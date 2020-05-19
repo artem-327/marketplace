@@ -26,23 +26,23 @@ class TransactionInfo extends Component {
     const StyledSegment = styled(OrderSegment)`
       margin: 14px 32px !important;
       padding: 0px !important;
-      
-      [class*="OrderSegment"] + & {
+
+      [class*='OrderSegment'] + & {
         margin-top: -20px !important;
       }
-      
+
       + div.ui.hidden.divider {
         margin: 14px 0 0 !important;
         border: 0 none !important;
       }
-      
+
       > .grid {
         margin: 0 !important;
         padding: 10px 0 !important;
-        
+
         > .row {
           padding: 0 !important;
-          
+
           + .row {
             margin-top: 10px !important;
           }

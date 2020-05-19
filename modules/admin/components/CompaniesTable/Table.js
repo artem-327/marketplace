@@ -8,6 +8,8 @@ import { Checkbox } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
+import { mapCompanyRows } from '~/constants/index'
+
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import * as Actions from '../../actions'
 import AddEditCompanySidebar from './AddEditCompanySidebar'
@@ -39,7 +41,7 @@ class CompaniesTable extends Component {
     })
   }
 
-  handleEnabled = async (row) => {
+  handleEnabled = async row => {
     const { datagrid, udpateEnabled } = this.props
 
     try {
@@ -142,34 +144,9 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
     companyListDataRequest: admin.companyListDataRequest,
     filterValue: admin.filterValue,
     currentTab: admin.currentTab,
-    rows: datagrid.rows.map(c => ({
-      rawData: c,
-      ...c,
-      displayName: getSafe(() => c.cfDisplayName, '') ? c.cfDisplayName : getSafe(() => c.name, ''),
-      associations: (
-        <ArrayToFirstItem values={getSafe(() => c.associations, '') ? c.associations.map(r => r.name) : []} />
-      ),
-      hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
-      hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified' ? 'Yes' : 'No',
-      primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
-        ? c.primaryBranch.deliveryAddress.address.streetAddress +
-          ', ' +
-          c.primaryBranch.deliveryAddress.address.city +
-          ', ' +
-          (c.primaryBranch.deliveryAddress.address.province
-            ? c.primaryBranch.deliveryAddress.address.province.name + ', '
-            : '') +
-          (c.primaryBranch.deliveryAddress.address.country ? c.primaryBranch.deliveryAddress.address.country.name : '')
-        : '',
-      primaryContact: getSafe(() => c.primaryUser.name, ''),
-      contactEmail: getSafe(() => c.primaryUser.email, ''),
-      reviewRequested: getSafe(() => c.reviewRequested, ''),
-      hasLogo: getSafe(() => c.hasLogo, ''),
-      nacdMember: c && c.nacdMember ? 'Yes' : c && c.nacdMember === false ? 'No' : '',
-      enabled: getSafe(() => c.enabled, false)
-    })),
-    confirmMessage: getSafe(() => admin.confirmMessage, ''),
-    deleteRowById: getSafe(() => admin.deleteRowById, '')
+    rows: mapCompanyRows(datagrid.rows),
+    confirmMessage: admin.confirmMessage,
+    deleteRowById: admin.deleteRowById
   }
 }
 

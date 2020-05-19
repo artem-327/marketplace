@@ -429,6 +429,13 @@ class Navigation extends Component {
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
+                      to='/settings?type=client-companies'
+                      tab='client-companies'
+                      data-test='navigation_settings_client_companies_drpdn'>
+                      {formatMessage({ id: 'navigation.clientCompanies', defaultMessage: '!Client Companies' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
                       to='/settings?type=logistics'
                       tab='logistics'
                       dataTest='navigation_settings_logistics_drpdn'>
