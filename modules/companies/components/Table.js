@@ -8,6 +8,8 @@ import { Checkbox } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
+import { mapCompanyRows } from '~/constants/index'
+
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import * as Actions from '../actions'
 import AddEditCompanySidebar from './AddEditCompanySidebar'

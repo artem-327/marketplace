@@ -1,4 +1,5 @@
 import { FormattedMessage } from 'react-intl'
+import { companyDatagridColumns } from '~/constants/index'
 import React from 'react'
 
 export const config = {
