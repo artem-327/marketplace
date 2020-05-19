@@ -504,8 +504,12 @@ const mapDispatchToProps = {
   deleteCompanyLogo
 }
 
-const mapStateToProps = ({ admin, zip }) => {
-  const popupValues = admin.popupValues ? admin.popupValues.rawData : null
+const mapStateToProps = ({ admin, settings, zip }) => {
+  const popupValues = admin.popupValues
+    ? admin.popupValues.rawData
+    : settings.popupValues
+    ? settings.popupValues.rawData
+    : null
   return {
     ...admin,
     popupValues,

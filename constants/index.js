@@ -92,9 +92,9 @@ export const mapCompanyRows = companyRows =>
   companyRows.map(c => ({
     rawData: c,
     ...c,
-    displayName: getSafe(() => c.cfDisplayName, ''),
-    hasLogisticsAccounts: c.logisticsAccount ? 'Yes' : 'No',
-    hasDwollaAccount: c.dwollaAccountStatus === 'verified' ? 'Yes' : 'No',
+    displayName: getSafe(() => c.name, ''),
+    hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
+    hasDwollaAccount: getSafe(() => c.dwollaAccountStatus === 'verified', '') ? 'Yes' : 'No',
     primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
       ? c.primaryBranch.deliveryAddress.address.streetAddress +
         ', ' +
@@ -107,8 +107,13 @@ export const mapCompanyRows = companyRows =>
       : '',
     primaryContact: getSafe(() => c.primaryBranch.deliveryAddress.contactName, ''),
     contactEmail: getSafe(() => c.primaryBranch.deliveryAddress.contactEmail, ''),
-    reviewRequested: c && c.reviewRequested ? 'Yes' : c.reviewRequested === false ? 'No' : '',
-    hasLogo: c.hasLogo,
-    nacdMember: c && c.nacdMember ? 'Yes' : c.nacdMember === false ? 'No' : ''
+    reviewRequested: getSafe(() => c.reviewRequested, false)
+      ? 'Yes'
+      : getSafe(() => c.reviewRequested === false, false)
+      ? 'No'
+      : '',
+    hasLogo: getSafe(() => c.hasLogo, false),
+    nacdMember: getSafe(() => c.nacdMember, false) ? 'Yes' : getSafe(() => c.nacdMember === false, false) ? 'No' : ''
   }))
+
 export const currencySymbol = '$'

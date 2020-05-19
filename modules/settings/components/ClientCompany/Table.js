@@ -25,7 +25,7 @@ class Table extends Component {
         rowActions={[
           {
             text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-            callback: row => openPopup(row.rawData)
+            callback: row => openPopup(row)
           },
           {
             text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
