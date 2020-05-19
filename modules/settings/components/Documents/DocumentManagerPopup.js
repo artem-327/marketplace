@@ -166,7 +166,10 @@ class DocumentPopup extends Component {
                           {text => text}
                         </FormattedMessage>
                       }
-                      inputProps={{ maxDate: moment() }}
+                      inputProps={{
+                        maxDate: moment(),
+                        clearable: true
+                      }}
                     />
                     <Input
                       name='issuer'
@@ -186,6 +189,9 @@ class DocumentPopup extends Component {
                           {text => text}
                         </FormattedMessage>
                       }
+                      inputProps={{
+                        clearable: true
+                      }}
                     />
 
                     <Dropdown
@@ -305,7 +311,7 @@ const mapStateToProps = ({ simpleAdd, settings }) => {
     popupValues: documentTab ? settings.popupValues : null,
     documentTypes: simpleAdd.listDocumentTypes,
     documentTypesFetching: simpleAdd.documentTypesFetching,
-    edit: documentTab & getSafe(() => settings.popupValues.id, false),
+    edit: documentTab && getSafe(() => settings.popupValues.id, false),
     enableClose: documentTab
   }
 }

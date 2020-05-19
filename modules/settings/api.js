@@ -216,6 +216,10 @@ export default {
   getBranch: branchId => api.get(`/prodex/api/branches/${branchId}`),
   removeAttachmentLinkToBranch: (attachmentId, branchId) =>
     api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
+  createClientCompany: payload => api.post('/prodex/api/companies/client', payload).then(response => response.data),
+  updateClientCompany: (payload, id) =>
+    api.put(`/prodex/api/companies/client/${id}`, payload).then(response => response.data),
+  deleteClientCompany: id => api.delete(`/prodex/api/companies/client/${id}`).then(response => response.data),
   addVerificationDocumentsOwner: (attachment, id, docType) => {
     const formData = new FormData()
     formData.append('file', attachment)
