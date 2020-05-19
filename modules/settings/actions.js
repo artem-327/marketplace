@@ -1149,6 +1149,43 @@ export const getBranch = branchId => ({
   payload: api.getBranch(branchId)
 })
 
+export const createClientCompany = payload => {
+  return async dispatch => {
+    const response = await api.createClientCompany(payload)
+    dispatch({
+      type: AT.CREATE_CLIENT_COMPANY,
+      payload: response
+    })
+    Datagrid.loadData()
+    dispatch(closePopup())
+    return response.data
+  }
+}
+export const updateClientCompany = (payload, id) => {
+  return async dispatch => {
+    const response = await api.updateClientCompany(payload, id)
+    dispatch({
+      type: AT.UPDATE_CLIENT_COMPANY,
+      payload: response
+    })
+    Datagrid.updateRow(id, () => payload)
+    dispatch(closePopup())
+    return response.data
+  }
+}
+
+export const deleteClientCompany = id => {
+  return async dispatch => {
+    const response = await api.deleteClientCompany(id)
+    dispatch({
+      type: AT.DELETE_CLIENT_COMPANY,
+      payload: response
+    })
+    Datagrid.loadData()
+    return
+  }
+}
+
 export const addVerificationDocumentsOwner = (attachment, id, docType) => {
   return {
     type: AT.ADD_VERIFICATION_DOCUMENT_OWNER,
