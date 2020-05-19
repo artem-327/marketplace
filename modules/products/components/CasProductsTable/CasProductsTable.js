@@ -107,21 +107,24 @@ const mapDispatchToProps = {
   deleteCasProduct
 }
 
-const transformHazardClasses = classes => (
-  <Label.Group color='blue'>
-    {classes.map((b, i) => (
-      <Popup
-        key={i}
-        content={b.description}
-        trigger={
-          <Label size='tiny' key={i}>
-            {b.classCode}
-          </Label>
-        }
-      />
-    ))}
-  </Label.Group>
-)
+const transformHazardClasses = classes => {
+  if (!classes || !classes.length) return
+  return (
+    <Label.Group color='blue'>
+      {classes.map((b, i) => (
+        <Popup
+          key={i}
+          content={b.description}
+          trigger={
+            <Label size='tiny' key={i}>
+              {b.classCode}
+            </Label>
+          }
+        />
+      ))}
+    </Label.Group>
+  )
+}
 
 const mapStateToProps = (state, { datagrid }) => {
   return {

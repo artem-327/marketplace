@@ -92,7 +92,7 @@ export function updateCasProductRequest(id, values) {
       payload: editedCasProduct
     })
     dispatch(closePopup())
-    Datagrid.updateRow(id, () => editedCasProduct)
+    Datagrid.updateRow(id, () => values)
     // Reload CAS Product list using filters
     // dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
   }

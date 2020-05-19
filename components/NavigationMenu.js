@@ -284,7 +284,9 @@ class Navigation extends Component {
             <MenuLink
               to='/inventory/my'
               dataTest='navigation_menu_inventory_my_drpdn'
-              className={`menu ${!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}`}>
+              className={`menu ${
+                !collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''
+              }`}>
               <>
                 <Layers size={22} />
                 {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
@@ -303,7 +305,9 @@ class Navigation extends Component {
             <MenuLink
               to='/marketplace/all'
               dataTest='navigation_menu_marketplace_drpdn'
-              className={`menu ${!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}`}>
+              className={`menu ${
+                !collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''
+              }`}>
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
@@ -483,20 +487,6 @@ class Navigation extends Component {
       </div>
     ) : (
       <div className='flex-wrapper'>
-        {isAdmin && (
-          <>
-            <DropdownItem
-              icon={<Home size={22} />}
-              text={formatMessage({ id: 'navigation.dashboard', defaultMessage: 'Dashboard' })}
-              className={admin ? 'opened' : null}
-              opened={admin}
-              onClick={() => this.toggleOpened('admin')}
-              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-              refId={'admin'}>
-              <Tabs />
-            </DropdownItem>
-          </>
-        )}
         {(isAdmin || isEchoOperator) && (
           <>
             <MenuLink to='/companies' dataTest='navigation_menu_admin_companies'>
@@ -545,12 +535,21 @@ class Navigation extends Component {
             {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
           </>
         </MenuLink>
-        <MenuLink to='/admin-settings' dataTest='navigation_menu_admin_settings'>
+
+        {isAdmin && (
           <>
-            <Settings size={22} />
-            {formatMessage({ id: 'navigation.adminSettings', defaultMessage: 'Admin Settings' })}
+            <DropdownItem
+              icon={<Settings size={22} />}
+              text={formatMessage({ id: 'navigation.adminSettings', defaultMessage: 'Admin Settings' })}
+              className={admin ? 'opened' : null}
+              opened={admin}
+              onClick={() => this.toggleOpened('admin')}
+              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+              refId={'admin'}>
+              <Tabs />
+            </DropdownItem>
           </>
-        </MenuLink>
+        )}
       </div>
     )
   }

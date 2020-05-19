@@ -117,7 +117,7 @@ export function login(username, password) {
             getSafe(() => identity.company.reviewRequested, false)
           )
         ) {
-          isAdmin ? Router.push('/admin') : Router.push(urlPage)
+          isAdmin ? Router.push('/companies') : Router.push(urlPage)
         }
 
         return authPayload
