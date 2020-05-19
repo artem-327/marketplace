@@ -1174,7 +1174,17 @@ export const updateClientCompany = (payload, id) => {
   }
 }
 
-export const deleteClientCompany = id => ({ type: AT.DELETE_CLIENT_COMPANY, payload: api.deleteClientCompany(id) })
+export const deleteClientCompany = id => {
+  return async dispatch => {
+    const response = await api.deleteClientCompany(id)
+    dispatch({
+      type: AT.DELETE_CLIENT_COMPANY,
+      payload: response
+    })
+    Datagrid.loadData()
+    return
+  }
+}
 
 export const addVerificationDocumentsOwner = (attachment, id, docType) => {
   return {
