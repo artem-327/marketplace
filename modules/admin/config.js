@@ -670,5 +670,8 @@ export const config = {
         }
       ]
     }
+  },
+  'Admin Settings': {
+    hideHandler: true
   }
 }

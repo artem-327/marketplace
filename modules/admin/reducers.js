@@ -35,7 +35,8 @@ export const initialState = {
     { name: 'Conditions', id: 6 },
     { name: 'Users', id: 13 },
     { name: 'NMFC Numbers', id: 14 },
-    { name: 'Associations', id: 15 }
+    { name: 'Associations', id: 15 },
+    { name: 'Admin Settings', id: 11, hideHandler: true }
   ],
   currentTab: { name: 'Units of Measure', id: 1 },
   casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'CasProduct.chemicalName' },

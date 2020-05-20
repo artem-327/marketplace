@@ -7,7 +7,7 @@ import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest } from
 import { Field } from 'formik-semantic-ui-fixed-validation'
 import { CompanyProductInfo } from '~/modules/company-product-info'
 
-import { removeEmpty } from '~/utils/functions'
+import { removeEmpty, getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 
 import { errorMessages } from '~/constants/yupValidation'
@@ -35,6 +35,12 @@ class AddEditCasProductsPopup extends React.Component {
         handleSubmit={async (values, formikProps) => {
           let { setSubmitting } = formikProps
           removeEmpty(values)
+          delete values.casProduct.id
+          delete values.casProduct.cfChemicalOfInterest
+          values.casProduct.hazardClasses = getSafe(() => values.casProduct.hazardClasses.length, '')
+            ? values.casProduct.hazardClasses.map(hazard => hazard.id)
+            : []
+
           try {
             if (popupValues) await updateCasProductRequest(popupValues.id, values.casProduct)
             else await postNewCasProductRequest(values.casProduct)

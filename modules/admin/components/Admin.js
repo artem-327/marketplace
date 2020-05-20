@@ -25,9 +25,22 @@ import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
 import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
+import Settings from '~/components/settings'
 
 import UsersTable from './UsersTable/Table'
 import UsersSidebar from './UsersTable/UsersSidebar'
+
+import styled from 'styled-components'
+
+const FixyWrapper = styled.div`
+  position: relative;
+  transform: translateY(0);
+`
+
+const ScrollableSegment = styled(Segment)`
+  max-height: 90vh;
+  overflow-y: auto;
+`
 
 const tables = {
   'Units of Measure': <UnitOfMeasureTable />,
@@ -38,7 +51,14 @@ const tables = {
   Conditions: <DataTable />,
   'NMFC Numbers': <NmfcTable />,
   Associations: <DataTable />,
-  Users: <UsersTable />
+  Users: <UsersTable />,
+  'Admin Settings': (
+    <FixyWrapper>
+      <ScrollableSegment basic padded='very'>
+        <Settings inputsInGroup={3} asModal={false} role='admin' />
+      </ScrollableSegment>
+    </FixyWrapper>
+  )
 }
 
 const datagridConfig = {

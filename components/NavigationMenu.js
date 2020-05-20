@@ -485,7 +485,7 @@ class Navigation extends Component {
       </div>
     ) : (
       <div className='flex-wrapper'>
-        {(isAdmin || isEchoOperator) && (
+        {isAdmin && (
           <>
             <MenuLink to='/companies' dataTest='navigation_menu_admin_companies'>
               <>
@@ -515,27 +515,12 @@ class Navigation extends Component {
                 {formatMessage({ id: 'navigation.marketSegments', defaultMessage: 'Market Segments' })}
               </>
             </MenuLink>
-            <DropdownItem
-              icon={<Archive size={22} />}
-              text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
-              className={operations ? 'opened' : null}
-              opened={operations}
-              onClick={() => this.toggleOpened('operations')}
-              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-              refId={'operations'}>
-              <TabsOperations />
-            </DropdownItem>
-          </>
-        )}
-        <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
-          <>
-            <Bell size={22} />
-            {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
-          </>
-        </MenuLink>
-
-        {isAdmin && (
-          <>
+            <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
+              <>
+                <Bell size={22} />
+                {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+              </>
+            </MenuLink>
             <DropdownItem
               icon={<Settings size={22} />}
               text={formatMessage({ id: 'navigation.adminSettings', defaultMessage: 'Admin Settings' })}
@@ -545,6 +530,20 @@ class Navigation extends Component {
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
               refId={'admin'}>
               <Tabs />
+            </DropdownItem>
+          </>
+        )}
+        {(isAdmin || isEchoOperator) && (
+          <>
+            <DropdownItem
+              icon={<Archive size={22} />}
+              text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
+              className={operations ? 'opened' : null}
+              opened={operations}
+              onClick={() => this.toggleOpened('operations')}
+              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+              refId={'operations'}>
+              <TabsOperations />
             </DropdownItem>
           </>
         )}
@@ -563,7 +562,7 @@ export default withAuth(
         activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
         activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
         activeWantedBoardFilter: getSafe(() => store.filter.wantedBoard.appliedFilter.filters.length > 0, false),
-        isEchoOperator: getSafe(() => store.auth.identity.roles, []).find(role => role.name === 'Echo Operator')
+        isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator')
       }),
       {
         triggerSystemSettingsModal,
