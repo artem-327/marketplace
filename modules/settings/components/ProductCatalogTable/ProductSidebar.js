@@ -166,7 +166,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 300
+    width: 270
   },
   {
     name: 'documentTypeName',
@@ -175,7 +175,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 300
+    width: 270
   }
 ]
 
