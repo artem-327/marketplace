@@ -104,7 +104,7 @@ export const chatWidget_hide = () => {
   }
 }
 
-export const chatWidget_showLable = () => {
+export const chatWidget_showLabel = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
     zE(function() {
       $zopim(function() {
@@ -168,4 +168,14 @@ export const chatWidget_isConnected = () => {
   )
     return false
   else return true
+}
+
+export const chatWidget_setHorizontalOffset = (offset) => {
+  if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
+    zE(function() {
+      $zopim(function() {
+        $zopim.livechat.button.setOffsetHorizontal(offset);
+      })
+    })
+  }
 }

@@ -14,15 +14,17 @@ class MyRequestedItemsPage extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'title.myRequestedItems', defaultMessage: 'My Requested Items' })}>
-        <MyRequestedItems activeIndex={1} type={type}/>
+        <MyRequestedItems activeIndex={1} type={type} />
       </Layout>
     )
   }
 }
 
-export default securePage(connect(
-  store => ({
-    type: store.wantedBoard.myRequestedItemsType
-  }),
-  null
-)(injectIntl(MyRequestedItemsPage)))
+export default securePage(
+  connect(
+    store => ({
+      type: store.wantedBoard.myRequestedItemsType
+    }),
+    null
+  )(injectIntl(MyRequestedItemsPage))
+)

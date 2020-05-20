@@ -13,77 +13,105 @@ import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { echoRowActions } from './constants'
-const columns = [
-  {
-    name: 'name',
-    title: (
-      <FormattedMessage id='global.productName' defaultMessage='Product Name'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150,
-    sortPath: 'EchoProduct.name'
-  },
-  {
-    name: 'code',
-    title: (
-      <FormattedMessage id='global.productCode' defaultMessage='Product Code'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150,
-    sortPath: 'EchoProduct.code'
-  },
-  {
-    name: 'manufacturerName',
-    title: (
-      <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150,
-    sortPath: 'EchoProduct.manufacturer.name'
-  },
-  {
-    name: 'sds',
-    title: (
-      <FormattedMessage id='admin.echoProducts.sds' defaultMessage='SDS'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150
-  },
-  {
-    name: 'sdsVersionNumber',
-    title: (
-      <FormattedMessage id='admin.echoProducts.sdsVersion' defaultMessage='SDS Version'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150,
-    sortPath: 'EchoProduct.sdsVersionNumber'
-  },
-  {
-    name: 'sdsRevisionDate',
-    title: (
-      <FormattedMessage id='admin.echoProducts.sdsRevisionDate' defaultMessage='SDS Revision Date'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150,
-    sortPath: 'EchoProduct.sdsRevisionDate'
-  },
-  {
-    name: 'tagsFormatted',
-    title: (
-      <FormattedMessage id='global.tags' defaultMessage='Tags'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150
+import { FileText } from 'react-feather'
+import styled from 'styled-components'
+import { Popup } from 'semantic-ui-react'
+
+const UnpublishedIcon = styled(FileText)`
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
   }
-]
+`
+
 class ProductCatalogTable extends Component {
+  state = {
+    columns: [
+      {
+        name: 'notPublishedStatus',
+        title: <UnpublishedIcon className='grey' />,
+        width: 40,
+        align: 'center'
+      },
+      {
+        name: 'name',
+        title: (
+          <FormattedMessage id='global.productName' defaultMessage='Product Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+        sortPath: 'EchoProduct.name'
+      },
+      {
+        name: 'code',
+        title: (
+          <FormattedMessage id='global.productCode' defaultMessage='Product Code'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+        sortPath: 'EchoProduct.code'
+      },
+      {
+        name: 'manufacturerName',
+        title: (
+          <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+        sortPath: 'EchoProduct.manufacturer.name'
+      },
+      {
+        name: 'sds',
+        title: (
+          <FormattedMessage id='admin.echoProducts.sds' defaultMessage='SDS'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'sdsVersionNumber',
+        title: (
+          <FormattedMessage id='admin.echoProducts.sdsVersion' defaultMessage='SDS Version'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+        sortPath: 'EchoProduct.sdsVersionNumber'
+      },
+      {
+        name: 'sdsRevisionDate',
+        title: (
+          <FormattedMessage id='admin.echoProducts.sdsRevisionDate' defaultMessage='SDS Revision Date'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+        sortPath: 'EchoProduct.sdsRevisionDate'
+      },
+      {
+        name: 'tagsFormatted',
+        title: (
+          <FormattedMessage id='global.tags' defaultMessage='Tags'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      }
+    ]
+  }
+
   getRows = rows => {
     const {
       intl: { formatMessage }
@@ -91,6 +119,22 @@ class ProductCatalogTable extends Component {
     return rows.map(row => {
       return {
         ...row,
+        notPublishedStatus: !row.isPublished ? (
+          <Popup
+            size='small'
+            header={
+              <FormattedMessage
+                id='global.notPublished'
+                defaultMessage='This echo product is not published and will not show on the Marketplace.'
+              />
+            }
+            trigger={
+              <div>
+                <UnpublishedIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : null,
         sds:
           row.attachments && row.attachments.length ? (
             <Button as='a' onClick={() => this.downloadAttachment(row.attachments[0].name, row.attachments[0].id)}>
@@ -189,6 +233,9 @@ class ProductCatalogTable extends Component {
       editedId,
       filterValue
     } = this.props
+
+    let { columns } = this.state
+
     return (
       <React.Fragment>
         <ProdexTable

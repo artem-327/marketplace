@@ -11,10 +11,34 @@ import { injectIntl, FormattedNumber, FormattedMessage } from 'react-intl'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
+import { FileText } from 'react-feather'
+import styled from 'styled-components'
+import { Popup } from 'semantic-ui-react'
+
+const UnpublishedIcon = styled(FileText)`
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
+  }
+`
 
 class ProductCatalogTable extends Component {
   state = {
     columns: [
+      {
+        name: 'notPublishedStatus',
+        title: <UnpublishedIcon className='grey' />,
+        width: 40,
+        align: 'center'
+      },
       {
         name: 'intProductName',
         title: (
@@ -22,6 +46,7 @@ class ProductCatalogTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
+        width: 200,
         sortPath: 'CompanyProduct.intProductName'
       },
       {
@@ -31,6 +56,7 @@ class ProductCatalogTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
+        width: 190,
         sortPath: 'CompanyProduct.intProductCode'
       },
       {
@@ -40,6 +66,7 @@ class ProductCatalogTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
+        width: 230,
         sortPath: 'CompanyProduct.echoProduct.name'
       },
       {
@@ -49,6 +76,7 @@ class ProductCatalogTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
+        width: 200,
         sortPath: 'CompanyProduct.echoProduct.code'
       },
       {
@@ -58,6 +86,7 @@ class ProductCatalogTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
+        width: 140,
         sortPath: 'CompanyProduct.packagingSize'
       },
       {
@@ -67,6 +96,7 @@ class ProductCatalogTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
+        width: 140,
         sortPath: 'CompanyProduct.packagingUnit.nameAbbreviation'
       },
       {
@@ -76,6 +106,7 @@ class ProductCatalogTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
+        width: 150,
         sortPath: 'CompanyProduct.packagingType.name'
       }
     ],
@@ -149,7 +180,10 @@ class ProductCatalogTable extends Component {
             direction: 'asc'
           }}
           rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
+            {
+              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+              callback: row => openPopup(row.rawData)
+            },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row => {
@@ -174,6 +208,8 @@ const mapStateToProps = (state, { datagrid }) => {
     rows: datagrid.rows.map(product => {
       return {
         ...product,
+        rawData: product,
+        intProductName: <div style={{ fontWeight: '500' }}>{product.intProductName}</div>,
         packagingTypeName: getSafe(() => product.packagingType.name) ? (
           <UnitOfPackaging value={product.packagingType.name} />
         ) : (
@@ -190,7 +226,24 @@ const mapStateToProps = (state, { datagrid }) => {
         externalProductCode: getSafe(() => product.echoProduct.code, 'N/A'),
         externalProductName: getSafe(() => product.echoProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
-        packagingUnit: getSafe(() => product.packagingUnit.id)
+        packagingUnit: getSafe(() => product.packagingUnit.id),
+        notPublishedStatus: product.echoProduct && !product.echoProduct.isPublished
+          ? (
+            <Popup
+              size='small'
+              header={
+                <FormattedMessage
+                  id='global.notPublished'
+                  defaultMessage='This echo product is not published and will not show on the Marketplace.'
+                />}
+              trigger={
+                <div>
+                  <UnpublishedIcon />
+                </div>
+              } // <div> has to be there otherwise popup will be not shown
+            />
+          )
+          : null
       }
     }),
     filterValue: state.settings.filterValue,
