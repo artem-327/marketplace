@@ -217,73 +217,6 @@ export function getUnNumbersByString(value) {
   }
 }
 
-export function postNewCasProductRequest(values) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_POST_NEW_CAS_PRODUCT,
-      payload: api.postNewCasProduct(values)
-    })
-    Datagrid.loadData()
-    dispatch(closePopup())
-    // Reload CAS Product list using filters
-    // dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
-  }
-}
-
-export function updateCasProductRequest(id, values) {
-  return async dispatch => {
-    const editedCasProduct = await api.updateCasProduct(id, values)
-    await dispatch({
-      type: AT.ADMIN_UPDATE_CAS_PRODUCT,
-      payload: editedCasProduct
-    })
-    dispatch(closePopup())
-    Datagrid.updateRow(id, () => editedCasProduct)
-    // Reload CAS Product list using filters
-    // dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
-  }
-}
-
-export function postNewProductName(productId, value) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_POST_NEW_PRODUCT_NAME,
-      payload: api.postNewProductName(productId, value)
-    })
-    await dispatch(getAlternativeProductNames(productId))
-  }
-}
-
-export function updateProductName(productId, id, value) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_UPDATE_PRODUCT_NAME,
-      payload: api.updateProductName(id, value)
-    })
-    await dispatch(getAlternativeProductNames(productId))
-  }
-}
-
-export function openEditCasPopup(data) {
-  // ! ! TODO probably openPopup() may be used
-  return {
-    type: AT.ADMIN_OPEN_POPUP,
-    payload: { data }
-  }
-}
-
-export function openEditAltNamesCasPopup(value) {
-  const data = {
-    casIndexName: value.casIndexName,
-    casNumber: value.casNumber,
-    id: value.id
-  }
-  return {
-    type: AT.ADMIN_OPEN_EDIT_2_POPUP,
-    payload: { data }
-  }
-}
-
 // export function casDeleteItem(value, reloadFilter) {
 // 	return async dispatch => {
 // 		await dispatch({
@@ -340,38 +273,6 @@ export function getCompany(id) {
 }
 */
 
-export function deleteProductName(productId, id) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_DELETE_PRODUCT_NAME,
-      payload: api.deleteProductName(id)
-    })
-    await dispatch(getAlternativeProductNames(productId))
-  }
-}
-
-export const deleteCompany = id => ({ type: AT.ADMIN_DELETE_COMPANIES, payload: api.deleteCompany(id) })
-
-export function createCompany(formData) {
-  return async dispatch => {
-    const enabled = formData.enabled
-    delete formData.enabled
-    let response = await api.createCompany(formData)
-    await dispatch({
-      type: AT.ADMIN_CREATE_COMPANY,
-      response
-    })
-
-    /* Called when uploaded logo
-    Datagrid.clear()
-    Datagrid.loadData()
-    */
-    await dispatch(udpateEnabled(response.id, enabled))
-    dispatch(closePopup())
-    return response
-  }
-}
-
 export function udpateEnabled(id, enabled) {
   return {
     type: AT.ADMIN_ENABLED_COMPANY,
@@ -379,75 +280,10 @@ export function udpateEnabled(id, enabled) {
   }
 }
 
-export function updateCompany(id, formData) {
-  return async dispatch => {
-    await dispatch(udpateEnabled(id, formData.enabled))
-    delete formData.enabled
-    let response = await api.updateCompany(id, formData)
-    dispatch({
-      type: AT.ADMIN_UPDATE_COMPANY,
-      response
-    })
-
-    /* Called when uploaded logo
-		Datagrid.updateRow(id, () => response)
-		*/
-
-    // dispatch(updateIdentity(response))
-    dispatch(closePopup())
-    return response
-    // dispatch(getCompanies())
-  }
-}
-
-export function openEditCompany(id, formData) {
-  return async dispatch => {
-    dispatch(openPopup(formData))
-    // const data = await api.getCompany(id)
-    // dispatch(openPopup(data))
-  }
-}
-
 export function searchUnNumber(pattern) {
   return {
     type: AT.ADMIN_SEARCH_UN_NUMBER,
     payload: api.searchUnNumber(pattern)
-  }
-}
-
-export function getEchoProduct(id) {
-  return {
-    type: AT.ADMIN_GET_ECHO_PRODUCT,
-    async payload() {
-      const response = await api.getEchoProduct(id)
-      Datagrid.updateRow(id, () => response.data)
-      return response
-    }
-  }
-}
-
-export function putEchoProduct(id, values) {
-  return {
-    type: AT.ADMIN_PUT_ECHO_PRODUCT,
-    payload: api.putEchoProduct(id, values)
-  }
-}
-
-export function postEchoProduct(values) {
-  return {
-    type: AT.ADMIN_POST_ECHO_PRODUCT,
-    payload: api.postEchoProduct(values)
-  }
-}
-
-export function deleteEchoProduct(echoProductId) {
-  return {
-    type: AT.ADMIN_DELETE_ECHO_PRODUCT,
-    async payload() {
-      const response = await api.deleteEchoProduct(echoProductId)
-      Datagrid.removeRow(echoProductId)
-      return response
-    }
   }
 }
 
@@ -466,11 +302,6 @@ export function prepareSearchedCasProducts(elements) {
     }
   }
 }
-
-export const searchCasProduct = (pattern, index) => ({
-  type: AT.ADMIN_SEARCH_CAS_PRODUCT,
-  payload: api.searchCasProduct(pattern)
-})
 
 export function getProductsCatalogRequest() {
   return dispatch => {
@@ -497,27 +328,6 @@ export function editEchoProductChangeTab(editTab, force = false, data = null) {
 export function openEditEchoProduct(id, editTab, force = false) {
   return async dispatch => {
     dispatch(editEchoProductChangeTab(editTab, force, { id }))
-  }
-}
-
-export function loadEditEchoProduct(id, editTab) {
-  return async dispatch => {
-    // get newest data
-    const response = await dispatch(getEchoProduct(id))
-    let formData = {
-      ...response.value.data
-    }
-
-    // mark attachments as linked
-    if (formData.attachments) {
-      formData.attachments = formData.attachments.map(att => {
-        return {
-          ...att,
-          linked: true
-        }
-      })
-    }
-    await dispatch(editEchoProductChangeTab(editTab, false, formData))
   }
 }
 
@@ -554,16 +364,6 @@ export function closePopup() {
   }
 }
 
-export const deleteCasProduct = id => {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_CAS_DELETE_PRODUCT,
-      payload: api.deleteCasProduct(id)
-    })
-    Datagrid.removeRow(id)
-  }
-}
-
 export const deleteUnit = id => {
   return async dispatch => {
     await dispatch({
@@ -597,13 +397,6 @@ export function getAddressSearchMailingBranch(body) {
     payload: api.getAddressSearch(body)
   }
 }
-export const takeOverCompany = id => {
-  return async dispatch => {
-    let payload = await api.takeOverCompany(id)
-    dispatch(updateIdentity(payload))
-    Router.push('/inventory/my')
-  }
-}
 
 export const takeOverCompanyFinish = () => {
   return async dispatch => {
@@ -613,66 +406,10 @@ export const takeOverCompanyFinish = () => {
   }
 }
 
-export const resendWelcomeEmail = userId => {
-  return {
-    type: AT.RESEND_WELCOME_EMAIL,
-    payload: api.resendWelcomeEmail(userId)
-  }
-}
-
 export const reviewRequest = companyId => {
   return {
     type: AT.ADMIN_REVIEW_REQUESTED,
     payload: api.reviewRequest(companyId)
-  }
-}
-
-export function getAlternativeEchoProductNames(value) {
-  return {
-    type: AT.ADMIN_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES,
-    payload: api.getAlternativeEchoProductNames(value)
-  }
-}
-
-export function postNewEchoProductAltName(productId, value) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_POST_NEW_ECHO_PRODUCT_ALTERNATIVE_NAME,
-      payload: api.postNewEchoProductAltName(productId, value)
-    })
-    await dispatch(getAlternativeEchoProductNames(productId))
-  }
-}
-
-export function updateEchoProductAltName(productId, id, value) {
-  return async dispatch => {
-    const response = await dispatch({
-      type: AT.ADMIN_UPDATE_ECHO_PRODUCT_ALTERNATIVE_NAME,
-      payload: api.updateEchoProductAltName(id, value)
-    })
-    await dispatch(getAlternativeEchoProductNames(productId))
-  }
-}
-
-export function deleteEchoProductAltName(productId, id) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_DELETE_ECHO_PRODUCT_ALTERNATIVE_NAME,
-      payload: api.deleteEchoProductAltName(id)
-    })
-    await dispatch(getAlternativeEchoProductNames(productId))
-  }
-}
-
-export function openEditEchoAltNamesPopup(value) {
-  const data = {
-    name: value.name,
-    code: value.code,
-    id: value.id
-  }
-  return {
-    type: AT.ADMIN_OPEN_EDIT_2_POPUP,
-    payload: { ...data }
   }
 }
 

@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { config } from '../config'
 import { debounce } from 'lodash'
 
-import { Menu, Button, Input, Grid } from 'semantic-ui-react'
+import { Header, Menu, Button, Input, Dropdown, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { openPopup, handleFiltersValue } from '../actions'
+import { openSidebar, handleFiltersValue } from '../actions'
+import { openImportPopup } from '~/modules/settings/actions'
 import { Datagrid } from '~/modules/datagrid'
+import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
+
 import styled from 'styled-components'
 
 const PositionHeaderSettings = styled.div`
@@ -40,20 +42,6 @@ class TablesHandlers extends Component {
     this.handleChange = debounce(this.handleChange, 300)
   }
 
-  componentDidUpdate(prevProps) {
-    let { filterValueKey } = this.state
-
-    if (prevProps.filterValue && this.props.filterValue === '') {
-      this.setState({
-        filterValueKey: ++filterValueKey
-      })
-    }
-    if (prevProps.currentTab.id !== this.props.currentTab.id) {
-      this.setState({ filterValue: '' })
-      this.props.handleFiltersValue(this.props, '')
-    }
-  }
-
   handleChangeSelectField = (event, value) => {
     this.setState({
       filterFieldCurrentValue: value
@@ -73,18 +61,22 @@ class TablesHandlers extends Component {
   }
 
   render() {
-    const { currentTab, openPopup, intl } = this.props
+    const { openSidebar, openImportPopup, intl, isOpenImportPopup } = this.props
 
     const { formatMessage } = intl
 
+    // if (currentTab === 'Manufactures' || currentTab === 'CAS Products' || currentTab === 'Companies') var onChange = this.debouncedOnChange
+    // else var onChange = this.handleChange
+
     return (
       <PositionHeaderSettings>
+        {isOpenImportPopup && <ProductImportPopup companies={true} />}
         <CustomGrid as={Menu} secondary verticalAlign='middle' className='page-part'>
           <CustomMenuItemLeft position='left' data-test='admin_table_search_inp'>
             <Input
               style={{ width: 340 }}
               icon='search'
-              placeholder={formatMessage({ id: config[currentTab.name].searchText })}
+              placeholder={formatMessage({ id: 'admin.searchCompany' })}
               onChange={(e, { value }) => {
                 this.setState({ filterValue: value })
                 this.handleChange(value)
@@ -93,11 +85,19 @@ class TablesHandlers extends Component {
             />
           </CustomMenuItemLeft>
           <CustomMenuItemRight position='right'>
-            <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
+            <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openSidebar()}>
               <FormattedMessage id='global.add' defaultMessage='Add'>
                 {text => `${text} `}
               </FormattedMessage>
-              {config[currentTab.name].addEditText}
+              <FormattedMessage id='admin.company' defaultMessage='Company'>
+                {text => text}
+              </FormattedMessage>
+            </Button>
+          </CustomMenuItemRight>
+
+          <CustomMenuItemRight>
+            <Button size='large' primary onClick={() => openImportPopup()} data-test='admin_import_btn'>
+              {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
             </Button>
           </CustomMenuItemRight>
         </CustomGrid>
@@ -108,14 +108,15 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.admin.currentTab,
     casListDataRequest: state.admin.casListDataRequest,
-    companyListDataRequest: state.admin.companyListDataRequest
+    companyListDataRequest: state.admin.companyListDataRequest,
+    isOpenImportPopup: state.settings.isOpenImportPopup
   }
 }
 
 const mapDispatchToProps = {
-  openPopup,
+  openSidebar,
+  openImportPopup,
   handleFiltersValue
 }
 

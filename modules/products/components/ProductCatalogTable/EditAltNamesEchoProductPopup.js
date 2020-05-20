@@ -53,7 +53,7 @@ class EditAltNamesEchoProductPopup extends React.Component {
   }
 
   componentDidMount = async () => {
-    await this.props.getAlternativeEchoProductNames(this.props.popupValues.id)
+    this.props.popupValues && (await this.props.getAlternativeEchoProductNames(this.props.popupValues.id))
     this.processFetchedData()
   }
 
@@ -130,7 +130,7 @@ class EditAltNamesEchoProductPopup extends React.Component {
                           onClick={() => this.handleAddName(arrayHelpers)}
                           data-test='settings_product_alt_name_add_btn'
                         />
-                        {`${popupValues.code} ${popupValues.name}`}
+                        {popupValues && `${popupValues.code} ${popupValues.name}`}
                       </Message>
 
                       <Table attached='bottom' className='table-fields'>
@@ -246,8 +246,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    popupValues: state.admin.popupValues,
-    productAltNames: state.admin.altEchoNamesRows
+    popupValues: state.productsAdmin.popupValues,
+    productAltNames: state.productsAdmin.altEchoNamesRows
   }
 }
 

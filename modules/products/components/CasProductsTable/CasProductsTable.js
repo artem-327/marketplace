@@ -15,6 +15,33 @@ import {
 } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 
+const columns = [
+  {
+    name: 'casIndexName',
+    title: (
+      <FormattedMessage id='global.indexName' defaultMessage='Index Name'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 375,
+    sortPath: 'CasProduct.casIndexName'
+  },
+  {
+    name: 'casNumber',
+    title: (
+      <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 150,
+    sortPath: 'CasProduct.casNumber'
+  }
+  // { name: 'chemicalName', title: <FormattedMessage id='global.chemicalName' defaultMessage='Chemical Name'>{text => text}</FormattedMessage>, width: 375, sortPath: 'CasProduct.chemicalName' },
+  // { name: 'unNumberCode', title: <FormattedMessage id='global.unNumber' defaultMessage='UN Number'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.unNumber.unNumberCode' },
+  // { name: 'packagingGroup', title: <FormattedMessage id='global.packagingGroup' defaultMessage='Packaging Group'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.packagingGroup.groupCode' },
+  // { name: 'hazardClassesLabeled', title: <FormattedMessage id='global.hazardClasses' defaultMessage='Hazard Classes'>{text => text}</FormattedMessage>, width: 150 },
+]
+
 class CasProductsTable extends Component {
   componentDidMount() {
     this.props.getHazardClassesDataRequest()
@@ -25,7 +52,6 @@ class CasProductsTable extends Component {
     const { datagrid, config, intl, rows, openPopup, openEditAltNamesCasPopup, deleteCasProduct } = this.props
 
     const { formatMessage } = intl
-    const { columns } = config.display
 
     return (
       <React.Fragment>
@@ -81,39 +107,33 @@ const mapDispatchToProps = {
   deleteCasProduct
 }
 
-const transformHazardClasses = classes => (
-  <Label.Group color='blue'>
-    {classes.map((b, i) => (
-      <Popup
-        key={i}
-        content={b.description}
-        trigger={
-          <Label size='tiny' key={i}>
-            {b.classCode}
-          </Label>
-        }
-      />
-    ))}
-  </Label.Group>
-)
+const transformHazardClasses = classes => {
+  if (!classes || !classes.length) return
+  return (
+    <Label.Group color='blue'>
+      {classes.map((b, i) => (
+        <Popup
+          key={i}
+          content={b.description}
+          trigger={
+            <Label size='tiny' key={i}>
+              {b.classCode}
+            </Label>
+          }
+        />
+      ))}
+    </Label.Group>
+  )
+}
 
 const mapStateToProps = (state, { datagrid }) => {
-  let cfg = state.admin.config[state.admin.currentTab.name]
-
   return {
-    config: cfg,
-    filterCasIds: state.admin.filterCasIds,
-    filterValue: state.admin.filterValue,
-    currentTab: state.admin.currentTab,
-    casListDataRequest: state.admin.casListDataRequest,
     rows: datagrid.rows.map(d => {
       return {
         ...d,
         hazardClassesLabeled: transformHazardClasses(d.hazardClasses)
       }
-    }),
-    confirmMessage: state.admin.confirmMessage,
-    deleteRowById: state.admin.deleteRowById
+    })
   }
 }
 

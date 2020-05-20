@@ -11,8 +11,105 @@ import Router from 'next/router'
 import { mapCompanyRows } from '~/constants/index'
 
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
-import * as Actions from '../../actions'
+import * as Actions from '../actions'
 import AddEditCompanySidebar from './AddEditCompanySidebar'
+
+const columns = [
+  {
+    name: 'displayName',
+    title: (
+      <FormattedMessage id='global.companyName' defaultMessage='Company Name'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 220,
+    sortPath: 'Company.name'
+  },
+  {
+    name: 'associations',
+    title: (
+      <FormattedMessage id='admin.associations' defaultMessage='Associations'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 165
+  },
+  {
+    name: 'primaryBranchAddress',
+    title: (
+      <FormattedMessage id='global.headquaterAddress' defaultMessage='Headquarters Address'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 185,
+    sortPath: 'Company.primaryBranch.deliveryAddress.address.streetAddress'
+  },
+  {
+    name: 'primaryContact',
+    title: (
+      <FormattedMessage id='global.primaryContact' defaultMessage='Primary Contact'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 150,
+    sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactName'
+  },
+  {
+    name: 'contactEmail',
+    title: (
+      <FormattedMessage id='global.contactEmail' defaultMessage='Contact E-mail'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 175,
+    sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactEmail'
+  },
+  {
+    name: 'hasDwollaAccount',
+    title: (
+      <FormattedMessage id='global.dwollaAccount' defaultMessage='Dwolla Account'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 145
+  },
+  {
+    name: 'hasLogisticsAccounts',
+    title: (
+      <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 150
+  },
+  {
+    name: 'reviewRequested',
+    title: (
+      <FormattedMessage id='global.reviewRequested' defaultMessage='Review Requested'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 150
+  },
+  {
+    name: 'nacdMember',
+    title: (
+      <FormattedMessage id='global.nacdMember' defaultMessage='NACD Member'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 130
+  },
+  {
+    name: 'enabled',
+    title: (
+      <FormattedMessage id='global.enabled' defaultMessage='Enabled'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 130
+  }
+]
 
 class CompaniesTable extends Component {
   getRows = rows => {
@@ -55,22 +152,20 @@ class CompaniesTable extends Component {
   render() {
     const {
       datagrid,
-      columns,
       rows,
       filterValue,
       loading,
       openEditCompany,
       confirmMessage,
       handleOpenConfirmPopup,
-      // closeConfirmPopup,
-      // deleteRowById,
       deleteCompany,
       openRegisterDwollaAccount,
       takeOverCompany,
       resendWelcomeEmail,
       intl,
       currentAddForm,
-      currentEditForm
+      currentEditForm,
+      isOpenSidebar
     } = this.props
 
     const { formatMessage } = intl
@@ -130,23 +225,43 @@ class CompaniesTable extends Component {
             }
           ]}
         />
-        {(currentAddForm || currentEditForm) && <AddEditCompanySidebar />}
+        {isOpenSidebar && <AddEditCompanySidebar />}
       </React.Fragment>
     )
   }
 }
 
-const mapStateToProps = ({ admin }, { datagrid }) => {
+const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
   return {
-    currentAddForm: admin.currentAddForm && admin.currentAddForm.name === 'Companies',
-    currentEditForm: admin.currentEditForm && admin.currentEditForm.name === 'Companies',
-    columns: admin.config[admin.currentTab.name].display.columns,
-    companyListDataRequest: admin.companyListDataRequest,
-    filterValue: admin.filterValue,
-    currentTab: admin.currentTab,
-    rows: mapCompanyRows(datagrid.rows),
-    confirmMessage: admin.confirmMessage,
-    deleteRowById: admin.deleteRowById
+    isOpenSidebar: companiesAdmin.isOpenSidebar,
+    companyListDataRequest: companiesAdmin.companyListDataRequest,
+    filterValue: companiesAdmin.filterValue,
+    rows: datagrid.rows.map(c => ({
+      rawData: c,
+      ...c,
+      displayName: getSafe(() => c.cfDisplayName, '') ? c.cfDisplayName : getSafe(() => c.name, ''),
+      associations: (
+        <ArrayToFirstItem values={getSafe(() => c.associations, '') ? c.associations.map(r => r.name) : []} />
+      ),
+      hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
+      hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified' ? 'Yes' : 'No',
+      primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
+        ? c.primaryBranch.deliveryAddress.address.streetAddress +
+          ', ' +
+          c.primaryBranch.deliveryAddress.address.city +
+          ', ' +
+          (c.primaryBranch.deliveryAddress.address.province
+            ? c.primaryBranch.deliveryAddress.address.province.name + ', '
+            : '') +
+          (c.primaryBranch.deliveryAddress.address.country ? c.primaryBranch.deliveryAddress.address.country.name : '')
+        : '',
+      primaryContact: getSafe(() => c.primaryUser.name, ''),
+      contactEmail: getSafe(() => c.primaryUser.email, ''),
+      reviewRequested: getSafe(() => c.reviewRequested, ''),
+      hasLogo: getSafe(() => c.hasLogo, ''),
+      nacdMember: c && c.nacdMember ? 'Yes' : c && c.nacdMember === false ? 'No' : '',
+      enabled: getSafe(() => c.enabled, false)
+    }))
   }
 }
 

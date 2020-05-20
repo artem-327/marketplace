@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { config } from '../config'
 import { debounce } from 'lodash'
 
 import { Menu, Button, Input, Grid } from 'semantic-ui-react'
@@ -29,7 +28,7 @@ const CustomGrid = styled(Grid)`
   margin-top: 10px !important;
 `
 
-class TablesHandlers extends Component {
+class TableHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -40,32 +39,6 @@ class TablesHandlers extends Component {
     this.handleChange = debounce(this.handleChange, 300)
   }
 
-  componentDidUpdate(prevProps) {
-    let { filterValueKey } = this.state
-
-    if (prevProps.filterValue && this.props.filterValue === '') {
-      this.setState({
-        filterValueKey: ++filterValueKey
-      })
-    }
-    if (prevProps.currentTab.id !== this.props.currentTab.id) {
-      this.setState({ filterValue: '' })
-      this.props.handleFiltersValue(this.props, '')
-    }
-  }
-
-  handleChangeSelectField = (event, value) => {
-    this.setState({
-      filterFieldCurrentValue: value
-    })
-  }
-
-  handleChangeFieldsCurrentValue = fieldStateName => event => {
-    this.setState({
-      [fieldStateName]: event.target.value
-    })
-  }
-
   handleChange = value => {
     Datagrid.setSearch(value)
     // if (Datagrid.isReady()) Datagrid.setSearch(value)
@@ -73,7 +46,7 @@ class TablesHandlers extends Component {
   }
 
   render() {
-    const { currentTab, openPopup, intl } = this.props
+    const { openPopup, intl } = this.props
 
     const { formatMessage } = intl
 
@@ -84,7 +57,7 @@ class TablesHandlers extends Component {
             <Input
               style={{ width: 340 }}
               icon='search'
-              placeholder={formatMessage({ id: config[currentTab.name].searchText })}
+              placeholder={formatMessage({ id: 'admin.searchMarketSegment' })}
               onChange={(e, { value }) => {
                 this.setState({ filterValue: value })
                 this.handleChange(value)
@@ -97,7 +70,9 @@ class TablesHandlers extends Component {
               <FormattedMessage id='global.add' defaultMessage='Add'>
                 {text => `${text} `}
               </FormattedMessage>
-              {config[currentTab.name].addEditText}
+              <FormattedMessage id='admin.marketSegment' defaultMessage='Market Segment'>
+                {text => text}
+              </FormattedMessage>
             </Button>
           </CustomMenuItemRight>
         </CustomGrid>
@@ -106,17 +81,9 @@ class TablesHandlers extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    currentTab: state.admin.currentTab,
-    casListDataRequest: state.admin.casListDataRequest,
-    companyListDataRequest: state.admin.companyListDataRequest
-  }
-}
-
 const mapDispatchToProps = {
   openPopup,
   handleFiltersValue
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(TablesHandlers))
+export default injectIntl(connect(null, mapDispatchToProps)(TableHandlers))
