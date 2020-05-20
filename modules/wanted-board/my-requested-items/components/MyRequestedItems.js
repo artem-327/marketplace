@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
 import {
   Container,
   Grid,
@@ -565,11 +567,11 @@ class MyRequestedItems extends Component {
       activeIndex,
       intl: { formatMessage },
       editWindowOpen,
-      clientCompany
+      isClientCompany
     } = this.props
 
     const panes = [
-      !clientCompany && {
+      !isClientCompany && {
         menuItem: (
           <MenuLink to='/wanted-board/wanted-board' data-test='wanted_board_submenu_tab_wanted_board'>
             <UpperCaseText>{formatMessage({ id: 'title.wantedBoard', defaultMessage: 'Wanted Board' })}</UpperCaseText>
@@ -587,7 +589,7 @@ class MyRequestedItems extends Component {
         ),
         render: () => <>{this.renderContent()}</>
       },
-      !clientCompany && {
+      !isClientCompany && {
         menuItem: (
           <MenuLink to='/wanted-board/my-offers' data-test='wanted_board_submenu_tab_my_offers'>
             <UpperCaseText>{formatMessage({ id: 'title.myOffers', defaultMessage: 'My Offers' })}</UpperCaseText>
@@ -621,4 +623,8 @@ MyRequestedItems.defaultProps = {
   activeIndex: 0
 }
 
-export default injectIntl(MyRequestedItems)
+const mapStateToProps = state => ({
+  isClientCompany: getSafe(() => state.auth.identity.company.isClientCompany, false)
+})
+
+export default injectIntl(connect(mapStateToProps)(MyRequestedItems))

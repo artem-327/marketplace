@@ -26,18 +26,18 @@ class Alerts extends Component {
           case 'read':
             filters.and.push(
               {
-                operator: 'GREATER_THAN',
-                path: 'Message.readAt',
-                values: ["0000-01-01T01:00:00.000000Z"]
+                operator: 'EQUALS',
+                path: 'Message.isRead',
+                values: ["TRUE"]
               }
             )
             break
           case 'unread':
             filters.and.push(
               {
-                operator: 'LESS_THAN_OR_NULL',
-                path: 'Message.readAt',
-                values: ["0000-01-01T01:00:00.000000Z"]
+                operator: 'EQUALS',
+                path: 'Message.isRead',
+                values: ["FALSE"]
               }
             )
             break

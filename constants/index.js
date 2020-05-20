@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+import { getSafe, getFormattedAddress } from '~/utils/functions'
 
 export const otherPermissions = [
   { value: 'NONE', id: 'NONE', text: 'None' },
@@ -95,16 +95,13 @@ export const mapCompanyRows = companyRows =>
     displayName: getSafe(() => c.name, ''),
     hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
     hasDwollaAccount: getSafe(() => c.dwollaAccountStatus === 'verified', '') ? 'Yes' : 'No',
-    primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
-      ? c.primaryBranch.deliveryAddress.address.streetAddress +
-        ', ' +
-        c.primaryBranch.deliveryAddress.address.city +
-        ', ' +
-        (c.primaryBranch.deliveryAddress.address.province
-          ? c.primaryBranch.deliveryAddress.address.province.name + ', '
-          : '') +
-        (c.primaryBranch.deliveryAddress.address.country ? c.primaryBranch.deliveryAddress.address.country.name : '')
-      : '',
+    primaryBranchAddress: getFormattedAddress({
+      street: getSafe(() => c.primaryBranch.deliveryAddress.address.streetAddress, ''),
+      city: getSafe(() => c.primaryBranch.deliveryAddress.address.city, ''),
+      zip: getSafe(() => c.primaryBranch.deliveryAddress.address.zip.zip, ''),
+      province: getSafe(() => c.primaryBranch.deliveryAddress.address.province.name, ''),
+      country: getSafe(() => c.primaryBranch.deliveryAddress.address.country.name, '')
+    }),
     primaryContact: getSafe(() => c.primaryBranch.deliveryAddress.contactName, ''),
     contactEmail: getSafe(() => c.primaryBranch.deliveryAddress.contactEmail, ''),
     reviewRequested: getSafe(() => c.reviewRequested, false)

@@ -8,17 +8,33 @@ import { withToastManager } from 'react-toast-notifications'
 
 function mapStateToProps(state) {
   const sidebars = () => {
-    return (
-      getSafe(() => state.admin.currentEditForm, false) ||
-      getSafe(() => state.admin.currentEdit2Form, false) ||
-      getSafe(() => state.admin.currentAddForm, false) ||
-      getSafe(() => state.admin.currentAddDwolla, false) ||
-      getSafe(() => state.simpleAdd.sidebarDetailOpen, false) ||
-      getSafe(() => state.cart.sidebar.isOpen, false) ||
-      getSafe(() => state.wantedBoard.editWindowOpen, false) ||
+    const adminTab =
+      (getSafe(() => state.admin.currentEditForm, false) ||
+        getSafe(() => state.admin.currentEdit2Form, false) ||
+        getSafe(() => state.admin.currentAddForm, false) ||
+        getSafe(() => state.admin.currentAddDwolla, false)
+      ) && getSafe(() => state.admin.currentTab.name, '')
+
+    if (
+      getSafe(() => state.wantedBoard.editWindowOpen, false)
+    ) return 430
+
+    if (
       getSafe(() => state.settings.isOpenSidebar, false) ||
-      getSafe(() => state.companyProductInfo.isOpen, false)
-    )
+      adminTab === 'Product Catalog'
+    ) return 500
+
+    if (
+      getSafe(() => state.cart.sidebar.isOpen, false) ||
+      getSafe(() => state.simpleAdd.sidebarDetailOpen, false) ||
+      getSafe(() => state.companyProductInfo.isOpen, false) ||
+      (getSafe(() => state.settings.isOpenPopup, false)
+        && getSafe(() => state.settings.currentTab.type, '') === 'products') ||
+      adminTab === 'Users' ||
+      adminTab === 'Companies'
+    ) return 630
+
+    return 0
   }
 
   return {
