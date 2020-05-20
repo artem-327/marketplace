@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import cn from 'classnames'
 import moment from 'moment/moment'
 import { debounce } from 'lodash'
-import { Clock } from 'react-feather'
+import { Clock, FileText } from 'react-feather'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
@@ -60,6 +60,21 @@ const ClockIcon = styled(Clock)`
   }
 `
 
+const UnpublishedIcon = styled(FileText)`
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+
+  &.grey {
+    color: #848893;
+  }
+`
+
 const StyledPopup = styled(Popup)`
   max-width: 90%;
   padding: 0 !important;
@@ -80,7 +95,13 @@ class MyInventory extends Component {
       {
         name: 'expired',
         title: <ClockIcon className='grey' />,
-        width: 45,
+        width: 40,
+        align: 'center'
+      },
+      {
+        name: 'notPublishedStatus',
+        title: <UnpublishedIcon className='grey' />,
+        width: 40,
         align: 'center'
       },
       {
@@ -436,6 +457,24 @@ class MyInventory extends Component {
             } // <div> has to be there otherwise popup will be not shown
           />
         ) : null,
+        notPublishedStatus: (r.notPublishedStatus
+          ? (
+            <Popup
+              size='small'
+              header={
+                <FormattedMessage
+                  id='global.notPublished'
+                  defaultMessage='This echo product is not published and will not show on the Marketplace.'
+                />}
+              trigger={
+                <div>
+                  <UnpublishedIcon />
+                </div>
+              } // <div> has to be there otherwise popup will be not shown
+            />
+          )
+          : null
+        ),
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (

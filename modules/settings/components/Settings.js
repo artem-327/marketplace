@@ -13,7 +13,7 @@ import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 import EditWarehouseSidebar from './WarehouseTable/WarehouseSidebar'
 import EditUsersPopup from './UserTable/UsersPopup'
-import EditProductPopup from './ProductCatalogTable/ProductPopup'
+import ProductSidebar from './ProductCatalogTable/ProductSidebar'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
 import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDocPopup'
@@ -314,7 +314,7 @@ class Settings extends Component {
       users: <EditUsersPopup />,
       branches: <EditWarehouseSidebar />,
       warehouses: <EditWarehouseSidebar />,
-      products: <EditProductPopup />,
+      products: <ProductSidebar />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
