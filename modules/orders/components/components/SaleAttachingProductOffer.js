@@ -95,16 +95,19 @@ class SaleAttachingProductOffer extends Component {
     available: [],
     poLots: [],
     sumPkgTotal: [],
-    totalPkgAmount: 0
+    totalPkgAmount: 0,
+    loadingGroupedProductOffer: false
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({ loadingGroupedProductOffer: true })
     const { getGroupedProductOffers, orderId, orderItemsId } = this.props
-
-    if (orderItemsId && orderItemsId.length > 1) {
-      orderItemsId.forEach(id => getGroupedProductOffers(orderId, id))
-    } else if (orderId && orderItemsId && orderItemsId.length === 1) {
-      getGroupedProductOffers(orderId, orderItemsId[0])
+    try {
+      await getGroupedProductOffers(orderId, orderItemsId)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.setState({ loadingGroupedProductOffer: false })
     }
   }
 
@@ -435,16 +438,14 @@ class SaleAttachingProductOffer extends Component {
     const {
       intl: { formatMessage },
       closePopup,
-      loadingGroupedProductOffer,
       groupedProductOffers,
       toastManager,
       orderId,
       orderItemsId
     } = this.props
-
     return (
       <Modal closeIcon onClose={() => closePopup()} open={true}>
-        <Dimmer active={loadingGroupedProductOffer} inverted>
+        <Dimmer active={this.state.loadingGroupedProductOffer} inverted>
           <Loader />
         </Dimmer>
         <Modal.Header>
@@ -689,18 +690,22 @@ function mapStateToProps(state) {
       }
     })
   }
-
+  function myFunc(total, num) {
+    return total + num
+  }
   return {
     orderId: getSafe(() => detail.id, null),
     orderItemsId: getSafe(() => detail.orderItems.map(item => item.id), []),
     loadingGroupedProductOffer: getSafe(() => state.orders.loadingGroupedProductOffer, false),
     groupedProductOffers: getSafe(() => state.orders.groupedProductOffers, false),
-    available: getSafe(() => state.orders.groupedProductOffers, [])
-      ? state.orders.groupedProductOffers.map(offer => offer.pkgAvailable)
-      : [0],
-    allocated: getSafe(() => state.orders.groupedProductOffers, [])
-      ? state.orders.groupedProductOffers.map(offer => offer.pkgAllocated)
-      : [0],
+    available: getSafe(() => state.orders.groupedProductOffers, []).map(offer => {
+      if (!Array.isArray(offer)) return
+      return offer.reduce((total, pkg) => total + pkg.pkgAvailable)
+    }),
+    allocated: getSafe(() => state.orders.groupedProductOffers, []).map(offer => {
+      if (!Array.isArray(offer)) return
+      return offer.reduce((total, pkg) => total + pkg.pkgAllocated)
+    }),
     productOffersPkgAmount
   }
 }
