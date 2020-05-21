@@ -1194,3 +1194,10 @@ export const addVerificationDocumentsOwner = (attachment, id, docType) => {
     }
   }
 }
+
+export function setPrimaryUser(companyId, userId) {
+  return {
+    type: AT.SETTINGS_SET_PRIMARY_USER,
+    payload: api.setPrimaryUser(companyId, userId)
+  }
+}
