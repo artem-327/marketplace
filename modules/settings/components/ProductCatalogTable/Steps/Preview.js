@@ -187,7 +187,8 @@ const mapStateToProps = state => {
     CSV: state.settings.CSV,
     isSaveMapCSV: state.settings.isSaveMapCSV,
     mapName: state.settings.mapName,
-    selectedSavedMap: state.settings.selectedSavedMap
+    selectedSavedMap: state.settings.selectedSavedMap,
+    csvWithoutHeader: state.settings.csvWithoutHeader
   }
 }
 

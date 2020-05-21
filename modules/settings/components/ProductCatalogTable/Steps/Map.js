@@ -307,7 +307,7 @@ class Map extends Component {
 
     this.setState({ newHeaders: this.props.CSV.headerCSV, mapping: mapping, constant: constant })
 
-    let a = mapping.sort(function(a, b) {
+    let a = mapping.sort(function (a, b) {
       let x = a.text.toLowerCase()
       let y = b.text.toLowerCase()
       if (x < y) {
@@ -370,7 +370,7 @@ class Map extends Component {
         let indexRemove = options[i].findIndex(obj => obj.value === value)
         if (indexRemove >= 0) options[i].splice(indexRemove, 1)
         // Sort alphabetically
-        options[i].sort(function(a, b) {
+        options[i].sort(function (a, b) {
           let x = a.value.toLowerCase()
           let y = b.value.toLowerCase()
           if (x < y) {
@@ -401,7 +401,8 @@ class Map extends Component {
       CSV,
       selectedSavedMap,
       intl: { formatMessage },
-      toastManager
+      toastManager,
+      csvWithoutHeader
     } = this.props
 
     const optionMaps =
@@ -412,6 +413,11 @@ class Map extends Component {
       }))
 
     const { values } = this.state
+
+    csvWithoutHeader &&
+      CSV.bodyCSV[0].lineNumber !== 1 &&
+      CSV.bodyCSV.unshift({ lineNumber: 1, columns: CSV.headerCSV })
+    !csvWithoutHeader && CSV.bodyCSV[0].lineNumber === 1 && CSV.bodyCSV.shift()
 
     return (
       <React.Fragment>
@@ -506,7 +512,7 @@ class Map extends Component {
                           return prev
                         },
                         {
-                          headerLine: true,
+                          headerLine: !this.props.csvWithoutHeader,
                           mapName: this.props.mapName || 'Uno'
                         }
                       )
@@ -575,12 +581,20 @@ class Map extends Component {
         <MapTable celled padded textAlign='center'>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell style={{ width: '130px', minWidth: '130px' }}>
-                <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
-              </Table.HeaderCell>
-              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
-                <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
-              </Table.HeaderCell>
+              {csvWithoutHeader ? (
+                <Table.HeaderCell colSpan={CSV.bodyCSV.length > 4 ? 4 : CSV.bodyCSV.length}>
+                  <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
+                </Table.HeaderCell>
+              ) : (
+                <>
+                  <Table.HeaderCell style={{ width: '130px', minWidth: '130px' }}>
+                    <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
+                    <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
+                  </Table.HeaderCell>
+                </>
+              )}
               <Table.HeaderCell style={{ width: '229px', minWidth: '229px' }}>
                 <FormattedMessage id='settings.mapping' defaultMessage='Mapping' />
               </Table.HeaderCell>
@@ -590,7 +604,7 @@ class Map extends Component {
             <Table.Body>
               {CSV.headerCSV.map((lineHeader, lineIndex) => (
                 <Table.Row key={lineHeader.columnNumber}>
-                  <Table.Cell style={{ width: '130px' }}>{lineHeader.content}</Table.Cell>
+                  {csvWithoutHeader ? null : <Table.Cell style={{ width: '130px' }}>{lineHeader.content}</Table.Cell>}
                   {CSV.bodyCSV.map(line => {
                     return line.columns.map(lineBody => {
                       return (
@@ -640,7 +654,7 @@ class Map extends Component {
       return requiredFields
     }, [])
 
-    const requiredMissing = required.filter(function(field) {
+    const requiredMissing = required.filter(function (field) {
       return values.indexOf(field) < 0
     })
     return requiredMissing.map(reqM => {
@@ -663,7 +677,7 @@ class Map extends Component {
 
       if (mapper) {
         values.forEach(
-          function(value2, v2Index) {
+          function (value2, v2Index) {
             if (v2Index !== vIndex && mapper === value2) {
               let indexAdd = mapping.findIndex(obj => obj.value === newHeaders[v2Index].header)
               newHeaders[v2Index].header = ''
@@ -751,7 +765,8 @@ const mapStateToProps = state => {
     mappedHeader: state.settings.mappedHeaders,
     maps: state.settings.maps,
     mapName: state.settings.mapName,
-    selectedSavedMap: state.settings.selectedSavedMap
+    selectedSavedMap: state.settings.selectedSavedMap,
+    csvWithoutHeader: state.settings.csvWithoutHeader
   }
 }
 

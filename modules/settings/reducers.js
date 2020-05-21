@@ -122,7 +122,8 @@ export const initialState = {
   tabClicked: false,
   isOpenSidebar: false,
   openTab: 0,
-  documentsOwner: []
+  documentsOwner: [],
+  csvWithoutHeader: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -622,6 +623,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_SET_PRIMARY_USER_PENDING:
     case AT.DELETE_PRODUCT_PENDING:
     case AT.DELETE_USER_PENDING: {
       return {
@@ -630,14 +632,10 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_SET_PRIMARY_USER_FULFILLED:
     case AT.DELETE_PRODUCT_FULFILLED:
-    case AT.DELETE_USER_FULFILLED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
+    case AT.DELETE_USER_FULFILLED:
+    case AT.SETTINGS_SET_PRIMARY_USER_REJECTED:
     case AT.DELETE_PRODUCT_REJECTED:
     case AT.DELETE_USER_REJECTED: {
       return {
@@ -1469,6 +1467,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         documentsOwner: action.payload
+      }
+    }
+
+    case AT.CHANGE_CSV_HEADER: {
+      return {
+        ...state,
+        csvWithoutHeader: !state.csvWithoutHeader
       }
     }
 

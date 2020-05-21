@@ -2,11 +2,6 @@ import api from '~/api'
 
 import { getSafe, generateQueryString } from '~/utils/functions'
 
-export async function getAlternativeProductNames(value) {
-  const { data } = await api.get(`/prodex/api/cas-products/alternative-names/cas-product/${value}`)
-  return data
-}
-
 export async function getCasProductByString(value, limit = 30) {
   const { data } = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${value}`)
   return data
@@ -16,18 +11,6 @@ export async function getManufacturersByString(value, limit = 30) {
   const { data } = await api.get(`/prodex/api/manufacturers/search?limit=${limit}&search=${value}`)
   return data
 }
-
-export async function postNewCasProduct(value) {
-  const { data } = await api.post('/prodex/api/cas-products', value)
-  return data
-}
-
-export async function updateCasProduct(id, value) {
-  const { data } = await api.put(`/prodex/api/cas-products/id/${id}`, value)
-  return data
-}
-
-export const deleteCasProduct = id => api.delete(`/prodex/api/cas-products/id/${id}`).then(() => id)
 
 export async function getAllUnNumbers() {
   const { data } = await api.get('/prodex/api/un-numbers')
@@ -128,33 +111,6 @@ export async function getCompany(id) {
 }
 */
 
-export async function createCompany(formData) {
-  const { data } = await api.post('/prodex/api/companies', formData)
-  return data
-}
-
-export async function updateCompany(id, formData) {
-  const { data } = await api.patch(`/prodex/api/companies/admin/id/${id}`, formData)
-
-  return data
-}
-
-export const deleteCompany = id => api.delete(`/prodex/api/companies/id/${id}`).then(() => id)
-
-export async function postNewProductName(productId, value) {
-  const { data } = await api.post(`/prodex/api/cas-products/alternative-names/cas-product/${productId}`, value)
-  return data
-}
-
-export async function updateProductName(id, value) {
-  const { data } = await api.patch(`/prodex/api/cas-products/alternative-names/id/${id}`, value)
-  return data
-}
-
-export async function deleteProductName(id) {
-  await api.delete(`/prodex/api/cas-products/alternative-names/id/${id}`)
-}
-
 export const deleteUnit = id => api.delete(`/prodex/api/units/${id}`).then(() => id)
 
 export const deleteUnitOfPackaging = id => api.delete(`/prodex/api/packaging-types/${id}`).then(() => id)
@@ -164,51 +120,15 @@ export async function getAddressSearch(body) {
   return data
 }
 
-export async function getAlternativeEchoProductNames(id) {
-  const { data } = await api.get(`/prodex/api/echo-products/alternative-names/echo-product/${id}`)
-  return data
-}
-
-export async function postNewEchoProductAltName(id, data) {
-  await api.post(`/prodex/api/echo-products/alternative-names/echo-product/${id}`, data)
-}
-
-export async function updateEchoProductAltName(id, value) {
-  await api.patch(`/prodex/api/echo-products/alternative-names/id/${id}`, value)
-}
-
-export async function deleteEchoProductAltName(id) {
-  await api.delete(`/prodex/api/echo-products/alternative-names/id/${id}`)
-}
-
-export const takeOverCompany = id =>
-  api.patch(`/prodex/api/admin/company/${id}/take-over`).then(response => response.data)
-
 export const takeOverCompanyFinish = () =>
   api.patch('/prodex/api/admin/company/take-over/finish').then(response => response.data)
-
-export const resendWelcomeEmail = userId =>
-  api
-    .get(`/prodex/api/users/id/${userId}/email/welcome`)
-    .then(response => response.data)
-    .catch(e => console.error(e.clientMessage))
 
 export const reviewRequest = companyId => api.patch(`/prodex/api/companies/id/${companyId}/review-request`)
 
 export const getCompanyDetails = id =>
   api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
 
-export const searchCasProduct = pattern =>
-  api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`).then(response => response.data)
-
 export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`)
-
-export const getEchoProduct = id => api.get(`/prodex/api/echo-products/id/${id}`)
-
-export const putEchoProduct = (id, values) =>
-  api.put(`/prodex/api/echo-products/id/${id}/`, values).then(response => response.data)
-
-export const postEchoProduct = values => api.post(`/prodex/api/echo-products`, values).then(response => response.data)
 
 export const deleteEchoProduct = id => api.delete(`/prodex/api/echo-products/id/${id}`)
 

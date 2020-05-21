@@ -21,7 +21,7 @@ import {
   Dimmer,
   Modal
 } from 'semantic-ui-react'
-import { ArrowLeft, ChevronDown, DownloadCloud } from 'react-feather'
+import { ArrowLeft, ChevronDown, DownloadCloud, UploadCloud } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
@@ -50,6 +50,7 @@ import { AttachmentManager } from '~/modules/attachments'
 import ProdexGrid from '~/components/table'
 import { getLocaleDateFormat } from '~/components/date-format'
 import TransactionInfo from './components/TransactionInfo'
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 
 export const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
@@ -165,7 +166,9 @@ const OrderAccordion = styled(Accordion)`
     padding: 15px 1em !important;
     background-color: #ffffff;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-
+    .uploadAttachment {
+      display: contents !important;
+    }
     + .title {
       margin-top: 10px !important;
     }
@@ -224,7 +227,6 @@ const Chevron = styled(ChevronDown)`
 const GridData = styled(Grid)`
   padding-top: 1em !important;
   padding-bottom: 1em !important;
-
   > .column:not(.row),
   > .row > .column,
   &.column > .column:not(.row),
@@ -388,6 +390,18 @@ const StyledModal = styled(Modal)`
       height: 40px;
     }
   }
+`
+
+const DivIcon = styled.div`
+  display: flex !important;
+`
+
+const AIcon = styled.a`
+  margin-left: 0.8vw;
+`
+
+const UploadCloudIcon = styled(UploadCloud)`
+  color: #2599d5 !important;
 `
 
 const StyledHeader = styled.span`
@@ -731,6 +745,29 @@ class Detail extends Component {
         rows={rowsDocuments}
       />
     )
+  }
+
+  removeAttachment = (orderItemId, file) => {
+    const query = {
+      attachmentId: file.id,
+      orderItemId: orderItemId
+    }
+
+    this.props.removeLinkAttachmentToOrderItem(query)
+  }
+
+  linkAttachment = async (orderItemId, files) => {
+    try {
+      const response = await this.props.addAttachment(files[0], 1, {})
+      const query = {
+        attachmentId: response.value.data.id,
+        orderItemId: orderItemId
+      }
+      await this.props.linkAttachmentToOrderItem(query)
+      await this.props.getSaleOrder(this.props.order.id)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   render() {
@@ -1360,7 +1397,25 @@ class Detail extends Component {
                                     <FormattedMessage id='global.view' defaultMessage='View' />
                                   </a>
                                 ) : (
-                                  'N/A'
+                                  <UploadAttachment
+                                    removeOrderItem={file => {
+                                      this.removeAttachment(order.orderItems[index].id, file)
+                                    }}
+                                    name={`documents${index}`}
+                                    type={1}
+                                    filesLimit={1}
+                                    fileMaxSize={20}
+                                    onChange={files => this.linkAttachment(order.orderItems[index].id, files)}
+                                    data-test={`detail_order_${index}_attachments`}
+                                    emptyContent={
+                                      <DivIcon>
+                                        <UploadCloudIcon />
+                                        <AIcon>
+                                          <FormattedMessage id='global.uploadCloud' defaultMessage='upload' />
+                                        </AIcon>
+                                      </DivIcon>
+                                    }
+                                  />
                                 )}
                               </Table.Cell>
                               <Table.Cell className='p-0'></Table.Cell>

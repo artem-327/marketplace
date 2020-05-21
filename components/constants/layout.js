@@ -692,15 +692,28 @@ export const LeftMenu = styled(Menu)`
         }
       }
     }
+    
+    .container > a.item,
+    .flex-wrapper > a.item {
+    
+      &:before,
+      &:after {
+        content: none !important;
+        display: none !important;
+      }
+      
+      &.menu {
+        
+        &:before,
+        &:after {
+          content: '' !important;
+          display: block !important;
+        }
+      }
+    }
 
     .container > a.item {
       overflow: hidden;
-
-      &:before,
-      &:after {
-        content: none;
-        display: none;
-      }
     }
 
     ~ div {

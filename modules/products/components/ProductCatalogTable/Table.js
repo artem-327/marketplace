@@ -117,27 +117,24 @@ class ProductCatalogTable extends Component {
       intl: { formatMessage }
     } = this.props
     return rows.map(row => {
-
       return {
         ...row,
-        notPublishedStatus: !row.isPublished
-          ? (
-            <Popup
-              size='small'
-              header={
-                <FormattedMessage
-                  id='global.notPublished'
-                  defaultMessage='This echo product is not published and will not show on the Marketplace.'
-                />}
-              trigger={
-                <div>
-                  <UnpublishedIcon />
-                </div>
-              } // <div> has to be there otherwise popup will be not shown
-            />
-          )
-          : null
-        ,
+        notPublishedStatus: !row.isPublished ? (
+          <Popup
+            size='small'
+            header={
+              <FormattedMessage
+                id='global.notPublished'
+                defaultMessage='This echo product is not published and will not show on the Marketplace.'
+              />
+            }
+            trigger={
+              <div>
+                <UnpublishedIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : null,
         sds:
           row.attachments && row.attachments.length ? (
             <Button as='a' onClick={() => this.downloadAttachment(row.attachments[0].name, row.attachments[0].id)}>
@@ -149,11 +146,9 @@ class ProductCatalogTable extends Component {
           ),
         manufacturerName: row.manufacturer ? row.manufacturer.name : '',
         sdsRevisionDate: row.sdsRevisionDate ? moment(row.sdsRevisionDate).format(getLocaleDateFormat()) : '',
-        tagsFormatted:
-          <ArrayToFirstItem
-            values={row.tags ? row.tags.map(d => d.name ? d.name : d) : ''}
-            rowItems={2}
-          />
+        tagsFormatted: (
+          <ArrayToFirstItem values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''} rowItems={2} />
+        )
       }
     })
   }
@@ -236,7 +231,7 @@ class ProductCatalogTable extends Component {
       openEditEchoAltNamesPopup,
       deleteEchoProduct,
       editedId,
-      filterValue,
+      filterValue
     } = this.props
 
     let { columns } = this.state
@@ -282,24 +277,21 @@ class ProductCatalogTable extends Component {
   }
 }
 
-const mapStateToProps = ({ admin }, { datagrid }) => {
+const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
   const editedId =
-    admin.currentTab.name === 'Product Catalog' &&
-    (!!admin.currentAddForm || !!admin.currentEditForm) &&
-    admin.popupValues
-      ? admin.popupValues.id
+    productsAdmin.currentTab.name === 'Product Catalog' &&
+    (!!productsAdmin.currentAddForm || !!productsAdmin.currentEditForm) &&
+    productsAdmin.popupValues
+      ? productsAdmin.popupValues.id
       : -1
 
   return {
     editedId,
-    productListDataRequest: admin.productListDataRequest,
-    filterValue: admin.filterValue,
-    currentTab: admin.currentTab,
+    filterValue: productsAdmin.filterValue,
+    currentTab: productsAdmin.currentTab,
     rows: datagrid.rows.map(c => ({
       ...c
-    })),
-    confirmMessage: admin.confirmMessage,
-    deleteRowById: admin.deleteRowById
+    }))
   }
 }
 
