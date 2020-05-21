@@ -8,7 +8,7 @@ import { getSafe, getFormattedAddress } from '~/utils/functions'
 import { FormattedNumber } from 'react-intl'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
-import { downloadAttachment } from '~/modules/inventory/actions'
+import { downloadAttachment, addAttachment } from '~/modules/inventory/actions'
 
 function actionRequired(data) {
   // return statuses code
@@ -220,4 +220,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions, downloadAttachment })(Detail)
+export default connect(mapStateToProps, { ...Actions, downloadAttachment, addAttachment })(Detail)

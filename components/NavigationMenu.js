@@ -10,12 +10,26 @@ import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
-import { Hexagon, Layers, Settings, ShoppingBag, Grid, Sliders, FileText, Bell } from 'react-feather'
+import {
+  Layers,
+  Settings,
+  ShoppingBag,
+  Grid,
+  Sliders,
+  FileText,
+  Bell,
+  Briefcase,
+  Home,
+  Package,
+  Archive,
+  Disc
+} from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
 import TabsOperations from '~/modules/operations/components/Tabs'
+import TabsProducts from '~/modules/products/components/Tabs'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -40,6 +54,7 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/orders/detail', false),
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
+    products: getSafe(() => Router.router.pathname === '/products', false),
     openedFilterMyInventory: true,
     openedFilterMarketplace: true,
     openedFilterOrders: false,
@@ -145,6 +160,9 @@ class Navigation extends Component {
     if (type === 'operations') {
       Router.push('/operations')
     }
+    if (type === 'products') {
+      Router.push('/products')
+    }
     // toggle dropdown state
     this.setState({
       openedFilterMyInventory: false,
@@ -154,6 +172,7 @@ class Navigation extends Component {
       settings: false,
       admin: false,
       operations: false,
+      products: false,
       [type]: !typeState
     })
 
@@ -226,6 +245,7 @@ class Navigation extends Component {
       orders,
       admin,
       operations,
+      products,
       openedFilterMyInventory,
       openedFilterMarketplace,
       openedFilterOrders,
@@ -262,7 +282,9 @@ class Navigation extends Component {
             <MenuLink
               to='/inventory/my'
               dataTest='navigation_menu_inventory_my_drpdn'
-              className={!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''}>
+              className={`menu ${
+                !collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''
+              }`}>
               <>
                 <Layers size={22} />
                 {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
@@ -281,7 +303,9 @@ class Navigation extends Component {
             <MenuLink
               to='/marketplace/all'
               dataTest='navigation_menu_marketplace_drpdn'
-              className={!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''}>
+              className={`menu ${
+                !collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''
+              }`}>
               <>
                 <ShoppingBag size={22} />
                 {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
@@ -463,9 +487,43 @@ class Navigation extends Component {
       <div className='flex-wrapper'>
         {isAdmin && (
           <>
+            <MenuLink to='/companies' dataTest='navigation_menu_admin_companies'>
+              <>
+                <Briefcase size={22} />
+                {formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
+              </>
+            </MenuLink>
             <DropdownItem
-              icon={<Hexagon size={22} />}
-              text={formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
+              icon={<Package size={22} />}
+              text={formatMessage({ id: 'navigation.products', defaultMessage: 'Products' })}
+              className={products ? 'opened' : null}
+              opened={products}
+              onClick={() => this.toggleOpened('products')}
+              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+              refId={'products'}>
+              <TabsProducts />
+            </DropdownItem>
+            <MenuLink to='/document-types' dataTest='navigation_menu_admin_document-types'>
+              <>
+                <FileText size={22} />
+                {formatMessage({ id: 'navigation.documentTypes', defaultMessage: 'Document Types' })}
+              </>
+            </MenuLink>
+            <MenuLink to='/market-segments' dataTest='navigation_menu_admin_market_segments'>
+              <>
+                <Disc size={22} />
+                {formatMessage({ id: 'navigation.marketSegments', defaultMessage: 'Market Segments' })}
+              </>
+            </MenuLink>
+            <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
+              <>
+                <Bell size={22} />
+                {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+              </>
+            </MenuLink>
+            <DropdownItem
+              icon={<Settings size={22} />}
+              text={formatMessage({ id: 'navigation.adminSettings', defaultMessage: 'Admin Settings' })}
               className={admin ? 'opened' : null}
               opened={admin}
               onClick={() => this.toggleOpened('admin')}
@@ -478,7 +536,7 @@ class Navigation extends Component {
         {(isAdmin || isEchoOperator) && (
           <>
             <DropdownItem
-              icon={<Hexagon size={22} />}
+              icon={<Archive size={22} />}
               text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
               className={operations ? 'opened' : null}
               opened={operations}
@@ -504,7 +562,7 @@ export default withAuth(
         activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
         activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
         activeWantedBoardFilter: getSafe(() => store.filter.wantedBoard.appliedFilter.filters.length > 0, false),
-        isEchoOperator: getSafe(() => store.auth.identity.roles, []).find(role => role.name === 'Echo Operator')
+        isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator')
       }),
       {
         triggerSystemSettingsModal,

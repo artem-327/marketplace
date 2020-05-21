@@ -24,6 +24,7 @@ import {
   deleteProductName
 } from '../../actions'
 import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
+import { getSafe } from '~/utils/functions'
 
 const initialFormValues = {
   casAlternativeNames: [{}]
@@ -113,14 +114,14 @@ class EditAltNamesCasProductsPopup extends React.Component {
   }
 
   render() {
-    const { closeEditPopup, currentTab, popupValues, altCasNamesRows, config, loading } = this.props
+    const { closeEditPopup, popupValues, altCasNamesRows, loading } = this.props
 
     const { initialState } = this.state
 
     return (
       <Modal closeIcon onClose={() => closeEditPopup()} open centered={false}>
         <Modal.Header>
-          <FormattedMessage id='global.edit' defaultMessage='Edit' /> {config.addEditText2}
+          <FormattedMessage id='global.edit' defaultMessage='Edit' /> {'Edit'}
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -262,13 +263,10 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  let cfg = state.admin.config[state.admin.currentTab.name]
   return {
-    config: cfg,
-    currentTab: state.admin.currentTab,
-    popupValues: state.admin.popupValues,
-    altCasNamesRows: state.admin.altCasNamesRows,
-    loading: state.admin.loading
+    popupValues: state.productsAdmin.popupValues,
+    altCasNamesRows: getSafe(() => state.productAdmin.altCasNamesRows, []),
+    loading: getSafe(() => state.productAdmin.loading, false)
   }
 }
 

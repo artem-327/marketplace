@@ -19,7 +19,8 @@ import {
   deleteUser,
   openRolesPopup,
   userSwitchEnableDisable,
-  resendWelcomeEmail
+  resendWelcomeEmail,
+  setPrimaryUser
 } from '../../actions'
 import Router from 'next/router'
 import { Checkbox, Popup, Label, List } from 'semantic-ui-react'
@@ -132,7 +133,8 @@ class UsersTable extends Component {
       datagrid,
       deleteUser,
       resendWelcomeEmail,
-      currentUserId
+      currentUserId,
+      setPrimaryUser
       // confirmMessage,
       // handleOpenConfirmPopup,
       // closeConfirmPopup,
@@ -182,7 +184,17 @@ class UsersTable extends Component {
                 const { value } = await resendWelcomeEmail(row.id)
               },
               hidden: row => !!row.lastLoginAt || currentUserId === row.id
-            }
+            },
+            {
+              text: <FormattedMessage
+                id='settings.user.setAsCompPrimUser'
+                defaultMessage='Set as Company Primary User'
+              />,
+              callback: async row => {
+                const { value } = await setPrimaryUser(this.props.currentCompanyId, row.id)
+              },
+              hidden: row => !row.isCompanyAdmin || this.props.currentCompanyId ===  null
+            },
           ]}
         />
       </React.Fragment>
@@ -198,7 +210,8 @@ const mapDispatchToProps = {
   closeConfirmPopup,
   deleteUser,
   userSwitchEnableDisable,
-  resendWelcomeEmail
+  resendWelcomeEmail,
+  setPrimaryUser
 }
 
 const userEnableDisableStatus = (r, currentUserId) => {
@@ -253,6 +266,7 @@ const mapStateToProps = (state, { datagrid }) => {
       id: user.id,
       allUserRoles: user.roles || [],
       userRoles: <ArrayToFirstItem values={user && user.roles && user.roles.length && user.roles.map(r => r.name)} />,
+      isCompanyAdmin: (user.roles || []).some(role => role.id === 2),
       switchEnable: userEnableDisableStatus(user, currentUserId),
       lastLoginAt: user.lastLoginAt ? moment(user.lastLoginAt).toDate().toLocaleString() : '',
       sellMarketSegments: getSafe(() => user.sellMarketSegments, []),
@@ -269,7 +283,8 @@ const mapStateToProps = (state, { datagrid }) => {
         ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
         : state.settings.tabsNames[0],
     loading: state.settings.loading,
-    roles: state.settings.roles
+    roles: state.settings.roles,
+    currentCompanyId: getSafe(() => state.auth.identity.company.id, null)
   }
 }
 

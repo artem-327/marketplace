@@ -27,26 +27,19 @@ export const initialState = {
   primaryBranchProvinces: [],
   mailingBranchProvinces: [],
   tabsNames: [
-    { name: 'CAS Products', id: 7 },
-    { name: 'Companies', id: 8 },
-    { name: 'Product Catalog', id: 12 },
     { name: 'Units of Measure', id: 1 },
     { name: 'Packaging Types', id: 2 },
     { name: 'Manufacturers', id: 3 },
     { name: 'Grades', id: 4 },
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
-    { name: 'NMFC Numbers', id: 14 },
-    { name: 'Document Types', id: 9 },
-    { name: 'Associations', id: 15 },
-    { name: 'Market Segments', id: 10 },
     { name: 'Users', id: 13 },
+    { name: 'NMFC Numbers', id: 14 },
+    { name: 'Associations', id: 15 },
     { name: 'Admin Settings', id: 11, hideHandler: true }
   ],
-
-  currentTab: { name: 'CAS Products', id: 7 },
+  currentTab: { name: 'Units of Measure', id: 1 },
   casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'CasProduct.chemicalName' },
-  companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'Company.name' },
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,
@@ -241,30 +234,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    /* DELETE COMPANY */
-
-    case AT.ADMIN_DELETE_COMPANIES_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-    case AT.ADMIN_DELETE_COMPANIES_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        companiesRows: state.companiesRows.filter(company => company.id !== payload)
-      }
-    }
-
-    case AT.ADMIN_DELETE_COMPANIES_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
     case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
       return {
         ...state,
@@ -333,39 +302,11 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_EDIT_ECHO_PRODUCT_CHANGE_TAB: {
-      return {
-        ...state,
-        editEchoProductEditTab: payload.editTab,
-        editEchoProductInitTrig: payload.force ^ state.editEchoProductInitTrig,
-        popupValues: payload.data,
-        ...(payload.data
-          ? {
-              currentAddForm: null,
-              currentEditForm: state.currentTab
-            }
-          : {
-              currentAddForm: state.currentTab,
-              currentEditForm: null
-            }),
-        currentEdit2Form: null,
-        currentAddDwolla: null
-      }
-    }
-
     case AT.ADMIN_DELETE_USER_PENDING:
-    case AT.ADMIN_GET_ECHO_PRODUCT_PENDING:
-    case AT.ADMIN_POST_ECHO_PRODUCT_PENDING:
-    case AT.ADMIN_PUT_ECHO_PRODUCT_PENDING:
     case AT.ADMIN_ADD_ATTACHMENT_PENDING:
     case AT.ADMIN_LINK_ATTACHMENT_PENDING:
     case AT.ADMIN_REMOVE_ATTACHMENT_PENDING:
     case AT.ADMIN_REMOVE_ATTACHMENT_LINK_PENDING:
-    case AT.ADMIN_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_PENDING:
-    case AT.ADMIN_POST_NEW_PRODUCT_NAME_PENDING:
-    case AT.ADMIN_UPDATE_PRODUCT_NAME_PENDING:
-    case AT.ADMIN_DELETE_PRODUCT_NAME_PENDING:
-    case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_PENDING:
     case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_PENDING:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_PENDING: {
       return {
@@ -389,22 +330,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         manufacturersRows: action.payload,
-        loading: false
-      }
-    }
-
-    case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_FULFILLED: {
-      return {
-        ...state,
-        altCasNamesRows: action.payload,
-        loading: false
-      }
-    }
-
-    case AT.ADMIN_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_FULFILLED: {
-      return {
-        ...state,
-        altEchoNamesRows: action.payload,
         loading: false
       }
     }
@@ -488,9 +413,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.ADMIN_DELETE_USER_FULFILLED:
-    case AT.ADMIN_GET_ECHO_PRODUCT_FULFILLED:
-    case AT.ADMIN_POST_ECHO_PRODUCT_FULFILLED:
-    case AT.ADMIN_PUT_ECHO_PRODUCT_FULFILLED:
     case AT.ADMIN_ADD_ATTACHMENT_FULFILLED:
     case AT.ADMIN_LINK_ATTACHMENT_FULFILLED:
     case AT.ADMIN_REMOVE_ATTACHMENT_FULFILLED:
@@ -502,44 +424,12 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.ADMIN_DELETE_USER_REJECTED:
-    case AT.ADMIN_GET_ECHO_PRODUCT_REJECTED:
-    case AT.ADMIN_POST_ECHO_PRODUCT_REJECTED:
-    case AT.ADMIN_PUT_ECHO_PRODUCT_REJECTED:
     case AT.ADMIN_ADD_ATTACHMENT_REJECTED:
     case AT.ADMIN_LINK_ATTACHMENT_REJECTED:
     case AT.ADMIN_REMOVE_ATTACHMENT_REJECTED:
     case AT.ADMIN_REMOVE_ATTACHMENT_LINK_REJECTED:
-    case AT.ADMIN_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_REJECTED:
-    case AT.ADMIN_POST_NEW_PRODUCT_NAME_REJECTED:
-    case AT.ADMIN_UPDATE_PRODUCT_NAME_REJECTED:
-    case AT.ADMIN_DELETE_PRODUCT_NAME_REJECTED:
-    case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_REJECTED:
     case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_REJECTED:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
-    /* CAS DELETE PRODUCT */
-
-    case AT.ADMIN_CAS_DELETE_PRODUCT_PENDING: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
-    case AT.ADMIN_CAS_DELETE_PRODUCT_FULFILLED: {
-      return {
-        ...state,
-        casProductsRows: state.casProductsRows.filter(row => row.id !== payload),
-        loading: false
-      }
-    }
-
-    case AT.ADMIN_CAS_DELETE_PRODUCT_REJECTED: {
       return {
         ...state,
         loading: false
@@ -666,24 +556,6 @@ export default function reducer(state = initialState, action) {
     //     })
     //   }
     // }
-
-    case AT.ADMIN_SEARCH_CAS_PRODUCT_FULFILLED: {
-      return {
-        ...state,
-        // searchedCasProducts: payload.concat(state.searchedCasProducts),
-        searchedCasProducts: uniqueArrayByKey(state.searchedCasProducts.concat(payload), 'id')
-      }
-      // return {
-      //   ...state,
-      //   searchedCasProducts: state.searchedCasProducts.map((list, listIndex) => {
-      //     if (listIndex === action.payload.index) {
-      //       return action.payload.data
-      //     } else {
-      //       return list
-      //     }
-      //   })
-      // }
-    }
 
     case AT.ADMIN_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
       const hazardClasses = action.payload.hazardClasses.map((hClass, id) => {

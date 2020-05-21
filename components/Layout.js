@@ -167,7 +167,8 @@ class Layout extends Component {
       toggleMenu,
       hasLogo,
       useCompanyLogo,
-      companyName
+      companyName,
+      isEchoOperator
     } = this.props
     let icon = Icon && <Icon name='user' />
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
@@ -216,7 +217,7 @@ class Layout extends Component {
             <MainTitle as='h1'>{title}</MainTitle>
 
             <Menu.Menu position='right' className='black'>
-              {auth && auth.identity && !auth.identity.isAdmin && (
+              {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && (
                 <>
                   <Menu.Item
                     onClick={() => Router.push('/marketplace/holds')}
@@ -374,7 +375,8 @@ const mapStateToProps = state => {
     hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),
     companyLogo: getSafe(() => state.businessTypes.companyLogo, null),
     useCompanyLogo: getSafe(() => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false),
-    companyName: getSafe(() => state.auth.identity.company.name, false)
+    companyName: getSafe(() => state.auth.identity.company.name, false),
+    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator')
   }
 }
 
