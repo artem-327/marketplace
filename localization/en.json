@@ -1745,6 +1745,7 @@
   "settings.user.disabled": "User disabled",
   "settings.user.enabled.clickToChange": "User enabled. Click to disable user.",
   "settings.user.disabled.clickToChange": "User disabled. Click to enable user.",
+  "settings.user.setAsCompPrimUser": "Set as Company Primary User",
   "settings.assignUserRoles": "Assign User Roles",
   "settings.editAlternativeNames": "Edit Alternative Names",
   "settings.editRoles": "Edit Roles",

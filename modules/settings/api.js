@@ -230,5 +230,8 @@ export default {
         'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
       }
     })
-  }
+  },
+  setPrimaryUser: (companyId, userId) =>
+    api.patch(`/prodex/api/companies/${companyId}/primary-user?userId=${userId}`)
+      .then(response => response.data)
 }

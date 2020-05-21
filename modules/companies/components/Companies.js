@@ -24,7 +24,7 @@ class Companies extends Component {
           <div style={{ padding: '20px 30px' }}>
             <TableHandlers />
           </div>
-          <div style={{ padding: '0 30px 20px 30px' }}>
+          <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
             <Table />
           </div>
         </Container>

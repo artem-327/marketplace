@@ -622,6 +622,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_SET_PRIMARY_USER_PENDING:
     case AT.DELETE_PRODUCT_PENDING:
     case AT.DELETE_USER_PENDING: {
       return {
@@ -630,14 +631,10 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_SET_PRIMARY_USER_FULFILLED:
     case AT.DELETE_PRODUCT_FULFILLED:
-    case AT.DELETE_USER_FULFILLED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
+    case AT.DELETE_USER_FULFILLED:
+    case AT.SETTINGS_SET_PRIMARY_USER_REJECTED:
     case AT.DELETE_PRODUCT_REJECTED:
     case AT.DELETE_USER_REJECTED: {
       return {
