@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { Header, Modal, Grid, Icon, Step, ModalContent, Button } from 'semantic-ui-react'
+import { Header, Modal, Grid, Icon, Step, ModalContent, Button, Checkbox } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/dist/client/router'
 
@@ -15,7 +15,8 @@ import {
   postImportEchoProductCSV,
   postImportProductOfferCSV,
   handleSaveMapCSV,
-  postImportCompaniesCSV
+  postImportCompaniesCSV,
+  changeCsvHeader
 } from '../../actions'
 
 import Upload from './Steps/UploadCSV'
@@ -94,7 +95,8 @@ class ProductImportPopup extends Component {
       closeImportPopupCancel,
       intl: { formatMessage },
       csvImportError,
-      reloadFilter
+      reloadFilter,
+      csvWithoutHeader
     } = this.props
 
     const { currentStep, isFinishUpload, isFinishMap, isFinishPreview } = this.state
@@ -142,6 +144,17 @@ class ProductImportPopup extends Component {
               </Step.Content>
             </Step>
           </Step.Group>
+
+          <Checkbox
+            label={formatMessage({
+              id: 'import.CSVwithoutHeader',
+              defaultMessage: 'CSV without header (Column Name)?'
+            })}
+            name='csvWithoutHeader'
+            inputProps={{ 'data-test': 'import_checkbox_csv_without_header' }}
+            checked={csvWithoutHeader}
+            onChange={() => this.props.changeCsvHeader()}
+          />
         </Modal.Header>
         <StyledModal>{this.steps[currentStep]}</StyledModal>
         <Modal.Actions>
@@ -277,7 +290,8 @@ const mapDispatchToProps = {
   postImportEchoProductCSV,
   postImportProductOfferCSV,
   handleSaveMapCSV,
-  postImportCompaniesCSV
+  postImportCompaniesCSV,
+  changeCsvHeader
 }
 
 const mapStateToProps = state => {
@@ -299,7 +313,8 @@ const mapStateToProps = state => {
         productsFilter: state.settings.productsFilter
       },
       value: state.settings.filterValue
-    }
+    },
+    csvWithoutHeader: state.settings.csvWithoutHeader
   }
 }
 

@@ -2330,5 +2330,6 @@
   "documentTypes.title": "Document Types",
   "marketSegments.title": "Market Segments",
   "adminSettings.title": "Admin Settings",
-  "confirm.deleteClientCompany": "Delete Client Company"
+  "confirm.deleteClientCompany": "Delete Client Company",
+  "import.CSVwithoutHeader": "CSV without header (Column Name)?"
 }

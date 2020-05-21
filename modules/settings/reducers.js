@@ -122,7 +122,8 @@ export const initialState = {
   tabClicked: false,
   isOpenSidebar: false,
   openTab: 0,
-  documentsOwner: []
+  documentsOwner: [],
+  csvWithoutHeader: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1466,6 +1467,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         documentsOwner: action.payload
+      }
+    }
+
+    case AT.CHANGE_CSV_HEADER: {
+      return {
+        ...state,
+        csvWithoutHeader: !state.csvWithoutHeader
       }
     }
 
