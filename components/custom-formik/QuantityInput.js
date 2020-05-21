@@ -18,6 +18,19 @@ export const QuantityWrapper = styled.div`
     position: relative;
     > .field {
       margin: 0 !important;
+      
+      // Chrome, Safari, Edge, Opera
+      input[type=number]::-webkit-outer-spin-button,
+      input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      // Firefox
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+      
       .ui.input input {
         padding-right: 47px;
         background-color: #fdfdfd;
