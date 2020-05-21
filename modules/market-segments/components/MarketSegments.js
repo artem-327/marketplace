@@ -21,7 +21,7 @@ class MarketSegments extends Component {
           <div style={{ padding: '20px 30px' }}>
             <TableHandler />
           </div>
-          <div style={{ padding: '0 30px 20px 30px' }}>
+          <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
             {this.props.currentEditForm && <EditPopup1Parameter />}
             {this.props.currentAddForm && <AddNewPopup1Parameter />}
             <Table />
