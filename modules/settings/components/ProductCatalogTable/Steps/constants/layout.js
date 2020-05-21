@@ -47,6 +47,16 @@ export const SmallerTableCell = styled(Table.Cell)`
     }
   }
 
+  &.cols4 {
+    width: calc((88vw - 404px) / 3);
+    max-width: calc(537px / 3);
+
+    > div {
+      width: calc(((88vw - 404px) / 3) - 25px);
+      max-width: calc((537px / 3) - 24px);
+    }
+  }
+
   @media (max-width: 1919px) {
     max-width: 487px;
 
@@ -65,6 +75,14 @@ export const SmallerTableCell = styled(Table.Cell)`
     }
 
     &.cols3 {
+      max-width: calc(487px / 3);
+
+      > div {
+        max-width: calc((487px / 3) - 24px);
+      }
+    }
+
+    &.cols4 {
       max-width: calc(487px / 3);
 
       > div {
@@ -97,13 +115,21 @@ export const SmallerTableCell = styled(Table.Cell)`
         max-width: calc((447px / 3) - 24px);
       }
     }
+
+    &.cols4 {
+      max-width: calc(447px / 3);
+
+      > div {
+        max-width: calc((447px / 3) - 24px);
+      }
+    }
   }
 
   @media (max-width: 767px) {
     &,
     &.cols1,
     &.cols2,
-    &.cols3 {
+    &.cols3 &.cols4 {
       width: 100%;
       max-width: 100%;
 

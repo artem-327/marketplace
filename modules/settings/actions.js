@@ -1201,3 +1201,9 @@ export function setPrimaryUser(companyId, userId) {
     payload: api.setPrimaryUser(companyId, userId)
   }
 }
+
+export function changeCsvHeader() {
+  return {
+    type: AT.CHANGE_CSV_HEADER
+  }
+}

@@ -70,7 +70,7 @@ class Preview extends Component {
             return prev
           },
           {
-            headerLine: true,
+            headerLine: !this.props.csvWithoutHeader,
             mapName: this.props.mapName || 'Uno'
           }
         )
@@ -187,7 +187,8 @@ const mapStateToProps = state => {
     CSV: state.settings.CSV,
     isSaveMapCSV: state.settings.isSaveMapCSV,
     mapName: state.settings.mapName,
-    selectedSavedMap: state.settings.selectedSavedMap
+    selectedSavedMap: state.settings.selectedSavedMap,
+    csvWithoutHeader: state.settings.csvWithoutHeader
   }
 }
 
