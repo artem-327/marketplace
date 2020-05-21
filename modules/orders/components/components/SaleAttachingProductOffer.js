@@ -108,7 +108,7 @@ class SaleAttachingProductOffer extends Component {
         if (!item.attachments.length) return
         else
           item.attachments.forEach((attachment, index) =>
-            this.setFieldValue(`tab[${tabIndex}].groupedOffer[0].attachments[${index}]`, {
+            this.setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].attachments[0]`, {
               id: attachment.id,
               name: attachment.name,
               linked: true,
@@ -180,36 +180,39 @@ class SaleAttachingProductOffer extends Component {
   }
 
   componentWillUnmount() {
-    this.props.clearGroupedProductOffer()
+    try {
+      this.props.getSaleOrder(this.props.orderId)
+      this.props.clearGroupedProductOffer()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   linkAttachment = async (orderItemId, files, setFieldValue, index) => {
     try {
       const response = await this.props.addAttachment(files[0], 1, {})
-      const query = {
-        attachmentId: response.value.data.id,
-        orderItemId: orderItemId
-      }
-      await this.props.linkAttachmentToOrderItem(query)
-
       setFieldValue(`tab[${this.state.activeTab}].groupedOffer[${index}].attachments[0]`, {
         id: response.value.data.id,
         name: response.value.data.name,
         linked: true,
         isToOrderItem: true
       })
+
+      const query = {
+        attachmentId: response.value.data.id,
+        orderItemId: orderItemId
+      }
+      await this.props.linkAttachmentToOrderItem(query)
     } catch (error) {
       console.error(error)
     }
   }
 
-  removeAttachment = (offer, file, setFieldValue, index) => {
-    setFieldValue(`tab[${this.state.activeTab}].groupedOffer[${index}].attachments`, [])
+  removeAttachment = (orderItemId, file) => {
     const query = {
       attachmentId: file.id,
-      orderItemId: offer.id
+      orderItemId: orderItemId
     }
-
     this.props.removeLinkAttachmentToOrderItem(query)
   }
 
@@ -389,7 +392,7 @@ class SaleAttachingProductOffer extends Component {
                           <UploadAttachment
                             {...this.props}
                             removeOrderItem={file => {
-                              this.removeAttachment(offer, file, setFieldValue, index)
+                              this.removeAttachment(this.props.orderItemsId[tabIndex], file)
                             }}
                             attachments={getSafe(
                               () => values.tab[tabIndex].groupedOffer[index].attachments,
