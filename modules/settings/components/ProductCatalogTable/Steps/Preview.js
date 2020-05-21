@@ -70,7 +70,7 @@ class Preview extends Component {
             return prev
           },
           {
-            headerLine: !this.props.csvWithoutHeader,
+            headerLine: true,
             mapName: this.props.mapName || 'Uno'
           }
         )
