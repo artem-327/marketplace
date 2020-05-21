@@ -101,9 +101,21 @@ class SaleAttachingProductOffer extends Component {
 
   async componentDidMount() {
     this.setState({ loadingGroupedProductOffer: true })
-    const { getGroupedProductOffers, orderId, orderItemsId } = this.props
+    const { getGroupedProductOffers, orderId, orderItemsId, orderItems } = this.props
     try {
       await getGroupedProductOffers(orderId, orderItemsId)
+      getSafe(() => orderItems, []).forEach((item, tabIndex) => {
+        if (!item.attachments.length) return
+        else
+          item.attachments.forEach((attachment, index) =>
+            this.setFieldValue(`tab[${tabIndex}].groupedOffer[0].attachments[${index}]`, {
+              id: attachment.id,
+              name: attachment.name,
+              linked: true,
+              isToOrderItem: true
+            })
+          )
+      })
     } catch (error) {
       console.error(error)
     } finally {
@@ -555,7 +567,6 @@ class SaleAttachingProductOffer extends Component {
                     }
                   })
                 }
-
                 // confirm to assign when missing attachment(s) for assigned lot(s)
                 if (missingFile) {
                   confirm(
