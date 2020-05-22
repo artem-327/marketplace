@@ -20,7 +20,7 @@ class Popup extends Component {
     if (values.primaryUser) requestBody.primaryUser = values.primaryUser
     if (values.mailingBranch) requestBody.mailingBranch = values.mailingBranch
 
-    return new Promise(async (resolve, _reject) => {
+    return new Promise(async (resolve, reject) => {
       const { updateClientCompany, createClientCompany } = this.props
       let data = null
       try {
@@ -28,7 +28,7 @@ class Popup extends Component {
         else data = await createClientCompany(requestBody)
         resolve(data)
       } catch (error) {
-        _reject(error)
+        reject(error)
       }
     })
   }
