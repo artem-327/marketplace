@@ -129,7 +129,8 @@ export const SmallerTableCell = styled(Table.Cell)`
     &,
     &.cols1,
     &.cols2,
-    &.cols3 &.cols4 {
+    &.cols3,
+    &.cols4 {
       width: 100%;
       max-width: 100%;
 
