@@ -25,6 +25,8 @@ context("Echo Product CRUD", () => {
     })
 
     it("Creates a Echo Product", () => {
+        cy.viewport(2000, 3000)
+
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'echo-products', filter).then(itemId => {
                 if (itemId != null)

@@ -16,7 +16,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.openSettings()
         cy.contains("Bank Accounts").click()
 
-        cy.wait("@accountsLoading")
+        cy.wait("@accountsLoading",{timeout: 100000})
         cy.waitForUI()
         cy.wait(10000)
     })

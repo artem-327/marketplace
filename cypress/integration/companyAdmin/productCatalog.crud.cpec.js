@@ -23,6 +23,7 @@ context("Company Product Catalog CRUD", () => {
     })
 
     it("Creates a product", () => {
+        cy.viewport(2000, 3000)
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'company-products', filter).then(itemId => {
                 if (itemId != null)
@@ -36,6 +37,16 @@ context("Company Product Catalog CRUD", () => {
         cy.enterText("#field_input_packagingSize", "70")
         cy.enterText("#field_input_packageWeight", "5")
 
+
+        cy.get("div[id='field_dropdown_nmfcNumber']")
+            .children("input")
+            .type("15", {force: true})
+            .should("have.value","15")
+
+        cy.get("div[id='field_dropdown_nmfcNumber']").within(() => {
+            cy.get("div[role='option']").eq(0).click({force: true})
+        })
+
         cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").click()
         cy.contains("kilograms").click()
 
@@ -47,14 +58,12 @@ context("Company Product Catalog CRUD", () => {
             cy.contains("kilograms").click()
         })
 
-        cy.selectFromDropdown("div[id='field_dropdown_nmfcNumber']", "15")
-
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").click()
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").within(() => {
             cy.contains("60").click()
         })
 
-        cy.clickSave()
+        cy.get("[data-test='settings_product_popup_submit_btn']")
 
         cy.reload()
         cy.wait("@productLoading")

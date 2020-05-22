@@ -19,6 +19,7 @@ context("Prodex User CRUD", () => {
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.openSettings()
         cy.contains("Users").click()
+        cy.waitForUI()
         cy.wait("@usersLogin")
     })
 
