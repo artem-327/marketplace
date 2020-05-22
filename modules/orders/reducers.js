@@ -431,7 +431,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loadingGroupedProductOffer: false,
-        groupedProductOffers: [action.payload.data].concat(state.groupedProductOffers)
+        groupedProductOffers: action.payload
       }
     }
     case AT.GET_GROUPED_PRODUCT_OFFERS_REJECTED: {

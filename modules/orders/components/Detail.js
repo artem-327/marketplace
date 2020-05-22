@@ -1088,7 +1088,7 @@ class Detail extends Component {
                   {openedSaleReturnShipping ? <SaleReturnShipping /> : null}
                   {openedSaleReviewCreditRequest ? <SaleReviewCreditRequest /> : null}
                   {openedPurchaseOrderShipping ? <PurchaseOrderShipping /> : null}
-                  {opendSaleAttachingProductOffer ? <SaleAttachingProductOffer /> : null}
+                  {opendSaleAttachingProductOffer ? <SaleAttachingProductOffer orderItems={order.orderItems} /> : null}
                 </>
               ) : null}
               <Divider hidden />
