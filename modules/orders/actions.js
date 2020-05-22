@@ -228,12 +228,27 @@ export function applyDatagridFilter(filter) {
   }
 }
 
-export function getGroupedProductOffers(orderId, orderItemId) {
-  return {
-    type: AT.GET_GROUPED_PRODUCT_OFFERS,
-    payload: Api.getGroupedProductOffers(orderId, orderItemId)
+export const getGroupedProductOffers = (orderId, orderItemsId) => ({
+  type: AT.GET_GROUPED_PRODUCT_OFFERS,
+  async payload() {
+    let res = []
+    if (orderItemsId && orderItemsId.length > 1) {
+      async function asyncForEach(array, callback) {
+        for (let index = 0; index < array.length; index++) {
+          await callback(array[index], index, array)
+        }
+      }
+      await asyncForEach(orderItemsId, async (id, index) => {
+        const result = await Api.getGroupedProductOffers(orderId, id)
+        await res.push(result.data)
+      })
+    } else if (orderId && orderItemsId && orderItemsId.length === 1) {
+      const result = await Api.getGroupedProductOffers(orderId, orderItemsId[0])
+      await res.push(result.data)
+    }
+    return res
   }
-}
+})
 
 export function patchAssignProductOffers(orderId, orderItemId, request) {
   return {

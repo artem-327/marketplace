@@ -95,16 +95,31 @@ class SaleAttachingProductOffer extends Component {
     available: [],
     poLots: [],
     sumPkgTotal: [],
-    totalPkgAmount: 0
+    totalPkgAmount: 0,
+    loadingGroupedProductOffer: false
   }
 
-  componentDidMount() {
-    const { getGroupedProductOffers, orderId, orderItemsId } = this.props
-
-    if (orderItemsId && orderItemsId.length > 1) {
-      orderItemsId.forEach(id => getGroupedProductOffers(orderId, id))
-    } else if (orderId && orderItemsId && orderItemsId.length === 1) {
-      getGroupedProductOffers(orderId, orderItemsId[0])
+  async componentDidMount() {
+    this.setState({ loadingGroupedProductOffer: true })
+    const { getGroupedProductOffers, orderId, orderItemsId, orderItems } = this.props
+    try {
+      await getGroupedProductOffers(orderId, orderItemsId)
+      getSafe(() => orderItems, []).forEach((item, tabIndex) => {
+        if (!item.attachments.length) return
+        else
+          item.attachments.forEach((attachment, index) =>
+            this.setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].attachments[0]`, {
+              id: attachment.id,
+              name: attachment.name,
+              linked: true,
+              isToOrderItem: true
+            })
+          )
+      })
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.setState({ loadingGroupedProductOffer: false })
     }
   }
 
@@ -165,36 +180,39 @@ class SaleAttachingProductOffer extends Component {
   }
 
   componentWillUnmount() {
-    this.props.clearGroupedProductOffer()
+    try {
+      this.props.getSaleOrder(this.props.orderId)
+      this.props.clearGroupedProductOffer()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   linkAttachment = async (orderItemId, files, setFieldValue, index) => {
     try {
       const response = await this.props.addAttachment(files[0], 1, {})
-      const query = {
-        attachmentId: response.value.data.id,
-        orderItemId: orderItemId
-      }
-      await this.props.linkAttachmentToOrderItem(query)
-
       setFieldValue(`tab[${this.state.activeTab}].groupedOffer[${index}].attachments[0]`, {
         id: response.value.data.id,
         name: response.value.data.name,
         linked: true,
         isToOrderItem: true
       })
+
+      const query = {
+        attachmentId: response.value.data.id,
+        orderItemId: orderItemId
+      }
+      await this.props.linkAttachmentToOrderItem(query)
     } catch (error) {
       console.error(error)
     }
   }
 
-  removeAttachment = (offer, file, setFieldValue, index) => {
-    setFieldValue(`tab[${this.state.activeTab}].groupedOffer[${index}].attachments`, [])
+  removeAttachment = (orderItemId, file) => {
     const query = {
       attachmentId: file.id,
-      orderItemId: offer.id
+      orderItemId: orderItemId
     }
-
     this.props.removeLinkAttachmentToOrderItem(query)
   }
 
@@ -374,7 +392,7 @@ class SaleAttachingProductOffer extends Component {
                           <UploadAttachment
                             {...this.props}
                             removeOrderItem={file => {
-                              this.removeAttachment(offer, file, setFieldValue, index)
+                              this.removeAttachment(this.props.orderItemsId[tabIndex], file)
                             }}
                             attachments={getSafe(
                               () => values.tab[tabIndex].groupedOffer[index].attachments,
@@ -435,16 +453,14 @@ class SaleAttachingProductOffer extends Component {
     const {
       intl: { formatMessage },
       closePopup,
-      loadingGroupedProductOffer,
       groupedProductOffers,
       toastManager,
       orderId,
       orderItemsId
     } = this.props
-
     return (
       <Modal closeIcon onClose={() => closePopup()} open={true}>
-        <Dimmer active={loadingGroupedProductOffer} inverted>
+        <Dimmer active={this.state.loadingGroupedProductOffer} inverted>
           <Loader />
         </Dimmer>
         <Modal.Header>
@@ -554,7 +570,6 @@ class SaleAttachingProductOffer extends Component {
                     }
                   })
                 }
-
                 // confirm to assign when missing attachment(s) for assigned lot(s)
                 if (missingFile) {
                   confirm(
@@ -689,18 +704,22 @@ function mapStateToProps(state) {
       }
     })
   }
-
+  function myFunc(total, num) {
+    return total + num
+  }
   return {
     orderId: getSafe(() => detail.id, null),
     orderItemsId: getSafe(() => detail.orderItems.map(item => item.id), []),
     loadingGroupedProductOffer: getSafe(() => state.orders.loadingGroupedProductOffer, false),
     groupedProductOffers: getSafe(() => state.orders.groupedProductOffers, false),
-    available: getSafe(() => state.orders.groupedProductOffers, [])
-      ? state.orders.groupedProductOffers.map(offer => offer.pkgAvailable)
-      : [0],
-    allocated: getSafe(() => state.orders.groupedProductOffers, [])
-      ? state.orders.groupedProductOffers.map(offer => offer.pkgAllocated)
-      : [0],
+    available: getSafe(() => state.orders.groupedProductOffers, []).map(offer => {
+      if (!Array.isArray(offer)) return
+      return offer.reduce((total, pkg) => total + pkg.pkgAvailable)
+    }),
+    allocated: getSafe(() => state.orders.groupedProductOffers, []).map(offer => {
+      if (!Array.isArray(offer)) return
+      return offer.reduce((total, pkg) => total + pkg.pkgAllocated)
+    }),
     productOffersPkgAmount
   }
 }
