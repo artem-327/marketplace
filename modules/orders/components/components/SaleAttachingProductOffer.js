@@ -103,7 +103,7 @@ class SaleAttachingProductOffer extends Component {
     this.setState({ loadingGroupedProductOffer: true })
     const { getGroupedProductOffers, orderId, orderItemsId, orderItems } = this.props
     try {
-      await getGroupedProductOffers(orderId, orderItemsId)
+      if (orderItemsId.length) await getGroupedProductOffers(orderId, orderItemsId)
       getSafe(() => orderItems, []).forEach((item, tabIndex) => {
         if (!item.attachments.length) return
         else
