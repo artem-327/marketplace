@@ -690,7 +690,7 @@ class SaleAttachingProductOffer extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, { orderItems }) {
   const { detail } = state.orders
 
   const productOffersPkgAmount = new Map()
@@ -709,7 +709,11 @@ function mapStateToProps(state) {
   }
   return {
     orderId: getSafe(() => detail.id, null),
-    orderItemsId: getSafe(() => detail.orderItems.map(item => item.id), []),
+    orderItemsId: orderItems
+      .filter(item => {
+        if (item.productOffers.some(product => product.virtual)) return item.id
+      })
+      .map(orderItem => orderItem.id),
     loadingGroupedProductOffer: getSafe(() => state.orders.loadingGroupedProductOffer, false),
     groupedProductOffers: getSafe(() => state.orders.groupedProductOffers, false),
     available: getSafe(() => state.orders.groupedProductOffers, []).map(offer => {
