@@ -6,19 +6,22 @@ import { updateClientCompany, createClientCompany, closePopup } from '~/modules/
 class Popup extends Component {
   onSubmit = (values, isEdit) => {
     const requestBody = {}
-    if (values.associations) requestBody.associations = values.associations
-    if (values.businessType) requestBody.businessType = values.businessType
-    if (values.cin) requestBody.cin = values.cin
-    if (values.dba) requestBody.dba = values.dba
-    if (values.dunsNumber) requestBody.dunsNumber = values.dunsNumber
-    if (values.nacdMember) requestBody.nacdMember = values.nacdMember
-    if (values.name) requestBody.name = values.name
-    if (values.phone) requestBody.phone = values.phone
-    if (values.tin) requestBody.tin = values.tin
-    if (values.website) requestBody.website = values.website
-    if (values.primaryBranch) requestBody.primaryBranch = values.primaryBranch
-    if (values.primaryUser) requestBody.primaryUser = values.primaryUser
-    if (values.mailingBranch) requestBody.mailingBranch = values.mailingBranch
+    const propsToInclude = [
+      'associations',
+      'businessType',
+      'cin',
+      'dba',
+      'dunsNumber',
+      'nacdMember',
+      'name',
+      'phone',
+      'tin',
+      'website',
+      'primaryBranch',
+      'primaryUser',
+      'mailingBranch'
+    ]
+    propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
 
     return new Promise(async (resolve, reject) => {
       const { updateClientCompany, createClientCompany } = this.props
