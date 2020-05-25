@@ -155,7 +155,7 @@ class TablesHandlers extends Component {
 
   handleFiltersValue = value => {
     const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    if (Datagrid.isReady()) Datagrid.setSearch(value, true, 'pageFilters')
     else handleFiltersValue(value)
   }
 
@@ -180,6 +180,13 @@ class TablesHandlers extends Component {
       documentType: value
     }
     this.handleFiltersValue(filter)
+  }
+
+  handleFilterChangeMappedUnmapped = (e, { value }) => {
+    this.props.handleProductCatalogUnmappedValue(value)
+
+
+
   }
 
   saveRulesBroadcast = async (model, toastManager) => {
@@ -260,15 +267,34 @@ class TablesHandlers extends Component {
         )}
 
         {currentTab.type === 'products' && (
-          <GridColumn computer={2} tablet={3}>
-            <Checkbox
-              label={formatMessage({
-                id: 'settings.tables.products.unmappedOnly',
-                defaultMessage: 'Unmapped only'
+          <GridColumn floated='left' computer={3} tablet={3}>
+            <Dropdown
+              placeholder={formatMessage({
+                id: 'operations.tables.companyProductCatalog.MappedText',
+                defaultMessage: 'Select mapped/unmapped only'
               })}
-              defaultChecked={productCatalogUnmappedValue}
-              onChange={(e, { checked }) => Datagrid.setQuery({ unmappedOnly: checked })}
-              data-test='settings_dwolla_unmapped_only_chckb'
+              fluid
+              selection
+              options={[
+                {
+                  key: 0,
+                  text: formatMessage({ id: 'operations.noSelection', defaultMessage: 'All' }),
+                  value: 'ALL'
+                },
+                {
+                  key: 1,
+                  text: formatMessage({ id: 'operations.unmapped', defaultMessage: 'Unmapped Only' }),
+                  value: 'UNMAPPED'
+                },
+                {
+                  key: 2,
+                  text: formatMessage({ id: 'operations.mappedOnly', defaultMessage: 'Mapped Only' }),
+                  value: 'MAPPED'
+                }
+              ]}
+              value={productCatalogUnmappedValue}
+              onChange={this.handleFilterChangeMappedUnmapped}
+              data-test='settings_dwolla_unmapped_only_drpdn'
             />
           </GridColumn>
         )}

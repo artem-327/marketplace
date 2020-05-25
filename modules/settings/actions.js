@@ -354,13 +354,13 @@ export function handleFiltersValue(value) {
   }
 }
 
-export function handleProductCatalogUnmappedValue(checked, props) {
+export function handleProductCatalogUnmappedValue(value) {
   return async dispatch => {
     dispatch({
       type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
-      payload: checked
+      payload: value
     })
-    dispatch(handleFiltersValue({ ...props, productCatalogUnmappedValue: checked }, props.filterValue))
+    // ! !dispatch(handleFiltersValue({ ...props, productCatalogUnmappedValue: value }, props.filterValue))
   }
 }
 //////////////////////

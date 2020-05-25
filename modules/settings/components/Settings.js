@@ -348,7 +348,7 @@ class Settings extends Component {
   }
 
   getApiConfig = () => {
-    const { currentTab, isProductCatalogAdmin, isUserAdmin } = this.props
+    const { currentTab, productCatalogUnmappedValue } = this.props
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
       users: {
@@ -429,7 +429,7 @@ class Settings extends Component {
         }
       },
       products: {
-        url: `/prodex/api/company-products/datagrid`,
+        url: `/prodex/api/company-products/datagrid?type=${productCatalogUnmappedValue}`,
         searchToFilter: v =>
           v
             ? [
@@ -515,9 +515,11 @@ class Settings extends Component {
   render() {
     const { currentTab, tutorialCompleted } = this.props
 
+    const preserveFilters = currentTab.type === 'products'
+
     return (
       !this.state.wrongUrl && (
-        <DatagridProvider apiConfig={this.getApiConfig()}>
+        <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
           <Container fluid className='flex stretched'>
             {!tutorialCompleted && <Tutorial />}
             <Container fluid style={{ padding: '0 18px' }}>
@@ -544,7 +546,8 @@ const mapStateToProps = ({ settings, auth }) => {
     isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
-    documentsOwner: getSafe(() => settings.documentsOwner, [])
+    documentsOwner: getSafe(() => settings.documentsOwner, []),
+    productCatalogUnmappedValue: settings.productCatalogUnmappedValue
   }
 }
 
