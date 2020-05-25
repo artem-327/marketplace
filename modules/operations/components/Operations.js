@@ -72,7 +72,7 @@ class Operations extends Component {
           v && v.filterValue ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.filterValue}%`] }] : []
       },
       'company-product-catalog': {
-        url: `/prodex/api/company-products/admin/datagrid?unmappedOnly=${companyProductUnmappedOnly}`,
+        url: `/prodex/api/company-products/admin/datagrid?type=${companyProductUnmappedOnly}`,
         searchToFilter: v => {
           let filter = { or: [], and: [] }
 
