@@ -287,7 +287,7 @@ class WantedBoard extends Component {
             </Grid.Row>
           </Grid>
         </ControlPanel>
-        <div className='flex stretched' style={{ padding: '10px 0' }}>
+        <div className='flex stretched' style={{ padding: '0 30px 20px 30px' }}>
           <ProdexGrid
             tableName='wanted_board_grid'
             {...datagrid.tableProps}
