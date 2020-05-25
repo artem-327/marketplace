@@ -175,12 +175,17 @@ class TablesHandlers extends Component {
                   {
                     key: 0,
                     text: formatMessage({ id: 'operations.noSelection', defaultMessage: 'All' }),
-                    value: false
+                    value: 'ALL'
                   },
                   {
                     key: 1,
                     text: formatMessage({ id: 'operations.unmapped', defaultMessage: 'Unmapped Only' }),
-                    value: true
+                    value: 'UNMAPPED'
+                  },
+                  {
+                    key: 2,
+                    text: formatMessage({ id: 'operations.mappedOnly', defaultMessage: 'Mapped Only' }),
+                    value: 'MAPPED'
                   }
                 ]}
                 value={companyProductUnmappedOnly}

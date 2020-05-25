@@ -1725,6 +1725,7 @@
   "operations.owner": "Owner",
   "operations.mapped": "Mapped",
   "operations.unmapped": "Unmapped Only",
+  "operations.mappedOnly": "Mapped Only",
   "operations.noSelection": "All",
   "operations.productOffersCnt": "Product Offers #",
   "operations.productName": "Product Name",
