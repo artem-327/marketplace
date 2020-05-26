@@ -15,7 +15,7 @@ import { FileText } from 'react-feather'
 import styled from 'styled-components'
 import { Popup } from 'semantic-ui-react'
 
-const UnpublishedIcon = styled(FileText)`
+const FileTextIcon = styled(FileText)`
   display: block;
   width: 20px;
   height: 20px;
@@ -34,8 +34,8 @@ class ProductCatalogTable extends Component {
   state = {
     columns: [
       {
-        name: 'notPublishedStatus',
-        title: <UnpublishedIcon className='grey' />,
+        name: 'productStatus',
+        title: <FileTextIcon className='grey' />,
         width: 40,
         align: 'center'
       },
@@ -203,6 +203,56 @@ class ProductCatalogTable extends Component {
   }
 }
 
+const getProductStatus = (product) => {
+
+  let status = product.echoProduct
+    ?
+    ( !product.echoProduct.isPublished
+        ? 'Unpublished'
+        : ''
+    )
+    : 'Unmapped'
+
+  let popupText = null
+
+  switch (status) {
+    case 'Unpublished': {
+      popupText = (
+        <FormattedMessage
+          id='global.notPublished'
+          defaultMessage='This echo product is not published and will not show on the Marketplace.'
+        />
+      )
+      break
+    }
+    case 'Unmapped': {
+      popupText = (
+        <FormattedMessage
+          id='settings.product.unmapped'
+          defaultMessage='This product is not mapped and will not show on the Marketplace.'
+        />
+      )
+      break
+    }
+  }
+
+  if (popupText) {
+    return (
+      <Popup
+        size='small'
+        header={popupText}
+        trigger={
+          <div>
+            <FileTextIcon />
+          </div>
+        } // <div> has to be there otherwise popup will be not shown
+      />
+    )
+  } else {
+    return null
+  }
+}
+
 const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(product => {
@@ -227,7 +277,8 @@ const mapStateToProps = (state, { datagrid }) => {
         externalProductName: getSafe(() => product.echoProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
         packagingUnit: getSafe(() => product.packagingUnit.id),
-        notPublishedStatus: product.echoProduct && !product.echoProduct.isPublished
+        productStatus: getProductStatus(product),
+        productStatusTmp: product.echoProduct && !product.echoProduct.isPublished
           ? (
             <Popup
               size='small'
@@ -238,7 +289,7 @@ const mapStateToProps = (state, { datagrid }) => {
                 />}
               trigger={
                 <div>
-                  <UnpublishedIcon />
+                  <FileTextIcon />
                 </div>
               } // <div> has to be there otherwise popup will be not shown
             />
