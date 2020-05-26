@@ -132,9 +132,12 @@ export default class AddressForm extends Component {
   getOptions = values => {
     let { addressDatalistData } = this.props
     try {
-      let { address } = this.getValues()
+      let value = this.getValues()
       return addressDatalistData.map(a => {
-        if (a.streetAddress.startsWith(address.streetAddress) && a.city.startsWith(address.city)) {
+        if (
+          a.streetAddress.startsWith(getSafe(() => value.address.streetAddress, '')) &&
+          a.city.startsWith(getSafe(() => value.address.city, ''))
+        ) {
           let element =
             a.streetAddress +
             ', ' +
@@ -218,7 +221,8 @@ export default class AddressForm extends Component {
                 <>
                   <FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />
                   {required && <Required />}
-                </>}
+                </>
+              }
               name={fields.streetAddress}
             />
 
@@ -251,8 +255,9 @@ export default class AddressForm extends Component {
               initialZipCodes={initialZipCodes}
               data-test='address_form_zip_drpdn'
             />
-              <Dropdown
-                label={<Popup
+            <Dropdown
+              label={
+                <Popup
                   trigger={
                     <label>
                       <FormattedMessage id='global.country' defaultMessage='Country' />
@@ -261,34 +266,34 @@ export default class AddressForm extends Component {
                   }
                   disabled={countryPopup.disabled}
                   content={countryPopup.content}
-                />}
-                name={fields.country}
-                options={countries.map(country => ({
-                  key: country.id,
-                  text: country.name,
-                  value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
-                }))}
-                inputProps={{
-                  loading: countriesLoading,
-                  onFocus: e => (e.target.autocomplete = null),
-                  'data-test': 'address_form_country_drpdn',
-                  search: true,
-                  onChange: async (e, data) => {
-                    let values = JSON.parse(data.value)
-                    // let fieldName = prefix ? `${prefix.province}` : 'address.province'
+                />
+              }
+              name={fields.country}
+              options={countries.map(country => ({
+                key: country.id,
+                text: country.name,
+                value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
+              }))}
+              inputProps={{
+                loading: countriesLoading,
+                onFocus: e => (e.target.autocomplete = null),
+                'data-test': 'address_form_country_drpdn',
+                search: true,
+                onChange: async (e, data) => {
+                  let values = JSON.parse(data.value)
+                  // let fieldName = prefix ? `${prefix.province}` : 'address.province'
 
-                    setFieldValue(fields[this.props.province.name], '')
+                  setFieldValue(fields[this.props.province.name], '')
 
-                    // this.handleChange(e, data)
-                    this.setState({ hasProvinces: values.hasProvinces })
-                    if (values.hasProvinces) {
-                      this.fetchProvinces(values.countryId, values.hasProvinces)
-                    }
-                  },
-                  ...additionalCountryInputProps
-                }}
-              />
-           
+                  // this.handleChange(e, data)
+                  this.setState({ hasProvinces: values.hasProvinces })
+                  if (values.hasProvinces) {
+                    this.fetchProvinces(values.countryId, values.hasProvinces)
+                  }
+                },
+                ...additionalCountryInputProps
+              }}
+            />
 
             <Dropdown
               label={
@@ -296,7 +301,7 @@ export default class AddressForm extends Component {
                   <FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />
                   {required && hasProvinces && <Required />}
                 </>
-                }
+              }
               name={fields.province}
               options={provinces
                 .map(province => ({

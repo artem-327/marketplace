@@ -1168,7 +1168,7 @@ export const updateClientCompany = (payload, id) => {
       type: AT.UPDATE_CLIENT_COMPANY,
       payload: response
     })
-    Datagrid.updateRow(id, () => payload)
+    Datagrid.updateRow(id, () => ({ ...payload, id: id }))
     dispatch(closePopup())
     return response.data
   }
