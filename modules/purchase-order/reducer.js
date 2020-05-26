@@ -346,9 +346,16 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.UPDATE_CART_ITEM_FULFILLED: {
+      const { payload } = action
+      if (payload.cartItems) {
+        let { cartItems } = payload
+        cartItems.forEach(item => {
+          item.locationStr = getLocationString(item.productOffer)
+        })
+      }
       return {
         ...state,
-        cart: { ...state.cart, ...action.payload },
+        cart: { ...state.cart, ...payload },
         sidebar: { ...state.cart.sidebar, isOpen: false },
         offerDetailIsFetching: false
       }
@@ -488,8 +495,10 @@ export default function reducer(state = initialState, action) {
         country: action.payload.country,
         zip: action.payload.zip,
         shippingQuotes: {
-          rates: action.payload.quotes.rates.map((quote) =>
-            ({ productOfferId: quote.productOfferId, ...quote.shipmentRate }))
+          rates: action.payload.quotes.rates.map(quote => ({
+            productOfferId: quote.productOfferId,
+            ...quote.shipmentRate
+          }))
         }
       }
     }
