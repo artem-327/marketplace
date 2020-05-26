@@ -2225,6 +2225,7 @@
   "order.detail.backToOrders": "Back to Orders",
   "order.detail.buyerCompanyEin": "Buyer Company EIN",
   "order.detail.sellerCompanyEin": "Seller Company EIN",
+  "order.detail.addTrackingCode": "Add tracking code",
   "settings.warehouse.certificates.message.title": "This state/province already has certificate documents uploaded",
   "settings.warehouse.certificates.message.content": "If you want to update the documents, you will replace all existing certificates for warehouses in this state.",
   "settings.warehouse.certificateIcon.header": "Certificate is attached and so will be visible anywhere",
