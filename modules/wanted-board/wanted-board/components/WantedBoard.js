@@ -121,6 +121,16 @@ class WantedBoard extends Component {
           </FormattedMessage>
         ),
         width: 120
+      },
+      {
+        name: 'createdAt',
+        title: (
+          <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+        sortPath: 'PurchaseRequest.createdAt'
       }
     ],
     columnsChemical: [
