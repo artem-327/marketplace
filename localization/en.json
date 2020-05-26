@@ -2271,6 +2271,7 @@
   "wantedBoard.reject": "Reject",
   "wantedBoard.purchase": "Purchase",
   "wantedBoard.delete": "Delete",
+  "wantedBoard.datePost": "Date Post",
   "confirm.rejectRequestedItem.Header": "Reject Requested Item",
   "confirm.rejectRequestedItem.Content": "Do you really want to reject requested item?",
   "confirm.deleteRequestedItem.Header": "Delete Requested Item",
