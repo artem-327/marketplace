@@ -253,13 +253,14 @@ const mapStateToProps = (state, { datagrid }) => {
       const isCompanyAdmin = (user.roles || []).some(role => role.id === 2)
 
       return {
-        name: isCompanyAdmin ? (
-          <>
-            <Icon name='user crown' style={{ color: '#2599d5' }} /> {user.name}
-          </>
-        ) : (
-          user.name
-        ),
+        name:
+          user.id === getSafe(() => state.auth.identity.company.primaryUser.id, '') ? (
+            <>
+              <Icon name='user crown' style={{ color: '#2599d5' }} /> {user.name}
+            </>
+          ) : (
+            user.name
+          ),
         jobTitle: user.jobTitle || '',
         email: user.email,
         phone: user.phone || '',
