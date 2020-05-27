@@ -23,7 +23,7 @@ import {
   setPrimaryUser
 } from '../../actions'
 import Router from 'next/router'
-import { Checkbox, Popup, Label, List } from 'semantic-ui-react'
+import { Checkbox, Popup, Label, List, Icon } from 'semantic-ui-react'
 
 const handleSwitchEnabled = id => {
   userSwitchEnableDisable(id)
@@ -186,15 +186,14 @@ class UsersTable extends Component {
               hidden: row => !!row.lastLoginAt || currentUserId === row.id
             },
             {
-              text: <FormattedMessage
-                id='settings.user.setAsCompPrimUser'
-                defaultMessage='Set as Company Primary User'
-              />,
+              text: (
+                <FormattedMessage id='settings.user.setAsCompPrimUser' defaultMessage='Set as Company Primary User' />
+              ),
               callback: async row => {
                 const { value } = await setPrimaryUser(this.props.currentCompanyId, row.id)
               },
-              hidden: row => !row.isCompanyAdmin || this.props.currentCompanyId ===  null
-            },
+              hidden: row => !row.isCompanyAdmin || this.props.currentCompanyId === null
+            }
           ]}
         />
       </React.Fragment>
@@ -250,28 +249,39 @@ const userEnableDisableStatus = (r, currentUserId) => {
 const mapStateToProps = (state, { datagrid }) => {
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
-    rows: datagrid.rows.map(user => ({
-      name: user.name,
-      jobTitle: user.jobTitle || '',
-      email: user.email,
-      phone: user.phone || '',
-      phoneFormatted: <FormattedPhone value={user.phone} />,
-      homeBranch: user.homeBranch && user.homeBranch.id,
-      additionalBranches: user.additionalBranches && user.additionalBranches.map(b => b.id),
-      enabled: user.enabled,
-      // preferredCurrency: (user.preferredCurrency || {}).id || undefined,
-      preferredCurrency: currency,
-      homeBranchName: getSafe(() => user.homeBranch.deliveryAddress.cfName, ''),
-      permissions: user.roles ? user.roles.name : '', // ! ! array?
-      id: user.id,
-      allUserRoles: user.roles || [],
-      userRoles: <ArrayToFirstItem values={user && user.roles && user.roles.length && user.roles.map(r => r.name)} />,
-      isCompanyAdmin: (user.roles || []).some(role => role.id === 2),
-      switchEnable: userEnableDisableStatus(user, currentUserId),
-      lastLoginAt: user.lastLoginAt ? moment(user.lastLoginAt).toDate().toLocaleString() : '',
-      sellMarketSegments: getSafe(() => user.sellMarketSegments, []),
-      buyMarketSegments: getSafe(() => user.buyMarketSegments, [])
-    })),
+    rows: datagrid.rows.map(user => {
+      const isCompanyAdmin = (user.roles || []).some(role => role.id === 2)
+
+      return {
+        name:
+          user.id === getSafe(() => state.auth.identity.company.primaryUser.id, '') ? (
+            <>
+              <Icon name='user crown' style={{ color: '#2599d5' }} /> {user.name}
+            </>
+          ) : (
+            user.name
+          ),
+        jobTitle: user.jobTitle || '',
+        email: user.email,
+        phone: user.phone || '',
+        phoneFormatted: <FormattedPhone value={user.phone} />,
+        homeBranch: user.homeBranch && user.homeBranch.id,
+        additionalBranches: user.additionalBranches && user.additionalBranches.map(b => b.id),
+        enabled: user.enabled,
+        // preferredCurrency: (user.preferredCurrency || {}).id || undefined,
+        preferredCurrency: currency,
+        homeBranchName: getSafe(() => user.homeBranch.deliveryAddress.cfName, ''),
+        permissions: user.roles ? user.roles.name : '', // ! ! array?
+        id: user.id,
+        allUserRoles: user.roles || [],
+        userRoles: <ArrayToFirstItem values={user && user.roles && user.roles.length && user.roles.map(r => r.name)} />,
+        isCompanyAdmin: isCompanyAdmin,
+        switchEnable: userEnableDisableStatus(user, currentUserId),
+        lastLoginAt: user.lastLoginAt ? moment(user.lastLoginAt).toDate().toLocaleString() : '',
+        sellMarketSegments: getSafe(() => user.sellMarketSegments, []),
+        buyMarketSegments: getSafe(() => user.buyMarketSegments, [])
+      }
+    }),
     currentUserId,
     addedItem: state.settings.addedItem,
     editedItem: state.settings.editedItem,

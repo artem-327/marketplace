@@ -1559,7 +1559,14 @@ class Detail extends Component {
                                     trigger={
                                       <CustomA
                                         onClick={() => this.setState({ toggleReturnShippingTrackingCode: true })}>
-                                        {this.state.returnShippingTrackingCode}
+                                        {this.state.returnShippingTrackingCode ? (
+                                          this.state.returnShippingTrackingCode
+                                        ) : (
+                                          <FormattedMessage
+                                            id='order.detail.addTrackingCode'
+                                            defaultMessage='Add tracking code'
+                                          />
+                                        )}
                                       </CustomA>
                                     }
                                   />
@@ -1663,7 +1670,14 @@ class Detail extends Component {
                                 }
                                 trigger={
                                   <CustomA onClick={() => this.setState({ toggleTrackingID: true })}>
-                                    {this.state.shippingTrackingCode}
+                                    {this.state.shippingTrackingCode ? (
+                                      this.state.shippingTrackingCode
+                                    ) : (
+                                      <FormattedMessage
+                                        id='order.detail.addTrackingCode'
+                                        defaultMessage='Add tracking code'
+                                      />
+                                    )}
                                   </CustomA>
                                 }
                               />

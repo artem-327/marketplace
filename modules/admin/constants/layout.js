@@ -46,9 +46,6 @@ export const FlexSidebar = styled(Sidebar)`
         margin: 0;
       }
     }
-    .phone-number .phone-code {
-      margin-right: 10px;
-    }
     
     > .ui.multiple.selection.search.dropdown,
     > .ui.multiple.selection.dropdown {

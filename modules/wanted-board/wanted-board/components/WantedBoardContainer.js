@@ -74,7 +74,8 @@ function mapStateToProps(store, { datagrid }) {
           moment(row.neededAt).format(getLocaleDateFormat())
         ) : (
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-        )
+        ),
+        createdAt: row.createdAt ? moment(row.createdAt).format(getLocaleDateFormat()) : 'N/A'
       }
     })
   }

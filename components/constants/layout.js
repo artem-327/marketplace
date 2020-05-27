@@ -332,6 +332,7 @@ export const LeftMenu = styled(Menu)`
           flex-shrink: 0;
 
           &.opened {
+            min-height: 200px;
             flex-grow: 0;
             flex-shrink: 1;
             display: flex;
@@ -692,18 +693,16 @@ export const LeftMenu = styled(Menu)`
         }
       }
     }
-    
+
     .container > a.item,
     .flex-wrapper > a.item {
-    
       &:before,
       &:after {
         content: none !important;
         display: none !important;
       }
-      
+
       &.menu {
-        
         &:before,
         &:after {
           content: '' !important;
@@ -930,11 +929,11 @@ export const MainContainer = styled(Container)`
   right: 0;
   bottom: 0;
   left: 0;
-  
+
   &.takeover {
     transform: translateX(0);
     margin-top: 30px;
-    
+
     > .menu.left > .container {
       max-height: calc(100vh - 30px) !important;
     }
@@ -1026,12 +1025,12 @@ export const Rectangle = styled.div`
   text-align: center;
   font-size: 14px;
   display: block;
-  
+
   > * {
     display: inline-block;
     vertical-align: middle;
   }
-  
+
   + h1 {
     align-self: center;
   }
