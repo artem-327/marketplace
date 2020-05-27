@@ -123,22 +123,14 @@ class WantedBoard extends Component {
         width: 120
       },
       {
-        name: 'ownerBranch',
+        name: 'createdAt',
         title: (
-          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
+          <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
-      },
-      {
-        name: 'location',
-        title: (
-          <FormattedMessage id='wantedBoard.location' defaultMessage='Location'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
+        width: 120,
+        sortPath: 'PurchaseRequest.createdAt'
       }
     ],
     columnsChemical: [
@@ -227,24 +219,6 @@ class WantedBoard extends Component {
           </FormattedMessage>
         ),
         width: 120
-      },
-      {
-        name: 'ownerBranch',
-        title: (
-          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'location',
-        title: (
-          <FormattedMessage id='wantedBoard.location' defaultMessage='Location'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
       }
     ],
     selectedRows: [],
@@ -297,7 +271,7 @@ class WantedBoard extends Component {
                       attached='left'
                       onClick={() => this.props.setWantedBoardType('product')}
                       data-test='wanted_board_product_switch_btn'>
-                      <FormattedMessage id='wantedBoard.switcher.product' defaultMessage='Finished Goods'>
+                      <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
                         {text => text}
                       </FormattedMessage>
                     </Button>
@@ -305,7 +279,7 @@ class WantedBoard extends Component {
                       attached='right'
                       onClick={() => this.props.setWantedBoardType('chemical')}
                       data-test='wanted_board_chemical_switch_btn'>
-                      <FormattedMessage id='wantedBoard.switcher.chemical' defaultMessage='Raw Materials'>
+                      <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
                         {text => text}
                       </FormattedMessage>
                     </Button>
@@ -323,7 +297,7 @@ class WantedBoard extends Component {
             </Grid.Row>
           </Grid>
         </ControlPanel>
-        <div className='flex stretched' style={{ padding: '10px 0' }}>
+        <div className='flex stretched' style={{ padding: '0 30px 20px 30px' }}>
           <ProdexGrid
             tableName='wanted_board_grid'
             {...datagrid.tableProps}

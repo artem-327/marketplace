@@ -5,14 +5,34 @@ import { CompanyModal } from '~/modules/company-form/'
 import { updateClientCompany, createClientCompany, closePopup } from '~/modules/settings/actions'
 class Popup extends Component {
   onSubmit = (values, isEdit) => {
-    return new Promise(async (resolve, _reject) => {
+    const requestBody = {}
+    const propsToInclude = [
+      'associations',
+      'businessType',
+      'cin',
+      'dba',
+      'dunsNumber',
+      'nacdMember',
+      'name',
+      'phone',
+      'tin',
+      'website',
+      'primaryBranch',
+      'primaryUser',
+      'mailingBranch'
+    ]
+    propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
+
+    return new Promise(async (resolve, reject) => {
       const { updateClientCompany, createClientCompany } = this.props
       let data = null
-
-      if (isEdit) data = await updateClientCompany(values, values.id)
-      else data = await createClientCompany(values)
-
-      resolve(data)
+      try {
+        if (isEdit) data = await updateClientCompany(requestBody, values.id)
+        else data = await createClientCompany(requestBody)
+        resolve(data)
+      } catch (error) {
+        reject(error)
+      }
     })
   }
   render() {

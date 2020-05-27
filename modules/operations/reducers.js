@@ -9,7 +9,7 @@ export const initialState = {
   loading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
-  companyProductUnmappedOnly: false,
+  companyProductUnmappedOnly: 'ALL',
   ordersStatusFilter: 'All',
   orderDetailData: null,
   documentTypesFetching: false,

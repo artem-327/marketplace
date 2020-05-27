@@ -55,7 +55,7 @@ export const initialState = {
   deleteUserById: null,
   deleteRowById: null,
   filterValue: '',
-  productCatalogUnmappedValue: false,
+  productCatalogUnmappedValue: 'ALL',
   editPopupSearchProducts: [],
   fileCSVId: null,
   CSV: null,

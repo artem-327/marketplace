@@ -110,7 +110,7 @@ function mapStateToProps(store, { datagrid }) {
         offerExpiration: po.validityDate ? moment(po.validityDate).format(getLocaleDateFormat()) : 'N/A',
         groupId: getSafe(() => po.parentOffer, ''),
         lotNumber: getSafe(() => po.lotNumber, ''),
-        notPublishedStatus:
+        productStatus:
           po.companyProduct && po.companyProduct.echoProduct && !po.companyProduct.echoProduct.isPublished
       }
     }),
