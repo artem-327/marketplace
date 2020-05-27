@@ -141,7 +141,8 @@ export const errorMessages = {
       defaultMessage='Space was detected as leading or trailing character, please check enter password is correct'
     />
   ),
-  passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />
+  passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />,
+  invalidTime: <FormattedMessage id='validation.invalidTime' defaultMessage='Invalid time' />,
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -337,3 +338,10 @@ export const dateBefore = (date = 'lotManufacturedDate', beforeDate = 'lotExpira
       return (newOpts.nullable && !parsedBeforeDate.isValid()) || parsedDate.isBefore(parsedBeforeDate)
     }
   )
+
+export const validateTime = () =>
+  Yup.string()
+    .trim()
+    .test('time', errorMessages.invalidTime, t => {
+      return moment(t, ['hh:mm a', 'HH:mm']).isValid() || !t.length
+    })

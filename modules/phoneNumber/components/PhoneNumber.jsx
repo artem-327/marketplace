@@ -9,6 +9,7 @@ import { getSafe } from '~/utils/functions'
 
 const StyledDropdown = styled(Dropdown)`
   min-width: 80px !important;
+  margin-right: 10px;
   cursor: pointer !important;
   word-wrap: normal;
   line-height: 1em;
