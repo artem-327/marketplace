@@ -14,19 +14,13 @@ import { getSafe } from '~/utils/functions'
 import confirm from '~/src/components/Confirmable/confirm'
 import { FormattedPhone } from '~/components/formatted-messages/'
 
-class WarehouseTable extends Component {
+class BranchesTable extends Component {
   state = {
     columns: [
       {
-        name: 'certificateIcon',
-        title: ' ',
-        width: 45,
-        align: 'center'
-      },
-      {
         name: 'addressName',
         title: (
-          <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name'>
+          <FormattedMessage id='settings.branchName' defaultMessage='Branch Name'>
             {text => text}
           </FormattedMessage>
         )
@@ -90,29 +84,6 @@ class WarehouseTable extends Component {
     ]
   }
 
-  getRows = rows => {
-    return rows.map(r => ({
-      ...r,
-      certificateIcon:
-        getSafe(() => r.attachments.length, false) && getSafe(() => r.countryName, false) === 'USA' ? (
-          <Popup
-            position='right center'
-            header={
-              <FormattedMessage
-                id='settings.warehouse.certificateIcon.header'
-                defaultMessage='Certificate is attached and so will be visible anywhere'
-              />
-            }
-            trigger={
-              <div>
-                <Icon className='file related' />
-              </div>
-            }
-          />
-        ) : null
-    }))
-  }
-
   render() {
     const {
       filterValue,
@@ -135,7 +106,7 @@ class WarehouseTable extends Component {
           filterValue={filterValue}
           columns={this.state.columns}
           loading={datagrid.loading}
-          rows={this.getRows(rows)}
+          rows={rows}
           style={{ marginTop: '5px' }}
           rowActions={[
             {
@@ -147,18 +118,10 @@ class WarehouseTable extends Component {
               }
             },
             {
-              text: formatMessage({ id: 'global.certificates', defaultMessage: 'Certificates' }),
-              callback: row => {
-                const indexTabofSidebar = 1
-                getBranch(row.id)
-                openSidebar(indexTabofSidebar)
-              }
-            },
-            {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
                 confirm(
-                  formatMessage({ id: 'confirm.deleteWarehouse', defaultMessage: 'Delete Warehouse' }),
+                  formatMessage({ id: 'confirm.deleteBranch', defaultMessage: 'Delete Branch' }),
                   formatMessage(
                     { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.addressName}! ? ` },
                     { item: row.name }
@@ -191,8 +154,7 @@ const mapStateToProps = (state, { datagrid }) => {
         contactName: getSafe(() => r.deliveryAddress.contactName, ''),
         contactEmail: getSafe(() => r.deliveryAddress.contactEmail, ''),
         phoneFormatted: <FormattedPhone value={getSafe(() => r.deliveryAddress.contactPhone, '')} />,
-        id: r.id,
-        attachments: r.attachments
+        id: r.id
       }
     }),
     filterValue: state.settings.filterValue,
@@ -200,4 +162,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(WarehouseTable))))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(BranchesTable))))

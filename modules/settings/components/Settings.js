@@ -8,10 +8,12 @@ import { FormattedMessage } from 'react-intl'
 import Tabs from './Tabs'
 import UsersTable from './UserTable/UsersTable'
 import WarehouseTable from './WarehouseTable/WarehouseTable'
+import BranchesTable from './BranchesTable/BranchesTable'
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
-import EditWarehouseSidebar from './WarehouseTable/WarehouseSidebar'
+import WarehouseSidebar from './WarehouseTable/WarehouseSidebar'
+import BranchesSidebar from './BranchesTable/BranchesSidebar'
 import EditUsersPopup from './UserTable/UsersPopup'
 import ProductSidebar from './ProductCatalogTable/ProductSidebar'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
@@ -291,7 +293,7 @@ class Settings extends Component {
     const tables = {
       'company-details': this.companyDetails(),
       users: <UsersTable />,
-      branches: <WarehouseTable />,
+      branches: <BranchesTable />,
       warehouses: <WarehouseTable />,
       products: <ProductCatalogTable />,
       'global-broadcast': <PriceBook />,
@@ -312,8 +314,8 @@ class Settings extends Component {
 
     const popupForm = {
       users: <EditUsersPopup />,
-      branches: <EditWarehouseSidebar />,
-      warehouses: <EditWarehouseSidebar />,
+      branches: <BranchesSidebar />,
+      warehouses: <WarehouseSidebar />,
       products: <ProductSidebar />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsPopup />,
