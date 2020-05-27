@@ -320,7 +320,7 @@ export function getProductsCatalogRequest() {
 
 export function editEchoProductChangeTab(editTab, force = false, data = null) {
   return {
-    type: AT.ADMIN_EDIT_ECHO_PRODUCT_CHANGE_TAB,
+    type: AT.ADMIN_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB,
     payload: { editTab, force, data }
   }
 }

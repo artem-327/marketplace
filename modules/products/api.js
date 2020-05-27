@@ -13,12 +13,13 @@ export default {
     api.post(`/prodex/api/cas-products/alternative-names/cas-product/${productId}`, value),
   updateProductName: (id, value) => api.patch(`/prodex/api/cas-products/alternative-names/id/${id}`, value),
   deleteProductName: id => api.delete(`/prodex/api/cas-products/alternative-names/id/${id}`),
-  deleteEchoProduct: id => api.delete(`/prodex/api/echo-products/id/${id}`),
+  deleteCompanyGenericProduct: id => api.delete(`/prodex/api/company-generic-products/id/${id}`),
   searchCasProduct: pattern =>
     api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`).then(response => response.data),
-  putEchoProduct: (id, values) =>
-    api.put(`/prodex/api/echo-products/id/${id}/`, values).then(response => response.data),
-  postEchoProduct: values => api.post(`/prodex/api/echo-products`, values).then(response => response.data),
+  putCompanyGenericProducts: (id, values) =>
+    api.put(`/prodex/api/company-generic-products/id/${id}/`, values).then(response => response.data),
+  postCompanyGenericProducts: values =>
+    api.post(`/prodex/api/company-generic-products`, values).then(response => response.data),
   searchManufacturers: (text, limit) =>
     api.get(
       `/prodex/api/manufacturers/search?search=${text}${
@@ -64,13 +65,15 @@ export default {
   getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   searchMarketSegments: filter =>
     api.post(`/prodex/api/market-segments/datagrid`, filter).then(response => response.data),
-  getEchoProduct: id => api.get(`/prodex/api/echo-products/id/${id}`),
-  getAlternativeEchoProductNames: async id => {
-    const { data } = await api.get(`/prodex/api/echo-products/alternative-names/echo-product/${id}`)
+  getCompanyGenericProduct: id => api.get(`/prodex/api/company-generic-products/id/${id}`),
+  getAlternativeCompanyGenericProductsNames: async id => {
+    const { data } = await api.get(`/prodex/api/company-generic-products/alternative-names/echo-product/${id}`)
     return data
   },
-  postNewEchoProductAltName: (id, data) =>
-    api.post(`/prodex/api/echo-products/alternative-names/echo-product/${id}`, data),
-  updateEchoProductAltName: (id, value) => api.patch(`/prodex/api/echo-products/alternative-names/id/${id}`, value),
-  deleteEchoProductAltName: id => api.delete(`/prodex/api/echo-products/alternative-names/id/${id}`)
+  postNewCompanyGenericProductsAltName: (id, data) =>
+    api.post(`/prodex/api/company-generic-products/alternative-names/echo-product/${id}`, data),
+  updateCompanyGenericProductsAltName: (id, value) =>
+    api.patch(`/prodex/api/company-generic-products/alternative-names/id/${id}`, value),
+  deleteCompanyGenericProductsAltName: id =>
+    api.delete(`/prodex/api/company-generic-products/alternative-names/id/${id}`)
 }

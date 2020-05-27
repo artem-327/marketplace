@@ -10,12 +10,12 @@ import {
   changeHeadersCSV,
   handleSaveMapCSV,
   handleChangeMapCSVName,
-  getCSVMapEchoProduct,
+  getCSVMapCompanyGenericProduct,
   getCSVMapProductOffer,
   selectSavedMap,
-  postCSVMapEchoProduct,
-  putCSVMapEchoProduct,
-  deleteCSVMapEchoProduct,
+  postCSVMapCompanyGenericProduct,
+  putCSVMapCompanyGenericProduct,
+  deleteCSVMapCompanyGenericProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
   deleteCSVMapProductOffer,
@@ -290,7 +290,7 @@ class Map extends Component {
       constant = simpleProductOfferList.constant
       mapping = mappingProductOffer
     } else if (this.props.echoProduct) {
-      this.props.getCSVMapEchoProduct()
+      this.props.getCSVMapCompanyGenericProduct()
       const mappingEchoProduct = this.getMapping(simpleEchoProductList)
       constant = simpleEchoProductList.constant
       mapping = mappingEchoProduct
@@ -454,7 +454,7 @@ class Map extends Component {
                     onClick={async () => {
                       const mapName = this.props.selectedSavedMap.name
                       if (this.props.echoProduct)
-                        await this.props.deleteCSVMapEchoProduct(this.props.selectedSavedMap.id)
+                        await this.props.deleteCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id)
 
                       if (this.props.productOffer)
                         await this.props.deleteCSVMapProductOffer(this.props.selectedSavedMap.id)
@@ -521,19 +521,19 @@ class Map extends Component {
                     if (this.props.echoProduct) {
                       if (this.props.selectedSavedMap) {
                         mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
-                        await this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+                        await this.props.putCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id, {
                           ...data,
                           mapName: mapName
                         })
                       } else {
                         mapName = this.props.mapName
-                        await this.props.postCSVMapEchoProduct({
+                        await this.props.postCSVMapCompanyGenericProduct({
                           ...data,
                           mapName: mapName
                         })
                       }
 
-                      this.props.getCSVMapEchoProduct()
+                      this.props.getCSVMapCompanyGenericProduct()
                     }
                     if (this.props.productOffer) {
                       if (this.props.selectedSavedMap) {
@@ -743,12 +743,12 @@ const mapDispatchToProps = {
   changeHeadersCSV,
   handleSaveMapCSV,
   handleChangeMapCSVName,
-  getCSVMapEchoProduct,
+  getCSVMapCompanyGenericProduct,
   getCSVMapProductOffer,
   selectSavedMap,
-  postCSVMapEchoProduct,
-  putCSVMapEchoProduct,
-  deleteCSVMapEchoProduct,
+  postCSVMapCompanyGenericProduct,
+  putCSVMapCompanyGenericProduct,
+  deleteCSVMapCompanyGenericProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
   deleteCSVMapProductOffer,

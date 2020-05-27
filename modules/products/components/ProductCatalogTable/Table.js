@@ -229,7 +229,7 @@ class ProductCatalogTable extends Component {
       intl: { formatMessage },
       openEditEchoProduct,
       openEditEchoAltNamesPopup,
-      deleteEchoProduct,
+      deleteCompanyGenericProduct,
       editedId,
       filterValue
     } = this.props
@@ -252,20 +252,26 @@ class ProductCatalogTable extends Component {
               callback: row => openEditEchoAltNamesPopup(row)
             },
             {
-              text: formatMessage({ id: 'admin.deleteEchoProduct', defaultMessage: 'Delete Echo Product' }),
+              text: formatMessage({
+                id: 'admin.deleteCompanyGenericProduct',
+                defaultMessage: 'Delete Company Generic Product'
+              }),
               disabled: row => editedId === row.id,
               callback: row => {
                 confirm(
-                  formatMessage({ id: 'confirm.deleteEchoProduct.title', defaultMessage: 'Delete Echo Product?' }),
+                  formatMessage({
+                    id: 'confirm.deleteCompanyGenericProduct.title',
+                    defaultMessage: 'Delete Company Generic Product?'
+                  }),
                   formatMessage(
                     {
-                      id: 'confirm.deleteEchoProduct.content',
-                      defaultMessage: `Do you really want to delete '${row.name}' echo product?`
+                      id: 'confirm.deleteCompanyGenericProduct.content',
+                      defaultMessage: `Do you really want to delete '${row.name}' company generic product?`
                     },
                     { name: row.name }
                   )
                 ).then(() => {
-                  deleteEchoProduct(row.id)
+                  deleteCompanyGenericProduct(row.id)
                   datagrid.removeRow(row.id)
                 })
               }

@@ -130,7 +130,7 @@ export const getCompanyDetails = id =>
 
 export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`)
 
-export const deleteEchoProduct = id => api.delete(`/prodex/api/echo-products/id/${id}`)
+export const deleteCompanyGenericProduct = id => api.delete(`/prodex/api/company-generic-products/id/${id}`)
 
 export const loadFile = attachment => {
   return api({
@@ -177,7 +177,8 @@ export const searchManufacturers = (text, limit) =>
 
 export const searchUnNumber = pattern => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`)
 
-export const verifyEchoProduct = id => api.get(`/prodex/api/echo-products/verify/${id}`).then(response => response.data)
+export const verifyEchoProduct = id =>
+  api.get(`/prodex/api/company-generic-products/verify/${id}`).then(response => response.data)
 
 export const addNmfcNumber = nmfc => api.post('/prodex/api/nmfc-numbers', nmfc).then(response => response.data)
 export const editNmfcNumber = nmfc =>

@@ -149,7 +149,7 @@ export function openEditEchoProduct(id, editTab, force = false) {
 
 export function editEchoProductChangeTab(editTab, force = false, data = null) {
   return {
-    type: AT.PRODUCTS_EDIT_ECHO_PRODUCT_CHANGE_TAB,
+    type: AT.PRODUCTS_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB,
     payload: { editTab, force, data }
   }
 }
@@ -166,11 +166,11 @@ export function openEditEchoAltNamesPopup(value) {
   }
 }
 
-export function deleteEchoProduct(echoProductId) {
+export function deleteCompanyGenericProduct(echoProductId) {
   return {
-    type: AT.PRODUCTS_DELETE_ECHO_PRODUCT,
+    type: AT.PRODUCTS_DELETE_COMPANY_GENERIC_PRODUCT,
     async payload() {
-      const response = await api.deleteEchoProduct(echoProductId)
+      const response = await api.deleteCompanyGenericProduct(echoProductId)
       Datagrid.removeRow(echoProductId)
       return response
     }
@@ -182,17 +182,17 @@ export const searchCasProduct = (pattern, index) => ({
   payload: api.searchCasProduct(pattern)
 })
 
-export function putEchoProduct(id, values) {
+export function putCompanyGenericProducts(id, values) {
   return {
-    type: AT.PRODUCTS_PUT_ECHO_PRODUCT,
-    payload: api.putEchoProduct(id, values)
+    type: AT.PRODUCTS_PUT_COMPANY_GENERIC_PRODUCT,
+    payload: api.putCompanyGenericProducts(id, values)
   }
 }
 
-export function postEchoProduct(values) {
+export function postCompanyGenericProducts(values) {
   return {
-    type: AT.PRODUCTS_POST_ECHO_PRODUCT,
-    payload: api.postEchoProduct(values)
+    type: AT.PRODUCTS_POST_COMPANY_GENERIC_PRODUCT,
+    payload: api.postCompanyGenericProducts(values)
   }
 }
 
@@ -256,11 +256,11 @@ export function removeAttachment(aId) {
   }
 }
 
-export function getEchoProduct(id) {
+export function getCompanyGenericProduct(id) {
   return {
-    type: AT.PRODUCTS_GET_ECHO_PRODUCT,
+    type: AT.PRODUCTS_GET_COMPANY_GENERIC_PRODUCT,
     async payload() {
-      const response = await api.getEchoProduct(id)
+      const response = await api.getCompanyGenericProduct(id)
       Datagrid.updateRow(id, () => response.data)
       return response
     }
@@ -270,7 +270,7 @@ export function getEchoProduct(id) {
 export function loadEditEchoProduct(id, editTab) {
   return async dispatch => {
     // get newest data
-    const response = await dispatch(getEchoProduct(id))
+    const response = await dispatch(getCompanyGenericProduct(id))
     let formData = {
       ...response.value.data
     }
@@ -327,39 +327,39 @@ export const searchMarketSegments = segment => ({
   })
 })
 
-export function getAlternativeEchoProductNames(value) {
+export function getAlternativeCompanyGenericProductsNames(value) {
   return {
-    type: AT.PRODUCTS_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES,
-    payload: api.getAlternativeEchoProductNames(value)
+    type: AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES,
+    payload: api.getAlternativeCompanyGenericProductsNames(value)
   }
 }
 
-export function postNewEchoProductAltName(productId, value) {
+export function postNewCompanyGenericProductsAltName(productId, value) {
   return async dispatch => {
     await dispatch({
-      type: AT.PRODUCTS_POST_NEW_ECHO_PRODUCT_ALTERNATIVE_NAME,
-      payload: api.postNewEchoProductAltName(productId, value)
+      type: AT.PRODUCTS_POST_NEW_COMPANY_GENERIC_PRODUCT_ALTERNATIVE_NAME,
+      payload: api.postNewCompanyGenericProductsAltName(productId, value)
     })
-    await dispatch(getAlternativeEchoProductNames(productId))
+    await dispatch(getAlternativeCompanyGenericProductsNames(productId))
   }
 }
 
-export function updateEchoProductAltName(productId, id, value) {
+export function updateCompanyGenericProductsAltName(productId, id, value) {
   return async dispatch => {
     const response = await dispatch({
-      type: AT.PRODUCTS_UPDATE_ECHO_PRODUCT_ALTERNATIVE_NAME,
-      payload: api.updateEchoProductAltName(id, value)
+      type: AT.PRODUCTS_UPDATE_COMPANY_GENERIC_PRODUCT_ALTERNATIVE_NAME,
+      payload: api.updateCompanyGenericProductsAltName(id, value)
     })
-    await dispatch(getAlternativeEchoProductNames(productId))
+    await dispatch(getAlternativeCompanyGenericProductsNames(productId))
   }
 }
 
-export function deleteEchoProductAltName(productId, id) {
+export function deleteCompanyGenericProductsAltName(productId, id) {
   return async dispatch => {
     await dispatch({
-      type: AT.PRODUCTS_DELETE_ECHO_PRODUCT_ALTERNATIVE_NAME,
-      payload: api.deleteEchoProductAltName(id)
+      type: AT.PRODUCTS_DELETE_COMPANY_GENERIC_PRODUCT_ALTERNATIVE_NAME,
+      payload: api.deleteCompanyGenericProductsAltName(id)
     })
-    await dispatch(getAlternativeEchoProductNames(productId))
+    await dispatch(getAlternativeCompanyGenericProductsNames(productId))
   }
 }

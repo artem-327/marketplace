@@ -12,7 +12,7 @@ import {
   postImportProductCSV,
   clearDataOfCSV,
   closeImportPopupCancel,
-  postImportEchoProductCSV,
+  postImportCompanyGenericProductCSV,
   postImportProductOfferCSV,
   handleSaveMapCSV,
   postImportCompaniesCSV,
@@ -270,7 +270,7 @@ class ProductImportPopup extends Component {
         this.props.productOffer
           ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId)
           : this.props.echoProduct
-          ? this.props.postImportEchoProductCSV(mappedDataHeaderCSV, csvFileId)
+          ? this.props.postImportCompanyGenericProductCSV(mappedDataHeaderCSV, csvFileId)
           : this.props.companies
           ? this.props.postImportCompaniesCSV(mappedDataHeaderCSV, csvFileId)
           : this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
@@ -287,7 +287,7 @@ const mapDispatchToProps = {
   postImportProductCSV,
   clearDataOfCSV,
   closeImportPopupCancel,
-  postImportEchoProductCSV,
+  postImportCompanyGenericProductCSV,
   postImportProductOfferCSV,
   handleSaveMapCSV,
   postImportCompaniesCSV,

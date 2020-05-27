@@ -5,8 +5,8 @@ import { Table } from 'semantic-ui-react'
 
 import {
   dataHeaderCSV,
-  postCSVMapEchoProduct,
-  putCSVMapEchoProduct,
+  postCSVMapCompanyGenericProduct,
+  putCSVMapCompanyGenericProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
   postCSVMapCompanies,
@@ -57,7 +57,7 @@ class Preview extends Component {
       if (this.props.echoProduct)
         this.props.isSaveMapCSV &&
           data &&
-          this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+          this.props.putCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id, {
             ...data,
             mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
           })
@@ -81,7 +81,7 @@ class Preview extends Component {
         if (this.props.echoProduct)
           this.props.isSaveMapCSV &&
             data &&
-            this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+            this.props.putCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id, {
               ...data,
               mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
             })
@@ -106,7 +106,7 @@ class Preview extends Component {
         if (this.props.echoProduct)
           this.props.isSaveMapCSV &&
             data &&
-            this.props.postCSVMapEchoProduct({
+            this.props.postCSVMapCompanyGenericProduct({
               ...data,
               mapName: this.props.mapName
             })
@@ -173,8 +173,8 @@ class Preview extends Component {
 
 const mapDispatchToProps = {
   dataHeaderCSV,
-  postCSVMapEchoProduct,
-  putCSVMapEchoProduct,
+  postCSVMapCompanyGenericProduct,
+  putCSVMapCompanyGenericProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
   postCSVMapCompanies,

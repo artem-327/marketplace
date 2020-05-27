@@ -71,12 +71,12 @@ class Products extends Component {
             : []
       },
       'product-catalog': {
-        url: '/prodex/api/echo-products/datagrid',
+        url: '/prodex/api/company-generic-products/datagrid',
         searchToFilter: v =>
           v
             ? [
-                { operator: 'LIKE', path: 'EchoProduct.name', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'EchoProduct.code', values: [`%${v}%`] }
+                { operator: 'LIKE', path: 'CompanyGenericProduct.name', values: [`%${v}%`] },
+                { operator: 'LIKE', path: 'CompanyGenericProduct.code', values: [`%${v}%`] }
               ]
             : []
       }

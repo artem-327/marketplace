@@ -632,7 +632,14 @@ class AddEditEchoProduct extends React.Component {
   }
 
   submitForm = async (values, setSubmitting) => {
-    const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes, datagrid } = this.props
+    const {
+      putCompanyGenericProducts,
+      postCompanyGenericProducts,
+      closePopup,
+      linkAttachment,
+      listDocumentTypes,
+      datagrid
+    } = this.props
 
     const { popupValues } = this.state
     let sendSuccess = false
@@ -662,8 +669,8 @@ class AddEditEchoProduct extends React.Component {
     removeEmpty(formValues)
 
     try {
-      if (popupValues) var { value } = await putEchoProduct(popupValues.id, formValues)
-      else var { value } = await postEchoProduct(formValues)
+      if (popupValues) var { value } = await putCompanyGenericProducts(popupValues.id, formValues)
+      else var { value } = await postCompanyGenericProducts(formValues)
 
       const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
       await linkAttachment(false, value.id, notLinkedAttachments)

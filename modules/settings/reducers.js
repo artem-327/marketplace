@@ -675,7 +675,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CSV_MAP_ECHO_PRODUCT_FULFILLED:
+    case AT.GET_CSV_MAP_COMPANY_GENERIC_PRODUCT_FULFILLED:
     case AT.GET_CSV_MAP_PRODUCT_OFFER_FULFILLED:
     case AT.GET_CSV_MAP_COMPANIES_FULFILLED: {
       return {
@@ -722,7 +722,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_PENDING:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_PENDING:
-    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_PENDING: {
+    case AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS_PENDING: {
       return {
         ...state,
         csvImportError: null
@@ -731,9 +731,9 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_REJECTED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_REJECTED:
-    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_REJECTED:
+    case AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS_REJECTED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_FULFILLED:
-    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_FULFILLED:
+    case AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS_FULFILLED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_FULFILLED:
     case AT.POST_CSV_IMPORT_COMPANIES_FULFILLED: {
       return {
@@ -1350,14 +1350,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SEARCH_ECHO_PRODUCTS_PENDING: {
+    case AT.SEARCH_COMPANY_GENERIC_PRODUCTS_PENDING: {
       return {
         ...state,
         echoProductsFetching: true
       }
     }
 
-    case AT.SEARCH_ECHO_PRODUCTS_FULFILLED: {
+    case AT.SEARCH_COMPANY_GENERIC_PRODUCTS_FULFILLED: {
       return {
         ...state,
         echoProducts: payload,
@@ -1365,7 +1365,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SEARCH_ECHO_PRODUCTS_REJECTED: {
+    case AT.SEARCH_COMPANY_GENERIC_PRODUCTS_REJECTED: {
       return {
         ...state,
         echoProductsFetching: false
@@ -1413,7 +1413,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.DELETE_CSV_MAP_PRODUCT_OFFER_FULFILLED:
-    case AT.DELETE_CSV_MAP_ECHO_PRODUCT_FULFILLED:
+    case AT.DELETE_CSV_MAP_COMPANY_GENERIC_PRODUCT_FULFILLED:
     case AT.DELETE_CSV_MAP_COMPANIES_FULFILLED: {
       return {
         ...state,
