@@ -19,9 +19,10 @@ import {
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
   getUnNumbersByString,
-  searchTags,
+  searchProductGroups,
   getDocumentTypes,
-  searchMarketSegments
+  searchMarketSegments,
+  searchCompany
 } from '~/modules/products/actions'
 
 import { Header } from 'semantic-ui-react'
@@ -45,9 +46,10 @@ const mapDispatchToProps = {
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
   getUnNumbersByString,
-  searchTags,
+  searchProductGroups,
   getDocumentTypes,
-  searchMarketSegments
+  searchMarketSegments,
+  searchCompany
 }
 
 const mapStateToProps = ({ productsAdmin }, props) => {
@@ -96,14 +98,14 @@ const mapStateToProps = ({ productsAdmin }, props) => {
     unNumbersFetching: productsAdmin.unNumbersFetching,
 
     listDocumentTypes: productsAdmin.documentTypes,
-    searchedTags: getSafe(() => productsAdmin.searchedTags.length, false)
-      ? productsAdmin.searchedTags.map(d => ({
+    searchedProductGroups: getSafe(() => productsAdmin.searchedProductGroups.length, false)
+      ? productsAdmin.searchedProductGroups.map(d => ({
           key: d.id,
           text: d.name,
           value: d.id
         }))
       : [],
-    searchedTagsLoading: productsAdmin.searchedTagsLoading,
+    searchedProductGroupsLoading: productsAdmin.searchedProductGroupsLoading,
     searchedMarketSegments: getSafe(() => productsAdmin.searchedMarketSegments.length, false)
       ? productsAdmin.searchedMarketSegments.map(d => ({
           key: d.id,
@@ -111,7 +113,15 @@ const mapStateToProps = ({ productsAdmin }, props) => {
           value: d.id
         }))
       : [],
-    searchedMarketSegmentsLoading: productsAdmin.searchedMarketSegmentsLoading
+    searchedMarketSegmentsLoading: productsAdmin.searchedMarketSegmentsLoading,
+    searchedCompany: getSafe(() => productsAdmin.searchedCompanies.length, false)
+      ? productsAdmin.searchedCompanies.map(d => ({
+          key: d.id,
+          text: d.name,
+          value: d.id
+        }))
+      : [],
+    searchedCompanyLoading: productsAdmin.searchedCompaniesLoading
   }
 }
 

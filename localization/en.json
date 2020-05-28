@@ -729,6 +729,7 @@
   "global.address.selectStateProvince": "Select State/Province",
   "global.address.selectCity": "Select City",
   "global.address.enterZip": "Enter Zip",
+  "global.productGroups": "Product Groups",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
@@ -2358,5 +2359,7 @@
   "pruduct.groups.add": "Add Product Group",
   "product.groups.tagsName": "Tags Name",
   "product.groups.tags": "Tags",
-  "confirm.delete.product.groups.content": "Do you really want to delete Product Group?"
+  "confirm.delete.product.groups.content": "Do you really want to delete Product Group?",
+  "validation.minOneGroup": "At least one group should be selected",
+  "validation.minOneCompany": "At least one company should be selected"
 }

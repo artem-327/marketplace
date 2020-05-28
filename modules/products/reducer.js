@@ -43,7 +43,9 @@ export const initialState = {
   documentTypes: [],
   searchedMarketSegments: [],
   searchedMarketSegmentsLoading: false,
-  altEchoNamesRows: []
+  altEchoNamesRows: [],
+  searchedProductGroups: [],
+  searchedProductGroupsLoading: false
 }
 
 export default function reducers(state = initialState, action) {
@@ -359,6 +361,32 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+    case AT.PRODUCTS_SEARCH_PRODUCT_GROUPS_PENDING: {
+      return { ...state, searchedProductGroupsLoading: true }
+    }
+    case AT.PRODUCTS_SEARCH_PRODUCT_GROUPS_REJECTED: {
+      return { ...state, searchedProductGroupsLoading: false }
+    }
+    case AT.PRODUCTS_SEARCH_PRODUCT_GROUPS_FULFILLED: {
+      return {
+        ...state,
+        searchedProductGroups: action.payload,
+        searchedProductGroupsLoading: false
+      }
+    }
+    case AT.PRODUCTS_SEARCH_COMPANY_PENDING: {
+      return { ...state, searchedCompaniesLoading: true }
+    }
+    case AT.PRODUCTS_SEARCH_COMPANY_REJECTED: {
+      return { ...state, searchedCompaniesLoading: false }
+    }
+    case AT.PRODUCTS_SEARCH_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        searchedCompanies: action.payload,
+        searchedCompaniesLoading: false
       }
     }
     default: {

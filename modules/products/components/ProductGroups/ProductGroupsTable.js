@@ -85,7 +85,10 @@ const mapDispatchToProps = {
 //TODO
 const mapStateToProps = (state, { datagrid }) => {
   return {
-    rows: datagrid.rows,
+    rows: datagrid.rows.map(row => ({
+      ...row,
+      tags: <ArrayToFirstItem values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''} rowItems={2} />
+    })),
     filterValue: state.productsAdmin.filterValue,
     currentTab: state.productsAdmin.currentTab,
     loading: state.productsAdmin.loading

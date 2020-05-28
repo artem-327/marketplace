@@ -395,3 +395,17 @@ export function deleteProductGroups(id) {
     }
   }
 }
+
+export const searchProductGroups = val => ({
+  type: AT.PRODUCTS_SEARCH_PRODUCT_GROUPS,
+  payload: api.searchProductGroups({
+    orFilters: [{ operator: 'LIKE', path: 'ProductGroup.name', values: [`%${val}%`] }],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})
+
+export const searchCompany = (companyText, limit) => ({
+  type: AT.PRODUCTS_SEARCH_COMPANY,
+  payload: api.searchCompany(companyText, limit)
+})

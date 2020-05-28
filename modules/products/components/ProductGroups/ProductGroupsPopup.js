@@ -189,7 +189,10 @@ const mapStateToProps = state => {
 
   return {
     rowId: getSafe(() => popupValues.id),
-    popupValues: popupValues,
+    popupValues: popupValues.map(val => ({
+      ...val,
+      productGroups: getSafe(() => val.productGroups, []).map(d => d.id)
+    })),
     searchedTagsLoading: state.productsAdmin.searchedTagsLoading,
     searchedTags: getSafe(() => state.productsAdmin.searchedTags.length, false)
       ? state.productsAdmin.searchedTags.map(d => ({

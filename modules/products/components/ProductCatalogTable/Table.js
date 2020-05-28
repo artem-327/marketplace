@@ -101,9 +101,18 @@ class ProductCatalogTable extends Component {
         sortPath: 'EchoProduct.sdsRevisionDate'
       },
       {
-        name: 'tagsFormatted',
+        name: 'productGroupFormatted',
         title: (
-          <FormattedMessage id='global.tags' defaultMessage='Tags'>
+          <FormattedMessage id='global.productGroups' defaultMessage='Product Groups'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150
+      },
+      {
+        name: 'company',
+        title: (
+          <FormattedMessage id='global.company' defaultMessage='Company'>
             {text => text}
           </FormattedMessage>
         ),
@@ -146,9 +155,13 @@ class ProductCatalogTable extends Component {
           ),
         manufacturerName: row.manufacturer ? row.manufacturer.name : '',
         sdsRevisionDate: row.sdsRevisionDate ? moment(row.sdsRevisionDate).format(getLocaleDateFormat()) : '',
-        tagsFormatted: (
-          <ArrayToFirstItem values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''} rowItems={2} />
-        )
+        productGroupFormatted: (
+          <ArrayToFirstItem
+            values={row.productGroup ? row.productGroup.map(d => (d.name ? d.name : d)) : []}
+            rowItems={2}
+          />
+        ),
+        company: getSafe(() => row.company, [])
       }
     })
   }
@@ -296,7 +309,8 @@ const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
     filterValue: productsAdmin.filterValue,
     currentTab: productsAdmin.currentTab,
     rows: datagrid.rows.map(c => ({
-      ...c
+      ...c,
+      company: getSafe(() => c.company, [])
     }))
   }
 }
