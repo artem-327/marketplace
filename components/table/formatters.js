@@ -18,7 +18,7 @@ const getDropdownItems = (actions = [], row) =>
 
 function getContainerDimensions(element) {
   let parentEl = element.parentElement
-  while (!parentEl.classList.contains("table-responsive") && parentEl !== null) {
+  while (parentEl !== null && !parentEl.classList.contains("table-responsive")) {
     parentEl = parentEl.parentElement
   }
 
