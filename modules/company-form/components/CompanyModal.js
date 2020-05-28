@@ -291,9 +291,9 @@ class CompanyModal extends React.Component {
                     <Modal.Content>
                       <CompanyForm
                         admin={true}
-                        selectLogo={selectLogo}
-                        removeLogo={removeLogo}
-                        companyLogo={companyLogo}
+                        selectLogo={this.props.selectLogo ? this.props.selectLogo : selectLogo}
+                        removeLogo={this.props.removeLogo ? this.props.removeLogo : removeLogo}
+                        companyLogo={this.props.companyLogo ? this.props.companyLogo : companyLogo}
                         values={values}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
