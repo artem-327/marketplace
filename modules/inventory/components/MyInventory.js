@@ -76,7 +76,7 @@ const FileTextIcon = styled(FileText)`
 `
 
 const StyledPopup = styled(Popup)`
-  max-width: 90%;
+  max-width: 90% !important;
   padding: 0 !important;
   border-radius: 4px;
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
