@@ -2350,5 +2350,13 @@
   "marketSegments.title": "Market Segments",
   "adminSettings.title": "Admin Settings",
   "confirm.deleteClientCompany": "Delete Client Company",
-  "import.CSVwithoutHeader": "CSV without header (Column Name)?"
+  "import.CSVwithoutHeader": "CSV without header (Column Name)?",
+  "products.productGroups.buttonAdd": "Add Product Group",
+  "products.productGroups.search": "Search by Group or Tag Name",
+  "product.groups.name": "Group Name",
+  "pruduct.groups.edit": "Edit Product Group",
+  "pruduct.groups.add": "Add Product Group",
+  "product.groups.tagsName": "Tags Name",
+  "product.groups.tags": "Tags",
+  "confirm.delete.product.groups.content": "Do you really want to delete Product Group?"
 }

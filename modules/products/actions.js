@@ -363,3 +363,35 @@ export function deleteCompanyGenericProductsAltName(productId, id) {
     await dispatch(getAlternativeCompanyGenericProductsNames(productId))
   }
 }
+
+export function postProductGroups(request) {
+  return {
+    type: AT.PRODUCTS_GROUPS_CREATE,
+    async payload() {
+      const response = await api.postProductGroups(request)
+      Datagrid.loadData()
+      return response
+    }
+  }
+}
+
+export function putProductGroups(id, request) {
+  return {
+    type: AT.PRODUCTS_GROUPS_UPDATE,
+    async payload() {
+      const response = await api.putProductGroups(id, request)
+      Datagrid.updateRow(id, () => response.data)
+      return response
+    }
+  }
+}
+
+export function deleteProductGroups(id) {
+  return {
+    type: AT.PRODUCTS_GROUPS_DELETE,
+    async payload() {
+      await api.deleteProductGroups(id)
+      Datagrid.loadData()
+    }
+  }
+}

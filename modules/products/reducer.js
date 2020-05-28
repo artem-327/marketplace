@@ -323,6 +323,44 @@ export default function reducers(state = initialState, action) {
         loading: false
       }
     }
+    case AT.PRODUCTS_GROUPS_CREATE_PENDING: {
+      return { ...state, loading: true }
+    }
+    case AT.PRODUCTS_GROUPS_CREATE_REJECTED: {
+      return { ...state, loading: false }
+    }
+    case AT.PRODUCTS_GROUPS_CREATE_FULFILLED: {
+      return {
+        ...state,
+        productGroup: action.payload,
+        loading: false
+      }
+    }
+    case AT.PRODUCTS_GROUPS_UPDATE_PENDING: {
+      return { ...state, loading: true }
+    }
+    case AT.PRODUCTS_GROUPS_UPDATE_REJECTED: {
+      return { ...state, loading: false }
+    }
+    case AT.PRODUCTS_GROUPS_UPDATE_FULFILLED: {
+      return {
+        ...state,
+        productGroup: action.payload,
+        loading: false
+      }
+    }
+    case AT.PRODUCTS_GROUPS_DELETE_PENDING: {
+      return { ...state, loading: true }
+    }
+    case AT.PRODUCTS_GROUPS_DELETE_REJECTED: {
+      return { ...state, loading: false }
+    }
+    case AT.PRODUCTS_GROUPS_DELETE_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
     default: {
       return state
     }

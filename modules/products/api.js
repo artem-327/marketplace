@@ -75,5 +75,8 @@ export default {
   updateCompanyGenericProductsAltName: (id, value) =>
     api.patch(`/prodex/api/company-generic-products/alternative-names/id/${id}`, value),
   deleteCompanyGenericProductsAltName: id =>
-    api.delete(`/prodex/api/company-generic-products/alternative-names/id/${id}`)
+    api.delete(`/prodex/api/company-generic-products/alternative-names/id/${id}`),
+  postProductGroups: request => api.post(`/prodex/api/product-groups`, request),
+  putProductGroups: (id, request) => api.put(`/prodex/api/product-groups/${id}`, request),
+  deleteProductGroups: id => api.put(`/prodex/api/product-groups/${id}`)
 }
