@@ -16,7 +16,7 @@ const getDropdownItems = (actions = [], row) =>
     )
   )
 
-export function getWindowDimensions(element) {
+function getContainerDimensions(element) {
   let parentEl = element.parentElement
   while (!parentEl.classList.contains("table-responsive") && parentEl !== null) {
     parentEl = parentEl.parentElement
@@ -33,7 +33,7 @@ export function getWindowDimensions(element) {
 }
 
 function repositionMenu(element) {
-  const viewport = getWindowDimensions(element)
+  const viewport = getContainerDimensions(element)
 
   // Calculate free space around dropdown
   const topSpace = element.parentNode.offsetTop - viewport.container.scrollTop + element.offsetTop
