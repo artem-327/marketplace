@@ -76,6 +76,24 @@ class AddressForm extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+
+    const { address } = this.getValues()
+    const oldValues = this.getValues(prevProps.values).address
+
+    const country = address && address.country
+    const oldCountry = oldValues && oldValues.country
+
+    if (country !== oldCountry) {
+      const parsed = JSON.parse(country)
+
+      this.setState({ hasProvinces: parsed.hasProvinces })
+      if (parsed.hasProvinces) {
+        this.fetchProvinces(parsed.countryId, parsed.hasProvinces)
+      }
+    }
+  }
+
   handleChange = (_, { name, value }) => {
     let { addressDatalistOptions, values } = this.props
     const { getAddressSearch, setFieldValue, addZip, addressDatalistLength } = this.props
@@ -181,7 +199,6 @@ class AddressForm extends Component {
       countryPopup,
       countriesLoading,
       loading,
-      initialProvince,
       required,
       intl: { formatMessage }
     } = this.props
@@ -255,16 +272,9 @@ class AddressForm extends Component {
                 'data-test': 'address_form_country_drpdn',
                 search: true,
                 onChange: async (e, data) => {
-                  let values = JSON.parse(data.value)
                   // let fieldName = prefix ? `${prefix.province}` : 'address.province'
 
                   setFieldValue(fields[this.props.province.name], '')
-
-                  // this.handleChange(e, data)
-                  this.setState({ hasProvinces: values.hasProvinces })
-                  if (values.hasProvinces) {
-                    this.fetchProvinces(values.countryId, values.hasProvinces)
-                  }
                 },
                 placeholder: formatMessage({ id: 'global.address.selectCountry', defaultMessage: 'Select Country' }),
                 ...additionalCountryInputProps
@@ -284,8 +294,7 @@ class AddressForm extends Component {
                   key: province.id,
                   text: province.name,
                   value: province.id
-                }))
-                .concat(initialProvince)}
+                }))}
               inputProps={{
                 onFocus: e => (e.target.autocomplete = null),
                 'data-test': 'address_form_province_drpdn',
@@ -368,7 +377,6 @@ AddressForm.propTypes = {
   additionalCountryInputProps: object,
   fixedCountries: array,
   handleChange: func,
-  initialProvince: array,
   required: bool
 }
 
@@ -406,7 +414,6 @@ AddressForm.defaultProps = {
   additionalCountryInputProps: {},
   fixedCountries: [],
   handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!'),
-  initialProvince: [],
   required: false
 }
 

@@ -1576,6 +1576,11 @@ i.file {
         div.ui.dropdown {
           height: 19px;
 
+          &[data-upward] > .menu {
+            top: auto !important;
+            bottom: 100% !important;
+          }
+
           svg {
             width: 20px;
             height: 19px;
