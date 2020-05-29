@@ -355,6 +355,13 @@ class Marketplace extends Component {
     const rows = this.getRows()
 
     const rowActions = []
+    const buttonInfo = {
+      text: formatMessage({
+        id: 'marketplace.info',
+        defaultMessage: 'Info'
+      }),
+      callback: row => openPopup(row.companyProduct)
+    }
     const buttonRequestHold = {
       text: formatMessage({
         id: 'hold.requestHold',
@@ -370,9 +377,11 @@ class Marketplace extends Component {
       callback: row => this.tableRowClicked(row.id)
     }
     if (isMerchant || isCompanyAdmin) {
+      rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
       rowActions.push(buttonRequestHold)
     } else {
+      rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
     }
 
@@ -457,13 +466,6 @@ class Marketplace extends Component {
 
         <div class='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
-            groupActions={row => {
-              let values = row.key.split('_')
-              return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
-                ...a,
-                text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
-              }))
-            }}
             tableName='marketplace_grid'
             {...datagrid.tableProps}
             rows={rows}
@@ -477,18 +479,32 @@ class Marketplace extends Component {
               _(rows)
                 .groupBy('productName')
                 .map(v => ({
-                  key: `${v[0].productName}_${v[0].productNumber}_${v.length}_${v[0].companyProduct.id}`,
+                  key: `${v[0].productName}_${v[0].productNumber}_${v.length}_${v[0].companyProduct.id}_${v[0].tags}`,
                   childRows: v
                 }))
                 .value()
             }
             renderGroupLabel={({ row: { value }, children = null }) => {
-              const [name, number, count] = value.split('_')
+              const [name, number, count, id, tags] = value.split('_')
               // const numberArray = number.split(' & ')
+              const tagNames = tags ? tags.split(',') : []
+              //TODO adjust style of tags
               return (
                 <span>
                   <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
-                  <span className='right'>Product offerings: {count}</span>
+
+                  <span className='right'>
+                    <span style={{ display: 'flex' }}>
+                      {tagNames.length ? (
+                        <>
+                          <ArrayToFirstItem style={{ display: 'flex' }} values={tagNames} rowItems={3} />{' '}
+                        </>
+                      ) : (
+                        ''
+                      )}
+                      Product offerings: {count}
+                    </span>
+                  </span>
                 </span>
               )
             }}

@@ -26,13 +26,15 @@ function mapStateToProps(store, { datagrid }) {
     defaultCountry: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.country.id, 1),
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
+      //TODO removed if BE send tags
+      const tags = [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }, { name: 'ddd' }, { name: 'fff' }]
       return {
         ...po,
         id: po.id,
         expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
-        productName: po.companyProduct.echoProduct.name,
+        productName: po.companyProduct.companyGenericProduct.name,
         intProductName: getSafe(() => po.companyProduct.intProductName, ''),
-        productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
+        productNumber: getSafe(() => po.companyProduct.companyGenericProduct.code, 'Unmapped'),
         // merchant: getSafe(() => po.warehouse.warehouseName, ''),
         available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
         packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
@@ -62,7 +64,7 @@ function mapStateToProps(store, { datagrid }) {
               {qtyPart && `/ ${qtyPart}`}{' '}
             </>
           ),
-        manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
+        manufacturer: getSafe(() => po.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
         expiration: po.lotExpirationDate ? moment(po.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
@@ -73,7 +75,9 @@ function mapStateToProps(store, { datagrid }) {
         nacdMember: po && po.ownerNacdMember ? 'Yes' : po.ownerNacdMember === false ? 'No' : '',
         notes: getSafe(() => po.externalNotes, ''),
         association: po && po.ownerAssociations && getSafe(() => po.ownerAssociations.map(a => a.name), []),
-        leadTime: getSafe(() => po.leadTime, 'N/A')
+        leadTime: getSafe(() => po.leadTime, 'N/A'),
+        //TODO po.companyProduct.companyGenericProduct.productGroup.tags instead of tags
+        tags: tags.length ? tags.map(tag => tag.name) : []
       }
     }),
     sidebar: store.cart.sidebar,
