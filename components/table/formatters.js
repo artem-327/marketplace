@@ -16,6 +16,41 @@ const getDropdownItems = (actions = [], row) =>
     )
   )
 
+function getContainerDimensions(element) {
+  let parentEl = element.parentElement
+  while (parentEl !== null && !parentEl.classList.contains("table-responsive")) {
+    parentEl = parentEl.parentElement
+  }
+
+  const width = parentEl ? parentEl.clientWidth : null
+  const height = parentEl ? parentEl.clientHeight : null
+
+  return {
+    container: parentEl,
+    width,
+    height
+  }
+}
+
+function repositionMenu(element) {
+  const viewport = getContainerDimensions(element)
+
+  // Calculate free space around dropdown
+  const topSpace = element.parentNode.offsetTop - viewport.container.scrollTop + element.offsetTop
+  const bottomSpace = viewport.height - (element.parentNode.offsetTop - viewport.container.scrollTop) - element.offsetTop - element.clientHeight
+
+  // Changing dropdown behavior as we know more about available space (top/bottom)
+  if (topSpace > bottomSpace) {
+    if (!element.getAttribute('data-upward')) {
+      element.setAttribute('data-upward', true)
+    }
+  } else {
+    if (element.getAttribute('data-upward')) {
+      element.removeAttribute('data-upward')
+    }
+  }
+}
+
 export function rowActionsCellFormatter({ column: { actions }, row }) {
   const dropdownItems = getDropdownItems(actions, row)
 
@@ -25,7 +60,7 @@ export function rowActionsCellFormatter({ column: { actions }, row }) {
   return displayMenu ? (
     <Dropdown icon='' trigger={
       <MoreVertical data-test={`action_${row.id ? row.id : getSafe(() => row.key.replace(' ', '_'), 'undefined')}`} />
-    }>
+    } onOpen={(e) => repositionMenu(e.currentTarget)}>
       <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
     </Dropdown>
   ) : null

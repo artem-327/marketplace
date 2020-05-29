@@ -7,7 +7,6 @@ export const initialState = {
   currentAddForm: null,
   currentEditForm: null,
   currentEdit2Form: null,
-  currentAddForm: null,
   currentAddDwolla: null,
   loading: false,
   companiesRows: [],
@@ -20,7 +19,8 @@ export const initialState = {
   mailingBranchProvinces: [],
   addressSearchPrimaryBranch: [],
   addressSearchMailingBranch: [],
-  isOpenSidebar: false
+  isOpenSidebar: false,
+  reRegisterP44Pending: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -145,6 +145,14 @@ export default function reducer(state = initialState, action) {
         addressSearchMailingBranch: action.payload,
         loading: false
       }
+    }
+
+    case AT.COMPANIES_RE_REGISTER_P44_PENDING: {
+      return { ...state, reRegisterP44Pending: true }
+    }
+    case AT.COMPANIES_RE_REGISTER_P44_REJECTED:
+    case AT.COMPANIES_RE_REGISTER_P44_FULFILLED: {
+      return { ...state, reRegisterP44Pending: false }
     }
 
     default: {
