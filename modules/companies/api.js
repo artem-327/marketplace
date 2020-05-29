@@ -38,3 +38,6 @@ export async function getAddressSearch(body) {
   const { data } = await api.post('/prodex/api/addresses/search', body)
   return data
 }
+
+export const reRegisterP44 = id =>
+  api.patch(`/prodex/api/shipment/${id}/re-register`).then(response => response.data)
