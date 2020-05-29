@@ -1,6 +1,7 @@
 import * as AT from './action-types'
 import api from './api'
 import { Datagrid } from '~/modules/datagrid'
+import { getSafe } from '~/utils/functions'
 
 export function handleActiveTab(tab, currentTab) {
   if (tab.type !== currentTab.type) Datagrid.clear()
@@ -271,6 +272,13 @@ export function loadEditEchoProduct(id, editTab) {
   return async dispatch => {
     // get newest data
     const response = await dispatch(getCompanyGenericProduct(id))
+    dispatch(searchProductGroups(getSafe(() => response.value.data.productGroup.name, '')))
+    dispatch(searchCompany(getSafe(() => response.value.data.company.name, '')))
+    if (Array.isArray(response.value.data.marketSegments)) {
+      response.value.data.marketSegments.forEach(segment =>
+        dispatch(searchMarketSegments(getSafe(() => segment.name, '')))
+      )
+    }
     let formData = {
       ...response.value.data
     }
@@ -380,7 +388,7 @@ export function putProductGroups(id, request) {
     type: AT.PRODUCTS_GROUPS_UPDATE,
     async payload() {
       const response = await api.putProductGroups(id, request)
-      Datagrid.updateRow(id, () => response.data)
+      Datagrid.updateRow(id, () => request)
       return response
     }
   }

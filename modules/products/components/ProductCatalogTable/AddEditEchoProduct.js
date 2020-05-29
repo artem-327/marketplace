@@ -246,8 +246,6 @@ class AddEditEchoProduct extends React.Component {
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
     if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
-    this.props.searchProductGroups('')
-    this.props.searchMarketSegments('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -333,14 +331,8 @@ class AddEditEchoProduct extends React.Component {
         }
       })
 
-      if (popupValues.productGroups) {
-        selectedProductGroupsOptions = popupValues.productGroups.map(d => {
-          return {
-            key: d.id,
-            text: d.name,
-            value: d.id
-          }
-        })
+      if (popupValues.productGroup) {
+        selectedProductGroupsOptions = popupValues.productGroup
       }
       if (popupValues.marketSegments) {
         selectedMarketSegmentsOptions = popupValues.marketSegments.map(d => {
@@ -353,13 +345,7 @@ class AddEditEchoProduct extends React.Component {
       }
     }
     if (popupValues && popupValues.company) {
-      selectedCompanyOptions = popupValues.company.map(d => {
-        return {
-          key: d.id,
-          text: d.name,
-          value: d.id
-        }
-      })
+      selectedCompanyOptions = popupValues.company
     }
     this.setState({
       codesList,
@@ -503,9 +489,9 @@ class AddEditEchoProduct extends React.Component {
             viscosity: getSafe(() => popupValues.viscosity, ''),
             wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
             isPublished: getSafe(() => popupValues.isPublished, false),
-            productGroup: getSafe(() => popupValues.productGroup, []).map(d => d.id),
+            productGroup: getSafe(() => popupValues.productGroup.id, ''),
             marketSegments: getSafe(() => popupValues.marketSegments, []).map(d => d.id),
-            company: getSafe(() => popupValues.company, []).map(d => d.id)
+            company: getSafe(() => popupValues.company.id, '')
           }
         : null)
     }
@@ -569,12 +555,12 @@ class AddEditEchoProduct extends React.Component {
   }, 250)
 
   handleProductGroupsChange = (value, options) => {
-    const newOptions = options.filter(el => value.some(v => el.value === v))
+    const newOptions = options.filter(el => value === el.value)
     this.setState({ selectedProductGroupsOptions: newOptions })
   }
 
   handleCompanyChange = (value, options) => {
-    const newOptions = options.filter(el => value.some(v => el.value === v))
+    const newOptions = options.filter(el => value === el.value)
     this.setState({ selectedCompanyOptions: newOptions })
   }
 

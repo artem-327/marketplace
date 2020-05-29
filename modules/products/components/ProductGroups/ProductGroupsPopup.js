@@ -75,7 +75,8 @@ class ProductGroupsPopup extends React.Component {
     const { selectedTagsOptions } = this.state
 
     const initialFormValues = {
-      name: getSafe(() => popupValues.name, false) ? popupValues.name : ''
+      name: getSafe(() => popupValues.name, ''),
+      tags: getSafe(() => popupValues.tags.props.ids, '')
     }
 
     const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
@@ -92,7 +93,7 @@ class ProductGroupsPopup extends React.Component {
         <Modal.Content>
           <Form
             enableReinitialize
-            initialValues={popupValues ? popupValues : initialFormValues}
+            initialValues={initialFormValues}
             validationSchema={formValidation()}
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
@@ -189,10 +190,7 @@ const mapStateToProps = state => {
 
   return {
     rowId: getSafe(() => popupValues.id),
-    popupValues: popupValues.map(val => ({
-      ...val,
-      productGroups: getSafe(() => val.productGroups, []).map(d => d.id)
-    })),
+    popupValues: getSafe(() => popupValues, ''),
     searchedTagsLoading: state.productsAdmin.searchedTagsLoading,
     searchedTags: getSafe(() => state.productsAdmin.searchedTags.length, false)
       ? state.productsAdmin.searchedTags.map(d => ({

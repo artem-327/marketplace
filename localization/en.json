@@ -729,7 +729,7 @@
   "global.address.selectStateProvince": "Select State/Province",
   "global.address.selectCity": "Select City",
   "global.address.enterZip": "Enter Zip",
-  "global.productGroups": "Product Groups",
+  "global.productGroup": "Product Group",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",

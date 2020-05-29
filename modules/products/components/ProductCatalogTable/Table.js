@@ -101,9 +101,9 @@ class ProductCatalogTable extends Component {
         sortPath: 'EchoProduct.sdsRevisionDate'
       },
       {
-        name: 'productGroupFormatted',
+        name: 'productGroup',
         title: (
-          <FormattedMessage id='global.productGroups' defaultMessage='Product Groups'>
+          <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
             {text => text}
           </FormattedMessage>
         ),
@@ -155,13 +155,8 @@ class ProductCatalogTable extends Component {
           ),
         manufacturerName: row.manufacturer ? row.manufacturer.name : '',
         sdsRevisionDate: row.sdsRevisionDate ? moment(row.sdsRevisionDate).format(getLocaleDateFormat()) : '',
-        productGroupFormatted: (
-          <ArrayToFirstItem
-            values={row.productGroup ? row.productGroup.map(d => (d.name ? d.name : d)) : []}
-            rowItems={2}
-          />
-        ),
-        company: getSafe(() => row.company, [])
+        productGroup: getSafe(() => row.productGroup.name, ''),
+        company: getSafe(() => row.company.name, '')
       }
     })
   }

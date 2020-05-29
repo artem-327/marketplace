@@ -9,6 +9,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import { openPopup, deleteProductGroups } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
 class ProductGroupsTable extends Component {
   state = {
@@ -87,7 +88,13 @@ const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(row => ({
       ...row,
-      tags: <ArrayToFirstItem values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''} rowItems={2} />
+      tags: (
+        <ArrayToFirstItem
+          values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''}
+          rowItems={3}
+          ids={row.tags ? row.tags.map(d => (d.id ? d.id : d)) : ''}
+        />
+      )
     })),
     filterValue: state.productsAdmin.filterValue,
     currentTab: state.productsAdmin.currentTab,
