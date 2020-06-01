@@ -110,6 +110,7 @@ export const mapCompanyRows = companyRows =>
       ? 'No'
       : '',
     hasLogo: getSafe(() => c.hasLogo, false),
+    enabled: getSafe(() => c.enabled, false),
     nacdMember: getSafe(() => c.nacdMember, false) ? 'Yes' : getSafe(() => c.nacdMember === false, false) ? 'No' : ''
   }))
 

@@ -51,6 +51,7 @@ const AccordionHeader = styled(Header)`
 const initialFormValues = {
   name: '',
   nacdMember: true,
+  enabled: false,
   phone: '',
   businessType: {
     id: null
