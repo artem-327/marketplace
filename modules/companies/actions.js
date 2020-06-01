@@ -1,8 +1,17 @@
 import * as AT from './action-types'
 import * as api from './api'
 import Router from 'next/router'
+import { Datagrid } from '~/modules/datagrid'
 
 import { updateIdentity } from '~/modules/auth/actions'
+
+export function handleActiveTab(tab, currentTab) {
+  if (tab.type !== currentTab.type) Datagrid.clear()
+  return {
+    type: AT.COMPANIES_HANDLE_ACTIVE_TAB,
+    payload: { tab }
+  }
+}
 
 export function udpateEnabled(id, enabled) {
   return {
@@ -149,3 +158,81 @@ export function reRegisterP44(id) {
     payload: api.reRegisterP44(id)
   }
 }
+
+export const deleteUser = id => ({
+  type: AT.COMPANIES_DELETE_USER,
+  payload: api.deleteUser(id)
+})
+
+export const getUser = id => ({ type: AT.COMPANIES_GET_USER, payload: api.getUser(id) })
+export const getUsersMe = () => ({ type: AT.COMPANIES_GET_USERS_ME, payload: api.getUsersMe() })
+
+export const userSwitchEnableDisable = (id, row) => {
+  Datagrid.updateRow(id, () => ({ ...row, enabled: !row.enabled }))
+  return { type: AT.COMPANIES_USER_SWITCH_ENABLE_DISABLE, payload: api.userSwitchEnableDisable(id) }
+}
+
+export const getUserRoles = () => ({
+  type: AT.COMPANIES_GET_USER_ROLES,
+  payload: api.getUserRoles()
+})
+
+export const getAdminRoles = () => ({
+  type: AT.COMPANIES_GET_ADMIN_ROLES,
+  payload: api.getAdminRoles()
+})
+
+export const postNewUserRequest = data => ({
+  type: AT.COMPANIES_POST_NEW_USER,
+  payload: api.postNewUserRequest(data)
+})
+
+export const submitUserEdit = (id, data) => ({
+  type: AT.COMPANIES_EDIT_USER,
+  payload: api.submitUserEdit(id, data)
+})
+
+export const searchCompany = (companyText, limit) => ({
+  type: AT.COMPANIES_SEARCH_COMPANY,
+  payload: api.searchCompany(companyText, limit)
+})
+
+export const searchCompanyFilter = (companyText, limit) => ({
+  type: AT.COMPANIES_SEARCH_COMPANY_FILTER,
+  payload: api.searchCompany(companyText, limit)
+})
+
+export const initSearchCompany = id => ({
+  type: AT.COMPANIES_INIT_SEARCH_COMPANY,
+  payload: api.getCompanyInfo(id)
+})
+
+export const searchSellMarketSegments = segment => ({
+  type: AT.COMPANIES_SEARCH_SELL_MARKET_SEGMENTS,
+  payload: api.searchMarketSegments({
+    orFilters: [
+      {
+        operator: 'LIKE',
+        path: 'MarketSegment.name',
+        values: [segment.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})
+
+export const searchBuyMarketSegments = segment => ({
+  type: AT.COMPANIES_SEARCH_BUY_MARKET_SEGMENTS,
+  payload: api.searchMarketSegments({
+    orFilters: [
+      {
+        operator: 'LIKE',
+        path: 'MarketSegment.name',
+        values: [segment.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})

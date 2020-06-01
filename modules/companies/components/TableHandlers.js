@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { debounce } from 'lodash'
 
+import { CornerLeftDown, PlusCircle } from 'react-feather'
+
 import { Header, Menu, Button, Input, Dropdown, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
-import { openSidebar, handleFiltersValue } from '../actions'
+import { getSafe, uniqueArrayByKey } from '~/utils/functions'
+import { openSidebar, handleFiltersValue, searchCompanyFilter } from '../actions'
 import { openImportPopup } from '~/modules/settings/actions'
 import { Datagrid } from '~/modules/datagrid'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
@@ -18,55 +20,126 @@ const PositionHeaderSettings = styled.div`
 `
 
 const CustomMenuItemLeft = styled(Menu.Item)`
-  margin-left: 0px !important;
+  margin-left: -5px !important;
   padding-left: 0px !important;
+  .dropdown, .input {
+    margin: 0 5px !important;
+    height: 40px;
+  }
 `
 
 const CustomMenuItemRight = styled(Menu.Item)`
-  margin-right: 0px !important;
+  margin-right: -5px !important;
   padding-right: 0px !important;
+ 
+  .ui.button {
+    margin: 0 5px !important;
+    height: 40px;
+    border-radius: 3px;
+    font-weight: 500;   
+    display: flex;
+    align-items: center;
+
+    svg {
+        width: 18px;
+        height: 20px;
+        margin-right: 10px;
+        vertical-align: top;
+        color: inherit;
+      }
+    
+    &.blue {
+      color: #ffffff;
+      background-color: #2599d5;
+    }
+    &.white {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+      border: solid 1px #dee2e6;
+      color: #848893;
+      background-color: #ffffff;
+    }
+  }  
 `
 
 const CustomGrid = styled(Grid)`
   margin-top: 10px !important;
 `
 
+const textsTable = {
+  'companies': {
+    BtnAddText: 'admin.addCompany',
+    SearchText: 'admin.searchCompany'
+  },
+  'users': {
+    BtnAddText: 'admin.addUser',
+    SearchText: 'admin.searchUser'
+  }
+}
+
 class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterFieldCurrentValue: 'None',
-      filterValue: ''
+      filterValue: '',
+      company: '',
+      selectedCompanyOption: ''
     }
 
     this.handleChange = debounce(this.handleChange, 300)
   }
 
-  handleChangeSelectField = (event, value) => {
-    this.setState({
-      filterFieldCurrentValue: value
-    })
-  }
-
-  handleChangeFieldsCurrentValue = fieldStateName => event => {
-    this.setState({
-      [fieldStateName]: event.target.value
-    })
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.currentTab !== this.props.currentTab) {
+      this.setState({ filterValue: '' })
+      this.handleChange('')
+    }
   }
 
   handleChange = value => {
     Datagrid.setSearch(value)
-    // if (Datagrid.isReady()) Datagrid.setSearch(value)
-    // else this.props.handleFiltersValue(this.props, value)
   }
 
-  render() {
-    const { openSidebar, openImportPopup, intl, isOpenImportPopup } = this.props
+  handleFilterChangeCompany = (e, { value }) => {
+    let selectedCompanyOption = ''
 
+    if (value !== '' ) {
+      selectedCompanyOption = this.props.searchedCompaniesFilter.find(c => value === c.value)
+    }
+
+    this.setState({ company: value, selectedCompanyOption })
+    this.handleChange(
+      { company: value, input: this.state.filterValue },
+      true,
+      'companyFilter'
+    )
+  }
+
+  searchCompanies = debounce(text => {
+    this.props.searchCompanyFilter(text, 5)
+  }, 300)
+
+  render() {
+    const {
+      openSidebar,
+      openImportPopup,
+      intl,
+      isOpenImportPopup,
+      currentTab,
+      searchedCompaniesFilterLoading,
+      searchedCompaniesFilter
+    } = this.props
     const { formatMessage } = intl
 
-    // if (currentTab === 'Manufactures' || currentTab === 'CAS Products' || currentTab === 'Companies') var onChange = this.debouncedOnChange
-    // else var onChange = this.handleChange
+    const { company, selectedCompanyOption } = this.state
+
+    const item = textsTable[currentTab.type]
+
+    let allCompanyOptions
+    if (selectedCompanyOption) {
+      allCompanyOptions = uniqueArrayByKey(searchedCompaniesFilter.concat([selectedCompanyOption]), 'key')
+    } else {
+      allCompanyOptions = searchedCompaniesFilter
+    }
 
     return (
       <PositionHeaderSettings>
@@ -76,30 +149,66 @@ class TablesHandlers extends Component {
             <Input
               style={{ width: 340 }}
               icon='search'
-              placeholder={formatMessage({ id: 'admin.searchCompany' })}
+              placeholder={formatMessage({ id: item.SearchText })}
               onChange={(e, { value }) => {
                 this.setState({ filterValue: value })
-                this.handleChange(value)
+                this.handleChange(
+                  { input: value, company },
+                  true,
+                  'handlersFilter'
+                )
               }}
               value={this.state.filterValue}
             />
+            {currentTab.type === 'users' && (
+
+              <Dropdown
+                style={{ width: 340, zIndex: 501 }}
+                placeholder={formatMessage({
+                  id: 'myInventory.exportInventorySearchText',
+                  defaultMessage: 'Search by Company'
+                })}
+                icon='search'
+                selection
+                clearable
+                options={allCompanyOptions}
+                search={options => options}
+                value={company}
+                loading={searchedCompaniesFilterLoading}
+                onSearchChange={(e, { searchQuery }) => {
+                  searchQuery.length > 0 && this.searchCompanies(searchQuery)
+                }}
+                onChange={this.handleFilterChangeCompany}
+              />
+            )}
           </CustomMenuItemLeft>
           <CustomMenuItemRight position='right'>
-            <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openSidebar()}>
-              <FormattedMessage id='global.add' defaultMessage='Add'>
+            {currentTab.type === 'companies' && (
+              <Button
+                className='white'
+                size='large'
+                primary
+                onClick={() => openImportPopup()}
+                data-test='companies_import_btn'
+              >
+                <CornerLeftDown />
+                {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
+              </Button>
+            )}
+            <Button
+              className='blue'
+              size='large'
+              data-test='companies_table_add_btn'
+              primary
+              onClick={() => openSidebar()}
+            >
+              <PlusCircle />
+              <FormattedMessage id={item.BtnAddText} defaultMessage='Add'>
                 {text => `${text} `}
-              </FormattedMessage>
-              <FormattedMessage id='admin.company' defaultMessage='Company'>
-                {text => text}
               </FormattedMessage>
             </Button>
           </CustomMenuItemRight>
 
-          <CustomMenuItemRight>
-            <Button size='large' primary onClick={() => openImportPopup()} data-test='admin_import_btn'>
-              {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
-            </Button>
-          </CustomMenuItemRight>
         </CustomGrid>
       </PositionHeaderSettings>
     )
@@ -108,16 +217,22 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    casListDataRequest: state.admin.casListDataRequest,
-    companyListDataRequest: state.admin.companyListDataRequest,
-    isOpenImportPopup: state.settings.isOpenImportPopup
+    currentTab: state.companiesAdmin.currentTab,
+    isOpenImportPopup: state.settings.isOpenImportPopup,
+    searchedCompaniesFilterLoading: state.companiesAdmin.searchedCompaniesFilterLoading,
+    searchedCompaniesFilter: state.companiesAdmin.searchedCompaniesFilter.map(d => ({
+      key: d.id,
+      value: d.id,
+      text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
+    }))
   }
 }
 
 const mapDispatchToProps = {
   openSidebar,
   openImportPopup,
-  handleFiltersValue
+  handleFiltersValue,
+  searchCompanyFilter
 }
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(TablesHandlers))
