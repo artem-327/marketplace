@@ -5,7 +5,8 @@ export const initialState = {
   holds: [],
   datagridFilter: { filters: [] },
   datagridFilterUpdate: false,
-  typeHolds: 'my'
+  typeHolds: 'my',
+  countHolds: ''
 }
 
 export default function reducer(state = initialState, action) {
@@ -34,44 +35,22 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_MY_HOLDS_PENDING: {
+    case AT.GET_COUNT_HOLDS_PENDING: {
       return {
         ...state,
         loading: true
       }
     }
 
-    case AT.GET_MY_HOLDS_FULFILLED: {
+    case AT.GET_COUNT_HOLDS_FULFILLED: {
       return {
         ...state,
         loading: false,
-        holds: payload.data
+        countHolds: payload.data
       }
     }
 
-    case AT.GET_MY_HOLDS_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
-    case AT.GET_FOREIGN_HOLDS_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-    case AT.GET_FOREIGN_HOLDS_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        holds: payload.data
-      }
-    }
-
-    case AT.GET_FOREIGN_HOLDS_REJECTED: {
+    case AT.GET_COUNT_HOLDS_REJECTED: {
       return {
         ...state,
         loading: false
