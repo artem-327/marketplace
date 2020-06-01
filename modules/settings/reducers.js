@@ -114,8 +114,8 @@ export const initialState = {
   },
   languages: [],
   languagesFetching: false,
-  echoProducts: [],
-  echoProductsFetching: false,
+  companyGenericProduct: [],
+  companyGenericProductFetching: false,
   nmfcNumbersFiltered: [],
   nmfcNumbersFetching: false,
   csvImportError: null,
@@ -1353,22 +1353,22 @@ export default function reducer(state = initialState, action) {
     case AT.SEARCH_COMPANY_GENERIC_PRODUCTS_PENDING: {
       return {
         ...state,
-        echoProductsFetching: true
+        companyGenericProductFetching: true
       }
     }
 
     case AT.SEARCH_COMPANY_GENERIC_PRODUCTS_FULFILLED: {
       return {
         ...state,
-        echoProducts: payload,
-        echoProductsFetching: false
+        companyGenericProduct: payload,
+        companyGenericProductFetching: false
       }
     }
 
     case AT.SEARCH_COMPANY_GENERIC_PRODUCTS_REJECTED: {
       return {
         ...state,
-        echoProductsFetching: false
+        companyGenericProductFetching: false
       }
     }
 

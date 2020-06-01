@@ -110,7 +110,7 @@ class ProductCatalogTable extends Component {
         sortPath: 'CompanyProduct.packagingType.name'
       }
     ],
-    echoProducts: []
+    companyGenericProduct: []
   }
 
   // componentDidMount() {

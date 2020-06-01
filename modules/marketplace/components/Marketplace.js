@@ -330,7 +330,7 @@ class Marketplace extends Component {
     }
   }
 
-  getEchoProducts = (rows, selectedRows) => {
+  getCompanyGenericProduct = (rows, selectedRows) => {
     if (!rows || !selectedRows) return
     return rows.reduce((filtered, row, rowIndex) => {
       if (selectedRows.includes(row.id)) {
@@ -410,7 +410,7 @@ class Marketplace extends Component {
             return filtered
           }, [])}
           removePopup={this.props.removePopup}
-          echoProducts={this.getEchoProducts(rows, selectedRows)}
+          companyGenericProduct={this.getCompanyGenericProduct(rows, selectedRows)}
           {...this.props}
         />
 
