@@ -440,7 +440,7 @@ class ProductSidebar extends React.Component {
                           <Dropdown
                             label={
                               <FormattedMessage
-                                id='settings.associatedEchoProducts'
+                                id='settings.associatedCompanyGenericProduct'
                                 defaultMessage='What is the Associated External Product that you would like to map to?'
                               />
                             }

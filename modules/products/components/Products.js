@@ -48,7 +48,7 @@ class Products extends Component {
     }
 
     const importForm = {
-      'product-catalog': <ProductImportPopup echoProduct={true} />
+      'product-catalog': <ProductImportPopup companyGenericProduct={true} />
     }
 
     return (

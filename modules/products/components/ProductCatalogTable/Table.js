@@ -74,7 +74,7 @@ class ProductCatalogTable extends Component {
       {
         name: 'sds',
         title: (
-          <FormattedMessage id='admin.echoProducts.sds' defaultMessage='SDS'>
+          <FormattedMessage id='admin.companyGenericProduct.sds' defaultMessage='SDS'>
             {text => text}
           </FormattedMessage>
         ),
@@ -83,7 +83,7 @@ class ProductCatalogTable extends Component {
       {
         name: 'sdsVersionNumber',
         title: (
-          <FormattedMessage id='admin.echoProducts.sdsVersion' defaultMessage='SDS Version'>
+          <FormattedMessage id='admin.companyGenericProduct.sdsVersion' defaultMessage='SDS Version'>
             {text => text}
           </FormattedMessage>
         ),
@@ -93,7 +93,7 @@ class ProductCatalogTable extends Component {
       {
         name: 'sdsRevisionDate',
         title: (
-          <FormattedMessage id='admin.echoProducts.sdsRevisionDate' defaultMessage='SDS Revision Date'>
+          <FormattedMessage id='admin.companyGenericProduct.sdsRevisionDate' defaultMessage='SDS Revision Date'>
             {text => text}
           </FormattedMessage>
         ),
