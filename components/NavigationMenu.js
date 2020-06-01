@@ -242,7 +242,8 @@ class Navigation extends Component {
       collapsedMenu,
       activeInventoryFilter,
       activeMarketplaceFilter,
-      activeWantedBoardFilter
+      activeWantedBoardFilter,
+      isClientCompanyAdmin
     } = this.props
 
     const {
@@ -367,7 +368,7 @@ class Navigation extends Component {
             </PerfectScrollbar>
           </Dropdown.Menu>
         </DropdownItem>
-        {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
+        {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin || isClientCompanyAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
             text={formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}
@@ -379,7 +380,7 @@ class Navigation extends Component {
             data-test='navigation_menu_settings_drpdn'>
             <Dropdown.Menu data-test='navigation_menu_settings_drpdn_menu'>
               <PerfectScrollbar>
-                {isCompanyAdmin ? (
+                {isCompanyAdmin || isClientCompanyAdmin ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}
@@ -397,7 +398,7 @@ class Navigation extends Component {
                     </Dropdown.Item>
                   </>
                 ) : null}
-                {isCompanyAdmin || isUserAdmin ? (
+                {isCompanyAdmin || isUserAdmin || isClientCompanyAdmin ? (
                   <Dropdown.Item
                     as={MenuLink}
                     to='/settings?type=users'
@@ -406,7 +407,7 @@ class Navigation extends Component {
                     {formatMessage({ id: 'navigation.users', defaultMessage: 'Users' })}
                   </Dropdown.Item>
                 ) : null}
-                {isCompanyAdmin ? (
+                {isCompanyAdmin || isClientCompanyAdmin ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}
@@ -569,6 +570,7 @@ export default withAuth(
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
+        isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
         collapsedMenu: store.layout.collapsedMenu,
         activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
         activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
