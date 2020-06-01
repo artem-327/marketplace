@@ -350,6 +350,7 @@
   "global.logisticAccounts": "Logistics Accounts",
   "global.reviewRequested": "Review Requested",
   "global.companyName": "Company Name",
+  "global.p44CompanyId": "P44 Company ID",
   "global.complete": "Complete",
   "global.headquaterAddress": "Headquarters Address",
   "global.primaryContact": "Primary Contact",

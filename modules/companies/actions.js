@@ -142,3 +142,10 @@ export function getAddressSearchMailingBranch(body) {
     payload: api.getAddressSearch(body)
   }
 }
+
+export function reRegisterP44(id) {
+  return {
+    type: AT.COMPANIES_RE_REGISTER_P44,
+    payload: api.reRegisterP44(id)
+  }
+}

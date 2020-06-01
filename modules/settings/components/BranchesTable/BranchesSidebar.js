@@ -34,6 +34,7 @@ import { TimeInput } from '~/components/custom-formik/'
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
   color: #fff !important;
+  margin: 0 5px !important;
 `
 
 const CustomSegment = styled(Segment)`
@@ -72,7 +73,7 @@ const CustomForm = styled(Form)`
 const CustomDiv = styled.div`
   text-align: right;
   z-index: 1;
-  padding: 10px 22px;
+  padding: 10px 25px;
   margin-top: 0px;
   box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
 `
@@ -131,10 +132,6 @@ class BranchSidebar extends React.Component {
     if (prevProps.openTab !== this.props.openTab) {
       this.setState({ editTab: this.props.openTab })
     }
-  }
-
-  fetchIfNoData = (name, fn) => {
-    if (this.props[name].length === 0) fn()
   }
 
   submitHandler = async (values, setSubmitting) => {
@@ -251,16 +248,11 @@ class BranchSidebar extends React.Component {
           required={true}
           setFieldValue={setFieldValue}
           values={values}
-          initialZipCodes={{
+          initialZipCodes={[{
             key: values.zipID.toString(),
             value: values.deliveryAddress.address.zip,
             text: values.deliveryAddress.address.zip
-          }}
-          initialProvince={{
-            key: getSafe(() => values.province.id, ''),
-            value: getSafe(() => values.province.id, ''),
-            text: getSafe(() => values.province.name, '')
-          }}
+          }]}
         />
 
         <Header as='h3'>
@@ -371,7 +363,7 @@ class BranchSidebar extends React.Component {
                 </FlexContent>
                 <CustomDiv>
                   <Button.Reset
-                    style={{ marginRight: '10px'}}
+                    style={{ margin: '0 5px'}}
                     onClick={closeSidebar}
                     data-test='settings_branches_popup_reset_btn'
                   >
