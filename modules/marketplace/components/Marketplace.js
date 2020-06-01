@@ -80,7 +80,7 @@ const CustomDiv = styled.div`
 class Marketplace extends Component {
   state = {
     columns: [
-      { name: 'productName', disabled: true },
+      { name: 'productGroupName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
       {
@@ -360,7 +360,7 @@ class Marketplace extends Component {
         id: 'marketplace.info',
         defaultMessage: 'Info'
       }),
-      callback: row => openPopup(row.companyProduct)
+      callback: row => openPopup(row)
     }
     const buttonRequestHold = {
       text: formatMessage({
@@ -477,33 +477,23 @@ class Marketplace extends Component {
             // sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
-                .groupBy('productName')
+                .groupBy('productGroupName')
                 .map(v => ({
-                  key: `${v[0].productName}_${v[0].productNumber}_${v.length}_${v[0].companyProduct.id}_${v[0].tags}`,
+                  key: `${v[0].productGroupName}_${v[0].productNumber}_${v.length}_${v[0].companyProduct.id}_${v[0].tagsNames}`,
                   childRows: v
                 }))
                 .value()
             }
             renderGroupLabel={({ row: { value }, children = null }) => {
-              const [name, number, count, id, tags] = value.split('_')
+              const [name, number, count, id, tagsNames] = value.split('_')
               // const numberArray = number.split(' & ')
-              const tagNames = tags ? tags.split(',') : []
-              //TODO adjust style of tags
+              const tagNames = tagsNames ? tagsNames.split(',') : []
               return (
                 <span>
                   <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
-
                   <span className='right'>
-                    <span style={{ display: 'flex' }}>
-                      {tagNames.length ? (
-                        <>
-                          <ArrayToFirstItem style={{ display: 'flex' }} values={tagNames} rowItems={3} />{' '}
-                        </>
-                      ) : (
-                        ''
-                      )}
-                      Product offerings: {count}
-                    </span>
+                    <span>{tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={3} /> : ''}</span>
+                    <span style={{ display: 'inline-flex' }}>Product offerings: {count}</span>
                   </span>
                 </span>
               )

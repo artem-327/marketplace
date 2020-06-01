@@ -1055,13 +1055,14 @@ class CompanyProductInfo extends Component {
       handleSubmit,
       casProductOnly
     } = this.props
-    console.log('popupValues====================================')
-    console.log(popupValues)
-    console.log('====================================')
-    let { companyGenericProduct } = popupValues
-    console.log('companyGenericProduct====================================')
-    console.log(companyGenericProduct)
-    console.log('====================================')
+
+    let { companyProduct } = popupValues
+
+    try {
+      var { companyGenericProduct } = companyProduct
+    } catch (e) {
+      var companyGenericProduct = {}
+    }
 
     let additionalFormProps = {}
     if (!readOnly) additionalFormProps.validationSchema = validationSchema
@@ -1071,8 +1072,8 @@ class CompanyProductInfo extends Component {
 
     let initialValues = {
       ...companyGenericProduct,
-      ...popupValues,
-      attachments: getSafe(() => popupValues.attachments, []).concat(
+      ...companyProduct,
+      attachments: getSafe(() => companyProduct.attachments, []).concat(
         getSafe(() => companyGenericProduct.attachments, [])
       ),
       productName: getSafe(() => companyGenericProduct.name, ''),

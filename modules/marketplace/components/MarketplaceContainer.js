@@ -26,13 +26,11 @@ function mapStateToProps(store, { datagrid }) {
     defaultCountry: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.country.id, 1),
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-      //TODO removed if BE send tags
-      const tags = [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }, { name: 'ddd' }, { name: 'fff' }]
       return {
         ...po,
         id: po.id,
         expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
-        productName: po.companyProduct.companyGenericProduct.name,
+        productGroupName: getSafe(() => po.companyProduct.companyGenericProduct.productGroup.name, ''),
         intProductName: getSafe(() => po.companyProduct.intProductName, ''),
         productNumber: getSafe(() => po.companyProduct.companyGenericProduct.code, 'Unmapped'),
         // merchant: getSafe(() => po.warehouse.warehouseName, ''),
@@ -76,8 +74,9 @@ function mapStateToProps(store, { datagrid }) {
         notes: getSafe(() => po.externalNotes, ''),
         association: po && po.ownerAssociations && getSafe(() => po.ownerAssociations.map(a => a.name), []),
         leadTime: getSafe(() => po.leadTime, 'N/A'),
-        //TODO po.companyProduct.companyGenericProduct.productGroup.tags instead of tags
-        tags: tags.length ? tags.map(tag => tag.name) : []
+        tagsNames: getSafe(() => po.companyProduct.companyGenericProduct.productGroup.tags.length, '')
+          ? po.companyProduct.companyGenericProduct.productGroup.tags.map(tag => tag.name)
+          : ''
       }
     }),
     sidebar: store.cart.sidebar,
