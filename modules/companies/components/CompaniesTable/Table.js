@@ -11,8 +11,7 @@ import Router from 'next/router'
 import { mapCompanyRows } from '~/constants/index'
 
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
-import * as Actions from '../actions'
-import AddEditCompanySidebar from './AddEditCompanySidebar'
+import * as Actions from '../../actions'
 import { RefreshCw } from 'react-feather'
 import styled from 'styled-components'
 import { Button } from 'semantic-ui-react'
@@ -222,8 +221,6 @@ class CompaniesTable extends Component {
       takeOverCompany,
       resendWelcomeEmail,
       intl,
-      currentAddForm,
-      currentEditForm,
       isOpenSidebar
     } = this.props
 
@@ -284,7 +281,6 @@ class CompaniesTable extends Component {
             }
           ]}
         />
-        {isOpenSidebar && <AddEditCompanySidebar />}
       </React.Fragment>
     )
   }

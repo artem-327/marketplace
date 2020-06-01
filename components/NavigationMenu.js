@@ -30,6 +30,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
 import TabsOperations from '~/modules/operations/components/Tabs'
 import TabsProducts from '~/modules/products/components/Tabs'
+import TabsCompanies from '~/modules/companies/components/Tabs'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -55,6 +56,7 @@ class Navigation extends Component {
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
     products: getSafe(() => Router.router.pathname === '/products', false),
+    companies: getSafe(() => Router.router.pathname === '/companies', false),
     openedFilterMyInventory: true,
     openedFilterMarketplace: true,
     openedFilterOrders: false,
@@ -163,6 +165,9 @@ class Navigation extends Component {
     if (type === 'products') {
       Router.push('/products')
     }
+    if (type === 'companies') {
+      Router.push('/companies')
+    }
     // toggle dropdown state
     this.setState({
       openedFilterMyInventory: false,
@@ -173,6 +178,7 @@ class Navigation extends Component {
       admin: false,
       operations: false,
       products: false,
+      companies: false,
       [type]: !typeState
     })
 
@@ -246,6 +252,7 @@ class Navigation extends Component {
       admin,
       operations,
       products,
+      companies,
       openedFilterMyInventory,
       openedFilterMarketplace,
       openedFilterOrders,
@@ -487,12 +494,16 @@ class Navigation extends Component {
       <div className='flex-wrapper'>
         {isAdmin && (
           <>
-            <MenuLink to='/companies' dataTest='navigation_menu_admin_companies'>
-              <>
-                <Briefcase size={22} />
-                {formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
-              </>
-            </MenuLink>
+            <DropdownItem
+              icon={<Briefcase size={22} />}
+              text={formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
+              className={companies ? 'opened' : null}
+              opened={companies}
+              onClick={() => this.toggleOpened('companies')}
+              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+              refId={'companies'}>
+              <TabsCompanies />
+            </DropdownItem>
             <DropdownItem
               icon={<Package size={22} />}
               text={formatMessage({ id: 'navigation.products', defaultMessage: 'Products' })}
