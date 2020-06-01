@@ -7,13 +7,13 @@ function mapStateToProps(state, props) {
   return {
     ...state.businessTypes,
     companyId: getSafe(
-      () => state.admin.popupValues.id,
+      () => state.companiesAdmin.popupValues.id,
       getSafe(() => state.auth.identity.company.id, false)
     ),
     selectLogo: props.selectLogo,
     companyLogo: props.companyLogo,
     hasLogo: props.admin
-      ? getSafe(() => state.admin.popupValues.hasLogo, false)
+      ? getSafe(() => state.companiesAdmin.popupValues.hasLogo, false)
       : getSafe(() => state.auth.identity.company.hasLogo, false),
     associations: getSafe(() => state.businessTypes.associations, [])
   }

@@ -27,9 +27,6 @@ import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
 
-import UsersTable from './UsersTable/Table'
-import UsersSidebar from './UsersTable/UsersSidebar'
-
 import styled from 'styled-components'
 
 const FixyWrapper = styled.div`
@@ -51,7 +48,6 @@ const tables = {
   Conditions: <DataTable />,
   'NMFC Numbers': <NmfcTable />,
   Associations: <DataTable />,
-  Users: <UsersTable />,
   'Admin Settings': (
     <FixyWrapper>
       <ScrollableSegment basic padded='very'>
@@ -101,20 +97,6 @@ const datagridConfig = {
   'Units of Measure': {
     url: '/prodex/api/units/datagrid',
     searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v}%`] }] : [])
-  },
-  Users: {
-    url: `/prodex/api/users/datagrid/all`,
-    searchToFilter: v =>
-      v
-        ? [
-            { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
-            {
-              operator: 'LIKE',
-              path: 'User.homeBranch.deliveryAddress.contactName',
-              values: [`%${v}%`]
-            }
-          ]
-        : []
   }
 }
 
@@ -138,10 +120,6 @@ const addForms = {
   Conditions: <AddNewPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
   Associations: <AddNewPopup1Parameter />
-}
-
-const editSidebar = {
-  Users: <UsersSidebar />
 }
 
 const addDwollaForms = {
@@ -191,7 +169,6 @@ class Admin extends Component {
             </Grid.Row>
           </Grid>
         </Container>
-        {(currentAddForm || currentEditForm) && editSidebar[currentTab.name]}
       </DatagridProvider>
     )
   }

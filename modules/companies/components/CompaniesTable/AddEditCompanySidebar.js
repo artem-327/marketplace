@@ -3,18 +3,13 @@ import { connect } from 'react-redux'
 
 import {
   Form,
-  Modal,
   FormGroup,
   Divider,
   Accordion,
   Icon,
-  Segment,
   Header,
   Loader,
-  Dimmer,
-  Grid,
-  GridRow,
-  GridColumn
+  Dimmer
 } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import {
@@ -681,7 +676,8 @@ class AddEditCompanySidebar extends React.Component {
               </FlexSidebar>
             </Form>
           )
-        }}></Formik>
+        }}>
+      </Formik>
     )
   }
 }

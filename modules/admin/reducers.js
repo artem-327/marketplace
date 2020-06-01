@@ -33,7 +33,6 @@ export const initialState = {
     { name: 'Grades', id: 4 },
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
-    { name: 'Users', id: 13 },
     { name: 'NMFC Numbers', id: 14 },
     { name: 'Associations', id: 15 },
     { name: 'Admin Settings', id: 11, hideHandler: true }
