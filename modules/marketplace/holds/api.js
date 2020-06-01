@@ -6,9 +6,7 @@ export const createHold = params => {
   return api.post(`/prodex/api/holds${queryParams}`)
 }
 
-export const getMyHolds = () => api.get(`/prodex/api/holds/my`)
-
-export const getForeignHolds = () => api.get(`/prodex/api/holds/foreign`)
+export const getCountHolds = () => api.get(`/prodex/api/holds/my/count`)
 
 export const rejectHold = id => api.patch(`/prodex/api/holds/${id}/reject`)
 
