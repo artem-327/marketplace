@@ -161,12 +161,16 @@ export const addAttachment = (attachment, docType, additionalParams = {}) => {
 }
 
 export const linkAttachment = (echoId, attachmentId) =>
-  api.post(`/prodex/api/attachment-links/to-echo-product?attachmentId=${attachmentId}&echoProductId=${echoId}`)
+  api.post(
+    `/prodex/api/attachment-links/to-company-generic-product?attachmentId=${attachmentId}&companyGenericProductId =${echoId}`
+  )
 
 export const removeAttachment = attachmentId => api.delete(`/prodex/api/attachments/${attachmentId}`)
 
 export const removeAttachmentLink = (echoId, attachmentId) =>
-  api.delete(`/prodex/api/attachment-links/to-echo-product?attachmentId=${attachmentId}&echoProductId=${echoId}`)
+  api.delete(
+    `/prodex/api/attachment-links/to-company-generic-product?attachmentId=${attachmentId}&companyGenericProductId =${echoId}`
+  )
 
 export const searchManufacturers = (text, limit) =>
   api.get(

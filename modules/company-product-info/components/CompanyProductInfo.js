@@ -12,7 +12,7 @@ import {
   tabs,
   regulatoryFilter,
   dropdownOptions,
-  echoProductGrouping,
+  companyGenericProductGrouping,
   yesNoOptions,
   tabsMarketPlace
 } from '../constants'
@@ -177,7 +177,7 @@ class CompanyProductInfo extends Component {
   state = {
     regulatoryFilter: regulatoryFilter.all.value,
     casProductIndex: 0,
-    echoProductGroup: echoProductGrouping[0].value
+    companyGenericProductGrouping: companyGenericProductGrouping[0].value
   }
 
   getElements = ({ id, defaultMessage, elements }) => {
@@ -920,106 +920,106 @@ class CompanyProductInfo extends Component {
                 <Dropdown
                   selection
                   fluid
-                  options={echoProductGrouping}
-                  value={this.state.echoProductGroup}
-                  onChange={(_, { value }) => this.setState({ echoProductGroup: value })}
+                  options={companyGenericProductGrouping}
+                  value={this.state.companyGenericProductGrouping}
+                  onChange={(_, { value }) => this.setState({ companyGenericProductGrouping: value })}
                 />
               </GridColumn>
             </GridRow>
             {this.getTextarea({
               id: 'global.unNumber',
               defaultMessage: 'UN Number',
-              name: `companyGenericProduct.${this.state.echoProductGroup}UnNumber.unNumberCode`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}UnNumber.unNumberCode`
             })}
             {this.getTextarea({
               id: 'global.properShippingName',
               defaultMessage: 'Proper Shipping Name',
-              name: `companyGenericProduct.${this.state.echoProductGroup}ProperShippingName`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ProperShippingName`
             })}
             {this.getTextarea({
               id: 'global.properTechnicalName',
               defaultMessage: 'Proper Technical Name',
-              name: `companyGenericProduct.${this.state.echoProductGroup}ProperTechnicalName`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ProperTechnicalName`
             })}
             {this.getTextarea({
               id: 'global.hazardClass',
               defaultMessage: 'Hazard Class',
-              name: `companyGenericProduct.${this.state.echoProductGroup}HazardClass.classCode`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}HazardClass.classCode`
             })}
             {this.getTextarea({
               id: 'global.packagingGroup',
               defaultMessage: 'Packaging Group',
-              name: `companyGenericProduct.${this.state.echoProductGroup}PackagingGroup.groupCode`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingGroup.groupCode`
             })}
             {this.getTextarea({
               id: 'global.reportableQuantity',
               defaultMessage: 'Reportable Quantity',
-              name: `companyGenericProduct.${this.state.echoProductGroup}ReportableQuantity`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantity`
             })}
             {/*this.getTextarea({
               id: 'global.enviromentalHazards',
               defaultMessage: 'Enviromental Hazards',
-              name: `companyGenericProduct.${this.state.echoProductGroup}EnviromentalHazards`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}EnviromentalHazards`
             })*/}
             {/*this.getTextarea({
               id: 'global.emsNumbers',
               defaultMessage: 'Ems Numbers',
-              name: `companyGenericProduct.${this.state.echoProductGroup}EmsNumbers`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}EmsNumbers`
             })*/}
             {/*this.getTextarea({
               id: 'global.exceptions',
               defaultMessage: 'Exceptions',
-              name: `companyGenericProduct.${this.state.echoProductGroup}Exceptions`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}Exceptions`
             })*/}
             {/*this.getTextarea({
               id: 'global.specialPrecautionForUser',
               defaultMessage: 'Special Precautions For User',
-              name: `companyGenericProduct.${this.state.echoProductGroup}SpecialPrecautionsForUser`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}SpecialPrecautionsForUser`
             })*/}
             {this.getTextarea({
               id: 'global.marinePollutant',
               defaultMessage: 'Marine Pollutant',
-              name: `companyGenericProduct.${this.state.echoProductGroup}MarinePollutant`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}MarinePollutant`
             })}
             {this.getTextarea({
               id: 'global.severeMarinePollutant',
               defaultMessage: 'Severe Marine Pollutant',
-              name: `companyGenericProduct.${this.state.echoProductGroup}SevereMarinePollutant`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}SevereMarinePollutant`
             })}
             {/*this.getTextarea({
               id: 'global.packagingExceptions',
               defaultMessage: 'Packaging Exceptions',
-              name: `companyGenericProduct.${this.state.echoProductGroup}PackagingExceptions`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingExceptions`
             })*/}
             {/*this.getTextarea({
               id: 'global.packagingNonBulk',
               defaultMessage: 'Packaging Non Bulk',
-              name: `companyGenericProduct.${this.state.echoProductGroup}PackagingNonBulk`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingNonBulk`
             })*/}
             {/*this.getTextarea({
               id: 'global.packagingBulk',
               defaultMessage: 'Packaging Bulk',
-              name: `companyGenericProduct.${this.state.echoProductGroup}PackagingBulk`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingBulk`
             })*/}
             {/*this.getTextarea({
               id: 'global.quantityLimitationsPassengerAircraftRail',
               defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
-              name: `companyGenericProduct.${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}QuantityLimitationsPassengerAircraftRail`
             })*/}
             {/*this.getTextarea({
               id: 'global.quantityLimitationsCargoAircraftOnly',
               defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
-              name: `companyGenericProduct.${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}QuantityLimitationsCargoAircraftOnly`
             })*/}
             {/*this.getTextarea({
               id: 'global.vesselStowageLocation',
               defaultMessage: 'Vessel Stowage Location',
-              name: `companyGenericProduct.${this.state.echoProductGroup}VesselStowageLocation`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}VesselStowageLocation`
             })*/}
             {/*this.getTextarea({
               id: 'global.vesselStowageOther',
               defaultMessage: 'Vessel Stowage Other',
-              name: `companyGenericProduct.${this.state.echoProductGroup}VesselStowageOther`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}VesselStowageOther`
             })*/}
           </Grid>
         )

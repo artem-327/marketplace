@@ -155,7 +155,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 220,
-        sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name'
+        sortPath: 'ProductOffer.companyProduct.companyGenericProduct.manufacturer.name'
       },
       {
         name: 'origin',
@@ -319,7 +319,7 @@ class Marketplace extends Component {
     if (!rows || !selectedRows) return
     const filteredRows = rows.reduce((filtered, row, rowIndex) => {
       if (selectedRows.includes(row.id)) {
-        filtered.push(row.companyProduct.echoProduct.id)
+        filtered.push(row.companyProduct.companyGenericProduct.id)
       }
       return [...new Set(filtered)]
     }, [])
@@ -334,7 +334,7 @@ class Marketplace extends Component {
     if (!rows || !selectedRows) return
     return rows.reduce((filtered, row, rowIndex) => {
       if (selectedRows.includes(row.id)) {
-        filtered.push(row.companyProduct.echoProduct)
+        filtered.push(row.companyProduct.companyGenericProduct)
       }
       return filtered
     }, [])

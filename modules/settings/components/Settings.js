@@ -447,12 +447,12 @@ class Settings extends Component {
                 },
                 {
                   operator: 'LIKE',
-                  path: 'CompanyProduct.echoProduct.name',
+                  path: 'CompanyProduct.companyGenericProduct.name',
                   values: [`%${v}%`]
                 },
                 {
                   operator: 'LIKE',
-                  path: 'CompanyProduct.echoProduct.code',
+                  path: 'CompanyProduct.companyGenericProduct.code',
                   values: [`%${v}%`]
                 }
               ]

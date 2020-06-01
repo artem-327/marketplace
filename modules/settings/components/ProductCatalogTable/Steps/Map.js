@@ -30,7 +30,7 @@ import _invert from 'lodash/invert'
 import { withToastManager } from 'react-toast-notifications'
 import { MapTable, SmallerTableCell } from '~/modules/settings/components/ProductCatalogTable/Steps/constants/layout'
 
-const simpleEchoProductList = {
+const simpleCompanyGenericProductList = {
   constant: 'global',
   required: ['codeMapper', 'elementsMapper', 'nameMapper'],
   optional: [
@@ -163,9 +163,9 @@ const simpleCompanyProductList = {
     'stackableMapper'
   ],
   optional: [
-    'echoProductNameMapper',
-    'echoProductCodeMapper',
-    'echoProductNameOrCodeMapper',
+    'companyGenericProductNameMapper',
+    'companyGenericProductCodeMapper',
+    'companyGenericProductNameOrCodeMapper',
     'freezeProtectMapper',
     'hazardousMapper',
     'inciNameMapper',
@@ -289,11 +289,11 @@ class Map extends Component {
       const mappingProductOffer = this.getMapping(simpleProductOfferList)
       constant = simpleProductOfferList.constant
       mapping = mappingProductOffer
-    } else if (this.props.echoProduct) {
+    } else if (this.props.companyGenericProduct) {
       this.props.getCSVMapCompanyGenericProduct()
-      const mappingEchoProduct = this.getMapping(simpleEchoProductList)
-      constant = simpleEchoProductList.constant
-      mapping = mappingEchoProduct
+      const mappingCompanyGenericProduct = this.getMapping(simpleCompanyGenericProductList)
+      constant = simpleCompanyGenericProductList.constant
+      mapping = mappingCompanyGenericProduct
     } else if (this.props.companies) {
       this.props.getCSVMapCompanies()
       const mappingCompanies = this.getMapping(simpleCompaniesList)
@@ -421,7 +421,7 @@ class Map extends Component {
 
     return (
       <React.Fragment>
-        {(this.props.productOffer || this.props.echoProduct || this.props.companies) && (
+        {(this.props.productOffer || this.props.companyGenericProduct || this.props.companies) && (
           <Grid centered padded>
             <Grid.Row verticalAlign='middle'>
               <Grid.Column width={5} textAlign='center'>
@@ -446,14 +446,14 @@ class Map extends Component {
                 />
               </Grid.Column>
               <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
-                {this.props.echoProduct || this.props.productOffer || this.props.companies ? (
+                {this.props.companyGenericProduct || this.props.productOffer || this.props.companies ? (
                   <Button
                     type='button'
                     color='red'
                     disabled={getSafe(() => !this.props.selectedSavedMap.id, true)}
                     onClick={async () => {
                       const mapName = this.props.selectedSavedMap.name
-                      if (this.props.echoProduct)
+                      if (this.props.companyGenericProduct)
                         await this.props.deleteCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id)
 
                       if (this.props.productOffer)
@@ -518,7 +518,7 @@ class Map extends Component {
                       )
                     let mapName = ''
 
-                    if (this.props.echoProduct) {
+                    if (this.props.companyGenericProduct) {
                       if (this.props.selectedSavedMap) {
                         mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
                         await this.props.putCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id, {

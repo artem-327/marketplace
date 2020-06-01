@@ -53,9 +53,13 @@ export default {
     })
   },
   linkAttachment: (echoId, attachmentId) =>
-    api.post(`/prodex/api/attachment-links/to-echo-product?attachmentId=${attachmentId}&echoProductId=${echoId}`),
+    api.post(
+      `/prodex/api/attachment-links/to-company-generic-product?attachmentId=${attachmentId}&companyGenericProductId=${echoId}`
+    ),
   removeAttachmentLink: (echoId, attachmentId) =>
-    api.delete(`/prodex/api/attachment-links/to-echo-product?attachmentId=${attachmentId}&echoProductId=${echoId}`),
+    api.delete(
+      `/prodex/api/attachment-links/to-company-generic-product?attachmentId=${attachmentId}&companyGenericProductId=${echoId}`
+    ),
   removeAttachment: attachmentId => api.delete(`/prodex/api/attachments/${attachmentId}`),
   getUnNumbersByString: async (value, limit = 30) => {
     const { data } = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${value}`)

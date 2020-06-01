@@ -137,7 +137,7 @@ const StyledGrid = styled(Grid)`
 `
 
 const initialValues = {
-  echoProduct: null,
+  companyGenericProduct: null,
   intProductName: '',
   intProductCode: '',
   packagingSize: '',
@@ -277,7 +277,10 @@ class ProductSidebar extends React.Component {
       stackable: values.stackable,
       freightClass: values.freightClass,
       packageWeightUnit: values.packageWeightUnit,
-      echoProduct: values.echoProduct === null || values.echoProduct === '' ? null : values.echoProduct,
+      companyGenericProduct:
+        values.companyGenericProduct === null || values.companyGenericProduct === ''
+          ? null
+          : values.companyGenericProduct,
       freezeProtect: values.freezeProtect,
       hazardous: values.hazardous,
       inciName: values.inciName === null || values.inciName === '' ? null : values.inciName,
@@ -333,8 +336,8 @@ class ProductSidebar extends React.Component {
     return {
       ...initialValues,
       ...popupValues,
-      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.echoProduct.elements, [])),
-      echoProduct: getSafe(() => popupValues.echoProduct.id, ''),
+      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.companyGenericProduct.elements, [])),
+      companyGenericProduct: getSafe(() => popupValues.companyGenericProduct.id, ''),
       nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, ''),
       packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id, ''),
       packagingUnit: getSafe(() => popupValues.packagingUnit.id, ''),
@@ -377,8 +380,8 @@ class ProductSidebar extends React.Component {
       popupValues,
       freightClasses,
       intl: { formatMessage },
-      echoProducts,
-      echoProductsFetching,
+      companyGenericProduct,
+      companyGenericProductFetching,
       nmfcNumbersFetching,
       nmfcNumbersFiltered,
       packageWeightUnits,
@@ -392,8 +395,10 @@ class ProductSidebar extends React.Component {
 
     let editable = popupValues ? popupValues.cfProductOfferCount === 0 || !popupValues.cfProductOfferCount : true
 
-    let allEchoProducts = uniqueArrayByKey(
-      echoProducts.concat(getSafe(() => popupValues.echoProduct) ? popupValues.echoProduct : []),
+    let allCompanyGenericProduct = uniqueArrayByKey(
+      companyGenericProduct.concat(
+        getSafe(() => popupValues.companyGenericProduct) ? popupValues.companyGenericProduct : []
+      ),
       'id'
     )
 
@@ -439,7 +444,7 @@ class ProductSidebar extends React.Component {
                                 defaultMessage='What is the Associated External Product that you would like to map to?'
                               />
                             }
-                            options={allEchoProducts.map(echo => ({
+                            options={allCompanyGenericProduct.map(echo => ({
                               key: echo.id,
                               text: echo.name,
                               value: echo.id
@@ -449,12 +454,12 @@ class ProductSidebar extends React.Component {
                               search: val => val,
                               clearable: true,
                               selection: true,
-                              loading: echoProductsFetching,
+                              loading: companyGenericProductFetching,
                               onChange: (_, { value }) =>
                                 setFieldValue(
                                   'casProducts',
                                   getDesiredCasProductsProps(
-                                    getSafe(() => allEchoProducts.find(el => el.id === value).elements, [])
+                                    getSafe(() => allCompanyGenericProduct.find(el => el.id === value).elements, [])
                                   )
                                 ),
                               onSearchChange: (_, { searchQuery }) => this.handleSearchChange(searchQuery),
@@ -465,7 +470,7 @@ class ProductSidebar extends React.Component {
                                 />
                               )
                             }}
-                            name='echoProduct'
+                            name='companyGenericProduct'
                           />
                         </GridColumn>
                       </GridRow>
@@ -995,8 +1000,8 @@ const mapStateToProps = ({ settings }) => {
   return {
     attachments: getSafe(() => settings.popupValues.attachments, []),
     popupValues: settings.popupValues,
-    echoProducts: settings.echoProducts,
-    echoProductsFetching: settings.echoProductsFetching,
+    companyGenericProduct: settings.companyGenericProduct,
+    companyGenericProductFetching: settings.companyGenericProductFetching,
     packagingType: settings.productsPackagingType,
     packagingTypesAll: settings.packagingTypes,
     productsUnitsType: settings.productsUnitsType,

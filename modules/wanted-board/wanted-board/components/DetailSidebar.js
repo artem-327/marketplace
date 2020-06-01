@@ -110,7 +110,7 @@ const initValues = {
   maximumPricePerUOM: '',
   notes: '',
   element: {
-    echoProduct: '',
+    companyGenericProduct: '',
     casProduct: '',
     assayMin: '',
     assayMax: ''
@@ -146,7 +146,7 @@ const validationSchema = () =>
           })
       }),
       element: val.object().shape({
-        echoProduct: val
+        companyGenericProduct: val
           .string()
           .trim()
           .test('required', errorMessages.requiredMessage, function (value) {
@@ -160,8 +160,8 @@ const validationSchema = () =>
           .string()
           .trim()
           .test('required', errorMessages.requiredMessage, function (value) {
-            const { echoProduct } = this.parent
-            if (echoProduct === null || echoProduct === '') {
+            const { companyGenericProduct } = this.parent
+            if (companyGenericProduct === null || companyGenericProduct === '') {
               return value !== null && value !== ''
             }
             return true
@@ -322,7 +322,7 @@ class DetailSidebar extends Component {
             deliveryCountry: getSafe(() => sidebarValues.deliveryCountry.id, ''),
             deliveryProvince: getSafe(() => sidebarValues.deliveryProvince.id, ''),
             element: {
-              echoProduct: getSafe(() => sidebarValues.element.echoProduct.id, ''),
+              companyGenericProduct: getSafe(() => sidebarValues.element.companyGenericProduct.id, ''),
               casProduct: getSafe(() => sidebarValues.element.casProduct.id, ''),
               assayMin: getSafe(() => sidebarValues.element.assayMin, ''),
               assayMax: getSafe(() => sidebarValues.element.assayMax, '')
@@ -448,7 +448,7 @@ class DetailSidebar extends Component {
                                 <Required />
                               </>
                             }
-                            name='element.echoProduct'
+                            name='element.companyGenericProduct'
                             options={this.props.autocompleteData}
                             inputProps={{
                               placeholder: (

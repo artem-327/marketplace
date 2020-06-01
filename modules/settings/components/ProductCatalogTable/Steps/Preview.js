@@ -51,10 +51,10 @@ class Preview extends Component {
 
   componentDidMount() {
     if (this.props.selectedSavedMap && !this.props.isSaveMapCSV) {
-      ;(this.props.productOffer || this.props.echoProduct || this.props.companies) &&
+      ;(this.props.productOffer || this.props.companyGenericProduct || this.props.companies) &&
         this.props.dataHeaderCSV(this.props.selectedSavedMap)
 
-      if (this.props.echoProduct)
+      if (this.props.companyGenericProduct)
         this.props.isSaveMapCSV &&
           data &&
           this.props.putCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id, {
@@ -78,7 +78,7 @@ class Preview extends Component {
 
       if (this.props.selectedSavedMap) {
         // save edited maps
-        if (this.props.echoProduct)
+        if (this.props.companyGenericProduct)
           this.props.isSaveMapCSV &&
             data &&
             this.props.putCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id, {
@@ -103,7 +103,7 @@ class Preview extends Component {
             })
       } else {
         // save new maps
-        if (this.props.echoProduct)
+        if (this.props.companyGenericProduct)
           this.props.isSaveMapCSV &&
             data &&
             this.props.postCSVMapCompanyGenericProduct({

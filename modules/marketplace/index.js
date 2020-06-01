@@ -14,7 +14,11 @@ export const Marketplace = props => {
               filters.or = [
                 { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${v.or}%`] },
                 { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${v.or}%`] },
-                { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.name', values: [`%${v.or}%`] },
+                {
+                  operator: 'LIKE',
+                  path: 'ProductOffer.companyProduct.companyGenericProduct.name',
+                  values: [`%${v.or}%`]
+                },
                 { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.tags.name', values: [`%${v.or}%`] }
               ]
             }

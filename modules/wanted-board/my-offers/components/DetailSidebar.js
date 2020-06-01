@@ -195,9 +195,12 @@ class DetailSidebar extends Component {
       ...this.state.initValues,
       ...(sidebarValues
         ? {
-            product: getSafe(() => sidebarValues.productOffer.companyProduct.echoProduct.id, ''),
+            product: getSafe(() => sidebarValues.productOffer.companyProduct.companyGenericProduct.id, ''),
             pricePerUOM: getSafe(() => sidebarValues.pricePerUOM, ''),
-            manufacturers: getSafe(() => sidebarValues.productOffer.companyProduct.echoProduct.manufacturer.id, ''),
+            manufacturers: getSafe(
+              () => sidebarValues.productOffer.companyProduct.companyGenericProduct.manufacturer.id,
+              ''
+            ),
             conditionConforming: getSafe(() => sidebarValues.productOffer.conforming, ''),
             packagingTypes: getSafe(() => sidebarValues.productOffer.companyProduct.packagingType.id, ''),
             measurement: getSafe(() => sidebarValues.productOffer.companyProduct.packagingUnit.id, ''),

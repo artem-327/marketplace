@@ -66,14 +66,14 @@ class ProductImportPopup extends Component {
     map: (
       <Map
         productOffer={this.props.productOffer && this.props.productOffer}
-        echoProduct={this.props.echoProduct && this.props.echoProduct}
+        companyGenericProduct={this.props.companyGenericProduct && this.props.companyGenericProduct}
         companies={this.props.companies && this.props.companies}
       />
     ),
     preview: (
       <Preview
         productOffer={this.props.productOffer && this.props.productOffer}
-        echoProduct={this.props.echoProduct && this.props.echoProduct}
+        companyGenericProduct={this.props.companyGenericProduct && this.props.companyGenericProduct}
         companies={this.props.companies && this.props.companies}
       />
     ),
@@ -81,7 +81,7 @@ class ProductImportPopup extends Component {
       <ConfirmationPage
         toUpload={this.toUpload}
         productOffer={this.props.productOffer && this.props.productOffer}
-        echoProduct={this.props.echoProduct && this.props.echoProduct}
+        companyGenericProduct={this.props.companyGenericProduct && this.props.companyGenericProduct}
         companies={this.props.companies && this.props.companies}
       />
     )
@@ -269,7 +269,7 @@ class ProductImportPopup extends Component {
       case 'preview':
         this.props.productOffer
           ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId)
-          : this.props.echoProduct
+          : this.props.companyGenericProduct
           ? this.props.postImportCompanyGenericProductCSV(mappedDataHeaderCSV, csvFileId)
           : this.props.companies
           ? this.props.postImportCompaniesCSV(mappedDataHeaderCSV, csvFileId)

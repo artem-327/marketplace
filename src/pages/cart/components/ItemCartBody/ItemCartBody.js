@@ -36,7 +36,9 @@ export default class ItemCartBody extends Component {
         <Grid className='item-cart-body'>
           <GridColumn width={9}>
             <div className='item-cart-body-section'>
-              <GridRow className='item-cart-body-section-name'>{productOffer.companyProduct.echoProduct.name}</GridRow>
+              <GridRow className='item-cart-body-section-name'>
+                {productOffer.companyProduct.companyGenericProduct.name}
+              </GridRow>
               <Grid columns={2}>
                 <GridColumn width={leftWidth1}>
                   <FormattedMessage id='cart.packaging' defaultMessage='Packaging:' />
@@ -103,7 +105,7 @@ export default class ItemCartBody extends Component {
                   <FormattedMessage id='cart.manufacturer' defaultMessage='Manufacturer:' />
                 </GridColumn>
                 <GridColumn width={rightWidth2}>
-                  {getSafe(() => productOffer.companyProduct.echoProduct.manufacturer.name, '')}
+                  {getSafe(() => productOffer.companyProduct.companyGenericProduct.manufacturer.name, '')}
                 </GridColumn>
 
                 <GridColumn width={leftWidth2}>

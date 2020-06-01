@@ -11,8 +11,7 @@ import { currency } from '~/constants/index'
 import { getLocaleDateFormat } from '~/components/date-format'
 import moment from 'moment/moment'
 
-import {
-} from '../../actions'
+import {} from '../../actions'
 import Router from 'next/router'
 
 class CompanyProductTable extends Component {
@@ -56,7 +55,7 @@ class CompanyProductTable extends Component {
           </FormattedMessage>
         ),
         width: 130,
-        sortPath: 'CompanyProduct.echoProduct.name'
+        sortPath: 'CompanyProduct.companyGenericProduct.name'
       },
       {
         name: 'cfProductOfferCount',
@@ -94,8 +93,7 @@ class CompanyProductTable extends Component {
   }
 }
 
-const mapDispatchToProps = {
-}
+const mapDispatchToProps = {}
 
 const mapStateToProps = (state, { datagrid }) => {
   return {
@@ -107,9 +105,11 @@ const mapStateToProps = (state, { datagrid }) => {
         intProductName: getSafe(() => d.intProductName, 'N/A'),
         intProductCode: getSafe(() => d.intProductCode, 'N/A'),
         owner: getSafe(() => d.owner.cfDisplayName, 'N/A'),
-        mapped: d.echoProduct
-          ? <FormattedMessage id='global.yes' defaultMessage='Yes'/>
-          : <FormattedMessage id='global.no' defaultMessage='No'/>,
+        mapped: d.companyGenericProduct ? (
+          <FormattedMessage id='global.yes' defaultMessage='Yes' />
+        ) : (
+          <FormattedMessage id='global.no' defaultMessage='No' />
+        ),
         cfProductOfferCount: d.cfProductOfferCount
       }
     }),
