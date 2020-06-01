@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { CompanyModal } from '~/modules/company-form/'
 import { updateClientCompany, createClientCompany, closePopup } from '~/modules/settings/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
+import { getSafe } from '~/utils/functions'
 
 class Popup extends Component {
   state = {
@@ -18,6 +19,7 @@ class Popup extends Component {
       'cin',
       'dba',
       'dunsNumber',
+      'enabled',
       'nacdMember',
       'name',
       'phone',
@@ -28,6 +30,9 @@ class Popup extends Component {
       'mailingBranch'
     ]
     propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
+    if (getSafe(() => requestBody.associations[0].id, '')) {
+      requestBody.associations = requestBody.associations.map(association => association.id)
+    }
     if (isEdit) {
       delete requestBody.primaryUser
       delete requestBody.primaryBranch
