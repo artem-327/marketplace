@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { getMyHolds } from '~/modules/marketplace/holds/actions'
+import { getCountHolds } from '~/modules/marketplace/holds/actions'
 import { Icon, Label } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { Clock } from 'react-feather'
@@ -21,16 +21,16 @@ const CircularLabel = styled(Label)`
 `
 class HoldIcon extends Component {
   componentDidMount() {
-    this.props.getMyHolds()
+    this.props.getCountHolds()
   }
 
   render() {
-    const { numberHolds } = this.props
+    const { countHolds } = this.props
     return (
       <Icon.Group>
         <HoldClockIcon />
         <CircularLabel circular color='orange'>
-          {numberHolds}
+          {countHolds}
         </CircularLabel>
       </Icon.Group>
     )
@@ -39,8 +39,8 @@ class HoldIcon extends Component {
 
 const stateToProps = state => {
   return {
-    numberHolds: getSafe(() => state.holds.holds.length, 0)
+    countHolds: getSafe(() => state.holds.countHolds, 0)
   }
 }
 
-export default connect(stateToProps, { getMyHolds })(HoldIcon)
+export default connect(stateToProps, { getCountHolds })(HoldIcon)

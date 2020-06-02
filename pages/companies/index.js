@@ -1,25 +1,24 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
 import Companies from '~/modules/companies'
 
-import { injectIntl } from 'react-intl'
-
 class Index extends Component {
   render() {
-    const {
-      intl: { formatMessage }
-    } = this.props
+    const { currentTab } = this.props
     return (
-      <Layout
-        title={formatMessage({
-          id: 'companies.title',
-          defaultMessage: 'Companies'
-        })}>
+      <Layout title={currentTab.name}>
         <Companies />
       </Layout>
     )
   }
 }
 
-export default securePage(injectIntl(Index))
+const mapStateToProps = state => {
+  return {
+    currentTab: state.companiesAdmin.currentTab
+  }
+}
+
+export default securePage(connect(mapStateToProps)(Index))

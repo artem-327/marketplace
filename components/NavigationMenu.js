@@ -30,6 +30,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
 import TabsOperations from '~/modules/operations/components/Tabs'
 import TabsProducts from '~/modules/products/components/Tabs'
+import TabsCompanies from '~/modules/companies/components/Tabs'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -55,6 +56,7 @@ class Navigation extends Component {
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
     products: getSafe(() => Router.router.pathname === '/products', false),
+    companies: getSafe(() => Router.router.pathname === '/companies', false),
     openedFilterMyInventory: true,
     openedFilterMarketplace: true,
     openedFilterOrders: false,
@@ -163,6 +165,9 @@ class Navigation extends Component {
     if (type === 'products') {
       Router.push('/products')
     }
+    if (type === 'companies') {
+      Router.push('/companies')
+    }
     // toggle dropdown state
     this.setState({
       openedFilterMyInventory: false,
@@ -173,6 +178,7 @@ class Navigation extends Component {
       admin: false,
       operations: false,
       products: false,
+      companies: false,
       [type]: !typeState
     })
 
@@ -236,7 +242,8 @@ class Navigation extends Component {
       collapsedMenu,
       activeInventoryFilter,
       activeMarketplaceFilter,
-      activeWantedBoardFilter
+      activeWantedBoardFilter,
+      isClientCompanyAdmin
     } = this.props
 
     const {
@@ -246,6 +253,7 @@ class Navigation extends Component {
       admin,
       operations,
       products,
+      companies,
       openedFilterMyInventory,
       openedFilterMarketplace,
       openedFilterOrders,
@@ -360,7 +368,7 @@ class Navigation extends Component {
             </PerfectScrollbar>
           </Dropdown.Menu>
         </DropdownItem>
-        {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin) && (
+        {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin || isClientCompanyAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
             text={formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}
@@ -372,7 +380,7 @@ class Navigation extends Component {
             data-test='navigation_menu_settings_drpdn'>
             <Dropdown.Menu data-test='navigation_menu_settings_drpdn_menu'>
               <PerfectScrollbar>
-                {isCompanyAdmin ? (
+                {isCompanyAdmin || isClientCompanyAdmin ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}
@@ -390,7 +398,7 @@ class Navigation extends Component {
                     </Dropdown.Item>
                   </>
                 ) : null}
-                {isCompanyAdmin || isUserAdmin ? (
+                {isCompanyAdmin || isUserAdmin || isClientCompanyAdmin ? (
                   <Dropdown.Item
                     as={MenuLink}
                     to='/settings?type=users'
@@ -399,7 +407,7 @@ class Navigation extends Component {
                     {formatMessage({ id: 'navigation.users', defaultMessage: 'Users' })}
                   </Dropdown.Item>
                 ) : null}
-                {isCompanyAdmin ? (
+                {isCompanyAdmin || isClientCompanyAdmin ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}
@@ -487,12 +495,16 @@ class Navigation extends Component {
       <div className='flex-wrapper'>
         {isAdmin && (
           <>
-            <MenuLink to='/companies' dataTest='navigation_menu_admin_companies'>
-              <>
-                <Briefcase size={22} />
-                {formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
-              </>
-            </MenuLink>
+            <DropdownItem
+              icon={<Briefcase size={22} />}
+              text={formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
+              className={companies ? 'opened' : null}
+              opened={companies}
+              onClick={() => this.toggleOpened('companies')}
+              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+              refId={'companies'}>
+              <TabsCompanies />
+            </DropdownItem>
             <DropdownItem
               icon={<Package size={22} />}
               text={formatMessage({ id: 'navigation.products', defaultMessage: 'Products' })}
@@ -558,6 +570,7 @@ export default withAuth(
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
+        isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
         collapsedMenu: store.layout.collapsedMenu,
         activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
         activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
