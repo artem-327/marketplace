@@ -434,15 +434,17 @@ class Navigation extends Component {
                     {formatMessage({ id: 'navigation.productCatalog', defaultMessage: 'Product Catalog' })}
                   </Dropdown.Item>
                 ) : null}
-                {isCompanyAdmin && !isClientCompany ? (
+                {(isCompanyAdmin && !isClientCompany) || isClientCompanyAdmin ? (
                   <>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/settings?type=global-broadcast'
-                      tab='global-broadcast'
-                      dataTest='navigation_settings_global_broadcast_drpdn'>
-                      {formatMessage({ id: 'navigation.globalPriceBook', defaultMessage: 'Global Price Book' })}
-                    </Dropdown.Item>
+                    {!isClientCompanyAdmin && (
+                      <Dropdown.Item
+                        as={MenuLink}
+                        to='/settings?type=global-broadcast'
+                        tab='global-broadcast'
+                        dataTest='navigation_settings_global_broadcast_drpdn'>
+                        {formatMessage({ id: 'navigation.globalPriceBook', defaultMessage: 'Global Price Book' })}
+                      </Dropdown.Item>
+                    )}
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=bank-accounts'
@@ -457,13 +459,15 @@ class Navigation extends Component {
                       dataTest='navigation_settings_delivery_addresses_drpdn'>
                       {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
                     </Dropdown.Item>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/settings?type=client-companies'
-                      tab='client-companies'
-                      data-test='navigation_settings_client_companies_drpdn'>
-                      {formatMessage({ id: 'navigation.clientCompanies', defaultMessage: '!Client Companies' })}
-                    </Dropdown.Item>
+                    {!isClientCompanyAdmin && (
+                      <Dropdown.Item
+                        as={MenuLink}
+                        to='/settings?type=client-companies'
+                        tab='client-companies'
+                        data-test='navigation_settings_client_companies_drpdn'>
+                        {formatMessage({ id: 'navigation.clientCompanies', defaultMessage: '!Client Companies' })}
+                      </Dropdown.Item>
+                    )}
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=logistics'
