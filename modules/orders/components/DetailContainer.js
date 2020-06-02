@@ -55,7 +55,7 @@ function prepareDetail(data, type) {
     buyerRejectionDate:
       typeof data.buyerRejectionDate !== 'undefined' ? moment(data.buyerRejectionDate).toDate().toLocaleString() : null,
     carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
-    chemicalName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
+    chemicalName: orderItems.map(d => (d.companyGenericProductName ? d.companyGenericProductName : 'N/A')),
     confirmationDate:
       typeof data.confirmationDate !== 'undefined' ? moment(data.confirmationDate).toDate().toLocaleString() : 'N/A',
     contactEmail: data.sellerCompanyContactEmail ? data.sellerCompanyContactEmail : 'N/A',
@@ -103,8 +103,8 @@ function prepareDetail(data, type) {
       province: data.returnAddressProvince,
       country: data.returnAddressCountry
     }),
-    productCode: orderItems.map(d => (d.echoProductCode ? d.echoProductCode : 'N/A')),
-    productName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
+    productCode: orderItems.map(d => (d.companyGenericProductCode ? d.companyGenericProductCode : 'N/A')),
+    productName: orderItems.map(d => (d.companyGenericProductName ? d.companyGenericProductName : 'N/A')),
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
     proNumber: 'N/A', // ! ! TBD
     quantityOrdered: orderItems.map(d =>
