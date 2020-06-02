@@ -16,7 +16,7 @@ const LogoWrapper = styled.div`
   border-radius: 3px;
   border: solid 1px #dee2e6;
   background-color: #ffffff;
-  
+
   > .ui.grid {
     margin: 20px;
     &.admin {
@@ -27,7 +27,7 @@ const LogoWrapper = styled.div`
       padding: 5px 0;
       > .column {
         padding: 0 5px;
-        
+
         .ui.button {
           border-radius: 3px;
           box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
@@ -39,11 +39,11 @@ const LogoWrapper = styled.div`
           font-weight: 500;
           font-stretch: normal;
           font-style: normal;
-          
+
           &.delete {
             color: #f16844;
           }
-          
+
           > svg {
             width: 18px;
             height: 20px;
@@ -53,7 +53,7 @@ const LogoWrapper = styled.div`
       }
     }
   }
-  
+
   .uploadAttachment {
     padding: 0;
     border-radius: 3px;
@@ -69,11 +69,11 @@ const LogoWrapper = styled.div`
       }
     }
   }
-  
+
   > div.logo-hint {
     display: flex;
     flex-direction: column;
-    padding: 16px 20px; 
+    padding: 16px 20px;
     border-top: solid 1px #dee2e6;
     background-color: #f8f9fb;
     font-size: 12px;
@@ -128,9 +128,7 @@ class CompanyForm extends Component {
       const file = new Blob([this.props.companyLogo], { type: this.props.companyLogo.type })
       let fileURL = URL.createObjectURL(file)
 
-      return (
-        <Image src={fileURL} size='small' />
-      )
+      return <Image src={fileURL} size='small' />
     }
 
     return null
@@ -178,19 +176,8 @@ class CompanyForm extends Component {
   }
 
   renderCompanyFields = () => {
-    let {
-      intl,
-      loading,
-      data,
-      setFieldValue,
-      values,
-      setFieldTouched,
-      errors,
-      touched,
-      isSubmitting
-    } = this.props
+    let { intl, loading, data, setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = this.props
     const { formatMessage } = intl
-
     return (
       <>
         <FormGroup widths='equal' data-test='company_form_legalCompanyName_inp'>
@@ -213,10 +200,10 @@ class CompanyForm extends Component {
               options={
                 data && data.length
                   ? data.map(type => ({
-                    text: type.name,
-                    value: type.id,
-                    key: type.id
-                  }))
+                      text: type.name,
+                      value: type.id,
+                      key: type.id
+                    }))
                   : []
               }
               clearable
@@ -298,7 +285,7 @@ class CompanyForm extends Component {
           />
         </FormGroup>
 
-        <FormGroup widths='equal' >
+        <FormGroup widths='equal'>
           <Checkbox
             label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
             name='enabled'
@@ -328,11 +315,10 @@ class CompanyForm extends Component {
       associations
     } = this.props
     const { formatMessage } = intl
-
     return (
       <>
         <FormGroup widths='equal' data-test='company_form_legalCompanyName_inp'>
-          <FormField className='upload-input' >
+          <FormField className='upload-input'>
             <Input
               label={
                 <>
@@ -345,7 +331,7 @@ class CompanyForm extends Component {
           </FormField>
         </FormGroup>
         <FormGroup widths='equal' data-test='company_form_dbaDuns_inp'>
-          <FormField className='upload-input' >
+          <FormField className='upload-input'>
             <label htmlFor='field_dropdown_associations'>
               <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
             </label>
@@ -353,10 +339,10 @@ class CompanyForm extends Component {
               options={
                 data && data.length
                   ? data.map(type => ({
-                    text: type.name,
-                    value: type.id,
-                    key: type.id
-                  }))
+                      text: type.name,
+                      value: type.id,
+                      key: type.id
+                    }))
                   : []
               }
               clearable
@@ -436,7 +422,7 @@ class CompanyForm extends Component {
             touched={touched}
             isSubmitting={isSubmitting}
           />
-          <FormField className='upload-input' >
+          <FormField className='upload-input'>
             <label htmlFor='field_dropdown_associations'>
               <FormattedMessage id='company.associationMembership' defaultMessage='Association Membership' />
             </label>
@@ -444,10 +430,10 @@ class CompanyForm extends Component {
               options={
                 associations && associations.length
                   ? associations.map(assoc => ({
-                    text: assoc.name,
-                    value: assoc.id,
-                    key: assoc.id
-                  }))
+                      text: assoc.name,
+                      value: assoc.id,
+                      key: assoc.id
+                    }))
                   : []
               }
               clearable
@@ -534,20 +520,14 @@ class CompanyForm extends Component {
                   hideAttachments
                   emptyContent={<StyledImageIcon />}
                   uploadedContent={this.getCompanyLogo()}
-                  saveComponentRef={(ref) => this.logoComponentRef = ref}
+                  saveComponentRef={ref => (this.logoComponentRef = ref)}
                 />
               </GridColumn>
             </GridRow>
 
             <GridRow>
               <GridColumn width={8}>
-                <Button
-                  className='delete'
-                  disabled={!hasLogo}
-                  type='button'
-                  fluid
-                  onClick={() => removeLogo()}
-                >
+                <Button className='delete' disabled={!hasLogo} type='button' fluid onClick={() => removeLogo()}>
                   <Trash />
                   <FormattedMessage id='company.logoButtonDelete' defaultMessage='Delete'>
                     {text => text}
@@ -558,26 +538,22 @@ class CompanyForm extends Component {
                 <Button
                   type='button'
                   fluid
-                  onClick={() => {if (this.logoComponentRef) this.logoComponentRef.open()}}
-                >
+                  onClick={() => {
+                    if (this.logoComponentRef) this.logoComponentRef.open()
+                  }}>
                   <UploadCloud />
-                    {
-                      hasLogo
-                        ? (
-                          <FormattedMessage id='company.logoButtonChange' defaultMessage='Change'>
-                            {text => text}
-                          </FormattedMessage>
-                        )
-                        : (
-                          <FormattedMessage id='company.logoButtonUpload' defaultMessage='Upload'>
-                            {text => text}
-                          </FormattedMessage>
-                        )
-                    }
+                  {hasLogo ? (
+                    <FormattedMessage id='company.logoButtonChange' defaultMessage='Change'>
+                      {text => text}
+                    </FormattedMessage>
+                  ) : (
+                    <FormattedMessage id='company.logoButtonUpload' defaultMessage='Upload'>
+                      {text => text}
+                    </FormattedMessage>
+                  )}
                 </Button>
               </GridColumn>
             </GridRow>
-
           </Grid>
           <div className='logo-hint'>
             <label>
@@ -610,12 +586,8 @@ class CompanyForm extends Component {
       return (
         <Grid>
           <GridRow>
-            <GridColumn width={4}>
-              {this.renderLogo()}
-            </GridColumn>
-            <GridColumn width={12}>
-              {this.renderCompanyFields()}
-            </GridColumn>
+            <GridColumn width={4}>{this.renderLogo()}</GridColumn>
+            <GridColumn width={12}>{this.renderCompanyFields()}</GridColumn>
           </GridRow>
         </Grid>
       )
