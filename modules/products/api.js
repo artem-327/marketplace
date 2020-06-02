@@ -82,7 +82,7 @@ export default {
     api.delete(`/prodex/api/company-generic-products/alternative-names/id/${id}`),
   postProductGroups: request => api.post(`/prodex/api/product-groups`, request),
   putProductGroups: (id, request) => api.put(`/prodex/api/product-groups/${id}`, request),
-  deleteProductGroups: id => api.put(`/prodex/api/product-groups/${id}`),
+  deleteProductGroups: id => api.delete(`/prodex/api/product-groups/${id}`),
   searchProductGroups: filter =>
     api.post(`/prodex/api/product-groups/datagrid`, filter).then(response => response.data),
   searchCompany: (companyText, limit = 30) =>
