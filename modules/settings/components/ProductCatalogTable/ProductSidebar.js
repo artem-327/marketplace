@@ -155,7 +155,10 @@ const initialValues = {
   documents: {
     documentType: null,
     attachments: []
-  }
+  },
+  packagingLength: '',
+  packagingHeight: '',
+  packagingWidth: ''
 }
 
 const columns = [
@@ -198,7 +201,19 @@ const formValidation = Yup.object().shape({
   packagesPerPallet: Yup.number()
     .typeError(errorMessages.mustBeNumber)
     .positive(errorMessages.positive)
-    .integer(errorMessages.integer)
+    .integer(errorMessages.integer),
+  packagingWidth: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .required(errorMessages.requiredMessage)
+    .positive(errorMessages.positive),
+  packagingHeight: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .required(errorMessages.requiredMessage)
+    .positive(errorMessages.positive),
+  packagingLength: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .required(errorMessages.requiredMessage)
+    .positive(errorMessages.positive)
 })
 
 class ProductSidebar extends React.Component {
@@ -288,7 +303,10 @@ class ProductSidebar extends React.Component {
       packageWeight: Number(values.packageWeight),
       packagesPerPallet:
         values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet),
-      attachments: this.state.attachments
+      attachments: this.state.attachments,
+      packagingLength: Number(values.packagingLength),
+      packagingHeight: Number(values.packagingHeight),
+      packagingWidth: Number(values.packagingWidth)
     }
 
     try {
@@ -341,7 +359,10 @@ class ProductSidebar extends React.Component {
       nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, ''),
       packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id, ''),
       packagingUnit: getSafe(() => popupValues.packagingUnit.id, ''),
-      packagingType: getSafe(() => popupValues.packagingType.id, '')
+      packagingType: getSafe(() => popupValues.packagingType.id, ''),
+      packagingWidth: getSafe(() => popupValues.packagingWidth, ''),
+      packagingHeight: getSafe(() => popupValues.packagingHeight, ''),
+      packagingLength: getSafe(() => popupValues.packagingLength, '')
     }
   }
 
@@ -584,6 +605,57 @@ class ProductSidebar extends React.Component {
                                 id: 'productCatalog.selectType',
                                 defaultMessage: 'Select Type'
                               })
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow columns={3}>
+                        <GridColumn>
+                          <QuantityInput
+                            name='packagingWidth'
+                            label={
+                              <>
+                                <FormattedMessage id='global.packagingWidth' defaultMessage='Packaging Width' />
+                                <Required />
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 1
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn>
+                          <QuantityInput
+                            name='packagingHeight'
+                            label={
+                              <>
+                                <FormattedMessage id='global.packagingHeight' defaultMessage='Packaging Height' />
+                                <Required />
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 1
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn>
+                          <QuantityInput
+                            name='packagingLength'
+                            label={
+                              <>
+                                <FormattedMessage id='global.packagingLength' defaultMessage='Packaging Length' />
+                                <Required />
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 1
                             }}
                           />
                         </GridColumn>
