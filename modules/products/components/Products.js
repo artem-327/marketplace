@@ -91,7 +91,7 @@ class Products extends Component {
           v
             ? [
                 { operator: 'LIKE', path: 'ProductGroup.name', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'Tag.name', values: [`%${v}%`] }
+                { operator: 'LIKE', path: 'ProductGroup.tags.name', values: [`%${v}%`] }
               ]
             : []
       }

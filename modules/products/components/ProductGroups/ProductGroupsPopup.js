@@ -97,10 +97,10 @@ class ProductGroupsPopup extends React.Component {
             validationSchema={formValidation()}
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
-              const request = {
-                name: values.name,
-                tags: values.tags
-              }
+              const request = {}
+              const propsToInclude = ['tags', 'name']
+              propsToInclude.forEach(prop => (values[prop] ? (request[prop] = values[prop]) : null))
+
               try {
                 if (popupValues) await putProductGroups(rowId, request)
                 else await postProductGroups(request)
@@ -135,7 +135,6 @@ class ProductGroupsPopup extends React.Component {
                           <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
                             {text => text}
                           </FormattedMessage>
-                          <Required />
                         </>
                       }
                       name='tags'

@@ -836,7 +836,7 @@ class CompanyProductInfo extends Component {
             {this.getElements({
               id: 'global.mixtures',
               defaultMessage: 'Mixtures',
-              elements: getSafe(() => values.companyProduct.companyGenericProduct.elements, [])
+              elements: getSafe(() => values.companyGenericProduct.elements, [])
             })}
             {this.getTextarea({
               id: 'global.manufacturer',
