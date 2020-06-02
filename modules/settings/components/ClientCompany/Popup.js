@@ -3,12 +3,21 @@ import { connect } from 'react-redux'
 
 import { CompanyModal } from '~/modules/company-form/'
 import { updateClientCompany, createClientCompany, closePopup } from '~/modules/settings/actions'
-import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
+import { postCompanyLogo, deleteCompanyLogo, getCompanyLogo } from '~/modules/company-form/actions'
 import { getSafe } from '~/utils/functions'
 
 class Popup extends Component {
   state = {
     companyLogo: null
+  }
+
+  async componentDidMount() {
+    try {
+      const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
+      if (companyLogo.value.data.size) this.setState({ companyLogo: companyLogo.value.data })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   onSubmit = (values, isEdit) => {
@@ -96,6 +105,19 @@ class Popup extends Component {
   }
 }
 
-const mapDispatchToProps = { updateClientCompany, createClientCompany, closePopup, postCompanyLogo, deleteCompanyLogo }
+const mapDispatchToProps = {
+  updateClientCompany,
+  createClientCompany,
+  closePopup,
+  postCompanyLogo,
+  deleteCompanyLogo,
+  getCompanyLogo
+}
 
-export default connect(null, mapDispatchToProps)(Popup)
+const mapStateToProps = state => {
+  return {
+    companyId: state.settings.popupValues.id
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Popup)
