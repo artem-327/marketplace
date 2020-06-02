@@ -35,22 +35,19 @@ import { Required } from '~/components/constants/layout'
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 
-
 const validationSchema = () =>
   Yup.lazy(values => {
     return Yup.object().shape({
-      pricePerUOM: Yup
-        .number()
+      pricePerUOM: Yup.number()
         .positive(errorMessages.positive)
         .typeError(errorMessages.requiredMessage)
         .required(errorMessages.requiredMessage),
       ...(values.lotExpirationDate && {
-        lotExpirationDate: Yup.string()
-          .test('minDate', errorMessages.dateNotInPast, function(date) {
-            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-            return enteredDate >= moment().endOf('day').format()
-          }),
-      }),
+        lotExpirationDate: Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
+          const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+          return enteredDate >= moment().endOf('day').format()
+        })
+      })
     })
   })
 
@@ -390,7 +387,7 @@ class SubmitOfferPopup extends React.Component {
             </div>
           </InputWrapper>
         ),
-        manufacturer: getSafe(() => row.companyProduct.echoProduct.manufacturer.name, 'N/A'),
+        manufacturer: getSafe(() => row.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
         condition: row.conforming ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
@@ -566,10 +563,7 @@ class SubmitOfferPopup extends React.Component {
                               name='pricePerUOM'
                               label={
                                 <>
-                                  <FormattedMessage
-                                    id='submitOffer.fobPrice'
-                                    defaultMessage='FOB Price'
-                                  >
+                                  <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
                                     {text => text}
                                   </FormattedMessage>
                                   <Required />
@@ -590,7 +584,7 @@ class SubmitOfferPopup extends React.Component {
                                 onChange: (e, { name, value }) =>
                                   this.handleChange(e, { name, value: getStringISODate(value) }),
                                 minDate: moment(),
-                                clearable: true,
+                                clearable: true
                               }}
                             />
                           </FormGroup>

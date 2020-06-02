@@ -98,11 +98,11 @@ class ConfirmationPage extends Component {
   }
 
   render() {
-    const { csvImportError, reloadFilter, productOffer, echoProduct, companies } = this.props
+    const { csvImportError, reloadFilter, productOffer, companyGenericProduct, companies } = this.props
 
     const titleViewMap = productOffer
       ? 'MyInventory'
-      : echoProduct
+      : companyGenericProduct
       ? 'Products'
       : companies
       ? 'Companies'

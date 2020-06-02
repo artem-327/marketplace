@@ -37,6 +37,10 @@ const textsTable = {
   'product-catalog': {
     BtnAddText: 'products.productCatalog.buttonAdd',
     SearchText: 'products.productCatalog.search'
+  },
+  'product-groups': {
+    BtnAddText: 'products.productGroups.buttonAdd',
+    SearchText: 'products.productGroups.search'
   }
 }
 

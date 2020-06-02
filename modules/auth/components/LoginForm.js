@@ -84,11 +84,7 @@ const LoginButton = styled(Button)`
 `
 
 const validationScheme = val.object().shape({
-  username: val
-    .string()
-    .trim()
-    .email(errorMessages.invalidEmail)
-    .required(errorMessages.requiredMessage),
+  username: val.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
   password: val
     .string()
     .min(3, errorMessages.minLength(3))
@@ -128,7 +124,8 @@ class LoginForm extends Component {
 
     return (
       <>
-        {getSafe(() => identity.company.reviewRequested, false) && getSafe(() => identity.isCompanyAdmin, false) ? (
+        {getSafe(() => identity.company.reviewRequested, false) &&
+        (getSafe(() => identity.isCompanyAdmin, false) || getSafe(() => identity.isClientCompanyAdmin, false)) ? (
           <>
             <ConfirmationPage />
           </>

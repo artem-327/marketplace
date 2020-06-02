@@ -136,7 +136,8 @@ export const defaultValues = {
   viscosity: '',
   wasteDisposalMethods: '',
   isPublished: true,
-  tags: []
+  productGroup: '',
+  company: ''
 }
 
 export const echoRowActions = callback => {

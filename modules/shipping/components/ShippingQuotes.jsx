@@ -22,10 +22,7 @@ const CustomHr = styled.hr`
 const formValidation = (min, split) =>
   Yup.object().shape({
     destination: Yup.object().shape({
-      zip: Yup.string()
-        .trim()
-        .min(3, errorMessages.minLength(3))
-        .required(errorMessages.requiredMessage),
+      zip: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       quantity: quantityValidation(min, split)
     })
   })
@@ -171,7 +168,7 @@ export default class ShippingQuotes extends Component {
   }
 
   renderForm() {
-    const { loading, loadingZip, loadingCountries, countries, echoProducts, zipCodes, defaultZip } = this.props
+    const { loading, loadingZip, loadingCountries, countries, companyGenericProduct, zipCodes, defaultZip } = this.props
     const { initialValues, min, split, allZips } = this.state
 
     // comparison if state has all zips from zipCodes
@@ -204,7 +201,7 @@ export default class ShippingQuotes extends Component {
 
           return (
             <>
-              <div>{`Product Info: ${getSafe(() => echoProducts[0].name, '')}`}</div>
+              <div>{`Product Info: ${getSafe(() => companyGenericProduct[0].name, '')}`}</div>
               <CustomHr />
               <FormGroup widths='equal' data-test='ShippingQuotes_quantity_inp'>
                 <Input
@@ -514,7 +511,7 @@ ShippingQuotes.propTypes = {
     centered: bool,
     closeModal: func
   }),
-  echoProducts: array
+  companyGenericProduct: array
 }
 
 ShippingQuotes.defaultProps = {
@@ -522,5 +519,5 @@ ShippingQuotes.defaultProps = {
     open: false,
     centered: false
   },
-  echoProducts: []
+  companyGenericProduct: []
 }

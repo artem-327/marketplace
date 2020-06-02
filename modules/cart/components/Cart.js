@@ -93,9 +93,9 @@ export default class Cart extends Component {
         <Grid>
           <GridRow>
             <GridColumn largeScreen={8}>
-              <CustomHeader as='h2'>{item.productOffer.companyProduct.echoProduct.name}</CustomHeader>
+              <CustomHeader as='h2'>{item.productOffer.companyProduct.companyGenericProduct.name}</CustomHeader>
               <FormattedMessage id='cart.manufacturer' defaultMessage='Manufacturer:' />{' '}
-              {getSafe(() => item.productOffer.companyProduct.echoProduct.manufacturer.name, '')}
+              {getSafe(() => item.productOffer.companyProduct.companyGenericProduct.manufacturer.name, '')}
             </GridColumn>
             <GridColumn textAlign='right' largeScreen={8}>
               <Button
