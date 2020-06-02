@@ -102,6 +102,7 @@ export function login(username, password) {
         if (
           identity &&
           identity.isCompanyAdmin &&
+          identity.isClientCompanyAdmin &&
           identity.company &&
           !identity.company.reviewRequested &&
           !identity.lastLoginAt
@@ -113,7 +114,7 @@ export function login(username, password) {
         }
         if (
           !(
-            identity.roles.find(role => role.name === 'Company Admin') &&
+            identity.roles.find(role => role.id === 2 || role.id === 67) && // 2 = Company Admin, 67 = Guest Company Admin
             getSafe(() => identity.company.reviewRequested, false)
           )
         ) {
