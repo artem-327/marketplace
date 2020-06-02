@@ -32,24 +32,14 @@ const EllipsisColumn = styled(GridColumn)`
 const { requiredMessage, mustBeNumber, minimum } = errorMessages
 
 const validationSchema = Yup.object().shape({
-  product: Yup.number()
-    .required(requiredMessage)
-    .typeError(requiredMessage),
+  product: Yup.number().required(requiredMessage).typeError(requiredMessage),
   pricingTiers: Yup.array(
     Yup.object().shape({
-      price: Yup.number()
-        .required(requiredMessage)
-        .typeError(mustBeNumber)
-        .positive(minimum(0.001))
+      price: Yup.number().required(requiredMessage).typeError(mustBeNumber).positive(minimum(0.001))
     })
   ),
-  quantity: Yup.number()
-    .required(requiredMessage)
-    .typeError(mustBeNumber)
-    .positive(minimum(1)),
-  warehouse: Yup.number()
-    .required(requiredMessage)
-    .typeError(requiredMessage)
+  quantity: Yup.number().required(requiredMessage).typeError(mustBeNumber).positive(minimum(1)),
+  warehouse: Yup.number().required(requiredMessage).typeError(requiredMessage)
 })
 
 class SimpleEdit extends Component {
@@ -104,8 +94,10 @@ class SimpleEdit extends Component {
       product: getSafe(() => popupValues.companyProduct.id),
       uom: getSafe(() => popupValues.companyProduct.packagingUnit.nameAbbreviation),
       packaging: getSafe(() => popupValues.companyProduct.packagingType.name),
-      casTradeName: getSafe(() => popupValues.companyProduct.echoProduct.name),
-      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.companyProduct.echoProduct.elements, [])),
+      casTradeName: getSafe(() => popupValues.companyProduct.companyGenericProduct.name),
+      casProducts: getDesiredCasProductsProps(
+        getSafe(() => popupValues.companyProduct.companyGenericProduct.elements, [])
+      ),
       // price: getSafe(() => popupValues.pricingTiers[0].price.amount),
       pricingTiers: getSafe(
         () =>

@@ -136,7 +136,7 @@ export const dropdownOptions = {
   }
 }
 
-export const echoProductGrouping = [
+export const companyGenericProductGrouping = [
   {
     key: 'dot',
     text: <FormattedMessage id='global.dot' defaultMessage='DOT' />,
@@ -173,4 +173,3 @@ export const yesNoOptions = {
     }
   ]
 }
-

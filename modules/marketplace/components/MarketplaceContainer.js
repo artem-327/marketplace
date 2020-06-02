@@ -30,9 +30,9 @@ function mapStateToProps(store, { datagrid }) {
         ...po,
         id: po.id,
         expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
-        productName: po.companyProduct.echoProduct.name,
+        productGroupName: getSafe(() => po.companyProduct.companyGenericProduct.productGroup.name, ''),
         intProductName: getSafe(() => po.companyProduct.intProductName, ''),
-        productNumber: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
+        productNumber: getSafe(() => po.companyProduct.companyGenericProduct.code, 'Unmapped'),
         // merchant: getSafe(() => po.warehouse.warehouseName, ''),
         available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
         packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
@@ -62,7 +62,7 @@ function mapStateToProps(store, { datagrid }) {
               {qtyPart && `/ ${qtyPart}`}{' '}
             </>
           ),
-        manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
+        manufacturer: getSafe(() => po.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
         expiration: po.lotExpirationDate ? moment(po.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
@@ -73,7 +73,10 @@ function mapStateToProps(store, { datagrid }) {
         nacdMember: po && po.ownerNacdMember ? 'Yes' : po.ownerNacdMember === false ? 'No' : '',
         notes: getSafe(() => po.externalNotes, ''),
         association: po && po.ownerAssociations && getSafe(() => po.ownerAssociations.map(a => a.name), []),
-        leadTime: getSafe(() => po.leadTime, 'N/A')
+        leadTime: getSafe(() => po.leadTime, 'N/A'),
+        tagsNames: getSafe(() => po.companyProduct.companyGenericProduct.productGroup.tags.length, '')
+          ? po.companyProduct.companyGenericProduct.productGroup.tags.map(tag => tag.name)
+          : ''
       }
     }),
     sidebar: store.cart.sidebar,

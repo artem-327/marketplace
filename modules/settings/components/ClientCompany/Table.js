@@ -32,7 +32,7 @@ class Table extends Component {
             text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
             callback: row =>
               confirm(
-                formatMessage({ id: 'confirm.deleteClientCompany', defaultMessage: 'Delete Client Company' }),
+                formatMessage({ id: 'confirm.deleteClientCompany', defaultMessage: 'Delete Guest Company' }),
                 formatMessage(
                   { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.displayName}?` },
                   { item: row.displayName }
