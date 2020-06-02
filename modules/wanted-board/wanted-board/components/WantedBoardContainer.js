@@ -32,7 +32,7 @@ function mapStateToProps(store, { datagrid }) {
         id: row.id,
         rawData: row,
         product: getSafe(
-          () => row.element.companyGenericProduct.name,
+          () => row.element.productGroup.name,
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
         ),
         casNumber: casNumberAndName(getSafe(() => row.element.casProduct, '')),

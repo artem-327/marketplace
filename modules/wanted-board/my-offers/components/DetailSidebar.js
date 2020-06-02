@@ -153,7 +153,7 @@ class DetailSidebar extends Component {
 
   searchProducts = debounce(text => {
     this.props.getAutocompleteData({
-      searchUrl: `/prodex/api/company-generic-products/search/include-alternative-names?pattern=${text}`
+      searchUrl: `/prodex/api/product-groups/search?pattern=${text}`
     })
   }, 250)
 
