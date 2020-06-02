@@ -89,7 +89,7 @@ class Popup extends Component {
         companyLogo={companyLogo}
         onSubmit={this.onSubmit}
         isClientCompany
-        header={{ id: 'global.clientCompany', defaultMessage: 'Client Company' }}
+        header={{ id: 'global.clientCompany', defaultMessage: 'Guest Company' }}
         closePopupClientCompany={this.props.closePopup}
       />
     )
