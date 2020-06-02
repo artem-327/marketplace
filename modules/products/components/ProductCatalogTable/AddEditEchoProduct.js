@@ -650,9 +650,6 @@ class AddEditEchoProduct extends React.Component {
       listDocumentTypes,
       datagrid
     } = this.props
-    console.log('values====================================')
-    console.log(values)
-    console.log('====================================')
 
     const { popupValues } = this.state
     let sendSuccess = false
