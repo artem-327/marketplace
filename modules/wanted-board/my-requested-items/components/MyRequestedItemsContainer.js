@@ -56,9 +56,9 @@ function mapStateToProps(store, { datagrid }) {
     editedId: store.wantedBoard.editWindowOpen === 'my-requested-items' ? store.wantedBoard.editedId : null,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     rows: datagrid.rows.map(row => {
-      const productName = getSafe(() => row.element.echoProduct.name, null)
+      const productName = getSafe(() => row.element.companyGenericProduct.name, null)
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
-      const product = getSafe(() => row.element.echoProduct.name, null)
+      const product = getSafe(() => row.element.companyGenericProduct.name, null)
       const casNumber = casNumberAndName(getSafe(() => row.element.casProduct, null))
       const purchaseRequestOffers = row.purchaseRequestOffers
         .map(pro => {
@@ -67,16 +67,16 @@ function mapStateToProps(store, { datagrid }) {
             id: row.id + '_' + pro.id,
             clsName: 'tree-table nested-row',
             rawData: pro,
-            product: getSafe(() => pro.productOffer.companyProduct.echoProduct.name, ''),
+            product: getSafe(() => pro.productOffer.companyProduct.companyGenericProduct.name, ''),
             casNumber: getSafe(
-              () => pro.productOffer.companyProduct.echoProduct.elements[0].casProduct.casNumber,
+              () => pro.productOffer.companyProduct.companyGenericProduct.elements[0].casProduct.casNumber,
               'N/A'
             ),
             orderQuantity: '',
             orderFrequency: '',
             neededBy: '',
             dealExpired: '',
-            manufacturer: getSafe(() => pro.productOffer.companyProduct.echoProduct.manufacturer.name, ''),
+            manufacturer: getSafe(() => pro.productOffer.companyProduct.companyGenericProduct.manufacturer.name, ''),
             condition:
               condition === null ? (
                 <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />

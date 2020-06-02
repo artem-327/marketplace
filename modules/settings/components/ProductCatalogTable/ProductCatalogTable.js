@@ -67,7 +67,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 230,
-        sortPath: 'CompanyProduct.echoProduct.name'
+        sortPath: 'CompanyProduct.companyGenericProduct.name'
       },
       {
         name: 'externalProductCode',
@@ -77,7 +77,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 200,
-        sortPath: 'CompanyProduct.echoProduct.code'
+        sortPath: 'CompanyProduct.companyGenericProduct.code'
       },
       {
         name: 'packagingSizeFormatted',
@@ -110,7 +110,7 @@ class ProductCatalogTable extends Component {
         sortPath: 'CompanyProduct.packagingType.name'
       }
     ],
-    echoProducts: []
+    companyGenericProduct: []
   }
 
   // componentDidMount() {
@@ -138,7 +138,7 @@ class ProductCatalogTable extends Component {
 
     if (action === 'edit' && actionId && loaded) {
       if (currentTab.type === 'products') {
-        const editRow = rows.find(function(product) {
+        const editRow = rows.find(function (product) {
           return product.id === parseInt(actionId)
         })
 
@@ -203,14 +203,11 @@ class ProductCatalogTable extends Component {
   }
 }
 
-const getProductStatus = (product) => {
-
-  let status = product.echoProduct
-    ?
-    ( !product.echoProduct.isPublished
-        ? 'Unpublished'
-        : ''
-    )
+const getProductStatus = product => {
+  let status = product.companyGenericProduct
+    ? !product.companyGenericProduct.isPublished
+      ? 'Unpublished'
+      : ''
     : 'Unmapped'
 
   let popupText = null
@@ -273,28 +270,28 @@ const mapStateToProps = (state, { datagrid }) => {
           'N/A'
         ),
         //packagingGroup: getSafe(() => product.packagingGroup.id),
-        externalProductCode: getSafe(() => product.echoProduct.code, 'N/A'),
-        externalProductName: getSafe(() => product.echoProduct.name, 'N/A'),
+        externalProductCode: getSafe(() => product.companyGenericProduct.code, 'N/A'),
+        externalProductName: getSafe(() => product.companyGenericProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
         packagingUnit: getSafe(() => product.packagingUnit.id),
         productStatus: getProductStatus(product),
-        productStatusTmp: product.echoProduct && !product.echoProduct.isPublished
-          ? (
+        productStatusTmp:
+          product.companyGenericProduct && !product.companyGenericProduct.isPublished ? (
             <Popup
               size='small'
               header={
                 <FormattedMessage
                   id='global.notPublished'
                   defaultMessage='This echo product is not published and will not show on the Marketplace.'
-                />}
+                />
+              }
               trigger={
                 <div>
                   <FileTextIcon />
                 </div>
               } // <div> has to be there otherwise popup will be not shown
             />
-          )
-          : null
+          ) : null
       }
     }),
     filterValue: state.settings.filterValue,

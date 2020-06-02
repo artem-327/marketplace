@@ -1,4 +1,4 @@
-export const EchoProductResponse = {
+export const CompanyGenericProductResponse = {
   appearance: '',
   aspirationHazard: '',
   attachments: [],
@@ -26,13 +26,13 @@ export const EchoProductResponse = {
   decompositionTemperature: '',
   developmentalEffects: '',
   dotHazardClass: {
-    classCode	:	'',
-    description	:	'',
-    id:	null
+    classCode: '',
+    description: '',
+    id: null
   },
   dotHazardLabel: '',
   dotMarinePollutant: '',
-  dotPackagingGroup	: {
+  dotPackagingGroup: {
     description: '',
     groupCode: '',
     id: null
@@ -44,7 +44,7 @@ export const EchoProductResponse = {
   dotUnNumber: {
     description: '',
     id: null,
-    unNumberCode: '',
+    unNumberCode: ''
   },
   emergencyPhone: '',
   endocrineDisruptorInformation: '',
@@ -65,9 +65,9 @@ export const EchoProductResponse = {
   hmisPhysicalHazard: '',
   hnoc: '',
   iataHazardClass: {
-    classCode	:	'',
-    description	:	'',
-    id:	null
+    classCode: '',
+    description: '',
+    id: null
   },
   iataHazardLabel: '',
   iataPackagingGroup: {
@@ -80,13 +80,13 @@ export const EchoProductResponse = {
   iataUnNumber: {
     description: '',
     id: null,
-    unNumberCode: '',
+    unNumberCode: ''
   },
   id: 0,
   imdgImoHazardClass: {
-    classCode	:	'',
-    description	:	'',
-    id:	null
+    classCode: '',
+    description: '',
+    id: null
   },
   imdgImoHazardLabel: '',
   imdgImoPackagingGroup: {
@@ -99,7 +99,7 @@ export const EchoProductResponse = {
   imdgImoUnNumber: {
     description: '',
     id: null,
-    unNumberCode: '',
+    unNumberCode: ''
   },
   incompatibleMaterials: '',
   ingestion: '',
@@ -154,9 +154,9 @@ export const EchoProductResponse = {
   symptomsEffects: '',
   tags: [],
   tdgHazardClass: {
-    classCode	:	'',
-    description	:	'',
-    id:	null
+    classCode: '',
+    description: '',
+    id: null
   },
   tdgHazardLabel: '',
   tdgPackagingGroup: {
@@ -169,7 +169,7 @@ export const EchoProductResponse = {
   tdgUnNumber: {
     description: '',
     id: null,
-    unNumberCode: '',
+    unNumberCode: ''
   },
   tdsIssuedDate: '',
   tdsPreparedBy: '',
@@ -180,7 +180,7 @@ export const EchoProductResponse = {
   vaporDensity: '',
   vaporPressure: '',
   viscosity: '',
-  wasteDisposalMethods: '',
+  wasteDisposalMethods: ''
 }
 
 export const CasProductResponse = {

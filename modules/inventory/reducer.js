@@ -222,7 +222,7 @@ export default function reducer(state = initialState, action) {
                 }))
               : [{ price: null, quantityFrom: 1 }],
           origin: getSafe(() => data.origin.id),
-          tradeName: data.companyProduct.echoProduct.name, // ! ! ? data.tradeName,
+          tradeName: data.companyProduct.companyGenericProduct.name, // ! ! ? data.tradeName,
           productCondition: getSafe(() => data.condition.id),
           productForm: getSafe(() => data.form.id),
           productGrades: getSafe(() => data.grades.map(el => el.id)),
@@ -475,7 +475,7 @@ export default function reducer(state = initialState, action) {
               content: {
                 productCode: productCode,
                 productName: productName,
-                casProducts: getSafe(() => el.echoProduct.elements, [])
+                casProducts: getSafe(() => el.companyGenericProduct.elements, [])
               }
             }
           })

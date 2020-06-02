@@ -7,9 +7,9 @@ export const SubmitOffer = props => {
     searchToFilter: v =>
       v
         ? [
-          //{ operator: 'LIKE', path: 'PurchaseRequestElement.echoProduct.name', values: [`%${v}%`] },
-          //{ operator: 'LIKE', path: 'PurchaseRequestElement.casProduct.casNumber', values: [`%${v}%`] }
-        ]
+            //{ operator: 'LIKE', path: 'PurchaseRequestElement.companyGenericProduct.name', values: [`%${v}%`] },
+            //{ operator: 'LIKE', path: 'PurchaseRequestElement.casProduct.casNumber', values: [`%${v}%`] }
+          ]
         : [],
     params: {
       orOperator: true

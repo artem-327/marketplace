@@ -20,7 +20,7 @@ const MyInventory = () => (
             filters.and = v.and.map(idTag => {
               return {
                 operator: 'EQUALS',
-                path: 'ProductOffer.companyProduct.echoProduct.tags.id',
+                path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
                 values: [idTag]
               }
             })
