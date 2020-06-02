@@ -19,7 +19,7 @@ const Holds = ({ typeHolds }) => (
               },
               {
                 operator: 'LIKE',
-                path: 'InventoryHold.productOffer.companyProduct.echoProduct.name',
+                path: 'InventoryHold.productOffer.companyProduct.companyGenericProduct.name',
                 values: [`%${v}%`]
               }
             ]

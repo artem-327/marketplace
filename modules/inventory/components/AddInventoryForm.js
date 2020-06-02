@@ -169,8 +169,8 @@ const initValues = {
   warehouse: null
 }
 
-val.addMethod(val.object, 'uniqueProperty', function(propertyName, message) {
-  return this.test('unique', message, function(value) {
+val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
+  return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
       return true
     }
@@ -192,7 +192,7 @@ val.addMethod(val.object, 'uniqueProperty', function(propertyName, message) {
   })
 })
 
-val.addMethod(val.number, 'divisibleBy', function(ref, message) {
+val.addMethod(val.number, 'divisibleBy', function (ref, message) {
   return this.test({
     name: 'divisibleBy',
     exclusive: false,
@@ -200,7 +200,7 @@ val.addMethod(val.number, 'divisibleBy', function(ref, message) {
     params: {
       reference: ref.path
     },
-    test: function(value) {
+    test: function (value) {
       const divisedBy = parseInt(this.resolve(ref))
       if (!divisedBy || isNaN(divisedBy)) return false
 
@@ -209,8 +209,8 @@ val.addMethod(val.number, 'divisibleBy', function(ref, message) {
   })
 })
 
-val.addMethod(val.string, 'minDateComparedTo', function(propertyName, message) {
-  return this.test('minDateComparedTo', message, function(value) {
+val.addMethod(val.string, 'minDateComparedTo', function (propertyName, message) {
+  return this.test('minDateComparedTo', message, function (value) {
     const comparedDate = this.parent[propertyName]
     if (!value || !comparedDate) {
       return true
@@ -230,10 +230,7 @@ const validationScheme = val.object().shape({
   costs: val.array().of(
     val.object().shape({
       description: val.string(),
-      lot: val
-        .number()
-        .moreThan(-1, errorMessages.lotHasToBeSelected)
-        .required(errorMessages.requiredMessage),
+      lot: val.number().moreThan(-1, errorMessages.lotHasToBeSelected).required(errorMessages.requiredMessage),
       cost: val
         .number()
         .nullable()
@@ -264,10 +261,7 @@ const validationScheme = val.object().shape({
         .object()
         .uniqueProperty('lotNumber', errorMessages.lotUnique)
         .shape({
-          lotNumber: val
-            .string()
-            .nullable()
-            .required(errorMessages.requiredMessage),
+          lotNumber: val.string().nullable().required(errorMessages.requiredMessage),
           pkgAvailable: val
             .number()
             .nullable()
@@ -288,14 +282,8 @@ const validationScheme = val.object().shape({
     .nullable()
     .divisibleBy(val.ref('splits'), 'Value is not divisible by Splits')
     .moreThan(0, errorMessages.greaterThan(0)),
-  splits: val
-    .number()
-    .nullable()
-    .moreThan(0, errorMessages.greaterThan(0)),
-  origin: val
-    .number()
-    .nullable()
-    .moreThan(0, errorMessages.invalidString),
+  splits: val.number().nullable().moreThan(0, errorMessages.greaterThan(0)),
+  origin: val.number().nullable().moreThan(0, errorMessages.invalidString),
   priceTiers: val.number(),
   pricingTiers: val.array().of(
     val
@@ -317,10 +305,7 @@ const validationScheme = val.object().shape({
           .test('maxdec', errorMessages.maxDecimals(3), val => {
             return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
           }),
-        manuallyModified: val
-          .number()
-          .min(0)
-          .max(1)
+        manuallyModified: val.number().min(0).max(1)
       })
   ),
   touchedLot: val.bool(),
@@ -334,7 +319,7 @@ const validationScheme = val.object().shape({
     .nullable()
     .min(0, errorMessages.minimum(0))
     .max(100, errorMessages.maximum(100))
-    .test('match', errorMessages.minUpToMax, function(assayMin) {
+    .test('match', errorMessages.minUpToMax, function (assayMin) {
       return typeof this.parent.assayMax === 'undefined' || assayMin <= this.parent.assayMax
     }),
   assayMax: val
@@ -342,7 +327,7 @@ const validationScheme = val.object().shape({
     .nullable()
     .min(0, errorMessages.minimum(0))
     .max(100, errorMessages.maximum(100))
-    .test('match', errorMessages.maxAtLeastMin, function(assayMax) {
+    .test('match', errorMessages.maxAtLeastMin, function (assayMax) {
       return typeof this.parent.assayMin === 'undefined' || assayMax >= this.parent.assayMin
     })
 })
@@ -622,7 +607,7 @@ class AddInventoryForm extends Component {
 
     if (isLot) {
       const lotIndex = values.lots.findIndex(lot => lot.id === connectedId)
-      let filteredAttachments = values.lots[lotIndex].attachments.reduce(function(filtered, attachment) {
+      let filteredAttachments = values.lots[lotIndex].attachments.reduce(function (filtered, attachment) {
         if (attachment.id !== documentId) {
           filtered.push(attachment)
         }
@@ -630,7 +615,7 @@ class AddInventoryForm extends Component {
       }, [])
       setFieldValue(`lots[${lotIndex}].attachments`, filteredAttachments)
     } else {
-      let filteredAttachments = values.attachments.reduce(function(filtered, attachment) {
+      let filteredAttachments = values.attachments.reduce(function (filtered, attachment) {
         if (attachment.id !== documentId) {
           filtered.push(attachment)
         }
@@ -638,7 +623,7 @@ class AddInventoryForm extends Component {
       }, [])
       setFieldValue(`attachments`, filteredAttachments)
 
-      let filteredAdditional = values.additional.reduce(function(filtered, additional) {
+      let filteredAdditional = values.additional.reduce(function (filtered, additional) {
         if (additional.id !== documentId) {
           filtered.push(additional)
         }
@@ -678,7 +663,7 @@ class AddInventoryForm extends Component {
 
     let documents = attachments.concat(
       additional,
-      lots.reduce(function(filtered, lot) {
+      lots.reduce(function (filtered, lot) {
         if (lot.attachments && lot.attachments.length) {
           lot.attachments.map(attachment => {
             let lotAttachment = {
@@ -880,7 +865,7 @@ class AddInventoryForm extends Component {
     let defaultMessage = values.product ? 'N/A' : ''
     const blendMessage = formatMessage({ id: 'global.blend', defaultMessage: 'Blend' })
     let product = autocompleteData.find(el => el.id === values.product)
-    let casProducts = getSafe(() => product.echoProduct.elements, [])
+    let casProducts = getSafe(() => product.companyGenericProduct.elements, [])
 
     return (
       <Grid className='product-details' centered>
@@ -909,14 +894,14 @@ class AddInventoryForm extends Component {
                     <FormattedMessage id='addInventory.productName' defaultMessage='Product Name' />
                   </GridColumn>
                   <GridColumn computer={8} mobile={16}>
-                    {getSafe(() => product.echoProduct.name, defaultMessage)}
+                    {getSafe(() => product.companyGenericProduct.name, defaultMessage)}
                   </GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'>
                     <FormattedMessage id='global.productCode' defaultMessage='Product Code' />
                   </GridColumn>
                   <GridColumn computer={8} mobile={16}>
-                    {getSafe(() => product.echoProduct.code, defaultMessage)}
+                    {getSafe(() => product.companyGenericProduct.code, defaultMessage)}
                   </GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'>
@@ -1022,21 +1007,21 @@ class AddInventoryForm extends Component {
                     <FormattedMessage id='addInventory.unNumber' defaultMessage='UN Number' />
                   </GridColumn>
                   <GridColumn computer={8} mobile={16}>
-                    {getSafe(() => product.echoProduct.cfUnNumber, defaultMessage)}
+                    {getSafe(() => product.companyGenericProduct.cfUnNumber, defaultMessage)}
                   </GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'>
                     <FormattedMessage id='addInventory.packGrp' defaultMessage='Packaging Group' />
                   </GridColumn>
                   <GridColumn computer={8} mobile={16}>
-                    {getSafe(() => product.echoProduct.cfPackagingGroup, defaultMessage)}
+                    {getSafe(() => product.companyGenericProduct.cfPackagingGroup, defaultMessage)}
                   </GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'>
                     <FormattedMessage id='addInventory.hazardClass' defaultMessage='Hazard Class' />
                   </GridColumn>
                   <GridColumn computer={8} mobile={16}>
-                    {getSafe(() => product.echoProduct.cfHazardClass, defaultMessage)}
+                    {getSafe(() => product.companyGenericProduct.cfHazardClass, defaultMessage)}
                   </GridColumn>
 
                   <GridColumn computer={8} mobile={16} className='key'>
@@ -2079,7 +2064,7 @@ class AddInventoryForm extends Component {
                                           selection: true,
                                           clearable: true,
                                           loading: searchedOriginsLoading,
-                                          onChange: (e, {value}) => {
+                                          onChange: (e, { value }) => {
                                             value && searchOrigins('')
                                           },
                                           onSearchChange: debounce(

@@ -104,7 +104,7 @@ class Filter extends Component {
       appliedFilter,
       onApply,
       applyDatagridFilter,
-      fetchCountries,
+      fetchCountries
     } = this.props
 
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
@@ -366,7 +366,7 @@ class Filter extends Component {
           if (filters[i].path === 'ProductOffer.lotManufacturedDate') {
             formikValues['mfg'] = datagridValues['mfg'].toFormik(filters[i].operator)
           }
-          if (filters[i].path === 'ProductOffer.companyProduct.echoProduct.id') {
+          if (filters[i].path === 'ProductOffer.companyProduct.companyGenericProduct.id') {
             this.searchProductOffer(filters[i].values)
           }
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
@@ -401,11 +401,11 @@ class Filter extends Component {
           if (savedProvinces[parsed.id]) {
             provinces = savedProvinces[parsed.id]
           } else {
-            const {value} = await this.props.fetchProvinces(parsed.id)
+            const { value } = await this.props.fetchProvinces(parsed.id)
             provinces = value.map(d => ({
               key: d.id,
               text: d.name,
-              value: JSON.stringify({id: d.id, name: d.name, text: d.name, country: d.country.id})
+              value: JSON.stringify({ id: d.id, name: d.name, text: d.name, country: d.country.id })
             }))
             savedProvinces[[parsed.id]] = provinces
           }
@@ -828,9 +828,7 @@ class Filter extends Component {
           }
         }
         let newProvinceValues = values.province.filter(p =>
-          data.value.some(c =>
-            JSON.parse(p).country === JSON.parse(c).id
-          )
+          data.value.some(c => JSON.parse(p).country === JSON.parse(c).id)
         )
         this.setState({ savedProvinces, provinceOptions })
         setFieldValue('province', newProvinceValues)
@@ -926,9 +924,13 @@ class Filter extends Component {
         <AccordionItem>
           {this.accordionTitle('location', <FormattedMessage id='filter.location' />)}
           <AccordionContent active={this.state.activeAccordion.location}>
-            <div className='field-label'><FormattedMessage id='global.country' /></div>
+            <div className='field-label'>
+              <FormattedMessage id='global.country' />
+            </div>
             <BottomMargedDropdown {...dropdownCountry} />
-            <div className='field-label'><FormattedMessage id='global.state' /></div>
+            <div className='field-label'>
+              <FormattedMessage id='global.state' />
+            </div>
             <BottomMargedDropdown {...dropdownProvince} />
           </AccordionContent>
         </AccordionItem>

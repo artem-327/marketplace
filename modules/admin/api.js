@@ -130,7 +130,7 @@ export const getCompanyDetails = id =>
 
 export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`)
 
-export const deleteEchoProduct = id => api.delete(`/prodex/api/echo-products/id/${id}`)
+export const deleteCompanyGenericProduct = id => api.delete(`/prodex/api/company-generic-products/id/${id}`)
 
 export const loadFile = attachment => {
   return api({
@@ -161,12 +161,16 @@ export const addAttachment = (attachment, docType, additionalParams = {}) => {
 }
 
 export const linkAttachment = (echoId, attachmentId) =>
-  api.post(`/prodex/api/attachment-links/to-echo-product?attachmentId=${attachmentId}&echoProductId=${echoId}`)
+  api.post(
+    `/prodex/api/attachment-links/to-company-generic-product?attachmentId=${attachmentId}&companyGenericProductId =${echoId}`
+  )
 
 export const removeAttachment = attachmentId => api.delete(`/prodex/api/attachments/${attachmentId}`)
 
 export const removeAttachmentLink = (echoId, attachmentId) =>
-  api.delete(`/prodex/api/attachment-links/to-echo-product?attachmentId=${attachmentId}&echoProductId=${echoId}`)
+  api.delete(
+    `/prodex/api/attachment-links/to-company-generic-product?attachmentId=${attachmentId}&companyGenericProductId =${echoId}`
+  )
 
 export const searchManufacturers = (text, limit) =>
   api.get(
@@ -177,7 +181,8 @@ export const searchManufacturers = (text, limit) =>
 
 export const searchUnNumber = pattern => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`)
 
-export const verifyEchoProduct = id => api.get(`/prodex/api/echo-products/verify/${id}`).then(response => response.data)
+export const verifyEchoProduct = id =>
+  api.get(`/prodex/api/company-generic-products/verify/${id}`).then(response => response.data)
 
 export const addNmfcNumber = nmfc => api.post('/prodex/api/nmfc-numbers', nmfc).then(response => response.data)
 export const editNmfcNumber = nmfc =>

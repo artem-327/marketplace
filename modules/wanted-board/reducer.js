@@ -131,13 +131,13 @@ export default function reducer(state = initialState, action) {
               .concat(state.searchedManufacturers),
             'key'
           ),
-          autocompleteData: row.element.echoProduct
+          autocompleteData: row.element.companyGenericProduct
             ? uniqueArrayByKey(
                 [
                   {
-                    key: row.element.echoProduct.id,
-                    text: `${row.element.echoProduct.name} ${row.element.echoProduct.code}`,
-                    value: row.element.echoProduct.id
+                    key: row.element.companyGenericProduct.id,
+                    text: `${row.element.companyGenericProduct.name} ${row.element.companyGenericProduct.code}`,
+                    value: row.element.companyGenericProduct.id
                   }
                 ].concat(state.autocompleteData),
                 'key'
@@ -168,8 +168,8 @@ export default function reducer(state = initialState, action) {
 
     case AT.WB_SIDEBAR_MO_DETAIL_TRIGGER: {
       const row = payload ? payload.rawData : null
-      const manufacturer = getSafe(() => row.productOffer.companyProduct.echoProduct.manufacturer, null)
-      const product = getSafe(() => row.productOffer.companyProduct.echoProduct, null)
+      const manufacturer = getSafe(() => row.productOffer.companyProduct.companyGenericProduct.manufacturer, null)
+      const product = getSafe(() => row.productOffer.companyProduct.companyGenericProduct, null)
       return {
         ...state,
         editInitTrig: !state.editInitTrig,

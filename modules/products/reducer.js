@@ -43,7 +43,9 @@ export const initialState = {
   documentTypes: [],
   searchedMarketSegments: [],
   searchedMarketSegmentsLoading: false,
-  altEchoNamesRows: []
+  altEchoNamesRows: [],
+  searchedProductGroups: [],
+  searchedProductGroupsLoading: false
 }
 
 export default function reducers(state = initialState, action) {
@@ -163,14 +165,14 @@ export default function reducers(state = initialState, action) {
         currentAddDwolla: null
       }
     }
-    case AT.PRODUCTS_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_PENDING:
-    case AT.PRODUCTS_GET_ECHO_PRODUCT_PENDING:
+    case AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES_PENDING:
+    case AT.PRODUCTS_GET_COMPANY_GENERIC_PRODUCT_PENDING:
     case AT.PRODUCTS_REMOVE_ATTACHMENT_PENDING:
     case AT.PRODUCTS_REMOVE_ATTACHMENT_LINK_PENDING:
     case AT.PRODUCTS_LINK_ATTACHMENT_PENDING:
     case AT.PRODUCTS_ADD_ATTACHMENT_PENDING:
-    case AT.PRODUCTS_POST_ECHO_PRODUCT_PENDING:
-    case AT.PRODUCTS_PUT_ECHO_PRODUCT_PENDING:
+    case AT.PRODUCTS_POST_COMPANY_GENERIC_PRODUCT_PENDING:
+    case AT.PRODUCTS_PUT_COMPANY_GENERIC_PRODUCT_PENDING:
     case AT.PRODUCTS_DELETE_PRODUCT_NAME_PENDING:
     case AT.PRODUCTS_UPDATE_PRODUCT_NAME_PENDING:
     case AT.PRODUCTS_POST_NEW_PRODUCT_NAME_PENDING:
@@ -187,9 +189,9 @@ export default function reducers(state = initialState, action) {
         loading: false
       }
     }
-    case AT.PRODUCTS_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_REJECTED:
-    case AT.PRODUCTS_GET_ECHO_PRODUCT_FULFILLED:
-    case AT.PRODUCTS_GET_ECHO_PRODUCT_REJECTED:
+    case AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES_REJECTED:
+    case AT.PRODUCTS_GET_COMPANY_GENERIC_PRODUCT_FULFILLED:
+    case AT.PRODUCTS_GET_COMPANY_GENERIC_PRODUCT_REJECTED:
     case AT.PRODUCTS_REMOVE_ATTACHMENT_FULFILLED:
     case AT.PRODUCTS_REMOVE_ATTACHMENT_REJECTED:
     case AT.PRODUCTS_REMOVE_ATTACHMENT_LINK_FULFILLED:
@@ -198,10 +200,10 @@ export default function reducers(state = initialState, action) {
     case AT.PRODUCTS_LINK_ATTACHMENT_REJECTED:
     case AT.PRODUCTS_ADD_ATTACHMENT_FULFILLED:
     case AT.PRODUCTS_ADD_ATTACHMENT_REJECTED:
-    case AT.PRODUCTS_POST_ECHO_PRODUCT_FULFILLED:
-    case AT.PRODUCTS_POST_ECHO_PRODUCT_REJECTED:
-    case AT.PRODUCTS_PUT_ECHO_PRODUCT_FULFILLED:
-    case AT.PRODUCTS_PUT_ECHO_PRODUCT_REJECTED:
+    case AT.PRODUCTS_POST_COMPANY_GENERIC_PRODUCT_FULFILLED:
+    case AT.PRODUCTS_POST_COMPANY_GENERIC_PRODUCT_REJECTED:
+    case AT.PRODUCTS_PUT_COMPANY_GENERIC_PRODUCT_FULFILLED:
+    case AT.PRODUCTS_PUT_COMPANY_GENERIC_PRODUCT_REJECTED:
     case AT.PRODUCTS_DELETE_PRODUCT_NAME_REJECTED:
     case AT.PRODUCTS_UPDATE_PRODUCT_NAME_REJECTED:
     case AT.PRODUCTS_POST_NEW_PRODUCT_NAME_REJECTED:
@@ -211,7 +213,7 @@ export default function reducers(state = initialState, action) {
         loading: false
       }
     }
-    case AT.PRODUCTS_EDIT_ECHO_PRODUCT_CHANGE_TAB: {
+    case AT.PRODUCTS_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB: {
       return {
         ...state,
         editEchoProductEditTab: payload.editTab,
@@ -316,11 +318,75 @@ export default function reducers(state = initialState, action) {
         searchedMarketSegmentsLoading: false
       }
     }
-    case AT.PRODUCTS_GET_ALTERNATIVE_ECHO_PRODUCT_NAMES_FULFILLED: {
+    case AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES_FULFILLED: {
       return {
         ...state,
         altEchoNamesRows: action.payload,
         loading: false
+      }
+    }
+    case AT.PRODUCTS_GROUPS_CREATE_PENDING: {
+      return { ...state, loading: true }
+    }
+    case AT.PRODUCTS_GROUPS_CREATE_REJECTED: {
+      return { ...state, loading: false }
+    }
+    case AT.PRODUCTS_GROUPS_CREATE_FULFILLED: {
+      return {
+        ...state,
+        productGroup: action.payload,
+        loading: false
+      }
+    }
+    case AT.PRODUCTS_GROUPS_UPDATE_PENDING: {
+      return { ...state, loading: true }
+    }
+    case AT.PRODUCTS_GROUPS_UPDATE_REJECTED: {
+      return { ...state, loading: false }
+    }
+    case AT.PRODUCTS_GROUPS_UPDATE_FULFILLED: {
+      return {
+        ...state,
+        productGroup: action.payload,
+        loading: false
+      }
+    }
+    case AT.PRODUCTS_GROUPS_DELETE_PENDING: {
+      return { ...state, loading: true }
+    }
+    case AT.PRODUCTS_GROUPS_DELETE_REJECTED: {
+      return { ...state, loading: false }
+    }
+    case AT.PRODUCTS_GROUPS_DELETE_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+    case AT.PRODUCTS_SEARCH_PRODUCT_GROUPS_PENDING: {
+      return { ...state, searchedProductGroupsLoading: true }
+    }
+    case AT.PRODUCTS_SEARCH_PRODUCT_GROUPS_REJECTED: {
+      return { ...state, searchedProductGroupsLoading: false }
+    }
+    case AT.PRODUCTS_SEARCH_PRODUCT_GROUPS_FULFILLED: {
+      return {
+        ...state,
+        searchedProductGroups: action.payload,
+        searchedProductGroupsLoading: false
+      }
+    }
+    case AT.PRODUCTS_SEARCH_COMPANY_PENDING: {
+      return { ...state, searchedCompaniesLoading: true }
+    }
+    case AT.PRODUCTS_SEARCH_COMPANY_REJECTED: {
+      return { ...state, searchedCompaniesLoading: false }
+    }
+    case AT.PRODUCTS_SEARCH_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        searchedCompanies: action.payload,
+        searchedCompaniesLoading: false
       }
     }
     default: {
