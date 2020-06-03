@@ -12,6 +12,7 @@ import { mapCompanyRows } from '~/constants/index'
 
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import * as Actions from '../../actions'
+import { reviewRequest } from '~/modules/admin/actions'
 import { RefreshCw } from 'react-feather'
 import styled from 'styled-components'
 import { Button } from 'semantic-ui-react'
@@ -161,26 +162,22 @@ class CompaniesTable extends Component {
             data-test={`admin_company_table_enable_${row.id}_chckb`}
           />
         ),
-        p44CompanyId:
+        p44CompanyId: row.p44CompanyId ? (
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: '100%' }}>{row.p44CompanyId}</div>
+            <StyledReRegisterButton
+              onClick={() => {
+                this.setState({ reRegisterCompanyId: row.id })
+                this.reRegisterP44(row.id)
+              }}
+              loading={this.props.reRegisterP44Pending && this.state.reRegisterCompanyId === row.id}
+              disabled={this.state.reRegisterCompanyId === row.id}>
+              <RefreshCw size={18} style={{ color: '#2599d5' }} />
+            </StyledReRegisterButton>
+          </div>
+        ) : (
           row.p44CompanyId
-            ? (
-              <div style={{ display: 'flex'}}>
-                <div style={{ width: '100%'}}>
-                  {row.p44CompanyId}
-                </div>
-                <StyledReRegisterButton
-                  onClick={() => {
-                    this.setState({ reRegisterCompanyId: row.id})
-                    this.reRegisterP44(row.id)}
-                  }
-                  loading={this.props.reRegisterP44Pending && this.state.reRegisterCompanyId === row.id}
-                  disabled={this.state.reRegisterCompanyId === row.id}
-                >
-                  <RefreshCw size={18} style={{ color: '#2599d5' }}/>
-                </StyledReRegisterButton>
-              </div>
-            )
-            : row.p44CompanyId
+        )
       }
     })
   }
@@ -196,12 +193,12 @@ class CompaniesTable extends Component {
     }
   }
 
-  reRegisterP44 = async (id) => {
+  reRegisterP44 = async id => {
     const { datagrid, reRegisterP44 } = this.props
     try {
       const { value } = await reRegisterP44(id)
-      this.setState({ reRegisterCompanyId: null})
-      datagrid.updateRow(id, () => (value))
+      this.setState({ reRegisterCompanyId: null })
+      datagrid.updateRow(id, () => value)
     } catch (err) {
       console.error(err)
     }
@@ -322,4 +319,4 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(CompaniesTable)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, reviewRequest })(injectIntl(CompaniesTable)))
