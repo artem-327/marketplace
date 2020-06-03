@@ -210,10 +210,9 @@ class Settings extends Component {
 
     let queryTab =
       (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
-      isCompanyAdmin ||
-      isClientCompanyAdmin
+      (isCompanyAdmin || isClientCompanyAdmin
         ? companyDetailsTab
-        : tabsNames.find(tab => tab.type !== companyDetailsTab.type)
+        : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
 
     this.changeRoute(queryTab)
     this.redirectPage(queryTab)
