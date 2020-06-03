@@ -12,11 +12,13 @@ class Popup extends Component {
   }
 
   async componentDidMount() {
-    try {
-      const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
-      if (companyLogo.value.data.size) this.setState({ companyLogo: companyLogo.value.data })
-    } catch (error) {
-      console.error(error)
+    if (this.props.companyId) {
+      try {
+        const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
+        if (companyLogo.value.data.size) this.setState({ companyLogo: companyLogo.value.data })
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 
@@ -116,7 +118,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    companyId: state.settings.popupValues.id
+    companyId: getSafe(() => state.settings.popupValues.id, '')
   }
 }
 
