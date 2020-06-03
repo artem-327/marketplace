@@ -56,9 +56,9 @@ function mapStateToProps(store, { datagrid }) {
     editedId: store.wantedBoard.editWindowOpen === 'my-requested-items' ? store.wantedBoard.editedId : null,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     rows: datagrid.rows.map(row => {
-      const productName = getSafe(() => row.element.companyGenericProduct.name, null)
+      const productName = getSafe(() => row.element.productGroup.name, null)
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
-      const product = getSafe(() => row.element.companyGenericProduct.name, null)
+      const product = getSafe(() => row.element.productGroup.name, null)
       const casNumber = casNumberAndName(getSafe(() => row.element.casProduct, null))
       const purchaseRequestOffers = row.purchaseRequestOffers
         .map(pro => {
@@ -67,9 +67,9 @@ function mapStateToProps(store, { datagrid }) {
             id: row.id + '_' + pro.id,
             clsName: 'tree-table nested-row',
             rawData: pro,
-            product: getSafe(() => pro.productOffer.companyProduct.companyGenericProduct.name, ''),
+            product: getSafe(() => pro.productOffer.companyProduct.productGroup.name, ''),
             casNumber: getSafe(
-              () => pro.productOffer.companyProduct.companyGenericProduct.elements[0].casProduct.casNumber,
+              () => pro.productOffer.companyProduct.productGroup.elements[0].casProduct.casNumber,
               'N/A'
             ),
             orderQuantity: '',
