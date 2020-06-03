@@ -486,3 +486,10 @@ export function closePricingEditPopup() {
     payload: null
   }
 }
+
+export function setExportSidebarOpenState(open) {
+  return {
+    type: AT.INVENTORY_SET_EXPORT_SIDEBAR_OPEN_STATE,
+    payload: open
+  }
+}

@@ -30,6 +30,7 @@ function mapStateToProps(state) {
       getSafe(() => state.settings.isOpenSidebar, false) ||
       getSafe(() => state.cart.sidebar.isOpen, false) ||
       getSafe(() => state.simpleAdd.sidebarDetailOpen, false) ||
+      getSafe(() => state.simpleAdd.isExportInventoryOpen, false) ||
       getSafe(() => state.companyProductInfo.isOpen, false) ||
       getSafe(() => state.companiesAdmin.isOpenSidebar, false) ||
       (getSafe(() => state.settings.isOpenPopup, false) &&
