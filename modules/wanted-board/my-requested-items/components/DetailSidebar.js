@@ -111,7 +111,7 @@ const initValues = {
   maximumPricePerUOM: '',
   notes: '',
   element: {
-    companyGenericProduct: '',
+    productGroup: '',
     casProduct: '',
     assayMin: '',
     assayMax: ''
@@ -147,7 +147,7 @@ const validationSchema = () =>
           })
       }),
       element: val.object().shape({
-        companyGenericProduct: val
+        productGroup: val
           .string()
           .trim()
           .test('required', errorMessages.requiredMessage, function (value) {
@@ -161,8 +161,8 @@ const validationSchema = () =>
           .string()
           .trim()
           .test('required', errorMessages.requiredMessage, function (value) {
-            const { companyGenericProduct } = this.parent
-            if (companyGenericProduct === null || companyGenericProduct === '') {
+            const { productGroup } = this.parent
+            if (productGroup === null || productGroup === '') {
               return value !== null && value !== ''
             }
             return true
@@ -318,7 +318,7 @@ class DetailSidebar extends Component {
 
   searchProducts = debounce(text => {
     this.props.getAutocompleteData({
-      searchUrl: `/prodex/api/company-generic-products/search/include-alternative-names?pattern=${text}`
+      searchUrl: `/prodex/api/product-groups/search?pattern=${text}`
     })
   }, 250)
 
@@ -392,7 +392,7 @@ class DetailSidebar extends Component {
             deliveryCountry: getSafe(() => sidebarValues.deliveryCountry.id, ''),
             deliveryProvince: getSafe(() => sidebarValues.deliveryProvince.id, ''),
             element: {
-              companyGenericProduct: getSafe(() => sidebarValues.element.companyGenericProduct.id, ''),
+              productGroup: getSafe(() => sidebarValues.element.productGroup.id, ''),
               casProduct: getSafe(() => sidebarValues.element.casProduct.id, ''),
               assayMin: getSafe(() => sidebarValues.element.assayMin, ''),
               assayMax: getSafe(() => sidebarValues.element.assayMax, '')
@@ -518,7 +518,7 @@ class DetailSidebar extends Component {
                                 <Required />
                               </>
                             }
-                            name='element.companyGenericProduct'
+                            name='element.productGroup'
                             options={this.props.autocompleteData}
                             inputProps={{
                               placeholder: (

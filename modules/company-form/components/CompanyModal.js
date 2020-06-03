@@ -301,6 +301,7 @@ class CompanyModal extends React.Component {
                         errors={errors}
                         touched={touched}
                         isSubmitting={isSubmitting}
+                        isClientCompany={this.props.isClientCompany}
                       />
                       {!popupValues && (
                         <>

@@ -213,6 +213,10 @@ const formValidation = Yup.object().shape({
   packagingLength: Yup.number()
     .typeError(errorMessages.mustBeNumber)
     .required(errorMessages.requiredMessage)
+    .positive(errorMessages.positive),
+  companyGenericProduct: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .required(errorMessages.requiredMessage)
     .positive(errorMessages.positive)
 })
 
@@ -460,10 +464,13 @@ class ProductSidebar extends React.Component {
                         <GridColumn>
                           <Dropdown
                             label={
-                              <FormattedMessage
-                                id='settings.associatedCompanyGenericProduct'
-                                defaultMessage='What is the Associated External Product that you would like to map to?'
-                              />
+                              <>
+                                <FormattedMessage
+                                  id='settings.associatedCompanyGenericProduct'
+                                  defaultMessage='What is the Associated External Product that you would like to map to?'
+                                />
+                                <Required />
+                              </>
                             }
                             options={allCompanyGenericProduct.map(echo => ({
                               key: echo.id,

@@ -466,14 +466,16 @@ class CompanyForm extends Component {
             name='nacdMember'
             data-test='company_form_nacdMember_chckb'
           />
-          <Checkbox
-            label={formatMessage({
-              id: 'company.purchaseHazmatEligible ',
-              defaultMessage: 'Purchase Hazardous Materials'
-            })}
-            name='purchaseHazmatEligible'
-            data-test='company_form_purchaseHazmatEligible_chckb'
-          />
+          {!this.props.isClientCompany && (
+            <Checkbox
+              label={formatMessage({
+                id: 'company.purchaseHazmatEligible ',
+                defaultMessage: 'Purchase Hazardous Materials'
+              })}
+              name='purchaseHazmatEligible'
+              data-test='company_form_purchaseHazmatEligible_chckb'
+            />
+          )}
         </FormGroup>
       </>
     )
