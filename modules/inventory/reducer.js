@@ -35,7 +35,8 @@ export const initialState = {
   productOfferStatuses: [],
   datagridFilter: { filters: [] },
   datagridFilterUpdate: false,
-  pricingEditOpenId: null
+  pricingEditOpenId: null,
+  isExportInventoryOpen: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -577,6 +578,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         pricingEditOpenId: payload
+      }
+    }
+
+    case AT.INVENTORY_SET_EXPORT_SIDEBAR_OPEN_STATE: {
+      return {
+        ...state,
+        isExportInventoryOpen: payload
       }
     }
 
