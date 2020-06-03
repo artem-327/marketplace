@@ -327,9 +327,11 @@ class Broadcast extends Component {
     let nodesToHide = tree.all(n => {
       if (n.model.rule.type === 'branch') {
         let company = this.findCompany(n)
+
         if (
-          !getSafe(() => company.model.associations, []).includes(associationFilter) ||
-          (associationFilter === 'Client Company' && getSafe(() => company.model.elements[0].clientCompany, false))
+          (!getSafe(() => company.model.associations, []).includes(associationFilter) &&
+            associationFilter !== 'Client Company') ||
+          (associationFilter === 'Client Company' && company.model.elements[0].clientCompany === false)
         ) {
           if (companiesToHide.indexOf(company.model.id) === -1) companiesToHide.push(company)
           return true
