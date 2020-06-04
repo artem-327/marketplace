@@ -83,7 +83,7 @@ class AddressForm extends Component {
     const country = values && values.address && values.address.country
     const oldCountry = oldValues && oldValues.address && oldValues.address.country
 
-    if (country !== oldCountry) {
+    if (country && oldCountry && country !== oldCountry) {
       const parsed = JSON.parse(country)
 
       this.setState({ hasProvinces: parsed.hasProvinces })
