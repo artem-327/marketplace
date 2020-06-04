@@ -97,7 +97,8 @@ class UsersTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 120,
+        align: 'center'
       }
     ]
   }
@@ -158,14 +159,16 @@ class UsersTable extends Component {
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row)
+              callback: row => openPopup(row.rawData)
               // hidden: row => currentUserId === row.id
             },
+            /* #34139
             {
               text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }),
-              callback: row => openRolesPopup(row)
+              callback: row => openRolesPopup(row.rawData)
               // hidden: row => currentUserId === row.id
             },
+            */
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
@@ -217,7 +220,7 @@ const userEnableDisableStatus = (r, currentUserId) => {
   let id = r.enabled ? 'settings.user.enabled' : 'settings.user.disabled'
 
   return (
-    <div style={{ float: 'right' }}>
+    <div>
       <Popup
         id={r.id}
         trigger={
@@ -253,13 +256,15 @@ const mapStateToProps = (state, { datagrid }) => {
       const isCompanyAdmin = (user.roles || []).some(role => role.id === 2)
 
       return {
+        rawData: user,
         name:
           user.id === getSafe(() => state.auth.identity.company.primaryUser.id, '') ? (
             <>
-              <Icon name='user crown' style={{ color: '#2599d5' }} /> {user.name}
+              <Icon name='user crown' style={{ color: '#2599d5' }} />
+              <span style={{ fontWeight: '500' }}>{user.name}</span>
             </>
           ) : (
-            user.name
+            <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</div>
           ),
         jobTitle: user.jobTitle || '',
         email: user.email,

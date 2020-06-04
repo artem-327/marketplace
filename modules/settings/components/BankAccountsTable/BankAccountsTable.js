@@ -45,6 +45,17 @@ const CustomDiv = styled.div`
   padding: 30px;
 `
 
+const StatusLabel = styled(Label)`
+  height: 22px;
+  border-radius: 11px !important;
+  font-size: 12px !important;
+  font-weight: normal !important;
+  font-stretch: normal !important;
+  font-style: normal !important;
+  text-align: center !important;
+  color: #ffffff !important;
+`
+
 const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
   <Formik
     initialValues={{
@@ -52,8 +63,12 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
       amount2: ''
     }}
     validationSchema={Yup.object().shape({
-      amount1: Yup.number(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
-      amount2: Yup.number(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
+      amount1: Yup.number(errorMessages.mustBeNumber)
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage),
+      amount2: Yup.number(errorMessages.mustBeNumber)
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
     })}
     onSubmit={values => proceed(values)}
     onReset={dismiss}
@@ -435,19 +450,19 @@ const mapDispatchToProps = {
 
 const statusToLabel = {
   verified: (
-    <Label color='green' horizontal>
+    <StatusLabel style={{ backgroundColor: '#84c225' }} horizontal>
       <FormattedMessage id='settings.verified' defaultMessage='Verified' />
-    </Label>
+    </StatusLabel>
   ),
   unverified: (
-    <Label color='red' horizontal>
+    <StatusLabel style={{ backgroundColor: '#f16844' }} horizontal>
       <FormattedMessage id='settings.unverified' defaultMessage='Unverified' />
-    </Label>
+    </StatusLabel>
   ),
   verification_in_process: (
-    <Label color='orange' horizontal>
+    <StatusLabel style={{ backgroundColor: '#ffb24f' }} horizontal>
       <FormattedMessage id='settings.verificationInProcess' defaultMessage='Verification in process' />
-    </Label>
+    </StatusLabel>
   )
 }
 
@@ -456,9 +471,9 @@ const displayStatus = (r, preferredBankAccountId) => {
     <>
       {statusToLabel[r.status]}
       {preferredBankAccountId === r.id ? (
-        <Label color='blue' horizontal>
+        <StatusLabel style={{ backgroundColor: '#2599d5' }} horizontal>
           <FormattedMessage id='settings.preferred' defaultMessage='Preferred' />
-        </Label>
+        </StatusLabel>
       ) : null}
     </>
   )
@@ -492,6 +507,7 @@ const mapStateToProps = state => {
     loading: state.settings.loading,
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
+      name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
       statusLabel: displayStatus(r, preferredBankAccountId)
       // some changes here
     })),
