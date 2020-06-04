@@ -262,7 +262,7 @@ class AttachmentClass extends Component {
                 onClose={() => {
                   this.setState({ uploadOpen: false })
                 }}
-                lockedFileType={lockedFileTypes}
+                lockedFileType={false /*lockedFileTypes*/}
                 initialFileType={
                   this.state.documentTypes && this.state.documentTypes.length
                     ? this.state.documentTypes[0]

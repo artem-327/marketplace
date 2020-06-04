@@ -184,7 +184,9 @@ const OrderAccordion = styled(Accordion)`
           width: 0 !important;
           padding: 0 !important;
         }
-
+        button.ui.fluid.button {
+          width: max-content;
+        }
         span.product-name {
           font-weight: 500;
         }
@@ -756,17 +758,18 @@ class Detail extends Component {
     this.props.removeLinkAttachmentToOrderItem(query)
   }
 
-  linkAttachment = async (orderItemId, files) => {
+  linkAttachment = async (files, orderItemId) => {
+    const docArray = uniqueArrayByKey(files, 'id')
     try {
-      const response = await this.props.addAttachment(files[0], 1, {})
-      const query = {
-        attachmentId: response.value.data.id,
-        orderItemId: orderItemId
+      if (docArray.length) {
+        await docArray.forEach(doc => {
+          this.props.linkAttachmentToOrderItem({ attachmentId: doc.id, orderItemId: orderItemId })
+        })
       }
-      await this.props.linkAttachmentToOrderItem(query)
-      await this.props.getSaleOrder(this.props.order.id)
+      setTimeout(() => this.props.getSaleOrder(this.props.order.id), 250)
     } catch (error) {
       console.error(error)
+    } finally {
     }
   }
 
@@ -1397,24 +1400,9 @@ class Detail extends Component {
                                     <FormattedMessage id='global.view' defaultMessage='View' />
                                   </a>
                                 ) : (
-                                  <UploadAttachment
-                                    removeOrderItem={file => {
-                                      this.removeAttachment(order.orderItems[index].id, file)
-                                    }}
-                                    name={`documents${index}`}
-                                    type={1}
-                                    filesLimit={1}
-                                    fileMaxSize={20}
-                                    onChange={files => this.linkAttachment(order.orderItems[index].id, files)}
-                                    data-test={`detail_order_${index}_attachments`}
-                                    emptyContent={
-                                      <DivIcon>
-                                        <UploadCloudIcon />
-                                        <AIcon>
-                                          <FormattedMessage id='global.uploadCloud' defaultMessage='upload' />
-                                        </AIcon>
-                                      </DivIcon>
-                                    }
+                                  <AttachmentManager
+                                    asModal
+                                    returnSelectedRows={rows => this.linkAttachment(rows, order.orderItems[index].id)}
                                   />
                                 )}
                               </Table.Cell>
@@ -1571,7 +1559,14 @@ class Detail extends Component {
                                     trigger={
                                       <CustomA
                                         onClick={() => this.setState({ toggleReturnShippingTrackingCode: true })}>
-                                        {this.state.returnShippingTrackingCode}
+                                        {this.state.returnShippingTrackingCode ? (
+                                          this.state.returnShippingTrackingCode
+                                        ) : (
+                                          <FormattedMessage
+                                            id='order.detail.addTrackingCode'
+                                            defaultMessage='Add tracking code'
+                                          />
+                                        )}
                                       </CustomA>
                                     }
                                   />
@@ -1675,7 +1670,14 @@ class Detail extends Component {
                                 }
                                 trigger={
                                   <CustomA onClick={() => this.setState({ toggleTrackingID: true })}>
-                                    {this.state.shippingTrackingCode}
+                                    {this.state.shippingTrackingCode ? (
+                                      this.state.shippingTrackingCode
+                                    ) : (
+                                      <FormattedMessage
+                                        id='order.detail.addTrackingCode'
+                                        defaultMessage='Add tracking code'
+                                      />
+                                    )}
                                   </CustomA>
                                 }
                               />

@@ -11,8 +11,21 @@ import Router from 'next/router'
 import { mapCompanyRows } from '~/constants/index'
 
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
-import * as Actions from '../actions'
-import AddEditCompanySidebar from './AddEditCompanySidebar'
+import * as Actions from '../../actions'
+import { reviewRequest } from '~/modules/admin/actions'
+import { RefreshCw } from 'react-feather'
+import styled from 'styled-components'
+import { Button } from 'semantic-ui-react'
+
+const StyledReRegisterButton = styled(Button)`
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 3px !important;
+  border: solid 1px #2599d5 !important;
+  background-color: #ddf1fc !important;
+  padding: 6px !important;
+  margin: -6px -6px -7px 3px !important;
+`
 
 const columns = [
   {
@@ -24,6 +37,15 @@ const columns = [
     ),
     width: 220,
     sortPath: 'Company.name'
+  },
+  {
+    name: 'p44CompanyId',
+    title: (
+      <FormattedMessage id='global.p44CompanyId' defaultMessage='P44 Company ID'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 210
   },
   {
     name: 'associations',
@@ -89,7 +111,8 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 150
+    width: 150,
+    align: 'center'
   },
   {
     name: 'nacdMember',
@@ -107,11 +130,16 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 130
+    width: 130,
+    align: 'center'
   }
 ]
 
 class CompaniesTable extends Component {
+  state = {
+    reRegisterCompanyId: null
+  }
+
   getRows = rows => {
     return rows.map(row => {
       return {
@@ -133,6 +161,22 @@ class CompaniesTable extends Component {
             onClick={() => this.handleEnabled(row.rawData)}
             data-test={`admin_company_table_enable_${row.id}_chckb`}
           />
+        ),
+        p44CompanyId: row.p44CompanyId ? (
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: '100%' }}>{row.p44CompanyId}</div>
+            <StyledReRegisterButton
+              onClick={() => {
+                this.setState({ reRegisterCompanyId: row.id })
+                this.reRegisterP44(row.id)
+              }}
+              loading={this.props.reRegisterP44Pending && this.state.reRegisterCompanyId === row.id}
+              disabled={this.state.reRegisterCompanyId === row.id}>
+              <RefreshCw size={18} style={{ color: '#2599d5' }} />
+            </StyledReRegisterButton>
+          </div>
+        ) : (
+          row.p44CompanyId
         )
       }
     })
@@ -144,6 +188,17 @@ class CompaniesTable extends Component {
     try {
       await udpateEnabled(row.id, !row.enabled)
       datagrid.updateRow(row.id, () => ({ ...row, enabled: !row.enabled }))
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  reRegisterP44 = async id => {
+    const { datagrid, reRegisterP44 } = this.props
+    try {
+      const { value } = await reRegisterP44(id)
+      this.setState({ reRegisterCompanyId: null })
+      datagrid.updateRow(id, () => value)
     } catch (err) {
       console.error(err)
     }
@@ -163,8 +218,6 @@ class CompaniesTable extends Component {
       takeOverCompany,
       resendWelcomeEmail,
       intl,
-      currentAddForm,
-      currentEditForm,
       isOpenSidebar
     } = this.props
 
@@ -225,7 +278,6 @@ class CompaniesTable extends Component {
             }
           ]}
         />
-        {isOpenSidebar && <AddEditCompanySidebar />}
       </React.Fragment>
     )
   }
@@ -236,6 +288,7 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
     isOpenSidebar: companiesAdmin.isOpenSidebar,
     companyListDataRequest: companiesAdmin.companyListDataRequest,
     filterValue: companiesAdmin.filterValue,
+    reRegisterP44Pending: companiesAdmin.reRegisterP44Pending,
     rows: datagrid.rows.map(c => ({
       rawData: c,
       ...c,
@@ -260,9 +313,10 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
       reviewRequested: getSafe(() => c.reviewRequested, ''),
       hasLogo: getSafe(() => c.hasLogo, ''),
       nacdMember: c && c.nacdMember ? 'Yes' : c && c.nacdMember === false ? 'No' : '',
-      enabled: getSafe(() => c.enabled, false)
+      enabled: getSafe(() => c.enabled, false),
+      p44CompanyId: getSafe(() => c.project44Id, '')
     }))
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(CompaniesTable)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, reviewRequest })(injectIntl(CompaniesTable)))

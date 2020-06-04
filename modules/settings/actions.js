@@ -136,24 +136,13 @@ export function openEditPopup(rows) {
     payload: rows
   }
 }
-export function handlerSubmitUserEditPopup(payload, id) {
-  return async dispatch => {
-    //removeEmpty(payload)
-    try {
-      const response = await api.patchUser(id, payload)
-      dispatch({
-        type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-        payload: response
-      })
-      Datagrid.updateRow(id, () => response.data)
-
-      dispatch(closePopup())
-    } catch (e) {
-      // TODO
-      console.error(e)
-    }
+export function handlerSubmitUserEditPopup(id, payload) {
+  return {
+    type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+    payload: api.patchUser(id, payload)
   }
 }
+
 export function putNewUserRoleRequest(payload, id) {
   // return dispatch => ({
   //   type: AT.PUT_NEW_USER_ROLES_REQUEST,
@@ -354,13 +343,13 @@ export function handleFiltersValue(value) {
   }
 }
 
-export function handleProductCatalogUnmappedValue(checked, props) {
+export function handleProductCatalogUnmappedValue(value) {
   return async dispatch => {
     dispatch({
       type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
-      payload: checked
+      payload: value
     })
-    dispatch(handleFiltersValue({ ...props, productCatalogUnmappedValue: checked }, props.filterValue))
+    // ! !dispatch(handleFiltersValue({ ...props, productCatalogUnmappedValue: value }, props.filterValue))
   }
 }
 //////////////////////
@@ -645,15 +634,9 @@ export function getStoredCSV(data) {
 }
 
 export function postNewUserRequest(payload) {
-  return async dispatch => {
-    //removeEmpty(payload)
-    await dispatch({
-      type: AT.POST_NEW_USER_REQUEST,
-      payload: api.postNewUser(payload)
-    })
-    //dispatch(getUsersDataRequest())
-    Datagrid.loadData()
-    dispatch(closePopup())
+  return {
+    type: AT.POST_NEW_USER_REQUEST,
+    payload: api.postNewUser(payload)
   }
 }
 
@@ -741,10 +724,10 @@ export function uploadCSVFile(payload) {
   }
 }
 
-export function getCSVMapEchoProduct() {
+export function getCSVMapCompanyGenericProduct() {
   return {
-    type: AT.GET_CSV_MAP_ECHO_PRODUCT,
-    payload: api.getCSVMapEchoProduct()
+    type: AT.GET_CSV_MAP_COMPANY_GENERIC_PRODUCT,
+    payload: api.getCSVMapCompanyGenericProduct()
   }
 }
 
@@ -755,25 +738,25 @@ export function getCSVMapProductOffer() {
   }
 }
 
-export function postCSVMapEchoProduct(payload) {
+export function postCSVMapCompanyGenericProduct(payload) {
   return {
-    type: AT.POST_CSV_MAP_ECHO_PRODUCT,
-    payload: api.postCSVMapEchoProduct(payload)
+    type: AT.POST_CSV_MAP_COMPANY_GENERIC_PRODUCT,
+    payload: api.postCSVMapCompanyGenericProduct(payload)
   }
 }
 
-export function putCSVMapEchoProduct(mapId, data) {
+export function putCSVMapCompanyGenericProduct(mapId, data) {
   return {
-    type: AT.PUT_CSV_MAP_ECHO_PRODUCT,
-    payload: api.putCSVMapEchoProduct(mapId, data)
+    type: AT.PUT_CSV_MAP_COMPANY_GENERIC_PRODUCT,
+    payload: api.putCSVMapCompanyGenericProduct(mapId, data)
   }
 }
 
-export function deleteCSVMapEchoProduct(mapId) {
+export function deleteCSVMapCompanyGenericProduct(mapId) {
   return {
-    type: AT.DELETE_CSV_MAP_ECHO_PRODUCT,
+    type: AT.DELETE_CSV_MAP_COMPANY_GENERIC_PRODUCT,
     meta: mapId,
-    payload: api.deleteCSVMapEchoProduct(mapId)
+    payload: api.deleteCSVMapCompanyGenericProduct(mapId)
   }
 }
 
@@ -855,10 +838,10 @@ export function postImportProductCSV(payload, id) {
   }
 }
 
-export function postImportEchoProductCSV(payload, id) {
+export function postImportCompanyGenericProductCSV(payload, id) {
   return {
-    type: AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS,
-    payload: api.postImportEchoProductCSV(payload, id)
+    type: AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS,
+    payload: api.postImportCompanyGenericProductCSV(payload, id)
   }
 }
 
@@ -1123,9 +1106,9 @@ export const setPreferredLanguage = lang => ({
   payload: api.setPreferredLanguage(lang)
 })
 
-export const searchEchoProducts = (searchQuery, limit = 30) => ({
-  type: AT.SEARCH_ECHO_PRODUCTS,
-  payload: api.searchEchoProducts(searchQuery, limit)
+export const searchCompanyGenericProduct = (searchQuery, limit = 30) => ({
+  type: AT.SEARCH_COMPANY_GENERIC_PRODUCTS,
+  payload: api.searchCompanyGenericProduct(searchQuery, limit)
 })
 
 export const getNmfcNumbersByString = value => ({
@@ -1168,7 +1151,7 @@ export const updateClientCompany = (payload, id) => {
       type: AT.UPDATE_CLIENT_COMPANY,
       payload: response
     })
-    Datagrid.updateRow(id, () => payload)
+    Datagrid.updateRow(id, () => response)
     dispatch(closePopup())
     return response.data
   }
@@ -1205,5 +1188,12 @@ export function setPrimaryUser(companyId, userId) {
 export function changeCsvHeader() {
   return {
     type: AT.CHANGE_CSV_HEADER
+  }
+}
+
+export function getCompanyDetails(companyId) {
+  return {
+    type: AT.SETTINGS_GET_COMPANY_DETAILS,
+    payload: api.getCompanyDetails(companyId)
   }
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import {
@@ -28,6 +29,7 @@ import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/function
 import { AttachmentManager } from '~/modules/attachments'
 import confirm from '~/src/components/Confirmable/confirm'
 import { UploadCloud, XCircle } from 'react-feather'
+import { downloadAttachment, addAttachment } from '~/modules/inventory/actions'
 
 const CustomColumnGridDropdown = styled(GridColumn)`
   z-index: 610 !important;
@@ -65,9 +67,13 @@ export const CustomGridRow = styled(GridRow)`
 `
 
 export const CustomDivHr = styled.div`
-  width: 428px;
   border-bottom: 1px solid #dee2e6;
-  padding-top: 14px;
+`
+
+export const FieldsDiv = styled.div`
+  padding-bottom: 5px;
+  text-transform: capitalize;
+  color: #404040;
 `
 
 const columns = [
@@ -94,7 +100,7 @@ const columns = [
 class DocumentTab extends Component {
   state = {
     openUploadAttachment: false,
-    documentType: 1
+    documentType: []
   }
 
   attachDocumentsUploadAttachment = (newDocument, values, setFieldValue, setFieldNameAttachments, changedForm) => {
@@ -108,7 +114,85 @@ class DocumentTab extends Component {
   }
 
   handleChange = (e, name, value) => {
-    this.setState({ openUploadAttachment: true, documentType: value })
+    this.setState({ openUploadAttachment: true, documentType: [value] })
+  }
+
+  componentDidMount() {
+    if (this.props.documentTypeIds) this.setState({ documentType: this.props.documentTypeIds })
+  }
+
+  getMimeType = documentName => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+
+    switch (documentExtension) {
+      case 'doc':
+        return 'application/msword'
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      case 'ppt':
+        return 'application/vnd.ms-powerpoint'
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      case 'xls':
+        return 'application/vnd.ms-excel'
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      case 'gif':
+        return 'image/gif'
+      case 'png':
+        return 'image/png'
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg'
+      case 'svg':
+        return 'image/svg'
+      case 'pdf':
+        return 'application/pdf'
+      case '7z':
+        return 'application/x-7z-compressed'
+      case 'zip':
+        return 'application/zip'
+      case 'tar':
+        return 'application/x-tar'
+      case 'rar':
+        return 'application/x-rar-compressed'
+      case 'xml':
+        return 'application/xml'
+      default:
+        return 'text/plain'
+    }
+  }
+
+  downloadAttachment = async (documentName, documentId) => {
+    const element = await this.prepareLinkToAttachment(documentId)
+
+    element.download = documentName
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  }
+
+  prepareLinkToAttachment = async documentId => {
+    let downloadedFile = await this.props.downloadAttachment(documentId)
+    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
+    const mimeType = fileName && this.getMimeType(fileName)
+    const element = document.createElement('a')
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+    element.href = fileURL
+
+    return element
+  }
+
+  extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
   }
 
   render() {
@@ -127,16 +211,19 @@ class DocumentTab extends Component {
       dropdownName,
       attachmentFiles,
       removeAttachmentFromUpload,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      lockedFileTypes
     } = this.props
 
     return (
       <Grid>
         <CustomGridRow>
           <CustomColumnGridDropdown width={8}>
-            <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
-              {text => text}
-            </FormattedMessage>
+            <FieldsDiv>
+              <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
+                {text => text}
+              </FormattedMessage>
+            </FieldsDiv>
             <Dropdown
               name={dropdownName}
               closeOnChange
@@ -151,21 +238,30 @@ class DocumentTab extends Component {
           </CustomColumnGridDropdown>
 
           <CustomColumnGrid width={8}>
-            <FormattedMessage id='global.existingDocuments' defaultMessage='Existing documents: '>
-              {text => text}
-            </FormattedMessage>
+            <FieldsDiv>
+              <FormattedMessage id='global.existingDocuments' defaultMessage='Existing documents: '>
+                {text => text}
+              </FormattedMessage>
+            </FieldsDiv>
             <AttachmentManager
               documentTypeIds={
-                [this.state.documentType]
+                this.state.documentType
               }
+              lockedFileTypes={lockedFileTypes}
               asModal
               returnSelectedRows={rows =>
                 this.attachDocumentsUploadAttachment(rows, values, setFieldValue, setFieldNameAttachments, changedForm)
               }
             />
           </CustomColumnGrid>
-          <CustomDivHr />
         </CustomGridRow>
+
+        <CustomGridRow>
+          <GridColumn style={{ paddingTop: '0', paddingBottom: '0' }}>
+            <CustomDivHr />
+          </GridColumn>
+        </CustomGridRow>
+
         {this.state.openUploadAttachment ? (
           <CustomGridRow>
             <GridColumn>
@@ -187,7 +283,7 @@ class DocumentTab extends Component {
                 edit={getSafe(() => idForm, 0)} //sidebarValues.id
                 attachments={attachmentFiles}
                 name={setFieldNameAttachments}
-                type={this.state.documentType}
+                type={this.state.documentType.length ? '' + this.state.documentType[0] : '1' /* // ! ! tady ma byt string?*/}
                 filesLimit={1}
                 fileMaxSize={20}
                 onChange={files => {
@@ -260,6 +356,10 @@ class DocumentTab extends Component {
                       .map(row => {
                         return {
                           ...row,
+                          filename: row.name,
+                          name: <a href='#' onClick={() => this.downloadAttachment(row.name, row.id)}>
+                              {row.name}
+                            </a>,
                           documentTypeName: row.documentType && row.documentType.name
                         }
                       })
@@ -267,6 +367,14 @@ class DocumentTab extends Component {
                   : []
               }
               rowActions={[
+                {
+                  text: (
+                    <FormattedMessage id='global.download' defaultMessage='Download'>
+                      {text => text}
+                    </FormattedMessage>
+                  ),
+                  callback: (row) => this.downloadAttachment(row.filename, row.id)
+                },
                 {
                   text: (
                     <FormattedMessage id='global.unlink' defaultMessage='Unlink'>
@@ -323,4 +431,4 @@ class DocumentTab extends Component {
   }
 }
 
-export default withDatagrid(injectIntl(DocumentTab))
+export default withDatagrid(connect(null, { downloadAttachment })(injectIntl(DocumentTab)))

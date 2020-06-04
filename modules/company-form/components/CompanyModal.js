@@ -28,7 +28,12 @@ import { provinceObjectRequired, errorMessages, minOrZeroLength } from '~/consta
 
 import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
-import { addressValidationSchema, phoneValidation, websiteValidation } from '~/constants/yupValidation'
+import {
+  addressValidationSchema,
+  phoneValidation,
+  websiteValidation,
+  websiteValidationNotRequired
+} from '~/constants/yupValidation'
 
 import { getSafe, deepSearch } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
@@ -46,6 +51,7 @@ const AccordionHeader = styled(Header)`
 const initialFormValues = {
   name: '',
   nacdMember: true,
+  enabled: false,
   phone: '',
   businessType: {
     id: null
@@ -113,7 +119,7 @@ class CompanyModal extends React.Component {
 
       let validation = Yup.object().shape({
         name: Yup.string().trim().min(2, minLength).required(minLength),
-        website: websiteValidation(),
+        website: this.props.isClientCompany ? websiteValidationNotRequired() : websiteValidation(),
 
         mailingBranch: Yup.lazy(() => {
           if (mailingBranchRequired)
@@ -232,7 +238,13 @@ class CompanyModal extends React.Component {
               })
               payload = { ...popupValues, ...newValues, businessType: getSafe(() => newValues.businessType.id, null) }
             } else {
-              if (!values.deliveryAddress || !deepSearch(values.mailingBranch.deliveryAddress, val => val !== ''))
+              if (
+                !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
+                !deepSearch(
+                  getSafe(() => values.mailingBranch.deliveryAddress, ''),
+                  val => val !== ''
+                )
+              )
                 delete values['mailingBranch']
               let branches = ['primaryBranch', 'mailingBranch']
               if (values.businessType) values.businessType = values.businessType.id
@@ -244,18 +256,17 @@ class CompanyModal extends React.Component {
             }
 
             let data = await onSubmit(payload, isEdit)
-
             if (!isClientCompany) {
               if (companyLogo) postCompanyLogo(data.id, companyLogo)
               else if (!companyLogo && getSafe(() => popupValues.hasLogo, false)) deleteCompanyLogo(data.id)
-            }
-
-            if (isEdit) Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!companyLogo }))
-            else {
-              Datagrid.clear()
-              Datagrid.loadData()
+              if (isEdit) Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!companyLogo }))
+              else {
+                Datagrid.clear()
+                Datagrid.loadData()
+              }
             }
           } catch (err) {
+            actions.setSubmitting(false)
             console.error(err)
           }
           actions.setSubmitting(false)
@@ -281,15 +292,16 @@ class CompanyModal extends React.Component {
                     <Modal.Content>
                       <CompanyForm
                         admin={true}
-                        selectLogo={selectLogo}
-                        removeLogo={removeLogo}
-                        companyLogo={companyLogo}
+                        selectLogo={this.props.selectLogo ? this.props.selectLogo : selectLogo}
+                        removeLogo={this.props.removeLogo ? this.props.removeLogo : removeLogo}
+                        companyLogo={this.props.companyLogo ? this.props.companyLogo : companyLogo}
                         values={values}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         errors={errors}
                         touched={touched}
                         isSubmitting={isSubmitting}
+                        isClientCompany={this.props.isClientCompany}
                       />
                       {!popupValues && (
                         <>

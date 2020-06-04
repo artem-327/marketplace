@@ -69,8 +69,8 @@ function mapStateToProps(store, { datagrid }) {
         expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
         productName: getSafe(() => po.companyProduct.intProductName),
         productNumber: getSafe(() => po.companyProduct.intProductCode, 'N/A'),
-        echoName: getSafe(() => po.companyProduct.echoProduct.name, ''),
-        echoCode: getSafe(() => po.companyProduct.echoProduct.code, 'Unmapped'),
+        echoName: getSafe(() => po.companyProduct.companyGenericProduct.name, ''),
+        echoCode: getSafe(() => po.companyProduct.companyGenericProduct.code, 'Unmapped'),
         chemicalName: getSafe(() => po.product.casProduct.chemicalName, po.companyProduct.intProductName),
         warehouse: getSafe(() => po.warehouse.deliveryAddress.cfName, ''),
         productId: getSafe(() => po.product.casProduct.id, 0),
@@ -92,7 +92,7 @@ function mapStateToProps(store, { datagrid }) {
         pricingTiers: po.pricingTiers,
         //pricing: po.pricing,
         fobPrice,
-        manufacturer: getSafe(() => po.companyProduct.echoProduct.manufacturer.name, 'N/A'),
+        manufacturer: getSafe(() => po.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         // lotNumber: <ArrayToMultiple values={po.lots.map(d => (d.lotNumber))} />,
         cfStatus: getSafe(() => po.cfStatus, 'N/A'),
@@ -110,8 +110,10 @@ function mapStateToProps(store, { datagrid }) {
         offerExpiration: po.validityDate ? moment(po.validityDate).format(getLocaleDateFormat()) : 'N/A',
         groupId: getSafe(() => po.parentOffer, ''),
         lotNumber: getSafe(() => po.lotNumber, ''),
-        notPublishedStatus:
-          po.companyProduct && po.companyProduct.echoProduct && !po.companyProduct.echoProduct.isPublished
+        productStatus:
+          po.companyProduct &&
+          po.companyProduct.companyGenericProduct &&
+          !po.companyProduct.companyGenericProduct.isPublished
       }
     }),
     unmappedRows: datagrid.rows,

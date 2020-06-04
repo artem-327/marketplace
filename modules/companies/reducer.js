@@ -1,15 +1,14 @@
 import * as AT from './action-types'
+import { defaultTabs } from './constants'
 import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
+  tabsNames: defaultTabs,
+  currentTab: defaultTabs[0],
   editTrig: false,
   popupValues: null,
-  currentAddForm: null,
-  currentEditForm: null,
-  currentEdit2Form: null,
-  currentAddForm: null,
-  currentAddDwolla: null,
   loading: false,
+  updating: false,
   companiesRows: [],
   filterValue: '',
   casProductsRows: [],
@@ -20,43 +19,45 @@ export const initialState = {
   mailingBranchProvinces: [],
   addressSearchPrimaryBranch: [],
   addressSearchMailingBranch: [],
-  isOpenSidebar: false
+  isOpenSidebar: false,
+  reRegisterP44Pending: false,
+  currentUser: null,
+  userRoles: [],
+  adminRoles: [],
+  searchedCompanies: [],
+  searchedCompaniesLoading: false,
+  searchedCompaniesFilter: [],
+  searchedCompaniesFilterLoading: false,
+  searchedSellMarketSegments: [],
+  searchedSellMarketSegmentsLoading: false,
+  searchedBuyMarketSegments: [],
+  searchedBuyMarketSegmentsLoading: false
 }
 
 export default function reducer(state = initialState, action) {
   const { payload } = action
 
   switch (action.type) {
+
+    case AT.COMPANIES_HANDLE_ACTIVE_TAB: {
+      return {
+        ...state,
+        currentTab: payload.tab,
+        popupValues: null,
+        loading: false,
+        isOpenSidebar: false
+      }
+    }
+
     case AT.COMPANIES_OPEN_POPUP: {
       return {
         ...state,
         isOpenSidebar: true,
         editTrig: !state.editTrig,
-        popupValues: payload.data,
-
-        //[payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
-
-        ...(payload.data
-          ? {
-              currentAddForm: null,
-              currentEditForm: state.currentTab
-            }
-          : {
-              currentAddForm: state.currentTab,
-              currentEditForm: null
-            }),
-        currentEdit2Form: null,
-        currentAddDwolla: null
+        popupValues: payload.data
       }
     }
     /* DELETE COMPANY */
-
-    case AT.COMPANIES_DELETE_COMPANIES_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
 
     case AT.COMPANIES_DELETE_COMPANIES_FULFILLED: {
       return {
@@ -66,6 +67,16 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.COMPANIES_DELETE_USER_PENDING:
+    case AT.COMPANIES_DELETE_COMPANIES_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.COMPANIES_DELETE_USER_REJECTED:
+    case AT.COMPANIES_DELETE_USER_FULFILLED:
     case AT.COMPANIES_DELETE_COMPANIES_REJECTED: {
       return {
         ...state,
@@ -85,11 +96,7 @@ export default function reducer(state = initialState, action) {
     case AT.COMPANIES_CLOSE_POPUP: {
       return {
         ...state,
-        isOpenSidebar: false,
-        currentAddForm: null,
-        currentEditForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null
+        isOpenSidebar: false
       }
     }
 
@@ -144,6 +151,130 @@ export default function reducer(state = initialState, action) {
         ...state,
         addressSearchMailingBranch: action.payload,
         loading: false
+      }
+    }
+
+    case AT.COMPANIES_RE_REGISTER_P44_PENDING: {
+      return { ...state, reRegisterP44Pending: true }
+    }
+    case AT.COMPANIES_RE_REGISTER_P44_REJECTED:
+    case AT.COMPANIES_RE_REGISTER_P44_FULFILLED: {
+      return { ...state, reRegisterP44Pending: false }
+    }
+
+    case AT.COMPANIES_GET_USERS_ME_FULFILLED: {
+      return {
+        ...state,
+        currentUser: action.payload
+      }
+    }
+
+    case AT.COMPANIES_GET_USER_ROLES_FULFILLED: {
+      return {
+        ...state,
+        userRoles: action.payload
+      }
+    }
+
+    case AT.COMPANIES_GET_ADMIN_ROLES_FULFILLED: {
+      return {
+        ...state,
+        adminRoles: action.payload
+      }
+    }
+
+    case AT.COMPANIES_GET_USER_PENDING: {
+      return { ...state, updating: true }
+    }
+    case AT.COMPANIES_GET_USER_REJECTED: {
+      return { ...state, updating: false }
+    }
+    case AT.COMPANIES_GET_USER_FULFILLED: {
+      return {
+        ...state,
+        updating: false
+      }
+    }
+
+    case AT.COMPANIES_EDIT_USER_PENDING:
+    case AT.COMPANIES_POST_NEW_USER_PENDING: {
+      return { ...state, updating: true }
+    }
+
+    case AT.COMPANIES_POST_NEW_USER_REJECTED:
+    case AT.COMPANIES_POST_NEW_USER_FULFILLED:
+    case AT.COMPANIES_EDIT_USER_REJECTED:
+    case AT.COMPANIES_EDIT_USER_FULFILLED: {
+      return { ...state, updating: false }
+    }
+
+    case AT.COMPANIES_SEARCH_COMPANY_PENDING: {
+      return { ...state, searchedCompaniesLoading: true }
+    }
+    case AT.COMPANIES_SEARCH_COMPANY_REJECTED: {
+      return { ...state, searchedCompaniesLoading: false }
+    }
+    case AT.COMPANIES_SEARCH_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        searchedCompanies: action.payload,
+        searchedCompaniesLoading: false
+      }
+    }
+
+    case AT.COMPANIES_SEARCH_COMPANY_FILTER_PENDING: {
+      return { ...state, searchedCompaniesFilterLoading: true }
+    }
+    case AT.COMPANIES_SEARCH_COMPANY_FILTER_REJECTED: {
+      return { ...state, searchedCompaniesFilterLoading: false }
+    }
+    case AT.COMPANIES_SEARCH_COMPANY_FILTER_FULFILLED: {
+      return {
+        ...state,
+        searchedCompaniesFilter: action.payload,
+        searchedCompaniesFilterLoading: false
+      }
+    }
+
+    case AT.COMPANIES_INIT_SEARCH_COMPANY_PENDING: {
+      return { ...state, searchedCompaniesLoading: true }
+    }
+    case AT.COMPANIES_INIT_SEARCH_COMPANY_REJECTED: {
+      return { ...state, searchedCompaniesLoading: false }
+    }
+    case AT.COMPANIES_INIT_SEARCH_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        searchedCompanies: [action.payload],
+        searchedCompaniesLoading: false
+      }
+    }
+
+    case AT.COMPANIES_SEARCH_SELL_MARKET_SEGMENTS_PENDING: {
+      return { ...state, searchedSellMarketSegmentsLoading: true }
+    }
+    case AT.COMPANIES_SEARCH_SELL_MARKET_SEGMENTS_REJECTED: {
+      return { ...state, searchedSellMarketSegmentsLoading: false }
+    }
+    case AT.COMPANIES_SEARCH_SELL_MARKET_SEGMENTS_FULFILLED: {
+      return {
+        ...state,
+        searchedSellMarketSegments: action.payload,
+        searchedSellMarketSegmentsLoading: false
+      }
+    }
+
+    case AT.COMPANIES_SEARCH_BUY_MARKET_SEGMENTS_PENDING: {
+      return { ...state, searchedBuyMarketSegmentsLoading: true }
+    }
+    case AT.COMPANIES_SEARCH_BUY_MARKET_SEGMENTS_REJECTED: {
+      return { ...state, searchedBuyMarketSegmentsLoading: false }
+    }
+    case AT.COMPANIES_SEARCH_BUY_MARKET_SEGMENTS_FULFILLED: {
+      return {
+        ...state,
+        searchedBuyMarketSegments: action.payload,
+        searchedBuyMarketSegmentsLoading: false
       }
     }
 

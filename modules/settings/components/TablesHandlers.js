@@ -16,11 +16,109 @@ import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { PlusCircle, UploadCloud } from 'react-feather'
+import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
   z-index: 602;
+`
+
+const CustomRowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: -5px -5px;
+  flex-wrap: wrap;
+  
+  > div {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    margin: 5px 5px;
+  }
+  
+  input, .ui.dropdown {
+    height: 40px;
+  }
+  
+  .ui.button {
+    height: 40px;
+    border-radius: 3px;
+    font-weight: 500;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    border: solid 1px #dee2e6;
+    background-color: #ffffff;
+    color: #848893;   
+    display: flex;
+    align-items: center;
+    &:hover {
+      background-color: #f8f9fb;
+      color: #20273a;
+    }
+    &:active {
+      background-color: #edeef2;
+      color: #20273a;
+    }
+  
+    svg {
+        width: 18px;
+        height: 20px;
+        margin-right: 10px;
+        vertical-align: top;
+        color: inherit;
+    }
+      
+    &.light {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      color: #848893;    
+      &:hover {
+        background-color: #f8f9fb;
+        color: #20273a;
+      }
+      &:active {
+        background-color: #edeef2;
+        color: #20273a;
+      }
+    }
+    
+    &.primary {
+      box-shadow: none;
+      border: none;
+      color: #ffffff;
+      background-color: #2599d5;
+      &:hover {
+        background-color: #188ec9;
+      }
+      &:active {
+        background-color: #0d82bc;
+      }
+    }
+  }
+`
+
+const CustomLabel = styled.div`
+  height: 32px;
+  border-radius: 16px;
+  background-color: #e5efd8;
+  font-size: 14px;
+  text-align: center;
+  color: #84c225;
+  padding: 0 17px;
+  display: flex;
+  align-items: center;
+`
+
+const VertSplit = styled.div`
+  width: 1px;
+  height: 40px;
+  background-color: #dee2e6;
+  margin: 0 10px;
 `
 
 const CustomButton = styled(Button)`
@@ -155,7 +253,7 @@ class TablesHandlers extends Component {
 
   handleFiltersValue = value => {
     const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    if (Datagrid.isReady()) Datagrid.setSearch(value, true, 'pageFilters')
     else handleFiltersValue(value)
   }
 
@@ -180,6 +278,13 @@ class TablesHandlers extends Component {
       documentType: value
     }
     this.handleFiltersValue(filter)
+  }
+
+  handleFilterChangeMappedUnmapped = (e, { value }) => {
+    this.props.handleProductCatalogUnmappedValue(value)
+
+
+
   }
 
   saveRulesBroadcast = async (model, toastManager) => {
@@ -216,25 +321,27 @@ class TablesHandlers extends Component {
     return (
       <>
         {currentTab.type !== 'global-broadcast' && currentTab.type !== 'documents' && (
-          <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
-            <Input
-              fluid
-              icon='search'
-              value={filterValue}
-              placeholder={formatMessage({
-                id: textsTable[currentTab.type].SearchText,
-                defaultMessage: 'Select Credit Card'
-              })}
-              onChange={this.handleFilterChange}
-            />
-          </GridColumn>
+          <div>
+            <div className='column'>
+              <Input
+                style={{ width: '370px' }}
+                icon='search'
+                value={filterValue}
+                placeholder={formatMessage({
+                  id: textsTable[currentTab.type].SearchText,
+                  defaultMessage: 'Select Credit Card'
+                })}
+                onChange={this.handleFilterChange}
+              />
+            </div>
+          </div>
         )}
 
         {currentTab.type === 'documents' && (
-          <>
-            <GridColumn floated='left' widescreen={7} computer={5} tablet={4}>
+          <div>
+            <div className='column'>
               <Input
-                fluid
+                style={{ width: '370px' }}
                 icon='search'
                 value={filterValue}
                 placeholder={formatMessage({
@@ -243,121 +350,160 @@ class TablesHandlers extends Component {
                 })}
                 onChange={this.handleDocumentFilterChange}
               />
-            </GridColumn>
-            <GridColumn floated='right' computer={4} tablet={4}>
+            </div>
+            <div className='column'>
               <Dropdown
+                style={{ width: '200px' }}
                 placeholder={formatMessage({
                   id: 'settings.tables.documents.dropdown',
                   defaultMessage: 'Choose document type'
                 })}
-                fluid
                 selection
                 options={this.state.options}
                 onChange={this.handleFilterChangeDocumentType}
               />
-            </GridColumn>
-          </>
+            </div>
+          </div>
         )}
 
-        {currentTab.type === 'products' && (
-          <GridColumn computer={2} tablet={3}>
-            <Checkbox
-              label={formatMessage({
-                id: 'settings.tables.products.unmappedOnly',
-                defaultMessage: 'Unmapped only'
-              })}
-              defaultChecked={productCatalogUnmappedValue}
-              onChange={(e, { checked }) => Datagrid.setQuery({ unmappedOnly: checked })}
-              data-test='settings_dwolla_unmapped_only_chckb'
-            />
-          </GridColumn>
-        )}
-        {bankAccTab && bankAccounts.registerButton && (
-          <GridColumn computer={5} tablet={4}>
-            <CustomButton
-              fluid
-              onClick={() => Router.push('/dwolla-register')}
-              data-test='settings_dwolla_open_popup_btn'>
-              <CustomIcon size='20' />
-              <FormattedMessage
-                id='settings.tables.bankAccounts.registerDwolla'
-                defaultMessage='Register Dwolla Account'>
-                {text => text}
-              </FormattedMessage>
-            </CustomButton>
-          </GridColumn>
-        )}
-        {bankAccTab && bankAccounts.uploadDocumentsButton && (
-          <GridColumn computer={4} tablet={4}>
-            <CustomButton
-              fluid
-              onClick={() => openUploadDocumentsPopup()}
-              data-test='settings_dwolla_upload_documents_btn'>
-              <CustomUploadCloud size='20' />
-              <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents'>
-                {text => text}
-              </FormattedMessage>
-            </CustomButton>
-          </GridColumn>
-        )}
-        {bankAccTab && bankAccounts.uploadOwnerDocumentsButton && (
-          <GridColumn computer={5} tablet={5}>
-            <CustomButton
-              fluid
-              onClick={() => openUploadDocumentsPopup()}
-              data-test='settings_dwolla_owner_upload_documents_btn'>
-              <CustomUploadCloud size='20' />
-              <FormattedMessage
-                id='settings.tables.bankAccounts.uploadOwnerDoc'
-                defaultMessage='Upload Owner Documents'>
-                {text => text}
-              </FormattedMessage>
-            </CustomButton>
-          </GridColumn>
-        )}
-        {bankAccTab && bankAccounts.dwollaBalance && (
-          <GridColumn computer={2}>
-            <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />
-            <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
-          </GridColumn>
-        )}
-        {!currentTab.hideButtons && (
-          <>
-            {(!bankAccTab || bankAccounts.addButton) && (
-              <GridColumn widescreen={3} computer={4} tablet={4}>
-                <Button
-                  fluid
-                  primary
-                  onClick={() =>
-                    currentTab.type === 'warehouses' || currentTab.type === 'branches' ? openSidebar() : openPopup()
+        <div>
+          {currentTab.type === 'products' && (
+            <div className='column'>
+              <Dropdown
+                style={{ width: '200px' }}
+                placeholder={formatMessage({
+                  id: 'operations.tables.companyProductCatalog.MappedText',
+                  defaultMessage: 'Select mapped/unmapped only'
+                })}
+                selection
+                options={[
+                  {
+                    key: 0,
+                    text: formatMessage({ id: 'operations.noSelection', defaultMessage: 'All' }),
+                    value: 'ALL'
+                  },
+                  {
+                    key: 1,
+                    text: formatMessage({ id: 'operations.unmapped', defaultMessage: 'Unmapped Only' }),
+                    value: 'UNMAPPED'
+                  },
+                  {
+                    key: 2,
+                    text: formatMessage({ id: 'operations.mappedOnly', defaultMessage: 'Mapped Only' }),
+                    value: 'MAPPED'
                   }
-                  data-test='settings_open_popup_btn'>
-                  <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
-                </Button>
-              </GridColumn>
-            )}
-            {currentTab.type === 'products' && (
-              <GridColumn widescreen={3} computer={3} tablet={4}>
-                <Button fluid primary onClick={() => openImportPopup()} data-test='settings_open_import_popup_btn'>
-                  <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{text => text}</FormattedMessage>
-                </Button>
-              </GridColumn>
-            )}
-          </>
-        )}
-        {/*{currentTab.type === 'global-broadcast' && (
-          <GridColumn floated='right' widescreen={2} computer={2} tablet={3}>
-            <Button
-              fluid
-              primary
-              onClick={() => this.saveRulesBroadcast(treeData.model, toastManager)}
-              data-test='settings_open_import_popup_btn'>
-              <FormattedMessage id='global.save' defaultMessage='Save'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-          </GridColumn>
-        )}*/}
+                ]}
+                value={productCatalogUnmappedValue}
+                onChange={this.handleFilterChangeMappedUnmapped}
+                data-test='settings_dwolla_unmapped_only_drpdn'
+              />
+            </div>
+          )}
+          {bankAccTab && bankAccounts.registerButton && (
+            <div className='column'>
+              <CustomButton
+                fluid
+                onClick={() => Router.push('/dwolla-register')}
+                data-test='settings_dwolla_open_popup_btn'>
+                <CustomIcon size='20' />
+                <FormattedMessage
+                  id='settings.tables.bankAccounts.registerDwolla'
+                  defaultMessage='Register Dwolla Account'>
+                  {text => text}
+                </FormattedMessage>
+              </CustomButton>
+            </div>
+          )}
+          {bankAccTab && bankAccounts.uploadDocumentsButton && (
+            <div className='column'>
+              <CustomButton
+                fluid
+                onClick={() => openUploadDocumentsPopup()}
+                data-test='settings_dwolla_upload_documents_btn'>
+                <CustomUploadCloud size='20' />
+                <FormattedMessage id='settings.tables.bankAccounts.uploadDoc' defaultMessage='Upload Documents'>
+                  {text => text}
+                </FormattedMessage>
+              </CustomButton>
+            </div>
+          )}
+          {bankAccTab && bankAccounts.uploadOwnerDocumentsButton && (
+            <div className='column'>
+              <CustomButton
+                fluid
+                onClick={() => openUploadDocumentsPopup()}
+                data-test='settings_dwolla_owner_upload_documents_btn'>
+                <CustomUploadCloud size='20' />
+                <FormattedMessage
+                  id='settings.tables.bankAccounts.uploadOwnerDoc'
+                  defaultMessage='Upload Owner Documents'>
+                  {text => text}
+                </FormattedMessage>
+              </CustomButton>
+            </div>
+          )}
+          {bankAccTab && bankAccounts.dwollaBalance && (
+            <>
+              <div className='column'>
+
+                <CustomLabel>
+                  <div>
+                    <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />
+                    <b>
+                      <FormattedNumber
+                        style='currency'
+                        currency={dwollaAccBalance.currency}
+                        value={dwollaAccBalance.value}
+                      />
+                    </b>
+                  </div>
+                </CustomLabel>
+
+              </div>
+              <div className='column'>
+                <VertSplit />
+              </div>
+            </>
+          )}
+          {!currentTab.hideButtons && (
+            <>
+              {currentTab.type === 'products' && (
+                <div className='column'>
+                  <Button fluid onClick={() => openImportPopup()} data-test='settings_open_import_popup_btn'>
+                    <CornerLeftDown />
+                    <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{text => text}</FormattedMessage>
+                  </Button>
+                </div>
+              )}
+              {(!bankAccTab || bankAccounts.addButton) && (
+                <div className='column'>
+                  <Button
+                    primary
+                    onClick={() =>
+                      currentTab.type === 'warehouses' || currentTab.type === 'branches' ? openSidebar() : openPopup()
+                    }
+                    data-test='settings_open_popup_btn'>
+                    <PlusCircle />
+                    <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+          {/*{currentTab.type === 'global-broadcast' && (
+            <GridColumn floated='right' widescreen={2} computer={2} tablet={3}>
+              <Button
+                fluid
+                primary
+                onClick={() => this.saveRulesBroadcast(treeData.model, toastManager)}
+                data-test='settings_open_import_popup_btn'>
+                <FormattedMessage id='global.save' defaultMessage='Save'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </GridColumn>
+          )}*/}
+        </div>
       </>
     )
   }
@@ -365,9 +511,15 @@ class TablesHandlers extends Component {
   render() {
     return (
       <PositionHeaderSettings>
-        <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
+        <CustomRowDiv>
+          {!this.props.currentTab.hideHandler && this.renderHandler()}
+        </CustomRowDiv>
+
+        {false && (<Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
           <GridRow>{!this.props.currentTab.hideHandler && this.renderHandler()}</GridRow>
-        </Grid>
+        </Grid>)}
+
+
       </PositionHeaderSettings>
     )
   }

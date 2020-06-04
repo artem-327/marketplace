@@ -13,6 +13,8 @@ export const initialState = {
   popupLoading: false,
   popupValues: null,
   isOpenPopup: false,
+  editTrig: false,
+  updating: false,
   isOpenUploadDocumentsPopup: null,
   usersRows: [],
   userEditRoles: false,
@@ -55,7 +57,7 @@ export const initialState = {
   deleteUserById: null,
   deleteRowById: null,
   filterValue: '',
-  productCatalogUnmappedValue: false,
+  productCatalogUnmappedValue: 'ALL',
   editPopupSearchProducts: [],
   fileCSVId: null,
   CSV: null,
@@ -114,8 +116,8 @@ export const initialState = {
   },
   languages: [],
   languagesFetching: false,
-  echoProducts: [],
-  echoProductsFetching: false,
+  companyGenericProduct: [],
+  companyGenericProductFetching: false,
   nmfcNumbersFiltered: [],
   nmfcNumbersFetching: false,
   csvImportError: null,
@@ -135,6 +137,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loaded: false,
         isOpenPopup: true,
+        editTrig: !state.editTrig,
         popupValues: action.payload
       }
     }
@@ -150,6 +153,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loaded: false,
         isOpenSidebar: true,
+        editTrig: !state.editTrig,
         openTab: action.payload
       }
     }
@@ -675,7 +679,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CSV_MAP_ECHO_PRODUCT_FULFILLED:
+    case AT.GET_CSV_MAP_COMPANY_GENERIC_PRODUCT_FULFILLED:
     case AT.GET_CSV_MAP_PRODUCT_OFFER_FULFILLED:
     case AT.GET_CSV_MAP_COMPANIES_FULFILLED: {
       return {
@@ -722,7 +726,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_PENDING:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_PENDING:
-    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_PENDING: {
+    case AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS_PENDING: {
       return {
         ...state,
         csvImportError: null
@@ -731,9 +735,9 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_REJECTED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_REJECTED:
-    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_REJECTED:
+    case AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS_REJECTED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_FULFILLED:
-    case AT.SETTINGS_POST_CSV_IMPORT_ECHO_PRODUCTS_FULFILLED:
+    case AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS_FULFILLED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_FULFILLED:
     case AT.POST_CSV_IMPORT_COMPANIES_FULFILLED: {
       return {
@@ -1350,25 +1354,25 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SEARCH_ECHO_PRODUCTS_PENDING: {
+    case AT.SEARCH_COMPANY_GENERIC_PRODUCTS_PENDING: {
       return {
         ...state,
-        echoProductsFetching: true
+        companyGenericProductFetching: true
       }
     }
 
-    case AT.SEARCH_ECHO_PRODUCTS_FULFILLED: {
+    case AT.SEARCH_COMPANY_GENERIC_PRODUCTS_FULFILLED: {
       return {
         ...state,
-        echoProducts: payload,
-        echoProductsFetching: false
+        companyGenericProduct: payload,
+        companyGenericProductFetching: false
       }
     }
 
-    case AT.SEARCH_ECHO_PRODUCTS_REJECTED: {
+    case AT.SEARCH_COMPANY_GENERIC_PRODUCTS_REJECTED: {
       return {
         ...state,
-        echoProductsFetching: false
+        companyGenericProductFetching: false
       }
     }
 
@@ -1413,7 +1417,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.DELETE_CSV_MAP_PRODUCT_OFFER_FULFILLED:
-    case AT.DELETE_CSV_MAP_ECHO_PRODUCT_FULFILLED:
+    case AT.DELETE_CSV_MAP_COMPANY_GENERIC_PRODUCT_FULFILLED:
     case AT.DELETE_CSV_MAP_COMPANIES_FULFILLED: {
       return {
         ...state,
@@ -1474,6 +1478,27 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         csvWithoutHeader: !state.csvWithoutHeader
+      }
+    }
+
+    case AT.POST_NEW_USER_REQUEST_PENDING:
+    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_PENDING:
+    case AT.SETTINGS_GET_COMPANY_DETAILS_PENDING: {
+      return {
+        ...state,
+        updating: true
+      }
+    }
+
+    case AT.POST_NEW_USER_REQUEST_FULFILLED:
+    case AT.POST_NEW_USER_REQUEST_REJECTED:
+    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_FULFILLED:
+    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_REJECTED:
+    case AT.SETTINGS_GET_COMPANY_DETAILS_FULFILLED:
+    case AT.SETTINGS_GET_COMPANY_DETAILS_REJECTED: {
+      return {
+        ...state,
+        updating: false
       }
     }
 

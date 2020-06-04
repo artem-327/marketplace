@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, Header, Popup, Dropdown as SemanticDropdown, FormField, Segment } from 'semantic-ui-react'
 
 import { ZipDropdown } from '~/modules/zip-dropdown'
@@ -23,7 +23,7 @@ const CustomSegment = styled(Segment)`
   background-color: #f8f9fb !important;
 `
 
-export default class AddressForm extends Component {
+class AddressForm extends Component {
   state = {
     provinces: [],
     countryId: null,
@@ -73,6 +73,23 @@ export default class AddressForm extends Component {
       await this.fetchProvinces(countryId, hasProvinces)
     } catch (e) {
       console.error(e)
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const values = this.getValues()
+    const oldValues = this.getValues(prevProps.values)
+
+    const country = values && values.address && values.address.country
+    const oldCountry = oldValues && oldValues.address && oldValues.address.country
+
+    if (country && oldCountry && country !== oldCountry) {
+      const parsed = JSON.parse(country)
+
+      this.setState({ hasProvinces: parsed.hasProvinces })
+      if (parsed.hasProvinces) {
+        this.fetchProvinces(parsed.countryId, parsed.hasProvinces)
+      }
     }
   }
 
@@ -132,9 +149,12 @@ export default class AddressForm extends Component {
   getOptions = values => {
     let { addressDatalistData } = this.props
     try {
-      let { address } = this.getValues()
+      let value = this.getValues()
       return addressDatalistData.map(a => {
-        if (a.streetAddress.startsWith(address.streetAddress) && a.city.startsWith(address.city)) {
+        if (
+          a.streetAddress.startsWith(getSafe(() => value.address.streetAddress, '')) &&
+          a.city.startsWith(getSafe(() => value.address.city, ''))
+        ) {
           let element =
             a.streetAddress +
             ', ' +
@@ -178,8 +198,8 @@ export default class AddressForm extends Component {
       countryPopup,
       countriesLoading,
       loading,
-      initialProvince,
-      required
+      required,
+      intl: { formatMessage }
     } = this.props
 
     let fields = this.asignPrefix()
@@ -212,16 +232,83 @@ export default class AddressForm extends Component {
                 list: datalistName,
                 onChange: this.handleChange,
                 fluid: true,
-                loading
+                loading,
+                placeholder: formatMessage({ id: 'global.address.enterStreet', defaultMessage: 'Enter Street' })
               }}
               label={
                 <>
                   <FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />
                   {required && <Required />}
-                </>}
+                </>
+              }
               name={fields.streetAddress}
             />
+          </DatalistGroup>
 
+          <FormGroup widths='equal'>
+            <Dropdown
+              label={
+                <Popup
+                  trigger={
+                    <label>
+                      <FormattedMessage id='global.country' defaultMessage='Country' />
+                      {required && <Required />}
+                    </label>
+                  }
+                  disabled={countryPopup.disabled}
+                  content={countryPopup.content}
+                />
+              }
+              name={fields.country}
+              options={countries.map(country => ({
+                key: country.id,
+                text: country.name,
+                value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
+              }))}
+              inputProps={{
+                loading: countriesLoading,
+                onFocus: e => (e.target.autocomplete = null),
+                'data-test': 'address_form_country_drpdn',
+                search: true,
+                onChange: async (e, data) => {
+                  // let fieldName = prefix ? `${prefix.province}` : 'address.province'
+
+                  setFieldValue(fields[this.props.province.name], '')
+                },
+                placeholder: formatMessage({ id: 'global.address.selectCountry', defaultMessage: 'Select Country' }),
+                ...additionalCountryInputProps
+              }}
+            />
+
+            <Dropdown
+              label={
+                <>
+                  <FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />
+                  {required && hasProvinces && <Required />}
+                </>
+              }
+              name={fields.province}
+              options={provinces.map(province => ({
+                key: province.id,
+                text: province.name,
+                value: province.id
+              }))}
+              inputProps={{
+                onFocus: e => (e.target.autocomplete = null),
+                'data-test': 'address_form_province_drpdn',
+                search: true,
+                disabled: !this.state.hasProvinces,
+                loading: provincesAreFetching,
+                onChange: this.handleChange,
+                placeholder: formatMessage({
+                  id: 'global.address.selectStateProvince',
+                  defaultMessage: 'Select State/Province'
+                })
+              }}
+            />
+          </FormGroup>
+
+          <FormGroup widths='equal'>
             <Input
               inputProps={{
                 onFocus: e => (e.target.autocomplete = null),
@@ -229,7 +316,8 @@ export default class AddressForm extends Component {
                 list: datalistName,
                 onChange: this.handleChange,
                 fluid: true,
-                loading
+                loading,
+                placeholder: formatMessage({ id: 'global.address.selectCity', defaultMessage: 'Select City' })
               }}
               label={
                 <>
@@ -239,80 +327,18 @@ export default class AddressForm extends Component {
               }
               name={fields.city}
             />
-          </DatalistGroup>
-          <FormGroup widths='equal'>
             <ZipDropdown
               onAddition={(e, data) => setFieldValue(fields[this.props.zip.name], data.value)}
               onChange={this.handleChange}
-              additionalInputProps={{ loading }}
+              additionalInputProps={{
+                loading,
+                placeholder: formatMessage({ id: 'global.address.enterZip', defaultMessage: 'Enter Zip' })
+              }}
               name={fields.zip}
               required={required}
               countryId={countryId}
               initialZipCodes={initialZipCodes}
               data-test='address_form_zip_drpdn'
-            />
-              <Dropdown
-                label={<Popup
-                  trigger={
-                    <label>
-                      <FormattedMessage id='global.country' defaultMessage='Country' />
-                      {required && <Required />}
-                    </label>
-                  }
-                  disabled={countryPopup.disabled}
-                  content={countryPopup.content}
-                />}
-                name={fields.country}
-                options={countries.map(country => ({
-                  key: country.id,
-                  text: country.name,
-                  value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
-                }))}
-                inputProps={{
-                  loading: countriesLoading,
-                  onFocus: e => (e.target.autocomplete = null),
-                  'data-test': 'address_form_country_drpdn',
-                  search: true,
-                  onChange: async (e, data) => {
-                    let values = JSON.parse(data.value)
-                    // let fieldName = prefix ? `${prefix.province}` : 'address.province'
-
-                    setFieldValue(fields[this.props.province.name], '')
-
-                    // this.handleChange(e, data)
-                    this.setState({ hasProvinces: values.hasProvinces })
-                    if (values.hasProvinces) {
-                      this.fetchProvinces(values.countryId, values.hasProvinces)
-                    }
-                  },
-                  ...additionalCountryInputProps
-                }}
-              />
-           
-
-            <Dropdown
-              label={
-                <>
-                  <FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />
-                  {required && hasProvinces && <Required />}
-                </>
-                }
-              name={fields.province}
-              options={provinces
-                .map(province => ({
-                  key: province.id,
-                  text: province.name,
-                  value: province.id
-                }))
-                .concat(initialProvince)}
-              inputProps={{
-                onFocus: e => (e.target.autocomplete = null),
-                'data-test': 'address_form_province_drpdn',
-                search: true,
-                disabled: !this.state.hasProvinces,
-                loading: provincesAreFetching,
-                onChange: this.handleChange
-              }}
             />
           </FormGroup>
         </CustomSegment>
@@ -351,7 +377,6 @@ AddressForm.propTypes = {
   additionalCountryInputProps: object,
   fixedCountries: array,
   handleChange: func,
-  initialProvince: array,
   required: bool
 }
 
@@ -389,6 +414,7 @@ AddressForm.defaultProps = {
   additionalCountryInputProps: {},
   fixedCountries: [],
   handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!'),
-  initialProvince: [],
   required: false
 }
+
+export default injectIntl(AddressForm)

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getWarehousesDataRequest, getBranchesDataRequest, openSidebar, deleteBranch, getBranch } from '../../actions'
+import { openSidebar, deleteBranch, getBranch } from '../../actions'
 import Router from 'next/router'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
@@ -87,46 +87,7 @@ class WarehouseTable extends Component {
           </FormattedMessage>
         )
       }
-    ],
-    tab: ''
-  }
-
-  componentDidMount() {
-    this.handlerLoadPage()
-  }
-
-  handlerLoadPage() {
-    const { currentTab } = this.props
-    let { columns } = this.state
-    if (!columns) return
-
-    if (currentTab.type === 'warehouses') {
-      columns[1].title = (
-        <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name'>
-          {text => text}
-        </FormattedMessage>
-      )
-      this.setState(prevState => ({
-        tab: 'warehouses',
-        columns
-      }))
-    } else if (currentTab.type === 'branches') {
-      columns[1].title = (
-        <FormattedMessage id='settings.branchName' defaultMessage='Branch Name'>
-          {text => text}
-        </FormattedMessage>
-      )
-      this.setState(prevState => ({
-        tab: 'branches',
-        columns
-      }))
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.state.tab !== this.props.currentTab.type && this.props.currentTab.type !== prevProps.currentTab.type) {
-      this.handlerLoadPage()
-    }
+    ]
   }
 
   getRows = rows => {
@@ -161,15 +122,8 @@ class WarehouseTable extends Component {
       openSidebar,
       deleteBranch,
       intl,
-      currentTab,
-      toastManager,
       getBranch
     } = this.props
-
-    let message =
-      currentTab.type === 'branches'
-        ? { id: 'confirm.deleteBranch', defaultMessage: 'Delete Branch' }
-        : { id: 'confirm.deleteWarehouse', defaultMessage: 'Delete Warehouse' }
 
     const { formatMessage } = intl
 
@@ -204,9 +158,9 @@ class WarehouseTable extends Component {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
                 confirm(
-                  formatMessage({ ...message }),
+                  formatMessage({ id: 'confirm.deleteWarehouse', defaultMessage: 'Delete Warehouse' }),
                   formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? ` },
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.addressName}! ? ` },
                     { item: row.name }
                   )
                 ).then(() => deleteBranch(row.id))
@@ -219,8 +173,6 @@ class WarehouseTable extends Component {
 }
 
 const mapDispatchToProps = {
-  getWarehousesDataRequest,
-  getBranchesDataRequest,
   openSidebar,
   deleteBranch,
   getBranch
@@ -229,40 +181,23 @@ const mapDispatchToProps = {
 const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(r => {
-      let countryId = getSafe(() => r.deliveryAddress.address.country.id),
-        hasProvinces = getSafe(() => r.deliveryAddress.address.country.hasProvinces, false),
-        zip = getSafe(() => r.deliveryAddress.address.zip.zip),
-        provinceId = getSafe(() => r.deliveryAddress.address.province.id),
-        zipID = getSafe(() => r.deliveryAddress.address.zip.id)
-
       return {
         streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
         city: getSafe(() => r.deliveryAddress.address.city),
         countryName: getSafe(() => r.deliveryAddress.address.country.name),
-        countryId,
-        hasProvinces,
         provinceName: getSafe(() => r.deliveryAddress.address.province.name),
-        provinceId,
-        zip,
-        zipID,
-        addressName: getSafe(() => r.deliveryAddress.cfName, ''),
+        name: getSafe(() => r.deliveryAddress.cfName, ''),
+        addressName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {getSafe(() => r.deliveryAddress.cfName, '')}
+        </div>,
         contactName: getSafe(() => r.deliveryAddress.contactName, ''),
         contactEmail: getSafe(() => r.deliveryAddress.contactEmail, ''),
-        contactPhone: getSafe(() => r.deliveryAddress.contactPhone, ''),
         phoneFormatted: <FormattedPhone value={getSafe(() => r.deliveryAddress.contactPhone, '')} />,
-        branchId: r.id,
         id: r.id,
-        warehouse: r.warehouse,
         attachments: r.attachments
       }
     }),
-    editPopupBoolean: state.settings.editPopupBoolean,
-    addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0],
     loading: state.settings.loading
   }
 }

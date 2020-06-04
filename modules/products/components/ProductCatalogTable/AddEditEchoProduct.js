@@ -145,6 +145,8 @@ Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
 const validationScheme = Yup.object().shape({
   code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
   name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
+  productGroup: Yup.number().required(errorMessages.minOneGroup),
+  company: Yup.number().required(errorMessages.minOneCompany),
   elements: Yup.array().of(
     Yup.object()
       .uniqueProperty(
@@ -226,8 +228,9 @@ class AddEditEchoProduct extends React.Component {
     unNumberInitOptions: [],
     popupValues: null,
     editTab: 0,
-    selectedTagsOptions: [],
-    selectedMarketSegmentsOptions: []
+    selectedProductGroupsOptions: [],
+    selectedMarketSegmentsOptions: [],
+    selectedCompanyOptions: []
   }
 
   componentDidMount() {
@@ -243,8 +246,6 @@ class AddEditEchoProduct extends React.Component {
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
     if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
-    this.props.searchTags('')
-    this.props.searchMarketSegments('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -306,8 +307,9 @@ class AddEditEchoProduct extends React.Component {
   setInitialState = (popupValues, additionalStates) => {
     let codesList = [],
       unNumberInitOptions = [],
-      selectedTagsOptions = [],
-      selectedMarketSegmentsOptions = []
+      selectedProductGroupsOptions = [],
+      selectedMarketSegmentsOptions = [],
+      selectedCompanyOptions = []
 
     if (popupValues) {
       codesList = popupValues.mfrProductCodes.map(code => ({
@@ -329,14 +331,8 @@ class AddEditEchoProduct extends React.Component {
         }
       })
 
-      if (popupValues.tags) {
-        selectedTagsOptions = popupValues.tags.map(d => {
-          return {
-            key: d.id,
-            text: d.name,
-            value: d.id
-          }
-        })
+      if (popupValues.productGroup) {
+        selectedProductGroupsOptions = popupValues.productGroup
       }
       if (popupValues.marketSegments) {
         selectedMarketSegmentsOptions = popupValues.marketSegments.map(d => {
@@ -348,14 +344,18 @@ class AddEditEchoProduct extends React.Component {
         })
       }
     }
+    if (popupValues && popupValues.company) {
+      selectedCompanyOptions = popupValues.company
+    }
     this.setState({
       codesList,
       changedForm: false,
       changedAttachments: false,
       popupValues,
       unNumberInitOptions: unNumberInitOptions,
-      selectedTagsOptions,
+      selectedProductGroupsOptions,
       selectedMarketSegmentsOptions,
+      selectedCompanyOptions,
       ...additionalStates
     })
   }
@@ -489,8 +489,9 @@ class AddEditEchoProduct extends React.Component {
             viscosity: getSafe(() => popupValues.viscosity, ''),
             wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
             isPublished: getSafe(() => popupValues.isPublished, false),
-            tags: getSafe(() => popupValues.tags, []).map(d => d.id),
-            marketSegments: getSafe(() => popupValues.marketSegments, []).map(d => d.id)
+            productGroup: getSafe(() => popupValues.productGroup.id, ''),
+            marketSegments: getSafe(() => popupValues.marketSegments, []).map(d => d.id),
+            company: getSafe(() => popupValues.company.id, '')
           }
         : null)
     }
@@ -541,17 +542,26 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-  handleTagsSearchChange = debounce((_, { searchQuery }) => {
-    this.props.searchTags(searchQuery)
+  handleProductGroupsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchProductGroups(searchQuery)
+  }, 250)
+
+  handleCompanySearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchCompany(searchQuery)
   }, 250)
 
   handleMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
     this.props.searchMarketSegments(searchQuery)
   }, 250)
 
-  handleTagsChange = (value, options) => {
-    const newOptions = options.filter(el => value.some(v => el.value === v))
-    this.setState({ selectedTagsOptions: newOptions })
+  handleProductGroupsChange = (value, options) => {
+    const newOptions = options.filter(el => value === el.value)
+    this.setState({ selectedProductGroupsOptions: newOptions })
+  }
+
+  handleCompanyChange = (value, options) => {
+    const newOptions = options.filter(el => value === el.value)
+    this.setState({ selectedCompanyOptions: newOptions })
   }
 
   handleMarketSegmentsChange = (value, options) => {
@@ -632,7 +642,14 @@ class AddEditEchoProduct extends React.Component {
   }
 
   submitForm = async (values, setSubmitting) => {
-    const { putEchoProduct, postEchoProduct, closePopup, linkAttachment, listDocumentTypes, datagrid } = this.props
+    const {
+      putCompanyGenericProducts,
+      postCompanyGenericProducts,
+      closePopup,
+      linkAttachment,
+      listDocumentTypes,
+      datagrid
+    } = this.props
 
     const { popupValues } = this.state
     let sendSuccess = false
@@ -662,8 +679,8 @@ class AddEditEchoProduct extends React.Component {
     removeEmpty(formValues)
 
     try {
-      if (popupValues) var { value } = await putEchoProduct(popupValues.id, formValues)
-      else var { value } = await postEchoProduct(formValues)
+      if (popupValues) var { value } = await putCompanyGenericProducts(popupValues.id, formValues)
+      else var { value } = await postCompanyGenericProducts(formValues)
 
       const notLinkedAttachments = values.attachments.filter(att => !getSafe(() => att.linked, false))
       await linkAttachment(false, value.id, notLinkedAttachments)
@@ -1051,29 +1068,79 @@ class AddEditEchoProduct extends React.Component {
 
   renderEdit = formikProps => {
     let codesList = this.state.codesList
-    const { selectedTagsOptions, selectedMarketSegmentsOptions } = this.state
+    const { selectedProductGroupsOptions, selectedMarketSegmentsOptions, selectedCompanyOptions } = this.state
     const {
       intl: { formatMessage },
       searchedManufacturers,
       searchedManufacturersLoading,
       searchManufacturers,
-      searchedTagsLoading,
-      searchedTags,
+      searchedProductGroupsLoading,
+      searchedProductGroups,
       searchedmarketSegmentsLoading,
-      searchedMarketSegments
+      searchedMarketSegments,
+      searchedCompanyLoading,
+      searchedCompany
     } = this.props
 
     const allMarketSegmentsOptions = uniqueArrayByKey(
       searchedMarketSegments.concat(selectedMarketSegmentsOptions),
       'key'
     )
-    const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
+    const allProductGroupsOptions = uniqueArrayByKey(searchedProductGroups.concat(selectedProductGroupsOptions), 'key')
+    const allCompanyOptions = uniqueArrayByKey(searchedCompany.concat(selectedCompanyOptions), 'key')
 
     return (
       <Grid verticalAlign='middle'>
         {this.RowInput({ name: 'name', id: 'global.productName', defaultMessage: 'Product Name', required: true })}
         {this.RowInput({ name: 'code', id: 'global.productCode', defaultMessage: 'Product Code', required: true })}
-
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.productGroups' defaultMessage='Product Groups' />
+            <Required />
+          </GridColumn>
+          <GridColumn width={10}>
+            <FormikDropdown
+              name='productGroup'
+              options={allProductGroupsOptions}
+              inputProps={{
+                loading: searchedProductGroupsLoading,
+                search: true,
+                icon: 'search',
+                selection: true,
+                noResultsMessage: formatMessage({
+                  id: 'global.startTypingToSearch',
+                  defaultMessage: 'Start typing to begin search'
+                }),
+                onSearchChange: this.handleProductGroupsSearchChange,
+                onChange: (_, { value }) => this.handleProductGroupsChange(value, allProductGroupsOptions)
+              }}
+            />
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn width={6}>
+            <FormattedMessage id='global.company' defaultMessage='Company' />
+            <Required />
+          </GridColumn>
+          <GridColumn width={10}>
+            <FormikDropdown
+              name='company'
+              options={allCompanyOptions}
+              inputProps={{
+                loading: searchedCompanyLoading,
+                search: true,
+                icon: 'search',
+                selection: true,
+                noResultsMessage: formatMessage({
+                  id: 'global.startTypingToSearch',
+                  defaultMessage: 'Start typing to begin search'
+                }),
+                onSearchChange: this.handleCompanySearchChange,
+                onChange: (_, { value }) => this.handleCompanyChange(value, allProductGroupsOptions)
+              }}
+            />
+          </GridColumn>
+        </GridRow>
         <GridRow>
           <GridColumn width={6}>
             <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer' />
@@ -1165,30 +1232,7 @@ class AddEditEchoProduct extends React.Component {
             />
           </GridColumn>
         </GridRow>
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.tags' defaultMessage='Tags' />
-          </GridColumn>
-          <GridColumn width={10}>
-            <FormikDropdown
-              name='tags'
-              options={allTagsOptions}
-              inputProps={{
-                loading: searchedTagsLoading,
-                search: true,
-                icon: 'search',
-                selection: true,
-                multiple: true,
-                noResultsMessage: formatMessage({
-                  id: 'global.startTypingToSearch',
-                  defaultMessage: 'Start typing to begin search'
-                }),
-                onSearchChange: this.handleTagsSearchChange,
-                onChange: (_, { value }) => this.handleTagsChange(value, allTagsOptions)
-              }}
-            />
-          </GridColumn>
-        </GridRow>
+
         <Header as='h3'>
           <FormattedMessage id='global.sds' defaultMessage='SDS' />
         </Header>

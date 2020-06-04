@@ -6,14 +6,9 @@ export const createHold = params => ({
   payload: api.createHold(params)
 })
 
-export const getMyHolds = () => ({
-  type: AT.GET_MY_HOLDS,
-  payload: api.getMyHolds()
-})
-
-export const getForeignHolds = () => ({
-  type: AT.GET_FOREIGN_HOLDS,
-  payload: api.getForeignHolds()
+export const getCountHolds = () => ({
+  type: AT.GET_COUNT_HOLDS,
+  payload: api.getCountHolds()
 })
 
 export const rejectHold = id => ({

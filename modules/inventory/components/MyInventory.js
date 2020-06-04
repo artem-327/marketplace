@@ -60,7 +60,7 @@ const ClockIcon = styled(Clock)`
   }
 `
 
-const UnpublishedIcon = styled(FileText)`
+const FileTextIcon = styled(FileText)`
   display: block;
   width: 20px;
   height: 20px;
@@ -76,7 +76,7 @@ const UnpublishedIcon = styled(FileText)`
 `
 
 const StyledPopup = styled(Popup)`
-  max-width: 90%;
+  max-width: 90% !important;
   padding: 0 !important;
   border-radius: 4px;
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
@@ -99,8 +99,8 @@ class MyInventory extends Component {
         align: 'center'
       },
       {
-        name: 'notPublishedStatus',
-        title: <UnpublishedIcon className='grey' />,
+        name: 'productStatus',
+        title: <FileTextIcon className='grey' />,
         width: 40,
         align: 'center'
       },
@@ -431,6 +431,14 @@ class MyInventory extends Component {
               />
             )
             break
+          case 'unpublished':
+            title = (
+              <FormattedMessage
+                id='myInventory.broadcasting.unpublished'
+                defaultMessage='Unpublished, please make sure related Product is published first.'
+              />
+            )
+            break
           default:
             title = (
               <FormattedMessage id='myInventory.broadcasting.notAvailable' defaultMessage='Status is not available' />
@@ -445,6 +453,28 @@ class MyInventory extends Component {
         )
       }
 
+      let productStatusText = null
+      switch (r.cfStatus) {
+        case 'Unpublished': {
+          productStatusText = (
+            <FormattedMessage
+              id='global.notPublished'
+              defaultMessage='This echo product is not published and will not show on the Marketplace.'
+            />
+          )
+          break
+        }
+        case 'Unmapped': {
+          productStatusText = (
+            <FormattedMessage
+              id='myInventory.productStatus.unmapped'
+              defaultMessage="This Offer's Company Product is not mapped to Echo Product, so it will not be visible to other users at Marketplace."
+            />
+          )
+          break
+        }
+      }
+
       return {
         ...r,
         expired: r.expired ? (
@@ -457,18 +487,14 @@ class MyInventory extends Component {
             } // <div> has to be there otherwise popup will be not shown
           />
         ) : null,
-        notPublishedStatus: (r.notPublishedStatus
+        productStatus: (productStatusText
           ? (
             <Popup
               size='small'
-              header={
-                <FormattedMessage
-                  id='global.notPublished'
-                  defaultMessage='This echo product is not published and will not show on the Marketplace.'
-                />}
+              header={productStatusText}
               trigger={
                 <div>
-                  <UnpublishedIcon />
+                  <FileTextIcon />
                 </div>
               } // <div> has to be there otherwise popup will be not shown
             />
@@ -503,11 +529,15 @@ class MyInventory extends Component {
                   toggle
                   defaultChecked={r.cfStatus.toLowerCase() === 'broadcasting' && isOfferValid}
                   className={cn({
-                    error: r.cfStatus.toLowerCase() === 'incomplete' || r.cfStatus.toLowerCase() === 'unmapped'
+                    error:
+                      r.cfStatus.toLowerCase() === 'incomplete' ||
+                      r.cfStatus.toLowerCase() === 'unmapped' ||
+                      r.cfStatus.toLowerCase() === 'unpublished'
                   })}
                   disabled={
                     r.cfStatus.toLowerCase() === 'incomplete' ||
                     r.cfStatus.toLowerCase() === 'unmapped' ||
+                    r.cfStatus.toLowerCase() === 'unpublished' ||
                     r.cfStatus.toLowerCase() === 'n/a' ||
                     !isOfferValid ||
                     !!r.groupId

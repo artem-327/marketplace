@@ -99,6 +99,9 @@ export function login(username, password) {
         }
         // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
         // user is first login as companyAdmin then redirect to settings
+
+        const isClientCompanyAdmin = identity.roles.map(r => r.id).indexOf(67) > -1
+
         if (
           identity &&
           identity.isCompanyAdmin &&
@@ -113,11 +116,15 @@ export function login(username, password) {
         }
         if (
           !(
-            identity.roles.find(role => role.name === 'Company Admin') &&
+            identity.roles.find(role => role.id === 2 || role.id === 67) && // 2 = Company Admin, 67 = Guest Company Admin
             getSafe(() => identity.company.reviewRequested, false)
           )
         ) {
-          isAdmin ? Router.push('/companies') : Router.push(urlPage)
+          isAdmin
+            ? Router.push('/companies')
+            : isClientCompanyAdmin
+            ? Router.push('/marketplace/all')
+            : Router.push(urlPage)
         }
 
         return authPayload

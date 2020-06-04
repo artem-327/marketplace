@@ -32,7 +32,7 @@ function mapStateToProps(store, { datagrid }) {
         id: row.id,
         rawData: row,
         product: getSafe(
-          () => row.element.echoProduct.name,
+          () => row.element.productGroup.name,
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
         ),
         casNumber: casNumberAndName(getSafe(() => row.element.casProduct, '')),
@@ -74,7 +74,8 @@ function mapStateToProps(store, { datagrid }) {
           moment(row.neededAt).format(getLocaleDateFormat())
         ) : (
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-        )
+        ),
+        createdAt: row.createdAt ? moment(row.createdAt).format(getLocaleDateFormat()) : 'N/A'
       }
     })
   }

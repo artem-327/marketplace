@@ -135,13 +135,18 @@ export const errorMessages = {
     <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
   ),
   minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />,
+  minOneGroup: <FormattedMessage id='validation.minOneGroup' defaultMessage='At least one group should be selected' />,
+  minOneCompany: (
+    <FormattedMessage id='validation.minOneCompany' defaultMessage='At least one company should be selected' />
+  ),
   trailingSpaces: (
     <FormattedMessage
       id='validation.trailingSpaces'
       defaultMessage='Space was detected as leading or trailing character, please check enter password is correct'
     />
   ),
-  passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />
+  passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />,
+  invalidTime: <FormattedMessage id='validation.invalidTime' defaultMessage='Invalid time' />
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -337,3 +342,10 @@ export const dateBefore = (date = 'lotManufacturedDate', beforeDate = 'lotExpira
       return (newOpts.nullable && !parsedBeforeDate.isValid()) || parsedDate.isBefore(parsedBeforeDate)
     }
   )
+
+export const validateTime = () =>
+  Yup.string()
+    .trim()
+    .test('time', errorMessages.invalidTime, t => {
+      return moment(t, ['hh:mm a', 'HH:mm']).isValid() || !t.length
+    })

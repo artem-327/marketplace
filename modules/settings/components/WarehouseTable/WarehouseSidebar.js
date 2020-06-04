@@ -16,12 +16,11 @@ import {
 } from '../../actions'
 import { Input, Checkbox, TextArea, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import Router from 'next/router'
 import styled from 'styled-components'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { addressValidationSchema, errorMessages, minOrZeroLength } from '~/constants/yupValidation'
+import { addressValidationSchema, errorMessages, minOrZeroLength, validateTime } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form/'
 
@@ -32,14 +31,40 @@ import DocumentTab from '~/components/document-tab'
 import { AlertCircle } from 'react-feather'
 import { Required } from '~/components/constants/layout'
 import { removeEmpty } from '~/utils/functions'
+import { TimeInput } from '~/components/custom-formik/'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
   color: #fff !important;
+  margin: 0 5px !important;
 `
 
 const CustomSegment = styled(Segment)`
   background-color: #f8f9fb !important;
+  .field {
+    .ui.checkbox {
+      label {
+        color: #848893;
+      }
+      &.checked {
+        label {
+          color: #20273a;
+        }
+      }
+    }
+    .field {
+      label {
+        color: #546f93;
+      }
+    }
+    
+    .phone-number {
+      .phone-code,
+      .phone-num {
+        height: 40px;
+      }
+    }
+  }
 `
 
 const CustomForm = styled(Form)`
@@ -49,46 +74,46 @@ const CustomForm = styled(Form)`
 const CustomDiv = styled.div`
   text-align: right;
   z-index: 1;
-  padding-right: 22px;
-  padding-top: 10px;
+  padding: 10px 25px;
   margin-top: 0px;
   box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
 `
 
 const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
+  z-index: 1;
 `
 
 const Rectangle = styled.div`
   border-radius: 4px;
   border: solid 1px orange;
   background-color: #ffffff;
-  margin-bottom: 15px;
+  margin: 14px 0 20px 0;
   align-items: center;
   display: block;
-  padding: 10px;
+  padding: 13px 11px;
 `
 
 const CustomDivTitle = styled.div`
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   font-stretch: normal;
   font-style: normal;
   line-height: 1.43;
   letter-spacing: normal;
-  color: #0d0d0d;
+  color: #20273a;
   display: flex;
 `
 
 const CustomDivContent = styled.div`
-  font-size: 12px;
+  font-size: 14px;
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
   line-height: 1.43;
   letter-spacing: normal;
   color: #848893;
-  padding-left: 30px;
+  padding-left: 33px;
 `
 
 const CustomDivInTitle = styled.div`
@@ -96,7 +121,8 @@ const CustomDivInTitle = styled.div`
 `
 
 const CustomMenu = styled(Menu)`
-  padding-left: 63px !important;
+  padding-left: 30px !important;
+  margin: 0 !important;
 `
 
 const CustomSegmentContent = styled(Segment)`
@@ -121,7 +147,9 @@ const formValidation = () =>
       contactEmail: Yup.string()
         .trim()
         .email(errorMessages.invalidEmail)
-        .required(errorMessages.requiredMessage)
+        .required(errorMessages.requiredMessage),
+      readyTime: validateTime(),
+      closeTime: validateTime()
     })
   })
 
@@ -148,7 +176,7 @@ class WarehouseSidebar extends React.Component {
   }
 
   submitHandler = async (values, setSubmitting) => {
-    const { popupValues, currentTab, putEditWarehouse, postNewWarehouseRequest } = this.props
+    const { popupValues, putEditWarehouse, postNewWarehouseRequest } = this.props
     const { attachmentFiles } = this.state
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
     let requestData = {}
@@ -170,7 +198,7 @@ class WarehouseSidebar extends React.Component {
         }
       },
       taxId: values.taxId,
-      warehouse: currentTab.type === 'warehouses' ? true : false
+      warehouse: true
     }
     removeEmpty(requestData)
 
@@ -207,8 +235,8 @@ class WarehouseSidebar extends React.Component {
           country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
           zip
         },
-        readyTime: getSafe(() => popupValues.deliveryAddress.readyTime, null),
-        closeTime: getSafe(() => popupValues.deliveryAddress.closeTime, null),
+        readyTime: getSafe(() => popupValues.deliveryAddress.readyTime, ''),
+        closeTime: getSafe(() => popupValues.deliveryAddress.closeTime, ''),
         liftGate: getSafe(() => popupValues.deliveryAddress.liftGate, false),
         forkLift: getSafe(() => popupValues.deliveryAddress.forkLift, false),
         callAhead: getSafe(() => popupValues.deliveryAddress.callAhead, false),
@@ -235,22 +263,25 @@ class WarehouseSidebar extends React.Component {
 
   renderEdit = formikProps => {
     const {
-      currentTab,
       intl: { formatMessage }
     } = this.props
     const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
-    const name =
-      currentTab.type === 'branches' ? (
-        <FormattedMessage id='settings.branchName' defaultMessage='Branch Name' />
-      ) : (
-        <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name' />
-      )
-
     return (
       <>
         <FormGroup widths='equal' data-test='settings_warehouse_popup_name_inp'>
-          <Input type='text' label={name} name='deliveryAddress.addressName' />
+          <Input
+            type='text'
+            label={<FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name' />}
+            name='deliveryAddress.addressName'
+            inputProps={{
+              placeholder:
+                formatMessage({
+                  id: 'settings.warehouses.enterWarehouseName',
+                  defaultMessage: 'Enter Warehouse Name'
+                })
+            }}
+          />
         </FormGroup>
 
         <AddressForm
@@ -258,16 +289,11 @@ class WarehouseSidebar extends React.Component {
           required={true}
           setFieldValue={setFieldValue}
           values={values}
-          initialZipCodes={{
+          initialZipCodes={[{
             key: values.zipID.toString(),
             value: values.deliveryAddress.address.zip,
             text: values.deliveryAddress.address.zip
-          }}
-          initialProvince={{
-            key: getSafe(() => values.province.id, ''),
-            value: getSafe(() => values.province.id, ''),
-            text: getSafe(() => values.province.name, '')
-          }}
+          }]}
         />
 
         <Header as='h3'>
@@ -284,7 +310,14 @@ class WarehouseSidebar extends React.Component {
                 </>
               }
               name='deliveryAddress.contactName'
-              fieldProps={{ width: 8 }}
+              fieldProps={{ width: 16 }}
+              inputProps={{
+                placeholder:
+                  formatMessage({
+                    id: 'settings.warehouses.enterContactName',
+                    defaultMessage: 'Enter Contact Name'
+                  })
+              }}
             />
           </FormGroup>
           <FormGroup widths='equal' data-test='settings_warehouse_popup_phoneEmail_inp'>
@@ -312,64 +345,81 @@ class WarehouseSidebar extends React.Component {
                 </>
               }
               name='deliveryAddress.contactEmail'
+              inputProps={{
+                placeholder:
+                  formatMessage({
+                    id: 'settings.warehouses.enterEmailAddress',
+                    defaultMessage: 'Enter Email Address'
+                  })
+              }}
             />
           </FormGroup>
         </CustomSegment>
-        {getSafe(() => currentTab.type, '') === 'warehouses' ? (
-          <>
-            <Header as='h3'>
-              <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />
-            </Header>
-            <CustomSegment>
-              <FormGroup
-                widths='equal'
-                data-test='settings_delivery_address_notes_inp'
-                style={{ alignItems: 'center' }}>
-                <Input
-                  inputProps={{ type: 'time' }}
-                  label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
-                  name='deliveryAddress.readyTime'
-                />
-                <Input
-                  inputProps={{ type: 'time' }}
-                  label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
-                  name='deliveryAddress.closeTime'
-                />
-              </FormGroup>
-              <FormGroup widths='equal'>
-                <Checkbox
-                  label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
-                  name='deliveryAddress.liftGate'
-                  inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
-                />
-                <Checkbox
-                  label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
-                  name='deliveryAddress.forkLift'
-                  inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
-                />
-                <Checkbox
-                  label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
-                  name='deliveryAddress.callAhead'
-                  inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
-                />
-              </FormGroup>
-              <FormGroup data-test='settings_warehouse_popup_taxId_inp'>
-                <Input
-                  type='text'
-                  label={formatMessage({ id: 'global.taxId', defaultMessage: 'Tax ID' })}
-                  name='taxId'
-                  fieldProps={{ width: 8 }}
-                />
-              </FormGroup>
-              <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
-                <TextArea
-                  name='deliveryAddress.deliveryNotes'
-                  label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
-                />
-              </FormGroup>
-            </CustomSegment>
-          </>
-        ) : null}
+
+        <Header as='h3'>
+          <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />
+        </Header>
+        <CustomSegment>
+          <FormGroup data-test='settings_delivery_address_notes_inp'>
+            <TimeInput
+              label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
+              name='deliveryAddress.readyTime'
+            />
+            <TimeInput
+              label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+              name='deliveryAddress.closeTime'
+            />
+          </FormGroup>
+          <FormGroup widths='equal'>
+            <Checkbox
+              label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+              name='deliveryAddress.liftGate'
+              inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
+            />
+          </FormGroup>
+          <FormGroup widths='equal'>
+            <Checkbox
+              label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
+              name='deliveryAddress.forkLift'
+              inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
+            />
+          </FormGroup>
+          <FormGroup widths='equal'>
+            <Checkbox
+              label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
+              name='deliveryAddress.callAhead'
+              inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
+            />
+          </FormGroup>
+          <FormGroup data-test='settings_warehouse_popup_taxId_inp'>
+            <Input
+              type='text'
+              label={formatMessage({ id: 'global.taxId', defaultMessage: 'Tax ID' })}
+              name='taxId'
+              fieldProps={{ width: 8 }}
+              inputProps={{
+                placeholder:
+                  formatMessage({
+                    id: 'settings.warehouses.enterTaxId',
+                    defaultMessage: 'Enter Tax ID'
+                  })
+              }}
+            />
+          </FormGroup>
+          <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
+            <TextArea
+              name='deliveryAddress.deliveryNotes'
+              label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+              inputProps={{
+                placeholder:
+                  formatMessage({
+                    id: 'settings.warehouses.writeDeliveryNotesHere',
+                    defaultMessage: 'Write Delivery Notes Here'
+                  })
+              }}
+            />
+          </FormGroup>
+        </CustomSegment>
       </>
     )
   }
@@ -383,7 +433,7 @@ class WarehouseSidebar extends React.Component {
         getSafe(() => popupValues.deliveryAddress.address.country.name, false) === 'USA' ? (
           <Rectangle>
             <CustomDivTitle>
-              <AlertCircle color='orange' size={18} />
+              <AlertCircle color='orange' size={24} />
               <CustomDivInTitle>
                 <FormattedMessage
                   id='settings.warehouse.certificates.message.title'
@@ -406,6 +456,8 @@ class WarehouseSidebar extends React.Component {
             { key: 14, text: 'Resale Certificate', value: 14 },
             { key: 13, text: 'Sales Tax Exemption Certificate', value: 13 }
           ]}
+          documentTypeIds={[13, 14]}
+          lockedFileTypes={true}
           values={values}
           setFieldValue={setFieldValue}
           setFieldNameAttachments='attachments'
@@ -439,7 +491,7 @@ class WarehouseSidebar extends React.Component {
       }
 
       case 1: {
-        // Edit
+        // Certificates
         return this.renderCertificates(formikProps)
       }
 
@@ -449,10 +501,6 @@ class WarehouseSidebar extends React.Component {
   }
 
   render() {
-    // const {
-    //   AddressSuggestInput,
-    // } = this.props
-
     const {
       closeSidebar,
       popupValues,
@@ -486,7 +534,7 @@ class WarehouseSidebar extends React.Component {
               <FlexSidebar
                 visible={isOpenSidebar}
                 width='very wide'
-                style={{ width: '500px' }}
+                style={{ width: '630px' }}
                 direction='right'
                 animation='overlay'>
                 <div>
@@ -497,6 +545,7 @@ class WarehouseSidebar extends React.Component {
                     <CustomMenu pointing secondary>
                       {tabs.map((tab, i) => (
                         <Menu.Item
+                          key={tab.key}
                           onClick={() => this.tabChanged(i)}
                           active={editTab === i}
                           disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
@@ -510,7 +559,11 @@ class WarehouseSidebar extends React.Component {
                   <CustomSegmentContent basic>{this.getContent(formikProps)}</CustomSegmentContent>
                 </FlexContent>
                 <CustomDiv>
-                  <Button.Reset onClick={closeSidebar} data-test='settings_warehouse_popup_reset_btn'>
+                  <Button.Reset
+                    style={{ margin: '0 5px'}}
+                    onClick={closeSidebar}
+                    data-test='settings_warehouse_popup_reset_btn'
+                  >
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
@@ -544,12 +597,6 @@ class WarehouseSidebar extends React.Component {
   }
 }
 
-// const prepareAddressSuggest = (AddressSuggestOptions) => (
-//   <datalist id='addresses'>
-//     {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
-//   </datalist>
-// )
-
 const mapDispatchToProps = {
   postNewWarehouseRequest,
   putEditWarehouse,
@@ -561,24 +608,14 @@ const mapDispatchToProps = {
   addAttachment,
   loadFile
 }
-const mapStateToProps = state => {
-  // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
-  //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
-  // ))
 
+const mapStateToProps = state => {
   return {
-    // AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
-    // AddressSuggestOptions,
-    // AddressSuggestData: state.settings.addressSearch,
     hasProvinces: state.settings.popupValues ? state.settings.popupValues.hasProvinces : false,
     popupValues: state.settings.popupValues,
     country: state.settings.country,
     countries: state.settings.countries,
     provincesDropDown: state.settings.provincesDropDown,
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0],
     company: getSafe(() => state.auth.identity.company.id, null),
     isOpenSidebar: state.settings.isOpenSidebar,
     loading: state.settings.loading,

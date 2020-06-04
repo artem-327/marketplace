@@ -15,7 +15,7 @@ import { FileText } from 'react-feather'
 import styled from 'styled-components'
 import { Popup } from 'semantic-ui-react'
 
-const UnpublishedIcon = styled(FileText)`
+const FileTextIcon = styled(FileText)`
   display: block;
   width: 20px;
   height: 20px;
@@ -34,8 +34,8 @@ class ProductCatalogTable extends Component {
   state = {
     columns: [
       {
-        name: 'notPublishedStatus',
-        title: <UnpublishedIcon className='grey' />,
+        name: 'productStatus',
+        title: <FileTextIcon className='grey' />,
         width: 40,
         align: 'center'
       },
@@ -67,7 +67,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 230,
-        sortPath: 'CompanyProduct.echoProduct.name'
+        sortPath: 'CompanyProduct.companyGenericProduct.name'
       },
       {
         name: 'externalProductCode',
@@ -77,7 +77,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 200,
-        sortPath: 'CompanyProduct.echoProduct.code'
+        sortPath: 'CompanyProduct.companyGenericProduct.code'
       },
       {
         name: 'packagingSizeFormatted',
@@ -110,7 +110,7 @@ class ProductCatalogTable extends Component {
         sortPath: 'CompanyProduct.packagingType.name'
       }
     ],
-    echoProducts: []
+    companyGenericProduct: []
   }
 
   // componentDidMount() {
@@ -138,7 +138,7 @@ class ProductCatalogTable extends Component {
 
     if (action === 'edit' && actionId && loaded) {
       if (currentTab.type === 'products') {
-        const editRow = rows.find(function(product) {
+        const editRow = rows.find(function (product) {
           return product.id === parseInt(actionId)
         })
 
@@ -203,13 +203,62 @@ class ProductCatalogTable extends Component {
   }
 }
 
+const getProductStatus = product => {
+  let status = product.companyGenericProduct
+    ? !product.companyGenericProduct.isPublished
+      ? 'Unpublished'
+      : ''
+    : 'Unmapped'
+
+  let popupText = null
+
+  switch (status) {
+    case 'Unpublished': {
+      popupText = (
+        <FormattedMessage
+          id='global.notPublished'
+          defaultMessage='This echo product is not published and will not show on the Marketplace.'
+        />
+      )
+      break
+    }
+    case 'Unmapped': {
+      popupText = (
+        <FormattedMessage
+          id='settings.product.unmapped'
+          defaultMessage='This product is not mapped and will not show on the Marketplace.'
+        />
+      )
+      break
+    }
+  }
+
+  if (popupText) {
+    return (
+      <Popup
+        size='small'
+        header={popupText}
+        trigger={
+          <div>
+            <FileTextIcon />
+          </div>
+        } // <div> has to be there otherwise popup will be not shown
+      />
+    )
+  } else {
+    return null
+  }
+}
+
 const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(product => {
       return {
         ...product,
         rawData: product,
-        intProductName: <div style={{ fontWeight: '500' }}>{product.intProductName}</div>,
+        intProductName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {product.intProductName}
+        </div>,
         packagingTypeName: getSafe(() => product.packagingType.name) ? (
           <UnitOfPackaging value={product.packagingType.name} />
         ) : (
@@ -223,27 +272,28 @@ const mapStateToProps = (state, { datagrid }) => {
           'N/A'
         ),
         //packagingGroup: getSafe(() => product.packagingGroup.id),
-        externalProductCode: getSafe(() => product.echoProduct.code, 'N/A'),
-        externalProductName: getSafe(() => product.echoProduct.name, 'N/A'),
+        externalProductCode: getSafe(() => product.companyGenericProduct.code, 'N/A'),
+        externalProductName: getSafe(() => product.companyGenericProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
         packagingUnit: getSafe(() => product.packagingUnit.id),
-        notPublishedStatus: product.echoProduct && !product.echoProduct.isPublished
-          ? (
+        productStatus: getProductStatus(product),
+        productStatusTmp:
+          product.companyGenericProduct && !product.companyGenericProduct.isPublished ? (
             <Popup
               size='small'
               header={
                 <FormattedMessage
                   id='global.notPublished'
                   defaultMessage='This echo product is not published and will not show on the Marketplace.'
-                />}
+                />
+              }
               trigger={
                 <div>
-                  <UnpublishedIcon />
+                  <FileTextIcon />
                 </div>
               } // <div> has to be there otherwise popup will be not shown
             />
-          )
-          : null
+          ) : null
       }
     }),
     filterValue: state.settings.filterValue,
