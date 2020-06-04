@@ -256,7 +256,9 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         ...product,
         rawData: product,
-        intProductName: <div style={{ fontWeight: '500' }}>{product.intProductName}</div>,
+        intProductName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {product.intProductName}
+        </div>,
         packagingTypeName: getSafe(() => product.packagingType.name) ? (
           <UnitOfPackaging value={product.packagingType.name} />
         ) : (

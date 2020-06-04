@@ -77,11 +77,11 @@ class AddressForm extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { address } = this.getValues()
-    const oldValues = this.getValues(prevProps.values).address
+    const values = this.getValues()
+    const oldValues = this.getValues(prevProps.values)
 
-    const country = address && address.country
-    const oldCountry = oldValues && oldValues.country
+    const country = values && values.address && values.address.country
+    const oldCountry = oldValues && oldValues.address && oldValues.address.country
 
     if (country && oldCountry && country !== oldCountry) {
       const parsed = JSON.parse(country)
