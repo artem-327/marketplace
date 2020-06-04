@@ -216,15 +216,11 @@ export default function reducer(state = initialState, action) {
         autocompleteDataLoading: false,
         autocompleteData: uniqueArrayByKey(
           action.payload
-            .map(el => {
-              const productCode = getSafe(() => el.code, '')
-              const productName = getSafe(() => el.name, '')
-              return {
-                key: el.id,
-                text: `${productName} ${productCode}`,
-                value: el.id
-              }
-            })
+            .map(el => ({
+              key: getSafe(() => el.id, ''),
+              text: getSafe(() => el.name, ''),
+              value: getSafe(() => el.id, '')
+            }))
             .concat(state.autocompleteData),
           'key'
         )
