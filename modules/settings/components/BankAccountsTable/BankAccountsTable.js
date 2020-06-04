@@ -63,8 +63,12 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
       amount2: ''
     }}
     validationSchema={Yup.object().shape({
-      amount1: Yup.number(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
-      amount2: Yup.number(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
+      amount1: Yup.number(errorMessages.mustBeNumber)
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage),
+      amount2: Yup.number(errorMessages.mustBeNumber)
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
     })}
     onSubmit={values => proceed(values)}
     onReset={dismiss}
