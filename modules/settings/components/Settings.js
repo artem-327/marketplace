@@ -14,7 +14,7 @@ import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 import WarehouseSidebar from './WarehouseTable/WarehouseSidebar'
 import BranchesSidebar from './BranchesTable/BranchesSidebar'
-import EditUsersPopup from './UserTable/UsersPopup'
+import UsersSidebar from './UserTable/UsersSidebar'
 import ProductSidebar from './ProductCatalogTable/ProductSidebar'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
@@ -210,10 +210,9 @@ class Settings extends Component {
 
     let queryTab =
       (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
-      isCompanyAdmin ||
-      isClientCompanyAdmin
+      (isCompanyAdmin || isClientCompanyAdmin
         ? companyDetailsTab
-        : tabsNames.find(tab => tab.type !== companyDetailsTab.type)
+        : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
 
     this.changeRoute(queryTab)
     this.redirectPage(queryTab)
@@ -324,7 +323,7 @@ class Settings extends Component {
     }
 
     const popupForm = {
-      users: <EditUsersPopup />,
+      users: <UsersSidebar />,
       branches: <BranchesSidebar />,
       warehouses: <WarehouseSidebar />,
       products: <ProductSidebar />,
@@ -534,11 +533,11 @@ class Settings extends Component {
       !this.state.wrongUrl && (
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
           <Container fluid className='flex stretched'>
-            {!tutorialCompleted && <Tutorial />}
-            <Container fluid style={{ padding: '0 18px' }}>
+            {!tutorialCompleted && <div style={{ margin: '5px -2px -15px -2px' }}><Tutorial /></div>}
+            <Container fluid style={{ padding: '20px 30px' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>
-            <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
+            <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 30px' }}>
               <Grid.Row>
                 <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
               </Grid.Row>

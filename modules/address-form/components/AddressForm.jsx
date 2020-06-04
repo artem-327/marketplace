@@ -77,12 +77,11 @@ class AddressForm extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    const values = this.getValues()
+    const oldValues = this.getValues(prevProps.values)
 
-    const { address } = this.getValues()
-    const oldValues = this.getValues(prevProps.values).address
-
-    const country = address && address.country
-    const oldCountry = oldValues && oldValues.country
+    const country = values && values.address && values.address.country
+    const oldCountry = oldValues && oldValues.address && oldValues.address.country
 
     if (country !== oldCountry) {
       const parsed = JSON.parse(country)
@@ -289,12 +288,11 @@ class AddressForm extends Component {
                 </>
               }
               name={fields.province}
-              options={provinces
-                .map(province => ({
-                  key: province.id,
-                  text: province.name,
-                  value: province.id
-                }))}
+              options={provinces.map(province => ({
+                key: province.id,
+                text: province.name,
+                value: province.id
+              }))}
               inputProps={{
                 onFocus: e => (e.target.autocomplete = null),
                 'data-test': 'address_form_province_drpdn',
@@ -302,8 +300,10 @@ class AddressForm extends Component {
                 disabled: !this.state.hasProvinces,
                 loading: provincesAreFetching,
                 onChange: this.handleChange,
-                placeholder:
-                  formatMessage({ id: 'global.address.selectStateProvince', defaultMessage: 'Select State/Province' })
+                placeholder: formatMessage({
+                  id: 'global.address.selectStateProvince',
+                  defaultMessage: 'Select State/Province'
+                })
               }}
             />
           </FormGroup>

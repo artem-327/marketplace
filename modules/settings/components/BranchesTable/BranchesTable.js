@@ -150,7 +150,9 @@ const mapStateToProps = (state, { datagrid }) => {
         countryName: getSafe(() => r.deliveryAddress.address.country.name),
         provinceName: getSafe(() => r.deliveryAddress.address.province.name),
         name: getSafe(() => r.deliveryAddress.cfName, ''),
-        addressName: <div style={{ fontWeight: '500' }}>{getSafe(() => r.deliveryAddress.cfName, '')}</div>,
+        addressName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {getSafe(() => r.deliveryAddress.cfName, '')}
+        </div>,
         contactName: getSafe(() => r.deliveryAddress.contactName, ''),
         contactEmail: getSafe(() => r.deliveryAddress.contactEmail, ''),
         phoneFormatted: <FormattedPhone value={getSafe(() => r.deliveryAddress.contactPhone, '')} />,
