@@ -1,5 +1,6 @@
 import { FormattedMessage } from 'react-intl'
 import { getSafe, getFormattedAddress } from '~/utils/functions'
+import React from "react";
 
 export const otherPermissions = [
   { value: 'NONE', id: 'NONE', text: 'None' },
@@ -92,7 +93,9 @@ export const mapCompanyRows = companyRows =>
   companyRows.map(c => ({
     rawData: c,
     ...c,
-    displayName: getSafe(() => c.name, ''),
+    displayName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+      {getSafe(() => c.name, '')}
+    </div>,
     hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
     hasDwollaAccount: getSafe(() => c.dwollaAccountStatus === 'verified', '') ? 'Yes' : 'No',
     primaryBranchAddress: getFormattedAddress({

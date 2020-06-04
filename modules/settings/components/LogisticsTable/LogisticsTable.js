@@ -51,7 +51,9 @@ class LogisticsTable extends Component {
         columns={columns}
         rows={logisticsAccounts.map(acc => ({
           ...acc,
-          logisticsProviderName: acc.provider.name,
+          logisticsProviderName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {acc.provider.name}
+          </div>,
           username: <ArrayToFirstItem values={acc.accountInfos && acc.accountInfos.map(d => d.username)} />
         }))}
         loading={loading}

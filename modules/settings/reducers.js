@@ -13,6 +13,8 @@ export const initialState = {
   popupLoading: false,
   popupValues: null,
   isOpenPopup: false,
+  editTrig: false,
+  updating: false,
   isOpenUploadDocumentsPopup: null,
   usersRows: [],
   userEditRoles: false,
@@ -135,6 +137,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loaded: false,
         isOpenPopup: true,
+        editTrig: !state.editTrig,
         popupValues: action.payload
       }
     }
@@ -150,6 +153,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loaded: false,
         isOpenSidebar: true,
+        editTrig: !state.editTrig,
         openTab: action.payload
       }
     }
@@ -1474,6 +1478,27 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         csvWithoutHeader: !state.csvWithoutHeader
+      }
+    }
+
+    case AT.POST_NEW_USER_REQUEST_PENDING:
+    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_PENDING:
+    case AT.SETTINGS_GET_COMPANY_DETAILS_PENDING: {
+      return {
+        ...state,
+        updating: true
+      }
+    }
+
+    case AT.POST_NEW_USER_REQUEST_FULFILLED:
+    case AT.POST_NEW_USER_REQUEST_REJECTED:
+    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_FULFILLED:
+    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_REJECTED:
+    case AT.SETTINGS_GET_COMPANY_DETAILS_FULFILLED:
+    case AT.SETTINGS_GET_COMPANY_DETAILS_REJECTED: {
+      return {
+        ...state,
+        updating: false
       }
     }
 

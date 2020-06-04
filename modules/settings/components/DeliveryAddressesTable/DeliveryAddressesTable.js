@@ -137,7 +137,9 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         data: d, // all row data, used for edit popup
         id: d.id,
-        streetAddress: getSafe(() => d.address.streetAddress, ''),
+        streetAddress: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {getSafe(() => d.address.streetAddress, '')}
+        </div>,
         city: getSafe(() => d.address.city, ''),
         province: getSafe(() => d.address.province.name, ''),
         country: getSafe(() => d.address.country.name, ''),
