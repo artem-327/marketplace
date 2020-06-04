@@ -146,13 +146,15 @@ class Broadcast extends Component {
       // Add back removed node (with updated data)
       parent.addChildAtIndex(found, index)
       normalizeTree(node)
-
-      this.props.treeDataChanged(copy)
+      // console.log('test :D', this.treeToModel(copy))
+      console.log('copy', copy)
+      this.props.treeDataChanged({ ...copy, model: { ...copy.model, rule: { ...copy.model.rule, ...this.treeToModel(copy) } } })
     }
 
     else {
       normalizeTree(node)
-      this.props.treeDataChanged(node)
+      // console.log('test root :D', this.treeToModel(node))
+      this.props.treeDataChanged({ ...node, model: { ...node.model, rule: { ...node.model.rule, ...this.treeToModel(node) } } })
     }
     return copy
   }
@@ -267,30 +269,30 @@ class Broadcast extends Component {
 
   // Oposite function of getFilteredTree
   // Converts tree (what you can see in app) into what BE wants
-  treeToModel = () => {
-    const tree = this.getFilteredTree('region')
+  treeToModel = (tree = this.getFilteredTree('region'), directExtract = false) => {
+    // const tree = this.getFilteredTree('region')
 
     const extractFromRule = rule => {
-      const propertiesOfInterest = ['broadcast', 'id', 'name', 'priceAddition', 'priceMultiplier', 'priceOverride', 'type']
+      const propertiesOfInterest = ['broadcast', 'expanded', 'id', 'name', 'priceAddition', 'priceMultiplier', 'priceOverride', 'type']
 
       let obj = {}
       propertiesOfInterest.forEach((prop) => rule[prop] !== undefined ? obj[prop] = rule[prop] : null)
 
       return obj
     }
-
+    console.log('tree', tree, 'props?', this.props)
 
     return {
       broadcast: getBroadcast(tree.getPath()[0]),
       type: 'root',
       elements: tree.children.map((ch1) => ({
-        ...extractFromRule(ch1.model.rule),
+        ...extractFromRule(getSafe(() => ch1.model.rule, ch1.model)),
         elements: ch1.children.map((ch2) => ({
-          ...extractFromRule(ch2.model.rule),
+          ...extractFromRule(getSafe(() => ch2.model.rule, ch2.model)),
           elements: ch2.children.map((ch3) => ({
-            ...extractFromRule(ch3.model.rule),
+            ...extractFromRule(getSafe(() => ch3.model.rule, ch3.model)),
             elements: ch3.children.map((ch4) => ({
-              ...extractFromRule(ch4.model.rule)
+              ...extractFromRule(getSafe(() => ch4.model.rule, ch4.model))
             }))
           }))
         }))
@@ -360,7 +362,7 @@ class Broadcast extends Component {
 
     const value = rule[propertyName]
     let newValue = 0
-    
+    console.log('value', value)
     switch (value) {
       case 2: {
         if (getNodeStatus(node, (n) => n.model.rule.type !== 'company' && !n.model.rule.hidden).anyChildBroadcasting) {
@@ -415,22 +417,26 @@ class Broadcast extends Component {
     this.formChanged()
   }
 
-  changeInModel = (elements, { propertyName, value }) => {
-    elements.forEach(element => {
-      if (!element.hidden) element[propertyName] = value
+  changeInModel = (elementsParam, data) => {
+    // var elements = elementsParam
+    // elements.forEach(element => {
+    //   if (!element.hidden) {
+    //     element = { ...element, ...data }
+    //     console.log(element)
+    //   }
 
-      if (element.elements.length > 0) this.changeInModel(element.elements, { propertyName, value })
-    })
+    //   if (element.elements.length > 0) this.changeInModel(element.elements, data)
+    // })
   }
 
 
 
   handleRowClick = node => {
     node.model.rule.expanded = !node.model.rule.expanded
-
-    this.updateInTreeData(node)
+    console.log({ node })
 
     if (!node.model.rule.expanded) node.all(n => (n.model.rule.expanded = false))
+    this.updateInTreeData(node)
   }
 
   handleSearchChange = (e, { name, value }) => {
@@ -928,6 +934,8 @@ class Broadcast extends Component {
                 </Rule.Header>
                 <Rule.Content style={asSidebar ? { flex: '1 0 auto', overflowY: 'hidden' } : null}>
                   <RuleItem
+                    // changeInModel={this.changeInModel}
+                    changeInModel={() => console.log('tree to model', this.treeToModel())}
                     loadingChanged={this.props.loadingChanged}
                     filter={filter}
                     hideFobPrice={hideFobPrice}
@@ -981,6 +989,9 @@ class Broadcast extends Component {
     let filteredTree = this.treeToModel()
 
     try {
+      this.handleFilterChange(null, {
+        name: 'category', value: 'region'
+      })
       await saveRules(id, filteredTree)
       if (!asSidebar) {
         await initGlobalBroadcast()
@@ -1064,6 +1075,7 @@ export default injectIntl(
           ? new TreeModel({ childrenPropertyName: 'elements' }).parse(broadcast.data)
           : new TreeModel().parse({ model: { rule: {} } })
 
+        console.log({ treeData, broadcast })
         return {
           treeData,
           ...broadcast

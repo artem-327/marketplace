@@ -20,7 +20,8 @@ const RuleItem = props => {
     loadingChanged,
     asSidebar,
     openModalCompanyInfo,
-    getCompanyInfo
+    getCompanyInfo,
+    changeInModel
     // tree,
   } = props
   // let item = _.cloneDeep(props.item)
@@ -129,6 +130,7 @@ const RuleItem = props => {
         </Rule.Toggle>
 
         <PriceControl
+          changeInModel={changeInModel}
           hideFobPrice={hideFobPrice}
           data-test='broadcast_price_control'
           offer={offer}
@@ -142,6 +144,7 @@ const RuleItem = props => {
       {(item.model.rule.expanded || rule.type === 'root') &&
         item.children.map((i, idx) => (
           <RuleItem
+            changeInModel={changeInModel}
             loadingChanged={loadingChanged}
             filter={filter}
             hideFobPrice={hideFobPrice}
