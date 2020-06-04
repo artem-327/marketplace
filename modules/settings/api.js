@@ -87,7 +87,7 @@ export default {
     api.post(
       `/prodex/api/attachment-links/to-company-product?attachmentId=${attachmentId}&companyProductId=${productId}`
     ),
-  postNewUser: body => api.post('/prodex/api/users', body),
+  postNewUser: body => api.post('/prodex/api/users', body).then(response => response.data),
   postNewWarehouse: body => api.post('/prodex/api/branches/', body),
   postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
   postNewBankAccount: body => api.post('/prodex/api/payments/bank-accounts/add', body),
@@ -142,7 +142,7 @@ export default {
 
   putWarehouse: (branchId, body) => api.put(`/prodex/api/branches/${branchId}`, body).then(r => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
-  patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
+  patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body).then(r => r.data),
   patchUserRole: (id, body) => api.put(`/prodex/api/users/id/${id}/roles`, body),
   putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body), //! ! delete
   searchCasProduct: pattern => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`),
@@ -237,5 +237,7 @@ export default {
     })
   },
   setPrimaryUser: (companyId, userId) =>
-    api.patch(`/prodex/api/companies/${companyId}/primary-user?userId=${userId}`).then(response => response.data)
+    api.patch(`/prodex/api/companies/${companyId}/primary-user?userId=${userId}`).then(response => response.data),
+  getCompanyDetails:(id) =>
+    api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
 }

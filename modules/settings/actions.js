@@ -136,24 +136,13 @@ export function openEditPopup(rows) {
     payload: rows
   }
 }
-export function handlerSubmitUserEditPopup(payload, id) {
-  return async dispatch => {
-    //removeEmpty(payload)
-    try {
-      const response = await api.patchUser(id, payload)
-      dispatch({
-        type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-        payload: response
-      })
-      Datagrid.updateRow(id, () => response.data)
-
-      dispatch(closePopup())
-    } catch (e) {
-      // TODO
-      console.error(e)
-    }
+export function handlerSubmitUserEditPopup(id, payload) {
+  return {
+    type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+    payload: api.patchUser(id, payload)
   }
 }
+
 export function putNewUserRoleRequest(payload, id) {
   // return dispatch => ({
   //   type: AT.PUT_NEW_USER_ROLES_REQUEST,
@@ -645,15 +634,9 @@ export function getStoredCSV(data) {
 }
 
 export function postNewUserRequest(payload) {
-  return async dispatch => {
-    //removeEmpty(payload)
-    await dispatch({
-      type: AT.POST_NEW_USER_REQUEST,
-      payload: api.postNewUser(payload)
-    })
-    //dispatch(getUsersDataRequest())
-    Datagrid.loadData()
-    dispatch(closePopup())
+  return {
+    type: AT.POST_NEW_USER_REQUEST,
+    payload: api.postNewUser(payload)
   }
 }
 
@@ -1205,5 +1188,12 @@ export function setPrimaryUser(companyId, userId) {
 export function changeCsvHeader() {
   return {
     type: AT.CHANGE_CSV_HEADER
+  }
+}
+
+export function getCompanyDetails(companyId) {
+  return {
+    type: AT.SETTINGS_GET_COMPANY_DETAILS,
+    payload: api.getCompanyDetails(companyId)
   }
 }
