@@ -59,6 +59,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
 import { UploadCloud } from 'react-feather'
 import { QuantityInput } from '~/components/custom-formik/'
+import ErrorFocus from '~/components/error-focus'
 
 const CustomForm = styled(Form)`
   flex-grow: 0 !important;
@@ -164,8 +165,7 @@ const initialValues = {
   documents: {
     documentType: null,
     attachments: []
-  },
-
+  }
 }
 
 const columns = [
@@ -230,10 +230,14 @@ const formValidation = () =>
       ...(palletParamsRequired && {
         palletMinPkgs: Yup.number()
           .min(1, errorMessages.minimum(1))
-          .test("int", errorMessages.integer, val => { return val % 1 === 0 })
+          .test('int', errorMessages.integer, val => {
+            return val % 1 === 0
+          })
           .required(errorMessages.requiredMessage),
         palletMaxPkgs: Yup.number()
-          .test("int", errorMessages.integer, val => { return val % 1 === 0 })
+          .test('int', errorMessages.integer, val => {
+            return val % 1 === 0
+          })
           .min(
             values.palletMinPkgs ? values.palletMinPkgs : 1,
             errorMessages.minimum(values.palletMinPkgs ? values.palletMinPkgs : 1)
@@ -254,7 +258,7 @@ const formValidation = () =>
         palletHeight: Yup.number()
           .typeError(errorMessages.mustBeNumber)
           .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive),
+          .positive(errorMessages.positive)
       }),
       companyGenericProduct: Yup.number()
         .typeError(errorMessages.mustBeNumber)
@@ -770,20 +774,22 @@ class ProductSidebar extends React.Component {
                             }}
                           />
                         </GridColumn>
-                        {false && (<GridColumn>
-                          <QuantityInput
-                            label={formatMessage({
-                              id: 'global.packagesPerPallet',
-                              defaultMessage: 'Packages per Pallet'
-                            })}
-                            name='packagesPerPallet'
-                            inputProps={{
-                              placeholder: '0',
-                              type: 'number',
-                              min: 1
-                            }}
-                          />
-                        </GridColumn>)}
+                        {false && (
+                          <GridColumn>
+                            <QuantityInput
+                              label={formatMessage({
+                                id: 'global.packagesPerPallet',
+                                defaultMessage: 'Packages per Pallet'
+                              })}
+                              name='packagesPerPallet'
+                              inputProps={{
+                                placeholder: '0',
+                                type: 'number',
+                                min: 1
+                              }}
+                            />
+                          </GridColumn>
+                        )}
                       </GridRow>
 
                       <GridRow columns={3}>
@@ -793,7 +799,7 @@ class ProductSidebar extends React.Component {
                             label={
                               <>
                                 <FormattedMessage id='global.palletMinPkgs' defaultMessage='Pallet Min Pkgs' />
-                                {palletParamsRequired && (<Required />)}
+                                {palletParamsRequired && <Required />}
                               </>
                             }
                             inputProps={{
@@ -809,7 +815,7 @@ class ProductSidebar extends React.Component {
                             label={
                               <>
                                 <FormattedMessage id='global.palletMaxPkgs' defaultMessage='Pallet Max Pkgs' />
-                                {palletParamsRequired && (<Required />)}
+                                {palletParamsRequired && <Required />}
                               </>
                             }
                             inputProps={{
@@ -825,7 +831,7 @@ class ProductSidebar extends React.Component {
                             label={
                               <>
                                 <FormattedMessage id='global.palletWeight' defaultMessage='Pallet Weight' />
-                                {palletParamsRequired && (<Required />)}
+                                {palletParamsRequired && <Required />}
                               </>
                             }
                             inputProps={{
@@ -844,7 +850,7 @@ class ProductSidebar extends React.Component {
                             label={
                               <>
                                 <FormattedMessage id='global.palletLength' defaultMessage='Pallet Length' />
-                                {palletParamsRequired && (<Required />)}
+                                {palletParamsRequired && <Required />}
                               </>
                             }
                             inputProps={{
@@ -860,7 +866,7 @@ class ProductSidebar extends React.Component {
                             label={
                               <>
                                 <FormattedMessage id='global.palletWidth' defaultMessage='Pallet Width' />
-                                {palletParamsRequired && (<Required />)}
+                                {palletParamsRequired && <Required />}
                               </>
                             }
                             inputProps={{
@@ -876,7 +882,7 @@ class ProductSidebar extends React.Component {
                             label={
                               <>
                                 <FormattedMessage id='global.palletHeight' defaultMessage='Pallet Height' />
-                                {palletParamsRequired && (<Required />)}
+                                {palletParamsRequired && <Required />}
                               </>
                             }
                             inputProps={{
@@ -1220,6 +1226,7 @@ class ProductSidebar extends React.Component {
                   </BottomButtons>
                 </FlexSidebar>
               </CustomForm>
+              <ErrorFocus />
             </>
           )
         }}

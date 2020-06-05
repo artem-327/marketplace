@@ -23,6 +23,7 @@ import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { removeEmpty } from '~/utils/functions'
+import ErrorFocus from '~/components/error-focus'
 
 const initialFormValues = {
   addressName: '',
@@ -48,30 +49,13 @@ const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
       addressName: minOrZeroLength(3),
-      contactName: Yup.string()
-        .trim()
-        .min(3, errorMessages.minLength(3))
-        .required(errorMessages.requiredMessage),
-      contactEmail: Yup.string()
-        .trim()
-        .email(errorMessages.invalidEmail)
-        .required(errorMessages.requiredMessage),
-      contactPhone: Yup.string()
-        .trim()
-        .min(3, errorMessages.minLength(3))
-        .required(errorMessages.requiredMessage),
+      contactName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
+      contactPhone: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       address: Yup.object().shape({
-        city: Yup.string()
-          .trim()
-          .min(3, errorMessages.minLength(2))
-          .required(errorMessages.requiredMessage),
-        streetAddress: Yup.string()
-          .trim()
-          .min(3, errorMessages.minLength(2))
-          .required(errorMessages.requiredMessage),
-        zip: Yup.string()
-          .trim()
-          .required(errorMessages.requiredMessage),
+        city: Yup.string().trim().min(3, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
+        streetAddress: Yup.string().trim().min(3, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
+        zip: Yup.string().trim().required(errorMessages.requiredMessage),
         country: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
         province: provinceObjectRequired(getSafe(() => JSON.parse(values.address.country).hasProvinces))
       })
@@ -109,13 +93,12 @@ class DeliveryAddressesPopup extends React.Component {
             if (values.address.province === '') delete payload.address['province']
             if (popupValues) await updateDeliveryAddresses(rowId, payload, reloadFilter)
             else await createDeliveryAddress(payload, reloadFilter)
-
           } catch {
           } finally {
             setSubmitting(false)
           }
         }}>
-        {(formikProps) => {
+        {formikProps => {
           const { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting, handleSubmit } = formikProps
           return (
             <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
@@ -141,7 +124,7 @@ class DeliveryAddressesPopup extends React.Component {
                     <Header as='h3'>
                       <FormattedMessage id='global.address' defaultMessage='Address' />
                     </Header>
-                    <AddressForm values={values} displayHeader={false} setFieldValue={setFieldValue} required={true}/>
+                    <AddressForm values={values} displayHeader={false} setFieldValue={setFieldValue} required={true} />
                     <Header as='h3'>
                       <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
                     </Header>
@@ -228,6 +211,7 @@ class DeliveryAddressesPopup extends React.Component {
                       />
                     </FormGroup>
                   </>
+                  <ErrorFocus />
                 </Form>
               </Modal.Content>
               <Modal.Actions>
@@ -240,8 +224,7 @@ class DeliveryAddressesPopup extends React.Component {
                   <Button.Submit
                     data-test='settings_delivery_address_submit_btn'
                     onClick={handleSubmit}
-                    disabled={isSubmitting}
-                  >
+                    disabled={isSubmitting}>
                     <FormattedMessage id='global.save' defaultMessage='Save'>
                       {text => text}
                     </FormattedMessage>
@@ -252,7 +235,6 @@ class DeliveryAddressesPopup extends React.Component {
           )
         }}
       </Formik>
-
     )
   }
 }

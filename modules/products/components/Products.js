@@ -110,7 +110,7 @@ class Products extends Component {
     const preserveFilters = currentTab.type === 'product-catalog'
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
+      <DatagridProvider apiConfig={this.getApiConfig()}>
         <Container fluid className='flex stretched'>
           <>
             <Container fluid style={{ padding: '0 1.5vh' }}>

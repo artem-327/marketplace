@@ -46,6 +46,7 @@ import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { Required, Or } from '~/components/constants/layout'
 import { AttachmentManager } from '~/modules/attachments'
 import { UploadCloud } from 'react-feather'
+import ErrorFocus from '~/components/error-focus'
 
 export const MyContainer = styled.div`
   margin: 0 15px 0 0;
@@ -1896,6 +1897,7 @@ class AddEditEchoProduct extends React.Component {
                   </GridRow>
                 </Grid>
               </GraySegment>
+              <ErrorFocus />
             </FlexSidebar>
           )
         }}

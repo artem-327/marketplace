@@ -926,6 +926,7 @@ class _Table extends Component {
                   <GroupCell
                     {...this.getGroupRowCheckboxState(props.row.key)}
                     rowSelection={rowSelection}
+                    hideActions={groupActions ? false : true}
                     hideCheckboxes={hideCheckboxes}
                     onSelectionChange={this.handleGroupSelectionChange}
                     actionsDropdown={
