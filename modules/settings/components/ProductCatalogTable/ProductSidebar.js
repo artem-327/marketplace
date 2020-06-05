@@ -138,27 +138,34 @@ const StyledGrid = styled(Grid)`
 
 const initialValues = {
   companyGenericProduct: null,
-  intProductName: '',
-  intProductCode: '',
-  packagingSize: '',
-  packagingUnit: '',
-  packagingType: '',
-  nmfcNumber: '',
-  stackable: false,
   freezeProtect: false,
-  hazardous: false,
   freightClass: '',
+  hazardous: false,
+  inciName: '',
+  intProductCode: '',
+  intProductName: '',
+  nmfcNumber: '',
   packageWeight: '',
   packageWeightUnit: '',
-  packagesPerPallet: '',
-  inciName: '',
+  packagingHeight: '',
+  packagingLength: '',
+  packagingWidth: '',
+  packagingSize: '',
+  packagingType: '',
+  packagingUnit: '',
+  palletMinPkgs: '',
+  palletMaxPkgs: '',
+  palletWeight: '',
+  palletLength: '',
+  palletWidth: '',
+  palletHeight: '',
+  stackable: false,
+  //packagesPerPallet: '',  // Not in ednpoint anymore?
   documents: {
     documentType: null,
     attachments: []
   },
-  packagingLength: '',
-  packagingHeight: '',
-  packagingWidth: ''
+
 }
 
 const columns = [
@@ -182,43 +189,83 @@ const columns = [
   }
 ]
 
-const formValidation = Yup.object().shape({
-  intProductName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-  intProductCode: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
-  packagingSize: Yup.number(errorMessages.invalidNumber)
-    .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage)
-    .positive(errorMessages.positive),
-  packagingUnit: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
-  packagingType: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
-  nmfcNumber: Yup.number().required(errorMessages.requiredMessage),
-  freightClass: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
-  packageWeight: Yup.number()
-    .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage)
-    .positive(errorMessages.positive),
-  packageWeightUnit: Yup.number().required(errorMessages.requiredMessage),
-  packagesPerPallet: Yup.number()
-    .typeError(errorMessages.mustBeNumber)
-    .positive(errorMessages.positive)
-    .integer(errorMessages.integer),
-  packagingWidth: Yup.number()
-    .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage)
-    .positive(errorMessages.positive),
-  packagingHeight: Yup.number()
-    .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage)
-    .positive(errorMessages.positive),
-  packagingLength: Yup.number()
-    .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage)
-    .positive(errorMessages.positive),
-  companyGenericProduct: Yup.number()
-    .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage)
-    .positive(errorMessages.positive)
-})
+const formValidation = () =>
+  Yup.lazy(values => {
+    const palletParamsRequired = checkPalletParamsRequired(values)
+
+    return Yup.object().shape({
+      intProductName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      intProductCode: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
+      packagingSize: Yup.number(errorMessages.invalidNumber)
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
+        .positive(errorMessages.positive),
+      packagingUnit: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
+      packagingType: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
+      nmfcNumber: Yup.number().required(errorMessages.requiredMessage),
+      freightClass: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
+      packageWeight: Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
+        .positive(errorMessages.positive),
+      packageWeightUnit: Yup.number().required(errorMessages.requiredMessage),
+      /*
+      packagesPerPallet: Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .positive(errorMessages.positive)
+        .integer(errorMessages.integer),
+      */
+      packagingWidth: Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
+        .positive(errorMessages.positive),
+      packagingHeight: Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
+        .positive(errorMessages.positive),
+      packagingLength: Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
+        .positive(errorMessages.positive),
+      ...(palletParamsRequired && {
+        palletMinPkgs: Yup.number()
+          .min(1, errorMessages.minimum(1))
+          .test("int", errorMessages.integer, val => { return val % 1 === 0 })
+          .required(errorMessages.requiredMessage),
+        palletMaxPkgs: Yup.number()
+          .test("int", errorMessages.integer, val => { return val % 1 === 0 })
+          .min(
+            values.palletMinPkgs ? values.palletMinPkgs : 1,
+            errorMessages.minimum(values.palletMinPkgs ? values.palletMinPkgs : 1)
+          )
+          .required(errorMessages.requiredMessage),
+        palletWeight: Yup.number()
+          .typeError(errorMessages.mustBeNumber)
+          .required(errorMessages.requiredMessage)
+          .positive(errorMessages.positive),
+        palletLength: Yup.number()
+          .typeError(errorMessages.mustBeNumber)
+          .required(errorMessages.requiredMessage)
+          .positive(errorMessages.positive),
+        palletWidth: Yup.number()
+          .typeError(errorMessages.mustBeNumber)
+          .required(errorMessages.requiredMessage)
+          .positive(errorMessages.positive),
+        palletHeight: Yup.number()
+          .typeError(errorMessages.mustBeNumber)
+          .required(errorMessages.requiredMessage)
+          .positive(errorMessages.positive),
+      }),
+      companyGenericProduct: Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
+        .positive(errorMessages.positive)
+    })
+  })
+
+const checkPalletParamsRequired = v => {
+  return !!(v.palletMinPkgs || v.palletMaxPkgs || v.palletWeight || v.palletLength || v.palletWidth || v.palletHeight)
+}
 
 class ProductSidebar extends React.Component {
   state = {
@@ -287,6 +334,8 @@ class ProductSidebar extends React.Component {
     const { popupValues, handleSubmitProductEditPopup, handleSubmitProductAddPopup, datagrid } = this.props
     delete values.casProducts
 
+    const palletParamsRequired = checkPalletParamsRequired(values)
+
     let formValues = {
       intProductName: values.intProductName,
       intProductCode: values.intProductCode,
@@ -305,12 +354,22 @@ class ProductSidebar extends React.Component {
       inciName: values.inciName === null || values.inciName === '' ? null : values.inciName,
       packagingSize: Number(values.packagingSize),
       packageWeight: Number(values.packageWeight),
+      /*
       packagesPerPallet:
         values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet),
+      */
       attachments: this.state.attachments,
       packagingLength: Number(values.packagingLength),
       packagingHeight: Number(values.packagingHeight),
-      packagingWidth: Number(values.packagingWidth)
+      packagingWidth: Number(values.packagingWidth),
+      ...(palletParamsRequired === true && {
+        palletMinPkgs: Number(values.palletMinPkgs),
+        palletMaxPkgs: Number(values.palletMaxPkgs),
+        palletWeight: Number(values.palletWeight),
+        palletLength: Number(values.palletLength),
+        palletWidth: Number(values.palletWidth),
+        palletHeight: Number(values.palletHeight)
+      })
     }
 
     try {
@@ -366,7 +425,13 @@ class ProductSidebar extends React.Component {
       packagingType: getSafe(() => popupValues.packagingType.id, ''),
       packagingWidth: getSafe(() => popupValues.packagingWidth, ''),
       packagingHeight: getSafe(() => popupValues.packagingHeight, ''),
-      packagingLength: getSafe(() => popupValues.packagingLength, '')
+      packagingLength: getSafe(() => popupValues.packagingLength, ''),
+      palletMinPkgs: getSafe(() => popupValues.palletMinPkgs, ''),
+      palletMaxPkgs: getSafe(() => popupValues.palletMaxPkgs, ''),
+      palletWeight: getSafe(() => popupValues.palletWeight, ''),
+      palletLength: getSafe(() => popupValues.palletLength, ''),
+      palletWidth: getSafe(() => popupValues.palletWidth, ''),
+      palletHeight: getSafe(() => popupValues.palletHeight, '')
     }
   }
 
@@ -430,7 +495,7 @@ class ProductSidebar extends React.Component {
     return (
       <Formik
         initialValues={this.getInitialFormValues()}
-        validationSchema={formValidation}
+        validationSchema={formValidation()}
         enableReinitialize
         onReset={closePopup}
         onSubmit={this.handlerSubmit}
@@ -438,6 +503,7 @@ class ProductSidebar extends React.Component {
         {formikProps => {
           let { setFieldValue, values } = formikProps
           let casProducts = getSafe(() => values.casProducts, [])
+          const palletParamsRequired = checkPalletParamsRequired(values)
 
           return (
             <>
@@ -569,7 +635,7 @@ class ProductSidebar extends React.Component {
                             inputProps={{
                               placeholder: '0',
                               type: 'number',
-                              min: 1
+                              min: 0
                             }}
                           />
                         </GridColumn>
@@ -630,7 +696,7 @@ class ProductSidebar extends React.Component {
                             inputProps={{
                               placeholder: '0',
                               type: 'number',
-                              min: 1
+                              min: 0
                             }}
                           />
                         </GridColumn>
@@ -646,7 +712,7 @@ class ProductSidebar extends React.Component {
                             inputProps={{
                               placeholder: '0',
                               type: 'number',
-                              min: 1
+                              min: 0
                             }}
                           />
                         </GridColumn>
@@ -662,7 +728,7 @@ class ProductSidebar extends React.Component {
                             inputProps={{
                               placeholder: '0',
                               type: 'number',
-                              min: 1
+                              min: 0
                             }}
                           />
                         </GridColumn>
@@ -681,7 +747,7 @@ class ProductSidebar extends React.Component {
                             inputProps={{
                               placeholder: '0',
                               type: 'number',
-                              min: 1
+                              min: 0
                             }}
                           />
                         </GridColumn>
@@ -704,7 +770,7 @@ class ProductSidebar extends React.Component {
                             }}
                           />
                         </GridColumn>
-                        <GridColumn>
+                        {false && (<GridColumn>
                           <QuantityInput
                             label={formatMessage({
                               id: 'global.packagesPerPallet',
@@ -715,6 +781,108 @@ class ProductSidebar extends React.Component {
                               placeholder: '0',
                               type: 'number',
                               min: 1
+                            }}
+                          />
+                        </GridColumn>)}
+                      </GridRow>
+
+                      <GridRow columns={3}>
+                        <GridColumn>
+                          <QuantityInput
+                            name='palletMinPkgs'
+                            label={
+                              <>
+                                <FormattedMessage id='global.palletMinPkgs' defaultMessage='Pallet Min Pkgs' />
+                                {palletParamsRequired && (<Required />)}
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 1
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn>
+                          <QuantityInput
+                            name='palletMaxPkgs'
+                            label={
+                              <>
+                                <FormattedMessage id='global.palletMaxPkgs' defaultMessage='Pallet Max Pkgs' />
+                                {palletParamsRequired && (<Required />)}
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 1
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn>
+                          <QuantityInput
+                            name='palletWeight'
+                            label={
+                              <>
+                                <FormattedMessage id='global.palletWeight' defaultMessage='Pallet Weight' />
+                                {palletParamsRequired && (<Required />)}
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 0
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow columns={3}>
+                        <GridColumn>
+                          <QuantityInput
+                            name='palletLength'
+                            label={
+                              <>
+                                <FormattedMessage id='global.palletLength' defaultMessage='Pallet Length' />
+                                {palletParamsRequired && (<Required />)}
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 0
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn>
+                          <QuantityInput
+                            name='palletWidth'
+                            label={
+                              <>
+                                <FormattedMessage id='global.palletWidth' defaultMessage='Pallet Width' />
+                                {palletParamsRequired && (<Required />)}
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 0
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn>
+                          <QuantityInput
+                            name='palletHeight'
+                            label={
+                              <>
+                                <FormattedMessage id='global.palletHeight' defaultMessage='Pallet Height' />
+                                {palletParamsRequired && (<Required />)}
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 0
                             }}
                           />
                         </GridColumn>
