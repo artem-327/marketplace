@@ -88,6 +88,7 @@ const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(row => ({
       ...row,
+      rawData: row,
       tags: (
         <ArrayToFirstItem
           values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''}
