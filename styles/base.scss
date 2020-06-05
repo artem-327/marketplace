@@ -1633,6 +1633,7 @@ i.file {
           float: right;
           width: 20px;
           height: 19px;
+          margin-left: 10px;
 
           svg {
             width: 20px;
@@ -1645,8 +1646,13 @@ i.file {
         }
 
         div.group-content {
+          position: sticky;
+          right: 0;
+          transition: width 250ms linear;
+          float: right;
           display: block;
-          width: calc(100% - 30px);
+          width: calc(100vw - 430px);
+          max-width: calc(100% - 30px);
         }
       }
     }
@@ -1702,6 +1708,20 @@ i.file {
 
         > td {
           background-color: #fff0ed;
+        }
+      }
+    }
+  }
+}
+
+.ui.fluid.container > .left.collapsed ~ div {
+  .table-responsive {
+    table.table {
+      tr.group-row {
+        td {
+          div.group-content {
+            width: calc(100vw - 200px);
+          }
         }
       }
     }
