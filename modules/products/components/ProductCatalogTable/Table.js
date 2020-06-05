@@ -49,7 +49,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.name'
+        sortPath: 'CompanyGenericProduct.name'
       },
       {
         name: 'code',
@@ -59,7 +59,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.code'
+        sortPath: 'CompanyGenericProduct.code'
       },
       {
         name: 'manufacturerName',
@@ -69,7 +69,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.manufacturer.name'
+        sortPath: 'CompanyGenericProduct.manufacturer.name'
       },
       {
         name: 'sds',
@@ -88,7 +88,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.sdsVersionNumber'
+        sortPath: 'CompanyGenericProduct.sdsVersionNumber'
       },
       {
         name: 'sdsRevisionDate',
@@ -98,7 +98,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.sdsRevisionDate'
+        sortPath: 'CompanyGenericProduct.sdsRevisionDate'
       },
       {
         name: 'productGroup',
@@ -107,7 +107,8 @@ class ProductCatalogTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 150
+        width: 150,
+        sortPath: 'CompanyGenericProduct.productGroup.name'
       },
       {
         name: 'company',
@@ -116,7 +117,8 @@ class ProductCatalogTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 150
+        width: 150,
+        sortPath: 'CompanyGenericProduct.company.name'
       }
     ]
   }

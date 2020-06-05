@@ -26,6 +26,18 @@ class ProductGroupsPopup extends React.Component {
   }
 
   componentDidMount() {
+    if (this.props.popupValues && this.props.popupValues.rawData.tags) {
+      this.setState({
+        selectedTagsOptions: this.props.popupValues.rawData.tags.map(d => {
+          return {
+            key: d.id,
+            text: d.name,
+            value: d.id
+          }
+        })
+      })
+    }
+
     try {
       this.props.searchTags('')
     } catch (error) {
@@ -39,7 +51,7 @@ class ProductGroupsPopup extends React.Component {
       ((prevProps.popupValues && prevProps.popupValues !== this.props.popupValues) || prevProps.popupValues === null)
     ) {
       this.setState({
-        selectedTagsOptions: this.props.popupValues.tags.map(d => {
+        selectedTagsOptions: this.props.popupValues.rawData.tags.map(d => {
           return {
             key: d.id,
             text: d.name,
