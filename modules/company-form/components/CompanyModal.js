@@ -39,6 +39,7 @@ import { getSafe, deepSearch } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { string, objectOf, bool, func } from 'prop-types'
+import ErrorFocus from '~/components/error-focus'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -498,8 +499,7 @@ class CompanyModal extends React.Component {
                 <Button.Submit
                   data-test='admin_popup_company_save_btn'
                   onClick={props.handleSubmit}
-                  disabled={isSubmitting}
-                >
+                  disabled={isSubmitting}>
                   <FormattedMessage id='global.save' defaultMessage='Save'>
                     {text => text}
                   </FormattedMessage>
@@ -507,8 +507,7 @@ class CompanyModal extends React.Component {
               </Modal.Actions>
             </Modal>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }
@@ -532,8 +531,8 @@ const mapStateToProps = ({ admin, settings, zip }) => {
   const popupValues = admin.popupValues
     ? admin.popupValues.rawData
     : settings.popupValues
-      ? settings.popupValues.rawData
-      : null
+    ? settings.popupValues.rawData
+    : null
   return {
     ...admin,
     popupValues,

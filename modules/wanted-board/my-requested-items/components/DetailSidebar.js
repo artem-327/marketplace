@@ -90,6 +90,7 @@ import {
 
 import { listFrequency } from '../../constants/constants'
 import { comparationHelper } from '../../constants/validation'
+import ErrorFocus from '~/components/error-focus'
 
 const CustomHr = styled.hr`
   border: solid 0.5px #dee2e6;
@@ -1056,6 +1057,7 @@ class DetailSidebar extends Component {
                   </div>
                 </BottomButtons>
               </FlexSidebar>
+              <ErrorFocus />
             </Form>
           )
         }}
