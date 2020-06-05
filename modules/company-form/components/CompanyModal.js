@@ -48,6 +48,13 @@ const AccordionHeader = styled(Header)`
   }
 `
 
+const StyledModalContent = styled(Modal.Content)`
+  max-height: calc(80vh - 10em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px;
+`
+
 const initialFormValues = {
   name: '',
   nacdMember: true,
@@ -286,10 +293,10 @@ class CompanyModal extends React.Component {
                 <FormattedMessage id={`global.${isEdit ? 'edit' : 'add'}`} />{' '}
                 <FormattedMessage id={header.id} defaultMessage={header.defaultMessage} />
               </Modal.Header>
-              <Segment basic padded>
+              <Segment basic style={{ padding: '0', margin: '0' }}>
                 <Form loading={isSubmitting}>
                   <Accordion exclusive={false}>
-                    <Modal.Content>
+                    <StyledModalContent>
                       <CompanyForm
                         admin={true}
                         selectLogo={this.props.selectLogo ? this.props.selectLogo : selectLogo}
@@ -476,7 +483,7 @@ class CompanyModal extends React.Component {
                           </Accordion.Content>
                         </>
                       )}
-                    </Modal.Content>
+                    </StyledModalContent>
                   </Accordion>
                 </Form>
               </Segment>
@@ -488,7 +495,11 @@ class CompanyModal extends React.Component {
                     {text => text}
                   </FormattedMessage>
                 </Button>
-                <Button.Submit data-test='admin_popup_company_save_btn' onClick={props.handleSubmit}>
+                <Button.Submit
+                  data-test='admin_popup_company_save_btn'
+                  onClick={props.handleSubmit}
+                  disabled={isSubmitting}
+                >
                   <FormattedMessage id='global.save' defaultMessage='Save'>
                     {text => text}
                   </FormattedMessage>
@@ -496,7 +507,8 @@ class CompanyModal extends React.Component {
               </Modal.Actions>
             </Modal>
           )
-        }}></Formik>
+        }}>
+      </Formik>
     )
   }
 }
@@ -520,8 +532,8 @@ const mapStateToProps = ({ admin, settings, zip }) => {
   const popupValues = admin.popupValues
     ? admin.popupValues.rawData
     : settings.popupValues
-    ? settings.popupValues.rawData
-    : null
+      ? settings.popupValues.rawData
+      : null
   return {
     ...admin,
     popupValues,
