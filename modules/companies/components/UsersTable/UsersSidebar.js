@@ -29,6 +29,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
+import ErrorFocus from '~/components/error-focus'
 
 const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -788,8 +789,7 @@ const mapStateToProps = state => {
     userRoles: companiesAdmin.userRoles,
     adminRoles: companiesAdmin.adminRoles,
     popupValues: companiesAdmin.popupValues,
-    isSuperAdmin:
-      companiesAdmin.currentUser && companiesAdmin.currentUser.roles.findIndex(d => d.id === 1) !== -1,
+    isSuperAdmin: companiesAdmin.currentUser && companiesAdmin.currentUser.roles.findIndex(d => d.id === 1) !== -1,
     searchedCompanies: companiesAdmin.searchedCompanies,
     searchedCompaniesLoading: companiesAdmin.searchedCompaniesLoading,
     searchedSellMarketSegments: getSafe(() => companiesAdmin.searchedSellMarketSegments, []).map(d => ({

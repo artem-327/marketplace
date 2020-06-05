@@ -24,6 +24,7 @@ import { CompanyGenericProductResponse, CasProductResponse } from '~/constants/b
 import { Required } from '~/components/constants/layout'
 
 import { SegmentShowOnly, BottonButtonsShowOnly } from '../constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -1114,7 +1115,9 @@ class CompanyProductInfo extends Component {
           this.formikProps = formikProps
           this.submitForm = submitForm
           return casProductOnly ? (
-            <Grid verticalAlign='middle'>{this.renderCasProduct()}</Grid>
+            <Grid verticalAlign='middle'>
+              {this.renderCasProduct()} <ErrorFocus />
+            </Grid>
           ) : (
             <>
               <Menu pointing secondary>
@@ -1139,6 +1142,7 @@ class CompanyProductInfo extends Component {
               ) : (
                 <Segment basic>{this.getContent(formikProps)}</Segment>
               )}
+              <ErrorFocus />
             </>
           )
         }}

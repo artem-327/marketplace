@@ -1,16 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import {
-  Form,
-  FormGroup,
-  Divider,
-  Accordion,
-  Icon,
-  Header,
-  Loader,
-  Dimmer
-} from 'semantic-ui-react'
+import { Form, FormGroup, Divider, Accordion, Icon, Header, Loader, Dimmer } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import {
   closePopup,
@@ -66,6 +57,7 @@ import {
   //CustomLabel,
   LabeledRow
 } from '~/modules/admin/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -676,8 +668,7 @@ class AddEditCompanySidebar extends React.Component {
               </FlexSidebar>
             </Form>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }
