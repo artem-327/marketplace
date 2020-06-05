@@ -9,3 +9,4 @@ build:
 
 after_script:
   - docker rmi $(docker images -q prodex/web:test) || exit 0
+  - docker system prune --volumes -f || exit 0

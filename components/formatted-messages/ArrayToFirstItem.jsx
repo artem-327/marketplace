@@ -4,13 +4,28 @@ import {Label, Popup, List, Header} from 'semantic-ui-react'
 import { string, array, number } from "prop-types"
 import styled from 'styled-components'
 
+const FlexWrapper = styled.div`
+  display: flex;
+  flex-flow: row-reverse nowrap;
+`
+
 const ProductLabel = styled(Label)`
   margin-left: 5px !important;
 `
 
+const ItemLabel = styled(Label)`
+  height: 22px !important;
+  border-radius: 2px !important;
+  padding: 3px 12px !important;
+  background: #2599d5 !important;
+  font-family: 'HelveticaNeueLTPro-Md', sans-serif;
+  font-size: 12px !important;
+  color: #fff !important;
+  line-height: 16px !important;
+`
+
 const ProductFirstItem = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 export default class ArrayToFirstItem extends Component {
@@ -23,7 +38,7 @@ export default class ArrayToFirstItem extends Component {
 
     if (values.length > rowItems) {
       return (
-        <div>
+        <FlexWrapper>
           <Popup
             wide='very'
             data-test='array_to_multiple_list'
@@ -40,8 +55,8 @@ export default class ArrayToFirstItem extends Component {
             position='right center'
             trigger={<div><ProductLabel className='bordered right'>{values.length - rowItems}+</ProductLabel></div>}
           />
-          <ProductFirstItem>{rowValues.join(', ')}</ProductFirstItem>
-        </div>
+          <ProductFirstItem>{rowValues.map(val => <ItemLabel>{val}</ItemLabel>)}</ProductFirstItem>
+        </FlexWrapper>
       )
     }
     else {
