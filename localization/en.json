@@ -744,6 +744,8 @@
   "global.address.selectCity": "Select City",
   "global.address.enterZip": "Enter Zip",
   "global.productGroup": "Product Group",
+  "global.errorValidation.title": "Errors on form",
+  "global.errorValidation.content": "Fields on form are incomplete/non-validating, please fix the issues first",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",

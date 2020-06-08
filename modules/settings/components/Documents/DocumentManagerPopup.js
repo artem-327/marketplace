@@ -15,10 +15,11 @@ import { getSafe, removeEmpty } from '~/utils/functions'
 
 import { closePopup } from '~/modules/settings/actions'
 import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
-import {bool, func, number} from 'prop-types'
+import { bool, func, number } from 'prop-types'
 import { getStringISODate } from '~/components/date-format'
 import Router from 'next/router'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const validationSchema = Yup.lazy(values => {
   let validationObject = {
@@ -48,10 +49,10 @@ const initialValues = {
   issuer: '',
   othersPermissions: '',
   sharedTo: '',
-  file: '',
   documentType: {
     id: ''
-  }
+  },
+  file: ''
 }
 
 const RightAlignedGroup = styled(FormGroup)`
@@ -109,9 +110,7 @@ class DocumentPopup extends Component {
                   values.expirationDate &&
                   getSafe(() => encodeURIComponent(getStringISODate(values.expirationDate)), null),
                 isTemporary: getSafe(() => values.isTemporary, false),
-                issuedAt:
-                  values.issuedAt &&
-                  getSafe(() => encodeURIComponent(getStringISODate(values.issuedAt)), null),
+                issuedAt: values.issuedAt && getSafe(() => encodeURIComponent(getStringISODate(values.issuedAt)), null),
                 issuer: values.issuer,
                 othersPermissions: values.othersPermissions,
                 sharedTo: values.sharedTo
@@ -260,6 +259,7 @@ class DocumentPopup extends Component {
                       label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
                     />
                   </RightAlignedGroup>
+                  <ErrorFocus />
                 </Form>
               )
             }}
