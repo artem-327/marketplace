@@ -8,10 +8,10 @@ import { FormattedMessage } from 'react-intl'
 
 import {
   closePopup,
-  getAlternativeEchoProductNames,
-  postNewEchoProductAltName,
-  updateEchoProductAltName,
-  deleteEchoProductAltName
+  getAlternativeCompanyGenericProductsNames,
+  postNewCompanyGenericProductsAltName,
+  updateCompanyGenericProductsAltName,
+  deleteCompanyGenericProductsAltName
 } from '../../actions'
 
 const initialFormValues = {
@@ -53,7 +53,7 @@ class EditAltNamesEchoProductPopup extends React.Component {
   }
 
   componentDidMount = async () => {
-    this.props.popupValues && (await this.props.getAlternativeEchoProductNames(this.props.popupValues.id))
+    this.props.popupValues && (await this.props.getAlternativeCompanyGenericProductsNames(this.props.popupValues.id))
     this.processFetchedData()
   }
 
@@ -81,7 +81,7 @@ class EditAltNamesEchoProductPopup extends React.Component {
     if (val.id === null) {
       arrayHelpers.remove(index)
     } else {
-      await this.props.deleteEchoProductAltName(productId, val.id)
+      await this.props.deleteCompanyGenericProductsAltName(productId, val.id)
       await this.processFetchedData()
     }
   }
@@ -92,11 +92,11 @@ class EditAltNamesEchoProductPopup extends React.Component {
     if (val.id === null) {
       // Create new name
       let value = { alternativeName: name }
-      await this.props.postNewEchoProductAltName(productId, value)
+      await this.props.postNewCompanyGenericProductsAltName(productId, value)
     } else {
       // Update name
       let value = { alternativeName: name }
-      await this.props.updateEchoProductAltName(productId, val.id, value)
+      await this.props.updateCompanyGenericProductsAltName(productId, val.id, value)
     }
     await this.processFetchedData()
   }
@@ -238,10 +238,10 @@ class EditAltNamesEchoProductPopup extends React.Component {
 
 const mapDispatchToProps = {
   closePopup,
-  getAlternativeEchoProductNames,
-  postNewEchoProductAltName,
-  updateEchoProductAltName,
-  deleteEchoProductAltName
+  getAlternativeCompanyGenericProductsNames,
+  postNewCompanyGenericProductsAltName,
+  updateCompanyGenericProductsAltName,
+  deleteCompanyGenericProductsAltName
 }
 
 const mapStateToProps = state => {

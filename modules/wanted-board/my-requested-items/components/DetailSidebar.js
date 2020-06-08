@@ -90,6 +90,7 @@ import {
 
 import { listFrequency } from '../../constants/constants'
 import { comparationHelper } from '../../constants/validation'
+import ErrorFocus from '~/components/error-focus'
 
 const CustomHr = styled.hr`
   border: solid 0.5px #dee2e6;
@@ -111,7 +112,7 @@ const initValues = {
   maximumPricePerUOM: '',
   notes: '',
   element: {
-    echoProduct: '',
+    productGroup: '',
     casProduct: '',
     assayMin: '',
     assayMax: ''
@@ -132,39 +133,25 @@ const validationSchema = () =>
         expiresAt: val
           .string()
           .required(errorMessages.requiredMessage)
-          .test('minDate', errorMessages.dateNotInPast, function(date) {
-            const enteredDate = moment(getStringISODate(date))
-              .endOf('day')
-              .format()
-            return (
-              enteredDate >=
-              moment()
-                .endOf('day')
-                .format()
-            )
+          .test('minDate', errorMessages.dateNotInPast, function (date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
           })
       }),
       ...(values.neededNow === false && {
         neededAt: val
           .string()
           .required(errorMessages.requiredMessage)
-          .test('minDate', errorMessages.dateNotInPast, function(date) {
-            const enteredDate = moment(getStringISODate(date))
-              .endOf('day')
-              .format()
-            return (
-              enteredDate >=
-              moment()
-                .endOf('day')
-                .format()
-            )
+          .test('minDate', errorMessages.dateNotInPast, function (date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
           })
       }),
       element: val.object().shape({
-        echoProduct: val
+        productGroup: val
           .string()
           .trim()
-          .test('required', errorMessages.requiredMessage, function(value) {
+          .test('required', errorMessages.requiredMessage, function (value) {
             const { casProduct } = this.parent
             if (casProduct === null || casProduct === '') {
               return value !== null && value !== ''
@@ -174,49 +161,49 @@ const validationSchema = () =>
         casProduct: val
           .string()
           .trim()
-          .test('required', errorMessages.requiredMessage, function(value) {
-            const { echoProduct } = this.parent
-            if (echoProduct === null || echoProduct === '') {
+          .test('required', errorMessages.requiredMessage, function (value) {
+            const { productGroup } = this.parent
+            if (productGroup === null || productGroup === '') {
               return value !== null && value !== ''
             }
             return true
           }),
         assayMin: val
           .string()
-          .test('v', errorMessages.minUpToMax, function(v) {
+          .test('v', errorMessages.minUpToMax, function (v) {
             const { assayMax: v2 } = this.parent
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             if (v2 === null || v2 === '' || isNaN(v2)) return true // No max limit value - can not be tested
             return Number(v) <= v2
           })
-          .test('v', errorMessages.minimum(0), function(v) {
+          .test('v', errorMessages.minimum(0), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) >= 0
           })
-          .test('v', errorMessages.maximum(100), function(v) {
+          .test('v', errorMessages.maximum(100), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) <= 100
           })
-          .test('v', errorMessages.mustBeNumber, function(v) {
+          .test('v', errorMessages.mustBeNumber, function (v) {
             return v === null || v === '' || !isNaN(v)
           }),
         assayMax: val
           .string()
-          .test('v', errorMessages.maxAtLeastMin, function(v) {
+          .test('v', errorMessages.maxAtLeastMin, function (v) {
             const { assayMin: v2 } = this.parent
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             if (v2 === null || v2 === '' || isNaN(v2)) return true // No min limit value - can not be tested
             return Number(v) >= v2
           })
-          .test('v', errorMessages.minimum(0), function(v) {
+          .test('v', errorMessages.minimum(0), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) >= 0
           })
-          .test('v', errorMessages.maximum(100), function(v) {
+          .test('v', errorMessages.maximum(100), function (v) {
             if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
             return Number(v) <= 100
           })
-          .test('v', errorMessages.mustBeNumber, function(v) {
+          .test('v', errorMessages.mustBeNumber, function (v) {
             return v === null || v === '' || !isNaN(v)
           })
       }),
@@ -226,14 +213,8 @@ const validationSchema = () =>
         .moreThan(0, errorMessages.greaterThan(0))
         //.integer(errorMessages.integer)
         .required(errorMessages.requiredMessage),
-      maximumPricePerUOM: val
-        .number()
-        .positive(errorMessages.positive)
-        .typeError(errorMessages.requiredMessage),
-      maximumDeliveredPrice: val
-        .number()
-        .positive(errorMessages.positive)
-        .typeError(errorMessages.requiredMessage)
+      maximumPricePerUOM: val.number().positive(errorMessages.positive).typeError(errorMessages.requiredMessage),
+      maximumDeliveredPrice: val.number().positive(errorMessages.positive).typeError(errorMessages.requiredMessage)
     })
   })
 
@@ -338,7 +319,7 @@ class DetailSidebar extends Component {
 
   searchProducts = debounce(text => {
     this.props.getAutocompleteData({
-      searchUrl: `/prodex/api/echo-products/search/include-alternative-names?pattern=${text}`
+      searchUrl: `/prodex/api/product-groups/search?pattern=${text}`
     })
   }, 250)
 
@@ -359,21 +340,15 @@ class DetailSidebar extends Component {
       expiresAt = null
 
     if (values.neededNow) {
-      neededAt = moment()
-        .endOf('day')
-        .format()
+      neededAt = moment().endOf('day').format()
     } else {
       if (values.neededAt.length) {
-        neededAt = moment(getStringISODate(values.neededAt))
-          .endOf('day')
-          .format()
+        neededAt = moment(getStringISODate(values.neededAt)).endOf('day').format()
       }
     }
 
     if (values.doesExpire) {
-      expiresAt = moment(getStringISODate(values.expiresAt))
-        .endOf('day')
-        .format()
+      expiresAt = moment(getStringISODate(values.expiresAt)).endOf('day').format()
     }
 
     let body = {
@@ -392,7 +367,7 @@ class DetailSidebar extends Component {
       if (sidebarValues) {
         const { value } = await editPurchaseRequest(sidebarValues.id, body)
         sendSuccess = true
-        
+
         // If id's differ then "Purchase Request contained offers, new Purchase Request will be created instead." happened
         if (sidebarValues.id !== value.id) datagrid.loadData()
         else datagrid.updateRow(sidebarValues.id, () => value)
@@ -418,7 +393,7 @@ class DetailSidebar extends Component {
             deliveryCountry: getSafe(() => sidebarValues.deliveryCountry.id, ''),
             deliveryProvince: getSafe(() => sidebarValues.deliveryProvince.id, ''),
             element: {
-              echoProduct: getSafe(() => sidebarValues.element.echoProduct.id, ''),
+              productGroup: getSafe(() => sidebarValues.element.productGroup.id, ''),
               casProduct: getSafe(() => sidebarValues.element.casProduct.id, ''),
               assayMin: getSafe(() => sidebarValues.element.assayMin, ''),
               assayMax: getSafe(() => sidebarValues.element.assayMax, '')
@@ -538,15 +513,13 @@ class DetailSidebar extends Component {
                           <Dropdown
                             label={
                               <>
-                                <FormattedMessage
-                                  id='wantedBoard.productName'
-                                  defaultMessage='Product Name'>
+                                <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name'>
                                   {text => text}
                                 </FormattedMessage>
                                 <Required />
                               </>
                             }
-                            name='element.echoProduct'
+                            name='element.productGroup'
                             options={this.props.autocompleteData}
                             inputProps={{
                               placeholder: (
@@ -576,9 +549,7 @@ class DetailSidebar extends Component {
                           <Dropdown
                             label={
                               <>
-                                <FormattedMessage
-                                  id='wantedBoard.casNumber'
-                                  defaultMessage='CAS Number'>
+                                <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
                                   {text => text}
                                 </FormattedMessage>
                                 <Required />
@@ -665,10 +636,7 @@ class DetailSidebar extends Component {
                           },
                           this.formikProps,
                           <>
-                            <FormattedMessage
-                              id='wantedBoard.quantityNeeded'
-                              defaultMessage='Quantity Needed'
-                            >
+                            <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
                               {text => text}
                             </FormattedMessage>
                             <Required />
@@ -821,36 +789,38 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
 
-                    {false && (<GridRow>
-                      <GridColumn>
-                        <Dropdown
-                          label={
-                            <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
-                              {text => text}
-                            </FormattedMessage>
-                          }
-                          name='manufacturers'
-                          options={searchedManufacturers}
-                          inputProps={{
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectManufacturer'
-                                defaultMessage='Select manufacturer'
-                              />
-                            ),
-                            loading: searchedManufacturersLoading,
-                            'data-test': 'my_requested_items_sidebar_manufacturer_drpdn',
-                            size: 'large',
-                            icon: 'search',
-                            search: options => options,
-                            selection: true,
-                            multiple: true,
-                            onSearchChange: (e, { searchQuery }) =>
-                              searchQuery.length > 0 && this.searchManufacturers(searchQuery)
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>)}
+                    {false && (
+                      <GridRow>
+                        <GridColumn>
+                          <Dropdown
+                            label={
+                              <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            name='manufacturers'
+                            options={searchedManufacturers}
+                            inputProps={{
+                              placeholder: (
+                                <FormattedMessage
+                                  id='wantedBoard.selectManufacturer'
+                                  defaultMessage='Select manufacturer'
+                                />
+                              ),
+                              loading: searchedManufacturersLoading,
+                              'data-test': 'my_requested_items_sidebar_manufacturer_drpdn',
+                              size: 'large',
+                              icon: 'search',
+                              search: options => options,
+                              selection: true,
+                              multiple: true,
+                              onSearchChange: (e, { searchQuery }) =>
+                                searchQuery.length > 0 && this.searchManufacturers(searchQuery)
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    )}
 
                     <GridRow>
                       <GridColumn width={8}>
@@ -1087,6 +1057,7 @@ class DetailSidebar extends Component {
                   </div>
                 </BottomButtons>
               </FlexSidebar>
+              <ErrorFocus />
             </Form>
           )
         }}

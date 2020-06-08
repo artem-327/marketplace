@@ -31,10 +31,10 @@ import { getLocaleDateFormat } from '~/components/date-format'
 import './AddCart.scss'
 // import file from '../../../../images/file.svg'
 import { checkToken } from '../../../../utils/auth'
-import { tabsMarketPlace, echoProductGrouping, dropdownOptions, regulatoryFilter } from './constants'
+import { tabsMarketPlace, companyGenericProductGrouping, dropdownOptions, regulatoryFilter } from './constants'
 import _ from 'lodash'
-import { yesNoOptions } from "../../../../../modules/company-product-info/constants"
-import { FlexTabs } from "~/modules/inventory/constants/layout"
+import { yesNoOptions } from '../../../../../modules/company-product-info/constants'
+import { FlexTabs } from '~/modules/inventory/constants/layout'
 import { ChevronDown } from 'react-feather'
 
 const FlexContent = styled(Segment)`
@@ -48,39 +48,38 @@ const RelaxedSegment = styled(Segment)`
   margin: 0 !important;
   padding: 26px 50px !important;
   box-shadow: inset 0 1px 0 0 #dee2e6 !important;
-  
+
   .grid {
-  
     .row {
       padding: 0 !important;
       background: transparent !important;
-      
+
       .column {
         float: right;
         width: auto !important;
         padding: 0 10px !important;
-        
+
         button.button {
           height: 40px;
           margin: 0;
           padding: 0 25px;
           vertical-align: top;
           line-height: 40px;
-          
+
           &.primary {
             background: #2599d5 !important;
-            
+
             &:hover {
               background: #188ec9 !important;
             }
           }
-          
+
           &.cancel {
             border: solid 1px #dee2e6;
             background-color: #ffffff;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
           }
-          
+
           + button.button {
             margin-left: 10px;
           }
@@ -121,9 +120,9 @@ const CustomGridColumn = styled(GridColumn)`
 
 const CustomGrid = styled(Grid)`
   &,
-  &.ui.grid {  
+  &.ui.grid {
     margin: 14px !important;
-    
+
     > .row.select-row {
       padding: 1.071428571em 30px !important;
       > .column:first-child {
@@ -144,7 +143,7 @@ const CustomGrid = styled(Grid)`
         margin-top: 0.5em;
       }
     }
-    
+
     > .row.table-name {
       padding: 1.071428571em 30px 0.714285714em 30px !important;
       > .column {
@@ -152,7 +151,7 @@ const CustomGrid = styled(Grid)`
         color: #20273a;
       }
     }
-    
+
     > table {
       padding: 0;
       margin: 0 30px 1.428571429em 30px;
@@ -180,41 +179,38 @@ const CustomGrid = styled(Grid)`
         line-height: 1.4285714;
       }
     }
-    
+
     > .row:not(.select-row):not(.table-name) {
       box-shadow: 0 1px 0 0 #dee2e6;
       margin-left: 30px !important;
       margin-right: 30px !important;
       padding: 15px 0 !important;
-      
+
       > .column:first-child {
         padding: 0 0.714285714em 0 0;
         white-space: normal;
       }
-      
+
       > .column:last-child {
         padding: 0 0 0 0.714285714em;
         font-weight: 400;
         color: #20273a;
       }
-      
+
       > .column {
-      
         .field > .ui.dropdown,
         .field > .ui.input input {
           color: #20273a;
         }
       }
     }
-    
+
     .field-value {
       white-space: normal;
       font-weight: 400 !important;
     }
   }
 `
-
-
 
 const optionsExpirationTime = [
   { text: '24 h', value: 24, key: 1 }
@@ -229,7 +225,7 @@ class AddCart extends Component {
     expirationTime: '23:59',
     activeTab: 0,
     offer: null,
-    echoProductGroup: echoProductGrouping[0].value,
+    companyGenericProductGrouping: companyGenericProductGrouping[0].value,
     regulatoryFilter: regulatoryFilter.all.value,
     casProductIndex: 0
   }
@@ -251,17 +247,18 @@ class AddCart extends Component {
   formatData = () => {
     const { offer } = this.props
     const companyProduct = getSafe(() => offer.companyProduct, null)
-    const echoProduct = getSafe(() => offer.companyProduct.echoProduct, null)
+    const companyGenericProduct = getSafe(() => offer.companyProduct.companyGenericProduct, null)
     return {
       ...offer,
       companyProduct: {
         ...companyProduct,
-        echoProduct: {
-          ...echoProduct,
-          mfrProductCodes: getSafe(() => echoProduct.mfrProductCodes.toString(), ''),
+        companyGenericProduct: {
+          ...companyGenericProduct,
+          mfrProductCodes: getSafe(() => companyGenericProduct.mfrProductCodes.toString(), ''),
           sdsRevisionDate:
-            echoProduct && echoProduct.sdsRevisionDate
-              ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY') : ''
+            companyGenericProduct && companyGenericProduct.sdsRevisionDate
+              ? moment(companyGenericProduct.sdsRevisionDate).format('MM/DD/YYYY')
+              : ''
         }
       }
     }
@@ -345,8 +342,8 @@ class AddCart extends Component {
           i + 1 >= pricingTiers.length
             ? pkgAvailable
             : tier.quantityFrom > pricingTiers[i + 1].quantityFrom
-              ? tier.quantityFrom
-              : pricingTiers[i + 1].quantityFrom - 1
+            ? tier.quantityFrom
+            : pricingTiers[i + 1].quantityFrom - 1
 
         let text = (
           <>
@@ -446,7 +443,9 @@ class AddCart extends Component {
             </GridRow> */}
 
             <GridRow>
-              <GridColumn computer={16} className='productName'>{offer.companyProduct.echoProduct.name}</GridColumn>
+              <GridColumn computer={16} className='productName'>
+                {offer.companyProduct.companyGenericProduct.name}
+              </GridColumn>
             </GridRow>
 
             <GridRow>
@@ -484,7 +483,7 @@ class AddCart extends Component {
                     <FormattedMessage id='cart.manufacturer' defaultMessage='Manufacturer:' />
                   </GridColumn>
                   <GridColumn computer={10}>
-                    {getSafe(() => offer.companyProduct.echoProduct.manufacturer.name, '')}
+                    {getSafe(() => offer.companyProduct.companyGenericProduct.manufacturer.name, '')}
                   </GridColumn>
                 </GridRow>
                 <GridRow>
@@ -543,8 +542,8 @@ class AddCart extends Component {
                   {isHoldRequest ? (
                     <FormattedMessage id='cart.holdRequestInfo' defaultMessage='2. Hold Request Info' />
                   ) : (
-                      <FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' />
-                    )}
+                    <FormattedMessage id='cart.PurchaseHeader' defaultMessage='2. Purchase Info' />
+                  )}
                 </Header>
               </GridColumn>
             </GridRow>
@@ -552,32 +551,40 @@ class AddCart extends Component {
               <GridColumn>
                 <FormattedMessage id='cart.minimumPackges' defaultMessage='Minimum Packages' />
               </GridColumn>
-              <GridColumn>
-                {offer.minPkg}
-              </GridColumn>
+              <GridColumn>{offer.minPkg}</GridColumn>
             </GridRow>
             <GridRow columns={2}>
               <GridColumn>
                 <FormattedMessage id='cart.split' defaultMessage='!Split' />
               </GridColumn>
-              <GridColumn>
-                {offer.splitPkg}
-              </GridColumn>
+              <GridColumn>{offer.splitPkg}</GridColumn>
             </GridRow>
 
             <GridRow columns={2}>
               <GridColumn>
-                <FormattedMessage id='cart.priceLevel' defaultMessage='Price Level'>{text => (<label>{text}</label>)}</FormattedMessage>
-                <Dropdown disabled fluid icon={<ChevronDown />} text={dropdownOptions.find(el => el.value.price === this.props.sidebar.pricing.price).text}>
+                <FormattedMessage id='cart.priceLevel' defaultMessage='Price Level'>
+                  {text => <label>{text}</label>}
+                </FormattedMessage>
+                <Dropdown
+                  disabled
+                  fluid
+                  icon={<ChevronDown />}
+                  text={dropdownOptions.find(el => el.value.price === this.props.sidebar.pricing.price).text}>
                   <Dropdown.Menu>
                     {dropdownOptions.map((el, i) => (
-                      <Dropdown.Item key={i} text={el.text} value={i} selected={el.value.price === this.props.sidebar.pricing.price}></Dropdown.Item>
+                      <Dropdown.Item
+                        key={i}
+                        text={el.text}
+                        value={i}
+                        selected={el.value.price === this.props.sidebar.pricing.price}></Dropdown.Item>
                     ))}
                   </Dropdown.Menu>
                 </Dropdown>
               </GridColumn>
               <GridColumn data-test='add_cart_quantity_inp'>
-                <FormattedMessage id='cart.selectQuantity' defaultMessage='Select Quantity'>{text => (<label>{text}</label>)}</FormattedMessage>
+                <FormattedMessage id='cart.selectQuantity' defaultMessage='Select Quantity'>
+                  {text => <label>{text}</label>}
+                </FormattedMessage>
                 <Input
                   step={offer.splitPkg}
                   error={!!error}
@@ -637,8 +644,8 @@ class AddCart extends Component {
                     <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize * pkgAmount} />{' '}
                   </>
                 ) : (
-                    <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
-                  )) ||
+                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                )) ||
                   (isEdit ? (
                     <>
                       {' '}
@@ -649,8 +656,8 @@ class AddCart extends Component {
                       />{' '}
                     </>
                   ) : (
-                      <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
-                    ))}
+                    <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                  ))}
               </GridColumn>
             </GridRow>
 
@@ -676,8 +683,8 @@ class AddCart extends Component {
                 {totalPrice ? (
                   <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
                 ) : (
-                    <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
-                  )}
+                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                )}
               </GridColumn>
             </GridRow>
           </Grid>
@@ -709,16 +716,12 @@ class AddCart extends Component {
                     </FormattedMessage>
                   </Button>
                 ) : (
-                    <Button
-                      disabled={!canProceed}
-                      primary
-                      onClick={this.editOrder}
-                      data-test='add_cart_edit_order_btn'>
-                      <FormattedMessage id='global.save' defaultMessage='Save'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
-                  )}
+                  <Button disabled={!canProceed} primary onClick={this.editOrder} data-test='add_cart_edit_order_btn'>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                )}
               </GridColumn>
             </GridRow>
           </Grid>
@@ -784,7 +787,6 @@ class AddCart extends Component {
 
     let displayValue = ''
     if (value !== null && props && props.options) {
-
       const index = props.options.findIndex(el => el.value === value)
       if (index >= 0) {
         displayValue = props.options[index].text
@@ -805,8 +807,8 @@ class AddCart extends Component {
   }
   renderCasProduct = () => {
     const { offer, casProductIndex } = this.state
-    let casProducts = getSafe(() => offer.companyProduct.echoProduct.elements, [])
-    const prefix = `companyProduct.echoProduct.elements[${casProductIndex}].`
+    let casProducts = getSafe(() => offer.companyProduct.companyGenericProduct.elements, [])
+    const prefix = `companyProduct.companyGenericProduct.elements[${casProductIndex}].`
 
     let markup = [
       this.renderField({
@@ -1200,72 +1202,70 @@ class AddCart extends Component {
                 {this.renderField({
                   id: 'global.productName',
                   defaultMessage: 'Product Name',
-                  name: 'companyProduct.echoProduct.name'
+                  name: 'companyProduct.companyGenericProduct.name'
                 })}
                 {this.renderElements({
                   id: 'global.mixtures',
                   defaultMessage: 'Mixtures',
-                  elements: getSafe(() => offer.companyProduct.echoProduct.elements, [])
+                  elements: getSafe(() => offer.companyProduct.companyGenericProduct.elements, [])
                 })}
                 {this.renderField({
                   id: 'global.manufacturer',
                   defaultMessage: 'Manufacturer',
-                  name: 'companyProduct.echoProduct.manufacturer.name'
+                  name: 'companyProduct.companyGenericProduct.manufacturer.name'
                 })}
                 {this.renderField({
                   id: 'global.manufacturerProductCode',
                   defaultMessage: 'Manufacturer Product Code',
-                  name: 'companyProduct.echoProduct.mfrProductCodes'
+                  name: 'companyProduct.companyGenericProduct.mfrProductCodes'
                 })}
                 {this.renderField({
                   id: 'global.emergencyNumber',
                   defaultMessage: 'Emergency Number',
-                  name: 'companyProduct.echoProduct.emergencyPhone'
+                  name: 'companyProduct.companyGenericProduct.emergencyPhone'
                 })}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                   this.renderField({
                   id: 'global.esin',
                   defaultMessage: 'ESIN',
-                  name: 'companyProduct.echoProduct.esin'
-                })*/
-                }
+                  name: 'companyProduct.companyGenericProduct.esin'
+                })*/}
                 {this.renderField({
                   id: 'global.recommendedUse',
                   defaultMessage: 'Recommended Uses',
-                  name: 'companyProduct.echoProduct.recommendedUse'
+                  name: 'companyProduct.companyGenericProduct.recommendedUse'
                 })}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.recommendedRestrictions',
                   defaultMessage: 'Recommended Restrictions',
-                  name: 'companyProduct.echoProduct.recommendedRestrictions'
-                })*/
-                }
+                  name: 'companyProduct.companyGenericProduct.recommendedRestrictions'
+                })*/}
                 {this.renderField({
                   id: 'global.version',
                   defaultMessage: 'Version',
-                  name: 'companyProduct.echoProduct.sdsVersionNumber'
+                  name: 'companyProduct.companyGenericProduct.sdsVersionNumber'
                 })}
                 {this.renderField({
                   id: 'global.revisionDate',
                   defaultMessage: 'Revision Date',
-                  name: 'companyProduct.echoProduct.sdsRevisionDate'
+                  name: 'companyProduct.companyGenericProduct.sdsRevisionDate'
                 })}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.synonyms',
                   defaultMessage: 'Synonyms',
-                  name: 'companyProduct.echoProduct.synonyms'
+                  name: 'companyProduct.companyGenericProduct.synonyms'
                 })*/}
                 {this.renderField({
                   id: 'global.formula',
                   defaultMessage: 'Formula',
-                  name: 'companyProduct.echoProduct.molecularFormula'
+                  name: 'companyProduct.companyGenericProduct.molecularFormula'
                 })}
                 {this.renderField({
                   id: 'global.molecularWeight',
                   defaultMessage: 'Molecular Weight',
-                  name: 'companyProduct.echoProduct.molecularWeight'
+                  name: 'companyProduct.companyGenericProduct.molecularWeight'
                 })}
               </CustomGrid>
             </FlexContent>
@@ -1294,7 +1294,7 @@ class AddCart extends Component {
       }
       case 2: {
         // Properties
-        const prefix = 'companyProduct.echoProduct.'
+        const prefix = 'companyProduct.companyGenericProduct.'
         return (
           <>
             <FlexContent basic>
@@ -1410,8 +1410,7 @@ class AddCart extends Component {
                   id: 'global.specificVolume',
                   defaultMessage: 'Specific Volume',
                   name: `${prefix}specificVolume`
-                })*/
-                }
+                })*/}
                 {this.renderField({
                   id: 'global.recommendedUse',
                   defaultMessage: 'Recommended Uses',
@@ -1452,9 +1451,7 @@ class AddCart extends Component {
         return (
           <>
             <FlexContent basic>
-              <CustomGrid verticalAlign='middle'>
-                {this.renderCasProduct()}
-              </CustomGrid>
+              <CustomGrid verticalAlign='middle'>{this.renderCasProduct()}</CustomGrid>
             </FlexContent>
 
             <RelaxedSegment basic>
@@ -1481,7 +1478,7 @@ class AddCart extends Component {
       }
       case 4: {
         // Transportation
-        const prefix = 'companyProduct.echoProduct.'
+        const prefix = 'companyProduct.companyGenericProduct.'
         return (
           <>
             <FlexContent basic>
@@ -1495,121 +1492,115 @@ class AddCart extends Component {
                       selection
                       fluid
                       icon={<ChevronDown />}
-                      options={echoProductGrouping}
-                      value={this.state.echoProductGroup}
-                      onChange={(_, { value }) => this.setState({ echoProductGroup: value })}
+                      options={companyGenericProductGrouping}
+                      value={this.state.companyGenericProductGrouping}
+                      onChange={(_, { value }) => this.setState({ companyGenericProductGrouping: value })}
                     />
                   </GridColumn>
                 </GridRow>
                 {this.renderField({
                   id: 'global.unNumber',
                   defaultMessage: 'UN Number',
-                  name: `${prefix}${this.state.echoProductGroup}UnNumber.unNumberCode`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}UnNumber.unNumberCode`
                 })}
                 {this.renderField({
                   id: 'global.properShippingName',
                   defaultMessage: 'Proper Shipping Name',
-                  name: `${prefix}${this.state.echoProductGroup}ProperShippingName`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}ProperShippingName`
                 })}
                 {this.renderField({
                   id: 'global.properTechnicalName',
                   defaultMessage: 'Proper Technical Name',
-                  name: `${prefix}${this.state.echoProductGroup}ProperTechnicalName`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}ProperTechnicalName`
                 })}
                 {this.renderField({
                   id: 'global.hazardClass',
                   defaultMessage: 'Hazard Class',
-                  name: `${prefix}${this.state.echoProductGroup}HazardClass.classCode`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}HazardClass.classCode`
                 })}
                 {this.renderField({
                   id: 'global.packagingGroup',
                   defaultMessage: 'Packaging Group',
-                  name: `${prefix}${this.state.echoProductGroup}PackagingGroup.groupCode`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}PackagingGroup.groupCode`
                 })}
                 {this.renderField({
                   id: 'global.reportableQuantity',
                   defaultMessage: 'Reportable Quantity',
-                  name: `${prefix}${this.state.echoProductGroup}ReportableQuantity`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}ReportableQuantity`
                 })}
                 {this.renderField({
                   id: 'global.enviromentalHazards',
                   defaultMessage: 'Enviromental Hazards',
-                  name: `${prefix}${this.state.echoProductGroup}HazardLabel`  // ? (EnviromentalHazards)
+                  name: `${prefix}${this.state.companyGenericProductGrouping}HazardLabel` // ? (EnviromentalHazards)
                 })}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.emsNumbers',
                   defaultMessage: 'Ems Numbers',
-                  name: `${prefix}${this.state.echoProductGroup}EmsNumbers`
-                })*/
-                }
+                  name: `${prefix}${this.state.companyGenericProductGrouping}EmsNumbers`
+                })*/}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.exceptions',
                   defaultMessage: 'Exceptions',
-                  name: `${prefix}${this.state.echoProductGroup}Exceptions`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}Exceptions`
                 })*/}
                 {this.renderField({
                   id: 'global.specialPrecautionForUser',
                   defaultMessage: 'Special Precautions For User',
-                  name: `${prefix}precautionaryStatements`  // ? (SpecialPrecautionsForUser)
+                  name: `${prefix}precautionaryStatements` // ? (SpecialPrecautionsForUser)
                 })}
                 {this.renderField({
                   id: 'global.marinePollutant',
                   defaultMessage: 'Marine Pollutant',
-                  name: `${prefix}${this.state.echoProductGroup}MarinePollutant`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}MarinePollutant`
                 })}
                 {this.renderField({
                   id: 'global.severeMarinePollutant',
                   defaultMessage: 'Severe Marine Pollutant',
-                  name: `${prefix}${this.state.echoProductGroup}SevereMarinePollutant`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}SevereMarinePollutant`
                 })}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.packagingExceptions',
                   defaultMessage: 'Packaging Exceptions',
-                  name: `${prefix}${this.state.echoProductGroup}PackagingExceptions`
-                })*/
-                }
+                  name: `${prefix}${this.state.companyGenericProductGrouping}PackagingExceptions`
+                })*/}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.packagingNonBulk',
                   defaultMessage: 'Packaging Non Bulk',
-                  name: `${prefix}${this.state.echoProductGroup}PackagingNonBulk`
-                })*/
-                }
+                  name: `${prefix}${this.state.companyGenericProductGrouping}PackagingNonBulk`
+                })*/}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.packagingBulk',
                   defaultMessage: 'Packaging Bulk',
-                  name: `${prefix}${this.state.echoProductGroup}PackagingBulk`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}PackagingBulk`
                 })*/}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.quantityLimitationsPassengerAircraftRail',
                   defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
-                  name: `${prefix}${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail`
-                })*/
-                }
+                  name: `${prefix}${this.state.companyGenericProductGrouping}QuantityLimitationsPassengerAircraftRail`
+                })*/}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.quantityLimitationsCargoAircraftOnly',
                   defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
-                  name: `${prefix}${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly`
-                })*/
-                }
+                  name: `${prefix}${this.state.companyGenericProductGrouping}QuantityLimitationsCargoAircraftOnly`
+                })*/}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.vesselStowageLocation',
                   defaultMessage: 'Vessel Stowage Location',
-                  name: `${prefix}${this.state.echoProductGroup}VesselStowageLocation`
-                })*/
-                }
+                  name: `${prefix}${this.state.companyGenericProductGrouping}VesselStowageLocation`
+                })*/}
                 {/* not in response (swagger 1.0.3-COVID-19.9)
                 this.renderField({
                   id: 'global.vesselStowageOther',
                   defaultMessage: 'Vessel Stowage Other',
-                  name: `${prefix}${this.state.echoProductGroup}VesselStowageOther`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}VesselStowageOther`
                 })*/}
               </CustomGrid>
             </FlexContent>
@@ -1643,7 +1634,7 @@ class AddCart extends Component {
     let { sidebar, isEdit, orderDetailIsFetching, offerDetailIsFetching } = this.props
     const {
       sidebarChanged,
-      intl: { formatMessage },
+      intl: { formatMessage }
     } = this.props
     const { activeTab } = this.state
     let { isOpen } = sidebar
@@ -1684,17 +1675,17 @@ class AddCart extends Component {
             <Loader size='large' />{' '}
           </Dimmer>
         ) : (
-            <>
-              <Menu pointing secondary>
-                {tabsMarketPlace.map((tab, i) =>
-                  <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
-                    {formatMessage(tab.text)}
-                  </Menu.Item>
-                )}
-              </Menu>
-              {this.getContent()}
-            </>
-          )}
+          <>
+            <Menu pointing secondary>
+              {tabsMarketPlace.map((tab, i) => (
+                <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
+                  {formatMessage(tab.text)}
+                </Menu.Item>
+              ))}
+            </Menu>
+            {this.getContent()}
+          </>
+        )}
       </Sidebar>
     )
   }
@@ -1704,7 +1695,7 @@ AddCart.propTypes = {
   offer: object,
   order: object,
   postNewOrder: func,
-  openInfo: boolean,
+  openInfo: boolean
   // id: number,
   // pkgAmount: number,
   // pricing: object,

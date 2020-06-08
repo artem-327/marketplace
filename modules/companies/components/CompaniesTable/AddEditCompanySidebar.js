@@ -1,21 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import {
-  Form,
-  Modal,
-  FormGroup,
-  Divider,
-  Accordion,
-  Icon,
-  Segment,
-  Header,
-  Loader,
-  Dimmer,
-  Grid,
-  GridRow,
-  GridColumn
-} from 'semantic-ui-react'
+import { Form, FormGroup, Divider, Accordion, Icon, Header, Loader, Dimmer } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import {
   closePopup,
@@ -71,6 +57,7 @@ import {
   //CustomLabel,
   LabeledRow
 } from '~/modules/admin/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -82,7 +69,6 @@ const AccordionHeader = styled(Header)`
 
 const initialFormValues = {
   name: '',
-  nacdMember: true,
   enabled: false,
   phone: '',
   purchaseHazmatEligible: false,
@@ -343,7 +329,6 @@ class AddEditCompanySidebar extends React.Component {
                 cin: getSafe(() => values.cin, ''),
                 dba: getSafe(() => values.dba, ''),
                 dunsNumber: getSafe(() => values.dunsNumber, ''),
-                nacdMember: getSafe(() => values.nacdMember, false),
                 enabled: getSafe(() => values.enabled, false),
                 name: getSafe(() => values.name, ''),
                 phone: getSafe(() => values.phone, ''),

@@ -546,7 +546,8 @@ class DetailSidebar extends Component {
                 setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
                 if (i === 0) setFieldValue('edit.minimum', value)
               },
-              placeholder: '0'
+              placeholder: '0',
+              disabled: i === 0
             })}
           </GridColumn>
 
@@ -936,6 +937,7 @@ class DetailSidebar extends Component {
             <Button
               type='button'
               className='buttonPlus'
+              disabled={inputProps.disabled}
               onClick={() => {
                 if (isNaN(value) || value === '') {
                   setFieldValue(name, 1)
@@ -950,6 +952,7 @@ class DetailSidebar extends Component {
             <Button
               type='button'
               className='buttonMinus'
+              disabled={inputProps.disabled}
               onClick={() => {
                 if (isNaN(value) || value === '') {
                   setFieldValue(name, 1)

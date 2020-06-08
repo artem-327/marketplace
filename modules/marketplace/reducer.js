@@ -56,7 +56,7 @@ export default function reducer(state = initialState, action) {
               content: {
                 productCode: productCode,
                 productName: productName,
-                casProducts: getSafe(() => el.echoProduct.elements, [])
+                casProducts: getSafe(() => el.companyGenericProduct.elements, [])
               }
             }
           })
@@ -86,7 +86,6 @@ export default function reducer(state = initialState, action) {
         datagridFilterUpdate: !state.datagridFilterUpdate
       }
     }
-
 
     default: {
       return state

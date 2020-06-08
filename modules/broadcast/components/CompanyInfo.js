@@ -136,6 +136,10 @@ class CompanyInfo extends Component {
   getContent = () => {
     //TODO fixed with real data in 1.0.5 from new endpoint where we get all data for this modal company info
     const { dataCompanyInfo } = this.props
+
+    // { id: 7, name: "NACD" }
+    const nacdMember = getSafe(() => dataCompanyInfo.associations.some(a => a.id === 7), false)
+
     return (
       <Grid>
         <CustomRow>
@@ -158,7 +162,7 @@ class CompanyInfo extends Component {
           </CustomColumn>
           <CustomColumn mobile={rightWidth} computer={rightWidth}>
             <CustomDivValue name='nacdMember'>
-              {getSafe(() => dataCompanyInfo.nacdMember, false) ? (
+              {nacdMember ? (
                 <CustomLabelVerified color={'#84c225'}>Verified</CustomLabelVerified>
               ) : (
                 <CustomLabelNotVerified color={'#dee2e6'}>Not Verified</CustomLabelNotVerified>
@@ -166,7 +170,7 @@ class CompanyInfo extends Component {
             </CustomDivValue>
           </CustomColumn>
         </CustomRow>
-        {!getSafe(() => dataCompanyInfo.nacdMember, false) ? (
+        {!nacdMember ? (
           <CustomRow>
             <CustomColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
               <FormattedMessage id='boradcast.modal.nacdReferences' defaultMessage='NACD References'>

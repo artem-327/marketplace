@@ -149,6 +149,10 @@ class Tutorial extends Component {
 
   componentDidMount() {
     const { tutorialTab } = this.state
+    if (this.props.isClientCompanyAdmin) {
+      tutorialTabs.splice(3, 2) // removed tabs products and inventory
+      urlTabs.splice(3, 2) // removed urls for products and inventory
+    }
     if (!tutorialTab) {
       this.setState({ tutorialTab: this.getNextTab() })
     }
@@ -318,7 +322,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    name: getSafe(() => state.auth.identity.name, '')
+    name: getSafe(() => state.auth.identity.name, ''),
+    isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false)
   }
 }
 

@@ -70,7 +70,7 @@ class CartItemSummary extends Component {
     let unNumbers = []
     option = getSafe(() => item.cfUnNumber, null)
     if (option) unNumbers.push(option)
-    option = getSafe(() => item.productOffer.companyProduct.echoProduct.cfUnNumber, null)
+    option = getSafe(() => item.productOffer.companyProduct.companyGenericProduct.cfUnNumber, null)
     if (unNumbers && option && unNumbers[0].id !== option.id) unNumbers.push(option)
 
     nmfcNumbers = nmfcNumbers.map(d => {
@@ -121,15 +121,15 @@ class CartItemSummary extends Component {
     let initialValues = {
       unNumber: getSafe(
         () => item.cfUnNumber.id,
-        getSafe(() => companyProduct.echoProduct.cfUnNumber.id, null)
+        getSafe(() => companyProduct.companyGenericProduct.cfUnNumber.id, null)
       ),
       packagingGroup: getSafe(
         () => item.cfPackagingGroup.id,
-        getSafe(() => companyProduct.echoProduct.cfPackagingGroup.id, null)
+        getSafe(() => companyProduct.companyGenericProduct.cfPackagingGroup.id, null)
       ),
       hazardClass: getSafe(
         () => item.cfHazardClass.id,
-        getSafe(() => companyProduct.echoProduct.cfHazardClass.id, null)
+        getSafe(() => companyProduct.companyGenericProduct.cfHazardClass.id, null)
       ),
       freightClass: getSafe(
         () => item.cfFreightClass,
@@ -282,7 +282,6 @@ class CartItemSummary extends Component {
                       }}
                       name='nmfcNumber'
                     />
-
                   </FormGroup>
 
                   <FormGroup widths='2'>
@@ -292,10 +291,10 @@ class CartItemSummary extends Component {
                       label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })}
                     />
                   </FormGroup>
-
                 </>
               )
-            }} />
+            }}
+          />
         </Modal.Content>
 
         <Modal.Actions>
@@ -312,7 +311,7 @@ class CartItemSummary extends Component {
           </Button>
           <Button
             type='button'
-            {... this.state.edittingHazmatInfo ? { positive: true } : { color: 'blue' }}
+            {...(this.state.edittingHazmatInfo ? { positive: true } : { color: 'blue' })}
             onClick={() => {
               if (this.state.edittingHazmatInfo) this.handleSubmit()
               else this.setState(prevState => ({ edittingHazmatInfo: !prevState.edittingHazmatInfo }))
@@ -325,7 +324,6 @@ class CartItemSummary extends Component {
         </Modal.Actions>
       </>
     )
-
   }
 
   renderItem = ({ item, lastChild }) => {
@@ -341,11 +339,17 @@ class CartItemSummary extends Component {
             <StyledRow verticallyUnpadded bottomShadow>
               <GridColumn computer={12}>
                 {/* {productOffer.companyProduct.intProductCode + ' ' + productOffer.companyProduct.intProductName} */}
-                <Header as='h2'>{productOffer.companyProduct.echoProduct.name}</Header>
+                <Header as='h2'>{productOffer.companyProduct.companyGenericProduct.name}</Header>
               </GridColumn>
 
               <GridColumn computer={4} textAlign='right'>
-                <Button type='button' onClick={() => deleteCart(item.id)} data-test={`shopping_cart_remove_${item.id}_btn`} basic icon negative>
+                <Button
+                  type='button'
+                  onClick={() => deleteCart(item.id)}
+                  data-test={`shopping_cart_remove_${item.id}_btn`}
+                  basic
+                  icon
+                  negative>
                   <Icon name='trash alternate outline' />
                 </Button>
               </GridColumn>
@@ -379,8 +383,7 @@ class CartItemSummary extends Component {
                         {text => text}
                       </FormattedMessage>
                     </BlueText>
-                  }
-                >
+                  }>
                   {this.hazmatMarkup(item)}
                 </Modal>
               </VerticalUnpaddedColumn>
@@ -453,12 +456,10 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='global.leadTime' defaultMessage='!Lead Time' />
               </VerticalUnpaddedColumn>
 
-              <VerticalUnpaddedColumn black>
-                {leadTime}
-              </VerticalUnpaddedColumn>
+              <VerticalUnpaddedColumn black>{leadTime}</VerticalUnpaddedColumn>
             </RelaxedRow>
 
-            {externalNotes &&
+            {externalNotes && (
               <RelaxedRow>
                 <VerticalUnpaddedColumn computer={16}>
                   <ItemDescriptionGrid>
@@ -476,7 +477,7 @@ class CartItemSummary extends Component {
                   </ItemDescriptionGrid>
                 </VerticalUnpaddedColumn>
               </RelaxedRow>
-            }
+            )}
 
             {!lastChild ? <Divider /> : null}
           </Grid>

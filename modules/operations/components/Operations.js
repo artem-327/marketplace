@@ -34,7 +34,7 @@ class Operations extends Component {
       tags: <TagsTable />,
       'company-product-catalog': <CompanyProductTable />,
       'company-inventory': <CompanyInventoryTable />,
-      orders: orderDetailData ? <OrderDetail /> : <Orders />,
+      orders: orderDetailData ? <OrderDetail /> : <Orders />
     }
 
     const popupForm = {
@@ -90,12 +90,12 @@ class Operations extends Component {
               },
               {
                 operator: 'LIKE',
-                path: 'CompanyProduct.echoProduct.name',
+                path: 'CompanyProduct.companyGenericProduct.name',
                 values: [`%${v.filterValue}%`]
               },
               {
                 operator: 'LIKE',
-                path: 'CompanyProduct.echoProduct.code',
+                path: 'CompanyProduct.companyGenericProduct.code',
                 values: [`%${v.filterValue}%`]
               }
             ]
@@ -156,33 +156,29 @@ class Operations extends Component {
     //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
     //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
-    const preserveFilters =
-      currentTab.type === 'company-product-catalog'
-    || currentTab.type === 'orders'
+    const preserveFilters = currentTab.type === 'company-product-catalog' || currentTab.type === 'orders'
 
     const displayPage = !!orderDetailData
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
         <Container fluid className='flex stretched'>
-          {currentTab.type === 'orders' && !orderDetailData && <OrdersMenu/>}
-          {displayPage
-            ? (this.renderContent())
-            : (
-
-
+          {currentTab.type === 'orders' && !orderDetailData && <OrdersMenu />}
+          {displayPage ? (
+            this.renderContent()
+          ) : (
             <>
-            <Container fluid style={{ padding: '0 1.5vh' }}>
-              <TablesHandlers currentTab={currentTab} />
-            </Container>
+              <Container fluid style={{ padding: '0 1.5vh' }}>
+                <TablesHandlers currentTab={currentTab} />
+              </Container>
 
-          <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
-            <Grid.Row>
-              <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
-            </Grid.Row>
-          </Grid>
+              <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
+                <Grid.Row>
+                  <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
+                </Grid.Row>
+              </Grid>
             </>
-            )}
+          )}
         </Container>
       </DatagridProvider>
     )

@@ -3,11 +3,23 @@ import { connect } from 'react-redux'
 
 import { CompanyModal } from '~/modules/company-form/'
 import { updateClientCompany, createClientCompany, closePopup } from '~/modules/settings/actions'
-import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
+import { postCompanyLogo, deleteCompanyLogo, getCompanyLogo } from '~/modules/company-form/actions'
+import { getSafe } from '~/utils/functions'
 
 class Popup extends Component {
   state = {
     companyLogo: null
+  }
+
+  async componentDidMount() {
+    if (this.props.companyId) {
+      try {
+        const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
+        if (companyLogo.value.data.size) this.setState({ companyLogo: companyLogo.value.data })
+      } catch (error) {
+        console.error(error)
+      }
+    }
   }
 
   onSubmit = (values, isEdit) => {
@@ -18,7 +30,7 @@ class Popup extends Component {
       'cin',
       'dba',
       'dunsNumber',
-      'nacdMember',
+      'enabled',
       'name',
       'phone',
       'tin',
@@ -28,6 +40,9 @@ class Popup extends Component {
       'mailingBranch'
     ]
     propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
+    if (getSafe(() => requestBody.associations[0].id, '')) {
+      requestBody.associations = requestBody.associations.map(association => association.id)
+    }
     if (isEdit) {
       delete requestBody.primaryUser
       delete requestBody.primaryBranch
@@ -84,13 +99,26 @@ class Popup extends Component {
         companyLogo={companyLogo}
         onSubmit={this.onSubmit}
         isClientCompany
-        header={{ id: 'global.clientCompany', defaultMessage: 'Client Company' }}
+        header={{ id: 'global.clientCompany', defaultMessage: 'Guest Company' }}
         closePopupClientCompany={this.props.closePopup}
       />
     )
   }
 }
 
-const mapDispatchToProps = { updateClientCompany, createClientCompany, closePopup, postCompanyLogo, deleteCompanyLogo }
+const mapDispatchToProps = {
+  updateClientCompany,
+  createClientCompany,
+  closePopup,
+  postCompanyLogo,
+  deleteCompanyLogo,
+  getCompanyLogo
+}
 
-export default connect(null, mapDispatchToProps)(Popup)
+const mapStateToProps = state => {
+  return {
+    companyId: getSafe(() => state.settings.popupValues.id, '')
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Popup)

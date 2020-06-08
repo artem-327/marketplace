@@ -13,5 +13,6 @@ export const ROLES_ENUM = [
   { name: 'Product Catalog Admin', id: 6, propertyName: 'isProductCatalogAdmin' },
   { name: 'Order Processing', id: 7, propertyName: 'isOrderProcessing' },
   { name: 'Product Offer Manager', id: 8, propertyName: 'isProductOfferManager' },
-  { name: 'ClientCompany Manager', id: 36, propertyName: 'isClientCompanyManager' }
+  { name: 'Guest Company Admin', id: 67, propertyName: 'isClientCompanyAdmin' },
+  { name: 'Guest Company Manager', id: 36, propertyName: 'isClientCompanyManager' }
 ]

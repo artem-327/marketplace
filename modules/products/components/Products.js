@@ -13,6 +13,8 @@ import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEcho
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 import AddEditCasProductsPopup from './CasProductsTable/AddEditCasProductsPopup'
 import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
+import ProductGroupsTable from './ProductGroups/ProductGroupsTable'
+import ProductGroupsPopup from './ProductGroups/ProductGroupsPopup'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
@@ -26,15 +28,18 @@ class Products extends Component {
 
     const tables = {
       'cas-products': <CasProductsTable />,
-      'product-catalog': <ProductCatalogTable />
+      'product-catalog': <ProductCatalogTable />,
+      'product-groups': <ProductGroupsTable />
     }
 
     const addForms = {
-      'cas-products': <AddEditCasProductsPopup />
+      'cas-products': <AddEditCasProductsPopup />,
+      'product-groups': <ProductGroupsPopup />
     }
 
     const editForms = {
-      'cas-products': <AddEditCasProductsPopup />
+      'cas-products': <AddEditCasProductsPopup />,
+      'product-groups': <ProductGroupsPopup />
     }
 
     const edit2Forms = {
@@ -43,7 +48,7 @@ class Products extends Component {
     }
 
     const importForm = {
-      'product-catalog': <ProductImportPopup echoProduct={true} />
+      'product-catalog': <ProductImportPopup companyGenericProduct={true} />
     }
 
     return (
@@ -71,12 +76,22 @@ class Products extends Component {
             : []
       },
       'product-catalog': {
-        url: '/prodex/api/echo-products/datagrid',
+        url: '/prodex/api/company-generic-products/datagrid',
         searchToFilter: v =>
           v
             ? [
-                { operator: 'LIKE', path: 'EchoProduct.name', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'EchoProduct.code', values: [`%${v}%`] }
+                { operator: 'LIKE', path: 'CompanyGenericProduct.name', values: [`%${v}%`] },
+                { operator: 'LIKE', path: 'CompanyGenericProduct.code', values: [`%${v}%`] }
+              ]
+            : []
+      },
+      'product-groups': {
+        url: '/prodex/api/product-groups/datagrid',
+        searchToFilter: v =>
+          v
+            ? [
+                { operator: 'LIKE', path: 'ProductGroup.name', values: [`%${v}%`] },
+                { operator: 'LIKE', path: 'ProductGroup.tags.name', values: [`%${v}%`] }
               ]
             : []
       }
@@ -95,7 +110,7 @@ class Products extends Component {
     const preserveFilters = currentTab.type === 'product-catalog'
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
+      <DatagridProvider apiConfig={this.getApiConfig()}>
         <Container fluid className='flex stretched'>
           <>
             <Container fluid style={{ padding: '0 1.5vh' }}>

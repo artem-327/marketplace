@@ -25,7 +25,7 @@ class Tabs extends Component {
       tabsNamesMap.set(tabsNames[i].type, tabsNames[i])
     }
     // added tabs based on role of user
-    if (isCompanyAdmin) {
+    if (isCompanyAdmin || isClientCompanyAdmin) {
       newTabs = tabsNames
     } else if (isProductCatalogAdmin && !isUserAdmin) {
       newTabs = [tabsNamesMap.get('products')]
@@ -77,7 +77,8 @@ const mapStateToProps = state => {
     currentTab: state.settings.currentTab,
     isProductCatalogAdmin: getSafe(() => state.auth.identity.isProductCatalogAdmin, false),
     isUserAdmin: getSafe(() => state.auth.identity.isUserAdmin, false),
-    isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false)
+    isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
+    isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false)
   }
 }
 
