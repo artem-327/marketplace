@@ -55,7 +55,10 @@ class Messages extends Component {
 
     const url = getSafe(() => config.url, '')
     const isPaymentEndpoint = url.startsWith('/prodex/api/payments')
-    const dwollaValidationError = isPaymentEndpoint && clientMessage === 'Dwolla validation errors'
+    const dwollaValidationError = isPaymentEndpoint && (
+      clientMessage.startsWith('Dwolla validation error') ||
+      clientMessage.startsWith('Uploading documents for customer failed')
+    )
 
     const msg =
       message && message.level
