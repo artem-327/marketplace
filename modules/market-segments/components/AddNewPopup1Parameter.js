@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 
 import { FormattedMessage } from 'react-intl'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const initialFormValues = {
   val0: ''
@@ -75,6 +76,7 @@ class AddNewPopup1Parameter extends React.Component {
                 </FormattedMessage>
               </Button.Submit>
             </div>
+            <ErrorFocus />
           </Form>
         </Modal.Content>
       </Modal>

@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const initialFormValues = {
   val0: '',
@@ -18,14 +19,9 @@ const initialFormValues = {
 }
 
 const formValidation = Yup.object().shape({
-  val0: Yup.string()
-    .trim()
-    .required(errorMessages.minLength(1)),
-  val1: Yup.string()
-    .trim()
-    .required(errorMessages.minLength(1)),
-  val2: Yup.number()
-    .required(errorMessages.requiredMessage),
+  val0: Yup.string().trim().required(errorMessages.minLength(1)),
+  val1: Yup.string().trim().required(errorMessages.minLength(1)),
+  val2: Yup.number().required(errorMessages.requiredMessage),
   val3: Yup.number()
     .typeError(errorMessages.mustBeNumber)
     .positive(errorMessages.positive)
@@ -65,7 +61,8 @@ class AddNewUnitOfMeasurePopup extends React.Component {
                     <Required />
                   </>
                 }
-                name='val0' />
+                name='val0'
+              />
             </FormGroup>
             <FormGroup widths='equal' data-test='admin_add_unit_measure_nameAbb_inp'>
               <Input
@@ -116,6 +113,7 @@ class AddNewUnitOfMeasurePopup extends React.Component {
                 </FormattedMessage>
               </Button.Submit>
             </div>
+            <ErrorFocus />
           </Form>
         </Modal.Content>
       </Modal>

@@ -8,12 +8,10 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validati
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const formValidation = Yup.object().shape({
-  val0: Yup.string()
-    .trim()
-    .min(1, 'Too short')
-    .required('Required'),
+  val0: Yup.string().trim().min(1, 'Too short').required('Required'),
   val1: Yup.number().required('Required'),
   val2: Yup.number().required('Required'),
   val3: Yup.number().required('Required'),
@@ -127,6 +125,7 @@ class EditUnitOfPackagingPopup extends React.Component {
                 </FormattedMessage>
               </Button.Submit>
             </div>
+            <ErrorFocus />
           </Form>
         </Modal.Content>
       </Modal>

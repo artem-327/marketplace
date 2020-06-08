@@ -14,6 +14,7 @@ import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const initialFormValues = {
   accountNumber: '',
@@ -29,14 +30,8 @@ const formValidation = Yup.object().shape({
     .max(17, errorMessages.maxLength(17))
     .test('numeric-string', errorMessages.mustBeNumber, value => /^[0-9]*$/gm.test(value))
     .required(errorMessages.requiredMessage),
-  bankAccountType: Yup.string()
-    .trim()
-    .min(3, errorMessages.minLength(3))
-    .required(errorMessages.requiredMessage),
-  name: Yup.string()
-    .trim()
-    .min(3, errorMessages.minLength(3))
-    .required(errorMessages.requiredMessage),
+  bankAccountType: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
   routingNumber: Yup.string()
     .trim()
     .matches(/^\d{9}$/, errorMessages.exactLength(9))
@@ -153,6 +148,7 @@ class BankAccountsPopup extends React.Component {
                 </FormattedMessage>
               </Button.Submit>
             </div>
+            <ErrorFocus />
           </Form>
         </Modal.Content>
       </Modal>

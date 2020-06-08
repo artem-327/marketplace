@@ -12,11 +12,12 @@ import { errorMessages } from '~/constants/yupValidation'
 import { withDatagrid } from '~/modules/datagrid'
 import { closePopup, putProductGroups, searchTags, postProductGroups } from '../../actions'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
-      name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
+      nameGroup: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
     })
   )
 
@@ -87,7 +88,7 @@ class ProductGroupsPopup extends React.Component {
     const { selectedTagsOptions } = this.state
 
     const initialFormValues = {
-      name: getSafe(() => popupValues.name, ''),
+      nameGroup: getSafe(() => popupValues.name, ''),
       tags: getSafe(() => popupValues.tags.props.ids, '')
     }
 
@@ -110,7 +111,7 @@ class ProductGroupsPopup extends React.Component {
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
               const request = {}
-              const propsToInclude = ['tags', 'name']
+              const propsToInclude = ['tags', 'nameGroup']
               propsToInclude.forEach(prop => (values[prop] ? (request[prop] = values[prop]) : null))
 
               try {
@@ -128,6 +129,7 @@ class ProductGroupsPopup extends React.Component {
                 <>
                   <FormGroup data-test='operations_tag_name_inp'>
                     <Input
+                      name='nameGroup'
                       type='text'
                       label={
                         <>
@@ -137,7 +139,6 @@ class ProductGroupsPopup extends React.Component {
                           <Required />
                         </>
                       }
-                      name='name'
                       fieldProps={{ width: 8 }}
                     />
                     <FormikDropdown
@@ -179,6 +180,7 @@ class ProductGroupsPopup extends React.Component {
                       </FormattedMessage>
                     </Button.Submit>
                   </div>
+                  <ErrorFocus />
                 </>
               )
             }}
