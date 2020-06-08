@@ -26,6 +26,7 @@ const ItemLabel = styled(Label)`
 `
 
 const ProductFirstTags = styled.div`
+  order: 1;
   white-space: nowrap;
 `
 
