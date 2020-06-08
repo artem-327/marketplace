@@ -458,7 +458,7 @@ class CompanyProductInfo extends Component {
     let markup = [
       this.getInput({
         id: 'global.casIndexName',
-        defaultMessage: 'Cas Index Name',
+        defaultMessage: 'CAS Index Name',
         name: 'casProduct.casIndexName',
         required: true
       })
