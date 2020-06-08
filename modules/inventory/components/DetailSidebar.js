@@ -1122,6 +1122,7 @@ class DetailSidebar extends Component {
                                       console.log('CATCH', e)
                                     })
                                 }}
+                                title='Bootstrap tooltip - Add something'
                                 data-test='detail_inventory_tab_edit'>
                                 {formatMessage({
                                   id: getSafe(() => this.state.sidebarValues.id, false)
@@ -1168,7 +1169,9 @@ class DetailSidebar extends Component {
                                             )}`,
                                             value: el.id
                                           }))}
+                                          data-toggle='tooltip'
                                           inputProps={{
+                                            title: 'Bootstrap tooltip - Company Product is usually a Product of Company',
                                             placeholder: (
                                               <FormattedMessage
                                                 id='addInventory.searchByProductName'
@@ -1219,22 +1222,37 @@ class DetailSidebar extends Component {
                                   </GridRow>
                                   <GridRow>
                                     <GridColumn width={8}>
-                                      {this.quantityWrapper(
-                                        'edit.pkgAvailable',
-                                        {
-                                          min: 1,
-                                          type: 'number',
-                                          placeholder: '0'
-                                        },
-                                        <>
-                                          <FormattedMessage
-                                            id='addInventory.pkgsAvailable'
-                                            defaultMessage='PKGs Available'>
-                                            {text => text}
-                                          </FormattedMessage>
-                                          <Required />
-                                        </>
-                                      )}
+                                      <Popup
+                                        header={
+                                          <div>
+                                            <b>Some text</b>
+                                            <li>this</li>
+                                            <li>that</li>
+                                            <li>etc.</li>
+                                          </div>
+                                        }
+                                        style={{ backgroundColor: '#202020', color: '#ffffff'}}
+                                        trigger={
+                                          <div>
+                                            {this.quantityWrapper(
+                                              'edit.pkgAvailable',
+                                              {
+                                                min: 1,
+                                                type: 'number',
+                                                placeholder: '0'
+                                              },
+                                              <>
+                                                <FormattedMessage
+                                                  id='addInventory.pkgsAvailable'
+                                                  defaultMessage='PKGs Available'>
+                                                  {text => text}
+                                                </FormattedMessage>
+                                                <Required />
+                                              </>
+                                            )}
+                                          </div>
+                                        }
+                                      />
                                     </GridColumn>
                                     <GridColumn width={8}>
                                       <Dropdown
@@ -1274,6 +1292,7 @@ class DetailSidebar extends Component {
                                           name='edit.warehouse'
                                           options={warehousesList}
                                           inputProps={{
+                                            title: 'Bootstrap tooltip - Warehouse some text',
                                             disabled: sidebarValues && sidebarValues.grouped,
                                             onChange: this.onChange,
                                             selection: true,
@@ -1326,27 +1345,39 @@ class DetailSidebar extends Component {
                                   <GridRow>
                                     <GridColumn width={8}>
                                       <FormField width={16} data-test='detail_sidebar_fob_price'>
-                                        {this.inputWrapper(
-                                          'edit.fobPrice',
-                                          {
-                                            disabled: sidebarValues && sidebarValues.grouped,
-                                            type: 'number',
-                                            min: '0',
-                                            onChange: (e, { value }) => {
-                                              if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
-                                                setFieldValue(`priceTiers.pricingTiers[0].price`, value)
-                                              }
-                                            },
-                                            placeholder: '0.000'
-                                          },
-                                          <>
-                                            <FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>
-                                              {text => text}
-                                            </FormattedMessage>
-                                            <Required />
-                                          </>,
-                                          currencySymbol
-                                        )}
+                                        <Popup
+                                          header={
+                                            <p>
+                                              Popup - FOB Price - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                            </p>
+                                          }
+                                          hoverable
+                                          trigger={
+                                            <div>
+                                              {this.inputWrapper(
+                                                'edit.fobPrice',
+                                                {
+                                                  disabled: sidebarValues && sidebarValues.grouped,
+                                                  type: 'number',
+                                                  min: '0',
+                                                  onChange: (e, { value }) => {
+                                                    if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
+                                                      setFieldValue(`priceTiers.pricingTiers[0].price`, value)
+                                                    }
+                                                  },
+                                                  placeholder: '0.000'
+                                                },
+                                                <>
+                                                  <FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>
+                                                    {text => text}
+                                                  </FormattedMessage>
+                                                  <Required />
+                                                </>,
+                                                currencySymbol
+                                              )}
+                                            </div>
+                                          }
+                                        />
                                       </FormField>
                                     </GridColumn>
                                     <GridColumn width={8}>
@@ -1710,7 +1741,16 @@ class DetailSidebar extends Component {
                                     })
                                 }}
                                 data-test='detail_inventory_tab_documents'>
-                                {formatMessage({ id: 'addInventory.productDocuments', defaultMessage: 'DOCUMENTS' })}
+                                <Popup
+                                  header={<p>Popup - Some documents, for example <b>this one</b> or <b>that one</b>.</p>}
+                                  trigger={
+                                    <div>
+                                      {formatMessage({ id: 'addInventory.productDocuments',
+                                        defaultMessage: 'DOCUMENTS'
+                                      })}
+                                    </div>
+                                  }
+                                />
                               </Menu.Item>
                             ),
                             pane: (
