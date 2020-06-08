@@ -80,7 +80,7 @@ const CustomDiv = styled.div`
 class Marketplace extends Component {
   state = {
     columns: [
-      { name: 'productName', disabled: true },
+      { name: 'productGroupName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
       {
@@ -155,7 +155,7 @@ class Marketplace extends Component {
           </FormattedMessage>
         ),
         width: 220,
-        sortPath: 'ProductOffer.companyProduct.echoProduct.manufacturer.name'
+        sortPath: 'ProductOffer.companyProduct.companyGenericProduct.manufacturer.name'
       },
       {
         name: 'origin',
@@ -319,7 +319,7 @@ class Marketplace extends Component {
     if (!rows || !selectedRows) return
     const filteredRows = rows.reduce((filtered, row, rowIndex) => {
       if (selectedRows.includes(row.id)) {
-        filtered.push(row.companyProduct.echoProduct.id)
+        filtered.push(row.companyProduct.companyGenericProduct.id)
       }
       return [...new Set(filtered)]
     }, [])
@@ -330,11 +330,11 @@ class Marketplace extends Component {
     }
   }
 
-  getEchoProducts = (rows, selectedRows) => {
+  getCompanyGenericProduct = (rows, selectedRows) => {
     if (!rows || !selectedRows) return
     return rows.reduce((filtered, row, rowIndex) => {
       if (selectedRows.includes(row.id)) {
-        filtered.push(row.companyProduct.echoProduct)
+        filtered.push(row.companyProduct.companyGenericProduct)
       }
       return filtered
     }, [])
@@ -355,6 +355,13 @@ class Marketplace extends Component {
     const rows = this.getRows()
 
     const rowActions = []
+    const buttonInfo = {
+      text: formatMessage({
+        id: 'marketplace.info',
+        defaultMessage: 'Info'
+      }),
+      callback: row => openPopup(row)
+    }
     const buttonRequestHold = {
       text: formatMessage({
         id: 'hold.requestHold',
@@ -370,9 +377,11 @@ class Marketplace extends Component {
       callback: row => this.tableRowClicked(row.id)
     }
     if (isMerchant || isCompanyAdmin) {
+      rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
       rowActions.push(buttonRequestHold)
     } else {
+      rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
     }
 
@@ -401,7 +410,7 @@ class Marketplace extends Component {
             return filtered
           }, [])}
           removePopup={this.props.removePopup}
-          echoProducts={this.getEchoProducts(rows, selectedRows)}
+          companyGenericProduct={this.getCompanyGenericProduct(rows, selectedRows)}
           {...this.props}
         />
 
@@ -457,13 +466,6 @@ class Marketplace extends Component {
 
         <div class='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
-            groupActions={row => {
-              let values = row.key.split('_')
-              return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
-                ...a,
-                text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
-              }))
-            }}
             tableName='marketplace_grid'
             {...datagrid.tableProps}
             rows={rows}
@@ -475,20 +477,24 @@ class Marketplace extends Component {
             // sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
-                .groupBy('productName')
+                .groupBy('productGroupName')
                 .map(v => ({
-                  key: `${v[0].productName}_${v[0].productNumber}_${v.length}_${v[0].companyProduct.id}`,
+                  key: `${v[0].productGroupName}_${v[0].productNumber}_${v.length}_${v[0].companyProduct.id}_${v[0].tagsNames}`,
                   childRows: v
                 }))
                 .value()
             }
             renderGroupLabel={({ row: { value }, children = null }) => {
-              const [name, number, count] = value.split('_')
+              const [name, number, count, id, tagsNames] = value.split('_')
               // const numberArray = number.split(' & ')
+              const tagNames = tagsNames ? tagsNames.split(',') : []
               return (
                 <span>
-                  <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
-                  <span className='right'>Product offerings: {count}</span>
+                  <span style={{ fontWeight: '600', color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
+                  <span className='right'>
+                    <span>{tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={3} /> : ''}</span>
+                    <span style={{ float: 'right', display: 'inline-flex' }}>Product offerings: {count}</span>
+                  </span>
                 </span>
               )
             }}

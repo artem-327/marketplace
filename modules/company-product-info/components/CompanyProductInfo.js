@@ -12,7 +12,7 @@ import {
   tabs,
   regulatoryFilter,
   dropdownOptions,
-  echoProductGrouping,
+  companyGenericProductGrouping,
   yesNoOptions,
   tabsMarketPlace
 } from '../constants'
@@ -20,13 +20,11 @@ import { errorMessages } from '~/constants/yupValidation'
 
 import DocumentManager from '~/modules/settings/components/Documents/DocumentManagerTable'
 import { getSafe, formatAssay } from '~/utils/functions'
-import { EchoProductResponse, CasProductResponse } from '~/constants/backendObjects'
+import { CompanyGenericProductResponse, CasProductResponse } from '~/constants/backendObjects'
 import { Required } from '~/components/constants/layout'
 
-import {
-  SegmentShowOnly,
-  BottonButtonsShowOnly
-} from '../constants/layout'
+import { SegmentShowOnly, BottonButtonsShowOnly } from '../constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -47,17 +45,16 @@ export const FlexContent = styled.div`
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
-  
+
   > .ui.segment {
     padding: 0 1em 1em 1em;
-    
+
     .ui.form {
-    
-      > .ui.menu {      
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;    
+      > .ui.menu {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
         margin: 0px -1em;
         padding: 0px 2.142857143em;
-        
+
         > .item {
           margin: 0 18px;
           border-width: 0 0 2px;
@@ -74,16 +71,16 @@ export const FlexContent = styled.div`
           &:first-child {
             margin-left: 0;
           }
-    
+
           &:last-child {
             margin-right: 0;
           }
-    
+
           &.active {
             color: #20273a !important;
           }
         }
-        
+
         > .active.item {
           color: #20273a;
           border-bottom-width: 2px;
@@ -95,44 +92,46 @@ export const FlexContent = styled.div`
 
 const WiderSidebar = styled(FlexSidebar)`
   min-width: 630px !important;
-  
+
   .grid > .row > .column.top.aligned {
     align-self: flex-start !important;
   }
-  
-  [class*="SegmentShowOnly"] > .grid > .row > .column:first-child {
+
+  [class*='SegmentShowOnly'] > .grid > .row > .column:first-child {
     align-self: flex-start !important;
     padding: 11px 0 !important;
   }
-  
-  [class*="SegmentShowOnly"] > .grid > .row > .column:first-child:last-child {
+
+  [class*='SegmentShowOnly'] > .grid > .row > .column:first-child:last-child {
     align-self: center !important;
     padding: 0 !important;
   }
-  
+
   input[readonly] {
     color: #20273a !important;
-    
-    &::-webkit-input-placeholder { /* Edge */
+
+    &::-webkit-input-placeholder {
+      /* Edge */
       color: #20273a !important;
     }
 
-    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    &:-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
       color: #20273a !important;
     }
-    
+
     &::placeholder {
       color: #20273a !important;
     }
   }
-  
+
   input,
   textarea {
     font-family: 'HelveticaNeueLTPro' !important;
   }
-  
+
   .ui.dropdown.disabled > .text:empty:before {
-    content: "-";
+    content: '-';
   }
 `
 
@@ -146,20 +145,22 @@ const TextareaStyled = styled(TextareaAutosize)`
   padding: 10px 0 !important;
   color: #20273a !important;
   line-height: 18px !important;
-  
+
   &[readonly] {
     resize: none !important;
     border: 0 none !important;
     padding: 11px 0 !important;
-    
-    &::-webkit-input-placeholder { /* Edge */
+
+    &::-webkit-input-placeholder {
+      /* Edge */
       color: #20273a !important;
     }
 
-    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    &:-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
       color: #20273a !important;
     }
-    
+
     &::placeholder {
       color: #20273a !important;
     }
@@ -177,7 +178,7 @@ class CompanyProductInfo extends Component {
   state = {
     regulatoryFilter: regulatoryFilter.all.value,
     casProductIndex: 0,
-    echoProductGroup: echoProductGrouping[0].value
+    companyGenericProductGrouping: companyGenericProductGrouping[0].value
   }
 
   getElements = ({ id, defaultMessage, elements }) => {
@@ -228,7 +229,10 @@ class CompanyProductInfo extends Component {
       </GridColumn>
 
       <GridColumn width={9}>
-        <Input inputProps={{ readOnly: this.props.readOnly, id: name, placeholder: '-', className: 'styled-readonly' }} name={name} />
+        <Input
+          inputProps={{ readOnly: this.props.readOnly, id: name, placeholder: '-', className: 'styled-readonly' }}
+          name={name}
+        />
       </GridColumn>
     </GridRow>
   )
@@ -245,15 +249,17 @@ class CompanyProductInfo extends Component {
         </GridColumn>
 
         <GridColumn width={9}>
-          <TextareaStyled minRows={1}
-                          readOnly={this.props.readOnly}
-                          id={name}
-                          name={name}
-                          value={value}
-                          placeholder={'-'}
-                          onChange={(e) => {
-                            setFieldValue(name, e.target.value)
-                          }} />
+          <TextareaStyled
+            minRows={1}
+            readOnly={this.props.readOnly}
+            id={name}
+            name={name}
+            value={value}
+            placeholder={'-'}
+            onChange={e => {
+              setFieldValue(name, e.target.value)
+            }}
+          />
         </GridColumn>
       </GridRow>
     )
@@ -272,8 +278,7 @@ class CompanyProductInfo extends Component {
           name={name}
           {...props}
           inputProps={{ disabled: this.props.readOnly }}
-          options={props.options.map(el => (typeof el === 'object' ? el : { key: el, text: el, value: el }))}
-        >
+          options={props.options.map(el => (typeof el === 'object' ? el : { key: el, text: el, value: el }))}>
           <Dropdown.Item defaultValue></Dropdown.Item>
         </FormikDropdown>
       </GridColumn>
@@ -439,21 +444,21 @@ class CompanyProductInfo extends Component {
     }
   }
 
-  componentDidUpdate() {
-    // When you switch different Products and previous product had casProductIndex bigger value than new product casProducts count, set index to 0 so dropdown value is correctly displayed
-    if (this.props.readOnly && this.props.isOpen)
-      if (
-        this.state.casProductIndex + 1 >
-        getSafe(() => this.props.popupValues.companyProduct.echoProduct.elements.length, 0)
-      )
-        this.setState({ casProductIndex: 0 })
-  }
+  // componentDidUpdate() {
+  // When you switch different Products and previous product had casProductIndex bigger value than new product casProducts count, set index to 0 so dropdown value is correctly displayed
+  // if (this.props.readOnly && this.props.isOpen)
+  //   if (
+  //     this.state.casProductIndex + 1 >
+  //     getSafe(() => this.props.popupValues.companyProduct.companyGenericProduct.elements.length, 0)
+  //   )
+  //     this.setState({ casProductIndex: 0 })
+  // }
 
   renderCasProduct = () => {
     const { values, setFieldValue } = this.formikProps
     let { popupValues, readOnly } = this.props
 
-    let casProducts = getSafe(() => popupValues.companyProduct.echoProduct.elements, [])
+    let casProducts = getSafe(() => popupValues.companyProduct.companyGenericProduct.elements, [])
 
     let markup = [
       this.getInput({
@@ -792,7 +797,7 @@ class CompanyProductInfo extends Component {
                 id: 'global.casNumber',
                 defaultMessage: 'CAS Number',
                 name: 'casProduct.casNumber',
-                required : true
+                required: true
               })
             )}
           </GridColumn>
@@ -832,7 +837,7 @@ class CompanyProductInfo extends Component {
             {this.getElements({
               id: 'global.mixtures',
               defaultMessage: 'Mixtures',
-              elements: getSafe(() => values.companyProduct.echoProduct.elements, [])
+              elements: getSafe(() => values.companyGenericProduct.elements, [])
             })}
             {this.getTextarea({
               id: 'global.manufacturer',
@@ -842,59 +847,59 @@ class CompanyProductInfo extends Component {
             {this.getTextarea({
               id: 'global.manufacturerProductCode',
               defaultMessage: 'Manufacturer Product Code',
-              name: 'echoProduct.mfrProductCodes'
+              name: 'companyGenericProduct.mfrProductCodes'
             })}
             {this.getTextarea({
               id: 'global.emergencyNumber',
               defaultMessage: 'Emergency Number',
-              name: 'echoProduct.emergencyPhone'
+              name: 'companyGenericProduct.emergencyPhone'
             })}
             {/*this.getTextarea({
               id: 'global.esin',
               defaultMessage: 'ESIN',
-              name: 'echoProduct.esin'
+              name: 'companyGenericProduct.esin'
             })*/}
             {this.getTextarea({
               id: 'global.recommendedUse',
               defaultMessage: 'Recommended Uses',
-              name: 'echoProduct.recommendedUse',
+              name: 'companyGenericProduct.recommendedUse'
             })}
             {/*this.getTextarea({
               id: 'global.recommendedRestrictions',
               defaultMessage: 'Recommended Restrictions',
-              name: 'echoProduct.recommendedRestrictions'
+              name: 'companyGenericProduct.recommendedRestrictions'
             })*/}
             {this.getTextarea({
               id: 'global.version',
               defaultMessage: 'Version',
-              name: 'echoProduct.sdsVersionNumber'
+              name: 'companyGenericProduct.sdsVersionNumber'
             })}
             {this.getTextarea({
               id: 'global.revisionDate',
               defaultMessage: 'Revision Date',
-              name: 'echoProduct.sdsRevisionDate'
+              name: 'companyGenericProduct.sdsRevisionDate'
             })}
             {/*this.getTextarea({
               id: 'global.synonyms',
               defaultMessage: 'Synonyms',
-              name: 'echoProduct.synonyms'
+              name: 'companyGenericProduct.synonyms'
             })*/}
             {this.getTextarea({
               id: 'global.formula',
               defaultMessage: 'Formula',
-              name: 'echoProduct.molecularFormula'
+              name: 'companyGenericProduct.molecularFormula'
             })}
             {this.getTextarea({
               id: 'global.molecularWeight',
               defaultMessage: 'Molecular Weight',
-              name: 'echoProduct.molecularWeight'
+              name: 'companyGenericProduct.molecularWeight'
             })}
           </Grid>
         )
       }
       case 1: {
         // Properties
-        return <Grid verticalAlign='middle'>{this.getSharedContent('echoProduct.')}</Grid>
+        return <Grid verticalAlign='middle'>{this.getSharedContent('companyGenericProduct.')}</Grid>
       }
 
       case 2: {
@@ -916,106 +921,106 @@ class CompanyProductInfo extends Component {
                 <Dropdown
                   selection
                   fluid
-                  options={echoProductGrouping}
-                  value={this.state.echoProductGroup}
-                  onChange={(_, { value }) => this.setState({ echoProductGroup: value })}
+                  options={companyGenericProductGrouping}
+                  value={this.state.companyGenericProductGrouping}
+                  onChange={(_, { value }) => this.setState({ companyGenericProductGrouping: value })}
                 />
               </GridColumn>
             </GridRow>
             {this.getTextarea({
               id: 'global.unNumber',
               defaultMessage: 'UN Number',
-              name: `echoProduct.${this.state.echoProductGroup}UnNumber.unNumberCode`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}UnNumber.unNumberCode`
             })}
             {this.getTextarea({
               id: 'global.properShippingName',
               defaultMessage: 'Proper Shipping Name',
-              name: `echoProduct.${this.state.echoProductGroup}ProperShippingName`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ProperShippingName`
             })}
             {this.getTextarea({
               id: 'global.properTechnicalName',
               defaultMessage: 'Proper Technical Name',
-              name: `echoProduct.${this.state.echoProductGroup}ProperTechnicalName`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ProperTechnicalName`
             })}
             {this.getTextarea({
               id: 'global.hazardClass',
               defaultMessage: 'Hazard Class',
-              name: `echoProduct.${this.state.echoProductGroup}HazardClass.classCode`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}HazardClass.classCode`
             })}
             {this.getTextarea({
               id: 'global.packagingGroup',
               defaultMessage: 'Packaging Group',
-              name: `echoProduct.${this.state.echoProductGroup}PackagingGroup.groupCode`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingGroup.groupCode`
             })}
             {this.getTextarea({
               id: 'global.reportableQuantity',
               defaultMessage: 'Reportable Quantity',
-              name: `echoProduct.${this.state.echoProductGroup}ReportableQuantity`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantity`
             })}
             {/*this.getTextarea({
               id: 'global.enviromentalHazards',
               defaultMessage: 'Enviromental Hazards',
-              name: `echoProduct.${this.state.echoProductGroup}EnviromentalHazards`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}EnviromentalHazards`
             })*/}
             {/*this.getTextarea({
               id: 'global.emsNumbers',
               defaultMessage: 'Ems Numbers',
-              name: `echoProduct.${this.state.echoProductGroup}EmsNumbers`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}EmsNumbers`
             })*/}
             {/*this.getTextarea({
               id: 'global.exceptions',
               defaultMessage: 'Exceptions',
-              name: `echoProduct.${this.state.echoProductGroup}Exceptions`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}Exceptions`
             })*/}
             {/*this.getTextarea({
               id: 'global.specialPrecautionForUser',
               defaultMessage: 'Special Precautions For User',
-              name: `echoProduct.${this.state.echoProductGroup}SpecialPrecautionsForUser`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}SpecialPrecautionsForUser`
             })*/}
             {this.getTextarea({
               id: 'global.marinePollutant',
               defaultMessage: 'Marine Pollutant',
-              name: `echoProduct.${this.state.echoProductGroup}MarinePollutant`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}MarinePollutant`
             })}
             {this.getTextarea({
               id: 'global.severeMarinePollutant',
               defaultMessage: 'Severe Marine Pollutant',
-              name: `echoProduct.${this.state.echoProductGroup}SevereMarinePollutant`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}SevereMarinePollutant`
             })}
             {/*this.getTextarea({
               id: 'global.packagingExceptions',
               defaultMessage: 'Packaging Exceptions',
-              name: `echoProduct.${this.state.echoProductGroup}PackagingExceptions`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingExceptions`
             })*/}
             {/*this.getTextarea({
               id: 'global.packagingNonBulk',
               defaultMessage: 'Packaging Non Bulk',
-              name: `echoProduct.${this.state.echoProductGroup}PackagingNonBulk`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingNonBulk`
             })*/}
             {/*this.getTextarea({
               id: 'global.packagingBulk',
               defaultMessage: 'Packaging Bulk',
-              name: `echoProduct.${this.state.echoProductGroup}PackagingBulk`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingBulk`
             })*/}
             {/*this.getTextarea({
               id: 'global.quantityLimitationsPassengerAircraftRail',
               defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
-              name: `echoProduct.${this.state.echoProductGroup}QuantityLimitationsPassengerAircraftRail`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}QuantityLimitationsPassengerAircraftRail`
             })*/}
             {/*this.getTextarea({
               id: 'global.quantityLimitationsCargoAircraftOnly',
               defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
-              name: `echoProduct.${this.state.echoProductGroup}QuantityLimitationsCargoAircraftOnly`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}QuantityLimitationsCargoAircraftOnly`
             })*/}
             {/*this.getTextarea({
               id: 'global.vesselStowageLocation',
               defaultMessage: 'Vessel Stowage Location',
-              name: `echoProduct.${this.state.echoProductGroup}VesselStowageLocation`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}VesselStowageLocation`
             })*/}
             {/*this.getTextarea({
               id: 'global.vesselStowageOther',
               defaultMessage: 'Vessel Stowage Other',
-              name: `echoProduct.${this.state.echoProductGroup}VesselStowageOther`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}VesselStowageOther`
             })*/}
           </Grid>
         )
@@ -1023,13 +1028,15 @@ class CompanyProductInfo extends Component {
 
       case 4: {
         // Documents
-        return <DocumentManager
-          items={values.attachments}
-          edit={false}
-          deletable={false}
-          normalWidth={!readOnly}
-          reduceColumns={readOnly}
-        />
+        return (
+          <DocumentManager
+            items={values.attachments}
+            edit={false}
+            deletable={false}
+            normalWidth={!readOnly}
+            reduceColumns={readOnly}
+          />
+        )
       }
 
       default:
@@ -1047,50 +1054,54 @@ class CompanyProductInfo extends Component {
       hiddenTabs,
       readOnly,
       handleSubmit,
-      casProductOnly,
+      casProductOnly
     } = this.props
 
     let { companyProduct } = popupValues
 
     try {
-      var { echoProduct } = companyProduct
+      var { companyGenericProduct } = companyProduct
     } catch (e) {
-      var echoProduct = {}
+      var companyGenericProduct = {}
     }
 
     let additionalFormProps = {}
     if (!readOnly) additionalFormProps.validationSchema = validationSchema
     if (handleSubmit) additionalFormProps.onSubmit = handleSubmit
 
-    let { id, ...rest } = getSafe(() => echoProduct.elements[this.state.casProductIndex].casProduct, {})
+    let { id, ...rest } = getSafe(() => companyGenericProduct.elements[this.state.casProductIndex].casProduct, {})
 
     let initialValues = {
+      ...companyGenericProduct,
       ...companyProduct,
-      ...popupValues,
-      attachments: companyProduct && companyProduct.attachments.concat(echoProduct.attachments),
-      productName: getSafe(() => echoProduct.name, ''),
-      manufacturer: getSafe(() => echoProduct.manufacturer.name, ''),
+      attachments: getSafe(() => companyProduct.attachments, []).concat(
+        getSafe(() => companyGenericProduct.attachments, [])
+      ),
+      productName: getSafe(() => companyGenericProduct.name, ''),
+      manufacturer: getSafe(() => companyGenericProduct.manufacturer.name, ''),
       casProduct: {
         ...CasProductResponse,
-        ...getSafe(() => echoProduct.elements[this.state.casProductIndex], {}),
+        ...getSafe(() => companyGenericProduct.elements[this.state.casProductIndex], {}),
         ...casProduct,
         ...rest
       },
-      echoProduct: {
-        ...EchoProductResponse,
-        ...echoProduct,
+      companyGenericProduct: {
+        ...CompanyGenericProductResponse,
+        ...companyGenericProduct,
         elements: getSafe(
           () =>
-            echoProduct.elements.map(element => ({
+            companyGenericProduct.elements.map(element => ({
               ...element,
               assayMin: element.assayMin ? element.assayMin : '',
               assayMax: element.assayMax ? element.assayMax : ''
             })),
           []
         ),
-        mfrProductCodes: getSafe(() => echoProduct.mfrProductCodes.toString(), ''),
+        mfrProductCodes: getSafe(() => companyGenericProduct.mfrProductCodes.toString(), ''),
         sdsRevisionDate:
-          echoProduct && echoProduct.sdsRevisionDate ? moment(echoProduct.sdsRevisionDate).format('MM/DD/YYYY') : ''
+          companyGenericProduct && companyGenericProduct.sdsRevisionDate
+            ? moment(companyGenericProduct.sdsRevisionDate).format('MM/DD/YYYY')
+            : ''
       }
     }
 
@@ -1104,7 +1115,9 @@ class CompanyProductInfo extends Component {
           this.formikProps = formikProps
           this.submitForm = submitForm
           return casProductOnly ? (
-            <Grid verticalAlign='middle'>{this.renderCasProduct()}</Grid>
+            <Grid verticalAlign='middle'>
+              {this.renderCasProduct()} <ErrorFocus />
+            </Grid>
           ) : (
             <>
               <Menu pointing secondary>
@@ -1124,10 +1137,12 @@ class CompanyProductInfo extends Component {
                       )
                     )}
               </Menu>
-              {readOnly
-                ? (<SegmentShowOnly basic>{this.getContent(formikProps)}</SegmentShowOnly>)
-                : (<Segment basic>{this.getContent(formikProps)}</Segment>)
-              }
+              {readOnly ? (
+                <SegmentShowOnly basic>{this.getContent(formikProps)}</SegmentShowOnly>
+              ) : (
+                <Segment basic>{this.getContent(formikProps)}</Segment>
+              )}
+              <ErrorFocus />
             </>
           )
         }}
@@ -1178,18 +1193,13 @@ class CompanyProductInfo extends Component {
       React.cloneElement(
         this.props.actionsWrapper ? (
           this.props.actionsWrapper(children)
+        ) : readOnly ? (
+          <BottonButtonsShowOnly>{children}</BottonButtonsShowOnly>
         ) : (
-          readOnly ?
-            (
-              <BottonButtonsShowOnly>
-                {children}
-              </BottonButtonsShowOnly>
-            ) : (
-              <GraySegment>
-                <RightAlignedDiv>{children}</RightAlignedDiv>
-              </GraySegment>
-            )
-          )
+          <GraySegment>
+            <RightAlignedDiv>{children}</RightAlignedDiv>
+          </GraySegment>
+        )
       )
 
     const Content = React.cloneElement(

@@ -39,6 +39,7 @@ import { getSafe, deepSearch } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { string, objectOf, bool, func } from 'prop-types'
+import ErrorFocus from '~/components/error-focus'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -48,9 +49,16 @@ const AccordionHeader = styled(Header)`
   }
 `
 
+const StyledModalContent = styled(Modal.Content)`
+  max-height: calc(80vh - 10em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px;
+`
+
 const initialFormValues = {
   name: '',
-  nacdMember: true,
+  enabled: false,
   phone: '',
   businessType: {
     id: null
@@ -285,10 +293,10 @@ class CompanyModal extends React.Component {
                 <FormattedMessage id={`global.${isEdit ? 'edit' : 'add'}`} />{' '}
                 <FormattedMessage id={header.id} defaultMessage={header.defaultMessage} />
               </Modal.Header>
-              <Segment basic padded>
+              <Segment basic style={{ padding: '0', margin: '0' }}>
                 <Form loading={isSubmitting}>
                   <Accordion exclusive={false}>
-                    <Modal.Content>
+                    <StyledModalContent>
                       <CompanyForm
                         admin={true}
                         selectLogo={this.props.selectLogo ? this.props.selectLogo : selectLogo}
@@ -300,6 +308,7 @@ class CompanyModal extends React.Component {
                         errors={errors}
                         touched={touched}
                         isSubmitting={isSubmitting}
+                        isClientCompany={this.props.isClientCompany}
                       />
                       {!popupValues && (
                         <>
@@ -474,7 +483,7 @@ class CompanyModal extends React.Component {
                           </Accordion.Content>
                         </>
                       )}
-                    </Modal.Content>
+                    </StyledModalContent>
                   </Accordion>
                 </Form>
               </Segment>
@@ -486,7 +495,10 @@ class CompanyModal extends React.Component {
                     {text => text}
                   </FormattedMessage>
                 </Button>
-                <Button.Submit data-test='admin_popup_company_save_btn' onClick={props.handleSubmit}>
+                <Button.Submit
+                  data-test='admin_popup_company_save_btn'
+                  onClick={props.handleSubmit}
+                  disabled={isSubmitting}>
                   <FormattedMessage id='global.save' defaultMessage='Save'>
                     {text => text}
                   </FormattedMessage>

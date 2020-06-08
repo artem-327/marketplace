@@ -49,7 +49,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.name'
+        sortPath: 'CompanyGenericProduct.name'
       },
       {
         name: 'code',
@@ -59,7 +59,7 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.code'
+        sortPath: 'CompanyGenericProduct.code'
       },
       {
         name: 'manufacturerName',
@@ -69,12 +69,12 @@ class ProductCatalogTable extends Component {
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.manufacturer.name'
+        sortPath: 'CompanyGenericProduct.manufacturer.name'
       },
       {
         name: 'sds',
         title: (
-          <FormattedMessage id='admin.echoProducts.sds' defaultMessage='SDS'>
+          <FormattedMessage id='admin.companyGenericProduct.sds' defaultMessage='SDS'>
             {text => text}
           </FormattedMessage>
         ),
@@ -83,31 +83,42 @@ class ProductCatalogTable extends Component {
       {
         name: 'sdsVersionNumber',
         title: (
-          <FormattedMessage id='admin.echoProducts.sdsVersion' defaultMessage='SDS Version'>
+          <FormattedMessage id='admin.companyGenericProduct.sdsVersion' defaultMessage='SDS Version'>
             {text => text}
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.sdsVersionNumber'
+        sortPath: 'CompanyGenericProduct.sdsVersionNumber'
       },
       {
         name: 'sdsRevisionDate',
         title: (
-          <FormattedMessage id='admin.echoProducts.sdsRevisionDate' defaultMessage='SDS Revision Date'>
+          <FormattedMessage id='admin.companyGenericProduct.sdsRevisionDate' defaultMessage='SDS Revision Date'>
             {text => text}
           </FormattedMessage>
         ),
         width: 150,
-        sortPath: 'EchoProduct.sdsRevisionDate'
+        sortPath: 'CompanyGenericProduct.sdsRevisionDate'
       },
       {
-        name: 'tagsFormatted',
+        name: 'productGroup',
         title: (
-          <FormattedMessage id='global.tags' defaultMessage='Tags'>
+          <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 150
+        width: 150,
+        sortPath: 'CompanyGenericProduct.productGroup.name'
+      },
+      {
+        name: 'company',
+        title: (
+          <FormattedMessage id='global.company' defaultMessage='Company'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 150,
+        sortPath: 'CompanyGenericProduct.company.name'
       }
     ]
   }
@@ -146,9 +157,8 @@ class ProductCatalogTable extends Component {
           ),
         manufacturerName: row.manufacturer ? row.manufacturer.name : '',
         sdsRevisionDate: row.sdsRevisionDate ? moment(row.sdsRevisionDate).format(getLocaleDateFormat()) : '',
-        tagsFormatted: (
-          <ArrayToFirstItem values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''} rowItems={2} />
-        )
+        productGroup: getSafe(() => row.productGroup.name, ''),
+        company: getSafe(() => row.company.name, '')
       }
     })
   }
@@ -229,7 +239,7 @@ class ProductCatalogTable extends Component {
       intl: { formatMessage },
       openEditEchoProduct,
       openEditEchoAltNamesPopup,
-      deleteEchoProduct,
+      deleteCompanyGenericProduct,
       editedId,
       filterValue
     } = this.props
@@ -252,20 +262,26 @@ class ProductCatalogTable extends Component {
               callback: row => openEditEchoAltNamesPopup(row)
             },
             {
-              text: formatMessage({ id: 'admin.deleteEchoProduct', defaultMessage: 'Delete Echo Product' }),
+              text: formatMessage({
+                id: 'admin.deleteCompanyGenericProduct',
+                defaultMessage: 'Delete Company Generic Product'
+              }),
               disabled: row => editedId === row.id,
               callback: row => {
                 confirm(
-                  formatMessage({ id: 'confirm.deleteEchoProduct.title', defaultMessage: 'Delete Echo Product?' }),
+                  formatMessage({
+                    id: 'confirm.deleteCompanyGenericProduct.title',
+                    defaultMessage: 'Delete Company Generic Product?'
+                  }),
                   formatMessage(
                     {
-                      id: 'confirm.deleteEchoProduct.content',
-                      defaultMessage: `Do you really want to delete '${row.name}' echo product?`
+                      id: 'confirm.deleteCompanyGenericProduct.content',
+                      defaultMessage: `Do you really want to delete '${row.name}' company generic product?`
                     },
                     { name: row.name }
                   )
                 ).then(() => {
-                  deleteEchoProduct(row.id)
+                  deleteCompanyGenericProduct(row.id)
                   datagrid.removeRow(row.id)
                 })
               }
@@ -290,7 +306,8 @@ const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
     filterValue: productsAdmin.filterValue,
     currentTab: productsAdmin.currentTab,
     rows: datagrid.rows.map(c => ({
-      ...c
+      ...c,
+      company: getSafe(() => c.company, [])
     }))
   }
 }

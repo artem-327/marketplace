@@ -87,7 +87,7 @@ export default {
     api.post(
       `/prodex/api/attachment-links/to-company-product?attachmentId=${attachmentId}&companyProductId=${productId}`
     ),
-  postNewUser: body => api.post('/prodex/api/users', body),
+  postNewUser: body => api.post('/prodex/api/users', body).then(response => response.data),
   postNewWarehouse: body => api.post('/prodex/api/branches/', body),
   postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
   postNewBankAccount: body => api.post('/prodex/api/payments/bank-accounts/add', body),
@@ -100,9 +100,9 @@ export default {
       .then(response => response.data)
       .catch(error => console.error(error))
   },
-  postImportEchoProductCSV: (body, id) => {
+  postImportCompanyGenericProductCSV: (body, id) => {
     return api
-      .post(`/prodex/api/imports/echo-products/csv-import?temporaryFileId=${id}`, body)
+      .post(`/prodex/api/imports/company-generic-products/csv-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
   postImportProductOfferCSV: (body, id) => {
@@ -116,10 +116,13 @@ export default {
 
     return api.post('/prodex/api/imports/temporary-files', formData).then(response => response.data)
   },
-  getCSVMapEchoProduct: () => api.get('/prodex/api/imports/echo-products/import-maps').then(response => response.data),
-  postCSVMapEchoProduct: data => api.post('/prodex/api/imports/echo-products/import-maps', data),
-  putCSVMapEchoProduct: (mapId, data) => api.put(`/prodex/api/imports/echo-products/import-maps/${mapId}`, data),
-  deleteCSVMapEchoProduct: mapId => api.delete(`/prodex/api/imports/echo-products/import-maps/${mapId}`),
+  getCSVMapCompanyGenericProduct: () =>
+    api.get('/prodex/api/imports/company-generic-products/import-maps').then(response => response.data),
+  postCSVMapCompanyGenericProduct: data => api.post('/prodex/api/imports/company-generic-products/import-maps', data),
+  putCSVMapCompanyGenericProduct: (mapId, data) =>
+    api.put(`/prodex/api/imports/company-generic-products/import-maps/${mapId}`, data),
+  deleteCSVMapCompanyGenericProduct: mapId =>
+    api.delete(`/prodex/api/imports/company-generic-products/import-maps/${mapId}`),
 
   getCSVMapProductOffer: () =>
     api.get('/prodex/api/imports/product-offers/import-maps').then(response => response.data),
@@ -139,7 +142,7 @@ export default {
 
   putWarehouse: (branchId, body) => api.put(`/prodex/api/branches/${branchId}`, body).then(r => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
-  patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
+  patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body).then(r => r.data),
   patchUserRole: (id, body) => api.put(`/prodex/api/users/id/${id}/roles`, body),
   putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body), //! ! delete
   searchCasProduct: pattern => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`),
@@ -205,8 +208,10 @@ export default {
   getLanguages: () => api.get('/prodex/api/cms/languages/').then(response => response.data),
   setPreferredLanguage: language =>
     api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language),
-  searchEchoProducts: (searchQuery, limit) =>
-    api.get(`/prodex/api/echo-products/search?pattern=${searchQuery}&limit=${limit}`).then(response => response.data),
+  searchCompanyGenericProduct: (searchQuery, limit) =>
+    api
+      .get(`/prodex/api/company-generic-products/search?pattern=${searchQuery}&limit=${limit}`)
+      .then(response => response.data),
   getNmfcNumbersByString: pattern =>
     api.get(`/prodex/api/nmfc-numbers/search?limit=5&pattern=${pattern}`).then(response => response.data),
   removeAttachmentLinkCompanyProduct: (itemId, aId) =>
@@ -232,6 +237,7 @@ export default {
     })
   },
   setPrimaryUser: (companyId, userId) =>
-    api.patch(`/prodex/api/companies/${companyId}/primary-user?userId=${userId}`)
-      .then(response => response.data)
+    api.patch(`/prodex/api/companies/${companyId}/primary-user?userId=${userId}`).then(response => response.data),
+  getCompanyDetails:(id) =>
+    api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
 }

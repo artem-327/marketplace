@@ -574,7 +574,7 @@ class Orders extends Component {
             row &&
             row.orderItems &&
             row.orderItems.length &&
-            row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))
+            row.orderItems.map(d => (d.companyGenericProductName ? d.companyGenericProductName : 'N/A'))
           }
         />
       ),
@@ -608,7 +608,7 @@ class Orders extends Component {
         globalStatus: '',
         date: '',
         customerName: '',
-        productName: item.echoProductName ? item.echoProductName : 'N/A',
+        productName: item.companyGenericProductName ? item.companyGenericProductName : 'N/A',
         orderStatus: '',
         shippingStatus: '',
         reviewStatus: '',
@@ -623,16 +623,17 @@ class Orders extends Component {
             <a
               href='#'
               onClick={e =>
-                this.openDocumentManager(e, {
+                this.openDocumentManager(
+                  e,
+                  {
                     rowRawData: row.rawData,
                     parentId: item.rawData.id,
                     attachments: item.attachments,
                     type: 'item'
                   },
-                  [10]  // B/L
+                  [10] // B/L
                 )
-              }
-            >
+              }>
               <Icon name='file' className='unknown' />
             </a>
           ),
@@ -645,16 +646,17 @@ class Orders extends Component {
             <a
               href='#'
               onClick={e =>
-                this.openDocumentManager(e, {
+                this.openDocumentManager(
+                  e,
+                  {
                     rowRawData: row.rawData,
                     parentId: item.rawData.id,
                     attachments: item.attachments,
                     type: 'item'
                   },
-                  [3]  // SDS
+                  [3] // SDS
                 )
-              }
-            >
+              }>
               <Icon name='file' className='unknown' />
             </a>
           ),
@@ -667,21 +669,22 @@ class Orders extends Component {
             <a
               href='#'
               onClick={e =>
-                this.openDocumentManager(e, {
+                this.openDocumentManager(
+                  e,
+                  {
                     rowRawData: row.rawData,
                     parentId: item.rawData.id,
                     attachments: item.attachments,
                     type: 'item'
                   },
-                  [1]  // C of A
+                  [1] // C of A
                 )
-              }
-            >
-              {
-                row.rawData.orderStatus === 2
-                ? <Icon name='file' className='negative' />
-                : <Icon name='file' className='unknown' />
-              }
+              }>
+              {row.rawData.orderStatus === 2 ? (
+                <Icon name='file' className='negative' />
+              ) : (
+                <Icon name='file' className='unknown' />
+              )}
             </a>
           ),
         related: (
@@ -698,7 +701,7 @@ class Orders extends Component {
                     <FormattedMessage id='order.relatedDocumentsFor' defaultMessage='RELATED DOCUMENTS FOR '>
                       {text => text}
                     </FormattedMessage>
-                    <StyledHeader>{item.echoProductName}</StyledHeader>
+                    <StyledHeader>{item.companyGenericProductName}</StyledHeader>
                   </>
                 )
               })
@@ -1220,7 +1223,8 @@ class Orders extends Component {
               this.setState({
                 isOpenManager: false,
                 relatedDocumentType: []
-              })}
+              })
+            }
           />
         )}
 

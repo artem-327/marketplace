@@ -20,13 +20,8 @@ import _ from 'lodash'
 import { inputWrapper, quantityWrapper } from '../../components'
 import { Required } from '~/components/constants/layout'
 
-import {
-  Dimmer,
-  Loader,
-  Grid,
-  GridRow,
-  GridColumn,
-} from 'semantic-ui-react'
+import { Dimmer, Loader, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import ErrorFocus from '~/components/error-focus'
 
 import {
   myOffersSidebarTrigger,
@@ -44,14 +39,7 @@ import {
   updateEditedId
 } from '../../actions'
 
-
-
-import {
-  FlexSidebar,
-  FlexContent,
-  HighSegment,
-  BottomButtons,
-} from '../../constants/layout'
+import { FlexSidebar, FlexContent, HighSegment, BottomButtons } from '../../constants/layout'
 
 import { listFrequency } from '../../constants/constants'
 
@@ -62,34 +50,29 @@ const initValues = {
   conditionConforming: '',
   packagingTypes: '',
   expiresAt: '',
-  measurement: 7      // pounds [lb]
+  measurement: 7 // pounds [lb]
 }
 
 const validationSchema = () =>
   val.lazy(values => {
     return val.object().shape({
-        product: val
-          .number()
-          .typeError(errorMessages.requiredMessage)
-          .required(errorMessages.requiredMessage),
-        pricePerUOM: val
-          .number()
-          .positive(errorMessages.positive)
-          .moreThan(0, errorMessages.greaterThan(0))
-          .typeError(errorMessages.mustBeNumber)
-          .test('maxdec', errorMessages.maxDecimals(3), val => {
-            return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-          })
-          .required(errorMessages.requiredMessage),
-        ...(values.expiresAt.length && {
-          expiresAt: val.string()
-            .test('minDate', errorMessages.dateNotInPast, function(date) {
-              const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-              return enteredDate >= moment().endOf('day').format()
-            }),
-        }),
-      }
-    )
+      product: val.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+      pricePerUOM: val
+        .number()
+        .positive(errorMessages.positive)
+        .moreThan(0, errorMessages.greaterThan(0))
+        .typeError(errorMessages.mustBeNumber)
+        .test('maxdec', errorMessages.maxDecimals(3), val => {
+          return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+        })
+        .required(errorMessages.requiredMessage),
+      ...(values.expiresAt.length && {
+        expiresAt: val.string().test('minDate', errorMessages.dateNotInPast, function (date) {
+          const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+          return enteredDate >= moment().endOf('day').format()
+        })
+      })
+    })
   })
 
 const listConforming = [
@@ -108,7 +91,7 @@ const listConforming = [
 class DetailSidebar extends Component {
   state = {
     initValues: initValues,
-    sidebarValues: null,
+    sidebarValues: null
   }
 
   componentDidMount = async () => {
@@ -116,7 +99,7 @@ class DetailSidebar extends Component {
     this.fetchIfNoData('listUnits', this.props.getUnits)
     //this.props.searchManufacturers('', 200)
     this.props.updateEditedId(this.props.sidebarValues.id)
-    this.setState({ sidebarValues: this.props.sidebarValues})
+    this.setState({ sidebarValues: this.props.sidebarValues })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -126,7 +109,7 @@ class DetailSidebar extends Component {
       const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = this.formikProps
       if (_.isEmpty(touched)) {
         this.props.updateEditedId(this.props.sidebarValues.id)
-        this.setState({ sidebarValues: this.props.sidebarValues})
+        this.setState({ sidebarValues: this.props.sidebarValues })
       } else {
         // Form edited
         validateForm().then(err => {
@@ -144,21 +127,21 @@ class DetailSidebar extends Component {
                 defaultMessage: 'You have unsaved changes. Do you wish to save them?'
               })
             )
-            .then(
-              async () => {
-                // Confirm
-                if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
-                  this.setState({sidebarValues: this.props.sidebarValues})
+              .then(
+                async () => {
+                  // Confirm
+                  if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
+                    this.setState({ sidebarValues: this.props.sidebarValues })
+                    this.props.updateEditedId(this.props.sidebarValues.id)
+                  }
+                },
+                () => {
+                  // Cancel
+                  this.setState({ sidebarValues: this.props.sidebarValues })
                   this.props.updateEditedId(this.props.sidebarValues.id)
                 }
-              },
-              () => {
-                // Cancel
-                this.setState({ sidebarValues: this.props.sidebarValues})
-                this.props.updateEditedId(this.props.sidebarValues.id)
-              }
-            )
-            .catch(() => {})
+              )
+              .catch(() => {})
           }
         })
       }
@@ -171,7 +154,7 @@ class DetailSidebar extends Component {
 
   searchProducts = debounce(text => {
     this.props.getAutocompleteData({
-      searchUrl: `/prodex/api/echo-products/search/include-alternative-names?pattern=${text}`
+      searchUrl: `/prodex/api/product-groups/search?pattern=${text}`
     })
   }, 250)
 
@@ -198,7 +181,6 @@ class DetailSidebar extends Component {
         const response = await editMyPurchaseOffer(sidebarValues.id, body)
         sendSuccess = true
         datagrid.updateRow(sidebarValues.id, () => response.value.data)
-
       } else {
         //const response = await addMyPurchaseOffer(body)
       }
@@ -213,17 +195,19 @@ class DetailSidebar extends Component {
     let initialValues = {
       ...this.state.initValues,
       ...(sidebarValues
-          ? {
-            product: getSafe(() => sidebarValues.productOffer.companyProduct.echoProduct.id, ''),
+        ? {
+            product: getSafe(() => sidebarValues.productOffer.companyProduct.companyGenericProduct.id, ''),
             pricePerUOM: getSafe(() => sidebarValues.pricePerUOM, ''),
-            manufacturers: getSafe(() => sidebarValues.productOffer.companyProduct.echoProduct.manufacturer.id, ''),
+            manufacturers: getSafe(
+              () => sidebarValues.productOffer.companyProduct.companyGenericProduct.manufacturer.id,
+              ''
+            ),
             conditionConforming: getSafe(() => sidebarValues.productOffer.conforming, ''),
             packagingTypes: getSafe(() => sidebarValues.productOffer.companyProduct.packagingType.id, ''),
             measurement: getSafe(() => sidebarValues.productOffer.companyProduct.packagingUnit.id, ''),
-            expiresAt: getSafe(() => sidebarValues.expiresAt, ''),
+            expiresAt: getSafe(() => sidebarValues.expiresAt, '')
           }
-          : null
-      )
+        : null)
     }
     if (initialValues.expiresAt) {
       initialValues.expiresAt = moment(initialValues.expiresAt).format(getLocaleDateFormat())
@@ -284,14 +268,11 @@ class DetailSidebar extends Component {
                 </HighSegment>
                 <FlexContent>
                   <Grid>
-
                     <GridRow>
                       <GridColumn>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.productName'
-                              defaultMessage='Product Name'>
+                            <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -299,10 +280,7 @@ class DetailSidebar extends Component {
                           options={this.props.autocompleteData}
                           inputProps={{
                             placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectProduct'
-                                defaultMessage='Select Product'
-                              />
+                              <FormattedMessage id='wantedBoard.selectProduct' defaultMessage='Select Product' />
                             ),
                             loading: this.props.autocompleteDataLoading,
                             'data-test': 'my_offer_product_search_drpdn',
@@ -330,61 +308,55 @@ class DetailSidebar extends Component {
                             'data-test': 'my_offer_fob_price_inp'
                           },
                           <>
-                            <FormattedMessage
-                              id='wantedBoard.fobPrice'
-                              defaultMessage='FOB Price'
-                            >
+                            <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
                               {text => text}
                             </FormattedMessage>
                             <Required />
-                          </>
-                          ,
+                          </>,
                           currencySymbol
                         )}
                       </GridColumn>
                     </GridRow>
 
-                    {false && (<GridRow>
-                      <GridColumn>
-                        <Dropdown
-                          label={
-                            <FormattedMessage
-                              id='wantedBoard.manufacturer'
-                              defaultMessage='Manufacturer'>
-                              {text => text}
-                            </FormattedMessage>
-                          }
-                          name='manufacturers'
-                          options={searchedManufacturers}
-                          inputProps={{
-                            placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectManufacturer'
-                                defaultMessage='Select Manufacturer'
-                              />
-                            ),
-                            loading: searchedManufacturersLoading,
-                            'data-test': 'my_offer_manufacturer_drpdn',
-                            size: 'large',
-                            icon: 'search',
-                            search: options => options,
-                            selection: true,
-                            multiple: false,
-                            disabled: true,
-                            onSearchChange: (e, { searchQuery }) =>
-                              searchQuery.length > 0 && this.searchManufacturers(searchQuery)
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>)}
+                    {false && (
+                      <GridRow>
+                        <GridColumn>
+                          <Dropdown
+                            label={
+                              <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            name='manufacturers'
+                            options={searchedManufacturers}
+                            inputProps={{
+                              placeholder: (
+                                <FormattedMessage
+                                  id='wantedBoard.selectManufacturer'
+                                  defaultMessage='Select Manufacturer'
+                                />
+                              ),
+                              loading: searchedManufacturersLoading,
+                              'data-test': 'my_offer_manufacturer_drpdn',
+                              size: 'large',
+                              icon: 'search',
+                              search: options => options,
+                              selection: true,
+                              multiple: false,
+                              disabled: true,
+                              onSearchChange: (e, { searchQuery }) =>
+                                searchQuery.length > 0 && this.searchManufacturers(searchQuery)
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    )}
 
                     <GridRow>
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.condition'
-                              defaultMessage='Condition'>
+                            <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -392,24 +364,19 @@ class DetailSidebar extends Component {
                           options={listConforming}
                           inputProps={{
                             placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectCondition'
-                                defaultMessage='Select Condition'
-                              />
+                              <FormattedMessage id='wantedBoard.selectCondition' defaultMessage='Select Condition' />
                             ),
                             'data-test': 'my_offer_conforming_drpdn',
                             selection: true,
                             clearable: true,
-                            disabled: true,
+                            disabled: true
                           }}
                         />
                       </GridColumn>
-                      <GridColumn  width={8}>
+                      <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.packaging'
-                              defaultMessage='Packaging'>
+                            <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -417,10 +384,7 @@ class DetailSidebar extends Component {
                           options={listPackagingTypes}
                           inputProps={{
                             placeholder: (
-                              <FormattedMessage
-                                id='wantedBoard.selectPackaging'
-                                defaultMessage='Select Packaging'
-                              />
+                              <FormattedMessage id='wantedBoard.selectPackaging' defaultMessage='Select Packaging' />
                             ),
                             'data-test': 'my_offer_packaging_drpdn',
                             selection: true,
@@ -433,12 +397,10 @@ class DetailSidebar extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <GridColumn  width={8}>
+                      <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.measurement'
-                              defaultMessage='Measurement'>
+                            <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -456,26 +418,22 @@ class DetailSidebar extends Component {
                         <DateInput
                           name='expiresAt'
                           label={
-                            <FormattedMessage
-                              id='wantedBoard.expirationDate'
-                              defaultMessage='Expiration Date'>
+                            <FormattedMessage id='wantedBoard.expirationDate' defaultMessage='Expiration Date'>
                               {text => text}
                             </FormattedMessage>
                           }
                           inputProps={{
                             'data-test': 'my_offer_expiration_date_inp',
-                            placeholder:
-                              formatMessage({
-                                id: 'date.standardPlaceholder',
-                                defaultMessage: '00/00/0000'
-                              }),
+                            placeholder: formatMessage({
+                              id: 'date.standardPlaceholder',
+                              defaultMessage: '00/00/0000'
+                            }),
                             minDate: moment(),
                             clearable: true
                           }}
                         />
                       </GridColumn>
                     </GridRow>
-
                   </Grid>
                 </FlexContent>
                 <BottomButtons>
@@ -484,7 +442,7 @@ class DetailSidebar extends Component {
                       size='large'
                       inputProps={{
                         type: 'button',
-                        'data-test': 'my_offer_close_btn',
+                        'data-test': 'my_offer_close_btn'
                       }}
                       onClick={() => this.props.closeDetailSidebar()}
                       data-test='sidebar_inventory_cancel'>
@@ -495,7 +453,7 @@ class DetailSidebar extends Component {
                     <Button
                       disabled={!(Object.keys(touched).length || this.state.changedForm)}
                       inputProps={{
-                        'data-test': 'my_offer_save_btn',
+                        'data-test': 'my_offer_save_btn'
                       }}
                       primary
                       size='large'
@@ -517,6 +475,7 @@ class DetailSidebar extends Component {
                   </div>
                 </BottomButtons>
               </FlexSidebar>
+              <ErrorFocus />
             </Form>
           )
         }}
@@ -549,7 +508,7 @@ const mapStateToProps = ({
     loading,
     sidebarValues,
     searchedManufacturers,
-    searchedManufacturersLoading,
+    searchedManufacturersLoading
   }
 }) => ({
   editInitTrig,

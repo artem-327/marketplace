@@ -14,7 +14,7 @@ import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 import WarehouseSidebar from './WarehouseTable/WarehouseSidebar'
 import BranchesSidebar from './BranchesTable/BranchesSidebar'
-import EditUsersPopup from './UserTable/UsersPopup'
+import UsersSidebar from './UserTable/UsersSidebar'
 import ProductSidebar from './ProductCatalogTable/ProductSidebar'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
@@ -119,14 +119,22 @@ class Settings extends Component {
   }
   // marked tab based on role of user or if tab changed.
   changeRoute = queryTab => {
-    const { isCompanyAdmin, tabsNames, tabChanged, currentTab, isUserAdmin, isProductCatalogAdmin } = this.props
+    const {
+      isCompanyAdmin,
+      tabsNames,
+      tabChanged,
+      currentTab,
+      isUserAdmin,
+      isProductCatalogAdmin,
+      isClientCompanyAdmin
+    } = this.props
     // array of tabsNames converted to Map
     let tabsNamesMap = new Map()
     for (let i in tabsNames) {
       tabsNamesMap.set(tabsNames[i].type, tabsNames[i])
     }
 
-    if (isCompanyAdmin) {
+    if (isCompanyAdmin || isClientCompanyAdmin) {
       tabChanged(queryTab)
     } else {
       if (isUserAdmin) {
@@ -165,10 +173,9 @@ class Settings extends Component {
   }
 
   redirectPage = async queryTab => {
-    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin } = this.props
+    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, isClientCompanyAdmin } = this.props
     const tab = getSafe(() => queryTab.type, '')
-
-    if (!isCompanyAdmin && tab !== 'system-settings') {
+    if (!isCompanyAdmin && !isClientCompanyAdmin && tab !== 'system-settings') {
       if ((isUserAdmin && tab === 'users') || (isProductCatalogAdmin && tab === 'products')) {
         this.setState({ wrongUrl: false })
       } else if (!isProductCatalogAdmin && !isUserAdmin) {
@@ -192,17 +199,20 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    const { isCompanyAdmin, addTab, tabsNames, getIdentity } = this.props
+    const { isCompanyAdmin, addTab, tabsNames, getIdentity, isClientCompanyAdmin } = this.props
     try {
       await getIdentity()
     } catch (error) {
       console.error(error)
     }
 
-    if (isCompanyAdmin) addTab(companyDetailsTab)
+    if (isCompanyAdmin || isClientCompanyAdmin) addTab(companyDetailsTab)
+
     let queryTab =
       (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
-      (isCompanyAdmin ? companyDetailsTab : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
+      (isCompanyAdmin || isClientCompanyAdmin
+        ? companyDetailsTab
+        : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
 
     this.changeRoute(queryTab)
     this.redirectPage(queryTab)
@@ -313,7 +323,7 @@ class Settings extends Component {
     }
 
     const popupForm = {
-      users: <EditUsersPopup />,
+      users: <UsersSidebar />,
       branches: <BranchesSidebar />,
       warehouses: <WarehouseSidebar />,
       products: <ProductSidebar />,
@@ -447,12 +457,12 @@ class Settings extends Component {
                 },
                 {
                   operator: 'LIKE',
-                  path: 'CompanyProduct.echoProduct.name',
+                  path: 'CompanyProduct.companyGenericProduct.name',
                   values: [`%${v}%`]
                 },
                 {
                   operator: 'LIKE',
-                  path: 'CompanyProduct.echoProduct.code',
+                  path: 'CompanyProduct.companyGenericProduct.code',
                   values: [`%${v}%`]
                 }
               ]
@@ -523,11 +533,11 @@ class Settings extends Component {
       !this.state.wrongUrl && (
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
           <Container fluid className='flex stretched'>
-            {!tutorialCompleted && <Tutorial />}
-            <Container fluid style={{ padding: '0 18px' }}>
+            {!tutorialCompleted && <div style={{ margin: '5px -2px -15px -2px' }}><Tutorial /></div>}
+            <Container fluid style={{ padding: '20px 30px' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>
-            <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
+            <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 30px' }}>
               <Grid.Row>
                 <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
               </Grid.Row>
@@ -549,7 +559,8 @@ const mapStateToProps = ({ settings, auth }) => {
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
     documentsOwner: getSafe(() => settings.documentsOwner, []),
-    productCatalogUnmappedValue: settings.productCatalogUnmappedValue
+    productCatalogUnmappedValue: settings.productCatalogUnmappedValue,
+    isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false)
   }
 }
 

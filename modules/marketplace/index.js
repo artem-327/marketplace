@@ -14,15 +14,23 @@ export const Marketplace = props => {
               filters.or = [
                 { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${v.or}%`] },
                 { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${v.or}%`] },
-                { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.name', values: [`%${v.or}%`] },
-                { operator: 'LIKE', path: 'ProductOffer.companyProduct.echoProduct.tags.name', values: [`%${v.or}%`] }
+                {
+                  operator: 'LIKE',
+                  path: 'ProductOffer.companyProduct.companyGenericProduct.name',
+                  values: [`%${v.or}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.name',
+                  values: [`%${v.or}%`]
+                }
               ]
             }
             if (v && v.and && v.and.length > 0) {
               filters.and = v.and.map(idTag => {
                 return {
                   operator: 'EQUALS',
-                  path: 'ProductOffer.companyProduct.echoProduct.tags.id',
+                  path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
                   values: [idTag]
                 }
               })

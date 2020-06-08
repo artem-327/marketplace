@@ -5,8 +5,8 @@ import { Table } from 'semantic-ui-react'
 
 import {
   dataHeaderCSV,
-  postCSVMapEchoProduct,
-  putCSVMapEchoProduct,
+  postCSVMapCompanyGenericProduct,
+  putCSVMapCompanyGenericProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
   postCSVMapCompanies,
@@ -51,13 +51,13 @@ class Preview extends Component {
 
   componentDidMount() {
     if (this.props.selectedSavedMap && !this.props.isSaveMapCSV) {
-      ;(this.props.productOffer || this.props.echoProduct || this.props.companies) &&
+      ;(this.props.productOffer || this.props.companyGenericProduct || this.props.companies) &&
         this.props.dataHeaderCSV(this.props.selectedSavedMap)
 
-      if (this.props.echoProduct)
+      if (this.props.companyGenericProduct)
         this.props.isSaveMapCSV &&
           data &&
-          this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+          this.props.putCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id, {
             ...data,
             mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
           })
@@ -78,10 +78,10 @@ class Preview extends Component {
 
       if (this.props.selectedSavedMap) {
         // save edited maps
-        if (this.props.echoProduct)
+        if (this.props.companyGenericProduct)
           this.props.isSaveMapCSV &&
             data &&
-            this.props.putCSVMapEchoProduct(this.props.selectedSavedMap.id, {
+            this.props.putCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id, {
               ...data,
               mapName: this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
             })
@@ -103,10 +103,10 @@ class Preview extends Component {
             })
       } else {
         // save new maps
-        if (this.props.echoProduct)
+        if (this.props.companyGenericProduct)
           this.props.isSaveMapCSV &&
             data &&
-            this.props.postCSVMapEchoProduct({
+            this.props.postCSVMapCompanyGenericProduct({
               ...data,
               mapName: this.props.mapName
             })
@@ -173,8 +173,8 @@ class Preview extends Component {
 
 const mapDispatchToProps = {
   dataHeaderCSV,
-  postCSVMapEchoProduct,
-  putCSVMapEchoProduct,
+  postCSVMapCompanyGenericProduct,
+  putCSVMapCompanyGenericProduct,
   postCSVMapProductOffer,
   putCSVMapProductOffer,
   postCSVMapCompanies,
