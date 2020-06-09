@@ -533,6 +533,7 @@ class ProductSidebar extends React.Component {
                       <GridRow>
                         <GridColumn>
                           <Dropdown
+                            name='companyGenericProduct'
                             label={
                               <>
                                 <FormattedMessage
@@ -568,7 +569,6 @@ class ProductSidebar extends React.Component {
                                 />
                               )
                             }}
-                            name='companyGenericProduct'
                           />
                         </GridColumn>
                       </GridRow>
@@ -1225,8 +1225,8 @@ class ProductSidebar extends React.Component {
                     />
                   </BottomButtons>
                 </FlexSidebar>
+                <ErrorFocus />
               </CustomForm>
-              <ErrorFocus />
             </>
           )
         }}

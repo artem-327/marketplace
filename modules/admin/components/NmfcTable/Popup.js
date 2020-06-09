@@ -10,6 +10,7 @@ import { nmfcValidation } from '../../../../constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { addNmfcNumber, editNmfcNumber } from '~/modules/admin/actions'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const validationSchema = Yup.object().shape({
   code: nmfcValidation()
@@ -41,8 +42,7 @@ class Popup extends Component {
     return (
       <Modal open onClose={() => closeAddPopup()}>
         <Modal.Header>
-          {formatMessage({ id: `global.${type.id}`, defaultMessage: type.defaultMessage })}{' '}
-          {config.addEditText}
+          {formatMessage({ id: `global.${type.id}`, defaultMessage: type.defaultMessage })} {config.addEditText}
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -80,6 +80,7 @@ class Popup extends Component {
                       name='description'
                       label={formatMessage({ id: 'global.description', defaultMessage: '!Description' })}
                     />
+                    <ErrorFocus />
                   </FormGroup>
                 </>
               )
