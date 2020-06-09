@@ -170,9 +170,9 @@ const textsTable = {
     BtnAddText: 'settings.tables.deliveryAddresses.buttonAdd',
     SearchText: 'settings.tables.deliveryAddresses.search'
   },
-  'client-companies': {
-    BtnAddText: 'settings.tables.clientCompanies.buttonAdd',
-    SearchText: 'settings.tables.clientCompanies.search'
+  'guest-companies': {
+    BtnAddText: 'settings.tables.guestCompanies.buttonAdd',
+    SearchText: 'settings.tables.guestCompanies.search'
   },
   logistics: {
     BtnAddText: 'settings.tables.logistics.buttonAdd',

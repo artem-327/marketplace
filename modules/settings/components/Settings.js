@@ -312,7 +312,7 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'delivery-addresses': <DeliveryAddressesTable />,
-      'client-companies': <ClientCompanyTable />,
+      'guest-companies': <ClientCompanyTable />,
       logistics: <LogisticsTable />,
       'system-settings': (
         <FixyWrapper>
@@ -333,7 +333,7 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
       'delivery-addresses': <DeliveryAddressesPopup />,
-      'client-companies': <ClientCompanyPopup />,
+      'guest-companies': <ClientCompanyPopup />,
       logistics: <LogisticsPopup />,
       documents: <DocumentsPopup />
     }
@@ -409,7 +409,7 @@ class Settings extends Component {
           orOperator: true
         }
       },
-      'client-companies': {
+      'guest-companies': {
         url: '/prodex/api/companies/client/datagrid',
         searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v}%`] }] : []),
         params: {
