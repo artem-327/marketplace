@@ -227,6 +227,8 @@ class Navigation extends Component {
         // Reset styles
         current.lastChild.style.maxHeight = ''
       }
+
+      this.props.navigationPS.current.updateScroll()
     }
   }
 
@@ -570,7 +572,8 @@ class Navigation extends Component {
 export default withAuth(
   withRouter(
     connect(
-      store => ({
+      (store, { navigationPS }) => ({
+        navigationPS: navigationPS,
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),

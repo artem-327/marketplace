@@ -927,9 +927,12 @@ export const LeftMenuContainer = styled(Container)`
   padding: 0 10px;
 
   .scrollbar-container {
-    //min-height: calc(100vh - 70px);
     flex-grow: 0;
     flex-shrink: 1;
+  }
+  
+  > .scrollbar-container {
+    min-height: calc(100vh - 70px);
   }
 
   .container.bottom {
