@@ -74,6 +74,7 @@ export default class ArrayToFirstItem extends Component {
             <ProductFirstTags>
               {rowValues.map(val => (
                 <ItemLabel
+                  style={typeof onTagClick !== 'undefined' ? { cursor: 'pointer' } : null}
                   onClick={e => {
                     if (typeof onTagClick !== 'undefined') onTagClick(e, { value: val })
                   }}>
@@ -92,6 +93,7 @@ export default class ArrayToFirstItem extends Component {
           <ProductFirstTags>
             {rowValues.map(val => (
               <ItemLabel
+                style={typeof onTagClick !== 'undefined' ? { cursor: 'pointer' } : null}
                 onClick={e => {
                   if (typeof onTagClick !== 'undefined') onTagClick(e, { value: val })
                 }}>
