@@ -19,8 +19,8 @@ class ErrorFocus extends Component {
       return arrayKeys
     }
 
-    let errKeys = ''
-    let valKeys = ''
+    let errKeys = []
+    let valKeys = []
     let keys = ''
     //TODO errors or values can be array (e.g. elements in Company Generate Product form) not only object
     try {
