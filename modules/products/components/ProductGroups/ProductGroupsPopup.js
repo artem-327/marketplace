@@ -12,6 +12,7 @@ import { errorMessages } from '~/constants/yupValidation'
 import { withDatagrid } from '~/modules/datagrid'
 import { closePopup, putProductGroups, searchTags, postProductGroups } from '../../actions'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const formValidation = () =>
   Yup.lazy(values =>
@@ -128,6 +129,7 @@ class ProductGroupsPopup extends React.Component {
                 <>
                   <FormGroup data-test='operations_tag_name_inp'>
                     <Input
+                      name='name'
                       type='text'
                       label={
                         <>
@@ -137,7 +139,6 @@ class ProductGroupsPopup extends React.Component {
                           <Required />
                         </>
                       }
-                      name='name'
                       fieldProps={{ width: 8 }}
                     />
                     <FormikDropdown
@@ -179,6 +180,7 @@ class ProductGroupsPopup extends React.Component {
                       </FormattedMessage>
                     </Button.Submit>
                   </div>
+                  <ErrorFocus />
                 </>
               )
             }}

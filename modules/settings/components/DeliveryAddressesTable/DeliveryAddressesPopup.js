@@ -26,17 +26,17 @@ import { removeEmpty } from '~/utils/functions'
 import ErrorFocus from '~/components/error-focus'
 
 const initialFormValues = {
+  address: {
+    streetAddress: '',
+    country: '',
+    province: '',
+    city: '',
+    zip: ''
+  },
   addressName: '',
   contactName: '',
   contactEmail: '',
   contactPhone: '',
-  address: {
-    city: '',
-    country: '',
-    province: '',
-    streetAddress: '',
-    zip: ''
-  },
   readyTime: null,
   closeTime: null,
   liftGate: false,

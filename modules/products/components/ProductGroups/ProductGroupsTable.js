@@ -94,6 +94,7 @@ const mapStateToProps = (state, { datagrid }) => {
           values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''}
           rowItems={3}
           ids={row.tags ? row.tags.map(d => (d.id ? d.id : d)) : ''}
+          tags={true}
         />
       )
     })),
