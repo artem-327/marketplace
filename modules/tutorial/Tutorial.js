@@ -149,10 +149,22 @@ class Tutorial extends Component {
 
   componentDidMount() {
     const { tutorialTab } = this.state
-    if (this.props.isClientCompanyAdmin) {
-      tutorialTabs.splice(3, 2) // removed tabs products and inventory
-      urlTabs.splice(3, 2) // removed urls for products and inventory
+    const { isCompanyAdmin, isClientCompanyAdmin, isProductCatalogAdmin, isProductOfferManager } = this.props
+    if (!isCompanyAdmin) {
+      if (isClientCompanyAdmin) {
+        tutorialTabs.splice(3, 2) // removed tabs products and inventory
+        urlTabs.splice(3, 2) // removed urls for products and inventory
+      }
+      if (isProductCatalogAdmin) {
+        tutorialTabs = ['products']
+        urlTabs = ['/settings?type=products']
+      }
+      if (isProductOfferManager) {
+        tutorialTabs = ['inventory', 'marketplace']
+        urlTabs = ['/inventory/my', '/settings?type=global-broadcast']
+      }
     }
+
     if (!tutorialTab) {
       this.setState({ tutorialTab: this.getNextTab() })
     }
@@ -271,7 +283,15 @@ class Tutorial extends Component {
 
   render() {
     const { tutorialTab } = this.state
-    const { marginMarketplace, marginHolds, marginOrders, marginWantedBoard } = this.props
+    const {
+      marginMarketplace,
+      marginHolds,
+      marginOrders,
+      marginWantedBoard,
+      isMerchant,
+      isClientCompanyManager,
+      isOrderProcessing
+    } = this.props
 
     let margin = '15px 32px 15px 32px'
     if (marginMarketplace) margin = '10px 0'
@@ -282,7 +302,7 @@ class Tutorial extends Component {
     const theme = {
       margin
     }
-    return (
+    return isMerchant || isClientCompanyManager || isOrderProcessing ? null : (
       <>
         {tutorialTab ? (
           <ThemeProvider theme={theme}>
@@ -323,7 +343,13 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     name: getSafe(() => state.auth.identity.name, ''),
-    isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false)
+    isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false),
+    isMerchant: getSafe(() => state.auth.identity.isMerchant, false),
+    isClientCompanyManager: getSafe(() => state.auth.identity.isClientCompanyManager, false),
+    isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
+    isProductCatalogAdmin: getSafe(() => state.auth.identity.isProductCatalogAdmin, false),
+    isProductOfferManager: getSafe(() => state.auth.identity.isProductOfferManager, false),
+    isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false)
   }
 }
 
