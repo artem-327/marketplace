@@ -1,5 +1,17 @@
-node_modules/
-build/
-Docs/
+
+Dockerfile
+.dockerignore
+.gitignore
+README.md
+Docs
 .env
 .next
+.git
+.cache
+docker-compose.yml
+node_modules/         # Installed inside container
+nginx/ 
+
+node_modules
+build
+
