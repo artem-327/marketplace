@@ -2374,7 +2374,6 @@
   "product.groups.name": "Group Name",
   "pruduct.groups.edit": "Edit Product Group",
   "pruduct.groups.add": "Add Product Group",
-  "product.groups.tagsName": "Tags Name",
   "product.groups.tags": "Tags",
   "confirm.delete.product.groups.content": "Do you really want to delete Product Group?",
   "validation.minOneGroup": "At least one group should be selected",
