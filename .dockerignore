@@ -9,6 +9,9 @@ Docs
 .git
 .cache
 docker-compose.yml
+docker-compose.debug.yml
+.vscode/tasks.json
+.vscode/launch.json
 node_modules/         # Installed inside container
 nginx/ 
 
