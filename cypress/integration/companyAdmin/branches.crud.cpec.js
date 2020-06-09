@@ -43,14 +43,14 @@ context("Prodex Branches CRUD", () => {
         cy.selectFromDropdown("div[id='field_dropdown_deliveryAddress.address.zip']", "75000")
 
         cy.enterText("input[id='field_input_deliveryAddress.contactName']", "David Cameron")
-        cy.get("div[data-test='settings_warehouse_popup_phoneEmail_inp']").within(($form) => {
+        cy.get("div[data-test='settings_branches_popup_phoneEmail_inp']").within(($form) => {
             cy.get("input[placeholder = 'Phone Number']").type("1234567895")
             cy.contains("+CCC").click()
             cy.contains("USA").click()
         })
         cy.enterText("input[id='field_input_deliveryAddress.contactEmail']", "test@central.com")
 
-        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
+        cy.get('[data-test=settings_branches_popup_submit_btn]').click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
@@ -67,7 +67,7 @@ context("Prodex Branches CRUD", () => {
             .should("have.value", "David Cameron")
 
 
-        cy.get("div[data-test='settings_warehouse_popup_phoneEmail_inp']").within(($form) => {
+        cy.get("div[data-test='settings_branches_popup_phoneEmail_inp']").within(($form) => {
             cy.get("input[placeholder = 'Phone Number']").should("have.value", "123 456 7895")
         })
 
@@ -85,7 +85,7 @@ context("Prodex Branches CRUD", () => {
             .type("Arnold Schwarzenegger")
             .should("have.value", "Arnold Schwarzenegger")
 
-        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
+        cy.get('[data-test=settings_branches_popup_submit_btn]').click()
 
         cy.searchInList("Arnold")
 
@@ -98,7 +98,7 @@ context("Prodex Branches CRUD", () => {
     it("Checks error messages", () => {
         cy.settingsAdd()
 
-        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
+        cy.get('[data-test=settings_branches_popup_submit_btn]').click()
 
         cy.get(".error")
             .should("have.length", 7)
@@ -110,9 +110,9 @@ context("Prodex Branches CRUD", () => {
     it("Deletes a branch", () => {
         cy.searchInList("Arnold")
 
-        cy.openElement(branchId, 2)
+        cy.openElement(branchId, 1)
 
-        cy.clickSave()
+        cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
         cy.contains("Central branch").should("not.exist")
 

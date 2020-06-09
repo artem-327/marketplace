@@ -43,7 +43,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.enterText("#field_input_routingNumber", "123103729")
 
         cy.waitForUI()
-        cy.clickSave()
+        cy.get('[data-test=settings_bank_account_popup_submit_btn]').click()
 
         cy.wait("@verifyLoading")
     })

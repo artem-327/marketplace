@@ -43,7 +43,11 @@ context("Prodex User CRUD", () => {
             cy.get("div[role='option']").eq(0).click()
         })
 
-        cy.clickSave()
+        cy.get('[style="padding-bottom: 0px;"]').within(() => {
+            cy.contains("Merchant").click()
+        })
+
+        cy.get("[data-test=settings_users_popup_submit_btn]").click()
 
         cy.wait("@usersSave")
         cy.waitForUI()
@@ -68,8 +72,6 @@ context("Prodex User CRUD", () => {
     })
 
     it("Edits a user", () => {
-        cy.get("input").type("John")
-
         cy.waitForUI()
 
         cy.openElement(userID, 0)
@@ -79,7 +81,7 @@ context("Prodex User CRUD", () => {
             .type("Jen Automator")
             .should("have.value", "Jen Automator")
 
-        cy.clickSave()
+        cy.get("[data-test=settings_users_popup_submit_btn]").click()
 
         cy.openElement(userID, 0)
 
@@ -90,29 +92,32 @@ context("Prodex User CRUD", () => {
     it("Edit user roles a user", () => {
         cy.waitForUI()
 
-        cy.openElement(userID, 1)
+        cy.openElement(userID, 0)
 
-        cy.get("#field_checkbox_roles_3")
-            .click({force: true})
-            .should("not.selected")
+        cy.get('[style="padding-bottom: 0px;"]').within(() => {
+            cy.contains("Merchant").click()
+            cy.contains("Order View").click()
+        })
 
-        cy.get("button[class='ui primary button']").click({force: true})
+        cy.get("[data-test=settings_users_popup_submit_btn]").click().click({force: true})
 
         cy.waitForUI()
 
-        cy.openElement(userID, 1)
+        cy.openElement(userID, 0)
 
-        cy.get("#field_checkbox_roles_3")
-            .should("not.selected")
+        cy.get('[style="padding-bottom: 0px;"]').within(() => {
+            cy.get(':nth-child(1) > :nth-child(2) > [data-test=settings_users_popup_FormikField_change]').should("not.selected")
+            cy.get(':nth-child(2) > :nth-child(1) > [data-test=settings_users_popup_FormikField_change]').should("not.selected")
+        })
     })
 
     it("Checks error messages", () => {
         cy.settingsAdd()
 
-        cy.clickSave()
+        cy.get("[data-test=settings_users_popup_submit_btn]").click()
 
         cy.get(".error")
-            .should("have.length", 3)
+            .should("have.length", 13)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
@@ -120,9 +125,9 @@ context("Prodex User CRUD", () => {
 
     it("Deletes a user", () => {
         cy.waitForUI()
-        cy.openElement(userID, 2)
+        cy.openElement(userID, 1)
 
-        cy.clickSave()
+        cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
         cy.contains("Jen Automator").should("not.exist")
 

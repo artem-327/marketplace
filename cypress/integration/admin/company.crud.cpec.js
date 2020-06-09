@@ -6,18 +6,13 @@ context("Companies CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
         cy.route("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
         cy.route("POST", "/prodex/api/companies").as("companyCreate")
         cy.route("GET", "/_next/static/webpack/").as("datagridLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
-        cy.url().should("include", "admin")
-
-        cy.wait("@loading")
-
-        cy.contains("Companies").click()
+        cy.url().should("include", "companies")
 
         cy.wait("@companiesLoad")
     })
@@ -31,7 +26,7 @@ context("Companies CRUD", () => {
         })
 
         cy.waitForUI()
-        cy.clickAdd()
+        cy.get('[data-test=companies_table_add_btn]').click()
         cy.waitForUI()
 
         cy.enterText("#field_input_name", "Donald The Ducks")
@@ -99,7 +94,7 @@ context("Companies CRUD", () => {
     })
 
     it("Checks error message", () => {
-        cy.clickAdd()
+        cy.get('[data-test=companies_table_add_btn]').click()
 
         cy.clickSave()
 

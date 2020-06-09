@@ -7,16 +7,18 @@ context("Manufacturers CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
         cy.route("POST", "/prodex/api/manufacturers/datagrid").as("manufacturersLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
-        cy.url().should("include", "admin")
+        cy.url().should("include", "companies")
 
         cy.wait("@loading")
 
-        cy.contains("Manufacturers").click()
+        cy.get('.flex-wrapper > :nth-child(6)').click()
+        cy.waitForUI()
+        cy.get('[data-test=tabs_menu_item_manufacturers]').click()
 
         cy.wait("@manufacturersLoad")
     })

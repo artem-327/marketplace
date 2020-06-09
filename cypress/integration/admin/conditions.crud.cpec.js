@@ -7,17 +7,18 @@ context("Conditions CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
         cy.route("POST", "/prodex/api/product-conditions/datagrid").as("formsLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
-        cy.url().should("include", "admin")
+        cy.url().should("include", "companies")
 
         cy.wait("@loading")
 
-        cy.contains("Conditions").click()
-
+        cy.get('.flex-wrapper > :nth-child(6)').click()
+        cy.waitForUI()
+        cy.get('[data-test=tabs_menu_item_conditions]').click()
         cy.wait("@formsLoad")
     })
 

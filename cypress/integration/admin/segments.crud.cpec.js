@@ -6,12 +6,12 @@ context("Market Segments CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("GET", "/prodex/api/packaging-groups").as("loading")
+        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
         cy.route("POST", "/prodex/api/market-segments/datagrid").as("segments")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
-        cy.url().should("include", "admin")
+        cy.url().should("include", "companies")
 
         cy.wait("@loading")
 

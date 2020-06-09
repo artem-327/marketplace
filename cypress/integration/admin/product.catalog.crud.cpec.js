@@ -1,51 +1,55 @@
-context("Echo Product CRUD", () => {
+context("Generic Company Product CRUD", () => {
 
     let productId = null
-    let filter = [{"operator": "LIKE", "path": "EchoProduct.name", "values": ["%Test%"]}, {
+    let filter = [{"operator": "LIKE", "path": "CompanyGenericProduct.name", "values": ["%Test%"]}, {
         "operator": "LIKE",
-        "path": "EchoProduct.code",
+        "path": "CompanyGenericProduct.code",
         "values": ["%Test%"]
     }]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
-        cy.route("POST", "/prodex/api/echo-products/datagrid").as("echoLoading")
+        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/company-generic-products/datagrid").as("genericLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "admin")
+        cy.url().should("include", "companies")
 
-        cy.contains("Product Catalog").click()
+        cy.get('.flex-wrapper > :nth-child(2)').click()
+        cy.waitForUI()
+        cy.get('[data-test=tabs_menu_item_product-catalog]').click()
 
-        cy.wait("@echoLoading")
+        cy.wait("@genericLoading")
         cy.waitForUI()
     })
 
-    it("Creates a Echo Product", () => {
+    it("Creates a Generic Product", () => {
         cy.viewport(2000, 3000)
 
         cy.getToken().then(token => {
-            cy.getFirstEntityWithFilter(token, 'echo-products', filter).then(itemId => {
+            cy.getFirstEntityWithFilter(token, 'company-generic-products', filter).then(itemId => {
                 if (itemId != null)
-                    cy.deleteEntity(token, 'echo-products/id', itemId)
+                    cy.deleteEntity(token, 'company-generic-products/id', itemId)
             })
         })
 
-        cy.clickAdd()
+        cy.get("[data-test=products_open_popup_btn]").click({force: true})
 
         cy.get("#name").type("TestoEchoprod")
         cy.get("#code").type("TEST-05")
         cy.selectFromDropdown("[data-test='admin_product_popup_cas_0_drpdn']", "382-45-6")
+        cy.selectFromDropdown("#field_dropdown_productGroup", "Product Group A")
+        cy.selectFromDropdown("#field_dropdown_company", "Company Name")
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.waitForUI()
         cy.searchInList("Test")
 
         cy.getToken().then(token => {
-            cy.getFirstEchoProductIdWithFilter(token, filter).then(itemId => {
+            cy.getFirstGenericProductIdWithFilter(token, filter).then(itemId => {
                 cy.openElement(itemId, 0)
 
                 productId = itemId
@@ -59,7 +63,7 @@ context("Echo Product CRUD", () => {
             .should("have.value", "TEST-05")
     })
 
-    it("Edits an Echo product", () => {
+    it("Edits a Generic product", () => {
         cy.searchInList("Test")
 
         cy.openElement(productId, 0)
@@ -130,7 +134,7 @@ context("Echo Product CRUD", () => {
     })
 
     it("Checks error messages", () => {
-        cy.clickAdd()
+        cy.get("[data-test=products_open_popup_btn]").click()
 
         cy.get("#code").click()
         cy.get("#name").click()
@@ -138,9 +142,9 @@ context("Echo Product CRUD", () => {
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.get(".error")
-            .should("have.length", 3)
+            .should("have.length", 5)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)/i)
+            expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(At least one group should be selected)/i)
         })
     })
 

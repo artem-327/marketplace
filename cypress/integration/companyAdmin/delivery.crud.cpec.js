@@ -49,7 +49,7 @@ context("Prodex Branches CRUD", () => {
 
         cy.enterText("#field_input_contactEmail", "marie@address.com")
 
-        cy.clickSave()
+        cy.get('[data-test=settings_delivery_address_submit_btn]').click()
         cy.waitForUI()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
@@ -87,7 +87,9 @@ context("Prodex Branches CRUD", () => {
             .type("Adolf Schwarzenegger")
             .should("have.value", "Adolf Schwarzenegger")
 
-        cy.clickSave()
+        cy.get('[data-test=settings_delivery_address_submit_btn]').click()
+
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + addressId + ']').click()
         cy.get('[data-test=action_' + addressId + '_0]').click()
@@ -99,7 +101,7 @@ context("Prodex Branches CRUD", () => {
     it("Checks error messages", () => {
         cy.settingsAdd()
 
-        cy.clickSave()
+        cy.get('[data-test=settings_delivery_address_submit_btn]').click()
 
         cy.get(".error")
             .should("have.length", 7)
@@ -112,7 +114,7 @@ context("Prodex Branches CRUD", () => {
         cy.get('[data-test=action_' + addressId + ']').click({force: true})
         cy.get('[data-test=action_' + addressId + '_1]').click({force: true})
 
-        cy.clickSave()
+        cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
         cy.contains("126 N G St").should("not.exist")
 

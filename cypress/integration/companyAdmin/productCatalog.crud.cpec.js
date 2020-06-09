@@ -7,7 +7,7 @@ context("Company Product Catalog CRUD", () => {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
-        cy.route("POST", "/prodex/api/company-products/datagrid").as("productLoading")
+        cy.route("POST", "/prodex/api/company-products/datagrid?type=ALL").as("productLoading")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
@@ -32,11 +32,15 @@ context("Company Product Catalog CRUD", () => {
         })
         cy.settingsAdd()
 
+        cy.selectFromDropdown("div[id='field_dropdown_companyGenericProduct']","ATMP")
+
         cy.enterText("#field_input_intProductName", "Our product")
         cy.enterText("#field_input_intProductCode", "OURPR")
         cy.enterText("#field_input_packagingSize", "70")
         cy.enterText("#field_input_packageWeight", "5")
-
+        cy.enterText("#field_input_packagingWidth", "5")
+        cy.enterText("#field_input_packagingHeight", "5")
+        cy.enterText("#field_input_packagingLength", "5")
 
         cy.get("div[id='field_dropdown_nmfcNumber']")
             .children("input")
@@ -63,7 +67,8 @@ context("Company Product Catalog CRUD", () => {
             cy.contains("60").click()
         })
 
-        cy.get("[data-test='settings_product_popup_submit_btn']")
+        cy.get("[data-test='settings_product_popup_submit_btn']").click()
+        cy.waitForUI()
 
         cy.reload()
         cy.wait("@productLoading")
@@ -97,7 +102,7 @@ context("Company Product Catalog CRUD", () => {
             .type("My product")
             .should("have.value", "My product")
 
-        cy.clickSave()
+        cy.get("[data-test='settings_product_popup_submit_btn']").click()
 
         cy.searchInList("My")
         cy.openElement(productId, 0)
@@ -109,10 +114,10 @@ context("Company Product Catalog CRUD", () => {
     it("Checks error messages", () => {
         cy.settingsAdd()
 
-        cy.clickSave()
+        cy.get("[data-test='settings_product_popup_submit_btn']").click()
 
         cy.get(".error")
-            .should("have.length", 9)
+            .should("have.length", 23)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
@@ -122,7 +127,7 @@ context("Company Product Catalog CRUD", () => {
         cy.searchInList("My")
         cy.openElement(productId, 1)
 
-        cy.clickSave()
+        cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
         cy.contains("My product").should("not.exist")
 

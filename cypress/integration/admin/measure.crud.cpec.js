@@ -4,17 +4,19 @@ context("Units of measure CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("GET", "/prodex/api/packaging-groups").as("loading")
+        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
         cy.route("POST", "/prodex/api/units/datagrid").as("unitLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
-        cy.url().should("include", "admin")
+        cy.url().should("include", "companies")
 
         cy.wait("@loading")
         cy.waitForUI()
 
-        cy.contains("Units of Measure").click()
+        cy.get('.flex-wrapper > :nth-child(6)').click()
+        cy.waitForUI()
+        cy.get('[data-test=tabs_menu_item_units-of-measure]').click()
 
         cy.wait("@unitLoad")
     })

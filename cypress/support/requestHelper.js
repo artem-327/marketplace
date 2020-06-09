@@ -89,10 +89,10 @@ Cypress.Commands.add("getFirstItemIdWithFilter", (token, filter) => {
     })
 })
 
-Cypress.Commands.add("getFirstEchoProductIdWithFilter", (token, filter) => {
+Cypress.Commands.add("getFirstGenericProductIdWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
-        url: '/prodex/api/echo-products/datagrid',
+        url: '/prodex/api/company-generic-products/datagrid',
         headers: {
             authorization: "Bearer " + token
         },

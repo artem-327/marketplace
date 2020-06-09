@@ -7,12 +7,15 @@ context("CAS products CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/cas-products/datagrid").as("CASloading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "admin")
+        cy.url().should("include", "companies")
+        cy.get('.flex-wrapper > :nth-child(2)').click()
+        cy.wait("@CASloading")
     })
 
     it("Creates a CAS product", () => {
@@ -23,15 +26,13 @@ context("CAS products CRUD", () => {
             })
         })
 
-        cy.get("button[class='ui large primary button']").eq(0).click({force: true})
+        cy.get('[data-test=products_open_popup_btn]').click({force: true})
 
         cy.enterText("[name='casProduct.casNumber']", "100-95-521")
         cy.enterText("[name='casProduct.casIndexName']", "Testinonium")
         cy.clickSave()
 
-        cy.get("[data-test=admin_table_search_inp]")
-            .children("div")
-            .children("input")
+        cy.get('.left > .ui > input')
             .type("Testinonium")
 
         cy.getToken().then(token => {
@@ -50,9 +51,7 @@ context("CAS products CRUD", () => {
     })
 
     it("Edits a CAS product", () => {
-        cy.get("[data-test=admin_table_search_inp]")
-            .children("div")
-            .children("input")
+        cy.get('.left > .ui > input')
             .type("Testinonium")
 
         cy.openElement(productId, 0)
@@ -74,9 +73,7 @@ context("CAS products CRUD", () => {
         cy.route("POST", "/prodex/api/cas-products/alternative-names/**").as("nameSaving")
         cy.route("GET", "/prodex/api/cas-products/alternative-names/**").as("nameGetting")
 
-        cy.get("[data-test=admin_table_search_inp]")
-            .children("div")
-            .children("input")
+        cy.get('.left > .ui > input')
             .type("Testerium")
 
         cy.openElement(productId, 1)
@@ -93,6 +90,7 @@ context("CAS products CRUD", () => {
         cy.wait("@nameSaving")
 
         cy.get("[data-test=admin_popup_alt_cas_name_close_btn]").click()
+        cy.waitForUI()
 
         cy.openElement(productId, 1)
 
@@ -106,9 +104,7 @@ context("CAS products CRUD", () => {
         cy.route("DELETE", "/prodex/api/cas-products/alternative-names/**").as("nameDelete")
         cy.route("GET", "/prodex/api/cas-products/alternative-names/**").as("nameGetting")
 
-        cy.get("[data-test=admin_table_search_inp]")
-            .children("div")
-            .children("input")
+        cy.get('.left > .ui > input')
             .type("Testerium")
 
         cy.openElement(productId, 1)
@@ -134,7 +130,7 @@ context("CAS products CRUD", () => {
     })
 
     it("Checks error messages", () => {
-        cy.get("button[class='ui large primary button']").eq(0).click({force: true})
+        cy.get('[data-test=products_open_popup_btn]').click({force: true})
 
         cy.clickSave()
 
@@ -146,9 +142,7 @@ context("CAS products CRUD", () => {
     })
 
     it("Deletes a product", () => {
-        cy.get("[data-test=admin_table_search_inp]")
-            .children("div")
-            .children("input")
+        cy.get('.left > .ui > input')
             .type("Testerium")
 
         cy.openElement(productId, 2)

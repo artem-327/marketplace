@@ -4,15 +4,17 @@ context("Admin Settings RUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
         cy.route("GET", "/prodex/api/settings/admin").as("adminLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "admin")
+        cy.url().should("include", "companies")
 
-        cy.contains('Admin Settings').click()
+        cy.get('.flex-wrapper > :nth-child(6)').click()
+        cy.waitForUI()
+        cy.get('[data-test=tabs_menu_item_admin-settings]').click()
 
         cy.wait("@adminLoading")
         cy.waitForUI()
@@ -24,7 +26,7 @@ context("Admin Settings RUD", () => {
         cy.get(":nth-child(30)").within(() => {
             cy.get("input")
                 .clear()
-                .type("operations@echoexchange.net")
+                .type("tomas-artio@email.cz")
         })
 
         cy.get("button[class='ui primary button']").click({force: true})

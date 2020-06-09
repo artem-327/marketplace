@@ -103,7 +103,7 @@ context("Prodex Warehouse CRUD", () => {
     it("Deletes a warehouse", () => {
         cy.openElement(branchId, 2)
 
-        cy.clickSave()
+        cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
         cy.contains("Central branch").should("not.exist")
 
