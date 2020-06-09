@@ -17,7 +17,7 @@ import ErrorFocus from '~/components/error-focus'
 const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
-      nameGroup: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
+      name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
     })
   )
 
@@ -88,7 +88,7 @@ class ProductGroupsPopup extends React.Component {
     const { selectedTagsOptions } = this.state
 
     const initialFormValues = {
-      nameGroup: getSafe(() => popupValues.name, ''),
+      name: getSafe(() => popupValues.name, ''),
       tags: getSafe(() => popupValues.tags.props.ids, '')
     }
 
@@ -111,7 +111,7 @@ class ProductGroupsPopup extends React.Component {
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
               const request = {}
-              const propsToInclude = ['tags', 'nameGroup']
+              const propsToInclude = ['tags', 'name']
               propsToInclude.forEach(prop => (values[prop] ? (request[prop] = values[prop]) : null))
 
               try {
@@ -129,7 +129,7 @@ class ProductGroupsPopup extends React.Component {
                 <>
                   <FormGroup data-test='operations_tag_name_inp'>
                     <Input
-                      name='nameGroup'
+                      name='name'
                       type='text'
                       label={
                         <>
