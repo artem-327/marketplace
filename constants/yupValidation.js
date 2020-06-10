@@ -347,5 +347,5 @@ export const validateTime = () =>
   Yup.string()
     .trim()
     .test('time', errorMessages.invalidTime, t => {
-      return moment(t, ['hh:mm a', 'HH:mm']).isValid() || !t.length
+      return moment(t, ['hh:mm a', 'HH:mm']).isValid() || !t
     })

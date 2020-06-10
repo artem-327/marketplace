@@ -129,9 +129,9 @@ const tutorialTabs = [
 ]
 
 const urlTabs = [
-  '/settings?type=branches',
+  '/settings?type=locations',
   '/settings?type=users',
-  '/settings?type=warehouses',
+  '/settings?type=locations',
   '/settings?type=products',
   '/inventory/my',
   '/settings?type=global-broadcast',
