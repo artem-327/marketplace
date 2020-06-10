@@ -185,7 +185,7 @@ export default function reducers(state = initialState, action) {
     case AT.PRODUCTS_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_FULFILLED: {
       return {
         ...state,
-        altCasNamesRows: action.payload,
+        altCasNamesRows: action.payload.data,
         loading: false
       }
     }
