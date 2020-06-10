@@ -114,7 +114,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
   }
 
   render() {
-    const { closeEditPopup, popupValues, altCasNamesRows, loading } = this.props
+    const { closeEditPopup, popupValues, loading } = this.props
 
     const { initialState } = this.state
 
@@ -265,8 +265,8 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     popupValues: state.productsAdmin.popupValues,
-    altCasNamesRows: getSafe(() => state.productAdmin.altCasNamesRows, []),
-    loading: getSafe(() => state.productAdmin.loading, false)
+    altCasNamesRows: getSafe(() => state.productsAdmin.altCasNamesRows.data, []),
+    loading: getSafe(() => state.productsAdmin.loading, false)
   }
 }
 
