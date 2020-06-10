@@ -104,7 +104,7 @@ class Operations extends Component {
             filter.and = [
               {
                 operator: 'EQUALS',
-                path: 'CompanyProduct.owner.id',
+                path: 'CompanyProduct.companyGenericProduct.company.id',
                 values: [`${v.company}`]
               }
             ]
