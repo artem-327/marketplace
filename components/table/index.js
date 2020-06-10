@@ -850,6 +850,7 @@ class _Table extends Component {
             {treeDataType && (
               <TableTreeColumn
                 for={tableTreeColumn}
+                cellComponent={props => <TableTreeColumn.Cell {...props} className='tree-cell' />}
                 expandButtonComponent={() => {
                   return null
                 }}

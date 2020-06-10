@@ -124,6 +124,12 @@ body > *:not(.modals) .bootstrapiso .table-responsive {
   }
 }
 
+.bootstrapiso .table-responsive table .tree-cell [class*="table-tree-content"] {
+  margin-top: -5px !important;
+  margin-bottom: -5px !important;
+  line-height: 29px;
+}
+
 .ui.menu .item > i.chevron.icon {
   padding: 0em;
   float: right;
