@@ -190,8 +190,11 @@ class ProductCatalogTable extends Component {
                 return confirm(
                   formatMessage({ id: 'confirm.deleteProductCatalog', defaultMessage: 'Delete Product Catalog' }),
                   formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.intProductName}?` },
-                    { item: row.intProductName }
+                    {
+                      id: 'confirm.deleteItem',
+                      defaultMessage: `Do you really want to delete ${row.rawData.intProductName}?`
+                    },
+                    { item: row.rawData.intProductName }
                   )
                 ).then(() => deleteProduct(row.id, row.intProductName))
               }
@@ -256,9 +259,11 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         ...product,
         rawData: product,
-        intProductName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {product.intProductName}
-        </div>,
+        intProductName: (
+          <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {product.intProductName}
+          </div>
+        ),
         packagingTypeName: getSafe(() => product.packagingType.name) ? (
           <UnitOfPackaging value={product.packagingType.name} />
         ) : (
