@@ -45,7 +45,7 @@ class CompanyProductTable extends Component {
           </FormattedMessage>
         ),
         width: 250,
-        sortPath: 'CompanyProduct.owner.cfDisplayName'
+        sortPath: 'CompanyProduct.companyGenericProduct.company.cfDisplayName'
       },
       {
         name: 'mapped',
@@ -104,7 +104,7 @@ const mapStateToProps = (state, { datagrid }) => {
         id: d.id,
         intProductName: getSafe(() => d.intProductName, 'N/A'),
         intProductCode: getSafe(() => d.intProductCode, 'N/A'),
-        owner: getSafe(() => d.owner.cfDisplayName, 'N/A'),
+        owner: getSafe(() => d.companyGenericProduct.company.cfDisplayName, 'N/A'),
         mapped: d.companyGenericProduct ? (
           <FormattedMessage id='global.yes' defaultMessage='Yes' />
         ) : (

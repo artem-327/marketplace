@@ -1,11 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {
-  closePopup,
-  postNewUserRequest,
-  handlerSubmitUserEditPopup,
-  getCompanyDetails
-} from '../../actions'
+import { closePopup, postNewUserRequest, handlerSubmitUserEditPopup, getCompanyDetails } from '../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../companies/actions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -27,6 +22,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
+import ErrorFocus from '~/components/error-focus'
 
 const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -99,7 +95,7 @@ const BottomButtons = styled.div`
     height: 40px;
     border-radius: 3px;
     font-weight: 500;
-    color: #848893;   
+    color: #848893;
     margin: 0 5px;
     align-items: center;
 
@@ -107,7 +103,7 @@ const BottomButtons = styled.div`
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
       border: solid 1px #dee2e6;
       background-color: #ffffff;
-      color: #848893;    
+      color: #848893;
       &:hover {
         background-color: #f8f9fb;
         color: #20273a;
@@ -117,7 +113,7 @@ const BottomButtons = styled.div`
         color: #20273a;
       }
     }
-    
+
     &.secondary {
       color: #ffffff;
       background-color: #2599d5;
@@ -128,8 +124,7 @@ const BottomButtons = styled.div`
         background-color: #0d82bc;
       }
     }
-  }    
-    
+  }
 
   .ui.modal & {
     margin: 30px -1.5rem -1.5rem;
@@ -188,15 +183,9 @@ class UsersSidebar extends React.Component {
     if (companyId !== null) {
       const { value } = await this.props.getCompanyDetails(companyId)
       let branches = uniqueArrayByKey(
-        (popupValues && popupValues.homeBranch
-          ? this.getHomeBranchesOptions([popupValues.homeBranch])
-          : []
-        ).concat(popupValues && popupValues.additionalBranches
-          ? this.getBranchesOptions(popupValues.additionalBranches)
-          : [],
-          value && value.branches
-            ? this.getBranchesOptions(value.branches)
-            : []
+        (popupValues && popupValues.homeBranch ? this.getHomeBranchesOptions([popupValues.homeBranch]) : []).concat(
+          popupValues && popupValues.additionalBranches ? this.getBranchesOptions(popupValues.additionalBranches) : [],
+          value && value.branches ? this.getBranchesOptions(value.branches) : []
         ),
         'key'
       )
@@ -218,12 +207,7 @@ class UsersSidebar extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.editTrig !== prevProps.editTrig) {
       if (!this.state.popupValues || this.props.popupValues.id !== this.state.popupValues) {
-        let {
-          values,
-          touched,
-          validateForm,
-          submitForm
-        } = this.formikProps
+        let { values, touched, validateForm, submitForm } = this.formikProps
         if (Object.keys(touched).length) {
           validateForm().then(err => {
             const errors = Object.keys(err)
@@ -362,17 +346,17 @@ class UsersSidebar extends React.Component {
     const { popupValues } = this.state
     return popupValues
       ? {
-        additionalBranches: popupValues.additionalBranches.map(d => d.id),
-        email: popupValues.email,
-        homeBranch: popupValues.homeBranch ? popupValues.homeBranch.id : '',
-        jobTitle: popupValues.jobTitle,
-        name: popupValues.name,
-        phone: popupValues.phone,
-        preferredCurrency: currencyId,
-        roles: popupValues.roles.map(d => d.id),
-        sellMarketSegments: getSafe(() => popupValues.sellMarketSegments, []).map(d => d.id),
-        buyMarketSegments: getSafe(() => popupValues.buyMarketSegments, []).map(d => d.id)
-      }
+          additionalBranches: popupValues.additionalBranches.map(d => d.id),
+          email: popupValues.email,
+          homeBranch: popupValues.homeBranch ? popupValues.homeBranch.id : '',
+          jobTitle: popupValues.jobTitle,
+          name: popupValues.name,
+          phone: popupValues.phone,
+          preferredCurrency: currencyId,
+          roles: popupValues.roles.map(d => d.id),
+          sellMarketSegments: getSafe(() => popupValues.sellMarketSegments, []).map(d => d.id),
+          buyMarketSegments: getSafe(() => popupValues.buyMarketSegments, []).map(d => d.id)
+        }
       : initValues
   }
 
@@ -462,12 +446,7 @@ class UsersSidebar extends React.Component {
       isCompanyAdmin
     } = this.props
 
-    const {
-      branches,
-      popupValues,
-      selectedSellMarketSegmentsOptions,
-      selectedBuyMarketSegmentsOptions
-    } = this.state
+    const { branches, popupValues, selectedSellMarketSegmentsOptions, selectedBuyMarketSegmentsOptions } = this.state
 
     const allSellMarketSegmentsOptions = uniqueArrayByKey(
       searchedSellMarketSegments.concat(selectedSellMarketSegmentsOptions),
@@ -615,12 +594,10 @@ class UsersSidebar extends React.Component {
                       <Dropdown
                         label={
                           <>
-                            {
-                              formatMessage({
-                                id: 'global.sellMarketSegments',
-                                defaultMessage: 'Sell Market Segment'
-                              })
-                            }
+                            {formatMessage({
+                              id: 'global.sellMarketSegments',
+                              defaultMessage: 'Sell Market Segment'
+                            })}
                           </>
                         }
                         name='sellMarketSegments'
@@ -649,9 +626,7 @@ class UsersSidebar extends React.Component {
                     <GridColumn width={8}>
                       <Dropdown
                         label={
-                          <>
-                            {formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}
-                          </>
+                          <>{formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}</>
                         }
                         name='buyMarketSegments'
                         options={allBuyMarketSegmentsOptions}
@@ -685,13 +660,8 @@ class UsersSidebar extends React.Component {
                       <Required />
                     </GridColumnWError>
                   </GridRow>
-                  <GridRow style={{ paddingBottom: '0'}}>
-                    {this.generateCheckboxes(
-                      userRoles,
-                      values,
-                      'roles',
-                      errorRoles
-                    )}
+                  <GridRow style={{ paddingBottom: '0' }}>
+                    {this.generateCheckboxes(userRoles, values, 'roles', errorRoles)}
                   </GridRow>
                   <GridRow style={{ paddingTop: '0', marginTop: '-5px' }}>
                     <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
@@ -717,6 +687,7 @@ class UsersSidebar extends React.Component {
                   </Button.Submit>
                 </div>
               </BottomButtons>
+              <ErrorFocus />
             </FlexSidebar>
           )
         }}

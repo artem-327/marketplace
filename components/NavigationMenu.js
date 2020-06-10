@@ -227,6 +227,8 @@ class Navigation extends Component {
         // Reset styles
         current.lastChild.style.maxHeight = ''
       }
+
+      this.props.navigationPS.current.updateScroll()
     }
   }
 
@@ -462,10 +464,10 @@ class Navigation extends Component {
                     {!isClientCompanyAdmin && (
                       <Dropdown.Item
                         as={MenuLink}
-                        to='/settings?type=client-companies'
-                        tab='client-companies'
-                        data-test='navigation_settings_client_companies_drpdn'>
-                        {formatMessage({ id: 'navigation.clientCompanies', defaultMessage: '!Client Companies' })}
+                        to='/settings?type=guest-companies'
+                        tab='guest-companies'
+                        data-test='navigation_settings_guest_companies_drpdn'>
+                        {formatMessage({ id: 'navigation.guestCompanies', defaultMessage: 'Guest Companies' })}
                       </Dropdown.Item>
                     )}
                     <Dropdown.Item
@@ -570,7 +572,8 @@ class Navigation extends Component {
 export default withAuth(
   withRouter(
     connect(
-      store => ({
+      (store, { navigationPS }) => ({
+        navigationPS: navigationPS,
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),

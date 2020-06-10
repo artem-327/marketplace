@@ -10,16 +10,12 @@ import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const formValidation = Yup.object().shape({
-  val0: Yup.string()
-    .trim()
-    .required(errorMessages.minLength(1)),
-  val1: Yup.string()
-    .trim()
-    .required(errorMessages.minLength(1)),
-  val2: Yup.number()
-    .required(errorMessages.requiredMessage),
+  val0: Yup.string().trim().required(errorMessages.minLength(1)),
+  val1: Yup.string().trim().required(errorMessages.minLength(1)),
+  val2: Yup.number().required(errorMessages.requiredMessage),
   val3: Yup.number()
     .typeError(errorMessages.mustBeNumber)
     .positive(errorMessages.positive)
@@ -28,14 +24,7 @@ const formValidation = Yup.object().shape({
 
 class EditUnitOfMeasurePopup extends React.Component {
   render() {
-    const {
-      closeEditPopup,
-      currentTab,
-      config,
-      popupValues,
-      putEditedDataRequest,
-      measureOptions
-    } = this.props
+    const { closeEditPopup, currentTab, config, popupValues, putEditedDataRequest, measureOptions } = this.props
 
     const { id } = popupValues
 
@@ -43,7 +32,7 @@ class EditUnitOfMeasurePopup extends React.Component {
       val0: popupValues[config.edit[0].name],
       val1: popupValues[config.edit[1].name],
       val2: popupValues.measureTypeId,
-      val3: popupValues[config.edit[3].name],
+      val3: popupValues[config.edit[3].name]
     }
 
     return (
@@ -128,6 +117,7 @@ class EditUnitOfMeasurePopup extends React.Component {
                 </FormattedMessage>
               </Button.Submit>
             </div>
+            <ErrorFocus />
           </Form>
         </Modal.Content>
       </Modal>

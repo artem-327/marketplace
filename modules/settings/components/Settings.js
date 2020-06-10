@@ -55,6 +55,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { getIdentity } from '~/modules/auth/actions'
+import ErrorFocus from '~/components/error-focus'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -277,6 +278,7 @@ class Settings extends Component {
                       </Button.Submit>
                     </GridColumn>
                   </Grid>
+                  <ErrorFocus />
                 </Segment>
               )
             }}
@@ -310,7 +312,7 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'delivery-addresses': <DeliveryAddressesTable />,
-      'client-companies': <ClientCompanyTable />,
+      'guest-companies': <ClientCompanyTable />,
       logistics: <LogisticsTable />,
       'system-settings': (
         <FixyWrapper>
@@ -331,7 +333,7 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
       'delivery-addresses': <DeliveryAddressesPopup />,
-      'client-companies': <ClientCompanyPopup />,
+      'guest-companies': <ClientCompanyPopup />,
       logistics: <LogisticsPopup />,
       documents: <DocumentsPopup />
     }
@@ -407,7 +409,7 @@ class Settings extends Component {
           orOperator: true
         }
       },
-      'client-companies': {
+      'guest-companies': {
         url: '/prodex/api/companies/client/datagrid',
         searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v}%`] }] : []),
         params: {
@@ -533,7 +535,11 @@ class Settings extends Component {
       !this.state.wrongUrl && (
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
           <Container fluid className='flex stretched'>
-            {!tutorialCompleted && <div style={{ margin: '5px -2px -15px -2px' }}><Tutorial /></div>}
+            {!tutorialCompleted && (
+              <div style={{ margin: '5px -2px -15px -2px' }}>
+                <Tutorial />
+              </div>
+            )}
             <Container fluid style={{ padding: '20px 30px' }}>
               <TablesHandlers currentTab={currentTab} />
             </Container>

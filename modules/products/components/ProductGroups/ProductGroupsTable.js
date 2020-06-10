@@ -26,7 +26,7 @@ class ProductGroupsTable extends Component {
       {
         name: 'tags',
         title: (
-          <FormattedMessage id='product.groups.tagsName' defaultMessage='Tags Name'>
+          <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
             {text => text}
           </FormattedMessage>
         )
@@ -84,15 +84,18 @@ const mapDispatchToProps = {
   deleteProductGroups
 }
 //TODO
-const mapStateToProps = (state, { datagrid }) => {
+const mapStateToProps = (state, { handleFilterChange, datagrid }) => {
   return {
     rows: datagrid.rows.map(row => ({
       ...row,
+      rawData: row,
       tags: (
         <ArrayToFirstItem
           values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''}
           rowItems={3}
           ids={row.tags ? row.tags.map(d => (d.id ? d.id : d)) : ''}
+          tags={true}
+          onTagClick={handleFilterChange}
         />
       )
     })),

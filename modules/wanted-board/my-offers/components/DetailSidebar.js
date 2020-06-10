@@ -21,6 +21,7 @@ import { inputWrapper, quantityWrapper } from '../../components'
 import { Required } from '~/components/constants/layout'
 
 import { Dimmer, Loader, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import ErrorFocus from '~/components/error-focus'
 
 import {
   myOffersSidebarTrigger,
@@ -474,6 +475,7 @@ class DetailSidebar extends Component {
                   </div>
                 </BottomButtons>
               </FlexSidebar>
+              <ErrorFocus />
             </Form>
           )
         }}

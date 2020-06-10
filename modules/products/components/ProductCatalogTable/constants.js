@@ -22,6 +22,7 @@ export const onErrorFieldTabs = {
 }
 
 export const defaultValues = {
+  name: '',
   attachments: [],
   appearance: '',
   aspirationHazard: '',
@@ -84,7 +85,7 @@ export const defaultValues = {
   molecularWeight: '',
   mostImportantSymptomsAndEffects: '',
   mutagenicEffects: '',
-  name: '',
+
   nfpaFireHazard: '',
   nfpaHealthHazard: '',
   nfpaReactivityHazard: '',

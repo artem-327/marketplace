@@ -11,14 +11,12 @@ import { errorMessages } from '~/constants/yupValidation'
 import { withDatagrid } from '~/modules/datagrid'
 import { closePopup, updateTag, createTag } from '../../actions'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
-      name: Yup.string()
-        .trim()
-        .min(3, errorMessages.minLength(3))
-        .required(errorMessages.requiredMessage)
+      name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
     })
   )
 
@@ -96,6 +94,7 @@ class TagsPopup extends React.Component {
                       </FormattedMessage>
                     </Button.Submit>
                   </div>
+                  <ErrorFocus />
                 </>
               )
             }}

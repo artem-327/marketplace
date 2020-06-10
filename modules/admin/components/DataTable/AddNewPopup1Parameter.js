@@ -9,16 +9,14 @@ import * as Yup from 'yup'
 
 import { FormattedMessage } from 'react-intl'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const initialFormValues = {
   val0: ''
 }
 
 const formValidation = Yup.object().shape({
-  val0: Yup.string()
-    .trim()
-    .min(1, 'Too short')
-    .required('Required')
+  val0: Yup.string().trim().min(1, 'Too short').required('Required')
 })
 
 class AddNewPopup1Parameter extends React.Component {
@@ -57,7 +55,8 @@ class AddNewPopup1Parameter extends React.Component {
                     <Required />
                   </>
                 }
-                name='val0' />
+                name='val0'
+              />
             </FormGroup>
 
             <div style={{ textAlign: 'right' }}>
@@ -72,6 +71,7 @@ class AddNewPopup1Parameter extends React.Component {
                 </FormattedMessage>
               </Button.Submit>
             </div>
+            <ErrorFocus />
           </Form>
         </Modal.Content>
       </Modal>

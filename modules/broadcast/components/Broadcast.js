@@ -369,7 +369,9 @@ class Broadcast extends Component {
   }
 
   findCompany = branch =>
-    this.props.treeData.first(n => n.model.id === getSafe(() => branch.model.rule.id, branch.id)).parent
+    this.props.treeData.first(
+      n => n.model.type === 'branch' && n.model.id === getSafe(() => branch.model.rule.id, branch.id)
+    ).parent
 
   handleChange = (node, propertyName, e) => {
     e.preventDefault()

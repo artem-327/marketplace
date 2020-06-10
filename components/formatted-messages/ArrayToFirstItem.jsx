@@ -1,21 +1,48 @@
 import React, { Component } from 'react'
 
-import {Label, Popup, List, Header} from 'semantic-ui-react'
-import { string, array, number } from "prop-types"
+import { Label, Popup, List, Header } from 'semantic-ui-react'
+import { string, array, number, bool, func } from 'prop-types'
 import styled from 'styled-components'
+
+const FlexWrapper = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start !important;
+`
 
 const ProductLabel = styled(Label)`
   margin-left: 5px !important;
 `
 
+const ItemLabel = styled(Label)`
+  height: 22px !important;
+  border-radius: 2px !important;
+  padding: 3px 12px !important;
+  background: #2599d5 !important;
+  font-family: 'HelveticaNeueLTPro-Md', sans-serif;
+  font-size: 12px !important;
+  color: #fff !important;
+  line-height: 16px !important;
+`
+
+const ProductFirstTags = styled.div`
+  order: 1;
+  white-space: nowrap;
+`
+
 const ProductFirstItem = styled.div`
+  order: 1;
   overflow: hidden;
   text-overflow: ellipsis;
 `
 
+const ProductMoreItems = styled.div`
+  order: 2;
+`
+
 export default class ArrayToFirstItem extends Component {
   render() {
-    let { values, rowItems } = this.props
+    let { values, rowItems, tags, onTagClick } = this.props
     if (!values || values.length === 0) return null
 
     let rowValues = values.slice()
@@ -23,7 +50,7 @@ export default class ArrayToFirstItem extends Component {
 
     if (values.length > rowItems) {
       return (
-        <div>
+        <FlexWrapper>
           <Popup
             wide='very'
             data-test='array_to_multiple_list'
@@ -31,31 +58,66 @@ export default class ArrayToFirstItem extends Component {
               <List>
                 {values.map((text, i) => (
                   <List.Item key={i}>
-                    <List.Content>
-                      {text}
-                    </List.Content>
+                    <List.Content>{text}</List.Content>
                   </List.Item>
                 ))}
-              </List>}
+              </List>
+            }
             position='right center'
-            trigger={<div><ProductLabel className='bordered right'>{values.length - rowItems}+</ProductLabel></div>}
+            trigger={
+              <ProductMoreItems>
+                <ProductLabel className='bordered right'>{values.length - rowItems}+</ProductLabel>
+              </ProductMoreItems>
+            }
           />
-          <ProductFirstItem>{rowValues.join(', ')}</ProductFirstItem>
-        </div>
+          {tags ? (
+            <ProductFirstTags>
+              {rowValues.map(val => (
+                <ItemLabel
+                  style={typeof onTagClick !== 'undefined' ? { cursor: 'pointer' } : null}
+                  onClick={e => {
+                    if (typeof onTagClick !== 'undefined') onTagClick(e, { value: val })
+                  }}>
+                  {val}
+                </ItemLabel>
+              ))}
+            </ProductFirstTags>
+          ) : (
+            <ProductFirstItem>{rowValues.join(', ')}</ProductFirstItem>
+          )}
+        </FlexWrapper>
       )
-    }
-    else {
-      return rowValues.join(', ')
+    } else {
+      if (tags) {
+        return (
+          <ProductFirstTags>
+            {rowValues.map(val => (
+              <ItemLabel
+                style={typeof onTagClick !== 'undefined' ? { cursor: 'pointer' } : null}
+                onClick={e => {
+                  if (typeof onTagClick !== 'undefined') onTagClick(e, { value: val })
+                }}>
+                {val}
+              </ItemLabel>
+            ))}
+          </ProductFirstTags>
+        )
+      } else {
+        return rowValues.join(', ')
+      }
     }
   }
 }
 
 ArrayToFirstItem.propTypes = {
   values: array,
-  rowItems: number
+  rowItems: number,
+  tags: bool,
+  onTagClick: func
 }
 
 ArrayToFirstItem.defaultProps = {
   values: null,
-  rowItems: 1
+  rowItems: 1,
+  tags: false
 }

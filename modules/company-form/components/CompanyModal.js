@@ -39,6 +39,7 @@ import { getSafe, deepSearch } from '~/utils/functions'
 import { Datagrid } from '~/modules/datagrid'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { string, objectOf, bool, func } from 'prop-types'
+import ErrorFocus from '~/components/error-focus'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -46,6 +47,13 @@ const AccordionHeader = styled(Header)`
   > i {
     font-weight: bolder;
   }
+`
+
+const StyledModalContent = styled(Modal.Content)`
+  max-height: calc(80vh - 10em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px;
 `
 
 const initialFormValues = {
@@ -57,43 +65,43 @@ const initialFormValues = {
     id: null
   },
   website: '',
-  mailingBranch: {
-    deliveryAddress: {
-      addressName: '',
-      accessorials: [],
-      address: {
-        city: '',
-        country: '',
-        province: '',
-        streetAddress: '',
-        zip: ''
-      },
-      contactEmail: '',
-      contactName: '',
-      contactPhone: ''
-    },
-    warehouse: true
+  primaryUser: {
+    name: '',
+    email: ''
   },
   primaryBranch: {
     deliveryAddress: {
       addressName: '',
+      contactName: '',
+      contactEmail: '',
+      contactPhone: '',
       accessorials: [],
       address: {
-        city: '',
+        streetAddress: '',
         country: '',
         province: '',
-        streetAddress: '',
+        city: '',
         zip: ''
-      },
-      contactEmail: '',
-      contactName: '',
-      contactPhone: ''
+      }
     },
     warehouse: true
   },
-  primaryUser: {
-    email: '',
-    name: ''
+  mailingBranch: {
+    deliveryAddress: {
+      addressName: '',
+      contactName: '',
+      contactEmail: '',
+      contactPhone: '',
+      accessorials: [],
+      address: {
+        streetAddress: '',
+        country: '',
+        province: '',
+        city: '',
+        zip: ''
+      }
+    },
+    warehouse: true
   }
 }
 
@@ -286,10 +294,10 @@ class CompanyModal extends React.Component {
                 <FormattedMessage id={`global.${isEdit ? 'edit' : 'add'}`} />{' '}
                 <FormattedMessage id={header.id} defaultMessage={header.defaultMessage} />
               </Modal.Header>
-              <Segment basic padded>
+              <Segment basic style={{ padding: '0', margin: '0' }}>
                 <Form loading={isSubmitting}>
                   <Accordion exclusive={false}>
-                    <Modal.Content>
+                    <StyledModalContent>
                       <CompanyForm
                         admin={true}
                         selectLogo={this.props.selectLogo ? this.props.selectLogo : selectLogo}
@@ -476,8 +484,9 @@ class CompanyModal extends React.Component {
                           </Accordion.Content>
                         </>
                       )}
-                    </Modal.Content>
+                    </StyledModalContent>
                   </Accordion>
+                  <ErrorFocus />
                 </Form>
               </Segment>
               <Modal.Actions>
@@ -488,7 +497,10 @@ class CompanyModal extends React.Component {
                     {text => text}
                   </FormattedMessage>
                 </Button>
-                <Button.Submit data-test='admin_popup_company_save_btn' onClick={props.handleSubmit}>
+                <Button.Submit
+                  data-test='admin_popup_company_save_btn'
+                  onClick={props.handleSubmit}
+                  disabled={isSubmitting}>
                   <FormattedMessage id='global.save' defaultMessage='Save'>
                     {text => text}
                   </FormattedMessage>

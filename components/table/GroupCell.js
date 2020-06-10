@@ -30,6 +30,7 @@ const Cell = ({
   checked,
   indeterminate,
   hideCheckboxes,
+  hideActions,
   ...restProps
 }) => {
   const handleClick = () => onToggle()
@@ -52,12 +53,14 @@ const Cell = ({
           />
         </td>
       )}
-      <td className="actions">
-        {actionsDropdown}
-      </td>
+      {hideActions ? null : (
+        <td className="actions">
+          {actionsDropdown}
+        </td>
+      )}
       <td
         key={row.key}
-        colSpan={colSpan - ((rowSelection && !hideCheckboxes) ? 4 : 3)}
+        colSpan={colSpan + (hideActions ? 1 : 0) - ((rowSelection && !hideCheckboxes) ? 4 : 3)}
         className={cn('dx-g-bs4-cursor-pointer', className)}
         onClick={handleClick}
         {...restProps}>
