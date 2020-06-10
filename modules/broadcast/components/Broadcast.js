@@ -143,15 +143,13 @@ class Broadcast extends Component {
       // Add back removed node (with updated data)
       parent.addChildAtIndex(found, index)
       normalizeTree(node)
-      // console.log('test :D', this.treeToModel(copy))
-      console.log('copy', copy)
+
       this.props.treeDataChanged({
         ...copy,
         model: { ...copy.model, rule: { ...copy.model.rule, ...this.treeToModel(copy) } }
       })
     } else {
       normalizeTree(node)
-      // console.log('test root :D', this.treeToModel(node))
       this.props.treeDataChanged({
         ...node,
         model: { ...node.model, rule: { ...node.model.rule, ...this.treeToModel(node) } }
@@ -294,7 +292,6 @@ class Broadcast extends Component {
 
       return obj
     }
-    console.log('tree', tree, 'props?', this.props)
 
     return {
       broadcast: getBroadcast(tree.getPath()[0]),
@@ -381,7 +378,6 @@ class Broadcast extends Component {
 
     const value = rule[propertyName]
     let newValue = 0
-    console.log('value', value)
     switch (value) {
       case 2: {
         if (getNodeStatus(node, n => n.model.rule.type !== 'company' && !n.model.rule.hidden).anyChildBroadcasting) {
@@ -440,7 +436,6 @@ class Broadcast extends Component {
     // elements.forEach(element => {
     //   if (!element.hidden) {
     //     element = { ...element, ...data }
-    //     console.log(element)
     //   }
     //   if (element.elements.length > 0) this.changeInModel(element.elements, data)
     // })
@@ -448,7 +443,6 @@ class Broadcast extends Component {
 
   handleRowClick = node => {
     node.model.rule.expanded = !node.model.rule.expanded
-    console.log({ node })
 
     if (!node.model.rule.expanded) node.all(n => (n.model.rule.expanded = false))
     this.updateInTreeData(node)
@@ -950,7 +944,6 @@ class Broadcast extends Component {
                 <Rule.Content style={asSidebar ? { flex: '1 0 auto', overflowY: 'hidden' } : null}>
                   <RuleItem
                     // changeInModel={this.changeInModel}
-                    changeInModel={() => console.log('tree to model', this.treeToModel())}
                     loadingChanged={this.props.loadingChanged}
                     filter={filter}
                     hideFobPrice={hideFobPrice}
@@ -1091,7 +1084,6 @@ export default injectIntl(
           ? new TreeModel({ childrenPropertyName: 'elements' }).parse(broadcast.data)
           : new TreeModel().parse({ model: { rule: {} } })
 
-        console.log({ treeData, broadcast })
         return {
           treeData,
           ...broadcast
