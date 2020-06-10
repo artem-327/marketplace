@@ -383,12 +383,16 @@ export function postProductGroups(request) {
   }
 }
 
-export function putProductGroups(id, request) {
+export function putProductGroups(id, request, selectedTagsOptions) {
   return {
     type: AT.PRODUCTS_GROUPS_UPDATE,
     async payload() {
       const response = await api.putProductGroups(id, request)
-      Datagrid.updateRow(id, () => request)
+      Datagrid.updateRow(id, () => ({
+        name: request.name,
+        tags: selectedTagsOptions.map(tag => ({ name: tag.text, id: tag.key })),
+        id: id
+      }))
       return response
     }
   }
