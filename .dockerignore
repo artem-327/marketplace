@@ -1,5 +1,20 @@
-node_modules/
-build/
-Docs/
+
+Dockerfile
+.dockerignore
+.gitignore
+README.md
+Docs
 .env
 .next
+.git
+.cache
+docker-compose.yml
+docker-compose.debug.yml
+.vscode/tasks.json
+.vscode/launch.json
+node_modules/         # Installed inside container
+nginx/ 
+
+node_modules
+build
+

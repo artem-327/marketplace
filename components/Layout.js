@@ -85,6 +85,12 @@ class Layout extends Component {
     fatalError: false,
     mainClass: null
   }
+
+  constructor(props) {
+    super(props);
+    this.navigationPS = React.createRef();
+  }
+
   componentDidMount() {
     if (this.props.hasLogo && getSafe(() => this.props.useCompanyLogo.value === 'true', false)) this.loadCompanyLogo()
 
@@ -187,7 +193,7 @@ class Layout extends Component {
 
         <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsedMenu ? 'collapsed' : ''}>
           <LeftMenuContainer fluid>
-            <PerfectScrollbar>
+            <PerfectScrollbar ref={this.navigationPS}>
               <LogoImage
                 src={
                   !collapsedMenu
@@ -198,7 +204,7 @@ class Layout extends Component {
                 }
               />
 
-              <NavigationMenu takeover={takeover} collapsed={collapsedMenu} />
+              <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
             </PerfectScrollbar>
             <Container className='bottom'>
               <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
