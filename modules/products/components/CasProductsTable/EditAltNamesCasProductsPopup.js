@@ -265,7 +265,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     popupValues: state.productsAdmin.popupValues,
-    altCasNamesRows: getSafe(() => state.productsAdmin.altCasNamesRows, []),
+    altCasNamesRows: getSafe(() => state.productsAdmin.altCasNamesRows.data, []),
     loading: getSafe(() => state.productsAdmin.loading, false)
   }
 }

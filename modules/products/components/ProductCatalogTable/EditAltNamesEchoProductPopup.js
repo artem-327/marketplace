@@ -13,6 +13,7 @@ import {
   updateCompanyGenericProductsAltName,
   deleteCompanyGenericProductsAltName
 } from '../../actions'
+import { getSafe } from '~/utils/functions'
 
 const initialFormValues = {
   productAltNames: [{}]
@@ -246,8 +247,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    popupValues: state.productsAdmin.popupValues,
-    productAltNames: state.productsAdmin.altEchoNamesRows
+    popupValues: getSafe(() => state.productsAdmin.popupValues, ''),
+    productAltNames: getSafe(() => state.productsAdmin.altEchoNamesRows.data, [])
   }
 }
 
