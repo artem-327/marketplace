@@ -10,7 +10,7 @@ export const WantedBoard = props => {
         filters.and = v.and.map(idTag => {
           return {
             operator: 'EQUALS',
-            path: 'PurchaseRequest.elements.companyGenericProduct.productGroup.tags.id',
+            path: 'PurchaseRequest.elements.productGroup.tags.id',
             values: [idTag]
           }
         })
