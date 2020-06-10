@@ -141,14 +141,6 @@ const textsTable = {
     BtnAddText: 'settings.tables.users.buttonAdd',
     SearchText: 'settings.tables.users.search'
   },
-  branches: {
-    BtnAddText: 'settings.tables.branches.buttonAdd',
-    SearchText: 'settings.tables.branches.search'
-  },
-  warehouses: {
-    BtnAddText: 'settings.tables.warehouses.buttonAdd',
-    SearchText: 'settings.tables.warehouses.search'
-  },
   products: {
     BtnAddText: 'settings.tables.products.buttonAdd',
     BtnImportText: 'settings.tables.products.buttonImport',
@@ -165,10 +157,6 @@ const textsTable = {
   'bank-accounts': {
     BtnAddText: 'settings.tables.bankAccounts.buttonAdd',
     SearchText: 'settings.tables.bankAccounts.search'
-  },
-  'delivery-addresses': {
-    BtnAddText: 'settings.tables.deliveryAddresses.buttonAdd',
-    SearchText: 'settings.tables.deliveryAddresses.search'
   },
   'client-companies': {
     BtnAddText: 'settings.tables.clientCompanies.buttonAdd',
@@ -479,9 +467,7 @@ class TablesHandlers extends Component {
                 <div className='column'>
                   <Button
                     primary
-                    onClick={() =>
-                      currentTab.type === 'warehouses' || currentTab.type === 'branches' ? openSidebar() : openPopup()
-                    }
+                    onClick={() => openPopup()}
                     data-test='settings_open_popup_btn'>
                     <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>

@@ -407,17 +407,10 @@ class Navigation extends Component {
                   <>
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/settings?type=branches'
-                      tab='branches'
-                      dataTest='navigation_settings_branches_drpdn'>
-                      {formatMessage({ id: 'navigation.branches', defaultMessage: 'Branches' })}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/settings?type=warehouses'
-                      tab='warehouses'
-                      dataTest='navigation_settings_warehouses_drpdn'>
-                      {formatMessage({ id: 'navigation.warehouses', defaultMessage: 'Warehouses' })}
+                      to='/settings?type=locations'
+                      tab='locations'
+                      dataTest='navigation_settings_locations_drpdn'>
+                      {formatMessage({ id: 'navigation.locations', defaultMessage: 'Locations' })}
                     </Dropdown.Item>
                   </>
                 ) : null}
@@ -447,13 +440,6 @@ class Navigation extends Component {
                       tab='bank-accounts'
                       dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/settings?type=delivery-addresses'
-                      tab='delivery-addresses'
-                      dataTest='navigation_settings_delivery_addresses_drpdn'>
-                      {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
                     </Dropdown.Item>
                     {!isClientCompanyAdmin && (
                       <Dropdown.Item

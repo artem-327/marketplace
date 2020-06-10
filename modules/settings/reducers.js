@@ -48,6 +48,7 @@ export const initialState = {
   sysSettingsUpdating: false,
   tabsNames: defaultTabs,
   currentTab: [],
+  locationsTab: 'delivery-locations',
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
   currentEditForm: null,
@@ -154,7 +155,8 @@ export default function reducer(state = initialState, action) {
         loaded: false,
         isOpenSidebar: true,
         editTrig: !state.editTrig,
-        openTab: action.payload
+        openTab: action.payload.openTab,
+        popupValues: action.payload.data
       }
     }
     case AT.CLOSE_SIDEBAR: {
@@ -1501,6 +1503,14 @@ export default function reducer(state = initialState, action) {
         updating: false
       }
     }
+
+    case AT.SETTINGS_HANDLE_LOCATIONS_TAB: {
+      return {
+        ...state,
+        locationsTab: action.payload
+      }
+    }
+
 
     default: {
       return state
