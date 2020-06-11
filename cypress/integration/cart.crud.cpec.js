@@ -37,10 +37,17 @@ context("Shopping cart CRUD", () => {
                 })
 
                 marketPlaceId = suitableOffers[ 0 ].id
-                marketPlaceName = suitableOffers[ 0 ].companyProduct.echoProduct.name
 
-                cy.contains(marketPlaceName).click()
-                cy.openElement(marketPlaceId, 0)
+                //Open tab inside marketplace. Checking if undefined
+                if(suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup == undefined){
+                    cy.contains("Unmapped").click()
+                }else{
+                    marketPlaceName = suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup.name
+
+                    cy.contains(marketPlaceName).click()
+                }
+
+                cy.openElement(marketPlaceId, 1)
 
                 cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
                     cy.get('input[type="number"]').type("1")
@@ -51,7 +58,7 @@ context("Shopping cart CRUD", () => {
                 cy.getUserToken(userJSON.email, userJSON.password).then(token => {
                     //Check product name
                     cy.getItemBody(token, marketPlaceId).then(itemBody => {
-                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.echoProduct.name)
+                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.companyGenericProduct.name)
                     })
 
                     //Check cart price
@@ -100,12 +107,18 @@ context("Shopping cart CRUD", () => {
                 cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
                     let marketPlaceIdNum1 = sameWarehouseOffer[ 0 ].id
                     let marketPlaceIdNum2 = sameWarehouseOffer[ 1 ].id
-                    let marketPlaceName1 = sameWarehouseOffer[ 0 ].companyProduct.echoProduct.name
-                    let marketPlaceName2 = sameWarehouseOffer[ 1 ].companyProduct.echoProduct.name
+                    let marketPlaceName1 = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.name
+                    let marketPlaceName2 = sameWarehouseOffer[ 1 ].companyProduct.companyGenericProduct.name
                     marketPlaceId = marketPlaceIdNum1
+                    //Open tab
+                    if(sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup == undefined){
+                        cy.contains("Unmapped").click()
+                    }else{
+                        marketPlaceName = suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup.name
 
-                    cy.contains(marketPlaceName1).click()
-                    cy.openElement(sameWarehouseOffer[ 0 ].id, 0)
+                        cy.contains(marketPlaceName).click()
+                    }
+                    cy.openElement(sameWarehouseOffer[ 0 ].id, 1)
 
                     cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
                         cy.get('input[type="number"]').type("2")
@@ -114,17 +127,22 @@ context("Shopping cart CRUD", () => {
                     cy.contains("Continue").click()
 
                     cy.getItemBody(token, marketPlaceIdNum1).then(itemBody => {
-                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.echoProduct.name)
+                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.companyGenericProduct.name)
                     })
 
                     cy.contains("Marketplace").click()
                     cy.wait("@marketplaceLoading", { timeout: 30000 })
 
                     cy.waitForUI()
-                    if (marketPlaceName2 != marketPlaceName1) {
-                        cy.contains(marketPlaceName2).click()
+                    //Open desired tab
+                    if(sameWarehouseOffer[ 1 ].companyProduct.companyGenericProduct.productGroup == undefined){
+                        cy.contains("Unmapped").click()
+                    }else{
+                        marketPlaceName = suitableOffers[ 1 ].companyProduct.companyGenericProduct.productGroup.name
+
+                        cy.contains(marketPlaceName).click()
                     }
-                    cy.openElement(marketPlaceIdNum2, 0)
+                    cy.openElement(marketPlaceIdNum2, 1)
 
                     cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
                         cy.get('input[type="number"]').type("2")
@@ -133,10 +151,10 @@ context("Shopping cart CRUD", () => {
                     cy.contains("Continue").click()
 
                     cy.getItemBody(token, marketPlaceIdNum1).then(itemBody => {
-                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').eq(0).should('contain', itemBody.companyProduct.echoProduct.name)
+                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').eq(0).should('contain', itemBody.companyProduct.companyGenericProduct.name)
                     })
                     cy.getItemBody(token, marketPlaceIdNum2).then(itemBody => {
-                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').eq(1).should('contain', itemBody.companyProduct.echoProduct.name)
+                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').eq(1).should('contain', itemBody.companyProduct.companyGenericProduct.name)
                     })
 
                 })
@@ -157,7 +175,7 @@ context("Shopping cart CRUD", () => {
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getItemBody(token, marketPlaceId).then(itemBody => {
-                cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.echoProduct.name)
+                cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.companyGenericProduct.name)
             })
         })
 
@@ -166,7 +184,7 @@ context("Shopping cart CRUD", () => {
         cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should("have.length", "1")
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getItemBody(token, marketPlaceId).then(itemBody => {
-                cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.echoProduct.name)
+                cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.companyGenericProduct.name)
             })
         })
     })

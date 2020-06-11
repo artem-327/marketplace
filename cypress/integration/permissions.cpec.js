@@ -22,7 +22,7 @@ context("Permissions tests",() => {
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
         cy.wait('@loading')
-        cy.get('.actions').should("be.visible")
+        cy.get('tbody > :nth-child(1)').should("be.visible")
 
         cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
     })
@@ -102,6 +102,7 @@ context("Permissions tests",() => {
         cy.wait('@loading')
         cy.contains("No records found.")
 
+        cy.waitForUI()
         cy.get("[data-test='navigation_menu_settings_drpdn']").click()
         cy.get("[data-test='navigation_settings_warehouses_drpdn']").should('not.exist')
 
@@ -117,7 +118,7 @@ context("Permissions tests",() => {
         cy.url().should("include", "inventory")
         cy.contains("No records found.")
 
-        cy.get("[data-test='navigation_menu_wanted_board_drpdn']").click()
+        cy.get("[data-test='navigation_menu_wanted_board_drpdn']").eq(0).click()
         cy.wait('@loading', {timeout: 30000})
         cy.contains("No records found.")
         cy.waitForUI()

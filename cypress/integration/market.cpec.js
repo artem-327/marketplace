@@ -19,7 +19,7 @@ context("Market place tests",() => {
         let searchedValue = null
 
         cy.server()
-        cy.route("GET","/prodex/api/echo-products/search/all-alternatives?**").as("search")
+        cy.route("GET","/prodex/api/company-generic-products/search/all-alternatives?**").as("search")
 
         cy.waitForUI()
 
@@ -40,9 +40,12 @@ context("Market place tests",() => {
 
         cy.contains("Apply").click()
 
+        cy.waitForUI()
+
+        cy.contains("Unmapped").click()
         cy.get('.actions').should("be.visible")
 
-        cy.get("[name='quantity'").click()
+        cy.get("[name='quantity']").click()
         cy.get("#field_input_quantityTo").type(searchedValue + 5)
         cy.contains("Apply").click()
 

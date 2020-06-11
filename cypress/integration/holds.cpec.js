@@ -40,11 +40,18 @@ context("Holds tests", () => {
             cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
                 let marketPlaceId = sameWarehouseOffer[0].id
                 warehouseOffer = marketPlaceId
-                let marketPlaceName = sameWarehouseOffer[0].companyProduct.echoProduct.name
+                let marketPlaceName = sameWarehouseOffer[0].companyProduct.companyGenericProduct.name
 
-                cy.contains(marketPlaceName).click()
+                //Open tab
+                if(sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup == undefined){
+                    cy.contains("Unmapped").click()
+                }else{
+                    marketPlaceName = suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup.name
+
+                    cy.contains(marketPlaceName).click()
+                }
                 cy.waitForUI()
-                cy.openElement(marketPlaceId, 1)
+                cy.openElement(marketPlaceId, 2)
                 cy.get("[data-test='add_cart_quantity_inp']").within(() => {
                     cy.get("input").type("1")
                 })
@@ -98,7 +105,7 @@ context("Holds tests", () => {
         cy.getUserToken(userJSON1.email, userJSON1.password).then(token => {
             //Check product name
             cy.getItemBody(token, warehouseOffer).then(itemBody => {
-                cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.echoProduct.name)
+                cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.companyGenericProduct.name)
             })
         })
     })

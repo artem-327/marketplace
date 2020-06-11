@@ -143,7 +143,7 @@ context("Inventory CRUD", () => {
     it('Create item with optional info', () => {
         cy.get("[data-test=my_inventory_add_btn]").click()
 
-        cy.selectChemical("Caustic")
+        cy.selectChemical(productName)
 
         cy.get("[data-test=new_inventory_warehouse_drpdn]").click()
         cy.get("[data-test=new_inventory_warehouse_drpdn]").within(() => {

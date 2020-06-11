@@ -72,7 +72,7 @@ context("Login and logout", () => {
             expect(xhr.responseBody.token_type).to.eq("bearer")
         })
 
-        cy.url().should("include", "/admin")
+        cy.url().should("include", "/companies")
         cy.wait(200)
         cy.get(".user-menu-wrapper").click()
         cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
