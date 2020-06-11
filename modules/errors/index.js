@@ -1,3 +1,3 @@
-import GatewayTimeout from './components/GatewayTimeout'
+import ErrorPage from './components/ErrorPage'
 
-export { GatewayTimeout }
+export default ErrorPage

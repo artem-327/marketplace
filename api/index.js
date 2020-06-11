@@ -33,6 +33,7 @@ axios.interceptors.response.use(
     return response
   },
   function (error) {
+    const hasWindow = typeof window !== 'undefined'
     // const errData = error && error.response && error.response.data
     if (
       error.request.responseType === 'blob' &&
@@ -53,7 +54,12 @@ axios.interceptors.response.use(
                 Router.push('/auth/logout?auto=true')
                 break
               case 504:
-                Router.push('/errors/504')
+                hasWindow && window.localStorage.setItem('errorStatus', '504')
+                Router.push('/errors')
+                break
+              case 403:
+                hasWindow && window.localStorage.setItem('errorStatus', '403')
+                Router.push('/errors')
                 break
               default:
                 break
@@ -82,7 +88,12 @@ axios.interceptors.response.use(
           Router.push('/auth/logout?auto=true')
           break
         case 504:
-          Router.push('/errors/504')
+          hasWindow && window.localStorage.setItem('errorStatus', '504')
+          Router.push('/errors')
+          break
+        case 403:
+          hasWindow && window.localStorage.setItem('errorStatus', '403')
+          Router.push('/errors')
           break
         default:
           break
