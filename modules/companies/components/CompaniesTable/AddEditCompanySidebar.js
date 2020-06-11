@@ -76,43 +76,43 @@ const initialFormValues = {
     id: null
   },
   website: '',
-  mailingBranch: {
-    deliveryAddress: {
-      addressName: '',
-      accessorials: [],
-      address: {
-        city: '',
-        country: '',
-        province: '',
-        streetAddress: '',
-        zip: ''
-      },
-      contactEmail: '',
-      contactName: '',
-      contactPhone: ''
-    },
-    warehouse: false
+  primaryUser: {
+    name: '',
+    email: ''
   },
   primaryBranch: {
     deliveryAddress: {
       addressName: '',
+      contactName: '',
+      contactPhone: '',
+      contactEmail: '',
       accessorials: [],
       address: {
-        city: '',
+        streetAddress: '',
         country: '',
         province: '',
-        streetAddress: '',
+        city: '',
         zip: ''
-      },
-      contactEmail: '',
-      contactName: '',
-      contactPhone: ''
+      }
     },
     warehouse: false
   },
-  primaryUser: {
-    email: '',
-    name: ''
+  mailingBranch: {
+    deliveryAddress: {
+      addressName: '',
+      contactName: '',
+      contactPhone: '',
+      contactEmail: '',
+      accessorials: [],
+      address: {
+        streetAddress: '',
+        country: '',
+        province: '',
+        city: '',
+        zip: ''
+      }
+    },
+    warehouse: false
   }
 }
 
@@ -664,6 +664,7 @@ class AddEditCompanySidebar extends React.Component {
                   </div>
                 </BottomButtons>
               </FlexSidebar>
+              <ErrorFocus />
             </Form>
           )
         }}></Formik>

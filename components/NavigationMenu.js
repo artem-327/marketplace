@@ -227,6 +227,8 @@ class Navigation extends Component {
         // Reset styles
         current.lastChild.style.maxHeight = ''
       }
+
+      this.props.navigationPS.current.updateScroll()
     }
   }
 
@@ -441,13 +443,20 @@ class Navigation extends Component {
                       dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings?type=delivery-addresses'
+                      tab='delivery-addresses'
+                      dataTest='navigation_settings_delivery_addresses_drpdn'>
+                      {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
+                    </Dropdown.Item>
                     {!isClientCompanyAdmin && (
                       <Dropdown.Item
                         as={MenuLink}
-                        to='/settings?type=client-companies'
-                        tab='client-companies'
-                        data-test='navigation_settings_client_companies_drpdn'>
-                        {formatMessage({ id: 'navigation.clientCompanies', defaultMessage: '!Client Companies' })}
+                        to='/settings?type=guest-companies'
+                        tab='guest-companies'
+                        data-test='navigation_settings_guest_companies_drpdn'>
+                        {formatMessage({ id: 'navigation.guestCompanies', defaultMessage: 'Guest Companies' })}
                       </Dropdown.Item>
                     )}
                     <Dropdown.Item
@@ -552,7 +561,8 @@ class Navigation extends Component {
 export default withAuth(
   withRouter(
     connect(
-      store => ({
+      (store, { navigationPS }) => ({
+        navigationPS: navigationPS,
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),

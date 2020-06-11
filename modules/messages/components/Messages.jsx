@@ -15,7 +15,7 @@ class Messages extends Component {
 
   checkForMessages = response => {
     if (!response) return
-    let { data } = response
+    let { data, config } = response
     let messages = data.clientMessage
       ? [data]
       : Array.isArray(data)
@@ -29,7 +29,7 @@ class Messages extends Component {
     // )
     if (messages.length > 0) {
       messages.forEach(message => {
-        this.onMessage(message)
+        this.onMessage(message, config)
       })
     }
   }
@@ -46,12 +46,19 @@ class Messages extends Component {
     return null
   }
 
-  onMessage = message => {
+  onMessage = (message, config) => {
     let { toastManager } = this.props
 
     const clientMessage = getSafe(() => message.clientMessage, null)
     const descriptionMessage = getSafe(() => message.descriptionMessage, null)
     const exceptionMessage = getSafe(() => message.exceptionMessage, null)
+
+    const url = getSafe(() => config.url, '')
+    const isPaymentEndpoint = url.startsWith('/prodex/api/payments')
+    const dwollaValidationError = isPaymentEndpoint && (
+      clientMessage.startsWith('Dwolla validation error') ||
+      clientMessage.startsWith('Uploading documents for customer failed')
+    )
 
     const msg =
       message && message.level
@@ -59,7 +66,11 @@ class Messages extends Component {
           <>
             {this.createTaggedMessage(clientMessage)}
             {this.createTaggedMessage(descriptionMessage)}
-            {process.env.NODE_ENV === 'production' ? '' : this.createTaggedMessage(exceptionMessage)}
+            {
+              (process.env.NODE_ENV === 'production' && !dwollaValidationError)
+                ? ''
+                : this.createTaggedMessage(exceptionMessage)
+            }
           </>
         )
         : message

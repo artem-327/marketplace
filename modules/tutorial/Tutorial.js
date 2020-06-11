@@ -117,7 +117,7 @@ const Icons = styled.div`
 
 const cookies = new Cookies()
 
-const tutorialTabs = [
+let tutorialTabs = [
   'branches',
   'users',
   'warehouses',
@@ -128,8 +128,8 @@ const tutorialTabs = [
   'addAccount'
 ]
 
-const urlTabs = [
-  '/settings?type=locations',
+let urlTabs = [
+  '/settings?type=branches',
   '/settings?type=users',
   '/settings?type=locations',
   '/settings?type=products',
@@ -149,10 +149,33 @@ class Tutorial extends Component {
 
   componentDidMount() {
     const { tutorialTab } = this.state
-    if (this.props.isClientCompanyAdmin) {
-      tutorialTabs.splice(3, 2) // removed tabs products and inventory
-      urlTabs.splice(3, 2) // removed urls for products and inventory
+    const { isCompanyAdmin, isClientCompanyAdmin, isProductCatalogAdmin, isProductOfferManager } = this.props
+    if (!isCompanyAdmin) {
+      let tutorials = []
+      let urls = []
+      if (isClientCompanyAdmin) {
+        tutorials.push('branches', 'users', 'warehouses', 'marketplace', 'registerAccount', 'addAccount')
+        urls.push(
+          '/settings?type=branches',
+          '/settings?type=users',
+          '/settings?type=warehouses',
+          '/settings?type=global-broadcast',
+          '/settings?type=bank-accounts',
+          '/settings?type=bank-accounts'
+        )
+      }
+      if (isProductCatalogAdmin) {
+        tutorials.push('products')
+        urls.push('/settings?type=products')
+      }
+      if (isProductOfferManager) {
+        tutorials.push('inventory', 'marketplace')
+        urls.push('/inventory/my', '/settings?type=global-broadcast')
+      }
+      tutorialTabs = [...new Set(tutorials)]
+      urlTabs = [...new Set(urls)]
     }
+
     if (!tutorialTab) {
       this.setState({ tutorialTab: this.getNextTab() })
     }
@@ -212,7 +235,7 @@ class Tutorial extends Component {
       }
     } else {
       !skip && Router.push(urlTabs[0])
-      !skip && tabChanged(tabsNamesMap.get('branches'))
+      !skip && tabChanged(tabsNamesMap.get(tutorialTabs[0]))
       cookies.set('tutorial', [this.getNextTab()], { path: '/' }) // set first checked tab 'branches'
       this.setState({ tutorialTab: tutorialTabs[1] }) // set second tutorial tab after checked first tab
     }
@@ -271,7 +294,15 @@ class Tutorial extends Component {
 
   render() {
     const { tutorialTab } = this.state
-    const { marginMarketplace, marginHolds, marginOrders, marginWantedBoard } = this.props
+    const {
+      marginMarketplace,
+      marginHolds,
+      marginOrders,
+      marginWantedBoard,
+      isMerchant,
+      isClientCompanyManager,
+      isOrderProcessing
+    } = this.props
 
     let margin = '15px 32px 15px 32px'
     if (marginMarketplace) margin = '10px 0'
@@ -282,7 +313,7 @@ class Tutorial extends Component {
     const theme = {
       margin
     }
-    return (
+    return isMerchant || isClientCompanyManager || isOrderProcessing ? null : (
       <>
         {tutorialTab ? (
           <ThemeProvider theme={theme}>
@@ -323,7 +354,13 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     name: getSafe(() => state.auth.identity.name, ''),
-    isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false)
+    isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false),
+    isMerchant: getSafe(() => state.auth.identity.isMerchant, false),
+    isClientCompanyManager: getSafe(() => state.auth.identity.isClientCompanyManager, false),
+    isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
+    isProductCatalogAdmin: getSafe(() => state.auth.identity.isProductCatalogAdmin, false),
+    isProductOfferManager: getSafe(() => state.auth.identity.isProductOfferManager, false),
+    isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false)
   }
 }
 

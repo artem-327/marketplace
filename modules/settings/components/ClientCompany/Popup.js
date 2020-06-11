@@ -31,6 +31,7 @@ class Popup extends Component {
       'dba',
       'dunsNumber',
       'enabled',
+      'nacdMember',
       'name',
       'phone',
       'tin',

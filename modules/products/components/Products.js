@@ -17,19 +17,46 @@ import ProductGroupsTable from './ProductGroups/ProductGroupsTable'
 import ProductGroupsPopup from './ProductGroups/ProductGroupsPopup'
 
 import { getSafe } from '~/utils/functions'
-import { DatagridProvider } from '~/modules/datagrid'
+import { DatagridProvider, withDatagrid, Datagrid } from '~/modules/datagrid'
+import { debounce } from 'lodash'
 
 const CustomGridColumn = styled(GridColumn)`
   padding: 0 32px 0 32px !important;
 `
 class Products extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      filterValue: ''
+    }
+    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.currentTab !== this.props.currentTab) {
+      this.setState({ filterValue: '' })
+      this.handleFiltersValue('')
+    }
+  }
+
+  handleFilterChange = (e, { value }) => {
+    this.setState({ filterValue: value })
+
+    this.handleFiltersValue(value)
+  }
+
+  handleFiltersValue = value => {
+    // this condition must be ready evrytimes if you inicializate datagridProvider
+    if (Datagrid.isReady()) Datagrid.setSearch(value, true, 'pageFilters')
+  }
+
   renderContent = () => {
     const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = this.props
 
     const tables = {
       'cas-products': <CasProductsTable />,
       'product-catalog': <ProductCatalogTable />,
-      'product-groups': <ProductGroupsTable />
+      'product-groups': <ProductGroupsTable handleFilterChange={this.handleFilterChange} />
     }
 
     const addForms = {
@@ -119,7 +146,11 @@ class Products extends Component {
         <Container fluid className='flex stretched'>
           <>
             <Container fluid style={{ padding: '0 1.5vh' }}>
-              <TablesHandlers currentTab={currentTab} />
+              <TablesHandlers
+                currentTab={currentTab}
+                handleFilterChange={this.handleFilterChange}
+                filterValue={this.state.filterValue}
+              />
             </Container>
 
             <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
@@ -147,4 +178,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withAuth(connect(mapStateToProps)(Products))
+export default withDatagrid(withAuth(connect(mapStateToProps)(Products)))

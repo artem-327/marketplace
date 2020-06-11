@@ -12,6 +12,8 @@ import Locations from './Locations/Locations'
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
+import WarehouseSidebar from './WarehouseTable/WarehouseSidebar'
+import BranchesSidebar from './BranchesTable/BranchesSidebar'
 import UsersSidebar from './UserTable/UsersSidebar'
 import ProductSidebar from './ProductCatalogTable/ProductSidebar'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
@@ -50,6 +52,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { getIdentity } from '~/modules/auth/actions'
+import ErrorFocus from '~/components/error-focus'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -272,6 +275,7 @@ class Settings extends Component {
                       </Button.Submit>
                     </GridColumn>
                   </Grid>
+                  <ErrorFocus />
                 </Segment>
               )
             }}
@@ -302,7 +306,8 @@ class Settings extends Component {
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
-      'client-companies': <ClientCompanyTable />,
+      'delivery-addresses': <DeliveryAddressesTable />,
+      'guest-companies': <ClientCompanyTable />,
       logistics: <LogisticsTable />,
       'system-settings': (
         <FixyWrapper>
@@ -316,11 +321,14 @@ class Settings extends Component {
 
     const popupForm = {
       users: <UsersSidebar />,
+      branches: <BranchesSidebar />,
+      warehouses: <WarehouseSidebar />,
       products: <ProductSidebar />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
-      'client-companies': <ClientCompanyPopup />,
+      'delivery-addresses': <DeliveryAddressesPopup />,
+      'guest-companies': <ClientCompanyPopup />,
       logistics: <LogisticsPopup />,
       documents: <DocumentsPopup />
     }
@@ -396,7 +404,7 @@ class Settings extends Component {
           orOperator: true
         }
       },
-      'client-companies': {
+      'guest-companies': {
         url: '/prodex/api/companies/client/datagrid',
         searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v}%`] }] : []),
         params: {
@@ -517,7 +525,7 @@ class Settings extends Component {
     const { currentTab, tutorialCompleted } = this.props
 
     if (currentTab && currentTab.type === 'locations') {
-      return (<Locations />)
+      return <Locations />
     } else {
       const preserveFilters = currentTab && currentTab.type === 'products'
 
@@ -525,11 +533,15 @@ class Settings extends Component {
         !this.state.wrongUrl && (
           <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
             <Container fluid className='flex stretched'>
-              {!tutorialCompleted && <div style={{margin: '5px -2px -15px -2px'}}><Tutorial/></div>}
-              <Container fluid style={{padding: '20px 30px'}}>
-                <TablesHandlers currentTab={currentTab}/>
+              {!tutorialCompleted && (
+                <div style={{ margin: '5px -2px -15px -2px' }}>
+                  <Tutorial />
+                </div>
+              )}
+              <Container fluid style={{ padding: '20px 30px' }}>
+                <TablesHandlers currentTab={currentTab} />
               </Container>
-              <SettingsGrid columns='equal' className='flex stretched' style={{padding: '0 30px'}}>
+              <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 30px' }}>
                 <Grid.Row>
                   <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
                 </Grid.Row>

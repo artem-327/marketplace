@@ -762,6 +762,7 @@ class UsersSidebar extends React.Component {
                   </Button.Submit>
                 </div>
               </BottomButtons>
+              <ErrorFocus />
             </FlexSidebar>
           )
         }}

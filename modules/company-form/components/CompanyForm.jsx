@@ -284,6 +284,19 @@ class CompanyForm extends Component {
             isSubmitting={isSubmitting}
           />
         </FormGroup>
+
+        <FormGroup widths='equal'>
+          <Checkbox
+            label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
+            name='enabled'
+            data-test='company_form_enabled_chckb'
+          />
+          <Checkbox
+            label={formatMessage({ id: 'global.nacdMember', defaultMessage: 'NACD Member' })}
+            name='nacdMember'
+            data-test='company_form_nacdMember_chckb'
+          />
+        </FormGroup>
       </>
     )
   }
@@ -447,6 +460,11 @@ class CompanyForm extends Component {
             label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
             name='enabled'
             data-test='company_form_enabled_chckb'
+          />
+          <Checkbox
+            label={formatMessage({ id: 'global.nacdMember', defaultMessage: 'NACD Member' })}
+            name='nacdMember'
+            data-test='company_form_nacdMember_chckb'
           />
           {!this.props.isClientCompany && (
             <Checkbox

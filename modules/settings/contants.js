@@ -4,7 +4,7 @@ export const defaultTabs = [
   { name: 'Locations', id: 2, type: 'locations' },
   { name: 'Product Catalog', id: 4, type: 'products' },
   { name: 'Global Price Book', id: 5, type: 'global-broadcast', hideSearch: true, hideButtons: true },
-  { name: 'Client Companies', id: 6, type: 'client-companies' },
+  { name: 'Guest Companies', id: 6, type: 'guest-companies' },
   //{ name: 'Credit Cards', id: 7, type: 'credit-cards' },
   { name: 'Bank Accounts', id: 8, type: 'bank-accounts' },
   { name: 'Logistics', id: 13, type: 'logistics' },

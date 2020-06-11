@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 
-import {Label, Popup, List, Header} from 'semantic-ui-react'
-import { string, array, number } from "prop-types"
+import { Label, Popup, List, Header } from 'semantic-ui-react'
+import { string, array, number, bool, func } from 'prop-types'
 import styled from 'styled-components'
 
 const FlexWrapper = styled.div`
   display: flex;
-  flex-flow: row-reverse nowrap;
+  flex-flow: row nowrap;
+  justify-content: flex-start !important;
 `
 
 const ProductLabel = styled(Label)`
@@ -24,13 +25,24 @@ const ItemLabel = styled(Label)`
   line-height: 16px !important;
 `
 
-const ProductFirstItem = styled.div`
+const ProductFirstTags = styled.div`
+  order: 1;
   white-space: nowrap;
+`
+
+const ProductFirstItem = styled.div`
+  order: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
+const ProductMoreItems = styled.div`
+  order: 2;
 `
 
 export default class ArrayToFirstItem extends Component {
   render() {
-    let { values, rowItems } = this.props
+    let { values, rowItems, tags, onTagClick } = this.props
     if (!values || values.length === 0) return null
 
     let rowValues = values.slice()
@@ -46,31 +58,66 @@ export default class ArrayToFirstItem extends Component {
               <List>
                 {values.map((text, i) => (
                   <List.Item key={i}>
-                    <List.Content>
-                      {text}
-                    </List.Content>
+                    <List.Content>{text}</List.Content>
                   </List.Item>
                 ))}
-              </List>}
+              </List>
+            }
             position='right center'
-            trigger={<div><ProductLabel className='bordered right'>{values.length - rowItems}+</ProductLabel></div>}
+            trigger={
+              <ProductMoreItems>
+                <ProductLabel className='bordered right'>{values.length - rowItems}+</ProductLabel>
+              </ProductMoreItems>
+            }
           />
-          <ProductFirstItem>{rowValues.map(val => <ItemLabel>{val}</ItemLabel>)}</ProductFirstItem>
+          {tags ? (
+            <ProductFirstTags>
+              {rowValues.map(val => (
+                <ItemLabel
+                  style={typeof onTagClick !== 'undefined' ? { cursor: 'pointer' } : null}
+                  onClick={e => {
+                    if (typeof onTagClick !== 'undefined') onTagClick(e, { value: val })
+                  }}>
+                  {val}
+                </ItemLabel>
+              ))}
+            </ProductFirstTags>
+          ) : (
+            <ProductFirstItem>{rowValues.join(', ')}</ProductFirstItem>
+          )}
         </FlexWrapper>
       )
-    }
-    else {
-      return rowValues.join(', ')
+    } else {
+      if (tags) {
+        return (
+          <ProductFirstTags>
+            {rowValues.map(val => (
+              <ItemLabel
+                style={typeof onTagClick !== 'undefined' ? { cursor: 'pointer' } : null}
+                onClick={e => {
+                  if (typeof onTagClick !== 'undefined') onTagClick(e, { value: val })
+                }}>
+                {val}
+              </ItemLabel>
+            ))}
+          </ProductFirstTags>
+        )
+      } else {
+        return rowValues.join(', ')
+      }
     }
   }
 }
 
 ArrayToFirstItem.propTypes = {
   values: array,
-  rowItems: number
+  rowItems: number,
+  tags: bool,
+  onTagClick: func
 }
 
 ArrayToFirstItem.defaultProps = {
   values: null,
-  rowItems: 1
+  rowItems: 1,
+  tags: false
 }

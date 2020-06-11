@@ -17,14 +17,13 @@ import {
   updateLogisticsAccount,
   getLogisticsAccounts
 } from '~/modules/settings/actions'
+import ErrorFocus from '~/components/error-focus'
 
-const validationSchema = Yup.object().shape(
-  {
-    providerIdentifier: Yup.string(requiredMessage).required(requiredMessage),
-    username: Yup.string(requiredMessage).required(requiredMessage),
-    password: passwordValidationAnyChar()
-  }
-)
+const validationSchema = Yup.object().shape({
+  providerIdentifier: Yup.string(requiredMessage).required(requiredMessage),
+  username: Yup.string(requiredMessage).required(requiredMessage),
+  password: passwordValidationAnyChar()
+})
 
 const initialValues = {
   providerIdentifier: '',
@@ -34,7 +33,6 @@ const initialValues = {
 }
 
 class LogisticsPopup extends Component {
-
   componentDidMount() {
     this.props.getLogisticsProviders()
   }
@@ -43,15 +41,13 @@ class LogisticsPopup extends Component {
     let { popupValues } = this.props
     return popupValues
       ? {
-        providerIdentifier: JSON.stringify(popupValues.provider.identifier),
-        providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifier.value})`,
-        username: popupValues.accountInfos && popupValues.accountInfos.length
-          ? popupValues.accountInfos[0].username
-          : '',
-        password: ''
-      }
-      :
-      initialValues
+          providerIdentifier: JSON.stringify(popupValues.provider.identifier),
+          providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifier.value})`,
+          username:
+            popupValues.accountInfos && popupValues.accountInfos.length ? popupValues.accountInfos[0].username : '',
+          password: ''
+        }
+      : initialValues
   }
 
   render() {
@@ -167,6 +163,7 @@ class LogisticsPopup extends Component {
                       inputProps={{ type: 'password' }}
                     />
                   </FormGroup>
+                  <ErrorFocus />
                 </>
               )
             }}

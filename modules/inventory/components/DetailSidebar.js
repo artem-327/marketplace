@@ -77,6 +77,7 @@ import {
   InputLabeledWrapper,
   CustomLabel
 } from '../constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const CustomHr = styled.hr`
   border: solid 0.5px #dee2e6;
@@ -113,6 +114,9 @@ const initValues = {
     conforming: true,
     costPerUOM: '',
     externalNotes: '',
+    pkgAvailable: '',
+    product: null,
+    warehouse: null,
     fobPrice: '',
     inStock: false,
     internalNotes: '',
@@ -122,15 +126,12 @@ const initValues = {
     lotManufacturedDate: '',
     minimum: 1, // minPkg
     origin: null,
-    pkgAvailable: '',
-    product: null,
     productCondition: null,
     productForm: null,
     productGrades: [],
     splits: 1, // splitPkg
     doesExpire: false,
     expirationDate: '',
-    warehouse: null,
     documentType: ''
   },
   priceTiers: {
@@ -719,18 +720,6 @@ class DetailSidebar extends Component {
     // switch tab only if there is no error on active tab
     if (tabs.includes(this.state.tabs[this.state.activeTab])) {
       switch (tabs[0]) {
-        case 'edit':
-          this.switchTab(0)
-          document.getElementsByName('edit.' + Object.keys(errors.edit)[0])[0].focus()
-          break
-        case 'documents':
-          this.switchTab(1)
-          document.getElementsByName('documents.' + Object.keys(errors.documents)[0])[0].focus()
-          break
-        case 'priceBook':
-          this.switchTab(2)
-          document.getElementsByName('priceBook.' + Object.keys(errors.priceBook)[0])[0].focus()
-          break
         case 'priceTiers':
           this.switchTab(3)
           const priceErrors = errors.priceTiers[Object.keys(errors.priceTiers)[0]]
@@ -744,18 +733,6 @@ class DetailSidebar extends Component {
           }
           break
       }
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='addInventory.saveFirst' defaultMessage='Errors on activated Tab' />,
-          <FormattedMessage
-            id='addInventory.poDataSaved'
-            defaultMessage='Basic properites are incomplete/non-validating, please fix the issues first'
-          />
-        ),
-        {
-          appearance: 'warning'
-        }
-      )
     }
   }
 
@@ -2014,6 +1991,7 @@ class DetailSidebar extends Component {
                   </div>
                 </BottomButtons>
               </FlexSidebar>
+              <ErrorFocus />
             </Form>
           )
         }}

@@ -20,7 +20,8 @@ const RuleItem = props => {
     loadingChanged,
     asSidebar,
     openModalCompanyInfo,
-    getCompanyInfo
+    getCompanyInfo,
+    changeInModel
     // tree,
   } = props
   // let item = _.cloneDeep(props.item)
@@ -37,7 +38,7 @@ const RuleItem = props => {
   const findCompany = () => {
     if (getSafe(() => item.model.rule.type, null) === 'branch') {
       for (let i in getSafe(() => item.parent.model.rule.elements, [])) {
-        if (item.parent.model.rule.elements[i].elements.length) {
+        if (getSafe(() => item.parent.model.rule.elements[i].elements.length, '')) {
           for (let j in item.parent.model.rule.elements[i].elements) {
             if (item.parent.model.rule.elements[i].elements[j].id === getSafe(() => item.model.rule.id, '')) {
               return item.parent.model.rule.elements[i].name
@@ -57,18 +58,14 @@ const RuleItem = props => {
     .filter(n => n.model.rule.broadcast === 1)
   const parentBroadcasted = broadcastedParents.reverse()[0]
   let nodeBroadcast = rule.broadcast
-  const hasNonHiddenChild = item.first((n) => !n.model.rule.hidden && n.model.rule.id !== item.model.rule.id)
+  const hasNonHiddenChild = item.first(n => !n.model.rule.hidden && n.model.rule.id !== item.model.rule.id)
 
-  const displayArrow =
-    item.children.length > 0 &&
-    rule.type !== 'root' &&
-    hasNonHiddenChild
-
+  const displayArrow = item.children.length > 0 && rule.type !== 'root' && hasNonHiddenChild
 
   if (filter.category === 'branch' && item.isRoot()) {
-    let all = item.all((n) => n.model.rule.type === 'branch').length
+    let all = item.all(n => n.model.rule.type === 'branch').length
 
-    let broadcastingTo = item.all((n) => n.model.rule.type === 'branch' && n.model.rule.broadcast === 1).length
+    let broadcastingTo = item.all(n => n.model.rule.type === 'branch' && n.model.rule.broadcast === 1).length
 
     if (all === broadcastingTo) nodeBroadcast = 1
     else if (broadcastingTo === 0) nodeBroadcast = 0
@@ -91,28 +88,24 @@ const RuleItem = props => {
         data-test='broadcast_rule_row_click'
         style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
         <Rule.RowContent>
-          {displayArrow ? (
-            <Icon name={`chevron ${item.model.rule.expanded ? 'down' : 'right'}`} />
-          ) : (
-              <EmptyIconSpace />
-            )}
+          {displayArrow ? <Icon name={`chevron ${item.model.rule.expanded ? 'down' : 'right'}`} /> : <EmptyIconSpace />}
           {rule.type !== 'branch' || (rule.type === 'branch' && companyName) ? (
             <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
           ) : (
-              <a
-                onClick={() => {
-                  try {
-                    if (getSafe(() => item.parent.model.rule.id, '')) {
-                      getCompanyInfo(item.parent.model.rule.id)
-                      openModalCompanyInfo()
-                    }
-                  } catch (error) {
-                    console.error(error)
+            <a
+              onClick={() => {
+                try {
+                  if (getSafe(() => item.parent.model.rule.id, '')) {
+                    getCompanyInfo(item.parent.model.rule.id)
+                    openModalCompanyInfo()
                   }
-                }}>
-                {companyName ? `${companyName} ${name}` : `${name}`}
-              </a>
-            )}
+                } catch (error) {
+                  console.error(error)
+                }
+              }}>
+              {companyName ? `${companyName} ${name}` : `${name}`}
+            </a>
+          )}
         </Rule.RowContent>
 
         <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : null}>
@@ -129,6 +122,7 @@ const RuleItem = props => {
         </Rule.Toggle>
 
         <PriceControl
+          changeInModel={changeInModel}
           hideFobPrice={hideFobPrice}
           data-test='broadcast_price_control'
           offer={offer}
@@ -142,6 +136,7 @@ const RuleItem = props => {
       {(item.model.rule.expanded || rule.type === 'root') &&
         item.children.map((i, idx) => (
           <RuleItem
+            changeInModel={changeInModel}
             loadingChanged={loadingChanged}
             filter={filter}
             hideFobPrice={hideFobPrice}
