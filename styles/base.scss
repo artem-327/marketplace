@@ -1666,6 +1666,10 @@ i.file {
           display: block;
           width: calc(100vw - 430px);
           max-width: calc(100% - 30px);
+
+          .row.right {
+            margin-right: 0 !important;
+          }
         }
       }
     }
