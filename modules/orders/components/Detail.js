@@ -801,7 +801,8 @@ class Detail extends Component {
       editReturnTrackingCode,
       isOrderProcessing,
       isCompanyAdmin,
-      isAdmin
+      isAdmin,
+      isClientCompanyAdmin
     } = this.props
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -1078,7 +1079,7 @@ class Detail extends Component {
           ) : (
             <>
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
-              {isAdmin || isCompanyAdmin || isOrderProcessing ? (
+              {isAdmin || isCompanyAdmin || isOrderProcessing || isClientCompanyAdmin ? (
                 <>
                   <ActionsRequired order={order} ordersType={ordersType} />
                   {openedAssignLots ? <AssignLots /> : null}
