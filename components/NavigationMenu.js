@@ -443,13 +443,7 @@ class Navigation extends Component {
                       dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/settings?type=delivery-addresses'
-                      tab='delivery-addresses'
-                      dataTest='navigation_settings_delivery_addresses_drpdn'>
-                      {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
-                    </Dropdown.Item>
+
                     {!isClientCompanyAdmin && (
                       <Dropdown.Item
                         as={MenuLink}

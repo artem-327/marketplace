@@ -569,10 +569,6 @@ class ProductSidebar extends React.Component {
                                 />
                               )
                             }}
-<<<<<<< HEAD
-                            name='companyGenericProduct'
-=======
->>>>>>> COVID-19.15
                           />
                         </GridColumn>
                       </GridRow>
