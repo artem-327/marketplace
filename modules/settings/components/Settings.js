@@ -12,8 +12,6 @@ import Locations from './Locations/Locations'
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
-import WarehouseSidebar from './WarehouseTable/WarehouseSidebar'
-import BranchesSidebar from './BranchesTable/BranchesSidebar'
 import UsersSidebar from './UserTable/UsersSidebar'
 import ProductSidebar from './ProductCatalogTable/ProductSidebar'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
@@ -306,7 +304,6 @@ class Settings extends Component {
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
-      'delivery-addresses': <DeliveryAddressesTable />,
       'guest-companies': <ClientCompanyTable />,
       logistics: <LogisticsTable />,
       'system-settings': (
@@ -321,13 +318,10 @@ class Settings extends Component {
 
     const popupForm = {
       users: <UsersSidebar />,
-      branches: <BranchesSidebar />,
-      warehouses: <WarehouseSidebar />,
       products: <ProductSidebar />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
-      'delivery-addresses': <DeliveryAddressesPopup />,
       'guest-companies': <ClientCompanyPopup />,
       logistics: <LogisticsPopup />,
       documents: <DocumentsPopup />
