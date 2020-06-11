@@ -115,7 +115,7 @@ class ProductGroupsPopup extends React.Component {
               propsToInclude.forEach(prop => (values[prop] ? (request[prop] = values[prop]) : null))
 
               try {
-                if (popupValues) await putProductGroups(rowId, request)
+                if (popupValues) await putProductGroups(rowId, request, selectedTagsOptions)
                 else await postProductGroups(request)
               } catch (err) {
                 console.error(err)
