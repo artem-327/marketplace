@@ -60,9 +60,9 @@ class ProductCatalogTable extends Component {
         sortPath: 'CompanyProduct.intProductCode'
       },
       {
-        name: 'externalProductName',
+        name: 'genericProductName',
         title: (
-          <FormattedMessage id='global.externalProductName' defaultMessage='External Product Name!'>
+          <FormattedMessage id='global.genericProductName' defaultMessage='Generic Product Name!'>
             {text => text}
           </FormattedMessage>
         ),
@@ -70,9 +70,9 @@ class ProductCatalogTable extends Component {
         sortPath: 'CompanyProduct.companyGenericProduct.name'
       },
       {
-        name: 'externalProductCode',
+        name: 'genericProductCode',
         title: (
-          <FormattedMessage id='global.externalProductCode' defaultMessage='External Product Code!'>
+          <FormattedMessage id='global.genericProductCode' defaultMessage='Generic Product Code!'>
             {text => text}
           </FormattedMessage>
         ),
@@ -277,8 +277,8 @@ const mapStateToProps = (state, { datagrid }) => {
           'N/A'
         ),
         //packagingGroup: getSafe(() => product.packagingGroup.id),
-        externalProductCode: getSafe(() => product.companyGenericProduct.code, 'N/A'),
-        externalProductName: getSafe(() => product.companyGenericProduct.name, 'N/A'),
+        genericProductCode: getSafe(() => product.companyGenericProduct.code, 'N/A'),
+        genericProductName: getSafe(() => product.companyGenericProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
         packagingUnit: getSafe(() => product.packagingUnit.id),
         productStatus: getProductStatus(product),
