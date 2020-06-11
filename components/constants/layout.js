@@ -179,6 +179,10 @@ export const LeftMenu = styled(Menu)`
         display: flex;
         flex-flow: column;
         height: calc(100% - 100px); // 100px for logo
+        
+        > .ui.form {
+          min-height: 200px;
+        }
 
         > a.item {
           flex-grow: 0;
@@ -190,7 +194,7 @@ export const LeftMenu = styled(Menu)`
             border-bottom-right-radius: 0 !important;
 
             + form {
-              flex-grow: 1;
+              flex-grow: 0;
               flex-shrink: 1;
               overflow: hidden;
               display: flex;
@@ -332,11 +336,23 @@ export const LeftMenu = styled(Menu)`
           flex-shrink: 0;
 
           &.opened {
-            min-height: 200px;
+            min-height: 70px;
             flex-grow: 0;
             flex-shrink: 1;
             display: flex;
             flex-flow: column;
+          }
+          
+          &.dropdown.opened {
+            flex-grow: 0;
+            
+            > .menu.transition {
+              flex-grow: 1;
+              
+              > .scrollbar-container {
+                min-height: calc(100% + 20px);
+              }
+            }
           }
         }
       }
@@ -769,9 +785,14 @@ export const LeftMenu = styled(Menu)`
         &.ps--active-y > .ps__rail-y {
           display: none !important;
         }
+        
+        .ui.form {
+          min-height: 100px;
+        }
 
         .item.dropdown.opened {
           overflow: visible !important;
+          min-height: 50px;
           border-width: 1px 0 1px 1px;
           border-style: solid;
           border-color: #dee2e6;
@@ -906,9 +927,12 @@ export const LeftMenuContainer = styled(Container)`
   padding: 0 10px;
 
   .scrollbar-container {
-    height: calc(100vh - 70px);
     flex-grow: 0;
     flex-shrink: 1;
+  }
+  
+  > .scrollbar-container {
+    min-height: calc(100vh - 70px);
   }
 
   .container.bottom {

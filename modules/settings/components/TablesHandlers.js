@@ -29,22 +29,23 @@ const CustomRowDiv = styled.div`
   justify-content: space-between;
   margin: -5px -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 5px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
-  
+
   .ui.button {
     height: 40px;
     border-radius: 3px;
@@ -52,7 +53,7 @@ const CustomRowDiv = styled.div`
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
     border: solid 1px #dee2e6;
     background-color: #ffffff;
-    color: #848893;   
+    color: #848893;
     display: flex;
     align-items: center;
     &:hover {
@@ -63,20 +64,20 @@ const CustomRowDiv = styled.div`
       background-color: #edeef2;
       color: #20273a;
     }
-  
+
     svg {
-        width: 18px;
-        height: 20px;
-        margin-right: 10px;
-        vertical-align: top;
-        color: inherit;
+      width: 18px;
+      height: 20px;
+      margin-right: 10px;
+      vertical-align: top;
+      color: inherit;
     }
-      
+
     &.light {
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
       border: solid 1px #dee2e6;
       background-color: #ffffff;
-      color: #848893;    
+      color: #848893;
       &:hover {
         background-color: #f8f9fb;
         color: #20273a;
@@ -86,7 +87,7 @@ const CustomRowDiv = styled.div`
         color: #20273a;
       }
     }
-    
+
     &.primary {
       box-shadow: none;
       border: none;
@@ -158,9 +159,13 @@ const textsTable = {
     BtnAddText: 'settings.tables.bankAccounts.buttonAdd',
     SearchText: 'settings.tables.bankAccounts.search'
   },
-  'client-companies': {
-    BtnAddText: 'settings.tables.clientCompanies.buttonAdd',
-    SearchText: 'settings.tables.clientCompanies.search'
+  'delivery-addresses': {
+    BtnAddText: 'settings.tables.deliveryAddresses.buttonAdd',
+    SearchText: 'settings.tables.deliveryAddresses.search'
+  },
+  'guest-companies': {
+    BtnAddText: 'settings.tables.guestCompanies.buttonAdd',
+    SearchText: 'settings.tables.guestCompanies.search'
   },
   logistics: {
     BtnAddText: 'settings.tables.logistics.buttonAdd',
@@ -270,9 +275,6 @@ class TablesHandlers extends Component {
 
   handleFilterChangeMappedUnmapped = (e, { value }) => {
     this.props.handleProductCatalogUnmappedValue(value)
-
-
-
   }
 
   saveRulesBroadcast = async (model, toastManager) => {
@@ -433,7 +435,6 @@ class TablesHandlers extends Component {
           {bankAccTab && bankAccounts.dwollaBalance && (
             <>
               <div className='column'>
-
                 <CustomLabel>
                   <div>
                     <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />
@@ -446,7 +447,6 @@ class TablesHandlers extends Component {
                     </b>
                   </div>
                 </CustomLabel>
-
               </div>
               <div className='column'>
                 <VertSplit />
@@ -465,10 +465,7 @@ class TablesHandlers extends Component {
               )}
               {(!bankAccTab || bankAccounts.addButton) && (
                 <div className='column'>
-                  <Button
-                    primary
-                    onClick={() => openPopup()}
-                    data-test='settings_open_popup_btn'>
+                  <Button primary onClick={() => openPopup()} data-test='settings_open_popup_btn'>
                     <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
@@ -497,15 +494,13 @@ class TablesHandlers extends Component {
   render() {
     return (
       <PositionHeaderSettings>
-        <CustomRowDiv>
-          {!this.props.currentTab.hideHandler && this.renderHandler()}
-        </CustomRowDiv>
+        <CustomRowDiv>{!this.props.currentTab.hideHandler && this.renderHandler()}</CustomRowDiv>
 
-        {false && (<Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <GridRow>{!this.props.currentTab.hideHandler && this.renderHandler()}</GridRow>
-        </Grid>)}
-
-
+        {false && (
+          <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
+            <GridRow>{!this.props.currentTab.hideHandler && this.renderHandler()}</GridRow>
+          </Grid>
+        )}
       </PositionHeaderSettings>
     )
   }

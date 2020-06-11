@@ -45,41 +45,16 @@ const textsTable = {
 }
 
 class TablesHandlers extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      filterValue: ''
-    }
-    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.currentTab !== this.props.currentTab) {
-      this.setState({ filterValue: '' })
-      this.handleFiltersValue('')
-    }
-  }
-
-  handleFiltersValue = value => {
-    // this condition must be ready evrytimes if you inicializate datagridProvider
-    if (Datagrid.isReady()) Datagrid.setSearch(value, true, 'pageFilters')
-  }
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-
-    this.handleFiltersValue(value)
-  }
 
   renderHandler = () => {
     const {
       currentTab,
       openPopup,
       intl: { formatMessage },
-      openImportPopup
+      openImportPopup,
+      filterValue,
+      handleFilterChange
     } = this.props
-
-    const { filterValue } = this.state
 
     const item = textsTable[currentTab.type]
 
@@ -95,7 +70,7 @@ class TablesHandlers extends Component {
                 id: item.SearchText,
                 defaultMessage: 'Select Credit Card'
               })}
-              onChange={this.handleFilterChange}
+              onChange={handleFilterChange}
             />
           </CustomMenuItemLeft>
         )}

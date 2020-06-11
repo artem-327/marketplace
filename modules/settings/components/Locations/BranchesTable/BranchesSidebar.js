@@ -30,6 +30,7 @@ import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/const
 import { Required } from '~/components/constants/layout'
 import { removeEmpty } from '~/utils/functions'
 import { TimeInput } from '~/components/custom-formik/'
+import ErrorFocus from '~/components/error-focus'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -50,13 +51,13 @@ const CustomSegment = styled(Segment)`
         }
       }
     }
-    
+
     .field {
       label {
         color: #546f93;
       }
     }
-    
+
     .phone-number {
       .phone-code,
       .phone-num {
@@ -85,7 +86,7 @@ const CustomHighSegment = styled(HighSegment)`
   font-size: 14px;
   font-weight: 500;
   color: #20273a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6  !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
   background-color: #ffffff;
   z-index: 1;
 `
@@ -101,18 +102,9 @@ const formValidation = () =>
     deliveryAddress: Yup.object().shape({
       address: addressValidationSchema(),
       addressName: minOrZeroLength(3),
-      contactName: Yup.string()
-        .trim()
-        .min(3, minLength)
-        .required(errorMessages.requiredMessage),
-      contactPhone: Yup.string()
-        .trim()
-        .min(3, minLength)
-        .required(errorMessages.requiredMessage),
-      contactEmail: Yup.string()
-        .trim()
-        .email(errorMessages.invalidEmail)
-        .required(errorMessages.requiredMessage)
+      contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+      contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+      contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
     })
   })
 
@@ -223,11 +215,10 @@ class BranchSidebar extends React.Component {
             label={<FormattedMessage id='settings.branchName' defaultMessage='Branch Name' />}
             name='deliveryAddress.addressName'
             inputProps={{
-              placeholder:
-                formatMessage({
-                  id: 'settings.warehouses.enterBranchName',
-                  defaultMessage: 'Enter Branch Name'
-                })
+              placeholder: formatMessage({
+                id: 'settings.warehouses.enterBranchName',
+                defaultMessage: 'Enter Branch Name'
+              })
             }}
           />
         </FormGroup>
@@ -237,11 +228,13 @@ class BranchSidebar extends React.Component {
           required={true}
           setFieldValue={setFieldValue}
           values={values}
-          initialZipCodes={[{
-            key: values.zipID.toString(),
-            value: values.deliveryAddress.address.zip,
-            text: values.deliveryAddress.address.zip
-          }]}
+          initialZipCodes={[
+            {
+              key: values.zipID.toString(),
+              value: values.deliveryAddress.address.zip,
+              text: values.deliveryAddress.address.zip
+            }
+          ]}
         />
 
         <Header as='h3'>
@@ -260,11 +253,10 @@ class BranchSidebar extends React.Component {
               name='deliveryAddress.contactName'
               fieldProps={{ width: 16 }}
               inputProps={{
-                placeholder:
-                  formatMessage({
-                    id: 'settings.warehouses.enterContactName',
-                    defaultMessage: 'Enter Contact Name'
-                  })
+                placeholder: formatMessage({
+                  id: 'settings.warehouses.enterContactName',
+                  defaultMessage: 'Enter Contact Name'
+                })
               }}
             />
           </FormGroup>
@@ -294,11 +286,10 @@ class BranchSidebar extends React.Component {
               }
               name='deliveryAddress.contactEmail'
               inputProps={{
-                placeholder:
-                  formatMessage({
-                    id: 'settings.warehouses.enterEmailAddress',
-                    defaultMessage: 'Enter Email Address'
-                  })
+                placeholder: formatMessage({
+                  id: 'settings.warehouses.enterEmailAddress',
+                  defaultMessage: 'Enter Email Address'
+                })
               }}
             />
           </FormGroup>
@@ -359,10 +350,9 @@ class BranchSidebar extends React.Component {
                 </FlexContent>
                 <CustomDiv>
                   <Button.Reset
-                    style={{ margin: '0 5px'}}
+                    style={{ margin: '0 5px' }}
                     onClick={closeSidebar}
-                    data-test='settings_branches_popup_reset_btn'
-                  >
+                    data-test='settings_branches_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
@@ -388,6 +378,7 @@ class BranchSidebar extends React.Component {
                   </CustomButtonSubmit>
                 </CustomDiv>
               </FlexSidebar>
+              <ErrorFocus />
             </CustomForm>
           </>
         )}

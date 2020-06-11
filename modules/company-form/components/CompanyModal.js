@@ -58,49 +58,50 @@ const StyledModalContent = styled(Modal.Content)`
 
 const initialFormValues = {
   name: '',
+  nacdMember: true,
   enabled: false,
   phone: '',
   businessType: {
     id: null
   },
   website: '',
-  mailingBranch: {
-    deliveryAddress: {
-      addressName: '',
-      accessorials: [],
-      address: {
-        city: '',
-        country: '',
-        province: '',
-        streetAddress: '',
-        zip: ''
-      },
-      contactEmail: '',
-      contactName: '',
-      contactPhone: ''
-    },
-    warehouse: true
+  primaryUser: {
+    name: '',
+    email: ''
   },
   primaryBranch: {
     deliveryAddress: {
       addressName: '',
+      contactName: '',
+      contactEmail: '',
+      contactPhone: '',
       accessorials: [],
       address: {
-        city: '',
+        streetAddress: '',
         country: '',
         province: '',
-        streetAddress: '',
+        city: '',
         zip: ''
-      },
-      contactEmail: '',
-      contactName: '',
-      contactPhone: ''
+      }
     },
     warehouse: true
   },
-  primaryUser: {
-    email: '',
-    name: ''
+  mailingBranch: {
+    deliveryAddress: {
+      addressName: '',
+      contactName: '',
+      contactEmail: '',
+      contactPhone: '',
+      accessorials: [],
+      address: {
+        streetAddress: '',
+        country: '',
+        province: '',
+        city: '',
+        zip: ''
+      }
+    },
+    warehouse: true
   }
 }
 
@@ -485,6 +486,7 @@ class CompanyModal extends React.Component {
                       )}
                     </StyledModalContent>
                   </Accordion>
+                  <ErrorFocus />
                 </Form>
               </Segment>
               <Modal.Actions>

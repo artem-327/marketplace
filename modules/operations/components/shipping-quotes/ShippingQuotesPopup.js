@@ -15,6 +15,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { closePopup, updateShippingQuote, createShippingQuote } from '../../actions'
 import { Required } from '~/components/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const initialFormValues = {
   carrierName: '',
@@ -26,17 +27,9 @@ const initialFormValues = {
 const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
-      carrierName: Yup.string()
-        .trim()
-        .min(3, errorMessages.minLength(3))
-        .required(errorMessages.requiredMessage),
-      quoteId: Yup.string()
-        .trim()
-        .min(3, errorMessages.minLength(3))
-        .required(errorMessages.requiredMessage),
-      price: Yup.number()
-        .typeError(errorMessages.mustBeNumber)
-        .required(errorMessages.requiredMessage)
+      carrierName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      quoteId: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      price: Yup.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
     })
   )
 
@@ -165,6 +158,7 @@ class ShippingQuotesPopup extends React.Component {
                       </FormattedMessage>
                     </Button.Submit>
                   </div>
+                  <ErrorFocus />
                 </>
               )
             }}

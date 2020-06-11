@@ -218,8 +218,8 @@ class DatagridProvider extends Component {
       s => ({
         datagridParams: {
           ...s.datagridParams,
-          ...sortFilter
-          //pageNumber: 0
+          ...sortFilter,
+          pageNumber: 0
         },
         rows: []
       }),
