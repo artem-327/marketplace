@@ -52,6 +52,8 @@
   "error.backButtonText": "Back to Echo Exchange",
   "error.footer": "If this issue persists please contact: {email}",
   "error.title": "Error!",
+  "error.gatewayTimeout": "GATEWAY TIMEOUT",
+  "error.bringToInventory": "Bring me to My Inventory",
   "success.title": "Success!",
   "admin.duplicateName": "Duplicate name!",
   "admin.clickToSave": "Click to save",
