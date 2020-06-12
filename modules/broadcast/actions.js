@@ -7,7 +7,8 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async offer => 
   const data = await api.loadRules(offer.id)
 
   return {
-    data,
+    data: data.broadcastTree,
+    broadcastTemplateName: getSafe(() => data.broadcastTemplateName, null),
     id: offer.id,
     offer: {
       id: offer.id,

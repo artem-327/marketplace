@@ -1,7 +1,7 @@
 import api from '~/api'
 
 export const loadRules = id =>
-  api.get(`/prodex/api/broadcast-rules/${id}`).then(response => response.data.broadcastTree)
+  api.get(`/prodex/api/broadcast-rules/${id}`).then(response => response.data)
 export const loadGeneralRules = () =>
   api.get('/prodex/api/broadcast-rules/general').then(response => response.data.broadcastTree)
 export const saveRules = (id, rules) => api.post(`/prodex/api/broadcast-rules/${id}`, rules)

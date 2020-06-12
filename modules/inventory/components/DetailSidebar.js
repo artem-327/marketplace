@@ -424,7 +424,8 @@ class DetailSidebar extends Component {
   componentDidUpdate = (prevProps, prevState, snapshot) => {
     if (prevProps.editProductOfferInitTrig !== this.props.editProductOfferInitTrig) {
       const shouldSwitchTab =
-        this.props.sidebarActiveTab > -1 && prevProps.sidebarActiveTab !== this.props.sidebarActiveTab
+        this.props.sidebarActiveTab > -1 && prevProps.sidebarActiveTab !== this.props.sidebarActiveTab ||
+        this.state.activeTab === 2  /* To Reload Broadcast rules */
 
       if (this.props.sidebarValues) {
         // Edit mode
