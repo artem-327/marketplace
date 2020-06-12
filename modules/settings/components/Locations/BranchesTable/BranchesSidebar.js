@@ -141,7 +141,7 @@ class BranchSidebar extends React.Component {
         }
       },
       taxId: values.taxId,
-      warehouse: values.warehouse
+      warehouse: false
     }
     removeEmpty(requestData)
 
@@ -150,6 +150,10 @@ class BranchSidebar extends React.Component {
         await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
       } else {
         await postNewWarehouseRequest(requestData, attachmentFiles)
+        if (values.alsoCreate) {
+          requestData.warehouse = true
+          await postNewWarehouseRequest(requestData, attachmentFiles)
+        }
       }
     } catch {
     } finally {
@@ -170,7 +174,7 @@ class BranchSidebar extends React.Component {
     const initialValues = {
       //name: r.name,
       taxId: getSafe(() => popupValues.taxId, ''),
-      warehouse: getSafe(() => popupValues.warehouse, false),
+      //warehouse: getSafe(() => popupValues.warehouse, false),
       deliveryAddress: {
         address: {
           streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
@@ -195,7 +199,8 @@ class BranchSidebar extends React.Component {
       countryId,
       hasProvinces,
       branchId: getSafe(() => popupValues.id, ''),
-      province: getSafe(() => popupValues.deliveryAddress.address.province, '')
+      province: getSafe(() => popupValues.deliveryAddress.address.province, ''),
+      alsoCreate: false
     }
 
     return initialValues
@@ -203,7 +208,8 @@ class BranchSidebar extends React.Component {
 
   renderEdit = formikProps => {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      popupValues
     } = this.props
     const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
@@ -294,13 +300,19 @@ class BranchSidebar extends React.Component {
             />
           </FormGroup>
         </CustomSegment>
-        <FormGroup data-test='settings_branches_popup_contactName_inp'>
-          <Checkbox
-            label={formatMessage({ id: 'settings.pickupLocation', defaultMessage: 'Pick-Up Location ' })}
-            name='warehouse'
-            inputProps={{ 'data-test': 'settings_branches_popup_pick_up_location_chckb' }}
-          />
-        </FormGroup>
+
+        {!popupValues && (
+          <FormGroup data-test='settings_branches_popup_contactName_inp'>
+            <Checkbox
+              label={formatMessage({
+                id: 'settings.alsoCreateAsPickUpLocation',
+                defaultMessage: 'Also create as Pick-Up Location'
+              })}
+              name='alsoCreate'
+              inputProps={{ 'data-test': 'settings_branches_popup_pick_up_location_chckb' }}
+            />
+          </FormGroup>
+        )}
       </>
     )
   }

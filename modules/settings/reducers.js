@@ -1507,7 +1507,10 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_HANDLE_LOCATIONS_TAB: {
       return {
         ...state,
-        locationsTab: action.payload
+        locationsTab: action.payload,
+        isOpenSidebar: false,
+        openTab: null,
+        popupValues: null
       }
     }
 
