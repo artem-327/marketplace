@@ -492,8 +492,12 @@ class Marketplace extends Component {
                 <span>
                   <span style={{ fontWeight: '600', color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
                   <span className='flex row right'>
-                    <span>{tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}</span>
-                    <span style={{ float: 'right', display: 'inline-flex', paddingLeft: '10px' }}>Product offerings: {count}</span>
+                    <span>
+                      {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+                    </span>
+                    <span style={{ float: 'right', display: 'inline-flex', paddingLeft: '10px' }}>
+                      Product offerings: {count}
+                    </span>
                   </span>
                 </span>
               )

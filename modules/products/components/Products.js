@@ -18,13 +18,12 @@ import ProductGroupsPopup from './ProductGroups/ProductGroupsPopup'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider, withDatagrid, Datagrid } from '~/modules/datagrid'
-import {debounce} from "lodash";
+import { debounce } from 'lodash'
 
 const CustomGridColumn = styled(GridColumn)`
   padding: 0 32px 0 32px !important;
 `
 class Products extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -109,7 +108,12 @@ class Products extends Component {
           v
             ? [
                 { operator: 'LIKE', path: 'CompanyGenericProduct.name', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'CompanyGenericProduct.code', values: [`%${v}%`] }
+                { operator: 'LIKE', path: 'CompanyGenericProduct.code', values: [`%${v}%`] },
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyGenericProduct.company.cfDisplayName',
+                  values: [`%${v}%`]
+                }
               ]
             : []
       },
@@ -142,7 +146,11 @@ class Products extends Component {
         <Container fluid className='flex stretched'>
           <>
             <Container fluid style={{ padding: '0 1.5vh' }}>
-              <TablesHandlers currentTab={currentTab} handleFilterChange={this.handleFilterChange} filterValue={this.state.filterValue} />
+              <TablesHandlers
+                currentTab={currentTab}
+                handleFilterChange={this.handleFilterChange}
+                filterValue={this.state.filterValue}
+              />
             </Container>
 
             <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>

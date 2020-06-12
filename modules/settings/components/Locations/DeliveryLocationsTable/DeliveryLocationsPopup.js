@@ -9,7 +9,7 @@ import {
   getCountries,
   getProvinces,
   getAddressSearch
-} from '../../actions'
+} from '../../../actions'
 
 import { Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
@@ -26,17 +26,17 @@ import { removeEmpty } from '~/utils/functions'
 import ErrorFocus from '~/components/error-focus'
 
 const initialFormValues = {
-  address: {
-    streetAddress: '',
-    country: '',
-    province: '',
-    city: '',
-    zip: ''
-  },
   addressName: '',
   contactName: '',
   contactEmail: '',
   contactPhone: '',
+  address: {
+    city: '',
+    country: '',
+    province: '',
+    streetAddress: '',
+    zip: ''
+  },
   readyTime: null,
   closeTime: null,
   liftGate: false,
@@ -62,7 +62,7 @@ const formValidation = () =>
     })
   )
 
-class DeliveryAddressesPopup extends React.Component {
+class DeliveryLocationsPopup extends React.Component {
   render() {
     const {
       closePopup,
@@ -308,4 +308,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(DeliveryAddressesPopup))
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(DeliveryLocationsPopup))

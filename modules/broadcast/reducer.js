@@ -32,6 +32,8 @@ const initialState = {
   open: false,
   loading: false,
   data: null,
+  broadcastTemplateName: null,
+  loadedRulesTrig: false,
   templateSaving: false,
   loadingTemplates: false,
   templateDeleting: false,
@@ -59,11 +61,13 @@ export default typeToReducer(
       }
     },
 
-    [openBroadcast.fulfilled]: (state, { payload: { data, id, offer } }) => {
+    [openBroadcast.fulfilled]: (state, { payload: { data, broadcastTemplateName, id, offer } }) => {
       return {
         ...state,
         loading: false,
         data,
+        broadcastTemplateName,
+        loadedRulesTrig: !state.loadedRulesTrig,
         id,
         offer
       }

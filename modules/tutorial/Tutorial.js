@@ -129,9 +129,9 @@ let tutorialTabs = [
 ]
 
 let urlTabs = [
-  '/settings?type=branches',
+  '/settings?type=locations',
   '/settings?type=users',
-  '/settings?type=warehouses',
+  '/settings?type=locations',
   '/settings?type=products',
   '/inventory/my',
   '/settings?type=global-broadcast',
@@ -156,9 +156,9 @@ class Tutorial extends Component {
       if (isClientCompanyAdmin) {
         tutorials.push('branches', 'users', 'warehouses', 'marketplace', 'registerAccount', 'addAccount')
         urls.push(
-          '/settings?type=branches',
+          '/settings?type=locations',
           '/settings?type=users',
-          '/settings?type=warehouses',
+          '/settings?type=locations',
           '/settings?type=global-broadcast',
           '/settings?type=bank-accounts',
           '/settings?type=bank-accounts'

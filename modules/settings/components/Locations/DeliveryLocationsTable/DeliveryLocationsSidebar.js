@@ -2,25 +2,19 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
 import { Formik } from 'formik'
-import { Header, FormGroup, Dimmer, Loader, Menu, Segment, Form } from 'semantic-ui-react'
+import { Header, FormGroup, Dimmer, Loader, Segment, Form } from 'semantic-ui-react'
 import {
   closeSidebar,
-  putEditWarehouse,
-  postNewWarehouseRequest,
-  getProvinces,
-  getAddressSearch,
-  removeAttachmentLinkToBranch,
-  removeAttachment,
-  addAttachment,
-  loadFile
-} from '../../actions'
-import { Input, Checkbox, TextArea, Button } from 'formik-semantic-ui-fixed-validation'
+  updateDeliveryAddresses,
+  createDeliveryAddress
+} from '../../../actions'
+import { Input, Checkbox, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { addressValidationSchema, errorMessages, minOrZeroLength } from '~/constants/yupValidation'
+import { addressValidationSchema, errorMessages, minOrZeroLength, validateTime } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form/'
 
@@ -30,7 +24,6 @@ import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/const
 import { Required } from '~/components/constants/layout'
 import { removeEmpty } from '~/utils/functions'
 import { TimeInput } from '~/components/custom-formik/'
-import ErrorFocus from '~/components/error-focus'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -51,13 +44,13 @@ const CustomSegment = styled(Segment)`
         }
       }
     }
-
+    
     .field {
       label {
         color: #546f93;
       }
     }
-
+    
     .phone-number {
       .phone-code,
       .phone-num {
@@ -86,7 +79,7 @@ const CustomHighSegment = styled(HighSegment)`
   font-size: 14px;
   font-weight: 500;
   color: #20273a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6  !important;
   background-color: #ffffff;
   z-index: 1;
 `
@@ -99,65 +92,63 @@ const minLength = errorMessages.minLength(3)
 
 const formValidation = () =>
   Yup.object().shape({
-    deliveryAddress: Yup.object().shape({
-      address: addressValidationSchema(),
-      addressName: minOrZeroLength(3),
-      contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-      contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-      contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
-    })
+    address: addressValidationSchema(),
+    addressName: minOrZeroLength(3),
+    contactName: Yup.string()
+      .trim()
+      .min(3, minLength)
+      .required(errorMessages.requiredMessage),
+    contactPhone: Yup.string()
+      .trim()
+      .min(3, minLength)
+      .required(errorMessages.requiredMessage),
+    contactEmail: Yup.string()
+      .trim()
+      .email(errorMessages.invalidEmail)
+      .required(errorMessages.requiredMessage),
+    readyTime: validateTime(),
+    closeTime: validateTime()
   })
 
-class BranchSidebar extends React.Component {
+class DeliveryLocationsSidebar extends React.Component {
   state = {
-    editTab: 0,
-    attachmentFiles: [],
     loadSidebar: false
-  }
-  componentDidMount() {
-    const { popupValues, getProvinces, openTab } = this.props
-    popupValues && popupValues.hasProvinces && getProvinces(popupValues.countryId)
-    openTab && this.setState({ editTab: this.props.openTab })
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.openTab !== this.props.openTab) {
-      this.setState({ editTab: this.props.openTab })
-    }
   }
 
   submitHandler = async (values, setSubmitting) => {
-    const { popupValues, putEditWarehouse, postNewWarehouseRequest } = this.props
+    const { popupValues, updateDeliveryAddresses, createDeliveryAddress } = this.props
     const { attachmentFiles } = this.state
-    let country = JSON.parse(values.deliveryAddress.address.country).countryId
-    let requestData = {}
+    let country = JSON.parse(values.address.country).countryId
 
-    requestData = {
-      deliveryAddress: {
-        ...values.deliveryAddress,
-        readyTime:
-          !values.deliveryAddress.readyTime || values.deliveryAddress.readyTime === ''
-            ? null
-            : values.deliveryAddress.readyTime,
-        closeTime:
-          !values.deliveryAddress.closeTime || values.deliveryAddress.closeTime === ''
-            ? null
-            : values.deliveryAddress.closeTime,
-        address: {
-          ...values.deliveryAddress.address,
-          country
-        }
+    let requestData = {
+      address: {
+        ...values.address,
+        country
       },
-      taxId: values.taxId,
-      warehouse: false
+      readyTime:
+        !values.readyTime || values.readyTime === ''
+          ? null
+          : values.readyTime,
+      closeTime:
+        !values.closeTime || values.closeTime === ''
+          ? null
+          : values.closeTime,
+      addressName: values.addressName,
+      callAhead: values.callAhead,
+      contactEmail: values.contactEmail,
+      contactName: values.contactName,
+      contactPhone: values.contactPhone,
+      deliveryNotes: values.deliveryNotes,
+      forkLift: values.forkLift,
+      liftGate: values.liftGate
     }
     removeEmpty(requestData)
 
     try {
       if (popupValues) {
-        await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
+        await updateDeliveryAddresses(popupValues.id, requestData)
       } else {
-        await postNewWarehouseRequest(requestData, attachmentFiles)
+        await createDeliveryAddress(requestData)
       }
     } catch {
     } finally {
@@ -169,47 +160,37 @@ class BranchSidebar extends React.Component {
   getInitialFormValues = () => {
     let { popupValues } = this.props
 
-    const provinceId = getSafe(() => popupValues.deliveryAddress.address.province.id, '')
-    const countryId = getSafe(() => popupValues.deliveryAddress.address.country.id, null)
-    const hasProvinces = getSafe(() => popupValues.deliveryAddress.address.country.hasProvinces, false)
-    const zip = getSafe(() => popupValues.deliveryAddress.address.zip.zip, '')
-    const zipID = getSafe(() => popupValues.deliveryAddress.address.zip.id, '')
+    const provinceId = getSafe(() => popupValues.address.province.id, '')
+    const countryId = getSafe(() => popupValues.address.country.id, null)
+    const hasProvinces = getSafe(() => popupValues.address.country.hasProvinces, false)
+    const zip = getSafe(() => popupValues.address.zip.zip, '')
+    const zipID = getSafe(() => popupValues.address.zip.id, '')
 
     const initialValues = {
-      //name: r.name,
-      taxId: getSafe(() => popupValues.taxId, ''),
-      deliveryAddress: {
-        address: {
-          streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
-          city: getSafe(() => popupValues.deliveryAddress.address.city, ''),
-          province: provinceId,
-          country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
-          zip
-        },
-        readyTime: getSafe(() => popupValues.deliveryAddress.readyTime, ''),
-        closeTime: getSafe(() => popupValues.deliveryAddress.closeTime, ''),
-        liftGate: getSafe(() => popupValues.deliveryAddress.liftGate, false),
-        forkLift: getSafe(() => popupValues.deliveryAddress.forkLift, false),
-        callAhead: getSafe(() => popupValues.deliveryAddress.callAhead, false),
-        deliveryNotes: getSafe(() => popupValues.deliveryAddress.deliveryNotes, ''),
-        addressName: getSafe(() => popupValues.deliveryAddress.addressName, ''),
-        contactName: getSafe(() => popupValues.deliveryAddress.contactName, ''),
-        contactPhone: getSafe(() => popupValues.deliveryAddress.contactPhone, ''),
-        contactEmail: getSafe(() => popupValues.deliveryAddress.contactEmail, '')
+      address: {
+        streetAddress: getSafe(() => popupValues.address.streetAddress, ''),
+        city: getSafe(() => popupValues.address.city, ''),
+        province: provinceId,
+        country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
+        zip
       },
-      attachments: getSafe(() => popupValues.attachments, []),
+      addressName: getSafe(() => popupValues.addressName, ''),
+      callAhead: getSafe(() => popupValues.callAhead, false),
+      closeTime: getSafe(() => popupValues.closeTime, ''),
+      contactEmail: getSafe(() => popupValues.contactEmail, ''),
+      contactName: getSafe(() => popupValues.contactName, ''),
+      contactPhone: getSafe(() => popupValues.contactPhone, ''),
+      deliveryNotes: getSafe(() => popupValues.deliveryNotes, ''),
+      forkLift: getSafe(() => popupValues.forkLift, false),
+      liftGate: getSafe(() => popupValues.liftGate, false),
+      readyTime: getSafe(() => popupValues.readyTime, ''),
+
       zipID,
       countryId,
       hasProvinces,
-      branchId: getSafe(() => popupValues.id, ''),
-      province: getSafe(() => popupValues.deliveryAddress.address.province, '')
+      province: getSafe(() => popupValues.address.province, '')
     }
-
     return initialValues
-  }
-
-  tabChanged = index => {
-    this.setState({ editTab: index })
   }
 
   renderEdit = formikProps => {
@@ -220,32 +201,35 @@ class BranchSidebar extends React.Component {
 
     return (
       <>
-        <FormGroup widths='equal' data-test='settings_branches_popup_name_inp'>
+        <FormGroup
+          widths='equal'
+          style={{ marginTop: '14px' }}
+          data-test='settings_delivery_locations_sidebar_name_inp'
+        >
           <Input
             type='text'
-            label={<FormattedMessage id='settings.branchName' defaultMessage='Branch Name' />}
-            name='deliveryAddress.addressName'
+            label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
+            name='addressName'
             inputProps={{
-              placeholder: formatMessage({
-                id: 'settings.warehouses.enterBranchName',
-                defaultMessage: 'Enter Branch Name'
-              })
+              placeholder:
+                formatMessage({
+                  id: 'global.enterAddressName',
+                  defaultMessage: 'Enter Address Name'
+                })
             }}
           />
         </FormGroup>
 
         <AddressForm
-          prefix={'deliveryAddress'}
+          prefix={''}
           required={true}
           setFieldValue={setFieldValue}
           values={values}
-          initialZipCodes={[
-            {
-              key: values.zipID.toString(),
-              value: values.deliveryAddress.address.zip,
-              text: values.deliveryAddress.address.zip
-            }
-          ]}
+          initialZipCodes={[{
+            key: values.zipID.toString(),
+            value: values.address.zip,
+            text: values.address.zip
+          }]}
         />
 
         <Header as='h3'>
@@ -261,19 +245,20 @@ class BranchSidebar extends React.Component {
                   <Required />
                 </>
               }
-              name='deliveryAddress.contactName'
+              name='contactName'
               fieldProps={{ width: 16 }}
               inputProps={{
-                placeholder: formatMessage({
-                  id: 'settings.warehouses.enterContactName',
-                  defaultMessage: 'Enter Contact Name'
-                })
+                placeholder:
+                  formatMessage({
+                    id: 'settings.warehouses.enterContactName',
+                    defaultMessage: 'Enter Contact Name'
+                  })
               }}
             />
           </FormGroup>
           <FormGroup widths='equal' data-test='settings_branches_popup_phoneEmail_inp'>
             <PhoneNumber
-              name='deliveryAddress.contactPhone'
+              name='contactPhone'
               values={values}
               label={
                 <>
@@ -295,11 +280,61 @@ class BranchSidebar extends React.Component {
                   <Required />
                 </>
               }
-              name='deliveryAddress.contactEmail'
+              name='contactEmail'
+              inputProps={{
+                placeholder:
+                  formatMessage({
+                    id: 'settings.warehouses.enterEmailAddress',
+                    defaultMessage: 'Enter Email Address'
+                  })
+              }}
+            />
+          </FormGroup>
+        </CustomSegment>
+
+        <Header as='h3'>
+          <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />
+        </Header>
+        <CustomSegment>
+          <FormGroup data-test='settings_delivery_address_notes_inp'>
+            <TimeInput
+              label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
+              name='readyTime'
+            />
+            <TimeInput
+              label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+              name='closeTime'
+            />
+          </FormGroup>
+          <FormGroup widths='equal'>
+            <Checkbox
+              label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+              name='liftGate'
+              inputProps={{ 'data-test': 'settings_delivery_address_liftGate_inp' }}
+            />
+          </FormGroup>
+          <FormGroup widths='equal'>
+            <Checkbox
+              label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
+              name='forkLift'
+              inputProps={{ 'data-test': 'settings_delivery_address_forklift_inp' }}
+            />
+          </FormGroup>
+          <FormGroup widths='equal'>
+            <Checkbox
+              label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
+              name='callAhead'
+              inputProps={{ 'data-test': 'settings_delivery_address_callAhead_inp' }}
+            />
+          </FormGroup>
+          <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
+            <TextArea
+              name='deliveryNotes'
+              label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
               inputProps={{
                 placeholder: formatMessage({
-                  id: 'settings.warehouses.enterEmailAddress',
-                  defaultMessage: 'Enter Email Address'
+                  id: 'settings.warehouses.writeDeliveryNotesHere',
+                  defaultMessage: 'Write Delivery Notes Here...'
                 })
               }}
             />
@@ -313,7 +348,6 @@ class BranchSidebar extends React.Component {
     const {
       closeSidebar,
       popupValues,
-      isOpenSidebar,
       loading,
       intl: { formatMessage }
     } = this.props
@@ -332,7 +366,7 @@ class BranchSidebar extends React.Component {
           <>
             <CustomForm>
               <FlexSidebar
-                visible={isOpenSidebar}
+                visible={true}
                 width='very wide'
                 style={{ width: '630px' }}
                 direction='right'
@@ -354,9 +388,10 @@ class BranchSidebar extends React.Component {
                 </FlexContent>
                 <CustomDiv>
                   <Button.Reset
-                    style={{ margin: '0 5px' }}
+                    style={{ margin: '0 5px'}}
                     onClick={closeSidebar}
-                    data-test='settings_branches_popup_reset_btn'>
+                    data-test='settings_branches_popup_reset_btn'
+                  >
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
@@ -382,7 +417,6 @@ class BranchSidebar extends React.Component {
                   </CustomButtonSubmit>
                 </CustomDiv>
               </FlexSidebar>
-              <ErrorFocus />
             </CustomForm>
           </>
         )}
@@ -392,15 +426,9 @@ class BranchSidebar extends React.Component {
 }
 
 const mapDispatchToProps = {
-  postNewWarehouseRequest,
-  putEditWarehouse,
-  closeSidebar,
-  getProvinces,
-  getAddressSearch,
-  removeAttachmentLinkToBranch,
-  removeAttachment,
-  addAttachment,
-  loadFile
+  updateDeliveryAddresses,
+  createDeliveryAddress,
+  closeSidebar
 }
 
 const mapStateToProps = state => {
@@ -412,9 +440,8 @@ const mapStateToProps = state => {
     provincesDropDown: state.settings.provincesDropDown,
     company: getSafe(() => state.auth.identity.company.id, null),
     isOpenSidebar: state.settings.isOpenSidebar,
-    loading: state.settings.loading,
-    openTab: state.settings.openTab
+    loading: state.settings.loading
   }
 }
 
-export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(BranchSidebar)))
+export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(DeliveryLocationsSidebar)))

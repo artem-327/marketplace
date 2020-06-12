@@ -115,15 +115,6 @@ const columns = [
     align: 'center'
   },
   {
-    name: 'nacdMember',
-    title: (
-      <FormattedMessage id='global.nacdMember' defaultMessage='NACD Member'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 130
-  },
-  {
     name: 'enabled',
     title: (
       <FormattedMessage id='global.enabled' defaultMessage='Enabled'>
@@ -312,7 +303,6 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
       contactEmail: getSafe(() => c.primaryUser.email, ''),
       reviewRequested: getSafe(() => c.reviewRequested, ''),
       hasLogo: getSafe(() => c.hasLogo, ''),
-      nacdMember: c && c.nacdMember ? 'Yes' : c && c.nacdMember === false ? 'No' : '',
       enabled: getSafe(() => c.enabled, false),
       p44CompanyId: getSafe(() => c.project44Id, '')
     }))

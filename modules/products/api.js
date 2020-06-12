@@ -71,7 +71,9 @@ export default {
     api.post(`/prodex/api/market-segments/datagrid`, filter).then(response => response.data),
   getCompanyGenericProduct: id => api.get(`/prodex/api/company-generic-products/id/${id}`),
   getAlternativeCompanyGenericProductsNames: async id => {
-    const { data } = await api.get(`/prodex/api/company-generic-products/alternative-names/echo-product/${id}`)
+    const { data } = await api.get(
+      `/prodex/api/company-generic-products/alternative-names/company-generic-product/${id}`
+    )
     return data
   },
   postNewCompanyGenericProductsAltName: (id, data) =>
