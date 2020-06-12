@@ -484,6 +484,12 @@ class Navigation extends Component {
       <div className='flex-wrapper'>
         {isAdmin && (
           <>
+            <MenuLink to='/dashboard' dataTest='navigation_menu_admin_dashboard'>
+              <>
+                <Home size={22} />
+                {formatMessage({ id: 'navigation.dashboard', defaultMessage: 'Dashboard' })}
+              </>
+            </MenuLink>
             <DropdownItem
               icon={<Briefcase size={22} />}
               text={formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}

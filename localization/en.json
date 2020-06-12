@@ -2402,5 +2402,6 @@
   "product.groups.tags": "Tags",
   "confirm.delete.product.groups.content": "Do you really want to delete Product Group?",
   "validation.minOneGroup": "At least one group should be selected",
-  "validation.minOneCompany": "At least one company should be selected"
+  "validation.minOneCompany": "At least one company should be selected",
+  "dashboard.title": "Analytics Dashboard"
 }
