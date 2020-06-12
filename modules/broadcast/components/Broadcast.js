@@ -337,8 +337,8 @@ class Broadcast extends Component {
 
         if (
           (!getSafe(() => company.model.associations, []).includes(associationFilter) &&
-            associationFilter !== 'Client Company') ||
-          (associationFilter === 'Client Company' && company.model.elements[0].clientCompany === false)
+            associationFilter !== 'Guest Company') ||
+          (associationFilter === 'Guest Company' && company.model.elements[0].clientCompany === false)
         ) {
           if (companiesToHide.indexOf(company.model.id) === -1) companiesToHide.push(company)
           return true
@@ -516,7 +516,7 @@ class Broadcast extends Component {
           value={this.state.associationFilter}
           selection
           loading={associationsFetching}
-          options={['ALL', 'Client Company'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
+          options={['ALL', 'Guest Company'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
       </Form.Field>
