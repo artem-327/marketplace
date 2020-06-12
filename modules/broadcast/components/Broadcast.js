@@ -49,10 +49,6 @@ const UnpaddedRow = {
   `
 }
 
-const templateInitialValues = {
-  name: ''
-}
-
 const templateValidation = () =>
   Yup.object().shape({
     name: Yup.string().required(errorMessages.requiredMessage)
@@ -67,7 +63,11 @@ class Broadcast extends Component {
     change: false,
     saved: false,
     initialize: true,
-    loading: false
+    loading: false,
+    templateInitialValues: {
+      name: '',
+      templates: ''
+    }
   }
 
   componentDidMount() {
@@ -121,8 +121,23 @@ class Broadcast extends Component {
   }
 
   componentDidUpdate(oldProps) {
+    const { loadedRulesTrig, broadcastTemplateName, templates } = this.props
+
     if (oldProps.saveBroadcast !== this.props.saveBroadcast && this.props.saveBroadcast) {
       this.saveBroadcastRules()
+    }
+
+    if (oldProps.loadedRulesTrig !== loadedRulesTrig && broadcastTemplateName) {
+      const dataId = getSafe(() => templates.find(el => el.name === broadcastTemplateName).id, null)
+      if (dataId !== null && this.setFieldValue) {
+        this.setFieldValue('templates', dataId)
+      } else {
+        this.setState({ templateInitialValues: {
+            ...this.state.templateInitialValues,
+            templates: dataId
+          }
+        })
+      }
     }
   }
 
@@ -572,6 +587,8 @@ class Broadcast extends Component {
       isLoadingModalCompanyInfo
     } = this.props
 
+    const { templateInitialValues } = this.state
+
     let total =
       this.props.filter.category === 'region'
         ? treeData.all(n => !n.hasChildren()).length
@@ -733,6 +750,7 @@ class Broadcast extends Component {
                   }}
                   render={props => {
                     this.submitForm = props.submitForm
+                    this.setFieldValue = props.setFieldValue
 
                     return (
                       <Form onSubmit={props.handleSubmit}>
@@ -916,7 +934,8 @@ class Broadcast extends Component {
                         </Grid>
                       </Form>
                     )
-                  }}></Formik>
+                  }}>
+                </Formik>
               </div>
             </Grid.Column>
             <Grid.Column
