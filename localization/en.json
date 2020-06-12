@@ -1811,6 +1811,8 @@
   "settings.warehouseName": "Warehouse Name",
   "settings.pickUpLocationName": "Pick-Up Location Name",
   "settings.pickupLocation": "Pick-Up Location",
+  "settings.alsoCreateAsBranch": "Also create as Branch",
+  "settings.alsoCreateAsPickUpLocation": "Also create as Pick-Up Location",
   "settings.branchName": "Branch Name",
   "settings.accountNumber": "Account Number",
   "settings.accountType": "Account Type",

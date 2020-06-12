@@ -199,6 +199,23 @@ class PickUpLocationsSidebar extends React.Component {
         await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
       } else {
         await postNewWarehouseRequest(requestData, attachmentFiles)
+        if (values.alsoCreate) {
+          requestData = {
+            deliveryAddress: {
+              addressName: values.deliveryAddress.addressName,
+              contactName: values.deliveryAddress.contactName,
+              contactPhone: values.deliveryAddress.contactPhone,
+              contactEmail: values.deliveryAddress.contactEmail,
+              address: {
+                ...values.deliveryAddress.address,
+                country
+              }
+            },
+            warehouse: false
+          }
+          removeEmpty(requestData)
+          await postNewWarehouseRequest(requestData, [])
+        }
       }
     } catch {
     } finally {
@@ -219,6 +236,7 @@ class PickUpLocationsSidebar extends React.Component {
     const initialValues = {
       //name: r.name,
       taxId: getSafe(() => popupValues.taxId, ''),
+      //warehouse: getSafe(() => popupValues.warehouse, false),
       deliveryAddress: {
         address: {
           streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
@@ -243,7 +261,8 @@ class PickUpLocationsSidebar extends React.Component {
       countryId,
       hasProvinces,
       branchId: getSafe(() => popupValues.id, ''),
-      province: getSafe(() => popupValues.deliveryAddress.address.province, '')
+      province: getSafe(() => popupValues.deliveryAddress.address.province, ''),
+      alsoCreate: false
     }
 
     return initialValues
@@ -255,7 +274,8 @@ class PickUpLocationsSidebar extends React.Component {
 
   renderEdit = formikProps => {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      popupValues
     } = this.props
     const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
@@ -409,6 +429,15 @@ class PickUpLocationsSidebar extends React.Component {
             />
           </FormGroup>
         </CustomSegment>
+        {!popupValues && (
+          <FormGroup data-test='settings_branches_popup_contactName_inp'>
+            <Checkbox
+              label={formatMessage({ id: 'settings.alsoCreateAsBranch', defaultMessage: 'Also create as Branch' })}
+              name='alsoCreate'
+              inputProps={{ 'data-test': 'settings_branches_popup_pick_up_location_chckb' }}
+            />
+          </FormGroup>
+        )}
       </>
     )
   }
