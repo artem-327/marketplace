@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import ProdexGrid from '~/components/table'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
 export const CustomRow = styled(GridRow)`
   margin-left: 25px !important;
@@ -137,9 +138,6 @@ class CompanyInfo extends Component {
     //TODO fixed with real data in 1.0.5 from new endpoint where we get all data for this modal company info
     const { dataCompanyInfo } = this.props
 
-    // { id: 7, name: "NACD" }
-    const nacdMember = getSafe(() => dataCompanyInfo.associations.some(a => a.id === 7), false)
-
     return (
       <Grid>
         <CustomRow>
@@ -156,34 +154,23 @@ class CompanyInfo extends Component {
         </CustomRow>
         <CustomRow>
           <CustomColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-            <FormattedMessage id='boradcast.modal.nacdMember' defaultMessage='NACD Member'>
+            <FormattedMessage id='global.associations' defaultMessage='Associations'>
               {text => text}
             </FormattedMessage>
           </CustomColumn>
           <CustomColumn mobile={rightWidth} computer={rightWidth}>
-            <CustomDivValue name='nacdMember'>
-              {nacdMember ? (
-                <CustomLabelVerified color={'#84c225'}>Verified</CustomLabelVerified>
-              ) : (
-                <CustomLabelNotVerified color={'#dee2e6'}>Not Verified</CustomLabelNotVerified>
-              )}
+            <CustomDivValue name='associations'>
+              {dataCompanyInfo.associations && dataCompanyInfo.associations.length
+                ? (
+                    <ArrayToFirstItem
+                      values={getSafe(() => dataCompanyInfo.associations, []).map(r => r.name)}
+                    />
+                  )
+                : 'N/A'
+              }
             </CustomDivValue>
           </CustomColumn>
         </CustomRow>
-        {!nacdMember ? (
-          <CustomRow>
-            <CustomColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
-              <FormattedMessage id='boradcast.modal.nacdReferences' defaultMessage='NACD References'>
-                {text => text}
-              </FormattedMessage>
-            </CustomColumn>
-            <CustomColumn mobile={rightWidth} computer={rightWidth}>
-              <CustomDivValue name='nacdReferences'>
-                {getSafe(() => dataCompanyInfo.nacdReferences, 'N/A')}
-              </CustomDivValue>
-            </CustomColumn>
-          </CustomRow>
-        ) : null}
         <CustomRow>
           <CustomColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
             <FormattedMessage id='boradcast.modal.successfulSales' defaultMessage='Successful Sales'>
