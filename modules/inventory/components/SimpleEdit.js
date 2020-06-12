@@ -229,8 +229,8 @@ class SimpleEdit extends Component {
                               label={
                                 <BoldLabel>
                                   <FormattedMessage
-                                    id='global.externalProductName'
-                                    defaultMessage='External Product Name'>
+                                    id='global.genericProductName'
+                                    defaultMessage='Generic Product Name'>
                                     {text => text}
                                   </FormattedMessage>
                                 </BoldLabel>
