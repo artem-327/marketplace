@@ -538,7 +538,7 @@ class ProductSidebar extends React.Component {
                               <>
                                 <FormattedMessage
                                   id='settings.associatedCompanyGenericProduct'
-                                  defaultMessage='What is the Associated External Product that you would like to map to?'
+                                  defaultMessage='What is the Associated Generic Product that you would like to map to?'
                                 />
                                 <Required />
                               </>

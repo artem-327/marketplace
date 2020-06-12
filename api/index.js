@@ -27,12 +27,14 @@ axios.interceptors.response.use(
   response => {
     try {
       Message && Message.checkForMessages && Message.checkForMessages(response)
-    } catch (e) {
-      console.error(e)
+    } catch (error) {
+      console.error(error)
     }
     return response
   },
   function (error) {
+    const hasWindow = typeof window !== 'undefined'
+    // const errData = error && error.response && error.response.data
     if (
       error.request.responseType === 'blob' &&
       error.response.data instanceof Blob &&
@@ -43,6 +45,26 @@ axios.interceptors.response.use(
         let reader = new FileReader()
         reader.onload = () => {
           error.response.data = JSON.parse(reader.result)
+
+          Message.checkForMessages(error.response)
+
+          if (error.response.status >= 401) {
+            switch (error.response.status) {
+              case 401:
+                Router.push('/auth/logout?auto=true')
+                break
+              case 504:
+                hasWindow && window.localStorage.setItem('errorStatus', '504')
+                Router.push('/errors')
+                break
+              case 403:
+                hasWindow && window.localStorage.setItem('errorStatus', '403')
+                Router.push('/errors')
+                break
+              default:
+                break
+            }
+          }
           resolve(Promise.reject(error))
         }
 
@@ -52,7 +74,33 @@ axios.interceptors.response.use(
 
         reader.readAsText(error.response.data)
       })
-    } else if (
+    }
+
+    try {
+      Message.checkForMessages(error.response)
+    } catch (error) {
+      console.error(error)
+    }
+
+    if (error.response.status >= 401) {
+      switch (error.response.status) {
+        case 401:
+          Router.push('/auth/logout?auto=true')
+          break
+        case 504:
+          hasWindow && window.localStorage.setItem('errorStatus', '504')
+          Router.push('/errors')
+          break
+        case 403:
+          hasWindow && window.localStorage.setItem('errorStatus', '403')
+          Router.push('/errors')
+          break
+        default:
+          break
+      }
+    }
+
+    if (
       error &&
       error.response &&
       error.response.config &&
@@ -61,19 +109,6 @@ axios.interceptors.response.use(
       error.response.config.headers.Pragma.includes('no-handle-error')
     ) {
       // do nothing
-    } else {
-      // Do something with response error
-
-      if (error.response && error.response.status === 401) {
-        Router.push('/auth/logout?auto=true')
-      }
-    }
-
-    // const errData = error && error.response && error.response.data
-    try {
-      Message && Message.checkForMessages && Message.checkForMessages(error.response)
-    } catch (e) {
-      console.error(e)
     }
 
     return Promise.reject(error)

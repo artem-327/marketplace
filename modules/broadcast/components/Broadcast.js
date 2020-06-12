@@ -49,10 +49,6 @@ const UnpaddedRow = {
   `
 }
 
-const templateInitialValues = {
-  name: ''
-}
-
 const templateValidation = () =>
   Yup.object().shape({
     name: Yup.string().required(errorMessages.requiredMessage)
@@ -67,7 +63,11 @@ class Broadcast extends Component {
     change: false,
     saved: false,
     initialize: true,
-    loading: false
+    loading: false,
+    templateInitialValues: {
+      name: '',
+      templates: ''
+    }
   }
 
   componentDidMount() {
@@ -121,8 +121,23 @@ class Broadcast extends Component {
   }
 
   componentDidUpdate(oldProps) {
+    const { loadedRulesTrig, broadcastTemplateName, templates } = this.props
+
     if (oldProps.saveBroadcast !== this.props.saveBroadcast && this.props.saveBroadcast) {
       this.saveBroadcastRules()
+    }
+
+    if (oldProps.loadedRulesTrig !== loadedRulesTrig && broadcastTemplateName) {
+      const dataId = getSafe(() => templates.find(el => el.name === broadcastTemplateName).id, null)
+      if (dataId !== null && this.setFieldValue) {
+        this.setFieldValue('templates', dataId)
+      } else {
+        this.setState({ templateInitialValues: {
+            ...this.state.templateInitialValues,
+            templates: dataId
+          }
+        })
+      }
     }
   }
 
@@ -337,8 +352,8 @@ class Broadcast extends Component {
 
         if (
           (!getSafe(() => company.model.associations, []).includes(associationFilter) &&
-            associationFilter !== 'Client Company') ||
-          (associationFilter === 'Client Company' && company.model.elements[0].clientCompany === false)
+            associationFilter !== 'Guest Company') ||
+          (associationFilter === 'Guest Company' && company.model.elements[0].clientCompany === false)
         ) {
           if (companiesToHide.indexOf(company.model.id) === -1) companiesToHide.push(company)
           return true
@@ -516,7 +531,7 @@ class Broadcast extends Component {
           value={this.state.associationFilter}
           selection
           loading={associationsFetching}
-          options={['ALL', 'Client Company'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
+          options={['ALL', 'Guest Company'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
       </Form.Field>
@@ -571,6 +586,8 @@ class Broadcast extends Component {
       dataCompanyInfo,
       isLoadingModalCompanyInfo
     } = this.props
+
+    const { templateInitialValues } = this.state
 
     let total =
       this.props.filter.category === 'region'
@@ -733,6 +750,7 @@ class Broadcast extends Component {
                   }}
                   render={props => {
                     this.submitForm = props.submitForm
+                    this.setFieldValue = props.setFieldValue
 
                     return (
                       <Form onSubmit={props.handleSubmit}>
@@ -916,7 +934,8 @@ class Broadcast extends Component {
                         </Grid>
                       </Form>
                     )
-                  }}></Formik>
+                  }}>
+                </Formik>
               </div>
             </Grid.Column>
             <Grid.Column

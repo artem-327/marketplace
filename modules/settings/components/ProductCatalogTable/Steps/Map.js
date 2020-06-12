@@ -204,7 +204,6 @@ const simpleProductOfferList = {
 const simpleCompaniesList = {
   constant: 'import.companies',
   required: [
-    'isNacdMemberMapper',
     'nameMapper',
     'primaryBranchDeliveryAddressAddressCityMapper',
     'primaryBranchDeliveryAddressAddressCountryMapper',

@@ -113,7 +113,6 @@ const BottomButtons = styled.div`
         color: #20273a;
       }
     }
-
     &.secondary {
       color: #ffffff;
       background-color: #2599d5;

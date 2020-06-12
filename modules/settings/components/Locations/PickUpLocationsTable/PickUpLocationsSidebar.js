@@ -13,7 +13,7 @@ import {
   removeAttachment,
   addAttachment,
   loadFile
-} from '../../actions'
+} from '../../../actions'
 import { Input, Checkbox, TextArea, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import styled from 'styled-components'
@@ -145,7 +145,7 @@ const formValidation = () =>
     })
   })
 
-class WarehouseSidebar extends React.Component {
+class PickUpLocationsSidebar extends React.Component {
   state = {
     editTab: 0,
     attachmentFiles: [],
@@ -199,6 +199,23 @@ class WarehouseSidebar extends React.Component {
         await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
       } else {
         await postNewWarehouseRequest(requestData, attachmentFiles)
+        if (values.alsoCreate) {
+          requestData = {
+            deliveryAddress: {
+              addressName: values.deliveryAddress.addressName,
+              contactName: values.deliveryAddress.contactName,
+              contactPhone: values.deliveryAddress.contactPhone,
+              contactEmail: values.deliveryAddress.contactEmail,
+              address: {
+                ...values.deliveryAddress.address,
+                country
+              }
+            },
+            warehouse: false
+          }
+          removeEmpty(requestData)
+          await postNewWarehouseRequest(requestData, [])
+        }
       }
     } catch {
     } finally {
@@ -219,6 +236,7 @@ class WarehouseSidebar extends React.Component {
     const initialValues = {
       //name: r.name,
       taxId: getSafe(() => popupValues.taxId, ''),
+      //warehouse: getSafe(() => popupValues.warehouse, false),
       deliveryAddress: {
         address: {
           streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
@@ -243,7 +261,8 @@ class WarehouseSidebar extends React.Component {
       countryId,
       hasProvinces,
       branchId: getSafe(() => popupValues.id, ''),
-      province: getSafe(() => popupValues.deliveryAddress.address.province, '')
+      province: getSafe(() => popupValues.deliveryAddress.address.province, ''),
+      alsoCreate: false
     }
 
     return initialValues
@@ -255,21 +274,22 @@ class WarehouseSidebar extends React.Component {
 
   renderEdit = formikProps => {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      popupValues
     } = this.props
     const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
     return (
       <>
-        <FormGroup widths='equal' data-test='settings_warehouse_popup_name_inp'>
+        <FormGroup style={{ marginTop: '14px' }} widths='equal' data-test='settings_warehouse_popup_name_inp'>
           <Input
             type='text'
-            label={<FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name' />}
+            label={<FormattedMessage id='settings.pickUpLocationName' defaultMessage='Pick-Up Location Name' />}
             name='deliveryAddress.addressName'
             inputProps={{
               placeholder: formatMessage({
                 id: 'settings.warehouses.enterWarehouseName',
-                defaultMessage: 'Enter Warehouse Name'
+                defaultMessage: 'Enter Pick-Up Location Name'
               })
             }}
           />
@@ -403,12 +423,21 @@ class WarehouseSidebar extends React.Component {
               inputProps={{
                 placeholder: formatMessage({
                   id: 'settings.warehouses.writeDeliveryNotesHere',
-                  defaultMessage: 'Write Delivery Notes Here'
+                  defaultMessage: 'Write Delivery Notes Here...'
                 })
               }}
             />
           </FormGroup>
         </CustomSegment>
+        {!popupValues && (
+          <FormGroup data-test='settings_branches_popup_contactName_inp'>
+            <Checkbox
+              label={formatMessage({ id: 'settings.alsoCreateAsBranch', defaultMessage: 'Also create as Branch' })}
+              name='alsoCreate'
+              inputProps={{ 'data-test': 'settings_branches_popup_pick_up_location_chckb' }}
+            />
+          </FormGroup>
+        )}
       </>
     )
   }
@@ -612,4 +641,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(WarehouseSidebar)))
+export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(PickUpLocationsSidebar)))

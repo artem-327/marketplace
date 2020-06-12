@@ -60,9 +60,9 @@ class ProductCatalogTable extends Component {
         sortPath: 'CompanyProduct.intProductCode'
       },
       {
-        name: 'externalProductName',
+        name: 'genericProductName',
         title: (
-          <FormattedMessage id='global.externalProductName' defaultMessage='External Product Name!'>
+          <FormattedMessage id='global.genericProductName' defaultMessage='Generic Product Name!'>
             {text => text}
           </FormattedMessage>
         ),
@@ -70,9 +70,9 @@ class ProductCatalogTable extends Component {
         sortPath: 'CompanyProduct.companyGenericProduct.name'
       },
       {
-        name: 'externalProductCode',
+        name: 'genericProductCode',
         title: (
-          <FormattedMessage id='global.externalProductCode' defaultMessage='External Product Code!'>
+          <FormattedMessage id='global.genericProductCode' defaultMessage='Generic Product Code!'>
             {text => text}
           </FormattedMessage>
         ),
@@ -190,8 +190,11 @@ class ProductCatalogTable extends Component {
                 return confirm(
                   formatMessage({ id: 'confirm.deleteProductCatalog', defaultMessage: 'Delete Product Catalog' }),
                   formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.intProductName}?` },
-                    { item: row.intProductName }
+                    {
+                      id: 'confirm.deleteItem',
+                      defaultMessage: `Do you really want to delete ${row.rawData.intProductName}?`
+                    },
+                    { item: row.rawData.intProductName }
                   )
                 ).then(() => deleteProduct(row.id, row.intProductName))
               }
@@ -256,9 +259,11 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         ...product,
         rawData: product,
-        intProductName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {product.intProductName}
-        </div>,
+        intProductName: (
+          <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {product.intProductName}
+          </div>
+        ),
         packagingTypeName: getSafe(() => product.packagingType.name) ? (
           <UnitOfPackaging value={product.packagingType.name} />
         ) : (
@@ -272,8 +277,8 @@ const mapStateToProps = (state, { datagrid }) => {
           'N/A'
         ),
         //packagingGroup: getSafe(() => product.packagingGroup.id),
-        externalProductCode: getSafe(() => product.companyGenericProduct.code, 'N/A'),
-        externalProductName: getSafe(() => product.companyGenericProduct.name, 'N/A'),
+        genericProductCode: getSafe(() => product.companyGenericProduct.code, 'N/A'),
+        genericProductName: getSafe(() => product.companyGenericProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
         packagingUnit: getSafe(() => product.packagingUnit.id),
         productStatus: getProductStatus(product),

@@ -214,10 +214,13 @@ class Holds extends Component {
     }
     let rowActions = []
 
-    if ((isCompanyAdmin || isMerchant) && this.state.holdDropdown === 'My Holds') {
+    if ((isCompanyAdmin || isMerchant || isClientCompanyAdmin) && this.state.holdDropdown === 'My Holds') {
       rowActions.push(buttonCancel)
       rowActions.push(buttonBuy)
-    } else if ((isCompanyAdmin || isProductOfferManager) && this.state.holdDropdown === 'Requsted Holds') {
+    } else if (
+      (isCompanyAdmin || isProductOfferManager || isClientCompanyAdmin) &&
+      this.state.holdDropdown === 'Requsted Holds'
+    ) {
       rowActions.push(buttonApprove)
       rowActions.push(buttonReject)
     }

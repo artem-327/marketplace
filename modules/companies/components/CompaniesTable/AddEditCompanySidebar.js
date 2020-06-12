@@ -69,7 +69,6 @@ const AccordionHeader = styled(Header)`
 
 const initialFormValues = {
   name: '',
-  nacdMember: true,
   enabled: false,
   phone: '',
   purchaseHazmatEligible: false,
@@ -330,7 +329,6 @@ class AddEditCompanySidebar extends React.Component {
                 cin: getSafe(() => values.cin, ''),
                 dba: getSafe(() => values.dba, ''),
                 dunsNumber: getSafe(() => values.dunsNumber, ''),
-                nacdMember: getSafe(() => values.nacdMember, false),
                 enabled: getSafe(() => values.enabled, false),
                 name: getSafe(() => values.name, ''),
                 phone: getSafe(() => values.phone, ''),

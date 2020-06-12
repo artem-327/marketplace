@@ -175,13 +175,6 @@ export function handleFiltersValue(props, value) {
   }
 }
 
-export function getAlternativeProductNames(value) {
-  return {
-    type: AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES,
-    payload: api.getAlternativeProductNames(value)
-  }
-}
-
 export function getHazardClassesDataRequest() {
   return {
     type: AT.ADMIN_GET_HAZARD_CLASSES,

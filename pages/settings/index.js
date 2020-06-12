@@ -11,7 +11,9 @@ class Index extends Component {
     const {
       intl: { formatMessage }
     } = this.props
-    const tabName = getSafe(() => this.props.router.query.type, '')
+    let tabName = getSafe(() => this.props.router.query.type, '')
+    //const subTabName = getSafe(() => this.props.router.query.tab, '')
+    //tabName = subTabName ? subTabName : tabName
     const id = tabName ? `title.settings.${tabName}` : 'title.settings.company-details'
     const titleName = formatMessage(
       {

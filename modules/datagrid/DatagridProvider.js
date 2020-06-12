@@ -18,7 +18,8 @@ const initialState = {
     pageNumber: 0
   },
   isScrollToEnd: false,
-  savedFilters: {}
+  savedFilters: {},
+  refreshTable: false
 }
 
 // singleton instance
@@ -45,10 +46,15 @@ class DatagridProvider extends Component {
     //Refresh datagrid
     if (this.props.autoRefresh)
       this.interval = setInterval(
-        this.loadData,
+        this.refreshTable,
         getSafe(() => this.props.refreshInterval, 60000)
       )
     this.setState({ savedFilters: {} })
+  }
+
+  refreshTable = () => {
+    this.setState({ refreshTable: true })
+    this.loadNextPage()
   }
 
   componentWillUnmount() {
@@ -89,7 +95,7 @@ class DatagridProvider extends Component {
   loadNextPage = async () => {
     if (!this.props.apiConfig) return
 
-    const { datagridParams, query, isScrollToEnd } = this.state
+    const { datagridParams, query, isScrollToEnd, refreshTable } = this.state
     const { apiConfig } = this.props
 
     this.setState({ loading: true })
@@ -100,7 +106,8 @@ class DatagridProvider extends Component {
       (!getSafe(() => datagridParams.filters.length, false) &&
         !getSafe(() => datagridParams.orFilters.length, false) &&
         datagridParams.pageNumber > 0 &&
-        !isScrollToEnd)
+        !isScrollToEnd &&
+        !refreshTable)
         ? 0
         : datagridParams.pageNumber
 
@@ -135,13 +142,14 @@ class DatagridProvider extends Component {
         datagridParams: {
           ...s.datagridParams,
           pageNumber: pageNumber + (allLoaded ? 0 : 1)
-        }
+        },
+        refreshTable: false
       }))
     } catch (e) {
       console.error(e)
-      this.setState({ loading: false })
+      this.setState({ loading: false, refreshTable: false })
     } finally {
-      this.setState({ isScrollToEnd: false })
+      this.setState({ isScrollToEnd: false, refreshTable: false })
       this.apiConfig = null
     }
   }
