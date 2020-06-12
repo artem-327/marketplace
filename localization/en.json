@@ -2400,6 +2400,7 @@
   "pruduct.groups.add": "Add Product Group",
   "product.groups.tagsName": "Tags Name",
   "product.groups.tags": "Tags",
+  "product.groups.marketSegment": "Market Segment",
   "confirm.delete.product.groups.content": "Do you really want to delete Product Group?",
   "validation.minOneGroup": "At least one group should be selected",
   "validation.minOneCompany": "At least one company should be selected"

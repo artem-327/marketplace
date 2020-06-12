@@ -10,7 +10,7 @@ import debounce from 'lodash/debounce'
 import { generateToastMarkup, getSafe, uniqueArrayByKey } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 import { withDatagrid } from '~/modules/datagrid'
-import { closePopup, putProductGroups, searchTags, postProductGroups } from '../../actions'
+import { closePopup, putProductGroups, searchTags, postProductGroups, searchMarketSegments } from '../../actions'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
 
@@ -23,27 +23,27 @@ const formValidation = () =>
 
 class ProductGroupsPopup extends React.Component {
   state = {
-    selectedTagsOptions: []
+    selectedTagsOptions: [],
+    selectedMarketSegmentsOptions: []
   }
 
   componentDidMount() {
-    if (this.props.popupValues && this.props.popupValues.rawData.tags) {
-      this.setState({
-        selectedTagsOptions: this.props.popupValues.rawData.tags.map(d => {
-          return {
-            key: d.id,
-            text: d.name,
-            value: d.id
-          }
-        })
+    this.setState({
+      selectedTagsOptions: getSafe(() => this.props.popupValues.rawData.tags, []).map(d => {
+        return {
+          key: d.id,
+          text: d.name,
+          value: d.id
+        }
+      }),
+      selectedMarketSegmentsOptions: getSafe(() => this.props.popupValues.rawData.marketSegments, []).map(d => {
+        return {
+          key: d.id,
+          text: d.name,
+          value: d.id
+        }
       })
-    }
-
-    try {
-      this.props.searchTags('')
-    } catch (error) {
-      console.error(error)
-    }
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -52,7 +52,14 @@ class ProductGroupsPopup extends React.Component {
       ((prevProps.popupValues && prevProps.popupValues !== this.props.popupValues) || prevProps.popupValues === null)
     ) {
       this.setState({
-        selectedTagsOptions: this.props.popupValues.rawData.tags.map(d => {
+        selectedTagsOptions: getSafe(() => this.props.popupValues.rawData.tags, []).map(d => {
+          return {
+            key: d.id,
+            text: d.name,
+            value: d.id
+          }
+        }),
+        selectedMarketSegmentsOptions: getSafe(() => this.props.popupValues.rawData.marketSegments, []).map(d => {
           return {
             key: d.id,
             text: d.name,
@@ -72,6 +79,15 @@ class ProductGroupsPopup extends React.Component {
     this.setState({ selectedTagsOptions: newOptions })
   }
 
+  handleMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
+    this.props.searchMarketSegments(searchQuery)
+  }, 250)
+
+  handleMarketSegmentsChange = (value, options) => {
+    const newOptions = options.filter(el => value.some(v => el.value === v))
+    this.setState({ selectedMarketSegmentsOptions: newOptions })
+  }
+
   render() {
     const {
       closePopup,
@@ -83,16 +99,23 @@ class ProductGroupsPopup extends React.Component {
       intl: { formatMessage },
       datagrid,
       searchedTags,
-      searchedTagsLoading
+      searchedTagsLoading,
+      searchedMarketSegmentsLoading,
+      searchedMarketSegments
     } = this.props
-    const { selectedTagsOptions } = this.state
+    const { selectedTagsOptions, selectedMarketSegmentsOptions } = this.state
 
     const initialFormValues = {
       name: getSafe(() => popupValues.name, ''),
-      tags: getSafe(() => popupValues.tags.props.ids, '')
+      tags: getSafe(() => popupValues.tags.props.ids, ''),
+      marketSegments: getSafe(() => popupValues.marketSegments.props.ids, '')
     }
 
     const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
+    const allMarketSegmentsOptions = uniqueArrayByKey(
+      searchedMarketSegments.concat(selectedMarketSegmentsOptions),
+      'key'
+    )
 
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
@@ -111,7 +134,7 @@ class ProductGroupsPopup extends React.Component {
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
               const request = {}
-              const propsToInclude = ['tags', 'name']
+              const propsToInclude = ['tags', 'name', 'marketSegments']
               propsToInclude.forEach(prop => (values[prop] ? (request[prop] = values[prop]) : null))
 
               try {
@@ -139,10 +162,10 @@ class ProductGroupsPopup extends React.Component {
                           <Required />
                         </>
                       }
-                      fieldProps={{ width: 8 }}
+                      fieldProps={{ width: 6 }}
                     />
                     <FormikDropdown
-                      fieldProps={{ width: 8 }}
+                      fieldProps={{ width: 5 }}
                       label={
                         <>
                           <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
@@ -164,6 +187,31 @@ class ProductGroupsPopup extends React.Component {
                         }),
                         onSearchChange: this.handleTagsSearchChange,
                         onChange: (_, { value }) => this.handleTagsChange(value, allTagsOptions)
+                      }}
+                    />
+                    <FormikDropdown
+                      fieldProps={{ width: 5 }}
+                      label={
+                        <>
+                          <FormattedMessage id='product.groups.marketSegment' defaultMessage='Market Segment'>
+                            {text => text}
+                          </FormattedMessage>
+                        </>
+                      }
+                      name='marketSegments'
+                      options={allMarketSegmentsOptions || []}
+                      inputProps={{
+                        loading: searchedMarketSegmentsLoading,
+                        search: true,
+                        icon: 'search',
+                        selection: true,
+                        multiple: true,
+                        noResultsMessage: formatMessage({
+                          id: 'global.startTypingToSearch',
+                          defaultMessage: 'Start typing to begin search'
+                        }),
+                        onSearchChange: this.handleMarketSegmentsSearchChange,
+                        onChange: (_, { value }) => this.handleMarketSegmentsChange(value, allMarketSegmentsOptions)
                       }}
                     />
                   </FormGroup>
@@ -195,7 +243,8 @@ const mapDispatchToProps = {
   closePopup,
   putProductGroups,
   searchTags,
-  postProductGroups
+  postProductGroups,
+  searchMarketSegments
 }
 
 const mapStateToProps = state => {
@@ -211,7 +260,15 @@ const mapStateToProps = state => {
           text: d.name,
           value: d.id
         }))
-      : []
+      : [],
+    searchedMarketSegments: getSafe(() => state.productsAdmin.searchedMarketSegments.length, false)
+      ? state.productsAdmin.searchedMarketSegments.map(d => ({
+          key: d.id,
+          text: d.name,
+          value: d.id
+        }))
+      : [],
+    searchedMarketSegmentsLoading: getSafe(() => state.productsAdmin.searchedMarketSegmentsLoading, false)
   }
 }
 

@@ -230,7 +230,6 @@ class AddEditEchoProduct extends React.Component {
     popupValues: null,
     editTab: 0,
     selectedProductGroupsOptions: [],
-    selectedMarketSegmentsOptions: [],
     selectedCompanyOptions: []
   }
 
@@ -309,7 +308,6 @@ class AddEditEchoProduct extends React.Component {
     let codesList = [],
       unNumberInitOptions = [],
       selectedProductGroupsOptions = [],
-      selectedMarketSegmentsOptions = [],
       selectedCompanyOptions = []
 
     if (popupValues) {
@@ -335,15 +333,6 @@ class AddEditEchoProduct extends React.Component {
       if (popupValues.productGroup) {
         selectedProductGroupsOptions = popupValues.productGroup
       }
-      if (popupValues.marketSegments) {
-        selectedMarketSegmentsOptions = popupValues.marketSegments.map(d => {
-          return {
-            key: d.id,
-            text: d.name,
-            value: d.id
-          }
-        })
-      }
     }
     if (popupValues && popupValues.company) {
       selectedCompanyOptions = popupValues.company
@@ -355,7 +344,6 @@ class AddEditEchoProduct extends React.Component {
       popupValues,
       unNumberInitOptions: unNumberInitOptions,
       selectedProductGroupsOptions,
-      selectedMarketSegmentsOptions,
       selectedCompanyOptions,
       ...additionalStates
     })
@@ -491,7 +479,6 @@ class AddEditEchoProduct extends React.Component {
             wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
             isPublished: getSafe(() => popupValues.isPublished, false),
             productGroup: getSafe(() => popupValues.productGroup.id, ''),
-            marketSegments: getSafe(() => popupValues.marketSegments, []).map(d => d.id),
             company: getSafe(() => popupValues.company.id, '')
           }
         : null)
@@ -551,10 +538,6 @@ class AddEditEchoProduct extends React.Component {
     this.props.searchCompany(searchQuery)
   }, 250)
 
-  handleMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
-    this.props.searchMarketSegments(searchQuery)
-  }, 250)
-
   handleProductGroupsChange = (value, options) => {
     const newOptions = options.filter(el => value === el.value)
     this.setState({ selectedProductGroupsOptions: newOptions })
@@ -563,11 +546,6 @@ class AddEditEchoProduct extends React.Component {
   handleCompanyChange = (value, options) => {
     const newOptions = options.filter(el => value === el.value)
     this.setState({ selectedCompanyOptions: newOptions })
-  }
-
-  handleMarketSegmentsChange = (value, options) => {
-    const newOptions = options.filter(el => value.some(v => el.value === v))
-    this.setState({ selectedMarketSegmentsOptions: newOptions })
   }
 
   switchToErrors = err => {
@@ -1069,7 +1047,7 @@ class AddEditEchoProduct extends React.Component {
 
   renderEdit = formikProps => {
     let codesList = this.state.codesList
-    const { selectedProductGroupsOptions, selectedMarketSegmentsOptions, selectedCompanyOptions } = this.state
+    const { selectedProductGroupsOptions, selectedCompanyOptions } = this.state
     const {
       intl: { formatMessage },
       searchedManufacturers,
@@ -1077,16 +1055,10 @@ class AddEditEchoProduct extends React.Component {
       searchManufacturers,
       searchedProductGroupsLoading,
       searchedProductGroups,
-      searchedmarketSegmentsLoading,
-      searchedMarketSegments,
       searchedCompanyLoading,
       searchedCompany
     } = this.props
 
-    const allMarketSegmentsOptions = uniqueArrayByKey(
-      searchedMarketSegments.concat(selectedMarketSegmentsOptions),
-      'key'
-    )
     const allProductGroupsOptions = uniqueArrayByKey(searchedProductGroups.concat(selectedProductGroupsOptions), 'key')
     const allCompanyOptions = uniqueArrayByKey(searchedCompany.concat(selectedCompanyOptions), 'key')
 
@@ -1209,30 +1181,6 @@ class AddEditEchoProduct extends React.Component {
           defaultMessage: 'Emergency Phone',
           props: formikProps
         })}
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.marketSegments' defaultMessage='Market Segments' />
-          </GridColumn>
-          <GridColumn width={10}>
-            <FormikDropdown
-              name='marketSegments'
-              options={allMarketSegmentsOptions}
-              inputProps={{
-                loading: searchedmarketSegmentsLoading,
-                search: true,
-                icon: 'search',
-                selection: true,
-                multiple: true,
-                noResultsMessage: formatMessage({
-                  id: 'global.startTypingToSearch',
-                  defaultMessage: 'Start typing to begin search'
-                }),
-                onSearchChange: this.handleMarketSegmentsSearchChange,
-                onChange: (_, { value }) => this.handleMarketSegmentsChange(value, allMarketSegmentsOptions)
-              }}
-            />
-          </GridColumn>
-        </GridRow>
 
         <Header as='h3'>
           <FormattedMessage id='global.sds' defaultMessage='SDS' />
