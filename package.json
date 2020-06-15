@@ -77,6 +77,7 @@
     "react-toast-notifications": "^1.4.0",
     "react-transition-group": "^2.5.0",
     "reactstrap": "^6.5.0",
+    "recharts": "^1.8.5",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^5.0.0",

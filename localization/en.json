@@ -2403,5 +2403,8 @@
   "confirm.delete.product.groups.content": "Do you really want to delete Product Group?",
   "validation.minOneGroup": "At least one group should be selected",
   "validation.minOneCompany": "At least one company should be selected",
-  "dashboard.title": "Analytics Dashboard"
+  "dashboard.title": "Analytics Dashboard",
+  "dasboard.transactions.graph.title": "Total Marketplace Transactions in {year}",
+  "dasboard.transactions.graph.subtitle": "in thousand dollars",
+  "dasboard.popularProducts.title": "POPULAR PRODUCTS"
 }

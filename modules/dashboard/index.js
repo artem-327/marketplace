@@ -1,2 +1,2 @@
-import Dashboard from './components/Dashboard'
+import Dashboard from './components/DashboardContainer'
 export default Dashboard
