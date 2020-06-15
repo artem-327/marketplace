@@ -132,7 +132,8 @@ class Broadcast extends Component {
       if (dataId !== null && this.setFieldValue) {
         this.setFieldValue('templates', dataId)
       } else {
-        this.setState({ templateInitialValues: {
+        this.setState({
+          templateInitialValues: {
             ...this.state.templateInitialValues,
             templates: dataId
           }
@@ -447,13 +448,15 @@ class Broadcast extends Component {
   }
 
   changeInModel = (elementsParam, data) => {
-    // var elements = elementsParam
-    // elements.forEach(element => {
-    //   if (!element.hidden) {
-    //     element = { ...element, ...data }
-    //   }
-    //   if (element.elements.length > 0) this.changeInModel(element.elements, data)
-    // })
+    var elements = elementsParam
+    if (getSafe(() => elements.length, false)) {
+      elements.forEach(element => {
+        if (!element.hidden) {
+          element = { ...element, ...data }
+        }
+        if (getSafe(() => element.elements.length, '') > 0) this.changeInModel(element.elements, data)
+      })
+    }
   }
 
   handleRowClick = node => {
@@ -934,8 +937,7 @@ class Broadcast extends Component {
                         </Grid>
                       </Form>
                     )
-                  }}>
-                </Formik>
+                  }}></Formik>
               </div>
             </Grid.Column>
             <Grid.Column
@@ -962,7 +964,7 @@ class Broadcast extends Component {
                 </Rule.Header>
                 <Rule.Content style={asSidebar ? { flex: '1 0 auto', overflowY: 'hidden' } : null}>
                   <RuleItem
-                    // changeInModel={this.changeInModel}
+                    changeInModel={this.changeInModel}
                     loadingChanged={this.props.loadingChanged}
                     filter={filter}
                     hideFobPrice={hideFobPrice}
