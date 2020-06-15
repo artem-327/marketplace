@@ -4,5 +4,9 @@ export const findProducts = search => api.get(`/prodex/api/company-products/sear
 
 export const getAutocompleteData = (pattern, limit = 15) =>
   api
-    .get(`/prodex/api/company-generic-products/search/all-alternatives?limit=${limit}&pattern=${pattern}`)
+    .get(
+      `/prodex/api/company-generic-products/search/all-alternatives?limit=${limit}&pattern=${encodeURIComponent(
+        pattern
+      )}`
+    )
     .then(response => response.data)
