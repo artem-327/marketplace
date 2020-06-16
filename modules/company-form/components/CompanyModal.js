@@ -58,7 +58,6 @@ const StyledModalContent = styled(Modal.Content)`
 
 const initialFormValues = {
   name: '',
-  nacdMember: true,
   enabled: false,
   phone: '',
   businessType: {
