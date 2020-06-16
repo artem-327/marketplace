@@ -52,12 +52,14 @@ const GlobalTableOverrideStyle = createGlobalStyle`
       padding: .5rem;
     }
   }
-  ${isFirefox &&
+  ${
+    isFirefox &&
     `
     .bootstrapiso > .flex-column {
       flex: 0 0 auto !important;
     }
-  `}
+  `
+  }
   .group-row {
     position: relative;
     background: #EEE;
@@ -330,6 +332,7 @@ class _Table extends Component {
     tableName: pt.string,
     singleSelection: pt.bool,
     onScrollToEnd: pt.func,
+    onScrollToUp: pt.func,
     onRowClick: pt.func,
     onSortingChange: pt.func,
     onTableReady: pt.func,
@@ -361,6 +364,7 @@ class _Table extends Component {
     singleSelection: false,
     onSelectionChange: () => {},
     onScrollToEnd: () => {},
+    onScrollToUp: () => {},
     onTableReady: () => {},
     getChildRows: () => {},
     defaultSorting: null,
@@ -399,15 +403,67 @@ class _Table extends Component {
   }
 
   handleScroll = ({ target }) => {
-    const { onScrollToEnd } = this.props
+    const { onScrollToEnd, onScrollToUp } = this.props
+    const { newTop, newBottom, pageSize } = this.state //TODO declare to state
     const { scrollLeft } = target
+    const scrollviewOffsetY = target.scrollTop
+    const scrollviewFrameHeight = target.clientHeight
+    const scrollviewContentHeight = target.scrollHeight
+    const sum = scrollviewOffsetY + scrollviewFrameHeight
 
     if (this.state.scrollLeft !== scrollLeft) {
       this.setState({ scrollLeft }, () => this.forceUpdate())
     }
-    if (target.offsetHeight + target.scrollTop >= target.scrollHeight - 50) {
-      onScrollToEnd()
+    let tops = 0
+    let bottoms = 0
+    if (newTop && sum && pageSize) {
+      tops = Math.ceil((newTop - sum) / pageSize) > 0 ? Math.ceil((newTop - sum) / pageSize) : 1
     }
+    if (newBottom && sum && pageSize) {
+      bottoms = Math.floor((newBottom - sum) / pageSize) < 0 ? Math.floor((newBottom - sum) / pageSize) * -1 : 1
+    }
+
+    if (sum <= newTop) {
+      this.setState({
+        newTop: newTop - pageSize * tops > 0 ? newTop - pageSize * tops : 0,
+        newBottom:
+          tops < 1 ? newTop : newTop - pageSize * (tops - 1) > pageSize ? newTop - pageSize * (tops - 1) : pageSize
+      })
+      onScrollToUp(tops * -1)
+    } else if (sum >= scrollviewContentHeight - 50) {
+      const newHeight = pageSize ? pageSize : scrollviewContentHeight
+      const newTop = !newBottom
+        ? scrollviewContentHeight
+        : newBottom > 1
+        ? newBottom + pageSize * (bottoms - 1)
+        : newBottom
+      const newBottom = !newBottom ? scrollviewContentHeight + newHeight : newBottom + pageSize * bottoms
+      this.setState({
+        pageSize: pageSize ? pageSize : scrollviewContentHeight,
+        newTop,
+        newBottom
+      })
+      onScrollToEnd(bottoms > 0 ? bottoms : 0)
+    } else if (sum >= newBottom - 50) {
+      this.setState({
+        newTop: newBottom > 1 ? newBottom + pageSize * (bottoms - 1) : newBottom,
+        newBottom: newBottom + pageSize * bottoms
+      })
+      onScrollToEnd(bottoms)
+    }
+
+    // if (target.offsetHeight + target.scrollTop >= target.scrollHeight - 50) {
+    //   console.log('7target.offsetHeight====================================')
+    //   console.log(target.offsetHeight)
+    //   console.log('====================================')
+    //   console.log('8target.scrollTop====================================')
+    //   console.log(target.scrollTop)
+    //   console.log('====================================')
+    //   console.log('9target.scrollHeight====================================')
+    //   console.log(target.scrollHeight)
+    //   console.log('====================================')
+
+    // }
   }
 
   componentDidUpdate(prevProps) {
