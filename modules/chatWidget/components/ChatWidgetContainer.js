@@ -36,7 +36,7 @@ function mapStateToProps(state) {
       getSafe(() => state.companyProductInfo.isOpen, false) ||
       getSafe(() => state.companiesAdmin.isOpenSidebar, false) ||
       (getSafe(() => state.settings.isOpenPopup, false) &&
-        (settingsTab === 'products' || (settingsTab === 'users'))) ||
+        (settingsTab === 'products' || settingsTab === 'users' || settingsTab === 'documents')) ||
       adminTab === 'Users' ||
       adminTab === 'Companies'
     )
