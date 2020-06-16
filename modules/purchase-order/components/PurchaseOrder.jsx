@@ -355,37 +355,6 @@ class PurchaseOrder extends Component {
 
     return (
       <Container>
-        {paymentTerm !== 'REGULAR' && (
-          <Rectangle>
-            <CustomDivTitle>
-              <InfoIcon size={18} />
-              <CustomDivInTitle>
-                <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
-              </CustomDivInTitle>
-            </CustomDivTitle>
-            <CustomDivContent>
-              {cart.paymentTerm === 'HALF_UPFRONT' ? (
-                <FormattedMessage
-                  id='cart.payment.terms50.content'
-                  defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
-                  values={{
-                    value: <b>50/50</b>,
-                    percentage: <b>50%</b>,
-                    shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
-                  }}
-                />
-              ) : (
-                <FormattedMessage
-                  id='cart.payment.terms100.content'
-                  defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
-                  values={{
-                    percentage: <b>100%</b>
-                  }}
-                />
-              )}
-            </CustomDivContent>
-          </Rectangle>
-        )}
         <Button basic onClick={() => Router.push('/cart')} data-test='purchase_order_back_to_cart_btn'>
           <Icon name='shopping cart' />
           <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
@@ -405,6 +374,51 @@ class PurchaseOrder extends Component {
             return (
               <GridContainer>
                 <GridColumn mobile={14} tablet={9} computer={10}>
+                  <Rectangle style={{ marginBottom: '10px' }}>
+                    <CustomDivTitle>
+                      <InfoIcon size={24} />
+                      <CustomDivInTitle>
+                        <FormattedMessage
+                          id='cart.payment.terms.title'
+                          defaultMessage={`Payment Terms Information`}
+                        />
+                      </CustomDivInTitle>
+                    </CustomDivTitle>
+                    <CustomDivContent>
+                  {paymentTerm === 'REGULAR'
+                    ? (
+                      <FormattedMessage
+                        id='cart.payment.netX.content'
+                        defaultMessage={`The payment terms of this order are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
+                        values={{
+                          value: <b>Net {paymentNetDays}</b>,
+                          days: <b>{paymentNetDays} days</b>
+                        }}
+                      />
+                    )
+                    : (
+                      paymentTerm === 'HALF_UPFRONT' ? (
+                        <FormattedMessage
+                          id='cart.payment.terms50.content'
+                          defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
+                          values={{
+                            value: <b>50/50</b>,
+                            percentage: <b>50%</b>,
+                            shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
+                          }}
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id='cart.payment.terms100.content'
+                          defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
+                          values={{
+                            percentage: <b>100%</b>
+                          }}
+                        />
+                      )
+                    )}
+                    </CustomDivContent>
+                  </Rectangle>
                   {this.state.modalOpen && (
                     <ShippingEdit
                       onClose={() => this.setState({ modalOpen: false })}

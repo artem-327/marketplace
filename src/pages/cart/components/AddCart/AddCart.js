@@ -36,6 +36,13 @@ import _ from 'lodash'
 import { yesNoOptions } from '../../../../../modules/company-product-info/constants'
 import { FlexTabs } from '~/modules/inventory/constants/layout'
 import { ChevronDown } from 'react-feather'
+import {
+  Rectangle,
+  CustomDivContent,
+  CustomDivInTitle,
+  CustomDivTitle,
+  InfoIcon
+} from '~/modules/cart/components/StyledComponents'
 
 const FlexContent = styled(Segment)`
   flex: 1;
@@ -322,7 +329,7 @@ class AddCart extends Component {
     let { offer, order, isEdit } = this.props
     let { pkgAmount, pricing, warning, isHoldRequest } = this.props.sidebar
 
-    let { pkgAvailable, pricingTiers } = offer
+    let { pkgAvailable, pricingTiers, paymentTerms, paymentNetDays } = offer
 
     const price = pricing ? pricing.price : null
 
@@ -408,6 +415,55 @@ class AddCart extends Component {
       <>
         <FlexContent basic>
           <Grid verticalAlign='top'>
+            <GridRow columns={1} style={{ padding: '30px 0 0 3px' }}>
+              <GridColumn style={{ padding: '0 30px' }}>
+                <Rectangle style={{ margin: '0', whiteSpace: 'normal' }}>
+                  <CustomDivTitle>
+                    <InfoIcon size={24} />
+                    <CustomDivInTitle>
+                      <FormattedMessage
+                        id='cart.payment.terms.title'
+                        defaultMessage={`Payment Terms Information`}
+                      />
+                    </CustomDivInTitle>
+                  </CustomDivTitle>
+                  <CustomDivContent>
+                    {paymentTerms === 'REGULAR'
+                      ? (
+                        <FormattedMessage
+                          id='buy.payment.netX.content'
+                          defaultMessage={`The payment terms of this product are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
+                          values={{
+                            value: <b>Net {paymentNetDays}</b>,
+                            days: <b>{paymentNetDays} days</b>
+                          }}
+                        />
+                      )
+                      : (
+                        paymentTerms === 'HALF_UPFRONT' ? (
+                          <FormattedMessage
+                            id='buy.payment.terms50.content'
+                            defaultMessage={`This product has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
+                            values={{
+                              value: <b>50/50</b>,
+                              percentage: <b>50%</b>,
+                              shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
+                            }}
+                          />
+                        ) : (
+                          <FormattedMessage
+                            id='buy.payment.terms100.content'
+                            defaultMessage={`This product has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
+                            values={{
+                              percentage: <b>100%</b>
+                            }}
+                          />
+                        )
+                      )}
+                  </CustomDivContent>
+                </Rectangle>
+              </GridColumn>
+            </GridRow>
             <GridRow className='action' columns={1}>
               <GridColumn>
                 <Header>
