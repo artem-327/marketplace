@@ -21,7 +21,6 @@ import {
   getUnNumbersByString,
   searchProductGroups,
   getDocumentTypes,
-  searchMarketSegments,
   searchCompany
 } from '~/modules/products/actions'
 
@@ -48,7 +47,6 @@ const mapDispatchToProps = {
   getUnNumbersByString,
   searchProductGroups,
   getDocumentTypes,
-  searchMarketSegments,
   searchCompany
 }
 
@@ -106,14 +104,6 @@ const mapStateToProps = ({ productsAdmin }, props) => {
         }))
       : [],
     searchedProductGroupsLoading: productsAdmin.searchedProductGroupsLoading,
-    searchedMarketSegments: getSafe(() => productsAdmin.searchedMarketSegments.length, false)
-      ? productsAdmin.searchedMarketSegments.map(d => ({
-          key: d.id,
-          text: d.name,
-          value: d.id
-        }))
-      : [],
-    searchedMarketSegmentsLoading: productsAdmin.searchedMarketSegmentsLoading,
     searchedCompany: getSafe(() => productsAdmin.searchedCompanies.length, false)
       ? productsAdmin.searchedCompanies.map(d => ({
           key: d.id,
