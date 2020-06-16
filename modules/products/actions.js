@@ -383,7 +383,7 @@ export function postProductGroups(request) {
   }
 }
 
-export function putProductGroups(id, request, selectedTagsOptions) {
+export function putProductGroups(id, request, selectedTagsOptions, selectedMarketSegmentsOptions) {
   return {
     type: AT.PRODUCTS_GROUPS_UPDATE,
     async payload() {
@@ -391,7 +391,8 @@ export function putProductGroups(id, request, selectedTagsOptions) {
       Datagrid.updateRow(id, () => ({
         name: request.name,
         tags: selectedTagsOptions.map(tag => ({ name: tag.text, id: tag.key })),
-        id: id
+        id: id,
+        marketSegments: selectedMarketSegmentsOptions.map(segment => ({ name: segment.text, id: segment.key }))
       }))
       return response
     }
