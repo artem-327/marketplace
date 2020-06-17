@@ -129,12 +129,17 @@ class Broadcast extends Component {
 
     if (oldProps.loadedRulesTrig !== loadedRulesTrig && broadcastTemplateName) {
       const dataId = getSafe(() => templates.find(el => el.name === broadcastTemplateName).id, null)
-      if (dataId !== null && this.setFieldValue) {
-        this.setFieldValue('templates', dataId)
-      } else {
+      if (dataId !== null) {
+        if (this.setFieldValue) this.setFieldValue('templates', dataId)
+
         this.setState({
+          ...this.state,
+          selectedTemplate: {
+            id: dataId,
+            name: broadcastTemplateName
+          },
           templateInitialValues: {
-            ...this.state.templateInitialValues,
+            name: broadcastTemplateName,
             templates: dataId
           }
         })
@@ -486,7 +491,12 @@ class Broadcast extends Component {
 
     let name = data.options.find(opt => opt.value === data.value).text
     setFieldValue('name', name)
-    this.setState({ selectedTemplate: { name, id: data.value } })
+    this.setState({
+      ...this.state,
+      selectedTemplate: { name, id: data.value },
+      templateInitialValues: { name, templates: data.value },
+    })
+
     try {
       await getTemplate(data.value)
     } catch (e) {
@@ -937,7 +947,8 @@ class Broadcast extends Component {
                         </Grid>
                       </Form>
                     )
-                  }}></Formik>
+                  }}>
+                </Formik>
               </div>
             </Grid.Column>
             <Grid.Column
