@@ -144,7 +144,7 @@ context("Generic Company Product CRUD", () => {
         cy.get(".error")
             .should("have.length", 5)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(At least one group should be selected)/i)
+            expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(At least one group should be selected)|(At least one company should be selected)/i)
         })
     })
 

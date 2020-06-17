@@ -12,6 +12,7 @@ context("Prodex Branches CRUD", () => {
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/branches/datagrid").as("branchesLoadingPOST")
+        cy.route("POST", "/prodex/api/delivery-addresses/datagrid").as("deliveryLoadingPOST")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
@@ -19,8 +20,10 @@ context("Prodex Branches CRUD", () => {
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.openSettings()
-        cy.contains("Branches").click()
+        cy.get("[data-test='navigation_settings_locations_drpdn']").click()
+        cy.wait("@deliveryLoadingPOST")
 
+        cy.contains("Branches").click()
         cy.wait("@branchesLoadingPOST")
         cy.waitForUI()
     })

@@ -10,12 +10,13 @@ context("Prodex Branches CRUD", () => {
         cy.route("POST", "/prodex/api/delivery-addresses/datagrid").as("addressLoading")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
+        cy.viewport(2250, 2250)
 
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading")
         cy.openSettings()
-        cy.contains("Delivery Addresses").click()
+        cy.get("[data-test='navigation_settings_locations_drpdn']").click()
 
         cy.wait("@addressLoading")
         cy.waitForUI()
@@ -41,15 +42,15 @@ context("Prodex Branches CRUD", () => {
         cy.selectFromDropdown("div[id='field_dropdown_address.zip']", "75000")
 
         cy.enterText("#field_input_contactName", "Marie Currie")
-        cy.get("div[data-test='settings_delivery_address_emailPhone_inp']").within(($form) => {
-            cy.get("input[placeholder = 'Phone Number']").type("1234567895")
+        //cy.get("div[data-test='settings_delivery_address_emailPhone_inp']").within(($form) => {
+            cy.get('.phone-num').type("1234567895")
             cy.contains("+CCC").click()
-            cy.contains("USA").click()
-        })
+        cy.get('.phone-number > .ui > .visible > :nth-child(1)').click()
+        //})
 
         cy.enterText("#field_input_contactEmail", "marie@address.com")
 
-        cy.get('[data-test=settings_delivery_address_submit_btn]').click()
+        cy.get('[data-test=settings_branches_popup_submit_btn]').click()
         cy.waitForUI()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
@@ -87,7 +88,7 @@ context("Prodex Branches CRUD", () => {
             .type("Adolf Schwarzenegger")
             .should("have.value", "Adolf Schwarzenegger")
 
-        cy.get('[data-test=settings_delivery_address_submit_btn]').click()
+        cy.get('[data-test=settings_branches_popup_submit_btn]').click()
 
         cy.waitForUI()
 
@@ -101,7 +102,7 @@ context("Prodex Branches CRUD", () => {
     it("Checks error messages", () => {
         cy.settingsAdd()
 
-        cy.get('[data-test=settings_delivery_address_submit_btn]').click()
+        cy.get('[data-test=settings_branches_popup_submit_btn]').click()
 
         cy.get(".error")
             .should("have.length", 7)

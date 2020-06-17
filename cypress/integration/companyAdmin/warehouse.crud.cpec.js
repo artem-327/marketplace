@@ -10,6 +10,7 @@ context("Prodex Warehouse CRUD", () => {
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/branches/warehouses/datagrid").as("warehouseLoading")
+        cy.route("POST", "/prodex/api/delivery-addresses/datagrid").as("deliveryLoadingPOST")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
@@ -17,8 +18,11 @@ context("Prodex Warehouse CRUD", () => {
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.openSettings()
-        cy.contains("Warehouses").click()
 
+        cy.get("[data-test='navigation_settings_locations_drpdn']").click()
+        cy.wait("@deliveryLoadingPOST")
+
+        cy.contains("Pick Up Locations").click()
         cy.wait("@warehouseLoading")
         cy.waitForUI()
     })
