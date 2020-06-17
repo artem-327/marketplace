@@ -16,7 +16,9 @@ export const WantedBoard = props => {
         })
       }
       if (v && v.or) {
-        filters.url = `/prodex/api/purchase-requests/other/datagrid?type=${props.type}&pattern=${v.or}`
+        filters.url = `/prodex/api/purchase-requests/other/datagrid?type=${props.type}&pattern=${encodeURIComponent(
+          v.or
+        )}`
       }
       return filters
     }

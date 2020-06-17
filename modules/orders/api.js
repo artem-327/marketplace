@@ -24,7 +24,8 @@ export default {
       responseType: 'blob'
     }),
   searchCompany: companyText => api.get(`/prodex/api/companies/search?pattern=${companyText}`),
-  searchProducts: productText => api.get(`/prodex/api/products/search?limit=30&search=${productText}`),
+  searchProducts: productText =>
+    api.get(`/prodex/api/products/search?limit=30&search=${encodeURIComponent(productText)}`),
   getLots: poId => api.get(`/prodex/api/product-offers/${poId}`),
   assignLots: (orderId, orderItemId, assignedLots) =>
     api.patch(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/assign-lots`, assignedLots),

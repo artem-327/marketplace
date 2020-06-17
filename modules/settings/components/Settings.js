@@ -26,7 +26,7 @@ import LogisticsPopup from './LogisticsTable/LogisticsPopup'
 import SystemSettings from '~/components/settings'
 
 import DocumentsTable from './Documents/DocumentManagerTable'
-import DocumentsPopup from './Documents/DocumentManagerPopup'
+import DocumentManagerSidebar from './Documents/DocumentManagerSidebar'
 
 import ClientCompanyTable from './ClientCompany/Table'
 import ClientCompanyPopup from './ClientCompany/Popup'
@@ -324,7 +324,7 @@ class Settings extends Component {
       'credit-cards': <CreditCardsPopup />,
       'guest-companies': <ClientCompanyPopup />,
       logistics: <LogisticsPopup />,
-      documents: <DocumentsPopup />
+      documents: <DocumentManagerSidebar />
     }
 
     const importForm = {

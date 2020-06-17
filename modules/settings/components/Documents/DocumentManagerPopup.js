@@ -253,12 +253,12 @@ class DocumentPopup extends Component {
                     />
                   </FormGroup>
 
-                  <RightAlignedGroup widths='equal'>
+                  {false && (<RightAlignedGroup widths='equal'>
                     <Checkbox
                       name='isTemporary'
                       label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
                     />
-                  </RightAlignedGroup>
+                  </RightAlignedGroup>)}
                   <ErrorFocus />
                 </Form>
               )
