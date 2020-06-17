@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { number } from 'prop-types'
+import { number, array } from 'prop-types'
 import { DatesRangeInput } from 'semantic-ui-calendar-react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { Menu, Button, Input, Grid, GridRow, GridColumn, Container, Tab } from 'semantic-ui-react'
 import { ChevronLeft, ChevronRight, Briefcase, Package, DollarSign } from 'react-feather'
 import {
@@ -16,35 +16,28 @@ import {
   PieChart,
   Pie,
   Sector,
-  Cell
+  Cell,
+  ResponsiveContainer
 } from 'recharts'
-
+//components
 import { getSafe } from '~/utils/functions'
-
+import { currency } from '~/constants/index'
+import PieGraph from './PieGraph'
+import LineGraph from './LineGraph'
+//styled
 import styled from 'styled-components'
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
-
-const RADIAN = Math.PI / 180
 //FIXME remove
 const data = [
   { name: 'Group A', value: 400 },
   { name: 'Group B', value: 300 },
   { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 }
+  { name: 'Group D', value: 200 },
+  { name: 'Group E', value: 400 },
+  { name: 'Group F', value: 300 },
+  { name: 'Group G', value: 300 },
+  { name: 'Group H', value: 200 }
 ]
-
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5
-  const x = cx + radius * Math.cos(-midAngle * RADIAN)
-  const y = cy + radius * Math.sin(-midAngle * RADIAN)
-
-  return (
-    <text x={x} y={y} fill='white' textAnchor={x > cx ? 'start' : 'end'} dominantBaseline='central'>
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  )
-}
 
 const CustomGrid = styled(Grid)`
   margin: 15px !important;
@@ -209,31 +202,6 @@ const GraphSubTitle = styled.div`
   margin-bottom: 10px;
 `
 
-const RectanglePieGraph = styled.div`
-  width: 100%;
-  height: 480px;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  border: solid 1px #dee2e6;
-  background-color: #ffffff;
-`
-
-const DivPieGraphHeader = styled.div`
-  width: 100%;
-  height: 55px;
-  border-bottom: solid 1px #dee2e6;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px;
-`
-
-const DivPieGraphTitle = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: #848893;
-`
-
 class Dashboard extends Component {
   state = {
     datesRange: '',
@@ -261,11 +229,28 @@ class Dashboard extends Component {
       totalProductOffersValue,
       graphDataTransactions,
       top10ProductGroups,
+      top10CompaniesByUsers,
+      top10CompaniesBySalesInLastYear,
+      top10CompaniesByCompanyProducts,
       intl: { formatMessage }
     } = this.props
-    console.log('top10ProductGroups====================================')
-    console.log(top10ProductGroups)
-    console.log('====================================')
+
+    const top4ProductGroups =
+      top10ProductGroups && top10ProductGroups.length > 4 ? top10ProductGroups.slice(0, 4) : top10ProductGroups
+    const top4CompaniesByUsers =
+      top10CompaniesByUsers && top10CompaniesByUsers.length > 4
+        ? top10CompaniesByUsers.slice(0, 4)
+        : top10CompaniesByUsers
+
+    const top4CompaniesBySalesInLastYear =
+      top10CompaniesBySalesInLastYear && top10CompaniesBySalesInLastYear.length > 4
+        ? top10CompaniesBySalesInLastYear.slice(0, 4)
+        : top10CompaniesBySalesInLastYear
+
+    const top4CompaniesByCompanyProducts =
+      top10CompaniesByCompanyProducts && top10CompaniesByCompanyProducts.length > 4
+        ? top10CompaniesByCompanyProducts.slice(0, 4)
+        : top10CompaniesByCompanyProducts
 
     const { activeTab } = this.state
     const panes = [
@@ -277,7 +262,14 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='users' attached={false}>
-            <UpperCaseText>{formatMessage({ id: 'dasboard.users', defaultMessage: 'USERS' })}</UpperCaseText>
+            <LineGraph
+              valuesInTitle={{ year: 2020 }}
+              data={graphDataTransactions}
+              title='Total Marketplace Transactions in {year}'
+              titleId='dasboard.transactions.graph.title'
+              subTitle='in thousand dollars'
+              subTitleId='dasboard.transactions.graph.subtitle'
+            />{' '}
           </TabPane>
         )
       },
@@ -289,7 +281,14 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='products' attached={false}>
-            <UpperCaseText>{formatMessage({ id: 'dasboard.products', defaultMessage: 'PRODUCTS' })}</UpperCaseText>
+            <LineGraph
+              valuesInTitle={{ year: 2020 }}
+              data={graphDataTransactions}
+              title='Total Marketplace Transactions in {year}'
+              titleId='dasboard.transactions.graph.title'
+              subTitle='in thousand dollars'
+              subTitleId='dasboard.transactions.graph.subtitle'
+            />{' '}
           </TabPane>
         )
       },
@@ -303,41 +302,14 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='transactions' attached={false}>
-            <DivGraph>
-              <GraphTitle>
-                <FormattedMessage
-                  id='dasboard.transactions.graph.title'
-                  defaultMessage={`Total Marketplace Transactions in {year}`}
-                  values={{
-                    year: 2020 // FIXME
-                  }}
-                />
-              </GraphTitle>
-              <GraphSubTitle>
-                <FormattedMessage id='dasboard.transactions.graph.subtitle' defaultMessage='in thousand dollars' />
-              </GraphSubTitle>
-              <LineChart
-                width={530}
-                height={340}
-                data={graphDataTransactions}
-                margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-                <Area legendType='none' />
-                <XAxis tickLine={false} dataKey='name' axisLine={false} />
-                <YAxis unit='$' tickLine={false} axisLine={false} />
-                <CartesianGrid vertical={false} strokeDasharray='2 10' />
-                <Tooltip />
-                <Legend />
-                <Line
-                  strokeWidth={2}
-                  dot={{ strokeWidth: 2 }}
-                  legendType='circle'
-                  type='linear'
-                  dataKey='Transactions'
-                  stroke='#2599d5'
-                  activeDot={{ r: 8 }}
-                />
-              </LineChart>
-            </DivGraph>
+            <LineGraph
+              valuesInTitle={{ year: 2020 }}
+              data={graphDataTransactions}
+              title='Total Marketplace Transactions in {year}'
+              titleId='dasboard.transactions.graph.title'
+              subTitle='in thousand dollars'
+              subTitleId='dasboard.transactions.graph.subtitle'
+            />
           </TabPane>
         )
       }
@@ -407,7 +379,7 @@ class Dashboard extends Component {
               </RectangleSummaryBottom>
             </RectangleSummary>
           </Grid.Column>
-          <Grid.Column width={6}>
+          <Grid.Column width={5}>
             <RectangleSummary>
               <RectangleSummaryHeader>
                 <DivIcon>
@@ -442,32 +414,42 @@ class Dashboard extends Component {
             </DivContainerGraph>
           </Grid.Column>
 
-          <Grid.Column width={6}>
-            <RectanglePieGraph>
-              <DivPieGraphHeader>
-                <DivPieGraphTitle>
-                  <FormattedMessage id='dasboard.popularProducts.title' defaultMessage='POPULAR PRODUCTS' />
-                </DivPieGraphTitle>
-                <ButtonViewAll type='button'>View all</ButtonViewAll>
-              </DivPieGraphHeader>
-              <div>
-                <PieChart width={800} height={400}>
-                  <Pie
-                    legendType='circle'
-                    label={renderCustomizedLabel}
-                    data={data} // FIXME top10ProductGroups
-                    cx={200}
-                    cy={200}
-                    outerRadius={80}
-                    dataKey='value'
-                    fill='#8884d8'>
-                    {data && // FIXME top10ProductGroups
-                      data.length &&
-                      data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-                  </Pie>
-                </PieChart>
-              </div>
-            </RectanglePieGraph>
+          <Grid.Column width={5}>
+            <PieGraph
+              isCurrency={true}
+              data={top4ProductGroups}
+              title='POPULAR PRODUCTS'
+              titleId='dasboard.popularProducts.title'
+            />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={5}>
+            <PieGraph
+              innerRadius='30%'
+              valueLegend='users'
+              data={top4CompaniesByUsers}
+              title='COMPANIES BY USERS'
+              titleId='dasboard.companiesUsers.title'
+            />
+          </Grid.Column>
+          <Grid.Column width={5}>
+            <PieGraph
+              innerRadius='30%'
+              data={top4CompaniesByCompanyProducts}
+              title='COMPANIES BY PRODUCTS'
+              titleId='dasboard.companiesProducts.title'
+            />
+          </Grid.Column>
+          <Grid.Column width={5}>
+            <PieGraph
+              innerRadius='30%'
+              isCurrency={true}
+              valueLegend='/year'
+              data={top4CompaniesBySalesInLastYear}
+              title='COMPANIES BY TRANSACTIONS'
+              titleId='dasboard.companiesTransactions.title'
+            />
           </Grid.Column>
         </Grid.Row>
       </CustomGrid>
@@ -477,12 +459,20 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   totalCompaniesCount: number,
-  totalCompaniesCount: number
+  totalCompaniesCount: number,
+  top10ProductGroups: array,
+  top10CompaniesByUsers: array,
+  top10CompaniesByCompanyProducts: array,
+  top10CompaniesBySalesInLastYear: array
 }
 
 Dashboard.defaultProps = {
   totalCompaniesCount: 0,
-  totalCompaniesCount: 0
+  totalCompaniesCount: 0,
+  top10ProductGroups: [],
+  top10ProductGroups: [],
+  top10CompaniesByCompanyProducts: [],
+  top10CompaniesBySalesInLastYear: []
 }
 
 export default injectIntl(Dashboard)

@@ -18,9 +18,24 @@ function mapStateToProps(store) {
     companySumOfPurchasesMonthly: getSafe(() => data.companySumOfPurchasesMonthly, ''),
     companySumOfSalesMonthly: getSafe(() => data.companySumOfSalesMonthly, ''),
     top10Buyers: getSafe(() => data.top10Buyers, ''),
-    top10CompaniesByCompanyProducts: getSafe(() => data.top10CompaniesByCompanyProducts, ''),
-    top10CompaniesBySalesInLastYear: getSafe(() => data.top10CompaniesBySalesInLastYear, ''),
-    top10CompaniesByUsers: getSafe(() => data.top10CompaniesByUsers, ''),
+    top10CompaniesByCompanyProducts: getSafe(() => data.top10CompaniesByCompanyProducts, '')
+      ? Object.entries(data.top10CompaniesByCompanyProducts).map(([name, value]) => ({
+          name,
+          value
+        }))
+      : [],
+    top10CompaniesBySalesInLastYear: getSafe(() => data.top10CompaniesBySalesInLastYear, '')
+      ? Object.entries(data.top10CompaniesBySalesInLastYear).map(([name, value]) => ({
+          name,
+          value: Math.round(value / 1000)
+        }))
+      : [],
+    top10CompaniesByUsers: getSafe(() => data.top10CompaniesByUsers, '')
+      ? Object.entries(data.top10CompaniesByUsers).map(([name, value]) => ({
+          name,
+          value
+        }))
+      : [],
     top10CompanyProductsByQuantitySales: getSafe(() => data.top10CompanyProductsByQuantitySales, ''),
     top10CompanyProductsByValueSales: getSafe(() => data.top10CompanyProductsByValueSales, ''),
     totalBroadcastedProductOffersValue: getSafe(() => data.totalBroadcastedProductOffersValue, ''),
@@ -39,7 +54,6 @@ function mapStateToProps(store) {
     ) : (
       0
     ),
-    totalSumOfSalesMonthly: getSafe(() => data.totalSumOfSalesMonthly, ''),
     totalUsersCount: getSafe(() => data.totalUsersCount, ''),
     loading: getSafe(() => data.loading, ''),
     graphDataTransactions: getSafe(() => data.totalSumOfSalesMonthly, '')
@@ -47,13 +61,13 @@ function mapStateToProps(store) {
           name,
           Transactions: Math.round(value / 1000)
         }))
-      : '',
+      : [],
     top10ProductGroups: getSafe(() => data.top10ProductGroups, '')
       ? Object.entries(data.top10ProductGroups).map(([name, value]) => ({
           name,
           value: Math.round(value / 1000)
         }))
-      : ''
+      : []
   }
 }
 

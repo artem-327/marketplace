@@ -2411,5 +2411,8 @@
   "dashboard.title": "Analytics Dashboard",
   "dasboard.transactions.graph.title": "Total Marketplace Transactions in {year}",
   "dasboard.transactions.graph.subtitle": "in thousand dollars",
-  "dasboard.popularProducts.title": "POPULAR PRODUCTS"
+  "dasboard.popularProducts.title": "POPULAR PRODUCTS",
+  "dasboard.companiesUser.title": "COMPANIES BY USERS",
+  "dasboard.companiesProducts.title": "COMPANIES BY PRODUCTS",
+  "dasboard.companiesTransactions.title": "COMPANIES BY TRANSACTIONS"
 }
