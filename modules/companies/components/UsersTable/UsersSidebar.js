@@ -16,7 +16,7 @@ import { CheckboxWithValue } from '~/components/custom-formik'
 import { Field as FormikField } from 'formik'
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 //import { currency } from '~/constants/index'
 import { currencyId } from '~/constants/index'
 import { PhoneNumber } from '~/modules/phoneNumber'
@@ -162,7 +162,7 @@ class UsersSidebar extends React.Component {
         email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
         additionalBranches: Yup.array(),
         jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
-        phone: Yup.string().trim().min(3, errorMessages.minLength(3)),
+        phone: phoneValidation(),
         ...(requiredCompany && {
           company: Yup.number().required(errorMessages.requiredMessage)
         }),

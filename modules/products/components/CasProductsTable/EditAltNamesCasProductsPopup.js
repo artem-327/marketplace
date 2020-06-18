@@ -12,7 +12,8 @@ import {
   FormField,
   Message,
   Icon,
-  Popup
+  Popup,
+  Form
 } from 'semantic-ui-react'
 import { FieldArray } from 'formik'
 import { FormattedMessage } from 'react-intl'
@@ -23,8 +24,18 @@ import {
   updateProductName,
   deleteProductName
 } from '../../actions'
-import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
+
+import { Formik } from 'formik'
+import { Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
 import { getSafe } from '~/utils/functions'
+import styled from 'styled-components'
+
+const StyledModalContent = styled(Modal.Content)`
+  max-height: calc(80vh - 10em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px;
+`
 
 const initialFormValues = {
   casAlternativeNames: [{}]
@@ -119,137 +130,140 @@ class EditAltNamesCasProductsPopup extends React.Component {
     const { initialState } = this.state
 
     return (
-      <Modal closeIcon onClose={() => closeEditPopup()} open centered={false}>
-        <Modal.Header>
-          <FormattedMessage id='global.edit' defaultMessage='Edit' /> {'Edit'}
-        </Modal.Header>
-        <Modal.Content>
-          <Form
-            enableReinitialize
-            initialValues={{ ...initialFormValues, ...initialState }}
-            loading={loading}
-            onReset={closeEditPopup}>
-            {({ values, errors, setFieldValue }) => (
-              <>
-                <FieldArray
-                  name='casAlternativeNames'
-                  render={arrayHelpers => (
-                    <>
-                      <Message attached='top' className='header-table-fields'>
-                        <Button
-                          type='button'
-                          data-test='admin_popup_alt_cas_name_add_btn'
-                          icon='plus'
-                          color='blue'
-                          size='small'
-                          floated='right'
-                          style={{ marginTop: '-0.5em' }}
-                          onClick={() => this.handleAddName(arrayHelpers)}
-                        />
-                        {`${popupValues.data.casNumber} ${popupValues.data.casIndexName}`}
-                      </Message>
+      <Formik
+        enableReinitialize
+        initialValues={{ ...initialFormValues, ...initialState }}
+        onReset={closeEditPopup}
+        onSubmit={() => {}}
+      >
+        {({ values, errors, setFieldValue }) => (
+          <Modal closeIcon onClose={() => closeEditPopup()} open centered={false}>
+            <Modal.Header>
+              <FormattedMessage id='admin.editAlternativeNames' defaultMessage='Edit Alternative Names' />
+            </Modal.Header>
+              <Form loading={loading}>
+                <StyledModalContent>
+                  <FieldArray
+                    name='casAlternativeNames'
+                    render={arrayHelpers => (
+                      <>
+                        <Message attached='top' className='header-table-fields'>
+                          <Button
+                            type='button'
+                            data-test='admin_popup_alt_cas_name_add_btn'
+                            icon='plus'
+                            color='blue'
+                            size='small'
+                            floated='right'
+                            style={{ marginTop: '-0.5em' }}
+                            onClick={() => this.handleAddName(arrayHelpers)}
+                          />
+                          {`${popupValues.data.casNumber} ${popupValues.data.casIndexName}`}
+                        </Message>
 
-                      <Table attached='bottom' className='table-fields'>
-                        <Table.Header>
-                          <Table.Row>
-                            <TableHeaderCell>
-                              <FormattedMessage id='admin.alternativeName' defaultMessage='Alternative Name' />
-                            </TableHeaderCell>
-                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
-                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
-                          </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                          {values && values.casAlternativeNames.length
-                            ? values.casAlternativeNames.map((val, index, vals) => (
-                                <Table.Row key={index}>
-                                  <TableCell width={16}>
-                                    <FormField data-test='admin_popup_alt_cas_name_inp'>
-                                      <Input
-                                        name={`casAlternativeNames[${index}].alternativeName`}
-                                        inputProps={{
-                                          onChange: (e, d) => {
-                                            const { color, description, canSave } = nameValidation(
-                                              index,
-                                              d.value.trim(),
-                                              vals
-                                            )
-                                            setFieldValue(`casAlternativeNames[${index}].color`, color)
-                                            setFieldValue(`casAlternativeNames[${index}].description`, description)
-                                            setFieldValue(`casAlternativeNames[${index}].canSave`, canSave)
+                        <Table attached='bottom' className='table-fields'>
+                          <Table.Header>
+                            <Table.Row>
+                              <TableHeaderCell>
+                                <FormattedMessage id='admin.alternativeName' defaultMessage='Alternative Name' />
+                              </TableHeaderCell>
+                              <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                              <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                            </Table.Row>
+                          </Table.Header>
+                          <Table.Body>
+                            {values && values.casAlternativeNames.length
+                              ? values.casAlternativeNames.map((val, index, vals) => (
+                                  <Table.Row key={index}>
+                                    <TableCell width={16}>
+                                      <FormField data-test='admin_popup_alt_cas_name_inp'>
+                                        <Input
+                                          name={`casAlternativeNames[${index}].alternativeName`}
+                                          inputProps={{
+                                            onChange: (e, d) => {
+                                              const { color, description, canSave } = nameValidation(
+                                                index,
+                                                d.value.trim(),
+                                                vals
+                                              )
+                                              setFieldValue(`casAlternativeNames[${index}].color`, color)
+                                              setFieldValue(`casAlternativeNames[${index}].description`, description)
+                                              setFieldValue(`casAlternativeNames[${index}].canSave`, canSave)
+                                            }
+                                          }}
+                                        />
+                                      </FormField>
+                                    </TableCell>
+                                    <TableCell width={1}>
+                                      {val.description ? (
+                                        <Popup
+                                          content={val.description}
+                                          trigger={
+                                            <Icon
+                                              name='save outline'
+                                              size='large'
+                                              onClick={() => {
+                                                if (val.canSave === true) {
+                                                  this.handleSaveName(popupValues.data.id, val, index)
+                                                  setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
+                                                  setFieldValue(`casAlternativeNames[${index}].description`, '')
+                                                  setFieldValue(`casAlternativeNames[${index}].canSave`, false)
+                                                }
+                                              }}
+                                              color={val.color}
+                                              data-test={`admin_popup_alt_cas_name_${index}_save`}
+                                            />
                                           }
-                                        }}
-                                      />
-                                    </FormField>
-                                  </TableCell>
-                                  <TableCell width={1}>
-                                    {val.description ? (
-                                      <Popup
-                                        content={val.description}
-                                        trigger={
-                                          <Icon
-                                            name='save outline'
-                                            size='large'
-                                            onClick={() => {
-                                              if (val.canSave === true) {
-                                                this.handleSaveName(popupValues.data.id, val, index)
-                                                setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
-                                                setFieldValue(`casAlternativeNames[${index}].description`, '')
-                                                setFieldValue(`casAlternativeNames[${index}].canSave`, false)
-                                              }
-                                            }}
-                                            color={val.color}
-                                            data-test={`admin_popup_alt_cas_name_${index}_save`}
-                                          />
-                                        }
-                                      />
-                                    ) : (
+                                        />
+                                      ) : (
+                                        <Icon
+                                          name='save outline'
+                                          size='large'
+                                          onClick={() => {
+                                            if (val.canSave === true) {
+                                              this.handleSaveName(popupValues.data.id, val, index)
+                                              setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
+                                              setFieldValue(`casAlternativeNames[${index}].description`, '')
+                                              setFieldValue(`casAlternativeNames[${index}].canSave`, false)
+                                            }
+                                          }}
+                                          color={val.color}
+                                          data-test={`admin_popup_alt_cas_name_${index}_save`}
+                                        />
+                                      )}
+                                    </TableCell>
+                                    <TableCell width={1}>
                                       <Icon
-                                        name='save outline'
+                                        name='trash alternate outline'
                                         size='large'
-                                        onClick={() => {
-                                          if (val.canSave === true) {
-                                            this.handleSaveName(popupValues.data.id, val, index)
-                                            setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
-                                            setFieldValue(`casAlternativeNames[${index}].description`, '')
-                                            setFieldValue(`casAlternativeNames[${index}].canSave`, false)
-                                          }
-                                        }}
-                                        color={val.color}
-                                        data-test={`admin_popup_alt_cas_name_${index}_save`}
+                                        onClick={() =>
+                                          this.handleDeleteName(popupValues.data.id, arrayHelpers, val, index)
+                                        }
+                                        data-test={`admin_popup_alt_cas_name_${index}_delete`}
                                       />
-                                    )}
-                                  </TableCell>
-                                  <TableCell width={1}>
-                                    <Icon
-                                      name='trash alternate outline'
-                                      size='large'
-                                      onClick={() =>
-                                        this.handleDeleteName(popupValues.data.id, arrayHelpers, val, index)
-                                      }
-                                      data-test={`admin_popup_alt_cas_name_${index}_delete`}
-                                    />
-                                  </TableCell>
-                                </Table.Row>
-                              ))
-                            : null}
-                        </Table.Body>
-                      </Table>
-                    </>
-                  )}
-                />
-                <div style={{ textAlign: 'right' }}>
-                  <Button.Reset data-test='admin_popup_alt_cas_name_close_btn'>
-                    <FormattedMessage id='global.close' defaultMessage='Close'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button.Reset>
-                </div>
-              </>
-            )}
-          </Form>
-        </Modal.Content>
-      </Modal>
+                                    </TableCell>
+                                  </Table.Row>
+                                ))
+                              : null}
+                          </Table.Body>
+                        </Table>
+                      </>
+                    )}
+                  />
+                </StyledModalContent>
+              </Form>
+            <Modal.Actions>
+              <div>
+                <Button.Reset data-test='admin_popup_alt_cas_name_close_btn'>
+                  <FormattedMessage id='global.close' defaultMessage='Close'>
+                    {text => text}
+                  </FormattedMessage>
+                </Button.Reset>
+              </div>
+            </Modal.Actions>
+          </Modal>
+        )}
+      </Formik>
     )
   }
 }
