@@ -12,6 +12,15 @@ import { FormattedMessage } from 'react-intl'
 
 import { errorMessages } from '~/constants/yupValidation'
 
+import styled from 'styled-components'
+const StyledModalContent = styled(Modal.Content)`
+  max-height: calc(80vh - 10em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px;
+`
+
+
 class AddEditCasProductsPopup extends React.Component {
   render() {
     const { closeAddPopup, popupValues, config, postNewCasProductRequest, updateCasProductRequest } = this.props
@@ -22,11 +31,10 @@ class AddEditCasProductsPopup extends React.Component {
         casProduct={popupValues}
         header={
           <Modal.Header>
-            <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`}>{text => text}</FormattedMessage>{' '}
-            {popupValues ? 'Edit' : 'Add'}
+            <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`}>{text => text}</FormattedMessage>
           </Modal.Header>
         }
-        contentWrapper={children => <Modal.Content>{children}</Modal.Content>}
+        contentWrapper={children => <StyledModalContent>{children}</StyledModalContent>}
         actionsWrapper={children => <Modal.Actions>{children}</Modal.Actions>}
         wrapper={<Modal closeIcon onClose={() => closeAddPopup()} open centered={false} />}
         onClose={closeAddPopup}
