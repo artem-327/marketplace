@@ -11,6 +11,8 @@ import ProdexTable from '~/components/table'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
 const columns = [
+  { name: 'logisticsProviderNameForSearch', disabled: true },
+  { name: 'usernameForSearch', disabled: true },
   {
     name: 'logisticsProviderName',
     title: (
@@ -43,18 +45,22 @@ class LogisticsTable extends Component {
       loading,
       intl: { formatMessage },
       deleteLogisticsAccount,
-      toastManager
+      toastManager,
+      filterValue
     } = this.props
 
     return (
       <ProdexTable
         columns={columns}
+        filterValue={filterValue}
         rows={logisticsAccounts.map(acc => ({
           ...acc,
-          logisticsProviderName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {acc.provider.name}
-          </div>,
-          username: <ArrayToFirstItem values={acc.accountInfos && acc.accountInfos.map(d => d.username)} />
+          logisticsProviderName: (
+            <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{acc.provider.name}</div>
+          ),
+          username: <ArrayToFirstItem values={acc.accountInfos && acc.accountInfos.map(d => d.username)} />,
+          logisticsProviderNameForSearch: acc.provider.name,
+          usernameForSearch: acc.accountInfos && acc.accountInfos.map(d => d.username)
         }))}
         loading={loading}
         rowActions={[
@@ -103,11 +109,13 @@ const mapDispatchToProps = {
   deleteLogisticsAccount
 }
 
-const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount } }) => {
-  return ({
-  loading,
-  logisticsAccounts,
-  deleteLogisticsAccount
-})}
+const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount, filterValue } }) => {
+  return {
+    loading,
+    logisticsAccounts,
+    deleteLogisticsAccount,
+    filterValue
+  }
+}
 
 export default withToastManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(LogisticsTable)))
