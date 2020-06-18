@@ -102,7 +102,7 @@ class DatagridProvider extends Component {
     this.setState({ loading: true })
 
     //if is filtering and is not scroll to end or if is not any filter and is not scroll to end we need to set pageNumber to 0
-    const pageNumber =
+    let pageNumber =
       (getSafe(() => datagridParams.filters.length, false) && !isScrollToEnd && !isScrollToUp) ||
       (getSafe(() => datagridParams.orFilters.length, false) && !isScrollToEnd && !isScrollToUp) ||
       (!getSafe(() => datagridParams.filters.length, false) &&
@@ -116,6 +116,10 @@ class DatagridProvider extends Component {
 
     if (datagridParams.sortDirection) {
       datagridParams.sortDirection = datagridParams.sortDirection.toUpperCase()
+    }
+
+    if (pageNumber < 0) {
+      pageNumber = 0
     }
 
     try {
@@ -186,18 +190,28 @@ class DatagridProvider extends Component {
   }
 
   onScrollToEnd = (overBottoms = 0) => {
-    const overPage = this.state.datagridParams.pageNumber === 1 ? 0 : overBottoms - 1
+    const overPage =
+      !this.props.autoRefresh || (this.state.datagridParams.pageNumber === 1 && overBottoms <= 1) ? 0 : overBottoms - 1
     this.setState({
       isScrollToEnd: true
     })
     this.loadNextPageSafe(overPage)
   }
 
-  onScrollToUp = (overTops = 0) => {
+  onScrollOverNewEnd = (overBottoms = 0) => {
+    const overPage = overBottoms <= 1 ? 0 : overBottoms - 1
+    this.setState({
+      isScrollToEnd: true
+    })
+    this.props.autoRefresh && this.loadNextPage(overPage)
+  }
+
+  onScrollOverNewUp = (overTops = 0) => {
+    const overPage = this.state.allLoaded ? overTops : overTops - 1
     this.setState({
       isScrollToUp: true
     })
-    this.loadNextPage(this.state.allLoaded ? overTops : overTops - 1)
+    this.props.autoRefresh && this.loadNextPage(overPage)
   }
 
   loadNextPageSafe = (overPage = 0) => {
@@ -354,7 +368,8 @@ class DatagridProvider extends Component {
             onTableReady: this.onTableReady,
             onSortingChange: this.setSorting,
             onScrollToEnd: this.onScrollToEnd,
-            onScrollToUp: this.onScrollToUp
+            onScrollOverNewEnd: this.onScrollOverNewEnd,
+            onScrollOverNewUp: this.onScrollOverNewUp
           }
         }}>
         {this.props.children}

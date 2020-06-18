@@ -332,7 +332,8 @@ class _Table extends Component {
     tableName: pt.string,
     singleSelection: pt.bool,
     onScrollToEnd: pt.func,
-    onScrollToUp: pt.func,
+    onScrollOverNewEnd: pt.func,
+    onScrollOverNewUp: pt.func,
     onRowClick: pt.func,
     onSortingChange: pt.func,
     onTableReady: pt.func,
@@ -364,7 +365,8 @@ class _Table extends Component {
     singleSelection: false,
     onSelectionChange: () => {},
     onScrollToEnd: () => {},
-    onScrollToUp: () => {},
+    onScrollOverNewEnd: () => {},
+    onScrollOverNewUp: () => {},
     onTableReady: () => {},
     getChildRows: () => {},
     defaultSorting: null,
@@ -403,67 +405,90 @@ class _Table extends Component {
   }
 
   handleScroll = ({ target }) => {
-    const { onScrollToEnd, onScrollToUp } = this.props
-    const { newTop, newBottom, pageSize } = this.state //TODO declare to state
+    const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd } = this.props
+    const { newTop, newBottom } = this.state
     const { scrollLeft } = target
+
+    if (this.state.scrollLeft !== scrollLeft) {
+      this.setState({ scrollLeft }, () => this.forceUpdate())
+    }
+    //Get position of scroll and height scroll area
     const scrollviewOffsetY = target.scrollTop
     const scrollviewFrameHeight = target.clientHeight
     const scrollviewContentHeight = target.scrollHeight
     const sum = scrollviewOffsetY + scrollviewFrameHeight
 
-    if (this.state.scrollLeft !== scrollLeft) {
-      this.setState({ scrollLeft }, () => this.forceUpdate())
-    }
+    //Get height header row and height row and calculate page size. In almost all tables it is 2000px = 1 page = 50 rows without header
+    const elementRowHeader = document.getElementsByClassName('dx-g-bs4-header-cell')
+    const elementRow = document.getElementsByTagName('tr')
+    const heightHeaderRow = elementRowHeader && elementRowHeader.length ? elementRowHeader[0].offsetHeight : 41 // this is default height header row
+    const heightRow = elementRow && elementRow.length ? elementRow[0].offsetHeight : 41 // this is default height row
+    const pageSize = heightRow * 50 - heightHeaderRow // 50 is default rows from datagrid endpoint
+
     let tops = 0
     let bottoms = 0
+    //Calculate how many top borders (pages {1 page = 50 rows}) user skipped (scroll)
     if (newTop && sum && pageSize) {
       tops = Math.ceil((newTop - sum) / pageSize) > 0 ? Math.ceil((newTop - sum) / pageSize) : 1
     }
+    //Calculate how many bottom borders (pages {1 page = 50 rows}) user skipped (scroll)
     if (newBottom && sum && pageSize) {
       bottoms = Math.floor((newBottom - sum) / pageSize) < 0 ? Math.floor((newBottom - sum) / pageSize) * -1 : 1
     }
-
-    if (sum <= newTop) {
-      this.setState({
-        newTop: newTop - pageSize * tops > 0 ? newTop - pageSize * tops : 0,
-        newBottom:
-          tops < 1 ? newTop : newTop - pageSize * (tops - 1) > pageSize ? newTop - pageSize * (tops - 1) : pageSize
-      })
-      onScrollToUp(tops * -1)
-    } else if (sum >= scrollviewContentHeight - 50) {
-      const newHeight = pageSize ? pageSize : scrollviewContentHeight
-      const newTop = !newBottom
-        ? scrollviewContentHeight
-        : newBottom > 1
+    // Upload new data if user scroll the end of a table and create new Top border and new Bottom border in a table
+    if (
+      (scrollviewContentHeight >= pageSize && sum >= scrollviewContentHeight - 50 && !newBottom) ||
+      (scrollviewContentHeight >= pageSize &&
+        sum >= scrollviewContentHeight - 50 &&
+        scrollviewContentHeight >= newBottom)
+    ) {
+      //Calculate new Top border and new Bottom border in a table
+      const top = !newBottom
+        ? pageSize
+        : bottoms > 1
         ? newBottom + pageSize * (bottoms - 1)
+        : scrollviewContentHeight < newBottom
+        ? newTop
         : newBottom
-      const newBottom = !newBottom ? scrollviewContentHeight + newHeight : newBottom + pageSize * bottoms
-      this.setState({
-        pageSize: pageSize ? pageSize : scrollviewContentHeight,
-        newTop,
-        newBottom
-      })
-      onScrollToEnd(bottoms > 0 ? bottoms : 0)
-    } else if (sum >= newBottom - 50) {
-      this.setState({
-        newTop: newBottom > 1 ? newBottom + pageSize * (bottoms - 1) : newBottom,
-        newBottom: newBottom + pageSize * bottoms
-      })
+
+      const bottom = !newBottom
+        ? scrollviewContentHeight + pageSize
+        : scrollviewContentHeight < newBottom
+        ? scrollviewContentHeight
+        : newBottom + pageSize * bottoms
+      //Call to DatagridProvider and there add bottoms to pageNumber
       onScrollToEnd(bottoms)
+
+      this.setState({
+        newTop: top,
+        newBottom: bottom
+      })
+    } // If user scrolls over new Bottom border then reload data in a table from specific page number
+    else if (sum >= newBottom - 50) {
+      //Calculate new Top border and new Bottom border in a table
+      const top = newBottom > 1 ? newBottom + pageSize * (bottoms - 1) : newBottom
+      const bottom = newBottom + pageSize * bottoms
+      //Call to DatagridProvider and there add bottoms to pageNumber
+      onScrollOverNewEnd(bottoms)
+
+      this.setState({
+        newTop: top,
+        newBottom: bottom
+      })
+    } // If user scrolls over new Top border then reload data in a table from specific page number
+    else if (sum <= newTop) {
+      //Calculate new Top border and new Bottom border in a table
+      const top = newTop - pageSize * tops > 0 ? newTop - pageSize * tops : 0
+      const bottom =
+        tops < 1 ? newTop : newTop - pageSize * (tops - 1) > pageSize ? newTop - pageSize * (tops - 1) : pageSize
+      //Call to DatagridProvider and there add tops to pageNumber
+      onScrollOverNewUp(tops * -1)
+
+      this.setState({
+        newTop: top,
+        newBottom: bottom
+      })
     }
-
-    // if (target.offsetHeight + target.scrollTop >= target.scrollHeight - 50) {
-    //   console.log('7target.offsetHeight====================================')
-    //   console.log(target.offsetHeight)
-    //   console.log('====================================')
-    //   console.log('8target.scrollTop====================================')
-    //   console.log(target.scrollTop)
-    //   console.log('====================================')
-    //   console.log('9target.scrollHeight====================================')
-    //   console.log(target.scrollHeight)
-    //   console.log('====================================')
-
-    // }
   }
 
   componentDidUpdate(prevProps) {
