@@ -127,23 +127,30 @@ class Broadcast extends Component {
       this.saveBroadcastRules()
     }
 
-    if (oldProps.loadedRulesTrig !== loadedRulesTrig && broadcastTemplateName) {
-      const dataId = getSafe(() => templates.find(el => el.name === broadcastTemplateName).id, null)
-      if (dataId !== null) {
-        if (this.setFieldValue) this.setFieldValue('templates', dataId)
+    if (oldProps.loadedRulesTrig !== loadedRulesTrig) {
+      let name = broadcastTemplateName
+      let dataId = broadcastTemplateName
+        ? getSafe(() => templates.find(el => el.name === broadcastTemplateName).id, null)
+        : null
 
-        this.setState({
-          ...this.state,
-          selectedTemplate: {
-            id: dataId,
-            name: broadcastTemplateName
-          },
-          templateInitialValues: {
-            name: broadcastTemplateName,
-            templates: dataId
-          }
-        })
+      if (dataId === null) {
+        dataId = ''
+        name = ''
       }
+
+      if (this.setFieldValue) this.setFieldValue('templates', dataId)
+
+      this.setState({
+        ...this.state,
+        selectedTemplate: {
+          id: dataId,
+          name: name
+        },
+        templateInitialValues: {
+          name: name,
+          templates: dataId
+        }
+      })
     }
   }
 
