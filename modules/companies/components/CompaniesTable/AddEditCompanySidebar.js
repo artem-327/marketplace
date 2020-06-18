@@ -78,7 +78,9 @@ const initialFormValues = {
   website: '',
   primaryUser: {
     name: '',
-    email: ''
+    email: '',
+    jobTitle: '',
+    phone: ''
   },
   primaryBranch: {
     deliveryAddress: {
@@ -150,6 +152,7 @@ class AddEditCompanySidebar extends React.Component {
       let validation = Yup.object().shape({
         name: Yup.string().trim().min(2, minLength).required(minLength),
         website: websiteValidationNotRequired(),
+        phone: phoneValidation(),
 
         mailingBranch: Yup.lazy(() => {
           if (mailingBranchRequired)
@@ -161,7 +164,7 @@ class AddEditCompanySidebar extends React.Component {
                   .email(errorMessages.invalidEmail)
                   .required(errorMessages.invalidEmail),
                 contactName: Yup.string().trim().min(2, minLength).required(minLength),
-                contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
+                contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
                 address: addressValidationSchema()
               })
             })
@@ -181,7 +184,8 @@ class AddEditCompanySidebar extends React.Component {
           // if (primaryUserRequired)
           return Yup.object().shape({
             email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-            name: Yup.string().trim().min(2, minLength).required(minLength)
+            name: Yup.string().trim().min(2, minLength).required(minLength),
+            phone: phoneValidation()
           })
           // return Yup.mixed().notRequired()
         })

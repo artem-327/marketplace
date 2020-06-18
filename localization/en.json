@@ -454,6 +454,8 @@
   "global.phoneNumber": "Phone Number",
   "global.phoneCCC": "+CCC",
   "global.phone": "Phone",
+  "global.phoneNumberRequired": "Phone number required",
+  "global.phoneCountryCodeRequired": "Phone country code required",
   "global.homeBranch": "Home Branch",
   "global.additionalBranches": "Additional Branches",
   "global.jobTitle": "Job Title",
