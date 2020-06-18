@@ -20,9 +20,20 @@ import { getStringISODate } from '~/components/date-format'
 import Router from 'next/router'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
-
+import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
+import { UploadCloud } from 'react-feather'
+import get from 'lodash/get'
 
+
+export const CustomA = styled.a`
+  font-weight: bold;
+  color: #2599d5;
+`
+
+export const CustomDiv = styled.div`
+  padding: 1em;
+`
 
 const CustomSegment = styled(Segment)`
   background-color: #f8f9fb !important;
@@ -97,7 +108,7 @@ const CustomForm = styled(Form)`
   }
 `
 
-const CustomDiv = styled.div`
+const BottomButtons = styled.div`
   text-align: right;
   z-index: 1;
   padding: 10px 25px;
@@ -130,7 +141,7 @@ const validationSchema = Yup.lazy(values => {
     })
   }
 
-  if (!values.id) var conditionalValidations = { file: Yup.string().required(errorMessages.requiredMessage) }
+  if (!values.id) var conditionalValidations = { files: Yup.array().required(errorMessages.requiredMessage) }
   else {
     var conditionalValidations = {
       othersPermissions: Yup.string().required(errorMessages.requiredMessage),
@@ -152,7 +163,7 @@ const initialValues = {
   documentType: {
     id: ''
   },
-  file: ''
+  files: ''
 }
 
 const RightAlignedGroup = styled(FormGroup)`
@@ -208,7 +219,10 @@ class DocumentManagerSidebar extends Component {
             if (edit) {
               await updateAttachment(values.id, { ...payload, type: values.documentType.id })
             } else {
-              await addAttachment(values.file, values.documentType.id, payload)
+              values.files.forEach(async file => {
+                  await addAttachment(file, values.documentType.id, payload)
+                }
+              )
             }
           } catch (e) {
             console.error(e)
@@ -222,6 +236,9 @@ class DocumentManagerSidebar extends Component {
           this.submitForm = submitForm
           this.values = values
           this.setFieldValue = setFieldValue
+
+          const errorFiles = get(errors, 'files', null)
+
           return (
             <CustomForm>
               <FlexSidebar
@@ -276,7 +293,7 @@ class DocumentManagerSidebar extends Component {
                         }}
                         name='customName'
                         label={
-                          <FormattedMessage id='global.customName' defaultMessage='Custom Name'>
+                          <FormattedMessage id='global.docName' defaultMessage='Document Name'>
                             {text => text}
                           </FormattedMessage>
                         }
@@ -302,17 +319,6 @@ class DocumentManagerSidebar extends Component {
 
                     <FormGroup widths='equal'>
                       <DateInput
-                        name='expirationDate'
-                        label={
-                          <FormattedMessage id='global.expDate' defaultMessage='Expiration Date'>
-                            {text => text}
-                          </FormattedMessage>
-                        }
-                        inputProps={{
-                          clearable: true
-                        }}
-                      />
-                      <DateInput
                         name='issuedAt'
                         label={
                           <FormattedMessage id='global.issuedDate' defaultMessage='Issued Date'>
@@ -324,6 +330,43 @@ class DocumentManagerSidebar extends Component {
                           clearable: true
                         }}
                       />
+                      <Input
+                        inputProps={{
+                          placeholder: formatMessage({
+                            id: 'settings.documents.enterIssuerName',
+                            defaultMessage: 'Enter issuer name'
+                          })
+                        }}
+                        name='issuer'
+                        label={
+                          <FormattedMessage id='global.issuer' defaultMessage='Issuer'>
+                            {text => text}
+                          </FormattedMessage>
+                        }
+                      />
+                      {false && (<FormField style={{ textAlign: 'right' }}>
+                        <div style={{ paddingTop: '40px' }}>
+                          <Checkbox
+                            name='isTemporary'
+                            label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
+                          />
+                        </div>
+                      </FormField>)}
+                    </FormGroup>
+
+                    <FormGroup widths='equal'>
+                      <DateInput
+                        name='expirationDate'
+                        label={
+                          <FormattedMessage id='global.expDate' defaultMessage='Expiration Date'>
+                            {text => text}
+                          </FormattedMessage>
+                        }
+                        inputProps={{
+                          clearable: true
+                        }}
+                      />
+                      <FormField></FormField>
                     </FormGroup>
 
                     <FormGroup widths='equal'>
@@ -369,45 +412,79 @@ class DocumentManagerSidebar extends Component {
                       />
                     </FormGroup>
 
-                    <FormGroup widths='equal'>
-                      <Input
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'settings.documents.enterIssuerName',
-                            defaultMessage: 'Enter issuer name'
-                          })
-                        }}
-                        name='issuer'
-                        label={
-                          <FormattedMessage id='global.issuer' defaultMessage='Issuer'>
-                            {text => text}
-                          </FormattedMessage>
-                        }
-                      />
-                      <FormField style={{ textAlign: 'right' }}>
-                      <div style={{ paddingTop: '40px' }}>
-                        <Checkbox
-                          name='isTemporary'
-                          label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
-                        />
-                      </div>
-                      </FormField>
-                    </FormGroup>
+                    {!values.id && (
+                      <FormGroup widths='equal' style={{ marginTop: '20px' }}>
+                        <FormField>
+                          <div style={!!errorFiles
+                            ? { border: '1px solid #9f3a38', margin: '-1px' }
+                            : null
+                          }>
+                            <UploadAttachment
+                              name='files'
+                              attachments={values.files}
+                              type={'' + values.documentType.id}
+                              fileMaxSize={20}
+                              onChange={files => {
+                                if (files.length) {
+                                  setFieldValue('files', files)
+                                }
+                              }}
+                              removeAttachment={() => {}}
+                              data-test='settings_add_document_drop'
+                              emptyContent={
+                                <CustomDiv>
+                                  <div>
+                                    <UploadCloud size='40' color='#dee2e6' />
+                                  </div>
 
-                    <FormGroup widths='equal'>
-                      {!values.id && (
-                        <FileInput
-                          fileName={getSafe(() => values.file.name, '')}
-                          setFieldValue={setFieldValue}
-                          errorMessage={errorMessages.requiredMessage}
-                          errors={errors}
-                          required={true}
-                        />
-                      )}
-                    </FormGroup>
+                                  {formatMessage({ id: 'addInventory.dragDrop' })}
+                                  <br />
+
+                                  <FormattedMessage
+                                    id='addInventory.dragDropOr'
+                                    defaultMessage={'or {link} to select from computer'}
+                                    values={{
+                                      link: (
+                                        <CustomA>
+                                          <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                        </CustomA>
+                                      )
+                                    }}
+                                  />
+                                </CustomDiv>
+                              }
+                              uploadedContent={
+                                <CustomDiv>
+                                  <div>
+                                    <UploadCloud size='40' color='#dee2e6' />
+                                  </div>
+                                  <FormattedMessage
+                                    id='addInventory.dragDrop'
+                                    defaultMessage={'Drag and drop to add file here'}
+                                  />
+                                  <br />
+                                  <FormattedMessage
+                                    id='addInventory.dragDropOr'
+                                    defaultMessage={'or {link} to select from computer'}
+                                    values={{
+                                      link: (
+                                        <CustomA>
+                                          <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                        </CustomA>
+                                      )
+                                    }}
+                                  />
+                                </CustomDiv>
+                              }
+                            />
+                          </div>
+                          {errorFiles && <div className='sui-error-message'>{errorFiles}</div>}
+                        </FormField>
+                      </FormGroup>
+                    )}
                   </CustomSegmentContent>
                 </FlexContent>
-                <CustomDiv>
+                <BottomButtons>
                   <Button
                     basic
                     onClick={() => {
@@ -427,7 +504,7 @@ class DocumentManagerSidebar extends Component {
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                </CustomDiv>
+                </BottomButtons>
               </FlexSidebar>
               <ErrorFocus />
             </CustomForm>

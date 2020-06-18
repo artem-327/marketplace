@@ -79,7 +79,7 @@ export default {
     return data
   },
   postNewCompanyGenericProductsAltName: (id, data) =>
-    api.post(`/prodex/api/company-generic-products/alternative-names/echo-product/${id}`, data),
+    api.post(`/prodex/api/company-generic-products/alternative-names/company-generic-product/${id}`, data),
   updateCompanyGenericProductsAltName: (id, value) =>
     api.patch(`/prodex/api/company-generic-products/alternative-names/id/${id}`, value),
   deleteCompanyGenericProductsAltName: id =>

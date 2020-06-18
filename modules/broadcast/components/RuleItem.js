@@ -103,7 +103,7 @@ const RuleItem = props => {
                   console.error(error)
                 }
               }}>
-              {companyName ? `${companyName} ${name}` : `${name}`}
+              <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
             </a>
           )}
         </Rule.RowContent>

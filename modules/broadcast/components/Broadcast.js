@@ -129,12 +129,17 @@ class Broadcast extends Component {
 
     if (oldProps.loadedRulesTrig !== loadedRulesTrig && broadcastTemplateName) {
       const dataId = getSafe(() => templates.find(el => el.name === broadcastTemplateName).id, null)
-      if (dataId !== null && this.setFieldValue) {
-        this.setFieldValue('templates', dataId)
-      } else {
+      if (dataId !== null) {
+        if (this.setFieldValue) this.setFieldValue('templates', dataId)
+
         this.setState({
+          ...this.state,
+          selectedTemplate: {
+            id: dataId,
+            name: broadcastTemplateName
+          },
           templateInitialValues: {
-            ...this.state.templateInitialValues,
+            name: broadcastTemplateName,
             templates: dataId
           }
         })
@@ -413,19 +418,18 @@ class Broadcast extends Component {
       node.walk(n => {
         if (!getSafe(() => n.model.rule.hidden, n.model.hidden)) {
           n.model.rule[propertyName] = newValue
+          if (getSafe(() => n.model.rule.elements.length, 0) > 0 && this.props.filter.category !== 'branch') {
+            this.changeInModel(n.model.rule.elements, { propertyName, value: newValue })
+          }
         }
       })
-      if (this.props.filter.category !== 'branch') {
-        this.changeInModel(node.model.rule.elements, { propertyName, value: newValue })
-      }
     }
-
-    const { treeData } = this.props
-    const findInData = node =>
-      getSafe(
-        () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
-        null
-      )
+    // const { treeData } = this.props
+    // const findInData = node =>
+    //   getSafe(
+    //     () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
+    //     null
+    //   )
 
     // let path = getSafe(() => findInData(node).getPath(), [])
     // for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
@@ -435,7 +439,7 @@ class Broadcast extends Component {
 
     // if (this.props.filter.category === 'branch') {
     //   if (node.isRoot()) {
-    //     node.walk((n) => {
+    //     node.walk(n => {
     //       if (n.model.rule.type === 'branch' && !n.model.rule.hidden) {
     //         n.model.rule[propertyName] = newValue
     //       }
@@ -448,11 +452,11 @@ class Broadcast extends Component {
   }
 
   changeInModel = (elementsParam, data) => {
-    var elements = elementsParam
-    if (getSafe(() => elements.length, false)) {
-      elements.forEach(element => {
+    const { propertyName, value } = data
+    if (getSafe(() => elementsParam.length, false)) {
+      elementsParam.forEach(element => {
         if (!element.hidden) {
-          element = { ...element, ...data }
+          element[propertyName] = value
         }
         if (getSafe(() => element.elements.length, '') > 0) this.changeInModel(element.elements, data)
       })
@@ -486,7 +490,12 @@ class Broadcast extends Component {
 
     let name = data.options.find(opt => opt.value === data.value).text
     setFieldValue('name', name)
-    this.setState({ selectedTemplate: { name, id: data.value } })
+    this.setState({
+      ...this.state,
+      selectedTemplate: { name, id: data.value },
+      templateInitialValues: { name, templates: data.value }
+    })
+
     try {
       await getTemplate(data.value)
     } catch (e) {
