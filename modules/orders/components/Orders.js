@@ -18,6 +18,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { AttachmentManager } from '~/modules/attachments'
 import { uniqueArrayByKey } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import TablesHandlers from './TablesHandlers'
 import { debounce } from 'lodash'
 
 const StyledModal = styled(Modal)`
@@ -272,120 +273,8 @@ class Orders extends Component {
       sortDirection: '',
       sortPath: ''
     },
-
     LastEndpointType: '',
 
-    filters: {
-      All: { filters: [] },
-      Draft: {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`Draft`]
-          }
-        ]
-      },
-      Pending: {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`Pending`]
-          }
-        ]
-      },
-      'In Transit': {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`In Transit`]
-          }
-        ]
-      },
-      Review: {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`Review`]
-          }
-        ]
-      },
-      Credit: {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`Credit`]
-          }
-        ]
-      },
-      Completed: {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`Completed`]
-          }
-        ]
-      },
-      'To Ship': {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`To Ship`]
-          }
-        ]
-      },
-      Returned: {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`Returned`]
-          }
-        ]
-      },
-      Declined: {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`Declined`]
-          }
-        ]
-      },
-      Cancelled: {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`Cancelled`]
-          }
-        ]
-      },
-      'To Return': {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`To Return`]
-          }
-        ]
-      },
-      Confirmed: {
-        filters: [
-          {
-            operator: 'EQUALS',
-            path: 'Order.cfGlobalStatus',
-            values: [`Confirmed`]
-          }
-        ]
-      }
-    },
     openModal: false,
     columnsRelatedOrders: [
       {
@@ -543,6 +432,7 @@ class Orders extends Component {
     }
   }
 
+  /*
   setDatagridFilter = debounce(filterData => {
     this.props.datagrid.loadData(this.state.filters[filterData.status])
   }, 500)
@@ -552,6 +442,7 @@ class Orders extends Component {
     this.setDatagridFilter(filterData)
     this.props.loadData(endpointType, filterData)
   }
+  */
 
   failedWrapper = value => {
     return <span style={{ color: '#DB2828' }}>{value}</span>
@@ -736,6 +627,7 @@ class Orders extends Component {
     await this.props.getRelatedOrders(orderId)
   }
 
+  /*
   handleFilterApply = payload => {
     // ! ! ????
     let statusFilters = getSafe(() => this.state.filters[this.props.filterData.status].filters, [])
@@ -743,16 +635,18 @@ class Orders extends Component {
 
     this.props.datagrid.setFilter(payload)
   }
+  */
 
   componentDidMount() {
     const { endpointType, filterData, getDocumentTypes, listDocumentTypes } = this.props
-    this.props.loadData(endpointType, { status: 'All' })
-    this.handleFilterClear()
+    //! !this.props.loadData(endpointType, { status: 'All' })
+    //! !this.handleFilterClear()
     if (listDocumentTypes && !listDocumentTypes.length) {
       getDocumentTypes()
     }
   }
 
+  /*
   componentDidUpdate(prevProps) {
     const { endpointType, datagridFilterUpdate, datagridFilter, datagrid } = this.props
     if (prevProps.endpointType !== this.props.endpointType) {
@@ -763,6 +657,7 @@ class Orders extends Component {
       datagrid.setFilter(datagridFilter)
     }
   }
+  */
 
   handleFilterClear = () => {
     this.props.applyFilter({ filters: [] })
@@ -1228,207 +1123,11 @@ class Orders extends Component {
           />
         )}
 
-        <Container fluid style={{ padding: '0 32px' }}>
-          <Menu pointing secondary horizontal>
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.all',
-                defaultMessage: 'ALL'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'All'
-                })
-              }
-              active={!activeStatus || activeStatus === 'All'}
-              data-test='menu_orders_all'
-            />
-            {endpointType === 'purchase' && (
-              <Menu.Item
-                name={formatMessage({
-                  id: 'order.menu.draft',
-                  defaultMessage: 'Draft'
-                })}
-                onClick={() =>
-                  this.loadData(endpointType, {
-                    ...this.props.filterData,
-                    status: 'Draft'
-                  })
-                }
-                active={activeStatus === 'Draft'}
-                data-test='menu_orders_draft'
-              />
-            )}
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.pending',
-                defaultMessage: 'PENDING'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'Pending'
-                })
-              }
-              active={activeStatus === 'Pending'}
-              data-test='menu_orders_pending'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.inTransit',
-                defaultMessage: 'IN TRANSIT'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'In Transit'
-                })
-              }
-              active={activeStatus === 'In Transit'}
-              data-test='menu_orders_inTransit'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.review',
-                defaultMessage: 'REVIEW'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'Review'
-                })
-              }
-              active={activeStatus === 'Review'}
-              data-test='menu_orders_review'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.credit',
-                defaultMessage: 'CREDIT'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'Credit'
-                })
-              }
-              active={activeStatus === 'Credit'}
-              data-test='menu_orders_credit'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.completed',
-                defaultMessage: 'COMPLETED'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'Completed'
-                })
-              }
-              active={activeStatus === 'Completed'}
-              data-test='menu_orders_completed'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.toShip',
-                defaultMessage: 'TO SHIP'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'To Ship'
-                })
-              }
-              active={activeStatus === 'To Ship'}
-              data-test='menu_orders_ship'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.returned',
-                defaultMessage: 'RETURNED'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'Returned'
-                })
-              }
-              active={activeStatus === 'Returned'}
-              data-test='menu_orders_returned'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.declined',
-                defaultMessage: 'DECLINED'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'Declined'
-                })
-              }
-              active={activeStatus === 'Declined'}
-              data-test='menu_orders_declined'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.cancelled',
-                defaultMessage: 'Cancelled'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'Cancelled'
-                })
-              }
-              active={activeStatus === 'Cancelled'}
-              data-test='menu_orders_cancelled'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.toReturn',
-                defaultMessage: 'To Return'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'To Return'
-                })
-              }
-              active={activeStatus === 'To Return'}
-              data-test='menu_orders_to_return'
-            />
-            <Menu.Item
-              name={formatMessage({
-                id: 'order.menu.confirmed',
-                defaultMessage: 'Confirmed'
-              })}
-              onClick={() =>
-                this.loadData(endpointType, {
-                  ...this.props.filterData,
-                  status: 'Confirmed'
-                })
-              }
-              active={activeStatus === 'Confirmed'}
-              data-test='menu_orders_confirmed'
-            />
-            <Menu.Item>
-              <FilterTags datagrid={datagrid} />
-            </Menu.Item>
-          </Menu>
-        </Container>
         {!tutorialCompleted && <Tutorial marginOrders />}
-        <Container fluid style={{ padding: '20px 32px 10px 32px' }} className='flex stretched'>
-          {false && (
-            <OrderFilter
-              ordersType={ordersType.toLowerCase()}
-              sortPath={this.state.sorting.sortPath}
-              sortDirection={this.state.sorting.sortDirection}
-              onApply={payload => this.handleFilterApply(payload)}
-            />
-          )}
+        <Container fluid style={{padding: '20px 30px 10px 30px'}}>
+          <TablesHandlers />
+        </Container>
+        <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
           {isFetching ? (
             <Spinner />
           ) : (
