@@ -2,6 +2,8 @@ import styled from 'styled-components'
 import { Button } from 'semantic-ui-react'
 
 export const DisabledButtonWrapped = styled.span`
+  display: inline-block;
+
   & > button {
     pointer-events: auto !important;
     opacity: 1 !important;
