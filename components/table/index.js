@@ -406,7 +406,7 @@ class _Table extends Component {
 
   handleScroll = ({ target }) => {
     const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd } = this.props
-    const { newTop, newBottom } = this.state
+    const { newTop, newBottom, pageSize } = this.state
     const { scrollLeft } = target
 
     if (this.state.scrollLeft !== scrollLeft) {
@@ -417,13 +417,6 @@ class _Table extends Component {
     const scrollviewFrameHeight = target.clientHeight
     const scrollviewContentHeight = target.scrollHeight
     const sum = scrollviewOffsetY + scrollviewFrameHeight
-
-    //Get height header row and height row and calculate page size. In almost all tables it is 2000px = 1 page = 50 rows without header
-    const elementRowHeader = document.getElementsByClassName('dx-g-bs4-header-cell')
-    const elementRow = document.getElementsByTagName('tr')
-    const heightHeaderRow = elementRowHeader && elementRowHeader.length ? elementRowHeader[0].offsetHeight : 41 // this is default height header row
-    const heightRow = elementRow && elementRow.length ? elementRow[0].offsetHeight : 41 // this is default height row
-    const pageSize = heightRow * 50 - heightHeaderRow // 50 is default rows from datagrid endpoint
 
     let tops = 0
     let bottoms = 0
@@ -437,22 +430,20 @@ class _Table extends Component {
     }
     // Upload new data if user scroll the end of a table and create new Top border and new Bottom border in a table
     if (
-      (scrollviewContentHeight >= pageSize && sum >= scrollviewContentHeight - 50 && !newBottom) ||
-      (scrollviewContentHeight >= pageSize &&
-        sum >= scrollviewContentHeight - 50 &&
-        scrollviewContentHeight >= newBottom)
+      (sum >= scrollviewContentHeight - 50 && !newBottom) ||
+      (sum >= scrollviewContentHeight - 50 && scrollviewContentHeight >= newBottom)
     ) {
       //Calculate new Top border and new Bottom border in a table
       const top = !newBottom
-        ? pageSize
-        : bottoms > 1
+        ? scrollviewContentHeight
+        : newBottom > 1
         ? newBottom + pageSize * (bottoms - 1)
         : scrollviewContentHeight < newBottom
         ? newTop
         : newBottom
 
       const bottom = !newBottom
-        ? scrollviewContentHeight + pageSize
+        ? scrollviewContentHeight * 2
         : scrollviewContentHeight < newBottom
         ? scrollviewContentHeight
         : newBottom + pageSize * bottoms
@@ -460,6 +451,7 @@ class _Table extends Component {
       onScrollToEnd(bottoms)
 
       this.setState({
+        pageSize: pageSize ? pageSize : scrollviewContentHeight,
         newTop: top,
         newBottom: bottom
       })
@@ -470,20 +462,18 @@ class _Table extends Component {
       const bottom = newBottom + pageSize * bottoms
       //Call to DatagridProvider and there add bottoms to pageNumber
       onScrollOverNewEnd(bottoms)
-
       this.setState({
         newTop: top,
         newBottom: bottom
       })
     } // If user scrolls over new Top border then reload data in a table from specific page number
-    else if (sum <= newTop) {
+    else if (sum <= newTop && scrollviewContentHeight > newTop) {
       //Calculate new Top border and new Bottom border in a table
-      const top = newTop - pageSize * tops > 0 ? newTop - pageSize * tops : 0
+      const top = newTop - pageSize * tops >= 0 ? newTop - pageSize * tops : 0
       const bottom =
         tops < 1 ? newTop : newTop - pageSize * (tops - 1) > pageSize ? newTop - pageSize * (tops - 1) : pageSize
       //Call to DatagridProvider and there add tops to pageNumber
       onScrollOverNewUp(tops * -1)
-
       this.setState({
         newTop: top,
         newBottom: bottom

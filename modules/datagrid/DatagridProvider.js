@@ -96,30 +96,32 @@ class DatagridProvider extends Component {
   loadNextPage = async (overPage = 0) => {
     if (!this.props.apiConfig) return
 
-    const { datagridParams, query, isScrollToEnd, isScrollToUp, refreshTable } = this.state
+    const { datagridParams, query, isScrollToEnd, isScrollToUp, refreshTable, allLoaded } = this.state
     const { apiConfig } = this.props
 
     this.setState({ loading: true })
 
-    //if is filtering and is not scroll to end or if is not any filter and is not scroll to end we need to set pageNumber to 0
-    let pageNumber =
-      (getSafe(() => datagridParams.filters.length, false) && !isScrollToEnd && !isScrollToUp) ||
-      (getSafe(() => datagridParams.orFilters.length, false) && !isScrollToEnd && !isScrollToUp) ||
-      (!getSafe(() => datagridParams.filters.length, false) &&
-        !getSafe(() => datagridParams.orFilters.length, false) &&
-        datagridParams.pageNumber > 0 &&
-        !isScrollToEnd &&
-        !isScrollToUp &&
-        !refreshTable)
-        ? 0
-        : datagridParams.pageNumber + overPage
+    let pageNumber = 0
+    if (refreshTable) {
+      if (allLoaded) {
+        pageNumber = datagridParams.pageNumber
+      } else {
+        pageNumber = datagridParams.pageNumber - 1
+      }
+    } else if (
+      getSafe(() => datagridParams.filters.length, false) ||
+      getSafe(() => datagridParams.orFilters.length, false)
+    ) {
+      pageNumber = 0
+    } else {
+      pageNumber = datagridParams.pageNumber + overPage
+    }
+    if (pageNumber < 0) {
+      pageNumber = 0
+    }
 
     if (datagridParams.sortDirection) {
       datagridParams.sortDirection = datagridParams.sortDirection.toUpperCase()
-    }
-
-    if (pageNumber < 0) {
-      pageNumber = 0
     }
 
     try {
