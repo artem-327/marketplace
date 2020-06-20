@@ -20,6 +20,8 @@ import OrderDetail from './orders/DetailContainer'
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
 import { tabChanged } from '../actions'
+import moment from 'moment'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'  // ! ! mozna nepouziju vsechno
 
 const CustomGridColumn = styled(GridColumn)`
   padding: 0 32px 0 32px !important;
@@ -56,12 +58,12 @@ class Operations extends Component {
       'shipping-quotes': {
         url: '/prodex/api/shipment/manual-quotes/datagrid',
         searchToFilter: v =>
-          v && v.filterValue
+          v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
                   path: 'ShippingQuote.carrierName',
-                  values: [`%${v.filterValue}%`]
+                  values: [`%${v.searchInput}%`]
                 }
               ]
             : []
@@ -69,62 +71,65 @@ class Operations extends Component {
       tags: {
         url: 'prodex/api/tags/datagrid',
         searchToFilter: v =>
-          v && v.filterValue ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.filterValue}%`] }] : []
+          v && v.searchInput ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.searchInput}%`] }] : []
       },
       'company-product-catalog': {
         url: `/prodex/api/company-products/admin/datagrid?type=${companyProductUnmappedOnly}`,
         searchToFilter: v => {
           let filter = { or: [], and: [] }
-
-          if (v && v.filterValue)
+          if (v && v.searchInput)
             filter.or = [
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.intProductName',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.intProductCode',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.companyGenericProduct.name',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.companyGenericProduct.code',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               }
             ]
 
-          if (v && v.company)
-            filter.and = [
-              {
-                operator: 'EQUALS',
-                path: 'CompanyProduct.companyGenericProduct.company.id',
-                values: [`${v.company}`]
-              }
-            ]
+          if (v && v.company) {
+            const company = JSON.parse(v.company)
+            if (company.id) {
+              filter.and = [
+                {
+                  operator: 'EQUALS',
+                  path: 'CompanyProduct.companyGenericProduct.company.id',
+                  values: [`${company.id}`]
+                }
+              ]
+            }
+          }
           return filter
         }
       },
       'company-inventory': {
         url: '/prodex/api/product-offers/admin/datagrid',
         searchToFilter: v =>
-          v && v.filterValue
+          v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
                   path: 'ProductOffer.companyProduct.intProductName',
-                  values: [`%${v.filterValue}%`]
+                  values: [`%${v.searchInput}%`]
                 },
                 {
                   operator: 'LIKE',
                   path: 'ProductOffer.companyProduct.intProductCode',
-                  values: [`%${v.filterValue}%`]
+                  values: [`%${v.searchInput}%`]
                 }
               ]
             : []
@@ -133,14 +138,18 @@ class Operations extends Component {
         url: 'prodex/api/purchase-orders/datagrid',
         searchToFilter: v => {
           let filter = { or: [], and: [] }
-          if (v && v.company)
+
+          if (v && v.company) {
+            const d = JSON.parse(v.company)
+            const value = d.cfDisplayName ? d.cfDisplayName : (d.name ? d.name : '')
             filter.and = [
               {
                 operator: 'LIKE',
                 path: 'Order.sellerCompanyName',
-                values: [`%${v.company}%`]
+                values: [`%${value}%`]
               }
             ]
+          }
           return filter
         }
       }
@@ -161,7 +170,11 @@ class Operations extends Component {
     const displayPage = !!orderDetailData
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
+      <DatagridProvider
+        apiConfig={this.getApiConfig()}
+        preserveFilters={preserveFilters}
+
+      >
         <Container fluid className='flex stretched'>
           {currentTab.type === 'orders' && !orderDetailData && <OrdersMenu />}
           {displayPage ? (

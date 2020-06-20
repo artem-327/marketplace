@@ -1,18 +1,16 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
-import { Modal, Menu, Header, Container, Grid, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
+import { Modal, Container, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
 import styled, { withTheme } from 'styled-components'
 
 import Spinner from '~/src/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
-import { actions } from 'react-redux-form'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
-import FilterTags from '~/modules/filter/components/FitlerTags'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import Link from 'next/link'
-import { UploadCloud, CheckCircle, PlusCircle } from 'react-feather'
+import { CheckCircle } from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
 import { AttachmentManager } from '~/modules/attachments'
@@ -432,18 +430,6 @@ class Orders extends Component {
     }
   }
 
-  /*
-  setDatagridFilter = debounce(filterData => {
-    this.props.datagrid.loadData(this.state.filters[filterData.status])
-  }, 500)
-
-  loadData(endpointType, filterData) {
-    this.props.dispatch(actions.change('forms.filter.status', filterData.status))
-    this.setDatagridFilter(filterData)
-    this.props.loadData(endpointType, filterData)
-  }
-  */
-
   failedWrapper = value => {
     return <span style={{ color: '#DB2828' }}>{value}</span>
   }
@@ -627,41 +613,11 @@ class Orders extends Component {
     await this.props.getRelatedOrders(orderId)
   }
 
-  /*
-  handleFilterApply = payload => {
-    // ! ! ????
-    let statusFilters = getSafe(() => this.state.filters[this.props.filterData.status].filters, [])
-    statusFilters.forEach(f => payload.filters.push(f))
-
-    this.props.datagrid.setFilter(payload)
-  }
-  */
-
   componentDidMount() {
-    const { endpointType, filterData, getDocumentTypes, listDocumentTypes } = this.props
-    //! !this.props.loadData(endpointType, { status: 'All' })
-    //! !this.handleFilterClear()
+    const { getDocumentTypes, listDocumentTypes } = this.props
     if (listDocumentTypes && !listDocumentTypes.length) {
       getDocumentTypes()
     }
-  }
-
-  /*
-  componentDidUpdate(prevProps) {
-    const { endpointType, datagridFilterUpdate, datagridFilter, datagrid } = this.props
-    if (prevProps.endpointType !== this.props.endpointType) {
-      this.props.loadData(endpointType, { status: 'All' })
-    }
-
-    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
-    }
-  }
-  */
-
-  handleFilterClear = () => {
-    this.props.applyFilter({ filters: [] })
-    this.props.datagrid.setFilter({ filters: [] })
   }
 
   downloadAttachment = async (documentName, documentId) => {
@@ -1037,9 +993,7 @@ class Orders extends Component {
 
   render() {
     const {
-      endpointType,
-      /*match, rows,*/ isFetching,
-      activeStatus,
+      isFetching,
       queryType,
       router,
       datagrid,
@@ -1047,7 +1001,7 @@ class Orders extends Component {
       intl: { formatMessage }
     } = this.props
 
-    const { columns, row, openModal, isOpenManager, relatedDocumentType, relatedPopupParams } = this.state
+    const { columns, relatedPopupParams } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
     return (

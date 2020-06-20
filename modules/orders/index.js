@@ -5,6 +5,8 @@ import Router from 'next/router'
 const OrdersModule = () => (
   <>
     <DatagridProvider
+      skipInitLoad
+      preserveFilters={true}
       apiConfig={{
         url: `/prodex/api/${
           Router && Router.router && Router.router.query

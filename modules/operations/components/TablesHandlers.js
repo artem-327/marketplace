@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Header, Menu, Button, Input, Grid, GridRow, GridColumn, Dropdown } from 'semantic-ui-react'
+import { DateInput } from '~/components/custom-formik'
+import moment from 'moment'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
+import { errorMessages, dateValidation, dateBefore } from '~/constants/yupValidation'
+import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
+import { OrdersFilters } from '../constants'
 
 import * as Actions from '../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+import { getSafe, uniqueArrayByKey } from '~/utils/functions'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -55,8 +62,22 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterValue: '',
-      company: ''
+      'shipping-quotes': {
+        searchInput: ''
+      },
+      'tags': {
+        searchInput: ''
+      },
+      'company-product-catalog': {
+        searchInput: '',
+        company: ''
+      },
+      'company-inventory': {
+        searchInput: ''
+      },
+      'orders': {
+        company: ''
+      }
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
@@ -69,26 +90,9 @@ class TablesHandlers extends Component {
   }
 
   handleFiltersValue = value => {
-    // this condition must be ready evrytimes if you inicializate datagridProvider
-    if (Datagrid.isReady()) Datagrid.setSearch(value, true, 'pageFilters')
+    const { datagrid } = this.props
+    datagrid.setSearch(value, true, 'pageFilters')
   }
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    const filter = {
-      filterValue: value,
-      company: this.state.company
-    }
-    this.handleFiltersValue(filter)
-  }
-
-  renderHeader = () => (
-    <GridColumn widescreen={2} computer={3} tablet={3}>
-      <Header as='h1' size='medium'>
-        {this.props.currentTab.name}
-      </Header>
-    </GridColumn>
-  )
 
   handleFilterChangeMappedUnmapped = (e, { value }) => {
     this.props.setProductMappedUnmaped(value)
@@ -98,11 +102,45 @@ class TablesHandlers extends Component {
     })
   }
 
-  handleFilterChangeCompany = (e, { value }) => {
-    this.setState({ company: value })
+
+
+
+
+  handleFilterChangeInputSearch = (e, data) => {
+    console.log('!!!!!!!!!! handleFilterChangeInputSearch data', data)
+    const { currentTab } = this.props
+    if (currentTab === '') return
+
+    this.setState({
+      [currentTab]: {
+        ...this.state[currentTab],
+        [data.name]: data.value
+      }
+    })
+
     const filter = {
-      filterValue: this.state.filterValue,
-      company: value
+      ...this.state[currentTab],
+      [data.name]: data.value
+    }
+    console.log('!!!!!!!!!! handleFilterChangeInputSearch filter', filter)
+    this.handleFiltersValue(filter)
+  }
+
+  handleFilterChangeCompany = (e, data) => {
+    console.log('!!!!!!!!!! handleFilterChangeCompany data', data)
+    const { currentTab } = this.props
+    if (currentTab === '') return
+
+    this.setState({
+      [currentTab]: {
+        ...this.state[currentTab],
+        [data.name]: data.value
+      }
+    })
+
+    const filter = {
+      ...this.state[currentTab],
+      [data.name]: data.value
     }
     this.handleFiltersValue(filter)
   }
@@ -122,29 +160,38 @@ class TablesHandlers extends Component {
       companyProductUnmappedOnly
     } = this.props
 
-    const { filterValue, company } = this.state
+    const item = textsTable[currentTab]
 
-    const item = textsTable[currentTab.type]
+    const filterValue = this.state[currentTab]
 
-    switch (currentTab.type) {
+    //const companiesOptions = uniqueArrayByKey(searchedCompanies.concat(), 'key')
+    // ! ! tady pokracovat
+
+
+    console.log('!!!!!!!!!! render currentTab', currentTab)
+    console.log('!!!!!!!!!! render this.state', this.state)
+
+    switch (currentTab) {
       case 'company-product-catalog':
         return (
           <CustomGridRow>
             <CustomMenuItemLeft>
               <Input
                 style={{ width: 340 }}
+                name='searchInput'
                 icon='search'
-                value={filterValue}
+                value={filterValue.searchInput}
                 placeholder={formatMessage({
                   id: item.SearchText,
                   defaultMessage: 'Select Credit Card'
                 })}
-                onChange={this.handleFilterChange}
+                onChange={this.handleFilterChangeInputSearch}
               />
             </CustomMenuItemLeft>
             <CustomMenuItemLeft>
               <Dropdown
                 style={{ width: 340 }}
+                name='company'
                 placeholder={formatMessage({
                   id: item.SearchCompanyText,
                   defaultMessage: 'Search product catalog by company'
@@ -154,7 +201,7 @@ class TablesHandlers extends Component {
                 clearable
                 options={searchedCompanies}
                 search={options => options}
-                value={company}
+                value={filterValue.company}
                 loading={searchedCompaniesLoading}
                 onSearchChange={(e, { searchQuery }) => {
                   searchQuery.length > 0 && this.searchCompanies(searchQuery)
@@ -165,6 +212,7 @@ class TablesHandlers extends Component {
             <CustomMenuItemLeft>
               <Dropdown
                 style={{ width: 250 }}
+                name='mappedUnmapped'
                 placeholder={formatMessage({
                   id: item.MappedText,
                   defaultMessage: 'Select mapped/unmapped only'
@@ -201,6 +249,7 @@ class TablesHandlers extends Component {
             <CustomMenuItemLeft>
               <Dropdown
                 style={{ width: 340 }}
+                name='company'
                 placeholder={formatMessage({
                   id: item.SearchText,
                   defaultMessage: 'Search orders by company'
@@ -210,7 +259,7 @@ class TablesHandlers extends Component {
                 clearable
                 options={searchedCompaniesByName}
                 search={options => options}
-                value={company}
+                value={filterValue.company}
                 loading={searchedCompaniesLoading}
                 onSearchChange={(e, { searchQuery }) => {
                   searchQuery.length > 0 && this.searchCompanies(searchQuery)
@@ -228,13 +277,14 @@ class TablesHandlers extends Component {
               <CustomMenuItemLeft position='left'>
                 <Input
                   style={{ width: 340 }}
+                  name='searchInput'
                   icon='search'
-                  value={filterValue}
+                  value={filterValue.searchInput}
                   placeholder={formatMessage({
                     id: item.SearchText,
                     defaultMessage: 'Select Credit Card'
                   })}
-                  onChange={this.handleFilterChange}
+                  onChange={this.handleFilterChangeInputSearch}
                 />
               </CustomMenuItemLeft>
             )}
@@ -263,15 +313,15 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.operations.currentTab,
+    currentTab: getSafe(() => state.operations.currentTab.type, ''),
     searchedCompanies: state.operations.searchedCompanies.map(d => ({
       key: d.id,
-      value: d.id,
+      value: JSON.stringify(d),
       text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
     })),
     searchedCompaniesByName: state.operations.searchedCompanies.map(d => ({
       key: d.id,
-      value: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, ''),
+      value: JSON.stringify(d),
       text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
     })),
     searchedCompaniesLoading: state.operations.searchedCompaniesLoading,

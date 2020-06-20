@@ -1,21 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import get from 'lodash/get'
-import { Header, Menu, Button, Checkbox, Dropdown, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { Dropdown } from 'semantic-ui-react'
 import { Input } from 'formik-semantic-ui-fixed-validation'
 import { debounce } from 'lodash'
-import Router from 'next/router'
 import styled from 'styled-components'
-import TreeModel from 'tree-model'
 import { withToastManager } from 'react-toast-notifications'
+import { withRouter } from 'next/router'
 import { DateInput } from '~/components/custom-formik'
 import * as Actions from '../actions'
-import { openGlobalBroadcast, saveRules, initGlobalBroadcast } from '~/modules/broadcast/actions'
-import { withDatagrid, Datagrid } from '~/modules/datagrid'
-import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
+import { withDatagrid } from '~/modules/datagrid'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
 import moment from 'moment'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -209,6 +205,38 @@ class TablesHandlers extends Component {
     this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
   }
 
+  componentDidMount() {
+    const { tableHandlersFilters } = this.props
+    if (tableHandlersFilters) {
+      this.initFilterValues(tableHandlersFilters)
+    } else {
+      this.handleFiltersValue(this.state.filterValue)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.saveFilters(this.state.filterValue)
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.queryType !== this.props.queryType) {
+      this.handleFiltersValue(this.state.filterValue)
+    }
+  }
+
+  initFilterValues = tableHandlersFilters => {
+    const { setValues, setFieldTouched } = this.formikProps
+    this.setState({ filterValue: tableHandlersFilters })
+
+    setValues({
+      dateFrom: tableHandlersFilters.dateFrom,
+      dateTo: tableHandlersFilters.dateTo,
+      orderId: tableHandlersFilters.orderId
+    })
+    setFieldTouched('dateFrom', true, true)
+    this.handleFiltersValue(tableHandlersFilters)
+  }
+
   handleFiltersValue = value => {
     const { datagrid } = this.props
     const orderIdError = getSafe(() => this.formikProps.errors.orderId, false)
@@ -218,7 +246,7 @@ class TablesHandlers extends Component {
       status: getSafe(() => filters[value.status].filters, ''),
       orderId: !orderIdError && value.orderId ? value.orderId : '',
       dateFrom: value.dateFrom && !dateFromError ? getStringISODate(value.dateFrom) : '',
-      dateTo: value.dateTo ? getStringISODate(value.dateTo) : ''
+      dateTo: value.dateTo ? moment(getStringISODate(value.dateTo)).endOf('day').format() : ''
     }
     datagrid.setSearch(filterValue, true, 'pageFilters')
   }
@@ -240,7 +268,6 @@ class TablesHandlers extends Component {
     this.setState({ filterValue })
     this.handleFiltersValue(filterValue)
   }
-
 
   renderHandler = () => {
     const {
@@ -343,17 +370,19 @@ class TablesHandlers extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, { router } )=> {
+  const query = router ? router.query : { type: 'sales' }
+  const { type } = query
+
   return {
     ...state,
-    datagridFilter: state.orders.datagridFilter
+    queryType: type,
+    tableHandlersFilters: state.orders.tableHandlersFilters
   }
 }
 
 export default withDatagrid(
-  withToastManager(
-    connect(mapStateToProps, { ...Actions })(
-      injectIntl(TablesHandlers)
-    )
-  )
+  withToastManager(withRouter(
+    connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers))
+  ))
 )
