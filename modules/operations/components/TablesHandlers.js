@@ -160,13 +160,29 @@ class TablesHandlers extends Component {
       companyProductUnmappedOnly
     } = this.props
 
+    let companiesOptions, companiesOptionsByName
+
     const item = textsTable[currentTab]
 
     const filterValue = this.state[currentTab]
 
-    //const companiesOptions = uniqueArrayByKey(searchedCompanies.concat(), 'key')
-    // ! ! tady pokracovat
+    if (filterValue && filterValue.company) {
+      const d = JSON.parse(filterValue.company)
+      companiesOptions = uniqueArrayByKey(searchedCompanies.concat([{
+        key: d.id,
+        value: filterValue.company,
+        text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
+      }]), 'key')
 
+      companiesOptionsByName = uniqueArrayByKey(searchedCompaniesByName.concat([{
+        key: d.id,
+        value: filterValue.company,
+        text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
+      }]), 'key')
+    } else {
+      companiesOptions = searchedCompanies
+      companiesOptionsByName = searchedCompaniesByName
+    }
 
     console.log('!!!!!!!!!! render currentTab', currentTab)
     console.log('!!!!!!!!!! render this.state', this.state)
@@ -199,7 +215,7 @@ class TablesHandlers extends Component {
                 icon='search'
                 selection
                 clearable
-                options={searchedCompanies}
+                options={companiesOptions}
                 search={options => options}
                 value={filterValue.company}
                 loading={searchedCompaniesLoading}
@@ -257,7 +273,7 @@ class TablesHandlers extends Component {
                 icon='search'
                 selection
                 clearable
-                options={searchedCompaniesByName}
+                options={companiesOptionsByName}
                 search={options => options}
                 value={filterValue.company}
                 loading={searchedCompaniesLoading}
