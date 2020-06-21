@@ -14,7 +14,6 @@ import TagsPopup from './tags/TagsPopup'
 import CompanyProductTable from './company-product-catalog/CompanyProductTable'
 import CompanyInventoryTable from './company-inventory/CompanyInventoryTable'
 import Orders from './orders/OrdersContainer'
-import OrdersMenu from './orders/OrdersMenu'
 import OrderDetail from './orders/DetailContainer'
 
 import { getSafe } from '~/utils/functions'
@@ -24,7 +23,7 @@ import moment from 'moment'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'  // ! ! mozna nepouziju vsechno
 
 const CustomGridColumn = styled(GridColumn)`
-  padding: 0 32px 0 32px !important;
+  padding: 0 30px !important;
 `
 
 class Operations extends Component {
@@ -52,7 +51,7 @@ class Operations extends Component {
     )
   }
 
-  getApiConfig = () => {
+  getApiConfig = () => {  // ! ! zrevidovat / opravit orders - datumy ! !
     const { currentTab, companyProductUnmappedOnly } = this.props
     const datagridApiMap = {
       'shipping-quotes': {
@@ -172,21 +171,20 @@ class Operations extends Component {
     return (
       <DatagridProvider
         apiConfig={this.getApiConfig()}
-        preserveFilters={preserveFilters}
-
+        preserveFilters={true}
+        skipInitLoad
       >
         <Container fluid className='flex stretched'>
-          {currentTab.type === 'orders' && !orderDetailData && <OrdersMenu />}
           {displayPage ? (
             this.renderContent()
           ) : (
             <>
-              <Container fluid style={{ padding: '0 1.5vh' }}>
+              <Container fluid>
                 <TablesHandlers currentTab={currentTab} />
               </Container>
 
-              <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
-                <Grid.Row>
+              <Grid columns='equal' className='flex stretched' style={{ margin: '0', padding: '0' }}>
+                <Grid.Row style={{ margin: '0', padding: '0 0 10px 0' }}>
                   <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
                 </Grid.Row>
               </Grid>
@@ -201,7 +199,7 @@ class Operations extends Component {
 const mapStateToProps = state => {
   return {
     ...state.operations,
-    currentTab: state.operations.currentTab,
+    //! !currentTab: state.operations.currentTab,
     auth: state.auth
   }
 }
