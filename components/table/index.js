@@ -52,12 +52,14 @@ const GlobalTableOverrideStyle = createGlobalStyle`
       padding: .5rem;
     }
   }
-  ${isFirefox &&
+  ${
+    isFirefox &&
     `
     .bootstrapiso > .flex-column {
       flex: 0 0 auto !important;
     }
-  `}
+  `
+  }
   .group-row {
     position: relative;
     background: #EEE;
@@ -330,6 +332,8 @@ class _Table extends Component {
     tableName: pt.string,
     singleSelection: pt.bool,
     onScrollToEnd: pt.func,
+    onScrollOverNewEnd: pt.func,
+    onScrollOverNewUp: pt.func,
     onRowClick: pt.func,
     onSortingChange: pt.func,
     onTableReady: pt.func,
@@ -361,6 +365,8 @@ class _Table extends Component {
     singleSelection: false,
     onSelectionChange: () => {},
     onScrollToEnd: () => {},
+    onScrollOverNewEnd: () => {},
+    onScrollOverNewUp: () => {},
     onTableReady: () => {},
     getChildRows: () => {},
     defaultSorting: null,
@@ -399,14 +405,79 @@ class _Table extends Component {
   }
 
   handleScroll = ({ target }) => {
-    const { onScrollToEnd } = this.props
+    const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd } = this.props
+    const { newTop, newBottom, pageSize } = this.state
     const { scrollLeft } = target
 
     if (this.state.scrollLeft !== scrollLeft) {
       this.setState({ scrollLeft }, () => this.forceUpdate())
     }
-    if (target.offsetHeight + target.scrollTop >= target.scrollHeight - 50) {
-      onScrollToEnd()
+    //Get position of scroll and height scroll area
+    const scrollviewOffsetY = target.scrollTop
+    const scrollviewFrameHeight = target.clientHeight
+    const scrollviewContentHeight = target.scrollHeight
+    const sum = scrollviewOffsetY + scrollviewFrameHeight
+
+    let tops = 0
+    let bottoms = 0
+    //Calculate how many top borders (pages {1 page = 50 rows}) user skipped (scroll)
+    if (newTop && sum && pageSize) {
+      tops = Math.ceil((newTop - sum) / pageSize) > 0 ? Math.ceil((newTop - sum) / pageSize) : 1
+    }
+    //Calculate how many bottom borders (pages {1 page = 50 rows}) user skipped (scroll)
+    if (newBottom && sum && pageSize) {
+      bottoms = Math.floor((newBottom - sum) / pageSize) < 0 ? Math.floor((newBottom - sum) / pageSize) * -1 : 1
+    }
+    // Upload new data if user scroll the end of a table and create new Top border and new Bottom border in a table
+    if (
+      (sum >= scrollviewContentHeight - 50 && !newBottom) ||
+      (sum >= scrollviewContentHeight - 50 && scrollviewContentHeight >= newBottom)
+    ) {
+      //Calculate new Top border and new Bottom border in a table
+      const top = !newBottom
+        ? scrollviewContentHeight
+        : newBottom > 1
+        ? newBottom + pageSize * (bottoms - 1)
+        : scrollviewContentHeight < newBottom
+        ? newTop
+        : newBottom
+
+      const bottom = !newBottom
+        ? scrollviewContentHeight * 2
+        : scrollviewContentHeight < newBottom
+        ? scrollviewContentHeight
+        : newBottom + pageSize * bottoms
+      //Call to DatagridProvider and there add bottoms to pageNumber
+      onScrollToEnd(bottoms)
+
+      this.setState({
+        pageSize: pageSize ? pageSize : scrollviewContentHeight,
+        newTop: top,
+        newBottom: bottom
+      })
+    } // If user scrolls over new Bottom border then reload data in a table from specific page number
+    else if (sum >= newBottom - 50) {
+      //Calculate new Top border and new Bottom border in a table
+      const top = newBottom > 1 ? newBottom + pageSize * (bottoms - 1) : newBottom
+      const bottom = newBottom + pageSize * bottoms
+      //Call to DatagridProvider and there add bottoms to pageNumber
+      onScrollOverNewEnd(bottoms)
+      this.setState({
+        newTop: top,
+        newBottom: bottom
+      })
+    } // If user scrolls over new Top border then reload data in a table from specific page number
+    else if (sum <= newTop && scrollviewContentHeight > newTop) {
+      //Calculate new Top border and new Bottom border in a table
+      const top = newTop - pageSize * tops >= 0 ? newTop - pageSize * tops : 0
+      const bottom =
+        tops < 1 ? newTop : newTop - pageSize * (tops - 1) > pageSize ? newTop - pageSize * (tops - 1) : pageSize
+      //Call to DatagridProvider and there add tops to pageNumber
+      onScrollOverNewUp(tops * -1)
+      this.setState({
+        newTop: top,
+        newBottom: bottom
+      })
     }
   }
 
