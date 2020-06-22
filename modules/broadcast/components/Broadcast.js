@@ -156,7 +156,6 @@ class Broadcast extends Component {
 
   updateInTreeData = node => {
     let copy = this.props.treeData
-
     const { filter } = this.props
     if (!node.isRoot()) {
       let found = copy.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)
@@ -389,7 +388,8 @@ class Broadcast extends Component {
       if (predicate(elements[i])) {
         elements[i].hidden = hidden
         return
-      } else if (elements[i].elements.length > 0) this.setHidden(predicate, hidden, elements[i].elements)
+      } else if (getSafe(() => elements[i].elements.length, false) > 0)
+        this.setHidden(predicate, hidden, elements[i].elements)
     }
   }
 
