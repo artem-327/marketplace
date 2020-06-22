@@ -136,7 +136,8 @@ const initValues = {
   phone: '',
   roles: [],
   buyMarketSegments: [],
-  sellMarketSegments: []
+  sellMarketSegments: [],
+  isClientCompany: false
 }
 
 class UsersSidebar extends React.Component {
@@ -456,6 +457,7 @@ class UsersSidebar extends React.Component {
     const {
       closePopup,
       userRoles,
+      clientCompanyRoles,
       adminRoles,
       currencies,
       intl: { formatMessage },
@@ -475,7 +477,8 @@ class UsersSidebar extends React.Component {
       popupValues,
       selectedCompany,
       selectedSellMarketSegmentsOptions,
-      selectedBuyMarketSegmentsOptions
+      selectedBuyMarketSegmentsOptions,
+      isClientCompany
     } = this.state
 
     const companiesAll = uniqueArrayByKey(searchedCompanies.concat(selectedCompany), 'id')
@@ -606,17 +609,21 @@ class UsersSidebar extends React.Component {
                             searchQuery.length > 0 && this.searchCompanies(searchQuery),
                           onChange: (_, { value }) => {
                             const company = companiesAll.find(el => el.id === value)
-                            this.setState({
-                              branches: company ? this.getBranchesOptions(company.branches) : [],
-                              selectedCompany: value ? companiesAll.find(d => d.id === value) : []
-                            })
                             let homeBranch = ''
                             if (company) {
                               let newRoles = values.roles.slice()
                               newRoles = newRoles.filter(role => adminRoles.every(d => role !== d.id))
+                              if (company.isClientCompany && (isClientCompany !== company.isClientCompany)) {
+                                newRoles = newRoles.filter(role => !clientCompanyRoles.every(d => role !== d.id))
+                              }
                               setFieldValue('roles', newRoles)
                               if (company.primaryBranch) homeBranch = company.primaryBranch.id
                             }
+                            this.setState({
+                              branches: company ? this.getBranchesOptions(company.branches) : [],
+                              selectedCompany: value ? companiesAll.find(d => d.id === value) : [],
+                              isClientCompany: company && company.isClientCompany
+                            })
                             setFieldValue('homeBranch', homeBranch)
                             setFieldValue('additionalBranches', [])
                           },
@@ -732,7 +739,12 @@ class UsersSidebar extends React.Component {
                   </GridRow>
                   <GridRow>
                     {this.generateCheckboxes(
-                      values.company !== '' ? userRoles : adminRoles,
+                      values.company !== ''
+                        ? (isClientCompany
+                          ? clientCompanyRoles
+                          : userRoles
+                        )
+                        : adminRoles,
                       values,
                       'roles',
                       errorRoles
@@ -788,6 +800,7 @@ const mapStateToProps = state => {
     editTrig: companiesAdmin.editTrig,
     updating: companiesAdmin.updating,
     userRoles: companiesAdmin.userRoles,
+    clientCompanyRoles: companiesAdmin.clientCompanyRoles,
     adminRoles: companiesAdmin.adminRoles,
     popupValues: companiesAdmin.popupValues,
     isSuperAdmin: companiesAdmin.currentUser && companiesAdmin.currentUser.roles.findIndex(d => d.id === 1) !== -1,
