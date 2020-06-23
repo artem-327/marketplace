@@ -20,13 +20,12 @@ export default class PriceControl extends Component {
     type: 'multiplier'
   }
 
-  componentDidMount() { }
+  componentDidMount() {}
 
   handleChange = (e, { name, value }) => {
     e.preventDefault()
     e.stopPropagation()
     const { changeInModel } = this.props
-
 
     // helper
     const asignValues = (values, rule) => {
@@ -74,13 +73,12 @@ export default class PriceControl extends Component {
         if (!n.model.rule.priceOverride) asignValues(values, n.model.rule)
       })
       // Same hack as in RuleItem.handleChange
-      // item.model.rule.elements.forEach(el => {
-      //   if (!el.priceOverride) asignValues(values, el)
-      // })
-
+      item.model.rule.elements.forEach(el => {
+        if (!el.priceOverride) asignValues(values, el)
+      })
     }
     let copy = _.cloneDeep(item)
-    changeInModel(copy.model.rule.elements, values)
+    // changeInModel(copy.model.rule.elements, values)
     console.log({ copy })
     this.props.onChange(item)
     return false
@@ -185,7 +183,7 @@ const PriceInput = styled(Input)`
 const ControlBox = styled.div`
   display: flex;
   flex-direction: column;
-  
+
   .ui.radio.checkbox input:focus:checked ~ label:after,
   .ui.radio.checkbox input:checked ~ label:after {
     background-color: #2599d5;
