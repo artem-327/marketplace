@@ -162,12 +162,26 @@ class TablesHandlers extends Component {
     })
     setFieldTouched('dateFrom', true, true)
 
-    this.handleFiltersValue(this.state[currentTab])
+    this.handleFiltersValue(tableHandlersFilters[currentTab])
   }
 
   handleFiltersValue = value => {
-    const { datagrid } = this.props
-    datagrid.setSearch(value, true, 'pageFilters')
+    const { datagrid, currentTab } = this.props
+
+    const orderIdError = getSafe(() => this.formikProps.errors.orderId, false)
+    const dateFromError = getSafe(() => this.formikProps.errors.dateFrom, false)
+
+    let filter = value
+    if (currentTab === 'orders') {
+      filter = {
+        ...value,
+        status: getSafe(() => OrdersFilters[value.status].filters, ''),
+        orderId: !orderIdError && value.orderId ? value.orderId : '',
+        dateFrom: value.dateFrom && !dateFromError ? getStringISODate(value.dateFrom) : '',
+        dateTo: value.dateTo ? moment(getStringISODate(value.dateTo)).endOf('day').format() : ''
+      }
+    }
+    datagrid.setSearch(filter, true, 'pageFilters')
   }
 
   handleFilterChangeMappedUnmapped = (e, { value }) => {

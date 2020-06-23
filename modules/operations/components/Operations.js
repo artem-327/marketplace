@@ -51,7 +51,7 @@ class Operations extends Component {
     )
   }
 
-  getApiConfig = () => {  // ! ! zrevidovat / opravit orders - datumy ! !
+  getApiConfig = () => {
     const { currentTab, companyProductUnmappedOnly } = this.props
     const datagridApiMap = {
       'shipping-quotes': {
@@ -149,6 +149,38 @@ class Operations extends Component {
               }
             ]
           }
+
+          if (v && v.status) {
+            filter.and = filter.and.concat(v.status)
+          }
+
+          if (v && v.orderId)
+            filter.and = filter.and.concat([
+              {
+                operator: 'LIKE',
+                path: 'Order.id',
+                values: [`%${v.orderId}%`]
+              }
+            ])
+
+          if (v && v.dateFrom)
+            filter.and = filter.and.concat([
+              {
+                operator: 'GREATER_THAN_OR_EQUAL_TO',
+                path: 'Order.orderDate',
+                values: [`${v.dateFrom}`]
+              }
+            ])
+
+          if (v && v.dateTo)
+            filter.and = filter.and.concat([
+              {
+                operator: 'LESS_THAN_OR_EQUAL_TO',
+                path: 'Order.orderDate',
+                values: [`${v.dateTo}`]
+              }
+            ])
+
           return filter
         }
       }
@@ -199,7 +231,6 @@ class Operations extends Component {
 const mapStateToProps = state => {
   return {
     ...state.operations,
-    //! !currentTab: state.operations.currentTab,
     auth: state.auth
   }
 }
