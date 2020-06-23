@@ -97,11 +97,16 @@ export default typeToReducer(
       loading: true
     }),
 
-    [saveRules.fulfilled]: state => ({
-      ...state,
-      loading: false,
-      open: false
-    }),
+    [saveRules.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        loading: false,
+        open: false,
+        broadcastTemplateName: payload && payload.broadcastTemplateName
+          ? payload.broadcastTemplateName
+          : null
+      }
+    },
 
     [saveRules.rejected]: state => ({
       ...state,
