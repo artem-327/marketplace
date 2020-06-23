@@ -3,7 +3,15 @@ import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
-import { deleteUser, getUsersMe, userSwitchEnableDisable, openSidebar, getUserRoles, getAdminRoles } from '../../actions'
+import {
+  deleteUser,
+  getUsersMe,
+  userSwitchEnableDisable,
+  openSidebar,
+  getUserRoles,
+  getClientCompanyRoles,
+  getAdminRoles
+} from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-messages/'
 import moment from 'moment'
@@ -109,6 +117,7 @@ class UsersTable extends Component {
   componentDidMount() {
     this.props.getUsersMe()
     if (!this.props.userRoles.length) this.props.getUserRoles()
+    if (!this.props.clientCompanyRoles.length) this.props.getClientCompanyRoles()
     if (!this.props.adminRoles.length) this.props.getAdminRoles()
   }
 
@@ -175,6 +184,7 @@ const mapDispatchToProps = {
   userSwitchEnableDisable,
   openSidebar,
   getUserRoles,
+  getClientCompanyRoles,
   getAdminRoles
 }
 
@@ -244,6 +254,7 @@ const mapStateToProps = (state, { datagrid }) => {
     currentTab: state.companiesAdmin.currentTab,
     loading: state.companiesAdmin.loading,
     userRoles: state.companiesAdmin.userRoles,
+    clientCompanyRoles: state.companiesAdmin.clientCompanyRoles.map(d => d.id),
     adminRoles: state.companiesAdmin.adminRoles.map(d => d.id)
   }
 }
