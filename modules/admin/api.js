@@ -206,8 +206,8 @@ export const submitUserEdit = (id, body) =>
   api.patch(`/prodex/api/users/id/${id}`, body).then(response => response.data)
 
 export const deleteUser = id => api.delete(`/prodex/api/users/id/${id}`).then(() => id)
-export const getUserRoles = () => api.get('/prodex/api/roles?includeAdminRoles=false').then(response => response.data)
-export const getAdminRoles = () => api.get('/prodex/api/roles?onlyAdminRoles=true').then(response => response.data)
+export const getUserRoles = () => api.get('/prodex/api/roles?type=WITHOUT_ADMIN').then(response => response.data)
+export const getAdminRoles = () => api.get('/prodex/api/roles?type=ONLY_ADMIN').then(response => response.data)
 
 export const searchCompany = (companyText, limit = 30) =>
   api
