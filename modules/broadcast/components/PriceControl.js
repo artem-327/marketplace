@@ -75,6 +75,11 @@ export default class PriceControl extends Component {
       // Same hack as in RuleItem.handleChange
       item.model.rule.elements.forEach(el => {
         if (!el.priceOverride) asignValues(values, el)
+        if (getSafe(() => el.elements.length, 0) > 0) {
+          el.elements.forEach(e => {
+            if (!e.priceOverride) asignValues(values, e)
+          })
+        }
       })
     }
     let copy = _.cloneDeep(item)
