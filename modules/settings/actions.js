@@ -426,10 +426,11 @@ export function getUsersDataRequest() {
     dispatch({
       type: AT.GET_USERS_DATA,
       async payload() {
-        const [users, branches, roles, currentUser] = await Promise.all([
+        const [users, branches, roles, clientCompanyRoles, currentUser] = await Promise.all([
           api.getUsers(),
           api.getBranches(),
           api.getRoles(),
+          api.getClientCompanyRoles(),
           api.getCurrentUser()
         ])
         dispatch({
@@ -439,6 +440,10 @@ export function getUsersDataRequest() {
         dispatch({
           type: AT.GET_ROLES_DATA,
           payload: roles
+        })
+        dispatch({
+          type: AT.SETTINGS_GET_CLIENT_COMPANY_ROLES_DATA,
+          payload: clientCompanyRoles
         })
         dispatch({
           type: AT.GET_CURRENT_USER_DATA_FULFILLED,

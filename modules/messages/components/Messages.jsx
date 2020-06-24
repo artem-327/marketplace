@@ -39,7 +39,8 @@ class Messages extends Component {
       const msg = message.split('\n')
       return msg.map(m => (
         <>
-          {m}<br/>
+          {m}
+          <br />
         </>
       ))
     }
@@ -55,25 +56,34 @@ class Messages extends Component {
 
     const url = getSafe(() => config.url, '')
     const isPaymentEndpoint = url.startsWith('/prodex/api/payments')
-    const dwollaValidationError = isPaymentEndpoint && (
-      clientMessage.startsWith('Dwolla validation error') ||
-      clientMessage.startsWith('Uploading documents for customer failed')
-    )
+    const dwollaValidationError =
+      isPaymentEndpoint &&
+      (clientMessage.startsWith('Dwolla validation error') ||
+        clientMessage.startsWith('Uploading documents for customer failed'))
 
     const msg =
-      message && message.level
-        ? (
-          <>
-            {this.createTaggedMessage(clientMessage)}
-            {this.createTaggedMessage(descriptionMessage)}
-            {
-              (process.env.NODE_ENV === 'production' && !dwollaValidationError)
-                ? ''
-                : this.createTaggedMessage(exceptionMessage)
-            }
-          </>
-        )
-        : message
+      message && message.level ? (
+        <>
+          {this.createTaggedMessage(clientMessage)}
+          {this.createTaggedMessage(descriptionMessage)}
+          {process.env.NODE_ENV === 'production' && !dwollaValidationError
+            ? ''
+            : this.createTaggedMessage(exceptionMessage)}
+        </>
+      ) : (
+        message
+      )
+
+    let autoDismissTimeout =
+      (getSafe(() => clientMessage.length, 0) +
+        getSafe(() => descriptionMessage.length, 0) +
+        getSafe(() => exceptionMessage.length, 0)) *
+      50
+    if (autoDismissTimeout < 2000) {
+      autoDismissTimeout = 2000
+    } else if (autoDismissTimeout > 7000) {
+      autoDismissTimeout = 7000
+    }
 
     if (msg && message.level) {
       const lowerCaseLevel = message.level.toLowerCase()
@@ -85,7 +95,11 @@ class Messages extends Component {
           />,
           msg
         ),
-        { appearance: themes[message.level], pauseOnHover: true }
+        {
+          appearance: themes[message.level],
+          pauseOnHover: true,
+          autoDismissTimeout
+        }
       )
       // this 'else if' can be remove in the future if backend will give all levels in all responses.
     } else if (msg && !message.level) {

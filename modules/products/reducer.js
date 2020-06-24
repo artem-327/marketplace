@@ -104,13 +104,13 @@ export default function reducers(state = initialState, action) {
     case AT.PRODUCTS_GET_HAZARD_CLASSES_FULFILLED: {
       return {
         ...state,
-        hazardClasses: action.payload
+        hazardClasses: action.payload.data
       }
     }
     case AT.PRODUCTS_GET_PACKAGING_GROUPS_FULFILLED: {
       return {
         ...state,
-        packagingGroups: action.payload
+        packagingGroups: action.payload.data
       }
     }
     /* CAS DELETE PRODUCT */

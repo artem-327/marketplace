@@ -70,7 +70,7 @@ function mapStateToProps(state, { router, datagrid }) {
         orderTotal: <FormattedNumber style='currency' currency={currency} value={r.cfPriceTotal} />,
         accountingDocumentsCount: r.accountingDocumentsCount,
         attachments: r.attachments,
-        orderItems: r.orderItems.map(item => {
+        orderItems: r.orderItems ? r.orderItems.map(item => {
           let cofA = filterAttachments(item.attachments, 1)  // C of A
           let sds = filterAttachments(item.attachments, 3)  // SDS
           let bl = filterAttachments(item.attachments, 10)  // B/L
@@ -83,7 +83,7 @@ function mapStateToProps(state, { router, datagrid }) {
             sds,
             bl
           })
-        })
+        }) : []
     })}),
     activeStatus: operations.ordersStatusFilter,
     //! !listDocumentTypes: operations.listDocumentTypes,

@@ -16,7 +16,8 @@ export const initialState = {
   listDocumentTypes: [],
   orderProcessing: false,
   orderAccountingDocuments: [],
-  orderAccountingDocumentsLoading: false
+  orderAccountingDocumentsLoading: false,
+  tableHandlersFilters: null
 }
 
 export default function reducers(state = initialState, action) {
@@ -186,6 +187,13 @@ export default function reducers(state = initialState, action) {
         orderAccountingDocumentsLoading: false,
         orderAccountingDocuments: action.payload.data
       }
+
+    case AT.OPERATIONS_SAVE_FILTERS: {
+      return {
+        ...state,
+        tableHandlersFilters: action.payload
+      }
+    }
 
     default: {
       return state
