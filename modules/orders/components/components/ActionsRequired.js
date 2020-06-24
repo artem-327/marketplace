@@ -241,7 +241,7 @@ class ActionsRequired extends React.Component {
 
     const textForConforming = !sellEligible ? 'order.confirm.sellElligible.notTrue' : 'order.confirm.accept.decline'
 
-    const requestCreditButton = orderCreditHistoryOpenrequestCreditButton
+    const requestCreditButton = orderCreditHistoryOpen
       ? {
           buttonType: 'primary',
           className: 'outline',
