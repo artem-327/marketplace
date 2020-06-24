@@ -198,9 +198,11 @@ class ActionsRequired extends React.Component {
                   <ARButton
                     primary={button.buttonType === 'primary'}
                     basic={button.buttonType === 'basic'}
+                    secondary={button.buttonType === 'secondary'}
                     fluid
                     size='large'
                     color={color ? color : null}
+                    className={(button.buttonType !== 'primary' && button.buttonType !== 'basic' && button.buttonType !== 'secondary' ? button.buttonType + ' ' : '') + getSafe(() => button.className, '')}
                     onClick={() => button.onClick()}
                     disabled={typeof button.disabled !== 'undefined' ? button.disabled : false}
                     loading={typeof button.loading !== 'undefined' ? button.loading : false}
@@ -238,11 +240,11 @@ class ActionsRequired extends React.Component {
     // Some switch might do the trick
 
     const textForConforming = !sellEligible ? 'order.confirm.sellElligible.notTrue' : 'order.confirm.accept.decline'
-    const test = true
 
-    const requestCreditButton = orderCreditHistoryOpen
+    const requestCreditButton = orderCreditHistoryOpenrequestCreditButton
       ? {
-          buttonType: 'basic',
+          buttonType: 'primary',
+          className: 'outline',
           onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
           dataTest: 'orders_detail_requestCredit_btn',
           text: 'order.requestCredit'
@@ -253,7 +255,7 @@ class ActionsRequired extends React.Component {
       <>
         {ordersType === 'Sales' ? (
           <>
-            {test || (orderStatus === 1) // Pending
+            {orderStatus === 1 // Pending
               ? this.renderSegment(null, 11, null, textForConforming, [
                   {
                     buttonType: 'primary',
@@ -264,7 +266,8 @@ class ActionsRequired extends React.Component {
                     disabled: (isSending && isSending !== 1) || !sellEligible
                   },
                   {
-                    buttonType: 'basic',
+                    buttonType: 'danger',
+                    className: 'outline',
                     onClick: this.rejectOrder,
                     dataTest: 'orders_detail_reject_btn',
                     text: 'global.reject',
@@ -283,7 +286,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}*/}
-            {test || (orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired && actionNeeded !== 'PRODUCT-OFFER-ASSIGN') // Confirmed && Not shipped
+            {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired && actionNeeded !== 'PRODUCT-OFFER-ASSIGN' // Confirmed && Not shipped
               ? this.renderSegment(null, 11, null, 'order.ship.description', [
                   {
                     buttonType: 'primary',
@@ -295,7 +298,7 @@ class ActionsRequired extends React.Component {
                 ])
               : null}
 
-            {test || (orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired && actionNeeded === 'PRODUCT-OFFER-ASSIGN') // Confirmed && Not shipped yet && virtual products
+            {orderStatus === 2 && shippingStatus === 1 && !assignLotsRequired && actionNeeded === 'PRODUCT-OFFER-ASSIGN' // Confirmed && Not shipped yet && virtual products
               ? this.renderSegment(null, 11, null, 'order.attach.products', [
                   {
                     buttonType: 'primary',
@@ -306,7 +309,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 2 && shippingStatus === 1 && assignLotsRequired) // Confirmed && Not shipped
+            {orderStatus === 2 && shippingStatus === 1 && assignLotsRequired // Confirmed && Not shipped
               ? this.renderSegment(null, 11, null, 'order.ship.description', [
                   {
                     // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
@@ -317,7 +320,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 2 && creditReviewStatus === 1 && creditReviewStatus === 1) // CONFIRMED && PENDING && PENDING
+            {orderStatus === 2 && creditReviewStatus === 1 && creditReviewStatus === 1 // CONFIRMED && PENDING && PENDING
               ? this.renderSegment(null, 11, null, 'order.reviewCreditRequestSales.description', [
                   {
                     // FE - show action "Assign Lot Numbers" when necessary. (order contains a Virtual ProductOffer)
@@ -328,7 +331,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 2 && reviewStatus === 3 && returnStatus === 0) // CONFIRMED && Rejected && null
+            {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
               ? this.renderSegment(null, 11, null, 'order.returnShipmentSale.description', [
                   {
                     buttonType: 'primary',
@@ -338,7 +341,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 2 && returnStatus === 2) // Confirmed && IN_TRANSIT
+            {orderStatus === 2 && returnStatus === 2 // Confirmed && IN_TRANSIT
               ? this.renderSegment(null, 11, null, 'order.returnInTransit.description', [
                   {
                     buttonType: 'primary',
@@ -353,7 +356,7 @@ class ActionsRequired extends React.Component {
         ) : (
           //ordersType === 'Purchase'
           <>
-            {test || (orderStatus === 4) // Draft
+            {orderStatus === 4 // Draft
               ? this.renderSegment(null, 11, null, 'order.detail.status.draft', [
                   {
                     buttonType: 'primary',
@@ -364,7 +367,8 @@ class ActionsRequired extends React.Component {
                     disabled: isSending && isSending !== 1
                   },
                   {
-                    buttonType: 'basic',
+                    buttonType: 'danger',
+                    className: 'outline',
                     onClick: this.discardOrder,
                     dataTest: 'orders_detail_discard_btn',
                     text: 'global.discard',
@@ -373,7 +377,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 1) // Pending
+            {orderStatus === 1 // Pending
               ? this.renderSegment(null, 11, null, 'order.detail.status.pending', [
                   {
                     buttonType: 'basic',
@@ -384,7 +388,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 2 && shippingStatus === 0) // Confirmed && N/A
+            {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
               ? this.renderSegment(null, 11, null, 'order.shipFailed.description', [
                   {
                     buttonType: 'primary',
@@ -394,7 +398,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 2 && shippingStatus === 2) // Confirmed && In transit
+            {orderStatus === 2 && shippingStatus === 2 // Confirmed && In transit
               ? this.renderSegment(null, 11, null, 'order.transit.description', [
                   {
                     buttonType: 'primary',
@@ -405,8 +409,8 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 0) // Confirmed && Pending
-              ? this.renderSegment(null, 11, null, 'order.delivered.description', [
+            {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 0 // Confirmed && Pending
+              ? this.renderSegment(null, 10, null, 'order.delivered.description', [
                   {
                     buttonType: 'primary',
                     onClick: this.acceptDelivery,
@@ -414,16 +418,17 @@ class ActionsRequired extends React.Component {
                     text: 'global.accept',
                     loading: isSending && !openedPopup
                   },
+                  requestCreditButton,
                   {
-                    buttonType: 'basic',
+                    buttonType: 'danger',
+                    className: 'outline',
                     onClick: () => openPopupName('openedPurchaseRejectDelivery'),
                     dataTest: 'orders_detail_reject_btn',
                     text: 'global.reject'
-                  },
-                  requestCreditButton
+                  }
                 ])
               : null}
-            {test || (orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 2)
+            {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 2
               ? // Confirmed && PENDING && COUNTER_OFFER_PENDING
                 this.renderSegment(null, 11, null, 'order.reviewCreditRequestPurchase.description', [
                   {
@@ -434,7 +439,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 2 && reviewStatus === 3 && returnStatus === 1) // Confirmed && Rejected && COUNTER_OFFER_PENDING
+            {orderStatus === 2 && reviewStatus === 3 && returnStatus === 1 // Confirmed && Rejected && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 11, null, 'order.waitToReturn.description', [
                   {
                     buttonType: 'primary',
@@ -445,7 +450,7 @@ class ActionsRequired extends React.Component {
                   }
                 ])
               : null}
-            {test || (orderStatus === 2 && reviewStatus !== 3 && (detail.paymentStatus === 5 || detail.paymentStatus === 4)) // Confirmed && Rejected && (Failed || Canceled)
+            {orderStatus === 2 && reviewStatus !== 3 && (detail.paymentStatus === 5 || detail.paymentStatus === 4) // Confirmed && Rejected && (Failed || Canceled)
               ? this.renderSegment('red', 11, null, 'order.payment.failed.description', [
                   {
                     buttonType: 'primary',

@@ -824,6 +824,8 @@ class Detail extends Component {
     const keyColumn = 5
     const valColumn = 16 - keyColumn
 
+    const test = true
+
     return (
       <div id='page' className='auto-scrolling'>
         {this.state.openDocumentsPopup && (
