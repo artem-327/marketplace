@@ -132,7 +132,16 @@ class TablesHandlers extends Component {
     if (tableHandlersFilters) {
       this.initFilterValues(tableHandlersFilters)
     } else {
-      this.handleFiltersValue(this.state[currentTab])
+      let filterValue = this.state[currentTab]
+      if (currentTab === 'orders') {
+        const status = localStorage['operations-orders-status-filter']
+        filterValue = {
+          ...filterValue,
+          status: status ? status : filterValue.status
+        }
+      }
+      this.setState({ orders: filterValue })
+      this.handleFiltersValue(filterValue)
     }
   }
 
@@ -140,7 +149,17 @@ class TablesHandlers extends Component {
     if (prevProps.currentTab !== this.props.currentTab) {
       const { currentTab } = this.props
       if (currentTab === '') return
-      this.handleFiltersValue(this.state[currentTab])
+
+      let filterValue = this.state[currentTab]
+      if (currentTab === 'orders') {
+        const status = localStorage['operations-orders-status-filter']
+        filterValue = {
+          ...filterValue,
+          status: status ? status : filterValue.status
+        }
+      }
+      this.setState({ orders: filterValue })
+      this.handleFiltersValue(filterValue)
     }
   }
 
@@ -148,9 +167,18 @@ class TablesHandlers extends Component {
     this.props.saveFilters(this.state)
   }
 
-  initFilterValues = tableHandlersFilters => {
+  initFilterValues = initTableHandlersFilters => {
     const { currentTab } = this.props
     if (currentTab === '') return
+    const status = localStorage['operations-orders-status-filter']
+
+    const tableHandlersFilters = {
+      ...initTableHandlersFilters,
+      orders: {
+        ...initTableHandlersFilters.orders,
+        status: status ? status : initTableHandlersFilters.orders.status
+      }
+    }
 
     const { setValues, setFieldTouched } = this.formikProps
     this.setState({ ...tableHandlersFilters })
@@ -201,6 +229,10 @@ class TablesHandlers extends Component {
         [data.name]: data.value
       }
     })
+
+    if (currentTab === 'orders' && data.name === 'status') {
+      localStorage['operations-orders-status-filter'] = data.value
+    }
 
     const filter = {
       ...this.state[currentTab],

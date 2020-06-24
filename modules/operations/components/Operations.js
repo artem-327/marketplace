@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
-import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
-import Tabs from './Tabs'
+import { Container, Grid, GridColumn } from 'semantic-ui-react'
 import { withAuth } from '~/hocs'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
@@ -19,8 +18,6 @@ import OrderDetail from './orders/DetailContainer'
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
 import { tabChanged } from '../actions'
-import moment from 'moment'
-import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'  // ! ! mozna nepouziju vsechno
 
 const CustomGridColumn = styled(GridColumn)`
   padding: 0 30px !important;
@@ -192,11 +189,8 @@ class Operations extends Component {
   render() {
     const { currentTab, orderDetailData } = this.props
 
-    //! ! Temporary commented
-    //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
-    //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-
-    const preserveFilters = currentTab.type === 'company-product-catalog' || currentTab.type === 'orders'
+    if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
+      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
     const displayPage = !!orderDetailData
 

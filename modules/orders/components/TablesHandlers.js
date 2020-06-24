@@ -207,10 +207,20 @@ class TablesHandlers extends Component {
 
   componentDidMount() {
     const { tableHandlersFilters } = this.props
+    const status = localStorage['orders-status-filter']
+
     if (tableHandlersFilters) {
-      this.initFilterValues(tableHandlersFilters)
+      this.initFilterValues({
+        ...tableHandlersFilters,
+        status: status ? status : tableHandlersFilters.status
+      })
     } else {
-      this.handleFiltersValue(this.state.filterValue)
+      const filterValue = {
+        ...this.state.filterValue,
+        status: status ? status : this.state.filterValue.status
+      }
+      this.setState({ filterValue })
+      this.handleFiltersValue(filterValue)
     }
   }
 
@@ -220,6 +230,7 @@ class TablesHandlers extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.queryType !== this.props.queryType) {
+      this.props.datagrid.clear()
       this.handleFiltersValue(this.state.filterValue)
     }
   }
@@ -256,6 +267,8 @@ class TablesHandlers extends Component {
       ...this.state.filterValue,
       [value.name]: value.value
     }
+    if (value.name === 'status') localStorage['orders-status-filter'] = value.value
+
     this.setState({ filterValue })
     this.handleFiltersValue(filterValue)
   }
@@ -382,7 +395,7 @@ const mapStateToProps = (state, { router } )=> {
 }
 
 export default withDatagrid(
-  withToastManager(withRouter(
-    connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers))
+  withDatagrid(withToastManager(withRouter(
+    connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers)))
   ))
 )
