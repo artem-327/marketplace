@@ -57,7 +57,8 @@ const Content = styled.div`
 
 const ButtonDiv = styled.div`
   padding-top: 8vw;
-  text-align: -webkit-center;
+  display: flex;
+  justify-content: center;
 `
 
 const CustomButton = styled(Button)`
