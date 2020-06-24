@@ -14,3 +14,10 @@ export const defaultTabs = [
 // TODO FORMATTED MESSAGE
 
 export const companyDetailsTab = { name: 'Company Details', id: 0, type: 'company-details', hideHandler: true }
+
+export const palletDimensions = {
+  weight: 'APP_SHIPPING_PALLET_WEIGHT_LB',
+  length: 'APP_SHIPPING_PALLET_LENGTH_IN',
+  width: 'APP_SHIPPING_PALLET_WIDTH_IN',
+  height: 'APP_SHIPPING_PALLET_HEIGHT_IN'
+}

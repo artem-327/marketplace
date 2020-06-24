@@ -78,7 +78,9 @@ class DatagridProvider extends Component {
       prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
       if (this.props.preserveFilters) {
-        this.loadData()
+        if (!this.props.skipInitLoad) {
+          this.loadData()
+        }
       } else {
         this.setState({ savedFilters: {} }, () => this.setFilter({ filters: [], orFilters: [] }))
       }

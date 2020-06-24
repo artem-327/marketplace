@@ -40,7 +40,8 @@ const initialState = {
   order: [],
   documentTypesFetching: false,
   listDocumentTypes: [],
-  loadingRelatedDocuments: false
+  loadingRelatedDocuments: false,
+  tableHandlersFilters: null
 }
 
 export default function (state = initialState, action) {
@@ -604,6 +605,13 @@ export default function (state = initialState, action) {
     case AT.EDIT_RETURN_TRACKING_CODE_REJECTED: {
       return {
         ...state
+      }
+    }
+
+    case AT.ORDERS_SAVE_FILTERS: {
+      return {
+        ...state,
+        tableHandlersFilters: action.payload
       }
     }
 

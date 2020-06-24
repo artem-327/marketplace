@@ -146,7 +146,8 @@ class UsersSidebar extends React.Component {
     selectedCompany: [],
     branches: [],
     selectedSellMarketSegmentsOptions: [],
-    selectedBuyMarketSegmentsOptions: []
+    selectedBuyMarketSegmentsOptions: [],
+    isClientCompany: false
   }
 
   userFormValidation = () =>
@@ -284,6 +285,7 @@ class UsersSidebar extends React.Component {
         selectedCompany: company ? [company] : [],
         selectedSellMarketSegmentsOptions,
         selectedBuyMarketSegmentsOptions,
+        isClientCompany: popupValues.company.isClientCompany,
         popupValues: {
           ...popupValues,
           homeBranch: user.value.homeBranch,
@@ -299,6 +301,7 @@ class UsersSidebar extends React.Component {
         selectedCompany: [],
         selectedSellMarketSegmentsOptions,
         selectedBuyMarketSegmentsOptions,
+        isClientCompany: false,
         popupValues: {
           ...popupValues,
           homeBranch: user.value.homeBranch,
