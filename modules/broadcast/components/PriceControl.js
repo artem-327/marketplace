@@ -119,7 +119,7 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const { disabled, offer, item, hideFobPrice } = this.props
+    const { disabled, offer, item, hideFobPrice, filter } = this.props
     const {
       model: { rule }
     } = item
@@ -127,7 +127,14 @@ export default class PriceControl extends Component {
     const prices = hideFobPrice ? null : this.getPrices()
     let type = rule.priceAddition ? 'addition' : this.state.type
 
-    let value = rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
+    let value =
+      !getSafe(() => rule.priceAddition, false) && !getSafe(() => rule.priceMultiplier, false)
+        ? ''
+        : rule.priceAddition !== 0
+        ? rule.priceAddition
+        : rule.priceMultiplier !== 0
+        ? rule.priceMultiplier
+        : ''
 
     return (
       <Box>

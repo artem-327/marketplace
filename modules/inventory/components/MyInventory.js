@@ -95,23 +95,23 @@ const StyledMenu = styled(Menu)`
     height: 40px;
     border-radius: 3px;
     font-weight: 500;
-    color: #848893;   
+    color: #848893;
     display: flex;
     align-items: center;
 
     svg {
-        width: 18px;
-        height: 20px;
-        margin-right: 10px;
-        vertical-align: top;
-        color: inherit;
-      }
-      
+      width: 18px;
+      height: 20px;
+      margin-right: 10px;
+      vertical-align: top;
+      color: inherit;
+    }
+
     &.light {
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
       border: solid 1px #dee2e6;
       background-color: #ffffff;
-      color: #848893;    
+      color: #848893;
       &:hover {
         background-color: #f8f9fb;
         color: #20273a;
@@ -121,7 +121,7 @@ const StyledMenu = styled(Menu)`
         color: #20273a;
       }
     }
-    
+
     &.secondary {
       color: #ffffff;
       background-color: #2599d5;
@@ -498,6 +498,12 @@ class MyInventory extends Component {
           />
         )
       }
+      if (r.cfStatusReason)
+        title = (
+          <>
+            {title} <span>{' ' + r.cfStatusReason}</span>
+          </>
+        )
 
       let productStatusText = null
       switch (r.cfStatus) {
@@ -533,20 +539,17 @@ class MyInventory extends Component {
             } // <div> has to be there otherwise popup will be not shown
           />
         ) : null,
-        productStatus: (productStatusText
-          ? (
-            <Popup
-              size='small'
-              header={productStatusText}
-              trigger={
-                <div>
-                  <FileTextIcon />
-                </div>
-              } // <div> has to be there otherwise popup will be not shown
-            />
-          )
-          : null
-        ),
+        productStatus: productStatusText ? (
+          <Popup
+            size='small'
+            header={productStatusText}
+            trigger={
+              <div>
+                <FileTextIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : null,
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
@@ -841,7 +844,9 @@ class MyInventory extends Component {
 
               return (
                 <span>
-                  <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({count})</span></span>
+                  <span style={{ color: '#2599d5' }}>
+                    {name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({count})</span>
+                  </span>
                 </span>
               )
             }}
@@ -960,7 +965,7 @@ class MyInventory extends Component {
           />
         </div>
         {sidebarDetailOpen && <DetailSidebar />}
-        {isExportInventoryOpen && <ExportInventorySidebar onClose={() => setExportSidebarOpenState(false)}/>}
+        {isExportInventoryOpen && <ExportInventorySidebar onClose={() => setExportSidebarOpenState(false)} />}
       </>
     )
   }
