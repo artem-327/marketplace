@@ -21,7 +21,7 @@ import {
   Dimmer,
   Modal
 } from 'semantic-ui-react'
-import { ArrowLeft, ChevronDown, DownloadCloud, UploadCloud } from 'react-feather'
+import { ArrowLeft, ChevronDown, DownloadCloud, PlusCircle, UploadCloud } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
@@ -327,6 +327,11 @@ const CustomInput = styled(Input)`
 const CustomButton = styled(Button)`
   background-color: #2599d5 !important;
   color: #ffffff !important;
+`
+
+const PlusIcon = styled(PlusCircle)`
+  margin-right: 5px;
+  vertical-align: middle;
 `
 
 const CustomA = styled.a`
@@ -819,6 +824,8 @@ class Detail extends Component {
     const keyColumn = 5
     const valColumn = 16 - keyColumn
 
+    const test = true
+
     return (
       <div id='page' className='auto-scrolling'>
         {this.state.openDocumentsPopup && (
@@ -1309,6 +1316,14 @@ class Detail extends Component {
                         <AttachmentManager
                           isOpenManager={this.state.isOpenManager}
                           asModal
+                          trigger={(
+                            <CustomButton type='button' floated='right'>
+                              <PlusIcon size='18' />
+                              <FormattedMessage id='global.addDocument' defaultMessage='Add Document'>
+                                {text => text}
+                              </FormattedMessage>
+                            </CustomButton>
+                          )}
                           returnSelectedRows={rows => this.attachDocumentsManager(rows)}
                         />
                       </GridColumn>
@@ -1408,12 +1423,12 @@ class Detail extends Component {
                                     onClick={() => this.openRelatedPopup(order.orderItems[index].attachments, element)}>
                                     <FormattedMessage id='global.view' defaultMessage='View' />
                                   </a>
-                                ) : (
+                                ) : ordersType !== 'Purchase' ? (
                                   <AttachmentManager
                                     asModal
                                     returnSelectedRows={rows => this.linkAttachment(rows, order.orderItems[index].id)}
                                   />
-                                )}
+                                ) : 'N/A'}
                               </Table.Cell>
                               <Table.Cell className='p-0'></Table.Cell>
                             </Table.Row>
@@ -1725,38 +1740,34 @@ class Detail extends Component {
                             </CustomDivInTitle>
                           </CustomDivTitle>
                           <CustomDivContent>
-                            {order.paymentTerms === 'REGULAR'
-                              ? (
-                                <FormattedMessage
-                                  id='cart.payment.netX.content'
-                                  defaultMessage={`The payment terms of this order are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
-                                  values={{
-                                    value: <b>Net {order.paymentNetDays}</b>,
-                                    days: <b>{order.paymentNetDays} days</b>
-                                  }}
-                                />
-                              )
-                              : (
-                                order.paymentTerms === 'HALF_UPFRONT' ? (
-                                  <FormattedMessage
-                                    id='cart.payment.terms50.content'
-                                    defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
-                                    values={{
-                                      value: <b>50/50</b>,
-                                      percentage: <b>50%</b>,
-                                      shipmentDate: <b>{order.paymentNetDays} days after the shipment date</b>
-                                    }}
-                                  />
-                                ) : (
-                                  <FormattedMessage
-                                    id='cart.payment.terms100.content'
-                                    defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
-                                    values={{
-                                      percentage: <b>100%</b>
-                                    }}
-                                  />
-                                )
-                              )}
+                            {order.paymentTerms === 'REGULAR' ? (
+                              <FormattedMessage
+                                id='cart.payment.netX.content'
+                                defaultMessage={`The payment terms of this order are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
+                                values={{
+                                  value: <b>Net {order.paymentNetDays}</b>,
+                                  days: <b>{order.paymentNetDays} days</b>
+                                }}
+                              />
+                            ) : order.paymentTerms === 'HALF_UPFRONT' ? (
+                              <FormattedMessage
+                                id='cart.payment.terms50.content'
+                                defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
+                                values={{
+                                  value: <b>50/50</b>,
+                                  percentage: <b>50%</b>,
+                                  shipmentDate: <b>{order.paymentNetDays} days after the shipment date</b>
+                                }}
+                              />
+                            ) : (
+                              <FormattedMessage
+                                id='cart.payment.terms100.content'
+                                defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
+                                values={{
+                                  percentage: <b>100%</b>
+                                }}
+                              />
+                            )}
                           </CustomDivContent>
                         </Rectangle>
                       </GridColumn>
