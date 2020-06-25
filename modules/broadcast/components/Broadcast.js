@@ -1030,7 +1030,7 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager } = this.props
+    const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager, templates } = this.props
     let filteredTree = this.treeToModel()
 
     try {
@@ -1038,13 +1038,38 @@ class Broadcast extends Component {
         name: 'category',
         value: 'region'
       })
-      await saveRules(id, filteredTree)
+
+      const { value } = await saveRules(id, filteredTree)
+
+      let name, dataId = null
+      if (value && value.broadcastTemplateName) {
+        name = value.broadcastTemplateName
+        dataId = value.broadcastTemplateName
+          ? getSafe(() => templates.find(el => el.name === value.broadcastTemplateName).id, null)
+          : null
+      }
+
+      if (dataId === null) {
+        dataId = ''
+        name = ''
+      }
+
+      //if (this.setFieldValue) this.setFieldValue('templates', dataId)
+
       if (!asSidebar) {
         await initGlobalBroadcast()
       }
       this.setState({
         saved: true,
-        initialize: true
+        initialize: true,
+        selectedTemplate: {
+          id: dataId,
+          name: name
+        },
+        templateInitialValues: {
+          name: name,
+          templates: dataId
+        }
       })
       if (getSafe(() => filteredTree.broadcast, null) === 0) {
         toastManager.add(

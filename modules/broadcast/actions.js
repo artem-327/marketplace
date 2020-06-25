@@ -33,7 +33,15 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
 })
 
 export const saveRules = createAsyncAction('BROADCAST_SAVE', async (id, rules) => {
-  id ? await api.saveRules(id, rules) : await api.saveGeneralRules(rules)
+  if (id)
+  {
+    const data = await api.saveRules(id, rules)
+    return {
+      broadcastTemplateName: getSafe(() => data.broadcastTemplateName, null)
+    }
+  } else {
+    return await api.saveGeneralRules(rules)
+  }
 })
 
 export const saveTemplate = createAsyncAction('BROADCAST_SAVE_TEMPLATE', payload => api.saveTemplate(payload))
