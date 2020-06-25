@@ -9,7 +9,7 @@ import Router from 'next/router'
 import { withToastManager } from 'react-toast-notifications'
 import styled, { ThemeProvider } from 'styled-components'
 import { updateMyProfile } from '~/modules/profile/actions'
-import { tabChanged } from '~/modules/settings/actions'
+import { tabChanged, handleLocationsTab } from '~/modules/settings/actions'
 import { defaultTabs } from '~/modules/settings/contants'
 
 import { generateToastMarkup, getSafe } from '~/utils/functions'
@@ -118,9 +118,9 @@ const Icons = styled.div`
 const cookies = new Cookies()
 
 let tutorialTabs = [
-  'branches',
+  'locations',
   'users',
-  'warehouses',
+  'pickup',
   'products',
   'inventory',
   'marketplace',
@@ -154,7 +154,7 @@ class Tutorial extends Component {
       let tutorials = []
       let urls = []
       if (isClientCompanyAdmin) {
-        tutorials.push('branches', 'users', 'warehouses', 'marketplace', 'registerAccount', 'addAccount')
+        tutorials.push('locations', 'users', 'pickup', 'marketplace', 'registerAccount', 'addAccount')
         urls.push(
           '/settings?type=locations',
           '/settings?type=users',
@@ -183,7 +183,7 @@ class Tutorial extends Component {
 
   getNextTab = () => {
     const cookieTutorialTabs = cookies.get('tutorial')
-    let nextTab = tutorialTabs[0] // 'branches'
+    let nextTab = tutorialTabs[0] // 'locations'
     if (cookieTutorialTabs && cookieTutorialTabs.length) {
       nextTab = tutorialTabs[cookieTutorialTabs.length]
     }
@@ -192,7 +192,7 @@ class Tutorial extends Component {
 
   handleSetCookies = async (e, skip) => {
     e.preventDefault()
-    const { toastManager, updateMyProfile, name, tabChanged } = this.props
+    const { toastManager, updateMyProfile, name, tabChanged, handleLocationsTab } = this.props
     // array of tabsNames converted to Map
     let tabsNamesMap = new Map()
     if (defaultTabs && defaultTabs.length) {
@@ -229,14 +229,21 @@ class Tutorial extends Component {
         !skip && Router.push(urlTabs[cookieTutorialTabs.length])
         const tabType = urlTabs[cookieTutorialTabs.length].split('=')[1]
         !skip && tutorialTabs[cookieTutorialTabs.length] !== 'inventory' && tabChanged(tabsNamesMap.get(tabType))
-
+        if (tutorialTabs[cookieTutorialTabs.length] === 'pickup') {
+          handleLocationsTab('pick-up-locations')
+        }
         cookies.set('tutorial', [...cookieTutorialTabs, this.getNextTab()], { path: '/' }) // set all existing cookies + next checked tab
         this.setState({ tutorialTab: tutorialTabs[cookieTutorialTabs.length + 1] }) // set another tutorial tab for show correct content and icons in tab
       }
     } else {
-      !skip && Router.push(urlTabs[0])
-      !skip && tabChanged(tabsNamesMap.get(tutorialTabs[0]))
-      cookies.set('tutorial', [this.getNextTab()], { path: '/' }) // set first checked tab 'branches'
+      !skip && (await Router.push(urlTabs[0]))
+      if (tutorialTabs[0] === 'locations') {
+        !skip && (await handleLocationsTab('branches'))
+      } else {
+        !skip && (await tabChanged(tabsNamesMap.get(tutorialTabs[0])))
+      }
+
+      cookies.set('tutorial', [this.getNextTab()], { path: '/' }) // set first checked tab 'locations'
       this.setState({ tutorialTab: tutorialTabs[1] }) // set second tutorial tab after checked first tab
     }
   }
@@ -349,7 +356,8 @@ class Tutorial extends Component {
 
 const mapDispatchToProps = {
   updateMyProfile,
-  tabChanged
+  tabChanged,
+  handleLocationsTab
 }
 
 const mapStateToProps = state => {
