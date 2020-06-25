@@ -35,7 +35,9 @@ export default {
   },
   getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
-  getRoles: () => api.get('/prodex/api/roles?includeSuperAdmin=false').then(response => response.data),
+  getRoles: () => api.get('/prodex/api/roles?type=WITHOUT_ADMIN').then(response => response.data),
+  getClientCompanyRoles: () =>
+    api.get('/prodex/api/roles?type=CLIENT_COMPANY_COMPATIBLE').then(response => response.data),
   userSwitchEnableDisable: id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`),
   getCurrentUser: () => api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () => api.get('/prodex/api/branches/warehouses').then(response => response.data),

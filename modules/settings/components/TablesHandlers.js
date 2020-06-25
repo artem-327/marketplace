@@ -196,7 +196,6 @@ class TablesHandlers extends Component {
       if (this.props.currentTab.type === 'bank-accounts') {
         await getDwollaBeneficiaryOwners()
       }
-      await initGlobalBroadcast()
     } catch (err) {
       console.error(err)
     }

@@ -369,7 +369,7 @@ class Navigation extends Component {
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin || isClientCompanyAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
-            text={formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}
+            text={formatMessage({ id: 'navigation.myAccount', defaultMessage: 'My Account' })}
             className={settings ? 'opened' : null}
             opened={settings}
             onClick={() => this.toggleOpened('settings')}

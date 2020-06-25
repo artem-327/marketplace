@@ -9,6 +9,7 @@ import {
   LeftMenuContainer,
   MainContainer,
   ContentContainer,
+  CopyrightContainer,
   FlexContainer,
   LogoImage,
   CircularLabel,
@@ -56,6 +57,7 @@ import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import ErrorComponent from '~/components/error'
+import moment from 'moment'
 
 export const IconMinimize2 = styled(Minimize2)`
   text-align: center;
@@ -322,6 +324,10 @@ class Layout extends Component {
           <ContentContainer fluid className='page-wrapper flex stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
           </ContentContainer>
+
+          <CopyrightContainer>
+            <FormattedMessage id='global.copyright' defaultMessage={`Copyright ${moment().format('YYYY')} Echosystem`} values={{ currentYear: moment().format('YYYY') }} />
+          </CopyrightContainer>
         </FlexContainer>
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
 

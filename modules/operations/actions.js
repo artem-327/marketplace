@@ -125,3 +125,10 @@ export const getAccountingDocuments = orderId => ({
   type: AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS,
   payload: api.getAccountingDocuments(orderId)
 })
+
+export function saveFilters(filters) {
+  return {
+    type: AT.OPERATIONS_SAVE_FILTERS,
+    payload: filters
+  }
+}

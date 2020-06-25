@@ -55,17 +55,269 @@ a.ui.button {
   background-color: #dee2e6 !important;
 }
 
-.ui.button.primary {
-  background: #84C225;
 
-  &:hover,
-  &:focus {
-    background: #6fad11;
+.ui.button {
+  min-width: 110px;
+  height: 40px;
+  border-radius: 3px;
+  padding: 10px 26px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+
+  &[disabled] {
+    opacity: 1 !important;
   }
-}
 
-.ui.button.basic {
-  background: #fff !important;
+  &.primary {
+    background: #84C225;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #76b519;
+      color: #ffffff;
+    }
+
+    &:focus {
+      background-color: #6ba80f;
+      color: #ffffff;
+    }
+
+    &[disabled] {
+      background-color: #d4eab3;
+      color: #ffffff;
+    }
+
+    &.outline {
+      border-color: #84c225;
+      background-color: #e5efd8;
+      color: #84c225;
+
+      &:hover {
+        border-color: #76b519;
+        background-color: #76b519;
+        color: #ffffff;
+      }
+
+      &:focus {
+        border-color: #6ba80f;
+        background-color: #6ba80f;
+        color: #ffffff;
+      }
+
+      &[disabled] {
+        border-color: #d4eab3;
+        background-color: #ffffff;
+        color: #d4eab3;
+      }
+    }
+  }
+
+  &.secondary {
+    background-color: #2599d5 !important;
+    color: #ffffff !important;
+
+    &:hover {
+      background-color: #188ec9 !important;
+    }
+
+    &:focus {
+      background-color: #0d82bc !important;
+    }
+
+    &[disabled] {
+      background-color: #bde0f2 !important;
+      color: rgba(#ffffff, 0.65) !important;
+    }
+
+    &.outline {
+      border-color: #2599d5 !important;
+      background-color: #ddf1fc !important;
+      color: #2599d5 !important;
+
+      &:hover {
+        border-color: #188ec9 !important;
+        background-color: #188ec9 !important;
+        color: #ffffff !important;
+      }
+
+      &:focus {
+        border-color: #0d82bc !important;
+        background-color: #0d82bc !important;
+        color: #ffffff !important;
+      }
+
+      &[disabled] {
+        border-color: #bde0f2 !important;
+        background: #ffffff !important;
+        color: #bde0f2 !important;
+      }
+    }
+  }
+
+  &.danger {
+    background-color: #f16844;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #e55834;
+      color: #ffffff;
+    }
+
+    &:focus {
+      background-color: #d84a27;
+      color: #ffffff;
+    }
+
+    &[disabled] {
+      background-color: #facabe;
+      color: #ffffff;
+    }
+
+    &.outline {
+      border-color: #f16844;
+      background-color: #fff0ed;
+      color: #f16844;
+
+      &:hover {
+        border-color: #e55834;
+        background-color: #e55834;
+        color: #ffffff;
+      }
+
+      &:focus {
+        border-color: #d84a27;
+        background-color: #d84a27;
+        color: #ffffff;
+      }
+
+      &[disabled] {
+        border-color: #facabe;
+        background-color: #ffffff;
+        color: #facabe;
+      }
+    }
+  }
+
+  &.ghost {
+    background: transparent !important;
+    color: #848893 !important;
+
+    &:hover {
+      background-color: #f8f9fb !important;
+      color: #20273a !important;
+    }
+
+    &:focus {
+      background-color: #edeef2 !important;
+      color: #20273a !important;
+    }
+
+    &[disabled] {
+      background-color: transparent !important;
+      color: #cecfd4 !important;
+    }
+
+    &.light {
+      color: #ffffff !important;
+
+      &:hover {
+        background-color: #1b3454 !important;
+        color: #ffffff !important;
+      }
+
+      &:focus {
+        background-color: #233e60 !important;
+        color: #ffffff !important;
+      }
+
+      &[disabled] {
+        color: rgba(#ffffff, 0.2) !important;
+      }
+    }
+  }
+
+  &.basic,
+  &.outline {
+    border-width: 1px;
+    border-style: solid;
+    padding: 9px 25px !important;
+  }
+
+  &.basic {
+    border-color: #dee2e6 !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06) !important;
+    color: #848893 !important;
+
+    &:hover {
+      background-color: #f8f9fb !important;
+      color: #20273a !important;
+    }
+
+    &:focus {
+      background-color: #edeef2 !important;
+      color: #20273a !important;
+    }
+
+    &[disabled] {
+      background-color: #ffffff !important;
+      color: #cecfd4 !important;
+    }
+
+    &.danger,
+    &.red {
+      color: #f16844 !important;
+
+      &:hover,
+      &:focus {
+        color: #f16844 !important;
+      }
+
+      &[disabled] {
+        color: #f16844 !important;
+      }
+    }
+
+    &.outline {
+      border-color: #466287 !important;
+      background-color: transparent !important;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06) !important;
+      color: #ffffff !important;
+
+      &:hover {
+        border-color: #dee2e6 !important;
+        background-color: #ffffff !important;
+        color: #20273a !important;
+      }
+
+      &:focus {
+        border-color: #dee2e6 !important;
+        background-color: #edeef2 !important;
+        color: #20273a !important;
+      }
+
+      &[disabled] {
+        border-color: #dee2e6 !important;
+        background-color: #ffffff !important;
+        color: #cecfd4 !important;
+      }
+
+      &.danger {
+        color: #f16844 !important;
+
+        &:hover,
+        &:focus {
+          color: #f16844 !important;
+        }
+
+        &[disabled] {
+          color: rgba(#f16844, 0.3) !important;
+        }
+      }
+    }
+  }
 }
 
 .flex {
@@ -1243,7 +1495,7 @@ i.file {
 
   &.entered > .dismiss-bar:after {
     animation-name: heightDown;
-    animation-duration: 10000ms;
+    animation-duration: 7000ms;
     animation-timing-function: linear;
   }
 
