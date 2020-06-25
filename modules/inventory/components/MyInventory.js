@@ -498,7 +498,7 @@ class MyInventory extends Component {
           />
         )
       }
-      if (r.cfStatusReason)
+      if (r.cfStatusReason && !(r.cfStatus.toLowerCase() === 'broadcasting' && isOfferValid))
         title = (
           <>
             {title} <span>{' ' + r.cfStatusReason}</span>

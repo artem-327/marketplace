@@ -173,7 +173,8 @@ class Holds extends Component {
       isCompanyAdmin,
       isProductOfferManager,
       tutorialCompleted,
-      toggleHolds
+      toggleHolds,
+      isClientCompanyAdmin
     } = this.props
     const { columns, filterValue } = this.state
     let { formatMessage } = intl

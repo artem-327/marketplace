@@ -224,12 +224,11 @@ class DatagridProvider extends Component {
     !allLoaded && this.loadNextPage(overPage)
   }
 
-  loadData = (params = {}, query = {}) => {
+  loadData = (params = { pageNumber: 0 }, query = {}) => {
     this.setState(
       s => ({
         ready: true,
         datagridParams: {
-          // pageNumber: 0,
           ...s.datagridParams,
           ...params
         },
