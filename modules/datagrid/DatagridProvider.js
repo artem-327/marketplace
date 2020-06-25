@@ -78,7 +78,9 @@ class DatagridProvider extends Component {
       prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
       if (this.props.preserveFilters) {
-        this.loadData()
+        if (!this.props.skipInitLoad) {
+          this.loadData()
+        }
       } else {
         this.setState({ savedFilters: {} }, () => this.setFilter({ filters: [], orFilters: [] }))
       }
@@ -222,12 +224,11 @@ class DatagridProvider extends Component {
     !allLoaded && this.loadNextPage(overPage)
   }
 
-  loadData = (params = {}, query = {}) => {
+  loadData = (params = { pageNumber: 0 }, query = {}) => {
     this.setState(
       s => ({
         ready: true,
         datagridParams: {
-          // pageNumber: 0,
           ...s.datagridParams,
           ...params
         },

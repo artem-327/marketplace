@@ -324,3 +324,10 @@ export function editReturnTrackingCode(orderId, trackingCode) {
     payload: Api.editReturnTrackingCode(orderId, trackingCode)
   }
 }
+
+export function saveFilters(filters) {
+  return {
+    type: AT.ORDERS_SAVE_FILTERS,
+    payload: filters
+  }
+}
