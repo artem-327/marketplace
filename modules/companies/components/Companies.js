@@ -55,8 +55,7 @@ class Companies extends Component {
           }
           if (v && v.company) {
             filters.and = [
-              //{operator: 'EQUALS', path: 'User.homeBranch.id', values: [v.company]},
-              {operator: 'EQUALS', path: 'Company.id', values: [v.company]},  // ! ! tmp - taky nic nevraci
+              {operator: 'EQUALS', path: 'User.homeBranch.company.id', values: [v.company]}
             ]
           }
           return filters
