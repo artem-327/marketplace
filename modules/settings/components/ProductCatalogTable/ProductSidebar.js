@@ -60,6 +60,7 @@ import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/const
 import { UploadCloud } from 'react-feather'
 import { QuantityInput } from '~/components/custom-formik/'
 import ErrorFocus from '~/components/error-focus'
+import { palletDimensions } from '~/modules/settings/contants'
 
 const CustomForm = styled(Form)`
   flex-grow: 0 !important;
@@ -417,7 +418,13 @@ class ProductSidebar extends React.Component {
   }, 250)
 
   getInitialFormValues = () => {
-    const { popupValues } = this.props
+    const {
+      popupValues,
+      palletWeightInitFromSettings,
+      palletHeightInitFromSettings,
+      palletWidthInitFromSettings,
+      palletLengthInitFromSettings
+    } = this.props
     return {
       ...initialValues,
       ...popupValues,
@@ -432,10 +439,26 @@ class ProductSidebar extends React.Component {
       packagingLength: getSafe(() => popupValues.packagingLength, ''),
       palletMinPkgs: getSafe(() => popupValues.palletMinPkgs, ''),
       palletMaxPkgs: getSafe(() => popupValues.palletMaxPkgs, ''),
-      palletWeight: getSafe(() => popupValues.palletWeight, ''),
-      palletLength: getSafe(() => popupValues.palletLength, ''),
-      palletWidth: getSafe(() => popupValues.palletWidth, ''),
+      palletWeight: getSafe(() => popupValues.palletWeight, '')
+        ? popupValues.palletWeight
+        : getSafe(() => palletWeightInitFromSettings, '')
+        ? palletWeightInitFromSettings
+        : '',
+      palletLength: getSafe(() => popupValues.palletLength, '')
+        ? popupValues.palletLength
+        : getSafe(() => palletLengthInitFromSettings, '')
+        ? palletLengthInitFromSettings
+        : '',
+      palletWidth: getSafe(() => popupValues.palletWidth, '')
+        ? popupValues.palletWidth
+        : getSafe(() => palletWidthInitFromSettings, '')
+        ? palletWidthInitFromSettings
+        : '',
       palletHeight: getSafe(() => popupValues.palletHeight, '')
+        ? popupValues.palletHeight
+        : getSafe(() => palletHeightInitFromSettings, '')
+        ? palletHeightInitFromSettings
+        : ''
     }
   }
 
@@ -1250,7 +1273,14 @@ const mapDispatchToProps = {
   addAttachment,
   removeAttachment
 }
-const mapStateToProps = ({ settings }) => {
+const mapStateToProps = ({ settings, auth }) => {
+  let settingsMap = new Map()
+  if (getSafe(() => auth.identity.settings.length, false)) {
+    for (let setting of auth.identity.settings) {
+      settingsMap.set(setting.key, setting.value)
+    }
+  }
+
   return {
     attachments: getSafe(() => settings.popupValues.attachments, []),
     popupValues: settings.popupValues,
@@ -1280,7 +1310,11 @@ const mapStateToProps = ({ settings }) => {
           </>
         )
       }
-    })
+    }),
+    palletWeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.weight), ''),
+    palletLengthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.length), ''),
+    palletWidthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.width), ''),
+    palletHeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.height), '')
   }
 }
 

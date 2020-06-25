@@ -301,7 +301,8 @@ class Tutorial extends Component {
       marginWantedBoard,
       isMerchant,
       isClientCompanyManager,
-      isOrderProcessing
+      isOrderProcessing,
+      isCompanyAdmin
     } = this.props
 
     let margin = '15px 32px 15px 32px'
@@ -313,7 +314,7 @@ class Tutorial extends Component {
     const theme = {
       margin
     }
-    return isMerchant || isClientCompanyManager || isOrderProcessing ? null : (
+    return !isCompanyAdmin && (isMerchant || isClientCompanyManager || isOrderProcessing) ? null : (
       <>
         {tutorialTab ? (
           <ThemeProvider theme={theme}>

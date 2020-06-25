@@ -66,15 +66,13 @@ class ProdexApp extends App {
     }
   }
 
-
-
   render() {
     const { Component, pageProps, store } = this.props
 
     return (
       <Container>
         <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
-          <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={10 * 1000} components={{ Toast: ProdexToast }}>
+          <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={7 * 1000} components={{ Toast: ProdexToast }}>
             <Provider store={store}>
               <Component {...pageProps} />
             </Provider>

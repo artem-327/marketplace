@@ -418,7 +418,7 @@ class AddEditCompanySidebar extends React.Component {
                   <Loader />
                 </Dimmer>
                 <HighSegment basic>
-                  <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {`${popupValues ? 'Edit' : 'Add'}`}
+                  <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} />
                 </HighSegment>
                 <FlexContent>
                   <Accordion exclusive={false}>
