@@ -15,8 +15,18 @@ function mapStateToProps(store) {
     dashboard: { data }
   } = store
   return {
-    companySumOfPurchasesMonthly: getSafe(() => data.companySumOfPurchasesMonthly, ''),
-    companySumOfSalesMonthly: getSafe(() => data.companySumOfSalesMonthly, ''),
+    companySumOfPurchasesMonthly: getSafe(() => data.companySumOfPurchasesMonthly, '')
+      ? Object.entries(data.companySumOfPurchasesMonthly).map(([name, value]) => ({
+          name,
+          Transactions: Math.round(value / 1000)
+        }))
+      : [],
+    companySumOfSalesMonthly: getSafe(() => data.companySumOfSalesMonthly, '')
+      ? Object.entries(data.companySumOfSalesMonthly).map(([name, value]) => ({
+          name,
+          Transactions: Math.round(value / 1000)
+        }))
+      : [],
     top10Buyers: getSafe(() => data.top10Buyers, ''),
     top10CompaniesByCompanyProducts: getSafe(() => data.top10CompaniesByCompanyProducts, '')
       ? Object.entries(data.top10CompaniesByCompanyProducts).map(([name, value]) => ({
@@ -36,25 +46,23 @@ function mapStateToProps(store) {
           value
         }))
       : [],
-    top10CompanyProductsByQuantitySales: getSafe(() => data.top10CompanyProductsByQuantitySales, ''),
-    top10CompanyProductsByValueSales: getSafe(() => data.top10CompanyProductsByValueSales, ''),
-    totalBroadcastedProductOffersValue: getSafe(() => data.totalBroadcastedProductOffersValue, ''),
-    totalCompaniesCount: getSafe(() => data.totalCompaniesCount, 0) ? (
-      <FormattedNumber minimumFractionDigits={0} value={getSafe(() => data.totalCompaniesCount, 0)} />
-    ) : (
-      0
-    ),
-    totalCompanyProductsCount: getSafe(() => data.totalCompanyProductsCount, 0) ? (
-      <FormattedNumber minimumFractionDigits={0} value={getSafe(() => data.totalCompanyProductsCount, 0)} />
-    ) : (
-      0
-    ),
-    totalProductOffersValue: getSafe(() => data.totalProductOffersValue, false) ? (
-      <FormattedNumber minimumFractionDigits={2} value={getSafe(() => data.totalProductOffersValue, 0)} />
-    ) : (
-      0
-    ),
-    totalUsersCount: getSafe(() => data.totalUsersCount, ''),
+    top10CompanyProductsByQuantitySales: getSafe(() => data.top10CompanyProductsByQuantitySales, '')
+      ? Object.entries(data.top10CompanyProductsByQuantitySales).map(([name, value]) => ({
+          name,
+          value
+        }))
+      : [],
+    top10CompanyProductsByValueSales: getSafe(() => data.top10CompanyProductsByValueSales, '')
+      ? Object.entries(data.top10CompanyProductsByValueSales).map(([name, value]) => ({
+          name,
+          value
+        }))
+      : [],
+    totalBroadcastedProductOffersValue: getSafe(() => data.totalBroadcastedProductOffersValue / 1000000, 0),
+    totalCompaniesCount: getSafe(() => data.totalCompaniesCount, 0),
+    totalCompanyProductsCount: getSafe(() => data.totalCompanyProductsCount, 0),
+    totalProductOffersValue: getSafe(() => data.totalProductOffersValue / 1000000, 0),
+    totalUsersCount: getSafe(() => data.totalUsersCount, 0),
     loading: getSafe(() => data.loading, ''),
     graphDataTransactions: getSafe(() => data.totalSumOfSalesMonthly, '')
       ? Object.entries(data.totalSumOfSalesMonthly).map(([name, value]) => ({

@@ -116,7 +116,7 @@ const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }
         <ButtonViewAll type='button'>View all</ButtonViewAll>
       </DivPieGraphHeader>
       <DivPieGraphCircle style={{ height: '60%', width: '100%' }}>
-        {data && data.length > 0 && (
+        {data && data.length > 0 ? (
           <ResponsiveContainer width='100%' height='100%'>
             <PieChart>
               <Pie
@@ -132,41 +132,41 @@ const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-        )}
+        ) : null}
       </DivPieGraphCircle>
       <DivPieGraphLegend>
-        {data &&
-          data.length &&
-          data.map((atr, index) => (
-            <DivRowLegend>
-              <DivOvalLegend>
-                <DivOval style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-              </DivOvalLegend>
+        {data && data.length
+          ? data.map((atr, index) => (
+              <DivRowLegend>
+                <DivOvalLegend>
+                  <DivOval style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                </DivOvalLegend>
 
-              <DivTextLegend>
-                <div>{atr.name.toUpperCase()}</div>
-                <DivValueLegend>
-                  <DivNumberLegend>
-                    {isCurrency ? (
-                      <>
-                        <FormattedNumber
-                          style='currency'
-                          currency={currency}
-                          minimumFractionDigits={0}
-                          value={getSafe(() => atr.value, 0)}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <FormattedNumber minimumFractionDigits={0} value={getSafe(() => atr.value, 0)} />{' '}
-                      </>
-                    )}
-                  </DivNumberLegend>
-                  {valueLegend && <DivAfterNumberLegend>{valueLegend}</DivAfterNumberLegend>}
-                </DivValueLegend>
-              </DivTextLegend>
-            </DivRowLegend>
-          ))}
+                <DivTextLegend>
+                  <div>{atr.name.toUpperCase()}</div>
+                  <DivValueLegend>
+                    <DivNumberLegend>
+                      {isCurrency ? (
+                        <>
+                          <FormattedNumber
+                            style='currency'
+                            currency={currency}
+                            minimumFractionDigits={0}
+                            value={getSafe(() => atr.value, 0)}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <FormattedNumber minimumFractionDigits={0} value={getSafe(() => atr.value, 0)} />{' '}
+                        </>
+                      )}
+                    </DivNumberLegend>
+                    {valueLegend && <DivAfterNumberLegend>{valueLegend}</DivAfterNumberLegend>}
+                  </DivValueLegend>
+                </DivTextLegend>
+              </DivRowLegend>
+            ))
+          : null}
       </DivPieGraphLegend>
     </RectanglePieGraph>
   )
