@@ -27,7 +27,12 @@ function mapStateToProps(store) {
           Transactions: Math.round(value / 1000)
         }))
       : [],
-    top10Buyers: getSafe(() => data.top10Buyers, ''),
+    top10Buyers: getSafe(() => data.top10Buyers, '')
+      ? Object.entries(data.top10Buyers).map(([name, value]) => ({
+          name,
+          value
+        }))
+      : [],
     top10CompaniesByCompanyProducts: getSafe(() => data.top10CompaniesByCompanyProducts, '')
       ? Object.entries(data.top10CompaniesByCompanyProducts).map(([name, value]) => ({
           name,

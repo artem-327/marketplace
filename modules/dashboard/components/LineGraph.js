@@ -53,6 +53,22 @@ const LineGraph = ({ data, title, titleId, valuesInTitle, subTitle, subTitleId }
   )
 }
 
-LineGraph.propTypes = {}
+LineGraph.propTypes = {
+  data: PropTypes.array,
+  title: PropTypes.string,
+  titleId: PropTypes.string,
+  valuesInTitle: PropTypes.string,
+  subTitle: PropTypes.string,
+  subTitleId: PropTypes.string
+}
+
+LineGraph.defaultProps = {
+  data: [],
+  title: '',
+  titleId: '',
+  valuesInTitle: '',
+  subTitle: '',
+  subTitleId: ''
+}
 
 export default LineGraph

@@ -2447,5 +2447,8 @@
   "dasboard.productsValue.title": "PRODUCTS BY VALUE",
   "dasboard.productsPopular.title": "PRODUCTS BY POPULAR",
   "dasboard.companyPurchase": "COMPANY PURCHASES",
-  "dasboard.companySales": "COMPANY SALES"
+  "dasboard.companySales": "COMPANY SALES",
+  "dasboard.topBuyers": "TOP 10 BUYERS",
+  "dasboard.total": "Total",
+  "dasboard.average": " average"
 }

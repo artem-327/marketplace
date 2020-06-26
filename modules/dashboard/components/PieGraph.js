@@ -13,7 +13,7 @@ const COLORS = ['#2599d5', '#f16844', '#4cc3da', '#ffc65d']
 
 const RectanglePieGraph = styled.div`
   width: 100%;
-  height: 480px;
+  height: 600px;
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   border: solid 1px #dee2e6;
@@ -113,20 +113,19 @@ const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }
         <DivPieGraphTitle>
           <FormattedMessage id={titleId} defaultMessage={title} />
         </DivPieGraphTitle>
-        <ButtonViewAll type='button'>View all</ButtonViewAll>
       </DivPieGraphHeader>
-      <DivPieGraphCircle style={{ height: '60%', width: '100%' }}>
+      <DivPieGraphCircle style={{ height: '40%', width: '100%' }}>
         {data && data.length > 0 ? (
           <ResponsiveContainer width='100%' height='100%'>
             <PieChart>
               <Pie
                 innerRadius={innerRadius}
-                data={data} // FIXME top10ProductGroups
+                data={data}
                 dataKey='value'
                 labelLine={false}
                 outerRadius='75%'
                 fill='#8884d8'>
-                {data && // FIXME top10ProductGroups
+                {data &&
                   data.length &&
                   data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
               </Pie>
