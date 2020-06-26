@@ -145,7 +145,7 @@ class AttachmentClass extends Component {
   }
 
   render() {
-    const { trigger, asModal, documentTypes, documentTypeIds, lockedFileTypes } = this.props
+    const { trigger, asModal, documentTypes, documentTypeIds, lockedFileTypes, singleSelection } = this.props
     if (!asModal) return this.getContent()
 
     return (
@@ -229,9 +229,16 @@ class AttachmentClass extends Component {
                     style={{ color: 'white', backgroundColor: '#2599d5' }}
                     disabled={!this.state.selectedRows.length}
                     onClick={this.returnSelectedRows}>
-                    <FormattedMessage id='attachments.attachSelected' defaultMessage='Attach Selected Files'>
-                      {text => text}
-                    </FormattedMessage>
+                    {singleSelection ? (
+                      <FormattedMessage id='attachments.attachSelectedFile' defaultMessage='Attach Selected File'>
+                        {text => text}
+                      </FormattedMessage>
+                      ) : (
+                      <FormattedMessage id='attachments.attachSelectedFiles' defaultMessage='Attach Selected Files'>
+                        {text => text}
+                      </FormattedMessage>
+                      )
+                    }
                   </Button>
                 </CustomGridColumn>
               </GridRow>
