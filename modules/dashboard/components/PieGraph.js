@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 import { Button } from 'semantic-ui-react'
 //components
 import { currency } from '~/constants/index'
@@ -129,6 +129,7 @@ const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }
                   data.length &&
                   data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
               </Pie>
+              <Tooltip />
             </PieChart>
           </ResponsiveContainer>
         ) : null}
