@@ -205,6 +205,7 @@ class BankAccountsTable extends Component {
     amount1: 0,
     amount2: 0,
     columns: [
+      { name: 'accountName', disabled: true },
       {
         name: 'name',
         title: (
@@ -508,7 +509,8 @@ const mapStateToProps = state => {
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
       name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
-      statusLabel: displayStatus(r, preferredBankAccountId)
+      statusLabel: displayStatus(r, preferredBankAccountId),
+      accountName: r.name // this is for search
       // some changes here
     })),
     preferredBankAccountId,

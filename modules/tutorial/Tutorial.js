@@ -129,9 +129,9 @@ let tutorialTabs = [
 ]
 
 let urlTabs = [
-  '/settings?type=branches',
+  '/settings?type=locations',
   '/settings?type=users',
-  '/settings?type=warehouses',
+  '/settings?type=locations',
   '/settings?type=products',
   '/inventory/my',
   '/settings?type=global-broadcast',
@@ -156,9 +156,9 @@ class Tutorial extends Component {
       if (isClientCompanyAdmin) {
         tutorials.push('branches', 'users', 'warehouses', 'marketplace', 'registerAccount', 'addAccount')
         urls.push(
-          '/settings?type=branches',
+          '/settings?type=locations',
           '/settings?type=users',
-          '/settings?type=warehouses',
+          '/settings?type=locations',
           '/settings?type=global-broadcast',
           '/settings?type=bank-accounts',
           '/settings?type=bank-accounts'
@@ -301,7 +301,8 @@ class Tutorial extends Component {
       marginWantedBoard,
       isMerchant,
       isClientCompanyManager,
-      isOrderProcessing
+      isOrderProcessing,
+      isCompanyAdmin
     } = this.props
 
     let margin = '15px 32px 15px 32px'
@@ -313,7 +314,7 @@ class Tutorial extends Component {
     const theme = {
       margin
     }
-    return isMerchant || isClientCompanyManager || isOrderProcessing ? null : (
+    return !isCompanyAdmin && (isMerchant || isClientCompanyManager || isOrderProcessing) ? null : (
       <>
         {tutorialTab ? (
           <ThemeProvider theme={theme}>

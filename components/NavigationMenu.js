@@ -308,27 +308,23 @@ class Navigation extends Component {
             {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
           </>
         )}
-        {getSafe(() => company.nacdMember, false) ? (
+        <MenuLink
+          to='/marketplace/all'
+          dataTest='navigation_menu_marketplace_drpdn'
+          className={`menu ${
+            !collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''
+          }`}>
           <>
-            <MenuLink
-              to='/marketplace/all'
-              dataTest='navigation_menu_marketplace_drpdn'
-              className={`menu ${
-                !collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''
-              }`}>
-              <>
-                <ShoppingBag size={22} />
-                {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
-                {!collapsedMenu && asPath === '/marketplace/all' && activeMarketplaceFilter ? (
-                  <div className='active-filter'>
-                    <Sliders />
-                  </div>
-                ) : null}
-              </>
-            </MenuLink>
-            {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
+            <ShoppingBag size={22} />
+            {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+            {!collapsedMenu && asPath === '/marketplace/all' && activeMarketplaceFilter ? (
+              <div className='active-filter'>
+                <Sliders />
+              </div>
+            ) : null}
           </>
-        ) : null}
+        </MenuLink>
+        {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
         <MenuLink
           to={isClientCompany ? '/wanted-board/my-requested-items' : '/wanted-board/wanted-board'}
           dataTest='navigation_menu_wanted_board_drpdn'>
@@ -373,7 +369,7 @@ class Navigation extends Component {
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin || isClientCompanyAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
-            text={formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}
+            text={formatMessage({ id: 'navigation.myAccount', defaultMessage: 'My Account' })}
             className={settings ? 'opened' : null}
             opened={settings}
             onClick={() => this.toggleOpened('settings')}
@@ -413,17 +409,10 @@ class Navigation extends Component {
                   <>
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/settings?type=branches'
-                      tab='branches'
-                      dataTest='navigation_settings_branches_drpdn'>
-                      {formatMessage({ id: 'navigation.branches', defaultMessage: 'Branches' })}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/settings?type=warehouses'
-                      tab='warehouses'
-                      dataTest='navigation_settings_warehouses_drpdn'>
-                      {formatMessage({ id: 'navigation.warehouses', defaultMessage: 'Warehouses' })}
+                      to='/settings?type=locations'
+                      tab='locations'
+                      dataTest='navigation_settings_locations_drpdn'>
+                      {formatMessage({ id: 'navigation.locations', defaultMessage: 'Locations' })}
                     </Dropdown.Item>
                   </>
                 ) : null}
@@ -454,13 +443,7 @@ class Navigation extends Component {
                       dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/settings?type=delivery-addresses'
-                      tab='delivery-addresses'
-                      dataTest='navigation_settings_delivery_addresses_drpdn'>
-                      {formatMessage({ id: 'navigation.deliveryAddresses', defaultMessage: 'Delivery Addresses' })}
-                    </Dropdown.Item>
+
                     {!isClientCompanyAdmin && (
                       <Dropdown.Item
                         as={MenuLink}

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
-import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
-import Tabs from './Tabs'
+import { Container, Grid, GridColumn } from 'semantic-ui-react'
 import { withAuth } from '~/hocs'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
@@ -14,7 +13,6 @@ import TagsPopup from './tags/TagsPopup'
 import CompanyProductTable from './company-product-catalog/CompanyProductTable'
 import CompanyInventoryTable from './company-inventory/CompanyInventoryTable'
 import Orders from './orders/OrdersContainer'
-import OrdersMenu from './orders/OrdersMenu'
 import OrderDetail from './orders/DetailContainer'
 
 import { getSafe } from '~/utils/functions'
@@ -22,7 +20,7 @@ import { DatagridProvider } from '~/modules/datagrid'
 import { tabChanged } from '../actions'
 
 const CustomGridColumn = styled(GridColumn)`
-  padding: 0 32px 0 32px !important;
+  padding: 0 30px !important;
 `
 
 class Operations extends Component {
@@ -56,12 +54,12 @@ class Operations extends Component {
       'shipping-quotes': {
         url: '/prodex/api/shipment/manual-quotes/datagrid',
         searchToFilter: v =>
-          v && v.filterValue
+          v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
                   path: 'ShippingQuote.carrierName',
-                  values: [`%${v.filterValue}%`]
+                  values: [`%${v.searchInput}%`]
                 }
               ]
             : []
@@ -69,62 +67,65 @@ class Operations extends Component {
       tags: {
         url: 'prodex/api/tags/datagrid',
         searchToFilter: v =>
-          v && v.filterValue ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.filterValue}%`] }] : []
+          v && v.searchInput ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.searchInput}%`] }] : []
       },
       'company-product-catalog': {
         url: `/prodex/api/company-products/admin/datagrid?type=${companyProductUnmappedOnly}`,
         searchToFilter: v => {
           let filter = { or: [], and: [] }
-
-          if (v && v.filterValue)
+          if (v && v.searchInput)
             filter.or = [
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.intProductName',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.intProductCode',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.companyGenericProduct.name',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'CompanyProduct.companyGenericProduct.code',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               }
             ]
 
-          if (v && v.company)
-            filter.and = [
-              {
-                operator: 'EQUALS',
-                path: 'CompanyProduct.owner.id',
-                values: [`${v.company}`]
-              }
-            ]
+          if (v && v.company) {
+            const company = JSON.parse(v.company)
+            if (company.id) {
+              filter.and = [
+                {
+                  operator: 'EQUALS',
+                  path: 'CompanyProduct.companyGenericProduct.company.id',
+                  values: [`${company.id}`]
+                }
+              ]
+            }
+          }
           return filter
         }
       },
       'company-inventory': {
         url: '/prodex/api/product-offers/admin/datagrid',
         searchToFilter: v =>
-          v && v.filterValue
+          v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
                   path: 'ProductOffer.companyProduct.intProductName',
-                  values: [`%${v.filterValue}%`]
+                  values: [`%${v.searchInput}%`]
                 },
                 {
                   operator: 'LIKE',
                   path: 'ProductOffer.companyProduct.intProductCode',
-                  values: [`%${v.filterValue}%`]
+                  values: [`%${v.searchInput}%`]
                 }
               ]
             : []
@@ -133,14 +134,50 @@ class Operations extends Component {
         url: 'prodex/api/purchase-orders/datagrid',
         searchToFilter: v => {
           let filter = { or: [], and: [] }
-          if (v && v.company)
+
+          if (v && v.company) {
+            const d = JSON.parse(v.company)
+            const value = d.cfDisplayName ? d.cfDisplayName : (d.name ? d.name : '')
             filter.and = [
               {
                 operator: 'LIKE',
                 path: 'Order.sellerCompanyName',
-                values: [`%${v.company}%`]
+                values: [`%${value}%`]
               }
             ]
+          }
+
+          if (v && v.status) {
+            filter.and = filter.and.concat(v.status)
+          }
+
+          if (v && v.orderId)
+            filter.and = filter.and.concat([
+              {
+                operator: 'LIKE',
+                path: 'Order.id',
+                values: [`%${v.orderId}%`]
+              }
+            ])
+
+          if (v && v.dateFrom)
+            filter.and = filter.and.concat([
+              {
+                operator: 'GREATER_THAN_OR_EQUAL_TO',
+                path: 'Order.orderDate',
+                values: [`${v.dateFrom}`]
+              }
+            ])
+
+          if (v && v.dateTo)
+            filter.and = filter.and.concat([
+              {
+                operator: 'LESS_THAN_OR_EQUAL_TO',
+                path: 'Order.orderDate',
+                values: [`${v.dateTo}`]
+              }
+            ])
+
           return filter
         }
       }
@@ -152,28 +189,28 @@ class Operations extends Component {
   render() {
     const { currentTab, orderDetailData } = this.props
 
-    //! ! Temporary commented
-    //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
-    //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-
-    const preserveFilters = currentTab.type === 'company-product-catalog' || currentTab.type === 'orders'
+    if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
+      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
     const displayPage = !!orderDetailData
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
+      <DatagridProvider
+        apiConfig={this.getApiConfig()}
+        preserveFilters={true}
+        skipInitLoad
+      >
         <Container fluid className='flex stretched'>
-          {currentTab.type === 'orders' && !orderDetailData && <OrdersMenu />}
           {displayPage ? (
             this.renderContent()
           ) : (
             <>
-              <Container fluid style={{ padding: '0 1.5vh' }}>
+              <Container fluid>
                 <TablesHandlers currentTab={currentTab} />
               </Container>
 
-              <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
-                <Grid.Row>
+              <Grid columns='equal' className='flex stretched' style={{ margin: '0', padding: '0' }}>
+                <Grid.Row style={{ margin: '0', padding: '0 0 10px 0' }}>
                   <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
                 </Grid.Row>
               </Grid>
@@ -188,7 +225,6 @@ class Operations extends Component {
 const mapStateToProps = state => {
   return {
     ...state.operations,
-    currentTab: state.operations.currentTab,
     auth: state.auth
   }
 }

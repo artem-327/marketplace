@@ -39,8 +39,13 @@ function prepareDetail(data, type) {
   )
   const orderItems = getSafe(() => data.orderItems, [])
 
+  let paymentNetDays = data.cfPaymentTerms && data.cfPaymentTerms.split(' ')
+  paymentNetDays = paymentNetDays.length ? parseInt(paymentNetDays[paymentNetDays.length - 1], 10) : 0
+
   return {
     ...data,
+    paymentTerms: data.paymentTerms,
+    paymentNetDays,
     companyEin:
       type === 'sales'
         ? data.buyerCompanyTin
@@ -216,7 +221,8 @@ function mapStateToProps(state, ownProps) {
     loadingRelatedDocuments: orders.loadingRelatedDocuments,
     isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
     isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
-    isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false)
+    isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
+    isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false)
   }
 }
 

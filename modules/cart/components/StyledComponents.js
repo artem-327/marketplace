@@ -192,7 +192,7 @@ export const CustomDivContent = styled.div`
   line-height: 1.43;
   letter-spacing: normal;
   color: #848893;
-  padding: 4px 30px;
+  padding: 4px 35px;
 `
 
 export const CustomDivInTitle = styled.div`

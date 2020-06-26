@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl'
 import { getSafe, getFormattedAddress } from '~/utils/functions'
-import React from "react";
+import React from 'react'
 
 export const otherPermissions = [
   { value: 'NONE', id: 'NONE', text: 'None' },
@@ -78,14 +78,6 @@ export const companyDatagridColumns = [
         {text => text}
       </FormattedMessage>
     )
-  },
-  {
-    name: 'nacdMember',
-    title: (
-      <FormattedMessage id='global.nacdMember' defaultMessage='NACD Member'>
-        {text => text}
-      </FormattedMessage>
-    )
   }
 ]
 
@@ -93,9 +85,9 @@ export const mapCompanyRows = companyRows =>
   companyRows.map(c => ({
     rawData: c,
     ...c,
-    displayName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-      {getSafe(() => c.name, '')}
-    </div>,
+    displayName: (
+      <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{getSafe(() => c.name, '')}</div>
+    ),
     hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
     hasDwollaAccount: getSafe(() => c.dwollaAccountStatus === 'verified', '') ? 'Yes' : 'No',
     primaryBranchAddress: getFormattedAddress({
@@ -113,8 +105,7 @@ export const mapCompanyRows = companyRows =>
       ? 'No'
       : '',
     hasLogo: getSafe(() => c.hasLogo, false),
-    enabled: getSafe(() => c.enabled, false),
-    nacdMember: getSafe(() => c.nacdMember, false) ? 'Yes' : getSafe(() => c.nacdMember === false, false) ? 'No' : ''
+    enabled: getSafe(() => c.enabled, false)
   }))
 
 export const currencySymbol = '$'

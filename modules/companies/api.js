@@ -39,11 +39,12 @@ export async function getAddressSearch(body) {
   return data
 }
 
-export const reRegisterP44 = id =>
-  api.patch(`/prodex/api/shipment/${id}/re-register`).then(response => response.data)
+export const reRegisterP44 = id => api.patch(`/prodex/api/shipment/${id}/re-register`).then(response => response.data)
 
-export const getUserRoles = () => api.get('/prodex/api/roles?includeAdminRoles=false').then(response => response.data)
-export const getAdminRoles = () => api.get('/prodex/api/roles?onlyAdminRoles=true').then(response => response.data)
+export const getUserRoles = () => api.get('/prodex/api/roles?type=WITHOUT_ADMIN').then(response => response.data)
+export const getClientCompanyRoles = () => api.get('/prodex/api/roles?type=CLIENT_COMPANY_COMPATIBLE')
+  .then(response => response.data)
+export const getAdminRoles = () => api.get('/prodex/api/roles?type=ONLY_ADMIN').then(response => response.data)
 
 export const getUser = id => api.get(`/prodex/api/users/id/${id}`).then(response => response.data)
 export const getUsersMe = () => api.get('/prodex/api/users/me').then(response => response.data)
@@ -55,7 +56,9 @@ export const submitUserEdit = (id, body) =>
 export const deleteUser = id => api.delete(`/prodex/api/users/id/${id}`).then(() => id)
 
 export const searchCompany = (companyText, limit = 30) =>
-  api.get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${companyText}`).then(response => response.data)
+  api
+    .get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)
+    .then(response => response.data)
 export const getCompanyInfo = id => api.get(`/prodex/api/companies/id/${id}`).then(response => response.data)
 
 export const searchMarketSegments = filter =>

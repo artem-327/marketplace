@@ -127,7 +127,9 @@ class Settings extends Component {
           ) {
             payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
           } else if (el.value.visible !== null) {
-            payload.settings.push({ id: el.id, value: el.type === 'BOOL' ? el.value.actual : el.value.visible })
+            payload.settings.push({ id: el.id, value: el.type === 'BOOL'
+                ? el.value.actual.toString().toUpperCase()
+                : el.value.visible })
           }
         }
       })
@@ -161,7 +163,7 @@ class Settings extends Component {
             id: setting.id,
             original: setting.original,
             value: {
-              actual: setting.type === 'BOOL' ? setting.value == 'true' : setting.value,
+              actual: setting.type === 'BOOL' ? setting.value.toLowerCase() === 'true' : setting.value,
               visible: setting.value === 'EMPTY_SETTING' ? '' : setting.value ? setting.value : ''
             },
             type: setting.type,

@@ -35,7 +35,9 @@ export default {
   },
   getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
-  getRoles: () => api.get('/prodex/api/roles?includeSuperAdmin=false').then(response => response.data),
+  getRoles: () => api.get('/prodex/api/roles?type=WITHOUT_ADMIN').then(response => response.data),
+  getClientCompanyRoles: () =>
+    api.get('/prodex/api/roles?type=CLIENT_COMPANY_COMPATIBLE').then(response => response.data),
   userSwitchEnableDisable: id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`),
   getCurrentUser: () => api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () => api.get('/prodex/api/branches/warehouses').then(response => response.data),
@@ -47,7 +49,9 @@ export default {
     api.get(`/prodex/api/payments/dwolla/beneficiary-owners`).then(response => response.data),
   getProductsCatalogByString: async (data, limit = 30) => {
     return await api
-      .get(`/prodex/api/products/search?limit=${limit}&onlyMapped=${data.unmapped}&search=${data.body}`)
+      .get(
+        `/prodex/api/products/search?limit=${limit}&onlyMapped=${data.unmapped}&search=${encodeURIComponent(data.body)}`
+      )
       .then(response => response.data)
   },
   getProductsCatalogByFilter: async data => {
@@ -145,8 +149,9 @@ export default {
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body).then(r => r.data),
   patchUserRole: (id, body) => api.put(`/prodex/api/users/id/${id}/roles`, body),
   putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body), //! ! delete
-  searchCasProduct: pattern => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`),
-  searchUnNumber: pattern => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`),
+  searchCasProduct: pattern =>
+    api.get(`/prodex/api/cas-products/search?limit=5&pattern=${encodeURIComponent(pattern)}`),
+  searchUnNumber: pattern => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${encodeURIComponent(pattern)}`),
   deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`).then(() => userId),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`).then(() => branchId),
   deleteProduct: productId => api.delete(`/prodex/api/company-products/id/${productId}`).then(() => productId),
@@ -156,7 +161,7 @@ export default {
   getAddressSearch: body => api.post('/prodex/api/addresses/search', body).then(response => response.data),
   getDeliveryAddressesByStringRequest: async (value, limit = 30) => {
     return await api
-      .get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${value}`)
+      .get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${encodeURIComponent(value)}`)
       .then(response => response.data)
   },
   getDeliveryAddressesByFilterRequest: async value => {
@@ -213,7 +218,9 @@ export default {
       .get(`/prodex/api/company-generic-products/search?pattern=${searchQuery}&limit=${limit}`)
       .then(response => response.data),
   getNmfcNumbersByString: pattern =>
-    api.get(`/prodex/api/nmfc-numbers/search?limit=5&pattern=${pattern}`).then(response => response.data),
+    api
+      .get(`/prodex/api/nmfc-numbers/search?limit=5&pattern=${encodeURIComponent(pattern)}`)
+      .then(response => response.data),
   removeAttachmentLinkCompanyProduct: (itemId, aId) =>
     api.delete(`/prodex/api/attachment-links/to-company-product?attachmentId=${aId}&companyProductId=${itemId}`),
   attachmentLinksToBranch: (attachmentId, branchId) =>
@@ -238,6 +245,5 @@ export default {
   },
   setPrimaryUser: (companyId, userId) =>
     api.patch(`/prodex/api/companies/${companyId}/primary-user?userId=${userId}`).then(response => response.data),
-  getCompanyDetails:(id) =>
-    api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
+  getCompanyDetails: id => api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
 }

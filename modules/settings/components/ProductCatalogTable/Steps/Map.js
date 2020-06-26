@@ -39,6 +39,7 @@ const simpleCompanyGenericProductList = {
     'aspirationHazardMapper',
     'autoIgnitionTemperatureMapper',
     'boilingPointRangeMapper',
+    'companyMapper',
     'conditionsToAvoidMapper',
     'decompositionTemperatureMapper',
     'developmentalEffectsMapper',
@@ -108,6 +109,7 @@ const simpleCompanyGenericProductList = {
     'phMapper',
     'physicalStateMapper',
     'precautionaryStatementsMapper',
+    'productGroupMapper',
     'productLc50InhalationMapper',
     'productLd50DermalMapper',
     'productLd50OralMapper',
@@ -204,7 +206,6 @@ const simpleProductOfferList = {
 const simpleCompaniesList = {
   constant: 'import.companies',
   required: [
-    'isNacdMemberMapper',
     'nameMapper',
     'primaryBranchDeliveryAddressAddressCityMapper',
     'primaryBranchDeliveryAddressAddressCountryMapper',

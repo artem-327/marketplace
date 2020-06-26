@@ -13,10 +13,8 @@ import { getSafe } from '~/utils/functions'
 import {
   getDeliveryAddressesByFilterRequest,
   deleteDeliveryAddress,
-  openPopup
-  // handleOpenConfirmPopup,
-  // closeConfirmPopup,
-} from '../../actions'
+  openSidebar
+} from '../../../actions'
 import Router from 'next/router'
 
 class DeliveryAddressesTable extends Component {
@@ -28,7 +26,9 @@ class DeliveryAddressesTable extends Component {
           <FormattedMessage id='global.streetName' defaultMessage='Street Name'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 330,
+        sortPath: 'DeliveryAddress.address.streetAddress'
       },
       {
         name: 'city',
@@ -36,7 +36,9 @@ class DeliveryAddressesTable extends Component {
           <FormattedMessage id='global.city' defaultMessage='City'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 190,
+        sortPath: 'DeliveryAddress.address.city'
       },
       {
         name: 'province',
@@ -44,7 +46,9 @@ class DeliveryAddressesTable extends Component {
           <FormattedMessage id='global.stateProvince' defaultMessage='State/Province'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 230,
+        sortPath: 'DeliveryAddress.address.province.name'
       },
       {
         name: 'country',
@@ -52,7 +56,9 @@ class DeliveryAddressesTable extends Component {
           <FormattedMessage id='global.country' defaultMessage='Country'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 190,
+        sortPath: 'DeliveryAddress.address.country.name'
       },
       {
         name: 'zip',
@@ -60,7 +66,9 @@ class DeliveryAddressesTable extends Component {
           <FormattedMessage id='global.zipCode' defaultMessage='ZIP Code'>
             {text => text}
           </FormattedMessage>
-        )
+        ),
+        width: 190,
+        sortPath: 'DeliveryAddress.address.zip.zip'
       }
     ]
   }
@@ -71,15 +79,9 @@ class DeliveryAddressesTable extends Component {
       rows,
       filterValue,
       loading,
-      openPopup,
+      openSidebar,
       intl,
       deleteDeliveryAddress
-      // reloadFilter,
-      // confirmMessage,
-      // handleOpenConfirmPopup,
-      // closeConfirmPopup,
-      // deleteDeliveryAddressesItem,
-      // deleteRowById
     } = this.props
 
     let { columns } = this.state
@@ -98,7 +100,7 @@ class DeliveryAddressesTable extends Component {
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row.data)
+              callback: row => openSidebar(row.rawData)
             },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -123,19 +125,16 @@ class DeliveryAddressesTable extends Component {
 const mapDispatchToProps = {
   getDeliveryAddressesByFilterRequest,
   deleteDeliveryAddress,
-  openPopup
+  openSidebar
 }
 
 const mapStateToProps = (state, { datagrid }) => {
   return {
     filterValue: state.settings.filterValue,
-    confirmMessage: state.settings.confirmMessage,
-    deleteRowById: state.settings.deleteRowById,
-    deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     loading: state.settings.loading,
     rows: datagrid.rows.map(d => {
       return {
-        data: d, // all row data, used for edit popup
+        rawData: d, // all row data, used for edit popup
         id: d.id,
         streetAddress: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {getSafe(() => d.address.streetAddress, '')}
@@ -145,18 +144,7 @@ const mapStateToProps = (state, { datagrid }) => {
         country: getSafe(() => d.address.country.name, ''),
         zip: getSafe(() => d.address.zip.zip, '')
       }
-    }),
-    // reloadFilter is used to reload Delivery addresses list after Edit / Add new Delivery address
-    reloadFilter: {
-      props: {
-        currentTab:
-          Router && Router.router && Router.router.query && Router.router.query.type
-            ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-            : state.settings.tabsNames[0],
-        deliveryAddressesFilter: state.settings.deliveryAddressesFilter
-      },
-      value: state.settings.filterValue
-    }
+    })
   }
 }
 

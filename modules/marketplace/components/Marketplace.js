@@ -490,10 +490,11 @@ class Marketplace extends Component {
               const tagNames = tagsNames ? tagsNames.split(',') : []
               return (
                 <span>
-                  <span style={{ fontWeight: '600', color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
+                  <span style={{ fontWeight: '600', color: '#2599d5' }}>{name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({count})</span></span>
                   <span className='flex row right'>
-                    <span>{tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}</span>
-                    <span style={{ float: 'right', display: 'inline-flex', paddingLeft: '10px' }}>Product offerings: {count}</span>
+                    <span>
+                      {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+                    </span>
                   </span>
                 </span>
               )

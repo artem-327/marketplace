@@ -30,6 +30,14 @@ class ProductGroupsTable extends Component {
             {text => text}
           </FormattedMessage>
         )
+      },
+      {
+        name: 'marketSegments',
+        title: (
+          <FormattedMessage id='product.groups.marketSegments' defaultMessage='Market Segment'>
+            {text => text}
+          </FormattedMessage>
+        )
       }
     ]
   }
@@ -83,7 +91,7 @@ const mapDispatchToProps = {
   openPopup,
   deleteProductGroups
 }
-//TODO
+
 const mapStateToProps = (state, { handleFilterChange, datagrid }) => {
   return {
     rows: datagrid.rows.map(row => ({
@@ -94,6 +102,15 @@ const mapStateToProps = (state, { handleFilterChange, datagrid }) => {
           values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''}
           rowItems={3}
           ids={row.tags ? row.tags.map(d => (d.id ? d.id : d)) : ''}
+          tags={true}
+          onTagClick={handleFilterChange}
+        />
+      ),
+      marketSegments: (
+        <ArrayToFirstItem
+          values={row.marketSegments ? row.marketSegments.map(d => (d.name ? d.name : d)) : ''}
+          rowItems={3}
+          ids={row.marketSegments ? row.marketSegments.map(d => (d.id ? d.id : d)) : ''}
           tags={true}
           onTagClick={handleFilterChange}
         />

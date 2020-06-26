@@ -49,10 +49,6 @@ const UnpaddedRow = {
   `
 }
 
-const templateInitialValues = {
-  name: ''
-}
-
 const templateValidation = () =>
   Yup.object().shape({
     name: Yup.string().required(errorMessages.requiredMessage)
@@ -67,7 +63,11 @@ class Broadcast extends Component {
     change: false,
     saved: false,
     initialize: true,
-    loading: false
+    loading: false,
+    templateInitialValues: {
+      name: '',
+      templates: ''
+    }
   }
 
   componentDidMount() {
@@ -121,14 +121,41 @@ class Broadcast extends Component {
   }
 
   componentDidUpdate(oldProps) {
+    const { loadedRulesTrig, broadcastTemplateName, templates } = this.props
+
     if (oldProps.saveBroadcast !== this.props.saveBroadcast && this.props.saveBroadcast) {
       this.saveBroadcastRules()
+    }
+
+    if (oldProps.loadedRulesTrig !== loadedRulesTrig) {
+      let name = broadcastTemplateName
+      let dataId = broadcastTemplateName
+        ? getSafe(() => templates.find(el => el.name === broadcastTemplateName).id, null)
+        : null
+
+      if (dataId === null) {
+        dataId = ''
+        name = ''
+      }
+
+      if (this.setFieldValue) this.setFieldValue('templates', dataId)
+
+      this.setState({
+        ...this.state,
+        selectedTemplate: {
+          id: dataId,
+          name: name
+        },
+        templateInitialValues: {
+          name: name,
+          templates: dataId
+        }
+      })
     }
   }
 
   updateInTreeData = node => {
     let copy = this.props.treeData
-
     const { filter } = this.props
     if (!node.isRoot()) {
       let found = copy.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)
@@ -337,8 +364,8 @@ class Broadcast extends Component {
 
         if (
           (!getSafe(() => company.model.associations, []).includes(associationFilter) &&
-            associationFilter !== 'Client Company') ||
-          (associationFilter === 'Client Company' && company.model.elements[0].clientCompany === false)
+            associationFilter !== 'Guest Company') ||
+          (associationFilter === 'Guest Company' && company.model.elements[0].clientCompany === false)
         ) {
           if (companiesToHide.indexOf(company.model.id) === -1) companiesToHide.push(company)
           return true
@@ -361,7 +388,8 @@ class Broadcast extends Component {
       if (predicate(elements[i])) {
         elements[i].hidden = hidden
         return
-      } else if (elements[i].elements.length > 0) this.setHidden(predicate, hidden, elements[i].elements)
+      } else if (getSafe(() => elements[i].elements.length, false) > 0)
+        this.setHidden(predicate, hidden, elements[i].elements)
     }
   }
 
@@ -397,19 +425,18 @@ class Broadcast extends Component {
       node.walk(n => {
         if (!getSafe(() => n.model.rule.hidden, n.model.hidden)) {
           n.model.rule[propertyName] = newValue
+          if (getSafe(() => n.model.rule.elements.length, 0) > 0 && this.props.filter.category !== 'branch') {
+            this.changeInModel(n.model.rule.elements, { propertyName, value: newValue })
+          }
         }
       })
-      if (this.props.filter.category !== 'branch') {
-        this.changeInModel(node.model.rule.elements, { propertyName, value: newValue })
-      }
     }
-
-    const { treeData } = this.props
-    const findInData = node =>
-      getSafe(
-        () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
-        null
-      )
+    // const { treeData } = this.props
+    // const findInData = node =>
+    //   getSafe(
+    //     () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
+    //     null
+    //   )
 
     // let path = getSafe(() => findInData(node).getPath(), [])
     // for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
@@ -419,7 +446,7 @@ class Broadcast extends Component {
 
     // if (this.props.filter.category === 'branch') {
     //   if (node.isRoot()) {
-    //     node.walk((n) => {
+    //     node.walk(n => {
     //       if (n.model.rule.type === 'branch' && !n.model.rule.hidden) {
     //         n.model.rule[propertyName] = newValue
     //       }
@@ -432,13 +459,15 @@ class Broadcast extends Component {
   }
 
   changeInModel = (elementsParam, data) => {
-    // var elements = elementsParam
-    // elements.forEach(element => {
-    //   if (!element.hidden) {
-    //     element = { ...element, ...data }
-    //   }
-    //   if (element.elements.length > 0) this.changeInModel(element.elements, data)
-    // })
+    const { propertyName, value } = data
+    if (getSafe(() => elementsParam.length, false)) {
+      elementsParam.forEach(element => {
+        if (!element.hidden) {
+          element[propertyName] = value
+        }
+        if (getSafe(() => element.elements.length, '') > 0) this.changeInModel(element.elements, data)
+      })
+    }
   }
 
   handleRowClick = node => {
@@ -468,7 +497,12 @@ class Broadcast extends Component {
 
     let name = data.options.find(opt => opt.value === data.value).text
     setFieldValue('name', name)
-    this.setState({ selectedTemplate: { name, id: data.value } })
+    this.setState({
+      ...this.state,
+      selectedTemplate: { name, id: data.value },
+      templateInitialValues: { name, templates: data.value }
+    })
+
     try {
       await getTemplate(data.value)
     } catch (e) {
@@ -516,7 +550,7 @@ class Broadcast extends Component {
           value={this.state.associationFilter}
           selection
           loading={associationsFetching}
-          options={['ALL', 'Client Company'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
+          options={['ALL', 'Guest Company'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
       </Form.Field>
@@ -571,6 +605,8 @@ class Broadcast extends Component {
       dataCompanyInfo,
       isLoadingModalCompanyInfo
     } = this.props
+
+    const { templateInitialValues } = this.state
 
     let total =
       this.props.filter.category === 'region'
@@ -733,6 +769,7 @@ class Broadcast extends Component {
                   }}
                   render={props => {
                     this.submitForm = props.submitForm
+                    this.setFieldValue = props.setFieldValue
 
                     return (
                       <Form onSubmit={props.handleSubmit}>
@@ -943,7 +980,7 @@ class Broadcast extends Component {
                 </Rule.Header>
                 <Rule.Content style={asSidebar ? { flex: '1 0 auto', overflowY: 'hidden' } : null}>
                   <RuleItem
-                    // changeInModel={this.changeInModel}
+                    changeInModel={this.changeInModel}
                     loadingChanged={this.props.loadingChanged}
                     filter={filter}
                     hideFobPrice={hideFobPrice}
@@ -993,7 +1030,7 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager } = this.props
+    const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager, templates } = this.props
     let filteredTree = this.treeToModel()
 
     try {
@@ -1001,13 +1038,38 @@ class Broadcast extends Component {
         name: 'category',
         value: 'region'
       })
-      await saveRules(id, filteredTree)
+
+      const { value } = await saveRules(id, filteredTree)
+
+      let name, dataId = null
+      if (value && value.broadcastTemplateName) {
+        name = value.broadcastTemplateName
+        dataId = value.broadcastTemplateName
+          ? getSafe(() => templates.find(el => el.name === value.broadcastTemplateName).id, null)
+          : null
+      }
+
+      if (dataId === null) {
+        dataId = ''
+        name = ''
+      }
+
+      //if (this.setFieldValue) this.setFieldValue('templates', dataId)
+
       if (!asSidebar) {
         await initGlobalBroadcast()
       }
       this.setState({
         saved: true,
-        initialize: true
+        initialize: true,
+        selectedTemplate: {
+          id: dataId,
+          name: name
+        },
+        templateInitialValues: {
+          name: name,
+          templates: dataId
+        }
       })
       if (getSafe(() => filteredTree.broadcast, null) === 0) {
         toastManager.add(

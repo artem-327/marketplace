@@ -113,7 +113,6 @@ const BottomButtons = styled.div`
         color: #20273a;
       }
     }
-
     &.secondary {
       color: #ffffff;
       background-color: #2599d5;
@@ -436,6 +435,8 @@ class UsersSidebar extends React.Component {
     const {
       closePopup,
       userRoles,
+      clientCompanyRoles,
+      isClientCompany,
       currencies,
       intl: { formatMessage },
       updating,
@@ -661,7 +662,14 @@ class UsersSidebar extends React.Component {
                     </GridColumnWError>
                   </GridRow>
                   <GridRow style={{ paddingBottom: '0' }}>
-                    {this.generateCheckboxes(userRoles, values, 'roles', errorRoles)}
+                    {this.generateCheckboxes(
+                      isClientCompany
+                        ? clientCompanyRoles
+                        : userRoles,
+                      values,
+                      'roles',
+                      errorRoles
+                    )}
                   </GridRow>
                   <GridRow style={{ paddingTop: '0', marginTop: '-5px' }}>
                     <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
@@ -713,9 +721,11 @@ const mapStateToProps = state => {
     currentUserId: getSafe(() => auth.identity.id, false),
     isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false),
     companyId: getSafe(() => state.auth.identity.company.id, null),
+    isClientCompany: getSafe(() => state.auth.identity.company.isClientCompany, false),
     editTrig: settings.editTrig,
     updating: settings.updating,
     userRoles: settings.roles,
+    clientCompanyRoles: settings.clientCompanyRoles,
     popupValues: settings.popupValues,
     searchedSellMarketSegments: getSafe(() => companiesAdmin.searchedSellMarketSegments, []).map(d => ({
       key: d.id,

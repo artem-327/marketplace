@@ -15,7 +15,9 @@ export default {
   deleteProductName: id => api.delete(`/prodex/api/cas-products/alternative-names/id/${id}`),
   deleteCompanyGenericProduct: id => api.delete(`/prodex/api/company-generic-products/id/${id}`),
   searchCasProduct: pattern =>
-    api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`).then(response => response.data),
+    api
+      .get(`/prodex/api/cas-products/search?limit=5&pattern=${encodeURIComponent(pattern)}`)
+      .then(response => response.data),
   putCompanyGenericProducts: (id, values) =>
     api.put(`/prodex/api/company-generic-products/id/${id}/`, values).then(response => response.data),
   postCompanyGenericProducts: values =>
@@ -62,7 +64,7 @@ export default {
     ),
   removeAttachment: attachmentId => api.delete(`/prodex/api/attachments/${attachmentId}`),
   getUnNumbersByString: async (value, limit = 30) => {
-    const { data } = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${value}`)
+    const { data } = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${encodeURIComponent(value)}`)
     return data
   },
   searchTags: filter => api.post(`/prodex/api/tags/datagrid`, filter).then(response => response.data),
@@ -71,11 +73,13 @@ export default {
     api.post(`/prodex/api/market-segments/datagrid`, filter).then(response => response.data),
   getCompanyGenericProduct: id => api.get(`/prodex/api/company-generic-products/id/${id}`),
   getAlternativeCompanyGenericProductsNames: async id => {
-    const { data } = await api.get(`/prodex/api/company-generic-products/alternative-names/echo-product/${id}`)
+    const { data } = await api.get(
+      `/prodex/api/company-generic-products/alternative-names/company-generic-product/${id}`
+    )
     return data
   },
   postNewCompanyGenericProductsAltName: (id, data) =>
-    api.post(`/prodex/api/company-generic-products/alternative-names/echo-product/${id}`, data),
+    api.post(`/prodex/api/company-generic-products/alternative-names/company-generic-product/${id}`, data),
   updateCompanyGenericProductsAltName: (id, value) =>
     api.patch(`/prodex/api/company-generic-products/alternative-names/id/${id}`, value),
   deleteCompanyGenericProductsAltName: id =>
@@ -86,5 +90,7 @@ export default {
   searchProductGroups: filter =>
     api.post(`/prodex/api/product-groups/datagrid`, filter).then(response => response.data),
   searchCompany: (companyText, limit = 30) =>
-    api.get(`/prodex/api/companies/search?limit=${limit}&pattern=${companyText}`).then(response => response.data)
+    api
+      .get(`/prodex/api/companies/search?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)
+      .then(response => response.data)
 }

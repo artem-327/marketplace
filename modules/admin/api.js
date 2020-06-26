@@ -3,12 +3,12 @@ import api from '~/api'
 import { getSafe, generateQueryString } from '~/utils/functions'
 
 export async function getCasProductByString(value, limit = 30) {
-  const { data } = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${value}`)
+  const { data } = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${encodeURIComponent(value)}`)
   return data
 }
 
 export async function getManufacturersByString(value, limit = 30) {
-  const { data } = await api.get(`/prodex/api/manufacturers/search?limit=${limit}&search=${value}`)
+  const { data } = await api.get(`/prodex/api/manufacturers/search?limit=${limit}&search=${encodeURIComponent(value)}`)
   return data
 }
 
@@ -18,7 +18,7 @@ export async function getAllUnNumbers() {
 }
 
 export async function getUnNumbersByString(value, limit = 30) {
-  const { data } = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${value}`)
+  const { data } = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${encodeURIComponent(value)}`)
   return data
 }
 
@@ -179,7 +179,8 @@ export const searchManufacturers = (text, limit) =>
     }`
   )
 
-export const searchUnNumber = pattern => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`)
+export const searchUnNumber = pattern =>
+  api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${encodeURIComponent(pattern)}`)
 
 export const verifyEchoProduct = id =>
   api.get(`/prodex/api/company-generic-products/verify/${id}`).then(response => response.data)
@@ -205,11 +206,13 @@ export const submitUserEdit = (id, body) =>
   api.patch(`/prodex/api/users/id/${id}`, body).then(response => response.data)
 
 export const deleteUser = id => api.delete(`/prodex/api/users/id/${id}`).then(() => id)
-export const getUserRoles = () => api.get('/prodex/api/roles?includeAdminRoles=false').then(response => response.data)
-export const getAdminRoles = () => api.get('/prodex/api/roles?onlyAdminRoles=true').then(response => response.data)
+export const getUserRoles = () => api.get('/prodex/api/roles?type=WITHOUT_ADMIN').then(response => response.data)
+export const getAdminRoles = () => api.get('/prodex/api/roles?type=ONLY_ADMIN').then(response => response.data)
 
 export const searchCompany = (companyText, limit = 30) =>
-  api.get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${companyText}`).then(response => response.data)
+  api
+    .get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)
+    .then(response => response.data)
 
 export const searchTags = filter => api.post(`/prodex/api/tags/datagrid`, filter).then(response => response.data)
 export const searchMarketSegments = filter =>

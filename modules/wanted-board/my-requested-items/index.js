@@ -6,7 +6,7 @@ export const MyRequestedItems = props => {
     url: `/prodex/api/purchase-requests/own/datagrid?type=${props.type}`,
     searchToFilter: v =>
       v
-        ? { url: `/prodex/api/purchase-requests/own/datagrid?type=${props.type}&pattern=${v}` }
+        ? { url: `/prodex/api/purchase-requests/own/datagrid?type=${props.type}&pattern=${encodeURIComponent(v)}` }
         : { url: `/prodex/api/purchase-requests/own/datagrid?type=${props.type}` }
   }
   return (

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import cn from 'classnames'
 import moment from 'moment/moment'
 import { debounce } from 'lodash'
-import { Clock, FileText } from 'react-feather'
+import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle } from 'react-feather'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
@@ -19,6 +19,7 @@ import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/function
 import Tutorial from '~/modules/tutorial/Tutorial'
 import SearchByNamesAndTags from '~/modules/search'
 import SubMenu from '~/src/components/SubMenu'
+import ExportInventorySidebar from '~/modules/export-inventory/components/ExportInventory'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -86,6 +87,51 @@ const StyledPopup = styled(Popup)`
   .ui.form {
     width: 570px;
     padding: 0;
+  }
+`
+
+const StyledMenu = styled(Menu)`
+  .item .ui.button {
+    height: 40px;
+    border-radius: 3px;
+    font-weight: 500;
+    color: #848893;
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 18px;
+      height: 20px;
+      margin-right: 10px;
+      vertical-align: top;
+      color: inherit;
+    }
+
+    &.light {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      color: #848893;
+      &:hover {
+        background-color: #f8f9fb;
+        color: #20273a;
+      }
+      &:active {
+        background-color: #edeef2;
+        color: #20273a;
+      }
+    }
+
+    &.secondary {
+      color: #ffffff;
+      background-color: #2599d5;
+      &:hover {
+        background-color: #188ec9;
+      }
+      &:active {
+        background-color: #0d82bc;
+      }
+    }
   }
 `
 
@@ -452,6 +498,12 @@ class MyInventory extends Component {
           />
         )
       }
+      if (r.cfStatusReason && !(r.cfStatus.toLowerCase() === 'broadcasting' && isOfferValid))
+        title = (
+          <>
+            {title} <span>{' ' + r.cfStatusReason}</span>
+          </>
+        )
 
       let productStatusText = null
       switch (r.cfStatus) {
@@ -487,20 +539,17 @@ class MyInventory extends Component {
             } // <div> has to be there otherwise popup will be not shown
           />
         ) : null,
-        productStatus: (productStatusText
-          ? (
-            <Popup
-              size='small'
-              header={productStatusText}
-              trigger={
-                <div>
-                  <FileTextIcon />
-                </div>
-              } // <div> has to be there otherwise popup will be not shown
-            />
-          )
-          : null
-        ),
+        productStatus: productStatusText ? (
+          <Popup
+            size='small'
+            header={productStatusText}
+            trigger={
+              <div>
+                <FileTextIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : null,
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
@@ -565,9 +614,10 @@ class MyInventory extends Component {
   }
 
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
-    const { isProductInfoOpen, closePopup } = this.props
+    const { isProductInfoOpen, closePopup, isExportInventoryOpen, setExportSidebarOpenState } = this.props
 
     if (isProductInfoOpen) closePopup()
+    if (isExportInventoryOpen) setExportSidebarOpenState(false)
     sidebarDetailTrigger(row, bol, tab)
   }
 
@@ -659,9 +709,12 @@ class MyInventory extends Component {
       openPopup,
       editedId,
       closeSidebarDetail,
-      tutorialCompleted
+      tutorialCompleted,
+      isExportInventoryOpen,
+      setExportSidebarOpenState
     } = this.props
     const { columns, clientMessage, request } = this.state
+
     return (
       <>
         <Modal size='small' open={this.state.open} onClose={() => this.setState({ open: false })} closeIcon>
@@ -694,13 +747,13 @@ class MyInventory extends Component {
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
         {!tutorialCompleted && <Tutorial />}
-        <Container fluid style={{ padding: '0 32px' }}>
+        <Container fluid style={{ padding: '10px 32px 0' }}>
           <Grid>
             <Grid.Row>
               <SearchByNamesAndTags />
 
               <Grid.Column width={8}>
-                <Menu secondary className='page-part'>
+                <StyledMenu secondary className='page-part'>
                   {/*selectedRows.length > 0 ? (
                     <Menu.Item>
                       <Header as='h3' size='small' color='grey'>
@@ -715,32 +768,50 @@ class MyInventory extends Component {
                   <Menu.Menu position='right'>
                     <Menu.Item>
                       <Button
+                        className='light'
                         size='large'
                         primary
-                        onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
-                        data-test='my_inventory_add_btn'>
-                        <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
-                          {text => text}
-                        </FormattedMessage>
+                        onClick={() => setExportSidebarOpenState(true)}
+                        data-test='my_inventory_export_btn'>
+                        <CornerLeftUp />
+                        {formatMessage({
+                          id: 'myInventory.export',
+                          defaultMessage: 'Export'
+                        })}
                       </Button>
                     </Menu.Item>
                     <Menu.Item>
                       <Button
+                        className='light'
                         size='large'
                         primary
                         onClick={() => openImportPopup()}
                         data-test='my_inventory_import_btn'>
+                        <CornerLeftDown />
                         {formatMessage({
                           id: 'myInventory.import',
                           defaultMessage: 'Import'
                         })}
                       </Button>
                     </Menu.Item>
+                    <Menu.Item>
+                      <Button
+                        className='secondary'
+                        size='large'
+                        primary
+                        onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
+                        data-test='my_inventory_add_btn'>
+                        <PlusCircle />
+                        <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button>
+                    </Menu.Item>
                     <MenuItemFilters>
                       <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
                     </MenuItemFilters>
                   </Menu.Menu>
-                </Menu>
+                </StyledMenu>
               </Grid.Column>
             </Grid.Row>
           </Grid>
@@ -773,8 +844,9 @@ class MyInventory extends Component {
 
               return (
                 <span>
-                  <span style={{ color: '#2599d5' }}>{name ? name : 'Unmapped'}</span>
-                  <span className='right'>Product offerings: {count}</span>
+                  <span style={{ color: '#2599d5' }}>
+                    {name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({count})</span>
+                  </span>
                 </span>
               )
             }}
@@ -786,7 +858,10 @@ class MyInventory extends Component {
                 values[values.length - 1],
                 sidebarDetailOpen,
                 closeSidebarDetail,
-                openPopup
+                (companyProduct, i) => {
+                  if (isExportInventoryOpen) setExportSidebarOpenState(false)
+                  openPopup(companyProduct, i)
+                }
               ).map(a => ({
                 ...a,
                 text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
@@ -890,6 +965,7 @@ class MyInventory extends Component {
           />
         </div>
         {sidebarDetailOpen && <DetailSidebar />}
+        {isExportInventoryOpen && <ExportInventorySidebar onClose={() => setExportSidebarOpenState(false)} />}
       </>
     )
   }

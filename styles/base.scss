@@ -1243,7 +1243,7 @@ i.file {
 
   &.entered > .dismiss-bar:after {
     animation-name: heightDown;
-    animation-duration: 10000ms;
+    animation-duration: 7000ms;
     animation-timing-function: linear;
   }
 
@@ -1666,6 +1666,10 @@ i.file {
           display: block;
           width: calc(100vw - 430px);
           max-width: calc(100% - 30px);
+
+          .row.right {
+            margin-right: 0 !important;
+          }
         }
       }
     }

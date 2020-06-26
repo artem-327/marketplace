@@ -7,13 +7,11 @@ import { FormattedMessage } from 'react-intl'
 
 import Tabs from './Tabs'
 import UsersTable from './UserTable/UsersTable'
-import WarehouseTable from './WarehouseTable/WarehouseTable'
-import BranchesTable from './BranchesTable/BranchesTable'
+import Locations from './Locations/Locations'
+
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
-import WarehouseSidebar from './WarehouseTable/WarehouseSidebar'
-import BranchesSidebar from './BranchesTable/BranchesSidebar'
 import UsersSidebar from './UserTable/UsersSidebar'
 import ProductSidebar from './ProductCatalogTable/ProductSidebar'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
@@ -22,16 +20,13 @@ import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDo
 import TablesHandlers from './TablesHandlers'
 import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
 
-import DeliveryAddressesTable from './DeliveryAddressesTable/DeliveryAddressesTable'
-import DeliveryAddressesPopup from './DeliveryAddressesTable/DeliveryAddressesPopup'
-
 import LogisticsTable from './LogisticsTable/LogisticsTable'
 import LogisticsPopup from './LogisticsTable/LogisticsPopup'
 
 import SystemSettings from '~/components/settings'
 
 import DocumentsTable from './Documents/DocumentManagerTable'
-import DocumentsPopup from './Documents/DocumentManagerPopup'
+import DocumentManagerSidebar from './Documents/DocumentManagerSidebar'
 
 import ClientCompanyTable from './ClientCompany/Table'
 import ClientCompanyPopup from './ClientCompany/Popup'
@@ -305,13 +300,10 @@ class Settings extends Component {
     const tables = {
       'company-details': this.companyDetails(),
       users: <UsersTable />,
-      branches: <BranchesTable />,
-      warehouses: <WarehouseTable />,
       products: <ProductCatalogTable />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
-      'delivery-addresses': <DeliveryAddressesTable />,
       'guest-companies': <ClientCompanyTable />,
       logistics: <LogisticsTable />,
       'system-settings': (
@@ -326,16 +318,13 @@ class Settings extends Component {
 
     const popupForm = {
       users: <UsersSidebar />,
-      branches: <BranchesSidebar />,
-      warehouses: <WarehouseSidebar />,
       products: <ProductSidebar />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
-      'delivery-addresses': <DeliveryAddressesPopup />,
       'guest-companies': <ClientCompanyPopup />,
       logistics: <LogisticsPopup />,
-      documents: <DocumentsPopup />
+      documents: <DocumentManagerSidebar />
     }
 
     const importForm = {
@@ -529,29 +518,33 @@ class Settings extends Component {
   render() {
     const { currentTab, tutorialCompleted } = this.props
 
-    const preserveFilters = currentTab.type === 'products'
+    if (currentTab && currentTab.type === 'locations') {
+      return <Locations />
+    } else {
+      const preserveFilters = currentTab && currentTab.type === 'products'
 
-    return (
-      !this.state.wrongUrl && (
-        <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
-          <Container fluid className='flex stretched'>
-            {!tutorialCompleted && (
-              <div style={{ margin: '5px -2px -15px -2px' }}>
-                <Tutorial />
-              </div>
-            )}
-            <Container fluid style={{ padding: '20px 30px' }}>
-              <TablesHandlers currentTab={currentTab} />
+      return (
+        !this.state.wrongUrl && (
+          <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
+            <Container fluid className='flex stretched'>
+              {!tutorialCompleted && (
+                <div style={{ margin: '5px -2px -15px -2px' }}>
+                  <Tutorial />
+                </div>
+              )}
+              <Container fluid style={{ padding: '20px 30px' }}>
+                <TablesHandlers currentTab={currentTab} />
+              </Container>
+              <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 30px' }}>
+                <Grid.Row>
+                  <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
+                </Grid.Row>
+              </SettingsGrid>
             </Container>
-            <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 30px' }}>
-              <Grid.Row>
-                <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
-              </Grid.Row>
-            </SettingsGrid>
-          </Container>
-        </DatagridProvider>
+          </DatagridProvider>
+        )
       )
-    )
+    }
   }
 }
 

@@ -30,10 +30,10 @@ export function closePopup(rows = null) {
   }
 }
 
-export function openSidebar(openTab = null) {
+export function openSidebar(row = null, openTab = null) {
   return {
     type: AT.OPEN_SIDEBAR,
-    payload: openTab
+    payload: { data: row, openTab }
   }
 }
 export function closeSidebar(openTab = null) {
@@ -426,10 +426,11 @@ export function getUsersDataRequest() {
     dispatch({
       type: AT.GET_USERS_DATA,
       async payload() {
-        const [users, branches, roles, currentUser] = await Promise.all([
+        const [users, branches, roles, clientCompanyRoles, currentUser] = await Promise.all([
           api.getUsers(),
           api.getBranches(),
           api.getRoles(),
+          api.getClientCompanyRoles(),
           api.getCurrentUser()
         ])
         dispatch({
@@ -439,6 +440,10 @@ export function getUsersDataRequest() {
         dispatch({
           type: AT.GET_ROLES_DATA,
           payload: roles
+        })
+        dispatch({
+          type: AT.SETTINGS_GET_CLIENT_COMPANY_ROLES_DATA,
+          payload: clientCompanyRoles
         })
         dispatch({
           type: AT.GET_CURRENT_USER_DATA_FULFILLED,
@@ -945,7 +950,7 @@ export function updateDeliveryAddresses(id, value, reloadFilter) {
       type: AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES,
       payload: response
     })
-    dispatch(closePopup())
+    dispatch(closeSidebar())
     Datagrid.updateRow(id, () => response.data)
     return response.data
     //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
@@ -959,7 +964,7 @@ export function createDeliveryAddress(value, reloadFilter) {
       type: AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS,
       payload: response
     })
-    dispatch(closePopup())
+    dispatch(closeSidebar())
     Datagrid.loadData()
     return response.data
     //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
@@ -1195,5 +1200,12 @@ export function getCompanyDetails(companyId) {
   return {
     type: AT.SETTINGS_GET_COMPANY_DETAILS,
     payload: api.getCompanyDetails(companyId)
+  }
+}
+
+export function handleLocationsTab(tab) {
+  return {
+    type: AT.SETTINGS_HANDLE_LOCATIONS_TAB,
+    payload: tab
   }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { string, object, bool, func } from 'prop-types'
+import { Field } from 'formik'
 import { FormField, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
@@ -181,33 +182,54 @@ export default class PhoneNumber extends Component {
     let error = (get(touched, name, null) || isSubmitting) && get(errors, name, null)
 
     return (
-      <FormField error={!!error}>
-        {label && <label>{label}</label>}
-        <span style={{ display: 'flex' }} className='phone-number'>
-          <StyledDropdown
-            className='phone-code'
-            options={phoneCountryCodes}
-            onChange={this.handleChangeDropdown}
-            search
-            disabled={disabled}
-            clearable={clearable}
-            placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
-            value={phoneCountryCode}
-          />
-          <StyledInputMask
-            className='phone-num'
-            mask='999 999 9999'
-            maskChar=' '
-            compact='true'
-            disabled={disabled}
-            type='text'
-            value={phoneNumber}
-            onChange={this.handleChangeInput}
-            placeholder={placeholder || formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
-          />
-        </span>
-        {error && <span className='sui-error-message'>{error}</span>}
-      </FormField>
+      <Field
+        name={name}
+        render={({ field, form }) => {
+          if (!get(errors, name, null) && (form && !error || form.isValidating)) {
+            if (!phoneCountryCode && phoneNumber) {
+              form.setFieldError(
+                name,
+                formatMessage({ id: 'global.phoneCountryCodeRequired', defaultMessage: 'Phone country code required' })
+              )
+            } else if (phoneCountryCode && !phoneNumber) {
+              form.setFieldError(
+                name,
+                formatMessage({ id: 'global.phoneNumberRequired', defaultMessage: 'Phone number required' })
+              )
+            }
+          }
+
+          return (
+            <FormField error={!!error}>
+              {label && <label>{label}</label>}
+              <span style={{ display: 'flex' }} className='phone-number'>
+                <StyledDropdown
+                  className='phone-code'
+                  options={phoneCountryCodes}
+                  onChange={this.handleChangeDropdown}
+                  search
+                  disabled={disabled}
+                  clearable={clearable}
+                  placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
+                  value={phoneCountryCode}
+                />
+                <StyledInputMask
+                  className='phone-num'
+                  mask='999 999 9999'
+                  maskChar=' '
+                  compact='true'
+                  disabled={disabled}
+                  type='text'
+                  value={phoneNumber}
+                  onChange={this.handleChangeInput}
+                  placeholder={placeholder || formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
+                />
+              </span>
+              {error && <span className='sui-error-message'>{error}</span>}
+            </FormField>
+          )
+        }}
+      />
     )
   }
 }
