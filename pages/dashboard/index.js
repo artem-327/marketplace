@@ -1,16 +1,26 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
+import { injectIntl } from 'react-intl'
+
+import Layout from 'components/Layout'
+import Dashboard from '~/modules/dashboard'
 
 class Index extends Component {
   render() {
+    const {
+      intl: { formatMessage }
+    } = this.props
     return (
-      <Layout title='Dashboard'>
-        <h1>Dashboard</h1>
+      <Layout
+        title={formatMessage({
+          id: 'dashboard.title',
+          defaultMessage: 'Analytics Dashboard'
+        })}>
+        <Dashboard />
       </Layout>
     )
   }
 }
 
-export default securePage(Index)
+export default securePage(injectIntl(Index))
