@@ -84,7 +84,7 @@ export function login(username, password) {
         }
 
         setAuth(authPayload)
-        let urlPage = '/inventory/my'
+        let urlPage = '/dashboard'
         if (typeof window !== 'undefined') {
           const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
           if (searchParams.has('redirectUrl')) {

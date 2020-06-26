@@ -137,7 +137,7 @@ const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }
       <DivPieGraphLegend>
         {data && data.length
           ? data.map((atr, index) => (
-              <DivRowLegend>
+              <DivRowLegend key={index}>
                 <DivOvalLegend>
                   <DivOval style={{ backgroundColor: COLORS[index % COLORS.length] }} />
                 </DivOvalLegend>

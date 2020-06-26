@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { number, array } from 'prop-types'
+import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { Menu, Grid, Tab } from 'semantic-ui-react'
 import { Briefcase, Package, DollarSign, User } from 'react-feather'
@@ -53,25 +53,26 @@ class Dashboard extends Component {
 
   render() {
     const {
-      totalCompaniesCount,
-      totalCompanyProductsCount,
-      totalProductOffersValue,
-      graphDataTransactions,
+      companiesCount,
+      companyProductsCount,
+      productOffersValue,
+      totalSumOfSalesMonthly,
       top10ProductGroups,
       top10CompaniesByUsers,
       top10CompaniesBySalesInLastYear,
       top10CompaniesByCompanyProducts,
       top10CompanyProductsByQuantitySales,
       top10CompanyProductsByValueSales,
-      totalBroadcastedProductOffersValue,
-      totalUsersCount,
+      broadcastedProductOffersValue,
+      usersCount,
       companySumOfPurchasesMonthly,
       companySumOfSalesMonthly,
       top10Buyers,
+      isAdmin,
       intl: { formatMessage }
     } = this.props
 
-    const panes = [
+    const saleTab = [
       {
         menuItem: (
           <Menu.Item key='sales' onClick={() => this.setState({ activeTab: 0 })}>
@@ -81,12 +82,35 @@ class Dashboard extends Component {
         render: () => (
           <TabPane key='sales' attached={false}>
             <LineGraph
-              data={graphDataTransactions}
+              data={totalSumOfSalesMonthly}
               title='Total Sum Of Sales Monthly'
               titleId='dasboard.sales.graph.title'
               subTitle='in thousand dollars'
               subTitleId='dasboard.sales.graph.subtitle'
             />{' '}
+          </TabPane>
+        )
+      }
+    ]
+
+    const companySalesPurchasesTabs = [
+      {
+        menuItem: (
+          <Menu.Item key='company-sales' onClick={() => this.setState({ activeTab: 0 })}>
+            <UpperCaseText>
+              {formatMessage({ id: 'dasboard.companySales', defaultMessage: 'COMPANY SALES' })}
+            </UpperCaseText>
+          </Menu.Item>
+        ),
+        render: () => (
+          <TabPane key='company-sales' attached={false}>
+            <LineGraph
+              data={companySumOfSalesMonthly}
+              title='Company Sum Of Sales Monthly'
+              titleId='dasboard.companySales.graph.title'
+              subTitle='in thousand dollars'
+              subTitleId='dasboard.sales.graph.subtitle'
+            />
           </TabPane>
         )
       },
@@ -109,26 +133,6 @@ class Dashboard extends Component {
             />
           </TabPane>
         )
-      },
-      {
-        menuItem: (
-          <Menu.Item key='company-sales' onClick={() => this.setState({ activeTab: 2 })}>
-            <UpperCaseText>
-              {formatMessage({ id: 'dasboard.companySales', defaultMessage: 'COMPANY SALES' })}
-            </UpperCaseText>
-          </Menu.Item>
-        ),
-        render: () => (
-          <TabPane key='company-sales' attached={false}>
-            <LineGraph
-              data={companySumOfSalesMonthly}
-              title='Company Sum Of Sales Monthly'
-              titleId='dasboard.companySales.graph.title'
-              subTitle='in thousand dollars'
-              subTitleId='dasboard.sales.graph.subtitle'
-            />
-          </TabPane>
-        )
       }
     ]
 
@@ -142,7 +146,7 @@ class Dashboard extends Component {
                 menu={{ secondary: true, pointing: true }}
                 activeIndex={this.state.activeTab}
                 menu={{ secondary: true, pointing: true }}
-                panes={panes}
+                panes={isAdmin ? saleTab : companySalesPurchasesTabs}
               />
             </DivContainerGraph>
           </Grid.Column>
@@ -150,34 +154,34 @@ class Dashboard extends Component {
           <Grid.Column width={5}>
             <SummaryRectangle
               icon={<Briefcase />}
-              data={totalCompaniesCount}
+              data={companiesCount}
               title='Total Companies'
               titleId='dashboard.totalCompanies.title'
             />
             <SummaryRectangle
               icon={<Package />}
-              data={totalCompanyProductsCount}
+              data={companyProductsCount}
               title='Total Products'
               titleId='dashboard.totalProducts.title'
               styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
             />
             <SummaryRectangle
               icon={<User />}
-              data={totalUsersCount}
+              data={usersCount}
               title='Total Users Count'
               titleId='dashboard.totalUsersCount.title'
               styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
             />
             <SummaryRectangle
               icon={<DollarSign />}
-              data={totalProductOffersValue}
+              data={productOffersValue}
               title='Total Products Value $M'
               titleId='dashboard.totalValue.title'
               styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
             />
             <SummaryRectangle
               icon={<DollarSign />}
-              data={totalBroadcastedProductOffersValue}
+              data={broadcastedProductOffersValue}
               title='Total Broadcasted Value $M'
               titleId='dashboard.totalBroadcastedValue.title'
               styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
@@ -185,40 +189,41 @@ class Dashboard extends Component {
             />
           </Grid.Column>
         </Grid.Row>
+        {isAdmin ? (
+          <Grid.Row>
+            <Grid.Column width={5}>
+              <PieGraph
+                innerRadius='30%'
+                valueLegend='users'
+                data={top10CompaniesByUsers}
+                title='COMPANIES BY USERS'
+                titleId='dasboard.companiesUsers.title'
+              />
+            </Grid.Column>
+            <Grid.Column width={5}>
+              <PieGraph
+                innerRadius='30%'
+                data={top10CompaniesByCompanyProducts}
+                title='COMPANIES BY PRODUCTS'
+                titleId='dasboard.companiesProducts.title'
+              />
+            </Grid.Column>
+            <Grid.Column width={5}>
+              <PieGraph
+                innerRadius='30%'
+                isCurrency={true}
+                valueLegend='/year'
+                data={top10CompaniesBySalesInLastYear}
+                title='COMPANIES BY TRANSACTIONS'
+                titleId='dasboard.companiesTransactions.title'
+              />
+            </Grid.Column>
+          </Grid.Row>
+        ) : null}
         <Grid.Row>
           <Grid.Column width={5}>
             <PieGraph
               innerRadius='30%'
-              valueLegend='users'
-              data={top10CompaniesByUsers}
-              title='COMPANIES BY USERS'
-              titleId='dasboard.companiesUsers.title'
-            />
-          </Grid.Column>
-          <Grid.Column width={5}>
-            <PieGraph
-              innerRadius='30%'
-              data={top10CompaniesByCompanyProducts}
-              title='COMPANIES BY PRODUCTS'
-              titleId='dasboard.companiesProducts.title'
-            />
-          </Grid.Column>
-          <Grid.Column width={5}>
-            <PieGraph
-              innerRadius='30%'
-              isCurrency={true}
-              valueLegend='/year'
-              data={top10CompaniesBySalesInLastYear}
-              title='COMPANIES BY TRANSACTIONS'
-              titleId='dasboard.companiesTransactions.title'
-            />
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={5}>
-            <PieGraph
-              innerRadius='30%'
-              valueLegend='users'
               data={top10CompanyProductsByQuantitySales}
               title='PRODUCTS BY QUANTITY'
               titleId='dasboard.productsQuantity.title'
@@ -227,6 +232,7 @@ class Dashboard extends Component {
           <Grid.Column width={5}>
             <PieGraph
               innerRadius='30%'
+              isCurrency={true}
               data={top10CompanyProductsByValueSales}
               title='PRODUCTS BY VALUE'
               titleId='dasboard.productsValue.title'
@@ -244,13 +250,7 @@ class Dashboard extends Component {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={5}>
-            <PieGraph
-              innerRadius='30%'
-              isCurrency={true}
-              data={top10Buyers}
-              title='TOP 10 BUYERS'
-              titleId='dasboard.topBuyers.title'
-            />
+            <PieGraph innerRadius='30%' data={top10Buyers} title='TOP 10 BUYERS' titleId='dasboard.topBuyers.title' />
           </Grid.Column>
         </Grid.Row>
       </CustomGrid>
@@ -259,21 +259,30 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  totalCompaniesCount: number,
+  companiesCount: number,
+  broadcastedProductOffersValue: number,
+  companyProductsCount: number,
+  productOffersValue: number,
+  usersCount: number,
   top10ProductGroups: array,
   top10CompaniesByUsers: array,
   top10CompaniesByCompanyProducts: array,
   top10CompaniesBySalesInLastYear: array,
   top10CompanyProductsByQuantitySales: array,
   top10CompanyProductsByValueSales: array,
-  totalUsersCount: number,
   companySumOfPurchasesMonthly: array,
   companySumOfSalesMonthly: array,
-  top10Buyers: array
+  top10Buyers: array,
+  totalSumOfSalesMonthly: array,
+  isAdmin: bool
 }
 
 Dashboard.defaultProps = {
-  totalCompaniesCount: 0,
+  companiesCount: 0,
+  broadcastedProductOffersValue: 0,
+  companyProductsCount: 0,
+  productOffersValue: 0,
+  usersCount: 0,
   top10ProductGroups: [],
   top10ProductGroups: [],
   top10CompaniesByCompanyProducts: [],
@@ -283,7 +292,8 @@ Dashboard.defaultProps = {
   companySumOfPurchasesMonthly: [],
   companySumOfSalesMonthly: [],
   top10Buyers: [],
-  totalUsersCount: 0
+  totalSumOfSalesMonthly: [],
+  isAdmin: false
 }
 
 export default injectIntl(Dashboard)

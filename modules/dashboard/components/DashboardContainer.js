@@ -14,7 +14,11 @@ function mapStateToProps(store) {
   const {
     dashboard: { data }
   } = store
+
+  const isAdmin = getSafe(() => store.auth.identity.isAdmin, false)
+
   return {
+    isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
     companySumOfPurchasesMonthly: getSafe(() => data.companySumOfPurchasesMonthly, '')
       ? Object.entries(data.companySumOfPurchasesMonthly).map(([name, value]) => ({
           name,
@@ -63,13 +67,21 @@ function mapStateToProps(store) {
           value
         }))
       : [],
-    totalBroadcastedProductOffersValue: getSafe(() => data.totalBroadcastedProductOffersValue / 1000000, 0),
-    totalCompaniesCount: getSafe(() => data.totalCompaniesCount, 0),
-    totalCompanyProductsCount: getSafe(() => data.totalCompanyProductsCount, 0),
-    totalProductOffersValue: getSafe(() => data.totalProductOffersValue / 1000000, 0),
-    totalUsersCount: getSafe(() => data.totalUsersCount, 0),
+    broadcastedProductOffersValue: isAdmin
+      ? getSafe(() => data.totalBroadcastedProductOffersValue / 1000000, 0)
+      : getSafe(() => data.companyBroadcastedProductOffersValue / 1000000, 0),
+    companiesCount: isAdmin
+      ? getSafe(() => data.totalCompaniesCount, 0)
+      : getSafe(() => data.companyClientCompaniesCount, 0),
+    companyProductsCount: isAdmin
+      ? getSafe(() => data.totalCompanyProductsCount, 0)
+      : getSafe(() => data.companyCompanyProductsCount, 0),
+    productOffersValue: isAdmin
+      ? getSafe(() => data.totalProductOffersValue / 1000000, 0)
+      : getSafe(() => data.companyProductOffersValue / 1000000, 0),
+    usersCount: isAdmin ? getSafe(() => data.totalUsersCount, 0) : getSafe(() => data.companyUsersCount, 0),
     loading: getSafe(() => data.loading, ''),
-    graphDataTransactions: getSafe(() => data.totalSumOfSalesMonthly, '')
+    totalSumOfSalesMonthly: getSafe(() => data.totalSumOfSalesMonthly, '')
       ? Object.entries(data.totalSumOfSalesMonthly).map(([name, value]) => ({
           name,
           Transactions: Math.round(value / 1000)
