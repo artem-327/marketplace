@@ -107,6 +107,7 @@ const CustomGridColumn = styled(Grid.Column)`
 class Settings extends Component {
   state = {
     companyLogo: null,
+    shouldUpdateLogo: false,
     wrongUrl: true
   }
 
@@ -214,18 +215,19 @@ class Settings extends Component {
     this.redirectPage(queryTab)
   }
 
-  selectLogo = logo => {
-    this.setState({ companyLogo: logo })
+  selectLogo = (logo, isNew = true) => {
+    this.setState({ companyLogo: logo, shouldUpdateLogo: isNew })
   }
 
   removeLogo = () => {
-    this.setState({ companyLogo: null })
+    this.setState({ companyLogo: null, shouldUpdateLogo: true })
   }
 
   companyDetails = () => {
     let { postCompanyLogo, deleteCompanyLogo } = this.props
     const { selectLogo, removeLogo } = this
-    const { companyLogo } = this.state
+    const { companyLogo, shouldUpdateLogo } = this.state
+
     return (
       <TopMargedGrid relaxed='very' centered>
         <GridColumn computer={12}>
@@ -241,10 +243,12 @@ class Settings extends Component {
                   ...values,
                   businessType: values.businessType ? values.businessType.id : null
                 })
-                if (companyLogo) {
-                  await postCompanyLogo(values.id, companyLogo)
-                } else {
-                  if (values.hasLogo) await deleteCompanyLogo(values.id)
+                if (shouldUpdateLogo) {
+                  if (companyLogo) {
+                    await postCompanyLogo(values.id, companyLogo)
+                  } else {
+                    await deleteCompanyLogo(values.id)
+                  }
                 }
               } catch (err) {
                 console.error(err)
