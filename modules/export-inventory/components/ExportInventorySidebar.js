@@ -165,24 +165,34 @@ class ExportInventorySidebar extends Component {
         && r.branches.some(b => selectedBranches.some(selB => selB === b.branchId))
 
       const isRowExpanded = expandedRowIds.includes(r.id)
+      const hasBranches = r.branches.length
 
       return {
         ...r,
         name: (
           <div style={{ display: 'flex'}}>
-            {isRowExpanded
-              ? <ChevronDown size={20} style={{color: '#2599d5', marginRight: '8px' }}/>
-              : <ChevronRight size={20} style={{color: '#2599d5', marginRight: '8px'}}/>
+            {hasBranches
+              ? (isRowExpanded
+                  ? <ChevronDown size={20} style={{color: '#2599d5', marginRight: '8px' }}/>
+                  : <ChevronRight size={20} style={{color: '#2599d5', marginRight: '8px'}}/>
+              ) : (
+                <div style={{ padding: '0 14px' }}/>
+                )
             }
-            <span style={{ color: '#20273a', fontWeight: '500' }}>
-              {r.name}
-            </span>
+            {hasBranches
+              ? (
+                <span style={{color: '#20273a', fontWeight: '500'}}>{r.name}</span>
+              ) : (
+                <span style={{color: 'rgba(191, 191, 191, 0.87)', fontWeight: '500'}}>{r.name}</span>
+              )
+            }
           </div>
         ),
         select: (
           <Checkbox
             data-test='export_inventory_sidebar_company_chckb'
             toggle
+            disabled={!hasBranches}
             defaultChecked={companyChecked || indeterminate}
             indeterminate={indeterminate}
             onChange={(e, { checked }) => {
