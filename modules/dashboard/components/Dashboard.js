@@ -142,10 +142,10 @@ class Dashboard extends Component {
           <Grid.Column width={10}>
             <DivContainerGraph>
               <Tab
+                style={{ padding: '0 20px 0 20px' }}
                 className='inventory-sidebar tab-menu flex stretched'
                 menu={{ secondary: true, pointing: true }}
                 activeIndex={this.state.activeTab}
-                menu={{ secondary: true, pointing: true }}
                 panes={isAdmin ? saleTab : companySalesPurchasesTabs}
               />
             </DivContainerGraph>
@@ -155,14 +155,14 @@ class Dashboard extends Component {
             <SummaryRectangle
               icon={<Briefcase />}
               data={companiesCount}
-              title='Total Companies'
-              titleId='dashboard.totalCompanies.title'
+              title={isAdmin ? 'Total Companies' : 'Total Client Companies'}
+              titleId={isAdmin ? 'dashboard.totalCompanies.title' : 'dashboard.totalClientCompanies.title'}
             />
             <SummaryRectangle
               icon={<Package />}
               data={companyProductsCount}
-              title='Total Products'
-              titleId='dashboard.totalProducts.title'
+              title={isAdmin ? 'Total Products' : 'Total Client Products'}
+              titleId={isAdmin ? 'dashboard.totalProducts.title' : 'dashboard.totalClientProducts.title'}
               styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
             />
             <SummaryRectangle
@@ -220,39 +220,43 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        <Grid.Row>
-          <Grid.Column width={5}>
-            <PieGraph
-              innerRadius='30%'
-              data={top10CompanyProductsByQuantitySales}
-              title='PRODUCTS BY QUANTITY'
-              titleId='dasboard.productsQuantity.title'
-            />
-          </Grid.Column>
-          <Grid.Column width={5}>
-            <PieGraph
-              innerRadius='30%'
-              isCurrency={true}
-              data={top10CompanyProductsByValueSales}
-              title='PRODUCTS BY VALUE'
-              titleId='dasboard.productsValue.title'
-            />
-          </Grid.Column>
-          <Grid.Column width={5}>
-            <PieGraph
-              innerRadius='30%'
-              isCurrency={true}
-              data={top10ProductGroups}
-              title='POPULAR PRODUCTS'
-              titleId='dasboard.productsPopular.title'
-            />
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={5}>
-            <PieGraph innerRadius='30%' data={top10Buyers} title='TOP 10 BUYERS' titleId='dasboard.topBuyers.title' />
-          </Grid.Column>
-        </Grid.Row>
+        {!isAdmin ? (
+          <Grid.Row>
+            <Grid.Column width={5}>
+              <PieGraph
+                innerRadius='30%'
+                data={top10CompanyProductsByQuantitySales}
+                title='PRODUCTS BY QUANTITY'
+                titleId='dasboard.productsQuantity.title'
+              />
+            </Grid.Column>
+            <Grid.Column width={5}>
+              <PieGraph
+                innerRadius='30%'
+                isCurrency={true}
+                data={top10CompanyProductsByValueSales}
+                title='PRODUCTS BY VALUE'
+                titleId='dasboard.productsValue.title'
+              />
+            </Grid.Column>
+            <Grid.Column width={5}>
+              <PieGraph innerRadius='30%' data={top10Buyers} title='TOP 10 BUYERS' titleId='dasboard.topBuyers.title' />
+            </Grid.Column>
+          </Grid.Row>
+        ) : null}
+        {isAdmin ? (
+          <Grid.Row>
+            <Grid.Column width={5}>
+              <PieGraph
+                innerRadius='30%'
+                isCurrency={true}
+                data={top10ProductGroups}
+                title='POPULAR PRODUCTS'
+                titleId='dasboard.productsPopular.title'
+              />
+            </Grid.Column>
+          </Grid.Row>
+        ) : null}
       </CustomGrid>
     )
   }
@@ -283,7 +287,6 @@ Dashboard.defaultProps = {
   companyProductsCount: 0,
   productOffersValue: 0,
   usersCount: 0,
-  top10ProductGroups: [],
   top10ProductGroups: [],
   top10CompaniesByCompanyProducts: [],
   top10CompaniesBySalesInLastYear: [],
