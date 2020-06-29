@@ -376,3 +376,7 @@ export const ButtonRequest = styled(Button)`
 export const IconPlusCircle = styled(PlusCircle)`
   margin-right: 10px;
 `
+
+export const TopRow = styled(Grid.Row)`
+  align-items: flex-end !important;
+`

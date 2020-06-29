@@ -14,7 +14,9 @@ import {
   Table,
   Label,
   Radio,
-  FormGroup
+  FormGroup,
+  Dropdown,
+  Input as InputSemantic
 } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { getSafe, getPrice } from '~/utils/functions'
@@ -52,6 +54,7 @@ const validationSchema = () =>
   })
 
 import { InputWrapper } from '../../../constants/layout'
+import { options } from './constants'
 
 const SubmitOfferHighSegment = styled(Segment)`
   width: 100%;
@@ -225,13 +228,26 @@ const RightColumn = styled(GridColumn)`
   padding-right: 1.5rem !important;
 `
 
-const ToggleForm = styled(Form)`
-  opacity: ${props => (props.hidden ? 0 : 1)};
-`
-
 const GreenLabel = styled(Label)`
   background-color: rgba(132, 194, 37, 0.15) !important;
   color: #84c225 !important;
+`
+
+const InputSemanticCustom = styled(InputSemantic)`
+  margin-top: 6px !important;
+  input {
+    background: #f1f1f1 !important;
+  }
+`
+
+const DropdownSemanticCustom = styled(Dropdown)`
+  z-index: 501 !important;
+  margin-top: 6px !important;
+`
+
+const LbsLabel = styled(Label)`
+  font-weight: 400 !important;
+  background-color: #edeef2 !important;
 `
 
 class SubmitOfferPopup extends React.Component {
@@ -308,7 +324,8 @@ class SubmitOfferPopup extends React.Component {
         width: 150
       }
     ],
-    select: ''
+    select: '',
+    value: 1
   }
 
   componentDidMount() {
@@ -340,7 +357,7 @@ class SubmitOfferPopup extends React.Component {
     }
   }
 
-  submitOffer = async ({ pricePerUOM, lotExpirationDate }) => {
+  submitOffer = async ({ pricePerUOM, lotExpirationDate, quantity }) => {
     const { closePopup, submitOffer, popupValues, rows } = this.props
 
     let expiresAt = null
@@ -352,7 +369,8 @@ class SubmitOfferPopup extends React.Component {
       expiresAt,
       pricePerUOM,
       productOffer: rows[this.state.select].id,
-      purchaseRequest: popupValues.id
+      purchaseRequest: popupValues.id,
+      quantity
     }
 
     await submitOffer(body)
@@ -409,6 +427,10 @@ class SubmitOfferPopup extends React.Component {
     datagrid.updateRow(row.id, () => row)
   }
 
+  handleChangeDropdown = (e, { value }) => {
+    this.setState({ value })
+  }
+
   render() {
     const {
       intl: { formatMessage },
@@ -419,7 +441,7 @@ class SubmitOfferPopup extends React.Component {
       closePopup,
       purchaseRequestPending
     } = this.props
-    const { columns } = this.state
+    const { columns, value } = this.state
     const rows = this.getRows()
 
     const qtyPart = popupValues.unit.nameAbbreviation
@@ -473,7 +495,7 @@ class SubmitOfferPopup extends React.Component {
                         <List.Item>
                           <List.Content>
                             <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit' />
+                              <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price' />
                             </List.Header>
                             <List.Description as='span'>
                               {popupValues.maximumPricePerUOM ? (
@@ -492,7 +514,7 @@ class SubmitOfferPopup extends React.Component {
                         <List.Item>
                           <List.Content>
                             <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed' />
+                              <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity' />
                             </List.Header>
                             <List.Description as='span'>
                               {qtyPart ? (
@@ -523,90 +545,158 @@ class SubmitOfferPopup extends React.Component {
                   </GridRow>
                 </Grid>
               </SubmitOfferHighSegment>
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column width={8}>
+                    <FormattedMessage id='wantedBoard.optionOffer.label' defaultMessage='Option to offer'>
+                      {text => <label>{text}</label>}
+                    </FormattedMessage>
+                    <DropdownSemanticCustom
+                      options={options}
+                      onChange={this.handleChangeDropdown}
+                      value={value}
+                      fluid
+                      selection
+                      placeholder={
+                        <FormattedMessage id='wantedBoard.optionOffer.placeholder' defaultMessage='Select option' />
+                      }
+                      name='optionOffer'
+                      inputProps={{
+                        'data-test': 'wanted_board_option_offer_drpdn'
+                      }}
+                    />
+                  </Grid.Column>
 
-              <div className='table-responsive'>
-                <ProdexGrid
-                  tableName='submit_offer_grid'
-                  {...datagrid.tableProps}
-                  loading={datagrid.loading || purchaseRequestPending}
-                  rows={rows}
-                  columns={columns}
-                />
-              </div>
+                  <Grid.Column width={8}>
+                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+                      {text => <label>{text}</label>}
+                    </FormattedMessage>
+                    <InputSemanticCustom
+                      fluid
+                      value={getSafe(() => popupValues.element.productGroup.name, '')}
+                      disabled
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+                {/*<Grid.Row>
+                  <Grid.Column>
+                      <ProdexGrid
+                      tableName='submit_offer_grid'
+                      {...datagrid.tableProps}
+                      loading={datagrid.loading || purchaseRequestPending}
+                      rows={rows}
+                      columns={columns}
+                    />
+                  </Grid.Column>
+                </Grid.Row>*/}
+
+                <Grid.Row>
+                  <Grid.Column>
+                    <Form
+                      onSubmit={(values, { setSubmitting }) => {
+                        setSubmitting(false)
+                        this.submitOffer(values)
+                      }}
+                      validationSchema={validationSchema()}
+                      validateOnChange
+                      enableReinitialize
+                      initialValues={{
+                        pricePerUOM: '',
+                        expirationDate: '',
+                        quantity: ''
+                      }}
+                      render={({ setFieldValue, values, submitForm }) => {
+                        this.setFieldValue = setFieldValue
+                        this.submitForm = submitForm
+                        return (
+                          <>
+                            <Grid verticalAlign='middle'>
+                              {value === 1 || value === 2 ? (
+                                <Grid.Row columns={3}>
+                                  <Grid.Column>
+                                    <Input
+                                      name='pricePerUOM'
+                                      label={
+                                        <>
+                                          <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
+                                            {text => text}
+                                          </FormattedMessage>
+                                          <Required />
+                                        </>
+                                      }
+                                      inputProps={{
+                                        type: 'number',
+                                        label: <GreenLabel>{currencySymbol}</GreenLabel>,
+                                        labelPosition: 'right'
+                                      }}
+                                    />
+                                  </Grid.Column>
+                                  <Grid.Column>
+                                    <DateInput
+                                      name='lotExpirationDate'
+                                      label='Expiration Date'
+                                      inputProps={{
+                                        minDate: moment(),
+                                        clearable: true
+                                      }}
+                                    />
+                                  </Grid.Column>
+                                  <Grid.Column>
+                                    <Input
+                                      name='quantity'
+                                      label={
+                                        <>
+                                          <FormattedMessage id='submitOffer.quantity' defaultMessage='Quantity'>
+                                            {text => text}
+                                          </FormattedMessage>
+                                          <Required />
+                                        </>
+                                      }
+                                      inputProps={{
+                                        type: 'number',
+                                        label: <LbsLabel>lbs</LbsLabel>,
+                                        labelPosition: 'right',
+                                        disabled: value === 2,
+                                        style: { backgroundColor: value === 2 ? '#f1f1f1' : '' }
+                                      }}
+                                    />
+                                  </Grid.Column>
+                                </Grid.Row>
+                              ) : (
+                                <Grid.Row>
+                                  <Grid.Column>
+                                    <ProdexGrid
+                                      tableName='submit_offer_grid'
+                                      {...datagrid.tableProps}
+                                      loading={datagrid.loading || purchaseRequestPending}
+                                      rows={rows}
+                                      columns={columns}
+                                    />
+                                  </Grid.Column>
+                                </Grid.Row>
+                              )}
+                            </Grid>
+                          </>
+                        )
+                      }}
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
             </>
           </ModalContent>
 
           <Modal.Actions>
-            <ToggleForm
-              onSubmit={(values, { setSubmitting }) => {
-                setSubmitting(false)
-                this.submitOffer(values)
-              }}
-              validationSchema={validationSchema()}
-              validateOnChange
-              enableReinitialize
-              initialValues={{
-                pricePerUOM: '',
-                expirationDate: ''
-              }}
-              hidden={this.state.select === ''}
-              render={({ setFieldValue, values, submitForm }) => {
-                this.setFieldValue = setFieldValue
-                this.submitForm = submitForm
-                return (
-                  <>
-                    <Grid verticalAlign='middle'>
-                      <GridRow columns={2}>
-                        <LeftColumn textAlign='left'>
-                          <FormGroup className='price-input'>
-                            <Input
-                              name='pricePerUOM'
-                              label={
-                                <>
-                                  <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
-                                    {text => text}
-                                  </FormattedMessage>
-                                  <Required />
-                                </>
-                              }
-                              inputProps={{
-                                type: 'number',
-                                onChange: this.handleChange,
-                                label: <GreenLabel>{currencySymbol}</GreenLabel>,
-                                labelPosition: 'right'
-                              }}
-                            />
-
-                            <DateInput
-                              name='lotExpirationDate'
-                              label='Expiration Date'
-                              inputProps={{
-                                onChange: (e, { name, value }) =>
-                                  this.handleChange(e, { name, value: getStringISODate(value) }),
-                                minDate: moment(),
-                                clearable: true
-                              }}
-                            />
-                          </FormGroup>
-                        </LeftColumn>
-                        <RightColumn>
-                          <Button basic type='button' onClick={closePopup}>
-                            <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
-                              {text => text}
-                            </FormattedMessage>
-                          </Button>
-                          <Button primary type='submit' disabled={this.state.select === ''}>
-                            <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span'>
-                              {text => text}
-                            </FormattedMessage>
-                          </Button>
-                        </RightColumn>
-                      </GridRow>
-                    </Grid>
-                  </>
-                )
-              }}
-            />
+            <Button basic type='button' onClick={closePopup}>
+              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
+                {text => text}
+              </FormattedMessage>
+            </Button>
+            <Button primary type='submit' disabled={this.state.select === ''}>
+              <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span'>
+                {text => text}
+              </FormattedMessage>
+            </Button>
           </Modal.Actions>
         </Modal>
       </>

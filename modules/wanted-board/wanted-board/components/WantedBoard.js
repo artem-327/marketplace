@@ -26,7 +26,8 @@ import {
   ProductChemicalSwitch,
   TopButtons,
   ButtonRequest,
-  IconPlusCircle
+  IconPlusCircle,
+  TopRow
 } from '../../constants/layout'
 import SearchByNamesAndTags from '~/modules/search'
 
@@ -318,7 +319,7 @@ class WantedBoard extends Component {
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
 
         <Grid>
-          <Grid.Row>
+          <TopRow>
             <SearchByNamesAndTags />
             <GridColumn width={8}>
               <ControlPanel>
@@ -353,7 +354,7 @@ class WantedBoard extends Component {
                 </TopButtons>
               </ControlPanel>
             </GridColumn>
-          </Grid.Row>
+          </TopRow>
 
           <Grid.Row>
             <GridColumn>
