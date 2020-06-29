@@ -17,11 +17,17 @@ import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { SubmitOffer } from './SubmitOffer/index'
-import { PlusCircle } from 'react-feather'
 import { number } from 'prop-types'
 import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { UpperCaseText, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
+import {
+  UpperCaseText,
+  ControlPanel,
+  ProductChemicalSwitch,
+  TopButtons,
+  ButtonRequest,
+  IconPlusCircle
+} from '../../constants/layout'
 import SearchByNamesAndTags from '~/modules/search'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
@@ -42,7 +48,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 290
+        width: 250
         //align: 'right',
         //sortPath: 'ProductOffer.pkgAvailable'
       },
@@ -55,6 +61,33 @@ class WantedBoard extends Component {
         ),
         width: 225,
         disabled: true
+      },
+      {
+        name: 'funcionalEquivalent',
+        title: (
+          <FormattedMessage id='wantedBoard.funcionalEquivalent' defaultMessage='Funcional Equivalent'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
+      },
+      {
+        name: 'assayMin',
+        title: (
+          <FormattedMessage id='wantedBoard.assayMin' defaultMessage='Assay Min'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100
+      },
+      {
+        name: 'assayMax',
+        title: (
+          <FormattedMessage id='wantedBoard.assayMax' defaultMessage='Assay Max'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100
       },
       {
         name: 'assay',
@@ -73,9 +106,8 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 150
+        width: 100
       },
-      /*
       {
         name: 'manufacturer',
         title: (
@@ -83,9 +115,8 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 420
+        width: 160
       },
-      */
       {
         name: 'form',
         title: (
@@ -93,25 +124,25 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 100
       },
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
+          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='Fob Price'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 150
+        width: 100
       },
       {
         name: 'quantity',
         title: (
-          <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
+          <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 180
+        width: 100
       },
       {
         name: 'neededBy',
@@ -120,7 +151,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 100
       },
       {
         name: 'createdAt',
@@ -129,7 +160,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 100,
         sortPath: 'PurchaseRequest.createdAt'
       }
     ],
@@ -141,7 +172,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 290,
+        width: 250,
         disabled: true
         //align: 'right',
         //sortPath: 'ProductOffer.pkgAvailable'
@@ -154,6 +185,33 @@ class WantedBoard extends Component {
           </FormattedMessage>
         ),
         width: 225
+      },
+      {
+        name: 'funcionalEquivalent',
+        title: (
+          <FormattedMessage id='wantedBoard.funcionalEquivalent' defaultMessage='Funcional Equivalent'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
+      },
+      {
+        name: 'assayMin',
+        title: (
+          <FormattedMessage id='wantedBoard.assayMin' defaultMessage='Assay Min'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100
+      },
+      {
+        name: 'assayMax',
+        title: (
+          <FormattedMessage id='wantedBoard.assayMax' defaultMessage='Assay Max'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100
       },
       {
         name: 'assay',
@@ -171,9 +229,8 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 150
+        width: 100
       },
-      /*
       {
         name: 'manufacturer',
         title: (
@@ -181,9 +238,8 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 420
+        width: 160
       },
-      */
       {
         name: 'form',
         title: (
@@ -191,25 +247,25 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 100
       },
       {
         name: 'fobPrice',
         title: (
-          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
+          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='Fob Price'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 150
+        width: 100
       },
       {
         name: 'quantity',
         title: (
-          <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
+          <FormattedMessage id='wantedBoard.quantity' defaultMessage='Quantity'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 180
+        width: 100
       },
       {
         name: 'neededBy',
@@ -218,7 +274,7 @@ class WantedBoard extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 100
       }
     ],
     selectedRows: [],
@@ -260,11 +316,12 @@ class WantedBoard extends Component {
       <>
         {!tutorialCompleted && <Tutorial marginWantedBoard />}
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
-        <ControlPanel>
-          <Grid>
-            <Grid.Row>
-              <SearchByNamesAndTags />
-              <GridColumn width={8}>
+
+        <Grid>
+          <Grid.Row>
+            <SearchByNamesAndTags />
+            <GridColumn width={8}>
+              <ControlPanel>
                 <TopButtons>
                   <ProductChemicalSwitch className={type}>
                     <Button
@@ -284,38 +341,42 @@ class WantedBoard extends Component {
                       </FormattedMessage>
                     </Button>
                   </ProductChemicalSwitch>
-                  <Button
+                  <ButtonRequest
                     primary
                     onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
                     data-test='wanted_board_open_popup_btn'>
-                    <FormattedMessage id='wantedBoard.addNewRequest' defaultMessage='Add New Request'>
+                    <IconPlusCircle />
+                    <FormattedMessage id='wantedBoard.requestProduct' defaultMessage='Request Product'>
                       {text => text}
                     </FormattedMessage>
-                  </Button>
+                  </ButtonRequest>
                 </TopButtons>
-              </GridColumn>
-            </Grid.Row>
-          </Grid>
-        </ControlPanel>
-        <div className='flex stretched' style={{ padding: '0 30px 20px 30px' }}>
-          <ProdexGrid
-            tableName='wanted_board_grid'
-            {...datagrid.tableProps}
-            rows={rows}
-            columns={type === 'product' ? columnsProduct : columnsChemical}
-            rowSelection={false}
-            showSelectionColumn={false}
-            rowActions={[
-              {
-                text: formatMessage({
-                  id: 'wantedBoard.submitOffer',
-                  defaultMessage: 'Submit Offer'
-                }),
-                callback: row => this.props.openSubmitOffer(row)
-              }
-            ]}
-          />
-        </div>
+              </ControlPanel>
+            </GridColumn>
+          </Grid.Row>
+
+          <Grid.Row>
+            <GridColumn>
+              <ProdexGrid
+                tableName='wanted_board_grid'
+                {...datagrid.tableProps}
+                rows={rows}
+                columns={type === 'product' ? columnsProduct : columnsChemical}
+                rowSelection={false}
+                showSelectionColumn={false}
+                rowActions={[
+                  {
+                    text: formatMessage({
+                      id: 'wantedBoard.submitOffer',
+                      defaultMessage: 'Submit Offer'
+                    }),
+                    callback: row => this.props.openSubmitOffer(row)
+                  }
+                ]}
+              />
+            </GridColumn>
+          </Grid.Row>
+        </Grid>
       </>
     )
   }

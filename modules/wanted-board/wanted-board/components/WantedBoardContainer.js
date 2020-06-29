@@ -36,6 +36,9 @@ function mapStateToProps(store, { datagrid }) {
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
         ),
         casNumber: casNumberAndName(getSafe(() => row.element.casProduct, '')),
+        funcionalEquivalent: getSafe(() => row.element.funcionalEquivalent, 'Any'),
+        assayMin: getSafe(() => row.element.assayMin, 'Any'),
+        assayMax: getSafe(() => row.element.assayMax, 'Any'),
         assay: (
           <FormattedAssay
             min={getSafe(() => row.element.assayMin, null)}

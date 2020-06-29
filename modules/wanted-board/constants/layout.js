@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow, Icon, Dropdown, Grid, GridColumn } from 'semantic-ui-react'
+import { Sidebar, Accordion, Segment, GridRow, Icon, Dropdown, Grid, GridColumn, Button } from 'semantic-ui-react'
+import { PlusCircle } from 'react-feather'
 
 export const UpperCaseText = styled.div`
   text-transform: uppercase;
@@ -149,6 +150,7 @@ export const FlexSidebar = styled(Sidebar)`
 export const TopButtons = styled.div`
   padding-top: 9px;
   float: right;
+  display: flex;
 `
 
 export const BottomButtons = styled.div`
@@ -364,4 +366,13 @@ export const QuantityWrapper = styled.div`
       }
     }
   }
+`
+
+export const ButtonRequest = styled(Button)`
+  display: flex !important;
+  align-items: center !important;
+`
+
+export const IconPlusCircle = styled(PlusCircle)`
+  margin-right: 10px;
 `
