@@ -4,7 +4,7 @@ import React from 'react'
 
 export const config = {
   'Units of Measure': {
-    tableName: 'units_of_measure',
+    tableName: 'admin_units_of_measure',
     addEditText: <FormattedMessage id='admin.unitOfMeasure'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfMeasurement',
     searchText: 'admin.searchUnitOfMeasure',
@@ -109,6 +109,7 @@ export const config = {
   },
 
   'Packaging Types': {
+    tableName: 'admin_packaging_types',
     addEditText: <FormattedMessage id='admin.unitOfPackaging'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfPackaging',
     searchText: 'admin.searchUnitOfPackaging',
@@ -467,7 +468,7 @@ export const config = {
   },
 
   'NMFC Numbers': {
-    tableName: 'nmfc_numbers',
+    tableName: 'admin_nmfc_numbers',
     addEditText: (
       <FormattedMessage id='admin.nmfcNumber' defaultMessage='NMFC Number'>
         {text => text}

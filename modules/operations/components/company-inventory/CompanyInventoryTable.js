@@ -75,7 +75,7 @@ class CompanyInventoryTable extends Component {
     return (
       <React.Fragment>
         <ProdexGrid
-          tableName='operations_company_product_catalog'
+          tableName='operations_company_inventory'
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={columns}

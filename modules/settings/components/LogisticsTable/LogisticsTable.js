@@ -51,6 +51,7 @@ class LogisticsTable extends Component {
 
     return (
       <ProdexTable
+        tableName='settings_logistics_table'
         columns={columns}
         filterValue={filterValue}
         rows={logisticsAccounts.map(acc => ({

@@ -146,7 +146,7 @@ class PickUpLocationsTable extends Component {
     return (
       <React.Fragment>
         <ProdexGrid
-          tableName='settings_werehouser_branches'
+          tableName='settings_pickup_locations'
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={this.state.columns}

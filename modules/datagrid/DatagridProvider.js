@@ -330,7 +330,19 @@ class DatagridProvider extends Component {
   }
 
   onTableReady = (params = {}) => {
-    if (!this.props.skipInitLoad) this.loadData(params)
+    if (this.props.skipInitLoad) {
+      this.setState(
+        s => ({
+          ready: true,
+          datagridParams: {
+            ...s.datagridParams,
+            ...params
+          },
+          rows: []
+        }))
+    } else {
+      this.loadData(params)
+    }
   }
 
   setApiConfig = apiConfig => {
