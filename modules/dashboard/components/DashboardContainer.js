@@ -20,16 +20,20 @@ function mapStateToProps(store) {
   return {
     isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
     companySumOfPurchasesMonthly: getSafe(() => data.companySumOfPurchasesMonthly, '')
-      ? Object.entries(data.companySumOfPurchasesMonthly).map(([name, value]) => ({
-          name,
-          Transactions: Math.round(value / 1000)
-        }))
+      ? Object.entries(data.companySumOfPurchasesMonthly)
+          .map(([name, value]) => ({
+            name,
+            Transactions: Math.round(value)
+          }))
+          .reverse()
       : [],
     companySumOfSalesMonthly: getSafe(() => data.companySumOfSalesMonthly, '')
-      ? Object.entries(data.companySumOfSalesMonthly).map(([name, value]) => ({
-          name,
-          Transactions: Math.round(value / 1000)
-        }))
+      ? Object.entries(data.companySumOfSalesMonthly)
+          .map(([name, value]) => ({
+            name,
+            Transactions: Math.round(value)
+          }))
+          .reverse()
       : [],
     top10Buyers: getSafe(() => data.top10Buyers, '')
       ? Object.entries(data.top10Buyers).map(([name, value]) => ({
@@ -82,15 +86,17 @@ function mapStateToProps(store) {
     usersCount: isAdmin ? getSafe(() => data.totalUsersCount, 0) : getSafe(() => data.companyUsersCount, 0),
     loading: getSafe(() => data.loading, ''),
     totalSumOfSalesMonthly: getSafe(() => data.totalSumOfSalesMonthly, '')
-      ? Object.entries(data.totalSumOfSalesMonthly).map(([name, value]) => ({
-          name,
-          Transactions: Math.round(value / 1000)
-        }))
+      ? Object.entries(data.totalSumOfSalesMonthly)
+          .map(([name, value]) => ({
+            name,
+            Transactions: Math.round(value)
+          }))
+          .reverse()
       : [],
     top10ProductGroups: getSafe(() => data.top10ProductGroups, '')
       ? Object.entries(data.top10ProductGroups).map(([name, value]) => ({
           name,
-          value: Math.round(value / 1000)
+          value
         }))
       : []
   }

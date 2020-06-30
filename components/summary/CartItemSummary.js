@@ -38,6 +38,17 @@ const BlueText = styled.label`
   cursor: pointer;
 `
 
+const DeleteButton = styled(Button)`
+  min-width: unset !important;
+  min-height: unset !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 6px !important;
+  border: solid 1px #f16844 !important;
+  background-color: #fff0ed !important;
+  color: #f16844 !important;
+`
+
 const validationSchema = Yup.object().shape({
   freightClass: freightClassValidation()
 })
@@ -343,15 +354,14 @@ class CartItemSummary extends Component {
               </GridColumn>
 
               <GridColumn computer={4} textAlign='right'>
-                <Button
+                <DeleteButton
                   type='button'
                   onClick={() => deleteCart(item.id)}
                   data-test={`shopping_cart_remove_${item.id}_btn`}
-                  basic
                   icon
                   negative>
                   <Icon name='trash alternate outline' />
-                </Button>
+                </DeleteButton>
               </GridColumn>
             </StyledRow>
 

@@ -696,7 +696,7 @@ class Orders extends Component {
             <Spinner />
           ) : (
             <ProdexGrid
-              tableName='orders_grid'
+              tableName='operations_orders_grid'
               columns={columns}
               {...datagrid.tableProps}
               loading={datagrid.loading || orderProcessing}

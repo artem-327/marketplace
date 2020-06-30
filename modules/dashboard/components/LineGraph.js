@@ -6,13 +6,14 @@ import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 
 const DivGraph = styled.div`
-  margin: 20px;
+  margin: 10px;
 `
 
 const GraphTitle = styled.div`
   font-size: 14px;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 20px;
 `
 const GraphSubTitle = styled.div`
   font-size: 12px;
@@ -27,14 +28,17 @@ const LineGraph = ({ data, title, titleId, valuesInTitle, subTitle, subTitleId }
       <GraphTitle>
         <FormattedMessage id={titleId} defaultMessage={title} values={valuesInTitle} />
       </GraphTitle>
-      <GraphSubTitle>
-        <FormattedMessage id={subTitleId} defaultMessage={subTitle} />
-      </GraphSubTitle>
+      {/*commented subtitle  */}
+      {false && (
+        <GraphSubTitle>
+          <FormattedMessage id={subTitleId} defaultMessage={subTitle} />
+        </GraphSubTitle>
+      )}
       <ResponsiveContainer width='100%' height='100%' minHeight={440}>
         <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
           <Area legendType='none' />
           <XAxis tickLine={false} dataKey='name' axisLine={false} />
-          <YAxis unit='$' tickLine={false} axisLine={false} />
+          <YAxis unit='$' tickLine={false} axisLine={false} width={80} />
           <CartesianGrid vertical={false} strokeDasharray='2 10' />
           <Tooltip />
           <Legend />
