@@ -25,6 +25,7 @@ const StyledReRegisterButton = styled(Button)`
   background-color: #ddf1fc !important;
   padding: 6px !important;
   margin: -6px -6px -7px 3px !important;
+  min-width: unset !important;
 `
 
 const columns = [

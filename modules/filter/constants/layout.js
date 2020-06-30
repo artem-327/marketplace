@@ -83,6 +83,9 @@ export const FlexSidebar = styled.div`
     opacity: 1 !important;
     color: #848893;
     margin: 10px 5px;
+    min-width: unset;
+    min-height: unset;
+    height: unset;
   
     background: #ffffff;
     :hover, :focus {
@@ -566,17 +569,19 @@ export const QuantityWrapper = styled.div`
       .ui.button {
         position: absolute;
         margin: 0;
+        min-width: unset;
+        min-height: unset;
+        height: unset;
+        line-height: 12px;
+        border-radius: 0 3px 0 0;
+        border: solid 1px #dee2e6;
+        width: 32px;
+
         &.buttonPlus {
-          border-radius: 0 3px 0 0;
-          border: solid 1px #dee2e6;
-          width: 32px;
-          padding: 1px 0 0 0;
+          padding: 1px 0 2px 0;
         }
         &.buttonMinus {
-          border-radius: 0 0 3px 0;
-          border: solid 1px #dee2e6;
-          width: 32px;
-          padding: 0;
+          padding: 0 0 2px 0;
           top: 16px;
         }
       }
