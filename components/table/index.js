@@ -485,6 +485,10 @@ class _Table extends Component {
     // expand groups after data was loaded when grouping is set
     if (prevProps.rows !== this.props.rows) this.props.groupBy.length && this.expandGroups()
     // prevProps.loading != this.props.loading && prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
+
+    if (prevProps.columns !== this.props.columns || prevProps.tableName !== this.props.tableName) {
+      this.loadColumnsSettings()
+    }
   }
 
   expandGroups = () => {
@@ -607,7 +611,6 @@ class _Table extends Component {
 
   loadColumnsSettings = () => {
     const { tableName, columns, rowActions, defaultHiddenColumns, defaultSorting } = this.props
-
     // get column names from current table settings
     let colNames = columns.map(column => {
       return column.name

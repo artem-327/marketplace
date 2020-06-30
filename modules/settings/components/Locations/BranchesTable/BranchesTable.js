@@ -117,7 +117,7 @@ class BranchesTable extends Component {
     return (
       <React.Fragment>
         <ProdexGrid
-          tableName='settings_werehouser_branches'
+          tableName='settings_branches'
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={this.state.columns}
