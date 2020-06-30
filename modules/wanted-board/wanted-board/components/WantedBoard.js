@@ -17,6 +17,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { SubmitOffer } from './SubmitOffer/index'
+import RequestProduct from './RequestProduct/RequestProductPopup'
 import { number } from 'prop-types'
 import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
@@ -308,7 +309,8 @@ class WantedBoard extends Component {
       openedSubmitOfferPopup,
       type,
       popupValues,
-      tutorialCompleted
+      tutorialCompleted,
+      openedRequestProductPopup
     } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
@@ -317,6 +319,7 @@ class WantedBoard extends Component {
       <>
         {!tutorialCompleted && <Tutorial marginWantedBoard />}
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
+        {openedRequestProductPopup && <RequestProduct />}
 
         <Grid>
           <TopRow>

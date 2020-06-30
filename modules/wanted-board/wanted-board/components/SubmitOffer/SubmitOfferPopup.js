@@ -250,6 +250,19 @@ const LbsLabel = styled(Label)`
   background-color: #edeef2 !important;
 `
 
+const DivTagName = styled.div`
+  border-radius: 11px;
+  border: solid 1px #dee2e6;
+  background-color: #f8f9fb;
+  margin-left: 5px;
+  padding: 0 10px 0 10px;
+`
+
+const DivFlex = styled.div`
+  display: flex;
+  color: #848893;
+`
+
 class SubmitOfferPopup extends React.Component {
   state = {
     columns: [
@@ -276,7 +289,6 @@ class SubmitOfferPopup extends React.Component {
         ),
         width: 117
       },
-      /*
       {
         name: 'manufacturer',
         title: (
@@ -286,7 +298,6 @@ class SubmitOfferPopup extends React.Component {
         ),
         width: 143
       },
-      */
       {
         name: 'condition',
         title: (
@@ -353,7 +364,7 @@ class SubmitOfferPopup extends React.Component {
           appearance: 'warning'
         }
       )
-      this.props.closePopup()
+      //this.props.closePopup()
     }
   }
 
@@ -445,7 +456,12 @@ class SubmitOfferPopup extends React.Component {
     const rows = this.getRows()
 
     const qtyPart = popupValues.unit.nameAbbreviation
-
+    console.log('popupValues====================================')
+    console.log(popupValues)
+    console.log('====================================')
+    console.log('rows====================================')
+    console.log(rows)
+    console.log('====================================')
     return (
       <>
         <Modal closeIcon onClose={closePopup} open={true} size='large'>
@@ -547,50 +563,6 @@ class SubmitOfferPopup extends React.Component {
               </SubmitOfferHighSegment>
               <Grid>
                 <Grid.Row>
-                  <Grid.Column width={8}>
-                    <FormattedMessage id='wantedBoard.optionOffer.label' defaultMessage='Option to offer'>
-                      {text => <label>{text}</label>}
-                    </FormattedMessage>
-                    <DropdownSemanticCustom
-                      options={options}
-                      onChange={this.handleChangeDropdown}
-                      value={value}
-                      fluid
-                      selection
-                      placeholder={
-                        <FormattedMessage id='wantedBoard.optionOffer.placeholder' defaultMessage='Select option' />
-                      }
-                      name='optionOffer'
-                      inputProps={{
-                        'data-test': 'wanted_board_option_offer_drpdn'
-                      }}
-                    />
-                  </Grid.Column>
-
-                  <Grid.Column width={8}>
-                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-                      {text => <label>{text}</label>}
-                    </FormattedMessage>
-                    <InputSemanticCustom
-                      fluid
-                      value={getSafe(() => popupValues.element.productGroup.name, '')}
-                      disabled
-                    />
-                  </Grid.Column>
-                </Grid.Row>
-                {/*<Grid.Row>
-                  <Grid.Column>
-                      <ProdexGrid
-                      tableName='submit_offer_grid'
-                      {...datagrid.tableProps}
-                      loading={datagrid.loading || purchaseRequestPending}
-                      rows={rows}
-                      columns={columns}
-                    />
-                  </Grid.Column>
-                </Grid.Row>*/}
-
-                <Grid.Row>
                   <Grid.Column>
                     <Form
                       onSubmit={(values, { setSubmitting }) => {
@@ -611,69 +583,127 @@ class SubmitOfferPopup extends React.Component {
                         return (
                           <>
                             <Grid verticalAlign='middle'>
-                              {value === 1 || value === 2 ? (
-                                <Grid.Row columns={3}>
-                                  <Grid.Column>
-                                    <Input
-                                      name='pricePerUOM'
-                                      label={
-                                        <>
-                                          <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
-                                            {text => text}
-                                          </FormattedMessage>
-                                          <Required />
-                                        </>
-                                      }
-                                      inputProps={{
-                                        type: 'number',
-                                        label: <GreenLabel>{currencySymbol}</GreenLabel>,
-                                        labelPosition: 'right'
-                                      }}
-                                    />
-                                  </Grid.Column>
-                                  <Grid.Column>
-                                    <DateInput
-                                      name='lotExpirationDate'
-                                      label='Expiration Date'
-                                      inputProps={{
-                                        minDate: moment(),
-                                        clearable: true
-                                      }}
-                                    />
-                                  </Grid.Column>
-                                  <Grid.Column>
-                                    <Input
-                                      name='quantity'
-                                      label={
-                                        <>
-                                          <FormattedMessage id='submitOffer.quantity' defaultMessage='Quantity'>
-                                            {text => text}
-                                          </FormattedMessage>
-                                          <Required />
-                                        </>
-                                      }
-                                      inputProps={{
-                                        type: 'number',
-                                        label: <LbsLabel>lbs</LbsLabel>,
-                                        labelPosition: 'right',
-                                        disabled: value === 2,
-                                        style: { backgroundColor: value === 2 ? '#f1f1f1' : '' }
-                                      }}
-                                    />
-                                  </Grid.Column>
-                                </Grid.Row>
+                              {getSafe(() => this.props.rows.length, false) ||
+                              datagrid.loading ||
+                              purchaseRequestPending ? (
+                                <>
+                                  <Grid.Row>
+                                    <Grid.Column width={6}>
+                                      <DivFlex>
+                                        <FormattedMessage id='wantedBoard.tags' defaultMessage='Tags:' />
+                                        <DivTagName>
+                                          {getSafe(() => popupValues.element.productGroup.name, '')}
+                                        </DivTagName>
+                                      </DivFlex>
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
+                                    <Grid.Column>
+                                      <ProdexGrid
+                                        tableName='submit_offer_grid'
+                                        {...datagrid.tableProps}
+                                        loading={datagrid.loading || purchaseRequestPending}
+                                        rows={rows}
+                                        columns={columns}
+                                      />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                </>
+                              ) : !getSafe(() => this.props.rows.length, false) &&
+                                !datagrid.loading &&
+                                !purchaseRequestPending &&
+                                (value === 1 || value === 2) ? (
+                                <>
+                                  <Grid.Row>
+                                    <Grid.Column width={8}>
+                                      <FormattedMessage
+                                        id='wantedBoard.optionOffer.label'
+                                        defaultMessage='Option to offer'>
+                                        {text => <label>{text}</label>}
+                                      </FormattedMessage>
+                                      <DropdownSemanticCustom
+                                        options={options}
+                                        onChange={this.handleChangeDropdown}
+                                        value={value}
+                                        fluid
+                                        selection
+                                        placeholder={
+                                          <FormattedMessage
+                                            id='wantedBoard.optionOffer.placeholder'
+                                            defaultMessage='Select option'
+                                          />
+                                        }
+                                        name='optionOffer'
+                                        inputProps={{
+                                          'data-test': 'wanted_board_option_offer_drpdn'
+                                        }}
+                                      />
+                                    </Grid.Column>
+
+                                    <Grid.Column width={8}>
+                                      <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+                                        {text => <label>{text}</label>}
+                                      </FormattedMessage>
+                                      <InputSemanticCustom
+                                        fluid
+                                        value={getSafe(() => popupValues.element.productGroup.name, '')}
+                                        disabled
+                                      />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row columns={3}>
+                                    <Grid.Column>
+                                      <Input
+                                        name='pricePerUOM'
+                                        label={
+                                          <>
+                                            <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
+                                              {text => text}
+                                            </FormattedMessage>
+                                            <Required />
+                                          </>
+                                        }
+                                        inputProps={{
+                                          type: 'number',
+                                          label: <GreenLabel>{currencySymbol}</GreenLabel>,
+                                          labelPosition: 'right'
+                                        }}
+                                      />
+                                    </Grid.Column>
+                                    <Grid.Column>
+                                      <DateInput
+                                        name='lotExpirationDate'
+                                        label='Expiration Date'
+                                        inputProps={{
+                                          minDate: moment(),
+                                          clearable: true
+                                        }}
+                                      />
+                                    </Grid.Column>
+                                    <Grid.Column>
+                                      <Input
+                                        name='quantity'
+                                        label={
+                                          <>
+                                            <FormattedMessage id='submitOffer.quantity' defaultMessage='Quantity'>
+                                              {text => text}
+                                            </FormattedMessage>
+                                            <Required />
+                                          </>
+                                        }
+                                        inputProps={{
+                                          type: 'number',
+                                          label: <LbsLabel>lbs</LbsLabel>,
+                                          labelPosition: 'right',
+                                          disabled: value === 2,
+                                          style: { backgroundColor: value === 2 ? '#f1f1f1' : '' }
+                                        }}
+                                      />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                </>
                               ) : (
-                                <Grid.Row>
-                                  <Grid.Column>
-                                    <ProdexGrid
-                                      tableName='submit_offer_grid'
-                                      {...datagrid.tableProps}
-                                      loading={datagrid.loading || purchaseRequestPending}
-                                      rows={rows}
-                                      columns={columns}
-                                    />
-                                  </Grid.Column>
-                                </Grid.Row>
+                                `TODO extra inputs `
                               )}
                             </Grid>
                           </>

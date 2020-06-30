@@ -66,7 +66,8 @@ import {
   closeDetailSidebar,
   //getProductOffer,
   addPurchaseRequest,
-  editPurchaseRequest
+  editPurchaseRequest,
+  openRequestProduct
 } from '../../actions'
 
 import {
@@ -84,7 +85,9 @@ import {
   //SmallGrid,
   //InputLabeledWrapper,
   //CustomLabel,
-  LabeledRow
+  LabeledRow,
+  DivProductNotExist,
+  DivLinkProductNotExist
 } from '../../constants/layout'
 
 import { listFrequency } from '../../constants/constants'
@@ -389,7 +392,8 @@ class DetailSidebar extends Component {
       toastManager,
       removeAttachment,
       currencySymbol,
-      type
+      type,
+      openRequestProduct
     } = this.props
 
     const { hasProvinces } = this.state
@@ -470,6 +474,20 @@ class DetailSidebar extends Component {
                                 searchQuery.length > 0 && this.searchProducts(searchQuery)
                             }}
                           />
+                          {!this.props.autocompleteData || !getSafe(() => this.props.autocompleteData.length, false) ? (
+                            <DivProductNotExist>
+                              <FormattedMessage
+                                id='wantedBoard.productNotExist'
+                                defaultMessage='The product does not exist, '
+                              />{' '}
+                              <DivLinkProductNotExist onClick={() => openRequestProduct()}>
+                                <FormattedMessage
+                                  id='wantedBoard.linkProductNotExist'
+                                  defaultMessage='Requst an EchoProduct'
+                                />
+                              </DivLinkProductNotExist>
+                            </DivProductNotExist>
+                          ) : null}
                         </GridColumn>
                       </GridRow>
                     )}
@@ -1020,7 +1038,8 @@ const mapDispatchToProps = {
   closeDetailSidebar,
   //getProductOffer,
   addPurchaseRequest,
-  editPurchaseRequest
+  editPurchaseRequest,
+  openRequestProduct
 }
 
 const mapStateToProps = ({

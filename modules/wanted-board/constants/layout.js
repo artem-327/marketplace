@@ -382,3 +382,15 @@ export const IconPlusCircle = styled(PlusCircle)`
 export const TopRow = styled(Grid.Row)`
   align-items: flex-end !important;
 `
+
+export const DivProductNotExist = styled.div`
+  display: flex;
+  margin-top: -10px;
+`
+
+export const DivLinkProductNotExist = styled.div`
+  font-weight: bold;
+  color: #2599d5;
+  cursor: pointer;
+  margin-left: 5px;
+`

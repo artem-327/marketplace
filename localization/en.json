@@ -2406,6 +2406,8 @@
   "wantedBoard.notify.noInventoryItems.Content": "You do not have any Inventory item matching the requested item to offer.",
   "wantedBoard.optionOffer.placeholder": "Select option",
   "wantedBoard.optionOffer.label": "Option to offer",
+  "wantedBoard.linkProductNotExist": "Request an EchoProduct",
+  "wantedBoard.productNotExist": "The product does not exist, ",
   "global.enabled": "Enabled",
   "global.selectTags": "Select tags",
   "global.marketSegments": "Market Segments",
@@ -2457,5 +2459,6 @@
   "dasboard.companySales": "SALES",
   "dasboard.topBuyers": "TOP 10 BUYERS",
   "dasboard.total": "Total",
-  "dasboard.average": " average"
+  "dasboard.average": " average",
+  "requestProduct.requiredDocuments": " Required Documents"
 }

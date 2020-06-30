@@ -36,7 +36,9 @@ export const initialState = {
   openedSubmitOfferPopup: false,
   popupValues: null,
   wantedBoardType: 'product',
-  myRequestedItemsType: 'product'
+  myRequestedItemsType: 'product',
+  openedRequestProductPopup: false,
+  attachments: []
 
   //datagridFilter: { filters: [] },
   //datagridFilterUpdate: false
@@ -54,10 +56,18 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_OPEN_REQUEST_PRODUCT: {
+      return {
+        ...state,
+        openedRequestProductPopup: true
+      }
+    }
+
     case AT.WB_CLOSE_POPUP: {
       return {
         ...state,
-        openedSubmitOfferPopup: false
+        openedSubmitOfferPopup: false,
+        openedRequestProductPopup: false
       }
     }
 
@@ -438,7 +448,9 @@ export default function reducer(state = initialState, action) {
     case AT.WB_REJECT_REQUESTED_ITEM_PENDING:
     case AT.WB_EDIT_PURCHASE_REQUEST_PENDING:
     case AT.WB_ADD_PURCHASE_REQUEST_PENDING:
-    case AT.WB_EDIT_MY_PURCHASE_OFFER_PENDING: {
+    case AT.WB_EDIT_MY_PURCHASE_OFFER_PENDING:
+    case AT.WB_ADD_ATTACHMENT_PENDING:
+    case AT.WB_REQUEST_PRODUCT: {
       return { ...state, loading: true }
     }
 
@@ -447,7 +459,9 @@ export default function reducer(state = initialState, action) {
     case AT.WB_REJECT_REQUESTED_ITEM_REJECTED:
     case AT.WB_EDIT_PURCHASE_REQUEST_REJECTED:
     case AT.WB_ADD_PURCHASE_REQUEST_REJECTED:
-    case AT.WB_EDIT_MY_PURCHASE_OFFER_REJECTED: {
+    case AT.WB_EDIT_MY_PURCHASE_OFFER_REJECTED:
+    case AT.WB_ADD_ATTACHMENT_REJECTED:
+    case AT.WB_REQUEST_PRODUCT: {
       return { ...state, loading: false }
     }
 
@@ -456,8 +470,16 @@ export default function reducer(state = initialState, action) {
     case AT.WB_REJECT_REQUESTED_ITEM_FULFILLED:
     case AT.WB_EDIT_PURCHASE_REQUEST_FULFILLED:
     case AT.WB_ADD_PURCHASE_REQUEST_FULFILLED:
-    case AT.WB_EDIT_MY_PURCHASE_OFFER_FULFILLED: {
+    case AT.WB_EDIT_MY_PURCHASE_OFFER_FULFILLED:
+    case AT.WB_REQUEST_PRODUCT: {
       return { ...state, loading: false }
+    }
+
+    case AT.WB_ADD_ATTACHMENT_FULFILLED: {
+      return {
+        ...state,
+        attachments: payload
+      }
     }
 
     default: {
