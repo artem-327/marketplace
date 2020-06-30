@@ -163,7 +163,7 @@ export const BottomButtons = styled.div`
   .ui.button {
     font-size: 1em;
     margin: 0 0.357142857em;
-    padding: 0.928571429em 1.5em 0.928571429em;
+    padding: 9px 18px 9px;
     color: #848893;
     background-color: #ffffff;
     border: solid 1px #dee2e6;
@@ -337,8 +337,8 @@ export const QuantityWrapper = styled.div`
     }
     > .sideButtons {
       position: absolute;
-      width: 2.8571429em;
-      height: 2.8571429em;
+      width: 40px;
+      height: 40px;
       right: 0;
       top: 0;
       .ui.button {
@@ -347,19 +347,21 @@ export const QuantityWrapper = styled.div`
         background-color: #f8f9fb;
         border: solid 1px #dee2e6;
         font-family: feathericon;
+        min-width: unset;
+        min-height: unset;
+        height: unset;
+        line-height: 14px;
         text-align: center;
         color: #848893;
+        border-radius: 0 3px 0 0;
+        width: 40px;
 
         &.buttonPlus {
-          border-radius: 0 3px 0 0;
-          width: 2.8571429em;
-          padding: 0.2142857em 0 0.1428571em 0;
+          padding: 3px 0 2px 0;
         }
         &.buttonMinus {
-          border-radius: 0 0 3px 0;
-          width: 2.8571429em;
-          padding: 0.1428571em 0 0.1428571em 0;
-          top: 1.42857143em;
+          padding: 2px 0 2px 0;
+          top: 20px;
         }
       }
     }

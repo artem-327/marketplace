@@ -37,13 +37,10 @@ const defaultHiddenColumns = [
 ]
 
 const MenuItemFilters = styled(Menu.Item)`
-  max-width: 40vw;
-`
-
-const CustomProdexTable = styled(ProdexTable)`
-  .dx-g-bs4-table-container {
-    overflow: hidden;
-  }
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: -5px;
 `
 
 const ClockIcon = styled(Clock)`
@@ -90,8 +87,36 @@ const StyledPopup = styled(Popup)`
   }
 `
 
-const StyledMenu = styled(Menu)`
-  .item .ui.button {
+const CustomSearchNameTags = styled.div`
+  .column {
+    width: 370px;
+    padding-top: 0 !important;
+  }
+`
+
+const CustomRowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: -5px -5px;
+  flex-wrap: wrap;
+  
+  > div {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    margin: 5px 5px;
+  }
+  
+  input, .ui.dropdown {
+    height: 40px;
+  }
+  
+  .ui.button {
     height: 40px;
     border-radius: 3px;
     font-weight: 500;
@@ -747,74 +772,72 @@ class MyInventory extends Component {
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
         {!tutorialCompleted && <Tutorial />}
-        <Container fluid style={{ padding: '10px 32px 0' }}>
-          <Grid>
-            <Grid.Row>
+        <Container fluid style={{ padding: '20px 32px 10px' }}>
+          <CustomRowDiv>
+            <CustomSearchNameTags>
               <SearchByNamesAndTags />
+            </CustomSearchNameTags>
 
-              <Grid.Column width={8}>
-                <StyledMenu secondary className='page-part'>
-                  {/*selectedRows.length > 0 ? (
-                    <Menu.Item>
-                      <Header as='h3' size='small' color='grey'>
-                        <FormattedMessage
-                          id='myInventory.smallHeader'
-                          defaultMessage={selectedRows.length + ' products offerings selected'}
-                          values={{ number: selectedRows.length }}
-                        />
-                      </Header>
-                    </Menu.Item>
-                  ) : null*/}
-                  <Menu.Menu position='right'>
-                    <Menu.Item>
-                      <Button
-                        className='light'
-                        size='large'
-                        primary
-                        onClick={() => setExportSidebarOpenState(true)}
-                        data-test='my_inventory_export_btn'>
-                        <CornerLeftUp />
-                        {formatMessage({
-                          id: 'myInventory.export',
-                          defaultMessage: 'Export'
-                        })}
-                      </Button>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <Button
-                        className='light'
-                        size='large'
-                        primary
-                        onClick={() => openImportPopup()}
-                        data-test='my_inventory_import_btn'>
-                        <CornerLeftDown />
-                        {formatMessage({
-                          id: 'myInventory.import',
-                          defaultMessage: 'Import'
-                        })}
-                      </Button>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <Button
-                        className='secondary'
-                        size='large'
-                        primary
-                        onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
-                        data-test='my_inventory_add_btn'>
-                        <PlusCircle />
-                        <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
-                          {text => text}
-                        </FormattedMessage>
-                      </Button>
-                    </Menu.Item>
-                    <MenuItemFilters>
-                      <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
-                    </MenuItemFilters>
-                  </Menu.Menu>
-                </StyledMenu>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+            {/*selectedRows.length > 0 ? (
+              <Menu.Item>
+                <Header as='h3' size='small' color='grey'>
+                  <FormattedMessage
+                    id='myInventory.smallHeader'
+                    defaultMessage={selectedRows.length + ' products offerings selected'}
+                    values={{ number: selectedRows.length }}
+                  />
+                </Header>
+              </Menu.Item>
+            ) : null*/}
+            <div>
+              <div className='column'>
+                <Button
+                  className='light'
+                  size='large'
+                  primary
+                  onClick={() => setExportSidebarOpenState(true)}
+                  data-test='my_inventory_export_btn'>
+                  <CornerLeftUp />
+                  {formatMessage({
+                    id: 'myInventory.export',
+                    defaultMessage: 'Export'
+                  })}
+                </Button>
+              </div>
+              <div className='column'>
+                <Button
+                  className='light'
+                  size='large'
+                  primary
+                  onClick={() => openImportPopup()}
+                  data-test='my_inventory_import_btn'>
+                  <CornerLeftDown />
+                  {formatMessage({
+                    id: 'myInventory.import',
+                    defaultMessage: 'Import'
+                  })}
+                </Button>
+              </div>
+              <div className='column'>
+                <Button
+                  className='secondary'
+                  size='large'
+                  primary
+                  onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
+                  data-test='my_inventory_add_btn'>
+                  <PlusCircle />
+                  <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
+                    {text => text}
+                  </FormattedMessage>
+                </Button>
+              </div>
+              <div className='column'>
+                <MenuItemFilters>
+                  <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
+                </MenuItemFilters>
+              </div>
+            </div>
+          </CustomRowDiv>
         </Container>
 
         <div className='flex stretched' style={{ padding: '10px 32px' }}>
