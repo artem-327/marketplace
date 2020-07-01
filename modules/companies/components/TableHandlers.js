@@ -1,17 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { debounce } from 'lodash'
-
 import { CornerLeftDown, PlusCircle } from 'react-feather'
-
 import { Header, Menu, Button, Input, Dropdown, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe, uniqueArrayByKey } from '~/utils/functions'
-import { openSidebar, handleFiltersValue, searchCompanyFilter } from '../actions'
+import { openSidebar, searchCompanyFilter, saveFilters } from '../actions'
 import { openImportPopup } from '~/modules/settings/actions'
-import { Datagrid } from '~/modules/datagrid'
+import { withDatagrid } from '~/modules/datagrid'
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
-
 import styled from 'styled-components'
 
 const PositionHeaderSettings = styled.div`
@@ -19,50 +16,84 @@ const PositionHeaderSettings = styled.div`
   z-index: 602;
 `
 
-const CustomMenuItemLeft = styled(Menu.Item)`
-  margin-left: -5px !important;
-  padding-left: 0px !important;
-  .dropdown, .input {
-    margin: 0 5px !important;
+const CustomRowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: -5px;
+  flex-wrap: wrap;
+  
+  > div {
+    align-items: top;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    margin: 5px;
+  }
+  
+  input, .ui.dropdown {
     height: 40px;
   }
-`
-
-const CustomMenuItemRight = styled(Menu.Item)`
-  margin-right: -5px !important;
-  padding-right: 0px !important;
- 
+  
   .ui.button {
-    margin: 0 5px !important;
     height: 40px;
     border-radius: 3px;
-    font-weight: 500;   
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    border: solid 1px #dee2e6;
+    background-color: #ffffff;
+    color: #848893;
     display: flex;
     align-items: center;
+    &:hover {
+      background-color: #f8f9fb;
+      color: #20273a;
+    }
+    &:active {
+      background-color: #edeef2;
+      color: #20273a;
+    }
 
     svg {
-        width: 18px;
-        height: 20px;
-        margin-right: 10px;
-        vertical-align: top;
-        color: inherit;
-      }
-    
-    &.blue {
-      color: #ffffff;
-      background-color: #2599d5;
+      width: 18px;
+      height: 20px;
+      margin-right: 10px;
+      vertical-align: top;
+      color: inherit;
     }
-    &.white {
+
+    &.light {
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
       border: solid 1px #dee2e6;
-      color: #848893;
       background-color: #ffffff;
+      color: #848893;
+      &:hover {
+        background-color: #f8f9fb;
+        color: #20273a;
+      }
+      &:active {
+        background-color: #edeef2;
+        color: #20273a;
+      }
     }
-  }  
-`
 
-const CustomGrid = styled(Grid)`
-  margin-top: 10px !important;
+    &.primary {
+      box-shadow: none;
+      border: none;
+      color: #ffffff;
+      background-color: #2599d5;
+      &:hover {
+        background-color: #188ec9;
+      }
+      &:active {
+        background-color: #0d82bc;
+      }
+    }
+  }
 `
 
 const textsTable = {
@@ -80,38 +111,91 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterValue: '',
-      company: '',
+      companies: {
+        searchInput: ''
+      },
+      users: {
+        searchInput: '',
+        company: ''
+      },
       selectedCompanyOption: ''
     }
 
-    this.handleChange = debounce(this.handleChange, 300)
+    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
+  }
+
+  componentDidMount() {
+    const { tableHandlersFilters, currentTab } = this.props
+    if (currentTab === '') return
+    if (tableHandlersFilters) {
+      this.initFilterValues(tableHandlersFilters)
+    } else {
+      let filterValue = this.state[currentTab]
+      this.handleFiltersValue(filterValue)
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.currentTab !== this.props.currentTab) {
-      this.setState({ filterValue: '' })
-      this.handleChange('')
+      const { currentTab } = this.props
+      if (currentTab === '') return
+
+      let filterValue = this.state[currentTab]
+      this.handleFiltersValue(filterValue)
     }
   }
 
-  handleChange = value => {
-    Datagrid.setSearch(value)
+  componentWillUnmount() {
+    this.props.saveFilters(this.state)
   }
 
-  handleFilterChangeCompany = (e, { value }) => {
-    let selectedCompanyOption = ''
+  initFilterValues = tableHandlersFilters => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
 
-    if (value !== '' ) {
-      selectedCompanyOption = this.props.searchedCompaniesFilter.find(c => value === c.value)
+    this.setState(tableHandlersFilters)
+    this.handleFiltersValue(tableHandlersFilters[currentTab])
+  }
+
+  handleFiltersValue = filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }
+
+  handleFilterChangeInputSearch = (e, data) => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
+
+    this.setState({
+      [currentTab]: {
+        ...this.state[currentTab],
+        [data.name]: data.value
+      }
+    })
+
+    const filter = {
+      ...this.state[currentTab],
+      [data.name]: data.value
     }
+    this.handleFiltersValue(filter)
+  }
 
-    this.setState({ company: value, selectedCompanyOption })
-    this.handleChange(
-      { company: value, input: this.state.filterValue },
-      true,
-      'companyFilter'
-    )
+  handleFilterChangeCompany = (e, data) => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
+
+    this.setState({
+      [currentTab]: {
+        ...this.state[currentTab],
+        [data.name]: data.value
+      }
+    })
+
+    const filter = {
+      ...this.state[currentTab],
+      [data.name]: data.value
+    }
+    this.handleFiltersValue(filter)
   }
 
   searchCompanies = debounce(text => {
@@ -130,9 +214,9 @@ class TablesHandlers extends Component {
     } = this.props
     const { formatMessage } = intl
 
-    const { company, selectedCompanyOption } = this.state
+    const { selectedCompanyOption } = this.state
 
-    const item = textsTable[currentTab.type]
+    const item = textsTable[currentTab]
 
     let allCompanyOptions
     if (selectedCompanyOption) {
@@ -141,75 +225,75 @@ class TablesHandlers extends Component {
       allCompanyOptions = searchedCompaniesFilter
     }
 
+    const filterValue = this.state[currentTab]
+
     return (
       <PositionHeaderSettings>
-        {isOpenImportPopup && <ProductImportPopup companies={true} />}
-        <CustomGrid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <CustomMenuItemLeft position='left' data-test='admin_table_search_inp'>
-            <Input
-              style={{ width: 340 }}
-              icon='search'
-              placeholder={formatMessage({ id: item.SearchText })}
-              onChange={(e, { value }) => {
-                this.setState({ filterValue: value })
-                this.handleChange(
-                  { input: value, company },
-                  true,
-                  'handlersFilter'
-                )
-              }}
-              value={this.state.filterValue}
-            />
-            {currentTab.type === 'users' && (
-
-              <Dropdown
-                style={{ width: 340, zIndex: 501 }}
-                placeholder={formatMessage({
-                  id: 'myInventory.exportInventorySearchText',
-                  defaultMessage: 'Search by Company'
-                })}
+        <CustomRowDiv>
+          {isOpenImportPopup && <ProductImportPopup companies={true} />}
+          <div>
+            <div className='column'>
+              <Input
+                style={{ width: 340 }}
+                name='searchInput'
                 icon='search'
-                selection
-                clearable
-                options={allCompanyOptions}
-                search={options => options}
-                value={company}
-                loading={searchedCompaniesFilterLoading}
-                onSearchChange={(e, { searchQuery }) => {
-                  searchQuery.length > 0 && this.searchCompanies(searchQuery)
-                }}
-                onChange={this.handleFilterChangeCompany}
+                placeholder={formatMessage({ id: item.SearchText })}
+                onChange={this.handleFilterChangeInputSearch}
+                value={filterValue.searchInput}
               />
+            </div>
+            {currentTab === 'users' && (
+              <div className='column'>
+                <Dropdown
+                  style={{ width: 340, zIndex: 501 }}
+                  name='company'
+                  placeholder={formatMessage({
+                    id: 'myInventory.exportInventorySearchText',
+                    defaultMessage: 'Search by Company'
+                  })}
+                  icon='search'
+                  selection
+                  clearable
+                  options={allCompanyOptions}
+                  search={options => options}
+                  value={filterValue.company}
+                  loading={searchedCompaniesFilterLoading}
+                  onSearchChange={(e, { searchQuery }) => {
+                    searchQuery.length > 0 && this.searchCompanies(searchQuery)
+                  }}
+                  onChange={this.handleFilterChangeCompany}
+                />
+              </div>
             )}
-          </CustomMenuItemLeft>
-          <CustomMenuItemRight position='right'>
-            {currentTab.type === 'companies' && (
+          </div>
+          <div>
+            {currentTab === 'companies' && (
+              <div className='column'>
+                <Button
+                  size='large'
+                  onClick={() => openImportPopup()}
+                  data-test='companies_import_btn'
+                >
+                  <CornerLeftDown />
+                  {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
+                </Button>
+              </div>
+            )}
+            <div className='column'>
               <Button
-                className='white'
                 size='large'
+                data-test='companies_table_add_btn'
                 primary
-                onClick={() => openImportPopup()}
-                data-test='companies_import_btn'
+                onClick={() => openSidebar()}
               >
-                <CornerLeftDown />
-                {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
+                <PlusCircle />
+                <FormattedMessage id={item.BtnAddText} defaultMessage='Add'>
+                  {text => `${text} `}
+                </FormattedMessage>
               </Button>
-            )}
-            <Button
-              className='blue'
-              size='large'
-              data-test='companies_table_add_btn'
-              primary
-              onClick={() => openSidebar()}
-            >
-              <PlusCircle />
-              <FormattedMessage id={item.BtnAddText} defaultMessage='Add'>
-                {text => `${text} `}
-              </FormattedMessage>
-            </Button>
-          </CustomMenuItemRight>
-
-        </CustomGrid>
+            </div>
+          </div>
+        </CustomRowDiv>
       </PositionHeaderSettings>
     )
   }
@@ -217,7 +301,8 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.companiesAdmin.currentTab,
+    currentTab: getSafe(() => state.companiesAdmin.currentTab.type, ''),
+    tableHandlersFilters: state.companiesAdmin.tableHandlersFilters,
     isOpenImportPopup: state.settings.isOpenImportPopup,
     searchedCompaniesFilterLoading: state.companiesAdmin.searchedCompaniesFilterLoading,
     searchedCompaniesFilter: state.companiesAdmin.searchedCompaniesFilter.map(d => ({
@@ -231,8 +316,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   openSidebar,
   openImportPopup,
-  handleFiltersValue,
-  searchCompanyFilter
+  searchCompanyFilter,
+  saveFilters
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(TablesHandlers))
+export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(TablesHandlers)))

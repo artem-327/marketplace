@@ -18,7 +18,6 @@ import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-// import { ZipDropdown } from '~/modules/zip-dropdown'
 // debug purposes only
 // import JSONPretty from 'react-json-pretty'
 
@@ -35,26 +34,15 @@ import { AddressForm } from '~/modules/address-form/'
 import { addressValidationSchema, phoneValidation, websiteValidationNotRequired } from '~/constants/yupValidation'
 
 import { getSafe, deepSearch } from '~/utils/functions'
-//import { Datagrid } from '~/modules/datagrid'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
+import { BottomButtons } from '../../constants'
 
 import {
   FlexSidebar,
-  //FlexTabs,
   FlexContent,
-  //TopMargedColumn,
-  //GraySegment,
   HighSegment,
-  //DivIcon,
-  //CloceIcon,
-  //InputWrapper,
-  //QuantityWrapper,
-  BottomButtons,
-  //SmallGrid,
-  //InputLabeledWrapper,
-  //CustomLabel,
   LabeledRow
 } from '~/modules/admin/constants/layout'
 import ErrorFocus from '~/components/error-focus'
