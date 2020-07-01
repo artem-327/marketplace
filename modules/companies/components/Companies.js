@@ -30,10 +30,10 @@ class Companies extends Component {
         url: '/prodex/api/companies/datagrid',
         searchToFilter: v => {
           return (
-            v && v.input
+            v && v.searchInput
               ? [
-                {operator: 'LIKE', path: 'Company.name', values: [`%${v.input}%`]},
-                {operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v.input}%`]}
+                {operator: 'LIKE', path: 'Company.name', values: [`%${v.searchInput}%`]},
+                {operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v.searchInput}%`]}
               ]
               : []
           )
@@ -43,13 +43,13 @@ class Companies extends Component {
         url: `/prodex/api/users/datagrid/all`,
         searchToFilter: v => {
           let filters = { or: [], and: [] }
-          if (v && v.input) {
+          if (v && v.searchInput) {
             filters.or = [
-              {operator: 'LIKE', path: 'User.name', values: [`%${v.input}%`]},
+              {operator: 'LIKE', path: 'User.name', values: [`%${v.searchInput}%`]},
               {
                 operator: 'LIKE',
                 path: 'User.homeBranch.deliveryAddress.contactName',
-                values: [`%${v.input}%`]
+                values: [`%${v.searchInput}%`]
               }
             ]
           }
@@ -79,12 +79,16 @@ class Companies extends Component {
   render() {
     const { currentTab, isOpenSidebar } = this.props
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider
+        apiConfig={this.getApiConfig()}
+        preserveFilters={true}
+        skipInitLoad
+      >
         <Container fluid className='flex stretched'>
-          <div style={{ padding: '0 30px' }}>
+          <div style={{ padding: '20px 30px 0' }}>
             <TableHandlers />
           </div>
-          <div style={{ padding: '10px 30px 20px 30px' }} className='flex stretched'>
+          <div style={{ padding: '20px 30px' }} className='flex stretched'>
             {this.renderContent()}
           </div>
         </Container>

@@ -200,7 +200,6 @@ class CompaniesTable extends Component {
     const {
       datagrid,
       rows,
-      filterValue,
       loading,
       openEditCompany,
       confirmMessage,
@@ -279,7 +278,6 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
   return {
     isOpenSidebar: companiesAdmin.isOpenSidebar,
     companyListDataRequest: companiesAdmin.companyListDataRequest,
-    filterValue: companiesAdmin.filterValue,
     reRegisterP44Pending: companiesAdmin.reRegisterP44Pending,
     rows: datagrid.rows.map(c => ({
       rawData: c,
