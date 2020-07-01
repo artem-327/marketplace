@@ -127,7 +127,6 @@ class UsersTable extends Component {
       loading,
       rows,
       datagrid,
-      filterValue,
       openSidebar,
       deleteUser,
       currentUserId,
@@ -142,7 +141,6 @@ class UsersTable extends Component {
         <ProdexTable
           tableName={'admin_users'}
           {...datagrid.tableProps}
-          filterValue={filterValue}
           loading={datagrid.loading || loading}
           columns={columns}
           rows={rows}
@@ -250,7 +248,6 @@ const mapStateToProps = (state, { datagrid }) => {
     currentUser,
     currentUserId,
     editId: state.companiesAdmin.popupValues && state.companiesAdmin.popupValues.id,
-    filterValue: state.companiesAdmin.filterValue,
     currentTab: state.companiesAdmin.currentTab,
     loading: state.companiesAdmin.loading,
     userRoles: state.companiesAdmin.userRoles,
