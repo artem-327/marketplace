@@ -2460,5 +2460,6 @@
   "dasboard.topBuyers": "TOP 10 BUYERS",
   "dasboard.total": "Total",
   "dasboard.average": " average",
-  "requestProduct.requiredDocuments": " Required Documents"
+  "requestProduct.requiredDocuments": " Required Documents",
+  "submitOffer.expirationDate": "Expiration Date"
 }

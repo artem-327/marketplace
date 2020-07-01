@@ -23,7 +23,8 @@ import {
   TableColumnVisibility,
   VirtualTableState,
   TreeDataState,
-  CustomTreeData
+  CustomTreeData,
+  RowDetailState
 } from '@devexpress/dx-react-grid'
 import {
   Grid,
@@ -34,7 +35,8 @@ import {
   TableColumnReordering,
   VirtualTable,
   TableColumnResizing,
-  TableTreeColumn
+  TableTreeColumn,
+  TableRowDetail
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
 import { getSafe } from '~/utils/functions'
@@ -243,6 +245,11 @@ const SortLabel = ({ column, onSort, children, direction }) => (
   </span>
 )
 
+const RowDetail = ({ row }) => {
+  if (row.detailRow) return row.detailRow
+  else return null
+}
+
 class PatchedIntegratedSelection extends React.PureComponent {
   render() {
     const { lockSelection, ...restProps } = this.props
@@ -346,7 +353,8 @@ class _Table extends Component {
     normalWidth: pt.bool,
     tableTreeColumn: pt.string,
     onExpandedRowIdsChange: pt.func,
-    expandedRowIds: pt.array
+    expandedRowIds: pt.array,
+    isRowDetail: pt.bool
   }
 
   static defaultProps = {
@@ -374,7 +382,8 @@ class _Table extends Component {
     normalWidth: false,
     tableTreeColumn: '',
     onExpandedRowIdsChange: () => {},
-    expandedRowIds: []
+    expandedRowIds: [],
+    isRowDetail: false
   }
 
   constructor(props) {
@@ -802,6 +811,7 @@ class _Table extends Component {
       tableTreeColumn,
       onExpandedRowIdsChange,
       expandedRowIds,
+      isRowDetail,
       ...restProps
     } = this.props
     const {
@@ -1022,6 +1032,10 @@ class _Table extends Component {
                 )}
               />
             )}
+            {isRowDetail && (
+              <RowDetailState expandedRowIds={expandedRowIds} onExpandedRowIdsChange={onExpandedRowIdsChange} />
+            )}
+            {isRowDetail && <TableRowDetail contentComponent={RowDetail} />}
           </Grid>
         </div>
       </Segment>

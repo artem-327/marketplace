@@ -263,6 +263,15 @@ const DivFlex = styled.div`
   color: #848893;
 `
 
+const DivExpandRow = styled.div`
+  display: flex;
+  border-radius: 4px;
+  border: solid 1px #dee2e6;
+  background-color: #edeef2;
+  align-items: center;
+  padding: 10px 20px;
+`
+
 class SubmitOfferPopup extends React.Component {
   state = {
     columns: [
@@ -270,6 +279,10 @@ class SubmitOfferPopup extends React.Component {
         name: 'radio',
         title: ' ',
         width: 40
+      },
+      {
+        name: 'id',
+        disabled: true
       },
       {
         name: 'product',
@@ -336,7 +349,8 @@ class SubmitOfferPopup extends React.Component {
       }
     ],
     select: '',
-    value: 1
+    value: 1,
+    expandedRowIds: []
   }
 
   componentDidMount() {
@@ -391,16 +405,23 @@ class SubmitOfferPopup extends React.Component {
   getRows = () => {
     const { currencySymbol, popupValues, rows } = this.props
 
-    return rows.map((row, index) => {
+    return rows.map(row => {
       return {
         ...row,
         radio: (
           <Radio
-            checked={this.state.select === index}
-            value={index}
+            checked={this.state.select === row.id}
+            value={row.id}
             onChange={(_e, { value }) => {
+              console.log('value====================================')
+              console.log(value)
+              console.log('====================================')
               this.setState({ select: value })
-              this.setFieldValue('pricePerUOM', row.pricePerUOM)
+              this.setFieldValue(`pricePerUOM_${row.id.toString()}`, row.pricePerUOM)
+              this.setFieldValue(
+                `lotExpirationDate_${row.id.toString()}`,
+                row.lotExpirationDate ? moment(row.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A'
+              )
             }}
             // inputProps={{  }}
           />
@@ -416,6 +437,7 @@ class SubmitOfferPopup extends React.Component {
             </div>
           </InputWrapper>
         ),
+        rawPricePerUOM: row.pricePerUOM,
         manufacturer: getSafe(() => row.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
         condition: row.conforming ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
@@ -424,7 +446,35 @@ class SubmitOfferPopup extends React.Component {
         ),
         packaging: getSafe(() => row.companyProduct.packagingType.name, 'N/A'),
         meas: getSafe(() => row.companyProduct.packagingUnit.nameAbbreviation, 'N/A').toUpperCase(),
-        expirationDate: row.lotExpirationDate ? moment(row.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A'
+        expirationDate: row.lotExpirationDate ? moment(row.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
+        detailRow: (
+          <DivExpandRow>
+            <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
+              {text => text}
+            </FormattedMessage>
+            <Required />
+            <div>
+              <Input
+                name={`pricePerUOM_${row.id.toString()}`}
+                inputProps={{
+                  type: 'number',
+                  label: <GreenLabel>{currencySymbol}</GreenLabel>,
+                  labelPosition: 'right'
+                }}
+              />
+            </div>
+            <FormattedMessage id='submitOffer.expirationDate' defaultMessage='Expiration Date'>
+              {text => text}
+            </FormattedMessage>
+            <Required />
+            <DateInput
+              name={`lotExpirationDate_${row.id.toString()}`}
+              inputProps={{
+                clearable: true
+              }}
+            />
+          </DivExpandRow>
+        )
       }
     })
   }
@@ -456,11 +506,11 @@ class SubmitOfferPopup extends React.Component {
     const rows = this.getRows()
 
     const qtyPart = popupValues.unit.nameAbbreviation
-    console.log('popupValues====================================')
-    console.log(popupValues)
-    console.log('====================================')
     console.log('rows====================================')
     console.log(rows)
+    console.log('====================================')
+    console.log('this.state.expandedRowIds====================================')
+    console.log(this.state.expandedRowIds)
     console.log('====================================')
     return (
       <>
@@ -605,6 +655,41 @@ class SubmitOfferPopup extends React.Component {
                                         loading={datagrid.loading || purchaseRequestPending}
                                         rows={rows}
                                         columns={columns}
+                                        isRowDetail={true}
+                                        onRowClick={(_, row) => {
+                                          console.log('row====================================')
+                                          console.log(row)
+                                          console.log('====================================')
+                                          if (row.detailRow) {
+                                            let ids = this.state.expandedRowIds.slice()
+                                            console.log('ids====================================')
+                                            console.log(ids)
+                                            console.log('====================================')
+                                            if (ids.includes(row.id)) {
+                                              //ids.filter(id => id === row.id)
+                                              this.setState({
+                                                expandedRowIds: ids.filter(id => id !== row.id),
+                                                select: ''
+                                              })
+                                              this.setFieldValue(`pricePerUOM_${row.id.toString()}`, row.rawPricePerUOM)
+
+                                              this.setFieldValue(
+                                                `lotExpirationDate_${row.id.toString()}`,
+                                                row.expirarionDate
+                                              )
+                                            } else {
+                                              this.setState({ expandedRowIds: [row.id], select: row.id })
+                                              this.setFieldValue(`pricePerUOM_${row.id.toString()}`, row.rawPricePerUOM)
+
+                                              this.setFieldValue(
+                                                `lotExpirationDate_${row.id.toString()}`,
+                                                row.expirationDate
+                                              )
+                                            }
+                                          }
+                                        }}
+                                        expandedRowIds={this.state.expandedRowIds}
+                                        onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
                                       />
                                     </Grid.Column>
                                   </Grid.Row>
