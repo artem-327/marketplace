@@ -1,4 +1,6 @@
 import React from 'react'
+import { object, func, number, array } from 'prop-types'
+
 import { connect } from 'react-redux'
 import * as Actions from '../../../actions'
 import {
@@ -41,6 +43,10 @@ const validationSchema = () =>
   Yup.lazy(values => {
     return Yup.object().shape({
       pricePerUOM: Yup.number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.requiredMessage)
+        .required(errorMessages.requiredMessage),
+      quantity: Yup.number()
         .positive(errorMessages.positive)
         .typeError(errorMessages.requiredMessage)
         .required(errorMessages.requiredMessage),
@@ -270,94 +276,29 @@ const DivExpandRow = styled.div`
   background-color: #edeef2;
   align-items: center;
   padding: 10px 20px;
-  width: 93%;
 `
 
 const DivRetailRow = styled.div`
   display: flex;
   justify-content: center;
+  position: absolute;
 `
 
 const DivInput = styled.div`
   padding: 0 10px 0 10px;
 `
 
+const TableCell = styled(Table.Cell)`
+  vertical-align: top;
+`
+
+const DivTableCell = styled.div`
+  height: 60px;
+  padding-top: 15px;
+`
+
 class SubmitOfferPopup extends React.Component {
   state = {
-    columns: [
-      {
-        name: 'radio',
-        title: ' ',
-        width: 40
-      },
-      {
-        name: 'id',
-        disabled: true
-      },
-      {
-        name: 'product',
-        title: (
-          <FormattedMessage id='submitOffer.product' defaultMessage='Product'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 170
-      },
-      {
-        name: 'pricePerUOM',
-        title: (
-          <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 117
-      },
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='submitOffer.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 143
-      },
-      {
-        name: 'condition',
-        title: (
-          <FormattedMessage id='submitOffer.condition' defaultMessage='Condition'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'packaging',
-        title: (
-          <FormattedMessage id='submitOffer.packaging' defaultMessage='Packaging'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 140
-      },
-      {
-        name: 'meas',
-        title: (
-          <FormattedMessage id='submitOffer.meas' defaultMessage='Meas'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80
-      },
-      {
-        name: 'expirationDate',
-        title: (
-          <FormattedMessage id='submitOffer.expirationDate' defaultMessage='Expiration Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      }
-    ],
     select: '',
     value: 1,
     expandedRowIds: []
@@ -365,6 +306,9 @@ class SubmitOfferPopup extends React.Component {
 
   componentDidMount() {
     if (!this.props.datagrid.loading) this.handleDatagridResult()
+    if (!getSafe(() => this.props.rows.length, false)) {
+      this.props.datagrid.loadData()
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -392,100 +336,28 @@ class SubmitOfferPopup extends React.Component {
     }
   }
 
-  submitOffer = async ({ pricePerUOM, lotExpirationDate, quantity }) => {
-    const { closePopup, submitOffer, popupValues, rows } = this.props
+  submitOffer = async ({ lotExpirationDate, pricePerUOM, quantity }, setSubmitting) => {
+    const { closePopup, submitOffer, popupValues } = this.props
 
     let expiresAt = null
     if (lotExpirationDate) {
       expiresAt = moment(getStringISODate(lotExpirationDate)).endOf('day').format()
     }
-
+    //TODO after BE add quantity to POST api/purchase-request-offers
     const body = {
       expiresAt,
       pricePerUOM,
-      productOffer: rows[this.state.select].id,
-      purchaseRequest: popupValues.id,
-      quantity
+      productOffer: this.state.select,
+      purchaseRequest: popupValues.id
+      //quantity
     }
-
-    await submitOffer(body)
+    try {
+      await submitOffer(body)
+    } catch (error) {
+      console.error(error)
+    }
+    setSubmitting(false)
     closePopup()
-  }
-
-  getRows = () => {
-    const { currencySymbol, popupValues, rows } = this.props
-
-    return rows.map(row => {
-      return {
-        ...row,
-        radio: (
-          <Radio
-            checked={this.state.select === row.id}
-            value={row.id}
-            onChange={(_e, { value }) => {
-              console.log('value====================================')
-              console.log(value)
-              console.log('====================================')
-              this.setState({ select: value })
-              this.setFieldValue(`pricePerUOM_${row.id.toString()}`, row.pricePerUOM)
-              this.setFieldValue(
-                `lotExpirationDate_${row.id.toString()}`,
-                row.lotExpirationDate ? moment(row.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A'
-              )
-            }}
-            // inputProps={{  }}
-          />
-        ),
-        product: getSafe(() => row.companyProduct.intProductName, 'N/A'),
-        pricePerUOM: (
-          <InputWrapper>
-            <div>
-              <div className='field'>
-                <FormattedNumber value={row.pricePerUOM} />
-              </div>
-              <Label>{currencySymbol}</Label>
-            </div>
-          </InputWrapper>
-        ),
-        rawPricePerUOM: row.pricePerUOM,
-        manufacturer: getSafe(() => row.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
-        condition: row.conforming ? (
-          <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
-        ) : (
-          <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
-        ),
-        packaging: getSafe(() => row.companyProduct.packagingType.name, 'N/A'),
-        meas: getSafe(() => row.companyProduct.packagingUnit.nameAbbreviation, 'N/A').toUpperCase(),
-        expirationDate: row.lotExpirationDate ? moment(row.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
-        detailRow: (
-          <DivRetailRow>
-            <DivExpandRow>
-              <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
-                {text => text}
-              </FormattedMessage>
-              <Required />
-              <DivInput>
-                <Input
-                  name={`pricePerUOM_${row.id.toString()}`}
-                  inputProps={{
-                    type: 'number',
-                    label: <GreenLabel>{currencySymbol}</GreenLabel>,
-                    labelPosition: 'right'
-                  }}
-                />
-              </DivInput>
-              <FormattedMessage id='submitOffer.expirationDate' defaultMessage='Expiration Date'>
-                {text => text}
-              </FormattedMessage>
-              <Required />
-              <DivInput>
-                <DateInput name={`lotExpirationDate_${row.id.toString()}`} />
-              </DivInput>
-            </DivExpandRow>
-          </DivRetailRow>
-        )
-      }
-    })
   }
 
   handleChange = (_e, { name, value }) => {
@@ -509,18 +381,12 @@ class SubmitOfferPopup extends React.Component {
       currencySymbol,
       datagrid,
       closePopup,
-      purchaseRequestPending
+      purchaseRequestPending,
+      rows
     } = this.props
-    const { columns, value } = this.state
-    const rows = this.getRows()
+    const { value } = this.state
 
     const qtyPart = popupValues.unit.nameAbbreviation
-    console.log('rows====================================')
-    console.log(rows)
-    console.log('====================================')
-    console.log('this.state.expandedRowIds====================================')
-    console.log(this.state.expandedRowIds)
-    console.log('====================================')
     return (
       <>
         <Modal closeIcon onClose={closePopup} open={true} size='large'>
@@ -625,22 +491,30 @@ class SubmitOfferPopup extends React.Component {
                   <Grid.Column>
                     <Form
                       onSubmit={(values, { setSubmitting }) => {
-                        setSubmitting(false)
-                        this.submitOffer(values)
+                        this.submitOffer(values, setSubmitting)
                       }}
                       validationSchema={validationSchema()}
                       validateOnChange
                       enableReinitialize
                       initialValues={{
                         pricePerUOM: '',
-                        expirationDate: '',
+                        lotExpirationDate: '',
                         quantity: ''
                       }}
-                      render={({ setFieldValue, values, submitForm }) => {
+                      render={({ setFieldValue, values, submitForm, setSubmitting }) => {
                         this.setFieldValue = setFieldValue
                         this.submitForm = submitForm
+                        this.values = values
+                        this.setSubmitting = setSubmitting
+                        console.log('this.values====================================')
+                        console.log(this.values)
+                        console.log('====================================')
                         return (
                           <>
+                            <Dimmer inverted active={datagrid.loading}>
+                              <Loader />
+                            </Dimmer>
+
                             <Grid verticalAlign='middle'>
                               {getSafe(() => this.props.rows.length, false) ||
                               datagrid.loading ||
@@ -658,146 +532,293 @@ class SubmitOfferPopup extends React.Component {
                                   </Grid.Row>
                                   <Grid.Row>
                                     <Grid.Column>
-                                      <ProdexGrid
-                                        tableName='submit_offer_grid'
-                                        {...datagrid.tableProps}
-                                        loading={datagrid.loading || purchaseRequestPending}
-                                        rows={rows}
-                                        columns={columns}
-                                        isRowDetail={true}
-                                        onRowClick={(_, row) => {
-                                          console.log('row====================================')
-                                          console.log(row)
-                                          console.log('====================================')
-                                          if (row.detailRow) {
-                                            let ids = this.state.expandedRowIds.slice()
-                                            console.log('ids====================================')
-                                            console.log(ids)
-                                            console.log('====================================')
-                                            if (ids.includes(row.id)) {
-                                              //ids.filter(id => id === row.id)
-                                              this.setState({
-                                                expandedRowIds: ids.filter(id => id !== row.id),
-                                                select: ''
-                                              })
-                                              this.setFieldValue(`pricePerUOM_${row.id.toString()}`, row.rawPricePerUOM)
-
-                                              this.setFieldValue(
-                                                `lotExpirationDate_${row.id.toString()}`,
-                                                row.expirarionDate
-                                              )
-                                            } else {
-                                              this.setState({ expandedRowIds: [row.id], select: row.id })
-                                              this.setFieldValue(`pricePerUOM_${row.id.toString()}`, row.rawPricePerUOM)
-
-                                              this.setFieldValue(
-                                                `lotExpirationDate_${row.id.toString()}`,
-                                                row.expirationDate
-                                              )
-                                            }
-                                          }
-                                        }}
-                                        expandedRowIds={this.state.expandedRowIds}
-                                        onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-                                      />
-                                    </Grid.Column>
-                                  </Grid.Row>
-                                </>
-                              ) : !getSafe(() => this.props.rows.length, false) &&
-                                !datagrid.loading &&
-                                !purchaseRequestPending &&
-                                (value === 1 || value === 2) ? (
-                                <>
-                                  <Grid.Row>
-                                    <Grid.Column width={8}>
-                                      <FormattedMessage
-                                        id='wantedBoard.optionOffer.label'
-                                        defaultMessage='Option to offer'>
-                                        {text => <label>{text}</label>}
-                                      </FormattedMessage>
-                                      <DropdownSemanticCustom
-                                        options={options}
-                                        onChange={this.handleChangeDropdown}
-                                        value={value}
-                                        fluid
-                                        selection
-                                        placeholder={
-                                          <FormattedMessage
-                                            id='wantedBoard.optionOffer.placeholder'
-                                            defaultMessage='Select option'
-                                          />
-                                        }
-                                        name='optionOffer'
-                                        inputProps={{
-                                          'data-test': 'wanted_board_option_offer_drpdn'
-                                        }}
-                                      />
-                                    </Grid.Column>
-
-                                    <Grid.Column width={8}>
-                                      <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-                                        {text => <label>{text}</label>}
-                                      </FormattedMessage>
-                                      <InputSemanticCustom
-                                        fluid
-                                        value={getSafe(() => popupValues.element.productGroup.name, '')}
-                                        disabled
-                                      />
-                                    </Grid.Column>
-                                  </Grid.Row>
-                                  <Grid.Row columns={3}>
-                                    <Grid.Column>
-                                      <Input
-                                        name='pricePerUOM'
-                                        label={
-                                          <>
-                                            <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
-                                              {text => text}
-                                            </FormattedMessage>
-                                            <Required />
-                                          </>
-                                        }
-                                        inputProps={{
-                                          type: 'number',
-                                          label: <GreenLabel>{currencySymbol}</GreenLabel>,
-                                          labelPosition: 'right'
-                                        }}
-                                      />
-                                    </Grid.Column>
-                                    <Grid.Column>
-                                      <DateInput
-                                        name='lotExpirationDate'
-                                        label='Expiration Date'
-                                        inputProps={{
-                                          minDate: moment(),
-                                          clearable: true
-                                        }}
-                                      />
-                                    </Grid.Column>
-                                    <Grid.Column>
-                                      <Input
-                                        name='quantity'
-                                        label={
-                                          <>
-                                            <FormattedMessage id='submitOffer.quantity' defaultMessage='Quantity'>
-                                              {text => text}
-                                            </FormattedMessage>
-                                            <Required />
-                                          </>
-                                        }
-                                        inputProps={{
-                                          type: 'number',
-                                          label: <LbsLabel>lbs</LbsLabel>,
-                                          labelPosition: 'right',
-                                          disabled: value === 2,
-                                          style: { backgroundColor: value === 2 ? '#f1f1f1' : '' }
-                                        }}
-                                      />
+                                      <div className='table-responsive'>
+                                        <Table>
+                                          <Table.Header>
+                                            <Table.Row>
+                                              <Table.HeaderCell />
+                                              <Table.HeaderCell>
+                                                <FormattedMessage id='submitOffer.product' defaultMessage='Product' />
+                                              </Table.HeaderCell>
+                                              <Table.HeaderCell>
+                                                <FormattedMessage
+                                                  id='submitOffer.fobPrice'
+                                                  defaultMessage='FOB Price'
+                                                />
+                                              </Table.HeaderCell>
+                                              <Table.HeaderCell>
+                                                <FormattedMessage
+                                                  id='submitOffer.manufacturer'
+                                                  defaultMessage='Manufacturer'
+                                                />
+                                              </Table.HeaderCell>
+                                              <Table.HeaderCell>
+                                                <FormattedMessage
+                                                  id='submitOffer.condition'
+                                                  defaultMessage='Condition'
+                                                />
+                                              </Table.HeaderCell>
+                                              <Table.HeaderCell>
+                                                <FormattedMessage
+                                                  id='submitOffer.packaging'
+                                                  defaultMessage='Packaging'
+                                                />
+                                              </Table.HeaderCell>
+                                              <Table.HeaderCell>
+                                                <FormattedMessage id='submitOffer.meas' defaultMessage='Meas' />
+                                              </Table.HeaderCell>
+                                              <Table.HeaderCell>
+                                                <FormattedMessage
+                                                  id='submitOffer.expirationDate'
+                                                  defaultMessage='Expiration Date'
+                                                />{' '}
+                                              </Table.HeaderCell>
+                                            </Table.Row>
+                                          </Table.Header>
+                                          <Table.Body>
+                                            {rows && rows.length
+                                              ? rows.map((row, index) => (
+                                                  <Table.Row key={index}>
+                                                    <TableCell
+                                                      style={{
+                                                        background:
+                                                          this.state.select === row.id ? '#f8f9fb' : '#ffffff',
+                                                        borderLeftColor: this.state.select === row.id ? '#2599d5' : ''
+                                                      }}>
+                                                      <RadioField>
+                                                        <Radio
+                                                          checked={this.state.select === row.id}
+                                                          value={row.id}
+                                                          onClick={(_e, { value }) => {
+                                                            if (this.state.select === value) {
+                                                              this.setState({ select: '' })
+                                                              this.setFieldValue(`pricePerUOM`, '')
+                                                              this.setFieldValue(`lotExpirationDate`, '')
+                                                            }
+                                                          }}
+                                                          onChange={(_e, { value }) => {
+                                                            this.setState({ select: value })
+                                                            this.setFieldValue(`pricePerUOM`, row.pricePerUOM)
+                                                            this.setFieldValue(
+                                                              `lotExpirationDate`,
+                                                              row.lotExpirationDate
+                                                                ? moment(row.lotExpirationDate).format(
+                                                                    getLocaleDateFormat()
+                                                                  )
+                                                                : ''
+                                                            )
+                                                          }}
+                                                          // inputProps={{  }}
+                                                        />
+                                                      </RadioField>
+                                                    </TableCell>
+                                                    <TableCell
+                                                      style={{
+                                                        background: this.state.select === row.id ? '#f8f9fb' : '#ffffff'
+                                                      }}>
+                                                      <span className='product-name'>
+                                                        {getSafe(() => row.companyProduct.intProductName, 'N/A')}
+                                                      </span>
+                                                      {this.state.select === row.id ? (
+                                                        <DivTableCell>
+                                                          <DivRetailRow>
+                                                            <DivExpandRow>
+                                                              <FormattedMessage
+                                                                id='submitOffer.fobPrice'
+                                                                defaultMessage='FOB Price'>
+                                                                {text => text}
+                                                              </FormattedMessage>
+                                                              <Required />
+                                                              <DivInput>
+                                                                <Input
+                                                                  name={`pricePerUOM`}
+                                                                  inputProps={{
+                                                                    type: 'number',
+                                                                    label: <GreenLabel>{currencySymbol}</GreenLabel>,
+                                                                    labelPosition: 'right'
+                                                                  }}
+                                                                />
+                                                              </DivInput>
+                                                              <FormattedMessage
+                                                                id='submitOffer.expirationDate'
+                                                                defaultMessage='Expiration Date'>
+                                                                {text => text}
+                                                              </FormattedMessage>
+                                                              <DivInput>
+                                                                <DateInput name={`lotExpirationDate`} />
+                                                              </DivInput>
+                                                            </DivExpandRow>
+                                                          </DivRetailRow>
+                                                        </DivTableCell>
+                                                      ) : null}
+                                                    </TableCell>
+                                                    <TableCell
+                                                      style={{
+                                                        background: this.state.select === row.id ? '#f8f9fb' : '#ffffff'
+                                                      }}>
+                                                      <InputWrapper>
+                                                        <div>
+                                                          <div className='field'>
+                                                            <FormattedNumber value={row.pricePerUOM} />
+                                                          </div>
+                                                          <Label>{currencySymbol}</Label>
+                                                        </div>
+                                                      </InputWrapper>
+                                                    </TableCell>
+                                                    <TableCell
+                                                      style={{
+                                                        background: this.state.select === row.id ? '#f8f9fb' : '#ffffff'
+                                                      }}>
+                                                      {getSafe(
+                                                        () =>
+                                                          row.companyProduct.companyGenericProduct.manufacturer.name,
+                                                        'N/A'
+                                                      )}
+                                                    </TableCell>
+                                                    <TableCell
+                                                      style={{
+                                                        background: this.state.select === row.id ? '#f8f9fb' : '#ffffff'
+                                                      }}>
+                                                      {row.conforming ? (
+                                                        <FormattedMessage
+                                                          id='global.conforming'
+                                                          defaultMessage='Conforming'
+                                                        />
+                                                      ) : (
+                                                        <FormattedMessage
+                                                          id='global.nonConforming'
+                                                          defaultMessage='Non Conforming'
+                                                        />
+                                                      )}
+                                                    </TableCell>
+                                                    <TableCell
+                                                      style={{
+                                                        background: this.state.select === row.id ? '#f8f9fb' : '#ffffff'
+                                                      }}>
+                                                      {getSafe(() => row.companyProduct.packagingType.name, 'N/A')}
+                                                    </TableCell>
+                                                    <TableCell
+                                                      style={{
+                                                        background: this.state.select === row.id ? '#f8f9fb' : '#ffffff'
+                                                      }}>
+                                                      {getSafe(
+                                                        () => row.companyProduct.packagingUnit.nameAbbreviation,
+                                                        'N/A'
+                                                      ).toUpperCase()}
+                                                    </TableCell>
+                                                    <TableCell
+                                                      style={{
+                                                        background: this.state.select === row.id ? '#f8f9fb' : '#ffffff'
+                                                      }}>
+                                                      {row.lotExpirationDate
+                                                        ? moment(row.lotExpirationDate).format(getLocaleDateFormat())
+                                                        : 'N/A'}
+                                                    </TableCell>
+                                                  </Table.Row>
+                                                ))
+                                              : null}
+                                          </Table.Body>
+                                        </Table>
+                                      </div>
                                     </Grid.Column>
                                   </Grid.Row>
                                 </>
                               ) : (
-                                `TODO extra inputs `
+                                !getSafe(() => this.props.rows.length, false) &&
+                                !datagrid.loading &&
+                                !purchaseRequestPending && (
+                                  <>
+                                    <Grid.Row>
+                                      <Grid.Column width={8}>
+                                        <FormattedMessage
+                                          id='wantedBoard.optionOffer.label'
+                                          defaultMessage='Option to offer'>
+                                          {text => <label>{text}</label>}
+                                        </FormattedMessage>
+                                        <DropdownSemanticCustom
+                                          options={options}
+                                          onChange={this.handleChangeDropdown}
+                                          value={value}
+                                          fluid
+                                          selection
+                                          placeholder={
+                                            <FormattedMessage
+                                              id='wantedBoard.optionOffer.placeholder'
+                                              defaultMessage='Select option'
+                                            />
+                                          }
+                                          name='optionOffer'
+                                          inputProps={{
+                                            'data-test': 'wanted_board_option_offer_drpdn'
+                                          }}
+                                        />
+                                      </Grid.Column>
+
+                                      <Grid.Column width={8}>
+                                        <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+                                          {text => <label>{text}</label>}
+                                        </FormattedMessage>
+                                        <InputSemanticCustom
+                                          fluid
+                                          value={getSafe(() => popupValues.element.productGroup.name, '')}
+                                          disabled
+                                        />
+                                      </Grid.Column>
+                                    </Grid.Row>
+                                    {(value === 1 || value === 2) && (
+                                      <Grid.Row columns={3}>
+                                        <Grid.Column>
+                                          <Input
+                                            name='pricePerUOM'
+                                            label={
+                                              <>
+                                                <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
+                                                  {text => text}
+                                                </FormattedMessage>
+                                                <Required />
+                                              </>
+                                            }
+                                            inputProps={{
+                                              type: 'number',
+                                              label: <GreenLabel>{currencySymbol}</GreenLabel>,
+                                              labelPosition: 'right'
+                                            }}
+                                          />
+                                        </Grid.Column>
+                                        <Grid.Column>
+                                          <DateInput
+                                            name='lotExpirationDate'
+                                            label='Expiration Date'
+                                            inputProps={{
+                                              minDate: moment(),
+                                              clearable: true
+                                            }}
+                                          />
+                                        </Grid.Column>
+                                        <Grid.Column>
+                                          <Input
+                                            name='quantity'
+                                            label={
+                                              <>
+                                                <FormattedMessage id='submitOffer.quantity' defaultMessage='Quantity'>
+                                                  {text => text}
+                                                </FormattedMessage>
+                                                <Required />
+                                              </>
+                                            }
+                                            inputProps={{
+                                              type: 'number',
+                                              label: <LbsLabel>lbs</LbsLabel>,
+                                              labelPosition: 'right',
+                                              style: { backgroundColor: value === 2 ? '#f1f1f1' : '' }
+                                            }}
+                                          />
+                                        </Grid.Column>
+                                      </Grid.Row>
+                                    )}
+                                    {value === 3 && 'TODO extra inputs in a table'}
+                                  </>
+                                )
                               )}
                             </Grid>
                           </>
@@ -816,7 +837,11 @@ class SubmitOfferPopup extends React.Component {
                 {text => text}
               </FormattedMessage>
             </Button>
-            <Button primary type='submit' disabled={this.state.select === ''}>
+            <Button
+              primary
+              type='button'
+              disabled={this.state.select === '' && this.values && !this.values.pricePerUOM && !this.values.quantity}
+              onClick={() => this.submitOffer(this.values, this.setSubmitting)}>
               <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span'>
                 {text => text}
               </FormattedMessage>
@@ -840,6 +865,13 @@ function mapStateToProps(store, props) {
     popupValues: props.rawData,
     currencySymbol: '$'
   }
+}
+SubmitOfferPopup.propTypes = {
+  rows: array
+}
+
+SubmitOfferPopup.defaultProps = {
+  rows: []
 }
 
 export default withDatagrid(connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SubmitOfferPopup))))
