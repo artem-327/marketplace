@@ -270,6 +270,16 @@ const DivExpandRow = styled.div`
   background-color: #edeef2;
   align-items: center;
   padding: 10px 20px;
+  width: 93%;
+`
+
+const DivRetailRow = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+const DivInput = styled.div`
+  padding: 0 10px 0 10px;
 `
 
 class SubmitOfferPopup extends React.Component {
@@ -448,32 +458,31 @@ class SubmitOfferPopup extends React.Component {
         meas: getSafe(() => row.companyProduct.packagingUnit.nameAbbreviation, 'N/A').toUpperCase(),
         expirationDate: row.lotExpirationDate ? moment(row.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
         detailRow: (
-          <DivExpandRow>
-            <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
-              {text => text}
-            </FormattedMessage>
-            <Required />
-            <div>
-              <Input
-                name={`pricePerUOM_${row.id.toString()}`}
-                inputProps={{
-                  type: 'number',
-                  label: <GreenLabel>{currencySymbol}</GreenLabel>,
-                  labelPosition: 'right'
-                }}
-              />
-            </div>
-            <FormattedMessage id='submitOffer.expirationDate' defaultMessage='Expiration Date'>
-              {text => text}
-            </FormattedMessage>
-            <Required />
-            <DateInput
-              name={`lotExpirationDate_${row.id.toString()}`}
-              inputProps={{
-                clearable: true
-              }}
-            />
-          </DivExpandRow>
+          <DivRetailRow>
+            <DivExpandRow>
+              <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
+                {text => text}
+              </FormattedMessage>
+              <Required />
+              <DivInput>
+                <Input
+                  name={`pricePerUOM_${row.id.toString()}`}
+                  inputProps={{
+                    type: 'number',
+                    label: <GreenLabel>{currencySymbol}</GreenLabel>,
+                    labelPosition: 'right'
+                  }}
+                />
+              </DivInput>
+              <FormattedMessage id='submitOffer.expirationDate' defaultMessage='Expiration Date'>
+                {text => text}
+              </FormattedMessage>
+              <Required />
+              <DivInput>
+                <DateInput name={`lotExpirationDate_${row.id.toString()}`} />
+              </DivInput>
+            </DivExpandRow>
+          </DivRetailRow>
         )
       }
     })
