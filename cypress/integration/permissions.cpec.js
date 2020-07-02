@@ -147,6 +147,7 @@ context("Permissions tests",() => {
         cy.get("[data-test='navigation_settings_warehouses_drpdn']").should('not.exist')
 
         cy.get("[data-test='navigation_settings_users_drpdn']").click()
+        cy.waitForUI()
         cy.wait('@loading')
         cy.get(':nth-child(1) > .actions').should('be.visible')
     })
