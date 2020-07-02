@@ -6,15 +6,16 @@ context("Product Group CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
+        cy.route("GET", "/prodex/api/dashboard").as("loading")
         cy.route("POST", "/prodex/api/product-groups/datagrid").as("groupsLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "companies")
+        cy.url().should("include", "dashboard")
 
-        cy.get('.flex-wrapper > :nth-child(2)').click()
+        cy.get('.flex-wrapper > :nth-child(3)').click()
+        cy.waitForUI()
         cy.waitForUI()
         cy.get('[data-test=tabs_menu_item_product-groups]').click()
 
@@ -50,7 +51,7 @@ context("Product Group CRUD", () => {
             .should("have.value", "TestGroup")
     })
 
-    it("Edits an Echo product", () => {
+    it("Edits an Product Group", () => {
         cy.searchInList("Test")
 
         cy.openElement(productId, 0)

@@ -82,7 +82,7 @@ context("Prodex Bank Account CRUD", () => {
 
     it("Checks error messages", () => {
         cy.get("[data-test='settings_open_popup_btn']").click()
-        cy.clickSave()
+        cy.get('[data-test=settings_bank_account_popup_submit_btn]').click()
 
         cy.get(".error")
             .should("have.length", 4)

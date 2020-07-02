@@ -41,6 +41,8 @@ context("Company Product Catalog CRUD", () => {
         cy.enterText("#field_input_packagingWidth", "5")
         cy.enterText("#field_input_packagingHeight", "5")
         cy.enterText("#field_input_packagingLength", "5")
+        cy.enterText("#field_input_palletMaxPkgs", "50")
+        cy.enterText("#field_input_palletMinPkgs", "10")
 
         cy.get("div[id='field_dropdown_nmfcNumber']")
             .children("input")
@@ -117,7 +119,7 @@ context("Company Product Catalog CRUD", () => {
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
 
         cy.get(".error")
-            .should("have.length", 23)
+            .should("have.length", 29)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

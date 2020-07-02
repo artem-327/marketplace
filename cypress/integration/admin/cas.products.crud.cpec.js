@@ -7,14 +7,14 @@ context("CAS products CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
+        cy.route("GET", "/prodex/api/dashboard").as("loading")
         cy.route("POST", "/prodex/api/cas-products/datagrid").as("CASloading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "companies")
-        cy.get('.flex-wrapper > :nth-child(2)').click()
+        cy.url().should("include", "dashboard")
+        cy.get('.flex-wrapper > :nth-child(3)').click()
         cy.wait("@CASloading")
     })
 

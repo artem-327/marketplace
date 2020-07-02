@@ -10,15 +10,15 @@ context("Generic Company Product CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
+        cy.route("GET", "/prodex/api/dashboard").as("loading")
         cy.route("POST", "/prodex/api/company-generic-products/datagrid").as("genericLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "companies")
+        cy.url().should("include", "dashboard")
 
-        cy.get('.flex-wrapper > :nth-child(2)').click()
+        cy.get('.flex-wrapper > :nth-child(3)').click()
         cy.waitForUI()
         cy.get('[data-test=tabs_menu_item_product-catalog]').click()
 
@@ -79,8 +79,8 @@ context("Generic Company Product CRUD", () => {
     })
 
     it("Creates a alternative name", () => {
-        cy.route("POST", "/prodex/api/echo-products/alternative-names/echo-product/**").as("nameSaving")
-        cy.route("GET", "/prodex/api/echo-products/alternative-names/echo-product/**").as("nameGetting")
+        cy.route("POST", "/prodex/api/company-generic-product/alternative-names/company-generic-product/**").as("nameSaving")
+        cy.route("GET", "/prodex/api/company-generic-product/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
         cy.openElement(productId, 4)
@@ -107,8 +107,8 @@ context("Generic Company Product CRUD", () => {
     })
 
     it("Deletes a alternative name", () => {
-        cy.route("DELETE", "/prodex/api/echo-products/alternative-names/id/**").as("nameDelete")
-        cy.route("GET", "/prodex/api/echo-products/alternative-names/echo-product/**").as("nameGetting")
+        cy.route("DELETE", "/prodex/api/company-generic-product/alternative-names/id/**").as("nameDelete")
+        cy.route("GET", "/prodex/api/company-generic-product/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
         cy.openElement(productId, 4)

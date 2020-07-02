@@ -4,15 +4,15 @@ context("Admin Settings RUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
+        cy.route("GET", "/prodex/api/dashboard").as("loading")
         cy.route("GET", "/prodex/api/settings/admin").as("adminLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "companies")
+        cy.url().should("include", "dashboard")
 
-        cy.get('.flex-wrapper > :nth-child(6)').click()
+        cy.get('.flex-wrapper > :nth-child(7)').click()
         cy.waitForUI()
         cy.get('[data-test=tabs_menu_item_admin-settings]').click()
 

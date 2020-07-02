@@ -6,16 +6,16 @@ context("Grades CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
+        cy.route("GET", "/prodex/api/dashboard").as("loading")
         cy.route("POST", "/prodex/api/product-grades/datagrid").as("gradesLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
-        cy.url().should("include", "companies")
+        cy.url().should("include", "dashboard")
 
         cy.wait("@loading")
 
-        cy.get('.flex-wrapper > :nth-child(6)').click()
+        cy.get('.flex-wrapper > :nth-child(7)').click()
         cy.waitForUI()
         cy.get('[data-test=tabs_menu_item_grades]').click()
 

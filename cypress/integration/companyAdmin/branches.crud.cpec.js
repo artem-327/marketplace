@@ -1,9 +1,9 @@
 context("Prodex Branches CRUD", () => {
     let branchId = null
     let filter = [
-        {"operator":"LIKE", "path":"Branch.deliveryAddress.addressName", "values":["%Central%"]},
-        {"operator":"LIKE", "path":"Branch.deliveryAddress.address.streetAddress", "values":["%Central%"]},
-        {"operator":"LIKE", "path":"Branch.deliveryAddress.contactName", "values":["%Central%"]}
+        {"operator":"LIKE", "path":"Branch.deliveryAddress.addressName", "values":["%Harlingen%"]},
+        {"operator":"LIKE", "path":"Branch.deliveryAddress.address.streetAddress", "values":["%Harlingen%"]},
+        {"operator":"LIKE", "path":"Branch.deliveryAddress.contactName", "values":["%Harlingen%"]}
     ]
     const userJSON = require('../../fixtures/user.json')
 

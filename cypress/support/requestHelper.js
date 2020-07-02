@@ -449,7 +449,7 @@ Cypress.Commands.add("getFirstCompanyWithFilter", (token, filter) => {
 Cypress.Commands.add("getFirstCompanyProductWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',
-        url: '/prodex/api/company-products/datagrid?type=ALL',
+        url: '/prodex/api/company-products/datagrid',
         headers: {
             authorization: "Bearer " + token
         },

@@ -6,15 +6,15 @@ context("Associations CRUD", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/companies/datagrid").as("loading")
+        cy.route("GET", "/prodex/api/dashboard").as("loading")
         cy.route("POST", "/prodex/api/associations/datagrid").as("groupsLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "companies")
+        cy.url().should("include", "dashboard")
 
-        cy.get('.flex-wrapper > :nth-child(6)').click()
+        cy.get('.flex-wrapper > :nth-child(7)').click()
         cy.waitForUI()
         cy.get('[data-test=tabs_menu_item_associations]').click()
 
@@ -22,7 +22,7 @@ context("Associations CRUD", () => {
         cy.waitForUI()
     })
 
-    it("Creates a Product Group", () => {
+    it("Creates a association", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'associations', filter).then(itemId => {
                 if (itemId != null)
@@ -50,7 +50,7 @@ context("Associations CRUD", () => {
             .should("have.value", "TestGroup")
     })
 
-    it("Edits an Echo product", () => {
+    it("Edits an association", () => {
         cy.searchInList("Test")
 
         cy.openElement(productId, 0)

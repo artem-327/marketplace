@@ -28,7 +28,7 @@ context("Permissions tests",() => {
     })
 
     it("Order View User permissions", () =>{
-        cy.viewport(2250, 1000)
+        cy.viewport(2250, 2000)
         cy.FElogin(orderViewUser.email, orderViewUser.password)
 
         cy.wait('@loading', {timeout: 30000})

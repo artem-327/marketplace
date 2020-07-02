@@ -6,14 +6,17 @@ context("Companies CRUD", () => {
 
     beforeEach(function () {
         cy.server()
+        cy.route("GET", "/prodex/api/dashboard").as("dashboardload")
         cy.route("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
         cy.route("POST", "/prodex/api/companies").as("companyCreate")
         cy.route("GET", "/_next/static/webpack/").as("datagridLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
-        cy.url().should("include", "companies")
+        cy.url().should("include", "dashboard")
 
+        cy.wait("@dashboardload")
+        cy.get('.flex-wrapper > :nth-child(2)').click()
         cy.wait("@companiesLoad")
     })
 
