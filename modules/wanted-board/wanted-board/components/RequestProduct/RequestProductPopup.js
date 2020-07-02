@@ -93,7 +93,7 @@ class RequstProductPopup extends React.Component {
     return (
       <Modal size='tiny' closeIcon onClose={closePopup} open={true}>
         <Modal.Header>
-          <FormattedMessage id='wantedBoard.submitOfferHeader' defaultMessage='SUBMIT OFFER' />
+          <FormattedMessage id='wantedBoard.requestAnEchoProduct' defaultMessage='REQUEST AN ECHO PRODUCT' />
         </Modal.Header>
         <Modal.Content>
           <Form
