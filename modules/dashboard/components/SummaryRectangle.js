@@ -149,7 +149,7 @@ const SummaryRectangle = ({
 
 SummaryRectangle.propTypes = {
   icon: PropTypes.element,
-  data: PropTypes.array,
+  data: PropTypes.number,
   titleId: PropTypes.string,
   title: PropTypes.string,
   textAverageId: PropTypes.string,
@@ -161,7 +161,7 @@ SummaryRectangle.propTypes = {
 
 SummaryRectangle.defaultProps = {
   icon: <></>,
-  data: [],
+  data: 0,
   title: 'Total',
   titelId: 'dashboard.total',
   textAverage: ' average',

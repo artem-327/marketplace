@@ -163,7 +163,7 @@ class Dashboard extends Component {
     const panes = isAdmin ? saleTab : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
 
     return (
-      <CustomGrid secondary verticalAlign='middle' className='page-part'>
+      <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
         <Grid.Row>
           <Grid.Column width={10}>
             <DivContainerGraph>
@@ -208,14 +208,18 @@ class Dashboard extends Component {
               <>
                 <SummaryRectangle
                   icon={<DollarSign />}
-                  data={productOffersValue}
+                  data={productOffersValue > 0 ? productOffersValue / 1000000 : productOffersValue}
                   title='Total Products Value $M'
                   titleId='dashboard.totalValue.title'
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
                 />
                 <SummaryRectangle
                   icon={<DollarSign />}
-                  data={broadcastedProductOffersValue}
+                  data={
+                    broadcastedProductOffersValue > 0
+                      ? broadcastedProductOffersValue / 1000000
+                      : broadcastedProductOffersValue
+                  }
                   title='Total Broadcasted Value $M'
                   titleId='dashboard.totalBroadcastedValue.title'
                   styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}

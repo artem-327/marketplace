@@ -73,8 +73,8 @@ function mapStateToProps(store) {
         }))
       : [],
     broadcastedProductOffersValue: isAdmin
-      ? getSafe(() => data.totalBroadcastedProductOffersValue / 1000000, 0)
-      : getSafe(() => data.companyBroadcastedProductOffersValue / 1000000, 0),
+      ? getSafe(() => data.totalBroadcastedProductOffersValue, 0)
+      : getSafe(() => data.companyBroadcastedProductOffersValue, 0),
     companiesCount: isAdmin
       ? getSafe(() => data.totalCompaniesCount, 0)
       : getSafe(() => data.companyClientCompaniesCount, 0),
@@ -82,8 +82,8 @@ function mapStateToProps(store) {
       ? getSafe(() => data.totalCompanyProductsCount, 0)
       : getSafe(() => data.companyCompanyProductsCount, 0),
     productOffersValue: isAdmin
-      ? getSafe(() => data.totalProductOffersValue / 1000000, 0)
-      : getSafe(() => data.companyProductOffersValue / 1000000, 0),
+      ? getSafe(() => data.totalProductOffersValue, 0)
+      : getSafe(() => data.companyProductOffersValue, 0),
     usersCount: isAdmin ? getSafe(() => data.totalUsersCount, 0) : getSafe(() => data.companyUsersCount, 0),
     loading: getSafe(() => data.loading, ''),
     totalSumOfSalesMonthly: getSafe(() => data.totalSumOfSalesMonthly, '')
