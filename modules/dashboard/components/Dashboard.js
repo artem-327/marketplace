@@ -195,15 +195,15 @@ class Dashboard extends Component {
                 />
               </>
             )}
-            {isClientCompanyAdmin && (
-              <SummaryRectangle
-                icon={<User />}
-                data={usersCount}
-                title='Total Users Count'
-                titleId='dashboard.totalUsersCount.title'
-                styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
-              />
-            )}
+
+            <SummaryRectangle
+              icon={<User />}
+              data={usersCount}
+              title='Total Users Count'
+              titleId='dashboard.totalUsersCount.title'
+              styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
+            />
+
             {!isClientCompanyAdmin && (
               <>
                 <SummaryRectangle
