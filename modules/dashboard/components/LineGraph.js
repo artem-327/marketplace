@@ -22,11 +22,11 @@ const GraphSubTitle = styled.div`
   color: #848893;
   margin-bottom: 10px;
 `
-const LineGraph = ({ data, title, titleId, valuesInTitle, subTitle, subTitleId }) => {
+const LineGraph = ({ data, title, titleId, subTitle, subTitleId }) => {
   return (
     <DivGraph>
       <GraphTitle>
-        <FormattedMessage id={titleId} defaultMessage={title} values={valuesInTitle} />
+        <FormattedMessage id={titleId} defaultMessage={title} />
       </GraphTitle>
       {/*commented subtitle  */}
       {false && (
@@ -61,7 +61,6 @@ LineGraph.propTypes = {
   data: PropTypes.array,
   title: PropTypes.string,
   titleId: PropTypes.string,
-  valuesInTitle: PropTypes.string,
   subTitle: PropTypes.string,
   subTitleId: PropTypes.string
 }
@@ -70,7 +69,6 @@ LineGraph.defaultProps = {
   data: [],
   title: '',
   titleId: '',
-  valuesInTitle: '',
   subTitle: '',
   subTitleId: ''
 }
