@@ -2409,6 +2409,8 @@
   "wantedBoard.linkProductNotExist": "Request an EchoProduct",
   "wantedBoard.productNotExist": "The product does not exist, ",
   "wantedBoard.requestAnEchoProduct": "REQUEST AN ECHO PRODUCT",
+  "wantedBoard.functionalEquivalent": "Functional Equivalent",
+  "wantedBoard.chooseFuncionalEquivalent": "Choose any funcional equivalent",
   "global.enabled": "Enabled",
   "global.selectTags": "Select tags",
   "global.marketSegments": "Market Segments",

@@ -125,7 +125,8 @@ const initValues = {
   notificationEnabled: false, // not implemented on endpoint yet
   notifyMail: false, // not implemented on endpoint yet
   notifyPhone: false, // not implemented on endpoint yet
-  unit: 7
+  unit: 7,
+  functionalEquivalent: ''
 }
 
 const validationSchema = () =>
@@ -341,7 +342,8 @@ class DetailSidebar extends Component {
             origins: sidebarValues.origins.map(d => d.id),
             packagingTypes: sidebarValues.packagingTypes.map(d => d.id),
             quantity: getSafe(() => sidebarValues.quantity, ''),
-            unit: getSafe(() => sidebarValues.unit.id, '')
+            unit: getSafe(() => sidebarValues.unit.id, ''),
+            functionalEquivalent: getSafe(() => sidebarValues.functionalEquivalent, '') //FIXME
           }
         : null)
     }
@@ -474,7 +476,7 @@ class DetailSidebar extends Component {
                                 searchQuery.length > 0 && this.searchProducts(searchQuery)
                             }}
                           />
-                          {!this.props.autocompleteData || !getSafe(() => this.props.autocompleteData.length, false) ? (
+                          {!getSafe(() => this.props.autocompleteData.length, false) ? (
                             <DivProductNotExist>
                               <FormattedMessage
                                 id='wantedBoard.productNotExist'
@@ -491,6 +493,36 @@ class DetailSidebar extends Component {
                         </GridColumn>
                       </GridRow>
                     )}
+                    <GridRow>
+                      <GridColumn width={16}>
+                        <Dropdown
+                          label={
+                            <>
+                              <FormattedMessage
+                                id='wantedBoard.functionalEquivalent'
+                                defaultMessage='Functional Equivalent'>
+                                {text => text}
+                              </FormattedMessage>
+                            </>
+                          }
+                          name='element.functionalEquivalent'
+                          options={[]} //FIXME
+                          inputProps={{
+                            placeholder: (
+                              <FormattedMessage
+                                id='wantedBoard.chooseFuncionalEquivalent'
+                                defaultMessage='Choose any funcional equivalent'
+                              />
+                            ),
+                            'data-test': 'wanted_board_sidebar_funcional_equivalent_drpdn',
+                            size: 'large',
+                            minCharacters: 1,
+                            selection: true,
+                            clearable: true
+                          }}
+                        />
+                      </GridColumn>
+                    </GridRow>
                     {!typeProduct && (
                       <GridRow>
                         <GridColumn>
@@ -907,68 +939,62 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
 
-                    {false /* temporary hidden */ && (
-                      <>
-                        <GridRow>
-                          <GridColumn>
-                            <CustomHr />
-                          </GridColumn>
-                        </GridRow>
+                    <GridRow>
+                      <GridColumn>
+                        <CustomHr />
+                      </GridColumn>
+                    </GridRow>
 
-                        <GridRow className='label-row'>
-                          <GridColumn width={8}>
-                            <FormattedMessage
-                              id='wantedBoard.enableNotifications'
-                              defaultMessage='Enable Notifications'>
-                              {text => text}
-                            </FormattedMessage>
-                          </GridColumn>
-                          <GridColumn width={8} className='float-right'>
-                            <FormikCheckbox
-                              inputProps={{
-                                toggle: true,
-                                style: { marginBottom: '-4px' },
-                                float: 'right',
-                                'data-test': 'wanted_board_sidebar_enableNotifications_chckb'
-                              }}
-                              name='notificationEnabled'
-                            />
-                          </GridColumn>
-                        </GridRow>
+                    <GridRow className='label-row'>
+                      <GridColumn width={8}>
+                        <FormattedMessage id='wantedBoard.enableNotifications' defaultMessage='Enable Notifications'>
+                          {text => text}
+                        </FormattedMessage>
+                      </GridColumn>
+                      <GridColumn width={8} className='float-right'>
+                        <FormikCheckbox
+                          inputProps={{
+                            toggle: true,
+                            style: { marginBottom: '-4px' },
+                            float: 'right',
+                            'data-test': 'wanted_board_sidebar_enableNotifications_chckb'
+                          }}
+                          name='notificationEnabled'
+                        />
+                      </GridColumn>
+                    </GridRow>
 
-                        <GridRow>
-                          <GridColumn>
-                            <FormikCheckbox
-                              inputProps={{
-                                disabled: !values.notificationEnabled,
-                                'data-test': 'wanted_board_sidebar_notifyMail_chckb'
-                              }}
-                              name='notifyMail'
-                              label={formatMessage({
-                                id: 'wantedBoard.notifyMail',
-                                defaultMessage: 'Email Notifications'
-                              })}
-                            />
-                          </GridColumn>
-                        </GridRow>
+                    <GridRow>
+                      <GridColumn>
+                        <FormikCheckbox
+                          inputProps={{
+                            disabled: !values.notificationEnabled,
+                            'data-test': 'wanted_board_sidebar_notifyMail_chckb'
+                          }}
+                          name='notifyMail'
+                          label={formatMessage({
+                            id: 'wantedBoard.notifyMail',
+                            defaultMessage: 'Email Notifications'
+                          })}
+                        />
+                      </GridColumn>
+                    </GridRow>
 
-                        <GridRow>
-                          <GridColumn>
-                            <FormikCheckbox
-                              inputProps={{
-                                disabled: !values.notificationEnabled,
-                                'data-test': 'wanted_board_sidebar_notifyMail_chckb'
-                              }}
-                              name='notifyPhone'
-                              label={formatMessage({
-                                id: 'wantedBoard.notifyPhone',
-                                defaultMessage: 'Phone Notifications'
-                              })}
-                            />
-                          </GridColumn>
-                        </GridRow>
-                      </>
-                    )}
+                    <GridRow>
+                      <GridColumn>
+                        <FormikCheckbox
+                          inputProps={{
+                            disabled: !values.notificationEnabled,
+                            'data-test': 'wanted_board_sidebar_notifyMail_chckb'
+                          }}
+                          name='notifyPhone'
+                          label={formatMessage({
+                            id: 'wantedBoard.notifyPhone',
+                            defaultMessage: 'Phone Notifications'
+                          })}
+                        />
+                      </GridColumn>
+                    </GridRow>
                   </Grid>
                 </FlexContent>
                 <BottomButtons>
