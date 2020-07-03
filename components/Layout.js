@@ -89,8 +89,8 @@ class Layout extends Component {
   }
 
   constructor(props) {
-    super(props);
-    this.navigationPS = React.createRef();
+    super(props)
+    this.navigationPS = React.createRef()
   }
 
   componentDidMount() {
@@ -323,11 +323,14 @@ class Layout extends Component {
           </TopMenuContainer>
           <ContentContainer fluid className='page-wrapper flex stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
+            <CopyrightContainer>
+              <FormattedMessage
+                id='global.copyright'
+                defaultMessage={`Copyright ${moment().format('YYYY')} Echosystem`}
+                values={{ currentYear: moment().format('YYYY') }}
+              />
+            </CopyrightContainer>
           </ContentContainer>
-
-          <CopyrightContainer>
-            <FormattedMessage id='global.copyright' defaultMessage={`Copyright ${moment().format('YYYY')} Echosystem`} values={{ currentYear: moment().format('YYYY') }} />
-          </CopyrightContainer>
         </FlexContainer>
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
 
