@@ -69,6 +69,7 @@ class Dashboard extends Component {
       companySumOfSalesMonthly,
       top10Buyers,
       isAdmin,
+      isClientCompanyAdmin,
       intl: { formatMessage }
     } = this.props
 
@@ -136,6 +137,31 @@ class Dashboard extends Component {
       }
     ]
 
+    const companyPurchasesTab = [
+      {
+        menuItem: (
+          <Menu.Item key='company-purchases' onClick={() => this.setState({ activeTab: 1 })}>
+            <UpperCaseText>
+              {formatMessage({ id: 'dasboard.companyPurchase', defaultMessage: 'COMPANY PURCHASES' })}
+            </UpperCaseText>
+          </Menu.Item>
+        ),
+        render: () => (
+          <TabPane key='company-purchases' attached={false}>
+            <LineGraph
+              data={companySumOfPurchasesMonthly}
+              title='Company Sum Of Purchases Monthly'
+              titleId='dasboard.companyPurchase.graph.title'
+              subTitle='in thousand dollars'
+              subTitleId='dasboard.sales.graph.subtitle'
+            />
+          </TabPane>
+        )
+      }
+    ]
+
+    const panes = isAdmin ? saleTab : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
+
     return (
       <CustomGrid secondary verticalAlign='middle' className='page-part'>
         <Grid.Row>
@@ -146,47 +172,57 @@ class Dashboard extends Component {
                 className='inventory-sidebar tab-menu flex stretched'
                 menu={{ secondary: true, pointing: true }}
                 activeIndex={this.state.activeTab}
-                panes={isAdmin ? saleTab : companySalesPurchasesTabs}
+                panes={panes}
               />
             </DivContainerGraph>
           </Grid.Column>
 
           <Grid.Column width={5}>
-            <SummaryRectangle
-              icon={<Briefcase />}
-              data={companiesCount}
-              title={isAdmin ? 'Total Companies' : 'Total Client Companies'}
-              titleId={isAdmin ? 'dashboard.totalCompanies.title' : 'dashboard.totalClientCompanies.title'}
-            />
-            <SummaryRectangle
-              icon={<Package />}
-              data={companyProductsCount}
-              title={isAdmin ? 'Total Products' : 'Total Client Products'}
-              titleId={isAdmin ? 'dashboard.totalProducts.title' : 'dashboard.totalClientProducts.title'}
-              styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
-            />
-            <SummaryRectangle
-              icon={<User />}
-              data={usersCount}
-              title='Total Users Count'
-              titleId='dashboard.totalUsersCount.title'
-              styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
-            />
-            <SummaryRectangle
-              icon={<DollarSign />}
-              data={productOffersValue}
-              title='Total Products Value $M'
-              titleId='dashboard.totalValue.title'
-              styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
-            />
-            <SummaryRectangle
-              icon={<DollarSign />}
-              data={broadcastedProductOffersValue}
-              title='Total Broadcasted Value $M'
-              titleId='dashboard.totalBroadcastedValue.title'
-              styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
-              isLastSummary
-            />
+            {!isClientCompanyAdmin && (
+              <>
+                <SummaryRectangle
+                  icon={<Briefcase />}
+                  data={companiesCount}
+                  title={isAdmin ? 'Total Companies' : 'Total Client Companies'}
+                  titleId={isAdmin ? 'dashboard.totalCompanies.title' : 'dashboard.totalClientCompanies.title'}
+                />
+                <SummaryRectangle
+                  icon={<Package />}
+                  data={companyProductsCount}
+                  title={isAdmin ? 'Total Products' : 'Total Client Products'}
+                  titleId={isAdmin ? 'dashboard.totalProducts.title' : 'dashboard.totalClientProducts.title'}
+                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
+                />
+              </>
+            )}
+            {isClientCompanyAdmin && (
+              <SummaryRectangle
+                icon={<User />}
+                data={usersCount}
+                title='Total Users Count'
+                titleId='dashboard.totalUsersCount.title'
+                styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
+              />
+            )}
+            {!isClientCompanyAdmin && (
+              <>
+                <SummaryRectangle
+                  icon={<DollarSign />}
+                  data={productOffersValue}
+                  title='Total Products Value $M'
+                  titleId='dashboard.totalValue.title'
+                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
+                />
+                <SummaryRectangle
+                  icon={<DollarSign />}
+                  data={broadcastedProductOffersValue}
+                  title='Total Broadcasted Value $M'
+                  titleId='dashboard.totalBroadcastedValue.title'
+                  styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
+                  isLastSummary
+                />
+              </>
+            )}
           </Grid.Column>
         </Grid.Row>
         {isAdmin ? (
@@ -220,7 +256,7 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        {!isAdmin ? (
+        {!isAdmin && !isClientCompanyAdmin ? (
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
@@ -278,7 +314,8 @@ Dashboard.propTypes = {
   companySumOfSalesMonthly: array,
   top10Buyers: array,
   totalSumOfSalesMonthly: array,
-  isAdmin: bool
+  isAdmin: bool,
+  isClientCompanyAdmin: bool
 }
 
 Dashboard.defaultProps = {
@@ -296,7 +333,8 @@ Dashboard.defaultProps = {
   companySumOfSalesMonthly: [],
   top10Buyers: [],
   totalSumOfSalesMonthly: [],
-  isAdmin: false
+  isAdmin: false,
+  isClientCompanyAdmin: false
 }
 
 export default injectIntl(Dashboard)

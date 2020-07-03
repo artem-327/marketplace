@@ -19,6 +19,7 @@ function mapStateToProps(store) {
 
   return {
     isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
+    isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
     companySumOfPurchasesMonthly: getSafe(() => data.companySumOfPurchasesMonthly, '')
       ? Object.entries(data.companySumOfPurchasesMonthly)
           .map(([name, value]) => ({
@@ -50,7 +51,7 @@ function mapStateToProps(store) {
     top10CompaniesBySalesInLastYear: getSafe(() => data.top10CompaniesBySalesInLastYear, '')
       ? Object.entries(data.top10CompaniesBySalesInLastYear).map(([name, value]) => ({
           name,
-          value: Math.round(value / 1000)
+          value: Math.round(value)
         }))
       : [],
     top10CompaniesByUsers: getSafe(() => data.top10CompaniesByUsers, '')
