@@ -365,32 +365,45 @@ class MyRequestedItems extends Component {
     selectedRows: [],
     pageNumber: 0,
     open: false,
-    filterValue: '',
+    filterValue: {
+      searchInput: ''
+    },
     expandedRowIds: []
   }
 
-  componentDidMount() {
-    this.setState({ filterValue: '' })
-    //this.handleFilterClear()
-    this.props.handleFiltersValue('')
-  }
-
-  /*componentDidUpdate(prevProps, prevState, snapshot) {
-    //const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
-    //if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-    //  datagrid.setFilter(datagridFilter)
-    //}
-  }*/
-
-  handleFiltersValue = debounce(value => {
-    const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else handleFiltersValue(value)
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
+  componentDidMount() {
+    const { tableHandlersFiltersMyReqItems } = this.props
+
+    if (tableHandlersFiltersMyReqItems) {
+      this.setState({ filterValue: tableHandlersFiltersMyReqItems })
+      this.handleFiltersValue(tableHandlersFiltersMyReqItems)
+    } else {
+      this.handleFiltersValue(this.state.filterValue)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFiltersMyReqItems', this.state.filterValue)
+  }
+
+  handleFilterChangeInputSearch = (e, data) => {
+    this.setState({
+      filterValue: {
+        ...this.state.filterValue,
+        [data.name]: data.value
+      }
+    })
+
+    const filter = {
+      ...this.state.filterValue,
+      [data.name]: data.value
+    }
+    this.handleFiltersValue(filter)
   }
 
   renderContent = () => {
@@ -406,14 +419,15 @@ class MyRequestedItems extends Component {
             <Grid.Row>
               <GridColumn floated='left' width={5} data-test='my_requested_items_search_inp'>
                 <Input
-                  fluid
+                  style={{ width: 340 }}
+                  name='searchInput'
                   icon='search'
-                  value={filterValue}
+                  value={filterValue.searchInput}
                   placeholder={formatMessage({
                     id: 'wantedBoard.searchByProductName',
                     defaultMessage: 'Search by product name...'
                   })}
-                  onChange={this.handleFilterChange}
+                  onChange={this.handleFilterChangeInputSearch}
                 />
               </GridColumn>
 

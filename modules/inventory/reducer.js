@@ -36,7 +36,8 @@ export const initialState = {
   datagridFilter: { filters: [] },
   datagridFilterUpdate: false,
   pricingEditOpenId: null,
-  isExportInventoryOpen: false
+  isExportInventoryOpen: false,
+  tableHandlersFilters: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -585,6 +586,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isExportInventoryOpen: payload
+      }
+    }
+
+    case AT.INVENTORY_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
 

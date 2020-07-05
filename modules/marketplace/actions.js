@@ -26,3 +26,10 @@ export function applyDatagridFilter(filter) {
     payload: filter
   }
 }
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.MARKETPLACE_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}

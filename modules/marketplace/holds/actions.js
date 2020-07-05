@@ -44,3 +44,10 @@ export function toggleHolds(type) {
     payload: type
   }
 }
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.HOLD_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}

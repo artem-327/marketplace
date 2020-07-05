@@ -26,7 +26,10 @@ const Holds = ({ typeHolds }) => (
           }
           return filters
         }
-      }}>
+      }}
+      preserveFilters
+      skipInitLoad
+    >
       <HoldsContainer />
     </DatagridProvider>
   </>

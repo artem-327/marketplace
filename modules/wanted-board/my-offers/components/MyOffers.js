@@ -88,25 +88,44 @@ class MyOffers extends Component {
     selectedRows: [],
     pageNumber: 0,
     open: false,
-    filterValue: ''
+    filterValue: {
+      searchInput: ''
+    }
   }
 
-  componentDidMount() {
-    this.setState({ filterValue: '' })
-    this.props.handleFiltersValue('')
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {}
-
-  handleFiltersValue = debounce(value => {
-    const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else handleFiltersValue(value)
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
+  componentDidMount() {
+    const { tableHandlersFiltersMyOffers } = this.props
+
+    if (tableHandlersFiltersMyOffers) {
+      this.setState({ filterValue: tableHandlersFiltersMyOffers })
+      this.handleFiltersValue(tableHandlersFiltersMyOffers)
+    } else {
+      this.handleFiltersValue(this.state.filterValue)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFiltersMyOffers', this.state.filterValue)
+  }
+
+  handleFilterChangeInputSearch = (e, data) => {
+    this.setState({
+      filterValue: {
+        ...this.state.filterValue,
+        [data.name]: data.value
+      }
+    })
+
+    const filter = {
+      ...this.state.filterValue,
+      [data.name]: data.value
+    }
+    this.handleFiltersValue(filter)
   }
 
   renderContent = () => {
@@ -122,14 +141,15 @@ class MyOffers extends Component {
             <Grid.Row>
               <GridColumn floated='left' width={5} data-test='my_offer_search_inp'>
                 <Input
-                  fluid
+                  style={{ width: 340 }}
+                  name='searchInput'
                   icon='search'
-                  value={filterValue}
+                  value={filterValue.searchInput}
                   placeholder={formatMessage({
                     id: 'wantedBoard.searchByProductName',
                     defaultMessage: 'Search by product name...'
                   })}
-                  onChange={this.handleFilterChange}
+                  onChange={this.handleFilterChangeInputSearch}
                 />
               </GridColumn>
             </Grid.Row>

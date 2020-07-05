@@ -493,3 +493,10 @@ export function setExportSidebarOpenState(open) {
     payload: open
   }
 }
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.INVENTORY_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}

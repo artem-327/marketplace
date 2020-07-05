@@ -20,7 +20,7 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.marketplace,
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
-    ...datagrid,
+    //! ! ??...datagrid,
     appliedFilter: store.filter.marketplace.appliedFilter,
     defaultZip: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.zip.zip, ''),
     defaultCountry: getSafe(() => store.auth.identity.homeBranch.deliveryAddress.address.country.id, 1),

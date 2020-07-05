@@ -19,6 +19,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import SearchByNamesAndTags from '~/modules/search'
+import { getSafe } from '~/utils/functions'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -236,7 +237,32 @@ class Marketplace extends Component {
     ],
     selectedRows: [],
     //pageNumber: 0,
-    open: false
+    open: false,
+    filterValues: {
+      SearchByNamesAndTags: null
+    }
+  }
+
+  componentDidMount() {
+    const { tableHandlersFilters } = this.props
+
+    if (tableHandlersFilters) {
+      this.setState({ filterValues: tableHandlersFilters },
+        () => {
+          const filter = {
+            ...this.state.filterValues,
+            ...(!!this.state.filterValues.SearchByNamesAndTags
+              && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+          }
+          this.handleFiltersValue(filter)
+        })
+    } else {
+      this.handleFiltersValue(this.state.filterValues)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFilters', this.state.filterValues)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -244,6 +270,26 @@ class Marketplace extends Component {
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
       datagrid.setFilter(datagridFilter, true, 'marketPlaceFilter')
     }
+  }
+
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }, 300)
+
+  SearchByNamesAndTagsChanged = data => {
+    this.setState({
+      filterValues: {
+        ...this.state.filterValues,
+        SearchByNamesAndTags: data
+      }}, () => {
+      const filter = {
+        ...this.state.filterValues,
+        ...(!!this.state.filterValues.SearchByNamesAndTags
+          && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+      }
+      this.handleFiltersValue(filter)
+    })
   }
 
   getRows = () => {
@@ -348,7 +394,8 @@ class Marketplace extends Component {
       isMerchant,
       tutorialCompleted,
       isCompanyAdmin,
-      sidebar: { openInfo }
+      sidebar: { openInfo },
+      tableHandlersFilters
     } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
@@ -416,7 +463,13 @@ class Marketplace extends Component {
 
         <Grid>
           <Grid.Row>
-            <SearchByNamesAndTags />
+            <SearchByNamesAndTags
+              onChange={this.SearchByNamesAndTagsChanged}
+              initFilterState={
+                getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)
+              }
+              filterApply={false}
+            />
 
             <Grid.Column width={8}>
               <Menu secondary className='page-part'>

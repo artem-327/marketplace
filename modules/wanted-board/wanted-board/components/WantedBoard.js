@@ -23,6 +23,7 @@ import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { UpperCaseText, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
 import SearchByNamesAndTags from '~/modules/search'
+import { getSafe } from '~/utils/functions'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -225,20 +226,51 @@ class WantedBoard extends Component {
     pageNumber: 0,
     open: false,
     popupValues: null,
-    filterValue: ''
+    filterValues: {
+      SearchByNamesAndTags: null
+    }
   }
 
   componentDidMount() {
-    this.setState({ filterValue: '' })
-    //this.handleFilterClear()
-    this.props.handleFiltersValue('')
+    const { tableHandlersFiltersWantedBoard } = this.props
+
+    if (tableHandlersFiltersWantedBoard) {
+      this.setState({ filterValues: tableHandlersFiltersWantedBoard },
+        () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.SearchByNamesAndTags
+            && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+        }
+        this.handleFiltersValue(filter)
+      })
+    } else {
+      this.handleFiltersValue(this.state.filterValues)
+    }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    //const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
-    //if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-    //  datagrid.setFilter(datagridFilter)
-    //}
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFiltersWantedBoard', this.state.filterValues)
+  }
+
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }, 300)
+
+  SearchByNamesAndTagsChanged = data => {
+    this.setState({
+      filterValues: {
+        ...this.state.filterValues,
+        SearchByNamesAndTags: data
+      }}, () => {
+      const filter = {
+        ...this.state.filterValues,
+        ...(!!this.state.filterValues.SearchByNamesAndTags
+          && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+      }
+      this.handleFiltersValue(filter)
+    })
   }
 
   renderContent = () => {
@@ -251,9 +283,10 @@ class WantedBoard extends Component {
       openedSubmitOfferPopup,
       type,
       popupValues,
-      tutorialCompleted
+      tutorialCompleted,
+      tableHandlersFiltersWantedBoard
     } = this.props
-    const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
+    const { columnsProduct, columnsChemical } = this.state
     let { formatMessage } = intl
 
     return (
@@ -263,7 +296,13 @@ class WantedBoard extends Component {
         <ControlPanel>
           <Grid>
             <Grid.Row>
-              <SearchByNamesAndTags />
+              <SearchByNamesAndTags
+                onChange={this.SearchByNamesAndTagsChanged}
+                initFilterState={
+                  getSafe(() => tableHandlersFiltersWantedBoard.SearchByNamesAndTags, null)
+                }
+                filterApply={false}
+              />
               <GridColumn width={8}>
                 <TopButtons>
                   <ProductChemicalSwitch className={type}>
@@ -299,7 +338,7 @@ class WantedBoard extends Component {
         </ControlPanel>
         <div className='flex stretched' style={{ padding: '0 30px 20px 30px' }}>
           <ProdexGrid
-            tableName='wanted_board_grid'
+            tableName={`wanted_board_${type}_grid`}
             {...datagrid.tableProps}
             rows={rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}

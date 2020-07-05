@@ -92,7 +92,7 @@ class Holds extends Component {
   }
 
   componentDidMount() {
-    this.props.applyDatagridFilter('')
+    //! !this.props.applyDatagridFilter('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -103,8 +103,8 @@ class Holds extends Component {
   }
 
   handleFiltersValue = debounce(value => {
-    const { applyDatagridFilter } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    const { applyDatagridFilter, datagrid } = this.props
+    if (datagrid.isReady()) datagrid.setSearch(value)
     else applyDatagridFilter(value)
   }, 250)
 
@@ -118,7 +118,7 @@ class Holds extends Component {
       const response = await this.props.approveHold(id)
       const newRow = response && response.value && response.value.data ? response.value.data : null
       if (newRow) {
-        Datagrid.updateRow(id, () => ({
+        this.props.datagrid.updateRow(id, () => ({
           ...newRow,
           status: 'ON_HOLD'
         }))
@@ -132,7 +132,7 @@ class Holds extends Component {
       const response = await this.props.rejectHold(id)
       const newRow = response && response.value && response.value.data ? response.value.data : null
       if (newRow) {
-        Datagrid.updateRow(id, () => ({
+        this.props.datagrid.updateRow(id, () => ({
           ...newRow,
           status: 'REJECTED'
         }))
@@ -146,7 +146,7 @@ class Holds extends Component {
       const response = await this.props.cancelHold(id)
       const newRow = response && response.value && response.value.data ? response.value.data : null
       if (newRow) {
-        Datagrid.updateRow(id, () => ({
+        this.props.datagrid.updateRow(id, () => ({
           ...newRow,
           status: 'CANCELLED'
         }))
