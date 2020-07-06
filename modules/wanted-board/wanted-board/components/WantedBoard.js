@@ -220,6 +220,17 @@ class WantedBoard extends Component {
           </FormattedMessage>
         ),
         width: 120
+      },
+      {
+        name: 'createdAt',
+        title: (
+          <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+        sortPath: 'PurchaseRequest.createdAt',
+        disabled: true
       }
     ],
     selectedRows: [],
@@ -273,6 +284,18 @@ class WantedBoard extends Component {
     })
   }
 
+  handleProductChemicalSwitch = data => {
+    const { datagrid } = this.props
+    this.props.setWantedBoardType(data)
+    datagrid.clear()
+    const filter = {
+      ...this.state.filterValues,
+      ...(!!this.state.filterValues.SearchByNamesAndTags
+        && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+    }
+    this.handleFiltersValue(filter)
+  }
+
   renderContent = () => {
     const {
       datagrid,
@@ -308,7 +331,7 @@ class WantedBoard extends Component {
                   <ProductChemicalSwitch className={type}>
                     <Button
                       attached='left'
-                      onClick={() => this.props.setWantedBoardType('product')}
+                      onClick={() => this.handleProductChemicalSwitch('product')}
                       data-test='wanted_board_product_switch_btn'>
                       <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
                         {text => text}
@@ -316,7 +339,7 @@ class WantedBoard extends Component {
                     </Button>
                     <Button
                       attached='right'
-                      onClick={() => this.props.setWantedBoardType('chemical')}
+                      onClick={() => this.handleProductChemicalSwitch('chemical')}
                       data-test='wanted_board_chemical_switch_btn'>
                       <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
                         {text => text}

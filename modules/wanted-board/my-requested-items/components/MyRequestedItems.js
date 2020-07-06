@@ -406,6 +406,17 @@ class MyRequestedItems extends Component {
     this.handleFiltersValue(filter)
   }
 
+  handleProductChemicalSwitch = data => {
+    const { datagrid } = this.props
+    this.props.setMyRequestedItemsType(data)
+    datagrid.clear()
+    const filter = {
+      ...this.state.filterValue,
+      [data.name]: data.value
+    }
+    this.handleFiltersValue(filter)
+  }
+
   renderContent = () => {
     const { datagrid, intl, rows, editedId, sidebarDetailTrigger, type, tutorialCompleted } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
@@ -438,7 +449,7 @@ class MyRequestedItems extends Component {
                       attached='left'
                       onClick={() => {
                         this.setState({ expandedRowIds: [] })
-                        this.props.setMyRequestedItemsType('product')
+                        this.handleProductChemicalSwitch('product')
                       }}
                       data-test='my_requested_items_product_switch_btn'>
                       <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
@@ -449,7 +460,7 @@ class MyRequestedItems extends Component {
                       attached='right'
                       onClick={() => {
                         this.setState({ expandedRowIds: [] })
-                        this.props.setMyRequestedItemsType('chemical')
+                        this.handleProductChemicalSwitch('chemical')
                       }}
                       data-test='my_requested_items_chemical_switch_btn'>
                       <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
@@ -473,7 +484,7 @@ class MyRequestedItems extends Component {
         <div className='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
             key={type}
-            tableName='my_requested_items_grid'
+            tableName={`my_requested_items_${type}_grid`}
             {...datagrid.tableProps}
             rows={rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}
