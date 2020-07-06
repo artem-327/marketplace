@@ -87,30 +87,45 @@ class Holds extends Component {
     selectedRows: [],
     //pageNumber: 0,
     open: false,
-    holdDropdown: 'My Holds',
-    filterValue: ''
-  }
-
-  componentDidMount() {
-    //! !this.props.applyDatagridFilter('')
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
-    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
+    filterValue: {
+      searchInput: '',
+      holdDropdown: 'My Holds'
     }
   }
 
-  handleFiltersValue = debounce(value => {
-    const { applyDatagridFilter, datagrid } = this.props
-    if (datagrid.isReady()) datagrid.setSearch(value)
-    else applyDatagridFilter(value)
+  componentDidMount() {
+    const { tableHandlersFilters } = this.props
+
+    if (tableHandlersFilters) {
+      this.setState({ filterValue: tableHandlersFilters })
+      this.handleFiltersValue(tableHandlersFilters)
+    } else {
+      this.handleFiltersValue(this.state.filterValue)
+    }
+  }
+
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
   }, 250)
 
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFilters', this.state.filterValue)
+  }
+
+  handleFilterChange = (e, data) => {
+    this.setState({
+      filterValue: {
+        ...this.state.filterValue,
+        [data.name]: data.value
+      }
+    })
+
+    const filter = {
+      ...this.state.filterValue,
+      [data.name]: data.value
+    }
+    this.handleFiltersValue(filter)
   }
 
   handleApprove = async id => {
@@ -234,7 +249,8 @@ class Holds extends Component {
               <Input
                 fluid
                 icon='search'
-                value={filterValue}
+                name='searchInput'
+                value={filterValue.searchInput}
                 onChange={this.handleFilterChange}
                 placeholder={formatMessage({
                   id: 'myInventory.searchByProductName',
@@ -256,15 +272,16 @@ class Holds extends Component {
                     text: 'Requsted Holds'
                   }
                 ]}
-                value={this.state.holdDropdown}
+                value={filterValue.holdDropdown}
                 selection
-                onChange={(event, { name, value }) => {
-                  if (value === 'My Holds') {
+                onChange={(event, data) => {
+                  if (data.value === 'My Holds') {
                     toggleHolds('my')
-                  } else if (value === 'Requsted Holds') {
+                  } else if (data.value === 'Requsted Holds') {
                     toggleHolds('foreign')
                   }
-                  this.setState({ [name]: value })
+                  this.handleFilterChange(event, data)
+                  //this.setState({ [name]: value })
                 }}
                 name='holdDropdown'
                 placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}

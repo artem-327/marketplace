@@ -45,7 +45,6 @@ function getStyleLabel(status) {
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.holds,
-    //! ! ??...datagrid,
     isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
     isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
     isProductOfferManager: getSafe(() => store.auth.identity.isProductOfferManager, false),

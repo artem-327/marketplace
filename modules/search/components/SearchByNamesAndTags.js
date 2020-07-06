@@ -47,6 +47,7 @@ class SearchByNamesAndTags extends Component {
       filterName: value,
       filterTags: filterTagsValues
     }
+    if (this.props.filterApply) this.handleFiltersValue(filters)
     this.props.onChange({
       state: {
         ...this.state,
@@ -55,7 +56,6 @@ class SearchByNamesAndTags extends Component {
       },
       filters
     })
-    if (this.props.filterApply) this.handleFiltersValue(filters)
   }
 
   handleTagsChange = (value, options) => {
@@ -66,6 +66,7 @@ class SearchByNamesAndTags extends Component {
       filterName: this.state.filterName,
       filterTags: selectedTags.length > 0 ? selectedTags.map(option => option.key) : []
     }
+    if (this.props.filterApply) this.handleFiltersValue(filters)
     this.props.onChange({
       state: {
         ...this.state,
@@ -74,7 +75,6 @@ class SearchByNamesAndTags extends Component {
       },
       filters
     })
-    if (this.props.filterApply) this.handleFiltersValue(filters)
   }
 
   render() {

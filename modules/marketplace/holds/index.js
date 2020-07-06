@@ -10,17 +10,17 @@ const Holds = ({ typeHolds }) => (
         url: `/prodex/api/holds/${typeHolds}/datagrid/`,
         searchToFilter: v => {
           let filters = { or: [], and: [] }
-          if (v) {
+          if (v && v.searchInput) {
             filters.or = [
               {
                 operator: 'LIKE',
                 path: 'InventoryHold.productOffer.companyProduct.intProductName',
-                values: [`%${v}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'InventoryHold.productOffer.companyProduct.companyGenericProduct.name',
-                values: [`%${v}%`]
+                values: [`%${v.searchInput}%`]
               }
             ]
           }
