@@ -96,7 +96,7 @@ Cypress.Commands.add("getFirstGenericProductIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {filters: filter, pageNumber: 0, pageSize: 50, "orOperator": true}
+        body: {filters: filter, pageNumber: 0, pageSize: 50}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
@@ -235,7 +235,7 @@ Cypress.Commands.add("getFirstUserIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orOperator: true, orFilters: filter}
+        body: {pageSize: 50, orFilters: filter}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
@@ -249,7 +249,7 @@ Cypress.Commands.add("getFirstBranchIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orOperator: true, orFilters : filter}
+        body: {pageSize: 50, orFilters : filter}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
@@ -263,7 +263,7 @@ Cypress.Commands.add("getFirstProductIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator: true}
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body[0].id
@@ -291,7 +291,7 @@ Cypress.Commands.add("getFirstCasProductWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orOperator: true, orFilters: filter}
+        body: {pageSize: 50, orFilters: filter}
     }).then((response) => {
         expect(response.status).to.eq(200)
         if (response.body[0] == undefined) {
@@ -309,7 +309,25 @@ Cypress.Commands.add("getFirstEntityWithFilter", (token, entity, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orOperator: true, orFilters: filter}
+        body: {pageSize: 50, orFilters: filter}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        if (response.body[0] == undefined) {
+            return null
+        } else {
+            return response.body[0].id
+        }
+    })
+})
+
+Cypress.Commands.add("getFirstPurchaseRequestWithFilter", (token, filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/purchase-requests/own/datagrid?type=product',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageSize: 50, orFilters: filter}
     }).then((response) => {
         expect(response.status).to.eq(200)
         if (response.body[0] == undefined) {

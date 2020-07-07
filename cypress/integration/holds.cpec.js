@@ -18,6 +18,7 @@ context("Holds tests", () => {
         cy.FElogin(userJSON1.email, userJSON1.password)
         cy.waitForUI()
 
+        cy.visit("/inventory/my")
         cy.wait('@inventoryLoading', {timeout: 30000})
         cy.contains("Marketplace").click()
 
@@ -73,6 +74,8 @@ context("Holds tests", () => {
 
         cy.FElogin(userJSON2.email, userJSON2.password)
 
+        cy.waitForUI()
+        cy.visit("/inventory/my")
         cy.wait('@inventoryLoading', {timeout: 30000})
         cy.url().should("include", "inventory")
         cy.contains("Marketplace").click()

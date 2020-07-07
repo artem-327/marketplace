@@ -24,11 +24,10 @@ context("Generic Company Product CRUD", () => {
 
         cy.wait("@genericLoading")
         cy.waitForUI()
+        cy.viewport(2000, 3000)
     })
 
     it("Creates a Generic Product", () => {
-        cy.viewport(2000, 3000)
-
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'company-generic-products', filter).then(itemId => {
                 if (itemId != null)

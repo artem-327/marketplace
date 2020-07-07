@@ -7,5 +7,6 @@
   },
   "viewportHeight" : 1200,
   "viewportWidth" : 2250,
-  "video": false
+  "video": false,
+  "requestTimeout": 30000
 }

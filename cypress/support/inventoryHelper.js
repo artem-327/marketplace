@@ -17,6 +17,25 @@ Cypress.Commands.add("selectChemical", (chemical) => {
 
 })
 
+Cypress.Commands.add("selectProductGroup", (group) => {
+    cy.server()
+    cy.route("GET",'/prodex/api/product-groups/search?*').as('search')
+
+    cy.waitForUI()
+
+    cy.get("[id='field_dropdown_element.productGroup']")
+        .children("input")
+        .type(group, {force: true})
+        .should("have.value",group)
+
+    cy.wait('@search')
+    cy.wait(500)
+    cy.get("[id='field_dropdown_element.productGroup']").within(() => {
+        cy.get('div[role=option]').eq(0).click({force: true})
+    })
+
+})
+
 Cypress.Commands.add("assertProductDetail", (index,value) => {
     cy.get(".data-grid")
         .children()
