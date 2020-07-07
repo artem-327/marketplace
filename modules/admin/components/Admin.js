@@ -32,9 +32,11 @@ import styled from 'styled-components'
 const FixyWrapper = styled.div`
   position: relative;
   transform: translateY(0);
+  height: 100%;
 `
 
 const ScrollableSegment = styled(Segment)`
+  height: 100%;
   max-height: 90vh;
   overflow-y: auto;
 `
@@ -162,8 +164,8 @@ class Admin extends Component {
             columns='equal'
             className='flex stretched'
             style={{ marginTop: '0', marginBottom: '0', padding: '0 32px' }}>
-            <Grid.Row>
-              <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className='flex stretched'>
+            <Grid.Row style={{ height: '100%' }}>
+              <Grid.Column key={this.props.currentTab} style={{ height: 'calc(100% - 10px)', marginTop: '10px' }} className='flex stretched'>
                 {this.renderContent()}
               </Grid.Column>
             </Grid.Row>
