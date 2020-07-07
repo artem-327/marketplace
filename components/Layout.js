@@ -285,7 +285,7 @@ class Layout extends Component {
                       data-test='navigation_menu_settings_lnk'>
                       <>
                         {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
-                        <Settings role='user' />
+                        <Settings role='user' scrolling={false} />
                       </>
                     </Menu.Item>
                   )}

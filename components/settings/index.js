@@ -12,6 +12,7 @@ import { typeToComponent, toYupSchema } from './constants'
 
 import { triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import styled from 'styled-components'
 import api from '~/modules/settings/api'
@@ -29,6 +30,19 @@ const ButtonsWrapper = styled(Grid)`
   width: calc(100% - 2em);
   margin: 0 !important;
   background: transparent;
+  
+  .scrollable > & {
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: static;
+    width: 100%;
+    margin: 0 !important;
+    background: transparent;
+    
+    > .column {
+      padding-right: 0 !important;
+    }
+  }
 `
 
 // PopupTriggerWrapper is necessary when button is disabled - trigger didn't work
@@ -38,10 +52,27 @@ const PopupTriggerWrapper = styled.div`
 
 const FormSpaced = styled(Form)`
   padding-bottom: 31px !important;
+
+  &.scrollable {
+    display: flex !important;
+    flex-flow: column;
+    max-height: calc(80vh - 114px);
+    min-height: 200px;
+    padding-bottom: 0 !important;
+  }
 `
 
 const StyledSegment = styled(Segment)`
   margin-bottom: 45px !important;
+  
+  .scrollable > & {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
+    margin-bottom: 15px !important;
+  }
 `
 
 const BottomMargedRow = styled(GridRow)``
@@ -56,6 +87,43 @@ const CustomPaddedColumn = styled(GridColumn)`
 
 const CustomGridColumn = styled(GridColumn)`
   padding-bottom: 2px !important;
+`
+const PScroll = styled(PerfectScrollbar)`
+
+  .ps__rail-x,
+  .ps__rail-y {
+    display: none;
+  }
+
+  .scrollable & {
+    flex-flow: 0;
+    flex-grow: 0;
+    position: relative;
+    overflow: hidden;
+    max-height: 100%;
+    margin-right: -1em;
+    padding-right: 2em;
+
+    .ps__rail-x,
+    .ps__rail-y {
+      display: block;
+    }
+    
+    .ps__rail-y {
+      position: absolute;
+      left: auto !important;
+      right: 0 !important;
+      width: 10px;
+      
+      .ps__thumb-y {
+        position: absolute;
+        width: 6px;
+        margin: 0 2px;
+        border-radius: 3px;
+        background: #ccc;
+      }
+    }
+  }
 `
 
 class Settings extends Component {
@@ -180,6 +248,7 @@ class Settings extends Component {
     let {
       open,
       asModal,
+      scrolling,
       triggerSystemSettingsModal,
       intl: { formatMessage },
       role
@@ -200,7 +269,7 @@ class Settings extends Component {
             systemSettings.length &&
             systemSettings.every(group => group.settings.every(val => !val.changeable))
           return (
-            <FormSpaced>
+            <FormSpaced className={asModal ? 'scrollable' : ''}>
               {systemSettings && systemSettings.length
                 ? systemSettings.map(group => {
                     return (
@@ -209,6 +278,7 @@ class Settings extends Component {
                           {group.name}
                         </Header>
                         <StyledSegment>
+                          <PScroll>
                           <>
                             {group.settings.map(el => {
                               return (
@@ -276,6 +346,7 @@ class Settings extends Component {
                               )
                             })}
                           </>
+                          </PScroll>
                         </StyledSegment>
                       </>
                     )
@@ -363,7 +434,7 @@ class Settings extends Component {
         </Modal.Header>
 
         <FixyWrapper>
-          <Modal.Content scrolling>{getMarkup()}</Modal.Content>
+          <Modal.Content scrolling={scrolling}>{getMarkup()}</Modal.Content>
         </FixyWrapper>
       </Modal>
     )
@@ -372,11 +443,13 @@ class Settings extends Component {
 
 Settings.propTypes = {
   asModal: bool,
+  scrolling: bool,
   role: oneOf(['user', 'admin', 'company']).isRequired
 }
 
 Settings.defaultProps = {
-  asModal: true
+  asModal: true,
+  scrolling: true
 }
 
 export default connect(
