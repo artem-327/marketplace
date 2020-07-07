@@ -84,11 +84,14 @@ class DwollaRegister extends Component {
   }
 
   getValidationSchema = () => {
+    const { identity } = this.props
     const { requiredMessage, invalidString, invalidEmail, minLength } = errorMessages
     const minLengthValue = 3
     const minLengthErr = minLength(minLengthValue)
 
     let validationSchema = {}
+
+    const fullSsnInput = getSafe(() => identity.company.dwollaAccountStatus, '') === 'retry'
 
     const commonValidations = {
       basicString: Yup.string(invalidString)
@@ -116,7 +119,7 @@ class DwollaRegister extends Component {
       },
       {},
       { beneficialOwners: beneficialOwnersValidation() },
-      { dwollaController: dwollaControllerValidation() }
+      { dwollaController: dwollaControllerValidation(fullSsnInput) }
     ]
 
     for (let i = 0; i < this.state.step; i++) {
@@ -134,7 +137,8 @@ class DwollaRegister extends Component {
       intl: { formatMessage },
       businessClassifications,
       businessClassificationsLoading,
-      isAdmin
+      isAdmin,
+      identity
     } = this.props
 
     let selectedBusiness = businessClassifications.find(el => el.id === values.businessClassification)
@@ -145,6 +149,8 @@ class DwollaRegister extends Component {
           text: el.name
         }))
       : []
+
+    const fullSsnInput = getSafe(() => identity.company.dwollaAccountStatus, '') === 'retry'
 
     switch (this.state.step) {
       case 1: {
@@ -564,7 +570,7 @@ class DwollaRegister extends Component {
                   <Header as='h4'>
                     <FormattedMessage id='global.controllerInfo' defaultMessage='Controller Information' />
                   </Header>
-                  <ControllerForm setFieldValue={setFieldValue} values={values} />
+                  <ControllerForm setFieldValue={setFieldValue} values={values} fullSsnInput={fullSsnInput} />
                   <RightAlignedDiv>
                     <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                       <FormattedMessage id='global.back' defaultMessage='Back'>
