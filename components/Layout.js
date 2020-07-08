@@ -85,7 +85,9 @@ const clientCompanyRoutes = {
 class Layout extends Component {
   state = {
     fatalError: false,
-    mainClass: null
+    mainClass: null,
+    showCopyright: false,
+    copyrightClassName: ''
   }
 
   constructor(props) {
@@ -98,8 +100,10 @@ class Layout extends Component {
 
     const { auth, phoneCountryCodes, getCountryCodes, hasLogo } = this.props
 
-    Router.events.on('beforeHistoryChange', this.handleRouteChange)
-    Router.events.on('routeChangeStart', this.handleRouteChange)
+    document.addEventListener('wheel', this.showCopyright)
+
+    Router.events.on('beforeHistoryChange', this.handleRouteEvent)
+    Router.events.on('routeChangeStart', this.handleRouteEvent)
 
     if (this.state.fatalError) this.setState({ fatalError: false })
     if (!phoneCountryCodes.length) getCountryCodes()
@@ -109,6 +113,48 @@ class Layout extends Component {
 
     const mainClass = this.props.takeover ? 'takeover' : null
     this.setState({ mainClass: mainClass })
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('wheel', this.showCopyright)
+  }
+
+  showCopyright = e => {
+    const { showCopyright } = this.state
+    let tableResponsive = document.querySelector('.table-responsive')
+
+    // if there is e.deltaY it is wheel event and it can show copyright if allowed
+    if (typeof e.deltaY !== 'undefined') {
+      // scrolling down
+      if (e.deltaY > 0 && showCopyright) {
+        this.setState({ copyrightClassName: 'show-cop' })
+      }
+      // scrolling up
+      else if (e.deltaY < 0) {
+        this.setState({ copyrightClassName: '' })
+      }
+    }
+  }
+
+  trackScrolling = e => {
+    const { showCopyright, copyrightClassName } = this.state
+    let tableResponsive = document.querySelector('.table-responsive')
+
+    // it there is datatable then allow to show copyright when datatable is fully scrolled down
+    if (tableResponsive !== null) {
+      if (tableResponsive.scrollTop + tableResponsive.clientHeight === tableResponsive.scrollHeight) {
+        this.setState({ showCopyright: true })
+      } else {
+        this.setState({ showCopyright: false })
+      }
+      // if there is no datatable, check if FlexContainer is fully scrolled down to allow copyright to be shown
+    } else {
+      if (e.target.scrollTop + e.target.clientHeight === e.target.scrollHeight) {
+        this.setState({ showCopyright: true })
+      } else {
+        this.setState({ showCopyright: false })
+      }
+    }
   }
 
   loadCompanyLogo = async () => {
@@ -132,13 +178,36 @@ class Layout extends Component {
     return Logo
   }
 
-  componentWillUpdate() {
+  cleanCopyrightState = () => {
+    this.setState({ showCopyright: false, copyrightClassName: '' })
+  }
+
+  componentWillUpdate(prevProps) {
+    if (
+      prevProps.adminTab !== this.props.adminTab ||
+      prevProps.companyTab !== this.props.companyTab ||
+      prevProps.operationTab !== this.props.operationTab ||
+      prevProps.productTab !== this.props.productTab
+    ) {
+      this.cleanCopyrightState()
+    }
     this.handleRouteChange(this.props.router.route)
   }
 
   componentDidCatch(error, info) {
     console.error('Error!', error, info)
     this.setState({ fatalError: true })
+  }
+
+  handleRouteEvent = url => {
+    const { showCopyright, copyrightClassName } = this.state
+
+    if (showCopyright || copyrightClassName !== '') {
+      this.cleanCopyrightState()
+      // this.handleRouteChange // will be called due to state change automatically
+    } else {
+      this.handleRouteChange(url)
+    }
   }
 
   handleRouteChange = url => {
@@ -182,7 +251,7 @@ class Layout extends Component {
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
     if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
 
-    const { mainClass } = this.state
+    const { mainClass, copyrightClassName } = this.state
 
     return (
       <MainContainer fluid className={mainClass}>
@@ -317,20 +386,20 @@ class Layout extends Component {
 
         {profile && profile.profilePopup && <Profile />}
         <ChatWidget />
-        <FlexContainer>
+        <FlexContainer className={copyrightClassName} onScroll={this.trackScrolling}>
           <TopMenuContainer fluid>
             <Messages />
           </TopMenuContainer>
           <ContentContainer fluid className='page-wrapper flex stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
-            <CopyrightContainer>
-              <FormattedMessage
-                id='global.copyright'
-                defaultMessage={`Copyright ${moment().format('YYYY')} Echosystem`}
-                values={{ currentYear: moment().format('YYYY') }}
-              />
-            </CopyrightContainer>
           </ContentContainer>
+          <CopyrightContainer>
+            <FormattedMessage
+              id='global.copyright'
+              defaultMessage={`Copyright ${moment().format('YYYY')} Echosystem`}
+              values={{ currentYear: moment().format('YYYY') }}
+            />
+          </CopyrightContainer>
         </FlexContainer>
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
 
@@ -391,7 +460,11 @@ const mapStateToProps = state => {
     companyLogo: getSafe(() => state.businessTypes.companyLogo, null),
     useCompanyLogo: getSafe(() => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false),
     companyName: getSafe(() => state.auth.identity.company.name, false),
-    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator')
+    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+    adminTab: getSafe(() => state.admin.currentTab.id, null),
+    companyTab: getSafe(() => state.companiesAdmin.currentTab.id, null),
+    operationTab: getSafe(() => state.operations.currentTab.id, null),
+    productTab: getSafe(() => state.productsAdmin.currentTab.id, null)
   }
 }
 

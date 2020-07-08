@@ -970,12 +970,16 @@ export const ContentContainer = styled(Container)`
   flex: 1 1 auto;
 `
 export const CopyrightContainer = styled(Container)`
+  flex-shrink: 0;
+  flex-grow: 0;
+  position: relative;
+  overflow: hidden;
   display: block;
   box-sizing: border-box;
   width: 100% !important;
-  height: 60px;
+  height: 0px;
   margin: 0;
-  padding: 23px 0;
+  padding: 0px 0;
   background-color: #f8f9fb;
   box-shadow: inset 0 1px 0 0 #dee2e6;
   text-align: center;
@@ -983,6 +987,11 @@ export const CopyrightContainer = styled(Container)`
   font-weight: 400;
   color: #848893;
   line-height: 14px;
+  
+  .show-cop > & {
+    height: 60px;
+    padding: 23px 0;
+  }
 `
 export const FlexContainer = styled.div`
   position: fixed;

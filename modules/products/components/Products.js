@@ -153,7 +153,7 @@ class Products extends Component {
               />
             </Container>
 
-            <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
+            <Grid columns='equal' className='flex stretched' style={{ marginBottom: '0', padding: '0 1.5vh' }}>
               <Grid.Row>
                 <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
               </Grid.Row>
