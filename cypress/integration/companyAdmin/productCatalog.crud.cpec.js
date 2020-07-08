@@ -121,7 +121,7 @@ context("Company Product Catalog CRUD", () => {
         cy.get(".error")
             .should("have.length", 29)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)/i)
+            expect(element.text()).to.match(/(Required)|(Number value should be integer)/i)
         })
     })
 

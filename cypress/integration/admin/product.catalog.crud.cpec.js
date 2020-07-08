@@ -78,8 +78,8 @@ context("Generic Company Product CRUD", () => {
     })
 
     it("Creates a alternative name", () => {
-        cy.route("POST", "/prodex/api/company-generic-product/alternative-names/company-generic-product/**").as("nameSaving")
-        cy.route("GET", "/prodex/api/company-generic-product/alternative-names/company-generic-product/**").as("nameGetting")
+        cy.route("POST","/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameSaving")
+        cy.route("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
         cy.openElement(productId, 4)
@@ -106,8 +106,8 @@ context("Generic Company Product CRUD", () => {
     })
 
     it("Deletes a alternative name", () => {
-        cy.route("DELETE", "/prodex/api/company-generic-product/alternative-names/id/**").as("nameDelete")
-        cy.route("GET", "/prodex/api/company-generic-product/alternative-names/company-generic-product/**").as("nameGetting")
+        cy.route("DELETE", "/prodex/api/company-generic-products/alternative-names/id/**").as("nameDelete")
+        cy.route("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
         cy.openElement(productId, 4)

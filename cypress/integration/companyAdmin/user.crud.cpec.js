@@ -7,6 +7,7 @@ context("Prodex User CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.route("GET", "/prodex/api/companies/id/**").as("companyLoading")
         cy.route("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
         cy.route("GET", "/prodex/api/settings/user").as("usersLogin")
         cy.route("POST", "/prodex/api/users").as("usersSave")
@@ -21,6 +22,7 @@ context("Prodex User CRUD", () => {
         cy.contains("Users").click()
         cy.waitForUI()
         cy.wait("@usersLogin")
+        cy.wait("@companyLoading")
     })
 
     it("Creates a user", () => {
