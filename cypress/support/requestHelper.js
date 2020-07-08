@@ -69,6 +69,9 @@ Cypress.Commands.add("deleteEntity", (token, entity, id) => {
         url: '/prodex/api/' + entity + '/' + id,
         headers: {
             authorization: "Bearer " + token
+        },
+        options: {
+            timeout: 50000
         }
     }).then((response) => {
         expect(response.status).to.eq(200)
@@ -492,6 +495,24 @@ Cypress.Commands.add("getFirstAttachmentWithFilter", (token, filter) => {
     })
 })
 
+Cypress.Commands.add("getFirstAdminUsersWithFilter", (token, filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/users/datagrid/all',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, orFilters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        if (response.body[0] == undefined) {
+            return null
+        } else {
+            return response.body[0].id
+        }
+    })
+})
+
 Cypress.Commands.add("turnOnGlobalBroadcasting", (token) => {
     cy.request({
         method: 'POST',
@@ -590,5 +611,19 @@ Cypress.Commands.add("refreshToken", (token) => {
         }
     }).then((response) => {
         expect(response.status).to.eq(200)
+    })
+})
+
+Cypress.Commands.add("createPurchaseRequest", (token) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/purchase-requests',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {quantity:"5",unit:8,element:{productGroup:6}}
+    }).then((response) => {
+        expect(response.status).to.eq(201)
+        return response.body.id
     })
 })
