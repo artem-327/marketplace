@@ -15,6 +15,30 @@ import { debounce } from 'lodash'
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;
 `
+
+const CustomRowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: -5px -5px;
+  flex-wrap: wrap;
+  
+  > div {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    margin: 5px 5px;
+  }
+  
+  input, .ui.dropdown {
+    height: 40px;
+  }
+`
+
 class Holds extends Component {
   state = {
     columns: [
@@ -243,52 +267,55 @@ class Holds extends Component {
     return (
       <Container fluid style={{ padding: '10px 0' }} className='flex stretched'>
         {!tutorialCompleted && <Tutorial marginHolds />}
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={4}>
-              <Input
-                fluid
-                icon='search'
-                name='searchInput'
-                value={filterValue.searchInput}
-                onChange={this.handleFilterChange}
-                placeholder={formatMessage({
-                  id: 'myInventory.searchByProductName',
-                  defaultMessage: 'Search by product name...'
-                })}
-              />
-            </Grid.Column>
-            <Grid.Column width={12}>
-              <HoldDropdown
-                options={[
-                  {
-                    key: 1,
-                    value: 'My Holds',
-                    text: 'My Holds'
-                  },
-                  {
-                    key: 2,
-                    value: 'Requsted Holds',
-                    text: 'Requsted Holds'
-                  }
-                ]}
-                value={filterValue.holdDropdown}
-                selection
-                onChange={(event, data) => {
-                  if (data.value === 'My Holds') {
-                    toggleHolds('my')
-                  } else if (data.value === 'Requsted Holds') {
-                    toggleHolds('foreign')
-                  }
-                  this.handleFilterChange(event, data)
-                  //this.setState({ [name]: value })
-                }}
-                name='holdDropdown'
-                placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
-              />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <div style={{ padding: '0 0 6px' }}>
+          <CustomRowDiv>
+            <div>
+              <div className='column'>
+                <Input
+                  fluid
+                  icon='search'
+                  name='searchInput'
+                  value={filterValue.searchInput}
+                  onChange={this.handleFilterChange}
+                  placeholder={formatMessage({
+                    id: 'myInventory.searchByProductName',
+                    defaultMessage: 'Search by product name...'
+                  })}
+                  style={{ width: '370px' }}
+                />
+              </div>
+              <div className='column'>
+                <HoldDropdown
+                  options={[
+                    {
+                      key: 1,
+                      value: 'My Holds',
+                      text: 'My Holds'
+                    },
+                    {
+                      key: 2,
+                      value: 'Requsted Holds',
+                      text: 'Requsted Holds'
+                    }
+                  ]}
+                  value={filterValue.holdDropdown}
+                  selection
+                  onChange={(event, data) => {
+                    if (data.value === 'My Holds') {
+                      toggleHolds('my')
+                    } else if (data.value === 'Requsted Holds') {
+                      toggleHolds('foreign')
+                    }
+                    this.handleFilterChange(event, data)
+                    //this.setState({ [name]: value })
+                  }}
+                  name='holdDropdown'
+                  placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
+                />
+              </div>
+            </div>
+          </CustomRowDiv>
+        </div>
         <ProdexGrid
           groupActions={row => {
             let values = row.key.split('_')

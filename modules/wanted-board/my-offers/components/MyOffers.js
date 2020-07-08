@@ -21,7 +21,7 @@ import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 
-import { UpperCaseText, ControlPanel } from '../../constants/layout'
+import { UpperCaseText, CustomRowDiv, ControlPanel } from '../../constants/layout'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -136,10 +136,10 @@ class MyOffers extends Component {
     return (
       <>
         {!tutorialCompleted && <Tutorial marginWantedBoard />}
-        <ControlPanel>
-          <Grid>
-            <Grid.Row>
-              <GridColumn floated='left' width={5} data-test='my_offer_search_inp'>
+        <div style={{ padding: '10px 0' }}>
+          <CustomRowDiv>
+            <div>
+              <div className='column'>
                 <Input
                   style={{ width: 340 }}
                   name='searchInput'
@@ -151,10 +151,10 @@ class MyOffers extends Component {
                   })}
                   onChange={this.handleFilterChangeInputSearch}
                 />
-              </GridColumn>
-            </Grid.Row>
-          </Grid>
-        </ControlPanel>
+              </div>
+            </div>
+          </CustomRowDiv>
+        </div>
         <div className='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
             tableName='my_offers_grid'
@@ -247,7 +247,7 @@ class MyOffers extends Component {
 
     return (
       <>
-        <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
+        <Container fluid style={{ padding: '0 30px' }} className='flex stretched'>
           <Tab
             activeIndex={activeIndex}
             className='marketplace-container'

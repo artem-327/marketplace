@@ -21,7 +21,7 @@ import { PlusCircle } from 'react-feather'
 import { number } from 'prop-types'
 import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { UpperCaseText, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
+import { UpperCaseText, CustomRowDiv, CustomSearchNameTags, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
 import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 
@@ -316,9 +316,9 @@ class WantedBoard extends Component {
       <>
         {!tutorialCompleted && <Tutorial marginWantedBoard />}
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
-        <ControlPanel>
-          <Grid>
-            <Grid.Row>
+        <div style={{ padding: '10px 0' }}>
+          <CustomRowDiv>
+            <CustomSearchNameTags>
               <SearchByNamesAndTags
                 onChange={this.SearchByNamesAndTagsChanged}
                 initFilterState={
@@ -326,40 +326,44 @@ class WantedBoard extends Component {
                 }
                 filterApply={false}
               />
-              <GridColumn width={8}>
-                <TopButtons>
-                  <ProductChemicalSwitch className={type}>
-                    <Button
-                      attached='left'
-                      onClick={() => this.handleProductChemicalSwitch('product')}
-                      data-test='wanted_board_product_switch_btn'>
-                      <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
-                    <Button
-                      attached='right'
-                      onClick={() => this.handleProductChemicalSwitch('chemical')}
-                      data-test='wanted_board_chemical_switch_btn'>
-                      <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
-                  </ProductChemicalSwitch>
+            </CustomSearchNameTags>
+            <div>
+              <div className='column'>
+                <ProductChemicalSwitch className={type}>
                   <Button
-                    primary
-                    onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
-                    data-test='wanted_board_open_popup_btn'>
-                    <FormattedMessage id='wantedBoard.addNewRequest' defaultMessage='Add New Request'>
+                    attached='left'
+                    onClick={() => this.handleProductChemicalSwitch('product')}
+                    data-test='wanted_board_product_switch_btn'>
+                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                </TopButtons>
-              </GridColumn>
-            </Grid.Row>
-          </Grid>
-        </ControlPanel>
-        <div className='flex stretched' style={{ padding: '0 30px 20px 30px' }}>
+                  <Button
+                    attached='right'
+                    onClick={() => this.handleProductChemicalSwitch('chemical')}
+                    data-test='wanted_board_chemical_switch_btn'>
+                    <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                </ProductChemicalSwitch>
+              </div>
+              <div className='column'>
+                <Button
+                  className='secondary'
+                  primary
+                  onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
+                  data-test='wanted_board_open_popup_btn'>
+                  <PlusCircle />
+                  <FormattedMessage id='wantedBoard.requestProduct' defaultMessage='Request Product'>
+                    {text => text}
+                  </FormattedMessage>
+                </Button>
+              </div>
+            </div>
+          </CustomRowDiv>
+        </div>
+        <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
             tableName={`wanted_board_${type}_grid`}
             {...datagrid.tableProps}
@@ -420,7 +424,7 @@ class WantedBoard extends Component {
 
     return (
       <>
-        <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
+        <Container fluid style={{ padding: '0 30px' }} className='flex stretched'>
           <Tab
             activeIndex={activeIndex}
             className='marketplace-container'

@@ -36,7 +36,7 @@ const defaultHiddenColumns = [
   'lotNumber'
 ]
 
-const MenuItemFilters = styled(Menu.Item)`
+const FiltersRow = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -879,9 +879,9 @@ class MyInventory extends Component {
                 </Button>
               </div>
               <div className='column'>
-                <MenuItemFilters>
+                <FiltersRow>
                   <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
-                </MenuItemFilters>
+                </FiltersRow>
               </div>
             </div>
           </CustomRowDiv>

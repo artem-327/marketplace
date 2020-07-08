@@ -78,6 +78,43 @@ const CustomDiv = styled.div`
   text-overflow: ellipsis;
 `
 
+const CustomRowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: -5px -5px;
+  flex-wrap: wrap;
+  
+  > div {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    margin: 5px 5px;
+  }
+  
+  input, .ui.dropdown {
+    height: 40px;
+  }
+`
+
+const CustomSearchNameTags = styled.div`
+  .column {
+    width: 370px;
+    padding-top: 0 !important;
+  }
+`
+
+const FiltersRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: -5px;
+`
+
 class Marketplace extends Component {
   state = {
     columns: [
@@ -461,61 +498,63 @@ class Marketplace extends Component {
           {...this.props}
         />
 
-        <Grid>
-          <Grid.Row>
-            <SearchByNamesAndTags
-              onChange={this.SearchByNamesAndTagsChanged}
-              initFilterState={
-                getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)
-              }
-              filterApply={false}
-            />
+        <div style={{ padding: '10px 1px' }}>
+          <CustomRowDiv>
+            <CustomSearchNameTags>
+              <SearchByNamesAndTags
+                onChange={this.SearchByNamesAndTagsChanged}
+                initFilterState={
+                  getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)
+                }
+                filterApply={false}
+              />
+            </CustomSearchNameTags>
 
-            <Grid.Column width={8}>
-              <Menu secondary className='page-part'>
-                <Menu.Menu position='right'>
-                  <Menu.Item>
-                    <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
-                  </Menu.Item>
-                  <Popup
-                    wide='very'
-                    data-test='array_to_multiple_list'
-                    content={
-                      <FormattedMessage
-                        id='marketplace.shippingQuoteTooltip'
-                        defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
-                      />
-                    }
-                    disabled={selectedRows.length !== 0}
-                    position='bottom right'
-                    trigger={
-                      <DivButtonWithToolTip
-                        data-tooltip={
-                          this.isSelectedMultipleEcho(rows, selectedRows)
-                            ? formatMessage({
-                                id: 'marketplace.multipleEchoProduct',
-                                defaultMessage: 'Multiple ProductOffers can not be calculate.'
-                              })
-                            : null
-                        }
-                        data-position='bottom right'>
-                        <Button
-                          disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
-                          primary
-                          onClick={() => this.setState({ open: true })}
-                          data-test='marketplace_shipping_quote_btn'>
-                          <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
-                            {text => text}
-                          </FormattedMessage>
-                        </Button>
-                      </DivButtonWithToolTip>
-                    }
-                  />
-                </Menu.Menu>
-              </Menu>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+            <div>
+              <div className='column'>
+                <FiltersRow>
+                  <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
+                </FiltersRow>
+              </div>
+              <div className='column'>
+                <Popup
+                  wide='very'
+                  data-test='array_to_multiple_list'
+                  content={
+                    <FormattedMessage
+                      id='marketplace.shippingQuoteTooltip'
+                      defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
+                    />
+                  }
+                  disabled={selectedRows.length !== 0}
+                  position='bottom right'
+                  trigger={
+                    <DivButtonWithToolTip
+                      data-tooltip={
+                        this.isSelectedMultipleEcho(rows, selectedRows)
+                          ? formatMessage({
+                            id: 'marketplace.multipleEchoProduct',
+                            defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                          })
+                          : null
+                      }
+                      data-position='bottom right'>
+                      <Button
+                        disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
+                        primary
+                        onClick={() => this.setState({ open: true })}
+                        data-test='marketplace_shipping_quote_btn'>
+                        <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button>
+                    </DivButtonWithToolTip>
+                  }
+                />
+              </div>
+            </div>
+          </CustomRowDiv>
+        </div>
 
         <div class='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
