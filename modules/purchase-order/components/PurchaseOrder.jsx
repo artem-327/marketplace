@@ -212,7 +212,7 @@ class PurchaseOrder extends Component {
       try {
         if (isNewAddress) {
           if (!isWarehouse) response = await postNewDeliveryAddress(payload)
-          else response = await postNewWarehouse(payload)
+          else response = await postNewWarehouse(true, payload)
         } else {
           if (!isWarehouse) response = await updateDeliveryAddress(payload, id)
           else response = await updateWarehouse(payload, id)

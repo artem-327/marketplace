@@ -92,7 +92,8 @@ export default {
       `/prodex/api/attachment-links/to-company-product?attachmentId=${attachmentId}&companyProductId=${productId}`
     ),
   postNewUser: body => api.post('/prodex/api/users', body).then(response => response.data),
-  postNewWarehouse: body => api.post('/prodex/api/branches/', body),
+  postNewWarehouse: (createWarehouse, body) =>
+    api.post(`/prodex/api/branches?createWarehouse=${createWarehouse ? 'true' : 'false'}`, body),
   postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
   postNewBankAccount: body => api.post('/prodex/api/payments/bank-accounts/add', body),
   postNewProduct: body => api.post('/prodex/api/company-products', body),
