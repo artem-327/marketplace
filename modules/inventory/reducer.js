@@ -34,6 +34,7 @@ export const initialState = {
   editedId: null,
   productOfferStatuses: [],
   datagridFilter: { filters: [] },
+  datagridFilterReload: false,
   datagridFilterUpdate: false,
   pricingEditOpenId: null,
   isExportInventoryOpen: false,
@@ -570,7 +571,8 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_APPLY_FILTER: {
       return {
         ...state,
-        datagridFilter: payload,
+        datagridFilter: payload.filter,
+        datagridFilterReload: payload.reload,
         datagridFilterUpdate: !state.datagridFilterUpdate
       }
     }

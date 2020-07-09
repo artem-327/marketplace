@@ -158,7 +158,7 @@ class InventoryFilter extends Component {
     )
     if (appliedFilter && appliedFilter.filters) {
       let datagridFilter = this.toDatagridFilter(appliedFilter)
-      applyDatagridFilter(datagridFilter)
+      applyDatagridFilter(datagridFilter, false)
       onApply(datagridFilter)
     }
   }
