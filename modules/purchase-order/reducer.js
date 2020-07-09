@@ -129,6 +129,54 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WAREHOUSE_CREATE: {
+      return {
+        ...state,
+        isFetching: true
+      }
+    }
+
+    case AT.WAREHOUSE_CREATE_FULFILLED: {
+      return {
+        ...state,
+        isFetching: false,
+        shipping: { ...state.shipping, selectedAddress: action.payload.deliveryAddresses, isShippingEdit: false },
+        warehouses: state.warehouses.concat(action.payload)
+      }
+    }
+    case AT.WAREHOUSE_CREATE_REJECTED: {
+      return {
+        ...state,
+        isFetching: false
+      }
+    }
+
+    case AT.UPDATE_WAREHOUSE: {
+      return {
+        ...state,
+        isFetching: true
+      }
+    }
+
+    case AT.UPDATE_WAREHOUSE_FULFILLED: {
+      return {
+        ...state,
+        isFetching: false,
+        warehouses: Object.assign([], state.warehouses, {
+          [state.warehouses.findIndex(value =>
+            value.id === action.payload.id)]: action.payload
+        }),
+        shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
+      }
+    }
+
+    case AT.UPDATE_WAREHOUSE_PENDING: {
+      return {
+        ...state,
+        isFetching: false
+      }
+    }
+
     /* PAYMENTS_FETCH */
 
     case AT.PAYMENTS_FETCH_PENDING: {
