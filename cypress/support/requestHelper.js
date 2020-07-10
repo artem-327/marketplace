@@ -621,7 +621,7 @@ Cypress.Commands.add("createPurchaseRequest", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {quantity:"5",unit:8,element:{productGroup:6}}
+        body: {quantity:"5",unit:8,element:{productGroup:31}}
     }).then((response) => {
         expect(response.status).to.eq(201)
         return response.body.id
