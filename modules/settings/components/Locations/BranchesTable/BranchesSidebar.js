@@ -149,11 +149,7 @@ class BranchSidebar extends React.Component {
       if (popupValues) {
         await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
       } else {
-        await postNewWarehouseRequest(requestData, attachmentFiles)
-        if (values.alsoCreate) {
-          requestData.warehouse = true
-          await postNewWarehouseRequest(requestData, attachmentFiles)
-        }
+        await postNewWarehouseRequest(values.alsoCreate, requestData, attachmentFiles)
       }
     } catch {
     } finally {

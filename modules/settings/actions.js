@@ -373,12 +373,11 @@ export function putEditWarehouse(payload, id, attachmentFiles) {
   }
 }
 
-///////////////////
-export function postNewWarehouseRequest(payload, attachmentFiles) {
+export function postNewWarehouseRequest(createWarehouse, payload, attachmentFiles) {
   return async dispatch => {
     const newWarehouse = await dispatch({
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
-      payload: api.postNewWarehouse(payload)
+      payload: api.postNewWarehouse(createWarehouse, payload)
     })
     if (attachmentFiles && attachmentFiles.length) {
       attachmentFiles.forEach(attachment => {
