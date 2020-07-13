@@ -117,12 +117,12 @@ const initValues = {
     assayMin: '',
     assayMax: ''
   },
-  maximumDeliveredPrice: '',
+  //maximumDeliveredPrice: '',
   neededNow: null,
   doesExpire: null,
-  notificationEnabled: false, // not implemented on endpoint yet
-  notifyMail: false, // not implemented on endpoint yet
-  notifyPhone: false, // not implemented on endpoint yet
+  // notificationEnabled: false, // not implemented on endpoint yet
+  // notifyMail: false, // not implemented on endpoint yet
+  // notifyPhone: false, // not implemented on endpoint yet
   unit: 7
 }
 
@@ -922,22 +922,26 @@ class DetailSidebar extends Component {
                       </GridColumn>
                     </GridRow>
 
-                    <GridRow>
-                      <GridColumn data-test='my_requested_items_sidebar_maximumDeliveredPrice_inp'>
-                        {inputWrapper(
-                          'maximumDeliveredPrice',
-                          {
-                            min: 0,
-                            type: 'number',
-                            placeholder: '0.000'
-                          },
-                          <FormattedMessage id='wantedBoard.maxDeliveredPrice' defaultMessage='Max Delivered Price/LB'>
-                            {text => text}
-                          </FormattedMessage>,
-                          currencySymbol
-                        )}
-                      </GridColumn>
-                    </GridRow>
+                    {false && (
+                      <GridRow>
+                        <GridColumn data-test='my_requested_items_sidebar_maximumDeliveredPrice_inp'>
+                          {inputWrapper(
+                            'maximumDeliveredPrice',
+                            {
+                              min: 0,
+                              type: 'number',
+                              placeholder: '0.000'
+                            },
+                            <FormattedMessage
+                              id='wantedBoard.maxDeliveredPrice'
+                              defaultMessage='Max Delivered Price/LB'>
+                              {text => text}
+                            </FormattedMessage>,
+                            currencySymbol
+                          )}
+                        </GridColumn>
+                      </GridRow>
+                    )}
 
                     <GridRow>
                       <GridColumn>
