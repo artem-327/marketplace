@@ -59,7 +59,7 @@ export const initialState = {
   deleteUserById: null,
   deleteRowById: null,
   filterValue: '',
-  productCatalogUnmappedValue: 'ALL',
+  productCatalogUnmappedValue: 'ALL',   // smazat
   editPopupSearchProducts: [],
   fileCSVId: null,
   CSV: null,
@@ -127,7 +127,9 @@ export const initialState = {
   isOpenSidebar: false,
   openTab: 0,
   documentsOwner: [],
-  csvWithoutHeader: false
+  csvWithoutHeader: false,
+  tableHandlersFiltersSettings: null,
+  tableHandlersFiltersLocations: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -1519,6 +1521,13 @@ export default function reducer(state = initialState, action) {
         isOpenSidebar: false,
         openTab: null,
         popupValues: null
+      }
+    }
+
+    case AT.SETTINGS_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
 

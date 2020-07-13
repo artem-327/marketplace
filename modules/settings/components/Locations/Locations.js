@@ -107,12 +107,12 @@ class Locations extends Component {
       'delivery-locations': {
         url: '/prodex/api/delivery-addresses/datagrid',
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
               {
                 operator: 'LIKE',
                 path: 'DeliveryAddress.address.streetAddress',
-                values: [`%${v}%`]
+                values: [`%${v.searchInput}%`]
               }
             ]
             : []
@@ -120,22 +120,22 @@ class Locations extends Component {
       'pick-up-locations': {
         url: `/prodex/api/branches/warehouses/datagrid`,
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
               {
                 operator: 'LIKE',
                 path: 'Branch.deliveryAddress.addressName',
-                values: [`%${v}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'Branch.deliveryAddress.address.streetAddress',
-                values: [`%${v}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'Branch.deliveryAddress.contactName',
-                values: [`%${v}%`]
+                values: [`%${v.searchInput}%`]
               }
             ]
             : [],
@@ -146,22 +146,22 @@ class Locations extends Component {
       branches: {
         url: `/prodex/api/branches/datagrid`,
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
               {
                 operator: 'LIKE',
                 path: 'Branch.deliveryAddress.addressName',
-                values: [`%${v}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'Branch.deliveryAddress.address.streetAddress',
-                values: [`%${v}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'Branch.deliveryAddress.contactName',
-                values: [`%${v}%`]
+                values: [`%${v.searchInput}%`]
               }
             ]
             : [],
@@ -182,7 +182,7 @@ class Locations extends Component {
      */
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
           <TopMenu />
           {!tutorialCompleted && <div style={{margin: '5px -2px -15px -2px'}}><Tutorial/></div>}

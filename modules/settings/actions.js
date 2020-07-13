@@ -1208,3 +1208,10 @@ export function handleLocationsTab(tab) {
     payload: tab
   }
 }
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.SETTINGS_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}
