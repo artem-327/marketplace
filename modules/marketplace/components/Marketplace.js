@@ -19,6 +19,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import SearchByNamesAndTags from '~/modules/search'
+import { getSafe } from '~/utils/functions'
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -75,6 +76,43 @@ const CustomDiv = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+`
+
+const CustomRowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: -5px -5px;
+  flex-wrap: wrap;
+  
+  > div {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    margin: 5px 5px;
+  }
+  
+  input, .ui.dropdown {
+    height: 40px;
+  }
+`
+
+const CustomSearchNameTags = styled.div`
+  .column {
+    width: 370px;
+    padding-top: 0 !important;
+  }
+`
+
+const FiltersRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: -5px;
 `
 
 class Marketplace extends Component {
@@ -236,14 +274,59 @@ class Marketplace extends Component {
     ],
     selectedRows: [],
     //pageNumber: 0,
-    open: false
+    open: false,
+    filterValues: {
+      SearchByNamesAndTags: null
+    }
+  }
+
+  componentDidMount() {
+    const { tableHandlersFilters } = this.props
+
+    if (tableHandlersFilters) {
+      this.setState({ filterValues: tableHandlersFilters },
+        () => {
+          const filter = {
+            ...this.state.filterValues,
+            ...(!!this.state.filterValues.SearchByNamesAndTags
+              && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+          }
+          this.handleFiltersValue(filter)
+        })
+    } else {
+      this.handleFiltersValue(this.state.filterValues)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFilters', this.state.filterValues)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+    const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter, true, 'marketPlaceFilter')
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'marketPlaceFilter')
     }
+  }
+
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }, 300)
+
+  SearchByNamesAndTagsChanged = data => {
+    this.setState({
+      filterValues: {
+        ...this.state.filterValues,
+        SearchByNamesAndTags: data
+      }}, () => {
+      const filter = {
+        ...this.state.filterValues,
+        ...(!!this.state.filterValues.SearchByNamesAndTags
+          && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+      }
+      this.handleFiltersValue(filter)
+    })
   }
 
   getRows = () => {
@@ -348,7 +431,8 @@ class Marketplace extends Component {
       isMerchant,
       tutorialCompleted,
       isCompanyAdmin,
-      sidebar: { openInfo }
+      sidebar: { openInfo },
+      tableHandlersFilters
     } = this.props
     const { columns, selectedRows } = this.state
     let { formatMessage } = intl
@@ -414,55 +498,63 @@ class Marketplace extends Component {
           {...this.props}
         />
 
-        <Grid>
-          <Grid.Row>
-            <SearchByNamesAndTags />
+        <div style={{ padding: '10px 1px' }}>
+          <CustomRowDiv>
+            <CustomSearchNameTags>
+              <SearchByNamesAndTags
+                onChange={this.SearchByNamesAndTagsChanged}
+                initFilterState={
+                  getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)
+                }
+                filterApply={false}
+              />
+            </CustomSearchNameTags>
 
-            <Grid.Column width={8}>
-              <Menu secondary className='page-part'>
-                <Menu.Menu position='right'>
-                  <Menu.Item>
-                    <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
-                  </Menu.Item>
-                  <Popup
-                    wide='very'
-                    data-test='array_to_multiple_list'
-                    content={
-                      <FormattedMessage
-                        id='marketplace.shippingQuoteTooltip'
-                        defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
-                      />
-                    }
-                    disabled={selectedRows.length !== 0}
-                    position='bottom right'
-                    trigger={
-                      <DivButtonWithToolTip
-                        data-tooltip={
-                          this.isSelectedMultipleEcho(rows, selectedRows)
-                            ? formatMessage({
-                                id: 'marketplace.multipleEchoProduct',
-                                defaultMessage: 'Multiple ProductOffers can not be calculate.'
-                              })
-                            : null
-                        }
-                        data-position='bottom right'>
-                        <Button
-                          disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
-                          primary
-                          onClick={() => this.setState({ open: true })}
-                          data-test='marketplace_shipping_quote_btn'>
-                          <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
-                            {text => text}
-                          </FormattedMessage>
-                        </Button>
-                      </DivButtonWithToolTip>
-                    }
-                  />
-                </Menu.Menu>
-              </Menu>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+            <div>
+              <div className='column'>
+                <FiltersRow>
+                  <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
+                </FiltersRow>
+              </div>
+              <div className='column'>
+                <Popup
+                  wide='very'
+                  data-test='array_to_multiple_list'
+                  content={
+                    <FormattedMessage
+                      id='marketplace.shippingQuoteTooltip'
+                      defaultMessage='Select one or more Product Offers to calculate a Shipping Quote.'
+                    />
+                  }
+                  disabled={selectedRows.length !== 0}
+                  position='bottom right'
+                  trigger={
+                    <DivButtonWithToolTip
+                      data-tooltip={
+                        this.isSelectedMultipleEcho(rows, selectedRows)
+                          ? formatMessage({
+                            id: 'marketplace.multipleEchoProduct',
+                            defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                          })
+                          : null
+                      }
+                      data-position='bottom right'>
+                      <Button
+                        disabled={selectedRows.length === 0 || this.isSelectedMultipleEcho(rows, selectedRows)}
+                        primary
+                        onClick={() => this.setState({ open: true })}
+                        data-test='marketplace_shipping_quote_btn'>
+                        <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button>
+                    </DivButtonWithToolTip>
+                  }
+                />
+              </div>
+            </div>
+          </CustomRowDiv>
+        </div>
 
         <div class='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid

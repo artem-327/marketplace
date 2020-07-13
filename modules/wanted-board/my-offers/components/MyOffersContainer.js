@@ -56,7 +56,6 @@ const StatusLabel = val => {
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
-    ...datagrid,
     editedId: store.wantedBoard.editWindowOpen === 'my-offers' ? store.wantedBoard.editedId : null,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     rows: datagrid.rows.map(po => {

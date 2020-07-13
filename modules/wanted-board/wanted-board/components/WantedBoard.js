@@ -21,8 +21,9 @@ import { PlusCircle } from 'react-feather'
 import { number } from 'prop-types'
 import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { UpperCaseText, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
+import { UpperCaseText, CustomRowDiv, CustomSearchNameTags, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
 import SearchByNamesAndTags from '~/modules/search'
+import { getSafe } from '~/utils/functions'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -219,26 +220,80 @@ class WantedBoard extends Component {
           </FormattedMessage>
         ),
         width: 120
+      },
+      {
+        name: 'createdAt',
+        title: (
+          <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+        sortPath: 'PurchaseRequest.createdAt',
+        disabled: true
       }
     ],
     selectedRows: [],
     pageNumber: 0,
     open: false,
     popupValues: null,
-    filterValue: ''
+    filterValues: {
+      SearchByNamesAndTags: null
+    }
   }
 
   componentDidMount() {
-    this.setState({ filterValue: '' })
-    //this.handleFilterClear()
-    this.props.handleFiltersValue('')
+    const { tableHandlersFiltersWantedBoard } = this.props
+
+    if (tableHandlersFiltersWantedBoard) {
+      this.setState({ filterValues: tableHandlersFiltersWantedBoard },
+        () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.SearchByNamesAndTags
+            && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+        }
+        this.handleFiltersValue(filter)
+      })
+    } else {
+      this.handleFiltersValue(this.state.filterValues)
+    }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    //const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
-    //if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-    //  datagrid.setFilter(datagridFilter)
-    //}
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFiltersWantedBoard', this.state.filterValues)
+  }
+
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }, 300)
+
+  SearchByNamesAndTagsChanged = data => {
+    this.setState({
+      filterValues: {
+        ...this.state.filterValues,
+        SearchByNamesAndTags: data
+      }}, () => {
+      const filter = {
+        ...this.state.filterValues,
+        ...(!!this.state.filterValues.SearchByNamesAndTags
+          && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+      }
+      this.handleFiltersValue(filter)
+    })
+  }
+
+  handleProductChemicalSwitch = data => {
+    const { datagrid } = this.props
+    this.props.setWantedBoardType(data)
+    datagrid.clear()
+    const filter = {
+      ...this.state.filterValues,
+      ...(!!this.state.filterValues.SearchByNamesAndTags
+        && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+    }
+    this.handleFiltersValue(filter)
   }
 
   renderContent = () => {
@@ -251,55 +306,66 @@ class WantedBoard extends Component {
       openedSubmitOfferPopup,
       type,
       popupValues,
-      tutorialCompleted
+      tutorialCompleted,
+      tableHandlersFiltersWantedBoard
     } = this.props
-    const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
+    const { columnsProduct, columnsChemical } = this.state
     let { formatMessage } = intl
 
     return (
       <>
         {!tutorialCompleted && <Tutorial marginWantedBoard />}
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
-        <ControlPanel>
-          <Grid>
-            <Grid.Row>
-              <SearchByNamesAndTags />
-              <GridColumn width={8}>
-                <TopButtons>
-                  <ProductChemicalSwitch className={type}>
-                    <Button
-                      attached='left'
-                      onClick={() => this.props.setWantedBoardType('product')}
-                      data-test='wanted_board_product_switch_btn'>
-                      <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
-                    <Button
-                      attached='right'
-                      onClick={() => this.props.setWantedBoardType('chemical')}
-                      data-test='wanted_board_chemical_switch_btn'>
-                      <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
-                  </ProductChemicalSwitch>
+        <div style={{ padding: '10px 0' }}>
+          <CustomRowDiv>
+            <CustomSearchNameTags>
+              <SearchByNamesAndTags
+                onChange={this.SearchByNamesAndTagsChanged}
+                initFilterState={
+                  getSafe(() => tableHandlersFiltersWantedBoard.SearchByNamesAndTags, null)
+                }
+                filterApply={false}
+              />
+            </CustomSearchNameTags>
+            <div>
+              <div className='column'>
+                <ProductChemicalSwitch className={type}>
                   <Button
-                    primary
-                    onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
-                    data-test='wanted_board_open_popup_btn'>
-                    <FormattedMessage id='wantedBoard.addNewRequest' defaultMessage='Add New Request'>
+                    attached='left'
+                    onClick={() => this.handleProductChemicalSwitch('product')}
+                    data-test='wanted_board_product_switch_btn'>
+                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                </TopButtons>
-              </GridColumn>
-            </Grid.Row>
-          </Grid>
-        </ControlPanel>
-        <div className='flex stretched' style={{ padding: '0 30px 20px 30px' }}>
+                  <Button
+                    attached='right'
+                    onClick={() => this.handleProductChemicalSwitch('chemical')}
+                    data-test='wanted_board_chemical_switch_btn'>
+                    <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                </ProductChemicalSwitch>
+              </div>
+              <div className='column'>
+                <Button
+                  className='secondary'
+                  primary
+                  onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
+                  data-test='wanted_board_open_popup_btn'>
+                  <PlusCircle />
+                  <FormattedMessage id='wantedBoard.requestProduct' defaultMessage='Request Product'>
+                    {text => text}
+                  </FormattedMessage>
+                </Button>
+              </div>
+            </div>
+          </CustomRowDiv>
+        </div>
+        <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
-            tableName='wanted_board_grid'
+            tableName={`wanted_board_${type}_grid`}
             {...datagrid.tableProps}
             rows={rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}
@@ -358,7 +424,7 @@ class WantedBoard extends Component {
 
     return (
       <>
-        <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
+        <Container fluid style={{ padding: '0 30px' }} className='flex stretched'>
           <Tab
             activeIndex={activeIndex}
             className='marketplace-container'
