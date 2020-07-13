@@ -147,8 +147,7 @@ class UsersTable extends Component {
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openSidebar(row),
-              disabled: row => row.roles.some(role => adminRoles.some(d => role.id === d))
+              callback: row => openSidebar(row)
             },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
