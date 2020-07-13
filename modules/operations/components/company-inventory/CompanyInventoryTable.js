@@ -11,8 +11,7 @@ import { currency } from '~/constants/index'
 import { getLocaleDateFormat } from '~/components/date-format'
 import moment from 'moment/moment'
 
-import {
-} from '../../actions'
+import {} from '../../actions'
 import Router from 'next/router'
 
 class CompanyInventoryTable extends Component {
@@ -43,7 +42,7 @@ class CompanyInventoryTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        sortPath: 'ProductOffer.companyProduct.owner.cfDisplayName'
+        sortPath: 'ProductOffer.owner.cfDisplayName'
       },
       {
         name: 'complete',
@@ -51,7 +50,7 @@ class CompanyInventoryTable extends Component {
           <FormattedMessage id='operations.complete' defaultMessage='Complete'>
             {text => text}
           </FormattedMessage>
-        ),
+        )
         //sortPath: 'CompanyProduct.complete'
       },
       {
@@ -88,8 +87,7 @@ class CompanyInventoryTable extends Component {
   }
 }
 
-const mapDispatchToProps = {
-}
+const mapDispatchToProps = {}
 
 const mapStateToProps = (state, { datagrid }) => {
   return {
@@ -97,19 +95,24 @@ const mapStateToProps = (state, { datagrid }) => {
     loading: state.operations.loading,
     rows: datagrid.rows.map(d => {
       const isComplete =
-        (d.validityDate ? moment().isBefore(d.validityDate) : true)
-      && (d.cfStatus === 'Broadcasting' || d.cfStatus === 'Not broadcasting')
+        (d.validityDate ? moment().isBefore(d.validityDate) : true) &&
+        (d.cfStatus === 'Broadcasting' || d.cfStatus === 'Not broadcasting')
       return {
         id: d.id,
         productName: getSafe(() => d.companyProduct.intProductName, 'N/A'),
         productCode: getSafe(() => d.companyProduct.intProductCode, 'N/A'),
         owner: getSafe(() => d.owner.cfDisplayName, 'N/A'),
-        complete: isComplete
-          ? <FormattedMessage id='global.yes' defaultMessage='Yes'/>
-          : <FormattedMessage id='global.no' defaultMessage='No'/>,
-        broadcasted: d.cfStatus === 'Broadcasting'
-          ? <FormattedMessage id='global.yes' defaultMessage='Yes'/>
-          : <FormattedMessage id='global.no' defaultMessage='No'/>,
+        complete: isComplete ? (
+          <FormattedMessage id='global.yes' defaultMessage='Yes' />
+        ) : (
+          <FormattedMessage id='global.no' defaultMessage='No' />
+        ),
+        broadcasted:
+          d.cfStatus === 'Broadcasting' ? (
+            <FormattedMessage id='global.yes' defaultMessage='Yes' />
+          ) : (
+            <FormattedMessage id='global.no' defaultMessage='No' />
+          )
       }
     }),
     currentTab: getSafe(() => Router.router.query.type)
