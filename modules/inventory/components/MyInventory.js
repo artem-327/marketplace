@@ -36,7 +36,7 @@ const defaultHiddenColumns = [
   'lotNumber'
 ]
 
-const MenuItemFilters = styled(Menu.Item)`
+const FiltersRow = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -416,11 +416,13 @@ class MyInventory extends Component {
     open: false,
     clientMessage: '',
     request: null,
-    selectedTagsOptions: []
+    filterValues: {
+      SearchByNamesAndTags: null
+    }
   }
 
   componentDidMount() {
-    const { sidebarDetailTrigger } = this.props
+    const { sidebarDetailTrigger, tableHandlersFilters } = this.props
     if (window) {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
@@ -444,14 +446,52 @@ class MyInventory extends Component {
     } catch (error) {
       console.error(error)
     }
+
+    if (tableHandlersFilters) {
+      this.setState({ filterValues: tableHandlersFilters },
+        () => {
+          const filter = {
+            ...this.state.filterValues,
+            ...(!!this.state.filterValues.SearchByNamesAndTags
+              && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+          }
+          this.handleFiltersValue(filter)
+        })
+    } else {
+      this.handleFiltersValue(this.state.filterValues)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFilters', this.state.filterValues)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
+    const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
 
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter, true, 'myInventoryFilter')
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'myInventoryFilter')
     }
+  }
+
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }, 300)
+
+  SearchByNamesAndTagsChanged = data => {
+    this.setState({
+      filterValues: {
+        ...this.state.filterValues,
+        SearchByNamesAndTags: data
+      }}, () => {
+      const filter = {
+        ...this.state.filterValues,
+        ...(!!this.state.filterValues.SearchByNamesAndTags
+          && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+      }
+      this.handleFiltersValue(filter)
+    })
   }
 
   getRows = rows => {
@@ -736,7 +776,8 @@ class MyInventory extends Component {
       closeSidebarDetail,
       tutorialCompleted,
       isExportInventoryOpen,
-      setExportSidebarOpenState
+      setExportSidebarOpenState,
+      tableHandlersFilters
     } = this.props
     const { columns, clientMessage, request } = this.state
 
@@ -775,7 +816,13 @@ class MyInventory extends Component {
         <Container fluid style={{ padding: '20px 32px 10px' }}>
           <CustomRowDiv>
             <CustomSearchNameTags>
-              <SearchByNamesAndTags />
+              <SearchByNamesAndTags
+                onChange={this.SearchByNamesAndTagsChanged}
+                initFilterState={
+                  getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)
+                }
+                filterApply={false}
+              />
             </CustomSearchNameTags>
 
             {/*selectedRows.length > 0 ? (
@@ -832,9 +879,9 @@ class MyInventory extends Component {
                 </Button>
               </div>
               <div className='column'>
-                <MenuItemFilters>
+                <FiltersRow>
                   <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
-                </MenuItemFilters>
+                </FiltersRow>
               </div>
             </div>
           </CustomRowDiv>

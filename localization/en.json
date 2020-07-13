@@ -2346,7 +2346,7 @@
   "wantedBoard.condition": "Condition",
   "wantedBoard.status": "Status",
   "wantedBoard.searchByProductName": "Search by product name...",
-  "wantedBoard.addNewRequest": "Add New Request",
+  "wantedBoard.requestProduct": "Request Product",
   "wantedBoard.chemical": "Chemical",
   "wantedBoard.submitOffer": "Submit Offer",
   "wantedBoard.reject": "Reject",
