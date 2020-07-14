@@ -75,7 +75,7 @@ const columns = [
       </FormattedMessage>
     ),
     width: 150,
-    sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactName'
+    sortPath: 'Company.primaryBranch.deliveryAddress.contactName'
   },
   {
     name: 'contactEmail',
@@ -85,7 +85,7 @@ const columns = [
       </FormattedMessage>
     ),
     width: 175,
-    sortPath: 'ClientCompany.primaryBranch.deliveryAddress.contactEmail'
+    sortPath: 'Company.primaryBranch.deliveryAddress.contactEmail'
   },
   {
     name: 'hasDwollaAccount',

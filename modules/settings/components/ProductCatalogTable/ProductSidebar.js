@@ -363,7 +363,6 @@ class ProductSidebar extends React.Component {
       packagesPerPallet:
         values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet),
       */
-      attachments: this.state.attachments,
       packagingLength: Number(values.packagingLength),
       packagingHeight: Number(values.packagingHeight),
       packagingWidth: Number(values.packagingWidth),
@@ -379,9 +378,9 @@ class ProductSidebar extends React.Component {
 
     try {
       if (popupValues) {
-        await handleSubmitProductEditPopup(formValues, popupValues.id)
+        await handleSubmitProductEditPopup(formValues, popupValues.id, this.state.attachments)
       } else {
-        await handleSubmitProductAddPopup(formValues)
+        await handleSubmitProductAddPopup(formValues, this.state.attachments)
       }
       let status = popupValues ? 'productUpdated' : 'productCreated'
       datagrid.loadData()

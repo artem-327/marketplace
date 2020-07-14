@@ -237,10 +237,12 @@ class Settings extends Component {
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 const { updateCompany } = this.props
-                // access to assocaitions has only admin
-                delete values.associations
+                const requestBody = {}
+                const propsToInclude = ['cin', 'dba', 'dunsNumber', 'enabled', 'name', 'phone', 'tin', 'website']
+                propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
+
                 await updateCompany(values.id, {
-                  ...values,
+                  ...requestBody,
                   businessType: values.businessType ? values.businessType.id : null
                 })
                 if (shouldUpdateLogo) {
