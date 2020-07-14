@@ -3,8 +3,7 @@ import * as AT from './action-types'
 export const initialState = {
   loading: false,
   searchedCompanies: [],
-  searchedCompaniesLoading: false,
-
+  searchedCompaniesLoading: false
 }
 
 export default function reducer(state = initialState, action) {
