@@ -59,7 +59,7 @@ export const initialState = {
   deleteUserById: null,
   deleteRowById: null,
   filterValue: '',
-  productCatalogUnmappedValue: 'ALL',   // smazat
+  productCatalogUnmappedValue: 'ALL',
   editPopupSearchProducts: [],
   fileCSVId: null,
   CSV: null,
