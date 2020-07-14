@@ -128,7 +128,8 @@ class ExportInventorySidebar extends Component {
     selectedCompanyOption: '',
     selectedBranches: [],
     selectedRows: [],
-    expandedRowIds: []
+    expandedRowIds: [],
+    loadSidebar: false
   }
 
   handleFiltersValue = debounce(value => {
@@ -150,8 +151,78 @@ class ExportInventorySidebar extends Component {
     this.handleFiltersValue({ company: value })
   }
 
+  getMimeType = documentName => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+
+    switch (documentExtension) {
+      case 'doc':
+        return 'application/msword'
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      case 'ppt':
+        return 'application/vnd.ms-powerpoint'
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      case 'xls':
+        return 'application/vnd.ms-excel'
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      case 'gif':
+        return 'image/gif'
+      case 'png':
+        return 'image/png'
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg'
+      case 'svg':
+        return 'image/svg'
+      case 'pdf':
+        return 'application/pdf'
+      case '7z':
+        return 'application/x-7z-compressed'
+      case 'zip':
+        return 'application/zip'
+      case 'tar':
+        return 'application/x-tar'
+      case 'rar':
+        return 'application/x-rar-compressed'
+      case 'xml':
+        return 'application/xml'
+      default:
+        return 'text/plain'
+    }
+  }
+
+  extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
+  }
+
   submitHandler = async (values, setSubmitting) => {
-    console.log('submit Selected Branches', this.state.selectedBranches)
+    const { exportProductOffer, onClose } = this.props
+    this.setState({ loadSidebar: true })
+    try {
+      let downloadedFile = await exportProductOffer(this.state.selectedBranches)
+      const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
+      const mimeType = fileName && this.getMimeType(fileName)
+      const element = document.createElement('a')
+      const file = new Blob([downloadedFile.value.data], { type: mimeType })
+      element.href = URL.createObjectURL(file)
+      element.download = fileName
+      document.body.appendChild(element) // Required for this to work in FireFox
+      element.click()
+      onClose()
+    } catch (error) {
+      console.error(error)
+    }
+    this.setState({ loadSidebar: false  })
   }
 
   getRows = rows => {
@@ -329,7 +400,6 @@ class ExportInventorySidebar extends Component {
             }}
             expandedRowIds={this.state.expandedRowIds}
             onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-
           />
         </div>
       </>
@@ -341,6 +411,8 @@ class ExportInventorySidebar extends Component {
       onClose,
       loading
     } = this.props
+
+    const { selectedBranches, loadSidebar } = this.state
 
     return (
       <Formik
@@ -359,7 +431,7 @@ class ExportInventorySidebar extends Component {
               animation='overlay'
             >
               <div>
-                <Dimmer inverted active={loading || this.state.loadSidebar}>
+                <Dimmer inverted active={loading || loadSidebar}>
                   <Loader />
                 </Dimmer>
                 <CustomHighSegment basic>
@@ -381,10 +453,8 @@ class ExportInventorySidebar extends Component {
                 </Button.Reset>
                 <Button.Submit
                   className='secondary'
-                  onClick={() => {
-                    console.log('submit - waiting for endpoint')
-                    console.log('submit Selected Branches', this.state.selectedBranches)
-                  }}
+                  disabled={!selectedBranches.length}
+                  onClick={this.submitHandler}
                   data-test='export_inventory_sidebar_submit_btn'>
                   <FormattedMessage id='myInventory.export' defaultMessage='Export'>
                     {text => text}
