@@ -189,15 +189,6 @@ class TablesHandlers extends Component {
         searchInput: '',
         productType: 'ALL'
       },
-      /* ! !
-      'global-broadcast': {
-
-      },
-      */
-      /*
-      'credit-cards': {
-        searchInput: ''
-      },*/
       /*
       'bank-accounts': {
         searchInput: ''
@@ -366,7 +357,8 @@ class TablesHandlers extends Component {
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
-        {currentTab.type !== 'global-broadcast' && currentTab.type !== 'documents' && (
+        {currentTab.type !== 'global-broadcast' && currentTab.type !== 'documents' &&
+        currentTab.type !== 'logistics' && currentTab.type !== 'bank-accounts' && (
           <div>
             <div className='column'>
               <Input
@@ -379,6 +371,24 @@ class TablesHandlers extends Component {
                   defaultMessage: 'Select Credit Card'
                 })}
                 onChange={this.handleFilterChangeInputSearch}
+              />
+            </div>
+          </div>
+        )}
+
+        {(currentTab.type === 'logistics' || currentTab.type === 'bank-accounts') && (
+          <div>
+            <div className='column'>
+              <Input
+                style={{ width: '370px' }}
+                icon='search'
+                name={`${currentTab.type}Filter`}
+                value={this.props[`${currentTab.type}Filter`]}
+                placeholder={formatMessage({
+                  id: textsTable[currentTab.type].SearchText,
+                  defaultMessage: 'Select Credit Card'
+                })}
+                onChange={(e, data) => this.props.handleVariableSave(data.name, data.value)}
               />
             </div>
           </div>
@@ -586,6 +596,8 @@ const mapStateToProps = state => {
   //const dwollaAccountStatus = 'document'
 
   return {
+    logisticsFilter: state.settings.logisticsFilter,
+    'bank-accountsFilter': state.settings['bank-accountsFilter'],
     documentTypes: state.settings.documentTypes,
     bankAccounts: bankAccountsConfig[dwollaAccountStatus],
     currentTab: state.settings.currentTab,

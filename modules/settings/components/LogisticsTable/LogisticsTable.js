@@ -110,12 +110,12 @@ const mapDispatchToProps = {
   deleteLogisticsAccount
 }
 
-const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount, filterValue } }) => {
+const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount, logisticsFilter } }) => {
   return {
     loading,
     logisticsAccounts,
     deleteLogisticsAccount,
-    filterValue
+    filterValue: logisticsFilter
   }
 }
 

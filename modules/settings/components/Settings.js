@@ -381,7 +381,7 @@ class Settings extends Component {
       'guest-companies': {
         url: '/prodex/api/companies/client/datagrid',
         searchToFilter: v => (v && v.searchInput
-          ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${vv.searchInput}%`] }]
+          ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }]
           : []),
         params: {
           orOperator: true

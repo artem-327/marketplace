@@ -84,19 +84,20 @@ const CustomRowDiv = styled.div`
   justify-content: space-between;
   margin: -5px -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 5px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
 `
@@ -284,15 +285,15 @@ class Marketplace extends Component {
     const { tableHandlersFilters } = this.props
 
     if (tableHandlersFilters) {
-      this.setState({ filterValues: tableHandlersFilters },
-        () => {
-          const filter = {
-            ...this.state.filterValues,
-            ...(!!this.state.filterValues.SearchByNamesAndTags
-              && { ...this.state.filterValues.SearchByNamesAndTags.filters })
-          }
-          this.handleFiltersValue(filter)
-        })
+      this.setState({ filterValues: tableHandlersFilters }, () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.SearchByNamesAndTags && {
+            ...this.state.filterValues.SearchByNamesAndTags.filters
+          })
+        }
+        this.handleFiltersValue(filter)
+      })
     } else {
       this.handleFiltersValue(this.state.filterValues)
     }
@@ -315,18 +316,23 @@ class Marketplace extends Component {
   }, 300)
 
   SearchByNamesAndTagsChanged = data => {
-    this.setState({
-      filterValues: {
-        ...this.state.filterValues,
-        SearchByNamesAndTags: data
-      }}, () => {
-      const filter = {
-        ...this.state.filterValues,
-        ...(!!this.state.filterValues.SearchByNamesAndTags
-          && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+    this.setState(
+      {
+        filterValues: {
+          ...this.state.filterValues,
+          SearchByNamesAndTags: data
+        }
+      },
+      () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.SearchByNamesAndTags && {
+            ...this.state.filterValues.SearchByNamesAndTags.filters
+          })
+        }
+        this.handleFiltersValue(filter)
       }
-      this.handleFiltersValue(filter)
-    })
+    )
   }
 
   getRows = () => {
@@ -503,9 +509,7 @@ class Marketplace extends Component {
             <CustomSearchNameTags>
               <SearchByNamesAndTags
                 onChange={this.SearchByNamesAndTagsChanged}
-                initFilterState={
-                  getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)
-                }
+                initFilterState={getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)}
                 filterApply={false}
               />
             </CustomSearchNameTags>
@@ -533,9 +537,9 @@ class Marketplace extends Component {
                       data-tooltip={
                         this.isSelectedMultipleEcho(rows, selectedRows)
                           ? formatMessage({
-                            id: 'marketplace.multipleEchoProduct',
-                            defaultMessage: 'Multiple ProductOffers can not be calculate.'
-                          })
+                              id: 'marketplace.multipleEchoProduct',
+                              defaultMessage: 'Multiple ProductOffers can not be calculate.'
+                            })
                           : null
                       }
                       data-position='bottom right'>

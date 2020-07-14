@@ -129,7 +129,9 @@ export const initialState = {
   documentsOwner: [],
   csvWithoutHeader: false,
   tableHandlersFiltersSettings: null,
-  tableHandlersFiltersLocations: null
+  tableHandlersFiltersLocations: null,
+  logisticsFilter: '',
+  'bank-accountsFilter': ''
 }
 
 export default function reducer(state = initialState, action) {
