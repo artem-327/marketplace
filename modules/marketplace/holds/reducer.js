@@ -6,7 +6,8 @@ export const initialState = {
   datagridFilter: { filters: [] },
   datagridFilterUpdate: false,
   typeHolds: 'my',
-  countHolds: ''
+  countHolds: '',
+  tableHandlersFilters: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -157,6 +158,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         typeHolds: payload
+      }
+    }
+
+    case AT.HOLD_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
 

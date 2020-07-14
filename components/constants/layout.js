@@ -178,7 +178,7 @@ export const LeftMenu = styled(Menu)`
         overflow: hidden;
         display: flex;
         flex-flow: column;
-        height: calc(100% - 100px); // 100px for logo
+        height: auto;
         
         > .ui.form {
           min-height: 200px;

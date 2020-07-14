@@ -53,9 +53,9 @@ export const postNewDeliveryAddress = address => ({
   payload: api.postNewDeliveryAddress(address)
 })
 
-export const postNewWarehouse = payload => ({
+export const postNewWarehouse = (createWarehouse, payload) => ({
   type: AT.WAREHOUSE_CREATE,
-  payload: api.postNewWarehouse(payload)
+  payload: api.postNewWarehouse(createWarehouse, payload)
 })
 
 export const updateWarehouse = (payload, id) => ({

@@ -39,5 +39,7 @@ export const postPurchaseOrder = data => api.post('/prodex/api/purchase-orders',
 export const requestManualShipment = queryString => api.post(`/prodex/api/shipment/manual-quotes/request${queryString}`)
 export const getIdentity = () => api.get('/prodex/api/users/me').then(response => response.data)
 
-export const postNewWarehouse = payload => api.post('/prodex/api/branches/', payload).then(response => response.data)
+export const postNewWarehouse = (createWarehouse, payload) =>
+  api.post(`/prodex/api/branches?createWarehouse=${createWarehouse ? 'true' : 'false'}`, payload)
+    .then(response => response.data)
 export const updateWarehouse = (payload, id) => api.put(`/prodex/api/branches/${id}`, payload).then(response => response.data)

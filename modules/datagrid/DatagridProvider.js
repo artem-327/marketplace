@@ -296,31 +296,35 @@ class DatagridProvider extends Component {
   }
 
   setSearch = (value, reload = true, filterId = null) => {
-    const {
-      apiConfig: { searchToFilter, params }
-    } = this.props
+    if (this.props.apiConfig) {
+      const {
+        apiConfig: {searchToFilter, params}
+      } = this.props
 
-    let filters = typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
+      let filters = typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
 
-    if (filters.url) {
-      this.apiConfig = { url: filters.url }
-    }
-    this.setState(
-      s => ({
-        datagridParams: { ...s.datagridParams, ...params },
-        isScrollToEnd: false
-      }),
-      () => {
-        this.setFilter(
-          {
-            orFilters: filters.or ? filters.or : filters.length ? filters : [],
-            filters: filters.and ? filters.and : []
-          },
-          reload,
-          filterId
-        )
+      if (filters.url) {
+        this.apiConfig = {url: filters.url}
       }
-    )
+      this.setState(
+        s => ({
+          datagridParams: {...s.datagridParams, ...params},
+          isScrollToEnd: false
+        }),
+        () => {
+          this.setFilter(
+            {
+              orFilters: filters.or ? filters.or : filters.length ? filters : [],
+              filters: filters.and ? filters.and : []
+            },
+            reload,
+            filterId
+          )
+        }
+      )
+    } else {
+      console.warn('Missing apiConfig in DatagridProvider')
+    }
   }
 
   setLoading = loading => {

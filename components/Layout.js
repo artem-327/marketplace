@@ -390,7 +390,7 @@ class Layout extends Component {
           <TopMenuContainer fluid>
             <Messages />
           </TopMenuContainer>
-          <ContentContainer fluid className='page-wrapper flex stretched'>
+          <ContentContainer fluid className='page-wrapper flex column stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
           </ContentContainer>
           <CopyrightContainer>

@@ -239,7 +239,7 @@ export const addressValidationSchema = () => {
   )
 }
 
-export const dwollaControllerValidation = () =>
+export const dwollaControllerValidation = (fullSsnInput) =>
   Yup.object().shape({
     address: addressValidationSchema(),
     dateOfBirth: dateOfBirthValidation(),
@@ -249,9 +249,12 @@ export const dwollaControllerValidation = () =>
     //   country: Yup.string().required(errorMessages.requiredMessage),
     //   number: Yup.string().required(errorMessages.requiredMessage),
     // }),
-    ssn: Yup.string()
-      .test('num-length', errorMessages.exactDigits(4), value => /^[0-9]{4}$/.test(value))
-      .required(errorMessages.requiredMessage),
+    ssn: (fullSsnInput
+      ? ssnValidation()
+      : Yup.string()
+        .test('num-length', errorMessages.exactDigits(4), value => /^[0-9]{4}$/.test(value))
+        .required(errorMessages.requiredMessage)
+      ),
     jobTitle: Yup.string().trim().required(errorMessages.requiredMessage)
   })
 

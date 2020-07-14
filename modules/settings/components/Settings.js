@@ -237,10 +237,12 @@ class Settings extends Component {
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 const { updateCompany } = this.props
-                // access to assocaitions has only admin
-                delete values.associations
+                const requestBody = {}
+                const propsToInclude = ['cin', 'dba', 'dunsNumber', 'enabled', 'name', 'phone', 'tin', 'website']
+                propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
+
                 await updateCompany(values.id, {
-                  ...values,
+                  ...requestBody,
                   businessType: values.businessType ? values.businessType.id : null
                 })
                 if (shouldUpdateLogo) {
@@ -361,13 +363,13 @@ class Settings extends Component {
       users: {
         url: `/prodex/api/users/datagrid`,
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
-                { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
+                { operator: 'LIKE', path: 'User.name', values: [`%${v.searchInput}%`] },
                 {
                   operator: 'LIKE',
                   path: 'User.homeBranch.deliveryAddress.contactName',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 }
                 // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
               ]
@@ -376,61 +378,11 @@ class Settings extends Component {
           orOperator: true
         }
       },
-      branches: {
-        url: `/prodex/api/branches/datagrid`,
-        searchToFilter: v =>
-          v
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.addressName',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.address.streetAddress',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.contactName',
-                  values: [`%${v}%`]
-                }
-              ]
-            : [],
-        params: {
-          orOperator: true
-        }
-      },
       'guest-companies': {
         url: '/prodex/api/companies/client/datagrid',
-        searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v}%`] }] : []),
-        params: {
-          orOperator: true
-        }
-      },
-      warehouses: {
-        url: `/prodex/api/branches/warehouses/datagrid`,
-        searchToFilter: v =>
-          v
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.addressName',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.address.streetAddress',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.contactName',
-                  values: [`%${v}%`]
-                }
-              ]
-            : [],
+        searchToFilter: v => (v && v.searchInput
+          ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }]
+          : []),
         params: {
           orOperator: true
         }
@@ -438,27 +390,27 @@ class Settings extends Component {
       products: {
         url: `/prodex/api/company-products/datagrid?type=${productCatalogUnmappedValue}`,
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
                   path: 'CompanyProduct.intProductName',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 },
                 {
                   operator: 'LIKE',
                   path: 'CompanyProduct.intProductCode',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 },
                 {
                   operator: 'LIKE',
                   path: 'CompanyProduct.companyGenericProduct.name',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 },
                 {
                   operator: 'LIKE',
                   path: 'CompanyProduct.companyGenericProduct.code',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 }
               ]
             : [],
@@ -468,36 +420,22 @@ class Settings extends Component {
       },
       // 'bank-accounts': null,
       // 'credit-cards': null,
-      'delivery-addresses': {
-        url: '/prodex/api/delivery-addresses/datagrid',
-        searchToFilter: v =>
-          v
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'DeliveryAddress.address.streetAddress',
-                  values: [`%${v}%`]
-                }
-              ]
-            : []
-      },
-
       documents: {
         url: '/prodex/api/attachments/datagrid/',
         searchToFilter: v => {
           let filter = { or: [], and: [] }
 
-          if (v && v.filterValue)
+          if (v && v.searchInput)
             filter.or = [
               {
                 operator: 'LIKE',
                 path: 'Attachment.name',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'Attachment.customName',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               }
             ]
           if (v && v.documentType)
@@ -525,11 +463,9 @@ class Settings extends Component {
     if (currentTab && currentTab.type === 'locations') {
       return <Locations />
     } else {
-      const preserveFilters = currentTab && currentTab.type === 'products'
-
       return (
         !this.state.wrongUrl && (
-          <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
+          <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
             <Container fluid className='flex stretched'>
               {!tutorialCompleted && (
                 <div style={{ margin: '5px -2px -15px -2px' }}>

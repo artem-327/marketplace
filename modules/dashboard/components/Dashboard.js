@@ -12,6 +12,7 @@ import SummaryRectangle from './SummaryRectangle'
 import styled from 'styled-components'
 
 const CustomGrid = styled(Grid)`
+  flex-shrink: 0;
   margin: 15px !important;
 `
 
