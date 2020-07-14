@@ -39,12 +39,7 @@ import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { BottomButtons } from '../../constants'
 
-import {
-  FlexSidebar,
-  FlexContent,
-  HighSegment,
-  LabeledRow
-} from '~/modules/admin/constants/layout'
+import { FlexSidebar, FlexContent, HighSegment, LabeledRow } from '~/modules/admin/constants/layout'
 import ErrorFocus from '~/components/error-focus'
 
 const AccordionHeader = styled(Header)`
@@ -76,7 +71,6 @@ const initialFormValues = {
       contactName: '',
       contactPhone: '',
       contactEmail: '',
-      accessorials: [],
       address: {
         streetAddress: '',
         country: '',
@@ -93,7 +87,6 @@ const initialFormValues = {
       contactName: '',
       contactPhone: '',
       contactEmail: '',
-      accessorials: [],
       address: {
         streetAddress: '',
         country: '',
