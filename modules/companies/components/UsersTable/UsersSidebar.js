@@ -123,11 +123,7 @@ class UsersSidebar extends React.Component {
   userFormValidation = () =>
     Yup.lazy(values => {
       const { adminRoles } = this.props
-      const { popupValues } = this.state
-
-      const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d.id))
-      const requiredCompany = !!popupValues || (!disabledCompany && !values.company)
-      const requiredBranch = !!popupValues || (!disabledCompany && !!values.company)
+      const requiredCompany = !values.roles.some(role => adminRoles.some(d => role === d.id))
 
       return Yup.object().shape({
         name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -138,7 +134,7 @@ class UsersSidebar extends React.Component {
         ...(requiredCompany && {
           company: Yup.number().required(errorMessages.requiredMessage)
         }),
-        ...(requiredBranch && {
+        ...(requiredCompany && {
           homeBranch: Yup.number().required(errorMessages.requiredMessage)
         }),
         roles: Yup.array().min(1, errorMessages.minOneRole)
@@ -576,6 +572,7 @@ class UsersSidebar extends React.Component {
                         options={companiesOptions}
                         inputProps={{
                           icon: 'search',
+                          disabled: disabledCompany,
                           search: options => options,
                           selection: true,
                           onSearchChange: (e, { searchQuery }) =>
