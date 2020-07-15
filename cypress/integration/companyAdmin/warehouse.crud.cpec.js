@@ -112,6 +112,9 @@ context("Prodex Warehouse CRUD", () => {
         cy.contains("Central branch").should("not.exist")
 
         cy.reload()
+        cy.wait("@deliveryLoadingPOST")
+
+        cy.contains("Pick Up Locations").click()
         cy.wait("@warehouseLoading")
 
         cy.contains("Central branch").should("not.exist")

@@ -101,7 +101,7 @@ context("Prodex User CRUD", () => {
             cy.contains("Order View").click()
         })
 
-        cy.get("[data-test=settings_users_popup_submit_btn]").click().click({force: true})
+        cy.get("[data-test=settings_users_popup_submit_btn]").click()
 
         cy.waitForUI()
 

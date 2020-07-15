@@ -238,9 +238,6 @@ context("Login and logout", () => {
         cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
         cy.FElogin(echoOperator.email, echoOperator.password)
 
-        //Assert on XHR
-        cy.wait('@login', {timeout: 30000})
-
         cy.waitForUI()
         cy.get(".user-menu-wrapper").click()
         cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()

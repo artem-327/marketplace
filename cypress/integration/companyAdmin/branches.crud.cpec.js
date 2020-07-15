@@ -3,7 +3,7 @@ context("Prodex Branches CRUD", () => {
     let filter = [
         {"operator":"LIKE", "path":"Branch.deliveryAddress.addressName", "values":["%Harlingen%"]},
         {"operator":"LIKE", "path":"Branch.deliveryAddress.address.streetAddress", "values":["%Harlingen%"]},
-        {"operator":"LIKE", "path":"Branch.deliveryAddress.contactName", "values":["%Harlingen%"]}
+        {"operator":"LIKE", "path":"Branch.deliveryAddress.address.city", "values":["%Harlingen%"]}
     ]
     const userJSON = require('../../fixtures/user.json')
 
@@ -91,6 +91,7 @@ context("Prodex Branches CRUD", () => {
         cy.get('[data-test=settings_branches_popup_submit_btn]').click()
 
         cy.searchInList("Arnold")
+        cy.wait("@branchesLoadingPOST")
 
         cy.openElement(branchId, 0)
 

@@ -115,20 +115,8 @@ context("Permissions tests",() => {
         cy.FElogin(echoOperator.email, echoOperator.password)
 
         cy.wait('@loading', {timeout: 30000})
-        cy.url().should("include", "inventory")
-        cy.contains("No records found.")
-
-        cy.get("[data-test='navigation_menu_wanted_board_drpdn']").eq(0).click()
-        cy.wait('@loading', {timeout: 30000})
-        cy.contains("No records found.")
-        cy.waitForUI()
-
-        cy.get("[data-test='navigation_orders_drpdn']").click()
-        cy.get("[data-test='navigation_orders_sales_orders_drpdn']").click()
-        cy.wait('@loading')
-        cy.contains("No records found.")
-
-        cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
+        cy.url().should("include", "operations")
+        cy.get('tbody > :nth-child(1)').should("be.visible")
     })
 
     it("User Admin permissions", () =>{

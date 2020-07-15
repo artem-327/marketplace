@@ -6,7 +6,7 @@ context("Inventory CRUD", () => {
     before(function () {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getInventoryDatagridBody(token).then(inventoryBody => {
-                cy.deleteEntity(token,'product-offers',inventoryBody[0].id)
+               // cy.deleteEntity(token,'product-offers',inventoryBody[0].id)
                 //TODO Found out why some assigning doesn't work
                 let helper = inventoryBody[1].companyProduct.intProductName
                 let idHelper = inventoryBody[1].companyProduct.id
