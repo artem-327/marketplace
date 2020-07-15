@@ -62,7 +62,6 @@ const CustomGridColumn = styled(Grid.Column)`
 `
 
 class Locations extends Component {
-
   componentDidMount = async () => {
     const { getIdentity } = this.props
     try {
@@ -73,12 +72,7 @@ class Locations extends Component {
   }
 
   renderContent = () => {
-    const {
-      activeTab,
-      isOpenPopup,
-      isUserAdmin,
-      isOpenSidebar
-    } = this.props
+    const { activeTab, isOpenPopup, isUserAdmin, isOpenSidebar } = this.props
 
     const tables = {
       'delivery-locations': <DeliveryLocationsTable />,
@@ -109,12 +103,12 @@ class Locations extends Component {
         searchToFilter: v =>
           v && v.searchInput
             ? [
-              {
-                operator: 'LIKE',
-                path: 'DeliveryAddress.address.streetAddress',
-                values: [`%${v.searchInput}%`]
-              }
-            ]
+                {
+                  operator: 'LIKE',
+                  path: 'DeliveryAddress.address.streetAddress',
+                  values: [`%${v.searchInput}%`]
+                }
+              ]
             : []
       },
       'pick-up-locations': {
@@ -122,52 +116,46 @@ class Locations extends Component {
         searchToFilter: v =>
           v && v.searchInput
             ? [
-              {
-                operator: 'LIKE',
-                path: 'Branch.deliveryAddress.addressName',
-                values: [`%${v.searchInput}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'Branch.deliveryAddress.address.streetAddress',
-                values: [`%${v.searchInput}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'Branch.deliveryAddress.contactName',
-                values: [`%${v.searchInput}%`]
-              }
-            ]
-            : [],
-        params: {
-          orOperator: true
-        }
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.addressName',
+                  values: [`%${v.searchInput}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.address.streetAddress',
+                  values: [`%${v.searchInput}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.contactName',
+                  values: [`%${v.searchInput}%`]
+                }
+              ]
+            : []
       },
       branches: {
         url: `/prodex/api/branches/datagrid`,
         searchToFilter: v =>
           v && v.searchInput
             ? [
-              {
-                operator: 'LIKE',
-                path: 'Branch.deliveryAddress.addressName',
-                values: [`%${v.searchInput}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'Branch.deliveryAddress.address.streetAddress',
-                values: [`%${v.searchInput}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'Branch.deliveryAddress.contactName',
-                values: [`%${v.searchInput}%`]
-              }
-            ]
-            : [],
-        params: {
-          orOperator: true
-        }
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.addressName',
+                  values: [`%${v.searchInput}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.address.streetAddress',
+                  values: [`%${v.searchInput}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'Branch.deliveryAddress.contactName',
+                  values: [`%${v.searchInput}%`]
+                }
+              ]
+            : []
       }
     }
     return datagridApiMap[activeTab]
@@ -185,11 +173,15 @@ class Locations extends Component {
       <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
           <TopMenu />
-          {!tutorialCompleted && <div style={{margin: '5px -2px -15px -2px'}}><Tutorial/></div>}
-          <Container fluid style={{padding: '20px 30px'}}>
+          {!tutorialCompleted && (
+            <div style={{ margin: '5px -2px -15px -2px' }}>
+              <Tutorial />
+            </div>
+          )}
+          <Container fluid style={{ padding: '20px 30px' }}>
             <TablesHandlers />
           </Container>
-          <SettingsGrid columns='equal' className='flex stretched' style={{padding: '0 30px'}}>
+          <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 30px' }}>
             <Grid.Row>
               <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
             </Grid.Row>
