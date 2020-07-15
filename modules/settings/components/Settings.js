@@ -373,19 +373,12 @@ class Settings extends Component {
                 }
                 // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
               ]
-            : [],
-        params: {
-          orOperator: true
-        }
+            : []
       },
       'guest-companies': {
         url: '/prodex/api/companies/client/datagrid',
-        searchToFilter: v => (v && v.searchInput
-          ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }]
-          : []),
-        params: {
-          orOperator: true
-        }
+        searchToFilter: v =>
+          v && v.searchInput ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }] : []
       },
       products: {
         url: `/prodex/api/company-products/datagrid?type=${productCatalogUnmappedValue}`,
@@ -413,10 +406,7 @@ class Settings extends Component {
                   values: [`%${v.searchInput}%`]
                 }
               ]
-            : [],
-        params: {
-          orOperator: true
-        }
+            : []
       },
       // 'bank-accounts': null,
       // 'credit-cards': null,
@@ -447,9 +437,6 @@ class Settings extends Component {
               }
             ]
           return filter
-        },
-        params: {
-          orOperator: true
         }
       }
     }
