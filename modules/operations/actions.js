@@ -132,3 +132,24 @@ export function saveFilters(filters) {
     payload: filters
   }
 }
+
+export function markRequestAsProcessed(id) {
+  return {
+    type: AT.OPERATIONS_MARK_REQUEST_AS_PROCESSED,
+    payload: api.markRequestAsProcessed(id)
+  }
+}
+
+export function denyRequest(id) {
+  return {
+    type: AT.OPERATIONS_DENY_REQUEST,
+    payload: api.denyRequest(id)
+  }
+}
+
+export function deleteRequest(id) {
+  return {
+    type: AT.OPERATIONS_DELETE_REQUEST,
+    payload: api.deleteRequest(id)
+  }
+}
