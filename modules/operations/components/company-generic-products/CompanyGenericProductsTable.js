@@ -66,35 +66,55 @@ class CompanyGenericProductsTable extends Component {
         ),
         width: 150,
         sortPath: 'CompanyGenericProductRequest.createdAt'
+      },
+      {
+        name: 'requestedByName',
+        title: (
+          <FormattedMessage id='operations.requestedByName' defaultMessage='Requested by Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 250,
+        sortPath: 'CompanyGenericProductRequest.requestedBy.name'
+      },
+      {
+        name: 'requestedByCompany',
+        title: (
+          <FormattedMessage id='operations.requestedByCompany' defaultMessage='Requested by Company'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 250,
+        sortPath: 'CompanyGenericProductRequest.requestedBy.homeBranch.company.cfDisplayName'
       }
     ]
   }
 
-  markRequestAsProcessed = async (id) => {
+  markRequestAsProcessed = async (row) => {
     const { markRequestAsProcessed, datagrid } = this.props
     try {
-      const response = await markRequestAsProcessed(id)
-      //! ! TODO updated datagrid row
+      const { value } = await markRequestAsProcessed(row.id)
+      datagrid.updateRow(row.id, () => value)
     } catch (err) {
       console.error(err)
     }
   }
 
-  denyRequest = async (id) => {
+  denyRequest = async (row) => {
     const { denyRequest, datagrid } = this.props
     try {
-      await denyRequest(id)
-      datagrid.removeRow(id)
+      await denyRequest(row.id)
+      datagrid.removeRow(row.id)
     } catch (err) {
       console.error(err)
     }
   }
 
-  deleteRequest = async (id) => {
+  deleteRequest = async (row) => {
     const { deleteRequest, datagrid } = this.props
     try {
-      await deleteRequest(id)
-      datagrid.removeRow(id)
+      await deleteRequest(row.id)
+      datagrid.removeRow(row.id)
     } catch (err) {
       console.error(err)
     }
@@ -126,7 +146,7 @@ class CompanyGenericProductsTable extends Component {
             {
               text:
                 formatMessage({ id: 'operations.markRequestAsProcessed', defaultMessage: 'Mark Request as Processed' }),
-              callback: row => this.markRequestAsProcessed(row.id),
+              callback: row => this.markRequestAsProcessed(row),
               hidden: row => row.rawData.processed
             },
             {
@@ -145,7 +165,7 @@ class CompanyGenericProductsTable extends Component {
                     { name: row.rawData.productName }
                   )
                 ).then(() => {
-                  this.denyRequest(row.id)
+                  this.denyRequest(row)
                 })
               },
               hidden: row => row.rawData.processed
@@ -166,7 +186,7 @@ class CompanyGenericProductsTable extends Component {
                     { name: row.rawData.productName }
                   )
                 ).then(() => {
-                  this.denyRequest(row.id)
+                  this.deleteRequest(row)
                 })
               },
               hidden: row => !row.rawData.processed
@@ -182,21 +202,7 @@ const mapStateToProps = (state, { datagrid }) => {
   return {
     filterValue: state.operations.filterValue,
     loading: state.operations.loading,
-    //rows: datagrid.rows.map(d => {
-    rows: [ //! ! Debug rows
-      {
-        id: 1,
-        productName: 'name 1',
-        notes: 'note 1',
-        processed: true,
-      },
-      {
-        id: 2,
-        productName: 'name 2',
-        notes: 'note 2',
-        processed: false,
-      }
-    ].map(d => {
+    rows: datagrid.rows.map(d => {
       return {
         id: d.id,
         rawData: d,
