@@ -108,6 +108,16 @@ class ProductCatalogTable extends Component {
         ),
         width: 150,
         sortPath: 'CompanyProduct.packagingType.name'
+      },
+      {
+        name: 'productGroup',
+        title: (
+          <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 200,
+        sortPath: 'CompanyProduct.companyGenericProduct.name'
       }
     ],
     companyGenericProduct: []
@@ -298,7 +308,8 @@ const mapStateToProps = (state, { datagrid }) => {
                 </div>
               } // <div> has to be there otherwise popup will be not shown
             />
-          ) : null
+          ) : null,
+        productGroup: getSafe(() => product.companyGenericProduct.productGroup.name, (<FormattedMessage id='global.unmapped' defaultMessage='Unmapped'>{text => text}</FormattedMessage>))
       }
     }),
     filterValue: state.settings.filterValue,
