@@ -9,9 +9,9 @@ export const tabs = [
 ]
 
 export const transportationTypes = [
-  { key: 'dot', text: <FormattedMessage id='global.dot' defaultMessage='DOT' />, value: 'dot' },
-  { key: 'iata', text: <FormattedMessage id='global.iata' defaultMessage='IATA' />, value: 'iata' },
   { key: 'tdg', text: <FormattedMessage id='global.tdg' defaultMessage='TDG' />, value: 'tdg' },
+  { key: 'iata', text: <FormattedMessage id='global.iata' defaultMessage='IATA' />, value: 'iata' },
+  { key: 'dot', text: <FormattedMessage id='global.dot' defaultMessage='DOT' />, value: 'dot' },
   { key: 'imdgImo', text: <FormattedMessage id='global.imdgImo' defaultMessage='IMDG/IMO' />, value: 'imdgImo' }
 ]
 
