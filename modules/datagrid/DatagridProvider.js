@@ -147,7 +147,7 @@ class DatagridProvider extends Component {
       const allLoaded = data.length < datagridParams.pageSize || data.length === 0
 
       this.setState(s => ({
-        rows: _.unionBy(s.rows, data, 'id'),
+        rows: _.unionBy(data, s.rows, 'id'),
         loading: false,
         allLoaded,
         datagridParams: {
