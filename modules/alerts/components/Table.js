@@ -10,6 +10,7 @@ import * as Actions from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
 import { Label } from 'semantic-ui-react'
+import ReactHtmlParser from 'react-html-parser'
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
@@ -44,6 +45,7 @@ class Table extends Component {
         ),
         sortPath: 'Message.text',
         width: 720,
+        maxWidth: 2000,
       },
       {
         name: 'readStatus',
@@ -104,7 +106,7 @@ class Table extends Component {
           else this.handleClickOnUnread(row)
         }}
       >
-        {row.text}
+        {ReactHtmlParser(row.text)}
       </div>
     )
   }
@@ -156,6 +158,7 @@ class Table extends Component {
       intl,
       datagrid,
       markSeenSending,
+      menuStatusFilter
     } = this.props
 
     const { formatMessage } = intl
@@ -164,7 +167,7 @@ class Table extends Component {
     return (
       <React.Fragment>
         <ProdexTable
-          tableName={'operations_tag'}
+          tableName={`operations_tag_${menuStatusFilter}`}
           {...datagrid.tableProps}
           loading={datagrid.loading || markSeenSending}
           columns={columns}

@@ -178,7 +178,7 @@ export const LeftMenu = styled(Menu)`
         overflow: hidden;
         display: flex;
         flex-flow: column;
-        height: calc(100% - 100px); // 100px for logo
+        height: auto;
         
         > .ui.form {
           min-height: 200px;
@@ -968,6 +968,21 @@ export const ContentContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+`
+export const CopyrightContainer = styled(Container)`
+  display: block;
+  box-sizing: border-box;
+  width: 100% !important;
+  height: 60px;
+  margin: 0;
+  padding: 23px 0;
+  background-color: #f8f9fb;
+  box-shadow: inset 0 1px 0 0 #dee2e6;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
+  color: #848893;
+  line-height: 14px;
 `
 export const FlexContainer = styled.div`
   position: fixed;

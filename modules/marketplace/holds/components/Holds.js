@@ -15,6 +15,30 @@ import { debounce } from 'lodash'
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;
 `
+
+const CustomRowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: -5px -5px;
+  flex-wrap: wrap;
+  
+  > div {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    margin: 5px 5px;
+  }
+  
+  input, .ui.dropdown {
+    height: 40px;
+  }
+`
+
 class Holds extends Component {
   state = {
     columns: [
@@ -87,30 +111,45 @@ class Holds extends Component {
     selectedRows: [],
     //pageNumber: 0,
     open: false,
-    holdDropdown: 'My Holds',
-    filterValue: ''
-  }
-
-  componentDidMount() {
-    this.props.applyDatagridFilter('')
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { datagridFilterUpdate, datagridFilter, datagrid } = this.props
-    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter)
+    filterValue: {
+      searchInput: '',
+      holdDropdown: 'My Holds'
     }
   }
 
-  handleFiltersValue = debounce(value => {
-    const { applyDatagridFilter } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value)
-    else applyDatagridFilter(value)
+  componentDidMount() {
+    const { tableHandlersFilters } = this.props
+
+    if (tableHandlersFilters) {
+      this.setState({ filterValue: tableHandlersFilters })
+      this.handleFiltersValue(tableHandlersFilters)
+    } else {
+      this.handleFiltersValue(this.state.filterValue)
+    }
+  }
+
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
   }, 250)
 
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFilters', this.state.filterValue)
+  }
+
+  handleFilterChange = (e, data) => {
+    this.setState({
+      filterValue: {
+        ...this.state.filterValue,
+        [data.name]: data.value
+      }
+    })
+
+    const filter = {
+      ...this.state.filterValue,
+      [data.name]: data.value
+    }
+    this.handleFiltersValue(filter)
   }
 
   handleApprove = async id => {
@@ -118,7 +157,7 @@ class Holds extends Component {
       const response = await this.props.approveHold(id)
       const newRow = response && response.value && response.value.data ? response.value.data : null
       if (newRow) {
-        Datagrid.updateRow(id, () => ({
+        this.props.datagrid.updateRow(id, () => ({
           ...newRow,
           status: 'ON_HOLD'
         }))
@@ -132,7 +171,7 @@ class Holds extends Component {
       const response = await this.props.rejectHold(id)
       const newRow = response && response.value && response.value.data ? response.value.data : null
       if (newRow) {
-        Datagrid.updateRow(id, () => ({
+        this.props.datagrid.updateRow(id, () => ({
           ...newRow,
           status: 'REJECTED'
         }))
@@ -146,7 +185,7 @@ class Holds extends Component {
       const response = await this.props.cancelHold(id)
       const newRow = response && response.value && response.value.data ? response.value.data : null
       if (newRow) {
-        Datagrid.updateRow(id, () => ({
+        this.props.datagrid.updateRow(id, () => ({
           ...newRow,
           status: 'CANCELLED'
         }))
@@ -228,50 +267,55 @@ class Holds extends Component {
     return (
       <Container fluid style={{ padding: '10px 0' }} className='flex stretched'>
         {!tutorialCompleted && <Tutorial marginHolds />}
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={4}>
-              <Input
-                fluid
-                icon='search'
-                value={filterValue}
-                onChange={this.handleFilterChange}
-                placeholder={formatMessage({
-                  id: 'myInventory.searchByProductName',
-                  defaultMessage: 'Search by product name...'
-                })}
-              />
-            </Grid.Column>
-            <Grid.Column width={12}>
-              <HoldDropdown
-                options={[
-                  {
-                    key: 1,
-                    value: 'My Holds',
-                    text: 'My Holds'
-                  },
-                  {
-                    key: 2,
-                    value: 'Requsted Holds',
-                    text: 'Requsted Holds'
-                  }
-                ]}
-                value={this.state.holdDropdown}
-                selection
-                onChange={(event, { name, value }) => {
-                  if (value === 'My Holds') {
-                    toggleHolds('my')
-                  } else if (value === 'Requsted Holds') {
-                    toggleHolds('foreign')
-                  }
-                  this.setState({ [name]: value })
-                }}
-                name='holdDropdown'
-                placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
-              />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <div style={{ padding: '0 0 6px' }}>
+          <CustomRowDiv>
+            <div>
+              <div className='column'>
+                <Input
+                  fluid
+                  icon='search'
+                  name='searchInput'
+                  value={filterValue.searchInput}
+                  onChange={this.handleFilterChange}
+                  placeholder={formatMessage({
+                    id: 'myInventory.searchByProductName',
+                    defaultMessage: 'Search by product name...'
+                  })}
+                  style={{ width: '370px' }}
+                />
+              </div>
+              <div className='column'>
+                <HoldDropdown
+                  options={[
+                    {
+                      key: 1,
+                      value: 'My Holds',
+                      text: 'My Holds'
+                    },
+                    {
+                      key: 2,
+                      value: 'Requsted Holds',
+                      text: 'Requsted Holds'
+                    }
+                  ]}
+                  value={filterValue.holdDropdown}
+                  selection
+                  onChange={(event, data) => {
+                    if (data.value === 'My Holds') {
+                      toggleHolds('my')
+                    } else if (data.value === 'Requsted Holds') {
+                      toggleHolds('foreign')
+                    }
+                    this.handleFilterChange(event, data)
+                    //this.setState({ [name]: value })
+                  }}
+                  name='holdDropdown'
+                  placeholder={formatMessage({ id: 'hold.selectHolds', defaultMessage: 'Select Holds' })}
+                />
+              </div>
+            </div>
+          </CustomRowDiv>
+        </div>
         <ProdexGrid
           groupActions={row => {
             let values = row.key.split('_')

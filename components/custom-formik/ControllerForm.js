@@ -7,13 +7,15 @@ import { DateInput } from '~/components/custom-formik'
 import { AddressForm } from '~/modules/address-form/'
 import { object, func } from 'prop-types'
 import { Required } from '~/components/constants/layout'
+import { getSafe } from '~/utils/functions'
 
 class ControllerForm extends Component {
   render() {
     const {
       values,
       setFieldValue,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      fullSsnInput
     } = this.props
 
     return (
@@ -62,22 +64,34 @@ class ControllerForm extends Component {
           <Input
             inputProps={{ fluid: true }}
             label={
-              <>
-                <FormattedMessage id='settings.ssn' defaultMessage='SSN'>
-                  {text => (
-                    <>
-                      <Popup
-                        trigger={<Icon name='info circle' color='blue' />}
-                        content={
-                          <FormattedMessage id='settings.lastFourDigits' defaultMessage='Enter only last four digits' />
-                        }
-                      />
-                      {text}
-                    </>
-                  )}
-                </FormattedMessage>
-                <Required />
-              </>
+              fullSsnInput
+                ? (
+                  <>
+                    {formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
+                    {<Required/>}
+                  </>
+                )
+                : (
+                  <>
+                    <FormattedMessage id='settings.ssn' defaultMessage='SSN'>
+                      {text => (
+                        <>
+                          <Popup
+                            trigger={<Icon name='info circle' color='blue' />}
+                            content={
+                              <FormattedMessage
+                                id='settings.lastFourDigits'
+                                defaultMessage='Enter only last four digits'
+                              />
+                            }
+                          />
+                          {text}
+                        </>
+                      )}
+                    </FormattedMessage>
+                    <Required />
+                  </>
+                )
             }
             name='dwollaController.ssn'
           />

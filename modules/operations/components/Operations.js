@@ -137,7 +137,7 @@ class Operations extends Component {
 
           if (v && v.company) {
             const d = JSON.parse(v.company)
-            const value = d.cfDisplayName ? d.cfDisplayName : (d.name ? d.name : '')
+            const value = d.cfDisplayName ? d.cfDisplayName : d.name ? d.name : ''
             filter.and = [
               {
                 operator: 'LIKE',
@@ -189,17 +189,18 @@ class Operations extends Component {
   render() {
     const { currentTab, orderDetailData } = this.props
 
-    if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
+    if (
+      !(
+        getSafe(() => this.props.auth.identity.isAdmin, false) ||
+        !getSafe(() => this.props.auth.identity.isEchoOperator, false)
+      )
+    )
       return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
     const displayPage = !!orderDetailData
 
     return (
-      <DatagridProvider
-        apiConfig={this.getApiConfig()}
-        preserveFilters={true}
-        skipInitLoad
-      >
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={true} skipInitLoad>
         <Container fluid className='flex stretched'>
           {displayPage ? (
             this.renderContent()

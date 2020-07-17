@@ -6,18 +6,18 @@ export const WantedBoard = props => {
     url: `/prodex/api/purchase-requests/other/datagrid?type=${props.type}`,
     searchToFilter: v => {
       let filters = { or: [], and: [], url: '' }
-      if (v && v.and && v.and.length > 0) {
-        filters.and = v.and.map(idTag => {
+      if (v && v.filterTags && v.filterTags.length > 0) {
+        filters.and = v.filterTags.map(idTag => {
           return {
             operator: 'EQUALS',
-            path: 'PurchaseRequest.elements.companyGenericProduct.productGroup.tags.id',
+            path: 'PurchaseRequest.elements.productGroup.tags.id',
             values: [idTag]
           }
         })
       }
-      if (v && v.or) {
+      if (v && v.filterName) {
         filters.url = `/prodex/api/purchase-requests/other/datagrid?type=${props.type}&pattern=${encodeURIComponent(
-          v.or
+          v.filterName
         )}`
       }
       return filters
@@ -25,7 +25,7 @@ export const WantedBoard = props => {
   }
   return (
     <>
-      <DatagridProvider apiConfig={urlApiConfig}>
+      <DatagridProvider apiConfig={urlApiConfig} preserveFilters skipInitLoad>
         <WantedBoardContainer {...props} />
       </DatagridProvider>
     </>

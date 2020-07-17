@@ -26,7 +26,7 @@ export const companyDatagridColumns = [
         {text => text}
       </FormattedMessage>
     ),
-    sortPath: 'Company.name'
+    sortPath: 'ClientCompany.name'
   },
   {
     name: 'primaryBranchAddress',
@@ -35,7 +35,7 @@ export const companyDatagridColumns = [
         {text => text}
       </FormattedMessage>
     ),
-    sortPath: 'Company.primaryBranch.deliveryAddress.address.streetAddress'
+    sortPath: 'ClientCompany.primaryBranch.deliveryAddress.address.streetAddress'
   },
   {
     name: 'primaryContact',

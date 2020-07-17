@@ -8,6 +8,25 @@ import moment from 'moment/moment'
 import confirm from '~/src/components/Confirmable/confirm'
 import { withToastManager } from 'react-toast-notifications'
 import { AlertCircle, AlertTriangle, CheckCircle, Info } from 'react-feather'
+import styled from 'styled-components'
+
+const ButtonsColumn = styled(Grid.Column)`
+  > *:first-child {
+    margin-right: -15px !important;
+  }
+`
+
+const ARButton = styled(Button)`
+  float: right;
+  width: auto !important;
+  height: 40px;
+  margin-left: 10px !important;
+  margin-right: 0 !important;
+  padding: 10px 26px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 20px !important;
+`
 
 class ActionsRequired extends React.Component {
   confirmCall = d => {
@@ -166,35 +185,33 @@ class ActionsRequired extends React.Component {
         {this.renderIcon(color)}
         <Grid verticalAlign='middle' columns='equal'>
           <Grid.Column width={columnWidth}>
-            <Header as='h3' color={color ? color : 'black'} style={{ margin: '0 0 0.3571429rem' }}>
+            <Header as='h3' color={color ? color : 'black'} style={{ margin: '0 0 6px' }}>
               <FormattedMessage id={title ? title : 'order.actionRequired'} />
             </Header>
             <FormattedMessage id={description} />
           </Grid.Column>
-          <Grid.Column>
-            <Grid verticalAlign='middle' columns='equal'>
-              {buttons &&
-                buttons.map(button => {
-                  if (!button) return
-                  return (
-                    <Grid.Column>
-                      <Button
-                        primary={button.buttonType === 'primary'}
-                        basic={button.buttonType === 'basic'}
-                        fluid
-                        size='large'
-                        color={color ? color : null}
-                        onClick={() => button.onClick()}
-                        disabled={typeof button.disabled !== 'undefined' ? button.disabled : false}
-                        loading={typeof button.loading !== 'undefined' ? button.loading : false}
-                        data-test={button.dataTest}>
-                        <FormattedMessage id={button.text} tagName='span' />
-                      </Button>
-                    </Grid.Column>
-                  )
-                })}
-            </Grid>
-          </Grid.Column>
+          <ButtonsColumn>
+            {buttons &&
+              buttons.map(button => {
+                if (!button) return
+                return (
+                  <ARButton
+                    primary={button.buttonType === 'primary'}
+                    basic={button.buttonType === 'basic'}
+                    secondary={button.buttonType === 'secondary'}
+                    fluid
+                    size='large'
+                    color={color ? color : null}
+                    className={(button.buttonType !== 'primary' && button.buttonType !== 'basic' && button.buttonType !== 'secondary' ? button.buttonType + ' ' : '') + getSafe(() => button.className, '')}
+                    onClick={() => button.onClick()}
+                    disabled={typeof button.disabled !== 'undefined' ? button.disabled : false}
+                    loading={typeof button.loading !== 'undefined' ? button.loading : false}
+                    data-test={button.dataTest}>
+                    <FormattedMessage id={button.text} tagName='span' />
+                  </ARButton>
+                )
+              })}
+          </ButtonsColumn>
         </Grid>
       </Segment>
     )
@@ -226,7 +243,8 @@ class ActionsRequired extends React.Component {
 
     const requestCreditButton = orderCreditHistoryOpen
       ? {
-          buttonType: 'basic',
+          buttonType: 'primary',
+          className: 'outline',
           onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
           dataTest: 'orders_detail_requestCredit_btn',
           text: 'order.requestCredit'
@@ -238,7 +256,7 @@ class ActionsRequired extends React.Component {
         {ordersType === 'Sales' ? (
           <>
             {orderStatus === 1 // Pending
-              ? this.renderSegment(null, 13, null, textForConforming, [
+              ? this.renderSegment(null, 11, null, textForConforming, [
                   {
                     buttonType: 'primary',
                     onClick: this.confirmOrder,
@@ -248,7 +266,8 @@ class ActionsRequired extends React.Component {
                     disabled: (isSending && isSending !== 1) || !sellEligible
                   },
                   {
-                    buttonType: 'basic',
+                    buttonType: 'danger',
+                    className: 'outline',
                     onClick: this.rejectOrder,
                     dataTest: 'orders_detail_reject_btn',
                     text: 'global.reject',
@@ -348,7 +367,8 @@ class ActionsRequired extends React.Component {
                     disabled: isSending && isSending !== 1
                   },
                   {
-                    buttonType: 'basic',
+                    buttonType: 'danger',
+                    className: 'outline',
                     onClick: this.discardOrder,
                     dataTest: 'orders_detail_discard_btn',
                     text: 'global.discard',
@@ -398,13 +418,14 @@ class ActionsRequired extends React.Component {
                     text: 'global.accept',
                     loading: isSending && !openedPopup
                   },
+                  requestCreditButton,
                   {
-                    buttonType: 'basic',
+                    buttonType: 'danger',
+                    className: 'outline',
                     onClick: () => openPopupName('openedPurchaseRejectDelivery'),
                     dataTest: 'orders_detail_reject_btn',
                     text: 'global.reject'
-                  },
-                  requestCreditButton
+                  }
                 ])
               : null}
             {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 2

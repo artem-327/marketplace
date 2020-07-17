@@ -23,7 +23,6 @@ function mapStateToProps(store, { datagrid }) {
   }
   return {
     ...store.wantedBoard,
-    ...datagrid,
     type: store.wantedBoard.wantedBoardType,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     rows: datagrid.rows.map(row => {

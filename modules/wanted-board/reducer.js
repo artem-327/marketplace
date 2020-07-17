@@ -36,10 +36,10 @@ export const initialState = {
   openedSubmitOfferPopup: false,
   popupValues: null,
   wantedBoardType: 'product',
-  myRequestedItemsType: 'product'
-
-  //datagridFilter: { filters: [] },
-  //datagridFilterUpdate: false
+  myRequestedItemsType: 'product',
+  tableHandlersFiltersWantedBoard: null,
+  tableHandlersFiltersMyReqItems: null,
+  tableHandlersFiltersMyOffers: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -458,6 +458,13 @@ export default function reducer(state = initialState, action) {
     case AT.WB_ADD_PURCHASE_REQUEST_FULFILLED:
     case AT.WB_EDIT_MY_PURCHASE_OFFER_FULFILLED: {
       return { ...state, loading: false }
+    }
+
+    case AT.WB_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
+      }
     }
 
     default: {

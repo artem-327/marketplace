@@ -107,6 +107,7 @@ const CustomGridColumn = styled(Grid.Column)`
 class Settings extends Component {
   state = {
     companyLogo: null,
+    shouldUpdateLogo: false,
     wrongUrl: true
   }
 
@@ -214,18 +215,19 @@ class Settings extends Component {
     this.redirectPage(queryTab)
   }
 
-  selectLogo = logo => {
-    this.setState({ companyLogo: logo })
+  selectLogo = (logo, isNew = true) => {
+    this.setState({ companyLogo: logo, shouldUpdateLogo: isNew })
   }
 
   removeLogo = () => {
-    this.setState({ companyLogo: null })
+    this.setState({ companyLogo: null, shouldUpdateLogo: true })
   }
 
   companyDetails = () => {
     let { postCompanyLogo, deleteCompanyLogo } = this.props
     const { selectLogo, removeLogo } = this
-    const { companyLogo } = this.state
+    const { companyLogo, shouldUpdateLogo } = this.state
+
     return (
       <TopMargedGrid relaxed='very' centered>
         <GridColumn computer={12}>
@@ -235,16 +237,20 @@ class Settings extends Component {
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 const { updateCompany } = this.props
-                // access to assocaitions has only admin
-                delete values.associations
+                const requestBody = {}
+                const propsToInclude = ['cin', 'dba', 'dunsNumber', 'enabled', 'name', 'phone', 'tin', 'website']
+                propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
+
                 await updateCompany(values.id, {
-                  ...values,
+                  ...requestBody,
                   businessType: values.businessType ? values.businessType.id : null
                 })
-                if (companyLogo) {
-                  await postCompanyLogo(values.id, companyLogo)
-                } else {
-                  if (values.hasLogo) await deleteCompanyLogo(values.id)
+                if (shouldUpdateLogo) {
+                  if (companyLogo) {
+                    await postCompanyLogo(values.id, companyLogo)
+                  } else {
+                    await deleteCompanyLogo(values.id)
+                  }
                 }
               } catch (err) {
                 console.error(err)
@@ -357,143 +363,69 @@ class Settings extends Component {
       users: {
         url: `/prodex/api/users/datagrid`,
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
-                { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
+                { operator: 'LIKE', path: 'User.name', values: [`%${v.searchInput}%`] },
                 {
                   operator: 'LIKE',
                   path: 'User.homeBranch.deliveryAddress.contactName',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 }
                 // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
               ]
-            : [],
-        params: {
-          orOperator: true
-        }
-      },
-      branches: {
-        url: `/prodex/api/branches/datagrid`,
-        searchToFilter: v =>
-          v
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.addressName',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.address.streetAddress',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.contactName',
-                  values: [`%${v}%`]
-                }
-              ]
-            : [],
-        params: {
-          orOperator: true
-        }
+            : []
       },
       'guest-companies': {
         url: '/prodex/api/companies/client/datagrid',
-        searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v}%`] }] : []),
-        params: {
-          orOperator: true
-        }
-      },
-      warehouses: {
-        url: `/prodex/api/branches/warehouses/datagrid`,
         searchToFilter: v =>
-          v
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.addressName',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.address.streetAddress',
-                  values: [`%${v}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'Branch.deliveryAddress.contactName',
-                  values: [`%${v}%`]
-                }
-              ]
-            : [],
-        params: {
-          orOperator: true
-        }
+          v && v.searchInput ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }] : []
       },
       products: {
         url: `/prodex/api/company-products/datagrid?type=${productCatalogUnmappedValue}`,
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
                   path: 'CompanyProduct.intProductName',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 },
                 {
                   operator: 'LIKE',
                   path: 'CompanyProduct.intProductCode',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 },
                 {
                   operator: 'LIKE',
                   path: 'CompanyProduct.companyGenericProduct.name',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 },
                 {
                   operator: 'LIKE',
                   path: 'CompanyProduct.companyGenericProduct.code',
-                  values: [`%${v}%`]
-                }
-              ]
-            : [],
-        params: {
-          orOperator: true
-        }
-      },
-      // 'bank-accounts': null,
-      // 'credit-cards': null,
-      'delivery-addresses': {
-        url: '/prodex/api/delivery-addresses/datagrid',
-        searchToFilter: v =>
-          v
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'DeliveryAddress.address.streetAddress',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 }
               ]
             : []
       },
-
+      // 'bank-accounts': null,
+      // 'credit-cards': null,
       documents: {
         url: '/prodex/api/attachments/datagrid/',
         searchToFilter: v => {
           let filter = { or: [], and: [] }
 
-          if (v && v.filterValue)
+          if (v && v.searchInput)
             filter.or = [
               {
                 operator: 'LIKE',
                 path: 'Attachment.name',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               },
               {
                 operator: 'LIKE',
                 path: 'Attachment.customName',
-                values: [`%${v.filterValue}%`]
+                values: [`%${v.searchInput}%`]
               }
             ]
           if (v && v.documentType)
@@ -505,9 +437,6 @@ class Settings extends Component {
               }
             ]
           return filter
-        },
-        params: {
-          orOperator: true
         }
       }
     }
@@ -521,11 +450,9 @@ class Settings extends Component {
     if (currentTab && currentTab.type === 'locations') {
       return <Locations />
     } else {
-      const preserveFilters = currentTab && currentTab.type === 'products'
-
       return (
         !this.state.wrongUrl && (
-          <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={preserveFilters}>
+          <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
             <Container fluid className='flex stretched'>
               {!tutorialCompleted && (
                 <div style={{ margin: '5px -2px -15px -2px' }}>

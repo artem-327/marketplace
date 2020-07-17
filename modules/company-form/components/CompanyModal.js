@@ -74,7 +74,6 @@ const initialFormValues = {
       contactName: '',
       contactEmail: '',
       contactPhone: '',
-      accessorials: [],
       address: {
         streetAddress: '',
         country: '',
@@ -91,7 +90,6 @@ const initialFormValues = {
       contactName: '',
       contactEmail: '',
       contactPhone: '',
-      accessorials: [],
       address: {
         streetAddress: '',
         country: '',

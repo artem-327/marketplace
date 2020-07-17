@@ -78,6 +78,7 @@ import productsAdmin from '~/modules/products/reducer'
 import documentTypes from '~/modules/document-types/reducer'
 import marketSegments from '~/modules/market-segments/reducer'
 import exportInventory from '~/modules/export-inventory/reducer'
+import dashboard from '~/modules/dashboard/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -144,7 +145,8 @@ const reducer = combineReducers({
   productsAdmin,
   documentTypes,
   marketSegments,
-  exportInventory
+  exportInventory,
+  dashboard
 })
 
 const rootReducer = (state, action) => {

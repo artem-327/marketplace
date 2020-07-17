@@ -1,8 +1,8 @@
 import SearchByNamesAndTags from './components/SearchByNamesAndTags'
 
-const Search = ({ isSearchViaPattern }) => (
+const Search = props => (
   <>
-    <SearchByNamesAndTags isSearchViaPattern />
+    <SearchByNamesAndTags {...props} />
   </>
 )
 

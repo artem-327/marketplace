@@ -13,9 +13,27 @@ const CustomDiv = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin: -5px -5px;
+  flex-wrap: wrap;
+  
+  > div {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    margin: 5px 5px;
+  }
+  
+  input, .ui.dropdown {
+    height: 40px;
+  }
 `
 
 const StyledButtonsGroup = styled(Button.Group)`
+  flex-wrap: wrap;
   .ui.button {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
     border: solid 1px #dee2e6 !important;
@@ -75,37 +93,44 @@ class TablesHandlers extends Component {
 
     return (
       <CustomDiv>
-        <Input
-          style={{ width: 370 }}
-          icon='search'
-          value={searchValue}
-          placeholder={formatMessage({
-            id: 'alerts.searchNotification',
-            defaultMessage: 'Search Notification...'
-          })}
-          onChange={this.handleFilterChange}
-        />
-
-        <StyledButtonsGroup>
-          <Button
-            active={switchButtonsValue === ''}
-            onClick={() => this.handleButtonsChange('')}
-          >
-            {formatMessage({ id: 'alerts.button.all', defaultMessage: 'All' })}
-          </Button>
-          <Button
-            active={switchButtonsValue === 'read'}
-            onClick={() => this.handleButtonsChange('read')}
-          >
-            {formatMessage({ id: 'alerts.button.read', defaultMessage: 'Read' })}
-          </Button>
-          <Button
-            active={switchButtonsValue === 'unread'}
-            onClick={() => this.handleButtonsChange('unread')}
-          >
-            {formatMessage({ id: 'alerts.button.unread', defaultMessage: 'Unread' })}
-          </Button>
-        </StyledButtonsGroup>
+        <div>
+          <div className='column'>
+            <Input
+              style={{ width: 370 }}
+              icon='search'
+              value={searchValue}
+              placeholder={formatMessage({
+                id: 'alerts.searchNotification',
+                defaultMessage: 'Search Notification...'
+              })}
+              onChange={this.handleFilterChange}
+            />
+          </div>
+        </div>
+        <div>
+          <div className='column'>
+            <StyledButtonsGroup>
+              <Button
+                active={switchButtonsValue === ''}
+                onClick={() => this.handleButtonsChange('')}
+              >
+                {formatMessage({ id: 'alerts.button.all', defaultMessage: 'All' })}
+              </Button>
+              <Button
+                active={switchButtonsValue === 'read'}
+                onClick={() => this.handleButtonsChange('read')}
+              >
+                {formatMessage({ id: 'alerts.button.read', defaultMessage: 'Read' })}
+              </Button>
+              <Button
+                active={switchButtonsValue === 'unread'}
+                onClick={() => this.handleButtonsChange('unread')}
+              >
+                {formatMessage({ id: 'alerts.button.unread', defaultMessage: 'Unread' })}
+              </Button>
+            </StyledButtonsGroup>
+          </div>
+        </div>
       </CustomDiv>
     )
   }

@@ -190,7 +190,7 @@ class PickUpLocationsSidebar extends React.Component {
         }
       },
       taxId: values.taxId,
-      warehouse: true
+      warehouse: !values.alsoCreate
     }
     removeEmpty(requestData)
 
@@ -198,24 +198,7 @@ class PickUpLocationsSidebar extends React.Component {
       if (popupValues) {
         await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
       } else {
-        await postNewWarehouseRequest(requestData, attachmentFiles)
-        if (values.alsoCreate) {
-          requestData = {
-            deliveryAddress: {
-              addressName: values.deliveryAddress.addressName,
-              contactName: values.deliveryAddress.contactName,
-              contactPhone: values.deliveryAddress.contactPhone,
-              contactEmail: values.deliveryAddress.contactEmail,
-              address: {
-                ...values.deliveryAddress.address,
-                country
-              }
-            },
-            warehouse: false
-          }
-          removeEmpty(requestData)
-          await postNewWarehouseRequest(requestData, [])
-        }
+        await postNewWarehouseRequest(true, requestData, attachmentFiles)
       }
     } catch {
     } finally {

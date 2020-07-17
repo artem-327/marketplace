@@ -10,14 +10,14 @@ const MyInventory = () => (
         url: '/prodex/api/product-offers/own/datagrid/',
         searchToFilter: v => {
           let filters = { or: [], and: [] }
-          if (v && v.or) {
+          if (v && v.filterName) {
             filters.or = [
-              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${v.or}%`] },
-              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${v.or}%`] }
+              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${v.filterName}%`] },
+              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${v.filterName}%`] }
             ]
           }
-          if (v && v.and && v.and.length > 0) {
-            filters.and = v.and.map(idTag => {
+          if (v && v.filterTags && v.filterTags.length > 0) {
+            filters.and = v.filterTags.map(idTag => {
               return {
                 operator: 'EQUALS',
                 path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
@@ -28,6 +28,8 @@ const MyInventory = () => (
           return filters
         }
       }}
+      preserveFilters
+      skipInitLoad
       autoRefresh>
       <MyInventoryContainer />
     </DatagridProvider>
