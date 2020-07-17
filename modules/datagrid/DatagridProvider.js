@@ -14,7 +14,7 @@ const initialState = {
   datagridParams: {
     orFilters: [],
     filters: [],
-    pageSize: 40,
+    pageSize: 50,
     pageNumber: 0
   },
   isScrollToEnd: false,
