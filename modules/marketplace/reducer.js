@@ -21,7 +21,9 @@ export const initialState = {
   autocompleteData: [],
   autocompleteDataLoading: false,
   datagridFilter: { filters: [] },
-  datagridFilterUpdate: false
+  datagridFilterReload: false,
+  datagridFilterUpdate: false,
+  tableHandlersFilters: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -82,8 +84,16 @@ export default function reducer(state = initialState, action) {
     case AT.MARKETPLACE_APPLY_FILTER: {
       return {
         ...state,
-        datagridFilter: payload,
+        datagridFilter: payload.filter,
+        datagridFilterReload: payload.reload,
         datagridFilterUpdate: !state.datagridFilterUpdate
+      }
+    }
+
+    case AT.MARKETPLACE_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
 

@@ -373,12 +373,11 @@ export function putEditWarehouse(payload, id, attachmentFiles) {
   }
 }
 
-///////////////////
-export function postNewWarehouseRequest(payload, attachmentFiles) {
+export function postNewWarehouseRequest(createWarehouse, payload, attachmentFiles) {
   return async dispatch => {
     const newWarehouse = await dispatch({
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
-      payload: api.postNewWarehouse(payload)
+      payload: api.postNewWarehouse(createWarehouse, payload)
     })
     if (attachmentFiles && attachmentFiles.length) {
       attachmentFiles.forEach(attachment => {
@@ -394,7 +393,7 @@ export function postNewWarehouseRequest(payload, attachmentFiles) {
   }
 }
 
-export function handleSubmitProductEditPopup(payload, id) {
+export function handleSubmitProductEditPopup(payload, id, attachments) {
   return async dispatch => {
     //removeEmpty(payload)
     const response = await api.updateProduct(id, payload)
@@ -402,11 +401,11 @@ export function handleSubmitProductEditPopup(payload, id) {
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
       payload: response
     })
-    if (payload.attachments && payload.attachments.length) {
-      for (let i = 0; i < payload.attachments.length; i++) {
+    if (attachments && attachments.length) {
+      for (let i = 0; i < attachments.length; i++) {
         dispatch({
           type: AT.SETTINGS_POST_LINK_ATTACHMENT,
-          payload: api.postLinkAttachment(payload.attachments[i].id, id)
+          payload: api.postLinkAttachment(attachments[i].id, id)
         })
       }
     }
@@ -665,18 +664,18 @@ export function userSwitchEnableDisable(id) {
   }
 }
 
-export function handleSubmitProductAddPopup(payload) {
+export function handleSubmitProductAddPopup(payload, attachments) {
   return async dispatch => {
     //removeEmpty(payload)
     const newProd = await dispatch({
       type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,
       payload: api.postNewProduct(payload)
     })
-    if (payload.attachments && payload.attachments.length) {
-      for (let i = 0; i < payload.attachments.length; i++) {
+    if (attachments && attachments.length) {
+      for (let i = 0; i < attachments.length; i++) {
         dispatch({
           type: AT.SETTINGS_POST_LINK_ATTACHMENT,
-          payload: api.postLinkAttachment(payload.attachments[i].id, newProd.value.data.id)
+          payload: api.postLinkAttachment(attachments[i].id, newProd.value.data.id)
         })
       }
     }
@@ -1207,5 +1206,12 @@ export function handleLocationsTab(tab) {
   return {
     type: AT.SETTINGS_HANDLE_LOCATIONS_TAB,
     payload: tab
+  }
+}
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.SETTINGS_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
   }
 }

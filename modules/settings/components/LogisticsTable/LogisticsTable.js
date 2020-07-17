@@ -51,6 +51,7 @@ class LogisticsTable extends Component {
 
     return (
       <ProdexTable
+        tableName='settings_logistics_table'
         columns={columns}
         filterValue={filterValue}
         rows={logisticsAccounts.map(acc => ({
@@ -109,12 +110,12 @@ const mapDispatchToProps = {
   deleteLogisticsAccount
 }
 
-const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount, filterValue } }) => {
+const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount, logisticsFilter } }) => {
   return {
     loading,
     logisticsAccounts,
     deleteLogisticsAccount,
-    filterValue
+    filterValue: logisticsFilter
   }
 }
 

@@ -9,9 +9,6 @@ export const initialState = {
   popupValues: null,
   loading: false,
   updating: false,
-  companiesRows: [],
-  filterValue: '',
-  casProductsRows: [],
   companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'Company.name' },
   countries: [],
   countriesDropDown: [],
@@ -32,7 +29,8 @@ export const initialState = {
   searchedSellMarketSegments: [],
   searchedSellMarketSegmentsLoading: false,
   searchedBuyMarketSegments: [],
-  searchedBuyMarketSegmentsLoading: false
+  searchedBuyMarketSegmentsLoading: false,
+  tableHandlersFilters: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -63,8 +61,7 @@ export default function reducer(state = initialState, action) {
     case AT.COMPANIES_DELETE_COMPANIES_FULFILLED: {
       return {
         ...state,
-        loading: false,
-        companiesRows: state.companiesRows.filter(company => company.id !== payload)
+        loading: false
       }
     }
 
@@ -82,15 +79,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
-      }
-    }
-
-    case AT.COMPANIES_HANDLE_FILTERS_VALUE: {
-      return {
-        ...state,
-        filterValue: action.payload,
-        casProductsRows: [],
-        companiesRows: []
       }
     }
 
@@ -283,6 +271,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         searchedBuyMarketSegments: action.payload,
         searchedBuyMarketSegmentsLoading: false
+      }
+    }
+
+    case AT.COMPANIES_SAVE_FILTERS: {
+      return {
+        ...state,
+        tableHandlersFilters: action.payload
       }
     }
 

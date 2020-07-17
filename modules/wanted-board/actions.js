@@ -173,3 +173,10 @@ export const updateEditedId = (id) => ({
   type: AT.WB_UPDATE_EDITED_ID,
   payload: id
 })
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.WB_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}

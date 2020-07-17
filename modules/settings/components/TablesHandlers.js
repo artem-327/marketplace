@@ -181,19 +181,48 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterFieldCurrentValue: 'None',
       filterValue: '',
+      'users': {
+        searchInput: ''
+      },
+      'products': {
+        searchInput: '',
+        productType: 'ALL'
+      },
+      /*
+      'bank-accounts': {
+        searchInput: ''
+      },*/
+      'guest-companies': {
+        searchInput: ''
+      },
+      /*
+      'logistics': {
+        searchInput: ''
+      },
+      */
+      'documents': {
+        searchInput: '',
+        documentType: ''
+      },
       documentType: '',
       options: []
     }
-    this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
+    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
 
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes, initGlobalBroadcast, getDwollaBeneficiaryOwners } = this.props
+    const {
+      documentTypes,
+      getDocumentTypes,
+      initGlobalBroadcast,
+      getDwollaBeneficiaryOwners,
+      tableHandlersFilters,
+      currentTab
+    } = this.props
     try {
       //check dwolla if exist some document which has to be verified
-      if (this.props.currentTab.type === 'bank-accounts') {
+      if (currentTab.type === 'bank-accounts') {
         await getDwollaBeneficiaryOwners()
       }
     } catch (err) {
@@ -226,54 +255,74 @@ class TablesHandlers extends Component {
         }))
       ]
     })
+    if (tableHandlersFilters) {
+      this.setState(tableHandlersFilters)
+      const filter = tableHandlersFilters[currentTab.type]
+      if (filter) {
+        this.props.datagrid.clear()
+        this.handleFiltersValue(filter)
+      }
+    } else {
+      const filter = this.state[currentTab.type]
+      if (filter) {
+        this.props.datagrid.clear()
+        this.handleFiltersValue(filter)
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFiltersSettings', this.state)
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.currentTab !== this.props.currentTab) {
+      const { currentTab } = this.props
       //check dwolla if exist some document which has to be verified
-      if (this.props.currentTab.type === 'bank-accounts') {
+      if (currentTab.type === 'bank-accounts') {
         try {
           await this.props.getDwollaBeneficiaryOwners()
         } catch (error) {
           console.error(error)
         }
       }
-      this.setState({ filterValue: '' })
-      this.handleFiltersValue('')
+      const filter = this.state[currentTab.type]
+      if (filter) {
+        this.props.datagrid.clear()
+        this.handleFiltersValue(filter)
+      }
     }
   }
 
-  handleFiltersValue = value => {
-    const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value, true, 'pageFilters')
-    else handleFiltersValue(value)
+  handleFiltersValue = filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
   }
 
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
-  }
+  handleFilterChangeInputSearch = (e, data) => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
 
-  handleDocumentFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
     const filter = {
-      filterValue: value,
-      documentType: this.state.documentType
+      ...this.state[currentTab.type],
+      [data.name]: data.value
     }
+    this.setState({ [currentTab.type]: filter })
     this.handleFiltersValue(filter)
   }
 
-  handleFilterChangeDocumentType = (e, { value }) => {
-    this.setState({ documentType: value })
-    const filter = {
-      filterValue: this.state.filterValue,
-      documentType: value
-    }
-    this.handleFiltersValue(filter)
-  }
+  handleFilterChangeMappedUnmapped = (e, data) => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
 
-  handleFilterChangeMappedUnmapped = (e, { value }) => {
-    this.props.handleProductCatalogUnmappedValue(value)
+    this.props.handleProductCatalogUnmappedValue(data.value)
+
+    const filter = {
+      ...this.state[currentTab.type],
+      [data.name]: data.value
+    }
+    this.setState({ [currentTab.type]: filter })
+    this.handleFiltersValue(filter)
   }
 
   saveRulesBroadcast = async (model, toastManager) => {
@@ -294,7 +343,6 @@ class TablesHandlers extends Component {
       openImportPopup,
       openUploadDocumentsPopup,
       // handleProductCatalogUnmappedValue,
-      productCatalogUnmappedValue,
       openDwollaPopup,
       dwollaAccBalance,
       // openGlobalBroadcast,
@@ -305,22 +353,42 @@ class TablesHandlers extends Component {
       intl: { formatMessage }
     } = this.props
 
-    const { filterValue } = this.state
+    const filterValue = this.state[currentTab.type]
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
-        {currentTab.type !== 'global-broadcast' && currentTab.type !== 'documents' && (
+        {currentTab.type !== 'global-broadcast' && currentTab.type !== 'documents' &&
+        currentTab.type !== 'logistics' && currentTab.type !== 'bank-accounts' && (
           <div>
             <div className='column'>
               <Input
                 style={{ width: '370px' }}
                 icon='search'
-                value={filterValue}
+                name='searchInput'
+                value={filterValue ? filterValue.searchInput : ''}
                 placeholder={formatMessage({
                   id: textsTable[currentTab.type].SearchText,
                   defaultMessage: 'Select Credit Card'
                 })}
-                onChange={this.handleFilterChange}
+                onChange={this.handleFilterChangeInputSearch}
+              />
+            </div>
+          </div>
+        )}
+
+        {(currentTab.type === 'logistics' || currentTab.type === 'bank-accounts') && (
+          <div>
+            <div className='column'>
+              <Input
+                style={{ width: '370px' }}
+                icon='search'
+                name={`${currentTab.type}Filter`}
+                value={this.props[`${currentTab.type}Filter`]}
+                placeholder={formatMessage({
+                  id: textsTable[currentTab.type].SearchText,
+                  defaultMessage: 'Select Credit Card'
+                })}
+                onChange={(e, data) => this.props.handleVariableSave(data.name, data.value)}
               />
             </div>
           </div>
@@ -332,24 +400,27 @@ class TablesHandlers extends Component {
               <Input
                 style={{ width: '370px' }}
                 icon='search'
-                value={filterValue}
+                name='searchInput'
+                value={filterValue.searchInput}
                 placeholder={formatMessage({
                   id: textsTable[currentTab.type].SearchText,
                   defaultMessage: 'Select Credit Card'
                 })}
-                onChange={this.handleDocumentFilterChange}
+                onChange={this.handleFilterChangeInputSearch}
               />
             </div>
             <div className='column'>
               <Dropdown
                 style={{ width: '200px' }}
+                name='documentType'
+                value={filterValue.documentType}
                 placeholder={formatMessage({
                   id: 'settings.tables.documents.dropdown',
                   defaultMessage: 'Choose document type'
                 })}
                 selection
                 options={this.state.options}
-                onChange={this.handleFilterChangeDocumentType}
+                onChange={this.handleFilterChangeInputSearch}
               />
             </div>
           </div>
@@ -382,7 +453,8 @@ class TablesHandlers extends Component {
                     value: 'MAPPED'
                   }
                 ]}
-                value={productCatalogUnmappedValue}
+                name='productType'
+                value={filterValue.productType}
                 onChange={this.handleFilterChangeMappedUnmapped}
                 data-test='settings_dwolla_unmapped_only_drpdn'
               />
@@ -524,9 +596,12 @@ const mapStateToProps = state => {
   //const dwollaAccountStatus = 'document'
 
   return {
+    logisticsFilter: state.settings.logisticsFilter,
+    'bank-accountsFilter': state.settings['bank-accountsFilter'],
     documentTypes: state.settings.documentTypes,
     bankAccounts: bankAccountsConfig[dwollaAccountStatus],
     currentTab: state.settings.currentTab,
+    tableHandlersFilters: state.settings.tableHandlersFiltersSettings,
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,

@@ -30,6 +30,7 @@ import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
 import ErrorFocus from '~/components/error-focus'
+import { BottomButtons } from '../../constants'
 
 const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -88,37 +89,6 @@ const FlexContent = styled.div`
   }
 `
 
-const BottomButtons = styled.div`
-  display: inline-block;
-  position: relative;
-  overflow: visible;
-  margin: 0;
-  box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
-  padding: 0.714285714em 1.785714286em;
-  text-align: right;
-
-  .ui.button {
-    font-size: 1em;
-    margin: 0 0.357142857em;
-    padding: 0.928571429em 1.5em 0.928571429em;
-    color: #848893;
-    background-color: #ffffff;
-    border: solid 1px #dee2e6;
-  }
-
-  .ui.primary.button {
-    color: #ffffff;
-    background-color: #2599d5;
-    border: none;
-  }
-
-  .ui.modal & {
-    margin: 30px -1.5rem -1.5rem;
-    border-top: 1px solid #dee2e6;
-    box-shadow: 0 0 0 0 transparent;
-  }
-`
-
 const GridColumnWError = styled(GridColumn)`
   &.column.error {
     color: #9f3a38;
@@ -153,11 +123,7 @@ class UsersSidebar extends React.Component {
   userFormValidation = () =>
     Yup.lazy(values => {
       const { adminRoles } = this.props
-      const { popupValues } = this.state
-
-      const disabledCompany = values.roles.some(role => adminRoles.some(d => role === d.id))
-      const requiredCompany = !!popupValues || (!disabledCompany && !values.company)
-      const requiredBranch = !!popupValues || (!disabledCompany && !!values.company)
+      const requiredCompany = !values.roles.some(role => adminRoles.some(d => role === d.id))
 
       return Yup.object().shape({
         name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -168,7 +134,7 @@ class UsersSidebar extends React.Component {
         ...(requiredCompany && {
           company: Yup.number().required(errorMessages.requiredMessage)
         }),
-        ...(requiredBranch && {
+        ...(requiredCompany && {
           homeBranch: Yup.number().required(errorMessages.requiredMessage)
         }),
         roles: Yup.array().min(1, errorMessages.minOneRole)
@@ -606,6 +572,7 @@ class UsersSidebar extends React.Component {
                         options={companiesOptions}
                         inputProps={{
                           icon: 'search',
+                          disabled: disabledCompany,
                           search: options => options,
                           selection: true,
                           onSearchChange: (e, { searchQuery }) =>
@@ -764,8 +731,8 @@ class UsersSidebar extends React.Component {
               </FlexContent>
 
               <BottomButtons>
-                <div style={{ textAlign: 'right' }}>
-                  <Button onClick={closePopup} data-test='admin_users_popup_reset_btn'>
+                <div>
+                  <Button className='light' onClick={closePopup} data-test='admin_users_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>

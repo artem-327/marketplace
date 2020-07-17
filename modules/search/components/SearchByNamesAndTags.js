@@ -13,11 +13,18 @@ import { searchTags } from '../actions'
 
 class SearchByNamesAndTags extends Component {
   state = {
-    or: '',
-    and: ''
+    filterName: '',
+    filterTags: [],
+    filterTagsValues: [],
   }
 
   componentDidMount() {
+    const { initFilterState } = this.props
+    // ! ! console.log('!!!!!!!!!! SearchByNamesAndTags componentDidMount this.props', this.props)
+    if (initFilterState) {
+      this.setState(initFilterState.state)
+      if (this.props.filterApply) this.handleFiltersValue(initFilterState.filters)
+    }
     try {
       this.props.searchTags('')
     } catch (error) {
@@ -33,34 +40,52 @@ class SearchByNamesAndTags extends Component {
     this.props.searchTags(searchQuery)
   }, 250)
 
-  handleFilterChange = (e, { value }) => {
-    this.setState({ or: value })
+  handleInputFilterChange = (e, { value }) => {
+    const filterTagsValues = this.state.filterTags.length > 0 ? this.state.filterTags.map(option => option.key) : []
+    this.setState({ filterName: value, filterTagsValues })
     const filters = {
-      or: value,
-      and: this.state.and.length > 0 ? this.state.and.map(option => option.key) : ''
+      filterName: value,
+      filterTags: filterTagsValues
     }
-    this.handleFiltersValue(filters)
+    if (this.props.filterApply) this.handleFiltersValue(filters)
+    this.props.onChange({
+      state: {
+        ...this.state,
+        filterName: value,
+        filterTagsValues
+      },
+      filters
+    })
   }
 
   handleTagsChange = (value, options) => {
     const selectedTags = options.length > 0 ? options.filter(el => value.some(v => el.value === v)) : []
-    this.setState({ and: selectedTags })
+    const filterTagsValues = selectedTags.length > 0 ? selectedTags.map(option => option.key) : []
+    this.setState({ filterTags: selectedTags, filterTagsValues })
     const filters = {
-      or: this.state.or,
-      and: selectedTags.length > 0 ? selectedTags.map(option => option.key) : ''
+      filterName: this.state.filterName,
+      filterTags: selectedTags.length > 0 ? selectedTags.map(option => option.key) : []
     }
-    this.handleFiltersValue(filters)
+    if (this.props.filterApply) this.handleFiltersValue(filters)
+    this.props.onChange({
+      state: {
+        ...this.state,
+        filterTags: selectedTags,
+        filterTagsValues
+      },
+      filters
+    })
   }
 
   render() {
     const {
-      tags,
+      tags: searchedTags,
       loading,
       intl: { formatMessage }
     } = this.props
-    const { or, and } = this.state
+    const { filterName, filterTags, filterTagsValues } = this.state
 
-    const allTagsOptions = uniqueArrayByKey(tags.concat(and), 'key')
+    const allTagsOptions = uniqueArrayByKey(searchedTags.concat(filterTags), 'key')
 
     return (
       <Fragment>
@@ -68,8 +93,8 @@ class SearchByNamesAndTags extends Component {
           <Input
             fluid
             icon='search'
-            value={or}
-            onChange={this.handleFilterChange}
+            value={filterName}
+            onChange={this.handleInputFilterChange}
             placeholder={formatMessage({
               id: 'myInventory.searchByProductName',
               defaultMessage: 'Search by product name...'
@@ -87,6 +112,7 @@ class SearchByNamesAndTags extends Component {
             icon='search'
             selection
             multiple
+            value={filterTagsValues}
             placeholder={formatMessage({
               id: 'global.selectTags',
               defaultMessage: 'Select tags'
@@ -107,13 +133,17 @@ class SearchByNamesAndTags extends Component {
 SearchByNamesAndTags.propTypes = {
   loading: PropTypes.bool.isRequired,
   tags: PropTypes.array.isRequired,
-  searchTags: PropTypes.func.isRequired
+  searchTags: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
+  filterApply: PropTypes.bool
 }
 
 SearchByNamesAndTags.defaultProps = {
   loading: false,
   tags: [],
-  searchTags: () => {}
+  searchTags: () => {},
+  onChange: () => {},
+  filterApply: true
 }
 
 const mapStateToProps = state => ({

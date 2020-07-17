@@ -20,9 +20,16 @@ export const clearAutocompleteData = () => {
   }
 }
 
-export function applyDatagridFilter(filter) {
+export function applyDatagridFilter(filter, reload = true) {
   return {
     type: AT.MARKETPLACE_APPLY_FILTER,
-    payload: filter
+    payload: { filter, reload }
+  }
+}
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.MARKETPLACE_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
   }
 }
