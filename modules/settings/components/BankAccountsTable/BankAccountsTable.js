@@ -514,7 +514,7 @@ const mapStateToProps = state => {
       // some changes here
     })),
     preferredBankAccountId,
-    filterValue: state.settings.filterValue,
+    filterValue: state.settings['bank-accountsFilter'],
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
     currentTab:

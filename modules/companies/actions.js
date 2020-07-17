@@ -52,16 +52,6 @@ export const resendWelcomeEmail = userId => {
   }
 }
 
-export function handleFiltersValue(props, value) {
-  return async dispatch => {
-    // save filter value
-    await dispatch({
-      type: AT.COMPANIES_HANDLE_FILTERS_VALUE,
-      payload: value
-    })
-  }
-}
-
 export function closePopup() {
   return {
     type: AT.COMPANIES_CLOSE_POPUP
@@ -241,3 +231,10 @@ export const searchBuyMarketSegments = segment => ({
     pageSize: 50
   })
 })
+
+export function saveFilters(filters) {
+  return {
+    type: AT.COMPANIES_SAVE_FILTERS,
+    payload: filters
+  }
+}

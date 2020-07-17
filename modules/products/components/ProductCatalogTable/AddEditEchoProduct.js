@@ -365,13 +365,24 @@ class AddEditEchoProduct extends React.Component {
             decompositionTemperature: getSafe(() => popupValues.decompositionTemperature, ''),
             developmentalEffects: getSafe(() => popupValues.developmentalEffects, ''),
             dotHazardClass: getSafe(() => popupValues.dotHazardClass.id, null),
-            dotHazardLabel: getSafe(() => popupValues.dotHazardLabel, ''),
             dotMarinePollutant: getSafe(() => popupValues.dotMarinePollutant, ''),
             dotPackagingGroup: getSafe(() => popupValues.dotPackagingGroup.id, null),
             dotProperShippingName: getSafe(() => popupValues.dotProperShippingName, ''),
             dotProperTechnicalName: getSafe(() => popupValues.dotProperTechnicalName, ''),
             dotReportableQuantity: getSafe(() => popupValues.dotReportableQuantity, ''),
             dotSevereMarinePollutant: getSafe(() => popupValues.dotSevereMarinePollutant, ''),
+            dotEnvironmentalHazards: getSafe(() => popupValues.dotEnvironmentalHazards, ''),
+            dotEmsNumbers: getSafe(() => popupValues.dotEmsNumbers, ''),
+            dotExceptions: getSafe(() => popupValues.dotExceptions, ''),
+            dotUserSpecialPrecautions: getSafe(() => popupValues.dotUserSpecialPrecautions, ''),
+            dotPackagingExceptions: getSafe(() => popupValues.dotPackagingExceptions, ''),
+            dotPackagingNonBulk: getSafe(() => popupValues.dotPackagingNonBulk, ''),
+            dotPackagingBulk: getSafe(() => popupValues.dotPackagingBulk, ''),
+            dotQuantityLimitations: getSafe(() => popupValues.dotQuantityLimitations, ''),
+            dotPassengerQuantityLimitations: getSafe(() => popupValues.dotPassengerQuantityLimitations, ''),
+            dotCargoAircraftQuantityLimitations: getSafe(() => popupValues.dotCargoAircraftQuantityLimitations, ''),
+            dotVesselStowageLocation: getSafe(() => popupValues.dotVesselStowageLocation, ''),
+            dotVesselStowageOther: getSafe(() => popupValues.dotVesselStowageOther, ''),
             dotUnNumber: getSafe(() => popupValues.dotUnNumber.id, null),
             elements: getSafe(
               () =>
@@ -403,17 +414,46 @@ class AddEditEchoProduct extends React.Component {
             hmisPhysicalHazard: getSafe(() => popupValues.hmisPhysicalHazard, ''),
             hnoc: getSafe(() => popupValues.hnoc, ''),
             iataHazardClass: getSafe(() => popupValues.iataHazardClass.id, null),
-            iataHazardLabel: getSafe(() => popupValues.iataHazardLabel, ''),
             iataPackagingGroup: getSafe(() => popupValues.iataPackagingGroup.id, null),
             iataProperShippingName: getSafe(() => popupValues.iataProperShippingName, ''),
             iataProperTechnicalName: getSafe(() => popupValues.iataProperTechnicalName, ''),
             iataUnNumber: getSafe(() => popupValues.iataUnNumber.id, null),
+            iataReportableQuantities: getSafe(() => popupValues.iataReportableQuantities, ''),
+            iataEnvironmentalHazards: getSafe(() => popupValues.iataEnvironmentalHazards, ''),
+            iataEmsNumbers: getSafe(() => popupValues.iataEmsNumbers, ''),
+            iataExceptions: getSafe(() => popupValues.iataExceptions, ''),
+            iataUserSpecialPrecautions: getSafe(() => popupValues.iataUserSpecialPrecautions, ''),
+            iataMarinePollutant: getSafe(() => popupValues.iataMarinePollutant, ''),
+            iataSevereMarinePollutant: getSafe(() => popupValues.iataSevereMarinePollutant, ''),
+            iataPackagingExceptions: getSafe(() => popupValues.iataPackagingExceptions, ''),
+            iataPackagingNonBulk: getSafe(() => popupValues.iataPackagingNonBulk, ''),
+            iataPackagingBulk: getSafe(() => popupValues.iataPackagingBulk, ''),
+            iataPassengerQuantityLimitations: getSafe(() => popupValues.iataPassengerQuantityLimitations, ''),
+            iataCargoAircraftQuantityLimitations: getSafe(() => popupValues.iataCargoAircraftQuantityLimitations, ''),
+            iataVesselStowageLocation: getSafe(() => popupValues.iataVesselStowageLocation, ''),
+            iataVesselStowageOther: getSafe(() => popupValues.iataVesselStowageOther, ''),
             imdgImoHazardClass: getSafe(() => popupValues.imdgImoHazardClass.id, null),
-            imdgImoHazardLabel: getSafe(() => popupValues.imdgImoHazardLabel, ''),
             imdgImoPackagingGroup: getSafe(() => popupValues.imdgImoPackagingGroup.id, null),
             imdgImoProperShippingName: getSafe(() => popupValues.imdgImoProperShippingName, ''),
             imdgImoProperTechnicalName: getSafe(() => popupValues.imdgImoProperTechnicalName, ''),
             imdgImoUnNumber: getSafe(() => popupValues.imdgImoUnNumber.id, null),
+            imdgImoReportableQuantities: getSafe(() => popupValues.imdgImoReportableQuantities, ''),
+            imdgImoEnvironmentalHazards: getSafe(() => popupValues.imdgImoEnvironmentalHazards, ''),
+            imdgImoEmsNumbers: getSafe(() => popupValues.imdgImoEmsNumbers, ''),
+            imdgImoExceptions: getSafe(() => popupValues.imdgImoExceptions, ''),
+            imdgImoUserSpecialPrecautions: getSafe(() => popupValues.imdgImoUserSpecialPrecautions, ''),
+            imdgImoMarinePollutant: getSafe(() => popupValues.imdgImoMarinePollutant, ''),
+            imdgImoSevereMarinePollutant: getSafe(() => popupValues.imdgImoSevereMarinePollutant, ''),
+            imdgImoPackagingExceptions: getSafe(() => popupValues.imdgImoPackagingExceptions, ''),
+            imdgImoPackagingNonBulk: getSafe(() => popupValues.imdgImoPackagingNonBulk, ''),
+            imdgImoPackagingBulk: getSafe(() => popupValues.imdgImoPackagingBulk, ''),
+            imdgImoPassengerQuantityLimitations: getSafe(() => popupValues.imdgImoPassengerQuantityLimitations, ''),
+            imdgImoCargoAircraftQuantityLimitations: getSafe(
+              () => popupValues.imdgImoCargoAircraftQuantityLimitations,
+              ''
+            ),
+            imdgImoVesselStowageLocation: getSafe(() => popupValues.imdgImoVesselStowageLocation, ''),
+            imdgImoVesselStowageOther: getSafe(() => popupValues.imdgImoVesselStowageOther, ''),
             incompatibleMaterials: getSafe(() => popupValues.incompatibleMaterials, ''),
             ingestion: getSafe(() => popupValues.ingestion, ''),
             inhalation: getSafe(() => popupValues.inhalation, ''),
@@ -462,10 +502,23 @@ class AddEditEchoProduct extends React.Component {
             supplementalInformation: getSafe(() => popupValues.supplementalInformation, ''),
             symptomsEffects: getSafe(() => popupValues.symptomsEffects, ''),
             tdgHazardClass: getSafe(() => popupValues.tdgHazardClass.id, null),
-            tdgHazardLabel: getSafe(() => popupValues.tdgHazardLabel, ''),
             tdgPackagingGroup: getSafe(() => popupValues.tdgPackagingGroup.id, null),
             tdgProperShippingName: getSafe(() => popupValues.tdgProperShippingName, ''),
             tdgProperTechnicalName: getSafe(() => popupValues.tdgProperTechnicalName, ''),
+            tdgReportableQuantities: getSafe(() => popupValues.tdgReportableQuantities, ''),
+            tdgEnvironmentalHazards: getSafe(() => popupValues.tdgEnvironmentalHazards, ''),
+            tdgEmsNumbers: getSafe(() => popupValues.tdgEmsNumbers, ''),
+            tdgExceptions: getSafe(() => popupValues.tdgExceptions, ''),
+            tdgUserSpecialPrecautions: getSafe(() => popupValues.tdgUserSpecialPrecautions, ''),
+            tdgMarinePollutant: getSafe(() => popupValues.tdgMarinePollutant, ''),
+            tdgSevereMarinePollutant: getSafe(() => popupValues.tdgSevereMarinePollutant, ''),
+            tdgPackagingExceptions: getSafe(() => popupValues.tdgPackagingExceptions, ''),
+            tdgPackagingNonBulk: getSafe(() => popupValues.tdgPackagingNonBulk, ''),
+            tdgPackagingBulk: getSafe(() => popupValues.tdgPackagingBulk, ''),
+            tdgPassengerQuantityLimitations: getSafe(() => popupValues.tdgPassengerQuantityLimitations, ''),
+            tdgCargoAircraftQuantityLimitations: getSafe(() => popupValues.tdgCargoAircraftQuantityLimitations, ''),
+            tdgVesselStowageLocation: getSafe(() => popupValues.tdgVesselStowageLocation, ''),
+            tdgVesselStowageOther: getSafe(() => popupValues.tdgVesselStowageOther, ''),
             tdgUnNumber: getSafe(() => popupValues.tdgUnNumber.id, null),
             tdsIssuedDate: getSafe(() => popupValues.tdsIssuedDate, ''),
             tdsPreparedBy: getSafe(() => popupValues.tdsPreparedBy, ''),
@@ -479,7 +532,16 @@ class AddEditEchoProduct extends React.Component {
             wasteDisposalMethods: getSafe(() => popupValues.wasteDisposalMethods, ''),
             isPublished: getSafe(() => popupValues.isPublished, false),
             productGroup: getSafe(() => popupValues.productGroup.id, ''),
-            company: getSafe(() => popupValues.company.id, '')
+            company: getSafe(() => popupValues.company.id, ''),
+            optionalRecommendedRestrictions: getSafe(() => popupValues.optionalRecommendedRestrictions, ''),
+            optionalSynonyms: getSafe(() => popupValues.optionalSynonyms, ''),
+            optionalSchedule: getSafe(() => popupValues.optionalSchedule, ''),
+            optionalSpecificVolume: getSafe(() => popupValues.optionalSpecificVolume, ''),
+            optionalCriticalTemperature: getSafe(() => popupValues.optionalCriticalTemperature, ''),
+            optionalGasDensity: getSafe(() => popupValues.optionalGasDensity, ''),
+            optionalRelativeDensity: getSafe(() => popupValues.optionalRelativeDensity, ''),
+            optionalFlowTime: getSafe(() => popupValues.optionalFlowTime, ''),
+            optionalHeatOfCombustion: getSafe(() => popupValues.optionalHeatOfCombustion, '')
           }
         : null)
     }
@@ -1232,6 +1294,11 @@ class AddEditEchoProduct extends React.Component {
           formikProps
         )}
         {this.RowInput({
+          name: 'optionalCriticalTemperature',
+          id: 'global.optionalCriticalTemperature',
+          defaultMessage: 'Critical Temperature'
+        })}
+        {this.RowInput({
           name: 'decompositionTemperature',
           id: 'global.decompositionTemperature',
           defaultMessage: 'Decomposition Temperature'
@@ -1268,6 +1335,16 @@ class AddEditEchoProduct extends React.Component {
           defaultMessage: 'Flammability (solid, gas)'
         })}
         {this.RowInput({ name: 'flashPoint', id: 'global.flashPoint', defaultMessage: 'Flash Point' })}
+        {this.RowInput({
+          name: 'optionalFlowTime',
+          id: 'global.optionalFlowTime',
+          defaultMessage: 'Flow Time'
+        })}
+        {this.RowInput({
+          name: 'optionalGasDensity',
+          id: 'global.optionalGasDensity',
+          defaultMessage: 'Gas Desity'
+        })}
         {this.RowTextArea(
           { name: 'generalAdvice', id: 'global.generalAdvice', defaultMessage: 'General Advice' },
           formikProps
@@ -1294,6 +1371,11 @@ class AddEditEchoProduct extends React.Component {
           name: 'hazardousReactions',
           id: 'global.hazardousReactions',
           defaultMessage: 'Hazardous Reactions'
+        })}
+        {this.RowInput({
+          name: 'optionalHeatOfCombustion',
+          id: 'global.optionalHeatOfCombustion',
+          defaultMessage: 'Heat Of Combustion'
         })}
         {this.RowInput({
           name: 'hmisChronicHealthHazard',
@@ -1410,16 +1492,29 @@ class AddEditEchoProduct extends React.Component {
         })}
         {this.RowInput({ name: 'productLd50Oral', id: 'global.productLd50Oral', defaultMessage: 'Product LD50 Oral' })}
         {this.RowInput({ name: 'reactiveHazard', id: 'global.reactiveHazard', defaultMessage: 'Reactive Hazard' })}
+        {this.RowInput({
+          name: 'optionalRecommendedRestrictions',
+          id: 'global.optionalRecommendedRestrictions',
+          defaultMessage: 'Recommended Restrictions'
+        })}
+
         {this.RowTextArea(
           { name: 'recommendedUse', id: 'global.recommendedUse', defaultMessage: 'Recommended Use' },
           formikProps
         )}
+        {this.RowInput({
+          name: 'optionalRelativeDensity',
+          id: 'global.optionalRelativeDensity',
+          defaultMessage: 'Relative Density'
+        })}
         {this.RowInput({
           name: 'reproductiveEffects',
           id: 'global.reproductiveEffects',
           defaultMessage: 'Reproductive Effects'
         })}
         {this.RowInput({ name: 'sensitization', id: 'global.sensitization', defaultMessage: 'Sensitization' })}
+        {this.RowInput({ name: 'optionalSchedule', id: 'global.optionalSchedule', defaultMessage: 'Schedule' })}
+
         {this.RowInput({ name: 'signalWord', id: 'global.signalWord', defaultMessage: 'Signal Word' })}
         {this.RowTextArea(
           { name: 'skinContact', id: 'global.skinContact', defaultMessage: 'Skin Contact' },
@@ -1427,6 +1522,11 @@ class AddEditEchoProduct extends React.Component {
         )}
         {this.RowInput({ name: 'solubility', id: 'global.solubility', defaultMessage: 'Solubility' })}
         {this.RowInput({ name: 'specificGravity', id: 'global.specificGravity', defaultMessage: 'Specific Gravity' })}
+        {this.RowInput({
+          name: 'optionalSpecificVolume',
+          id: 'global.optionalSpecificVolume',
+          defaultMessage: 'Specific Volume'
+        })}
         {this.RowInput({ name: 'stability', id: 'global.stability', defaultMessage: 'Stability' })}
         {this.RowInput({
           name: 'stotRepeatedExposure',
@@ -1451,6 +1551,11 @@ class AddEditEchoProduct extends React.Component {
           },
           formikProps
         )}
+        {this.RowInput({
+          name: 'optionalSynonyms',
+          id: 'global.optionalSynonyms',
+          defaultMessage: 'Synonyms'
+        })}
         {this.RowInput({ name: 'teratogenicity', id: 'global.teratogenicity', defaultMessage: 'Teratogenicity' })}
         {this.RowInput({
           name: 'usesAdvisedAgainst',
@@ -1544,7 +1649,6 @@ class AddEditEchoProduct extends React.Component {
                 options: this.props.hazardClasses
               }
             })}
-            {this.RowInput({ name: 'dotHazardLabel', id: 'global.dotHazardLabel', defaultMessage: 'DOT Hazard Label' })}
             {this.RowInput({
               name: 'dotMarinePollutant',
               id: 'global.dotMarinePollutant',
@@ -1587,6 +1691,67 @@ class AddEditEchoProduct extends React.Component {
                 options: unNumberOptions
               }
             })}
+            {this.RowInput({
+              name: 'dotEnvironmentalHazards',
+              id: 'global.dotEnvironmentalHazards',
+              defaultMessage: 'DOT Enviromental Hazards'
+            })}
+            {this.RowInput({
+              name: 'dotEmsNumbers',
+              id: 'global.dotEmsNumbers',
+              defaultMessage: 'DOT Ems Numbers'
+            })}
+
+            {this.RowInput({
+              name: 'dotExceptions',
+              id: 'global.dotExceptions',
+              defaultMessage: 'DOT Exceptions'
+            })}
+            {this.RowInput({
+              name: 'dotUserSpecialPrecautions',
+              id: 'global.dotUserSpecialPrecautions',
+              defaultMessage: 'DOT User Special Precautions'
+            })}
+            {this.RowInput({
+              name: 'dotPackagingExceptions',
+              id: 'global.dotPackagingExceptions',
+              defaultMessage: 'DOT Packaging Exceptions'
+            })}
+            {this.RowInput({
+              name: 'dotPackagingNonBulk',
+              id: 'global.dotPackagingNonBulk',
+              defaultMessage: 'DOT Packaging Non Bulk'
+            })}
+            {this.RowInput({
+              name: 'dotPackagingBulk',
+              id: 'global.dotPackagingBulk',
+              defaultMessage: 'DOT Packaging Bulk'
+            })}
+            {this.RowInput({
+              name: 'dotQuantityLimitations',
+              id: 'global.dotQuantityLimitations',
+              defaultMessage: 'DOT Quantity Limitations'
+            })}
+            {this.RowInput({
+              name: 'dotPassengerQuantityLimitations',
+              id: 'global.dotPassengerQuantityLimitations',
+              defaultMessage: 'DOT Passenger Quantity Limitations'
+            })}
+            {this.RowInput({
+              name: 'dotCargoAircraftQuantityLimitations',
+              id: 'global.dotCargoAircraftQuantityLimitations',
+              defaultMessage: 'DOT Cargo Aircraft Quantity Limitations'
+            })}
+            {this.RowInput({
+              name: 'dotVesselStowageLocation',
+              id: 'global.dotVesselStowageLocation',
+              defaultMessage: 'DOT Vessel Stowage Location'
+            })}
+            {this.RowInput({
+              name: 'dotVesselStowageOther',
+              id: 'global.dotVesselStowageOther',
+              defaultMessage: 'DOT Vessel Stowage Other'
+            })}
           </Grid>
         )
       }
@@ -1602,11 +1767,6 @@ class AddEditEchoProduct extends React.Component {
               props: {
                 options: this.props.hazardClasses
               }
-            })}
-            {this.RowInput({
-              name: 'iataHazardLabel',
-              id: 'global.iataHazardLabel',
-              defaultMessage: 'IATA Hazard Label'
             })}
             {this.RowDropdown({
               name: 'iataPackagingGroup',
@@ -1635,11 +1795,82 @@ class AddEditEchoProduct extends React.Component {
                 options: unNumberOptions
               }
             })}
+
+            {this.RowInput({
+              name: 'iataReportableQuantities',
+              id: 'global.iataReportableQuantities',
+              defaultMessage: 'IATA Reportable Quantities'
+            })}
+            {this.RowInput({
+              name: 'iataEnvironmentalHazards',
+              id: 'global.iataEnvironmentalHazards',
+              defaultMessage: 'IATA Enviromental Hazards'
+            })}
+            {this.RowInput({
+              name: 'iataEmsNumbers',
+              id: 'global.iataEmsNumbers',
+              defaultMessage: 'IATA Ems Numbers'
+            })}
+            {this.RowInput({
+              name: 'iataExceptions',
+              id: 'global.iataExceptions',
+              defaultMessage: 'IATA Exceptions'
+            })}
+            {this.RowInput({
+              name: 'iataUserSpecialPrecautions',
+              id: 'global.iataUserSpecialPrecautions',
+              defaultMessage: 'IATA User Special Precautions'
+            })}
+            {this.RowInput({
+              name: 'iataMarinePollutant',
+              id: 'global.iataMarinePollutant',
+              defaultMessage: 'IATA Marine Pollutant'
+            })}
+            {this.RowInput({
+              name: 'iataSevereMarinePollutant',
+              id: 'global.iataSevereMarinePollutant',
+              defaultMessage: 'IATA Severe Marine Pollutant'
+            })}
+            {this.RowInput({
+              name: 'iataPackagingExceptions',
+              id: 'global.iataPackagingExceptions',
+              defaultMessage: 'IATA Packaging Exceptions'
+            })}
+            {this.RowInput({
+              name: 'iataPackagingNonBulk',
+              id: 'global.iataPackagingNonBulk',
+              defaultMessage: 'IATA Packaging Non Bulk'
+            })}
+            {this.RowInput({
+              name: 'iataPackagingBulk',
+              id: 'global.iataPackagingBulk',
+              defaultMessage: 'IATA Packaging Bulk'
+            })}
+            {this.RowInput({
+              name: 'iataPassengerQuantityLimitations',
+              id: 'global.iataPassengerQuantityLimitations',
+              defaultMessage: 'IATA Passenger Quantity Limitations'
+            })}
+            {this.RowInput({
+              name: 'iataCargoAircraftQuantityLimitations',
+              id: 'global.iataCargoAircraftQuantityLimitations',
+              defaultMessage: 'IATA Cargo Aircraft Quantity Limitations'
+            })}
+            {this.RowInput({
+              name: 'iataVesselStowageLocation',
+              id: 'global.iataVesselStowageLocation',
+              defaultMessage: 'IATA Vessel Stoge Location'
+            })}
+            {this.RowInput({
+              name: 'iataVesselStowageOther',
+              id: 'global.iataVesselStowageOther',
+              defaultMessage: 'IATA Vessel Stowage Other'
+            })}
           </Grid>
         )
       }
 
-      case 'tdg': {
+      case 'imdgImo': {
         return (
           <Grid verticalAlign='middle'>
             {this.RowDropdown({
@@ -1650,11 +1881,6 @@ class AddEditEchoProduct extends React.Component {
               props: {
                 options: this.props.hazardClasses
               }
-            })}
-            {this.RowInput({
-              name: 'imdgImoHazardLabel',
-              id: 'global.imdgImoHazardLabel',
-              defaultMessage: 'IMDG/IMO Hazard Label'
             })}
             {this.RowDropdown({
               name: 'imdgImoPackagingGroup',
@@ -1683,11 +1909,82 @@ class AddEditEchoProduct extends React.Component {
                 options: unNumberOptions
               }
             })}
+
+            {this.RowInput({
+              name: 'imdgImoReportableQuantities',
+              id: 'global.imdgImoReportableQuantities',
+              defaultMessage: 'IMDG/IMO Reportable Quantities'
+            })}
+            {this.RowInput({
+              name: 'imdgImoEnvironmentalHazards',
+              id: 'global.imdgImoEnvironmentalHazards',
+              defaultMessage: 'IMDG/IMO Enviromental Hazards'
+            })}
+            {this.RowInput({
+              name: 'imdgImoEmsNumbers',
+              id: 'global.imdgImoEmsNumbers',
+              defaultMessage: 'IMDG/IMO Ems Numbers'
+            })}
+            {this.RowInput({
+              name: 'imdgImoExceptions',
+              id: 'global.imdgImoExceptions',
+              defaultMessage: 'IMDG/IMO Exceptions'
+            })}
+            {this.RowInput({
+              name: 'imdgImoUserSpecialPrecautions',
+              id: 'global.imdgImoUserSpecialPrecautions',
+              defaultMessage: 'IMDG/IMO User Special Precautions'
+            })}
+            {this.RowInput({
+              name: 'imdgImoMarinePollutant',
+              id: 'global.imdgImoMarinePollutant',
+              defaultMessage: 'IMDG/IMO Marine Pollutant'
+            })}
+            {this.RowInput({
+              name: 'imdgImoSevereMarinePollutant',
+              id: 'global.imdgImoSevereMarinePollutant',
+              defaultMessage: 'IMDG/IMO Severe Marine Pollutant'
+            })}
+            {this.RowInput({
+              name: 'imdgImoPackagingExceptions',
+              id: 'global.imdgImoPackagingExceptions',
+              defaultMessage: 'IMDG/IMO Packaging Exceptions'
+            })}
+            {this.RowInput({
+              name: 'imdgImoPackagingNonBulk',
+              id: 'global.imdgImoPackagingNonBulk',
+              defaultMessage: 'IMDG/IMO Packaging Non Bulk'
+            })}
+            {this.RowInput({
+              name: 'imdgImoPackagingBulk',
+              id: 'global.imdgImoPackagingBulk',
+              defaultMessage: 'IMDG/IMO Packaging Bulk'
+            })}
+            {this.RowInput({
+              name: 'imdgImoPassengerQuantityLimitations',
+              id: 'global.imdgImoPassengerQuantityLimitations',
+              defaultMessage: 'IMDG/IMO Passenger Quantity Limitations'
+            })}
+            {this.RowInput({
+              name: 'imdgImoCargoAircraftQuantityLimitations',
+              id: 'global.imdgImoCargoAircraftQuantityLimitations',
+              defaultMessage: 'IMDG/IMO Cargo Aircraft Quantity Limitations'
+            })}
+            {this.RowInput({
+              name: 'imdgImoVesselStowageLocation',
+              id: 'global.imdgImoVesselStowageLocation',
+              defaultMessage: 'IMDG/IMO Vessel Stoge Location'
+            })}
+            {this.RowInput({
+              name: 'imdgImoVesselStowageOther',
+              id: 'global.imdgImoVesselStowageOther',
+              defaultMessage: 'IMDG/IMO Vessel Stowage Other'
+            })}
           </Grid>
         )
       }
 
-      case 'imdgImo': {
+      case 'tdg': {
         return (
           <Grid verticalAlign='middle'>
             {this.RowDropdown({
@@ -1699,7 +1996,6 @@ class AddEditEchoProduct extends React.Component {
                 options: this.props.hazardClasses
               }
             })}
-            {this.RowInput({ name: 'tdgHazardLabel', id: 'global.tdgHazardLabel', defaultMessage: 'TDG Hazard Label' })}
             {this.RowDropdown({
               name: 'tdgPackagingGroup',
               id: 'global.tdgPackagingGroup',
@@ -1726,6 +2022,77 @@ class AddEditEchoProduct extends React.Component {
               props: {
                 options: unNumberOptions
               }
+            })}
+
+            {this.RowInput({
+              name: 'tdgReportableQuantities',
+              id: 'global.tdgReportableQuantities',
+              defaultMessage: 'TDG Reportable Quantities'
+            })}
+            {this.RowInput({
+              name: 'tdgEnvironmentalHazards',
+              id: 'global.tdgEnvironmentalHazards',
+              defaultMessage: 'TDG Environmental Hazards'
+            })}
+            {this.RowInput({
+              name: 'tdgEmsNumbers',
+              id: 'global.tdgEmsNumbers',
+              defaultMessage: 'TDG Ems Numbers'
+            })}
+            {this.RowInput({
+              name: 'tdgExceptions',
+              id: 'global.tdgExceptions',
+              defaultMessage: 'TDG Exceptions'
+            })}
+            {this.RowInput({
+              name: 'tdgUserSpecialPrecautions',
+              id: 'global.tdgUserSpecialPrecautions',
+              defaultMessage: 'TDG Users Special Precautions'
+            })}
+            {this.RowInput({
+              name: 'tdgMarinePollutant',
+              id: 'global.tdgMarinePollutant',
+              defaultMessage: 'TDG Marine Pollutant'
+            })}
+            {this.RowInput({
+              name: 'tdgSevereMarinePollutant',
+              id: 'global.tdgSevereMarinePollutant',
+              defaultMessage: 'TDG Severe Marine Pollutant'
+            })}
+            {this.RowInput({
+              name: 'tdgPackagingExceptions',
+              id: 'global.tdgPackagingExceptions',
+              defaultMessage: 'TDG Packaging Exceptions'
+            })}
+            {this.RowInput({
+              name: 'tdgPackagingNonBulk',
+              id: 'global.tdgPackagingNonBulk',
+              defaultMessage: 'TDG Packaging Non Bulk'
+            })}
+            {this.RowInput({
+              name: 'tdgPackagingBulk',
+              id: 'global.tdgPackagingBulk',
+              defaultMessage: 'TDG Packaging Bulk'
+            })}
+            {this.RowInput({
+              name: 'tdgPassengerQuantityLimitations',
+              id: 'global.tdgPassengerQuantityLimitations',
+              defaultMessage: 'TDG Passanger Quantity Limitations'
+            })}
+            {this.RowInput({
+              name: 'tdgCargoAircraftQuantityLimitations',
+              id: 'global.tdgCargoAircraftQuantityLimitations',
+              defaultMessage: 'TDG Cargo Aircraft Quantity Limitations'
+            })}
+            {this.RowInput({
+              name: 'tdgVesselStowageLocation',
+              id: 'global.tdgVesselStowageLocation',
+              defaultMessage: 'TDG Vessel Stowage Location'
+            })}
+            {this.RowInput({
+              name: 'tdgVesselStowageOther',
+              id: 'global.tdgVesselStowageOther',
+              defaultMessage: 'TDG Vessel Stowage Other'
             })}
           </Grid>
         )

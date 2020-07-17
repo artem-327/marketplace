@@ -457,10 +457,10 @@ export function detachOffers(productOfferIds) {
     payload: api.detachOffers(productOfferIds)
   }
 }
-export function applyDatagridFilter(filter) {
+export function applyDatagridFilter(filter, reload = true) {
   return {
     type: AT.INVENTORY_APPLY_FILTER,
-    payload: filter
+    payload: { filter, reload }
   }
 }
 
@@ -491,5 +491,12 @@ export function setExportSidebarOpenState(open) {
   return {
     type: AT.INVENTORY_SET_EXPORT_SIDEBAR_OPEN_STATE,
     payload: open
+  }
+}
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.INVENTORY_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
   }
 }

@@ -131,37 +131,68 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterValue: ''
+      'delivery-locations': {
+        searchInput: ''
+      },
+      'pick-up-locations': {
+        searchInput: ''
+      },
+      'branches': {
+        searchInput: ''
+      },
     }
-    this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
+    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
 
-  componentDidUpdate = async (prevProps, prevState, snapshot) => {
-    if (prevProps.activeTab !== this.props.activeTab) {
-      this.setState({ filterValue: '' })
-      this.handleFiltersValue('')
+  componentDidMount() {
+    const { tableHandlersFilters, currentTab } = this.props
+    if (currentTab === '') return
+    if (tableHandlersFilters) {
+      this.setState(tableHandlersFilters)
+      this.handleFiltersValue(tableHandlersFilters[currentTab])
+    } else {
+      this.handleFiltersValue(this.state[currentTab])
     }
   }
 
-  handleFiltersValue = value => {
-    const { handleFiltersValue } = this.props
-    if (Datagrid.isReady()) Datagrid.setSearch(value, true, 'pageFilters')
-    else handleFiltersValue(value)
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.currentTab !== this.props.currentTab) {
+      const { currentTab } = this.props
+      if (currentTab === '') return
+      this.props.datagrid.clear()
+      this.handleFiltersValue(this.state[currentTab])
+    }
   }
 
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-    this.handleFiltersValue(value)
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFiltersLocations', this.state)
+  }
+
+  handleFiltersValue = filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }
+
+  handleFilterChangeInputSearch = (e, data) => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
+
+    const filter = {
+      ...this.state[currentTab],
+      [data.name]: data.value
+    }
+    this.setState({ [currentTab]: filter })
+    this.handleFiltersValue(filter)
   }
 
   renderHandler = () => {
     const {
-      activeTab,
+      currentTab,
       openSidebar,
       intl: {formatMessage}
     } = this.props
 
-    const {filterValue} = this.state
+    const filterValue = this.state[currentTab]
 
     return (
       <>
@@ -169,13 +200,14 @@ class TablesHandlers extends Component {
           <div className='column'>
             <Input
               style={{ width: '370px' }}
+              name='searchInput'
               icon='search'
-              value={filterValue}
+              value={filterValue.searchInput}
               placeholder={formatMessage({
-                id: textsTable[activeTab].SearchText,
-                defaultMessage: 'Select Credit Card'
+                id: textsTable[currentTab].SearchText,
+                defaultMessage: 'Search Address'
               })}
-              onChange={this.handleFilterChange}
+              onChange={this.handleFilterChangeInputSearch}
             />
           </div>
         </div>
@@ -185,7 +217,7 @@ class TablesHandlers extends Component {
             onClick={() => openSidebar()}
             data-test='settings_open_popup_btn'>
             <PlusCircle />
-            <FormattedMessage id={textsTable[activeTab].BtnAddText}>{text => text}</FormattedMessage>
+            <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
           </Button>
         </div>
       </>
@@ -206,7 +238,8 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   return {
     ...state,
-    activeTab: state.settings.locationsTab,
+    currentTab: state.settings.locationsTab,
+    tableHandlersFilters: state.settings.tableHandlersFiltersLocations,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     filterValue: state.settings.filterValue
   }

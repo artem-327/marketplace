@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
 import { debounce } from 'lodash'
 import moment from 'moment'
-import { node, object, bool, array } from 'prop-types'
+import { object, bool, array } from 'prop-types'
 import { FileText } from 'react-feather'
 
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
@@ -145,133 +145,149 @@ class AttachmentClass extends Component {
   }
 
   render() {
-    const { trigger, asModal, documentTypes, documentTypeIds, lockedFileTypes } = this.props
+    const { asModal, documentTypes, documentTypeIds, lockedFileTypes, singleSelection } = this.props
     if (!asModal) return this.getContent()
 
     return (
       <>
-        <Modal
-          closeIcon={
-            <PaddedIcon
-              onClick={() => {
-                this.returnCloseAttachmentManager()
-                this.setState({ open: false })
-              }}
-              name='close icon'
-            />
-          }
-          centered={true}
-          open={this.state.open}
-          trigger={React.cloneElement(trigger, {
-            onClick: () => {
-              this.setState({ open: true })
-              if (documentTypeIds && documentTypeIds.length) {
-                this.handleSearch({ name: '', type: documentTypeIds })
-                this.setState({ documentTypes: documentTypeIds })
-              } else {
-                this.setState({ documentTypes: [] })
-              }
+        <CustomButton
+          fluid
+          type='button'
+          onClick={() => {
+            this.setState({open: true})
+            if (documentTypeIds && documentTypeIds.length) {
+              this.handleSearch({name: '', type: documentTypeIds})
+              this.setState({documentTypes: documentTypeIds})
+            } else {
+              this.setState({documentTypes: []})
             }
-          })}
-          onClose={() => {
-            this.returnCloseAttachmentManager()
-            this.setState({ open: false })
-          }}>
-          <CustomHeader>
-            <Grid verticalAlign='middle'>
-              <GridRow>
-                <GridColumn width={6}>
-                  <Header as='h2'>
-                    <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Header>
-                </GridColumn>
-              </GridRow>
-            </Grid>
-          </CustomHeader>
-          <Modal.Content scrolling>
-            <Grid style={{ justifyContent: 'flex-end' }}>
-              <GridRow>
-                <GridColumn width={7}>
-                  <CustomDropdown
-                    multiple
-                    name='documentTypes'
-                    options={documentTypes}
-                    value={this.state.documentTypes}
-                    selection
-                    disabled={lockedFileTypes}
-                    onChange={(event, { name, value }) => {
-                      this.setState({ [name]: value })
-                      this.handleSearch({ name: this.state.searchValue, type: value })
-                    }}
-                    placeholder={
-                      <FormattedMessage id='related.documents.selectType' defaultMessage='Select type'>
+          }}
+        >
+          <CustomIcon size='14' />
+          <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
+            {text => text}
+          </FormattedMessage>
+        </CustomButton>
+
+        {this.state.open && (
+          <Modal
+            closeIcon={
+              <PaddedIcon
+                onClick={() => {
+                  this.returnCloseAttachmentManager()
+                  this.setState({open: false})
+                }}
+              />
+            }
+            centered={true}
+            open={true}
+            onClose={() => {
+              this.returnCloseAttachmentManager()
+              this.setState({open: false})
+            }}>
+            <CustomHeader>
+              <Grid verticalAlign='middle'>
+                <GridRow>
+                  <GridColumn width={6}>
+                    <Header as='h2'>
+                      <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
                         {text => text}
                       </FormattedMessage>
-                    }
-                  />
-                </GridColumn>
-                <GridColumn width={5}>
-                  <Input
-                    icon='search'
-                    placeholder='Search...'
-                    onChange={(_, data) => {
-                      this.setState({ searchValue: data && data.value })
-                      this.handleSearch({ name: data.value, type: this.state.documentTypes })
-                    }}
-                  />
-                </GridColumn>
+                    </Header>
+                  </GridColumn>
+                </GridRow>
+              </Grid>
+            </CustomHeader>
+            <Modal.Content scrolling>
+              <Grid style={{justifyContent: 'flex-end'}}>
+                <GridRow>
+                  <GridColumn width={7}>
+                    <CustomDropdown
+                      multiple
+                      name='documentTypes'
+                      options={documentTypes}
+                      value={this.state.documentTypes}
+                      selection
+                      disabled={lockedFileTypes}
+                      onChange={(event, {name, value}) => {
+                        this.setState({[name]: value})
+                        this.handleSearch({name: this.state.searchValue, type: value})
+                      }}
+                      placeholder={
+                        <FormattedMessage id='related.documents.selectType' defaultMessage='Select type'>
+                          {text => text}
+                        </FormattedMessage>
+                      }
+                    />
+                  </GridColumn>
+                  <GridColumn width={5}>
+                    <Input
+                      icon='search'
+                      placeholder='Search...'
+                      onChange={(_, data) => {
+                        this.setState({searchValue: data && data.value})
+                        this.handleSearch({name: data.value, type: this.state.documentTypes})
+                      }}
+                    />
+                  </GridColumn>
 
-                <CustomGridColumn width={4}>
-                  <Button
-                    type='button'
-                    style={{ color: 'white', backgroundColor: '#2599d5' }}
-                    disabled={!this.state.selectedRows.length}
-                    onClick={this.returnSelectedRows}>
-                    <FormattedMessage id='attachments.attachSelected' defaultMessage='Attach Selected Files'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </CustomGridColumn>
-              </GridRow>
-            </Grid>
-            {this.getContent()}
-          </Modal.Content>
+                  <CustomGridColumn width={4}>
+                    <Button
+                      type='button'
+                      style={{color: 'white', backgroundColor: '#2599d5'}}
+                      disabled={!this.state.selectedRows.length}
+                      onClick={this.returnSelectedRows}>
+                      {singleSelection ? (
+                        <FormattedMessage id='attachments.attachSelectedFile' defaultMessage='Attach Selected File'>
+                          {text => text}
+                        </FormattedMessage>
+                      ) : (
+                        <FormattedMessage id='attachments.attachSelectedFiles' defaultMessage='Attach Selected Files'>
+                          {text => text}
+                        </FormattedMessage>
+                      )
+                      }
+                    </Button>
+                  </CustomGridColumn>
+                </GridRow>
+              </Grid>
+              {this.getContent()}
+            </Modal.Content>
 
-          <Modal.Actions>
-            <Button
-              basic
-              onClick={() => {
-                this.returnCloseAttachmentManager()
-                this.setState({ open: false })
-              }}>
-              <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-            <Button
-              style={{ color: 'white', backgroundColor: '#2599d5' }}
-              onClick={() => this.setState({ uploadOpen: true })}>
-              <FormattedMessage id='global.uploadAnother' defaultMessage='Upload Another'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-            {this.state.uploadOpen && (
-              <DocumentManagerPopup
-                onClose={() => {
-                  this.setState({ uploadOpen: false })
-                }}
-                lockedFileType={false /*lockedFileTypes*/}
-                initialFileType={
-                  this.state.documentTypes && this.state.documentTypes.length
-                    ? this.state.documentTypes[0]
-                    : null
-                }
-              />
-            )}
-          </Modal.Actions>
-        </Modal>
+            <Modal.Actions>
+              <Button
+                basic
+                onClick={() => {
+                  this.returnCloseAttachmentManager()
+                  this.setState({open: false})
+                }}>
+                <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+              <Button
+                style={{color: 'white', backgroundColor: '#2599d5'}}
+                onClick={() => this.setState({uploadOpen: true})}>
+                <FormattedMessage id='global.uploadAnother' defaultMessage='Upload Another'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+              {this.state.uploadOpen && (
+                <DocumentManagerPopup
+                  onClose={() => {
+                    this.setState({uploadOpen: false})
+                  }}
+                  lockedFileType={false /*lockedFileTypes*/}
+                  initialFileType={
+                    this.state.documentTypes && this.state.documentTypes.length
+                      ? this.state.documentTypes[0]
+                      : null
+                  }
+                />
+              )}
+            </Modal.Actions>
+          </Modal>
+        )}
       </>
     )
   }
@@ -288,7 +304,6 @@ const mapStateToProps = state => {
 const AttachmentModal = withDatagrid(connect(mapStateToProps, mapDispatchToProps)(AttachmentClass))
 
 AttachmentModal.propTypes = {
-  trigger: node,
   tableProps: object,
   asModal: bool,
   selectable: bool,
@@ -298,14 +313,6 @@ AttachmentModal.propTypes = {
 }
 
 AttachmentModal.defaultProps = {
-  trigger: (
-    <CustomButton fluid type='button'>
-      <CustomIcon size='14' />
-      <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
-        {text => text}
-      </FormattedMessage>
-    </CustomButton>
-  ),
   tableProps: {},
   asModal: true,
   selectable: true,

@@ -195,57 +195,110 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterValue: {
+      purchase: {
+        status: 'all',
+        orderId: '',
+        dateFrom: '',
+        dateTo: ''
+      },
+      sales: {
         status: 'all',
         orderId: '',
         dateFrom: '',
         dateTo: ''
       }
     }
-    this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
+    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
 
   componentDidMount() {
-    const { tableHandlersFilters } = this.props
-    const status = localStorage['orders-status-filter']
+    const { tableHandlersFilters, currentTab } = this.props
+    if (currentTab === '') return
 
     if (tableHandlersFilters) {
-      this.initFilterValues({
-        ...tableHandlersFilters,
-        status: status ? status : tableHandlersFilters.status
-      })
+      this.initFilterValues(tableHandlersFilters)
     } else {
-      const filterValue = {
-        ...this.state.filterValue,
-        status: status ? status : this.state.filterValue.status
+      let allFilters = this.state
+
+      const statusSales = localStorage['orders-status-filter-sales']
+      const statusPurchase = localStorage['orders-status-filter-purchase']
+
+      allFilters = {
+        ...allFilters,
+        purchase: {
+          ...allFilters.purchase,
+          status: statusPurchase ? statusPurchase : allFilters.purchase.status
+        },
+        sales: {
+          ...allFilters.sales,
+          status: statusSales ? statusSales : allFilters.sales.status
+        }
       }
-      this.setState({ filterValue })
-      this.handleFiltersValue(filterValue)
+
+      this.setState(allFilters)
+      this.handleFiltersValue(allFilters[currentTab])
     }
   }
 
   componentWillUnmount() {
-    this.props.saveFilters(this.state.filterValue)
+    this.props.saveFilters(this.state)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.queryType !== this.props.queryType) {
+    if (prevProps.currentTab !== this.props.currentTab) {
+      const { currentTab } = this.props
+      if (currentTab === '') return
+      const { setValues, setFieldTouched } = this.formikProps
+
+      let filterValue = this.state[currentTab]
+
+      const status = localStorage[`orders-status-filter-${currentTab}`]
+      filterValue = {
+        ...filterValue,
+        status: status ? status : filterValue.status
+      }
+      setValues({
+        dateFrom: filterValue.dateFrom,
+        dateTo: filterValue.dateTo,
+        orderId: filterValue.orderId
+      })
+      setFieldTouched('dateFrom', true, true)
+
+      this.setState({ [currentTab]: filterValue })
       this.props.datagrid.clear()
-      this.handleFiltersValue(this.state.filterValue)
+      this.handleFiltersValue(filterValue)
     }
   }
 
-  initFilterValues = tableHandlersFilters => {
+  initFilterValues = initTableHandlersFilters => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
+    const statusSales = localStorage['orders-status-filter-sales']
+    const statusPurchase = localStorage['orders-status-filter-purchase']
+
+    const tableHandlersFilters = {
+      ...initTableHandlersFilters,
+      purchase: {
+        ...initTableHandlersFilters.purchase,
+        status: statusPurchase ? statusPurchase : initTableHandlersFilters.purchase.status
+      },
+      sales: {
+        ...initTableHandlersFilters.sales,
+        status: statusSales ? statusSales : initTableHandlersFilters.sales.status
+      }
+    }
+
     const { setValues, setFieldTouched } = this.formikProps
-    this.setState({ filterValue: tableHandlersFilters })
+    this.setState(tableHandlersFilters)
 
     setValues({
-      dateFrom: tableHandlersFilters.dateFrom,
-      dateTo: tableHandlersFilters.dateTo,
-      orderId: tableHandlersFilters.orderId
+      dateFrom: tableHandlersFilters[currentTab].dateFrom,
+      dateTo: tableHandlersFilters[currentTab].dateTo,
+      orderId: tableHandlersFilters[currentTab].orderId
     })
     setFieldTouched('dateFrom', true, true)
-    this.handleFiltersValue(tableHandlersFilters)
+
+    this.handleFiltersValue(tableHandlersFilters[currentTab])
   }
 
   handleFiltersValue = value => {
@@ -262,32 +315,31 @@ class TablesHandlers extends Component {
     datagrid.setSearch(filterValue, true, 'pageFilters')
   }
 
-  handleFilterChange = (e, value) => {
-    const filterValue = {
-      ...this.state.filterValue,
-      [value.name]: value.value
-    }
-    if (value.name === 'status') localStorage['orders-status-filter'] = value.value
+  handleFilterChange = (e, data) => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
 
-    this.setState({ filterValue })
-    this.handleFiltersValue(filterValue)
-  }
+    this.setState({
+      [currentTab]: {
+        ...this.state[currentTab],
+        [data.name]: data.value
+      }
+    })
+    if (data.name === 'status') localStorage[`orders-status-filter-${currentTab}`] = data.value
 
-  handleDateFilterChange = (e, value) => {
-    const filterValue = {
-      ...this.state.filterValue,
-      [value.name]: value.value
+    const filter = {
+      ...this.state[currentTab],
+      [data.name]: data.value
     }
-    this.setState({ filterValue })
-    this.handleFiltersValue(filterValue)
+    this.handleFiltersValue(filter)
   }
 
   renderHandler = () => {
     const {
+      currentTab,
       intl: {formatMessage}
     } = this.props
-
-    const {filterValue} = this.state
+    const filterValue = this.state[currentTab]
 
     return (
       <Formik
@@ -345,7 +397,7 @@ class TablesHandlers extends Component {
                         id: 'global.from',
                         defaultMessage: 'From'
                       }),
-                      onChange: this.handleDateFilterChange
+                      onChange: this.handleFilterChange
                     }}
                   />
                 </div>
@@ -360,7 +412,7 @@ class TablesHandlers extends Component {
                         id: 'global.to',
                         defaultMessage: 'To'
                       }),
-                      onChange: this.handleDateFilterChange
+                      onChange: this.handleFilterChange
                     }}
                   />
                 </div>
@@ -389,7 +441,7 @@ const mapStateToProps = (state, { router } )=> {
 
   return {
     ...state,
-    queryType: type,
+    currentTab: type,
     tableHandlersFilters: state.orders.tableHandlersFilters
   }
 }

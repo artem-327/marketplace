@@ -33,6 +33,8 @@ export const CustomButton = styled(Button.Submit)`
 `
 
 export const CustomSpan = styled.span`
+  display: block;
+  margin-top: -0.75em;
   font-size: 12px !important;
   line-height: 1.17 !important;
   color: #848893 !important;

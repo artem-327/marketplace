@@ -160,9 +160,9 @@ export const dropdownOptions = {
 
 export const companyGenericProductGrouping = [
   {
-    key: 'dot',
-    text: <FormattedMessage id='global.dot' defaultMessage='DOT' />,
-    value: 'dot'
+    key: 'tdg',
+    text: <FormattedMessage id='global.tdg' defaultMessage='TDG' />,
+    value: 'tdg'
   },
   {
     key: 'iata',
@@ -170,9 +170,9 @@ export const companyGenericProductGrouping = [
     value: 'iata'
   },
   {
-    key: 'tdg',
-    text: <FormattedMessage id='global.tdg' defaultMessage='TDG' />,
-    value: 'tdg'
+    key: 'dot',
+    text: <FormattedMessage id='global.dot' defaultMessage='DOT' />,
+    value: 'dot'
   },
   {
     key: 'imdgImo',

@@ -10,10 +10,7 @@ export const SubmitOffer = props => {
             //{ operator: 'LIKE', path: 'PurchaseRequestElement.companyGenericProduct.name', values: [`%${v}%`] },
             //{ operator: 'LIKE', path: 'PurchaseRequestElement.casProduct.casNumber', values: [`%${v}%`] }
           ]
-        : [],
-    params: {
-      orOperator: true
-    }
+        : []
   }
   return (
     <>
