@@ -16,5 +16,13 @@ export default {
       .then(response => response.data),
   getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   cancelOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`),
-  getAccountingDocuments: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`)
+  getAccountingDocuments: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`),
+  markRequestAsProcessed: id =>
+    api
+      .patch(`/prodex/api/company-generic-product-requests/${id}/processed`)
+      .then(response => response.data),
+  denyRequest: id =>
+    api.patch(`/prodex/api/company-generic-product-requests/${id}/deny`),
+  deleteRequest: id =>
+    api.delete(`/prodex/api/company-generic-product-requests/${id}`)
 }
