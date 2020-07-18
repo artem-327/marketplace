@@ -6,16 +6,13 @@ import { Formik } from 'formik'
 import styled from 'styled-components'
 import * as Yup from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
-
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
-
 import { getSafe, removeEmpty } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
 import { downloadAttachment, addAttachment, updateAttachment, loadFile } from '~/modules/inventory/actions'
-
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { UploadCloud } from 'react-feather'
+import { object, bool } from 'prop-types'
 import { createCompanyGenericProductRequest } from '../api'
 
 const CustomButton = styled(Button)`
@@ -88,7 +85,10 @@ class CompanyGenericProductRequestForm extends Component {
 
   render() {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      buttonCaption,
+      headerCaption,
+      asLink
     } = this.props
 
     const {
@@ -98,16 +98,21 @@ class CompanyGenericProductRequestForm extends Component {
 
     return (
       <>
-        <CustomButton
-          fluid
-          type='button'
-          onClick={() => this.setState({ open: true })}
-        >
-          <FormattedMessage id='global.uploadANewProduct' defaultMessage='Upload a new Product'>
-            {text => text}
-          </FormattedMessage>
-        </CustomButton>
-
+        {asLink
+          ? (
+            <a href='#' onClick={() => this.setState({open: true})}>
+              {buttonCaption}
+            </a>
+          ) : (
+            <CustomButton
+              fluid
+              type='button'
+              onClick={() => this.setState({open: true})}
+            >
+              {buttonCaption}
+            </CustomButton>
+          )
+        }
         {this.state.open && (
           <Formik
             initialValues={initialValues}
@@ -129,9 +134,7 @@ class CompanyGenericProductRequestForm extends Component {
                   <Grid verticalAlign='middle'>
                     <GridRow>
                       <GridColumn>
-                        <FormattedMessage id='global.uploadANewProduct' defaultMessage='Upload a new Product'>
-                          {text => text}
-                        </FormattedMessage>
+                        {headerCaption}
                       </GridColumn>
                     </GridRow>
                   </Grid>
@@ -280,6 +283,26 @@ class CompanyGenericProductRequestForm extends Component {
       </>
     )
   }
+}
+
+CompanyGenericProductRequestForm.propTypes = {
+  buttonCaption: object,
+  headerCaption: object,
+  asLink: bool
+}
+
+CompanyGenericProductRequestForm.defaultProps = {
+  buttonCaption: (
+    <FormattedMessage id='global.uploadANewProduct' defaultMessage='Upload a new Product'>
+      {text => text}
+    </FormattedMessage>
+  ),
+  headerCaption: (
+    <FormattedMessage id='global.uploadANewProduct' defaultMessage='Upload a new Product'>
+      {text => text}
+    </FormattedMessage>
+  ),
+  asLink: false
 }
 
 const mapDispatchToProps = { downloadAttachment, addAttachment, updateAttachment, loadFile }

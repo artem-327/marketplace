@@ -279,9 +279,9 @@ class DetailSidebar extends Component {
                           name='product'
                           options={this.props.autocompleteData}
                           inputProps={{
-                            placeholder: (
-                              <FormattedMessage id='wantedBoard.selectProduct' defaultMessage='Select Product' />
-                            ),
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectProduct', defaultMessage: 'Select Product'
+                            }),
                             loading: this.props.autocompleteDataLoading,
                             'data-test': 'my_offer_product_search_drpdn',
                             size: 'large',
@@ -330,12 +330,10 @@ class DetailSidebar extends Component {
                             name='manufacturers'
                             options={searchedManufacturers}
                             inputProps={{
-                              placeholder: (
-                                <FormattedMessage
-                                  id='wantedBoard.selectManufacturer'
-                                  defaultMessage='Select Manufacturer'
-                                />
-                              ),
+                              placeholder: formatMessage({
+                                id: 'wantedBoard.selectManufacturer',
+                                defaultMessage: 'Select Manufacturer'
+                              }),
                               loading: searchedManufacturersLoading,
                               'data-test': 'my_offer_manufacturer_drpdn',
                               size: 'large',
@@ -363,9 +361,9 @@ class DetailSidebar extends Component {
                           name='conditionConforming'
                           options={listConforming}
                           inputProps={{
-                            placeholder: (
-                              <FormattedMessage id='wantedBoard.selectCondition' defaultMessage='Select Condition' />
-                            ),
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectCondition', defaultMessage: 'Select Condition'
+                            }),
                             'data-test': 'my_offer_conforming_drpdn',
                             selection: true,
                             clearable: true,
@@ -383,9 +381,9 @@ class DetailSidebar extends Component {
                           name='packagingTypes'
                           options={listPackagingTypes}
                           inputProps={{
-                            placeholder: (
-                              <FormattedMessage id='wantedBoard.selectPackaging' defaultMessage='Select Packaging' />
-                            ),
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectPackaging', defaultMessage: 'Select Packaging'
+                            }),
                             'data-test': 'my_offer_packaging_drpdn',
                             selection: true,
                             multiple: false,
@@ -440,24 +438,19 @@ class DetailSidebar extends Component {
                   <div>
                     <Button
                       size='large'
-                      inputProps={{
-                        type: 'button',
-                        'data-test': 'my_offer_close_btn'
-                      }}
+                      data-test='my_offers_close_btn'
                       onClick={() => this.props.closeDetailSidebar()}
-                      data-test='sidebar_inventory_cancel'>
+                    >
                       {Object.keys(touched).length || this.state.changedForm
                         ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
                         : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
                     </Button>
                     <Button
                       disabled={!(Object.keys(touched).length || this.state.changedForm)}
-                      inputProps={{
-                        'data-test': 'my_offer_save_btn'
-                      }}
                       primary
                       size='large'
                       type='button'
+                      data-test='my_offers_save_btn'
                       onClick={() => {
                         validateForm().then(err => {
                           const errors = Object.keys(err)

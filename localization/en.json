@@ -2479,6 +2479,7 @@
   "wantedBoard.submitOfferHeader": "SUBMIT OFFER",
   "wantedBoard.requestedBy": "Requested By",
   "wantedBoard.notify.noInventoryItems.Header": "No Items Match",
+  "wantedBoard.requestACompanyGenericProduct": "Request a Company Generic Product",
   "addDocuments.existingDocuments": "Existing Documents",
   "addDocuments.addDocuments": "ADD DOCUMENTS",
   "wantedBoard.notify.noInventoryItems.Content": "You do not have any Inventory item matching the requested item to offer.",
