@@ -5,6 +5,14 @@ import pt from 'prop-types'
 import { getSafe } from '~/utils/functions'
 export const DatagridContext = React.createContext({})
 
+const CONSTANTS_INTERVALS = {
+  '30s': 30000,
+  '60s': 60000,
+  '5min': 300000,
+  '10min': 600000,
+  '15min': 900000
+}
+
 const initialState = {
   ready: false,
   rows: [],
@@ -396,8 +404,17 @@ const mapStateToProps = ({ auth }) => {
   const refreshInterval = getSafe(() => auth.identity.settings, []).find(
     set => set.key === 'COMPANY_DATATABLE_REFRESH_INTERVAL' && set.value !== 'EMPTY_SETTING'
   )
+
+  let interval = null
+  for (const [key, value] of Object.entries(CONSTANTS_INTERVALS)) {
+    if (key === getSafe(() => refreshInterval.value, null)) {
+      interval = value
+      break
+    }
+  }
+
   return {
-    refreshInterval: getSafe(() => refreshInterval.value, null)
+    refreshInterval: interval
   }
 }
 
