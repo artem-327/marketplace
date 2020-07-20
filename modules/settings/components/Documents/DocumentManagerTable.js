@@ -41,9 +41,9 @@ const columns = [
     )
   },
   {
-    name: 'linkCount',
+    name: 'broadcast',
     title: (
-      <FormattedMessage id='global.linkCount' defaultMessage='Links Count'>
+      <FormattedMessage id='global.broadcast' defaultMessage='Broadcast'>
         {text => text}
       </FormattedMessage>
     )
@@ -52,6 +52,14 @@ const columns = [
     name: 'expirationDate',
     title: (
       <FormattedMessage id='global.expirationDate' defaultMessage='Expiration Date'>
+        {text => text}
+      </FormattedMessage>
+    )
+  },
+  {
+    name: 'linkCount',
+    title: (
+      <FormattedMessage id='global.linkCount' defaultMessage='Links Count'>
         {text => text}
       </FormattedMessage>
     )
@@ -93,12 +101,22 @@ class DocumentManager extends Component {
       documentTypeName: getSafe(() => row.documentType.name, ''),
       expirationDate: row.expirationDate && moment(row.expirationDate).format(getLocaleDateFormat()),
       issuedAt: row.issuedAt && moment(row.issuedAt).format(getLocaleDateFormat()),
-      customName: getSafe(() => row.customName, row.name)
+      customName: getSafe(() => row.customName, row.name),
+      broadcast: getSafe(() => row.broadcast, 'No') //FIXME
     }))
 
   render() {
     const {
-      datagrid, openPopup, removeAttachment, edit, download, deletable, loading, items, normalWidth, reduceColumns
+      datagrid,
+      openPopup,
+      removeAttachment,
+      edit,
+      download,
+      deletable,
+      loading,
+      items,
+      normalWidth,
+      reduceColumns
     } = this.props
 
     let rows = this.getRows(items ? items : this.props.rows)
@@ -125,20 +143,6 @@ class DocumentManager extends Component {
                 }
               ]
             : []),
-          ...(download
-            ? [
-                {
-                  text: row => (
-                    <BasicLink target='_blank' href={`/download/attachments/${row.id}`}>
-                      <FormattedMessage id='global.download' defaultMessage='Download'>
-                        {text => text}
-                      </FormattedMessage>
-                    </BasicLink>
-                  ),
-                  callback: () => {}
-                }
-              ]
-            : []),
           ...(deletable
             ? [
                 {
@@ -151,6 +155,33 @@ class DocumentManager extends Component {
                     await removeAttachment(row.id)
                     datagrid.removeRow(row.id)
                   }
+                }
+              ]
+            : []),
+          //FIXME
+          ...(edit
+            ? [
+                {
+                  text: (
+                    <FormattedMessage id='global.broadcast' defaultMessage='Broadcast'>
+                      {text => text}
+                    </FormattedMessage>
+                  ),
+                  callback: row => openPopup(row)
+                }
+              ]
+            : []),
+          ...(download
+            ? [
+                {
+                  text: row => (
+                    <BasicLink target='_blank' href={`/download/attachments/${row.id}`}>
+                      <FormattedMessage id='global.download' defaultMessage='Download'>
+                        {text => text}
+                      </FormattedMessage>
+                    </BasicLink>
+                  ),
+                  callback: () => {}
                 }
               ]
             : [])
@@ -166,7 +197,7 @@ DocumentManager.propTypes = {
   delete: bool,
   items: array,
   normalWidth: bool,
-  reduceColumns: bool,
+  reduceColumns: bool
 }
 
 DocumentManager.defaultProps = {

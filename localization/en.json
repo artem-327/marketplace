@@ -2024,6 +2024,7 @@
   "related.documents.addedNewDocument": "New document has been added",
   "related.documents.unlinkDocument": "Document has been unlinked",
   "settings.tables.documents.search": "Search documents ...",
+  "settings.tables.documents.buttonDownload": "Download All",
   "settings.tables.documents.dropdown": "Choose document type",
   "settings.tables.documents.dropdown.all.document.types": "All document types",
   "settings.previous": "< Previous",
@@ -2534,5 +2535,7 @@
   "dasboard.companySales": "SALES",
   "dasboard.topBuyers": "TOP 10 BUYERS",
   "dasboard.total": "Total",
-  "dasboard.average": " average"
+  "dasboard.average": " average",
+  "settings.documents.sharedDocuments": "Shared with Me",
+  "settings.documents.myDocuments": "My Documents"
 }

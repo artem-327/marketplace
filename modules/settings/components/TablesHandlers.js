@@ -16,7 +16,7 @@ import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
+import { PlusCircle, UploadCloud, CornerLeftDown, DownloadCloud } from 'react-feather'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -137,6 +137,47 @@ const CustomUploadCloud = styled(UploadCloud)`
   margin-right: 10px;
 `
 
+const SwitchDocuments = styled.div`
+  margin-right: 15px;
+  display: inline-block;
+  &.product {
+    .ui.button {
+      width: 110px;
+      padding-left: 1.071428571em;
+      padding-right: 1.071428571em;
+      text-align: center;
+    }
+    .ui.left.button {
+      border: solid 1px #dee2e6;
+      background-color: #edeef2;
+      color: #20273a;
+    }
+    .ui.right.button {
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      color: #848893;
+    }
+  }
+  &.chemical {
+    .ui.button {
+      width: 110px;
+      padding-left: 1.071428571em;
+      padding-right: 1.071428571em;
+      text-align: center;
+    }
+    .ui.left.button {
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      color: #848893;
+    }
+    .ui.right.button {
+      border: solid 1px #dee2e6;
+      background-color: #edeef2;
+      color: #20273a;
+    }
+  }
+`
+
 const textsTable = {
   users: {
     BtnAddText: 'settings.tables.users.buttonAdd',
@@ -173,7 +214,8 @@ const textsTable = {
   },
   documents: {
     BtnAddText: 'settings.tables.documents.buttonAdd',
-    SearchText: 'settings.tables.documents.search'
+    SearchText: 'settings.tables.documents.search',
+    BtnDownloadText: 'settings.tables.documents.buttonDownload'
   }
 }
 
@@ -182,10 +224,10 @@ class TablesHandlers extends Component {
     super(props)
     this.state = {
       filterValue: '',
-      'users': {
+      users: {
         searchInput: ''
       },
-      'products': {
+      products: {
         searchInput: '',
         productType: 'ALL'
       },
@@ -201,7 +243,7 @@ class TablesHandlers extends Component {
         searchInput: ''
       },
       */
-      'documents': {
+      documents: {
         searchInput: '',
         documentType: ''
       },
@@ -336,6 +378,10 @@ class TablesHandlers extends Component {
     }
   }
 
+  switchDocuments = typeDocument => {
+    //FIXME
+  }
+
   renderHandler = () => {
     const {
       currentTab,
@@ -357,24 +403,48 @@ class TablesHandlers extends Component {
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
-        {currentTab.type !== 'global-broadcast' && currentTab.type !== 'documents' &&
-        currentTab.type !== 'logistics' && currentTab.type !== 'bank-accounts' && (
-          <div>
-            <div className='column'>
-              <Input
-                style={{ width: '370px' }}
-                icon='search'
-                name='searchInput'
-                value={filterValue ? filterValue.searchInput : ''}
-                placeholder={formatMessage({
-                  id: textsTable[currentTab.type].SearchText,
-                  defaultMessage: 'Select Credit Card'
-                })}
-                onChange={this.handleFilterChangeInputSearch}
-              />
-            </div>
+        {currentTab.type !== 'documents' && (
+          <div className='column'>
+            <SwitchDocuments className={type}>
+              <Button
+                attached='left'
+                onClick={() => this.switchDocuments('myDocuments')}
+                data-test='settings_my_documents_switch_btn'>
+                <FormattedMessage id='settings.documents.myDocuments' defaultMessage='My Documents'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+              <Button
+                attached='right'
+                onClick={() => this.switchDocuments('sharedDocuments')}
+                data-test='settings_documents_shared_switch_btn'>
+                <FormattedMessage id='settings.documents.sharedDocuments' defaultMessage='Shared with Me'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </SwitchDocuments>
           </div>
         )}
+        {currentTab.type !== 'global-broadcast' &&
+          currentTab.type !== 'documents' &&
+          currentTab.type !== 'logistics' &&
+          currentTab.type !== 'bank-accounts' && (
+            <div>
+              <div className='column'>
+                <Input
+                  style={{ width: '370px' }}
+                  icon='search'
+                  name='searchInput'
+                  value={filterValue ? filterValue.searchInput : ''}
+                  placeholder={formatMessage({
+                    id: textsTable[currentTab.type].SearchText,
+                    defaultMessage: 'Select Credit Card'
+                  })}
+                  onChange={this.handleFilterChangeInputSearch}
+                />
+              </div>
+            </div>
+          )}
 
         {(currentTab.type === 'logistics' || currentTab.type === 'bank-accounts') && (
           <div>
@@ -531,6 +601,15 @@ class TablesHandlers extends Component {
                   <Button fluid onClick={() => openImportPopup()} data-test='settings_open_import_popup_btn'>
                     <CornerLeftDown />
                     <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{text => text}</FormattedMessage>
+                  </Button>
+                </div>
+              )}
+              {/*FIXME*/}
+              {currentTab.type === 'documents' && (
+                <div className='column'>
+                  <Button onClick={() => openPopup()} data-test='settings_open_popup_btn'>
+                    <DownloadCloud />
+                    <FormattedMessage id={textsTable[currentTab.type].BtnDownloadText}>{text => text}</FormattedMessage>
                   </Button>
                 </div>
               )}
