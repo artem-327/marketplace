@@ -124,7 +124,7 @@ const StyledButton = styled(Button)`
   min-width: 40px !important;
   padding: 9px 9px !important;
   background: transparent !important;
-  
+
   &.red {
     box-shadow: 0px 0px 0px 1px #f16844 inset !important;
     color: #f16844 !important;
@@ -1662,11 +1662,6 @@ class AddEditEchoProduct extends React.Component {
                 options: this.props.hazardClasses
               }
             })}
-            {this.RowInput({
-              name: 'dotMarinePollutant',
-              id: 'global.dotMarinePollutant',
-              defaultMessage: 'DOT Marine Pollutant'
-            })}
             {this.RowDropdown({
               name: 'dotPackagingGroup',
               id: 'global.dotPackagingGroup',
@@ -1676,6 +1671,7 @@ class AddEditEchoProduct extends React.Component {
                 options: this.props.packagingGroups
               }
             })}
+
             {this.RowInput({
               name: 'dotProperShippingName',
               id: 'global.dotProperShippingName',
@@ -1686,16 +1682,6 @@ class AddEditEchoProduct extends React.Component {
               id: 'global.dotProperTechnicalName',
               defaultMessage: 'DOT Proper Technical Name'
             })}
-            {this.RowInput({
-              name: 'dotReportableQuantity',
-              id: 'global.dotReportableQuantity',
-              defaultMessage: 'DOT Reportable Quantity'
-            })}
-            {this.RowInput({
-              name: 'dotSevereMarinePollutant',
-              id: 'global.dotSevereMarinePollutant',
-              defaultMessage: 'DOT Severe Marine Pollutant'
-            })}
             {this.RowUnNumberDropdown({
               name: 'dotUnNumber',
               id: 'global.dotUnNumber',
@@ -1703,6 +1689,11 @@ class AddEditEchoProduct extends React.Component {
               props: {
                 options: unNumberOptions
               }
+            })}
+            {this.RowInput({
+              name: 'dotReportableQuantity',
+              id: 'global.dotReportableQuantity',
+              defaultMessage: 'DOT Reportable Quantity'
             })}
             {this.RowInput({
               name: 'dotEnvironmentalHazards',
@@ -1714,7 +1705,6 @@ class AddEditEchoProduct extends React.Component {
               id: 'global.dotEmsNumbers',
               defaultMessage: 'DOT Ems Numbers'
             })}
-
             {this.RowInput({
               name: 'dotExceptions',
               id: 'global.dotExceptions',
@@ -1724,6 +1714,16 @@ class AddEditEchoProduct extends React.Component {
               name: 'dotUserSpecialPrecautions',
               id: 'global.dotUserSpecialPrecautions',
               defaultMessage: 'DOT User Special Precautions'
+            })}
+            {this.RowInput({
+              name: 'dotMarinePollutant',
+              id: 'global.dotMarinePollutant',
+              defaultMessage: 'DOT Marine Pollutant'
+            })}
+            {this.RowInput({
+              name: 'dotSevereMarinePollutant',
+              id: 'global.dotSevereMarinePollutant',
+              defaultMessage: 'DOT Severe Marine Pollutant'
             })}
             {this.RowInput({
               name: 'dotPackagingExceptions',
@@ -1739,11 +1739,6 @@ class AddEditEchoProduct extends React.Component {
               name: 'dotPackagingBulk',
               id: 'global.dotPackagingBulk',
               defaultMessage: 'DOT Packaging Bulk'
-            })}
-            {this.RowInput({
-              name: 'dotQuantityLimitations',
-              id: 'global.dotQuantityLimitations',
-              defaultMessage: 'DOT Quantity Limitations'
             })}
             {this.RowInput({
               name: 'dotPassengerQuantityLimitations',
@@ -1764,6 +1759,11 @@ class AddEditEchoProduct extends React.Component {
               name: 'dotVesselStowageOther',
               id: 'global.dotVesselStowageOther',
               defaultMessage: 'DOT Vessel Stowage Other'
+            })}
+            {this.RowInput({
+              name: 'dotQuantityLimitations',
+              id: 'global.dotQuantityLimitations',
+              defaultMessage: 'DOT Quantity Limitations'
             })}
           </Grid>
         )
