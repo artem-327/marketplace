@@ -70,6 +70,7 @@ class Dashboard extends Component {
       companySumOfSalesMonthly,
       top10Buyers,
       isAdmin,
+      takeover,
       isClientCompanyAdmin,
       intl: { formatMessage }
     } = this.props
@@ -161,7 +162,8 @@ class Dashboard extends Component {
       }
     ]
 
-    const panes = isAdmin ? saleTab : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
+    const panes =
+      isAdmin && !takeover ? saleTab : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
 
     return (
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
@@ -184,14 +186,18 @@ class Dashboard extends Component {
                 <SummaryRectangle
                   icon={<Briefcase />}
                   data={companiesCount}
-                  title={isAdmin ? 'Total Companies' : 'Total Client Companies'}
-                  titleId={isAdmin ? 'dashboard.totalCompanies.title' : 'dashboard.totalClientCompanies.title'}
+                  title={isAdmin && !takeover ? 'Total Companies' : 'Total Client Companies'}
+                  titleId={
+                    isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalClientCompanies.title'
+                  }
                 />
                 <SummaryRectangle
                   icon={<Package />}
                   data={companyProductsCount}
-                  title={isAdmin ? 'Total Products' : 'Total Client Products'}
-                  titleId={isAdmin ? 'dashboard.totalProducts.title' : 'dashboard.totalClientProducts.title'}
+                  title={isAdmin && !takeover ? 'Total Products' : 'Total Client Products'}
+                  titleId={
+                    isAdmin && !takeover ? 'dashboard.totalProducts.title' : 'dashboard.totalClientProducts.title'
+                  }
                   styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
                 />
               </>
@@ -230,7 +236,7 @@ class Dashboard extends Component {
             )}
           </Grid.Column>
         </Grid.Row>
-        {isAdmin ? (
+        {isAdmin && !takeover ? (
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
@@ -261,7 +267,7 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        {!isAdmin && !isClientCompanyAdmin ? (
+        {(!isAdmin && !isClientCompanyAdmin) || takeover ? (
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
@@ -285,7 +291,7 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        {isAdmin ? (
+        {isAdmin && !takeover ? (
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
@@ -320,6 +326,7 @@ Dashboard.propTypes = {
   top10Buyers: array,
   totalSumOfSalesMonthly: array,
   isAdmin: bool,
+  takeover: bool,
   isClientCompanyAdmin: bool
 }
 
@@ -339,6 +346,7 @@ Dashboard.defaultProps = {
   top10Buyers: [],
   totalSumOfSalesMonthly: [],
   isAdmin: false,
+  takeover: false,
   isClientCompanyAdmin: false
 }
 
