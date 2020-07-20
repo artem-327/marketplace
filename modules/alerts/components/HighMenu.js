@@ -124,7 +124,6 @@ class HighMenu extends Component {
   state = {
     categories: [],
     menuItems: [],
-    filters: {},
     menuSpace: 0
   }
 
@@ -139,8 +138,6 @@ class HighMenu extends Component {
     window.addEventListener('resize', this.handleResize)
 
     await this.props.getCategories()
-    this.setDatagridFilter({ status: this.props.activeStatus })
-
     this.handleResize()
   }
 
@@ -182,21 +179,10 @@ class HighMenu extends Component {
   }
 
   updateCategories = value => {
-    const { intl: { formatMessage }, activeStatus } = this.props
+    const { intl: { formatMessage }, topMenuTab } = this.props
 
-    // Generate menu items and filter values from returned Categories
-    let filters = {}
+    // Generate menu items from returned Categories
     const menuItems = value.map(cat => {
-      filters[cat.category] =
-        {
-          filters: [
-            {
-              operator: 'EQUALS',
-              path: 'Message.category',
-              values: [cat.category]
-            }
-          ]
-        }
       return {
         key: cat.category,
         name: cat.category,
@@ -205,7 +191,7 @@ class HighMenu extends Component {
             <>
               {formatMessage({
                 id: `alerts.menu.${cat.category.toLowerCase()}`,
-                defaultMessage: cat.category
+                defaultMessage: cat.category.replace(/_/g, ' ')
               })}
               <CircularLabel
                 circular
@@ -214,10 +200,7 @@ class HighMenu extends Component {
               </CircularLabel>
             </>
           ),
-        onClick: () => this.loadData({
-          ...this.props.filterData,
-          status: cat.category
-        }),
+        onClick: () => this.loadData(cat.category),
         style: { textTransform: 'uppercase' },
         'data-test': `menu_alerts_${cat.category}`
       }
@@ -225,29 +208,23 @@ class HighMenu extends Component {
 
     this.setState(
       {
-        filters,
         categories: value,
         menuItems
       },
       () => {
-        if (value.length && value.findIndex(cat => cat.category === activeStatus) === -1) {
-          this.loadData({ status: value[0].category})
+        if (value.length && value.findIndex(cat => cat.category === topMenuTab) === -1) {
+          this.loadData(value[0].category)
         }
       })
   }
 
-  setDatagridFilter = debounce( filterData => {
-    this.props.datagrid.setFilter(this.state.filters[filterData.status], true, 'alertsMenu')
-  }, 300)
-
-  loadData(filterData) {
-    this.props.loadData(filterData)
-    this.setDatagridFilter(filterData)
+  loadData(category) {
+    this.props.loadData(category)
   }
 
   render() {
     const {
-      activeStatus
+      topMenuTab
     } = this.props
 
     const {
@@ -256,7 +233,7 @@ class HighMenu extends Component {
       menuSpace
     } = this.state
 
-    const activeIndex = categories.findIndex(cat => cat.category === activeStatus)
+    const activeIndex = categories.findIndex(cat => cat.category === topMenuTab)
 
     return (
       <Container fluid style={{ padding: '0 32px' }}>
@@ -264,8 +241,6 @@ class HighMenu extends Component {
           <StyledMenu
             pointing
             secondary
-            horizontal
-            //items={menuItems}
             activeIndex={activeIndex}
             >
             {menuItems.map((item, itemIndex) =>
@@ -310,7 +285,7 @@ class HighMenu extends Component {
 const mapStateToProps = state => {
   const { alerts } = state
   return {
-    activeStatus: alerts.menuStatusFilter,
+    topMenuTab: alerts.topMenuTab,
     categories: alerts.categories
   }
 }

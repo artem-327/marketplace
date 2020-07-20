@@ -3,7 +3,8 @@ export const defaultTabs = [
   { name: 'Tags', id: 1, type: 'tags' },
   { name: 'Company Product Catalog', id: 2, type: 'company-product-catalog' },
   { name: 'Company Inventory', id: 3, type: 'company-inventory' },
-  { name: 'Orders', id: 4, type: 'orders' }
+  { name: 'Orders', id: 4, type: 'orders' },
+  { name: 'Company Generic Products', id: 5, type: 'company-generic-products' }
 ]
 
 export const OrdersFilters = {

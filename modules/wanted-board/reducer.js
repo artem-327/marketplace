@@ -131,18 +131,16 @@ export default function reducer(state = initialState, action) {
               .concat(state.searchedManufacturers),
             'key'
           ),
-          autocompleteData: row.element.companyGenericProduct
-            ? uniqueArrayByKey(
-                [
-                  {
-                    key: row.element.companyGenericProduct.id,
-                    text: `${row.element.companyGenericProduct.name} ${row.element.companyGenericProduct.code}`,
-                    value: row.element.companyGenericProduct.id
-                  }
-                ].concat(state.autocompleteData),
-                'key'
-              )
-            : state.autocompleteData,
+          autocompleteData: row.element.productGroup
+            ?
+              [
+                {
+                  key: row.element.productGroup.id,
+                  text: row.element.productGroup.name,
+                  value: row.element.productGroup.id
+                }
+              ]
+            : [],
           searchedCasNumbers: row.element.casProduct
             ? uniqueArrayByKey(
                 [

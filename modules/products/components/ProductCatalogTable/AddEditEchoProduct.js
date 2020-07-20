@@ -120,6 +120,21 @@ const DivIcon = styled.div`
   margin-top: 8px;
 `
 
+const StyledButton = styled(Button)`
+  min-width: 40px !important;
+  padding: 9px 9px !important;
+  background: transparent !important;
+  
+  &.red {
+    box-shadow: 0px 0px 0px 1px #f16844 inset !important;
+    color: #f16844 !important;
+  }
+  &.green {
+    box-shadow: 0px 0px 0px 1px #84c225 inset !important;
+    color: #84c225 !important;
+  }
+`
+
 Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
   return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
@@ -1066,8 +1081,7 @@ class AddEditEchoProduct extends React.Component {
                       </GridColumn>
                       <GridColumn width={2}>
                         {index ? (
-                          <Button
-                            basic
+                          <StyledButton
                             icon
                             color='red'
                             onClick={() => {
@@ -1076,7 +1090,7 @@ class AddEditEchoProduct extends React.Component {
                             }}
                             data-test={`settings_product_popup_remove_${index}_btn`}>
                             <Icon name='minus' />
-                          </Button>
+                          </StyledButton>
                         ) : (
                           ''
                         )}
@@ -1087,8 +1101,7 @@ class AddEditEchoProduct extends React.Component {
               <GridRow>
                 <GridColumn width={14}></GridColumn>
                 <GridColumn width={2} textAlign='center'>
-                  <Button
-                    basic
+                  <StyledButton
                     icon
                     color='green'
                     onClick={() => {
@@ -1097,7 +1110,7 @@ class AddEditEchoProduct extends React.Component {
                     }}
                     data-test='settings_product_popup_add_btn'>
                     <Icon name='plus' />
-                  </Button>
+                  </StyledButton>
                 </GridColumn>
               </GridRow>
             </>

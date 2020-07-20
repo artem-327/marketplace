@@ -60,36 +60,82 @@ class TablesHandlers extends Component {
     }
   }
 
+  componentDidMount() {
+    const { tableHandlersFilters, currentTab, datagrid } = this.props
+
+    datagrid.clear()
+
+    if (tableHandlersFilters) {
+      this.setState(tableHandlersFilters)
+      if (currentTab) {
+        const filter = tableHandlersFilters[currentTab]
+        if (filter) {
+          this.handleFiltersValue({...filter, category: currentTab})
+        } else {
+          this.handleFiltersValue({category: currentTab})
+        }
+      }
+    } else {
+      if (currentTab) {
+        const filter = this.state[currentTab]
+        if (filter) {
+          this.handleFiltersValue({...filter, category: currentTab})
+        } else {
+          this.handleFiltersValue({category: currentTab})
+        }
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFilters', this.state)
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.currentTab !== prevProps.currentTab) {
+      const { currentTab } = this.props
+      this.props.datagrid.clear()
+      const filter = this.state[currentTab]
+      if (filter) {
+        this.handleFiltersValue({ ...filter, category: currentTab })
+      } else {
+        this.handleFiltersValue({ category: currentTab })
+      }
+    }
+  }
+
   handleFiltersValue = debounce( filter => {
-    if (Datagrid.isReady()) Datagrid.setSearch(filter, true, 'searchRow')
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
     }, 300
   )
 
-  handleFilterChange = (e, { value }) => {
-    this.setState({ searchValue: value })
-    this.handleFiltersValue({
-      searchValue: value,
-      switchButtonsValue: this.state.switchButtonsValue
-    })
+  handleFilterChangeInputSearch = (e, data) => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
+
+    const filter = {
+      ...this.state[currentTab],
+      [data.name]: data.value
+    }
+    this.setState({ [currentTab]: filter })
+    this.handleFiltersValue({ ...filter, category: currentTab })
   }
 
   handleButtonsChange = (value) => {
-    this.setState({ switchButtonsValue: value })
-    this.handleFiltersValue({
-      searchValue: this.state.searchValue,
-      switchButtonsValue: value
+    this.handleFilterChangeInputSearch(null, {
+      name: 'switchButtonsValue',
+      value
     })
   }
 
   render() {
     const {
       intl: { formatMessage },
+      currentTab
     } = this.props
 
-    const {
-      searchValue,
-      switchButtonsValue
-    } = this.state
+    const filterValue = this.state[currentTab]
 
     return (
       <CustomDiv>
@@ -98,12 +144,13 @@ class TablesHandlers extends Component {
             <Input
               style={{ width: 370 }}
               icon='search'
-              value={searchValue}
+              name='searchInput'
+              value={filterValue && filterValue.searchInput ? filterValue.searchInput : ''}
               placeholder={formatMessage({
                 id: 'alerts.searchNotification',
                 defaultMessage: 'Search Notification...'
               })}
-              onChange={this.handleFilterChange}
+              onChange={this.handleFilterChangeInputSearch}
             />
           </div>
         </div>
@@ -111,19 +158,19 @@ class TablesHandlers extends Component {
           <div className='column'>
             <StyledButtonsGroup>
               <Button
-                active={switchButtonsValue === ''}
+                active={!filterValue || !filterValue.switchButtonsValue}
                 onClick={() => this.handleButtonsChange('')}
               >
                 {formatMessage({ id: 'alerts.button.all', defaultMessage: 'All' })}
               </Button>
               <Button
-                active={switchButtonsValue === 'read'}
+                active={filterValue && filterValue.switchButtonsValue === 'read'}
                 onClick={() => this.handleButtonsChange('read')}
               >
                 {formatMessage({ id: 'alerts.button.read', defaultMessage: 'Read' })}
               </Button>
               <Button
-                active={switchButtonsValue === 'unread'}
+                active={filterValue && filterValue.switchButtonsValue === 'unread'}
                 onClick={() => this.handleButtonsChange('unread')}
               >
                 {formatMessage({ id: 'alerts.button.unread', defaultMessage: 'Unread' })}
@@ -136,9 +183,10 @@ class TablesHandlers extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ alerts }) => {
   return {
-
+    ...alerts,
+    currentTab: alerts.topMenuTab
   }
 }
 

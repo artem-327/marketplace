@@ -26,6 +26,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
 import { inputWrapper, quantityWrapper } from '../../components'
 import { Required } from '~/components/constants/layout'
+import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
 
 import {
   Segment,
@@ -452,12 +453,10 @@ class DetailSidebar extends Component {
                             name='element.productGroup'
                             options={this.props.autocompleteData}
                             inputProps={{
-                              placeholder: (
-                                <FormattedMessage
-                                  id='wantedBoard.enterProductName'
-                                  defaultMessage='Enter any Product Name'
-                                />
-                              ),
+                              placeholder: formatMessage({
+                                id: 'wantedBoard.enterProductName',
+                                defaultMessage: 'Enter any Product Name'
+                              }),
                               loading: this.props.autocompleteDataLoading,
                               'data-test': 'wanted_board_sidebar_productName_drpdn',
                               size: 'large',
@@ -470,6 +469,27 @@ class DetailSidebar extends Component {
                                 searchQuery.length > 0 && this.searchProducts(searchQuery)
                             }}
                           />
+                          {!values.element.productGroup && (
+                            <div style={{ marginTop: '-10px' }}>
+                              <CompanyGenericProductRequestForm
+                                asLink
+                                buttonCaption={
+                                  <FormattedMessage
+                                    id='wantedBoard.requestACompanyGenericProduct'
+                                    defaultMessage='Request a Company Generic Product'
+                                  >
+                                    {text => text}
+                                  </FormattedMessage>
+                                }
+                                headerCaption={
+                                  <FormattedMessage
+                                    id='wantedBoard.requestACompanyGenericProduct'
+                                    defaultMessage='Request a Company Generic Product'
+                                  />
+                                }
+                              />
+                            </div>
+                          )}
                         </GridColumn>
                       </GridRow>
                     )}
@@ -488,9 +508,9 @@ class DetailSidebar extends Component {
                             name='element.casProduct'
                             options={searchedCasNumbers}
                             inputProps={{
-                              placeholder: (
-                                <FormattedMessage id='wantedBoard.enterCasNumber' defaultMessage='Enter CAS Number' />
-                              ),
+                              placeholder: formatMessage({
+                                id: 'wantedBoard.enterCasNumber', defaultMessage: 'Enter CAS Number'
+                              }),
                               loading: searchedCasNumbersLoading,
                               'data-test': 'wanted_board_sidebar_casNumber_drpdn',
                               size: 'large',
@@ -602,9 +622,9 @@ class DetailSidebar extends Component {
                           name='deliveryCountry'
                           options={listCountries}
                           inputProps={{
-                            placeholder: (
-                              <FormattedMessage id='wantedBoard.selectCountry' defaultMessage='Select Country' />
-                            ),
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectCountry', defaultMessage: 'Select Country'
+                            }),
                             'data-test': 'wanted_board_sidebar_deliveryLocation_drpdn',
                             selection: true,
                             onChange: (_, value) => {
@@ -625,9 +645,9 @@ class DetailSidebar extends Component {
                           name='deliveryProvince'
                           options={listProvinces}
                           inputProps={{
-                            placeholder: (
-                              <FormattedMessage id='wantedBoard.selectState' defaultMessage='Select State' />
-                            ),
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectState', defaultMessage: 'Select State'
+                            }),
                             'data-test': 'wanted_board_sidebar_selectState_drpdn',
                             selection: true,
                             loading: listProvincesLoading,
@@ -731,12 +751,10 @@ class DetailSidebar extends Component {
                             name='manufacturers'
                             options={searchedManufacturers}
                             inputProps={{
-                              placeholder: (
-                                <FormattedMessage
-                                  id='wantedBoard.selectManufacturer'
-                                  defaultMessage='Select manufacturer'
-                                />
-                              ),
+                              placeholder: formatMessage({
+                                id: 'wantedBoard.selectManufacturer',
+                                defaultMessage: 'Select manufacturer'
+                              }),
                               loading: searchedManufacturersLoading,
                               'data-test': 'wanted_board_sidebar_manufacturer_drpdn',
                               size: 'large',
@@ -766,9 +784,9 @@ class DetailSidebar extends Component {
                             'data-test': 'wanted_board_sidebar_condition_drpdn',
                             selection: true,
                             clearable: true,
-                            placeholder: (
-                              <FormattedMessage id='wantedBoard.selectCondition' defaultMessage='Select condition' />
-                            )
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectCondition', defaultMessage: 'Select condition'
+                            })
                           }}
                         />
                       </GridColumn>
@@ -785,9 +803,9 @@ class DetailSidebar extends Component {
                             'data-test': 'wanted_board_sidebar_origins_drpdn',
                             selection: true,
                             multiple: true,
-                            placeholder: (
-                              <FormattedMessage id='wantedBoard.selectOrigin' defaultMessage='Select Origin' />
-                            )
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectOrigin', defaultMessage: 'Select Origin'
+                            })
                           }}
                         />
                       </GridColumn>
@@ -807,7 +825,8 @@ class DetailSidebar extends Component {
                             'data-test': 'wanted_board_sidebar_grade_drpdn',
                             selection: true,
                             multiple: true,
-                            placeholder: <FormattedMessage id='wantedBoard.selectGrade' defaultMessage='Select Grade' />
+                            placeholder:
+                              formatMessage({ id: 'wantedBoard.selectGrade', defaultMessage: 'Select Grade' })
                           }}
                         />
                       </GridColumn>
@@ -824,7 +843,8 @@ class DetailSidebar extends Component {
                             'data-test': 'wanted_board_sidebar_forms_drpdn',
                             selection: true,
                             multiple: true,
-                            placeholder: <FormattedMessage id='wantedBoard.selectForm' defaultMessage='Select form' />
+                            placeholder:
+                              formatMessage({ id: 'wantedBoard.selectForm', defaultMessage: 'Select form' })
                           }}
                         />
                       </GridColumn>
@@ -841,9 +861,9 @@ class DetailSidebar extends Component {
                           name='packagingTypes'
                           options={listPackagingTypes}
                           inputProps={{
-                            placeholder: (
-                              <FormattedMessage id='wantedBoard.selectPackaging' defaultMessage='Select packaging' />
-                            ),
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectPackaging', defaultMessage: 'Select packaging'
+                            }),
                             'data-test': 'wanted_board_sidebar_packaging_drpdn',
                             selection: true,
                             multiple: true
@@ -957,7 +977,6 @@ class DetailSidebar extends Component {
                   <div>
                     <Button
                       size='large'
-                      inputProps={{ type: 'button' }}
                       onClick={() => this.props.closeDetailSidebar()}
                       data-test='wanted_board_sidebar_cancel_btn'>
                       {Object.keys(touched).length || this.state.changedForm
