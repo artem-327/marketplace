@@ -1921,6 +1921,16 @@ i.file {
 
           .row.right {
             margin-right: 0 !important;
+
+            .inventory-right {
+              display: flex;
+              flex-flow: row nowrap;
+
+              > div {
+                display: block;
+                margin-left: 5px;
+              }
+            }
           }
         }
       }
