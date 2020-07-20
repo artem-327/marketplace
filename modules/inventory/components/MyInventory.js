@@ -20,6 +20,7 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import SearchByNamesAndTags from '~/modules/search'
 import SubMenu from '~/src/components/SubMenu'
 import ExportInventorySidebar from '~/modules/export-inventory/components/ExportInventory'
+import {ArrayToFirstItem} from '~/components/formatted-messages/'
 
 const defaultHiddenColumns = [
   'minOrderQuantity',
@@ -902,7 +903,7 @@ class MyInventory extends Component {
                 .groupBy('echoName')
                 .map(v => {
                   return {
-                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}`,
+                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}_${v[0].productGroup !== null ? v[0].productGroup : formatMessage({ id: 'global.unmapped', defaultMessage: 'Unmapped' })}_${v[0].tagsNames ? v[0].tagsNames : ''}`,
                     childRows: v
                   }
                 })
@@ -910,12 +911,18 @@ class MyInventory extends Component {
             }
             renderGroupLabel={({ row, children = null }) => {
               let { value } = row
-              const [name, number, count] = value.split('_')
-
+              const [name, number, count, id, productGroup, tagsNames] = value.split('_')
+              const tagNames = tagsNames ? tagsNames.split(',') : []
               return (
                 <span>
-                  <span style={{ color: '#2599d5' }}>
+                  <span style={{ fontWeight: '600', color: '#2599d5' }}>
                     {name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({count})</span>
+                  </span>
+                  <span className='flex row right'>
+                    <span className='inventory-right'>
+                      <span style={{ fontWeight: '600' }}>{productGroup}: </span>
+                      {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+                    </span>
                   </span>
                 </span>
               )
