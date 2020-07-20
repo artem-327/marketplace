@@ -215,7 +215,7 @@ class Dashboard extends Component {
               <>
                 <SummaryRectangle
                   icon={<DollarSign />}
-                  data={productOffersValue > 1000000 ? productOffersValue / 1000000 : productOffersValue}
+                  data={productOffersValue > 1000000 ? Math.round(productOffersValue / 1000000) : productOffersValue}
                   title={productOffersValue > 1000000 ? 'Total Products Value $M' : 'Total Products Value $'}
                   titleId={
                     productOffersValue > 1000000
@@ -228,7 +228,7 @@ class Dashboard extends Component {
                   icon={<DollarSign />}
                   data={
                     broadcastedProductOffersValue > 1000000
-                      ? broadcastedProductOffersValue / 1000000
+                      ? Math.round(broadcastedProductOffersValue / 1000000)
                       : broadcastedProductOffersValue
                   }
                   title={
