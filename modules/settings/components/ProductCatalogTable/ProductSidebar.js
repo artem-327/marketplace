@@ -583,12 +583,10 @@ class ProductSidebar extends React.Component {
                                   )
                                 ),
                               onSearchChange: (_, { searchQuery }) => this.handleSearchChange(searchQuery),
-                              placeholder: (
-                                <FormattedMessage
-                                  id='productCatalog.enterProductName'
-                                  defaultMessage='Enter Product Name'
-                                />
-                              )
+                              placeholder: formatMessage({
+                                id: 'productCatalog.enterProductName',
+                                defaultMessage: 'Enter Product Name'
+                              })
                             }}
                           />
                         </GridColumn>
@@ -1009,12 +1007,10 @@ class ProductSidebar extends React.Component {
                                 closeOnChange
                                 options={documentTypes}
                                 inputProps={{
-                                  placeholder: (
-                                    <FormattedMessage
-                                      id='global.documentType.choose'
-                                      defaultMessage='Choose document type'
-                                    />
-                                  ),
+                                  placeholder: formatMessage({
+                                    id: 'global.documentType.choose',
+                                    defaultMessage: 'Choose document type'
+                                  }),
                                   onChange: (e, { name, value }) => {
                                     this.handleChangeDocumentType(e, name, value)
                                   }
