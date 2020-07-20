@@ -215,20 +215,30 @@ class Dashboard extends Component {
               <>
                 <SummaryRectangle
                   icon={<DollarSign />}
-                  data={productOffersValue > 0 ? productOffersValue / 1000000 : productOffersValue}
-                  title='Total Products Value $M'
-                  titleId='dashboard.totalValue.title'
+                  data={productOffersValue > 1000000 ? productOffersValue / 1000000 : productOffersValue}
+                  title={productOffersValue > 1000000 ? 'Total Products Value $M' : 'Total Products Value $'}
+                  titleId={
+                    productOffersValue > 1000000
+                      ? 'dashboard.totalValue.title'
+                      : 'dashboard.totalValueWithoutMilion.title'
+                  }
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
                 />
                 <SummaryRectangle
                   icon={<DollarSign />}
                   data={
-                    broadcastedProductOffersValue > 0
+                    broadcastedProductOffersValue > 1000000
                       ? broadcastedProductOffersValue / 1000000
                       : broadcastedProductOffersValue
                   }
-                  title='Total Broadcasted Value $M'
-                  titleId='dashboard.totalBroadcastedValue.title'
+                  title={
+                    broadcastedProductOffersValue > 1000000 ? 'Total Broadcasted Value $M' : 'Total Broadcasted Value $'
+                  }
+                  titleId={
+                    broadcastedProductOffersValue > 1000000
+                      ? 'dashboard.totalBroadcastedValue.title'
+                      : 'dashboard.totalBroadcastedValueWithoutMilion.title'
+                  }
                   styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
                   isLastSummary
                 />
