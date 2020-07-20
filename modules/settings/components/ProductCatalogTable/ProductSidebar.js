@@ -61,6 +61,7 @@ import { UploadCloud } from 'react-feather'
 import { QuantityInput } from '~/components/custom-formik/'
 import ErrorFocus from '~/components/error-focus'
 import { palletDimensions } from '~/modules/settings/contants'
+import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
 
 const CustomForm = styled(Form)`
   flex-grow: 0 !important;
@@ -553,18 +554,16 @@ class ProductSidebar extends React.Component {
                   <FlexContent style={{ padding: '30px' }}>
                     <StyledGrid>
                       <GridRow>
-                        <GridColumn>
+                        <div style={{ margin: '0 10px 6px' }}>
+                          <FormattedMessage
+                            id='settings.associatedCompanyGenericProduct'
+                            defaultMessage='What is the Associated Generic Product that you would like to map to?'
+                          />
+                          <Required />
+                        </div>
+                        <GridColumn width={10}>
                           <Dropdown
                             name='companyGenericProduct'
-                            label={
-                              <>
-                                <FormattedMessage
-                                  id='settings.associatedCompanyGenericProduct'
-                                  defaultMessage='What is the Associated Generic Product that you would like to map to?'
-                                />
-                                <Required />
-                              </>
-                            }
                             options={allCompanyGenericProduct.map(echo => ({
                               key: echo.id,
                               text: echo.name,
@@ -592,6 +591,9 @@ class ProductSidebar extends React.Component {
                               )
                             }}
                           />
+                        </GridColumn>
+                        <GridColumn width={6}>
+                          <CompanyGenericProductRequestForm />
                         </GridColumn>
                       </GridRow>
 

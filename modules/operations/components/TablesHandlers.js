@@ -65,6 +65,9 @@ const textsTable = {
   orders: {
     SearchText: 'operations.tables.orders.search'
   },
+  'company-generic-products': {
+    SearchText: 'operations.tables.companyGenericProduct.search'
+  }
 }
 
 const validationSchema = Yup.lazy(values => {
@@ -121,6 +124,9 @@ class TablesHandlers extends Component {
         company: '',
         dateFrom: '',
         dateTo: ''
+      },
+      'company-generic-products': {
+        searchInput: ''
       }
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
