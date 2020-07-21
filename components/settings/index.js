@@ -10,7 +10,7 @@ import * as Yup from 'yup'
 import { getSafe } from '~/utils/functions'
 import { typeToComponent, toYupSchema } from './constants'
 
-import { triggerSystemSettingsModal } from '~/modules/settings/actions'
+import { triggerSystemSettingsModal, getCurrentUser } from '~/modules/settings/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import styled from 'styled-components'
@@ -127,9 +127,10 @@ class Settings extends Component {
           ) {
             payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
           } else if (el.value.visible !== null) {
-            payload.settings.push({ id: el.id, value: el.type === 'BOOL'
-                ? el.value.actual.toString().toUpperCase()
-                : el.value.visible })
+            payload.settings.push({
+              id: el.id,
+              value: el.type === 'BOOL' ? el.value.actual.toString().toUpperCase() : el.value.visible
+            })
           }
         }
       })
@@ -137,6 +138,7 @@ class Settings extends Component {
 
     try {
       settings = await api.updateSettings(role, payload)
+      await this.props.getCurrentUser()
       let { systemSettings } = this.parseData(settings.settingGroups)
 
       this.setState({ systemSettings })
@@ -387,5 +389,5 @@ export default connect(
       isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, null)
     }
   }),
-  { triggerSystemSettingsModal }
+  { triggerSystemSettingsModal, getCurrentUser }
 )(injectIntl(Settings))
