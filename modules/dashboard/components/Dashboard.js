@@ -279,26 +279,37 @@ class Dashboard extends Component {
         ) : null}
         {(!isAdmin && !isClientCompanyAdmin) || takeover ? (
           <Grid.Row>
-            <Grid.Column width={5}>
-              <PieGraph
-                innerRadius='30%'
-                data={top10CompanyProductsByQuantitySales}
-                title='PRODUCTS BY QUANTITY'
-                titleId='dasboard.productsQuantity.title'
-              />
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <PieGraph
-                innerRadius='30%'
-                isCurrency={true}
-                data={top10CompanyProductsByValueSales}
-                title='PRODUCTS BY VALUE'
-                titleId='dasboard.productsValue.title'
-              />
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <PieGraph innerRadius='30%' data={top10Buyers} title='TOP 10 BUYERS' titleId='dasboard.topBuyers.title' />
-            </Grid.Column>
+            {top10CompanyProductsByQuantitySales && (
+              <Grid.Column width={5}>
+                <PieGraph
+                  innerRadius='30%'
+                  data={top10CompanyProductsByQuantitySales}
+                  title='PRODUCTS BY QUANTITY'
+                  titleId='dasboard.productsQuantity.title'
+                />
+              </Grid.Column>
+            )}
+            {top10CompanyProductsByValueSales && (
+              <Grid.Column width={5}>
+                <PieGraph
+                  innerRadius='30%'
+                  isCurrency={true}
+                  data={top10CompanyProductsByValueSales}
+                  title='PRODUCTS BY VALUE'
+                  titleId='dasboard.productsValue.title'
+                />
+              </Grid.Column>
+            )}
+            {top10Buyers && (
+              <Grid.Column width={5}>
+                <PieGraph
+                  innerRadius='30%'
+                  data={top10Buyers}
+                  title='TOP 10 BUYERS'
+                  titleId='dasboard.topBuyers.title'
+                />
+              </Grid.Column>
+            )}
           </Grid.Row>
         ) : null}
         {isAdmin && !takeover ? (
