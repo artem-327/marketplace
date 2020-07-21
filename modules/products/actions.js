@@ -422,3 +422,10 @@ export const searchCompany = (companyText, limit) => ({
   type: AT.PRODUCTS_SEARCH_COMPANY,
   payload: api.searchCompany(companyText, limit)
 })
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.PRODUCTS_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}
