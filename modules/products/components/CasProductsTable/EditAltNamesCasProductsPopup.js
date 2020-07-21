@@ -114,7 +114,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
     if (name.length < 3) return
     if (val.id === null) {
       // Create new name
-      let value = { casProduct: productId, alternativeName: name }
+      let value = { alternativeName: name }
       await this.props.postNewProductName(productId, value)
     } else {
       // Update name
@@ -204,10 +204,14 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                               size='large'
                                               onClick={() => {
                                                 if (val.canSave === true) {
-                                                  this.handleSaveName(popupValues.data.id, val, index)
-                                                  setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
-                                                  setFieldValue(`casAlternativeNames[${index}].description`, '')
-                                                  setFieldValue(`casAlternativeNames[${index}].canSave`, false)
+                                                  try {
+                                                    this.handleSaveName(popupValues.data.id, val, index)
+                                                    setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
+                                                    setFieldValue(`casAlternativeNames[${index}].description`, '')
+                                                    setFieldValue(`casAlternativeNames[${index}].canSave`, false)
+                                                  } catch (err) {
+                                                    console.error(err)
+                                                  }
                                                 }
                                               }}
                                               color={val.color}
@@ -221,10 +225,14 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                           size='large'
                                           onClick={() => {
                                             if (val.canSave === true) {
-                                              this.handleSaveName(popupValues.data.id, val, index)
-                                              setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
-                                              setFieldValue(`casAlternativeNames[${index}].description`, '')
-                                              setFieldValue(`casAlternativeNames[${index}].canSave`, false)
+                                              try {
+                                                this.handleSaveName(popupValues.data.id, val, index)
+                                                setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
+                                                setFieldValue(`casAlternativeNames[${index}].description`, '')
+                                                setFieldValue(`casAlternativeNames[${index}].canSave`, false)
+                                              } catch (err) {
+                                                console.error(err)
+                                              }
                                             }
                                           }}
                                           color={val.color}
