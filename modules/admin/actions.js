@@ -589,3 +589,10 @@ export const searchBuyMarketSegments = segment => ({
     pageSize: 50
   })
 })
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.ADMIN_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}
