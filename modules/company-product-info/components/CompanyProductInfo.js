@@ -393,11 +393,6 @@ class CompanyProductInfo extends Component {
         defaultMessage: 'Molecular Weight',
         name: `${prefix}molecularWeight`
       })}
-      {this.getInput({
-        id: 'global.specificVolume',
-        defaultMessage: 'Specific Volume',
-        name: `${prefix}specificVolume`
-      })}
       {this.getTextarea({
         id: 'global.recommendedUse',
         defaultMessage: 'Recommended Uses',
@@ -407,31 +402,6 @@ class CompanyProductInfo extends Component {
         id: 'global.usesAdvisedAgainst',
         defaultMessage: 'Uses Advised Against',
         name: `${prefix}usesAdvisedAgainst`
-      })}
-      {this.getInput({
-        id: 'global.criticalTemperature',
-        defaultMessage: 'Critical Temperature',
-        name: `${prefix}criticalTemperature`
-      })}
-      {this.getInput({
-        id: 'global.gasDensity',
-        defaultMessage: 'Gas Density',
-        name: `${prefix}gasDensity`
-      })}
-      {this.getInput({
-        id: 'global.relativeDensity',
-        defaultMessage: 'Relative Density',
-        name: `${prefix}relativeDensity`
-      })}
-      {this.getInput({
-        id: 'global.flowTime',
-        defaultMessage: 'Flow Time (ISO 2431)',
-        name: `${prefix}flowTimeIso2431`
-      })}
-      {this.getInput({
-        id: 'global.heatOfCombustion',
-        defaultMessage: 'Heat of Combustion',
-        name: `${prefix}heatOfCombustion`
       })}
     </>
   )
@@ -1004,9 +974,9 @@ class CompanyProductInfo extends Component {
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantity`
             })}
             {this.getTextarea({
-              id: 'global.enviromentalHazards',
-              defaultMessage: 'Enviromental Hazards',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}EnviromentalHazards`
+              id: 'global.environmentalHazards',
+              defaultMessage: 'Environmental Hazards',
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}EnvironmentalHazards`
             })}
             {this.getTextarea({
               id: 'global.emsNumbers',
@@ -1021,7 +991,7 @@ class CompanyProductInfo extends Component {
             {this.getTextarea({
               id: 'global.specialPrecautionForUser',
               defaultMessage: 'Special Precautions For User',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}SpecialPrecautionsForUser`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}UserSpecialPrecautions`
             })}
             {this.getTextarea({
               id: 'global.marinePollutant',
@@ -1051,12 +1021,12 @@ class CompanyProductInfo extends Component {
             {this.getTextarea({
               id: 'global.quantityLimitationsPassengerAircraftRail',
               defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}QuantityLimitationsPassengerAircraftRail`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PassengerQuantityLimitations`
             })}
             {this.getTextarea({
               id: 'global.quantityLimitationsCargoAircraftOnly',
               defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}QuantityLimitationsCargoAircraftOnly`
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}CargoAircraftQuantityLimitations`
             })}
             {this.getTextarea({
               id: 'global.vesselStowageLocation',

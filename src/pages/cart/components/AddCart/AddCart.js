@@ -421,45 +421,38 @@ class AddCart extends Component {
                   <CustomDivTitle>
                     <InfoIcon size={24} />
                     <CustomDivInTitle>
-                      <FormattedMessage
-                        id='cart.payment.terms.title'
-                        defaultMessage={`Payment Terms Information`}
-                      />
+                      <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
                     </CustomDivInTitle>
                   </CustomDivTitle>
                   <CustomDivContent>
-                    {paymentTerms === 'REGULAR'
-                      ? (
-                        <FormattedMessage
-                          id='buy.payment.netX.content'
-                          defaultMessage={`The payment terms of this product are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
-                          values={{
-                            value: <b>Net {paymentNetDays}</b>,
-                            days: <b>{paymentNetDays} days</b>
-                          }}
-                        />
-                      )
-                      : (
-                        paymentTerms === 'HALF_UPFRONT' ? (
-                          <FormattedMessage
-                            id='buy.payment.terms50.content'
-                            defaultMessage={`This product has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
-                            values={{
-                              value: <b>50/50</b>,
-                              percentage: <b>50%</b>,
-                              shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
-                            }}
-                          />
-                        ) : (
-                          <FormattedMessage
-                            id='buy.payment.terms100.content'
-                            defaultMessage={`This product has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
-                            values={{
-                              percentage: <b>100%</b>
-                            }}
-                          />
-                        )
-                      )}
+                    {paymentTerms === 'REGULAR' ? (
+                      <FormattedMessage
+                        id='buy.payment.netX.content'
+                        defaultMessage={`The payment terms of this product are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
+                        values={{
+                          value: <b>Net {paymentNetDays}</b>,
+                          days: <b>{paymentNetDays} days</b>
+                        }}
+                      />
+                    ) : paymentTerms === 'HALF_UPFRONT' ? (
+                      <FormattedMessage
+                        id='buy.payment.terms50.content'
+                        defaultMessage={`This product has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
+                        values={{
+                          value: <b>50/50</b>,
+                          percentage: <b>50%</b>,
+                          shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
+                        }}
+                      />
+                    ) : (
+                      <FormattedMessage
+                        id='buy.payment.terms100.content'
+                        defaultMessage={`This product has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
+                        values={{
+                          percentage: <b>100%</b>
+                        }}
+                      />
+                    )}
                   </CustomDivContent>
                 </Rectangle>
               </GridColumn>
@@ -1323,6 +1316,51 @@ class AddCart extends Component {
                   defaultMessage: 'Molecular Weight',
                   name: 'companyProduct.companyGenericProduct.molecularWeight'
                 })}
+                {this.renderField({
+                  name: 'companyProduct.companyGenericProduct.optionalRecommendedRestrictions',
+                  id: 'global.optionalRecommendedRestrictions',
+                  defaultMessage: 'Recommended Restrictions'
+                })}
+                {this.renderField({
+                  name: 'companyProduct.companyGenericProduct.optionalSynonyms',
+                  id: 'global.optionalSynonyms',
+                  defaultMessage: 'Synonyms'
+                })}
+                {this.renderField({
+                  name: 'companyProduct.companyGenericProduct.optionalSchedule',
+                  id: 'global.optionalSchedule',
+                  defaultMessage: 'Schedule'
+                })}
+                {this.renderField({
+                  name: 'companyProduct.companyGenericProduct.optionalSpecificVolume',
+                  id: 'global.optionalSpecificVolume',
+                  defaultMessage: 'Specific Volume'
+                })}
+                {this.renderField({
+                  name: 'companyProduct.companyGenericProduct.optionalCriticalTemperature',
+                  id: 'global.optionalCriticalTemperature',
+                  defaultMessage: 'Critical Temperature'
+                })}
+                {this.renderField({
+                  name: 'companyProduct.companyGenericProduct.optionalGasDensity',
+                  id: 'global.optionalGasDensity',
+                  defaultMessage: 'Gas Desity'
+                })}
+                {this.renderField({
+                  name: 'companyProduct.companyGenericProduct.optionalRelativeDensity',
+                  id: 'global.optionalRelativeDensity',
+                  defaultMessage: 'Relative Density'
+                })}
+                {this.renderField({
+                  name: 'companyProduct.companyGenericProduct.optionalFlowTime',
+                  id: 'global.optionalFlowTime',
+                  defaultMessage: 'Flow Time'
+                })}
+                {this.renderField({
+                  name: 'companyProduct.companyGenericProduct.optionalHeatOfCombustion',
+                  id: 'global.optionalHeatOfCombustion',
+                  defaultMessage: 'Heat Of Combustion'
+                })}
               </CustomGrid>
             </FlexContent>
 
@@ -1589,18 +1627,18 @@ class AddCart extends Component {
                   defaultMessage: 'Enviromental Hazards',
                   name: `${prefix}${this.state.companyGenericProductGrouping}HazardLabel` // ? (EnviromentalHazards)
                 })}
-                {/* not in response (swagger 1.0.3-COVID-19.9)
-                this.renderField({
+
+                {this.renderField({
                   id: 'global.emsNumbers',
                   defaultMessage: 'Ems Numbers',
                   name: `${prefix}${this.state.companyGenericProductGrouping}EmsNumbers`
-                })*/}
-                {/* not in response (swagger 1.0.3-COVID-19.9)
-                this.renderField({
+                })}
+
+                {this.renderField({
                   id: 'global.exceptions',
                   defaultMessage: 'Exceptions',
                   name: `${prefix}${this.state.companyGenericProductGrouping}Exceptions`
-                })*/}
+                })}
                 {this.renderField({
                   id: 'global.specialPrecautionForUser',
                   defaultMessage: 'Special Precautions For User',
@@ -1616,48 +1654,41 @@ class AddCart extends Component {
                   defaultMessage: 'Severe Marine Pollutant',
                   name: `${prefix}${this.state.companyGenericProductGrouping}SevereMarinePollutant`
                 })}
-                {/* not in response (swagger 1.0.3-COVID-19.9)
-                this.renderField({
+                {this.renderField({
                   id: 'global.packagingExceptions',
                   defaultMessage: 'Packaging Exceptions',
                   name: `${prefix}${this.state.companyGenericProductGrouping}PackagingExceptions`
-                })*/}
-                {/* not in response (swagger 1.0.3-COVID-19.9)
-                this.renderField({
+                })}
+                {this.renderField({
                   id: 'global.packagingNonBulk',
                   defaultMessage: 'Packaging Non Bulk',
                   name: `${prefix}${this.state.companyGenericProductGrouping}PackagingNonBulk`
-                })*/}
-                {/* not in response (swagger 1.0.3-COVID-19.9)
-                this.renderField({
+                })}
+                {this.renderField({
                   id: 'global.packagingBulk',
                   defaultMessage: 'Packaging Bulk',
                   name: `${prefix}${this.state.companyGenericProductGrouping}PackagingBulk`
-                })*/}
-                {/* not in response (swagger 1.0.3-COVID-19.9)
-                this.renderField({
+                })}
+                {this.renderField({
                   id: 'global.quantityLimitationsPassengerAircraftRail',
                   defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
                   name: `${prefix}${this.state.companyGenericProductGrouping}QuantityLimitationsPassengerAircraftRail`
-                })*/}
-                {/* not in response (swagger 1.0.3-COVID-19.9)
-                this.renderField({
+                })}
+                {this.renderField({
                   id: 'global.quantityLimitationsCargoAircraftOnly',
                   defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
                   name: `${prefix}${this.state.companyGenericProductGrouping}QuantityLimitationsCargoAircraftOnly`
-                })*/}
-                {/* not in response (swagger 1.0.3-COVID-19.9)
-                this.renderField({
+                })}
+                {this.renderField({
                   id: 'global.vesselStowageLocation',
                   defaultMessage: 'Vessel Stowage Location',
                   name: `${prefix}${this.state.companyGenericProductGrouping}VesselStowageLocation`
-                })*/}
-                {/* not in response (swagger 1.0.3-COVID-19.9)
-                this.renderField({
+                })}
+                {this.renderField({
                   id: 'global.vesselStowageOther',
                   defaultMessage: 'Vessel Stowage Other',
                   name: `${prefix}${this.state.companyGenericProductGrouping}VesselStowageOther`
-                })*/}
+                })}
               </CustomGrid>
             </FlexContent>
 

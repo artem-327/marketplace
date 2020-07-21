@@ -401,20 +401,17 @@ class DatagridProvider extends Component {
 }
 
 const mapStateToProps = ({ auth }) => {
-  const refreshInterval = getSafe(() => auth.identity.settings, []).find(
+  const refreshIntervalObject = getSafe(() => auth.identity.settings, []).find(
     set => set.key === 'COMPANY_DATATABLE_REFRESH_INTERVAL' && set.value !== 'EMPTY_SETTING'
   )
 
-  let interval = null
-  for (const [key, value] of Object.entries(CONSTANTS_INTERVALS)) {
-    if (key === getSafe(() => refreshInterval.value, null)) {
-      interval = value
-      break
-    }
-  }
+  const refreshIntervalValue =
+    refreshIntervalObject && refreshIntervalObject.value && parseInt(refreshIntervalObject.value) >= 30000
+      ? parseInt(refreshIntervalObject.value)
+      : 60000
 
   return {
-    refreshInterval: interval
+    refreshInterval: refreshIntervalValue
   }
 }
 
