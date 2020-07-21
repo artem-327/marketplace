@@ -24,7 +24,8 @@ import UploadAttachment from '~/modules/inventory/components/upload/UploadAttach
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
 import { UploadCloud } from 'react-feather'
 import get from 'lodash/get'
-
+import { Broadcast } from '~/modules/broadcast'
+import { openBroadcast } from '~/modules/broadcast/actions'
 
 export const CustomA = styled.a`
   font-weight: bold;
@@ -92,7 +93,7 @@ const CustomForm = styled(Form)`
       }
     }
   }
-  
+
   .field {
     .ui.checkbox {
       margin-bottom: 9px;
@@ -171,8 +172,19 @@ const RightAlignedGroup = styled(FormGroup)`
 `
 
 class DocumentManagerSidebar extends Component {
+  state = {
+    broadcastLoading: true
+  }
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes, initialFileType } = this.props
+    const { documentTypes, getDocumentTypes, initialFileType, openBroadcast, popupValues } = this.props
+
+    if (popupValues && popupValues.isOpenBroadcast) {
+      //FIXME
+      await openBroadcast({ id: 182 }).then(async () => {
+        this.setState({ broadcastLoading: false })
+      })
+    }
+
     if (documentTypes.length === 0) await getDocumentTypes()
     if (initialFileType !== null) this.setFieldValue('documentType.id', initialFileType)
   }
@@ -204,8 +216,7 @@ class DocumentManagerSidebar extends Component {
             customName: values.customName,
             description: values.description,
             expirationDate:
-              values.expirationDate &&
-              getSafe(() => encodeURIComponent(getStringISODate(values.expirationDate)), null),
+              values.expirationDate && getSafe(() => encodeURIComponent(getStringISODate(values.expirationDate)), null),
             isTemporary: getSafe(() => values.isTemporary, false),
             issuedAt: values.issuedAt && getSafe(() => encodeURIComponent(getStringISODate(values.issuedAt)), null),
             issuer: values.issuer,
@@ -220,9 +231,8 @@ class DocumentManagerSidebar extends Component {
               await updateAttachment(values.id, { ...payload, type: values.documentType.id })
             } else {
               values.files.forEach(async file => {
-                  await addAttachment(file, values.documentType.id, payload)
-                }
-              )
+                await addAttachment(file, values.documentType.id, payload)
+              })
             }
           } catch (e) {
             console.error(e)
@@ -261,226 +271,228 @@ class DocumentManagerSidebar extends Component {
                 </div>
                 <FlexContent style={{ padding: '16px' }}>
                   <CustomSegmentContent basic>
-
-                    <FormGroup widths='equal'>
-                      <Dropdown
-                        inputProps={{
-                          loading: documentTypesFetching,
-                          disabled: lockedFileType,
-                          placeholder: formatMessage({
-                            id: 'settings.documents.selectDocumentType',
-                            defaultMessage: 'Select document type'
-                          })
-                        }}
-                        loading={documentTypesFetching}
-                        name='documentType.id'
-                        label={
-                          <>
-                            <FormattedMessage id='global.docType' defaultMessage='Document Type'>
-                              {text => text}
-                            </FormattedMessage>
-                            <Required />
-                          </>
-                        }
-                        options={documentTypes}
-                      />
-                      <Input
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'settings.documents.enterDocumentName',
-                            defaultMessage: 'Enter document name'
-                          })
-                        }}
-                        name='customName'
-                        label={
-                          <FormattedMessage id='global.docName' defaultMessage='Document Name'>
-                            {text => text}
-                          </FormattedMessage>
-                        }
-                      />
-                    </FormGroup>
-
-                    <FormGroup widths='equal'>
-                      <Input
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'settings.documents.fileDescription',
-                            defaultMessage: 'File description'
-                          })
-                        }}
-                        name='description'
-                        label={
-                          <FormattedMessage id='global.description' defaultMessage='Description'>
-                            {text => text}
-                          </FormattedMessage>
-                        }
-                      />
-                    </FormGroup>
-
-                    <FormGroup widths='equal'>
-                      <DateInput
-                        name='issuedAt'
-                        label={
-                          <FormattedMessage id='global.issuedDate' defaultMessage='Issued Date'>
-                            {text => text}
-                          </FormattedMessage>
-                        }
-                        inputProps={{
-                          maxDate: moment(),
-                          clearable: true
-                        }}
-                      />
-                      <Input
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'settings.documents.enterIssuerName',
-                            defaultMessage: 'Enter issuer name'
-                          })
-                        }}
-                        name='issuer'
-                        label={
-                          <FormattedMessage id='global.issuer' defaultMessage='Issuer'>
-                            {text => text}
-                          </FormattedMessage>
-                        }
-                      />
-                      {false && (<FormField style={{ textAlign: 'right' }}>
-                        <div style={{ paddingTop: '40px' }}>
-                          <Checkbox
-                            name='isTemporary'
-                            label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
+                    {popupValues && popupValues.isOpenBroadcast ? (
+                      <>
+                        <Broadcast isPrepared={!this.state.broadcastLoading} asModal={false} asSidebar={true} />{' '}
+                      </>
+                    ) : (
+                      <>
+                        {' '}
+                        <FormGroup widths='equal'>
+                          <Dropdown
+                            inputProps={{
+                              loading: documentTypesFetching,
+                              disabled: lockedFileType,
+                              placeholder: formatMessage({
+                                id: 'settings.documents.selectDocumentType',
+                                defaultMessage: 'Select document type'
+                              })
+                            }}
+                            loading={documentTypesFetching}
+                            name='documentType.id'
+                            label={
+                              <>
+                                <FormattedMessage id='global.docType' defaultMessage='Document Type'>
+                                  {text => text}
+                                </FormattedMessage>
+                                <Required />
+                              </>
+                            }
+                            options={documentTypes}
                           />
-                        </div>
-                      </FormField>)}
-                    </FormGroup>
+                          <Input
+                            inputProps={{
+                              placeholder: formatMessage({
+                                id: 'settings.documents.enterDocumentName',
+                                defaultMessage: 'Enter document name'
+                              })
+                            }}
+                            name='customName'
+                            label={
+                              <FormattedMessage id='global.docName' defaultMessage='Document Name'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                          />
+                        </FormGroup>
+                        <FormGroup widths='equal'>
+                          <Input
+                            inputProps={{
+                              placeholder: formatMessage({
+                                id: 'settings.documents.fileDescription',
+                                defaultMessage: 'File description'
+                              })
+                            }}
+                            name='description'
+                            label={
+                              <FormattedMessage id='global.description' defaultMessage='Description'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                          />
+                        </FormGroup>
+                        <FormGroup widths='equal'>
+                          <DateInput
+                            name='issuedAt'
+                            label={
+                              <FormattedMessage id='global.issuedDate' defaultMessage='Issued Date'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            inputProps={{
+                              maxDate: moment(),
+                              clearable: true
+                            }}
+                          />
+                          <Input
+                            inputProps={{
+                              placeholder: formatMessage({
+                                id: 'settings.documents.enterIssuerName',
+                                defaultMessage: 'Enter issuer name'
+                              })
+                            }}
+                            name='issuer'
+                            label={
+                              <FormattedMessage id='global.issuer' defaultMessage='Issuer'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                          />
+                          {false && (
+                            <FormField style={{ textAlign: 'right' }}>
+                              <div style={{ paddingTop: '40px' }}>
+                                <Checkbox
+                                  name='isTemporary'
+                                  label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
+                                />
+                              </div>
+                            </FormField>
+                          )}
+                        </FormGroup>
+                        <FormGroup widths='equal'>
+                          <DateInput
+                            name='expirationDate'
+                            label={
+                              <FormattedMessage id='global.expDate' defaultMessage='Expiration Date'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            inputProps={{
+                              clearable: true
+                            }}
+                          />
+                          <FormField></FormField>
+                        </FormGroup>
+                        <FormGroup widths='equal'>
+                          <Dropdown
+                            name='othersPermissions'
+                            inputProps={{
+                              clearable: true,
+                              placeholder: formatMessage({
+                                id: 'settings.documents.selectPermission',
+                                defaultMessage: 'Select permission'
+                              })
+                            }}
+                            label={
+                              <FormattedMessage id='global.othersPermissions' defaultMessage='Others Permissions'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            options={otherPermissions.map((perm, i) => ({
+                              id: i,
+                              text: perm.text,
+                              value: perm.value
+                            }))}
+                          />
+                          <Dropdown
+                            name='sharedTo'
+                            inputProps={{
+                              clearable: true,
+                              placeholder: formatMessage({
+                                id: 'settings.documents.selectSharingOption',
+                                defaultMessage: 'Select sharing option'
+                              })
+                            }}
+                            label={
+                              <FormattedMessage id='global.sharedTo' defaultMessage='Shared To'>
+                                {text => text}
+                              </FormattedMessage>
+                            }
+                            options={sharedTo.map((s, i) => ({
+                              id: i,
+                              text: s.text,
+                              value: s.value
+                            }))}
+                          />
+                        </FormGroup>
+                        {!values.id && (
+                          <FormGroup widths='equal' style={{ marginTop: '20px' }}>
+                            <FormField>
+                              <div style={!!errorFiles ? { border: '1px solid #9f3a38', margin: '-1px' } : null}>
+                                <UploadAttachment
+                                  name='files'
+                                  attachments={values.files}
+                                  type={'' + values.documentType.id}
+                                  fileMaxSize={20}
+                                  onChange={files => {
+                                    if (files.length) {
+                                      setFieldValue('files', files)
+                                    }
+                                  }}
+                                  removeAttachment={() => {}}
+                                  data-test='settings_add_document_drop'
+                                  emptyContent={
+                                    <CustomDiv>
+                                      <div>
+                                        <UploadCloud size='40' color='#dee2e6' />
+                                      </div>
 
-                    <FormGroup widths='equal'>
-                      <DateInput
-                        name='expirationDate'
-                        label={
-                          <FormattedMessage id='global.expDate' defaultMessage='Expiration Date'>
-                            {text => text}
-                          </FormattedMessage>
-                        }
-                        inputProps={{
-                          clearable: true
-                        }}
-                      />
-                      <FormField></FormField>
-                    </FormGroup>
+                                      {formatMessage({ id: 'addInventory.dragDrop' })}
+                                      <br />
 
-                    <FormGroup widths='equal'>
-                      <Dropdown
-                        name='othersPermissions'
-                        inputProps={{
-                          clearable: true,
-                          placeholder: formatMessage({
-                            id: 'settings.documents.selectPermission',
-                            defaultMessage: 'Select permission'
-                          })
-                        }}
-                        label={
-                          <FormattedMessage id='global.othersPermissions' defaultMessage='Others Permissions'>
-                            {text => text}
-                          </FormattedMessage>
-                        }
-                        options={otherPermissions.map((perm, i) => ({
-                          id: i,
-                          text: perm.text,
-                          value: perm.value
-                        }))}
-                      />
-                      <Dropdown
-                        name='sharedTo'
-                        inputProps={{
-                          clearable: true,
-                          placeholder: formatMessage({
-                            id: 'settings.documents.selectSharingOption',
-                            defaultMessage: 'Select sharing option'
-                          })
-                        }}
-                        label={
-                          <FormattedMessage id='global.sharedTo' defaultMessage='Shared To'>
-                            {text => text}
-                          </FormattedMessage>
-                        }
-                        options={sharedTo.map((s, i) => ({
-                          id: i,
-                          text: s.text,
-                          value: s.value
-                        }))}
-                      />
-                    </FormGroup>
-
-                    {!values.id && (
-                      <FormGroup widths='equal' style={{ marginTop: '20px' }}>
-                        <FormField>
-                          <div style={!!errorFiles
-                            ? { border: '1px solid #9f3a38', margin: '-1px' }
-                            : null
-                          }>
-                            <UploadAttachment
-                              name='files'
-                              attachments={values.files}
-                              type={'' + values.documentType.id}
-                              fileMaxSize={20}
-                              onChange={files => {
-                                if (files.length) {
-                                  setFieldValue('files', files)
-                                }
-                              }}
-                              removeAttachment={() => {}}
-                              data-test='settings_add_document_drop'
-                              emptyContent={
-                                <CustomDiv>
-                                  <div>
-                                    <UploadCloud size='40' color='#dee2e6' />
-                                  </div>
-
-                                  {formatMessage({ id: 'addInventory.dragDrop' })}
-                                  <br />
-
-                                  <FormattedMessage
-                                    id='addInventory.dragDropOr'
-                                    defaultMessage={'or {link} to select from computer'}
-                                    values={{
-                                      link: (
-                                        <CustomA>
-                                          <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                        </CustomA>
-                                      )
-                                    }}
-                                  />
-                                </CustomDiv>
-                              }
-                              uploadedContent={
-                                <CustomDiv>
-                                  <div>
-                                    <UploadCloud size='40' color='#dee2e6' />
-                                  </div>
-                                  <FormattedMessage
-                                    id='addInventory.dragDrop'
-                                    defaultMessage={'Drag and drop to add file here'}
-                                  />
-                                  <br />
-                                  <FormattedMessage
-                                    id='addInventory.dragDropOr'
-                                    defaultMessage={'or {link} to select from computer'}
-                                    values={{
-                                      link: (
-                                        <CustomA>
-                                          <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                        </CustomA>
-                                      )
-                                    }}
-                                  />
-                                </CustomDiv>
-                              }
-                            />
-                          </div>
-                          {errorFiles && <div className='sui-error-message'>{errorFiles}</div>}
-                        </FormField>
-                      </FormGroup>
+                                      <FormattedMessage
+                                        id='addInventory.dragDropOr'
+                                        defaultMessage={'or {link} to select from computer'}
+                                        values={{
+                                          link: (
+                                            <CustomA>
+                                              <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                            </CustomA>
+                                          )
+                                        }}
+                                      />
+                                    </CustomDiv>
+                                  }
+                                  uploadedContent={
+                                    <CustomDiv>
+                                      <div>
+                                        <UploadCloud size='40' color='#dee2e6' />
+                                      </div>
+                                      <FormattedMessage
+                                        id='addInventory.dragDrop'
+                                        defaultMessage={'Drag and drop to add file here'}
+                                      />
+                                      <br />
+                                      <FormattedMessage
+                                        id='addInventory.dragDropOr'
+                                        defaultMessage={'or {link} to select from computer'}
+                                        values={{
+                                          link: (
+                                            <CustomA>
+                                              <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                            </CustomA>
+                                          )
+                                        }}
+                                      />
+                                    </CustomDiv>
+                                  }
+                                />
+                              </div>
+                              {errorFiles && <div className='sui-error-message'>{errorFiles}</div>}
+                            </FormField>
+                          </FormGroup>
+                        )}
+                      </>
                     )}
                   </CustomSegmentContent>
                 </FlexContent>
@@ -496,10 +508,7 @@ class DocumentManagerSidebar extends Component {
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                  <Button
-                    secondary
-                    onClick={() => this.submitForm()}
-                    data-test='settings_documents_sidebar_submit_btn'>
+                  <Button secondary onClick={() => this.submitForm()} data-test='settings_documents_sidebar_submit_btn'>
                     <FormattedMessage id='global.save' defaultMessage='Save'>
                       {text => text}
                     </FormattedMessage>
@@ -547,7 +556,8 @@ const mapDispatchToProps = {
   closePopup,
   getDocumentTypes,
   addAttachment,
-  updateAttachment
+  updateAttachment,
+  openBroadcast
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(DocumentManagerSidebar))

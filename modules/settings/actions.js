@@ -16,10 +16,10 @@ export const removeEmpty = obj =>
     }
   })
 
-export function openPopup(rows = null) {
+export function openPopup(rows = null, isOpenBroadcast) {
   return {
     type: AT.OPEN_POPUP,
-    payload: rows
+    payload: { ...rows, isOpenBroadcast }
   }
 }
 

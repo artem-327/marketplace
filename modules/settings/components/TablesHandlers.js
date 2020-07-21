@@ -138,11 +138,11 @@ const CustomUploadCloud = styled(UploadCloud)`
 `
 
 const SwitchDocuments = styled.div`
-  margin-right: 15px;
+  margin-bottom: 15px;
   display: inline-block;
-  &.product {
+  &.my-documents {
     .ui.button {
-      width: 110px;
+      width: 160px;
       padding-left: 1.071428571em;
       padding-right: 1.071428571em;
       text-align: center;
@@ -158,9 +158,9 @@ const SwitchDocuments = styled.div`
       color: #848893;
     }
   }
-  &.chemical {
+  &.shared-documents {
     .ui.button {
-      width: 110px;
+      width: 160px;
       padding-left: 1.071428571em;
       padding-right: 1.071428571em;
       text-align: center;
@@ -248,7 +248,8 @@ class TablesHandlers extends Component {
         documentType: ''
       },
       documentType: '',
-      options: []
+      options: [],
+      type: 'my-documents'
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
@@ -377,9 +378,9 @@ class TablesHandlers extends Component {
       console.error(e)
     }
   }
-
+  //TODO
   switchDocuments = typeDocument => {
-    //FIXME
+    this.setState({ type: typeDocument })
   }
 
   renderHandler = () => {
@@ -403,28 +404,6 @@ class TablesHandlers extends Component {
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
-        {currentTab.type !== 'documents' && (
-          <div className='column'>
-            <SwitchDocuments className={type}>
-              <Button
-                attached='left'
-                onClick={() => this.switchDocuments('myDocuments')}
-                data-test='settings_my_documents_switch_btn'>
-                <FormattedMessage id='settings.documents.myDocuments' defaultMessage='My Documents'>
-                  {text => text}
-                </FormattedMessage>
-              </Button>
-              <Button
-                attached='right'
-                onClick={() => this.switchDocuments('sharedDocuments')}
-                data-test='settings_documents_shared_switch_btn'>
-                <FormattedMessage id='settings.documents.sharedDocuments' defaultMessage='Shared with Me'>
-                  {text => text}
-                </FormattedMessage>
-              </Button>
-            </SwitchDocuments>
-          </div>
-        )}
         {currentTab.type !== 'global-broadcast' &&
           currentTab.type !== 'documents' &&
           currentTab.type !== 'logistics' &&
@@ -644,6 +623,28 @@ class TablesHandlers extends Component {
   render() {
     return (
       <PositionHeaderSettings>
+        {this.props.currentTab.type === 'documents' && (
+          <GridRow>
+            <SwitchDocuments className={this.state.type}>
+              <Button
+                attached='left'
+                onClick={() => this.switchDocuments('my-documents')}
+                data-test='settings_my_documents_switch_btn'>
+                <FormattedMessage id='settings.documents.myDocuments' defaultMessage='My Documents'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+              <Button
+                attached='right'
+                onClick={() => this.switchDocuments('shared-documents')}
+                data-test='settings_documents_shared_switch_btn'>
+                <FormattedMessage id='settings.documents.sharedDocuments' defaultMessage='Shared with Me'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </SwitchDocuments>
+          </GridRow>
+        )}
         <CustomRowDiv>{!this.props.currentTab.hideHandler && this.renderHandler()}</CustomRowDiv>
 
         {false && (

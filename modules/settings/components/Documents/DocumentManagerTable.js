@@ -167,7 +167,7 @@ class DocumentManager extends Component {
                       {text => text}
                     </FormattedMessage>
                   ),
-                  callback: row => openPopup(row)
+                  callback: row => openPopup(row, true)
                 }
               ]
             : []),

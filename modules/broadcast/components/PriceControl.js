@@ -93,7 +93,10 @@ export default class PriceControl extends Component {
     const { offer } = this.props
     if (type === 'multiplier') {
       return -99.9
-    } else if (offer.pricingTiers[this.props.offer.pricingTiers.length - 1] && type !== 'multiplier') {
+    } else if (
+      getSafe(() => offer.pricingTiers[this.props.offer.pricingTiers.length - 1], false) &&
+      type !== 'multiplier'
+    ) {
       return -1 * this.props.offer.pricingTiers[this.props.offer.pricingTiers.length - 1].pricePerUOM + 0.001
     } else {
       return
