@@ -18,38 +18,11 @@ import ProductGroupsPopup from './ProductGroups/ProductGroupsPopup'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider, withDatagrid, Datagrid } from '~/modules/datagrid'
-import { debounce } from 'lodash'
 
 const CustomGridColumn = styled(GridColumn)`
   padding: 0 32px 0 32px !important;
 `
 class Products extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      filterValue: ''
-    }
-    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.currentTab !== this.props.currentTab) {
-      this.setState({ filterValue: '' })
-      this.handleFiltersValue('')
-    }
-  }
-
-  handleFilterChange = (e, { value }) => {
-    this.setState({ filterValue: value })
-
-    this.handleFiltersValue(value)
-  }
-
-  handleFiltersValue = value => {
-    // this condition must be ready evrytimes if you inicializate datagridProvider
-    if (Datagrid.isReady()) Datagrid.setSearch(value, true, 'pageFilters')
-  }
-
   renderContent = () => {
     const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = this.props
 
@@ -95,24 +68,24 @@ class Products extends Component {
       'cas-products': {
         url: '/prodex/api/cas-products/datagrid',
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
-                { operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v}%`] }
+                { operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${v.searchInput}%`] },
+                { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v.searchInput}%`] }
               ]
             : []
       },
       'product-catalog': {
         url: '/prodex/api/company-generic-products/datagrid',
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
-                { operator: 'LIKE', path: 'CompanyGenericProduct.name', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'CompanyGenericProduct.code', values: [`%${v}%`] },
+                { operator: 'LIKE', path: 'CompanyGenericProduct.name', values: [`%${v.searchInput}%`] },
+                { operator: 'LIKE', path: 'CompanyGenericProduct.code', values: [`%${v.searchInput}%`] },
                 {
                   operator: 'LIKE',
                   path: 'CompanyGenericProduct.company.cfDisplayName',
-                  values: [`%${v}%`]
+                  values: [`%${v.searchInput}%`]
                 }
               ]
             : []
@@ -120,10 +93,10 @@ class Products extends Component {
       'product-groups': {
         url: '/prodex/api/product-groups/datagrid',
         searchToFilter: v =>
-          v
+          v && v.searchInput
             ? [
-                { operator: 'LIKE', path: 'ProductGroup.name', values: [`%${v}%`] },
-                { operator: 'LIKE', path: 'ProductGroup.tags.name', values: [`%${v}%`] }
+                { operator: 'LIKE', path: 'ProductGroup.name', values: [`%${v.searchInput}%`] },
+                { operator: 'LIKE', path: 'ProductGroup.tags.name', values: [`%${v.searchInput}%`] }
               ]
             : []
       }
@@ -133,31 +106,23 @@ class Products extends Component {
   }
 
   render() {
-    const { currentTab, orderDetailData } = this.props
+    const { currentTab } = this.props
 
     //! ! Temporary commented
     //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
     //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
-    const preserveFilters = currentTab.type === 'product-catalog'
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
           <>
-            <Container fluid style={{ padding: '0 1.5vh' }}>
-              <TablesHandlers
-                currentTab={currentTab}
-                handleFilterChange={this.handleFilterChange}
-                filterValue={this.state.filterValue}
-              />
-            </Container>
-
-            <Grid columns='equal' className='flex stretched' style={{ padding: '0 1.5vh' }}>
-              <Grid.Row>
-                <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
-              </Grid.Row>
-            </Grid>
+            <div style={{ padding: '20px 30px' }}>
+              <TablesHandlers currentTab={currentTab} />
+            </div>
+            <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
+              {this.renderContent()}
+            </div>
           </>
         </Container>
         <AddEditEchoProduct tabName={'Product Catalog'} />

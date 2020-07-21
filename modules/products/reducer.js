@@ -45,7 +45,8 @@ export const initialState = {
   searchedMarketSegmentsLoading: false,
   altEchoNamesRows: [],
   searchedProductGroups: [],
-  searchedProductGroupsLoading: false
+  searchedProductGroupsLoading: false,
+  tableHandlersFilters: null
 }
 
 export default function reducers(state = initialState, action) {
@@ -387,6 +388,12 @@ export default function reducers(state = initialState, action) {
         ...state,
         searchedCompanies: action.payload,
         searchedCompaniesLoading: false
+      }
+    }
+    case AT.PRODUCTS_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
     default: {

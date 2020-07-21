@@ -67,8 +67,6 @@ const StyledMenu = styled(Menu)`
       }
     
       .menu {
-        width: 280px !important;
-        min-width: 280px !important;
         padding-top: 11px !important;
         padding-bottom: 9px !important;
       

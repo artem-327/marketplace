@@ -14,7 +14,8 @@ export const initialState = {
   loading: false,
   casProductsRows: [],
   companiesRows: [],
-  currentTab: { name: 'Document Types', id: 9, type: 'document-types' }
+  currentTab: { name: 'Document Types', id: 9, type: 'document-types' },
+  tableHandlersFilters: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -94,6 +95,12 @@ export default function reducer(state = initialState, action) {
         currentEditForm: null,
         currentEdit2Form: null,
         currentAddDwolla: null
+      }
+    }
+    case AT.DOCUMENT_TYPES_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
     default: {
