@@ -4,7 +4,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 
 export function handleActiveTab(tab, currentTab) {
-  if (tab.type !== currentTab.type) Datagrid.clear()
+  if (tab.type !== currentTab.type && Datagrid) Datagrid.clear()
   return {
     type: AT.PRODUCTS_HANDLE_ACTIVE_TAB,
     payload: { tab }

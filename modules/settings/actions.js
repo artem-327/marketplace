@@ -1051,8 +1051,8 @@ export function removeAttachment(aId) {
 
 export const addTab = payload => ({ type: AT.ADD_TAB, payload })
 
-export const tabChanged = tab => {
-  Datagrid && Datagrid.clear()
+export const tabChanged = (tab, currentTab) => {
+  if (tab !== currentTab && Datagrid) Datagrid.clear()
   return { type: AT.TAB_CHANGED, payload: tab }
 }
 
