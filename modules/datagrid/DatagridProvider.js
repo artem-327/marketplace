@@ -109,7 +109,9 @@ class DatagridProvider extends Component {
     const { datagridParams, query, isScrollToEnd, refreshTable, allLoaded } = this.state
     const { apiConfig } = this.props
 
-    isScrollToEnd && this.setState({ loading: true })
+    isScrollToEnd ||
+      ((getSafe(() => datagridParams.filters.length, false) || getSafe(() => datagridParams.orFilters.length, false)) &&
+        this.setState({ loading: true }))
 
     let pageNumber = 0
     if (refreshTable) {

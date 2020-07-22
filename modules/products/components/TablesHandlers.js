@@ -17,20 +17,6 @@ const PositionHeaderSettings = styled.div`
   z-index: 602;
 `
 
-const CustomGridRow = styled(GridRow)`
-  padding: 0 !important;
-  margin: 10px 0 10px 4px !important;
-`
-
-const CustomMenuItemLeft = styled(Menu.Item)`
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-`
-
-const CustomMenuItemRight = styled(Menu.Item)`
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-`
 const textsTable = {
   'cas-products': {
     BtnAddText: 'products.casProducts.buttonAdd',
