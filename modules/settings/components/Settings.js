@@ -38,7 +38,7 @@ import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo, renderCopyright } from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -196,7 +196,7 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    const { isCompanyAdmin, addTab, tabsNames, getIdentity, isClientCompanyAdmin } = this.props
+    const { isCompanyAdmin, addTab, tabsNames, getIdentity, isClientCompanyAdmin, renderCopyright } = this.props
     try {
       await getIdentity()
     } catch (error) {
@@ -213,6 +213,7 @@ class Settings extends Component {
 
     this.changeRoute(queryTab)
     this.redirectPage(queryTab)
+    renderCopyright()
   }
 
   selectLogo = (logo, isNew = true) => {
@@ -498,5 +499,6 @@ export default connect(mapStateToProps, {
   loadLogo,
   postCompanyLogo,
   deleteCompanyLogo,
-  getIdentity
+  getIdentity,
+  renderCopyright
 })(withToastManager(Settings))

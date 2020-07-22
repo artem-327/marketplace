@@ -1215,3 +1215,9 @@ export function handleVariableSave(variable, value) {
     payload: { variable, value }
   }
 }
+
+export function renderCopyright() {
+  return {
+    type: AT.SETTINGS_RENDER_COPYRIGHT
+  }
+}

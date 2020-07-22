@@ -131,7 +131,8 @@ export const initialState = {
   tableHandlersFiltersSettings: null,
   tableHandlersFiltersLocations: null,
   logisticsFilter: '',
-  'bank-accountsFilter': ''
+  'bank-accountsFilter': '',
+  renderCopyright: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1530,6 +1531,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         [payload.variable]: payload.value
+      }
+    }
+
+    case AT.SETTINGS_RENDER_COPYRIGHT: {
+      return {
+        ...state,
+        renderCopyright: true
       }
     }
 
