@@ -32,14 +32,13 @@ import { MapTable, SmallerTableCell } from '~/modules/settings/components/Produc
 
 const simpleCompanyGenericProductList = {
   constant: 'global',
-  required: ['codeMapper', 'elementsMapper', 'nameMapper'],
+  required: ['companyMapper', 'productGroupMapper'],
   optional: [
     'alternativeNamesMapper',
     'appearanceMapper',
     'aspirationHazardMapper',
     'autoIgnitionTemperatureMapper',
     'boilingPointRangeMapper',
-    'companyMapper',
     'conditionsToAvoidMapper',
     'decompositionTemperatureMapper',
     'developmentalEffectsMapper',
@@ -71,7 +70,6 @@ const simpleCompanyGenericProductList = {
     'hmisPhysicalHazardMapper',
     'hnocMapper',
     'iataHazardClassMapper',
-    'iataHazardLabelMapper',
     'iataPackagingGroupMapper',
     'iataProperShippingNameMapper',
     'iataProperTechnicalNameMapper',
@@ -109,7 +107,6 @@ const simpleCompanyGenericProductList = {
     'phMapper',
     'physicalStateMapper',
     'precautionaryStatementsMapper',
-    'productGroupMapper',
     'productLc50InhalationMapper',
     'productLd50DermalMapper',
     'productLd50OralMapper',
@@ -154,7 +151,6 @@ const simpleCompanyGenericProductList = {
     'dotPackagingExceptionsMapper',
     'dotPackagingNonBulkMapper',
     'dotPackagingBulkMapper',
-    'dotQuantityLimitationsMapper',
     'dotPassengerQuantityLimitationsMapper',
     'dotCargoAircraftQuantityLimitationsMapper',
     'dotVesselStowageLocationMapper',
@@ -209,7 +205,10 @@ const simpleCompanyGenericProductList = {
     'optionalGasDensityMapper',
     'optionalRelativeDensityMapper',
     'optionalFlowTimeMapper',
-    'optionalHeatOfCombustionMapper'
+    'optionalHeatOfCombustionMapper',
+    'codeMapper',
+    'elementsMapper',
+    'nameMapper'
   ]
 }
 
