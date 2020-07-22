@@ -263,8 +263,8 @@ class Settings extends Component {
                                       inputProps: {
                                         disabled:
                                           !el.changeable ||
-                                          (getSafe(() => !values[role][group.name][el.name].edit, false) &&
-                                            !(role === 'admin')),
+                                          (getSafe(() => !values[role][group.code][el.code].edit, false) &&
+                                            (role !== 'admin')),
                                         ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
                                       }
                                     }),
