@@ -120,9 +120,9 @@ const initValues = {
   maximumDeliveredPrice: '', // not implemented on endpoint yet
   neededNow: null,
   doesExpire: null,
-  notificationEnabled: false, // not implemented on endpoint yet
-  notifyMail: false, // not implemented on endpoint yet
-  notifyPhone: false, // not implemented on endpoint yet
+  //notificationEnabled: false, // not implemented on endpoint yet
+  //notifyMail: false, // not implemented on endpoint yet
+  //notifyPhone: false, // not implemented on endpoint yet
   unit: 7
 }
 
@@ -476,8 +476,7 @@ class DetailSidebar extends Component {
                                 buttonCaption={
                                   <FormattedMessage
                                     id='wantedBoard.requestACompanyGenericProduct'
-                                    defaultMessage='Request a Company Generic Product'
-                                  >
+                                    defaultMessage='Request a Company Generic Product'>
                                     {text => text}
                                   </FormattedMessage>
                                 }
@@ -509,7 +508,8 @@ class DetailSidebar extends Component {
                             options={searchedCasNumbers}
                             inputProps={{
                               placeholder: formatMessage({
-                                id: 'wantedBoard.enterCasNumber', defaultMessage: 'Enter CAS Number'
+                                id: 'wantedBoard.enterCasNumber',
+                                defaultMessage: 'Enter CAS Number'
                               }),
                               loading: searchedCasNumbersLoading,
                               'data-test': 'wanted_board_sidebar_casNumber_drpdn',
@@ -623,7 +623,8 @@ class DetailSidebar extends Component {
                           options={listCountries}
                           inputProps={{
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectCountry', defaultMessage: 'Select Country'
+                              id: 'wantedBoard.selectCountry',
+                              defaultMessage: 'Select Country'
                             }),
                             'data-test': 'wanted_board_sidebar_deliveryLocation_drpdn',
                             selection: true,
@@ -646,7 +647,8 @@ class DetailSidebar extends Component {
                           options={listProvinces}
                           inputProps={{
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectState', defaultMessage: 'Select State'
+                              id: 'wantedBoard.selectState',
+                              defaultMessage: 'Select State'
                             }),
                             'data-test': 'wanted_board_sidebar_selectState_drpdn',
                             selection: true,
@@ -785,7 +787,8 @@ class DetailSidebar extends Component {
                             selection: true,
                             clearable: true,
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectCondition', defaultMessage: 'Select condition'
+                              id: 'wantedBoard.selectCondition',
+                              defaultMessage: 'Select condition'
                             })
                           }}
                         />
@@ -804,7 +807,8 @@ class DetailSidebar extends Component {
                             selection: true,
                             multiple: true,
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectOrigin', defaultMessage: 'Select Origin'
+                              id: 'wantedBoard.selectOrigin',
+                              defaultMessage: 'Select Origin'
                             })
                           }}
                         />
@@ -825,8 +829,10 @@ class DetailSidebar extends Component {
                             'data-test': 'wanted_board_sidebar_grade_drpdn',
                             selection: true,
                             multiple: true,
-                            placeholder:
-                              formatMessage({ id: 'wantedBoard.selectGrade', defaultMessage: 'Select Grade' })
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectGrade',
+                              defaultMessage: 'Select Grade'
+                            })
                           }}
                         />
                       </GridColumn>
@@ -843,8 +849,7 @@ class DetailSidebar extends Component {
                             'data-test': 'wanted_board_sidebar_forms_drpdn',
                             selection: true,
                             multiple: true,
-                            placeholder:
-                              formatMessage({ id: 'wantedBoard.selectForm', defaultMessage: 'Select form' })
+                            placeholder: formatMessage({ id: 'wantedBoard.selectForm', defaultMessage: 'Select form' })
                           }}
                         />
                       </GridColumn>
@@ -862,7 +867,8 @@ class DetailSidebar extends Component {
                           options={listPackagingTypes}
                           inputProps={{
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectPackaging', defaultMessage: 'Select packaging'
+                              id: 'wantedBoard.selectPackaging',
+                              defaultMessage: 'Select packaging'
                             }),
                             'data-test': 'wanted_board_sidebar_packaging_drpdn',
                             selection: true,
