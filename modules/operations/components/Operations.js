@@ -14,6 +14,7 @@ import CompanyProductTable from './company-product-catalog/CompanyProductTable'
 import CompanyInventoryTable from './company-inventory/CompanyInventoryTable'
 import Orders from './orders/OrdersContainer'
 import OrderDetail from './orders/DetailContainer'
+import CompanyGenericProductsTable from './company-generic-products/CompanyGenericProductsTable'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
@@ -32,7 +33,8 @@ class Operations extends Component {
       tags: <TagsTable />,
       'company-product-catalog': <CompanyProductTable />,
       'company-inventory': <CompanyInventoryTable />,
-      orders: orderDetailData ? <OrderDetail /> : <Orders />
+      orders: orderDetailData ? <OrderDetail /> : <Orders />,
+      'company-generic-products': <CompanyGenericProductsTable />
     }
 
     const popupForm = {
@@ -177,9 +179,21 @@ class Operations extends Component {
                 values: [`${v.dateTo}`]
               }
             ])
-
           return filter
         }
+      },
+      'company-generic-products': {
+        url: '/prodex/api/company-generic-product-requests/datagrid',
+        searchToFilter: v =>
+          v && v.searchInput
+            ? [
+              {
+                operator: 'LIKE',
+                path: 'CompanyGenericProductRequest.productName',
+                values: [`%${v.searchInput}%`]
+              }
+            ]
+            : []
       }
     }
 
@@ -200,7 +214,7 @@ class Operations extends Component {
     const displayPage = !!orderDetailData
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={true} skipInitLoad>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
           {displayPage ? (
             this.renderContent()

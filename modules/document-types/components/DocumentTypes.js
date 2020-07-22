@@ -11,12 +11,15 @@ import AddNewPopup1Parameter from './AddNewPopup1Parameter'
 class DocumentTypes extends Component {
   getApiConfig = () => ({
     url: 'prodex/api/document-types/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+      ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v.searchInput}%`] }]
+      : []
+    )
   })
 
   render() {
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
           <div style={{ padding: '20px 30px' }}>
             <TableHandlers />

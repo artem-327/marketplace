@@ -113,7 +113,16 @@ function mapStateToProps(store, { datagrid }) {
         productStatus:
           po.companyProduct &&
           po.companyProduct.companyGenericProduct &&
-          !po.companyProduct.companyGenericProduct.isPublished
+          !po.companyProduct.companyGenericProduct.isPublished,
+        productGroup: getSafe(() => po.companyProduct.companyGenericProduct.productGroup.name, null),
+        tagsNames:
+          po.companyProduct &&
+          po.companyProduct.companyGenericProduct &&
+          po.companyProduct.companyGenericProduct.productGroup &&
+          po.companyProduct.companyGenericProduct.productGroup.tags &&
+          po.companyProduct.companyGenericProduct.productGroup.tags.length
+            ? po.companyProduct.companyGenericProduct.productGroup.tags.map(tag => tag.name)
+            : []
       }
     }),
     unmappedRows: datagrid.rows,

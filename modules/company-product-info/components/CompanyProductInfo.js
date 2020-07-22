@@ -393,11 +393,6 @@ class CompanyProductInfo extends Component {
         defaultMessage: 'Molecular Weight',
         name: `${prefix}molecularWeight`
       })}
-      {this.getInput({
-        id: 'global.specificVolume',
-        defaultMessage: 'Specific Volume',
-        name: `${prefix}specificVolume`
-      })}
       {this.getTextarea({
         id: 'global.recommendedUse',
         defaultMessage: 'Recommended Uses',
@@ -407,31 +402,6 @@ class CompanyProductInfo extends Component {
         id: 'global.usesAdvisedAgainst',
         defaultMessage: 'Uses Advised Against',
         name: `${prefix}usesAdvisedAgainst`
-      })}
-      {this.getInput({
-        id: 'global.criticalTemperature',
-        defaultMessage: 'Critical Temperature',
-        name: `${prefix}criticalTemperature`
-      })}
-      {this.getInput({
-        id: 'global.gasDensity',
-        defaultMessage: 'Gas Density',
-        name: `${prefix}gasDensity`
-      })}
-      {this.getInput({
-        id: 'global.relativeDensity',
-        defaultMessage: 'Relative Density',
-        name: `${prefix}relativeDensity`
-      })}
-      {this.getInput({
-        id: 'global.flowTime',
-        defaultMessage: 'Flow Time (ISO 2431)',
-        name: `${prefix}flowTimeIso2431`
-      })}
-      {this.getInput({
-        id: 'global.heatOfCombustion',
-        defaultMessage: 'Heat of Combustion',
-        name: `${prefix}heatOfCombustion`
       })}
     </>
   )
@@ -894,6 +864,52 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Molecular Weight',
               name: 'companyGenericProduct.molecularWeight'
             })}
+
+            {this.getTextarea({
+              name: 'optionalRecommendedRestrictions',
+              id: 'global.optionalRecommendedRestrictions',
+              defaultMessage: 'Recommended Restrictions'
+            })}
+            {this.getTextarea({
+              name: 'optionalSynonyms',
+              id: 'global.optionalSynonyms',
+              defaultMessage: 'Synonyms'
+            })}
+            {this.getTextarea({
+              name: 'optionalSchedule',
+              id: 'global.optionalSchedule',
+              defaultMessage: 'Schedule'
+            })}
+            {this.getTextarea({
+              name: 'optionalSpecificVolume',
+              id: 'global.optionalSpecificVolume',
+              defaultMessage: 'Specific Volume'
+            })}
+            {this.getTextarea({
+              name: 'optionalCriticalTemperature',
+              id: 'global.optionalCriticalTemperature',
+              defaultMessage: 'Critical Temperature'
+            })}
+            {this.getTextarea({
+              name: 'optionalGasDensity',
+              id: 'global.optionalGasDensity',
+              defaultMessage: 'Gas Desity'
+            })}
+            {this.getTextarea({
+              name: 'optionalRelativeDensity',
+              id: 'global.optionalRelativeDensity',
+              defaultMessage: 'Relative Density'
+            })}
+            {this.getTextarea({
+              name: 'optionalFlowTime',
+              id: 'global.optionalFlowTime',
+              defaultMessage: 'Flow Time'
+            })}
+            {this.getTextarea({
+              name: 'optionalHeatOfCombustion',
+              id: 'global.optionalHeatOfCombustion',
+              defaultMessage: 'Heat Of Combustion'
+            })}
           </Grid>
         )
       }
@@ -957,26 +973,26 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Reportable Quantity',
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantity`
             })}
-            {/*this.getTextarea({
-              id: 'global.enviromentalHazards',
-              defaultMessage: 'Enviromental Hazards',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}EnviromentalHazards`
-            })*/}
-            {/*this.getTextarea({
+            {this.getTextarea({
+              id: 'global.environmentalHazards',
+              defaultMessage: 'Environmental Hazards',
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}EnvironmentalHazards`
+            })}
+            {this.getTextarea({
               id: 'global.emsNumbers',
               defaultMessage: 'Ems Numbers',
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}EmsNumbers`
-            })*/}
-            {/*this.getTextarea({
+            })}
+            {this.getTextarea({
               id: 'global.exceptions',
               defaultMessage: 'Exceptions',
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}Exceptions`
-            })*/}
-            {/*this.getTextarea({
+            })}
+            {this.getTextarea({
               id: 'global.specialPrecautionForUser',
               defaultMessage: 'Special Precautions For User',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}SpecialPrecautionsForUser`
-            })*/}
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}UserSpecialPrecautions`
+            })}
             {this.getTextarea({
               id: 'global.marinePollutant',
               defaultMessage: 'Marine Pollutant',
@@ -987,41 +1003,41 @@ class CompanyProductInfo extends Component {
               defaultMessage: 'Severe Marine Pollutant',
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}SevereMarinePollutant`
             })}
-            {/*this.getTextarea({
+            {this.getTextarea({
               id: 'global.packagingExceptions',
               defaultMessage: 'Packaging Exceptions',
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingExceptions`
-            })*/}
-            {/*this.getTextarea({
+            })}
+            {this.getTextarea({
               id: 'global.packagingNonBulk',
               defaultMessage: 'Packaging Non Bulk',
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingNonBulk`
-            })*/}
-            {/*this.getTextarea({
+            })}
+            {this.getTextarea({
               id: 'global.packagingBulk',
               defaultMessage: 'Packaging Bulk',
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PackagingBulk`
-            })*/}
-            {/*this.getTextarea({
+            })}
+            {this.getTextarea({
               id: 'global.quantityLimitationsPassengerAircraftRail',
               defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}QuantityLimitationsPassengerAircraftRail`
-            })*/}
-            {/*this.getTextarea({
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}PassengerQuantityLimitations`
+            })}
+            {this.getTextarea({
               id: 'global.quantityLimitationsCargoAircraftOnly',
               defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}QuantityLimitationsCargoAircraftOnly`
-            })*/}
-            {/*this.getTextarea({
+              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}CargoAircraftQuantityLimitations`
+            })}
+            {this.getTextarea({
               id: 'global.vesselStowageLocation',
               defaultMessage: 'Vessel Stowage Location',
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}VesselStowageLocation`
-            })*/}
-            {/*this.getTextarea({
+            })}
+            {this.getTextarea({
               id: 'global.vesselStowageOther',
               defaultMessage: 'Vessel Stowage Other',
               name: `companyGenericProduct.${this.state.companyGenericProductGrouping}VesselStowageOther`
-            })*/}
+            })}
           </Grid>
         )
       }

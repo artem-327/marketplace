@@ -5,77 +5,121 @@ import { debounce } from 'lodash'
 import { Menu, Button, Input, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { openPopup, handleFiltersValue } from '../actions'
-import { Datagrid } from '~/modules/datagrid'
+import { openPopup, handleFiltersValue, handleVariableSave } from '../actions'
+import { withDatagrid } from '~/modules/datagrid'
+import { getSafe } from '~/utils/functions'
 import styled from 'styled-components'
+import { CustomRowDiv } from '~/modules/companies/constants'
+import { PlusCircle } from 'react-feather'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
   z-index: 602;
 `
 
-const CustomMenuItemLeft = styled(Menu.Item)`
-  margin-left: 0px !important;
-  padding-left: 0px !important;
-`
-
-const CustomMenuItemRight = styled(Menu.Item)`
-  margin-right: 0px !important;
-  padding-right: 0px !important;
-`
-
-const CustomGrid = styled(Grid)`
-  margin-top: 10px !important;
-`
-
 class TableHandlers extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      filterFieldCurrentValue: 'None',
-      filterValue: ''
-    }
-
-    this.handleChange = debounce(this.handleChange, 300)
+    this.state = {}
   }
 
-  handleChange = value => {
-    Datagrid.setSearch(value)
-    // if (Datagrid.isReady()) Datagrid.setSearch(value)
-    // else this.props.handleFiltersValue(this.props, value)
+  componentDidMount() {
+    const { tableHandlersFilters, currentTab, datagrid } = this.props
+
+    datagrid.clear()
+    if (tableHandlersFilters) {
+      this.setState(tableHandlersFilters)
+      if (currentTab) {
+        const filter = tableHandlersFilters[currentTab]
+        if (filter) {
+          this.handleFiltersValue(filter)
+        } else {
+          this.handleFiltersValue(null)
+        }
+      }
+    } else {
+      if (currentTab) {
+        const filter = this.state[currentTab]
+        if (filter) {
+          this.handleFiltersValue(filter)
+        } else {
+          this.handleFiltersValue(null)
+        }
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFilters', this.state)
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.currentTab !== prevProps.currentTab) {
+      const { currentTab } = this.props
+      this.props.datagrid.clear()
+      const filter = this.state[currentTab]
+      if (filter) {
+        this.handleFiltersValue(filter)
+      } else {
+        this.handleFiltersValue(null)
+      }
+    }
+  }
+
+  handleFiltersValue = debounce( filter => {
+      const { datagrid } = this.props
+      datagrid.setSearch(filter, true, 'pageFilters')
+    }, 300
+  )
+
+  handleFilterChangeInputSearch = (e, data) => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
+
+    const filter = {
+      ...this.state[currentTab],
+      [data.name]: data.value
+    }
+    this.setState({ [currentTab]: filter })
+    this.handleFiltersValue(filter)
   }
 
   render() {
-    const { openPopup, intl } = this.props
+    const {
+      openPopup,
+      intl,
+      currentTab
+    } = this.props
 
     const { formatMessage } = intl
+    const filterValue = this.state[currentTab]
 
     return (
       <PositionHeaderSettings>
-        <CustomGrid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <CustomMenuItemLeft position='left' data-test='admin_table_search_inp'>
-            <Input
-              style={{ width: 340 }}
-              icon='search'
-              placeholder={formatMessage({ id: 'admin.searchMarketSegment' })}
-              onChange={(e, { value }) => {
-                this.setState({ filterValue: value })
-                this.handleChange(value)
-              }}
-              value={this.state.filterValue}
-            />
-          </CustomMenuItemLeft>
-          <CustomMenuItemRight position='right'>
-            <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
-              <FormattedMessage id='global.add' defaultMessage='Add'>
-                {text => `${text} `}
-              </FormattedMessage>
-              <FormattedMessage id='admin.marketSegment' defaultMessage='Market Segment'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-          </CustomMenuItemRight>
-        </CustomGrid>
+        <CustomRowDiv>
+          <div>
+            <div className='column'>
+              <Input
+                style={{ width: 340 }}
+                icon='search'
+                name='searchInput'
+                placeholder={formatMessage({ id: 'admin.searchMarketSegment' })}
+                onChange={this.handleFilterChangeInputSearch}
+                value={filterValue && filterValue.searchInput ? filterValue.searchInput : ''}
+              />
+            </div>
+          </div>
+          <div>
+            <div className='column'>
+              <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
+                <PlusCircle />
+                <FormattedMessage id='admin.addMarketSegment' defaultMessage='Add Market Segment'>
+                  {text => text}
+                </FormattedMessage>
+              </Button>
+            </div>
+          </div>
+        </CustomRowDiv>
       </PositionHeaderSettings>
     )
   }
@@ -83,7 +127,15 @@ class TableHandlers extends Component {
 
 const mapDispatchToProps = {
   openPopup,
-  handleFiltersValue
+  handleFiltersValue,
+  handleVariableSave
 }
 
-export default injectIntl(connect(null, mapDispatchToProps)(TableHandlers))
+const mapStateToProps = state => {
+  return {
+    currentTab: getSafe(() => state.marketSegments.currentTab.type, ''),
+    tableHandlersFilters: state.marketSegments.tableHandlersFilters
+  }
+}
+
+export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(TableHandlers)))

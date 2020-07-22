@@ -88,3 +88,10 @@ export function handleFiltersValue(props, value) {
     })
   }
 }
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.MARKET_SEGMENTS_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}

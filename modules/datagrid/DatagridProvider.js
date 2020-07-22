@@ -5,6 +5,14 @@ import pt from 'prop-types'
 import { getSafe } from '~/utils/functions'
 export const DatagridContext = React.createContext({})
 
+const CONSTANTS_INTERVALS = {
+  '30s': 30000,
+  '60s': 60000,
+  '5min': 300000,
+  '10min': 600000,
+  '15min': 900000
+}
+
 const initialState = {
   ready: false,
   rows: [],
@@ -98,10 +106,10 @@ class DatagridProvider extends Component {
   loadNextPage = async (overPage = 0) => {
     if (!this.props.apiConfig) return
 
-    const { datagridParams, query, isScrollToEnd, isScrollToUp, refreshTable, allLoaded } = this.state
+    const { datagridParams, query, isScrollToEnd, refreshTable, allLoaded } = this.state
     const { apiConfig } = this.props
 
-    this.setState({ loading: true })
+    isScrollToEnd && this.setState({ loading: true })
 
     let pageNumber = 0
     if (refreshTable) {
@@ -147,7 +155,7 @@ class DatagridProvider extends Component {
       const allLoaded = data.length < datagridParams.pageSize || data.length === 0
 
       this.setState(s => ({
-        rows: _.unionBy(s.rows, data, 'id'),
+        rows: _.unionBy(data, s.rows, 'id'),
         loading: false,
         allLoaded,
         datagridParams: {
@@ -204,17 +212,13 @@ class DatagridProvider extends Component {
 
   onScrollOverNewEnd = (overBottoms = 0) => {
     const overPage = overBottoms <= 1 ? 0 : overBottoms - 1
-    this.setState({
-      isScrollToEnd: true
-    })
+
     this.props.autoRefresh && this.loadNextPage(overPage)
   }
 
   onScrollOverNewUp = (overTops = 0) => {
     const overPage = this.state.allLoaded ? overTops : overTops - 1
-    this.setState({
-      isScrollToUp: true
-    })
+
     this.props.autoRefresh && this.loadNextPage(overPage)
   }
 
@@ -298,17 +302,17 @@ class DatagridProvider extends Component {
   setSearch = (value, reload = true, filterId = null) => {
     if (this.props.apiConfig) {
       const {
-        apiConfig: {searchToFilter, params}
+        apiConfig: { searchToFilter, params }
       } = this.props
 
       let filters = typeof searchToFilter !== 'function' ? this.apiConfig.searchToFilter(value) : searchToFilter(value)
 
       if (filters.url) {
-        this.apiConfig = {url: filters.url}
+        this.apiConfig = { url: filters.url }
       }
       this.setState(
         s => ({
-          datagridParams: {...s.datagridParams, ...params},
+          datagridParams: { ...s.datagridParams, ...params },
           isScrollToEnd: false
         }),
         () => {
@@ -335,15 +339,14 @@ class DatagridProvider extends Component {
 
   onTableReady = (params = {}) => {
     if (this.props.skipInitLoad) {
-      this.setState(
-        s => ({
-          ready: true,
-          datagridParams: {
-            ...s.datagridParams,
-            ...params
-          },
-          rows: []
-        }))
+      this.setState(s => ({
+        ready: true,
+        datagridParams: {
+          ...s.datagridParams,
+          ...params
+        },
+        rows: []
+      }))
     } else {
       this.loadData(params)
     }
@@ -398,11 +401,17 @@ class DatagridProvider extends Component {
 }
 
 const mapStateToProps = ({ auth }) => {
-  const refreshInterval = getSafe(() => auth.identity.settings, []).find(
+  const refreshIntervalObject = getSafe(() => auth.identity.settings, []).find(
     set => set.key === 'COMPANY_DATATABLE_REFRESH_INTERVAL' && set.value !== 'EMPTY_SETTING'
   )
+
+  const refreshIntervalValue =
+    refreshIntervalObject && refreshIntervalObject.value && parseInt(refreshIntervalObject.value) >= 30000
+      ? parseInt(refreshIntervalObject.value)
+      : 60000
+
   return {
-    refreshInterval: getSafe(() => refreshInterval.value, null)
+    refreshInterval: refreshIntervalValue
   }
 }
 

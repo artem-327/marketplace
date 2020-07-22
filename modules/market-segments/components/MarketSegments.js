@@ -11,12 +11,15 @@ import AddNewPopup1Parameter from './AddNewPopup1Parameter'
 class MarketSegments extends Component {
   getApiConfig = () => ({
     url: '/prodex/api/market-segments/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+        ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v.searchInput}%`] }]
+        : []
+    )
   })
 
   render() {
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
           <div style={{ padding: '20px 30px' }}>
             <TableHandler />

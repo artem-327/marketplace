@@ -1,11 +1,11 @@
 import * as AT from './action-types'
-//import { defaultTabs } from './constants'
 
 export const initialState = {
-  menuStatusFilter: '',
+  topMenuTab: '',
   markSeenSending: false,
   loadingCategories: false,
   categories: [],
+  tableHandlersFilters: null
 }
 
 export default function reducers(state = initialState, action) {
@@ -15,7 +15,7 @@ export default function reducers(state = initialState, action) {
     case AT.ALERTS_TAB_CHANGED:
       return {
         ...state,
-        menuStatusFilter: action.payload.filter.status,
+        topMenuTab: action.payload,
       }
 
     case AT.ALERTS_MARK_SEEN_PENDING: {
@@ -47,6 +47,13 @@ export default function reducers(state = initialState, action) {
         ...state,
         loadingCategories: false,
         categories: payload
+      }
+    }
+
+    case AT.ALERTS_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
 

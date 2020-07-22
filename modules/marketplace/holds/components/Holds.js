@@ -22,19 +22,20 @@ const CustomRowDiv = styled.div`
   justify-content: space-between;
   margin: -5px -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 5px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
 `
@@ -216,6 +217,7 @@ class Holds extends Component {
       isClientCompanyAdmin
     } = this.props
     const { columns, filterValue } = this.state
+
     let { formatMessage } = intl
     const buttonApprove = {
       text: formatMessage({
@@ -254,12 +256,12 @@ class Holds extends Component {
     }
     let rowActions = []
 
-    if ((isCompanyAdmin || isMerchant || isClientCompanyAdmin) && this.state.holdDropdown === 'My Holds') {
+    if ((isCompanyAdmin || isMerchant || isClientCompanyAdmin) && filterValue.holdDropdown === 'My Holds') {
       rowActions.push(buttonCancel)
       rowActions.push(buttonBuy)
     } else if (
       (isCompanyAdmin || isProductOfferManager || isClientCompanyAdmin) &&
-      this.state.holdDropdown === 'Requsted Holds'
+      filterValue.holdDropdown === 'Requsted Holds'
     ) {
       rowActions.push(buttonApprove)
       rowActions.push(buttonReject)
