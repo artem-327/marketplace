@@ -202,10 +202,10 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                             <Icon
                                               name='save outline'
                                               size='large'
-                                              onClick={() => {
+                                              onClick={async () => {
                                                 if (val.canSave === true) {
                                                   try {
-                                                    this.handleSaveName(popupValues.data.id, val, index)
+                                                    await this.handleSaveName(popupValues.data.id, val, index)
                                                     setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
                                                     setFieldValue(`casAlternativeNames[${index}].description`, '')
                                                     setFieldValue(`casAlternativeNames[${index}].canSave`, false)
@@ -223,10 +223,10 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                         <Icon
                                           name='save outline'
                                           size='large'
-                                          onClick={() => {
+                                          onClick={async () => {
                                             if (val.canSave === true) {
                                               try {
-                                                this.handleSaveName(popupValues.data.id, val, index)
+                                                await this.handleSaveName(popupValues.data.id, val, index)
                                                 setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
                                                 setFieldValue(`casAlternativeNames[${index}].description`, '')
                                                 setFieldValue(`casAlternativeNames[${index}].canSave`, false)
