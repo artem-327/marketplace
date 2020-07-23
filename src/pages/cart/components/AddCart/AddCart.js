@@ -868,7 +868,7 @@ class AddCart extends Component {
       this.renderField({
         id: 'global.recommendedUse',
         defaultMessage: 'Recommended Uses',
-        name: `${prefix}casProduct.recommendedUses`
+        name: `${prefix}casProduct.recommendedUse`
       }),
       this.renderField({
         id: 'global.usesAdvisedAgainst',
@@ -1620,12 +1620,12 @@ class AddCart extends Component {
                 {this.renderField({
                   id: 'global.reportableQuantity',
                   defaultMessage: 'Reportable Quantity',
-                  name: `${prefix}${this.state.companyGenericProductGrouping}ReportableQuantity`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}ReportableQuantities`
                 })}
                 {this.renderField({
                   id: 'global.enviromentalHazards',
                   defaultMessage: 'Enviromental Hazards',
-                  name: `${prefix}${this.state.companyGenericProductGrouping}HazardLabel` // ? (EnviromentalHazards)
+                  name: `${prefix}${this.state.companyGenericProductGrouping}EnvironmentalHazards` // ? (EnviromentalHazards)
                 })}
 
                 {this.renderField({
@@ -1672,12 +1672,12 @@ class AddCart extends Component {
                 {this.renderField({
                   id: 'global.quantityLimitationsPassengerAircraftRail',
                   defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
-                  name: `${prefix}${this.state.companyGenericProductGrouping}QuantityLimitationsPassengerAircraftRail`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}PassengerQuantityLimitations`
                 })}
                 {this.renderField({
                   id: 'global.quantityLimitationsCargoAircraftOnly',
                   defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
-                  name: `${prefix}${this.state.companyGenericProductGrouping}QuantityLimitationsCargoAircraftOnly`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}CargoAircraftQuantityLimitations`
                 })}
                 {this.renderField({
                   id: 'global.vesselStowageLocation',
