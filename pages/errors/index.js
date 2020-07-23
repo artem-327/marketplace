@@ -5,14 +5,18 @@ import Layout from 'components/Layout'
 import { injectIntl } from 'react-intl'
 import Errors from '~/modules/errors'
 
-class CartPage extends Component {
+class ErrorPage extends Component {
   render() {
     const {
       intl: { formatMessage }
     } = this.props
 
-    return <Errors />
+    return (
+      <Layout title={formatMessage({ id: 'global.errorCapital', defaultMessage: 'ERROR' })}>
+        <Errors />
+      </Layout>
+    )
   }
 }
 
-export default securePage(injectIntl(CartPage))
+export default securePage(injectIntl(ErrorPage))
