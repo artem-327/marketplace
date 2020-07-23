@@ -77,7 +77,7 @@ export function createTag(name) {
 }
 
 export function handleActiveTab(tab, currentTab) {
-  if (tab.type !== currentTab.type) Datagrid.clear()
+  if (tab.type !== currentTab.type && Datagrid) Datagrid.clear()
   return {
     type: AT.OPERATIONS_HANDLE_ACTIVE_TAB,
     payload: { tab }

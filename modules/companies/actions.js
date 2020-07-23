@@ -6,7 +6,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { updateIdentity } from '~/modules/auth/actions'
 
 export function handleActiveTab(tab, currentTab) {
-  if (tab.type !== currentTab.type) Datagrid.clear()
+  if (tab.type !== currentTab.type && Datagrid) Datagrid.clear()
   return {
     type: AT.COMPANIES_HANDLE_ACTIVE_TAB,
     payload: { tab }
