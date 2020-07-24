@@ -110,11 +110,6 @@ class ErrorPage extends Component {
 
     return (
       <PageError>
-        <Header>
-          <DivImage>
-            <LogoImage src={Logo} />
-          </DivImage>
-        </Header>
         <DivIconError>
           <ErrorImg src={errorSvg} />
         </DivIconError>

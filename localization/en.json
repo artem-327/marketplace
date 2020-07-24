@@ -441,6 +441,7 @@
   "global.title": "Title",
   "global.yes": "Yes",
   "global.error": "Error",
+  "global.errorCapital": "ERROR",
   "global.currency": "Currency",
   "global.apply": "Apply",
   "global.continue": "Continue",
