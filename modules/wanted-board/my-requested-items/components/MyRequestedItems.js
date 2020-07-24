@@ -474,7 +474,9 @@ class MyRequestedItems extends Component {
                 <Button
                   className='secondary'
                   primary
-                  onClick={() => sidebarDetailTrigger(null, 'my-requested-items')}
+                  onClick={() => {
+                    sidebarDetailTrigger(null, 'my-requested-items')
+                  }}
                   data-test='my_requested_items_open_popup_btn'>
                   <PlusCircle />
                   <FormattedMessage id='wantedBoard.requestProduct' defaultMessage='Request Product'>
@@ -596,7 +598,8 @@ class MyRequestedItems extends Component {
       activeIndex,
       intl: { formatMessage },
       editWindowOpen,
-      isClientCompany
+      isClientCompany,
+      openSidebar
     } = this.props
 
     const panes = [
@@ -638,7 +641,7 @@ class MyRequestedItems extends Component {
             panes={panes}
           />
         </Container>
-        {editWindowOpen === 'my-requested-items' && <DetailSidebar />}
+        {openSidebar ? <DetailSidebar /> : null}
       </>
     )
   }
