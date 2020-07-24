@@ -179,7 +179,7 @@ export const LeftMenu = styled(Menu)`
         display: flex;
         flex-flow: column;
         height: auto;
-        
+
         > .ui.form {
           min-height: 200px;
         }
@@ -342,13 +342,13 @@ export const LeftMenu = styled(Menu)`
             display: flex;
             flex-flow: column;
           }
-          
+
           &.dropdown.opened {
             flex-grow: 0;
-            
+
             > .menu.transition {
               flex-grow: 1;
-              
+
               > .scrollbar-container {
                 min-height: calc(100% + 20px);
               }
@@ -785,7 +785,7 @@ export const LeftMenu = styled(Menu)`
         &.ps--active-y > .ps__rail-y {
           display: none !important;
         }
-        
+
         .ui.form {
           min-height: 100px;
         }
@@ -930,7 +930,7 @@ export const LeftMenuContainer = styled(Container)`
     flex-grow: 0;
     flex-shrink: 1;
   }
-  
+
   > .scrollbar-container {
     min-height: calc(100vh - 70px);
   }
@@ -968,6 +968,7 @@ export const ContentContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  place-content: space-between;
 `
 export const CopyrightContainer = styled(Container)`
   display: block;
