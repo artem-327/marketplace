@@ -42,9 +42,7 @@ class Tabs extends Component {
 
   handleTabClick = tab => {
     let { currentTab, tabChanged } = this.props
-    if (tab.type !== currentTab.type) {
-      tabChanged(tab)
-    }
+      tabChanged(tab, currentTab)
   }
 
   render() {

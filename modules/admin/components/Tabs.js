@@ -33,7 +33,7 @@ function Tabs(props) {
           onClick={e => {
             e.preventDefault()
             e.stopPropagation()
-            handleActiveTab(tab)
+            handleActiveTab(tab, currentTab)
           }}
           active={currentTab.name === tab.name}
           dataTest={`tabs_menu_item_${tab.name.replace(/\s+/g, '-').toLowerCase()}`}

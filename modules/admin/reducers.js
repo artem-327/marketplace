@@ -77,7 +77,8 @@ export const initialState = {
   searchedSellMarketSegments: [],
   searchedSellMarketSegmentsLoading: false,
   searchedBuyMarketSegments: [],
-  searchedBuyMarketSegmentsLoading: false
+  searchedBuyMarketSegmentsLoading: false,
+  tableHandlersFilters: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -739,6 +740,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         searchedBuyMarketSegments: action.payload,
         searchedBuyMarketSegmentsLoading: false
+      }
+    }
+
+    case AT.ADMIN_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
 
