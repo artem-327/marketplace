@@ -3,104 +3,121 @@ import { connect } from 'react-redux'
 import { config } from '../config'
 import { debounce } from 'lodash'
 
-import { Menu, Button, Input, Grid } from 'semantic-ui-react'
+import { Button, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { openPopup, handleFiltersValue } from '../actions'
+import { openPopup, handleFiltersValue, handleVariableSave } from '../actions'
 import { Datagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
+import { withDatagrid } from '~/modules/datagrid'
+import { CustomRowDiv } from '~/modules/companies/constants'
+import { PlusCircle } from 'react-feather'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
   z-index: 602;
 `
 
-const CustomMenuItemLeft = styled(Menu.Item)`
-  margin-left: 0px !important;
-  padding-left: 0px !important;
-`
-
-const CustomMenuItemRight = styled(Menu.Item)`
-  margin-right: 0px !important;
-  padding-right: 0px !important;
-`
-
-const CustomGrid = styled(Grid)`
-  margin-top: 10px !important;
-`
-
 class TablesHandlers extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      filterFieldCurrentValue: 'None',
-      filterValue: ''
+    this.state = {}
+  }
+
+  componentDidMount() {
+    const { tableHandlersFilters, currentTab, datagrid } = this.props
+
+    datagrid.clear()
+    if (tableHandlersFilters) {
+      this.setState(tableHandlersFilters)
+      if (currentTab) {
+        const filter = tableHandlersFilters[currentTab]
+        if (filter) {
+          this.handleFiltersValue(filter)
+        } else {
+          this.handleFiltersValue(null)
+        }
+      }
+    } else {
+      if (currentTab) {
+        const filter = this.state[currentTab]
+        if (filter) {
+          this.handleFiltersValue(filter)
+        } else {
+          this.handleFiltersValue(null)
+        }
+      }
     }
-
-    this.handleChange = debounce(this.handleChange, 300)
   }
 
-  componentDidUpdate(prevProps) {
-    let { filterValueKey } = this.state
+  componentWillUnmount() {
+    this.props.handleVariableSave('tableHandlersFilters', this.state)
+  }
 
-    if (prevProps.filterValue && this.props.filterValue === '') {
-      this.setState({
-        filterValueKey: ++filterValueKey
-      })
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.currentTab !== prevProps.currentTab) {
+      const { currentTab } = this.props
+      this.props.datagrid.clear()
+      const filter = this.state[currentTab]
+      if (filter) {
+        this.handleFiltersValue(filter)
+      } else {
+        this.handleFiltersValue(null)
+      }
     }
-    if (prevProps.currentTab.id !== this.props.currentTab.id) {
-      this.setState({ filterValue: '' })
-      this.props.handleFiltersValue(this.props, '')
+  }
+
+  handleFiltersValue = debounce( filter => {
+      const { datagrid } = this.props
+      datagrid.setSearch(filter, true, 'pageFilters')
+    }, 300
+  )
+
+  handleFilterChangeInputSearch = (e, data) => {
+    const { currentTab } = this.props
+    if (currentTab === '') return
+
+    const filter = {
+      ...this.state[currentTab],
+      [data.name]: data.value
     }
-  }
-
-  handleChangeSelectField = (event, value) => {
-    this.setState({
-      filterFieldCurrentValue: value
-    })
-  }
-
-  handleChangeFieldsCurrentValue = fieldStateName => event => {
-    this.setState({
-      [fieldStateName]: event.target.value
-    })
-  }
-
-  handleChange = value => {
-    Datagrid.setSearch(value)
-    // if (Datagrid.isReady()) Datagrid.setSearch(value)
-    // else this.props.handleFiltersValue(this.props, value)
+    this.setState({ [currentTab]: filter })
+    this.handleFiltersValue(filter)
   }
 
   render() {
     const { currentTab, openPopup, intl } = this.props
 
     const { formatMessage } = intl
+    const filterValue = this.state[currentTab]
 
     return (
       <PositionHeaderSettings>
-        <CustomGrid as={Menu} secondary verticalAlign='middle' className='page-part'>
-          <CustomMenuItemLeft position='left' data-test='admin_table_search_inp'>
-            <Input
-              style={{ width: 340 }}
-              icon='search'
-              placeholder={formatMessage({ id: config[currentTab.name].searchText })}
-              onChange={(e, { value }) => {
-                this.setState({ filterValue: value })
-                this.handleChange(value)
-              }}
-              value={this.state.filterValue}
-            />
-          </CustomMenuItemLeft>
-          <CustomMenuItemRight position='right'>
-            <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
-              <FormattedMessage id='global.add' defaultMessage='Add'>
-                {text => `${text} `}
-              </FormattedMessage>
-              {config[currentTab.name].addEditText}
-            </Button>
-          </CustomMenuItemRight>
-        </CustomGrid>
+        <CustomRowDiv>
+          <div>
+            <div className='column'>
+              <Input
+                style={{ width: 340 }}
+                icon='search'
+                name='searchInput'
+                placeholder={formatMessage({ id: config[currentTab].searchText })}
+                onChange={this.handleFilterChangeInputSearch}
+                value={filterValue && filterValue.searchInput ? filterValue.searchInput : ''}
+              />
+            </div>
+          </div>
+          <div>
+            <div className='column'>
+              <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
+                <PlusCircle />
+                <FormattedMessage id='global.add' defaultMessage='Add'>
+                  {text => `${text} `}
+                </FormattedMessage>
+                {config[currentTab].addEditText}
+              </Button>
+            </div>
+          </div>
+        </CustomRowDiv>
       </PositionHeaderSettings>
     )
   }
@@ -108,7 +125,8 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.admin.currentTab,
+    currentTab: state.admin.currentTab.name,
+    tableHandlersFilters: state.admin.tableHandlersFilters,
     casListDataRequest: state.admin.casListDataRequest,
     companyListDataRequest: state.admin.companyListDataRequest
   }
@@ -116,7 +134,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   openPopup,
-  handleFiltersValue
+  handleFiltersValue,
+  handleVariableSave
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(TablesHandlers))
+export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(TablesHandlers)))

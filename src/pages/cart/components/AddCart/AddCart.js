@@ -229,7 +229,7 @@ const optionsExpirationTime = [
 class AddCart extends Component {
   state = {
     showMore: false,
-    expirationTime: '23:59',
+    expirationHours: 24,
     activeTab: 0,
     offer: null,
     companyGenericProductGrouping: companyGenericProductGrouping[0].value,
@@ -279,13 +279,8 @@ class AddCart extends Component {
 
     try {
       if (isHoldRequest) {
-        const holdTime = encodeURIComponent(
-          moment()
-            .add({ hours: this.state.expirationTime.split(':')[0], minutes: this.state.expirationTime.split(':')[1] })
-            .format()
-        )
         const params = {
-          holdTime,
+          expirationHours: this.state.expirationHours,
           pkgAmount,
           productOfferId: id
         }
@@ -409,7 +404,7 @@ class AddCart extends Component {
     //   <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
     // )
 
-    let canProceed = !warning && price && pkgAmount > 0 && this.state.expirationTime
+    let canProceed = !warning && price && pkgAmount > 0 && this.state.expirationHours
 
     return (
       <>
@@ -661,12 +656,13 @@ class AddCart extends Component {
                 </GridColumn>
                 <CustomGridColumn>
                   <Dropdown
-                    options={[{ key: 0, text: '24:00', value: this.state.expirationTime }]}
+                    options={optionsExpirationTime}
                     selection
+                    onChange={(e, { value }) => this.setState({ expirationHours: value })}
                     icon={<ChevronDown />}
                     disabled
                     fluid
-                    value={this.state.expirationTime}
+                    value={this.state.expirationHours}
                   />
                 </CustomGridColumn>
               </GridRow>
@@ -868,7 +864,7 @@ class AddCart extends Component {
       this.renderField({
         id: 'global.recommendedUse',
         defaultMessage: 'Recommended Uses',
-        name: `${prefix}casProduct.recommendedUses`
+        name: `${prefix}casProduct.recommendedUse`
       }),
       this.renderField({
         id: 'global.usesAdvisedAgainst',
@@ -1620,12 +1616,12 @@ class AddCart extends Component {
                 {this.renderField({
                   id: 'global.reportableQuantity',
                   defaultMessage: 'Reportable Quantity',
-                  name: `${prefix}${this.state.companyGenericProductGrouping}ReportableQuantity`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}ReportableQuantities`
                 })}
                 {this.renderField({
                   id: 'global.enviromentalHazards',
                   defaultMessage: 'Enviromental Hazards',
-                  name: `${prefix}${this.state.companyGenericProductGrouping}HazardLabel` // ? (EnviromentalHazards)
+                  name: `${prefix}${this.state.companyGenericProductGrouping}EnvironmentalHazards` // ? (EnviromentalHazards)
                 })}
 
                 {this.renderField({
@@ -1672,12 +1668,12 @@ class AddCart extends Component {
                 {this.renderField({
                   id: 'global.quantityLimitationsPassengerAircraftRail',
                   defaultMessage: 'Quantity Limitations Passenger Aircraft/Rail',
-                  name: `${prefix}${this.state.companyGenericProductGrouping}QuantityLimitationsPassengerAircraftRail`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}PassengerQuantityLimitations`
                 })}
                 {this.renderField({
                   id: 'global.quantityLimitationsCargoAircraftOnly',
                   defaultMessage: 'Quantity Limitations Cargo Aircraft Only',
-                  name: `${prefix}${this.state.companyGenericProductGrouping}QuantityLimitationsCargoAircraftOnly`
+                  name: `${prefix}${this.state.companyGenericProductGrouping}CargoAircraftQuantityLimitations`
                 })}
                 {this.renderField({
                   id: 'global.vesselStowageLocation',

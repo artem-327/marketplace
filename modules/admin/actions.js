@@ -118,8 +118,8 @@ export function putEditedDataRequest(config, id, values) {
   }
 }
 
-export function handleActiveTab(tab) {
-  Datagrid.clear()
+export function handleActiveTab(tab, currentTab) {
+  if (tab !== currentTab && Datagrid) Datagrid.clear()
 
   return {
     type: AT.ADMIN_HANDLE_ACTIVE_TAB,
@@ -589,3 +589,10 @@ export const searchBuyMarketSegments = segment => ({
     pageSize: 50
   })
 })
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.ADMIN_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}
