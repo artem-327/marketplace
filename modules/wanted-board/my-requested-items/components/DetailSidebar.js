@@ -266,27 +266,41 @@ class DetailSidebar extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.editInitTrig !== this.props.editInitTrig) {
       const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = this.formikProps
-      if (_.isEmpty(touched)) {
-        this.props.updateEditedId(this.props.sidebarValues.id)
-        this.setState({ sidebarValues: this.props.sidebarValues })
-      } else {
-        // Form edited
-        validateForm().then(err => {
-          const errors = Object.keys(err)
-          if (errors.length && errors[0] !== 'isCanceled') {
-            submitForm() // to show errors
-          } else {
-            confirm(
-              <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
-              <FormattedMessage
-                id='confirm.global.unsavedChanges.content'
-                defaultMessage='You have unsaved changes. Do you wish to save them?'
-              />
-            )
-              .then(
-                async () => {
-                  // Confirm
-                  if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
+      if (this.props.sidebarValues) {
+        if (_.isEmpty(touched)) {
+          this.props.updateEditedId(this.props.sidebarValues.id)
+          this.setState({ sidebarValues: this.props.sidebarValues })
+        } else {
+          // Form edited
+          validateForm().then(err => {
+            const errors = Object.keys(err)
+            if (errors.length && errors[0] !== 'isCanceled') {
+              submitForm() // to show errors
+            } else {
+              confirm(
+                <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
+                <FormattedMessage
+                  id='confirm.global.unsavedChanges.content'
+                  defaultMessage='You have unsaved changes. Do you wish to save them?'
+                />
+              )
+                .then(
+                  async () => {
+                    // Confirm
+                    if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
+                      if (
+                        this.props.sidebarValues.deliveryCountry &&
+                        this.props.sidebarValues.deliveryCountry.hasProvinces
+                      ) {
+                        this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
+                        this.setState({ hasProvinces: true })
+                      }
+                      this.setState({ sidebarValues: this.props.sidebarValues })
+                      this.props.updateEditedId(this.props.sidebarValues.id)
+                    }
+                  },
+                  () => {
+                    // Cancel
                     if (
                       this.props.sidebarValues.deliveryCountry &&
                       this.props.sidebarValues.deliveryCountry.hasProvinces
@@ -297,23 +311,11 @@ class DetailSidebar extends Component {
                     this.setState({ sidebarValues: this.props.sidebarValues })
                     this.props.updateEditedId(this.props.sidebarValues.id)
                   }
-                },
-                () => {
-                  // Cancel
-                  if (
-                    this.props.sidebarValues.deliveryCountry &&
-                    this.props.sidebarValues.deliveryCountry.hasProvinces
-                  ) {
-                    this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
-                    this.setState({ hasProvinces: true })
-                  }
-                  this.setState({ sidebarValues: this.props.sidebarValues })
-                  this.props.updateEditedId(this.props.sidebarValues.id)
-                }
-              )
-              .catch(() => {})
-          }
-        })
+                )
+                .catch(() => {})
+            }
+          })
+        }
       }
     }
   }
