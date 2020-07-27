@@ -944,7 +944,7 @@ class MyInventory extends Component {
               let values = row.key.split('_')
               return groupActions(
                 rows,
-                values[values.length - 1],
+                values[values.length - 3],
                 sidebarDetailOpen,
                 closeSidebarDetail,
                 (companyProduct, i) => {
