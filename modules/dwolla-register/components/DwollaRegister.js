@@ -309,25 +309,6 @@ class DwollaRegister extends Component {
                   <AddressForm values={values} setFieldValue={setFieldValue} displayHeader={false} required={true} />
 
                   <Dropdown
-                    name='businessClassification'
-                    label={
-                      <>
-                        <FormattedMessage id='global.businessClassification' defaultMessage='Business Classification' />
-                        <Required />
-                      </>
-                    }
-                    inputProps={{
-                      loading: businessClassificationsLoading,
-                      search: true
-                    }}
-                    options={businessClassifications.map(el => ({
-                      key: el.id,
-                      value: el.id,
-                      text: el.name
-                    }))}
-                  />
-
-                  <Dropdown
                     name='industryClassification'
                     label={
                       <>
@@ -853,6 +834,7 @@ class DwollaRegister extends Component {
               delete payload.dwollaController.address
               delete payload.acceptance
               delete payload.beneficialOwnersNotApplicable
+              delete payload.businessClassification
               try {
                 if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
                 removeEmpty(payload)

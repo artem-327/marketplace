@@ -8,6 +8,7 @@ import { connect } from "react-redux"
 
 import CompaniesTable from './CompaniesTable/Table'
 import UsersTable from './UsersTable/Table'
+import * as Actions from '../actions'
 
 import AddEditCompanySidebar from './CompaniesTable/AddEditCompanySidebar'
 import UsersSidebar from './UsersTable/UsersSidebar'
@@ -23,6 +24,11 @@ const sidebars = {
 }
 
 class Companies extends Component {
+  componentWillUnmount() {
+    const { isOpenSidebar, closePopup } = this.props
+    if (isOpenSidebar) closePopup()
+  }
+
   getApiConfig = () => {
     const { currentTab } = this.props
     const datagridApiMap = {
@@ -106,4 +112,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withAuth(connect(mapStateToProps)(Companies))
+export default withAuth(connect(mapStateToProps, Actions)(Companies))

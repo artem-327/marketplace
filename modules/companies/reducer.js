@@ -42,9 +42,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentTab: payload.tab,
-        popupValues: null,
-        loading: false,
-        isOpenSidebar: false
+        popupValues: state.currentTab !== payload.tab ? null : state.popupValues,
+        loading: state.currentTab !== payload.tab ? false : state.loading,
+        isOpenSidebar: state.currentTab !== payload.tab ? false : state.isOpenSidebar
       }
     }
 

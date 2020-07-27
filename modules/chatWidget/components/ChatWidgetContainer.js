@@ -15,7 +15,8 @@ function mapStateToProps(state) {
         getSafe(() => state.admin.currentAddDwolla, false)) &&
       getSafe(() => state.admin.currentTab.name, '')
 
-    if (getSafe(() => state.wantedBoard.editWindowOpen, false)) return 430
+    if (getSafe(() => state.wantedBoard.openSidebar, false) || getSafe(() => state.wantedBoard.editWindowOpen, false))
+      return 430
 
     if (
       adminTab === 'Product Catalog' ||

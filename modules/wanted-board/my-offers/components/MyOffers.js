@@ -111,6 +111,7 @@ class MyOffers extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersMyOffers', this.state.filterValue)
+    if (this.props.editWindowOpen) this.props.closeDetailSidebar()
   }
 
   handleFilterChangeInputSearch = (e, data) => {

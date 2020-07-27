@@ -262,6 +262,7 @@ class WantedBoard extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersWantedBoard', this.state.filterValues)
+    if (this.props.editWindowOpen) this.props.closeDetailSidebar()
   }
 
   handleFiltersValue = debounce(filter => {

@@ -38,7 +38,7 @@ import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo, renderCopyright } from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo, renderCopyright, closePopup, closeSidebar } from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -214,6 +214,17 @@ class Settings extends Component {
     this.changeRoute(queryTab)
     this.redirectPage(queryTab)
     renderCopyright()
+  }
+
+  componentWillUnmount() {
+    const {
+      isOpenPopup,
+      isOpenSidebar,
+      closePopup,
+      closeSidebar
+    } = this.props
+    if (isOpenPopup) closePopup()
+    if (isOpenSidebar) closeSidebar()
   }
 
   selectLogo = (logo, isNew = true) => {
@@ -500,5 +511,7 @@ export default connect(mapStateToProps, {
   postCompanyLogo,
   deleteCompanyLogo,
   getIdentity,
-  renderCopyright
+  renderCopyright,
+  closePopup,
+  closeSidebar
 })(withToastManager(Settings))
