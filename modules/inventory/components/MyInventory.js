@@ -915,7 +915,7 @@ class MyInventory extends Component {
                 .groupBy('echoName')
                 .map(v => {
                   return {
-                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}_${v[0].productGroup !== null ? v[0].productGroup : formatMessage({ id: 'global.unmapped', defaultMessage: 'Unmapped' })}_${v[0].tagsNames ? v[0].tagsNames : ''}`,
+                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}_${v[0].productGroup !== null ? v[0].productGroup+':' : formatMessage({ id: 'global.unmapped.cptlz', defaultMessage: 'Unmapped' })}_${v[0].tagsNames ? v[0].tagsNames : ''}`,
                     childRows: v
                   }
                 })
@@ -932,7 +932,7 @@ class MyInventory extends Component {
                   </span>
                   <span className='flex row right'>
                     <span className='inventory-right'>
-                      <span style={{ fontWeight: '600' }}>{productGroup}: </span>
+                      <span style={{ fontWeight: '600' }}>{productGroup} </span>
                       {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
                     </span>
                   </span>
