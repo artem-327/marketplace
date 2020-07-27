@@ -15,6 +15,7 @@ import AddEditCasProductsPopup from './CasProductsTable/AddEditCasProductsPopup'
 import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
 import ProductGroupsTable from './ProductGroups/ProductGroupsTable'
 import ProductGroupsPopup from './ProductGroups/ProductGroupsPopup'
+import * as Actions from '../actions'
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider, withDatagrid, Datagrid } from '~/modules/datagrid'
@@ -23,6 +24,11 @@ const CustomGridColumn = styled(GridColumn)`
   padding: 0 32px 0 32px !important;
 `
 class Products extends Component {
+  componentWillUnmount() {
+    const { currentAddForm, currentEditForm, currentEdit2Form, closeAddPopup } = this.props
+    if (currentAddForm || currentEditForm || currentEdit2Form) closeAddPopup()
+  }
+
   renderContent = () => {
     const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = this.props
 
@@ -143,4 +149,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(withAuth(connect(mapStateToProps)(Products)))
+export default withDatagrid(withAuth(connect(mapStateToProps, Actions)(Products)))

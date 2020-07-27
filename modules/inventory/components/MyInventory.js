@@ -464,7 +464,19 @@ class MyInventory extends Component {
   }
 
   componentWillUnmount() {
+    const {
+      sidebarDetailOpen,
+      closeSidebarDetail,
+      isProductInfoOpen,
+      closePopup,
+      isExportInventoryOpen,
+      setExportSidebarOpenState
+    } = this.props
+
     this.props.handleVariableSave('tableHandlersFilters', this.state.filterValues)
+    if (sidebarDetailOpen) closeSidebarDetail()
+    if (isProductInfoOpen) closePopup()
+    if (isExportInventoryOpen) setExportSidebarOpenState(false)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

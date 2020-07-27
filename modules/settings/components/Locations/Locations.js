@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import Router from 'next/router'
 
-import { tabChanged } from '../../actions'
+import { tabChanged, closeSidebar } from '../../actions'
 import { getIdentity } from '~/modules/auth/actions'
 import { DatagridProvider } from '~/modules/datagrid'
 
@@ -69,6 +69,11 @@ class Locations extends Component {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  componentWillUnmount() {
+    const { isOpenSidebar, closeSidebar } = this.props
+    if (isOpenSidebar) closeSidebar()
   }
 
   renderContent = () => {
@@ -205,5 +210,6 @@ const mapStateToProps = ({ settings, auth }) => {
 
 export default connect(mapStateToProps, {
   tabChanged,
-  getIdentity
+  getIdentity,
+  closeSidebar
 })(withToastManager(Locations))
