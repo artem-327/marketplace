@@ -18,13 +18,18 @@ import CompanyGenericProductsTable from './company-generic-products/CompanyGener
 
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
-import { tabChanged } from '../actions'
+import * as Actions from '../actions'
 
 const CustomGridColumn = styled(GridColumn)`
   padding: 0 30px !important;
 `
 
 class Operations extends Component {
+  componentWillUnmount() {
+    const { isOpenPopup, closePopup } = this.props
+    if (isOpenPopup) closePopup()
+  }
+
   renderContent = () => {
     const { currentTab, isOpenPopup, orderDetailData } = this.props
 
@@ -245,7 +250,5 @@ const mapStateToProps = state => {
 }
 
 export default withAuth(
-  connect(mapStateToProps, {
-    tabChanged
-  })(Operations)
+  connect(mapStateToProps, Actions)(Operations)
 )

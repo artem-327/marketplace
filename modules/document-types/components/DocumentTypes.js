@@ -7,8 +7,14 @@ import TableHandlers from './TableHandlers'
 import Table from './Table'
 import EditPopup1Parameter from './EditPopup1Parameter'
 import AddNewPopup1Parameter from './AddNewPopup1Parameter'
+import * as Actions from '../actions'
 
 class DocumentTypes extends Component {
+  componentWillUnmount() {
+    const { currentEditForm, currentAddForm, closeAddPopup } = this.props
+    if (currentEditForm || currentAddForm) closeAddPopup()
+  }
+
   getApiConfig = () => ({
     url: 'prodex/api/document-types/datagrid',
     searchToFilter: v => (v && v.searchInput
@@ -40,4 +46,4 @@ const mapStateToProps = ({ documentTypes }) => ({
   currentAddForm: documentTypes.currentAddForm
 })
 
-export default connect(mapStateToProps)(DocumentTypes)
+export default connect(mapStateToProps, Actions)(DocumentTypes)

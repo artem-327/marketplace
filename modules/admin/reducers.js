@@ -276,10 +276,10 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentTab: action.payload.tab,
-        currentAddForm: null,
-        currentEditForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null,
+        currentAddForm: state.currentTab !== action.payload.tab ? null : state.currentAddForm,
+        currentEditForm: state.currentTab !== action.payload.tab ? null : state.currentEditForm,
+        currentEdit2Form: state.currentTab !== action.payload.tab ? null : state.currentEdit2Form,
+        currentAddDwolla: state.currentTab !== action.payload.tab ? null : state.currentAddDwolla,
         filterCasIds: []
       }
     }
