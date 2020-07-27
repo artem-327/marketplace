@@ -300,7 +300,11 @@ class Marketplace extends Component {
   }
 
   componentWillUnmount() {
+    const { sidebarChanged } = this.props
+    let { isOpen, isHoldRequest } = this.props.sidebar
+
     this.props.handleVariableSave('tableHandlersFilters', this.state.filterValues)
+    if (isOpen || isHoldRequest) sidebarChanged({ isHoldRequest: false, isOpen: false })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

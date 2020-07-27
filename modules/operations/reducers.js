@@ -96,10 +96,10 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         currentTab: payload.tab,
-        popupValues: null,
-        isOpenPopup: false,
-        loading: false,
-        orderDetailData: null
+        popupValues: state.currentTab !== payload.tab ? null : state.popupValues,
+        isOpenPopup: state.currentTab !== payload.tab ? false : state.isOpenPopup,
+        loading: state.currentTab !== payload.tab ? false : state.loading,
+        orderDetailData: state.currentTab !== payload.tab ? null : state.orderDetailData
       }
     }
 

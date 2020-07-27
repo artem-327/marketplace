@@ -389,6 +389,7 @@ class MyRequestedItems extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersMyReqItems', this.state.filterValue)
+    if (this.props.editWindowOpen) this.props.closeDetailSidebar()
   }
 
   handleFilterChangeInputSearch = (e, data) => {

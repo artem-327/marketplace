@@ -26,6 +26,7 @@ import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
+import * as Actions from '../actions'
 
 import styled from 'styled-components'
 
@@ -148,6 +149,11 @@ const addDwollaForms = {
 }
 
 class Admin extends Component {
+  componentWillUnmount() {
+    const { currentEditForm, currentAddForm, currentAddDwolla, closePopup } = this.props
+    if (currentEditForm || currentAddForm || currentAddDwolla) closePopup()
+  }
+
   renderContent = () => {
     const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = this.props
     return (
@@ -195,4 +201,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 })
 
-export default withAuth(connect(mapStateToProps, null)(Admin))
+export default withAuth(connect(mapStateToProps, Actions)(Admin))

@@ -30,9 +30,14 @@ const StyledForm = styled(Form)`
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
     background-color: #ffffff;
   }
-  
+
+  .content {
+    max-height: 60vh;
+    overflow-y: auto;
+  } 
+
   .ui.grid {
-    margin: 30px 25px;
+    margin: 30px 0 30px 25px;
     padding: 0;
     
     .row {
@@ -98,6 +103,7 @@ const StyledForm = styled(Form)`
       }
       
       .ui.button {
+        min-width: 40px;
         height: 40px;
         border-radius: 3px;
       }
@@ -435,9 +441,11 @@ class QuickEditPricingPopup extends React.Component {
                 {formatMessage({ id: 'myInventory.editPricing', defaultMessage: 'Edit Pricing' })}
               </div>
 
-              <Grid>
-                {this.renderPricingTiers()}
-              </Grid>
+              <div className='content'>
+                <Grid>
+                  {this.renderPricingTiers()}
+                </Grid>
+              </div>
 
               <div className='bottom-buttons'>
                 <Button
