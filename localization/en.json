@@ -467,6 +467,7 @@
   "global.state": "State",
   "global.status": "Status",
   "global.unmapped": "unmapped",
+  "global.unmapped.cptlz": "Unmapped",
   "global.notPublished": "This echo product is not published and will not show on the Marketplace.",
   "global.country": "Country",
   "global.province": "Province",

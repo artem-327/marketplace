@@ -309,7 +309,7 @@ const mapStateToProps = (state, { datagrid }) => {
               } // <div> has to be there otherwise popup will be not shown
             />
           ) : null,
-        productGroup: getSafe(() => product.companyGenericProduct.productGroup.name, (<FormattedMessage id='global.unmapped' defaultMessage='Unmapped'>{text => text}</FormattedMessage>))
+        productGroup: getSafe(() => product.companyGenericProduct.productGroup.name, (<FormattedMessage id='global.unmapped.cptlz' defaultMessage='Unmapped'>{text => text}</FormattedMessage>))
       }
     }),
     filterValue: state.settings.filterValue,
