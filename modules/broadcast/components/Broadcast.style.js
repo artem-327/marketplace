@@ -18,7 +18,7 @@ const FONT_WEIGHT = {
 const Row = styled.div`
   position: relative;
   display: flex;
-  flex: 0 0 45px;
+  flex: 0 0 auto;
   line-height: 45px;
   border-bottom: 1px solid #e7e7e7;
   padding-left: ${({ depth }) => depth * 15 - 15}px;
@@ -41,7 +41,7 @@ const Row = styled.div`
 
 const Root = styled.div`
   display: flex;
-  flex: 1 0 300px;
+  flex: 1 0 auto;
   flex-direction: column;
   margin: 1.428571429em 0.714285714em;
   
@@ -52,7 +52,7 @@ const Root = styled.div`
 `
 const Header = styled(Row)`
   /* font-weight: bold; */
-  flex: 0 0 45px;
+  flex: 0 0 auto;
   padding: 0;
   display: flex;
   color: #848893;
