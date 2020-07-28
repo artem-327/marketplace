@@ -960,14 +960,14 @@ class Broadcast extends Component {
               width={asSidebar ? 16 : 10}
               stretched
               style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
-              <Rule.Root style={asSidebar ? null : { overflowY: 'scroll' }}>
+              <Rule.Root style={asSidebar ? null : { overflowY: 'scroll', flexBasis: '300px' }}>
                 <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                   <Rule.RowContent>
                     <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select'>
                       {text => text}
                     </FormattedMessage>
                   </Rule.RowContent>
-                  <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : null}>
+                  <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : { flex: '0 0 88px' }}>
                     <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                   </Rule.Toggle>
 
