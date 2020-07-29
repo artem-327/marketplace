@@ -579,33 +579,44 @@ class PurchaseOrder extends Component {
                             <Divider />
                           </>
                         )}
-                      <Grid.Row>
-                        <Grid.Column width={16}>
-                          <Line />
-                        </Grid.Column>
-                      </Grid.Row>
-                      <VerticalUnpaddedRow>
-                        <VerticalUnpaddedColumn computer={16}>
-                          <Header as='h2'>
-                            <FormattedMessage
-                              id='cart.quoteReceived'
-                              defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
-                            />
-                          </Header>
-                        </VerticalUnpaddedColumn>
-                      </VerticalUnpaddedRow>
-                      <GridRow>
-                        <GridColumn computer={8}>
-                          <Input
-                            inputProps={{
-                              onChange: () => this.handleQuoteSelect(null),
-                              disabled: values.freightType === 'OWN_FREIGHT'
-                            }}
-                            name='shipmentQuoteId'
-                            label={<FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />}
-                          />
-                        </GridColumn>
-                      </GridRow>
+
+                      {this.state.selectedAddress &&
+                      !shippingQuotesAreFetching &&
+                      (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
+                        <>
+                          {false && (
+                            <Grid.Row>
+                              <Grid.Column width={16}>
+                                <Line />
+                              </Grid.Column>
+                            </Grid.Row>
+                          )}
+                          <VerticalUnpaddedRow>
+                            <VerticalUnpaddedColumn computer={16}>
+                              <Header as='h2'>
+                                <FormattedMessage
+                                  id='cart.quoteReceived'
+                                  defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                                />
+                              </Header>
+                            </VerticalUnpaddedColumn>
+                          </VerticalUnpaddedRow>
+                          <GridRow>
+                            <GridColumn computer={8}>
+                              <Input
+                                inputProps={{
+                                  onChange: () => this.handleQuoteSelect(null),
+                                  disabled: values.freightType === 'OWN_FREIGHT'
+                                }}
+                                name='shipmentQuoteId'
+                                label={
+                                  <FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />
+                                }
+                              />
+                            </GridColumn>
+                          </GridRow>
+                        </>
+                      )}
                     </Grid>
                   </Segment>
 
