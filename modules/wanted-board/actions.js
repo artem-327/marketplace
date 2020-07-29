@@ -14,7 +14,11 @@ export const sidebarDetailTrigger = (row = null, activeTab = '') => {
   return {
     type: AT.WB_SIDEBAR_DETAIL_TRIGGER,
     async payload() {
-      const response = await api.getPurchaseRequest(row.id)
+      let response
+      if (row) {
+        response = await api.getPurchaseRequest(row.id)
+      }
+
       return { row: activeTab === 'my-requested-items' && row ? { ...response, rawData: response } : row }
     }
   }

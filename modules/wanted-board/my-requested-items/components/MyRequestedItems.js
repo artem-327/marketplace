@@ -376,9 +376,23 @@ class MyRequestedItems extends Component {
     datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  componentDidMount() {
-    const { tableHandlersFiltersMyReqItems } = this.props
+  async componentDidMount() {
+    const { tableHandlersFiltersMyReqItems, sidebarDetailTrigger } = this.props
+    if (window) {
+      const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
+      if (searchParams.has('id') || searchParams.has(`${window.location.href.split('?')[0]}?id`)) {
+        const idRequest = searchParams.has('id')
+          ? Number(searchParams.get('id'))
+          : Number(searchParams.get(`${window.location.href.split('?')[0]}?id`))
+
+        try {
+          await sidebarDetailTrigger({ id: idRequest }, 'my-requested-items')
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    }
     if (tableHandlersFiltersMyReqItems) {
       this.setState({ filterValue: tableHandlersFiltersMyReqItems })
       this.handleFiltersValue(tableHandlersFiltersMyReqItems)

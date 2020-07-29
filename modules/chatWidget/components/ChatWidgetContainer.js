@@ -39,7 +39,8 @@ function mapStateToProps(state) {
       (getSafe(() => state.settings.isOpenPopup, false) &&
         (settingsTab === 'products' || settingsTab === 'users' || settingsTab === 'documents')) ||
       adminTab === 'Users' ||
-      adminTab === 'Companies'
+      adminTab === 'Companies' ||
+      getSafe(() => state.manageGuests.isOpenPopup, false)
     )
       return 630
 

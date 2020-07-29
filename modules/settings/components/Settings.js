@@ -236,7 +236,7 @@ class Settings extends Component {
   }
 
   companyDetails = () => {
-    let { postCompanyLogo, deleteCompanyLogo } = this.props
+    let { postCompanyLogo, deleteCompanyLogo, companyId, hasLogo } = this.props
     const { selectLogo, removeLogo } = this
     const { companyLogo, shouldUpdateLogo } = this.state
 
@@ -283,6 +283,8 @@ class Settings extends Component {
                     errors={errors}
                     touched={touched}
                     isSubmitting={isSubmitting}
+                    companyId={companyId}
+                    hasLogo={hasLogo}
                   />
                   <Grid>
                     <GridColumn floated='right' computer={4}>
@@ -498,7 +500,9 @@ const mapStateToProps = ({ settings, auth }) => {
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
     documentsOwner: getSafe(() => settings.documentsOwner, []),
     productCatalogUnmappedValue: settings.productCatalogUnmappedValue,
-    isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false)
+    isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false),
+    companyId: getSafe(() => auth.identity.company.id, false),
+    hasLogo: getSafe(() => auth.identity.company.hasLogo, false)
   }
 }
 
