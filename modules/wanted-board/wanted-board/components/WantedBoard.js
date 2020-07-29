@@ -21,7 +21,14 @@ import { PlusCircle } from 'react-feather'
 import { number } from 'prop-types'
 import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { UpperCaseText, CustomRowDiv, CustomSearchNameTags, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
+import {
+  UpperCaseText,
+  CustomRowDiv,
+  CustomSearchNameTags,
+  ControlPanel,
+  ProductChemicalSwitch,
+  TopButtons
+} from '../../constants/layout'
 import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 
@@ -246,12 +253,12 @@ class WantedBoard extends Component {
     const { tableHandlersFiltersWantedBoard } = this.props
 
     if (tableHandlersFiltersWantedBoard) {
-      this.setState({ filterValues: tableHandlersFiltersWantedBoard },
-        () => {
+      this.setState({ filterValues: tableHandlersFiltersWantedBoard }, () => {
         const filter = {
           ...this.state.filterValues,
-          ...(!!this.state.filterValues.SearchByNamesAndTags
-            && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+          ...(!!this.state.filterValues.SearchByNamesAndTags && {
+            ...this.state.filterValues.SearchByNamesAndTags.filters
+          })
         }
         this.handleFiltersValue(filter)
       })
@@ -271,18 +278,23 @@ class WantedBoard extends Component {
   }, 300)
 
   SearchByNamesAndTagsChanged = data => {
-    this.setState({
-      filterValues: {
-        ...this.state.filterValues,
-        SearchByNamesAndTags: data
-      }}, () => {
-      const filter = {
-        ...this.state.filterValues,
-        ...(!!this.state.filterValues.SearchByNamesAndTags
-          && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+    this.setState(
+      {
+        filterValues: {
+          ...this.state.filterValues,
+          SearchByNamesAndTags: data
+        }
+      },
+      () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.SearchByNamesAndTags && {
+            ...this.state.filterValues.SearchByNamesAndTags.filters
+          })
+        }
+        this.handleFiltersValue(filter)
       }
-      this.handleFiltersValue(filter)
-    })
+    )
   }
 
   handleProductChemicalSwitch = data => {
@@ -291,8 +303,7 @@ class WantedBoard extends Component {
     datagrid.clear()
     const filter = {
       ...this.state.filterValues,
-      ...(!!this.state.filterValues.SearchByNamesAndTags
-        && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+      ...(!!this.state.filterValues.SearchByNamesAndTags && { ...this.state.filterValues.SearchByNamesAndTags.filters })
     }
     this.handleFiltersValue(filter)
   }
@@ -322,9 +333,7 @@ class WantedBoard extends Component {
             <CustomSearchNameTags>
               <SearchByNamesAndTags
                 onChange={this.SearchByNamesAndTagsChanged}
-                initFilterState={
-                  getSafe(() => tableHandlersFiltersWantedBoard.SearchByNamesAndTags, null)
-                }
+                initFilterState={getSafe(() => tableHandlersFiltersWantedBoard.SearchByNamesAndTags, null)}
                 filterApply={false}
               />
             </CustomSearchNameTags>
@@ -391,7 +400,7 @@ class WantedBoard extends Component {
     const {
       activeIndex,
       intl: { formatMessage },
-      editWindowOpen
+      openSidebar
     } = this.props
 
     const panes = [
@@ -433,7 +442,7 @@ class WantedBoard extends Component {
             panes={panes}
           />
         </Container>
-        {editWindowOpen === 'wanted-board' && <DetailSidebar />}
+        {openSidebar && <DetailSidebar />}
       </>
     )
   }
