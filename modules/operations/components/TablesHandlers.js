@@ -145,8 +145,8 @@ class TablesHandlers extends Component {
           ...filterValue,
           status: status ? status : filterValue.status
         }
+        this.setState({ orders: filterValue })  // ! ! Otestovat
       }
-      this.setState({ orders: filterValue })
       this.handleFiltersValue(filterValue)
     }
   }
@@ -163,8 +163,8 @@ class TablesHandlers extends Component {
           ...filterValue,
           status: status ? status : filterValue.status
         }
+        this.setState({ orders: filterValue })  // ! ! Otestovat
       }
-      this.setState({ orders: filterValue })
       this.handleFiltersValue(filterValue)
     }
   }

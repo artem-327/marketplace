@@ -22,7 +22,8 @@ import {
   Home,
   Package,
   Archive,
-  Disc
+  Disc,
+  Coffee
 } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -57,6 +58,7 @@ class Navigation extends Component {
     operations: getSafe(() => Router.router.pathname === '/operations', false),
     products: getSafe(() => Router.router.pathname === '/products', false),
     companies: getSafe(() => Router.router.pathname === '/companies', false),
+    manageGuests: getSafe(() => Router.router.pathname === '/manage-guests', false),
     openedFilterMyInventory: true,
     openedFilterMarketplace: true,
     openedFilterOrders: false,
@@ -180,6 +182,7 @@ class Navigation extends Component {
       operations: false,
       products: false,
       companies: false,
+      manageGuests: false,
       [type]: !typeState
     })
 
@@ -257,6 +260,7 @@ class Navigation extends Component {
       operations,
       products,
       companies,
+      manageGuests,
       openedFilterMyInventory,
       openedFilterMarketplace,
       openedFilterOrders,
@@ -373,6 +377,39 @@ class Navigation extends Component {
             </PerfectScrollbar>
           </Dropdown.Menu>
         </DropdownItem>
+
+        {(isCompanyAdmin && !isClientCompany) || isClientCompanyAdmin ? (
+          <DropdownItem
+            icon={<Coffee size={22} />}
+            text={formatMessage({ id: 'navigation.manageGuests', defaultMessage: 'Manage Guests' })}
+            className={manageGuests ? 'opened' : null}
+            opened={manageGuests}
+            onClick={() => this.toggleOpened('manageGuests')}
+            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+            refId={'manageGuests'}
+            data-test='navigation_menu_manage_guests_drpdn'
+          >
+            <Dropdown.Menu data-test='navigation_menu_manage_guests_drpdn_menu'>
+              <PerfectScrollbar>
+                <Dropdown.Item
+                  as={MenuLink}
+                  to='/manage-guests?type=guests'
+
+                  dataTest='navigation_manage_guests_guests_drpdn'>
+                  {formatMessage({ id: 'navigation.guests', defaultMessage: 'Guests' })}
+                </Dropdown.Item>
+                {false && (<Dropdown.Item
+                  as={MenuLink}
+                  to='/manage-guests?type=chat'
+
+                  dataTest='navigation_manage_guests_chat_drpdn'>
+                  {formatMessage({ id: 'navigation.chat', defaultMessage: 'Chat' })}
+                </Dropdown.Item>)}
+              </PerfectScrollbar>
+            </Dropdown.Menu>
+          </DropdownItem>
+        ) : null}
+
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin || isClientCompanyAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
@@ -451,7 +488,7 @@ class Navigation extends Component {
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
 
-                    {!isClientCompanyAdmin && (
+                    {false && !isClientCompanyAdmin && (
                       <Dropdown.Item
                         as={MenuLink}
                         to='/settings?type=guest-companies'

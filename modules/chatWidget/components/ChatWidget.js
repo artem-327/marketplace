@@ -12,7 +12,7 @@ export default class ChatWidget extends Component {
   componentDidUpdate(prevProps) {
     const { sidebars } = this.props
 
-    if (sidebars !== prevProps.sidebars) {
+    if (sidebars !== prevProps.sidebars || sidebars > 0) {
       //if (sidebars) chatWidget_hide()
       //else chatWidget_showLabel()
       chatWidget_setHorizontalOffset(sidebars)

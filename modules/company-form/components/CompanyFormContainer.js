@@ -6,15 +6,10 @@ import { getSafe } from '~/utils/functions'
 function mapStateToProps(state, props) {
   return {
     ...state.businessTypes,
-    companyId: getSafe(
-      () => state.companiesAdmin.popupValues.id,
-      getSafe(() => state.auth.identity.company.id, false)
-    ),
+    companyId: props.companyId,
     selectLogo: props.selectLogo,
     companyLogo: props.companyLogo,
-    hasLogo: props.admin
-      ? getSafe(() => state.companiesAdmin.popupValues.hasLogo, false)
-      : getSafe(() => state.auth.identity.company.hasLogo, false),
+    hasLogo: props.hasLogo,
     associations: getSafe(() => state.businessTypes.associations, [])
   }
 }

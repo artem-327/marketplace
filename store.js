@@ -33,6 +33,7 @@ import dataTables from '~/src/modules/dataTables'
 import settings from '~/modules/settings/reducers'
 import admin from '~/modules/admin/reducers'
 import profile from '~/modules/profile/reducers'
+import manageGuests from '~/modules/manage-guests/reducers'
 
 import { show as saveFilterItem } from '~/src/components/Filter/components/SavedFilters/reducers/SaveFilterItem.reducers'
 import companiesSaga from '~/src/saga/companies'
@@ -146,6 +147,7 @@ const reducer = combineReducers({
   documentTypes,
   marketSegments,
   exportInventory,
+  manageGuests,
   dashboard
 })
 
