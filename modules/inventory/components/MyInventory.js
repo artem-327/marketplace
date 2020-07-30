@@ -483,7 +483,7 @@ class MyInventory extends Component {
     const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
 
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter, datagridFilterReload, 'myInventoryFilter')
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'inventory')
     }
   }
 

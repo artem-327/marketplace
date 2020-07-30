@@ -363,7 +363,8 @@ class DatagridProvider extends Component {
     const {
       rows,
       loading,
-      datagridParams: { filters }
+      datagridParams: { filters },
+      savedFilters
     } = this.state
 
     return (
@@ -373,6 +374,7 @@ class DatagridProvider extends Component {
           rows,
           loading,
           filters,
+          savedFilters,
           autoRefresh: this.props.autoRefresh,
           removeRow: this.removeRowById,
           updateRow: this.updateRow,
