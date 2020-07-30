@@ -25,7 +25,6 @@ const initialState = {
     pageSize: 50,
     pageNumber: 0
   },
-  isScrollToEnd: false,
   isScrollToUp: false,
   savedFilters: {},
   refreshTable: false
@@ -106,12 +105,8 @@ class DatagridProvider extends Component {
   loadNextPage = async (overPage = 0) => {
     if (!this.props.apiConfig) return
 
-    const { datagridParams, query, isScrollToEnd, refreshTable, allLoaded } = this.state
+    const { datagridParams, query, refreshTable, allLoaded } = this.state
     const { apiConfig } = this.props
-
-    isScrollToEnd ||
-      ((getSafe(() => datagridParams.filters.length, false) || getSafe(() => datagridParams.orFilters.length, false)) &&
-        this.setState({ loading: true }))
 
     let pageNumber = 0
     if (refreshTable) {
@@ -156,8 +151,27 @@ class DatagridProvider extends Component {
       const { data } = response
       const allLoaded = data.length < datagridParams.pageSize || data.length === 0
 
+      let arrRows = this.state.rows
+      if (arrRows && arrRows.length) {
+        arrRows.forEach((row, i) => {
+          if (data && data.length) {
+            data.forEach((d, j) => {
+              if (d.id === row.id) {
+                arrRows.splice(i, 1, d)
+                data.splice(j, 1)
+              }
+              return
+            })
+          }
+        })
+      }
+      const newRows =
+        arrRows && arrRows.length
+          ? arrRows.concat(data && data.length ? data : [])
+          : [].concat(data && data.length ? data : [])
+
       this.setState(s => ({
-        rows: _.unionBy(data, s.rows, 'id'),
+        rows: newRows,
         loading: false,
         allLoaded,
         datagridParams: {
@@ -207,7 +221,7 @@ class DatagridProvider extends Component {
     const overPage =
       !this.props.autoRefresh || (this.state.datagridParams.pageNumber === 1 && overBottoms <= 1) ? 0 : overBottoms - 1
     this.setState({
-      isScrollToEnd: true
+      loading: true
     })
     this.loadNextPageSafe(overPage)
   }
@@ -234,6 +248,7 @@ class DatagridProvider extends Component {
     this.setState(
       s => ({
         ready: true,
+        loading: true,
         datagridParams: {
           ...s.datagridParams,
           ...params
@@ -314,8 +329,7 @@ class DatagridProvider extends Component {
       }
       this.setState(
         s => ({
-          datagridParams: { ...s.datagridParams, ...params },
-          isScrollToEnd: false
+          datagridParams: { ...s.datagridParams, ...params }
         }),
         () => {
           this.setFilter(
