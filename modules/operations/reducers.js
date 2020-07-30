@@ -53,6 +53,9 @@ export default function reducers(state = initialState, action) {
       }
     }
 
+    case AT.OPERATIONS_MARK_REQUEST_AS_PROCESSED_PENDING:
+    case AT.OPERATIONS_DENY_REQUEST_PENDING:
+    case AT.OPERATIONS_DELETE_REQUEST_PENDING:
     case AT.OPERATIONS_UPDATE_SHIPPING_QUOTE_PENDING:
     case AT.OPERATIONS_CREATE_SHIPPING_QUOTE_PENDING:
     case AT.OPERATIONS_DELETE_SHIPPING_QUOTE_PENDING:
@@ -65,6 +68,12 @@ export default function reducers(state = initialState, action) {
       }
     }
 
+    case AT.OPERATIONS_MARK_REQUEST_AS_PROCESSED_REJECTED:
+    case AT.OPERATIONS_MARK_REQUEST_AS_PROCESSED_FULFILLED:
+    case AT.OPERATIONS_DENY_REQUEST_REJECTED:
+    case AT.OPERATIONS_DENY_REQUEST_FULFILLED:
+    case AT.OPERATIONS_DELETE_REQUEST_REJECTED:
+    case AT.OPERATIONS_DELETE_REQUEST_FULFILLED:
     case AT.OPERATIONS_UPDATE_SHIPPING_QUOTE_FULFILLED:
     case AT.OPERATIONS_UPDATE_SHIPPING_QUOTE_REJECTED:
     case AT.OPERATIONS_DELETE_SHIPPING_QUOTE_FULFILLED:
@@ -87,10 +96,10 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         currentTab: payload.tab,
-        popupValues: null,
-        isOpenPopup: false,
-        loading: false,
-        orderDetailData: null
+        popupValues: state.currentTab !== payload.tab ? null : state.popupValues,
+        isOpenPopup: state.currentTab !== payload.tab ? false : state.isOpenPopup,
+        loading: state.currentTab !== payload.tab ? false : state.loading,
+        orderDetailData: state.currentTab !== payload.tab ? null : state.orderDetailData
       }
     }
 

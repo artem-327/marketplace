@@ -3,8 +3,7 @@ import { CART_FETCH_FULFILLED } from './../purchase-order/action-types'
 import * as api from './api'
 import { Datagrid } from '~/modules/datagrid'
 
-
-export const closeDetailSidebar = (id) => {
+export const closeDetailSidebar = id => {
   return {
     type: AT.WB_CLOSE_DETAIL_SIDEBAR,
     payload: null
@@ -14,7 +13,14 @@ export const closeDetailSidebar = (id) => {
 export const sidebarDetailTrigger = (row = null, activeTab = '') => {
   return {
     type: AT.WB_SIDEBAR_DETAIL_TRIGGER,
-    payload: { activeTab: activeTab, row: row }
+    async payload() {
+      let response
+      if (row) {
+        response = await api.getPurchaseRequest(row.id)
+      }
+
+      return { row: activeTab === 'my-requested-items' && row ? { ...response, rawData: response } : row }
+    }
   }
 }
 
@@ -25,21 +31,21 @@ export const myOffersSidebarTrigger = (row = null) => {
   }
 }
 
-export const deletePurchaseRequestItem = (id) => {
+export const deletePurchaseRequestItem = id => {
   return {
     type: AT.WB_DELETE_PURCHASE_REQUEST_ITEM,
     payload: api.deletePurchaseRequestItem(id)
   }
 }
 
-export const deleteMyOfferItem = (id) => {
+export const deleteMyOfferItem = id => {
   return {
     type: AT.WB_DELETE_MY_OFFER_ITEM,
     payload: api.deleteMyOfferItem(id)
   }
 }
 
-export const openSubmitOffer = (row) => {
+export const openSubmitOffer = row => {
   return {
     type: AT.WB_OPEN_SUBMIT_OFFER,
     payload: row
@@ -51,7 +57,7 @@ export const closePopup = () => {
   }
 }
 
-export const submitOffer = (myOffer) => {
+export const submitOffer = myOffer => {
   return {
     type: AT.WB_SUBMIT_OFFER,
     payload: api.submitOffer(myOffer)
@@ -64,16 +70,18 @@ export function purchaseRequestedItem(id) {
       type: AT.WB_PURCHASE_REQUESTED_ITEM,
       async payload() {
         const data = await api.purchaseRequestedItem(id)
-        dispatch({ // To display in CART
+        dispatch({
+          // To display in CART
           type: CART_FETCH_FULFILLED,
           payload: data
         })
         return data
       }
     })
-}}
+  }
+}
 
-export const rejectRequestedItem = (id) => ({
+export const rejectRequestedItem = id => ({
   type: AT.WB_REJECT_REQUESTED_ITEM,
   async payload() {
     const { data } = await api.rejectRequestedItem(id)
@@ -131,12 +139,12 @@ export const getCountries = () => ({
   payload: api.getCountries()
 })
 
-export const getProvinces = (id) => ({
+export const getProvinces = id => ({
   type: AT.WB_GET_PROVINCES,
   payload: api.getProvinces(id)
 })
 
-export const addPurchaseRequest = (body) => ({
+export const addPurchaseRequest = body => ({
   type: AT.WB_ADD_PURCHASE_REQUEST,
   payload: api.addPurchaseRequest(body)
 })
@@ -152,14 +160,15 @@ export function handleFiltersValue(value) {
       type: AT.WB_HANDLE_FILTERS_VALUE,
       payload: value
     })
-}}
+  }
+}
 
-export const setWantedBoardType = (type) => ({
+export const setWantedBoardType = type => ({
   type: AT.WB_SET_WANTED_BOARD_TYPE,
   payload: type
 })
 
-export const setMyRequestedItemsType = (type) => ({
+export const setMyRequestedItemsType = type => ({
   type: AT.WB_SET_MY_REQUESTED_ITEM_TYPE,
   payload: type
 })
@@ -169,7 +178,7 @@ export const editMyPurchaseOffer = (id, body) => ({
   payload: api.editMyPurchaseOffer(id, body)
 })
 
-export const updateEditedId = (id) => ({
+export const updateEditedId = id => ({
   type: AT.WB_UPDATE_EDITED_ID,
   payload: id
 })

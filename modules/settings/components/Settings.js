@@ -38,7 +38,7 @@ import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo, renderCopyright, closePopup, closeSidebar } from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -196,7 +196,7 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    const { isCompanyAdmin, addTab, tabsNames, getIdentity, isClientCompanyAdmin } = this.props
+    const { isCompanyAdmin, addTab, tabsNames, getIdentity, isClientCompanyAdmin, renderCopyright } = this.props
     try {
       await getIdentity()
     } catch (error) {
@@ -213,6 +213,18 @@ class Settings extends Component {
 
     this.changeRoute(queryTab)
     this.redirectPage(queryTab)
+    renderCopyright()
+  }
+
+  componentWillUnmount() {
+    const {
+      isOpenPopup,
+      isOpenSidebar,
+      closePopup,
+      closeSidebar
+    } = this.props
+    if (isOpenPopup) closePopup()
+    if (isOpenSidebar) closeSidebar()
   }
 
   selectLogo = (logo, isNew = true) => {
@@ -373,19 +385,12 @@ class Settings extends Component {
                 }
                 // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
               ]
-            : [],
-        params: {
-          orOperator: true
-        }
+            : []
       },
       'guest-companies': {
         url: '/prodex/api/companies/client/datagrid',
-        searchToFilter: v => (v && v.searchInput
-          ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }]
-          : []),
-        params: {
-          orOperator: true
-        }
+        searchToFilter: v =>
+          v && v.searchInput ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }] : []
       },
       products: {
         url: `/prodex/api/company-products/datagrid?type=${productCatalogUnmappedValue}`,
@@ -413,10 +418,7 @@ class Settings extends Component {
                   values: [`%${v.searchInput}%`]
                 }
               ]
-            : [],
-        params: {
-          orOperator: true
-        }
+            : []
       },
       // 'bank-accounts': null,
       // 'credit-cards': null,
@@ -447,9 +449,6 @@ class Settings extends Component {
               }
             ]
           return filter
-        },
-        params: {
-          orOperator: true
         }
       }
     }
@@ -511,5 +510,8 @@ export default connect(mapStateToProps, {
   loadLogo,
   postCompanyLogo,
   deleteCompanyLogo,
-  getIdentity
+  getIdentity,
+  renderCopyright,
+  closePopup,
+  closeSidebar
 })(withToastManager(Settings))

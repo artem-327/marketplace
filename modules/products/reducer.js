@@ -5,7 +5,6 @@ import { uniqueArrayByKey } from '~/utils/functions'
 export const initialState = {
   editTrig: false,
   popupValues: null,
-  isOpenPopup: false,
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
   loading: false,
@@ -13,7 +12,6 @@ export const initialState = {
   searchedCompaniesLoading: false,
   companyProductUnmappedOnly: false,
   ordersStatusFilter: 'All',
-  orderDetailData: null,
   documentTypesFetching: false,
   listDocumentTypes: [],
   orderProcessing: false,
@@ -22,14 +20,12 @@ export const initialState = {
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,
-  currentAddDwolla: null,
   editPopupBoolean: false,
   deleteRowById: null,
   confirmMessage: null,
   hazardClasses: [],
   packagingGroups: [],
   casProductsRows: [],
-  filterCasIds: [],
   altCasNamesRows: [],
   editEchoProductEditTab: 0,
   editEchoProductInitTrig: false,
@@ -45,7 +41,8 @@ export const initialState = {
   searchedMarketSegmentsLoading: false,
   altEchoNamesRows: [],
   searchedProductGroups: [],
-  searchedProductGroupsLoading: false
+  searchedProductGroupsLoading: false,
+  tableHandlersFilters: null
 }
 
 export default function reducers(state = initialState, action) {
@@ -56,11 +53,11 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         currentTab: payload.tab,
-        popupValues: null,
-        isOpenPopup: false,
-        loading: false,
-        orderDetailData: null,
-        filterCasIds: []
+        popupValues: state.currentTab !== payload.tab ? null : state.popupValues,
+        loading: state.currentTab !== payload.tab ? false : state.loading,
+        currentAddForm: state.currentTab !== payload.tab ? null : state.currentAddForm,
+        currentEditForm: state.currentTab !== payload.tab ? null : state.currentEditForm,
+        currentEdit2Form: state.currentTab !== payload.tab ? null : state.currentEdit2Form
       }
     }
     case AT.PRODUCTS_OPEN_POPUP: {
@@ -79,8 +76,7 @@ export default function reducers(state = initialState, action) {
               currentAddForm: state.currentTab,
               currentEditForm: null
             }),
-        currentEdit2Form: null,
-        currentAddDwolla: null
+        currentEdit2Form: null
       }
     }
     case AT.PRODUCTS_OPEN_EDIT_2_POPUP: {
@@ -89,7 +85,6 @@ export default function reducers(state = initialState, action) {
         currentEdit2Form: state.currentTab,
         currentAddForm: null,
         currentEditForm: null,
-        currentAddDwolla: null,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload
       }
@@ -142,8 +137,7 @@ export default function reducers(state = initialState, action) {
         ...state,
         currentAddForm: null,
         currentEditForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null
+        currentEdit2Form: null
       }
     }
 
@@ -152,8 +146,7 @@ export default function reducers(state = initialState, action) {
         ...state,
         currentAddForm: null,
         currentEditForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null
+        currentEdit2Form: null
       }
     }
     case AT.PRODUCTS_CLOSE_EDIT_POPUP: {
@@ -161,8 +154,7 @@ export default function reducers(state = initialState, action) {
         ...state,
         currentAddForm: null,
         currentEditForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null
+        currentEdit2Form: null
       }
     }
     case AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES_PENDING:
@@ -228,8 +220,7 @@ export default function reducers(state = initialState, action) {
               currentAddForm: state.currentTab,
               currentEditForm: null
             }),
-        currentEdit2Form: null,
-        currentAddDwolla: null
+        currentEdit2Form: null
       }
     }
 
@@ -387,6 +378,12 @@ export default function reducers(state = initialState, action) {
         ...state,
         searchedCompanies: action.payload,
         searchedCompaniesLoading: false
+      }
+    }
+    case AT.PRODUCTS_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
     default: {

@@ -26,6 +26,7 @@ import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
+import * as Actions from '../actions'
 
 import styled from 'styled-components'
 
@@ -62,43 +63,64 @@ const tables = {
 const datagridConfig = {
   Conditions: {
     url: '/prodex/api/product-conditions/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+      ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v.searchInput}%`] }]
+      : []
+    )
   },
   'NMFC Numbers': {
     url: '/prodex/api/nmfc-numbers/datagrid',
     searchToFilter: v => {
       let filters = []
-      if (v) {
-        filters.push({ operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v}%`] })
-        if (Number.isInteger(parseInt(v)))
-          filters.push({ operator: 'LIKE', path: 'NmfcNumber.prefix', values: [`${parseInt(v)}%`] })
+      if (v && v.searchInput ) {
+        filters.push({ operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v.searchInput}%`] })
+        if (Number.isInteger(parseInt(v.searchInput)))
+          filters.push({ operator: 'LIKE', path: 'NmfcNumber.prefix', values: [`${parseInt(v.searchInput)}%`] })
       }
       return filters
     }
   },
   Associations: {
     url: 'prodex/api/associations/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+      ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v.searchInput}%`] }]
+      : []
+    )
   },
   Forms: {
     url: '/prodex/api/product-forms/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+      ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v.searchInput}%`] }]
+      : []
+    )
   },
   Grades: {
     url: '/prodex/api/product-grades/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+      ? [{ operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v.searchInput}%`] }]
+      : []
+    )
   },
   Manufacturers: {
     url: '/prodex/api/manufacturers/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+      ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v.searchInput}%`] }]
+      : []
+    )
   },
   'Packaging Types': {
     url: '/prodex/api/packaging-types/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+      ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v.searchInput}%`] }]
+      : []
+    )
   },
   'Units of Measure': {
     url: '/prodex/api/units/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+      ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }]
+      : []
+    )
   }
 }
 
@@ -129,6 +151,11 @@ const addDwollaForms = {
 }
 
 class Admin extends Component {
+  componentWillUnmount() {
+    const { currentEditForm, currentAddForm, currentAddDwolla, closePopup } = this.props
+    if (currentEditForm || currentAddForm || currentAddDwolla) closePopup()
+  }
+
   renderContent = () => {
     const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = this.props
     return (
@@ -153,23 +180,18 @@ class Admin extends Component {
     const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = this.props
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
-          {!currentTab.hideHandler && (
-            <Container fluid style={{ padding: '0 32px' }}>
-              <TablesHandlers />
-            </Container>
-          )}
-          <Grid
-            columns='equal'
-            className='flex stretched'
-            style={{ marginTop: '0', marginBottom: '0', padding: '0 32px' }}>
-            <Grid.Row style={{ height: '100%' }}>
-              <Grid.Column key={this.props.currentTab} style={{ height: 'calc(100% - 10px)', marginTop: '10px' }} className='flex stretched'>
-                {this.renderContent()}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+          <>
+            {!currentTab.hideHandler && (
+              <div style={{ padding: '20px 30px' }}>
+                <TablesHandlers />
+              </div>
+            )}
+            <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
+              {this.renderContent()}
+            </div>
+          </>
         </Container>
       </DatagridProvider>
     )
@@ -181,4 +203,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 })
 
-export default withAuth(connect(mapStateToProps, null)(Admin))
+export default withAuth(connect(mapStateToProps, Actions)(Admin))

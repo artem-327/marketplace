@@ -12,12 +12,12 @@ class Alerts extends Component {
     url: '/prodex/api/messaging-center/datagrid',
     searchToFilter: v => {
       let filters = { or: [], and: [] }
-      if (v && v.searchValue) {
+      if (v && v.searchInput) {
         filters.or.push(
           {
             operator: 'LIKE',
             path: 'Message.text',
-            values: [`%${v.searchValue}%`]
+            values: [`%${v.searchInput}%`]
           }
         )
       }
@@ -43,13 +43,22 @@ class Alerts extends Component {
             break
         }
       }
+      if (v && v.category) {
+        filters.and.push(
+          {
+            operator: 'EQUALS',
+            path: 'Message.category',
+            values: [v.category]
+          }
+        )
+      }
       return filters
     }
   })
 
   render() {
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()} skipInitLoad>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <div id='page' className='flex stretched scrolling'>
           <Container fluid>
             <HighMenu />

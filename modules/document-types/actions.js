@@ -88,3 +88,10 @@ export function handleFiltersValue(props, value) {
     })
   }
 }
+
+export function handleVariableSave(variable, value) {
+  return {
+    type: AT.DOCUMENT_TYPES_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}

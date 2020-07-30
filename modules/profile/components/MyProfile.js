@@ -14,7 +14,14 @@ import { FormattedDateTime } from '~/components/formatted-messages/'
 import { errorMessages } from '~/constants/yupValidation'
 import { PhoneNumber } from '~/modules/phoneNumber'
 
-import { closePopup, getUserMeData, getCurrencies, updateMyProfile, openChangePasswordPopup } from '../actions'
+import {
+  closePopup,
+  getUserMeData,
+  getCurrencies,
+  updateMyProfile,
+  openChangePasswordPopup,
+  setPreferredLanguage
+} from '../actions'
 
 const initialFormValues = {
   name: '',
@@ -50,7 +57,8 @@ class MyProfile extends Component {
       intl: { formatMessage },
       languages,
       languagesFetching,
-      tutorialCompleted
+      tutorialCompleted,
+      setPreferredLanguage
     } = this.props
 
     return (
@@ -78,11 +86,11 @@ class MyProfile extends Component {
                   //preferredCurrency,
                   tutorialCompleted //from props, not from form
                 }
-
-                if (values.language)
-                  payload.preferredLanguage = languages.find(lan => lan.language === values.language).language
-
                 await this.props.updateMyProfile(payload)
+                if (values.language) {
+                  await setPreferredLanguage(languages.find(lan => lan.language === values.language).language)
+                }
+                closePopup()
               } catch (e) {
                 console.error(e)
               } finally {
@@ -171,7 +179,8 @@ const mapDispatchToProps = {
   getCurrencies,
   updateMyProfile,
   openChangePasswordPopup,
-  getLanguages
+  getLanguages,
+  setPreferredLanguage
 }
 
 const mapStateToProps = state => {

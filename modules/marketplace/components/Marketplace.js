@@ -300,13 +300,17 @@ class Marketplace extends Component {
   }
 
   componentWillUnmount() {
+    const { sidebarChanged } = this.props
+    let { isOpen, isHoldRequest } = this.props.sidebar
+
     this.props.handleVariableSave('tableHandlersFilters', this.state.filterValues)
+    if (isOpen || isHoldRequest) sidebarChanged({ isHoldRequest: false, isOpen: false })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter, datagridFilterReload, 'marketPlaceFilter')
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'marketplace')
     }
   }
 

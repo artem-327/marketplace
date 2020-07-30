@@ -16,9 +16,12 @@ function mapStateToProps(store) {
   } = store
 
   const isAdmin = getSafe(() => store.auth.identity.isAdmin, false)
+  const takeover =
+    getSafe(() => !!store.auth.identity.company.id, false) && getSafe(() => store.auth.identity.isAdmin, false)
 
   return {
-    isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
+    isAdmin,
+    takeover,
     isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
     companySumOfPurchasesMonthly: getSafe(() => data.companySumOfPurchasesMonthly, '')
       ? Object.entries(data.companySumOfPurchasesMonthly)
@@ -72,19 +75,24 @@ function mapStateToProps(store) {
           value
         }))
       : [],
-    broadcastedProductOffersValue: isAdmin
-      ? getSafe(() => data.totalBroadcastedProductOffersValue, 0)
-      : getSafe(() => data.companyBroadcastedProductOffersValue, 0),
-    companiesCount: isAdmin
-      ? getSafe(() => data.totalCompaniesCount, 0)
-      : getSafe(() => data.companyClientCompaniesCount, 0),
-    companyProductsCount: isAdmin
-      ? getSafe(() => data.totalCompanyProductsCount, 0)
-      : getSafe(() => data.companyCompanyProductsCount, 0),
-    productOffersValue: isAdmin
-      ? getSafe(() => data.totalProductOffersValue, 0)
-      : getSafe(() => data.companyProductOffersValue, 0),
-    usersCount: isAdmin ? getSafe(() => data.totalUsersCount, 0) : getSafe(() => data.companyUsersCount, 0),
+    broadcastedProductOffersValue:
+      isAdmin && !takeover
+        ? getSafe(() => data.totalBroadcastedProductOffersValue, 0)
+        : getSafe(() => data.companyBroadcastedProductOffersValue, 0),
+    companiesCount:
+      isAdmin && !takeover
+        ? getSafe(() => data.totalCompaniesCount, 0)
+        : getSafe(() => data.companyClientCompaniesCount, 0),
+    companyProductsCount:
+      isAdmin && !takeover
+        ? getSafe(() => data.totalCompanyProductsCount, 0)
+        : getSafe(() => data.companyCompanyProductsCount, 0),
+    productOffersValue:
+      isAdmin && !takeover
+        ? getSafe(() => data.totalProductOffersValue, 0)
+        : getSafe(() => data.companyProductOffersValue, 0),
+    usersCount:
+      isAdmin && !takeover ? getSafe(() => data.totalUsersCount, 0) : getSafe(() => data.companyUsersCount, 0),
     loading: getSafe(() => data.loading, ''),
     totalSumOfSalesMonthly: getSafe(() => data.totalSumOfSalesMonthly, '')
       ? Object.entries(data.totalSumOfSalesMonthly)

@@ -38,9 +38,9 @@ const Cell = ({
 
   return (
     <>
-      <td className="p-0"></td>
+      <td className='p-0'></td>
       {rowSelection && !hideCheckboxes && (
-        <td className="text-center">
+        <td className='text-center'>
           <GroupCheckbox
             checked={checked}
             indeterminate={indeterminate}
@@ -53,31 +53,27 @@ const Cell = ({
           />
         </td>
       )}
-      {hideActions ? null : (
-        <td className="actions">
-          {actionsDropdown}
-        </td>
-      )}
+      {hideActions ? null : <td className='actions'>{actionsDropdown}</td>}
       <td
         key={row.key}
-        colSpan={colSpan + (hideActions ? 1 : 0) - ((rowSelection && !hideCheckboxes) ? 4 : 3)}
+        colSpan={colSpan + (hideActions ? 1 : 0) - (rowSelection && !hideCheckboxes ? 4 : 3)}
         className={cn('dx-g-bs4-cursor-pointer', className)}
         onClick={handleClick}
         {...restProps}>
-        <div className='group-right'>
-          {expanded ? (
-            <ChevronDown onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
-          ) : (
-            <ChevronRight onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
-          )}
-        </div>
         <div className='group-content'>
+          <div className='group-right'>
+            {expanded ? (
+              <ChevronDown onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
+            ) : (
+              <ChevronRight onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
+            )}
+          </div>
           <Content column={column} row={row}>
             {children}
           </Content>
         </div>
       </td>
-      <td className="p-0"></td>
+      <td className='p-0'></td>
     </>
   )
 }

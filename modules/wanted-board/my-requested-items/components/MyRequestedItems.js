@@ -376,9 +376,23 @@ class MyRequestedItems extends Component {
     datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  componentDidMount() {
-    const { tableHandlersFiltersMyReqItems } = this.props
+  async componentDidMount() {
+    const { tableHandlersFiltersMyReqItems, sidebarDetailTrigger } = this.props
+    if (window) {
+      const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
+      if (searchParams.has('id') || searchParams.has(`${window.location.href.split('?')[0]}?id`)) {
+        const idRequest = searchParams.has('id')
+          ? Number(searchParams.get('id'))
+          : Number(searchParams.get(`${window.location.href.split('?')[0]}?id`))
+
+        try {
+          await sidebarDetailTrigger({ id: idRequest }, 'my-requested-items')
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    }
     if (tableHandlersFiltersMyReqItems) {
       this.setState({ filterValue: tableHandlersFiltersMyReqItems })
       this.handleFiltersValue(tableHandlersFiltersMyReqItems)
@@ -389,6 +403,7 @@ class MyRequestedItems extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersMyReqItems', this.state.filterValue)
+    if (this.props.editWindowOpen) this.props.closeDetailSidebar()
   }
 
   handleFilterChangeInputSearch = (e, data) => {
@@ -474,7 +489,9 @@ class MyRequestedItems extends Component {
                 <Button
                   className='secondary'
                   primary
-                  onClick={() => sidebarDetailTrigger(null, 'my-requested-items')}
+                  onClick={() => {
+                    sidebarDetailTrigger(null, 'my-requested-items')
+                  }}
                   data-test='my_requested_items_open_popup_btn'>
                   <PlusCircle />
                   <FormattedMessage id='wantedBoard.requestProduct' defaultMessage='Request Product'>
@@ -596,7 +613,8 @@ class MyRequestedItems extends Component {
       activeIndex,
       intl: { formatMessage },
       editWindowOpen,
-      isClientCompany
+      isClientCompany,
+      openSidebar
     } = this.props
 
     const panes = [
@@ -638,7 +656,7 @@ class MyRequestedItems extends Component {
             panes={panes}
           />
         </Container>
-        {editWindowOpen === 'my-requested-items' && <DetailSidebar />}
+        {openSidebar ? <DetailSidebar /> : null}
       </>
     )
   }

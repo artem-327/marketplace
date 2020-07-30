@@ -83,7 +83,8 @@ class Navigation extends Component {
       router,
       router: { pathname, asPath },
       tabChanged,
-      tabsNames
+      tabsNames,
+      currentSettingsTab
     } = this.props
     if (pathname === to) {
       switch (asPath) {
@@ -122,7 +123,7 @@ class Navigation extends Component {
 
     if (pathname === '/settings' && tab) {
       const newTab = tabsNames.find(t => t.type === tab)
-      tabChanged(newTab)
+      tabChanged(newTab, currentSettingsTab)
       router.push('/settings?type=' + tab)
     } else {
       router.push(to)
@@ -571,6 +572,7 @@ export default withAuth(
         navigationPS: navigationPS,
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
+        currentSettingsTab: store.settings.currentTab,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
         collapsedMenu: store.layout.collapsedMenu,

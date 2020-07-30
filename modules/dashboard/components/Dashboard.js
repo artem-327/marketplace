@@ -70,6 +70,7 @@ class Dashboard extends Component {
       companySumOfSalesMonthly,
       top10Buyers,
       isAdmin,
+      takeover,
       isClientCompanyAdmin,
       intl: { formatMessage }
     } = this.props
@@ -161,7 +162,8 @@ class Dashboard extends Component {
       }
     ]
 
-    const panes = isAdmin ? saleTab : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
+    const panes =
+      isAdmin && !takeover ? saleTab : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
 
     return (
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
@@ -184,14 +186,18 @@ class Dashboard extends Component {
                 <SummaryRectangle
                   icon={<Briefcase />}
                   data={companiesCount}
-                  title={isAdmin ? 'Total Companies' : 'Total Client Companies'}
-                  titleId={isAdmin ? 'dashboard.totalCompanies.title' : 'dashboard.totalClientCompanies.title'}
+                  title={isAdmin && !takeover ? 'Total Companies' : 'Total Client Companies'}
+                  titleId={
+                    isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalClientCompanies.title'
+                  }
                 />
                 <SummaryRectangle
                   icon={<Package />}
                   data={companyProductsCount}
-                  title={isAdmin ? 'Total Products' : 'Total Client Products'}
-                  titleId={isAdmin ? 'dashboard.totalProducts.title' : 'dashboard.totalClientProducts.title'}
+                  title={isAdmin && !takeover ? 'Total Products' : 'Total Client Products'}
+                  titleId={
+                    isAdmin && !takeover ? 'dashboard.totalProducts.title' : 'dashboard.totalClientProducts.title'
+                  }
                   styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
                 />
               </>
@@ -209,20 +215,34 @@ class Dashboard extends Component {
               <>
                 <SummaryRectangle
                   icon={<DollarSign />}
-                  data={productOffersValue > 0 ? productOffersValue / 1000000 : productOffersValue}
-                  title='Total Products Value $M'
-                  titleId='dashboard.totalValue.title'
+                  data={
+                    productOffersValue > 1000000
+                      ? Math.round(productOffersValue / 1000000)
+                      : Math.round(productOffersValue)
+                  }
+                  title={productOffersValue > 1000000 ? 'Total Products Value $M' : 'Total Products Value $'}
+                  titleId={
+                    productOffersValue > 1000000
+                      ? 'dashboard.totalValue.title'
+                      : 'dashboard.totalValueWithoutMilion.title'
+                  }
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
                 />
                 <SummaryRectangle
                   icon={<DollarSign />}
                   data={
-                    broadcastedProductOffersValue > 0
-                      ? broadcastedProductOffersValue / 1000000
-                      : broadcastedProductOffersValue
+                    broadcastedProductOffersValue > 1000000
+                      ? Math.round(broadcastedProductOffersValue / 1000000)
+                      : Math.round(broadcastedProductOffersValue)
                   }
-                  title='Total Broadcasted Value $M'
-                  titleId='dashboard.totalBroadcastedValue.title'
+                  title={
+                    broadcastedProductOffersValue > 1000000 ? 'Total Broadcasted Value $M' : 'Total Broadcasted Value $'
+                  }
+                  titleId={
+                    broadcastedProductOffersValue > 1000000
+                      ? 'dashboard.totalBroadcastedValue.title'
+                      : 'dashboard.totalBroadcastedValueWithoutMilion.title'
+                  }
                   styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
                   isLastSummary
                 />
@@ -230,7 +250,7 @@ class Dashboard extends Component {
             )}
           </Grid.Column>
         </Grid.Row>
-        {isAdmin ? (
+        {isAdmin && !takeover ? (
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
@@ -261,31 +281,42 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        {!isAdmin && !isClientCompanyAdmin ? (
+        {(!isAdmin && !isClientCompanyAdmin) || takeover ? (
           <Grid.Row>
-            <Grid.Column width={5}>
-              <PieGraph
-                innerRadius='30%'
-                data={top10CompanyProductsByQuantitySales}
-                title='PRODUCTS BY QUANTITY'
-                titleId='dasboard.productsQuantity.title'
-              />
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <PieGraph
-                innerRadius='30%'
-                isCurrency={true}
-                data={top10CompanyProductsByValueSales}
-                title='PRODUCTS BY VALUE'
-                titleId='dasboard.productsValue.title'
-              />
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <PieGraph innerRadius='30%' data={top10Buyers} title='TOP 10 BUYERS' titleId='dasboard.topBuyers.title' />
-            </Grid.Column>
+            {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
+              <Grid.Column width={5}>
+                <PieGraph
+                  innerRadius='30%'
+                  data={top10CompanyProductsByQuantitySales}
+                  title='PRODUCTS BY QUANTITY'
+                  titleId='dasboard.productsQuantity.title'
+                />
+              </Grid.Column>
+            ) : null}
+            {top10CompanyProductsByValueSales && top10CompanyProductsByValueSales.length ? (
+              <Grid.Column width={5}>
+                <PieGraph
+                  innerRadius='30%'
+                  isCurrency={true}
+                  data={top10CompanyProductsByValueSales}
+                  title='PRODUCTS BY VALUE'
+                  titleId='dasboard.productsValue.title'
+                />
+              </Grid.Column>
+            ) : null}
+            {top10Buyers && top10Buyers.length ? (
+              <Grid.Column width={5}>
+                <PieGraph
+                  innerRadius='30%'
+                  data={top10Buyers}
+                  title='TOP 10 BUYERS'
+                  titleId='dasboard.topBuyers.title'
+                />
+              </Grid.Column>
+            ) : null}
           </Grid.Row>
         ) : null}
-        {isAdmin ? (
+        {isAdmin && !takeover ? (
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
@@ -320,6 +351,7 @@ Dashboard.propTypes = {
   top10Buyers: array,
   totalSumOfSalesMonthly: array,
   isAdmin: bool,
+  takeover: bool,
   isClientCompanyAdmin: bool
 }
 
@@ -330,6 +362,7 @@ Dashboard.defaultProps = {
   productOffersValue: 0,
   usersCount: 0,
   top10ProductGroups: [],
+  top10CompaniesByUsers: [],
   top10CompaniesByCompanyProducts: [],
   top10CompaniesBySalesInLastYear: [],
   top10CompanyProductsByQuantitySales: [],
@@ -339,6 +372,7 @@ Dashboard.defaultProps = {
   top10Buyers: [],
   totalSumOfSalesMonthly: [],
   isAdmin: false,
+  takeover: false,
   isClientCompanyAdmin: false
 }
 

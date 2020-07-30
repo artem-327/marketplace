@@ -77,7 +77,7 @@ export function createTag(name) {
 }
 
 export function handleActiveTab(tab, currentTab) {
-  if (tab.type !== currentTab.type) Datagrid.clear()
+  if (tab.type !== currentTab.type && Datagrid) Datagrid.clear()
   return {
     type: AT.OPERATIONS_HANDLE_ACTIVE_TAB,
     payload: { tab }
@@ -130,5 +130,26 @@ export function saveFilters(filters) {
   return {
     type: AT.OPERATIONS_SAVE_FILTERS,
     payload: filters
+  }
+}
+
+export function markRequestAsProcessed(id) {
+  return {
+    type: AT.OPERATIONS_MARK_REQUEST_AS_PROCESSED,
+    payload: api.markRequestAsProcessed(id)
+  }
+}
+
+export function denyRequest(id) {
+  return {
+    type: AT.OPERATIONS_DENY_REQUEST,
+    payload: api.denyRequest(id)
+  }
+}
+
+export function deleteRequest(id) {
+  return {
+    type: AT.OPERATIONS_DELETE_REQUEST,
+    payload: api.deleteRequest(id)
   }
 }

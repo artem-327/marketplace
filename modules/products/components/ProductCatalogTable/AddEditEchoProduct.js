@@ -120,6 +120,21 @@ const DivIcon = styled.div`
   margin-top: 8px;
 `
 
+const StyledButton = styled(Button)`
+  min-width: 40px !important;
+  padding: 9px 9px !important;
+  background: transparent !important;
+
+  &.red {
+    box-shadow: 0px 0px 0px 1px #f16844 inset !important;
+    color: #f16844 !important;
+  }
+  &.green {
+    box-shadow: 0px 0px 0px 1px #84c225 inset !important;
+    color: #84c225 !important;
+  }
+`
+
 Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
   return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
@@ -1066,8 +1081,7 @@ class AddEditEchoProduct extends React.Component {
                       </GridColumn>
                       <GridColumn width={2}>
                         {index ? (
-                          <Button
-                            basic
+                          <StyledButton
                             icon
                             color='red'
                             onClick={() => {
@@ -1076,7 +1090,7 @@ class AddEditEchoProduct extends React.Component {
                             }}
                             data-test={`settings_product_popup_remove_${index}_btn`}>
                             <Icon name='minus' />
-                          </Button>
+                          </StyledButton>
                         ) : (
                           ''
                         )}
@@ -1087,8 +1101,7 @@ class AddEditEchoProduct extends React.Component {
               <GridRow>
                 <GridColumn width={14}></GridColumn>
                 <GridColumn width={2} textAlign='center'>
-                  <Button
-                    basic
+                  <StyledButton
                     icon
                     color='green'
                     onClick={() => {
@@ -1097,7 +1110,7 @@ class AddEditEchoProduct extends React.Component {
                     }}
                     data-test='settings_product_popup_add_btn'>
                     <Icon name='plus' />
-                  </Button>
+                  </StyledButton>
                 </GridColumn>
               </GridRow>
             </>
@@ -1649,11 +1662,6 @@ class AddEditEchoProduct extends React.Component {
                 options: this.props.hazardClasses
               }
             })}
-            {this.RowInput({
-              name: 'dotMarinePollutant',
-              id: 'global.dotMarinePollutant',
-              defaultMessage: 'DOT Marine Pollutant'
-            })}
             {this.RowDropdown({
               name: 'dotPackagingGroup',
               id: 'global.dotPackagingGroup',
@@ -1663,6 +1671,7 @@ class AddEditEchoProduct extends React.Component {
                 options: this.props.packagingGroups
               }
             })}
+
             {this.RowInput({
               name: 'dotProperShippingName',
               id: 'global.dotProperShippingName',
@@ -1673,16 +1682,6 @@ class AddEditEchoProduct extends React.Component {
               id: 'global.dotProperTechnicalName',
               defaultMessage: 'DOT Proper Technical Name'
             })}
-            {this.RowInput({
-              name: 'dotReportableQuantity',
-              id: 'global.dotReportableQuantity',
-              defaultMessage: 'DOT Reportable Quantity'
-            })}
-            {this.RowInput({
-              name: 'dotSevereMarinePollutant',
-              id: 'global.dotSevereMarinePollutant',
-              defaultMessage: 'DOT Severe Marine Pollutant'
-            })}
             {this.RowUnNumberDropdown({
               name: 'dotUnNumber',
               id: 'global.dotUnNumber',
@@ -1690,6 +1689,11 @@ class AddEditEchoProduct extends React.Component {
               props: {
                 options: unNumberOptions
               }
+            })}
+            {this.RowInput({
+              name: 'dotReportableQuantity',
+              id: 'global.dotReportableQuantity',
+              defaultMessage: 'DOT Reportable Quantity'
             })}
             {this.RowInput({
               name: 'dotEnvironmentalHazards',
@@ -1701,7 +1705,6 @@ class AddEditEchoProduct extends React.Component {
               id: 'global.dotEmsNumbers',
               defaultMessage: 'DOT Ems Numbers'
             })}
-
             {this.RowInput({
               name: 'dotExceptions',
               id: 'global.dotExceptions',
@@ -1711,6 +1714,16 @@ class AddEditEchoProduct extends React.Component {
               name: 'dotUserSpecialPrecautions',
               id: 'global.dotUserSpecialPrecautions',
               defaultMessage: 'DOT User Special Precautions'
+            })}
+            {this.RowInput({
+              name: 'dotMarinePollutant',
+              id: 'global.dotMarinePollutant',
+              defaultMessage: 'DOT Marine Pollutant'
+            })}
+            {this.RowInput({
+              name: 'dotSevereMarinePollutant',
+              id: 'global.dotSevereMarinePollutant',
+              defaultMessage: 'DOT Severe Marine Pollutant'
             })}
             {this.RowInput({
               name: 'dotPackagingExceptions',
@@ -1726,11 +1739,6 @@ class AddEditEchoProduct extends React.Component {
               name: 'dotPackagingBulk',
               id: 'global.dotPackagingBulk',
               defaultMessage: 'DOT Packaging Bulk'
-            })}
-            {this.RowInput({
-              name: 'dotQuantityLimitations',
-              id: 'global.dotQuantityLimitations',
-              defaultMessage: 'DOT Quantity Limitations'
             })}
             {this.RowInput({
               name: 'dotPassengerQuantityLimitations',
@@ -1751,6 +1759,11 @@ class AddEditEchoProduct extends React.Component {
               name: 'dotVesselStowageOther',
               id: 'global.dotVesselStowageOther',
               defaultMessage: 'DOT Vessel Stowage Other'
+            })}
+            {this.RowInput({
+              name: 'dotQuantityLimitations',
+              id: 'global.dotQuantityLimitations',
+              defaultMessage: 'DOT Quantity Limitations'
             })}
           </Grid>
         )

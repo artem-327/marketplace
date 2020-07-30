@@ -245,13 +245,25 @@ class Layout extends Component {
       hasLogo,
       useCompanyLogo,
       companyName,
-      isEchoOperator
+      isEchoOperator,
+      renderCopyright
     } = this.props
     let icon = Icon && <Icon name='user' />
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
     if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
 
     const { mainClass, copyrightClassName } = this.state
+    // if user is in Settings then copyrightContainer waiting to props renderCopyright
+    const copyrightContainer =
+      title.includes('Settings') && !renderCopyright ? null : (
+        <CopyrightContainer>
+          <FormattedMessage
+            id='global.copyright'
+            defaultMessage={`Copyright ${moment().format('YYYY')} Echosystem`}
+            values={{ currentYear: moment().format('YYYY') }}
+          />
+        </CopyrightContainer>
+      )
 
     return (
       <MainContainer fluid className={mainClass}>
@@ -393,13 +405,7 @@ class Layout extends Component {
           <ContentContainer fluid className='page-wrapper flex column stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
           </ContentContainer>
-          <CopyrightContainer>
-            <FormattedMessage
-              id='global.copyright'
-              defaultMessage={`Copyright ${moment().format('YYYY')} Echosystem`}
-              values={{ currentYear: moment().format('YYYY') }}
-            />
-          </CopyrightContainer>
+          {copyrightContainer}
         </FlexContainer>
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
 
@@ -461,6 +467,7 @@ const mapStateToProps = state => {
     useCompanyLogo: getSafe(() => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false),
     companyName: getSafe(() => state.auth.identity.company.name, false),
     isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+    renderCopyright: getSafe(() => state.settings.renderCopyright, false),
     adminTab: getSafe(() => state.admin.currentTab.id, null),
     companyTab: getSafe(() => state.companiesAdmin.currentTab.id, null),
     operationTab: getSafe(() => state.operations.currentTab.id, null),

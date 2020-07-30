@@ -25,6 +25,7 @@ function mapStateToProps(store, { datagrid }) {
     ...store.wantedBoard,
     type: store.wantedBoard.wantedBoardType,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
+    openSidebar: getSafe(() => store.wantedBoard.openSidebar, false),
     rows: datagrid.rows.map(row => {
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
       return {

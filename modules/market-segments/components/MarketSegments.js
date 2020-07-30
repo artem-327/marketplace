@@ -7,16 +7,25 @@ import TableHandler from './TableHandler'
 import Table from './Table'
 import EditPopup1Parameter from './EditPopup1Parameter'
 import AddNewPopup1Parameter from './AddNewPopup1Parameter'
+import * as Actions from '../actions'
 
 class MarketSegments extends Component {
+  componentWillUnmount() {
+    const { currentEditForm, currentAddForm, closeAddPopup } = this.props
+    if (currentEditForm || currentAddForm) closeAddPopup()
+  }
+
   getApiConfig = () => ({
     url: '/prodex/api/market-segments/datagrid',
-    searchToFilter: v => (v ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v}%`] }] : [])
+    searchToFilter: v => (v && v.searchInput
+        ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v.searchInput}%`] }]
+        : []
+    )
   })
 
   render() {
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
           <div style={{ padding: '20px 30px' }}>
             <TableHandler />
@@ -37,4 +46,4 @@ const mapStateToProps = ({ marketSegments }) => ({
   currentAddForm: marketSegments.currentAddForm
 })
 
-export default connect(mapStateToProps)(MarketSegments)
+export default connect(mapStateToProps, Actions)(MarketSegments)

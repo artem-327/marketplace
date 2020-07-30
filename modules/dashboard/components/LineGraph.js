@@ -34,25 +34,27 @@ const LineGraph = ({ data, title, titleId, subTitle, subTitleId }) => {
           <FormattedMessage id={subTitleId} defaultMessage={subTitle} />
         </GraphSubTitle>
       )}
-      <ResponsiveContainer width='100%' height='100%' minHeight={440}>
-        <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-          <Area legendType='none' />
-          <XAxis tickLine={false} dataKey='name' axisLine={false} />
-          <YAxis unit='$' tickLine={false} axisLine={false} width={80} />
-          <CartesianGrid vertical={false} strokeDasharray='2 10' />
-          <Tooltip />
-          <Legend />
-          <Line
-            strokeWidth={2}
-            dot={{ strokeWidth: 2 }}
-            legendType='circle'
-            type='linear'
-            dataKey='Transactions'
-            stroke='#2599d5'
-            activeDot={{ r: 8 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      {data && data.length > 0 ? (
+        <ResponsiveContainer width='100%' height='100%' minHeight={440}>
+          <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+            <Area legendType='none' />
+            <XAxis tickLine={false} dataKey='name' axisLine={false} />
+            <YAxis unit='$' tickLine={false} axisLine={false} width={80} />
+            <CartesianGrid vertical={false} strokeDasharray='2 10' />
+            <Tooltip />
+            <Legend />
+            <Line
+              strokeWidth={2}
+              dot={{ strokeWidth: 2 }}
+              legendType='circle'
+              type='linear'
+              dataKey='Transactions'
+              stroke='#2599d5'
+              activeDot={{ r: 8 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      ) : null}
     </DivGraph>
   )
 }
