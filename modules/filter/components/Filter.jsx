@@ -190,9 +190,10 @@ class Filter extends Component {
           try {
             if (typeof datagridValues[key] !== 'undefined') {
               let filter = datagridValues[key] && datagridValues[key].toFilter(inputs[key], this.props.filterType)
-              if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
-
-              datagridFilter.filters.push(filter)
+              if (filter) {
+                if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
+                datagridFilter.filters.push(filter)
+              }
             }
           } catch (err) {
             console.error(err)

@@ -35,13 +35,17 @@ class FilterTags extends Component {
   }
 
   removeFilter = filter => {
-    let { datagrid, appliedFilter } = this.props
+    let { datagrid, appliedFilter, filterType } = this.props
 
-    filter.indexes.forEach((index, i) => {
-      datagrid.filters.splice(index - i, 1)
-      appliedFilter.filters.splice(index - i, 1)
-    })
-    datagrid.setFilter({ filters: datagrid.filters })
+    if (datagrid.savedFilters[filterType] && datagrid.savedFilters[filterType].filters) {
+      filter.indexes.forEach((index, i) => {
+        datagrid.savedFilters[filterType].filters.splice(index - i, 1)
+        appliedFilter.filters.splice(index - i, 1)
+      })
+      datagrid.setFilter({filters:
+        datagrid.savedFilters[filterType].filters
+      }, true, filterType)
+    }
   }
 
   tagMarkup = filters => {
@@ -149,7 +153,8 @@ function mapStateToProps(store) {
   const filterType = getSafe(() => store.filter.params.filterType, null)
   return {
     appliedFilter: filterType && store.filter[filterType] ? store.filter[filterType].appliedFilter : [],
-    params: store.filter.params
+    params: store.filter.params,
+    filterType
   }
 }
 
