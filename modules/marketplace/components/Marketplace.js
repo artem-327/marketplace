@@ -310,7 +310,7 @@ class Marketplace extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter, datagridFilterReload, 'marketPlaceFilter')
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'marketplace')
     }
   }
 
