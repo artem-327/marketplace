@@ -423,6 +423,12 @@ const StyledHeader = styled.span`
   color: #2599d5;
 `
 
+const CustomDivAddDocument = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
 class Detail extends Component {
   state = {
     activeIndexes: [true, true, true, false, false, false, false, false],
@@ -566,6 +572,7 @@ class Detail extends Component {
 
   attachDocumentsManager = async newDocuments => {
     const { linkAttachmentToOrder, order, getPurchaseOrder, getSaleOrder } = this.props
+    this.setState({ openDocumentsPopup: false })
     if (this.state.replaceRow) {
       await this.handleUnlink(this.state.replaceRow)
       this.setState({ replaceRow: '' })
@@ -753,12 +760,25 @@ class Detail extends Component {
       )
     }))
     return (
-      <ProdexGrid
-        loading={this.state.submitting}
-        tableName='related_orders'
-        columns={this.state.columnsRelatedOrdersDetailDocuments}
-        rows={rowsDocuments}
-      />
+      <>
+        <CustomDivAddDocument>
+          <div>
+            <AttachmentManager
+              documentTypeIds={[]}
+              isOpenManager={this.state.isOpenManager}
+              asModal
+              returnSelectedRows={rows => this.attachDocumentsManager(rows)}
+              returnCloseAttachmentManager={val => this.setState({ isOpenManager: false })}
+            />
+          </div>
+        </CustomDivAddDocument>
+        <ProdexGrid
+          loading={this.state.submitting}
+          tableName='related_orders'
+          columns={this.state.columnsRelatedOrdersDetailDocuments}
+          rows={rowsDocuments}
+        />
+      </>
     )
   }
 
@@ -1316,14 +1336,14 @@ class Detail extends Component {
                         <AttachmentManager
                           isOpenManager={this.state.isOpenManager}
                           asModal
-                          trigger={(
+                          trigger={
                             <CustomButton type='button' floated='right'>
                               <PlusIcon size='18' />
                               <FormattedMessage id='global.addDocument' defaultMessage='Add Document'>
                                 {text => text}
                               </FormattedMessage>
                             </CustomButton>
-                          )}
+                          }
                           returnSelectedRows={rows => this.attachDocumentsManager(rows)}
                         />
                       </GridColumn>
@@ -1428,7 +1448,9 @@ class Detail extends Component {
                                     asModal
                                     returnSelectedRows={rows => this.linkAttachment(rows, order.orderItems[index].id)}
                                   />
-                                ) : 'N/A'}
+                                ) : (
+                                  'N/A'
+                                )}
                               </Table.Cell>
                               <Table.Cell className='p-0'></Table.Cell>
                             </Table.Row>
