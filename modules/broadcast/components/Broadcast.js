@@ -299,7 +299,7 @@ class Broadcast extends Component {
 
   // Oposite function of getFilteredTree
   // Converts tree (what you can see in app) into what BE wants
-  treeToModel = (tree = this.getFilteredTree('region'), directExtract = false) => {
+  treeToModel = (tree = this.getFilteredTree('region'), directExtract = false, removeExpanded = false) => {
     // const tree = this.getFilteredTree('region')
 
     const extractFromRule = rule => {
@@ -313,6 +313,11 @@ class Broadcast extends Component {
         'priceOverride',
         'type'
       ]
+
+      const index = propertiesOfInterest.indexOf('expanded')
+      if (index > -1 && removeExpanded) {
+        propertiesOfInterest.splice(index, 1)
+      }
 
       let obj = {}
       propertiesOfInterest.forEach(prop => (rule[prop] !== undefined ? (obj[prop] = rule[prop]) : null))
@@ -1031,7 +1036,7 @@ class Broadcast extends Component {
 
   saveBroadcastRules = async () => {
     const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager, templates } = this.props
-    let filteredTree = this.treeToModel()
+    let filteredTree = this.treeToModel(undefined, undefined, true)
 
     try {
       this.handleFilterChange(null, {
@@ -1041,7 +1046,8 @@ class Broadcast extends Component {
 
       const { value } = await saveRules(id, filteredTree)
 
-      let name, dataId = null
+      let name,
+        dataId = null
       if (value && value.broadcastTemplateName) {
         name = value.broadcastTemplateName
         dataId = value.broadcastTemplateName
