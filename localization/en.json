@@ -58,7 +58,7 @@
   "error.forbidden.title": "ERROR 403 FORBIDDEN",
   "error.notFound.content": "The page you were looking doesn't exist. We think the page may have moved.",
   "error.notFound.title": "ERROR 404 NOT FOUND",
-  "error.bringToInventory": "Bring me to My Inventory",
+  "error.bringMeBack": "Bring me back to last page",
   "success.title": "Success!",
   "admin.duplicateName": "Duplicate name!",
   "admin.clickToSave": "Click to save",
