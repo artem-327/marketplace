@@ -2577,5 +2577,6 @@
   "dasboard.companySales": "SALES",
   "dasboard.topBuyers": "TOP 10 BUYERS",
   "dasboard.total": "Total",
-  "dasboard.average": " average"
+  "dasboard.average": " average",
+  "global.scrollDown": "Scroll down for load more items"
 }

@@ -4,7 +4,7 @@ import { Getter, Plugin } from '@devexpress/dx-react-core'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
 import styled, { createGlobalStyle } from 'styled-components'
 import { Segment, Icon, Dropdown, Modal, Divider, Grid as GridSemantic } from 'semantic-ui-react'
-import { Settings } from 'react-feather'
+import { Settings, ArrowDown } from 'react-feather'
 import { Form, Checkbox, Button } from 'formik-semantic-ui-fixed-validation'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
@@ -90,6 +90,20 @@ const SettingButton = styled(Settings)`
     background-color: white !important;
   }
 `
+
+const DivScrollDown = styled.div`
+  display: flex;
+  color: #2599d5;
+  height: 40px;
+  background-color: #edeef2;
+  align-items: center;
+  justify-content: center;
+`
+
+const DivScrollDownText = styled.div`
+  margin: 0 10px 0 10px;
+`
+
 const ColumnsSetting = ({ onClick }) => <SettingButton onClick={onClick} data-test='table_setting_btn' name='setting' />
 
 const getSettingColumn = (columns, formatMessage, columnWidth) => {
@@ -346,7 +360,8 @@ class _Table extends Component {
     normalWidth: pt.bool,
     tableTreeColumn: pt.string,
     onExpandedRowIdsChange: pt.func,
-    expandedRowIds: pt.array
+    expandedRowIds: pt.array,
+    loadedAllData: pt.bool
   }
 
   static defaultProps = {
@@ -374,7 +389,8 @@ class _Table extends Component {
     normalWidth: false,
     tableTreeColumn: '',
     onExpandedRowIdsChange: () => {},
-    expandedRowIds: []
+    expandedRowIds: [],
+    loadedAllData: false
   }
 
   constructor(props) {
@@ -405,7 +421,7 @@ class _Table extends Component {
   }
 
   handleScroll = ({ target }) => {
-    const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd } = this.props
+    const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd, loadedAllData } = this.props
     const { newTop, newBottom, pageSize } = this.state
     const { scrollLeft } = target
 
@@ -428,10 +444,17 @@ class _Table extends Component {
     if (newBottom && sum && pageSize) {
       bottoms = Math.floor((newBottom - sum) / pageSize) < 0 ? Math.floor((newBottom - sum) / pageSize) * -1 : 1
     }
+
+    //crate new top abouve when is newTop > scrollviewContentHeight
+    if (newTop > scrollviewContentHeight) {
+      const top = newTop - pageSize * tops >= 0 ? newTop - pageSize * tops - 1 : 0
+      this.setState({ newTop: top })
+    }
     // Upload new data if user scroll the end of a table and create new Top border and new Bottom border in a table
     if (
-      (sum >= scrollviewContentHeight - 50 && !newBottom) ||
-      (sum >= scrollviewContentHeight - 50 && scrollviewContentHeight >= newBottom)
+      !loadedAllData &&
+      ((sum >= scrollviewContentHeight - 50 && !newBottom) ||
+        (sum >= scrollviewContentHeight - 50 && scrollviewContentHeight >= newBottom))
     ) {
       //Calculate new Top border and new Bottom border in a table
       const top = !newBottom
@@ -447,6 +470,7 @@ class _Table extends Component {
         : scrollviewContentHeight < newBottom
         ? scrollviewContentHeight
         : newBottom + pageSize * bottoms
+
       //Call to DatagridProvider and there add bottoms to pageNumber
       onScrollToEnd(bottoms)
 
@@ -802,6 +826,7 @@ class _Table extends Component {
       tableTreeColumn,
       onExpandedRowIdsChange,
       expandedRowIds,
+      loadedAllData,
       ...restProps
     } = this.props
     const {
@@ -1024,6 +1049,17 @@ class _Table extends Component {
             )}
           </Grid>
         </div>
+        {!loadedAllData ? (
+          <DivScrollDown>
+            <ArrowDown />
+            <DivScrollDownText>
+              <FormattedMessage id='global.scrollDown' defaultMessage='Scroll down for load more items'>
+                {text => text}
+              </FormattedMessage>
+            </DivScrollDownText>
+            <ArrowDown />
+          </DivScrollDown>
+        ) : null}
       </Segment>
     )
   }
