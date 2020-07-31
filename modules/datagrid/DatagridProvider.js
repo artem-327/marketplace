@@ -27,7 +27,8 @@ const initialState = {
   },
   isScrollToUp: false,
   savedFilters: {},
-  refreshTable: false
+  refreshTable: false,
+  loadedAllData: false
 }
 
 // singleton instance
@@ -174,6 +175,7 @@ class DatagridProvider extends Component {
         rows: newRows,
         loading: false,
         allLoaded,
+        loadedAllData: s.loadedAllData ? s.loadedAllData : allLoaded,
         datagridParams: {
           ...s.datagridParams,
           pageNumber: pageNumber + (allLoaded ? 0 : 1)
@@ -220,10 +222,12 @@ class DatagridProvider extends Component {
   onScrollToEnd = (overBottoms = 0) => {
     const overPage =
       !this.props.autoRefresh || (this.state.datagridParams.pageNumber === 1 && overBottoms <= 1) ? 0 : overBottoms - 1
-    this.setState({
-      loading: true
-    })
-    this.loadNextPageSafe(overPage)
+    if (!this.props.allLoaded) {
+      this.setState({
+        loading: true
+      })
+      this.loadNextPage(overPage)
+    }
   }
 
   onScrollOverNewEnd = (overBottoms = 0) => {
@@ -240,7 +244,6 @@ class DatagridProvider extends Component {
 
   loadNextPageSafe = (overPage = 0) => {
     const { allLoaded } = this.state
-
     !allLoaded && this.loadNextPage(overPage)
   }
 
@@ -378,7 +381,8 @@ class DatagridProvider extends Component {
       rows,
       loading,
       datagridParams: { filters },
-      savedFilters
+      savedFilters,
+      loadedAllData
     } = this.state
 
     return (
@@ -405,6 +409,7 @@ class DatagridProvider extends Component {
           tableProps: {
             rows,
             loading,
+            loadedAllData,
             onTableReady: this.onTableReady,
             onSortingChange: this.setSorting,
             onScrollToEnd: this.onScrollToEnd,
