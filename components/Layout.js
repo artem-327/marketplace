@@ -87,12 +87,14 @@ class Layout extends Component {
     fatalError: false,
     mainClass: null,
     showCopyright: false,
-    copyrightClassName: ''
+    copyrightClassName: '',
+    scrollHeight: 0
   }
 
   constructor(props) {
     super(props)
     this.navigationPS = React.createRef()
+    this.mainContainer = React.createRef()
   }
 
   componentDidMount() {
@@ -100,7 +102,7 @@ class Layout extends Component {
 
     const { auth, phoneCountryCodes, getCountryCodes, hasLogo } = this.props
 
-    document.addEventListener('wheel', this.showCopyright)
+    //document.addEventListener('wheel', this.showCopyright)
 
     Router.events.on('beforeHistoryChange', this.handleRouteEvent)
     Router.events.on('routeChangeStart', this.handleRouteEvent)
@@ -120,25 +122,27 @@ class Layout extends Component {
   }
 
   showCopyright = e => {
-    const { showCopyright } = this.state
+    const { showCopyright, copyrightClassName } = this.state
     let tableResponsive = document.querySelector('.table-responsive')
+    let mainContainer = this.mainContainer.current
 
     // if there is e.deltaY it is wheel event and it can show copyright if allowed
-    if (typeof e.deltaY !== 'undefined') {
+    if (typeof e.deltaY !== 'undefined' && e.target.closest('.modals, .sidebar') === null) {
       // scrolling down
-      if (e.deltaY > 0 && showCopyright) {
+      if (e.deltaY > 0 && showCopyright && copyrightClassName !== 'show-cop') {
         this.setState({ copyrightClassName: 'show-cop' })
       }
-      // scrolling up
-      else if (e.deltaY < 0) {
+      // scrolling up - hides copyright if there is scrollbar
+      else if (e.deltaY < 0 && copyrightClassName !== '' && ((tableResponsive !== null && tableResponsive.scrollHeight > tableResponsive.offsetHeight) || (tableResponsive === null && mainContainer.scrollHeight > mainContainer.offsetHeight))) {
         this.setState({ copyrightClassName: '' })
       }
     }
   }
 
-  trackScrolling = e => {
+  trackScrolling = () => {
     const { showCopyright, copyrightClassName } = this.state
     let tableResponsive = document.querySelector('.table-responsive')
+    let mainContainer = this.mainContainer.current
 
     // it there is datatable then allow to show copyright when datatable is fully scrolled down
     if (tableResponsive !== null) {
@@ -149,7 +153,7 @@ class Layout extends Component {
       }
       // if there is no datatable, check if FlexContainer is fully scrolled down to allow copyright to be shown
     } else {
-      if (e.target.scrollTop + e.target.clientHeight === e.target.scrollHeight) {
+      if (mainContainer.scrollTop + mainContainer.clientHeight === mainContainer.scrollHeight) {
         this.setState({ showCopyright: true })
       } else {
         this.setState({ showCopyright: false })
@@ -179,7 +183,7 @@ class Layout extends Component {
   }
 
   cleanCopyrightState = () => {
-    this.setState({ showCopyright: false, copyrightClassName: '' })
+    this.setState({ showCopyright: false, copyrightClassName: '', scrollHeight: 0 })
   }
 
   componentWillUpdate(prevProps) {
@@ -192,6 +196,63 @@ class Layout extends Component {
       this.cleanCopyrightState()
     }
     this.handleRouteChange(this.props.router.route)
+  }
+
+  componentDidUpdate(prevProps) {
+    // get the main datatable on page (not inside modal/sidebar)
+    let tableResponsive = Array.from(document.querySelectorAll('.table-responsive')).find(table => table.closest('.modals, .sidebar') === null)
+    let parentSegment = null
+    const { router, adminLoading, cartLoading, settingsLoading, wantedBoardLoading } = this.props
+
+    if (tableResponsive) {
+      do {
+        parentSegment = parentSegment !== null ? parentSegment.parentNode : tableResponsive.parentNode
+        if (!parentSegment.parentNode)
+          break;
+      } while (!parentSegment.classList.contains('segment'))
+    }
+
+    // copyright functionality on datatable pages
+    if (tableResponsive) {
+
+      if (
+        parentSegment.classList.contains('segment') &&
+        (
+          !parentSegment.classList.contains('loading') ||
+          (router.pathname.substr(0, 6) === '/admin' && !adminLoading && prevProps.adminLoading) ||
+          (router.pathname.substr(0, 9) === '/settings' && !settingsLoading && prevProps.settingsLoading) ||
+          (router.pathname.substr(0, 13) === '/wanted-board' && !wantedBoardLoading && prevProps.wantedBoardLoading)
+        )
+      ) {
+        let scrollHeight = tableResponsive.scrollHeight
+        let clientHeight = tableResponsive.clientHeight
+
+        if (this.state.scrollHeight !== scrollHeight) {
+          if (clientHeight !== scrollHeight) {
+            this.setState({ scrollHeight: scrollHeight });
+          } else {
+            this.setState({ scrollHeight: scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' });
+          }
+        }
+      }
+    // copyright functionality on other than datatable pages
+    } else {
+      if (
+        router.pathname.substr(0, 15) !== '/purchase-order' ||
+        (router.pathname.substr(0, 15) === '/purchase-order' && !cartLoading && prevProps.cartLoading)
+      ) {
+        let scrollHeight = this.mainContainer.current.scrollHeight
+        let clientHeight = this.mainContainer.current.clientHeight
+
+        if (this.state.scrollHeight !== scrollHeight) {
+          if (clientHeight !== scrollHeight) {
+            this.setState({ scrollHeight: scrollHeight });
+          } else {
+            this.setState({ scrollHeight: scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' });
+          }
+        }
+      }
+    }
   }
 
   componentDidCatch(error, info) {
@@ -402,7 +463,7 @@ class Layout extends Component {
           <TopMenuContainer fluid>
             <Messages />
           </TopMenuContainer>
-          <ContentContainer fluid className='page-wrapper flex column stretched'>
+          <ContentContainer ref={this.mainContainer} onWheel={this.showCopyright} className='ui fluid container page-wrapper flex column stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
           </ContentContainer>
           {copyrightContainer}
@@ -471,7 +532,11 @@ const mapStateToProps = state => {
     adminTab: getSafe(() => state.admin.currentTab.id, null),
     companyTab: getSafe(() => state.companiesAdmin.currentTab.id, null),
     operationTab: getSafe(() => state.operations.currentTab.id, null),
-    productTab: getSafe(() => state.productsAdmin.currentTab.id, null)
+    productTab: getSafe(() => state.productsAdmin.currentTab.id, null),
+    adminLoading: state.admin.loading,
+    cartLoading: state.cart.cartIsFetching,
+    settingsLoading: state.settings.loading,
+    wantedBoardLoading: state.wantedBoard.loading
   }
 }
 

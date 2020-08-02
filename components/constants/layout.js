@@ -963,7 +963,7 @@ export const MainContainer = styled(Container)`
     }
   }
 `
-export const ContentContainer = styled(Container)`
+export const ContentContainer = styled.div`
   /* padding: 0 20px; */
   display: flex;
   flex-direction: column;

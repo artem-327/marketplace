@@ -24,12 +24,16 @@ const FixyWrapper = styled.div`
 `
 
 const ButtonsWrapper = styled(Grid)`
-  position: fixed;
-  bottom: 4em;
-  left: 1em;
-  width: calc(100% - 2em);
-  margin: 0 !important;
-  background: transparent;
+  position: sticky !important;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  overflow: hidden;
+  width: calc(100% + 84px);
+  margin: 0 0 0 -42px !important;
+  border-top: 1px solid #dee2e6;
+  padding: 0 42px !important;
+  background: #fff;
   
   .scrollable > & {
     flex-grow: 0;
@@ -51,7 +55,6 @@ const PopupTriggerWrapper = styled.div`
 `
 
 const FormSpaced = styled(Form)`
-  padding-bottom: 31px !important;
 
   &.scrollable {
     display: flex !important;
