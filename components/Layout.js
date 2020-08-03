@@ -133,7 +133,12 @@ class Layout extends Component {
         this.setState({ copyrightClassName: 'show-cop' })
       }
       // scrolling up - hides copyright if there is scrollbar
-      else if (e.deltaY < 0 && copyrightClassName !== '' && ((tableResponsive !== null && tableResponsive.scrollHeight > tableResponsive.offsetHeight) || (tableResponsive === null && mainContainer.scrollHeight > mainContainer.offsetHeight))) {
+      else if (
+        e.deltaY < 0 &&
+        copyrightClassName !== '' &&
+        ((tableResponsive !== null && tableResponsive.scrollHeight > tableResponsive.offsetHeight) ||
+          (tableResponsive === null && mainContainer.scrollHeight > mainContainer.offsetHeight))
+      ) {
         this.setState({ copyrightClassName: '' })
       }
     }
@@ -200,42 +205,40 @@ class Layout extends Component {
 
   componentDidUpdate(prevProps) {
     // get the main datatable on page (not inside modal/sidebar)
-    let tableResponsive = Array.from(document.querySelectorAll('.table-responsive')).find(table => table.closest('.modals, .sidebar') === null)
+    let tableResponsive = Array.from(document.querySelectorAll('.table-responsive')).find(
+      table => table.closest('.modals, .sidebar') === null
+    )
     let parentSegment = null
     const { router, adminLoading, cartLoading, settingsLoading, wantedBoardLoading } = this.props
 
     if (tableResponsive) {
       do {
         parentSegment = parentSegment !== null ? parentSegment.parentNode : tableResponsive.parentNode
-        if (!parentSegment.parentNode)
-          break;
+        if (!parentSegment.parentNode) break
       } while (!parentSegment.classList.contains('segment'))
     }
 
     // copyright functionality on datatable pages
     if (tableResponsive) {
-
       if (
         parentSegment.classList.contains('segment') &&
-        (
-          !parentSegment.classList.contains('loading') ||
+        (!parentSegment.classList.contains('loading') ||
           (router.pathname.substr(0, 6) === '/admin' && !adminLoading && prevProps.adminLoading) ||
           (router.pathname.substr(0, 9) === '/settings' && !settingsLoading && prevProps.settingsLoading) ||
-          (router.pathname.substr(0, 13) === '/wanted-board' && !wantedBoardLoading && prevProps.wantedBoardLoading)
-        )
+          (router.pathname.substr(0, 13) === '/wanted-board' && !wantedBoardLoading && prevProps.wantedBoardLoading))
       ) {
         let scrollHeight = tableResponsive.scrollHeight
         let clientHeight = tableResponsive.clientHeight
 
         if (this.state.scrollHeight !== scrollHeight) {
           if (clientHeight !== scrollHeight) {
-            this.setState({ scrollHeight: scrollHeight });
+            this.setState({ scrollHeight: scrollHeight })
           } else {
-            this.setState({ scrollHeight: scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' });
+            this.setState({ scrollHeight: scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' })
           }
         }
       }
-    // copyright functionality on other than datatable pages
+      // copyright functionality on other than datatable pages
     } else {
       if (
         router.pathname.substr(0, 15) !== '/purchase-order' ||
@@ -246,9 +249,9 @@ class Layout extends Component {
 
         if (this.state.scrollHeight !== scrollHeight) {
           if (clientHeight !== scrollHeight) {
-            this.setState({ scrollHeight: scrollHeight });
+            this.setState({ scrollHeight: scrollHeight })
           } else {
-            this.setState({ scrollHeight: scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' });
+            this.setState({ scrollHeight: scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' })
           }
         }
       }
@@ -463,7 +466,10 @@ class Layout extends Component {
           <TopMenuContainer fluid>
             <Messages />
           </TopMenuContainer>
-          <ContentContainer ref={this.mainContainer} onWheel={this.showCopyright} className='ui fluid container page-wrapper flex column stretched'>
+          <ContentContainer
+            ref={this.mainContainer}
+            onWheel={this.showCopyright}
+            className='ui fluid container page-wrapper flex column stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
           </ContentContainer>
           {copyrightContainer}
