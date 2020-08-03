@@ -65,7 +65,7 @@ const RelaxedForm = styled(Form)`
 
 const Container = styled(SemanticContainer)`
   padding: 20px 30px 30px 30px !important;
-  overflow-x: hidden;
+  /*overflow-x: hidden;*/
 `
 
 const Line = styled.div`

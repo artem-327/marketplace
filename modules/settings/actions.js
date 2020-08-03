@@ -1221,3 +1221,9 @@ export function renderCopyright() {
     type: AT.SETTINGS_RENDER_COPYRIGHT
   }
 }
+
+export function cleanRenderCopyright() {
+  return {
+    type: AT.SETTINGS_CLEAN_RENDER_COPYRIGHT
+  }
+}

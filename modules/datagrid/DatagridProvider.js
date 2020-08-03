@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import api from '~/api'
 import pt from 'prop-types'
 import { getSafe } from '~/utils/functions'
+import { renderCopyright, cleanRenderCopyright } from '~/modules/settings/actions'
 export const DatagridContext = React.createContext({})
 
 const CONSTANTS_INTERVALS = {
@@ -27,7 +28,8 @@ const initialState = {
   },
   isScrollToUp: false,
   savedFilters: {},
-  refreshTable: false
+  refreshTable: false,
+  loadedAllData: false
 }
 
 // singleton instance
@@ -66,6 +68,7 @@ class DatagridProvider extends Component {
   }
 
   componentWillUnmount() {
+    this.props.cleanRenderCopyright()
     clearInterval(this.interval)
   }
 
@@ -76,7 +79,7 @@ class DatagridProvider extends Component {
   //   }
   // }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (
       prevProps.apiConfig &&
       prevProps.apiConfig.url &&
@@ -91,6 +94,10 @@ class DatagridProvider extends Component {
       } else {
         this.setState({ savedFilters: {} }, () => this.setFilter({ filters: [], orFilters: [] }))
       }
+    }
+
+    if (this.state.loadedAllData && !prevState.loadedAllData) {
+      this.props.renderCopyright()
     }
   }
 
@@ -174,6 +181,7 @@ class DatagridProvider extends Component {
         rows: newRows,
         loading: false,
         allLoaded,
+        loadedAllData: s.loadedAllData ? s.loadedAllData : allLoaded,
         datagridParams: {
           ...s.datagridParams,
           pageNumber: pageNumber + (allLoaded ? 0 : 1)
@@ -378,7 +386,8 @@ class DatagridProvider extends Component {
       rows,
       loading,
       datagridParams: { filters },
-      savedFilters
+      savedFilters,
+      loadedAllData
     } = this.state
 
     return (
@@ -405,6 +414,7 @@ class DatagridProvider extends Component {
           tableProps: {
             rows,
             loading,
+            loadedAllData,
             onTableReady: this.onTableReady,
             onSortingChange: this.setSorting,
             onScrollToEnd: this.onScrollToEnd,
@@ -433,4 +443,4 @@ const mapStateToProps = ({ auth }) => {
   }
 }
 
-export default connect(mapStateToProps)(DatagridProvider)
+export default connect(mapStateToProps, { renderCopyright, cleanRenderCopyright })(DatagridProvider)

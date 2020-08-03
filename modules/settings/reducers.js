@@ -1543,6 +1543,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_CLEAN_RENDER_COPYRIGHT: {
+      return {
+        ...state,
+        renderCopyright: false
+      }
+    }
+
     default: {
       return state
     }
