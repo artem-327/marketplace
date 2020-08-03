@@ -390,7 +390,7 @@ class _Table extends Component {
     tableTreeColumn: '',
     onExpandedRowIdsChange: () => {},
     expandedRowIds: [],
-    loadedAllData: false
+    loadedAllData: true
   }
 
   constructor(props) {
