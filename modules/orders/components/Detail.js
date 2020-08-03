@@ -431,7 +431,7 @@ const CustomDivAddDocument = styled.div`
 
 class Detail extends Component {
   state = {
-    activeIndexes: [true, true, true, false, false, false, false, false],
+    activeIndexes: [true, true, true, true, false, false, false, false, false],
     columnsRelatedOrdersDetailDocuments: [
       {
         name: 'documentName',
@@ -1138,7 +1138,7 @@ class Detail extends Component {
               ) : null}
               <Divider hidden />
               <OrderAccordion
-                defaultActiveIndex={[0, 1, 2]}
+                defaultActiveIndex={[0, 1, 2, 3]}
                 styled
                 fluid
                 style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
@@ -1387,14 +1387,14 @@ class Detail extends Component {
                 </AccordionContent>
 
                 <AccordionTitle
-                  active={activeIndexes[2]}
-                  index={2}
+                  active={activeIndexes[3]}
+                  index={3}
                   onClick={this.handleClick}
                   data-test='orders_detail_product_info'>
                   <Chevron />
                   <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
                 </AccordionTitle>
-                <AccordionContent active={activeIndexes[2]}>
+                <AccordionContent active={activeIndexes[3]}>
                   <div className='table-responsive'>
                     <Table>
                       <Table.Header>
@@ -1465,14 +1465,14 @@ class Detail extends Component {
                 </AccordionContent>
 
                 <AccordionTitle
-                  active={activeIndexes[3]}
-                  index={3}
+                  active={activeIndexes[4]}
+                  index={4}
                   onClick={this.handleClick}
                   data-test='orders_detail_pickup_info'>
                   <Chevron />
                   <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
                 </AccordionTitle>
-                <AccordionContent active={activeIndexes[3]}>
+                <AccordionContent active={activeIndexes[4]}>
                   <Grid divided='horizontally'>
                     <GridRow columns={2}>
                       <GridColumn>
@@ -1506,14 +1506,14 @@ class Detail extends Component {
                 {order.reviewStatus === 'Rejected' && (
                   <>
                     <AccordionTitle
-                      active={activeIndexes[4]}
-                      index={4}
+                      active={activeIndexes[5]}
+                      index={5}
                       onClick={this.handleClick}
                       data-test='orders_detail_return_shipping'>
                       <Chevron />
                       <FormattedMessage id='order.returnShipping' defaultMessage='Return Shipping' />
                     </AccordionTitle>
-                    <AccordionContent active={activeIndexes[4]}>
+                    <AccordionContent active={activeIndexes[5]}>
                       <Grid divided='horizontally'>
                         <GridRow columns={2}>
                           <GridColumn>
@@ -1631,14 +1631,14 @@ class Detail extends Component {
                 )}
 
                 <AccordionTitle
-                  active={activeIndexes[5]}
-                  index={5}
+                  active={activeIndexes[6]}
+                  index={6}
                   onClick={this.handleClick}
                   data-test='orders_detail_shipping'>
                   <Chevron />
                   <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
                 </AccordionTitle>
-                <AccordionContent active={activeIndexes[5]}>
+                <AccordionContent active={activeIndexes[6]}>
                   <Grid divided='horizontally'>
                     <GridRow columns={2}>
                       <GridColumn>
@@ -1744,14 +1744,14 @@ class Detail extends Component {
                 </AccordionContent>
 
                 <AccordionTitle
-                  active={activeIndexes[6]}
-                  index={6}
+                  active={activeIndexes[7]}
+                  index={7}
                   onClick={this.handleClick}
                   data-test='orders_detail_payment'>
                   <Chevron />
                   <FormattedMessage id='order.payment' defaultMessage='Payment' />
                 </AccordionTitle>
-                <AccordionContent active={activeIndexes[6]}>
+                <AccordionContent active={activeIndexes[7]}>
                   <Grid divided='horizontally'>
                     <GridRow columns={1} style={{ padding: '30px 0 0 3px' }}>
                       <GridColumn style={{ padding: '0 30px' }}>
@@ -1839,14 +1839,14 @@ class Detail extends Component {
                   </Grid>
                 </AccordionContent>
                 <AccordionTitle
-                  active={activeIndexes[7]}
-                  index={7}
+                  active={activeIndexes[8]}
+                  index={8}
                   onClick={this.handleClick}
                   data-test='orders_detail_notes'>
                   <Chevron />
                   <FormattedMessage id='order.detailNotes' defaultMessage='NOTES' />
                 </AccordionTitle>
-                <AccordionContent active={activeIndexes[7]}>
+                <AccordionContent active={activeIndexes[8]}>
                   <GridRow>
                     <GridColumn>{getSafe(() => this.props.order.note, '')}</GridColumn>
                   </GridRow>
