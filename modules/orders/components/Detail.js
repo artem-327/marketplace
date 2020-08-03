@@ -490,7 +490,8 @@ class Detail extends Component {
     returnShippingTrackingCode: '',
     openDocumentsPopup: false,
     openDocumentsAttachments: [],
-    documentsPopupProduct: ''
+    documentsPopupProduct: '',
+    orderItemId: null
   }
 
   constructor(props) {
@@ -729,11 +730,12 @@ class Detail extends Component {
     }
   }
 
-  openRelatedPopup(attachments, name) {
+  openRelatedPopup(orderItem, name) {
     this.setState({
       openDocumentsPopup: true,
-      openDocumentsAttachments: attachments,
-      documentsPopupProduct: name
+      openDocumentsAttachments: orderItem.attachments,
+      documentsPopupProduct: name,
+      orderItemId: orderItem.id
     })
   }
 
@@ -741,7 +743,7 @@ class Detail extends Component {
     const {
       intl: { formatMessage }
     } = this.props
-    let { openDocumentsAttachments } = this.state
+    let { openDocumentsAttachments, orderItemId } = this.state
 
     const rowsDocuments = openDocumentsAttachments.map(att => ({
       id: att.id,
@@ -767,7 +769,7 @@ class Detail extends Component {
               documentTypeIds={[]}
               isOpenManager={this.state.isOpenManager}
               asModal
-              returnSelectedRows={rows => this.attachDocumentsManager(rows)}
+              returnSelectedRows={rows => this.linkAttachment(rows, orderItemId)}
               returnCloseAttachmentManager={val => this.setState({ isOpenManager: false })}
             />
           </div>
@@ -792,13 +794,17 @@ class Detail extends Component {
   }
 
   linkAttachment = async (files, orderItemId) => {
+    const { openDocumentsAttachments } = this.state
     const docArray = uniqueArrayByKey(files, 'id')
+    let newAttachments = openDocumentsAttachments
     try {
       if (docArray.length) {
         await docArray.forEach(doc => {
           this.props.linkAttachmentToOrderItem({ attachmentId: doc.id, orderItemId: orderItemId })
+          doc && newAttachments.push(doc)
         })
       }
+      this.setState({ openDocumentsAttachments: newAttachments })
       setTimeout(() => this.props.getSaleOrder(this.props.order.id), 250)
     } catch (error) {
       console.error(error)
@@ -1438,9 +1444,7 @@ class Detail extends Component {
                               <Table.Cell textAlign='right'>{order.itemTotal[index]}</Table.Cell>
                               <Table.Cell>
                                 {order.orderItems[index].attachments.length ? (
-                                  <a
-                                    href='#'
-                                    onClick={() => this.openRelatedPopup(order.orderItems[index].attachments, element)}>
+                                  <a href='#' onClick={() => this.openRelatedPopup(order.orderItems[index], element)}>
                                     <FormattedMessage id='global.view' defaultMessage='View' />
                                   </a>
                                 ) : ordersType !== 'Purchase' ? (
