@@ -121,7 +121,7 @@ class Shipping extends Component {
         <StyledRow verticalAlign='middle' columns={2} bottomShadow>
           <VerticalUnpaddedColumn>
             <Header as='h2'>
-              <FormattedMessage id='cart.1shipping' defaultMessage='1. Shipping' />
+              <FormattedMessage id='cart.1delivery' defaultMessage='1. Delivery' />
             </Header>
           </VerticalUnpaddedColumn>
 
@@ -198,7 +198,7 @@ class Shipping extends Component {
 
         <GridColumn computer={8}>
           <ShippingAddress
-            header={<FormattedMessage id='cart.shippingAddress' defaultMessage='Shipping Address' />}
+            header={<FormattedMessage id='cart.deliveryAddress' defaultMessage='Delivery Address' />}
             billingInfo={selectedAddress} companyName={this.props.companyName}
             additionalContent={
               <GridRow>
