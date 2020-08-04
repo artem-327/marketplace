@@ -77,7 +77,15 @@ class Shipping extends Component {
   }
 
   render() {
-    let { deliveryAddresses, /* branches, */ warehouses, getAddress, selectedAddress, intl, handleOpen } = this.props
+    let {
+      deliveryAddresses,
+      /* branches, */ warehouses,
+      getAddress,
+      selectedAddress,
+      intl,
+      handleNewAddress,
+      openSidebar
+    } = this.props
     let { formatMessage } = intl
 
     let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches
@@ -138,7 +146,10 @@ class Shipping extends Component {
               data-test='purchase_order_edit_address'
               color='blue'
               size='tiny'
-              onClick={() => handleOpen({ modalOpen: true, isNewAddress: true })}>
+              onClick={() => {
+                openSidebar()
+                handleNewAddress({ isNewAddress: true })
+              }}>
               <Icon name='plus circle' />
               <FormattedMessage id='global.addNew' defaultMessage='Add New'>
                 {text => text}
@@ -214,7 +225,10 @@ class Shipping extends Component {
                 <TopUnpaddedColumn computer={16}>
                   <Button
                     type='button'
-                    onClick={() => handleOpen({ modalOpen: true, isNewAddress: false })}
+                    onClick={() => {
+                      openSidebar()
+                      handleNewAddress({ isNewAddress: false })
+                    }}
                     fluid
                     basic>
                     <Icon name='edit outline' />

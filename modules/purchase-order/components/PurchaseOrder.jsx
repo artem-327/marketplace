@@ -329,7 +329,10 @@ class PurchaseOrder extends Component {
       purchaseHazmatEligible,
       paymentTerm,
       paymentTerms,
-      paymentNetDays
+      paymentNetDays,
+      isOpenSidebar,
+      closeSidebarAddress,
+      openSidebarAddress
     } = this.props
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
@@ -356,6 +359,23 @@ class PurchaseOrder extends Component {
 
     return (
       <Container>
+        {isOpenSidebar && (
+          <ShippingEdit
+            onClose={() => closeSidebarAddress()}
+            isWarehouse={!this.state.otherAddresses}
+            savedShippingPreferences={shipping.savedShippingPreferences}
+            selectedAddress={this.state.selectedAddress}
+            isNewAddress={this.state.isNewAddress}
+            shippingChanged={this.props.shippingChanged}
+            handleSubmit={this.handleSubmit}
+            getStates={this.props.getStates}
+            getProvinces={this.props.getProvinces}
+            states={this.props.states}
+            provinces={this.props.provinces}
+            isFetching={this.props.isFetching}
+            initialValues={this.state.isNewAddress ? null : this.props.initialValues}
+          />
+        )}
         <Button basic onClick={() => Router.push('/cart')} data-test='purchase_order_back_to_cart_btn'>
           <Icon name='shopping cart' />
           <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
@@ -375,28 +395,11 @@ class PurchaseOrder extends Component {
             return (
               <GridContainer>
                 <GridColumn mobile={14} tablet={9} computer={10}>
-                  {this.state.modalOpen && (
-                    <ShippingEdit
-                      onClose={() => this.setState({ modalOpen: false })}
-                      isWarehouse={!this.state.otherAddresses}
-                      savedShippingPreferences={shipping.savedShippingPreferences}
-                      selectedAddress={this.state.selectedAddress}
-                      isNewAddress={this.state.isNewAddress}
-                      shippingChanged={this.props.shippingChanged}
-                      handleSubmit={this.handleSubmit}
-                      getStates={this.props.getStates}
-                      getProvinces={this.props.getProvinces}
-                      states={this.props.states}
-                      provinces={this.props.provinces}
-                      isFetching={this.props.isFetching}
-                      initialValues={this.state.isNewAddress ? null : this.props.initialValues}
-                    />
-                  )}
-
                   <Segment>
                     <Grid className='bottom-padded'>
                       <Shipping
-                        handleOpen={({ modalOpen, isNewAddress }) => this.setState({ modalOpen, isNewAddress })}
+                        handleNewAddress={({ isNewAddress }) => this.setState({ isNewAddress })}
+                        openSidebar={openSidebarAddress}
                         otherAddresses={this.state.otherAddresses}
                         deliveryAddresses={deliveryAddresses}
                         getAddress={this.getAddress}

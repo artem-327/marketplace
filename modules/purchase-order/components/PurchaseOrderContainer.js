@@ -51,7 +51,8 @@ function mapStateToProps(store) {
     purchaseHazmatEligible: getSafe(() => store.auth.identity.company.purchaseHazmatEligible),
     cartItems: getSafe(() => store.cart.cart.cartItems, []),
     paymentTerm: getSafe(() => store.cart.cart.paymentTerm, ''),
-    paymentNetDays: getSafe(() => store.cart.cart.paymentNetDays, '')
+    paymentNetDays: getSafe(() => store.cart.cart.paymentNetDays, ''),
+    isOpenSidebar: getSafe(() => store.cart.isOpenSidebar, false)
   }
 }
 
