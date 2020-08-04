@@ -717,7 +717,7 @@ class Detail extends Component {
                     <List.Item>
                       <List.Content>
                         <List.Header as='label'>
-                          <FormattedMessage id='order.shippingStatus' defaultMessage='Shipping Status' />
+                          <FormattedMessage id='order.deliveryStatus' defaultMessage='Delivery Status' />
                         </List.Header>
                         <List.Description
                           as='span'
@@ -1087,7 +1087,7 @@ class Detail extends Component {
                       <Grid.Column>
                         <GridData columns={2}>
                           <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.shippingContact' defaultMessage='Shipping Contact' />
+                            <FormattedMessage id='order.deliveryContact' defaultMessage='Delivery Contact' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.returnAddressName}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
@@ -1175,7 +1175,7 @@ class Detail extends Component {
                   onClick={this.handleClick}
                   data-test='orders_detail_shipping'>
                   <Chevron />
-                  <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
+                  <FormattedMessage id='order.deliveryInfo' defaultMessage='Delivery Info' />
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[5]}>
                   <Grid divided='horizontally'>
@@ -1183,7 +1183,7 @@ class Detail extends Component {
                       <Grid.Column>
                         <GridData columns={2}>
                           <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.shippingStatus' defaultMessage='Shipping Status' />
+                            <FormattedMessage id='order.Delivery' defaultMessage='Delivery Status' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shippingStatus}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>

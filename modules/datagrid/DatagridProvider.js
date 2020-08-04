@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import api from '~/api'
 import pt from 'prop-types'
 import { getSafe } from '~/utils/functions'
+import { renderCopyright, cleanRenderCopyright } from '~/modules/settings/actions'
 export const DatagridContext = React.createContext({})
 
 const CONSTANTS_INTERVALS = {
@@ -67,6 +68,7 @@ class DatagridProvider extends Component {
   }
 
   componentWillUnmount() {
+    this.props.cleanRenderCopyright()
     clearInterval(this.interval)
   }
 
@@ -77,7 +79,7 @@ class DatagridProvider extends Component {
   //   }
   // }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (
       prevProps.apiConfig &&
       prevProps.apiConfig.url &&
@@ -92,6 +94,10 @@ class DatagridProvider extends Component {
       } else {
         this.setState({ savedFilters: {} }, () => this.setFilter({ filters: [], orFilters: [] }))
       }
+    }
+
+    if (this.state.loadedAllData && !prevState.loadedAllData) {
+      this.props.renderCopyright()
     }
   }
 
@@ -438,4 +444,4 @@ const mapStateToProps = ({ auth }) => {
   }
 }
 
-export default connect(mapStateToProps)(DatagridProvider)
+export default connect(mapStateToProps, { renderCopyright, cleanRenderCopyright })(DatagridProvider)

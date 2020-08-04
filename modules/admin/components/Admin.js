@@ -33,11 +33,13 @@ import styled from 'styled-components'
 const FixyWrapper = styled.div`
   position: relative;
   transform: translateY(0);
+  height: 100%;
 `
 
-const ScrollableSegment = styled(Segment)`
-  max-height: 90vh;
-  overflow-y: auto;
+const AdminSegment = styled(Segment)`
+  height: auto !important;
+  margin-bottom: 42px !important;
+  padding-bottom: 0 !important;
 `
 
 const tables = {
@@ -51,9 +53,9 @@ const tables = {
   Associations: <DataTable />,
   'Admin Settings': (
     <FixyWrapper>
-      <ScrollableSegment basic padded='very'>
+      <AdminSegment basic padded='very'>
         <Settings inputsInGroup={3} asModal={false} role='admin' />
-      </ScrollableSegment>
+      </AdminSegment>
     </FixyWrapper>
   )
 }
