@@ -33,6 +33,10 @@ const ButtonAddNew = styled(Button)`
   height: 28px !important;
 `
 
+const DropdownAddress = styled(Dropdown)`
+  z-index: 600;
+`
+
 class Shipping extends Component {
   handleToggleChange = otherAddresses => {
     this.props.formikProps.setFieldValue('address', null)
@@ -177,7 +181,7 @@ class Shipping extends Component {
 
             <RightUnpaddedRow>
               <UnpaddedColumn computer={16}>
-                <Dropdown
+                <DropdownAddress
                   name='address'
                   fluid
                   selection
@@ -186,6 +190,7 @@ class Shipping extends Component {
                     search: (options, query) => {
                       return options.filter(opt => opt.searchText.toLowerCase().includes(query.trim().toLowerCase()))
                     },
+                    style: { 'z-index': '501' },
                     disabled: this.props.shippingQuotesAreFetching,
                     onChange: (_, { value }) => getAddress(value),
                     placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />
