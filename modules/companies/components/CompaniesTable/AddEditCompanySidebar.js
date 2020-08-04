@@ -414,8 +414,8 @@ class AddEditCompanySidebar extends React.Component {
                       errors={errors}
                       touched={touched}
                       isSubmitting={isSubmitting}
-                      companyId={popupValues.id}
-                      hasLogo={popupValues.hasLogo}
+                      companyId={popupValues ? popupValues.id : null}
+                      hasLogo={popupValues ? popupValues.hasLogo : false}
                     />
                     {!popupValues && (
                       <>
