@@ -340,7 +340,6 @@ class CartItemSummary extends Component {
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
     let { deleteCart } = this.props
-
     const externalNotes = getSafe(() => item.productOffer.externalNotes, '')
     const leadTime = getSafe(() => item.productOffer.leadTime, 'N/A')
     return (
@@ -467,6 +466,14 @@ class CartItemSummary extends Component {
               </VerticalUnpaddedColumn>
 
               <VerticalUnpaddedColumn black>{leadTime}</VerticalUnpaddedColumn>
+            </RelaxedRow>
+
+            <RelaxedRow>
+              <VerticalUnpaddedColumn>
+                <FormattedMessage id='global.paymentTerms' defaultMessage='Payment Terms' />
+              </VerticalUnpaddedColumn>
+
+              <VerticalUnpaddedColumn black>{productOffer && productOffer.cfPaymentTerms}</VerticalUnpaddedColumn>
             </RelaxedRow>
 
             {externalNotes && (

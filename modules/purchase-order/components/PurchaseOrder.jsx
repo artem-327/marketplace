@@ -328,6 +328,7 @@ class PurchaseOrder extends Component {
       shipping,
       purchaseHazmatEligible,
       paymentTerm,
+      paymentTerms,
       paymentNetDays
     } = this.props
     if (cartIsFetching) return <Spinner />
@@ -378,26 +379,20 @@ class PurchaseOrder extends Component {
                     <CustomDivTitle>
                       <InfoIcon size={24} />
                       <CustomDivInTitle>
-                        <FormattedMessage
-                          id='cart.payment.terms.title'
-                          defaultMessage={`Payment Terms Information`}
-                        />
+                        <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
                       </CustomDivInTitle>
                     </CustomDivTitle>
                     <CustomDivContent>
-                  {paymentTerm === 'REGULAR'
-                    ? (
-                      <FormattedMessage
-                        id='cart.payment.netX.content'
-                        defaultMessage={`The payment terms of this order are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
-                        values={{
-                          value: <b>Net {paymentNetDays}</b>,
-                          days: <b>{paymentNetDays} days</b>
-                        }}
-                      />
-                    )
-                    : (
-                      paymentTerm === 'HALF_UPFRONT' ? (
+                      {paymentTerm === 'REGULAR' ? (
+                        <FormattedMessage
+                          id='cart.payment.netX.content'
+                          defaultMessage={`The payment terms of this order are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
+                          values={{
+                            value: <b>Net {paymentNetDays}</b>,
+                            days: <b>{paymentNetDays} days</b>
+                          }}
+                        />
+                      ) : paymentTerm === 'HALF_UPFRONT' ? (
                         <FormattedMessage
                           id='cart.payment.terms50.content'
                           defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
@@ -415,8 +410,7 @@ class PurchaseOrder extends Component {
                             percentage: <b>100%</b>
                           }}
                         />
-                      )
-                    )}
+                      )}
                     </CustomDivContent>
                   </Rectangle>
                   {this.state.modalOpen && (
@@ -581,42 +575,42 @@ class PurchaseOrder extends Component {
                         )}
 
                       {this.state.selectedAddress &&
-                      !shippingQuotesAreFetching &&
-                      (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
-                        <>
-                          {false && (
-                            <Grid.Row>
-                              <Grid.Column width={16}>
-                                <Line />
-                              </Grid.Column>
-                            </Grid.Row>
-                          )}
-                          <VerticalUnpaddedRow>
-                            <VerticalUnpaddedColumn computer={16}>
-                              <Header as='h2'>
-                                <FormattedMessage
-                                  id='cart.quoteReceived'
-                                  defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                        !shippingQuotesAreFetching &&
+                        (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
+                          <>
+                            {false && (
+                              <Grid.Row>
+                                <Grid.Column width={16}>
+                                  <Line />
+                                </Grid.Column>
+                              </Grid.Row>
+                            )}
+                            <VerticalUnpaddedRow>
+                              <VerticalUnpaddedColumn computer={16}>
+                                <Header as='h2'>
+                                  <FormattedMessage
+                                    id='cart.quoteReceived'
+                                    defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                                  />
+                                </Header>
+                              </VerticalUnpaddedColumn>
+                            </VerticalUnpaddedRow>
+                            <GridRow>
+                              <GridColumn computer={8}>
+                                <Input
+                                  inputProps={{
+                                    onChange: () => this.handleQuoteSelect(null),
+                                    disabled: values.freightType === 'OWN_FREIGHT'
+                                  }}
+                                  name='shipmentQuoteId'
+                                  label={
+                                    <FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />
+                                  }
                                 />
-                              </Header>
-                            </VerticalUnpaddedColumn>
-                          </VerticalUnpaddedRow>
-                          <GridRow>
-                            <GridColumn computer={8}>
-                              <Input
-                                inputProps={{
-                                  onChange: () => this.handleQuoteSelect(null),
-                                  disabled: values.freightType === 'OWN_FREIGHT'
-                                }}
-                                name='shipmentQuoteId'
-                                label={
-                                  <FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />
-                                }
-                              />
-                            </GridColumn>
-                          </GridRow>
-                        </>
-                      )}
+                              </GridColumn>
+                            </GridRow>
+                          </>
+                        )}
                     </Grid>
                   </Segment>
 
