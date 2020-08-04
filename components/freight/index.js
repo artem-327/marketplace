@@ -27,6 +27,11 @@ const ColumnWithRectangle = styled(Grid.Column)`
   padding-top: 0 !important;
 `
 
+const ButtonCustom = styled(Button)`
+  height: 34px !important;
+  padding-top: 6px !important;
+`
+
 const FREIGHT_TYPES = {
   ECHO: 'ECHO_FREIGHT',
   OWN: 'OWN_FREIGHT'
@@ -53,7 +58,7 @@ const FreightLabel = ({ echoFreight, setFieldValue }) => (
           ) : (
             <FormattedMessage id='cart.usingOwnFreight' defaultMessage='You are using your own freight' />
           )}
-          <Button
+          <ButtonCustom
             type='button'
             color={echoFreight && 'blue'}
             basic
@@ -70,7 +75,7 @@ const FreightLabel = ({ echoFreight, setFieldValue }) => (
                 {text => text}
               </FormattedMessage>
             )}
-          </Button>
+          </ButtonCustom>
         </CustomMessage>
       </ColumnWithRectangle>
     </RowWithRectangle>
