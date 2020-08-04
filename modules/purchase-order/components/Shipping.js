@@ -19,13 +19,18 @@ import {
 } from '~/modules/cart/components/StyledComponents'
 
 const StyledButton = styled(Button)`
-  ${props => props.basic &&
+  ${props =>
+    props.basic &&
     `
     border-radius: 4px !important;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06) !important;
     border: solid 1px #dee2e6 !important;
-  `
-  }
+  `}
+`
+
+const ButtonAddNew = styled(Button)`
+  padding: 0 !important;
+  height: 28px !important;
 `
 
 class Shipping extends Component {
@@ -83,10 +88,10 @@ class Shipping extends Component {
         text: this.props.otherAddresses
           ? `${getSafe(() => i.addressName, '') ? getSafe(() => i.addressName, '') : getSafe(() => i.cfName, '')} `
           : `${
-          getSafe(() => i.deliveryAddress.cfName, '')
-            ? getSafe(() => i.deliveryAddress.cfName, '')
-            : getSafe(() => i.deliveryAddress.addressName, '')
-          } `,
+              getSafe(() => i.deliveryAddress.cfName, '')
+                ? getSafe(() => i.deliveryAddress.cfName, '')
+                : getSafe(() => i.deliveryAddress.addressName, '')
+            } `,
         value: i.id,
         key: i.id,
         content: (
@@ -102,8 +107,8 @@ class Shipping extends Component {
                     ? getSafe(() => i.deliveryAddress.cfName, '')
                     : getSafe(() => i.deliveryAddress.addressName, '')
                   : !i.addressName
-                    ? getSafe(() => i.cfName, '')
-                    : getSafe(() => i.addressName, '')}
+                  ? getSafe(() => i.cfName, '')
+                  : getSafe(() => i.addressName, '')}
               </div>
             }
             subheader={
@@ -114,11 +119,9 @@ class Shipping extends Component {
       }
     })
 
-
     return (
       <>
-
-        <StyledRow verticalAlign='middle' columns={2} bottomShadow>
+        <StyledRow paddingChange verticalAlign='middle' columns={2} bottomShadow>
           <VerticalUnpaddedColumn>
             <Header as='h2'>
               <FormattedMessage id='cart.1shipping' defaultMessage='1. Shipping' />
@@ -126,7 +129,7 @@ class Shipping extends Component {
           </VerticalUnpaddedColumn>
 
           <UnpaddedColumn textAlign='right'>
-            <Button
+            <ButtonAddNew
               type='button'
               data-test='purchase_order_edit_address'
               color='blue'
@@ -136,7 +139,7 @@ class Shipping extends Component {
               <FormattedMessage id='global.addNew' defaultMessage='Add New'>
                 {text => text}
               </FormattedMessage>
-            </Button>
+            </ButtonAddNew>
           </UnpaddedColumn>
         </StyledRow>
 
@@ -150,7 +153,7 @@ class Shipping extends Component {
                     disabled={this.props.shippingQuotesAreFetching}
                     onClick={() => this.handleToggleChange(true)}
                     active={this.props.otherAddresses}
-                    {...this.props.otherAddresses ? { color: 'blue' } : { basic: true }}
+                    {...(this.props.otherAddresses ? { color: 'blue' } : { basic: true })}
                     data-test='purchase_order_address_btn'>
                     <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>
                       {text => text}
@@ -162,7 +165,7 @@ class Shipping extends Component {
                     disabled={this.props.shippingQuotesAreFetching}
                     onClick={() => this.handleToggleChange(false)}
                     active={!this.props.otherAddresses}
-                    {...!this.props.otherAddresses ? { color: 'blue' } : { basic: true }}
+                    {...(!this.props.otherAddresses ? { color: 'blue' } : { basic: true })}
                     data-test='purchase_order_branches_btn'>
                     <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>
                       {text => text}
@@ -199,17 +202,25 @@ class Shipping extends Component {
         <GridColumn computer={8}>
           <ShippingAddress
             header={<FormattedMessage id='cart.shippingAddress' defaultMessage='Shipping Address' />}
-            billingInfo={selectedAddress} companyName={this.props.companyName}
+            billingInfo={selectedAddress}
+            companyName={this.props.companyName}
             additionalContent={
               <GridRow>
                 <TopUnpaddedColumn computer={16}>
-                  <Button type='button' onClick={() => handleOpen({ modalOpen: true, isNewAddress: false })} fluid basic>
+                  <Button
+                    type='button'
+                    onClick={() => handleOpen({ modalOpen: true, isNewAddress: false })}
+                    fluid
+                    basic>
                     <Icon name='edit outline' />
-                    <FormattedMessage id='global.edit' defaultMessage='Edit'>{text => text}</FormattedMessage>
+                    <FormattedMessage id='global.edit' defaultMessage='Edit'>
+                      {text => text}
+                    </FormattedMessage>
                   </Button>
                 </TopUnpaddedColumn>
               </GridRow>
-            } />
+            }
+          />
         </GridColumn>
       </>
     )
