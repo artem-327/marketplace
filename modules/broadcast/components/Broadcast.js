@@ -240,7 +240,7 @@ class Broadcast extends Component {
                 },
                 depth: 3,
                 children: n2
-                  .all(n => n.model.type === 'branch' && searchFn(n))
+                  .all(n => n.model.type === 'branch')
                   .map(n3 => ({
                     name: n3.model.name,
                     rule: { hidden: false, ...n3.model },
