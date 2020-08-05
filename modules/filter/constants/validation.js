@@ -5,6 +5,7 @@ import { errorMessages as errorMessagesGlobal, phoneValidation } from '~/constan
 
 export const initialValues = {
   search: [],
+  searchProductGroup: [],
   quantityFrom: '',
   quantityTo: '',
   priceFrom: '',
