@@ -29,7 +29,7 @@ export const filterPresets = {
 export const paths = {
   productOffers: {
     productId: 'ProductOffer.companyProduct.id',
-    marketplaceProductId: 'ProductOffer.companyProduct.companyGenericProduct.id',
+    marketplaceProductId: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.id',
     quantity: 'ProductOffer.quantity',
     price: 'ProductOffer.cfPricePerUOM',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
@@ -150,11 +150,11 @@ export const datagridValues = {
   },
 
   search: {
-    paths: [paths.productOffers.productId, paths.casProduct.id, paths.productOffers.marketplaceProductId],
+    paths: [paths.productOffers.productId, paths.casProduct.id],
     description: 'Chemical Name',
     operator: operators.EQUALS,
 
-    toFilter: function (values, filterType = filterTypes.INVENTORY) {
+    toFilter: function (values) {
       let modifiedValues = values.map(val => {
         let parsed = JSON.parse(val)
 
@@ -167,24 +167,9 @@ export const datagridValues = {
         }
       })
 
-      switch (filterType) {
-        case filterTypes.INVENTORY: {
-          var path = paths.productOffers.productId
-          break
-        }
-
-        case filterTypes.MARKETPLACE: {
-          var path = paths.productOffers.marketplaceProductId
-          break
-        }
-
-        default:
-          break
-      }
-
       return {
         operator: this.operator,
-        path,
+        path: this.paths[0],
         values: modifiedValues,
         description: this.description
       }
@@ -208,6 +193,50 @@ export const datagridValues = {
       return values.map(val => {
         let parsed = JSON.parse(val.description)
         return JSON.stringify({ id: parseInt(val.value), name: parsed.name, casNumber: parsed.casNumberCombined })
+      })
+    }
+  },
+
+  searchProductGroup: {
+    paths: [paths.productOffers.marketplaceProductId],
+    description: 'Product Group',
+    operator: operators.EQUALS,
+
+    toFilter: function (values) {
+      let modifiedValues = values.map(val => {
+        let parsed = JSON.parse(val)
+
+        return {
+          value: parsed.id,
+          description: JSON.stringify({
+            name: parsed.name
+          })
+        }
+      })
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: modifiedValues,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function (values, params) {
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return parsed.name
+      })
+    },
+
+    tagDescription: function (values) {
+      return this.valuesDescription(values)
+    },
+
+    toFormik: function ({ values }) {
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return JSON.stringify({ id: parseInt(val.value), name: parsed.name })
       })
     }
   },

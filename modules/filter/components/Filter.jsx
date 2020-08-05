@@ -367,7 +367,7 @@ class Filter extends Component {
           if (filters[i].path === 'ProductOffer.lotManufacturedDate') {
             formikValues['mfg'] = datagridValues['mfg'].toFormik(filters[i].operator)
           }
-          if (filters[i].path === 'ProductOffer.companyProduct.companyGenericProduct.id') {
+          if (filters[i].path === 'ProductOffer.companyProduct.companyGenericProduct.productGroup.id') {
             this.searchProductOffer(filters[i].values)
           }
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
@@ -679,11 +679,7 @@ class Filter extends Component {
         content: (
           <StyledGrid>
             <GridRow>
-              <GridColumn computer={8}>{parsed.name}</GridColumn>
-
-              <SmallerTextColumn computer={8} textAlign='right'>
-                {parsed.casNumber}
-              </SmallerTextColumn>
+              <GridColumn computer={16}>{parsed.name}</GridColumn>
             </GridRow>
           </StyledGrid>
         )
@@ -733,11 +729,11 @@ class Filter extends Component {
       fluid: true,
       options: options,
       loading: autocompleteDataLoading,
-      name: 'search',
-      placeholder: <FormattedMessage id='filter.searchProductsInventory' defaultMessage='Chemical, CAS, Trade' />,
+      name: 'searchProductGroup',
+      placeholder: <FormattedMessage id='filter.searchProductGroup' defaultMessage='Search Product Group' />,
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
-      value: values.search,
+      value: values.searchProductGroup,
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : [])
     }
 
@@ -858,7 +854,7 @@ class Filter extends Component {
     return (
       <FilterAccordion>
         <AccordionItem>
-          {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalProductName' />)}
+          {this.accordionTitle('chemicalType', <FormattedMessage id='filter.productGroupName' />)}
           <AccordionContent active={this.state.activeAccordion.chemicalType}>
             <BottomMargedDropdown {...dropdownProps} />
           </AccordionContent>
