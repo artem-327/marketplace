@@ -406,6 +406,18 @@ class MyRequestedItems extends Component {
     if (this.props.editWindowOpen) this.props.closeDetailSidebar()
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.openSidebar === true &&
+      this.props.type === 'product' &&
+      getSafe(() => this.props.sidebarValues.element.casProduct.id, false) &&
+      getSafe(() => prevProps.sidebarValues.element.casProduct.id, false) !==
+        getSafe(() => this.props.sidebarValues.element.casProduct.id, false)
+    ) {
+      this.handleProductChemicalSwitch('chemical')
+    }
+  }
+
   handleFilterChangeInputSearch = (e, data) => {
     this.setState({
       filterValue: {
