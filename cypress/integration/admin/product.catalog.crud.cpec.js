@@ -41,7 +41,7 @@ context("Generic Company Product CRUD", () => {
         cy.get("#code").type("TEST-05")
         cy.selectFromDropdown("[data-test='admin_product_popup_cas_0_drpdn']", "382-45-6")
         cy.selectFromDropdown("#field_dropdown_productGroup", "Product Group A")
-        cy.selectFromDropdown("#field_dropdown_company", "Company Name")
+        cy.selectFromDropdown("#field_dropdown_company", "Norman Fox")
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.waitForUI()
