@@ -63,16 +63,14 @@ const tables = {
 const datagridConfig = {
   Conditions: {
     url: '/prodex/api/product-conditions/datagrid',
-    searchToFilter: v => (v && v.searchInput
-      ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v.searchInput}%`] }]
-      : []
-    )
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v.searchInput}%`] }] : []
   },
   'NMFC Numbers': {
     url: '/prodex/api/nmfc-numbers/datagrid',
     searchToFilter: v => {
       let filters = []
-      if (v && v.searchInput ) {
+      if (v && v.searchInput) {
         filters.push({ operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v.searchInput}%`] })
         if (Number.isInteger(parseInt(v.searchInput)))
           filters.push({ operator: 'LIKE', path: 'NmfcNumber.prefix', values: [`${parseInt(v.searchInput)}%`] })
@@ -82,45 +80,33 @@ const datagridConfig = {
   },
   Associations: {
     url: 'prodex/api/associations/datagrid',
-    searchToFilter: v => (v && v.searchInput
-      ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v.searchInput}%`] }]
-      : []
-    )
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v.searchInput}%`] }] : []
   },
   Forms: {
     url: '/prodex/api/product-forms/datagrid',
-    searchToFilter: v => (v && v.searchInput
-      ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v.searchInput}%`] }]
-      : []
-    )
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v.searchInput}%`] }] : []
   },
   Grades: {
     url: '/prodex/api/product-grades/datagrid',
-    searchToFilter: v => (v && v.searchInput
-      ? [{ operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v.searchInput}%`] }]
-      : []
-    )
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v.searchInput}%`] }] : []
   },
   Manufacturers: {
     url: '/prodex/api/manufacturers/datagrid',
-    searchToFilter: v => (v && v.searchInput
-      ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v.searchInput}%`] }]
-      : []
-    )
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v.searchInput}%`] }] : []
   },
   'Packaging Types': {
     url: '/prodex/api/packaging-types/datagrid',
-    searchToFilter: v => (v && v.searchInput
-      ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v.searchInput}%`] }]
-      : []
-    )
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v.searchInput}%`] }] : []
   },
   'Units of Measure': {
     url: '/prodex/api/units/datagrid',
-    searchToFilter: v => (v && v.searchInput
-      ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }]
-      : []
-    )
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
   }
 }
 

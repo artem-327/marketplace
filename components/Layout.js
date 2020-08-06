@@ -211,6 +211,9 @@ class Layout extends Component {
     let parentSegment = null
     const { router, adminLoading, cartLoading, settingsLoading, wantedBoardLoading } = this.props
 
+    if (!prevProps.renderCopyright && this.props.renderCopyright) {
+      this.setState({ scrollHeight: tableResponsive.scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' })
+    }
     if (tableResponsive) {
       do {
         parentSegment = parentSegment !== null ? parentSegment.parentNode : tableResponsive.parentNode
@@ -231,7 +234,7 @@ class Layout extends Component {
         let clientHeight = tableResponsive.clientHeight
 
         if (this.state.scrollHeight !== scrollHeight) {
-          if (clientHeight !== scrollHeight) {
+          if (clientHeight !== scrollHeight && !this.props.renderCopyright) {
             this.setState({ scrollHeight: scrollHeight })
           } else {
             this.setState({ scrollHeight: scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' })
