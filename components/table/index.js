@@ -346,7 +346,8 @@ class _Table extends Component {
     normalWidth: pt.bool,
     tableTreeColumn: pt.string,
     onExpandedRowIdsChange: pt.func,
-    expandedRowIds: pt.array
+    expandedRowIds: pt.array,
+    loadedAllData: pt.bool
   }
 
   static defaultProps = {
@@ -374,7 +375,8 @@ class _Table extends Component {
     normalWidth: false,
     tableTreeColumn: '',
     onExpandedRowIdsChange: () => {},
-    expandedRowIds: []
+    expandedRowIds: [],
+    loadedAllData: false
   }
 
   constructor(props) {
@@ -405,7 +407,7 @@ class _Table extends Component {
   }
 
   handleScroll = ({ target }) => {
-    const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd } = this.props
+    const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd, loadedAllData } = this.props
     const { newTop, newBottom, pageSize } = this.state
     const { scrollLeft } = target
 
@@ -428,11 +430,9 @@ class _Table extends Component {
     if (newBottom && sum && pageSize) {
       bottoms = Math.floor((newBottom - sum) / pageSize) < 0 ? Math.floor((newBottom - sum) / pageSize) * -1 : 1
     }
+
     // Upload new data if user scroll the end of a table and create new Top border and new Bottom border in a table
-    if (
-      (sum >= scrollviewContentHeight - 50 && !newBottom) ||
-      (sum >= scrollviewContentHeight - 50 && scrollviewContentHeight >= newBottom)
-    ) {
+    if (!loadedAllData && sum >= scrollviewContentHeight - 50) {
       //Calculate new Top border and new Bottom border in a table
       const top = !newBottom
         ? scrollviewContentHeight

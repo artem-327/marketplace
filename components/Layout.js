@@ -87,8 +87,7 @@ class Layout extends Component {
     fatalError: false,
     mainClass: null,
     showCopyright: false,
-    copyrightClassName: '',
-    scrollHeight: 0
+    copyrightClassName: ''
   }
 
   constructor(props) {
@@ -148,21 +147,21 @@ class Layout extends Component {
     const { showCopyright, copyrightClassName } = this.state
     let tableResponsive = document.querySelector('.table-responsive')
     let mainContainer = this.mainContainer.current
+    //Get position of scroll and height scroll area
+    const scrollviewOffsetY = tableResponsive ? tableResponsive.scrollTop : mainContainer.scrollTop
+    const scrollviewFrameHeight = tableResponsive ? tableResponsive.clientHeight : mainContainer.clientHeight
+    const scrollviewContentHeight = tableResponsive ? tableResponsive.scrollHeight : mainContainer.scrollHeight
+    const sum = scrollviewOffsetY + scrollviewFrameHeight
 
-    // it there is datatable then allow to show copyright when datatable is fully scrolled down
-    if (tableResponsive !== null) {
-      if (tableResponsive.scrollTop + tableResponsive.clientHeight === tableResponsive.scrollHeight) {
-        this.setState({ showCopyright: true })
-      } else {
-        this.setState({ showCopyright: false })
-      }
-      // if there is no datatable, check if FlexContainer is fully scrolled down to allow copyright to be shown
+    if (
+      (tableResponsive && sum >= scrollviewContentHeight - 20 && this.props.renderCopyright) ||
+      (!tableResponsive && mainContainer && sum >= scrollviewContentHeight - 20)
+    ) {
+      this.setState({
+        showCopyright: true
+      })
     } else {
-      if (mainContainer.scrollTop + mainContainer.clientHeight === mainContainer.scrollHeight) {
-        this.setState({ showCopyright: true })
-      } else {
-        this.setState({ showCopyright: false })
-      }
+      this.setState({ showCopyright: false })
     }
   }
 
@@ -188,7 +187,7 @@ class Layout extends Component {
   }
 
   cleanCopyrightState = () => {
-    this.setState({ showCopyright: false, copyrightClassName: '', scrollHeight: 0 })
+    this.setState({ showCopyright: false, copyrightClassName: '' })
   }
 
   componentWillUpdate(prevProps) {
@@ -196,7 +195,8 @@ class Layout extends Component {
       prevProps.adminTab !== this.props.adminTab ||
       prevProps.companyTab !== this.props.companyTab ||
       prevProps.operationTab !== this.props.operationTab ||
-      prevProps.productTab !== this.props.productTab
+      prevProps.productTab !== this.props.productTab ||
+      prevProps.myAccountTab !== this.props.myAccountTab
     ) {
       this.cleanCopyrightState()
     }
@@ -208,56 +208,36 @@ class Layout extends Component {
     let tableResponsive = Array.from(document.querySelectorAll('.table-responsive')).find(
       table => table.closest('.modals, .sidebar') === null
     )
-    let parentSegment = null
-    const { router, adminLoading, cartLoading, settingsLoading, wantedBoardLoading } = this.props
+    let mainContainer = this.mainContainer.current
+    // let parentSegment = null
+    // const { router, adminLoading, cartLoading, settingsLoading, wantedBoardLoading } = this.props
 
-    if (!prevProps.renderCopyright && this.props.renderCopyright) {
-      this.setState({ scrollHeight: tableResponsive.scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' })
-    }
-    if (tableResponsive) {
-      do {
-        parentSegment = parentSegment !== null ? parentSegment.parentNode : tableResponsive.parentNode
-        if (!parentSegment.parentNode) break
-      } while (!parentSegment.classList.contains('segment'))
-    }
+    //Get position of scroll and height scroll area
+    const scrollviewOffsetY = tableResponsive ? tableResponsive.scrollTop : mainContainer.scrollTop
+    const scrollviewFrameHeight = tableResponsive ? tableResponsive.clientHeight : mainContainer.clientHeight
+    const scrollviewContentHeight = tableResponsive ? tableResponsive.scrollHeight : mainContainer.scrollHeight
+    const sum = scrollviewOffsetY + scrollviewFrameHeight
 
-    // copyright functionality on datatable pages
-    if (tableResponsive) {
-      if (
-        parentSegment.classList.contains('segment') &&
-        (!parentSegment.classList.contains('loading') ||
-          (router.pathname.substr(0, 6) === '/admin' && !adminLoading && prevProps.adminLoading) ||
-          (router.pathname.substr(0, 9) === '/settings' && !settingsLoading && prevProps.settingsLoading) ||
-          (router.pathname.substr(0, 13) === '/wanted-board' && !wantedBoardLoading && prevProps.wantedBoardLoading))
-      ) {
-        let scrollHeight = tableResponsive.scrollHeight
-        let clientHeight = tableResponsive.clientHeight
-
-        if (this.state.scrollHeight !== scrollHeight) {
-          if (clientHeight !== scrollHeight && !this.props.renderCopyright) {
-            this.setState({ scrollHeight: scrollHeight })
-          } else {
-            this.setState({ scrollHeight: scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' })
-          }
-        }
-      }
-      // copyright functionality on other than datatable pages
-    } else {
-      if (
-        router.pathname.substr(0, 15) !== '/purchase-order' ||
-        (router.pathname.substr(0, 15) === '/purchase-order' && !cartLoading && prevProps.cartLoading)
-      ) {
-        let scrollHeight = this.mainContainer.current.scrollHeight
-        let clientHeight = this.mainContainer.current.clientHeight
-
-        if (this.state.scrollHeight !== scrollHeight) {
-          if (clientHeight !== scrollHeight) {
-            this.setState({ scrollHeight: scrollHeight })
-          } else {
-            this.setState({ scrollHeight: scrollHeight, showCopyright: true, copyrightClassName: 'show-cop' })
-          }
-        }
-      }
+    if (
+      (tableResponsive &&
+        sum >= scrollviewContentHeight - 20 &&
+        this.props.renderCopyright &&
+        this.state.copyrightClassName !== 'show-cop') ||
+      (!tableResponsive &&
+        mainContainer &&
+        sum >= scrollviewContentHeight - 20 &&
+        this.state.copyrightClassName !== 'show-cop')
+    ) {
+      this.setState({
+        showCopyright: true,
+        copyrightClassName: 'show-cop'
+      })
+    } else if (
+      sum < scrollviewContentHeight - 20 &&
+      !this.state.showCopyright &&
+      this.state.copyrightClassName === 'show-cop'
+    ) {
+      this.cleanCopyrightState()
     }
   }
 
@@ -542,6 +522,7 @@ const mapStateToProps = state => {
     companyTab: getSafe(() => state.companiesAdmin.currentTab.id, null),
     operationTab: getSafe(() => state.operations.currentTab.id, null),
     productTab: getSafe(() => state.productsAdmin.currentTab.id, null),
+    myAccountTab: getSafe(() => state.settings.currentTab.id, null),
     adminLoading: state.admin.loading,
     cartLoading: state.cart.cartIsFetching,
     settingsLoading: state.settings.loading,
