@@ -3,7 +3,7 @@ import { array, func, object, bool } from 'prop-types'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { GridRow, GridColumn, Header, Button, Icon, Grid } from 'semantic-ui-react'
+import { GridRow, GridColumn, Header, Button, Icon, Grid, Modal, Radio } from 'semantic-ui-react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 import styled from 'styled-components'
 
@@ -17,6 +17,7 @@ import {
   RightUnpaddedRow,
   TopUnpaddedColumn
 } from '~/modules/cart/components/StyledComponents'
+import { Edit2, RefreshCcw } from 'react-feather'
 
 const StyledButton = styled(Button)`
   ${props =>
@@ -37,7 +38,43 @@ const DropdownAddress = styled(Dropdown)`
   z-index: 600;
 `
 
+const DivIcon = styled.div`
+  display: flex;
+  align-self: center;
+  margin-right: 8px;
+`
+
+const RectangleAddress = styled.div`
+  height: 100px;
+  border-radius: 4px;
+  background-color: #f8f9fb;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  ${props =>
+    props.active
+      ? 'border: solid 1px #2599d5; background-color: rgba(37, 153, 213, 0.1);'
+      : 'border: solid 1px #dee2e6; background-color: #f8f9fb;'}
+`
+
+const DivTitleAddress = styled.div`
+  font-weight: bold;
+`
+
+const RadioAddress = styled(Radio)`
+  align-self: center;
+  .ui.radio.checkbox input:focus:checked ~ label:after,
+  .ui.radio.checkbox input:checked ~ label:after {
+    background-color: #2599d5;
+  }
+`
+
 class Shipping extends Component {
+  state = {
+    isOpenModalAddress: false,
+    active: null
+  }
+
   handleToggleChange = otherAddresses => {
     this.props.formikProps.setFieldValue('address', null)
     if (otherAddresses !== this.props.otherAddresses) {
@@ -74,6 +111,69 @@ class Shipping extends Component {
     }
 
     return fullAddress
+  }
+
+  renderModalAddress = () => {
+    const { active } = this.state
+
+    const addresses = [
+      { title: 'Title 1', street: 'Street 1', state: 'State 1' },
+      { title: 'Title 2', street: 'Street 2', state: 'State 2' },
+      { title: 'Title 3', street: 'Street 3', state: 'State 3' }
+    ]
+
+    return (
+      <>
+        <Modal.Header>
+          <FormattedMessage id='cart.changeAddress' defaultMessage='CHANGE ADDRESS' />
+        </Modal.Header>
+        <Modal.Content>
+          <Grid>
+            {addresses.map((address, index) => (
+              <Grid.Row>
+                <Grid.Column width={16}>
+                  <RectangleAddress
+                    key={index}
+                    active={active === index}
+                    onClick={() => this.setState({ active: index })}>
+                    <div>
+                      <DivTitleAddress>{address.title}</DivTitleAddress>
+                      <div>{address.street}</div>
+                      <div>{address.state}</div>
+                    </div>
+                    <RadioAddress checked={active === index} />
+                  </RectangleAddress>
+                </Grid.Column>
+              </Grid.Row>
+            ))}
+          </Grid>
+        </Modal.Content>
+
+        <Modal.Actions>
+          <Button
+            type='button'
+            basic
+            onClick={() => {
+              //TODO function for fetch adresses. Maybe it is not necessery because onClose is in Modal
+              this.setState({ isOpenModalAddress: false })
+            }}
+            data-test='cart_modal_address_cancel'>
+            <FormattedMessage id='global.close' defaultMessage='Close'>
+              {text => text}
+            </FormattedMessage>
+          </Button>
+          <Button
+            type='button'
+            color='blue'
+            onClick={() => {
+              //TODO
+            }}
+            data-test='cart_modal_address_save'>
+            <FormattedMessage id='global.save'>{text => text}</FormattedMessage>
+          </Button>
+        </Modal.Actions>
+      </>
+    )
   }
 
   render() {
@@ -136,7 +236,7 @@ class Shipping extends Component {
         <StyledRow paddingChange verticalAlign='middle' columns={2} bottomShadow>
           <VerticalUnpaddedColumn>
             <Header as='h2'>
-              <FormattedMessage id='cart.1delivery' defaultMessage='1. Delivery' />
+              <FormattedMessage id='cart.1shipping' defaultMessage='1. SHIPPING' />
             </Header>
           </VerticalUnpaddedColumn>
 
@@ -222,20 +322,51 @@ class Shipping extends Component {
             companyName={this.props.companyName}
             additionalContent={
               <GridRow>
-                <TopUnpaddedColumn computer={16}>
+                <TopUnpaddedColumn width={8}>
                   <Button
+                    style={{ display: 'flex' }}
                     type='button'
                     onClick={() => {
                       openSidebar()
                       handleNewAddress({ isNewAddress: false })
                     }}
-                    fluid
                     basic>
-                    <Icon name='edit outline' />
+                    <DivIcon>
+                      <Edit2 size={16} />
+                    </DivIcon>
                     <FormattedMessage id='global.edit' defaultMessage='Edit'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
+                </TopUnpaddedColumn>
+                <TopUnpaddedColumn width={8}>
+                  <Modal
+                    open={this.state.isOpenModalAddress}
+                    closeIcon
+                    size='tiny'
+                    onClose={() => {
+                      //TODO function for fetch adresses
+                      this.setState({ isOpenModalAddress: false })
+                    }}
+                    trigger={
+                      <Button
+                        style={{ display: 'flex' }}
+                        type='button'
+                        onClick={() => {
+                          //TODO function for fetch other adresses
+                          this.setState({ isOpenModalAddress: true })
+                        }}
+                        basic>
+                        <DivIcon>
+                          <RefreshCcw size={16} />
+                        </DivIcon>
+                        <FormattedMessage id='global.change' defaultMessage='Change'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button>
+                    }>
+                    {this.renderModalAddress()}
+                  </Modal>
                 </TopUnpaddedColumn>
               </GridRow>
             }

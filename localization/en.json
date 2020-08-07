@@ -847,6 +847,7 @@
   "global.notes": "Notes",
   "global.processed": "Processed",
   "global.paymentTerms": "Payment Terms",
+  "global.change": "Change",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
@@ -2586,5 +2587,6 @@
   "dasboard.topBuyers": "TOP 10 BUYERS",
   "dasboard.total": "Total",
   "dasboard.average": " average",
-  "global.scrollDown": "Scroll down for load more items"
+  "global.scrollDown": "Scroll down for load more items",
+  "cart.changeAddress": "CHANGE ADDRESS"
 }
