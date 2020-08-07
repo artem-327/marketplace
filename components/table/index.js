@@ -409,7 +409,8 @@ class _Table extends Component {
         order: this.getColumns().map(c => c.name),
         sorting: []
       },
-      scrollLeft: 0
+      scrollLeft: 0,
+      scrolledBottom: false
     }
   }
 
@@ -422,7 +423,7 @@ class _Table extends Component {
 
   handleScroll = ({ target }) => {
     const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd, loadedAllData } = this.props
-    const { newTop, newBottom, pageSize } = this.state
+    const { newTop, newBottom, pageSize, scrolledBottom } = this.state
     const { scrollLeft } = target
 
     if (this.state.scrollLeft !== scrollLeft) {
@@ -456,6 +457,11 @@ class _Table extends Component {
       ((sum >= scrollviewContentHeight - 50 && !newBottom) ||
         (sum >= scrollviewContentHeight - 50 && scrollviewContentHeight >= newBottom))
     ) {
+      //scrolledBottom show message "Scroll down for load more items" under a table
+      if (!scrolledBottom && !loadedAllData && sum >= scrollviewContentHeight - 50) {
+        this.setState({ scrolledBottom: true })
+        return
+      }
       //Calculate new Top border and new Bottom border in a table
       const top = !newBottom
         ? scrollviewContentHeight
@@ -477,7 +483,8 @@ class _Table extends Component {
       this.setState({
         pageSize: pageSize ? pageSize : scrollviewContentHeight,
         newTop: top,
-        newBottom: bottom
+        newBottom: bottom,
+        scrolledBottom: false
       })
     } // If user scrolls over new Bottom border then reload data in a table from specific page number
     else if (sum >= newBottom - 50) {
@@ -834,7 +841,7 @@ class _Table extends Component {
       defaultHiddenColumns
     } = this.props
 
-    const { columnSettingOpen, expandedGroups, columnsSettings, loaded } = this.state
+    const { columnSettingOpen, expandedGroups, columnsSettings, loaded, scrolledBottom } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
     const columnsFiltered = columns.filter(c => !c.disabled && (showColumnsWhenGrouped || !groupBy.includes(c.name)))
 
@@ -1049,7 +1056,7 @@ class _Table extends Component {
             )}
           </Grid>
         </div>
-        {!loadedAllData ? (
+        {!loadedAllData && scrolledBottom ? (
           <DivScrollDown>
             <ArrowDown />
             <DivScrollDownText>

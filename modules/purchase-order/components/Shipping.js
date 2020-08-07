@@ -136,7 +136,7 @@ class Shipping extends Component {
         <StyledRow paddingChange verticalAlign='middle' columns={2} bottomShadow>
           <VerticalUnpaddedColumn>
             <Header as='h2'>
-              <FormattedMessage id='cart.1shipping' defaultMessage='1. Shipping' />
+              <FormattedMessage id='cart.1delivery' defaultMessage='1. Delivery' />
             </Header>
           </VerticalUnpaddedColumn>
 

@@ -61,9 +61,10 @@ const FixyWrapper = styled.div`
   transform: translateY(0);
 `
 
-const ScrollableSegment = styled(Segment)`
-  max-height: 90vh;
-  overflow-y: auto;
+const SettingsSegment = styled(Segment)`
+  height: auto !important;
+  margin-bottom: 42px !important;
+  padding-bottom: 0 !important;
 `
 
 const SettingsGrid = styled(Grid)`
@@ -328,9 +329,9 @@ class Settings extends Component {
       logistics: <LogisticsTable />,
       'system-settings': (
         <FixyWrapper>
-          <ScrollableSegment basic padded='very'>
+          <SettingsSegment basic padded='very'>
             <SystemSettings asModal={false} inputsInGroup={3} role='company' />
-          </ScrollableSegment>
+          </SettingsSegment>
         </FixyWrapper>
       ),
       documents: <DocumentsTable />

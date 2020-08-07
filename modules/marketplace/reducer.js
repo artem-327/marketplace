@@ -43,20 +43,16 @@ export default function reducer(state = initialState, action) {
         autocompleteDataLoading: false,
         autocompleteData: state.autocompleteData.concat(
           uniqueArrayByKey(payload, 'id').map(el => {
-            const productCode = getSafe(() => el.code, '')
             const productName = getSafe(() => el.name, '')
-
             return {
               ...el,
               key: el.id,
-              text: `${productName} ${productCode} `,
+              text: productName,
               value: JSON.stringify({
                 id: el.id,
-                name: productName,
-                casNumber: productCode
+                name: productName
               }),
               content: {
-                productCode: productCode,
                 productName: productName,
                 casProducts: getSafe(() => el.companyGenericProduct.elements, [])
               }

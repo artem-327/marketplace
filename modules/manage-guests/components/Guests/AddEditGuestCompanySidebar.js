@@ -347,6 +347,13 @@ class AddEditGuestCompanySidebar extends React.Component {
                       prefix='primaryBranch.deliveryAddress'
                       required={true}
                     />
+                    <FormGroup widths='equal'>
+                      <Checkbox
+                        label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
+                        name='enabled'
+                        data-test='company_form_enabled_chckb'
+                      />
+                    </FormGroup>
                   </>
                 </FlexContent>
                 <BottomButtons>

@@ -165,7 +165,7 @@ class CartItemSummary extends Component {
     return (
       <>
         <Modal.Header>
-          <FormattedMessage id='cart.shippingtInfo' defaultMessage='Shipping Information' />
+          <FormattedMessage id='cart.deliveryInfo' defaultMessage='Delivery Information' />
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -374,7 +374,7 @@ class CartItemSummary extends Component {
 
             <RelaxedRow columns={2}>
               <VerticalUnpaddedColumn>
-                <FormattedMessage id='cart.shipingInformation' defaultMessage='Shipping Information' />
+                <FormattedMessage id='cart.deliveryInfo' defaultMessage='Delivery Information' />
               </VerticalUnpaddedColumn>
               <VerticalUnpaddedColumn>
                 <Modal

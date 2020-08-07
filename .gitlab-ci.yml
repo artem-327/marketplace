@@ -1,6 +1,5 @@
 before_script:
   - docker info
-  - git status
 
 build:
   stage: build
@@ -21,31 +20,47 @@ deploy_dev:
     - docker push 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web
     - docker rmi 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:dev
   only:
-    - /^\d\.\d\..*/
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 deploy_review:
   extends: .login_and_build
   stage: deploy
   resource_group: review
+  when: manual
   script:
     - docker tag prodex/web:test 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:review
     - docker push 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web
     - docker rmi 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:review
-  when: manual
   only:
-    - /^\d\.\d\..*/
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 deploy_staging:
   extends: .login_and_build
   stage: deploy
   resource_group: staging
+  when: manual
   script:
     - docker tag prodex/web:test 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:stage
     - docker push 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web
     - docker rmi 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:stage
-  when: manual
   only:
-    - /^\d\.\d\..*/
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+deploy_production:
+  extends: .login_and_build
+  stage: deploy
+  resource_group: production
+  when: manual
+  script:
+    - docker tag prodex/web:test 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:production
+    - docker push 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web
+    - docker rmi 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:production
+  only:
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 cleanup:
   stage: .post
