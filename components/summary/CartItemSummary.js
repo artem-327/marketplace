@@ -165,7 +165,7 @@ class CartItemSummary extends Component {
     return (
       <>
         <Modal.Header>
-          <FormattedMessage id='cart.deliveryInfo' defaultMessage='Delivery Information' />
+          <FormattedMessage id='cart.shippingInfo' defaultMessage='Shipping Information' />
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -220,7 +220,8 @@ class CartItemSummary extends Component {
                         clearable: true,
                         search: true,
                         selection: true,
-                        onSearchChange: this.handleUnNumberChange
+                        onSearchChange: this.handleUnNumberChange,
+                        style: { background: disabled ? '#dee2e6' : null }
                       }}
                       name='unNumber'
                       label={formatMessage({ id: 'global.unNumber', defaultMessage: 'UN Number' })}
@@ -239,7 +240,8 @@ class CartItemSummary extends Component {
                         disabled,
                         clearable: true,
                         selection: true,
-                        search: true
+                        search: true,
+                        style: { background: disabled ? '#dee2e6' : null }
                       }}
                       name='packagingGroup'
                       label={formatMessage({ id: 'cart.packagingGroup', defaultMessage: 'Packaging Group' })}
@@ -253,7 +255,12 @@ class CartItemSummary extends Component {
                         value: hazardClass.id,
                         text: `${hazardClass.classCode} - ${hazardClass.description}`
                       }))}
-                      inputProps={{ disabled, search: true, clearable: true }}
+                      inputProps={{
+                        disabled,
+                        search: true,
+                        clearable: true,
+                        style: { background: disabled ? '#dee2e6' : null }
+                      }}
                       fieldProps={{
                         'data-test': 'shopping_cart_hazardClass_inp'
                       }}
@@ -265,7 +272,7 @@ class CartItemSummary extends Component {
                       fieldProps={{
                         'data-test': 'shopping_cart_freightClass_inp'
                       }}
-                      inputProps={{ disabled }}
+                      inputProps={{ disabled, style: { background: disabled ? '#dee2e6' : null } }}
                       name='freightClass'
                       label={formatMessage({ id: 'cart.freightClass', defaultMessage: 'Freight Class' })}
                     />
@@ -284,6 +291,7 @@ class CartItemSummary extends Component {
                       }}
                       inputProps={{
                         disabled,
+                        style: { background: disabled ? '#dee2e6' : null },
                         fluid: true,
                         search: val => val,
                         clearable: true,
@@ -297,7 +305,10 @@ class CartItemSummary extends Component {
 
                   <FormGroup widths='2'>
                     <Checkbox
-                      inputProps={{ disabled, 'data-test': 'shopping_cart_stackable_chckb' }}
+                      inputProps={{
+                        disabled,
+                        'data-test': 'shopping_cart_stackable_chckb'
+                      }}
                       name='stackable'
                       label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })}
                     />
@@ -374,7 +385,7 @@ class CartItemSummary extends Component {
 
             <RelaxedRow columns={2}>
               <VerticalUnpaddedColumn>
-                <FormattedMessage id='cart.deliveryInfo' defaultMessage='Delivery Information' />
+                <FormattedMessage id='cart.shippingInfo' defaultMessage='Shipping Information' />
               </VerticalUnpaddedColumn>
               <VerticalUnpaddedColumn>
                 <Modal

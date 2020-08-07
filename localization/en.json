@@ -1564,6 +1564,7 @@
   "cart.minimumPackges": "Minimum Packages",
   "cart.split": "Split",
   "cart.deliveryInfo": "Delivery Information",
+  "cart.shippingInfo": "Shipping Information",
   "cart.unCode": "UN Code",
   "cart.packagingGroup": "Packaging Group",
   "cart.hazardClass": "Hazard Class",
