@@ -626,7 +626,7 @@ class AddCart extends Component {
                 </Dropdown>
               </GridColumn>
               <GridColumn data-test='add_cart_quantity_inp'>
-                <FormattedMessage id='cart.selectQuantity' defaultMessage='Select Quantity'>
+                <FormattedMessage id='cart.selectQuantity' defaultMessage='Quantity'>
                   {text => <label>{text}</label>}
                 </FormattedMessage>
                 <Input
@@ -689,7 +689,7 @@ class AddCart extends Component {
                     <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize * pkgAmount} />{' '}
                   </>
                 ) : (
-                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select desired Quantity first.' />
                 )) ||
                   (isEdit ? (
                     <>
@@ -701,7 +701,7 @@ class AddCart extends Component {
                       />{' '}
                     </>
                   ) : (
-                    <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                    <FormattedMessage id='cart.selectFirst' defaultMessage='Select desired Quantity first.' />
                   ))}
               </GridColumn>
             </GridRow>
@@ -728,7 +728,7 @@ class AddCart extends Component {
                 {totalPrice ? (
                   <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
                 ) : (
-                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select Packages Requested first.' />
+                  <FormattedMessage id='cart.selectFirst' defaultMessage='Select desired Quantity first.' />
                 )}
               </GridColumn>
             </GridRow>
