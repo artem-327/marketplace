@@ -924,7 +924,7 @@
   "confirm.deleteOfferHeader": "Delete Product Offer",
   "confirm.deleteUser": "Delete User",
   "confirm.deleteUser.content": "Do you really want to delete user?",
-  "confirm.deleteItem": "Do you really want to delete {item}?",
+  "confirm.deleteItem": "Do you really want to delete '{item}'?",
   "confirm.deleteProductCatalog": "Delete Product Catalog",
   "confirm.deleteBankAccount": "Delete Bank Account",
   "confirm.deleteBranch": "Delete Branch",

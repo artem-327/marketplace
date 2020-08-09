@@ -14,7 +14,7 @@ import { getSafe } from '~/utils/functions'
 import {
   openPopup,
   getClientCompanyRoles,
-  //deleteUser,
+  deleteUser
 } from '../../../actions'
 
 class UsersTable extends Component {
@@ -94,18 +94,11 @@ class UsersTable extends Component {
       filterValue,
       loading,
       openPopup,
-      openRolesPopup,
       intl,
       datagrid,
       deleteUser,
-      resendWelcomeEmail,
       currentUserId,
-      setPrimaryUser
-      // confirmMessage,
-      // handleOpenConfirmPopup,
-      // closeConfirmPopup,
-      // deleteRowById,
-      // currentTab
+      companyId
     } = this.props
 
     let { columns } = this.state
@@ -133,10 +126,17 @@ class UsersTable extends Component {
                 confirm(
                   formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
                   formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` },
-                    { item: row.name }
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.rawData.name}?` },
+                    { item: row.rawData.name }
                   )
-                ).then(() => deleteUser(row.id)),
+                ).then(async () => {
+                  try {
+                    await deleteUser(row.id, companyId)
+                    datagrid.removeRow(row.id)
+                  } catch (e) {
+                    console.log('DELETE ERROR')
+                  }
+                }),
               hidden: row => currentUserId === row.id
             },
           ]}
@@ -148,12 +148,14 @@ class UsersTable extends Component {
 
 const mapDispatchToProps = {
   openPopup,
-  getClientCompanyRoles
+  getClientCompanyRoles,
+  deleteUser
 }
 
 const mapStateToProps = (state, { datagrid }) => {
   return {
-    clientCompanyRoles: state.manageGuests.clientCompanyRoles,
+    ...state.manageGuests,
+    companyId: getSafe(() => state.manageGuests.companyEditValues.id, null),
     rows: datagrid.rows.map(user => {
       return {
         id: user.id,

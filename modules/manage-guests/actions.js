@@ -88,4 +88,25 @@ export function updateClientCompany(id, data) {
   }
 }
 
+export function addNewUser(payload) {
+  return {
+    type: AT.GUESTS_ADD_NEW_USER,
+    payload: api.postNewUser(payload)
+  }
+}
+
+export function editUser(userId, companyId, payload) {
+  return {
+    type: AT.GUESTS_EDIT_USER,
+    payload: api.patchUser(userId, companyId, payload)
+  }
+}
+
+export function deleteUser(id, companyId) {
+  return {
+    type: AT.GUESTS_DELETE_USER,
+    payload: api.deleteUser(id, companyId)
+  }
+}
+
 

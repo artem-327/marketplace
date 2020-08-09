@@ -88,6 +88,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GUESTS_DELETE_USER_PENDING:
     case AT.GUESTS_DELETE_CLIENT_COMPANY_PENDING: {
       return {
         ...state,
@@ -95,11 +96,31 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GUESTS_DELETE_USER_REJECTED:
+    case AT.GUESTS_DELETE_USER_FULFILLED:
     case AT.GUESTS_DELETE_CLIENT_COMPANY_FULFILLED:
     case AT.GUESTS_DELETE_CLIENT_COMPANY_REJECTED: {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.GUESTS_EDIT_USER_PENDING:
+    case AT.GUESTS_ADD_NEW_USER_PENDING: {
+      return {
+        ...state,
+        updating: true
+      }
+    }
+
+    case AT.GUESTS_EDIT_USER_REJECTED:
+    case AT.GUESTS_EDIT_USER_FULFILLED:
+    case AT.GUESTS_ADD_NEW_USER_REJECTED:
+    case AT.GUESTS_ADD_NEW_USER_FULFILLED: {
+      return {
+        ...state,
+        updating: false
       }
     }
 
