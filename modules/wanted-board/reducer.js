@@ -74,7 +74,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         editWindowOpen: null,
         editedId: null,
-        openSidebar: false
+        openSidebar: false,
+        sidebarValues: null
       }
     }
 
