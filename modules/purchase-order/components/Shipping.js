@@ -55,6 +55,10 @@ const RectangleAddress = styled.div`
     props.active
       ? 'border: solid 1px #2599d5; background-color: rgba(37, 153, 213, 0.1);'
       : 'border: solid 1px #dee2e6; background-color: #f8f9fb;'}
+  .ui.radio.checkbox input:focus:checked ~ label:after,
+  .ui.radio.checkbox input:checked ~ label:after {
+    background-color: #2599d5;
+  }
 `
 
 const DivTitleAddress = styled.div`
@@ -63,16 +67,12 @@ const DivTitleAddress = styled.div`
 
 const RadioAddress = styled(Radio)`
   align-self: center;
-  .ui.radio.checkbox input:focus:checked ~ label:after,
-  .ui.radio.checkbox input:checked ~ label:after {
-    background-color: #2599d5;
-  }
 `
 
 class Shipping extends Component {
   state = {
     isOpenModalAddress: false,
-    active: null
+    activeIdAddress: null
   }
 
   handleToggleChange = otherAddresses => {
@@ -89,6 +89,17 @@ class Shipping extends Component {
 
   componentDidMount() {
     if (this.props.selectedAddress && this.props.formikProps) {
+      this.props.formikProps.setFieldValue('address', this.props.selectedAddress.id)
+    }
+    this.props.getWarehouses()
+  }
+
+  componentDidUpdate(prevProps) {
+    const { selectedAddress } = this.props
+    if (
+      this.props.formikProps &&
+      getSafe(() => prevProps.selectedAddress.id, '') !== getSafe(() => selectedAddress.id, '')
+    ) {
       this.props.formikProps.setFieldValue('address', this.props.selectedAddress.id)
     }
   }
@@ -114,13 +125,16 @@ class Shipping extends Component {
   }
 
   renderModalAddress = () => {
-    const { active } = this.state
+    const { activeIdAddress } = this.state
+    const { deliveryAddresses, warehouses, getAddress } = this.props
 
-    const addresses = [
-      { title: 'Title 1', street: 'Street 1', state: 'State 1' },
-      { title: 'Title 2', street: 'Street 2', state: 'State 2' },
-      { title: 'Title 3', street: 'Street 3', state: 'State 3' }
-    ]
+    let addresses = []
+    if (deliveryAddresses.length) {
+      addresses = deliveryAddresses
+    }
+    if (warehouses.length) {
+      addresses = addresses.concat(warehouses.map(warehous => ({ ...warehous.deliveryAddress, id: warehous.id })))
+    }
 
     return (
       <>
@@ -129,23 +143,34 @@ class Shipping extends Component {
         </Modal.Header>
         <Modal.Content>
           <Grid>
-            {addresses.map((address, index) => (
-              <Grid.Row>
-                <Grid.Column width={16}>
-                  <RectangleAddress
-                    key={index}
-                    active={active === index}
-                    onClick={() => this.setState({ active: index })}>
-                    <div>
-                      <DivTitleAddress>{address.title}</DivTitleAddress>
-                      <div>{address.street}</div>
-                      <div>{address.state}</div>
-                    </div>
-                    <RadioAddress checked={active === index} />
-                  </RectangleAddress>
-                </Grid.Column>
-              </Grid.Row>
-            ))}
+            {addresses.map((address, index) => {
+              const title = getSafe(() => address.cfName, '')
+              const street = getSafe(() => address.address.streetAddress, '')
+              const city = getSafe(() => address.address.city, '')
+              const state = getSafe(() => address.address.province, '')
+                ? getSafe(() => address.address.province.name, '')
+                : getSafe(() => address.address.country.name, '')
+              const zip = getSafe(() => address.address.zip.zip, '')
+              return (
+                <Grid.Row>
+                  <Grid.Column width={16}>
+                    <RectangleAddress
+                      key={address.id}
+                      active={activeIdAddress === address.id}
+                      onClick={() => {
+                        this.setState({ activeIdAddress: address.id })
+                      }}>
+                      <div>
+                        <DivTitleAddress>{title}</DivTitleAddress>
+                        <div>{street}</div>
+                        <div>{`${city}, ${state}, ${zip}`}</div>
+                      </div>
+                      <RadioAddress checked={activeIdAddress === address.id} />
+                    </RectangleAddress>
+                  </Grid.Column>
+                </Grid.Row>
+              )
+            })}
           </Grid>
         </Modal.Content>
 
@@ -154,7 +179,6 @@ class Shipping extends Component {
             type='button'
             basic
             onClick={() => {
-              //TODO function for fetch adresses. Maybe it is not necessery because onClose is in Modal
               this.setState({ isOpenModalAddress: false })
             }}
             data-test='cart_modal_address_cancel'>
@@ -166,7 +190,8 @@ class Shipping extends Component {
             type='button'
             color='blue'
             onClick={() => {
-              //TODO
+              getAddress(activeIdAddress)
+              this.setState({ isOpenModalAddress: false })
             }}
             data-test='cart_modal_address_save'>
             <FormattedMessage id='global.save'>{text => text}</FormattedMessage>
@@ -188,16 +213,22 @@ class Shipping extends Component {
     } = this.props
     let { formatMessage } = intl
 
-    let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches
+    let addresses = []
+    if (deliveryAddresses.length) {
+      addresses = deliveryAddresses
+    }
+    if (warehouses.length) {
+      addresses = addresses.concat(warehouses)
+    }
 
     let dropdownOptions = addresses.map(i => {
       const address = i.warehouse ? getSafe(() => i.deliveryAddress.address, '') : getSafe(() => i.address, '')
 
       return {
-        searchText: this.props.otherAddresses
+        searchText: !i.warehouse
           ? `${getSafe(() => i.addressName, '')}, ${this.getFullAddress(address)}  `
           : `${getSafe(() => i.deliveryAddress.cfName, '')}, ${this.getFullAddress(address)} `,
-        text: this.props.otherAddresses
+        text: !i.warehouse
           ? `${getSafe(() => i.addressName, '') ? getSafe(() => i.addressName, '') : getSafe(() => i.cfName, '')} `
           : `${
               getSafe(() => i.deliveryAddress.cfName, '')
@@ -262,36 +293,6 @@ class Shipping extends Component {
           <Grid>
             <RightUnpaddedRow>
               <UnpaddedColumn computer={16}>
-                <Button.Group fluid>
-                  <StyledButton
-                    type='button'
-                    disabled={this.props.shippingQuotesAreFetching}
-                    onClick={() => this.handleToggleChange(true)}
-                    active={this.props.otherAddresses}
-                    {...(this.props.otherAddresses ? { color: 'blue' } : { basic: true })}
-                    data-test='purchase_order_address_btn'>
-                    <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>
-                      {text => text}
-                    </FormattedMessage>
-                  </StyledButton>
-                  <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
-                  <StyledButton
-                    type='button'
-                    disabled={this.props.shippingQuotesAreFetching}
-                    onClick={() => this.handleToggleChange(false)}
-                    active={!this.props.otherAddresses}
-                    {...(!this.props.otherAddresses ? { color: 'blue' } : { basic: true })}
-                    data-test='purchase_order_branches_btn'>
-                    <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>
-                      {text => text}
-                    </FormattedMessage>
-                  </StyledButton>
-                </Button.Group>
-              </UnpaddedColumn>
-            </RightUnpaddedRow>
-
-            <RightUnpaddedRow>
-              <UnpaddedColumn computer={16}>
                 <DropdownAddress
                   name='address'
                   fluid
@@ -345,7 +346,6 @@ class Shipping extends Component {
                     closeIcon
                     size='tiny'
                     onClose={() => {
-                      //TODO function for fetch adresses
                       this.setState({ isOpenModalAddress: false })
                     }}
                     trigger={
@@ -353,7 +353,6 @@ class Shipping extends Component {
                         style={{ display: 'flex' }}
                         type='button'
                         onClick={() => {
-                          //TODO function for fetch other adresses
                           this.setState({ isOpenModalAddress: true })
                         }}
                         basic>

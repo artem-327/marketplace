@@ -147,7 +147,6 @@ class PurchaseOrder extends Component {
 
         this.setState(
           {
-            otherAddresses: false,
             addressId: 'warehouseId',
             shippingQuotes: preFilledValues.quotes.rates.map(d => d.shipmentRate),
             selectedAddress: selectedAddress
@@ -171,10 +170,16 @@ class PurchaseOrder extends Component {
 
   getAddress = selectedAddressId => {
     let { deliveryAddresses, warehouses, branches, cart } = this.props
-    let addresses = this.state.otherAddresses ? deliveryAddresses : warehouses //branches
+    let addresses = []
+    if (deliveryAddresses.length) {
+      addresses = deliveryAddresses
+    }
+    if (warehouses.length) {
+      addresses = addresses.concat(warehouses.map(warehous => ({ ...warehous.deliveryAddress, id: warehous.id })))
+    }
     let selectedAddress = addresses.find(i => i.id === selectedAddressId)
 
-    if (selectedAddress.deliveryAddress) {
+    if (getSafe(() => selectedAddress.deliveryAddress, false)) {
       selectedAddress = { ...selectedAddress, address: selectedAddress.deliveryAddress.address }
     }
 
@@ -194,6 +199,7 @@ class PurchaseOrder extends Component {
   }
 
   getShippingQuotes = async selectedAddress => {
+    if (!selectedAddress || (selectedAddress && !selectedAddress.address)) return
     let { address } = selectedAddress
     try {
       await this.props.getShippingQuotes(address.country.id, address.zip.zip)
