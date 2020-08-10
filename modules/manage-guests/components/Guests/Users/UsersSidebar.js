@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { closePopup } from '../../../actions'
-import { postNewUserRequest, handlerSubmitUserEditPopup } from '~/modules/settings/actions'
+import { closePopup, addNewUser, editUser } from '../../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '~/modules/companies/actions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -194,12 +193,13 @@ class UsersSidebar extends React.Component {
 
   submitUser = async (values, actions, closeOnSubmit = true) => {
     const {
-      handlerSubmitUserEditPopup,
-      postNewUserRequest,
+      editUser,
+      addNewUser,
       closePopup,
       datagrid,
       currentUserId,
-      getIdentity
+      getIdentity,
+      companyId
     } = this.props
     const { popupValues } = this.state
     let sendSuccess = false
@@ -223,12 +223,12 @@ class UsersSidebar extends React.Component {
 
     try {
       if (popupValues) {
-        const { value } = await handlerSubmitUserEditPopup(popupValues.id, data)
+        const { value } = await editUser(popupValues.id, companyId, data)
         datagrid.updateRow(popupValues.id, () => value)
         sendSuccess = true
         if (currentUserId === popupValues.id) getIdentity()
       } else {
-        await postNewUserRequest(data)
+        await addNewUser(data)
         datagrid.loadData()
         sendSuccess = true
       }
@@ -595,8 +595,8 @@ class UsersSidebar extends React.Component {
 
 const mapDispatchToProps = {
   closePopup,
-  postNewUserRequest,
-  handlerSubmitUserEditPopup,
+  addNewUser,
+  editUser,
   searchSellMarketSegments,
   searchBuyMarketSegments,
   getIdentity

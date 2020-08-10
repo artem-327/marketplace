@@ -10,10 +10,12 @@ export default {
   userSwitchEnableDisable: id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`),
   getCurrentUser: () => api.get('/prodex/api/users/me').then(response => response.data),
   postNewUser: body => api.post('/prodex/api/users', body).then(response => response.data),
-  patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body).then(r => r.data),
+  patchUser: (userId, companyId, body) =>
+    api.patch(`/prodex/api/users/id/${userId}?clientCompany=${companyId}`, body).then(r => r.data),
   patchUserRole: (id, body) => api.put(`/prodex/api/users/id/${id}/roles`, body)
     .then(response => response.data),
-  deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`).then(() => userId),
+  deleteUser: (userId, companyId) =>
+    api.delete(`/prodex/api/users/id/${userId}?clientCompanyId=${companyId}`).then(() => userId),
   createClientCompany: payload => api.post('/prodex/api/companies/client', payload).then(response => response.data),
   updateClientCompany: (id, payload) =>
     api.put(`/prodex/api/companies/client/${id}`, payload).then(response => response.data),

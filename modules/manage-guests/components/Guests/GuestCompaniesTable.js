@@ -123,8 +123,11 @@ class GuestCompaniesTable extends Component {
               confirm(
                 formatMessage({ id: 'confirm.deleteClientCompany', defaultMessage: 'Delete Guest Company' }),
                 formatMessage(
-                  { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.displayName}?` },
-                  { item: row.displayName }
+                  {
+                    id: 'confirm.deleteItem',
+                    defaultMessage: `Do you really want to delete '${row.rawData.cfDisplayName}'?`
+                  },
+                  { item: row.rawData.cfDisplayName }
                 )
               ).then(async () => {
                 try {
