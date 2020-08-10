@@ -452,16 +452,18 @@ class _Table extends Component {
       this.setState({ newTop: top })
     }
     // Upload new data if user scroll the end of a table and create new Top border and new Bottom border in a table
-    if (
-      !loadedAllData &&
-      ((sum >= scrollviewContentHeight - 50 && !newBottom) ||
-        (sum >= scrollviewContentHeight - 50 && scrollviewContentHeight >= newBottom))
-    ) {
-      //scrolledBottom show message "Scroll down for load more items" under a table
-      if (!scrolledBottom && !loadedAllData && sum >= scrollviewContentHeight - 50) {
+
+    //scrolledBottom show message "Scroll down for load more items" under a table
+    if (!scrolledBottom && !loadedAllData && sum >= scrollviewContentHeight - 50) {
+      if ((scrollviewContentHeight > newTop && scrollviewContentHeight > newBottom - 50) || (!newBottom && !newTop)) {
         this.setState({ scrolledBottom: true })
         return
       }
+    } else {
+      this.setState({ scrolledBottom: false })
+    }
+    // Upload new data if user scroll the end of a table and create new Top border and new Bottom border in a table
+    if (!loadedAllData && sum >= scrollviewContentHeight - 50) {
       //Calculate new Top border and new Bottom border in a table
       const top = !newBottom
         ? scrollviewContentHeight

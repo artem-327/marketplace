@@ -87,6 +87,7 @@ class DatagridProvider extends Component {
       this.props.apiConfig.url &&
       prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
+      this.props.cleanRenderCopyright()
       if (this.props.preserveFilters) {
         if (!this.props.skipInitLoad) {
           this.loadData()
@@ -94,10 +95,6 @@ class DatagridProvider extends Component {
       } else {
         this.setState({ savedFilters: {} }, () => this.setFilter({ filters: [], orFilters: [] }))
       }
-    }
-
-    if (this.state.loadedAllData && !prevState.loadedAllData) {
-      this.props.renderCopyright()
     }
   }
 
@@ -157,6 +154,9 @@ class DatagridProvider extends Component {
 
       const { data } = response
       const allLoaded = data.length < datagridParams.pageSize || data.length === 0
+
+      if (this.state.loadedAllData || allLoaded) this.props.renderCopyright()
+      else this.props.cleanRenderCopyright()
 
       let arrRows = this.state.rows
       if (arrRows && arrRows.length) {
