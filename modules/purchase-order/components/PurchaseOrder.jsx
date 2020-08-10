@@ -147,7 +147,6 @@ class PurchaseOrder extends Component {
 
         this.setState(
           {
-            otherAddresses: false,
             addressId: 'warehouseId',
             shippingQuotes: preFilledValues.quotes.rates.map(d => d.shipmentRate),
             selectedAddress: selectedAddress
@@ -171,10 +170,16 @@ class PurchaseOrder extends Component {
 
   getAddress = selectedAddressId => {
     let { deliveryAddresses, warehouses, branches, cart } = this.props
-    let addresses = this.state.otherAddresses ? deliveryAddresses : warehouses //branches
+    let addresses = []
+    if (deliveryAddresses.length) {
+      addresses = deliveryAddresses
+    }
+    if (warehouses.length) {
+      addresses = addresses.concat(warehouses.map(warehous => ({ ...warehous.deliveryAddress, id: warehous.id })))
+    }
     let selectedAddress = addresses.find(i => i.id === selectedAddressId)
 
-    if (selectedAddress.deliveryAddress) {
+    if (getSafe(() => selectedAddress.deliveryAddress, false)) {
       selectedAddress = { ...selectedAddress, address: selectedAddress.deliveryAddress.address }
     }
 
@@ -194,6 +199,7 @@ class PurchaseOrder extends Component {
   }
 
   getShippingQuotes = async selectedAddress => {
+    if (!selectedAddress || (selectedAddress && !selectedAddress.address)) return
     let { address } = selectedAddress
     try {
       await this.props.getShippingQuotes(address.country.id, address.zip.zip)
@@ -328,7 +334,11 @@ class PurchaseOrder extends Component {
       shipping,
       purchaseHazmatEligible,
       paymentTerm,
-      paymentNetDays
+      paymentTerms,
+      paymentNetDays,
+      isOpenSidebar,
+      closeSidebarAddress,
+      openSidebarAddress
     } = this.props
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
@@ -355,6 +365,23 @@ class PurchaseOrder extends Component {
 
     return (
       <Container>
+        {isOpenSidebar && (
+          <ShippingEdit
+            onClose={() => closeSidebarAddress()}
+            isWarehouse={!this.state.otherAddresses}
+            savedShippingPreferences={shipping.savedShippingPreferences}
+            selectedAddress={this.state.selectedAddress}
+            isNewAddress={this.state.isNewAddress}
+            shippingChanged={this.props.shippingChanged}
+            handleSubmit={this.handleSubmit}
+            getStates={this.props.getStates}
+            getProvinces={this.props.getProvinces}
+            states={this.props.states}
+            provinces={this.props.provinces}
+            isFetching={this.props.isFetching}
+            initialValues={this.state.isNewAddress ? null : this.props.initialValues}
+          />
+        )}
         <Button basic onClick={() => Router.push('/cart')} data-test='purchase_order_back_to_cart_btn'>
           <Icon name='shopping cart' />
           <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
@@ -374,73 +401,11 @@ class PurchaseOrder extends Component {
             return (
               <GridContainer>
                 <GridColumn mobile={14} tablet={9} computer={10}>
-                  <Rectangle style={{ marginBottom: '10px' }}>
-                    <CustomDivTitle>
-                      <InfoIcon size={24} />
-                      <CustomDivInTitle>
-                        <FormattedMessage
-                          id='cart.payment.terms.title'
-                          defaultMessage={`Payment Terms Information`}
-                        />
-                      </CustomDivInTitle>
-                    </CustomDivTitle>
-                    <CustomDivContent>
-                  {paymentTerm === 'REGULAR'
-                    ? (
-                      <FormattedMessage
-                        id='cart.payment.netX.content'
-                        defaultMessage={`The payment terms of this order are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
-                        values={{
-                          value: <b>Net {paymentNetDays}</b>,
-                          days: <b>{paymentNetDays} days</b>
-                        }}
-                      />
-                    )
-                    : (
-                      paymentTerm === 'HALF_UPFRONT' ? (
-                        <FormattedMessage
-                          id='cart.payment.terms50.content'
-                          defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
-                          values={{
-                            value: <b>50/50</b>,
-                            percentage: <b>50%</b>,
-                            shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
-                          }}
-                        />
-                      ) : (
-                        <FormattedMessage
-                          id='cart.payment.terms100.content'
-                          defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
-                          values={{
-                            percentage: <b>100%</b>
-                          }}
-                        />
-                      )
-                    )}
-                    </CustomDivContent>
-                  </Rectangle>
-                  {this.state.modalOpen && (
-                    <ShippingEdit
-                      onClose={() => this.setState({ modalOpen: false })}
-                      isWarehouse={!this.state.otherAddresses}
-                      savedShippingPreferences={shipping.savedShippingPreferences}
-                      selectedAddress={this.state.selectedAddress}
-                      isNewAddress={this.state.isNewAddress}
-                      shippingChanged={this.props.shippingChanged}
-                      handleSubmit={this.handleSubmit}
-                      getStates={this.props.getStates}
-                      getProvinces={this.props.getProvinces}
-                      states={this.props.states}
-                      provinces={this.props.provinces}
-                      isFetching={this.props.isFetching}
-                      initialValues={this.state.isNewAddress ? null : this.props.initialValues}
-                    />
-                  )}
-
                   <Segment>
                     <Grid className='bottom-padded'>
                       <Shipping
-                        handleOpen={({ modalOpen, isNewAddress }) => this.setState({ modalOpen, isNewAddress })}
+                        handleNewAddress={({ isNewAddress }) => this.setState({ isNewAddress })}
+                        openSidebar={openSidebarAddress}
                         otherAddresses={this.state.otherAddresses}
                         deliveryAddresses={deliveryAddresses}
                         getAddress={this.getAddress}
@@ -463,16 +428,7 @@ class PurchaseOrder extends Component {
                           </Header>
                         </VerticalUnpaddedColumn>
                       </StyledRow>
-                      {this.state.selectedAddress && (
-                        <FreightLabel
-                          echoFreight={echoFreight}
-                          setFieldValue={(fieldName, value) => {
-                            shippingQuoteSelected(null)
-                            setFieldValue(fieldName, value)
-                            if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
-                          }}
-                        />
-                      )}
+
                       {!cart.weightLimitExceed && this.state.selectedAddress ? (
                         <ShippingQuote
                           selectionDisabled={!echoFreight}
@@ -581,45 +537,93 @@ class PurchaseOrder extends Component {
                         )}
 
                       {this.state.selectedAddress &&
-                      !shippingQuotesAreFetching &&
-                      (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
-                        <>
-                          {false && (
-                            <Grid.Row>
-                              <Grid.Column width={16}>
-                                <Line />
-                              </Grid.Column>
-                            </Grid.Row>
-                          )}
-                          <VerticalUnpaddedRow>
-                            <VerticalUnpaddedColumn computer={16}>
-                              <Header as='h2'>
-                                <FormattedMessage
-                                  id='cart.quoteReceived'
-                                  defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                        !shippingQuotesAreFetching &&
+                        (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
+                          <>
+                            {false && (
+                              <Grid.Row>
+                                <Grid.Column width={16}>
+                                  <Line />
+                                </Grid.Column>
+                              </Grid.Row>
+                            )}
+                            <VerticalUnpaddedRow>
+                              <VerticalUnpaddedColumn computer={16}>
+                                <Header as='h2'>
+                                  <FormattedMessage
+                                    id='cart.quoteReceived'
+                                    defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                                  />
+                                </Header>
+                              </VerticalUnpaddedColumn>
+                            </VerticalUnpaddedRow>
+                            <GridRow>
+                              <GridColumn computer={8}>
+                                <Input
+                                  inputProps={{
+                                    onChange: () => this.handleQuoteSelect(null),
+                                    disabled: values.freightType === 'OWN_FREIGHT'
+                                  }}
+                                  name='shipmentQuoteId'
+                                  label={
+                                    <FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />
+                                  }
                                 />
-                              </Header>
-                            </VerticalUnpaddedColumn>
-                          </VerticalUnpaddedRow>
-                          <GridRow>
-                            <GridColumn computer={8}>
-                              <Input
-                                inputProps={{
-                                  onChange: () => this.handleQuoteSelect(null),
-                                  disabled: values.freightType === 'OWN_FREIGHT'
-                                }}
-                                name='shipmentQuoteId'
-                                label={
-                                  <FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />
-                                }
-                              />
-                            </GridColumn>
-                          </GridRow>
-                        </>
+                              </GridColumn>
+                            </GridRow>
+                          </>
+                        )}
+
+                      {this.state.selectedAddress && (
+                        <FreightLabel
+                          echoFreight={echoFreight}
+                          setFieldValue={(fieldName, value) => {
+                            shippingQuoteSelected(null)
+                            setFieldValue(fieldName, value)
+                            if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
+                          }}
+                        />
                       )}
                     </Grid>
                   </Segment>
-
+                  <Rectangle style={{ marginBottom: '10px' }}>
+                    <CustomDivTitle>
+                      <InfoIcon size={24} />
+                      <CustomDivInTitle>
+                        <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
+                      </CustomDivInTitle>
+                    </CustomDivTitle>
+                    <CustomDivContent>
+                      {paymentTerm === 'REGULAR' ? (
+                        <FormattedMessage
+                          id='cart.payment.netX.content'
+                          defaultMessage={`The payment terms of this order are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
+                          values={{
+                            value: <b>Net {paymentNetDays}</b>,
+                            days: <b>{paymentNetDays} days</b>
+                          }}
+                        />
+                      ) : paymentTerm === 'HALF_UPFRONT' ? (
+                        <FormattedMessage
+                          id='cart.payment.terms50.content'
+                          defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
+                          values={{
+                            value: <b>50/50</b>,
+                            percentage: <b>50%</b>,
+                            shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
+                          }}
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id='cart.payment.terms100.content'
+                          defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
+                          values={{
+                            percentage: <b>100%</b>
+                          }}
+                        />
+                      )}
+                    </CustomDivContent>
+                  </Rectangle>
                   <Segment>
                     <Grid className='bottom-padded'>
                       <StyledRow verticalAlign='middle' bottomShadow>

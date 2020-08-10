@@ -11,22 +11,23 @@ export const CustomRowDiv = styled.div`
   justify-content: space-between;
   margin: -5px -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 5px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
-  
+
   .ui.button {
     height: 40px;
     border-radius: 3px;
@@ -263,6 +264,7 @@ export const HighSegment = styled.div`
   color: #20273a;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
   background-color: #ffffff;
+  padding-left: ${props => (props.paddingLeft20 ? '20px' : '30px')};
 `
 
 export const FlexContent = styled.div`

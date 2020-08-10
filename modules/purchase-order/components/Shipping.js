@@ -3,7 +3,7 @@ import { array, func, object, bool } from 'prop-types'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { GridRow, GridColumn, Header, Button, Icon, Grid } from 'semantic-ui-react'
+import { GridRow, GridColumn, Header, Button, Icon, Grid, Modal, Radio } from 'semantic-ui-react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 import styled from 'styled-components'
 
@@ -17,18 +17,64 @@ import {
   RightUnpaddedRow,
   TopUnpaddedColumn
 } from '~/modules/cart/components/StyledComponents'
+import { Edit2, RefreshCcw } from 'react-feather'
 
 const StyledButton = styled(Button)`
-  ${props => props.basic &&
+  ${props =>
+    props.basic &&
     `
     border-radius: 4px !important;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06) !important;
     border: solid 1px #dee2e6 !important;
-  `
+  `}
+`
+
+const ButtonAddNew = styled(Button)`
+  padding: 0 !important;
+  height: 28px !important;
+`
+
+const DropdownAddress = styled(Dropdown)`
+  z-index: 600;
+`
+
+const DivIcon = styled.div`
+  display: flex;
+  align-self: center;
+  margin-right: 8px;
+`
+
+const RectangleAddress = styled.div`
+  height: 100px;
+  border-radius: 4px;
+  background-color: #f8f9fb;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  ${props =>
+    props.active
+      ? 'border: solid 1px #2599d5; background-color: rgba(37, 153, 213, 0.1);'
+      : 'border: solid 1px #dee2e6; background-color: #f8f9fb;'}
+  .ui.radio.checkbox input:focus:checked ~ label:after,
+  .ui.radio.checkbox input:checked ~ label:after {
+    background-color: #2599d5;
   }
 `
 
+const DivTitleAddress = styled.div`
+  font-weight: bold;
+`
+
+const RadioAddress = styled(Radio)`
+  align-self: center;
+`
+
 class Shipping extends Component {
+  state = {
+    isOpenModalAddress: false,
+    activeIdAddress: null
+  }
+
   handleToggleChange = otherAddresses => {
     this.props.formikProps.setFieldValue('address', null)
     if (otherAddresses !== this.props.otherAddresses) {
@@ -43,6 +89,17 @@ class Shipping extends Component {
 
   componentDidMount() {
     if (this.props.selectedAddress && this.props.formikProps) {
+      this.props.formikProps.setFieldValue('address', this.props.selectedAddress.id)
+    }
+    this.props.getWarehouses()
+  }
+
+  componentDidUpdate(prevProps) {
+    const { selectedAddress } = this.props
+    if (
+      this.props.formikProps &&
+      getSafe(() => prevProps.selectedAddress.id, '') !== getSafe(() => selectedAddress.id, '')
+    ) {
       this.props.formikProps.setFieldValue('address', this.props.selectedAddress.id)
     }
   }
@@ -67,26 +124,117 @@ class Shipping extends Component {
     return fullAddress
   }
 
+  renderModalAddress = () => {
+    const { activeIdAddress } = this.state
+    const { deliveryAddresses, warehouses, getAddress } = this.props
+
+    let addresses = []
+    if (deliveryAddresses.length) {
+      addresses = deliveryAddresses
+    }
+    if (warehouses.length) {
+      addresses = addresses.concat(warehouses.map(warehous => ({ ...warehous.deliveryAddress, id: warehous.id })))
+    }
+
+    return (
+      <>
+        <Modal.Header>
+          <FormattedMessage id='cart.changeAddress' defaultMessage='CHANGE ADDRESS' />
+        </Modal.Header>
+        <Modal.Content>
+          <Grid>
+            {addresses.map((address, index) => {
+              const title = getSafe(() => address.cfName, '')
+              const street = getSafe(() => address.address.streetAddress, '')
+              const city = getSafe(() => address.address.city, '')
+              const state = getSafe(() => address.address.province, '')
+                ? getSafe(() => address.address.province.name, '')
+                : getSafe(() => address.address.country.name, '')
+              const zip = getSafe(() => address.address.zip.zip, '')
+              return (
+                <Grid.Row>
+                  <Grid.Column width={16}>
+                    <RectangleAddress
+                      key={address.id}
+                      active={activeIdAddress === address.id}
+                      onClick={() => {
+                        this.setState({ activeIdAddress: address.id })
+                      }}>
+                      <div>
+                        <DivTitleAddress>{title}</DivTitleAddress>
+                        <div>{street}</div>
+                        <div>{`${city}, ${state}, ${zip}`}</div>
+                      </div>
+                      <RadioAddress checked={activeIdAddress === address.id} />
+                    </RectangleAddress>
+                  </Grid.Column>
+                </Grid.Row>
+              )
+            })}
+          </Grid>
+        </Modal.Content>
+
+        <Modal.Actions>
+          <Button
+            type='button'
+            basic
+            onClick={() => {
+              this.setState({ isOpenModalAddress: false })
+            }}
+            data-test='cart_modal_address_cancel'>
+            <FormattedMessage id='global.close' defaultMessage='Close'>
+              {text => text}
+            </FormattedMessage>
+          </Button>
+          <Button
+            type='button'
+            color='blue'
+            onClick={() => {
+              getAddress(activeIdAddress)
+              this.setState({ isOpenModalAddress: false })
+            }}
+            data-test='cart_modal_address_save'>
+            <FormattedMessage id='global.save'>{text => text}</FormattedMessage>
+          </Button>
+        </Modal.Actions>
+      </>
+    )
+  }
+
   render() {
-    let { deliveryAddresses, /* branches, */ warehouses, getAddress, selectedAddress, intl, handleOpen } = this.props
+    let {
+      deliveryAddresses,
+      /* branches, */ warehouses,
+      getAddress,
+      selectedAddress,
+      intl,
+      handleNewAddress,
+      openSidebar
+    } = this.props
     let { formatMessage } = intl
 
-    let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches
+    let addresses = []
+    if (deliveryAddresses.length) {
+      addresses = deliveryAddresses
+    }
+    if (warehouses.length) {
+      addresses = addresses.concat(warehouses)
+    }
 
     let dropdownOptions = addresses.map(i => {
       const address = i.warehouse ? getSafe(() => i.deliveryAddress.address, '') : getSafe(() => i.address, '')
 
       return {
-        searchText: this.props.otherAddresses
+        searchText: !i.warehouse
           ? `${getSafe(() => i.addressName, '')}, ${this.getFullAddress(address)}  `
           : `${getSafe(() => i.deliveryAddress.cfName, '')}, ${this.getFullAddress(address)} `,
-        text: this.props.otherAddresses
+        text: !i.warehouse
           ? `${getSafe(() => i.addressName, '') ? getSafe(() => i.addressName, '') : getSafe(() => i.cfName, '')} `
           : `${
-          getSafe(() => i.deliveryAddress.cfName, '')
-            ? getSafe(() => i.deliveryAddress.cfName, '')
-            : getSafe(() => i.deliveryAddress.addressName, '')
-          } `,
+              getSafe(() => i.deliveryAddress.cfName, '')
+                ? getSafe(() => i.deliveryAddress.cfName, '')
+                : getSafe(() => i.deliveryAddress.addressName, '')
+            } `,
         value: i.id,
         key: i.id,
         content: (
@@ -102,8 +250,8 @@ class Shipping extends Component {
                     ? getSafe(() => i.deliveryAddress.cfName, '')
                     : getSafe(() => i.deliveryAddress.addressName, '')
                   : !i.addressName
-                    ? getSafe(() => i.cfName, '')
-                    : getSafe(() => i.addressName, '')}
+                  ? getSafe(() => i.cfName, '')
+                  : getSafe(() => i.addressName, '')}
               </div>
             }
             subheader={
@@ -114,29 +262,30 @@ class Shipping extends Component {
       }
     })
 
-
     return (
       <>
-
-        <StyledRow verticalAlign='middle' columns={2} bottomShadow>
+        <StyledRow paddingChange verticalAlign='middle' columns={2} bottomShadow>
           <VerticalUnpaddedColumn>
             <Header as='h2'>
-              <FormattedMessage id='cart.1delivery' defaultMessage='1. Delivery' />
+              <FormattedMessage id='cart.1shipping' defaultMessage='1. SHIPPING' />
             </Header>
           </VerticalUnpaddedColumn>
 
           <UnpaddedColumn textAlign='right'>
-            <Button
+            <ButtonAddNew
               type='button'
               data-test='purchase_order_edit_address'
               color='blue'
               size='tiny'
-              onClick={() => handleOpen({ modalOpen: true, isNewAddress: true })}>
+              onClick={() => {
+                openSidebar()
+                handleNewAddress({ isNewAddress: true })
+              }}>
               <Icon name='plus circle' />
               <FormattedMessage id='global.addNew' defaultMessage='Add New'>
                 {text => text}
               </FormattedMessage>
-            </Button>
+            </ButtonAddNew>
           </UnpaddedColumn>
         </StyledRow>
 
@@ -144,37 +293,7 @@ class Shipping extends Component {
           <Grid>
             <RightUnpaddedRow>
               <UnpaddedColumn computer={16}>
-                <Button.Group fluid>
-                  <StyledButton
-                    type='button'
-                    disabled={this.props.shippingQuotesAreFetching}
-                    onClick={() => this.handleToggleChange(true)}
-                    active={this.props.otherAddresses}
-                    {...this.props.otherAddresses ? { color: 'blue' } : { basic: true }}
-                    data-test='purchase_order_address_btn'>
-                    <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>
-                      {text => text}
-                    </FormattedMessage>
-                  </StyledButton>
-                  <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
-                  <StyledButton
-                    type='button'
-                    disabled={this.props.shippingQuotesAreFetching}
-                    onClick={() => this.handleToggleChange(false)}
-                    active={!this.props.otherAddresses}
-                    {...!this.props.otherAddresses ? { color: 'blue' } : { basic: true }}
-                    data-test='purchase_order_branches_btn'>
-                    <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>
-                      {text => text}
-                    </FormattedMessage>
-                  </StyledButton>
-                </Button.Group>
-              </UnpaddedColumn>
-            </RightUnpaddedRow>
-
-            <RightUnpaddedRow>
-              <UnpaddedColumn computer={16}>
-                <Dropdown
+                <DropdownAddress
                   name='address'
                   fluid
                   selection
@@ -183,6 +302,7 @@ class Shipping extends Component {
                     search: (options, query) => {
                       return options.filter(opt => opt.searchText.toLowerCase().includes(query.trim().toLowerCase()))
                     },
+                    style: { 'z-index': '501' },
                     disabled: this.props.shippingQuotesAreFetching,
                     onChange: (_, { value }) => getAddress(value),
                     placeholder: <FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />
@@ -198,18 +318,58 @@ class Shipping extends Component {
 
         <GridColumn computer={8}>
           <ShippingAddress
-            header={<FormattedMessage id='cart.deliveryAddress' defaultMessage='Delivery Address' />}
-            billingInfo={selectedAddress} companyName={this.props.companyName}
+            header={<FormattedMessage id='cart.shippingAddress' defaultMessage='Shipping Address' />}
+            billingInfo={selectedAddress}
+            companyName={this.props.companyName}
             additionalContent={
               <GridRow>
-                <TopUnpaddedColumn computer={16}>
-                  <Button type='button' onClick={() => handleOpen({ modalOpen: true, isNewAddress: false })} fluid basic>
-                    <Icon name='edit outline' />
-                    <FormattedMessage id='global.edit' defaultMessage='Edit'>{text => text}</FormattedMessage>
+                <TopUnpaddedColumn width={8}>
+                  <Button
+                    style={{ display: 'flex' }}
+                    type='button'
+                    onClick={() => {
+                      openSidebar()
+                      handleNewAddress({ isNewAddress: false })
+                    }}
+                    basic>
+                    <DivIcon>
+                      <Edit2 size={16} />
+                    </DivIcon>
+                    <FormattedMessage id='global.edit' defaultMessage='Edit'>
+                      {text => text}
+                    </FormattedMessage>
                   </Button>
                 </TopUnpaddedColumn>
+                <TopUnpaddedColumn width={8}>
+                  <Modal
+                    open={this.state.isOpenModalAddress}
+                    closeIcon
+                    size='tiny'
+                    onClose={() => {
+                      this.setState({ isOpenModalAddress: false })
+                    }}
+                    trigger={
+                      <Button
+                        style={{ display: 'flex' }}
+                        type='button'
+                        onClick={() => {
+                          this.setState({ isOpenModalAddress: true })
+                        }}
+                        basic>
+                        <DivIcon>
+                          <RefreshCcw size={16} />
+                        </DivIcon>
+                        <FormattedMessage id='global.change' defaultMessage='Change'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button>
+                    }>
+                    {this.renderModalAddress()}
+                  </Modal>
+                </TopUnpaddedColumn>
               </GridRow>
-            } />
+            }
+          />
         </GridColumn>
       </>
     )

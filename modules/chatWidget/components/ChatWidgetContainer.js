@@ -22,7 +22,8 @@ function mapStateToProps(state) {
       adminTab === 'Product Catalog' ||
       ((getSafe(() => state.productsAdmin.currentEditForm, false) ||
         getSafe(() => state.productsAdmin.currentAddForm, false)) &&
-        getSafe(() => state.productsAdmin.currentTab.name, false) === 'Product Catalog')
+        getSafe(() => state.productsAdmin.currentTab.name, false) === 'Product Catalog') ||
+      getSafe(() => state.cart.isOpenSidebar, false)
     )
       return 500
 
