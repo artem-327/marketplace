@@ -21,6 +21,19 @@ import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 
+const defaultHiddenColumns = [
+  'conformingIcon',
+  'expired',
+  'origin',
+  'expiration',
+  'condition',
+  'form',
+  'location',
+  'association',
+  'notes',
+  'leadTime'
+]
+
 const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
@@ -141,6 +154,17 @@ class Marketplace extends Component {
         sortPath: 'ProductOffer.companyProduct.intProductName'
       },
       {
+        name: 'fobPrice',
+        title: (
+          <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160,
+        align: 'right',
+        sortPath: 'ProductOffer.cfPricePerUOM'
+      },
+      {
         name: 'available',
         title: (
           <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>
@@ -170,17 +194,6 @@ class Marketplace extends Component {
         width: 140,
         align: 'right',
         sortPath: 'ProductOffer.quantity'
-      },
-      {
-        name: 'fobPrice',
-        title: (
-          <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160,
-        align: 'right',
-        sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {
         name: 'manufacturer',
@@ -473,6 +486,7 @@ class Marketplace extends Component {
 
         <div class='flex stretched' style={{ padding: '10px 0' }}>
           <ProdexGrid
+            defaultHiddenColumns={defaultHiddenColumns}
             tableName='marketplace_grid'
             {...datagrid.tableProps}
             rows={rows}

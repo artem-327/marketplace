@@ -23,6 +23,12 @@ import ExportInventorySidebar from '~/modules/export-inventory/components/Export
 import {ArrayToFirstItem} from '~/components/formatted-messages/'
 
 const defaultHiddenColumns = [
+  'expired',
+  'productStatus',
+  'productNumber',
+  'warehouse',
+  'cost',
+  'broadcast',
   'minOrderQuantity',
   'splits',
   'condition',
@@ -34,6 +40,7 @@ const defaultHiddenColumns = [
   'expDate',
   'allocatedPkg',
   'offerExpiration',
+  'groupId',
   'lotNumber'
 ]
 
@@ -191,6 +198,17 @@ class MyInventory extends Component {
         sortPath: 'ProductOffer.companyProduct.intProductName'
       },
       {
+        name: 'fobPrice',
+        title: (
+          <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 180,
+        align: 'right',
+        sortPath: 'ProductOffer.cfPricePerUOM'
+      },
+      {
         name: 'productNumber',
         title: (
           <FormattedMessage id='global.intProductCode' defaultMessage='Product Code'>
@@ -252,17 +270,6 @@ class MyInventory extends Component {
         ),
         width: 100,
         align: 'right'
-      },
-      {
-        name: 'fobPrice',
-        title: (
-          <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 180,
-        align: 'right',
-        sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {
         name: 'manufacturer',
