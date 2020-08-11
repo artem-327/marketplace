@@ -411,10 +411,7 @@ class Layout extends Component {
                     <Menu.Item
                       onClick={() => triggerSystemSettingsModal(true)}
                       data-test='navigation_menu_settings_lnk'>
-                      <>
-                        {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
-                        <Settings role='user' scrolling={false} />
-                      </>
+                      {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
                     </Menu.Item>
                   )}
                   <Dropdown.Item
@@ -444,6 +441,7 @@ class Layout extends Component {
         </TopMenu>
 
         {profile && profile.profilePopup && <Profile />}
+        <Settings role='user' scrolling={false} />
         <ChatWidget />
         <FlexContainer className={copyrightClassName} onScroll={this.trackScrolling}>
           <TopMenuContainer fluid>
