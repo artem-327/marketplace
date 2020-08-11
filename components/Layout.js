@@ -208,7 +208,9 @@ class Layout extends Component {
     let tableResponsive = Array.from(document.querySelectorAll('.table-responsive')).find(
       table => table.closest('.modals, .sidebar') === null
     )
-    let mainContainer = this.mainContainer.current
+    let mainContainer = getSafe(() => this.mainContainer.current, '')
+
+    if (!tableResponsive || !mainContainer) return
     // let parentSegment = null
     // const { router, adminLoading, cartLoading, settingsLoading, wantedBoardLoading } = this.props
 

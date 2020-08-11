@@ -15,3 +15,15 @@ export const searchTags = tag => ({
     pageSize: 50
   })
 })
+
+export const searchProductOffersInventory = filter => ({
+  type: AT.SEARCH_PRODUCT_OFFERS_INVENTORY,
+  payload: api.searchProductOffersInventory({
+    orFilters: [
+      { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${filter.toString()}%`] },
+      { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${filter.toString()}%`] }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})
