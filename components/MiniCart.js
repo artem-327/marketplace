@@ -30,9 +30,12 @@ class MiniCart extends Component {
     return (
       <Icon.Group>
         <IconCart name='shopping cart' color='white' size='large' />
-        <CircularLabel circular color='orange'>
-          {cartItems}
-        </CircularLabel>
+        {cartItems
+          ? (
+            <CircularLabel circular color='orange'>
+              {cartItems}
+            </CircularLabel>
+          ) : null}
       </Icon.Group>
     )
   }
