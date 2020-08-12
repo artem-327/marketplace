@@ -29,9 +29,12 @@ class HoldIcon extends Component {
     return (
       <Icon.Group>
         <HoldClockIcon />
-        <CircularLabel circular color='orange'>
-          {countHolds}
-        </CircularLabel>
+        {countHolds
+          ? (
+            <CircularLabel circular color='orange'>
+              {countHolds}
+            </CircularLabel>
+          ) : null}
       </Icon.Group>
     )
   }
