@@ -38,6 +38,10 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SEARCH_CLEAR_PRODUCT_OFFERS: {
+      return { productOffers: [] }
+    }
+
     default: {
       return state
     }

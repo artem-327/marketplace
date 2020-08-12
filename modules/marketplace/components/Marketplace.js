@@ -458,6 +458,7 @@ class Marketplace extends Component {
                 onChange={this.SearchByNamesAndTagsChanged}
                 initFilterState={getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)}
                 filterApply={false}
+                isMarketplace={true}
               />
             </CustomSearchNameTags>
 

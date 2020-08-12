@@ -16,14 +16,19 @@ export const searchTags = tag => ({
   })
 })
 
-export const searchProductOffersInventory = filter => ({
+export const searchProductOffersInventory = (filter, isMarketplace) => ({
   type: AT.SEARCH_PRODUCT_OFFERS_INVENTORY,
-  payload: api.searchProductOffersInventory({
-    orFilters: [
-      { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${filter.toString()}%`] },
-      { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${filter.toString()}%`] }
-    ],
-    pageNumber: 0,
-    pageSize: 50
-  })
+  payload: api.searchProductOffersInventory(
+    {
+      orFilters: [
+        { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${filter.toString()}%`] },
+        { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${filter.toString()}%`] }
+      ],
+      pageNumber: 0,
+      pageSize: 50
+    },
+    isMarketplace
+  )
 })
+
+export const clearProductOffers = () => ({ type: AT.SEARCH_CLEAR_PRODUCT_OFFERS })

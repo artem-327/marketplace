@@ -1092,6 +1092,7 @@
   "myInventory.groupId": "Group ID",
   "myInventory.lotNumber": "Lot Number",
   "myInventory.searchByProductName": "Search by product name...",
+  "myInventory.searchByProductOrTagName": "Search by product or tag name...",
   "myInventory.editPricing": "Edit Pricing",
   "myInventory.andAbove": "and above",
   "myInventory.productStatus.unmapped": "This Product Offer's Company Product is not mapped to Echo Product, so it will not be visible to other users at Marketplace.",

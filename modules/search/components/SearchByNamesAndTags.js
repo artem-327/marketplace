@@ -9,7 +9,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { withDatagrid } from '~/modules/datagrid'
 import { uniqueArrayByKey, getSafe } from '~/utils/functions'
 //actions
-import { searchTags, searchProductOffersInventory } from '../actions'
+import { searchTags, searchProductOffersInventory, clearProductOffers } from '../actions'
 //stylesheet
 import styled from 'styled-components'
 
@@ -19,6 +19,7 @@ const DivRectangleTag = styled.div`
   background-color: #edeef2;
   padding: 4px;
   margin: 4px;
+  cursor: pointer;
 `
 
 const DivItem = styled.div`
@@ -36,11 +37,15 @@ const DivTags = styled.div`
 `
 
 class SearchByNamesAndTags extends Component {
-  state = {
-    filterName: '',
-    filterTags: [],
-    filterTagsValues: [],
-    active: null
+  constructor(props) {
+    super(props)
+    this.refDropdownMenu = React.createRef()
+    this.state = {
+      filterName: '',
+      filterTags: [],
+      filterTagsValues: [],
+      active: null
+    }
   }
 
   componentDidMount() {
@@ -57,16 +62,37 @@ class SearchByNamesAndTags extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.clearProductOffers()
+  }
+
   handleFiltersValue = debounce(filters => {
     if (Datagrid.isReady()) Datagrid.setSearch(filters, true, 'searchByNamesAndTags')
   }, 250)
 
-  handleSearchChange = debounce((_, { searchQuery }) => {
+  handleSearchChange = debounce((e, { searchQuery }) => {
+    e && e.stopPropagation()
     try {
-      this.props.searchProductOffersInventory(searchQuery)
+      this.props.searchProductOffersInventory(searchQuery, this.props.isMarketplace)
       this.props.searchTags(searchQuery)
     } catch (error) {
       console.error(error)
+    }
+    if (searchQuery.trim() === '') {
+      this.refDropdownMenu.current.close()
+      const filters = {
+        filterName: '',
+        filterTags: []
+      }
+      if (this.props.filterApply) this.handleFiltersValue(filters)
+      this.props.onChange({
+        state: {
+          filterName: '',
+          filterTags: [],
+          filterTagsValues: []
+        },
+        filters
+      })
     }
   }, 150)
 
@@ -107,7 +133,25 @@ class SearchByNamesAndTags extends Component {
     })
   }
 
-  handleClickItem = (e, data) => {
+  handleClick = (e, data) => {
+    if (!data) return
+    e && e.stopPropagation()
+    this.refDropdownMenu.current.close()
+    this.refDropdownMenu.current.state.searchQuery = data.text
+    this.refDropdownMenu.current.props.onSearchChange(null, { searchQuery: data.text })
+    const filters = {
+      filterName: data.tagId ? '' : data.text,
+      filterTags: data.tagId ? [data.tagId] : []
+    }
+    if (this.props.filterApply) this.handleFiltersValue(filters)
+    this.props.onChange({
+      state: {
+        filterName: data.tagId ? '' : data.text,
+        filterTags: data.tagId ? [data.tagId] : [],
+        filterTagsValues: data.tagId ? [data.tagId] : []
+      },
+      filters
+    })
     this.setState({ active: data.value })
   }
 
@@ -125,18 +169,6 @@ class SearchByNamesAndTags extends Component {
     return (
       <Fragment>
         <Grid.Column width={4} style={{ paddingTop: '9px' }}>
-          <Input
-            fluid
-            icon='search'
-            value={filterName}
-            onChange={this.handleInputFilterChange}
-            placeholder={formatMessage({
-              id: 'myInventory.searchByProductName',
-              defaultMessage: 'Search by product name...'
-            })}
-          />
-        </Grid.Column>
-        <Grid.Column width={4} style={{ paddingTop: '9px' }}>
           <Dropdown
             style={{ zIndex: '501' }}
             fluid
@@ -145,9 +177,11 @@ class SearchByNamesAndTags extends Component {
             search
             icon='search'
             selection
+            clearable
+            ref={this.refDropdownMenu}
             placeholder={formatMessage({
-              id: 'global.selectTags',
-              defaultMessage: 'Select tags'
+              id: 'myInventory.searchByProductOrTagName',
+              defaultMessage: 'Search by product or tag name...'
             })}
             noResultsMessage={formatMessage({
               id: 'global.startTypingToSearch',
@@ -166,7 +200,7 @@ class SearchByNamesAndTags extends Component {
                         text={option.text}
                         value={option.value}
                         active={active === option.value}
-                        onClick={(e, data) => this.handleClickItem(e, data)}
+                        onClick={(e, data) => this.handleClick(e, data)}
                       />
                     ) : null
                   })
@@ -176,7 +210,11 @@ class SearchByNamesAndTags extends Component {
               <DivTags>
                 <DivItem>
                   {searchedTags.map(tag => (
-                    <DivRectangleTag>{tag.text}</DivRectangleTag>
+                    <DivRectangleTag
+                      key={tag.value}
+                      onClick={e => this.handleClick(e, { tagId: tag.value, text: tag.text })}>
+                      {tag.text}
+                    </DivRectangleTag>
                   ))}
                 </DivItem>
               </DivTags>
@@ -194,7 +232,9 @@ SearchByNamesAndTags.propTypes = {
   productOffers: PropTypes.array,
   searchTags: PropTypes.func.isRequired,
   onChange: PropTypes.func,
-  filterApply: PropTypes.bool
+  clearProductOffers: PropTypes.func,
+  filterApply: PropTypes.bool,
+  isMarketplace: PropTypes.bool
 }
 
 SearchByNamesAndTags.defaultProps = {
@@ -203,7 +243,9 @@ SearchByNamesAndTags.defaultProps = {
   productOffers: [],
   searchTags: () => {},
   onChange: () => {},
-  filterApply: true
+  clearProductOffers: () => {},
+  filterApply: true,
+  isMarketplace: false
 }
 
 const mapStateToProps = state => ({
@@ -230,5 +272,7 @@ const mapStateToProps = state => ({
 })
 
 export default withDatagrid(
-  connect(mapStateToProps, { searchTags, searchProductOffersInventory })(injectIntl(SearchByNamesAndTags))
+  connect(mapStateToProps, { searchTags, searchProductOffersInventory, clearProductOffers })(
+    injectIntl(SearchByNamesAndTags)
+  )
 )

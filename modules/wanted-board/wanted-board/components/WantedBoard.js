@@ -29,7 +29,6 @@ import {
   ProductChemicalSwitch,
   TopButtons
 } from '../../constants/layout'
-import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
@@ -245,7 +244,7 @@ class WantedBoard extends Component {
     open: false,
     popupValues: null,
     filterValues: {
-      SearchByNamesAndTags: null
+      searchInput: ''
     }
   }
 
@@ -255,10 +254,7 @@ class WantedBoard extends Component {
     if (tableHandlersFiltersWantedBoard) {
       this.setState({ filterValues: tableHandlersFiltersWantedBoard }, () => {
         const filter = {
-          ...this.state.filterValues,
-          ...(!!this.state.filterValues.SearchByNamesAndTags && {
-            ...this.state.filterValues.SearchByNamesAndTags.filters
-          })
+          ...this.state.filterValues
         }
         this.handleFiltersValue(filter)
       })
@@ -274,36 +270,29 @@ class WantedBoard extends Component {
 
   handleFiltersValue = debounce(filter => {
     const { datagrid } = this.props
-    datagrid.setSearch(filter, true, 'pageFilters')
+    datagrid && datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
-
-  SearchByNamesAndTagsChanged = data => {
-    this.setState(
-      {
-        filterValues: {
-          ...this.state.filterValues,
-          SearchByNamesAndTags: data
-        }
-      },
-      () => {
-        const filter = {
-          ...this.state.filterValues,
-          ...(!!this.state.filterValues.SearchByNamesAndTags && {
-            ...this.state.filterValues.SearchByNamesAndTags.filters
-          })
-        }
-        this.handleFiltersValue(filter)
-      }
-    )
-  }
 
   handleProductChemicalSwitch = data => {
     const { datagrid } = this.props
     this.props.setWantedBoardType(data)
     datagrid.clear()
     const filter = {
-      ...this.state.filterValues,
-      ...(!!this.state.filterValues.SearchByNamesAndTags && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+      ...this.state.filterValues
+    }
+    this.handleFiltersValue(filter)
+  }
+
+  handleFilterChangeInputSearch = (e, data) => {
+    if (!data) return
+    e && e.stopPropagation()
+    this.setState({
+      filterValues: {
+        searchInput: data.value
+      }
+    })
+    const filter = {
+      filterName: data.value
     }
     this.handleFiltersValue(filter)
   }
@@ -321,7 +310,7 @@ class WantedBoard extends Component {
       tutorialCompleted,
       tableHandlersFiltersWantedBoard
     } = this.props
-    const { columnsProduct, columnsChemical } = this.state
+    const { columnsProduct, columnsChemical, filterValues } = this.state
     let { formatMessage } = intl
 
     return (
@@ -331,10 +320,16 @@ class WantedBoard extends Component {
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <CustomSearchNameTags>
-              <SearchByNamesAndTags
-                onChange={this.SearchByNamesAndTagsChanged}
-                initFilterState={getSafe(() => tableHandlersFiltersWantedBoard.SearchByNamesAndTags, null)}
-                filterApply={false}
+              <Input
+                style={{ width: 340 }}
+                name='searchInput'
+                icon='search'
+                value={filterValues.searchInput}
+                placeholder={formatMessage({
+                  id: 'wantedBoard.searchByProductName',
+                  defaultMessage: 'Search by product name...'
+                })}
+                onChange={this.handleFilterChangeInputSearch}
               />
             </CustomSearchNameTags>
             <div>
