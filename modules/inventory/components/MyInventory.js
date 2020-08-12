@@ -625,9 +625,7 @@ class MyInventory extends Component {
           <StyledPopup
             content={<QuickEditPricingPopup rawData={r.rawData} />}
             on='click'
-            pinned
-            position='left center'
-            trigger={<div>{r.fobPrice}</div>}
+            trigger={<div style={{ cursor: 'pointer' }}>{r.fobPrice}</div>}
             open={pricingEditOpenId === r.rawData.id}
             onOpen={() => setPricingEditOpenId(r.rawData.id)}
             onClose={() => setPricingEditOpenId(null)}
