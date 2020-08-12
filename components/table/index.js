@@ -422,9 +422,11 @@ class _Table extends Component {
   }
 
   handleScroll = ({ target }) => {
-    const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd, loadedAllData } = this.props
+    const { onScrollToEnd, onScrollOverNewUp, onScrollOverNewEnd, loadedAllData, loading } = this.props
     const { newTop, newBottom, pageSize, scrolledBottom } = this.state
     const { scrollLeft } = target
+
+    if (loading) return
 
     if (this.state.scrollLeft !== scrollLeft) {
       this.setState({ scrollLeft }, () => this.forceUpdate())
