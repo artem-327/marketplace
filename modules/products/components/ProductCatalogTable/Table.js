@@ -17,18 +17,24 @@ import { FileText } from 'react-feather'
 import styled from 'styled-components'
 import { Popup } from 'semantic-ui-react'
 
-const UnpublishedIcon = styled(FileText)`
+const FileTextIcon = styled(FileText)`
   display: block;
   width: 20px;
   height: 20px;
   margin: 0 auto;
   vertical-align: top;
   font-size: 20px;
-  color: #f16844;
+  color: #848893;
   line-height: 20px;
+`
 
-  &.grey {
-    color: #848893;
+const Circle = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: #84c225;
+  &.red {
+    background-color: #f16844;
   }
 `
 
@@ -36,8 +42,21 @@ class ProductCatalogTable extends Component {
   state = {
     columns: [
       {
-        name: 'notPublishedStatus',
-        title: <UnpublishedIcon className='grey' />,
+        name: 'publishedStatus',
+        title:
+          <Popup
+            size='small'
+            header={
+              <FormattedMessage
+                id='global.productStatusIndicator'
+                defaultMessage='Status indicator if Company Product will be shown on Marketplace' />
+            }
+            trigger={
+              <div>
+                <FileTextIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />,
         width: 40,
         align: 'center'
       },
@@ -130,22 +149,38 @@ class ProductCatalogTable extends Component {
     return rows.map(row => {
       return {
         ...row,
-        notPublishedStatus: !row.isPublished ? (
-          <Popup
-            size='small'
-            header={
-              <FormattedMessage
-                id='global.notPublished'
-                defaultMessage='This echo product is not published and will not show on the Marketplace.'
-              />
-            }
-            trigger={
-              <div>
-                <UnpublishedIcon />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ) : null,
+        publishedStatus: row.isPublished
+          ? (
+            <Popup
+              size='small'
+              header={
+                <FormattedMessage
+                  id='global.productOk'
+                  defaultMessage='This Company Generic Product is published and will be shown on the Marketplace'
+                />
+              }
+              trigger={
+                <div>
+                  <Circle />
+                </div>
+              } // <div> has to be there otherwise popup will be not shown
+            />
+          ) : (
+            <Popup
+              size='small'
+              header={
+                <FormattedMessage
+                  id='global.notPublished'
+                  defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace'
+                />
+              }
+              trigger={
+                <div>
+                  <Circle className='red' />
+                </div>
+              } // <div> has to be there otherwise popup will be not shown
+            />
+          ),
         sds:
           row.attachments && row.attachments.length ? (
             <Button as='a' onClick={() => this.downloadAttachment(row.attachments[0].name, row.attachments[0].id)}>
