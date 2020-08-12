@@ -22,11 +22,17 @@ const FileTextIcon = styled(FileText)`
   margin: 0 auto;
   vertical-align: top;
   font-size: 20px;
-  color: #f16844;
+  color: #848893;
   line-height: 20px;
+`
 
-  &.grey {
-    color: #848893;
+const Circle = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: #84c225;
+  &.red {
+    background-color: #f16844;
   }
 `
 
@@ -35,7 +41,20 @@ class ProductCatalogTable extends Component {
     columns: [
       {
         name: 'productStatus',
-        title: <FileTextIcon className='grey' />,
+        title:
+          <Popup
+            size='small'
+            header={
+              <FormattedMessage
+                id='global.productStatusIndicator'
+                defaultMessage='Status indicator if Company Product will be shown on Marketplace' />
+            }
+            trigger={
+              <div>
+                <FileTextIcon />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />,
         width: 40,
         align: 'center'
       },
@@ -123,27 +142,7 @@ class ProductCatalogTable extends Component {
     companyGenericProduct: []
   }
 
-  // componentDidMount() {
-  //   const { datagrid, productCatalogUnmappedValue: unmapped } = this.props
-
-  //   datagrid.setFilter([], { unmappedOnly: unmapped })
-  // }
-
-  componentWillReceiveProps({ productCatalogUnmappedValue: newUnmapped, filterValue: newFilterValue }) {
-    const { datagrid, filterValue } = this.props
-
-    // if (filterValue !== newFilterValue) {
-    //   datagrid.setFilter({
-    //     filters: newFilterValue && newFilterValue.length >= 1 ? [{
-    //       operator: 'LIKE',
-    //       path: 'Product.productName',
-    //       values: ['%'+newFilterValue+'%']
-    //     }] : []
-    //   })
-    // }
-  }
-
-  componentDidUpdate(oldProps) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
     const { action, actionId, currentTab, loaded, openPopup, rows } = this.props
 
     if (action === 'edit' && actionId && loaded) {
@@ -155,10 +154,6 @@ class ProductCatalogTable extends Component {
         openPopup(editRow)
       }
     }
-  }
-
-  getEditedProduct = r => {
-    return this.props.editedItem
   }
 
   render() {
@@ -223,44 +218,50 @@ const getProductStatus = product => {
       : ''
     : 'Unmapped'
 
-  let popupText = null
+  let popupText, dispIcon
 
   switch (status) {
-    case 'Unpublished': {
+    case 'Unpublished':
       popupText = (
         <FormattedMessage
           id='global.notPublished'
-          defaultMessage='This echo product is not published and will not show on the Marketplace.'
+          defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace.'
         />
       )
+      dispIcon = <Circle className='red' />
       break
-    }
-    case 'Unmapped': {
+
+    case 'Unmapped':
       popupText = (
         <FormattedMessage
           id='settings.product.unmapped'
           defaultMessage='This product is not mapped and will not show on the Marketplace.'
         />
       )
+      dispIcon = <Circle className='red' />
       break
-    }
+
+    default:
+      popupText = (
+        <FormattedMessage
+          id='global.productOk'
+          defaultMessage='This Company Generic Product is published and will be shown on the Marketplace'
+        />
+      )
+      dispIcon = <Circle />
   }
 
-  if (popupText) {
-    return (
-      <Popup
-        size='small'
-        header={popupText}
-        trigger={
-          <div>
-            <FileTextIcon />
-          </div>
-        } // <div> has to be there otherwise popup will be not shown
-      />
-    )
-  } else {
-    return null
-  }
+  return (
+    <Popup
+      size='small'
+      header={popupText}
+      trigger={
+        <div>
+          {dispIcon}
+        </div>
+      } // <div> has to be there otherwise popup will be not shown
+    />
+  )
 }
 
 const mapStateToProps = (state, { datagrid }) => {
