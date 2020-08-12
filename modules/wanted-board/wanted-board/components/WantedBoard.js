@@ -319,7 +319,7 @@ class WantedBoard extends Component {
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
-            <CustomSearchNameTags>
+            <div className='column'>
               <Input
                 style={{ width: 340 }}
                 name='searchInput'
@@ -331,7 +331,7 @@ class WantedBoard extends Component {
                 })}
                 onChange={this.handleFilterChangeInputSearch}
               />
-            </CustomSearchNameTags>
+            </div>
             <div>
               <div className='column'>
                 <ProductChemicalSwitch className={type}>
