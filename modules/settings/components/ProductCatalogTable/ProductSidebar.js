@@ -600,7 +600,7 @@ class ProductSidebar extends React.Component {
 
           return (
             <>
-              <CustomForm>
+              <CustomForm autoComplete='off'>
                 <FlexSidebar
                   visible={true}
                   width='very wide'

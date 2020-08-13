@@ -79,9 +79,7 @@ class UsersSidebar extends React.Component {
         (companyEditValues && companyEditValues.primaryBranch
           ? this.getHomeBranchesOptions([companyEditValues.primaryBranch])
           : []
-        ).concat(
-          companyEditValues.branches ? this.getBranchesOptions(companyEditValues.branches) : []
-        ),
+        ).concat(companyEditValues.branches ? this.getBranchesOptions(companyEditValues.branches) : []),
         'key'
       )
       this.setState({ branches })
@@ -192,15 +190,7 @@ class UsersSidebar extends React.Component {
   }
 
   submitUser = async (values, actions, closeOnSubmit = true) => {
-    const {
-      editUser,
-      addNewUser,
-      closePopup,
-      datagrid,
-      currentUserId,
-      getIdentity,
-      companyId
-    } = this.props
+    const { editUser, addNewUser, closePopup, datagrid, currentUserId, getIdentity, companyId } = this.props
     const { popupValues } = this.state
     let sendSuccess = false
 
@@ -356,6 +346,7 @@ class UsersSidebar extends React.Component {
 
     return (
       <CustomForm
+        autoComplete='off'
         enableReinitialize
         initialValues={this.getInitialFormValues()}
         validationSchema={this.userFormValidation()}

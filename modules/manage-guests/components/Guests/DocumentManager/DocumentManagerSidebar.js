@@ -110,9 +110,10 @@ class DocumentManagerSidebar extends Component {
       return {
         ...initialValues,
         ...popupValues,
-        issuedAt: popupValues.issuedAt ? (moment(popupValues.issuedAt).format(getLocaleDateFormat())) : '',
+        issuedAt: popupValues.issuedAt ? moment(popupValues.issuedAt).format(getLocaleDateFormat()) : '',
         expirationDate: popupValues.expirationDate
-          ? (moment(popupValues.expirationDate).format(getLocaleDateFormat())) : ''
+          ? moment(popupValues.expirationDate).format(getLocaleDateFormat())
+          : ''
       }
     } else return initialValues
   }
@@ -142,8 +143,7 @@ class DocumentManagerSidebar extends Component {
             customName: values.customName,
             description: values.description,
             expirationDate:
-              values.expirationDate &&
-              getSafe(() => encodeURIComponent(getStringISODate(values.expirationDate)), null),
+              values.expirationDate && getSafe(() => encodeURIComponent(getStringISODate(values.expirationDate)), null),
             isTemporary: getSafe(() => values.isTemporary, false),
             issuedAt: values.issuedAt && getSafe(() => encodeURIComponent(getStringISODate(values.issuedAt)), null),
             issuer: values.issuer,
@@ -159,9 +159,8 @@ class DocumentManagerSidebar extends Component {
               await updateAttachment(values.id, { ...payload, type: values.documentType.id })
             } else {
               values.files.forEach(async file => {
-                  await addAttachment(file, values.documentType.id, payload)
-                }
-              )
+                await addAttachment(file, values.documentType.id, payload)
+              })
             }
           } catch (e) {
             console.error(e)
@@ -178,7 +177,7 @@ class DocumentManagerSidebar extends Component {
           const errorFiles = get(errors, 'files', null)
 
           return (
-            <CustomForm>
+            <CustomForm autoComplete='off'>
               <FlexSidebar
                 visible={true}
                 width='very wide'
@@ -199,7 +198,6 @@ class DocumentManagerSidebar extends Component {
                 </div>
                 <FlexContent style={{ padding: '16px' }}>
                   <CustomSegmentContent basic>
-
                     <FormGroup widths='equal'>
                       <Dropdown
                         inputProps={{
@@ -282,14 +280,16 @@ class DocumentManagerSidebar extends Component {
                           </FormattedMessage>
                         }
                       />
-                      {false && (<FormField style={{ textAlign: 'right' }}>
-                        <div style={{ paddingTop: '40px' }}>
-                          <Checkbox
-                            name='isTemporary'
-                            label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
-                          />
-                        </div>
-                      </FormField>)}
+                      {false && (
+                        <FormField style={{ textAlign: 'right' }}>
+                          <div style={{ paddingTop: '40px' }}>
+                            <Checkbox
+                              name='isTemporary'
+                              label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
+                            />
+                          </div>
+                        </FormField>
+                      )}
                     </FormGroup>
 
                     <FormGroup widths='equal'>
@@ -353,10 +353,7 @@ class DocumentManagerSidebar extends Component {
                     {!values.id && (
                       <FormGroup widths='equal' style={{ marginTop: '20px' }}>
                         <FormField>
-                          <div style={!!errorFiles
-                            ? { border: '1px solid #9f3a38', margin: '-1px' }
-                            : null
-                          }>
+                          <div style={!!errorFiles ? { border: '1px solid #9f3a38', margin: '-1px' } : null}>
                             <UploadAttachment
                               name='files'
                               attachments={values.files}
@@ -423,18 +420,12 @@ class DocumentManagerSidebar extends Component {
                   </CustomSegmentContent>
                 </FlexContent>
                 <BottomButtons>
-                  <Button
-                    basic
-                    onClick={() => closePopup()}
-                    data-test='settings_documents_sidebar_reset_btn'>
+                  <Button basic onClick={() => closePopup()} data-test='settings_documents_sidebar_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                  <Button
-                    secondary
-                    onClick={() => this.submitForm()}
-                    data-test='settings_documents_sidebar_submit_btn'>
+                  <Button secondary onClick={() => this.submitForm()} data-test='settings_documents_sidebar_submit_btn'>
                     <FormattedMessage id='global.save' defaultMessage='Save'>
                       {text => text}
                     </FormattedMessage>
@@ -469,7 +460,7 @@ const mapStateToProps = ({ manageGuests }) => {
       value: d.id
     })),
     documentTypesFetching: manageGuests.documentTypesLoading,
-    edit: getSafe(() => manageGuests.popupValues.id, false),
+    edit: getSafe(() => manageGuests.popupValues.id, false)
   }
 }
 
