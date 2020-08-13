@@ -373,10 +373,14 @@ export const LeftMenu = styled(Menu)`
       font-weight: 700 !important;
 
       &:hover,
-      &:hover i,
-      &:hover svg {
+      &:hover i {
         color: #20273a !important;
       }
+
+      &:hover svg {
+        color: #2599d5 !important;
+      }
+      
 
       &.active {
         background: #edeef2 !important;
@@ -430,7 +434,7 @@ export const LeftMenu = styled(Menu)`
       border-radius: 4px !important;
       padding: 12px 40px 12px 55px;
       text-align: left;
-      color: #848893 !important;
+      color: #20273a !important;
       line-height: 26px;
 
       &:before,
@@ -649,7 +653,7 @@ export const LeftMenu = styled(Menu)`
         > .text,
         > .text ~ i,
         > .text ~ svg {
-          color: #848893 !important;
+          color: #20273a !important;
 
           &.hexagon {
             color: #2599d5 !important;
@@ -675,7 +679,7 @@ export const LeftMenu = styled(Menu)`
 
         > .text ~ i,
         > .text ~ svg {
-          color: #20273a !important;
+          color: #2599d5 !important;
         }
 
         &:before,
