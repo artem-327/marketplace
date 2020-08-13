@@ -9,7 +9,6 @@ import ProdexGrid from '~/components/table'
 
 const GridContainer = styled.div`
   padding-top: 15px !important;
-  overflow-x: hidden;
 `
 
 const columns = [
@@ -105,7 +104,7 @@ export default class ShippingQuote extends Component {
     let { shippingQuotes, shippingQuotesAreFetching, selectedAddress } = this.props
 
     return (
-      <GridContainer>
+      <GridContainer className='flex stretched'>
         <ProdexGrid
           tableName='checkout_freight_table'
           loading={shippingQuotesAreFetching}
