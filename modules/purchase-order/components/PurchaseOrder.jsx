@@ -107,6 +107,16 @@ const DivInTitle = styled.div`
   padding-left: 10px;
 `
 
+const QuoteRow = styled.div`
+  flex-direction: column !important;
+  margin: 0 !important;
+  flex-grow: 1 !important;
+  flex-shrink: 1 !important;
+  height: 100%;
+  padding-bottom: 0 !important;
+  padding-right: 18px !important;
+`
+
 const validationSchema = Yup.object().shape({
   address: Yup.number().required(errorMessages.requiredMessage)
 })
@@ -430,18 +440,22 @@ class PurchaseOrder extends Component {
                       </StyledRow>
 
                       {!cart.weightLimitExceed && this.state.selectedAddress ? (
-                        <ShippingQuote
-                          selectionDisabled={!echoFreight}
-                          currency={currency}
-                          selectedShippingQuote={this.props.cart.selectedShipping}
-                          handleQuoteSelect={index => {
-                            setFieldValue('shipmentQuoteId', '')
-                            this.handleQuoteSelect(index)
-                          }}
-                          selectedAddress={this.state.selectedAddress}
-                          shippingQuotes={shippingQuotes}
-                          shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
-                        />
+                        <SemanticContainer className='flex stretched' style={{ maxHeight: '220px' }}>
+                          <QuoteRow className='flex stretched'>
+                            <ShippingQuote
+                              selectionDisabled={!echoFreight}
+                              currency={currency}
+                              selectedShippingQuote={this.props.cart.selectedShipping}
+                              handleQuoteSelect={index => {
+                                setFieldValue('shipmentQuoteId', '')
+                                this.handleQuoteSelect(index)
+                              }}
+                              selectedAddress={this.state.selectedAddress}
+                              shippingQuotes={shippingQuotes}
+                              shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
+                            />
+                          </QuoteRow>
+                        </SemanticContainer>
                       ) : (
                         !this.state.selectedAddress && (
                           <GridRow>
