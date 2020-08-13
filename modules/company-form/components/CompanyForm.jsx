@@ -116,7 +116,7 @@ class CompanyForm extends Component {
   }
 
   loadCompanyLogo = async () => {
-    if (this.props.hasLogo && this.props.selectLogo && this.props.getCompanyLogo) {
+    if (this.props.hasLogo && this.props.selectLogo && this.props.getCompanyLogo && this.props.companyId) {
       const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
 
       if (companyLogo.value.data.size) this.props.selectLogo(companyLogo.value.data, false)
@@ -176,7 +176,20 @@ class CompanyForm extends Component {
   }
 
   renderCompanyFields = () => {
-    let { intl, loading, data, setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = this.props
+    let {
+      intl,
+      loading,
+      data,
+      setFieldValue,
+      values,
+      setFieldTouched,
+      errors,
+      touched,
+      isSubmitting,
+      enableAssociations,
+      enableCheckbox,
+      associations
+    } = this.props
     const { formatMessage } = intl
     return (
       <>
@@ -284,6 +297,53 @@ class CompanyForm extends Component {
             isSubmitting={isSubmitting}
           />
         </FormGroup>
+
+        {(enableAssociations || enableCheckbox) && (
+          <FormGroup>
+            {enableAssociations && (
+              <FormField className='upload-input' width={8}>
+                <label htmlFor='field_dropdown_associations'>
+                  <FormattedMessage id='global.associations' defaultMessage='Associations' />
+                </label>
+                <Dropdown
+                  options={
+                    associations && associations.length
+                      ? associations.map(assoc => ({
+                        text: assoc.name,
+                        value: assoc.id,
+                        key: assoc.id
+                      }))
+                      : []
+                  }
+                  clearable
+                  multiple
+                  loading={loading}
+                  search
+                  selection
+                  value={this.state.associations}
+                  onChange={(e, data) => {
+                    e.preventDefault()
+                    this.setState({
+                      associations: data.value
+                    })
+                    setFieldValue('associations', data.value)
+                  }}
+                  name='associations'
+                  data-test='company_form_association_drpdn'
+                />
+              </FormField>
+            )}
+            {enableCheckbox && (
+              <FormField className='upload-input' width={8} style={{ marginTop: '32px', paddingLeft: '40px' }}>
+                <Checkbox
+                  label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
+                  name='enabled'
+                  data-test='company_form_enabled_chckb'
+                />
+              </FormField>
+            )}
+          </FormGroup>
+        )}
       </>
     )
   }

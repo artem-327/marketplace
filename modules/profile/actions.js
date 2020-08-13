@@ -1,9 +1,6 @@
 import * as AT from './action-types'
 import api from './api'
 
-import { SET_PREFERRED_LANGUAGE } from '~/modules/settings/action-types'
-import { setPreferredLanguage } from '~/modules/settings/actions'
-
 const removeEmpty = obj =>
   Object.entries(obj).forEach(([key, val]) => {
     if (val && typeof val === 'object') {
@@ -71,3 +68,8 @@ export function changePassword(data) {
     payload: api.changePassword(data)
   }
 }
+
+export const setPreferredLanguage = lang => ({
+  type: AT.PROFILE_PREFERRED_LANGUAGE,
+  payload: api.setPreferredLanguage(lang)
+})

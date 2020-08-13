@@ -2,6 +2,7 @@ import * as AT from './action-types'
 
 export const initialState = {
   tags: [],
+  productOffers: [],
   loading: false
 }
 
@@ -21,6 +22,24 @@ export default function reducer(state = initialState, action) {
         tags: action.payload,
         loading: false
       }
+    }
+
+    case AT.SEARCH_PRODUCT_OFFERS_INVENTORY_PENDING: {
+      return { ...state, loading: true }
+    }
+    case AT.SEARCH_PRODUCT_OFFERS_INVENTORY_REJECTED: {
+      return { ...state, loading: false }
+    }
+    case AT.SEARCH_PRODUCT_OFFERS_INVENTORY_FULFILLED: {
+      return {
+        ...state,
+        productOffers: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.SEARCH_CLEAR_PRODUCT_OFFERS: {
+      return { productOffers: [] }
     }
 
     default: {

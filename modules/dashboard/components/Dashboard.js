@@ -215,7 +215,11 @@ class Dashboard extends Component {
               <>
                 <SummaryRectangle
                   icon={<DollarSign />}
-                  data={productOffersValue > 1000000 ? Math.round(productOffersValue / 1000000) : productOffersValue}
+                  data={
+                    productOffersValue > 1000000
+                      ? Math.round(productOffersValue / 1000000)
+                      : Math.round(productOffersValue)
+                  }
                   title={productOffersValue > 1000000 ? 'Total Products Value $M' : 'Total Products Value $'}
                   titleId={
                     productOffersValue > 1000000
@@ -229,7 +233,7 @@ class Dashboard extends Component {
                   data={
                     broadcastedProductOffersValue > 1000000
                       ? Math.round(broadcastedProductOffersValue / 1000000)
-                      : broadcastedProductOffersValue
+                      : Math.round(broadcastedProductOffersValue)
                   }
                   title={
                     broadcastedProductOffersValue > 1000000 ? 'Total Broadcasted Value $M' : 'Total Broadcasted Value $'
@@ -279,26 +283,37 @@ class Dashboard extends Component {
         ) : null}
         {(!isAdmin && !isClientCompanyAdmin) || takeover ? (
           <Grid.Row>
-            <Grid.Column width={5}>
-              <PieGraph
-                innerRadius='30%'
-                data={top10CompanyProductsByQuantitySales}
-                title='PRODUCTS BY QUANTITY'
-                titleId='dasboard.productsQuantity.title'
-              />
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <PieGraph
-                innerRadius='30%'
-                isCurrency={true}
-                data={top10CompanyProductsByValueSales}
-                title='PRODUCTS BY VALUE'
-                titleId='dasboard.productsValue.title'
-              />
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <PieGraph innerRadius='30%' data={top10Buyers} title='TOP 10 BUYERS' titleId='dasboard.topBuyers.title' />
-            </Grid.Column>
+            {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
+              <Grid.Column width={5}>
+                <PieGraph
+                  innerRadius='30%'
+                  data={top10CompanyProductsByQuantitySales}
+                  title='PRODUCTS BY QUANTITY'
+                  titleId='dasboard.productsQuantity.title'
+                />
+              </Grid.Column>
+            ) : null}
+            {top10CompanyProductsByValueSales && top10CompanyProductsByValueSales.length ? (
+              <Grid.Column width={5}>
+                <PieGraph
+                  innerRadius='30%'
+                  isCurrency={true}
+                  data={top10CompanyProductsByValueSales}
+                  title='PRODUCTS BY VALUE'
+                  titleId='dasboard.productsValue.title'
+                />
+              </Grid.Column>
+            ) : null}
+            {top10Buyers && top10Buyers.length ? (
+              <Grid.Column width={5}>
+                <PieGraph
+                  innerRadius='30%'
+                  data={top10Buyers}
+                  title='TOP 10 BUYERS'
+                  titleId='dasboard.topBuyers.title'
+                />
+              </Grid.Column>
+            ) : null}
           </Grid.Row>
         ) : null}
         {isAdmin && !takeover ? (
@@ -347,6 +362,7 @@ Dashboard.defaultProps = {
   productOffersValue: 0,
   usersCount: 0,
   top10ProductGroups: [],
+  top10CompaniesByUsers: [],
   top10CompaniesByCompanyProducts: [],
   top10CompaniesBySalesInLastYear: [],
   top10CompanyProductsByQuantitySales: [],

@@ -77,7 +77,8 @@ export const initialState = {
   searchedSellMarketSegments: [],
   searchedSellMarketSegmentsLoading: false,
   searchedBuyMarketSegments: [],
-  searchedBuyMarketSegmentsLoading: false
+  searchedBuyMarketSegmentsLoading: false,
+  tableHandlersFilters: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -275,10 +276,10 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentTab: action.payload.tab,
-        currentAddForm: null,
-        currentEditForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null,
+        currentAddForm: state.currentTab !== action.payload.tab ? null : state.currentAddForm,
+        currentEditForm: state.currentTab !== action.payload.tab ? null : state.currentEditForm,
+        currentEdit2Form: state.currentTab !== action.payload.tab ? null : state.currentEdit2Form,
+        currentAddDwolla: state.currentTab !== action.payload.tab ? null : state.currentAddDwolla,
         filterCasIds: []
       }
     }
@@ -739,6 +740,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         searchedBuyMarketSegments: action.payload,
         searchedBuyMarketSegmentsLoading: false
+      }
+    }
+
+    case AT.ADMIN_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [payload.variable]: payload.value
       }
     }
 

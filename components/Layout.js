@@ -85,12 +85,15 @@ const clientCompanyRoutes = {
 class Layout extends Component {
   state = {
     fatalError: false,
-    mainClass: null
+    mainClass: null,
+    showCopyright: false,
+    copyrightClassName: ''
   }
 
   constructor(props) {
     super(props)
     this.navigationPS = React.createRef()
+    this.mainContainer = React.createRef()
   }
 
   componentDidMount() {
@@ -98,8 +101,10 @@ class Layout extends Component {
 
     const { auth, phoneCountryCodes, getCountryCodes, hasLogo } = this.props
 
-    Router.events.on('beforeHistoryChange', this.handleRouteChange)
-    Router.events.on('routeChangeStart', this.handleRouteChange)
+    //document.addEventListener('wheel', this.showCopyright)
+
+    Router.events.on('beforeHistoryChange', this.handleRouteEvent)
+    Router.events.on('routeChangeStart', this.handleRouteEvent)
 
     if (this.state.fatalError) this.setState({ fatalError: false })
     if (!phoneCountryCodes.length) getCountryCodes()
@@ -109,6 +114,55 @@ class Layout extends Component {
 
     const mainClass = this.props.takeover ? 'takeover' : null
     this.setState({ mainClass: mainClass })
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('wheel', this.showCopyright)
+  }
+
+  showCopyright = e => {
+    const { showCopyright, copyrightClassName } = this.state
+    let tableResponsive = document.querySelector('.table-responsive')
+    let mainContainer = this.mainContainer.current
+
+    // if there is e.deltaY it is wheel event and it can show copyright if allowed
+    if (typeof e.deltaY !== 'undefined' && e.target.closest('.modals, .sidebar') === null) {
+      // scrolling down
+      if (e.deltaY > 0 && showCopyright && copyrightClassName !== 'show-cop') {
+        this.setState({ copyrightClassName: 'show-cop' })
+      }
+      // scrolling up - hides copyright if there is scrollbar
+      else if (
+        e.deltaY < 0 &&
+        copyrightClassName !== '' &&
+        ((tableResponsive !== null && tableResponsive.scrollHeight > tableResponsive.offsetHeight) ||
+          (tableResponsive === null && mainContainer.scrollHeight > mainContainer.offsetHeight))
+      ) {
+        this.setState({ copyrightClassName: '' })
+      }
+    }
+  }
+
+  trackScrolling = () => {
+    const { showCopyright, copyrightClassName } = this.state
+    let tableResponsive = document.querySelector('.table-responsive')
+    let mainContainer = this.mainContainer.current
+    //Get position of scroll and height scroll area
+    const scrollviewOffsetY = tableResponsive ? tableResponsive.scrollTop : mainContainer.scrollTop
+    const scrollviewFrameHeight = tableResponsive ? tableResponsive.clientHeight : mainContainer.clientHeight
+    const scrollviewContentHeight = tableResponsive ? tableResponsive.scrollHeight : mainContainer.scrollHeight
+    const sum = scrollviewOffsetY + scrollviewFrameHeight
+
+    if (
+      (tableResponsive && sum >= scrollviewContentHeight - 20 && this.props.renderCopyright) ||
+      (!tableResponsive && mainContainer && sum >= scrollviewContentHeight - 20)
+    ) {
+      this.setState({
+        showCopyright: true
+      })
+    } else {
+      this.setState({ showCopyright: false })
+    }
   }
 
   loadCompanyLogo = async () => {
@@ -132,13 +186,77 @@ class Layout extends Component {
     return Logo
   }
 
-  componentWillUpdate() {
+  cleanCopyrightState = () => {
+    this.setState({ showCopyright: false, copyrightClassName: '' })
+  }
+
+  componentWillUpdate(prevProps) {
+    if (
+      prevProps.adminTab !== this.props.adminTab ||
+      prevProps.companyTab !== this.props.companyTab ||
+      prevProps.operationTab !== this.props.operationTab ||
+      prevProps.productTab !== this.props.productTab ||
+      prevProps.myAccountTab !== this.props.myAccountTab
+    ) {
+      this.cleanCopyrightState()
+    }
     this.handleRouteChange(this.props.router.route)
+  }
+
+  componentDidUpdate(prevProps) {
+    // get the main datatable on page (not inside modal/sidebar)
+    let tableResponsive = Array.from(document.querySelectorAll('.table-responsive')).find(
+      table => table.closest('.modals, .sidebar') === null
+    )
+    let mainContainer = getSafe(() => this.mainContainer.current, '')
+
+    if (!tableResponsive || !mainContainer) return
+    // let parentSegment = null
+    // const { router, adminLoading, cartLoading, settingsLoading, wantedBoardLoading } = this.props
+
+    //Get position of scroll and height scroll area
+    const scrollviewOffsetY = tableResponsive ? tableResponsive.scrollTop : mainContainer.scrollTop
+    const scrollviewFrameHeight = tableResponsive ? tableResponsive.clientHeight : mainContainer.clientHeight
+    const scrollviewContentHeight = tableResponsive ? tableResponsive.scrollHeight : mainContainer.scrollHeight
+    const sum = scrollviewOffsetY + scrollviewFrameHeight
+
+    if (
+      (tableResponsive &&
+        sum >= scrollviewContentHeight - 20 &&
+        this.props.renderCopyright &&
+        this.state.copyrightClassName !== 'show-cop') ||
+      (!tableResponsive &&
+        mainContainer &&
+        sum >= scrollviewContentHeight - 20 &&
+        this.state.copyrightClassName !== 'show-cop')
+    ) {
+      this.setState({
+        showCopyright: true,
+        copyrightClassName: 'show-cop'
+      })
+    } else if (
+      sum < scrollviewContentHeight - 20 &&
+      !this.state.showCopyright &&
+      this.state.copyrightClassName === 'show-cop'
+    ) {
+      this.cleanCopyrightState()
+    }
   }
 
   componentDidCatch(error, info) {
     console.error('Error!', error, info)
     this.setState({ fatalError: true })
+  }
+
+  handleRouteEvent = url => {
+    const { showCopyright, copyrightClassName } = this.state
+
+    if (showCopyright || copyrightClassName !== '') {
+      this.cleanCopyrightState()
+      // this.handleRouteChange // will be called due to state change automatically
+    } else {
+      this.handleRouteChange(url)
+    }
   }
 
   handleRouteChange = url => {
@@ -176,13 +294,25 @@ class Layout extends Component {
       hasLogo,
       useCompanyLogo,
       companyName,
-      isEchoOperator
+      isEchoOperator,
+      renderCopyright
     } = this.props
     let icon = Icon && <Icon name='user' />
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
     if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
 
-    const { mainClass } = this.state
+    const { mainClass, copyrightClassName } = this.state
+    // if user is in Settings then copyrightContainer waiting to props renderCopyright
+    const copyrightContainer =
+      title.includes('Settings') && !renderCopyright ? null : (
+        <CopyrightContainer>
+          <FormattedMessage
+            id='global.copyright'
+            defaultMessage={`Copyright ${moment().format('YYYY')} Echosystem`}
+            values={{ currentYear: moment().format('YYYY') }}
+          />
+        </CopyrightContainer>
+      )
 
     return (
       <MainContainer fluid className={mainClass}>
@@ -283,10 +413,7 @@ class Layout extends Component {
                     <Menu.Item
                       onClick={() => triggerSystemSettingsModal(true)}
                       data-test='navigation_menu_settings_lnk'>
-                      <>
-                        {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
-                        <Settings role='user' />
-                      </>
+                      {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
                     </Menu.Item>
                   )}
                   <Dropdown.Item
@@ -316,21 +443,19 @@ class Layout extends Component {
         </TopMenu>
 
         {profile && profile.profilePopup && <Profile />}
+        <Settings role='user' scrolling={false} />
         <ChatWidget />
-        <FlexContainer>
+        <FlexContainer className={copyrightClassName} onScroll={this.trackScrolling}>
           <TopMenuContainer fluid>
             <Messages />
           </TopMenuContainer>
-          <ContentContainer fluid className='page-wrapper flex column stretched'>
+          <ContentContainer
+            ref={this.mainContainer}
+            onWheel={this.showCopyright}
+            className='ui fluid container page-wrapper flex column stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
-            <CopyrightContainer>
-              <FormattedMessage
-                id='global.copyright'
-                defaultMessage={`Copyright ${moment().format('YYYY')} Echosystem`}
-                values={{ currentYear: moment().format('YYYY') }}
-              />
-            </CopyrightContainer>
           </ContentContainer>
+          {copyrightContainer}
         </FlexContainer>
         <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
 
@@ -391,7 +516,17 @@ const mapStateToProps = state => {
     companyLogo: getSafe(() => state.businessTypes.companyLogo, null),
     useCompanyLogo: getSafe(() => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false),
     companyName: getSafe(() => state.auth.identity.company.name, false),
-    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator')
+    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+    renderCopyright: getSafe(() => state.settings.renderCopyright, false),
+    adminTab: getSafe(() => state.admin.currentTab.id, null),
+    companyTab: getSafe(() => state.companiesAdmin.currentTab.id, null),
+    operationTab: getSafe(() => state.operations.currentTab.id, null),
+    productTab: getSafe(() => state.productsAdmin.currentTab.id, null),
+    myAccountTab: getSafe(() => state.settings.currentTab.id, null),
+    adminLoading: state.admin.loading,
+    cartLoading: state.cart.cartIsFetching,
+    settingsLoading: state.settings.loading,
+    wantedBoardLoading: state.wantedBoard.loading
   }
 }
 

@@ -39,7 +39,8 @@ export const initialState = {
   myRequestedItemsType: 'product',
   tableHandlersFiltersWantedBoard: null,
   tableHandlersFiltersMyReqItems: null,
-  tableHandlersFiltersMyOffers: null
+  tableHandlersFiltersMyOffers: null,
+  openSidebar: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -72,7 +73,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         editWindowOpen: null,
-        editedId: null
+        editedId: null,
+        openSidebar: false,
+        sidebarValues: null
       }
     }
 
@@ -111,10 +114,19 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.WB_SIDEBAR_DETAIL_TRIGGER: {
+    case AT.WB_SIDEBAR_DETAIL_TRIGGER_PENDING: {
+      return {
+        ...state,
+        openSidebar: true,
+        loading: true
+      }
+    }
+
+    case AT.WB_SIDEBAR_DETAIL_TRIGGER_FULFILLED: {
       const row = payload.row ? payload.row.rawData : null
       return {
         ...state,
+        loading: false,
         editInitTrig: !state.editInitTrig,
         editWindowOpen: payload.activeTab,
         sidebarValues: payload.row,
@@ -132,8 +144,7 @@ export default function reducer(state = initialState, action) {
             'key'
           ),
           autocompleteData: row.element.productGroup
-            ?
-              [
+            ? [
                 {
                   key: row.element.productGroup.id,
                   text: row.element.productGroup.name,
@@ -161,6 +172,13 @@ export default function reducer(state = initialState, action) {
               )
             : state.searchedCasNumbers
         })
+      }
+    }
+
+    case AT.WB_SIDEBAR_DETAIL_TRIGGER_REJECTED: {
+      return {
+        ...state,
+        loading: false
       }
     }
 

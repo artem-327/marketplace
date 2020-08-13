@@ -37,6 +37,12 @@ const StyledHeader = styled(Header)`
   margin-bottom: 0;
 `
 
+const CheckboxContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+`
+
 class ProductImportPopup extends Component {
   state = {
     currentStep: 'upload',
@@ -144,7 +150,11 @@ class ProductImportPopup extends Component {
               </Step.Content>
             </Step>
           </Step.Group>
-
+        </Modal.Header>
+        <StyledModal>
+          {this.steps[currentStep]}
+        </StyledModal>
+        <CheckboxContainer>
           <Checkbox
             label={formatMessage({
               id: 'import.CSVwithoutHeader',
@@ -155,8 +165,7 @@ class ProductImportPopup extends Component {
             checked={csvWithoutHeader}
             onChange={() => this.props.changeCsvHeader()}
           />
-        </Modal.Header>
-        <StyledModal>{this.steps[currentStep]}</StyledModal>
+        </CheckboxContainer>
         <Modal.Actions>
           {currentStep !== 'confirmation' && (
             <Grid>

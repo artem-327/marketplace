@@ -131,7 +131,8 @@ export const initialState = {
   tableHandlersFiltersSettings: null,
   tableHandlersFiltersLocations: null,
   logisticsFilter: '',
-  'bank-accountsFilter': ''
+  'bank-accountsFilter': '',
+  renderCopyright: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1082,7 +1083,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentTab: payload,
-        isOpenSidebar: false,
+        isOpenSidebar: state.currentTab !== payload ? false : state.isOpenSidebar,
+        isOpenPopup: state.currentTab !== payload ? false : state.isOpenPopup,
+        popupValues: state.currentTab !== payload ? null : state.popupValues,
         filterValue: state.currentTab !== payload ? '' : state.filterValue,
         tabClicked: !state.tabClicked
       }
@@ -1519,10 +1522,10 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_HANDLE_LOCATIONS_TAB: {
       return {
         ...state,
-        locationsTab: action.payload,
-        isOpenSidebar: false,
-        openTab: null,
-        popupValues: null
+        locationsTab: payload,
+        isOpenSidebar: state.locationsTab !== payload ? false : state.isOpenSidebar,
+        openTab: state.locationsTab !== payload ? null : state.openTab,
+        popupValues: state.locationsTab !== payload ? null : state.popupValues
       }
     }
 
@@ -1530,6 +1533,20 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         [payload.variable]: payload.value
+      }
+    }
+
+    case AT.SETTINGS_RENDER_COPYRIGHT: {
+      return {
+        ...state,
+        renderCopyright: true
+      }
+    }
+
+    case AT.SETTINGS_CLEAN_RENDER_COPYRIGHT: {
+      return {
+        ...state,
+        renderCopyright: false
       }
     }
 

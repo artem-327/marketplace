@@ -30,8 +30,7 @@ export default class Summary extends Component {
 
     if (cartItems.length === 0) return null
 
-    let shipping =
-      cart.selectedShipping && cart.selectedShipping.quote ? cart.selectedShipping.quote.estimatedPrice : 'N/A'
+    let shipping = cart.selectedShipping && cart.selectedShipping.quote ? cart.selectedShipping.quote.estimatedPrice : 0
 
     return (
       <>
@@ -53,17 +52,17 @@ export default class Summary extends Component {
               </VerticalUnpaddedColumn>
             </RelaxedRow>
 
-            {/*
+            {
               <RelaxedRow columns={2}>
                 <VerticalUnpaddedColumn>
-                  <FormattedMessage id='cart.estimatedShipping' defaultMessage='Estimated Shipping' />
+                  <FormattedMessage id='cart.freightCost' defaultMessage='Freight Cost' />
                 </VerticalUnpaddedColumn>
 
-                <VerticalUnpaddedColumn>
-                  {shipping > 0 && <FormattedNumber style='currency' currency={currency} value={shipping} />}
+                <VerticalUnpaddedColumn black>
+                  <FormattedNumber style='currency' currency={currency} value={shipping} />
                 </VerticalUnpaddedColumn>
               </RelaxedRow>
-              */}
+            }
 
             <RelaxedRow columns={2}>
               <VerticalUnpaddedColumn>

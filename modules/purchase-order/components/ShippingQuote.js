@@ -9,7 +9,6 @@ import ProdexGrid from '~/components/table'
 
 const GridContainer = styled.div`
   padding-top: 15px !important;
-  overflow-x: hidden;
 `
 
 const columns = [
@@ -68,26 +67,35 @@ const columns = [
 
 export default class ShippingQuote extends Component {
   getRows = () => {
-    const { selectionDisabled, handleQuoteSelect, selectedShippingQuote, shippingQuotes: { rates }, currency } = this.props
+    const {
+      selectionDisabled,
+      handleQuoteSelect,
+      selectedShippingQuote,
+      shippingQuotes: { rates },
+      currency
+    } = this.props
     if (!rates) return []
 
     return rates.map((rate, index) => {
       let timeObj = rate.estimatedDeliveryDate && moment(rate.estimatedDeliveryDate)
-      let deliveryTime = rate.estimatedDeliveryDate ? moment(rate.estimatedDeliveryDate).format(getLocaleDateFormat()) : ''
+      let deliveryTime = rate.estimatedDeliveryDate
+        ? moment(rate.estimatedDeliveryDate).format(getLocaleDateFormat())
+        : ''
       return {
         id: index,
-        selected: <Radio
-          disabled={selectionDisabled}
-          checked={selectedShippingQuote && selectedShippingQuote.index === index}
-          onChange={() => handleQuoteSelect(index)}
-          data-test={`purchase_order_shipping_quote_${index}_rad`}
-        />,
+        selected: (
+          <Radio
+            disabled={selectionDisabled}
+            checked={selectedShippingQuote && selectedShippingQuote.index === index}
+            onChange={() => handleQuoteSelect(index)}
+            data-test={`purchase_order_shipping_quote_${index}_rad`}
+          />
+        ),
         carrierName: rate.carrierName,
         estimatedPrice: <FormattedNumber style='currency' currency={currency} value={rate.estimatedPrice} />,
         deliveryTime,
         etd: timeObj ? timeObj.fromNow() : '',
         serviceType: rate.serviceType
-
       }
     })
   }
@@ -96,8 +104,13 @@ export default class ShippingQuote extends Component {
     let { shippingQuotes, shippingQuotesAreFetching, selectedAddress } = this.props
 
     return (
-      <GridContainer>
-        <ProdexGrid tableName='checkout_freight_table' loading={shippingQuotesAreFetching} columns={columns} rows={this.getRows()} />
+      <GridContainer className='flex stretched'>
+        <ProdexGrid
+          tableName='checkout_freight_table'
+          loading={shippingQuotesAreFetching}
+          columns={columns}
+          rows={this.getRows()}
+        />
       </GridContainer>
     )
   }

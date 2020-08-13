@@ -414,6 +414,8 @@ class AddEditCompanySidebar extends React.Component {
                       errors={errors}
                       touched={touched}
                       isSubmitting={isSubmitting}
+                      companyId={popupValues ? popupValues.id : null}
+                      hasLogo={popupValues ? popupValues.hasLogo : false}
                     />
                     {!popupValues && (
                       <>
@@ -652,7 +654,8 @@ class AddEditCompanySidebar extends React.Component {
               <ErrorFocus />
             </Form>
           )
-        }}></Formik>
+        }}>
+      </Formik>
     )
   }
 }

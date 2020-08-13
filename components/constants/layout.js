@@ -179,7 +179,7 @@ export const LeftMenu = styled(Menu)`
         display: flex;
         flex-flow: column;
         height: auto;
-        
+
         > .ui.form {
           min-height: 200px;
         }
@@ -342,13 +342,13 @@ export const LeftMenu = styled(Menu)`
             display: flex;
             flex-flow: column;
           }
-          
+
           &.dropdown.opened {
             flex-grow: 0;
-            
+
             > .menu.transition {
               flex-grow: 1;
-              
+
               > .scrollbar-container {
                 min-height: calc(100% + 20px);
               }
@@ -373,10 +373,14 @@ export const LeftMenu = styled(Menu)`
       font-weight: 700 !important;
 
       &:hover,
-      &:hover i,
-      &:hover svg {
+      &:hover i {
         color: #20273a !important;
       }
+
+      &:hover svg {
+        color: #2599d5 !important;
+      }
+      
 
       &.active {
         background: #edeef2 !important;
@@ -430,7 +434,7 @@ export const LeftMenu = styled(Menu)`
       border-radius: 4px !important;
       padding: 12px 40px 12px 55px;
       text-align: left;
-      color: #848893 !important;
+      color: #20273a !important;
       line-height: 26px;
 
       &:before,
@@ -649,7 +653,7 @@ export const LeftMenu = styled(Menu)`
         > .text,
         > .text ~ i,
         > .text ~ svg {
-          color: #848893 !important;
+          color: #20273a !important;
 
           &.hexagon {
             color: #2599d5 !important;
@@ -675,7 +679,7 @@ export const LeftMenu = styled(Menu)`
 
         > .text ~ i,
         > .text ~ svg {
-          color: #20273a !important;
+          color: #2599d5 !important;
         }
 
         &:before,
@@ -785,7 +789,7 @@ export const LeftMenu = styled(Menu)`
         &.ps--active-y > .ps__rail-y {
           display: none !important;
         }
-        
+
         .ui.form {
           min-height: 100px;
         }
@@ -930,7 +934,7 @@ export const LeftMenuContainer = styled(Container)`
     flex-grow: 0;
     flex-shrink: 1;
   }
-  
+
   > .scrollbar-container {
     min-height: calc(100vh - 70px);
   }
@@ -963,19 +967,24 @@ export const MainContainer = styled(Container)`
     }
   }
 `
-export const ContentContainer = styled(Container)`
+export const ContentContainer = styled.div`
   /* padding: 0 20px; */
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  place-content: space-between;
 `
 export const CopyrightContainer = styled(Container)`
+  flex-shrink: 0;
+  flex-grow: 0;
+  position: relative;
+  overflow: hidden;
   display: block;
   box-sizing: border-box;
   width: 100% !important;
-  height: 60px;
+  height: 0px;
   margin: 0;
-  padding: 23px 0;
+  padding: 0px 0;
   background-color: #f8f9fb;
   box-shadow: inset 0 1px 0 0 #dee2e6;
   text-align: center;
@@ -983,6 +992,11 @@ export const CopyrightContainer = styled(Container)`
   font-weight: 400;
   color: #848893;
   line-height: 14px;
+  
+  .show-cop > & {
+    height: 60px;
+    padding: 23px 0;
+  }
 `
 export const FlexContainer = styled.div`
   position: fixed;

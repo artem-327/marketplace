@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import api from '~/api'
 import pt from 'prop-types'
 import { getSafe } from '~/utils/functions'
+import { renderCopyright, cleanRenderCopyright } from '~/modules/settings/actions'
 export const DatagridContext = React.createContext({})
 
 const CONSTANTS_INTERVALS = {
@@ -25,10 +26,10 @@ const initialState = {
     pageSize: 50,
     pageNumber: 0
   },
-  isScrollToEnd: false,
   isScrollToUp: false,
   savedFilters: {},
-  refreshTable: false
+  refreshTable: false,
+  loadedAllData: false
 }
 
 // singleton instance
@@ -67,6 +68,7 @@ class DatagridProvider extends Component {
   }
 
   componentWillUnmount() {
+    this.props.cleanRenderCopyright()
     clearInterval(this.interval)
   }
 
@@ -77,7 +79,7 @@ class DatagridProvider extends Component {
   //   }
   // }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (
       prevProps.apiConfig &&
       prevProps.apiConfig.url &&
@@ -85,6 +87,7 @@ class DatagridProvider extends Component {
       this.props.apiConfig.url &&
       prevProps.apiConfig.url !== this.props.apiConfig.url
     ) {
+      this.props.cleanRenderCopyright()
       if (this.props.preserveFilters) {
         if (!this.props.skipInitLoad) {
           this.loadData()
@@ -106,10 +109,8 @@ class DatagridProvider extends Component {
   loadNextPage = async (overPage = 0) => {
     if (!this.props.apiConfig) return
 
-    const { datagridParams, query, isScrollToEnd, refreshTable, allLoaded } = this.state
+    const { datagridParams, query, refreshTable, allLoaded } = this.state
     const { apiConfig } = this.props
-
-    isScrollToEnd && this.setState({ loading: true })
 
     let pageNumber = 0
     if (refreshTable) {
@@ -154,10 +155,33 @@ class DatagridProvider extends Component {
       const { data } = response
       const allLoaded = data.length < datagridParams.pageSize || data.length === 0
 
+      if (this.state.loadedAllData || allLoaded) this.props.renderCopyright()
+      else this.props.cleanRenderCopyright()
+
+      let arrRows = this.state.rows
+      if (arrRows && arrRows.length) {
+        arrRows.forEach((row, i) => {
+          if (data && data.length) {
+            data.forEach((d, j) => {
+              if (d.id === row.id) {
+                arrRows.splice(i, 1, d)
+                data.splice(j, 1)
+              }
+              return
+            })
+          }
+        })
+      }
+      const newRows =
+        arrRows && arrRows.length
+          ? arrRows.concat(data && data.length ? data : [])
+          : [].concat(data && data.length ? data : [])
+
       this.setState(s => ({
-        rows: _.unionBy(data, s.rows, 'id'),
+        rows: newRows,
         loading: false,
         allLoaded,
+        loadedAllData: s.loadedAllData ? s.loadedAllData : allLoaded,
         datagridParams: {
           ...s.datagridParams,
           pageNumber: pageNumber + (allLoaded ? 0 : 1)
@@ -204,10 +228,12 @@ class DatagridProvider extends Component {
   onScrollToEnd = (overBottoms = 0) => {
     const overPage =
       !this.props.autoRefresh || (this.state.datagridParams.pageNumber === 1 && overBottoms <= 1) ? 0 : overBottoms - 1
-    this.setState({
-      isScrollToEnd: true
-    })
-    this.loadNextPageSafe(overPage)
+    if (!this.props.allLoaded) {
+      this.setState({
+        loading: true
+      })
+      this.loadNextPage(overPage)
+    }
   }
 
   onScrollOverNewEnd = (overBottoms = 0) => {
@@ -224,7 +250,6 @@ class DatagridProvider extends Component {
 
   loadNextPageSafe = (overPage = 0) => {
     const { allLoaded } = this.state
-
     !allLoaded && this.loadNextPage(overPage)
   }
 
@@ -232,6 +257,7 @@ class DatagridProvider extends Component {
     this.setState(
       s => ({
         ready: true,
+        loading: true,
         datagridParams: {
           ...s.datagridParams,
           ...params
@@ -312,8 +338,7 @@ class DatagridProvider extends Component {
       }
       this.setState(
         s => ({
-          datagridParams: { ...s.datagridParams, ...params },
-          isScrollToEnd: false
+          datagridParams: { ...s.datagridParams, ...params }
         }),
         () => {
           this.setFilter(
@@ -361,7 +386,9 @@ class DatagridProvider extends Component {
     const {
       rows,
       loading,
-      datagridParams: { filters }
+      datagridParams: { filters },
+      savedFilters,
+      loadedAllData
     } = this.state
 
     return (
@@ -371,6 +398,7 @@ class DatagridProvider extends Component {
           rows,
           loading,
           filters,
+          savedFilters,
           autoRefresh: this.props.autoRefresh,
           removeRow: this.removeRowById,
           updateRow: this.updateRow,
@@ -387,6 +415,7 @@ class DatagridProvider extends Component {
           tableProps: {
             rows,
             loading,
+            loadedAllData,
             onTableReady: this.onTableReady,
             onSortingChange: this.setSorting,
             onScrollToEnd: this.onScrollToEnd,
@@ -415,4 +444,4 @@ const mapStateToProps = ({ auth }) => {
   }
 }
 
-export default connect(mapStateToProps)(DatagridProvider)
+export default connect(mapStateToProps, { renderCopyright, cleanRenderCopyright })(DatagridProvider)

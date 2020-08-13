@@ -505,7 +505,8 @@ class CompanyModal extends React.Component {
               </Modal.Actions>
             </Modal>
           )
-        }}></Formik>
+        }}>
+      </Formik>
     )
   }
 }

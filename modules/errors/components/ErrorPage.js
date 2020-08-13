@@ -110,11 +110,6 @@ class ErrorPage extends Component {
 
     return (
       <PageError>
-        <Header>
-          <DivImage>
-            <LogoImage src={Logo} />
-          </DivImage>
-        </Header>
         <DivIconError>
           <ErrorImg src={errorSvg} />
         </DivIconError>
@@ -128,12 +123,12 @@ class ErrorPage extends Component {
           />
         </Content>
         <ButtonDiv>
-          <CustomButton type='button' onClick={() => Router.push('/inventory/my')}>
+          <CustomButton type='button' onClick={() => Router.back()}>
             <div>
               <Layers size={22} />
             </div>
             <ButtonContent>
-              <FormattedMessage id='error.bringToInventory' defaultMessage='Bring me to My Inventory'>
+              <FormattedMessage id='error.bringMeBack' defaultMessage='Bring me back to last page'>
                 {text => text}
               </FormattedMessage>
             </ButtonContent>

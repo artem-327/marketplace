@@ -7,8 +7,14 @@ import TableHandler from './TableHandler'
 import Table from './Table'
 import EditPopup1Parameter from './EditPopup1Parameter'
 import AddNewPopup1Parameter from './AddNewPopup1Parameter'
+import * as Actions from '../actions'
 
 class MarketSegments extends Component {
+  componentWillUnmount() {
+    const { currentEditForm, currentAddForm, closeAddPopup } = this.props
+    if (currentEditForm || currentAddForm) closeAddPopup()
+  }
+
   getApiConfig = () => ({
     url: '/prodex/api/market-segments/datagrid',
     searchToFilter: v => (v && v.searchInput
@@ -40,4 +46,4 @@ const mapStateToProps = ({ marketSegments }) => ({
   currentAddForm: marketSegments.currentAddForm
 })
 
-export default connect(mapStateToProps)(MarketSegments)
+export default connect(mapStateToProps, Actions)(MarketSegments)

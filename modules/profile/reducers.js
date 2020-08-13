@@ -26,6 +26,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.PROFILE_PREFERRED_LANGUAGE_PENDING:
     case AT.PROFILE_CHANGE_PASSWORD_PENDING:
     case AT.PROFILE_GET_CURRENCIES_PENDING:
     case AT.PROFILE_GET_USERS_ME_PENDING: {
@@ -35,6 +36,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.PROFILE_PREFERRED_LANGUAGE_FULFILLED:
+    case AT.PROFILE_PREFERRED_LANGUAGE_REJECTED:
     case AT.PROFILE_GET_CURRENCIES_REJECTED:
     case AT.PROFILE_GET_USERS_ME_REJECTED: {
       return {

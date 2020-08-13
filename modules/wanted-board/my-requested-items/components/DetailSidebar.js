@@ -259,30 +259,48 @@ class DetailSidebar extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.closeDetailSidebar()
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.editInitTrig !== this.props.editInitTrig) {
       const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = this.formikProps
-      if (_.isEmpty(touched)) {
-        this.props.updateEditedId(this.props.sidebarValues.id)
-        this.setState({ sidebarValues: this.props.sidebarValues })
-      } else {
-        // Form edited
-        validateForm().then(err => {
-          const errors = Object.keys(err)
-          if (errors.length && errors[0] !== 'isCanceled') {
-            submitForm() // to show errors
-          } else {
-            confirm(
-              <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
-              <FormattedMessage
-                id='confirm.global.unsavedChanges.content'
-                defaultMessage='You have unsaved changes. Do you wish to save them?'
-              />
-            )
-              .then(
-                async () => {
-                  // Confirm
-                  if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
+      if (this.props.sidebarValues) {
+        if (_.isEmpty(touched)) {
+          this.props.updateEditedId(this.props.sidebarValues.id)
+          this.setState({ sidebarValues: this.props.sidebarValues })
+        } else {
+          // Form edited
+          validateForm().then(err => {
+            const errors = Object.keys(err)
+            if (errors.length && errors[0] !== 'isCanceled') {
+              submitForm() // to show errors
+            } else {
+              confirm(
+                <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
+                <FormattedMessage
+                  id='confirm.global.unsavedChanges.content'
+                  defaultMessage='You have unsaved changes. Do you wish to save them?'
+                />
+              )
+                .then(
+                  async () => {
+                    // Confirm
+                    if (await this.submitForm(values, setSubmitting, setTouched).sendSuccess) {
+                      if (
+                        this.props.sidebarValues.deliveryCountry &&
+                        this.props.sidebarValues.deliveryCountry.hasProvinces
+                      ) {
+                        this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
+                        this.setState({ hasProvinces: true })
+                      }
+                      this.setState({ sidebarValues: this.props.sidebarValues })
+                      this.props.updateEditedId(this.props.sidebarValues.id)
+                    }
+                  },
+                  () => {
+                    // Cancel
                     if (
                       this.props.sidebarValues.deliveryCountry &&
                       this.props.sidebarValues.deliveryCountry.hasProvinces
@@ -293,23 +311,11 @@ class DetailSidebar extends Component {
                     this.setState({ sidebarValues: this.props.sidebarValues })
                     this.props.updateEditedId(this.props.sidebarValues.id)
                   }
-                },
-                () => {
-                  // Cancel
-                  if (
-                    this.props.sidebarValues.deliveryCountry &&
-                    this.props.sidebarValues.deliveryCountry.hasProvinces
-                  ) {
-                    this.props.getProvinces(this.props.sidebarValues.deliveryCountry.id)
-                    this.setState({ hasProvinces: true })
-                  }
-                  this.setState({ sidebarValues: this.props.sidebarValues })
-                  this.props.updateEditedId(this.props.sidebarValues.id)
-                }
-              )
-              .catch(() => {})
-          }
-        })
+                )
+                .catch(() => {})
+            }
+          })
+        }
       }
     }
   }
@@ -546,8 +552,7 @@ class DetailSidebar extends Component {
                                 buttonCaption={
                                   <FormattedMessage
                                     id='wantedBoard.requestACompanyGenericProduct'
-                                    defaultMessage='Request a Company Generic Product'
-                                  >
+                                    defaultMessage='Request a Company Generic Product'>
                                     {text => text}
                                   </FormattedMessage>
                                 }
@@ -579,7 +584,8 @@ class DetailSidebar extends Component {
                             options={searchedCasNumbers}
                             inputProps={{
                               placeholder: formatMessage({
-                                id: 'wantedBoard.enterCasNumber', defaultMessage: 'Enter CAS Number'
+                                id: 'wantedBoard.enterCasNumber',
+                                defaultMessage: 'Enter CAS Number'
                               }),
                               loading: searchedCasNumbersLoading,
                               'data-test': 'my_requested_items_sidebar_casNumber_drpdn',
@@ -693,7 +699,8 @@ class DetailSidebar extends Component {
                           options={listCountries}
                           inputProps={{
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectCountry', defaultMessage: 'Select Country'
+                              id: 'wantedBoard.selectCountry',
+                              defaultMessage: 'Select Country'
                             }),
                             'data-test': 'my_requested_items_sidebar_deliveryLocation_drpdn',
                             selection: true,
@@ -716,7 +723,8 @@ class DetailSidebar extends Component {
                           options={listProvinces}
                           inputProps={{
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectState', defaultMessage: 'Select State'
+                              id: 'wantedBoard.selectState',
+                              defaultMessage: 'Select State'
                             }),
                             'data-test': 'my_requested_items_sidebar_selectState_drpdn',
                             selection: true,
@@ -855,7 +863,8 @@ class DetailSidebar extends Component {
                             selection: true,
                             clearable: true,
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectCondition', defaultMessage: 'Select condition'
+                              id: 'wantedBoard.selectCondition',
+                              defaultMessage: 'Select condition'
                             })
                           }}
                         />
@@ -874,7 +883,8 @@ class DetailSidebar extends Component {
                             selection: true,
                             multiple: true,
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectOrigin', defaultMessage: 'Select Origin'
+                              id: 'wantedBoard.selectOrigin',
+                              defaultMessage: 'Select Origin'
                             })
                           }}
                         />
@@ -895,8 +905,10 @@ class DetailSidebar extends Component {
                             'data-test': 'my_requested_items_sidebar_grade_drpdn',
                             selection: true,
                             multiple: true,
-                            placeholder:
-                              formatMessage({ id: 'wantedBoard.selectGrade', defaultMessage: 'Select Grade' })
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.selectGrade',
+                              defaultMessage: 'Select Grade'
+                            })
                           }}
                         />
                       </GridColumn>
@@ -913,8 +925,7 @@ class DetailSidebar extends Component {
                             'data-test': 'my_requested_items_sidebar_forms_drpdn',
                             selection: true,
                             multiple: true,
-                            placeholder:
-                              formatMessage({ id: 'wantedBoard.selectForm', defaultMessage: 'Select form' })
+                            placeholder: formatMessage({ id: 'wantedBoard.selectForm', defaultMessage: 'Select form' })
                           }}
                         />
                       </GridColumn>
@@ -932,7 +943,8 @@ class DetailSidebar extends Component {
                           options={listPackagingTypes}
                           inputProps={{
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectPackaging', defaultMessage: 'Select packaging'
+                              id: 'wantedBoard.selectPackaging',
+                              defaultMessage: 'Select packaging'
                             }),
                             'data-test': 'my_requested_items_sidebar_packaging_drpdn',
                             selection: true,

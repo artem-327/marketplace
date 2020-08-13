@@ -38,7 +38,7 @@ import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo, renderCopyright, closePopup, closeSidebar } from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -61,9 +61,10 @@ const FixyWrapper = styled.div`
   transform: translateY(0);
 `
 
-const ScrollableSegment = styled(Segment)`
-  max-height: 90vh;
-  overflow-y: auto;
+const SettingsSegment = styled(Segment)`
+  height: auto !important;
+  margin-bottom: 42px !important;
+  padding-bottom: 0 !important;
 `
 
 const SettingsGrid = styled(Grid)`
@@ -196,7 +197,7 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    const { isCompanyAdmin, addTab, tabsNames, getIdentity, isClientCompanyAdmin } = this.props
+    const { isCompanyAdmin, addTab, tabsNames, getIdentity, isClientCompanyAdmin, renderCopyright } = this.props
     try {
       await getIdentity()
     } catch (error) {
@@ -213,6 +214,18 @@ class Settings extends Component {
 
     this.changeRoute(queryTab)
     this.redirectPage(queryTab)
+    renderCopyright()
+  }
+
+  componentWillUnmount() {
+    const {
+      isOpenPopup,
+      isOpenSidebar,
+      closePopup,
+      closeSidebar
+    } = this.props
+    if (isOpenPopup) closePopup()
+    if (isOpenSidebar) closeSidebar()
   }
 
   selectLogo = (logo, isNew = true) => {
@@ -224,7 +237,7 @@ class Settings extends Component {
   }
 
   companyDetails = () => {
-    let { postCompanyLogo, deleteCompanyLogo } = this.props
+    let { postCompanyLogo, deleteCompanyLogo, companyId, hasLogo } = this.props
     const { selectLogo, removeLogo } = this
     const { companyLogo, shouldUpdateLogo } = this.state
 
@@ -271,6 +284,8 @@ class Settings extends Component {
                     errors={errors}
                     touched={touched}
                     isSubmitting={isSubmitting}
+                    companyId={companyId}
+                    hasLogo={hasLogo}
                   />
                   <Grid>
                     <GridColumn floated='right' computer={4}>
@@ -314,9 +329,9 @@ class Settings extends Component {
       logistics: <LogisticsTable />,
       'system-settings': (
         <FixyWrapper>
-          <ScrollableSegment basic padded='very'>
+          <SettingsSegment basic padded='very'>
             <SystemSettings asModal={false} inputsInGroup={3} role='company' />
-          </ScrollableSegment>
+          </SettingsSegment>
         </FixyWrapper>
       ),
       documents: <DocumentsTable />
@@ -486,7 +501,9 @@ const mapStateToProps = ({ settings, auth }) => {
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
     documentsOwner: getSafe(() => settings.documentsOwner, []),
     productCatalogUnmappedValue: settings.productCatalogUnmappedValue,
-    isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false)
+    isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false),
+    companyId: getSafe(() => auth.identity.company.id, false),
+    hasLogo: getSafe(() => auth.identity.company.hasLogo, false)
   }
 }
 
@@ -498,5 +515,8 @@ export default connect(mapStateToProps, {
   loadLogo,
   postCompanyLogo,
   deleteCompanyLogo,
-  getIdentity
+  getIdentity,
+  renderCopyright,
+  closePopup,
+  closeSidebar
 })(withToastManager(Settings))

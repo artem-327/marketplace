@@ -41,7 +41,8 @@ export const initialState = {
     savedShippingPreferences: true,
     selectedShippingQuote: null
   },
-  identity: null
+  identity: null,
+  isOpenSidebar: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -163,8 +164,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         isFetching: false,
         warehouses: Object.assign([], state.warehouses, {
-          [state.warehouses.findIndex(value =>
-            value.id === action.payload.id)]: action.payload
+          [state.warehouses.findIndex(value => value.id === action.payload.id)]: action.payload
         }),
         shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
       }
@@ -555,6 +555,20 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         preFilledValues: null
+      }
+    }
+
+    case AT.OPEN_SIDEBAR_ADDRESS: {
+      return {
+        ...state,
+        isOpenSidebar: true
+      }
+    }
+
+    case AT.CLOSE_SIDEBAR_ADDRESS: {
+      return {
+        ...state,
+        isOpenSidebar: false
       }
     }
 

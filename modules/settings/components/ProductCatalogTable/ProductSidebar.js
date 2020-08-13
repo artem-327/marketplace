@@ -19,7 +19,8 @@ import {
   Form,
   Segment,
   Dimmer,
-  Loader
+  Loader,
+  Accordion
 } from 'semantic-ui-react'
 import { Formik } from 'formik'
 
@@ -57,7 +58,7 @@ import styled from 'styled-components'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
-import { UploadCloud } from 'react-feather'
+import { UploadCloud, ChevronDown } from 'react-feather'
 import { QuantityInput } from '~/components/custom-formik/'
 import ErrorFocus from '~/components/error-focus'
 import { palletDimensions } from '~/modules/settings/contants'
@@ -137,6 +138,42 @@ const StyledGrid = styled(Grid)`
       }
     }
   }
+`
+
+const Chevron = styled(ChevronDown)`
+  width: 20px;
+  height: 20px;
+  margin: 3px 6px 4px;
+  vertical-align: top;
+  font-size: 20px;
+  color: #2599d5 !important;
+`
+
+const AccordionTitle = styled(Accordion.Title)`
+  text-transform: uppercase;
+  font-size: 1rem !important;
+  color: #20273a !important;
+  line-height: 1.9285714;
+  border-bottom: solid 1px #dee2e6 !important;
+  margin-bottom: 15px !important;
+
+  svg {
+    transform: rotate(-90deg);
+    color: #2599d5 !important;
+  }
+
+  &.active {
+    color: #20273a !important;
+
+    svg {
+      transform: rotate(0deg);
+      color: #2599d5 !important;
+    }
+  }
+`
+
+const AccordionContent = styled(Accordion.Content)`
+  margin-bottom: 20px !important;
 `
 
 const initialValues = {
@@ -280,7 +317,8 @@ class ProductSidebar extends React.Component {
     changedForm: false,
     attachments: [],
     loadSidebar: false,
-    popupValues: null
+    popupValues: null,
+    activeIndex: null
   }
 
   componentDidMount() {
@@ -490,6 +528,34 @@ class ProductSidebar extends React.Component {
     this.setState({ changedForm: true, attachments: docArray })
   }
 
+  handleClick = (e, titleProps) => {
+    const { index } = titleProps
+    const { activeIndex } = this.state
+    const newIndex = activeIndex === index ? -1 : index
+
+    this.setState({ activeIndex: newIndex })
+  }
+
+  handleChangePackagingType = (e, value, setFieldValue) => {
+    e.preventDefault()
+    const { packagingTypesAll } = this.props
+    const selectedPackingType = packagingTypesAll.find(type => type.id === value)
+
+    const elementsToInclude = ['palletPkgMax', 'palletPkgMin']
+    elementsToInclude.forEach(element => {
+      if (selectedPackingType && selectedPackingType[element]) {
+        switch (element) {
+          case 'palletPkgMin':
+            setFieldValue('palletMinPkgs', selectedPackingType[element])
+          case 'palletPkgMax':
+            setFieldValue('palletMaxPkgs', selectedPackingType[element])
+          default:
+            return
+        }
+      }
+    })
+  }
+
   render() {
     const {
       closePopup,
@@ -508,7 +574,7 @@ class ProductSidebar extends React.Component {
       datagrid
     } = this.props
 
-    const { packagingTypesReduced } = this.state
+    const { packagingTypesReduced, activeIndex } = this.state
 
     let editable = popupValues ? popupValues.cfProductOfferCount === 0 || !popupValues.cfProductOfferCount : true
 
@@ -703,7 +769,10 @@ class ProductSidebar extends React.Component {
                               placeholder: formatMessage({
                                 id: 'productCatalog.selectType',
                                 defaultMessage: 'Select Type'
-                              })
+                              }),
+                              onChange: (e, { value }) => {
+                                this.handleChangePackagingType(e, value, setFieldValue)
+                              }
                             }}
                           />
                         </GridColumn>
@@ -816,108 +885,6 @@ class ProductSidebar extends React.Component {
 
                       <GridRow columns={3}>
                         <GridColumn>
-                          <QuantityInput
-                            name='palletMinPkgs'
-                            label={
-                              <>
-                                <FormattedMessage id='global.palletMinPkgs' defaultMessage='Pallet Min Pkgs' />
-                                {palletParamsRequired && <Required />}
-                              </>
-                            }
-                            inputProps={{
-                              placeholder: '0',
-                              type: 'number',
-                              min: 1
-                            }}
-                          />
-                        </GridColumn>
-                        <GridColumn>
-                          <QuantityInput
-                            name='palletMaxPkgs'
-                            label={
-                              <>
-                                <FormattedMessage id='global.palletMaxPkgs' defaultMessage='Pallet Max Pkgs' />
-                                {palletParamsRequired && <Required />}
-                              </>
-                            }
-                            inputProps={{
-                              placeholder: '0',
-                              type: 'number',
-                              min: 1
-                            }}
-                          />
-                        </GridColumn>
-                        <GridColumn>
-                          <QuantityInput
-                            name='palletWeight'
-                            label={
-                              <>
-                                <FormattedMessage id='global.palletWeight' defaultMessage='Pallet Weight' />
-                                {palletParamsRequired && <Required />}
-                              </>
-                            }
-                            inputProps={{
-                              placeholder: '0',
-                              type: 'number',
-                              min: 0
-                            }}
-                          />
-                        </GridColumn>
-                      </GridRow>
-
-                      <GridRow columns={3}>
-                        <GridColumn>
-                          <QuantityInput
-                            name='palletLength'
-                            label={
-                              <>
-                                <FormattedMessage id='global.palletLength' defaultMessage='Pallet Length' />
-                                {palletParamsRequired && <Required />}
-                              </>
-                            }
-                            inputProps={{
-                              placeholder: '0',
-                              type: 'number',
-                              min: 0
-                            }}
-                          />
-                        </GridColumn>
-                        <GridColumn>
-                          <QuantityInput
-                            name='palletWidth'
-                            label={
-                              <>
-                                <FormattedMessage id='global.palletWidth' defaultMessage='Pallet Width' />
-                                {palletParamsRequired && <Required />}
-                              </>
-                            }
-                            inputProps={{
-                              placeholder: '0',
-                              type: 'number',
-                              min: 0
-                            }}
-                          />
-                        </GridColumn>
-                        <GridColumn>
-                          <QuantityInput
-                            name='palletHeight'
-                            label={
-                              <>
-                                <FormattedMessage id='global.palletHeight' defaultMessage='Pallet Height' />
-                                {palletParamsRequired && <Required />}
-                              </>
-                            }
-                            inputProps={{
-                              placeholder: '0',
-                              type: 'number',
-                              min: 0
-                            }}
-                          />
-                        </GridColumn>
-                      </GridRow>
-
-                      <GridRow columns={3}>
-                        <GridColumn>
                           <Dropdown
                             options={nmfcNumbersFiltered}
                             inputProps={{
@@ -996,11 +963,136 @@ class ProductSidebar extends React.Component {
                           />
                         </GridColumn>
                       </GridRow>
+                      <GridRow>
+                        <GridColumn>
+                          <Accordion fluid>
+                            <AccordionTitle
+                              active={activeIndex === 0}
+                              index={0}
+                              onClick={this.handleClick}
+                              data-test='company_product_advance_options_title'>
+                              <Chevron />
+                              <FormattedMessage id={'product.advanced.options'} defaultMessage='Advanced Options' />
+                            </AccordionTitle>
+                            <AccordionContent active={activeIndex === 0}>
+                              <Grid>
+                                <GridRow columns={3}>
+                                  <GridColumn>
+                                    <QuantityInput
+                                      name='palletMinPkgs'
+                                      label={
+                                        <>
+                                          <FormattedMessage
+                                            id='global.palletMinPkgs'
+                                            defaultMessage='Pallet Min Pkgs'
+                                          />
+                                          {palletParamsRequired && <Required />}
+                                        </>
+                                      }
+                                      inputProps={{
+                                        placeholder: '0',
+                                        type: 'number',
+                                        min: 1
+                                      }}
+                                    />
+                                  </GridColumn>
+                                  <GridColumn>
+                                    <QuantityInput
+                                      name='palletMaxPkgs'
+                                      label={
+                                        <>
+                                          <FormattedMessage
+                                            id='global.palletMaxPkgs'
+                                            defaultMessage='Pallet Max Pkgs'
+                                          />
+                                          {palletParamsRequired && <Required />}
+                                        </>
+                                      }
+                                      inputProps={{
+                                        placeholder: '0',
+                                        type: 'number',
+                                        min: 1
+                                      }}
+                                    />
+                                  </GridColumn>
+                                  <GridColumn>
+                                    <QuantityInput
+                                      name='palletWeight'
+                                      label={
+                                        <>
+                                          <FormattedMessage id='global.palletWeight' defaultMessage='Pallet Weight' />
+                                          {palletParamsRequired && <Required />}
+                                        </>
+                                      }
+                                      inputProps={{
+                                        placeholder: '0',
+                                        type: 'number',
+                                        min: 0
+                                      }}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
 
+                                <GridRow columns={3}>
+                                  <GridColumn>
+                                    <QuantityInput
+                                      name='palletLength'
+                                      label={
+                                        <>
+                                          <FormattedMessage id='global.palletLength' defaultMessage='Pallet Length' />
+                                          {palletParamsRequired && <Required />}
+                                        </>
+                                      }
+                                      inputProps={{
+                                        placeholder: '0',
+                                        type: 'number',
+                                        min: 0
+                                      }}
+                                    />
+                                  </GridColumn>
+                                  <GridColumn>
+                                    <QuantityInput
+                                      name='palletWidth'
+                                      label={
+                                        <>
+                                          <FormattedMessage id='global.palletWidth' defaultMessage='Pallet Width' />
+                                          {palletParamsRequired && <Required />}
+                                        </>
+                                      }
+                                      inputProps={{
+                                        placeholder: '0',
+                                        type: 'number',
+                                        min: 0
+                                      }}
+                                    />
+                                  </GridColumn>
+                                  <GridColumn>
+                                    <QuantityInput
+                                      name='palletHeight'
+                                      label={
+                                        <>
+                                          <FormattedMessage id='global.palletHeight' defaultMessage='Pallet Height' />
+                                          {palletParamsRequired && <Required />}
+                                        </>
+                                      }
+                                      inputProps={{
+                                        placeholder: '0',
+                                        type: 'number',
+                                        min: 0
+                                      }}
+                                    />
+                                  </GridColumn>
+                                </GridRow>
+                              </Grid>
+                            </AccordionContent>
+                          </Accordion>
+                        </GridColumn>
+                      </GridRow>
                       {documentTypes.length && (
                         <>
-                          <Divider />
-                          <GridRow columns={2} style={{ paddingBottom: '12.5px !important' }}>
+                          <GridRow
+                            columns={2}
+                            style={{ paddingBottom: '12.5px !important', marginTop: '12.5px !important' }}>
                             <GridColumn>
                               <Dropdown
                                 name='documents.documentType'

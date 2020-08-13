@@ -148,6 +148,10 @@ class DetailSidebar extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.closeDetailSidebar()
+  }
+
   fetchIfNoData = (name, fn) => {
     if (this.props[name].length === 0) fn()
   }
@@ -280,7 +284,8 @@ class DetailSidebar extends Component {
                           options={this.props.autocompleteData}
                           inputProps={{
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectProduct', defaultMessage: 'Select Product'
+                              id: 'wantedBoard.selectProduct',
+                              defaultMessage: 'Select Product'
                             }),
                             loading: this.props.autocompleteDataLoading,
                             'data-test': 'my_offer_product_search_drpdn',
@@ -362,7 +367,8 @@ class DetailSidebar extends Component {
                           options={listConforming}
                           inputProps={{
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectCondition', defaultMessage: 'Select Condition'
+                              id: 'wantedBoard.selectCondition',
+                              defaultMessage: 'Select Condition'
                             }),
                             'data-test': 'my_offer_conforming_drpdn',
                             selection: true,
@@ -382,7 +388,8 @@ class DetailSidebar extends Component {
                           options={listPackagingTypes}
                           inputProps={{
                             placeholder: formatMessage({
-                              id: 'wantedBoard.selectPackaging', defaultMessage: 'Select Packaging'
+                              id: 'wantedBoard.selectPackaging',
+                              defaultMessage: 'Select Packaging'
                             }),
                             'data-test': 'my_offer_packaging_drpdn',
                             selection: true,
@@ -439,8 +446,7 @@ class DetailSidebar extends Component {
                     <Button
                       size='large'
                       data-test='my_offers_close_btn'
-                      onClick={() => this.props.closeDetailSidebar()}
-                    >
+                      onClick={() => this.props.closeDetailSidebar()}>
                       {Object.keys(touched).length || this.state.changedForm
                         ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
                         : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}

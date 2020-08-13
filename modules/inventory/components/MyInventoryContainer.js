@@ -14,7 +14,7 @@ import { setCompanyElligible } from '~/modules/auth/actions'
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
 
-import { FormattedUnit, UnitOfPackaging, ArrayToFirstItem, FormattedAssay } from '~/components/formatted-messages'
+import { FormattedUnit, ArrayToFirstItem, FormattedAssay } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
@@ -75,18 +75,10 @@ function mapStateToProps(store, { datagrid }) {
         warehouse: getSafe(() => po.warehouse.deliveryAddress.cfName, ''),
         productId: getSafe(() => po.product.casProduct.id, 0),
         available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
-        packaging: getSafe(() => po.companyProduct.packagingType.name) ? (
-          <UnitOfPackaging value={po.companyProduct.packagingType.name} />
-        ) : (
-          'N/A'
-        ),
-        pkgAmount: qtyPart ? (
-          <FormattedUnit unit={qtyPart} separator={' '} value={po.companyProduct.packagingSize} />
-        ) : (
-          'N/A'
-        ),
+        packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
+        packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
         //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
-        packagingUnit: getSafe(() => po.companyProduct.packagingUnit.name),
+        packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
         quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.quantity} /> : 'N/A',
         cost: po.costPerUOM ? <FormattedNumber style='currency' currency={currency} value={po.costPerUOM} /> : 'N/A',
         pricingTiers: po.pricingTiers,

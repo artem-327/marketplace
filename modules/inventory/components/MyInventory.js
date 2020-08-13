@@ -161,6 +161,10 @@ const CustomRowDiv = styled.div`
   }
 `
 
+const CapitalizedText = styled.span`
+  text-transform: capitalize;
+`
+
 class MyInventory extends Component {
   state = {
     columns: [
@@ -220,35 +224,13 @@ class MyInventory extends Component {
         sortPath: 'ProductOffer.quantity'
       },
       {
-        name: 'pkgAmount',
-        title: (
-          <FormattedMessage id='global.pkgSize' defaultMessage='Packaging Size'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130,
-        align: 'right',
-        sortPath: 'ProductOffer.pkgAvailable'
-      },
-      {
-        name: 'packagingUnit',
-        title: (
-          <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130,
-        sortPath: 'ProductOffer.companyProduct.packagingUnit.name'
-      },
-      {
         name: 'packaging',
         title: (
-          <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>
+          <FormattedMessage id='myInventory.packaging' defaultMessage='Packaging'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 130,
-        sortPath: 'ProductOffer.companyProduct.packagingType.name'
+        width: 150
       },
       {
         name: 'quantity',
@@ -464,14 +446,26 @@ class MyInventory extends Component {
   }
 
   componentWillUnmount() {
+    const {
+      sidebarDetailOpen,
+      closeSidebarDetail,
+      isProductInfoOpen,
+      closePopup,
+      isExportInventoryOpen,
+      setExportSidebarOpenState
+    } = this.props
+
     this.props.handleVariableSave('tableHandlersFilters', this.state.filterValues)
+    if (sidebarDetailOpen) closeSidebarDetail()
+    if (isProductInfoOpen) closePopup()
+    if (isExportInventoryOpen) setExportSidebarOpenState(false)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
 
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter, datagridFilterReload, 'myInventoryFilter')
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'inventory')
     }
   }
 
@@ -616,6 +610,12 @@ class MyInventory extends Component {
             } // <div> has to be there otherwise popup will be not shown
           />
         ) : null,
+        packaging: (
+          <>
+            {`${r.packagingSize} ${r.packagingUnit} `}
+            <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
+          </>
+        ),
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
@@ -625,9 +625,7 @@ class MyInventory extends Component {
           <StyledPopup
             content={<QuickEditPricingPopup rawData={r.rawData} />}
             on='click'
-            pinned
-            position='left center'
-            trigger={<div>{r.fobPrice}</div>}
+            trigger={<div style={{ cursor: 'pointer' }}>{r.fobPrice}</div>}
             open={pricingEditOpenId === r.rawData.id}
             onOpen={() => setPricingEditOpenId(r.rawData.id)}
             onClose={() => setPricingEditOpenId(null)}
@@ -903,7 +901,7 @@ class MyInventory extends Component {
                 .groupBy('echoName')
                 .map(v => {
                   return {
-                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}_${v[0].productGroup !== null ? v[0].productGroup : formatMessage({ id: 'global.unmapped', defaultMessage: 'Unmapped' })}_${v[0].tagsNames ? v[0].tagsNames : ''}`,
+                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}_${v[0].productGroup !== null ? v[0].productGroup+':' : formatMessage({ id: 'global.unmapped.cptlz', defaultMessage: 'Unmapped' })}_${v[0].tagsNames ? v[0].tagsNames : ''}`,
                     childRows: v
                   }
                 })
@@ -920,7 +918,7 @@ class MyInventory extends Component {
                   </span>
                   <span className='flex row right'>
                     <span className='inventory-right'>
-                      <span style={{ fontWeight: '600' }}>{productGroup}: </span>
+                      <span style={{ fontWeight: '600' }}>{productGroup} </span>
                       {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
                     </span>
                   </span>
@@ -932,7 +930,7 @@ class MyInventory extends Component {
               let values = row.key.split('_')
               return groupActions(
                 rows,
-                values[values.length - 1],
+                values[values.length - 3],
                 sidebarDetailOpen,
                 closeSidebarDetail,
                 (companyProduct, i) => {

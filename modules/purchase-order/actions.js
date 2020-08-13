@@ -90,3 +90,5 @@ export const setPreFilledValues = values => ({ type: AT.SET_PRE_FILLED_VALUES, p
 
 export const clearPreFilledValues = () => ({ type: AT.CLEAR_PRE_FILLED_VALUES, payload: null })
 
+export const openSidebarAddress = () => ({ type: AT.OPEN_SIDEBAR_ADDRESS, payload: null })
+export const closeSidebarAddress = () => ({ type: AT.CLOSE_SIDEBAR_ADDRESS, payload: null })

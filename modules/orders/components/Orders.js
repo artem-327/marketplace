@@ -10,7 +10,7 @@ import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import Link from 'next/link'
-import { CheckCircle } from 'react-feather'
+import { CheckCircle, ChevronDown, ChevronRight} from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
 import { AttachmentManager } from '~/modules/attachments'
@@ -128,7 +128,6 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 100,
-        align: 'right',
         sortPath: 'Order.id'
       },
       {
@@ -441,9 +440,18 @@ class Orders extends Component {
     return this.props.rows.map(row => ({
       ...row,
       orderId: (
-        <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}>
-          <a onClick={e => e.stopPropagation()}>{row.id}</a>
-        </Link>
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {
+              this.state.expandedRowIds.some(el => el === row.id)
+                ? <ChevronDown size={20} style={{ color: '#2599d5', cursor: 'pointer' }}/>
+                : <ChevronRight size={20} style={{ color: '#2599d5', cursor: 'pointer' }}/>
+            }
+          </div>
+          <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}>
+            <a onClick={e => e.stopPropagation()}>{row.id}</a>
+          </Link>
+        </div>
       ),
       productName: (
         <ArrayToFirstItem

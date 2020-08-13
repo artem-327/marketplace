@@ -21,8 +21,14 @@ import { PlusCircle } from 'react-feather'
 import { number } from 'prop-types'
 import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { UpperCaseText, CustomRowDiv, CustomSearchNameTags, ControlPanel, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
-import SearchByNamesAndTags from '~/modules/search'
+import {
+  UpperCaseText,
+  CustomRowDiv,
+  CustomSearchNameTags,
+  ControlPanel,
+  ProductChemicalSwitch,
+  TopButtons
+} from '../../constants/layout'
 import { getSafe } from '~/utils/functions'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
@@ -238,7 +244,7 @@ class WantedBoard extends Component {
     open: false,
     popupValues: null,
     filterValues: {
-      SearchByNamesAndTags: null
+      searchInput: ''
     }
   }
 
@@ -246,12 +252,9 @@ class WantedBoard extends Component {
     const { tableHandlersFiltersWantedBoard } = this.props
 
     if (tableHandlersFiltersWantedBoard) {
-      this.setState({ filterValues: tableHandlersFiltersWantedBoard },
-        () => {
+      this.setState({ filterValues: tableHandlersFiltersWantedBoard }, () => {
         const filter = {
-          ...this.state.filterValues,
-          ...(!!this.state.filterValues.SearchByNamesAndTags
-            && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+          ...this.state.filterValues
         }
         this.handleFiltersValue(filter)
       })
@@ -262,36 +265,34 @@ class WantedBoard extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersWantedBoard', this.state.filterValues)
+    if (this.props.editWindowOpen) this.props.closeDetailSidebar()
   }
 
   handleFiltersValue = debounce(filter => {
     const { datagrid } = this.props
-    datagrid.setSearch(filter, true, 'pageFilters')
+    datagrid && datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
-
-  SearchByNamesAndTagsChanged = data => {
-    this.setState({
-      filterValues: {
-        ...this.state.filterValues,
-        SearchByNamesAndTags: data
-      }}, () => {
-      const filter = {
-        ...this.state.filterValues,
-        ...(!!this.state.filterValues.SearchByNamesAndTags
-          && { ...this.state.filterValues.SearchByNamesAndTags.filters })
-      }
-      this.handleFiltersValue(filter)
-    })
-  }
 
   handleProductChemicalSwitch = data => {
     const { datagrid } = this.props
     this.props.setWantedBoardType(data)
     datagrid.clear()
     const filter = {
-      ...this.state.filterValues,
-      ...(!!this.state.filterValues.SearchByNamesAndTags
-        && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+      ...this.state.filterValues
+    }
+    this.handleFiltersValue(filter)
+  }
+
+  handleFilterChangeInputSearch = (e, data) => {
+    if (!data) return
+    e && e.stopPropagation()
+    this.setState({
+      filterValues: {
+        searchInput: data.value
+      }
+    })
+    const filter = {
+      filterName: data.value
     }
     this.handleFiltersValue(filter)
   }
@@ -309,7 +310,7 @@ class WantedBoard extends Component {
       tutorialCompleted,
       tableHandlersFiltersWantedBoard
     } = this.props
-    const { columnsProduct, columnsChemical } = this.state
+    const { columnsProduct, columnsChemical, filterValues } = this.state
     let { formatMessage } = intl
 
     return (
@@ -318,15 +319,19 @@ class WantedBoard extends Component {
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
-            <CustomSearchNameTags>
-              <SearchByNamesAndTags
-                onChange={this.SearchByNamesAndTagsChanged}
-                initFilterState={
-                  getSafe(() => tableHandlersFiltersWantedBoard.SearchByNamesAndTags, null)
-                }
-                filterApply={false}
+            <div className='column'>
+              <Input
+                style={{ width: 340 }}
+                name='searchInput'
+                icon='search'
+                value={filterValues.searchInput}
+                placeholder={formatMessage({
+                  id: 'wantedBoard.searchByProductName',
+                  defaultMessage: 'Search by product name...'
+                })}
+                onChange={this.handleFilterChangeInputSearch}
               />
-            </CustomSearchNameTags>
+            </div>
             <div>
               <div className='column'>
                 <ProductChemicalSwitch className={type}>
@@ -390,7 +395,7 @@ class WantedBoard extends Component {
     const {
       activeIndex,
       intl: { formatMessage },
-      editWindowOpen
+      openSidebar
     } = this.props
 
     const panes = [
@@ -432,7 +437,7 @@ class WantedBoard extends Component {
             panes={panes}
           />
         </Container>
-        {editWindowOpen === 'wanted-board' && <DetailSidebar />}
+        {openSidebar && <DetailSidebar />}
       </>
     )
   }
