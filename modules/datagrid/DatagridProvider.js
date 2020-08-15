@@ -281,7 +281,9 @@ class DatagridProvider extends Component {
           ...sortFilter,
           pageNumber: 0
         },
-        rows: []
+        rows: [],
+        allLoaded: false,
+        loadedAllData: false
       }),
       () => reload && this.loadData()
     )
