@@ -115,14 +115,7 @@ class AddEditGuestCompanySidebar extends React.Component {
     })
 
   render() {
-    const {
-      closePopup,
-      popupValues,
-      updateClientCompany,
-      createClientCompany,
-      intl,
-      datagrid
-    } = this.props
+    const { closePopup, popupValues, updateClientCompany, createClientCompany, intl, datagrid } = this.props
 
     const { formatMessage } = intl
 
@@ -200,7 +193,7 @@ class AddEditGuestCompanySidebar extends React.Component {
         render={props => {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           return (
-            <CustomForm>
+            <CustomForm autoComplete='off'>
               <FlexSidebar
                 visible={true}
                 width='very wide'

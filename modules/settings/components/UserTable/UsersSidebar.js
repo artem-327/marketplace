@@ -460,6 +460,7 @@ class UsersSidebar extends React.Component {
 
     return (
       <CustomForm
+        autoComplete='off'
         enableReinitialize
         initialValues={this.getInitialFormValues()}
         validationSchema={this.userFormValidation()}
@@ -663,9 +664,7 @@ class UsersSidebar extends React.Component {
                   </GridRow>
                   <GridRow style={{ paddingBottom: '0' }}>
                     {this.generateCheckboxes(
-                      isClientCompany
-                        ? clientCompanyRoles
-                        : userRoles,
+                      isClientCompany ? clientCompanyRoles : userRoles,
                       values,
                       'roles',
                       errorRoles

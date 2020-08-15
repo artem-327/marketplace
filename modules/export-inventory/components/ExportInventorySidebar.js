@@ -1,12 +1,7 @@
 import React, { Component } from 'react'
 import { debounce } from 'lodash'
 import { Info, ChevronDown, ChevronRight } from 'react-feather'
-import {
-  Checkbox,
-  Dropdown,
-  Loader,
-  Dimmer,
-} from 'semantic-ui-react'
+import { Checkbox, Dropdown, Loader, Dimmer } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
@@ -27,7 +22,7 @@ const CustomHighSegment = styled(HighSegment)`
   font-size: 14px;
   font-weight: 500;
   color: #20273a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6  !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
   background-color: #ffffff;
   z-index: 1;
 `
@@ -42,7 +37,7 @@ const BottomButtons = styled.div`
   padding: 10px 22px;
   margin-top: 0px;
   box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
-  
+
   .ui.button {
     height: 40px;
     border-radius: 3px;
@@ -51,17 +46,17 @@ const BottomButtons = styled.div`
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
       border: solid 1px #dee2e6;
       background-color: #ffffff;
-      color: #848893;    
+      color: #848893;
       &:hover {
-        background-color: #f8f9fb !important;;
+        background-color: #f8f9fb !important;
         color: #20273a;
       }
       &:active {
-        background-color: #edeef2 !important;;
+        background-color: #edeef2 !important;
         color: #20273a;
       }
     }
-    
+
     &.secondary {
       color: #ffffff;
       background-color: #2599d5;
@@ -83,7 +78,7 @@ const CustomButtonSubmit = styled(Button.Submit)`
 const Rectangle = styled.div`
   border-radius: 4px;
   border: solid 1px #2599d5;
-  background-color: #ffffff;  
+  background-color: #ffffff;
   margin: 0 0 20px 0;
   align-items: center;
   display: block;
@@ -107,18 +102,18 @@ class ExportInventorySidebar extends Component {
       {
         name: 'name',
         title: (
-              <FormattedMessage id='myInventory.exportInventoryCompanySelect' defaultMessage='Company Select'>
-                {text => text}
-              </FormattedMessage>
+          <FormattedMessage id='myInventory.exportInventoryCompanySelect' defaultMessage='Company Select'>
+            {text => text}
+          </FormattedMessage>
         ),
         width: 498
       },
       {
         name: 'select',
         title: (
-              <FormattedMessage id='myInventory.exportInventorySelect' defaultMessage='Select'>
-                {text => text}
-              </FormattedMessage>
+          <FormattedMessage id='myInventory.exportInventorySelect' defaultMessage='Select'>
+            {text => text}
+          </FormattedMessage>
         ),
         width: 70,
         align: 'center'
@@ -143,7 +138,7 @@ class ExportInventorySidebar extends Component {
   handleFilterChangeCompany = (e, { value }) => {
     let selectedCompanyOption = ''
 
-    if (value !== '' ) {
+    if (value !== '') {
       selectedCompanyOption = this.props.searchedCompanies.find(c => value === c.value)
     }
 
@@ -222,18 +217,19 @@ class ExportInventorySidebar extends Component {
     } catch (error) {
       console.error(error)
     }
-    this.setState({ loadSidebar: false  })
+    this.setState({ loadSidebar: false })
   }
 
   getRows = rows => {
     const { selectedBranches, expandedRowIds } = this.state
 
     return rows.map((r, rIndex) => {
-      const companyChecked = r.branches.length && selectedBranches.length
-        && r.branches.every(b => selectedBranches.some(selB => selB === b.branchId))
+      const companyChecked =
+        r.branches.length &&
+        selectedBranches.length &&
+        r.branches.every(b => selectedBranches.some(selB => selB === b.branchId))
 
-      const indeterminate = !companyChecked
-        && r.branches.some(b => selectedBranches.some(selB => selB === b.branchId))
+      const indeterminate = !companyChecked && r.branches.some(b => selectedBranches.some(selB => selB === b.branchId))
 
       const isRowExpanded = expandedRowIds.includes(r.id)
       const hasBranches = r.branches.length
@@ -241,22 +237,21 @@ class ExportInventorySidebar extends Component {
       return {
         ...r,
         name: (
-          <div style={{ display: 'flex'}}>
-            {hasBranches
-              ? (isRowExpanded
-                  ? <ChevronDown size={20} style={{color: '#2599d5', marginRight: '8px' }}/>
-                  : <ChevronRight size={20} style={{color: '#2599d5', marginRight: '8px'}}/>
+          <div style={{ display: 'flex' }}>
+            {hasBranches ? (
+              isRowExpanded ? (
+                <ChevronDown size={20} style={{ color: '#2599d5', marginRight: '8px' }} />
               ) : (
-                <div style={{ padding: '0 14px' }}/>
-                )
-            }
-            {hasBranches
-              ? (
-                <span style={{color: '#20273a', fontWeight: '500'}}>{r.name}</span>
-              ) : (
-                <span style={{color: 'rgba(191, 191, 191, 0.87)', fontWeight: '500'}}>{r.name}</span>
+                <ChevronRight size={20} style={{ color: '#2599d5', marginRight: '8px' }} />
               )
-            }
+            ) : (
+              <div style={{ padding: '0 14px' }} />
+            )}
+            {hasBranches ? (
+              <span style={{ color: '#20273a', fontWeight: '500' }}>{r.name}</span>
+            ) : (
+              <span style={{ color: 'rgba(191, 191, 191, 0.87)', fontWeight: '500' }}>{r.name}</span>
+            )}
           </div>
         ),
         select: (
@@ -269,20 +264,18 @@ class ExportInventorySidebar extends Component {
             onChange={(e, { checked }) => {
               e.stopPropagation()
               let selectedBranches = this.state.selectedBranches.slice()
-              if (checked) { // Add
+              if (checked) {
+                // Add
                 if (r.branches.length) {
-                  selectedBranches = selectedBranches.filter(selB =>
-                    !r.branches.some(b => b.branchId === selB)
-                  )
+                  selectedBranches = selectedBranches.filter(selB => !r.branches.some(b => b.branchId === selB))
                   selectedBranches = selectedBranches.concat(r.branchesIds)
                   this.setState({ selectedBranches })
                 }
-              } else {  // Remove
+              } else {
+                // Remove
 
                 if (r.branches.length) {
-                  selectedBranches = selectedBranches.filter(selB =>
-                    !r.branches.some(b => b.branchId === selB)
-                  )
+                  selectedBranches = selectedBranches.filter(selB => !r.branches.some(b => b.branchId === selB))
                   this.setState({ selectedBranches })
                 }
               }
@@ -293,11 +286,7 @@ class ExportInventorySidebar extends Component {
           const checked = selectedBranches.includes(b.branchId)
           return {
             ...b,
-            name: (
-              <div style={{ color: '#2599d5', paddingLeft: '31px' }}>
-                {b.name}
-              </div>
-            ),
+            name: <div style={{ color: '#2599d5', paddingLeft: '31px' }}>{b.name}</div>,
             select: (
               <Checkbox
                 data-test='export_inventory_sidebar_branch_chckb'
@@ -305,18 +294,20 @@ class ExportInventorySidebar extends Component {
                 defaultChecked={checked}
                 onChange={(e, { checked }) => {
                   let selectedBranches = this.state.selectedBranches.slice()
-                  if (checked) { // Add
+                  if (checked) {
+                    // Add
                     selectedBranches.push(b.branchId)
                     this.setState({ selectedBranches })
-                  } else {  // Remove
+                  } else {
+                    // Remove
                     selectedBranches = selectedBranches.filter(branch => branch !== b.branchId)
                     this.setState({ selectedBranches })
                   }
                 }}
               />
             )
-          }}
-        )
+          }
+        })
       }
     })
   }
@@ -344,7 +335,7 @@ class ExportInventorySidebar extends Component {
       <>
         <Rectangle>
           <CustomDivContent>
-            <Info size={20} style={{ color: '#2599d5', marginRight: '10px' }}/>
+            <Info size={20} style={{ color: '#2599d5', marginRight: '10px' }} />
             <FormattedMessage
               id='myInventory.exportInfoText'
               defaultMessage='Please choose, per branch, how many exports you would like'>
@@ -407,29 +398,20 @@ class ExportInventorySidebar extends Component {
   }
 
   render() {
-    const {
-      onClose,
-      loading
-    } = this.props
+    const { onClose, loading } = this.props
 
     const { selectedBranches, loadSidebar } = this.state
 
     return (
-      <Formik
-        initialValues={{}}
-        onReset={onClose}
-        onSubmit={this.submitHandler}
-        loading={loading}>
+      <Formik initialValues={{}} onReset={onClose} onSubmit={this.submitHandler} loading={loading}>
         {formikProps => (
-          <CustomForm
-          >
+          <CustomForm autoComplete='off'>
             <FlexSidebar
               visible={true}
               width='very wide'
               style={{ width: '630px' }}
               direction='right'
-              animation='overlay'
-            >
+              animation='overlay'>
               <div>
                 <Dimmer inverted active={loading || loadSidebar}>
                   <Loader />
@@ -438,15 +420,12 @@ class ExportInventorySidebar extends Component {
                   <FormattedMessage id='myInventory.exportInventory' defaultMessage='Export Inventory' />
                 </CustomHighSegment>
               </div>
-              <FlexContent style={{ padding: '30px' }}>
-                {this.renderContent()}
-              </FlexContent>
+              <FlexContent style={{ padding: '30px' }}>{this.renderContent()}</FlexContent>
               <BottomButtons>
                 <Button.Reset
                   className='light'
-                  style={{ marginRight: '10px'}}
-                  data-test='export_inventory_sidebar_reset_btn'
-                >
+                  style={{ marginRight: '10px' }}
+                  data-test='export_inventory_sidebar_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
                   </FormattedMessage>
@@ -470,4 +449,3 @@ class ExportInventorySidebar extends Component {
 }
 
 export default injectIntl(withToastManager(ExportInventorySidebar))
-

@@ -531,7 +531,7 @@ class PickUpLocationsSidebar extends React.Component {
         loading={loading}>
         {formikProps => (
           <>
-            <CustomForm>
+            <CustomForm autoComplete='off'>
               <FlexSidebar
                 visible={isOpenSidebar}
                 width='very wide'
