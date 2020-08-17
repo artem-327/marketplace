@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Button, Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Form, Label } from 'semantic-ui-react'
-import { Formik } from 'formik'
+import { Formik, FieldArray } from 'formik'
 import { DateInput } from '~/components/custom-formik'
 import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { debounce } from 'lodash'
@@ -29,6 +29,8 @@ import {
   Button as ButtonSemantic
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
+import { Trash, PlusCircle } from 'react-feather'
+
 import {
   sidebarDetailTrigger,
   getAutocompleteData,
@@ -79,6 +81,11 @@ import {
 } from '../constants/layout'
 import ErrorFocus from '~/components/error-focus'
 
+const tdsArray = [
+  { property: 'name', specifications: 'value1' },
+  { property: 'name2', specifications: 'value1' }
+]
+
 const CustomHr = styled.hr`
   border: solid 0.5px #dee2e6;
   margin: 0.642857143em 0 1.071428571em 0;
@@ -104,6 +111,30 @@ const PricingLabel = styled.label`
 
 const PricingIcon = styled(Icon)`
   line-height: 40px;
+`
+
+const DivAddInputTds = styled.div`
+  border-radius: 3px;
+  border: solid 1px #2599d5;
+  background-color: #ddf1fc;
+  padding: 8px 0 4px 0;
+  cursor: pointer;
+`
+
+const IconPlusCircle = styled(PlusCircle)`
+  color: #2599d5;
+  line-height: 1.11;
+  width: 18px;
+  height: 20px;
+`
+
+const IconTrash = styled(Trash)`
+  cursor: pointer;
+  color: #f16844;
+`
+
+const DivIconPlusCircle = styled.div`
+  margin: 0;
 `
 
 const initValues = {
@@ -322,7 +353,7 @@ const validationScheme = val.object().shape({
 
 class DetailSidebar extends Component {
   state = {
-    tabs: ['edit', 'documents', 'priceBook', 'priceTiers'],
+    tabs: ['edit', 'tds', 'documents', 'priceBook', 'priceTiers'],
     activeTab: 0,
     broadcastLoading: true,
     saveBroadcast: 0,
@@ -424,8 +455,8 @@ class DetailSidebar extends Component {
   componentDidUpdate = (prevProps, prevState, snapshot) => {
     if (prevProps.editProductOfferInitTrig !== this.props.editProductOfferInitTrig) {
       const shouldSwitchTab =
-        this.props.sidebarActiveTab > -1 && prevProps.sidebarActiveTab !== this.props.sidebarActiveTab ||
-        this.state.activeTab === 2  /* To Reload Broadcast rules */
+        (this.props.sidebarActiveTab > -1 && prevProps.sidebarActiveTab !== this.props.sidebarActiveTab) ||
+        this.state.activeTab === 3 /* To Reload Broadcast rules */
 
       if (this.props.sidebarValues) {
         // Edit mode
@@ -617,7 +648,8 @@ class DetailSidebar extends Component {
     switch (this.state.activeTab) {
       case 0:
       case 1:
-      case 3:
+      case 2:
+      case 4:
         props = {
           ...values.edit,
           expirationDate: values.edit.doesExpire ? getStringISODate(values.edit.expirationDate) : null,
@@ -638,10 +670,11 @@ class DetailSidebar extends Component {
               ],
           productGrades: values.edit.productGrades.length ? values.edit.productGrades : [],
           costPerUOM:
-            values.edit.costPerUOM === null || values.edit.costPerUOM === '' ? null : Number(values.edit.costPerUOM)
+            values.edit.costPerUOM === null || values.edit.costPerUOM === '' ? null : Number(values.edit.costPerUOM),
+          tdsFields: JSON.stringify(values.edit.tdsFields)
         }
         break
-      case 2:
+      case 3:
         this.saveBroadcastRules()
         setTouched({})
         this.setState({ changedForm: false, edited: false })
@@ -704,7 +737,7 @@ class DetailSidebar extends Component {
       activeTab: newTab
     })
     try {
-      if (newTab === 2) {
+      if (newTab === 3) {
         await this.props.openBroadcast(data ? data : this.state.sidebarValues).then(async () => {
           this.setState({ broadcastLoading: false })
         })
@@ -827,6 +860,14 @@ class DetailSidebar extends Component {
   }
 
   getEditValues = sidebarValues => {
+    let tdsFields = ''
+    //Convert tdsFields string array of objects to array
+    if (sidebarValues.tdsFields) {
+      let newJson = sidebarValues.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
+      newJson = newJson.replace(/'/g, '"')
+      tdsFields = JSON.parse(newJson)
+    }
+
     return {
       edit: {
         broadcasted: getSafe(() => sidebarValues.broadcasted, false),
@@ -861,7 +902,8 @@ class DetailSidebar extends Component {
           sidebarValues && sidebarValues.validityDate
             ? moment(sidebarValues.validityDate).format(getLocaleDateFormat())
             : '',
-        warehouse: getSafe(() => sidebarValues.warehouse.id, null)
+        warehouse: getSafe(() => sidebarValues.warehouse.id, null),
+        tdsFields: getSafe(() => tdsFields, [{ property: '', specifications: '' }])
       },
       priceTiers: {
         priceTiers: getSafe(() => sidebarValues.pricingTiers.length, 0),
@@ -1031,6 +1073,7 @@ class DetailSidebar extends Component {
           this.values = values
           this.resetForm = resetForm
           this.formikProps = formikProps
+
           return (
             <Form onChange={this.onChange}>
               <FlexSidebar
@@ -1656,7 +1699,7 @@ class DetailSidebar extends Component {
                           {
                             menuItem: (
                               <Menu.Item
-                                key='documents'
+                                key='tds'
                                 disabled={sidebarValues && sidebarValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
@@ -1685,6 +1728,124 @@ class DetailSidebar extends Component {
 
                                       // if validation is correct - switch tabs
                                       this.switchTab(1)
+                                    })
+                                    .catch(e => {
+                                      console.log('CATCH', e)
+                                    })
+                                }}
+                                data-test='detail_inventory_tab_documents'>
+                                {formatMessage({ id: 'addInventory.tds', defaultMessage: 'TDS' })}
+                              </Menu.Item>
+                            ),
+                            pane: (
+                              <Tab.Pane key='tds' style={{ padding: '16px' }}>
+                                <Grid>
+                                  <Grid.Row>
+                                    <Grid.Column width={7}>
+                                      <FormattedMessage id='addInventory.property' defaultMessage='Property' />
+                                    </Grid.Column>
+                                    <Grid.Column width={7}>
+                                      <FormattedMessage
+                                        id='addInventory.specifications'
+                                        defaultMessage='Specifications'
+                                      />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <FieldArray
+                                    name='edit.tdsFields'
+                                    render={arrayHelpers => (
+                                      <>
+                                        {getSafe(() => values.edit.tdsFields.length, '')
+                                          ? values.edit.tdsFields.map((property, index) => {
+                                              return (
+                                                <GridRow>
+                                                  <GridColumn width={7}>
+                                                    <Input
+                                                      type='text'
+                                                      name={`edit.tdsFields[${index}].property`}
+                                                      inputProps={{
+                                                        placeholder: 'Enter Property'
+                                                      }}
+                                                    />
+                                                  </GridColumn>
+                                                  <GridColumn width={7}>
+                                                    <Input
+                                                      type='text'
+                                                      name={`edit.tdsFields[${index}].specifications`}
+                                                      inputProps={{
+                                                        placeholder: 'Enter Specifications'
+                                                      }}
+                                                    />
+                                                  </GridColumn>
+                                                  <GridColumn
+                                                    width={2}
+                                                    verticalAlign='middle'
+                                                    textAlign='center'
+                                                    onClick={e => {
+                                                      if (
+                                                        index ===
+                                                        getSafe(() => values.edit.tdsFields.length, 0) - 1
+                                                      ) {
+                                                        arrayHelpers.push({ property: '', specifications: '' })
+                                                        this.setState({ changedForm: true })
+                                                      } else {
+                                                        arrayHelpers.remove(index)
+                                                        this.setState({ changedForm: true })
+                                                      }
+                                                    }}>
+                                                    {index === getSafe(() => values.edit.tdsFields.length, 0) - 1 ? (
+                                                      <DivAddInputTds>
+                                                        <DivIconPlusCircle>
+                                                          <IconPlusCircle />
+                                                        </DivIconPlusCircle>
+                                                      </DivAddInputTds>
+                                                    ) : (
+                                                      <IconTrash />
+                                                    )}
+                                                  </GridColumn>
+                                                </GridRow>
+                                              )
+                                            })
+                                          : null}
+                                      </>
+                                    )}
+                                  />
+                                </Grid>
+                              </Tab.Pane>
+                            )
+                          },
+                          {
+                            menuItem: (
+                              <Menu.Item
+                                key='documents'
+                                disabled={sidebarValues && sidebarValues.grouped}
+                                onClick={() => {
+                                  if (Object.keys(touched).length || this.state.changedForm) {
+                                    toastManager.add(
+                                      generateToastMarkup(
+                                        <FormattedMessage id='addInventory.saveFirst' defaultMessage='Save First' />,
+                                        <FormattedMessage
+                                          id='addInventory.poDataSaved'
+                                          defaultMessage='Due to form changes you have to save the tab first'
+                                        />
+                                      ),
+                                      {
+                                        appearance: 'warning'
+                                      }
+                                    )
+                                    return false
+                                  }
+                                  validateForm()
+                                    .then(r => {
+                                      // stop when errors found
+                                      if (Object.keys(r).length) {
+                                        submitForm() // show errors
+                                        this.switchToErrors(r)
+                                        return false
+                                      }
+
+                                      // if validation is correct - switch tabs
+                                      this.switchTab(2)
                                     })
                                     .catch(e => {
                                       console.log('CATCH', e)
@@ -1755,7 +1916,7 @@ class DetailSidebar extends Component {
                                       }
 
                                       // if validation is correct - switch tabs
-                                      this.switchTab(2)
+                                      this.switchTab(3)
                                     })
                                     .catch(e => {
                                       console.log('CATCH', e)
@@ -1808,7 +1969,7 @@ class DetailSidebar extends Component {
                                       }
 
                                       // if validation is correct - switch tabs
-                                      this.switchTab(3)
+                                      this.switchTab(4)
                                     })
                                     .catch(e => {
                                       console.log('CATCH', e)
@@ -1943,13 +2104,13 @@ class DetailSidebar extends Component {
                       type='button'
                       onClick={() => {
                         // Dont validate if it is a broadcast tab
-                        if (this.state.activeTab === 2) {
+                        if (this.state.activeTab === 3) {
                           this.submitForm(values, setSubmitting, setTouched)
                           return true
                         }
 
                         return validateForm().then(async r => {
-                          if (Object.keys(r).length && this.state.activeTab !== 1) {
+                          if (Object.keys(r).length && this.state.activeTab !== 2) {
                             this.switchToErrors(r)
                             submitForm() // to show errors
                           } else {
