@@ -243,7 +243,7 @@ class AddCart extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.sidebar.isOpen && !prevProps.sidebar.isOpen) {
+    if (getSafe(() => this.props.openInfo, '') !== getSafe(() => prevProps.openInfo, '')) {
       this.setState({ activeTab: this.props.openInfo ? 1 : 0 }) // Buy or Info tab
     }
     if (this.props.offer !== prevProps.offer) {
