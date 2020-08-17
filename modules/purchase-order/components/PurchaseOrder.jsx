@@ -125,7 +125,6 @@ class PurchaseOrder extends Component {
   state = {
     modalOpen: false,
     isNewAddress: false,
-    otherAddresses: true,
     submitting: false,
     addressId: 'deliveryAddressId',
     shippingQuotes: [],
@@ -185,7 +184,9 @@ class PurchaseOrder extends Component {
       addresses = deliveryAddresses
     }
     if (warehouses.length) {
-      addresses = addresses.concat(warehouses.map(warehous => ({ ...warehous.deliveryAddress, id: warehous.id })))
+      addresses = addresses.concat(
+        warehouses.map(warehous => ({ ...warehous.deliveryAddress, id: warehous.id, warehouse: true }))
+      )
     }
     let selectedAddress = addresses.find(i => i.id === selectedAddressId)
 
@@ -194,7 +195,10 @@ class PurchaseOrder extends Component {
     }
 
     this.setState(
-      { selectedAddress, addressId: this.state.otherAddresses ? 'deliveryAddressId' : 'warehouseId' },
+      {
+        selectedAddress,
+        addressId: selectedAddress && selectedAddress.warehouse ? 'warehouseId' : 'deliveryAddressId'
+      },
       () => {
         this.props.shippingChanged(this.state.selectedAddress)
         if (!cart.weightLimitExceed) this.getShippingQuotes(this.state.selectedAddress)
@@ -219,11 +223,12 @@ class PurchaseOrder extends Component {
   }
 
   handleSubmit = async payload => {
-    let id = getSafe(() => this.state.selectedAddress.id)
-    const isWarehouse = !this.state.otherAddresses
+    let id = getSafe(() => this.state.selectedAddress.id, '')
+    const isWarehouse = getSafe(() => this.state.selectedAddress.warehouse, false)
     const { isNewAddress } = this.state
     const { postNewDeliveryAddress, updateDeliveryAddress, postNewWarehouse, updateWarehouse } = this.props
     let response = null
+
     return new Promise(async (resolve, reject) => {
       try {
         if (isNewAddress) {
@@ -239,12 +244,6 @@ class PurchaseOrder extends Component {
       } catch (e) {
         reject(e)
       }
-    })
-  }
-
-  handleToggleChange = otherAddresses => {
-    return new Promise(resolve => {
-      this.setState({ otherAddresses, selectedAddress: null }, resolve)
     })
   }
 
@@ -378,7 +377,7 @@ class PurchaseOrder extends Component {
         {isOpenSidebar && (
           <ShippingEdit
             onClose={() => closeSidebarAddress()}
-            isWarehouse={!this.state.otherAddresses}
+            isWarehouse={getSafe(() => this.state.selectedAddress.warehouse, false)}
             savedShippingPreferences={shipping.savedShippingPreferences}
             selectedAddress={this.state.selectedAddress}
             isNewAddress={this.state.isNewAddress}
@@ -416,13 +415,11 @@ class PurchaseOrder extends Component {
                       <Shipping
                         handleNewAddress={({ isNewAddress }) => this.setState({ isNewAddress })}
                         openSidebar={openSidebarAddress}
-                        otherAddresses={this.state.otherAddresses}
                         deliveryAddresses={deliveryAddresses}
                         getAddress={this.getAddress}
                         selectedAddress={this.state.selectedAddress}
                         getWarehouses={this.props.getWarehouses}
                         warehouses={this.props.warehouses}
-                        handleToggleChange={this.handleToggleChange}
                         shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                         formikProps={formikProps}
                       />
