@@ -71,7 +71,7 @@ class SearchByNamesAndTags extends Component {
   }, 250)
 
   handleSearchChange = debounce((e, { searchQuery }) => {
-    e && e.stopPropagation()
+    e && e.persist()
     try {
       this.props.searchProductOffersInventory(searchQuery, this.props.isMarketplace)
       this.props.searchTags(searchQuery)
@@ -135,7 +135,7 @@ class SearchByNamesAndTags extends Component {
 
   handleClick = (e, data) => {
     if (!data) return
-    e && e.stopPropagation()
+    e && e.persist()
     this.refDropdownMenu.current.close()
     this.refDropdownMenu.current.state.searchQuery = data.text
     this.refDropdownMenu.current.props.onSearchChange(null, { searchQuery: data.text })

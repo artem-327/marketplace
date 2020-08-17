@@ -75,18 +75,6 @@ class Shipping extends Component {
     activeIdAddress: null
   }
 
-  handleToggleChange = otherAddresses => {
-    this.props.formikProps.setFieldValue('address', null)
-    if (otherAddresses !== this.props.otherAddresses) {
-      let { warehouses, getWarehouses } = this.props
-
-      this.props.handleToggleChange(otherAddresses).then(() => {
-        // if (branches.length === 0 && !this.props.otherAddresses) getBranches()
-        if (warehouses.length === 0 && !this.props.otherAddresses) getWarehouses()
-      })
-    }
-  }
-
   componentDidMount() {
     if (this.props.selectedAddress && this.props.formikProps) {
       this.props.formikProps.setFieldValue('address', this.props.selectedAddress.id)
@@ -380,11 +368,6 @@ export default injectIntl(Shipping)
 
 Shipping.propTypes = {
   deliveryAddresses: array,
-  otherAddresses: bool,
   getAddress: func,
   selectedAddress: object
-}
-
-Shipping.defaultProps = {
-  otherAddresses: true
 }
