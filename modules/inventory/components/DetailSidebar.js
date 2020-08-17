@@ -640,6 +640,12 @@ class DetailSidebar extends Component {
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
     let sendSuccess = false
     let data = null
+    let tdsFields = []
+    if (getSafe(() => values.edit.tdsFields.length, '')) {
+      values.edit.tdsFields.forEach((item, index) => {
+        if (getSafe(() => item.property, '')) tdsFields.push(item)
+      })
+    }
 
     await new Promise(resolve => this.setState({ edited: false }, resolve))
 
@@ -671,7 +677,7 @@ class DetailSidebar extends Component {
           productGrades: values.edit.productGrades.length ? values.edit.productGrades : [],
           costPerUOM:
             values.edit.costPerUOM === null || values.edit.costPerUOM === '' ? null : Number(values.edit.costPerUOM),
-          tdsFields: JSON.stringify(values.edit.tdsFields)
+          tdsFields: tdsFields.length ? JSON.stringify(tdsFields) : ''
         }
         break
       case 3:
@@ -860,9 +866,9 @@ class DetailSidebar extends Component {
   }
 
   getEditValues = sidebarValues => {
-    let tdsFields = ''
+    let tdsFields = null
     //Convert tdsFields string array of objects to array
-    if (sidebarValues.tdsFields) {
+    if (getSafe(() => sidebarValues.tdsFields, '')) {
       let newJson = sidebarValues.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
       newJson = newJson.replace(/'/g, '"')
       tdsFields = JSON.parse(newJson)
