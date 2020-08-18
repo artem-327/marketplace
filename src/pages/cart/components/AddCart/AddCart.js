@@ -351,7 +351,13 @@ class AddCart extends Component {
           <>
             <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} />
             <FormattedUnit unit='' separator=' : ' value={quantityTo} />
-            <FormattedNumber style='currency' value={tier.pricePerUOM} currency={currencyCode} />
+            <FormattedNumber
+              minimumFractionDigits={2}
+              maximumFractionDigits={2}
+              style='currency'
+              value={tier.pricePerUOM}
+              currency={currencyCode}
+            />
             {nameAbbreviation && ` / ${nameAbbreviation}`}
           </>
         )
@@ -369,7 +375,13 @@ class AddCart extends Component {
         value: { quantityFrom: 1, price: value },
         text: (
           <>
-            <FormattedNumber minimumFractionDigits={0} value={value} style='currency' currency={currencyCode} />
+            <FormattedNumber
+              minimumFractionDigits={2}
+              maximumFractionDigits={2}
+              value={value}
+              style='currency'
+              currency={currencyCode}
+            />
             {nameAbbreviation && ` / ${nameAbbreviation}`}
           </>
         )
@@ -713,7 +725,13 @@ class AddCart extends Component {
               <GridColumn computer={10} textAlign='right'>
                 {price && !isNaN(price) ? (
                   <>
-                    <FormattedNumber style='currency' currency={currencyCode} value={price} />{' '}
+                    <FormattedNumber
+                      minimumFractionDigits={2}
+                      maximumFractionDigits={2}
+                      style='currency'
+                      currency={currencyCode}
+                      value={price}
+                    />{' '}
                     {nameAbbreviation && `/ ${nameAbbreviation}`}
                   </>
                 ) : null}
@@ -726,7 +744,13 @@ class AddCart extends Component {
               </GridColumn>
               <GridColumn computer={10} textAlign='right'>
                 {totalPrice ? (
-                  <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
+                  <FormattedNumber
+                    minimumFractionDigits={2}
+                    maximumFractionDigits={2}
+                    style='currency'
+                    currency={currencyCode}
+                    value={totalPrice}
+                  />
                 ) : (
                   <FormattedMessage id='cart.selectFirst' defaultMessage='Select desired Quantity first.' />
                 )}
