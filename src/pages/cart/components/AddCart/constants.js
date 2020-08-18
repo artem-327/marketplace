@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl'
 export const tabsMarketPlace = [
   { text: { id: 'global.buy', defaultMessage: 'Buy' }, key: 'buy' },
   { text: { id: 'global.ep.info', defaultMessage: 'Info(EP)' }, key: 'info' },
+  { text: { id: 'global.tds', defaultMessage: 'TDS(EP)' }, key: 'tds' },
   {
     text: { id: 'global.ep.properties', defaultMessage: 'Properties(EP)' },
     key: 'properties'
