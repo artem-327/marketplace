@@ -89,7 +89,7 @@ const minLength = errorMessages.minLength(3)
 const formValidation = () =>
   Yup.object().shape({
     address: addressValidationSchema(),
-    addressName: minOrZeroLength(3),
+    addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
     contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
     contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
     contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
@@ -188,7 +188,11 @@ class DeliveryLocationsSidebar extends React.Component {
           data-test='settings_delivery_locations_sidebar_name_inp'>
           <Input
             type='text'
-            label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
+            label={
+              <>
+                <FormattedMessage id='global.addressName' defaultMessage='Address Name' /> <Required />
+              </>
+            }
             name='addressName'
             inputProps={{
               placeholder: formatMessage({
