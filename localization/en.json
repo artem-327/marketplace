@@ -853,6 +853,8 @@
   "global.processed": "Processed",
   "global.paymentTerms": "Payment Terms",
   "global.change": "Change",
+  "global.specifications": "Specifications",
+  "global.property": "Property",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
