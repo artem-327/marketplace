@@ -23,6 +23,12 @@ import ExportInventorySidebar from '~/modules/export-inventory/components/Export
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
 const defaultHiddenColumns = [
+  'expired',
+  'productStatus',
+  'productNumber',
+  'warehouse',
+  'cost',
+  'broadcast',
   'minOrderQuantity',
   'splits',
   'condition',
@@ -34,6 +40,7 @@ const defaultHiddenColumns = [
   'expDate',
   'allocatedPkg',
   'offerExpiration',
+  'groupId',
   'lotNumber'
 ]
 
@@ -172,12 +179,22 @@ class MyInventory extends Component {
       {
         name: 'expired',
         title: <ClockIcon className='grey' />,
+        caption: (
+          <FormattedMessage id='global.expirationStatusIcon' defaultMessage='Expiration Status Icon'>
+            {text => text}
+          </FormattedMessage>
+        ),
         width: 40,
         align: 'center'
       },
       {
         name: 'productStatus',
         title: <FileTextIcon className='grey' />,
+        caption: (
+          <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon'>
+            {text => text}
+          </FormattedMessage>
+        ),
         width: 40,
         align: 'center'
       },
@@ -190,6 +207,17 @@ class MyInventory extends Component {
         ),
         width: 250,
         sortPath: 'ProductOffer.companyProduct.intProductName'
+      },
+      {
+        name: 'fobPrice',
+        title: (
+          <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 180,
+        align: 'right',
+        sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {
         name: 'productNumber',
@@ -253,17 +281,6 @@ class MyInventory extends Component {
         ),
         width: 100,
         align: 'right'
-      },
-      {
-        name: 'fobPrice',
-        title: (
-          <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 180,
-        align: 'right',
-        sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {
         name: 'manufacturer',

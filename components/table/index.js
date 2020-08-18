@@ -124,7 +124,15 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
                       id: c.title.props.id,
                       defaultMessage: c.title.props.defaultMessage
                     })
-                  : formatMessage({
+                  : c.caption
+                    ? (typeof c.caption === 'string'
+                        ? c.caption
+                        : formatMessage({
+                           id: c.caption.props.id,
+                            defaultMessage: c.caption.props.defaultMessage
+                        })
+                    )
+                    : formatMessage({
                       id: `global.${c.name}`,
                       defaultMessage: c.name
                     })
