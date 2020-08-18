@@ -494,6 +494,14 @@ class ProductSidebar extends React.Component {
       palletWidthInitFromSettings,
       palletLengthInitFromSettings
     } = this.props
+
+    const palletSaleOnly =
+      popupValues && popupValues.palletSaleOnly
+        ? popupValues.palletSaleOnly
+        : popupValues && popupValues.palletSaleOnly && popupValues.palletSaleOnly === false
+        ? popupValues.palletSaleOnly
+        : true
+
     return {
       ...initialValues,
       ...popupValues,
@@ -504,7 +512,7 @@ class ProductSidebar extends React.Component {
       packagingUnit: getSafe(() => popupValues.packagingUnit.id, ''),
       packagingType: getSafe(() => popupValues.packagingType.id, ''),
       packagingWidth: getSafe(() => popupValues.packagingWidth, ''),
-      palletSaleOnly: getSafe(() => popupValues.palletSaleOnly, ''),
+      palletSaleOnly: getSafe(() => palletSaleOnly, true),
       packagingHeight: getSafe(() => popupValues.packagingHeight, ''),
       packagingLength: getSafe(() => popupValues.packagingLength, ''),
       palletMinPkgs: getSafe(() => popupValues.palletMinPkgs, ''),
