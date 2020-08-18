@@ -244,7 +244,7 @@ const columns = [
 
 const formValidation = () =>
   Yup.lazy(values => {
-    const palletParamsRequired = checkPalletParamsRequired(values)
+    const palletParamsRequired = values.palletSaleOnly ? checkPalletParamsRequired(values) : false
 
     return Yup.object().shape({
       intProductName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -504,6 +504,7 @@ class ProductSidebar extends React.Component {
       packagingUnit: getSafe(() => popupValues.packagingUnit.id, ''),
       packagingType: getSafe(() => popupValues.packagingType.id, ''),
       packagingWidth: getSafe(() => popupValues.packagingWidth, ''),
+      palletSaleOnly: getSafe(() => popupValues.palletSaleOnly, ''),
       packagingHeight: getSafe(() => popupValues.packagingHeight, ''),
       packagingLength: getSafe(() => popupValues.packagingLength, ''),
       palletMinPkgs: getSafe(() => popupValues.palletMinPkgs, ''),
