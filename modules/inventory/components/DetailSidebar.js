@@ -1764,52 +1764,56 @@ class DetailSidebar extends Component {
                                         {getSafe(() => values.edit.tdsFields.length, '')
                                           ? values.edit.tdsFields.map((property, index) => {
                                               return (
-                                                <GridRow>
-                                                  <GridColumn width={7}>
-                                                    <Input
-                                                      type='text'
-                                                      name={`edit.tdsFields[${index}].property`}
-                                                      inputProps={{
-                                                        placeholder: 'Enter Property'
-                                                      }}
-                                                    />
-                                                  </GridColumn>
-                                                  <GridColumn width={7}>
-                                                    <Input
-                                                      type='text'
-                                                      name={`edit.tdsFields[${index}].specifications`}
-                                                      inputProps={{
-                                                        placeholder: 'Enter Specifications'
-                                                      }}
-                                                    />
-                                                  </GridColumn>
-                                                  <GridColumn
-                                                    width={2}
-                                                    verticalAlign='middle'
-                                                    textAlign='center'
-                                                    onClick={e => {
-                                                      if (
-                                                        index ===
-                                                        getSafe(() => values.edit.tdsFields.length, 0) - 1
-                                                      ) {
-                                                        arrayHelpers.push({ property: '', specifications: '' })
-                                                        this.setState({ changedForm: true })
-                                                      } else {
+                                                <>
+                                                  <GridRow>
+                                                    <GridColumn width={7}>
+                                                      <Input
+                                                        type='text'
+                                                        name={`edit.tdsFields[${index}].property`}
+                                                        inputProps={{
+                                                          placeholder: 'Enter Property'
+                                                        }}
+                                                      />
+                                                    </GridColumn>
+                                                    <GridColumn width={7}>
+                                                      <Input
+                                                        type='text'
+                                                        name={`edit.tdsFields[${index}].specifications`}
+                                                        inputProps={{
+                                                          placeholder: 'Enter Specifications'
+                                                        }}
+                                                      />
+                                                    </GridColumn>
+                                                    <GridColumn
+                                                      width={2}
+                                                      verticalAlign='middle'
+                                                      textAlign='center'
+                                                      onClick={e => {
                                                         arrayHelpers.remove(index)
                                                         this.setState({ changedForm: true })
-                                                      }
-                                                    }}>
-                                                    {index === getSafe(() => values.edit.tdsFields.length, 0) - 1 ? (
-                                                      <DivAddInputTds>
-                                                        <DivIconPlusCircle>
-                                                          <IconPlusCircle />
-                                                        </DivIconPlusCircle>
-                                                      </DivAddInputTds>
-                                                    ) : (
+                                                      }}>
                                                       <IconTrash />
-                                                    )}
-                                                  </GridColumn>
-                                                </GridRow>
+                                                    </GridColumn>
+                                                  </GridRow>
+                                                  {index === getSafe(() => values.edit.tdsFields.length, 0) - 1 ? (
+                                                    <GridRow>
+                                                      <GridColumn
+                                                        width={2}
+                                                        verticalAlign='middle'
+                                                        textAlign='center'
+                                                        onClick={e => {
+                                                          arrayHelpers.push({ property: '', specifications: '' })
+                                                          this.setState({ changedForm: true })
+                                                        }}>
+                                                        <DivAddInputTds>
+                                                          <DivIconPlusCircle>
+                                                            <IconPlusCircle />
+                                                          </DivIconPlusCircle>
+                                                        </DivAddInputTds>
+                                                      </GridColumn>
+                                                    </GridRow>
+                                                  ) : null}
+                                                </>
                                               )
                                             })
                                           : null}
