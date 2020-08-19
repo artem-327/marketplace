@@ -29,9 +29,10 @@ const FileTextIcon = styled(FileText)`
 `
 
 const Circle = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
+  width: 14px;
+  height: 14px;
+  margin: 3px;
+  border-radius: 7px;
   background-color: #84c225;
   &.red {
     background-color: #f16844;
