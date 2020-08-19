@@ -78,13 +78,14 @@ const GlobalTableOverrideStyle = createGlobalStyle`
 const SettingButton = styled(Settings)`
   position: absolute !important;
   cursor: pointer !important;
-  top: 9px;
+  top: 11px;
   left: 10px;
   z-index: 601;
   width: 20px;
   height: 19px;
   font-size: 20px;
   line-height: 20px;
+  
   &:before {
     padding: 10px 16px 10px 10px;
     background-color: white !important;
