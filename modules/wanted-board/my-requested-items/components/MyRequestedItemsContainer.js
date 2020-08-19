@@ -91,7 +91,15 @@ function mapStateToProps(store, { datagrid }) {
             packaging: getSafe(() => pro.productOffer.companyProduct.packagingType.name, ''),
             measurement: getSafe(() => pro.productOffer.companyProduct.packagingUnit.nameAbbreviation, ''),
             deliveryPriceMax: 'N/A',
-            fobQuote: <FormattedNumber style='currency' currency={currency} value={pro.pricePerUOM} />,
+            fobQuote: (
+              <FormattedNumber
+                minimumFractionDigits={2}
+                maximumFractionDigits={2}
+                style='currency'
+                currency={currency}
+                value={pro.pricePerUOM}
+              />
+            ),
             deliveredQuote: 'N/A'
           }
         })
@@ -168,7 +176,13 @@ function mapStateToProps(store, { datagrid }) {
             <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
           ),
         deliveryPriceMax: row.maximumPricePerUOM ? (
-          <FormattedNumber style='currency' currency={currency} value={row.maximumPricePerUOM} />
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={row.maximumPricePerUOM}
+          />
         ) : (
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
         ),

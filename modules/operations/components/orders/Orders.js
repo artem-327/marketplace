@@ -386,8 +386,7 @@ class Orders extends Component {
           onClick={e => {
             e.stopPropagation()
             this.props.openOrderDetail(row.rawData)
-          }}
-        >
+          }}>
           {row.id}
         </a>
       ),
@@ -449,11 +448,11 @@ class Orders extends Component {
             </a>
           ) : (
             <>
-              {
-                row.rawData.orderStatus === 2
-                  ? <Icon name='file' className='negative' />
-                  : <Icon name='file' className='unknown' />
-              }
+              {row.rawData.orderStatus === 2 ? (
+                <Icon name='file' className='negative' />
+              ) : (
+                <Icon name='file' className='unknown' />
+              )}
             </>
           ),
         related:
@@ -551,7 +550,15 @@ class Orders extends Component {
       type: att.type,
       issuedAt: getSafe(() => <FormattedDate value={att.issuedAt.split('T')[0]} />, 'N/A'),
       issuerCompanyName: att.issuerCompanyName,
-      cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={att.cfPriceTotal} />
+      cfPriceTotal: (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={att.cfPriceTotal}
+        />
+      )
     }))
     return (
       <ProdexGrid
@@ -630,7 +637,7 @@ class Orders extends Component {
     )
   }
 
-  cancelOrder = async (id) => {
+  cancelOrder = async id => {
     const { cancelOrder, datagrid } = this.props
     try {
       const response = await cancelOrder(id)

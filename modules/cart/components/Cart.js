@@ -188,6 +188,8 @@ export default class Cart extends Component {
               <FormattedMessage id='cart.totalPerItem' defaultMessage='Total per Item:' />{' '}
               <DescriptionValue bold>
                 <FormattedNumber
+                  minimumFractionDigits={2}
+                  maximumFractionDigits={2}
                   id='cart.totalPerItem'
                   style='currency'
                   currency={currency}
@@ -259,7 +261,13 @@ export default class Cart extends Component {
                     <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />
                   </VerticalUnpaddedColumn>
                   <VerticalUnpaddedColumn textAlign='right'>
-                    <FormattedNumber style='currency' currency={currency} value={cart.cfPriceSubtotal} />
+                    <FormattedNumber
+                      minimumFractionDigits={2}
+                      maximumFractionDigits={2}
+                      style='currency'
+                      currency={currency}
+                      value={cart.cfPriceSubtotal}
+                    />
                   </VerticalUnpaddedColumn>
                 </BottomUnpaddedRow>
 
@@ -268,7 +276,13 @@ export default class Cart extends Component {
                     <FormattedMessage id='cart.estimatedTax' defaultMessage='Estimated Tax' />
                   </VerticalUnpaddedColumn>
                   <VerticalUnpaddedColumn textAlign='right'>
-                    <FormattedNumber style='currency' currency={currency} value={0} />
+                    <FormattedNumber
+                      minimumFractionDigits={2}
+                      maximumFractionDigits={2}
+                      style='currency'
+                      currency={currency}
+                      value={0}
+                    />
                   </VerticalUnpaddedColumn>
                 </TopUnpaddedRow>
                 <TotalRow columns={2}>
@@ -280,7 +294,13 @@ export default class Cart extends Component {
 
                   <VerticalUnpaddedColumn textAlign='right'>
                     <DescriptionValue bold>
-                      <FormattedNumber style='currency' currency={currency} value={cart.cfPriceSubtotal} />
+                      <FormattedNumber
+                        minimumFractionDigits={2}
+                        maximumFractionDigits={2}
+                        style='currency'
+                        currency={currency}
+                        value={cart.cfPriceSubtotal}
+                      />
                     </DescriptionValue>
                   </VerticalUnpaddedColumn>
                 </TotalRow>

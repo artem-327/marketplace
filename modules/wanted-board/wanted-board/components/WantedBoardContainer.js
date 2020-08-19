@@ -61,7 +61,13 @@ function mapStateToProps(store, { datagrid }) {
             <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
           ),
         fobPrice: row.maximumPricePerUOM ? (
-          <FormattedNumber style='currency' currency={currency} value={row.maximumPricePerUOM} />
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={row.maximumPricePerUOM}
+          />
         ) : (
           <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
         ),
