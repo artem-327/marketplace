@@ -1742,19 +1742,23 @@ i.file {
               border-right: 1px solid #dde2e6;
             }
 
-            &:not(.p-0):after {
-              content: "";
-              position: absolute;
-              left: 0;
-              right: 0;
-              bottom: -5px;
-              display: block;
-              height: 4px;
-              background: rgba(0,0,0, 0.01);
-              background: -moz-linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
-              background: -webkit-linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
-              background: linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
-              filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
+            &:not(.p-0){
+              box-shadow: 0 0 0 0 transparent !important;
+
+              &:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -5px;
+                display: block;
+                height: 4px;
+                background: rgba(0,0,0, 0.01);
+                background: -moz-linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
+                background: -webkit-linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
+                background: linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
+              }
             }
 
             & .justify-content-end {
@@ -2000,7 +2004,7 @@ i.file {
 
     thead tr th:not(.p-0) {
       background: #fff;
-      /*box-shadow: 0 2px 4px 0 rgba(222, 226, 230, 0.4);*/
+      box-shadow: 0 2px 4px 0 rgba(222, 226, 230, 0.4);
     }
 
     tbody {
