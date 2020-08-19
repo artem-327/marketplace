@@ -48,7 +48,13 @@ export default class Summary extends Component {
               </VerticalUnpaddedColumn>
 
               <VerticalUnpaddedColumn black>
-                <FormattedNumber style='currency' currency={currency} value={totalPrice} />
+                <FormattedNumber
+                  minimumFractionDigits={2}
+                  maximumFractionDigits={2}
+                  style='currency'
+                  currency={currency}
+                  value={totalPrice}
+                />
               </VerticalUnpaddedColumn>
             </RelaxedRow>
 
@@ -59,7 +65,13 @@ export default class Summary extends Component {
                 </VerticalUnpaddedColumn>
 
                 <VerticalUnpaddedColumn black>
-                  <FormattedNumber style='currency' currency={currency} value={shipping} />
+                  <FormattedNumber
+                    minimumFractionDigits={2}
+                    maximumFractionDigits={2}
+                    style='currency'
+                    currency={currency}
+                    value={shipping}
+                  />
                 </VerticalUnpaddedColumn>
               </RelaxedRow>
             }
@@ -70,7 +82,13 @@ export default class Summary extends Component {
               </VerticalUnpaddedColumn>
 
               <VerticalUnpaddedColumn black>
-                <FormattedNumber style='currency' currency={currency} value={0} />
+                <FormattedNumber
+                  minimumFractionDigits={2}
+                  maximumFractionDigits={2}
+                  style='currency'
+                  currency={currency}
+                  value={0}
+                />
               </VerticalUnpaddedColumn>
             </RelaxedRow>
 
@@ -101,6 +119,8 @@ export default class Summary extends Component {
 
               <VerticalUnpaddedColumn>
                 <FormattedNumber
+                  minimumFractionDigits={2}
+                  maximumFractionDigits={2}
                   style='currency'
                   currency={currency}
                   value={totalPrice + (shipping !== 'N/A' ? shipping : 0)}

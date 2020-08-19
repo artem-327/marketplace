@@ -56,7 +56,15 @@ function prepareDetail(data, type) {
         : 'N/A',
     acceptanceDate:
       typeof data.acceptanceDate !== 'undefined' ? moment(data.acceptanceDate).toDate().toLocaleString() : 'N/A',
-    amount: <FormattedNumber style='currency' currency={currency} value={subtotal} />,
+    amount: (
+      <FormattedNumber
+        minimumFractionDigits={2}
+        maximumFractionDigits={2}
+        style='currency'
+        currency={currency}
+        value={subtotal}
+      />
+    ),
     buyerRejectionDate:
       typeof data.buyerRejectionDate !== 'undefined' ? moment(data.buyerRejectionDate).toDate().toLocaleString() : null,
     carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
@@ -71,10 +79,18 @@ function prepareDetail(data, type) {
       typeof data.deliveryDate !== 'undefined' ? moment(data.deliveryDate).toDate().toLocaleString() : 'N/A',
     echoFee: getSafe(() => data.echoFee, 0),
     freight: (
-      <FormattedNumber style='currency' currency={currency} value={data.shippingPrice ? data.shippingPrice : 0} />
+      <FormattedNumber
+        minimumFractionDigits={2}
+        maximumFractionDigits={2}
+        style='currency'
+        currency={currency}
+        value={data.shippingPrice ? data.shippingPrice : 0}
+      />
     ),
     grossProfit: (
       <FormattedNumber
+        minimumFractionDigits={2}
+        maximumFractionDigits={2}
         style='currency'
         currency={currency}
         value={data.totalPriceWithShipping ? data.totalPriceWithShipping : 0}
@@ -148,16 +164,52 @@ function prepareDetail(data, type) {
     }),
     shipToEmail: data.shippingAddressContactEmail,
     shipToPhone: data.shippingAddressContactPhone,
-    subtotal: <FormattedNumber style='currency' currency={currency} value={subtotal} />, //"$" + totalPrice.formatMoney(2),
+    subtotal: (
+      <FormattedNumber
+        minimumFractionDigits={2}
+        maximumFractionDigits={2}
+        style='currency'
+        currency={currency}
+        value={subtotal}
+      />
+    ), //"$" + totalPrice.formatMoney(2),
     terms: data.cfPaymentTerms ? data.cfPaymentTerms : 'N/A',
-    total: <FormattedNumber style='currency' currency={currency} value={totalPriceWithShipping} />, //"$" + totalPriceWithShipping.formatMoney(2),
+    total: (
+      <FormattedNumber
+        minimumFractionDigits={2}
+        maximumFractionDigits={2}
+        style='currency'
+        currency={currency}
+        value={totalPriceWithShipping}
+      />
+    ), //"$" + totalPriceWithShipping.formatMoney(2),
     totalPkg: orderItems.map(d => d.pkgAmount),
     unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
     unitPrice: orderItems.map(d =>
-      d.pricePerUOM ? <FormattedNumber style='currency' currency={currency} value={d.pricePerUOM} /> : 'N/A'
+      d.pricePerUOM ? (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={d.pricePerUOM}
+        />
+      ) : (
+        'N/A'
+      )
     ),
     itemTotal: orderItems.map(d =>
-      d.priceSubtotal ? <FormattedNumber style='currency' currency={currency} value={d.priceSubtotal} /> : 'N/A'
+      d.priceSubtotal ? (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={d.priceSubtotal}
+        />
+      ) : (
+        'N/A'
+      )
     ),
     //<FormattedNumber style='currency' currency={currency} value={0} />, //"$" + getSafe(() => data.orderItems[0].price, 0).formatMoney(2),
     // Vendor or Customer

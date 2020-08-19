@@ -128,7 +128,17 @@ const mapStateToProps = (state, { datagrid }) => {
         data: d, // all row data, used for edit popup
         id: d.id,
         carrierName: d.carrierName || '',
-        price: d.price ? <FormattedNumber style='currency' currency={currency} value={d.price} /> : 'N/A',
+        price: d.price ? (
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={d.price}
+          />
+        ) : (
+          'N/A'
+        ),
         quoteId: d.quoteId || '',
         validityDate: d.validityDate ? moment(d.validityDate).format(getLocaleDateFormat()) : 'N/A'
       }

@@ -1,19 +1,7 @@
 import React, { Component } from 'react'
 import '~/src/pages/inventory/addInventory/AddInventory.scss'
 import Spinner from '~/src/components/Spinner/Spinner'
-import {
-  Grid,
-  Segment,
-  Accordion,
-  Table,
-  List,
-  Button,
-  Icon,
-  Divider,
-  Header,
-  GridRow,
-  Modal
-} from 'semantic-ui-react'
+import { Grid, Segment, Accordion, Table, List, Button, Icon, Divider, Header, GridRow, Modal } from 'semantic-ui-react'
 import { ChevronDown, DownloadCloud, ArrowLeft } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
@@ -301,9 +289,9 @@ const StyledModal = styled(Modal)`
 const TopRow = styled.div`
   margin: 0 32px;
   padding: 20px 0 50px 0;
-  vertical-align: middle;  
+  vertical-align: middle;
   display: block;
-  
+
   > a {
     float: left;
     border-radius: 3px;
@@ -315,7 +303,7 @@ const TopRow = styled.div`
     font-weight: 500;
     line-height: 1.43;
     padding: 9px 17px 11px 17px;
-  
+
     > svg {
       width: 18px;
       height: 20px;
@@ -324,7 +312,7 @@ const TopRow = styled.div`
       vertical-align: middle;
     }
   }
-  
+
   > div.field {
     float: right;
     display: flex;
@@ -338,11 +326,11 @@ const TopRow = styled.div`
     > div {
       padding: 12px 18px;
     }
-     
+
     > div:first-child {
       color: #848893;
-    }  
-  } 
+    }
+  }
 `
 
 const StyledHeader = styled.span`
@@ -547,11 +535,7 @@ class Detail extends Component {
             : 'N/A',
           documenIssuer: getSafe(() => row.issuer, 'N/A'),
           download: (
-            <a
-              href='#'
-              onClick={() =>
-                this.downloadAttachment(row.name, row.id)
-              }>
+            <a href='#' onClick={() => this.downloadAttachment(row.name, row.id)}>
               <Icon name='file' className='positive' />
             </a>
           )
@@ -586,10 +570,11 @@ class Detail extends Component {
       documenType: att.documentType.name,
       documenDate: 'N/A',
       documenIssuer: 'N/A',
-      download:
+      download: (
         <a href='#' onClick={() => this.downloadAttachment(att.name, att.id)}>
           <Icon name='file' className='positive' />
         </a>
+      )
     }))
     return (
       <ProdexGrid
@@ -617,8 +602,7 @@ class Detail extends Component {
 
     return (
       <div id='page' className='auto-scrolling'>
-        {this.state.openDocumentsPopup &&
-        (
+        {this.state.openDocumentsPopup && (
           <StyledModal
             size='Default'
             closeIcon={false}
@@ -630,9 +614,7 @@ class Detail extends Component {
                 <FormattedMessage id='order.relatedDocumentsFor' defaultMessage='RELATED DOCUMENTS FOR '>
                   {text => text}
                 </FormattedMessage>
-                <StyledHeader>
-                  {documentsPopupProduct}
-                </StyledHeader>
+                <StyledHeader>{documentsPopupProduct}</StyledHeader>
               </>
             </Modal.Header>
             <Modal.Content scrolling>{this.getRelatedDocumentsContent()}</Modal.Content>
@@ -658,7 +640,9 @@ class Detail extends Component {
               <div>
                 <FormattedMessage id='order.detail.buyerCompanyEin' defaultMessage='Buyer Company EIN' />
               </div>
-              <div><strong>{order.companyEin}</strong></div>
+              <div>
+                <strong>{order.companyEin}</strong>
+              </div>
             </div>
           </TopRow>
           <OrderSegment>
@@ -683,10 +667,7 @@ class Detail extends Component {
                       style={{ fontSize: '1.14285714em', cursor: 'pointer' }}
                       data-test='orders_detail_download_order'>
                       <DownloadCloud />
-                      <FormattedMessage
-                        id='global.download'
-                        defaultMessage='Download'
-                      />
+                      <FormattedMessage id='global.download' defaultMessage='Download' />
                     </a>
                   </div>
                 </Grid.Column>
@@ -1036,6 +1017,8 @@ class Detail extends Component {
                               <Table.Cell textAlign='right'>
                                 {order.unitCost[index] ? (
                                   <FormattedNumber
+                                    minimumFractionDigits={2}
+                                    maximumFractionDigits={2}
                                     style='currency'
                                     currency={currency}
                                     value={order.unitCost[index]}
@@ -1044,18 +1027,16 @@ class Detail extends Component {
                                   'N/A'
                                 )}
                               </Table.Cell>
-                              <Table.Cell>{
-                                order.orderItems[index].attachments.length
-                                  ? (
-                                    <a
-                                      href='#'
-                                      onClick={() =>
-                                        this.openRelatedPopup(order.orderItems[index].attachments, element)
-                                      }>
-                                      <FormattedMessage id='global.view' defaultMessage='View' />
-                                    </a>
-                                  ) : 'N/A'
-                              }
+                              <Table.Cell>
+                                {order.orderItems[index].attachments.length ? (
+                                  <a
+                                    href='#'
+                                    onClick={() => this.openRelatedPopup(order.orderItems[index].attachments, element)}>
+                                    <FormattedMessage id='global.view' defaultMessage='View' />
+                                  </a>
+                                ) : (
+                                  'N/A'
+                                )}
                               </Table.Cell>
                               <Table.Cell className='p-0'></Table.Cell>
                             </Table.Row>

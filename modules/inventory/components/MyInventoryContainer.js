@@ -38,6 +38,8 @@ function mapStateToProps(store, { datagrid }) {
             <>
               {' '}
               <FormattedNumber
+                minimumFractionDigits={2}
+                maximumFractionDigits={2}
                 style='currency'
                 currency={currency}
                 value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM}
@@ -51,6 +53,8 @@ function mapStateToProps(store, { datagrid }) {
             <>
               {' '}
               <FormattedNumber
+                minimumFractionDigits={2}
+                maximumFractionDigits={2}
                 style='currency'
                 currency={currency}
                 value={getSafe(() => po.pricingTiers[0].pricePerUOM)}
@@ -80,7 +84,17 @@ function mapStateToProps(store, { datagrid }) {
         //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
         quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.quantity} /> : 'N/A',
-        cost: po.costPerUOM ? <FormattedNumber style='currency' currency={currency} value={po.costPerUOM} /> : 'N/A',
+        cost: po.costPerUOM ? (
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={po.costPerUOM}
+          />
+        ) : (
+          'N/A'
+        ),
         pricingTiers: po.pricingTiers,
         //pricing: po.pricing,
         fobPrice,
