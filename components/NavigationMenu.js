@@ -378,7 +378,7 @@ class Navigation extends Component {
           </Dropdown.Menu>
         </DropdownItem>
 
-        {(isCompanyAdmin && !isClientCompany) || isClientCompanyAdmin ? (
+        {isClientCompany || isCompanyAdmin || isClientCompanyAdmin ? (
           <DropdownItem
             icon={<Coffee size={22} />}
             text={formatMessage({ id: 'navigation.manageGuests', defaultMessage: 'Manage Guests' })}
@@ -387,24 +387,23 @@ class Navigation extends Component {
             onClick={() => this.toggleOpened('manageGuests')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'manageGuests'}
-            data-test='navigation_menu_manage_guests_drpdn'
-          >
+            data-test='navigation_menu_manage_guests_drpdn'>
             <Dropdown.Menu data-test='navigation_menu_manage_guests_drpdn_menu'>
               <PerfectScrollbar>
                 <Dropdown.Item
                   as={MenuLink}
                   to='/manage-guests?type=guests'
-
                   dataTest='navigation_manage_guests_guests_drpdn'>
                   {formatMessage({ id: 'navigation.guests', defaultMessage: 'Guests' })}
                 </Dropdown.Item>
-                {false && (<Dropdown.Item
-                  as={MenuLink}
-                  to='/manage-guests?type=chat'
-
-                  dataTest='navigation_manage_guests_chat_drpdn'>
-                  {formatMessage({ id: 'navigation.chat', defaultMessage: 'Chat' })}
-                </Dropdown.Item>)}
+                {false && (
+                  <Dropdown.Item
+                    as={MenuLink}
+                    to='/manage-guests?type=chat'
+                    dataTest='navigation_manage_guests_chat_drpdn'>
+                    {formatMessage({ id: 'navigation.chat', defaultMessage: 'Chat' })}
+                  </Dropdown.Item>
+                )}
               </PerfectScrollbar>
             </Dropdown.Menu>
           </DropdownItem>
