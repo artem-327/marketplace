@@ -411,6 +411,14 @@ class ProductSidebar extends React.Component {
 
     const palletParamsRequired = checkPalletParamsRequired(values)
 
+    const packagingDimensions = !getSafe(() => values.palletSaleOnly, false)
+      ? {
+          packagingLength: Number(values.packagingLength),
+          packagingHeight: Number(values.packagingHeight),
+          packagingWidth: Number(values.packagingWidth)
+        }
+      : null
+
     let formValues = {
       intProductName: values.intProductName,
       intProductCode: values.intProductCode,
@@ -434,9 +442,7 @@ class ProductSidebar extends React.Component {
       packagesPerPallet:
         values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet),
       */
-      packagingLength: Number(values.packagingLength),
-      packagingHeight: Number(values.packagingHeight),
-      packagingWidth: Number(values.packagingWidth),
+      ...packagingDimensions,
       ...(palletParamsRequired === true && {
         palletMinPkgs: Number(values.palletMinPkgs),
         palletMaxPkgs: Number(values.palletMaxPkgs),
@@ -499,7 +505,7 @@ class ProductSidebar extends React.Component {
     const palletSaleOnly =
       popupValues && popupValues.palletSaleOnly
         ? popupValues.palletSaleOnly
-        : popupValues && popupValues.palletSaleOnly && popupValues.palletSaleOnly === false
+        : popupValues && popupValues.palletSaleOnly === false
         ? popupValues.palletSaleOnly
         : true
 
@@ -577,7 +583,7 @@ class ProductSidebar extends React.Component {
     this.setState({ activeIndex: newIndex })
   }
 
-  handleChangePackagingType = (e, value, setFieldValue) => {
+  handleChangePackagingType = (e, value, setFieldValue, values) => {
     e.preventDefault()
     const { packagingTypesAll } = this.props
     const selectedPackingType = packagingTypesAll.find(type => type.id === value)
@@ -587,9 +593,9 @@ class ProductSidebar extends React.Component {
       if (selectedPackingType && selectedPackingType[element]) {
         switch (element) {
           case 'palletPkgMin':
-            setFieldValue('palletMinPkgs', selectedPackingType[element])
+            !values.palletMinPkgs && setFieldValue('palletMinPkgs', selectedPackingType[element])
           case 'palletPkgMax':
-            setFieldValue('palletMaxPkgs', selectedPackingType[element])
+            !values.palletMaxPkgs && setFieldValue('palletMaxPkgs', selectedPackingType[element])
           default:
             return
         }
@@ -780,6 +786,28 @@ class ProductSidebar extends React.Component {
                           />
                         </GridColumn>
                         <GridColumn>
+                          <Dropdown
+                            name='packageWeightUnit'
+                            options={packageWeightUnits}
+                            label={
+                              <>
+                                <FormattedMessage id='global.packageWeightUnit' defaultMessage='Package Weight Unit' />
+                                <Required />
+                              </>
+                            }
+                            inputProps={{
+                              'data-test': 'settings_product_popup_packageWeightUnit_drpdn',
+                              placeholder: formatMessage({
+                                id: 'productCatalog.selectWeightUnit',
+                                defaultMessage: 'Select Weight Unit'
+                              })
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow columns={2}>
+                        <GridColumn>
                           <QuantityInput
                             name='packageWeight'
                             label={
@@ -796,32 +824,6 @@ class ProductSidebar extends React.Component {
                               type: 'number',
                               min: 0
                             }}
-                          />
-                        </GridColumn>
-                      </GridRow>
-
-                      <GridRow columns={2}>
-                        <GridColumn>
-                          <Dropdown
-                            options={nmfcNumbersFiltered}
-                            inputProps={{
-                              fluid: true,
-                              search: val => val,
-                              selection: true,
-                              loading: nmfcNumbersFetching,
-                              onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery),
-                              placeholder: formatMessage({
-                                id: 'productCatalog.selectNmfcCode',
-                                defaultMessage: 'Select NMFC Code'
-                              })
-                            }}
-                            name='nmfcNumber'
-                            label={
-                              <>
-                                <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code' />
-                                <Required />
-                              </>
-                            }
                           />
                         </GridColumn>
                         <GridColumn>
@@ -908,28 +910,6 @@ class ProductSidebar extends React.Component {
                                 }}
                               />
                             </GridColumn>
-                            <GridColumn>
-                              <Dropdown
-                                name='packageWeightUnit'
-                                options={packageWeightUnits}
-                                label={
-                                  <>
-                                    <FormattedMessage
-                                      id='global.packageWeightUnit'
-                                      defaultMessage='Package Weight Unit'
-                                    />
-                                    <Required />
-                                  </>
-                                }
-                                inputProps={{
-                                  'data-test': 'settings_product_popup_packageWeightUnit_drpdn',
-                                  placeholder: formatMessage({
-                                    id: 'productCatalog.selectWeightUnit',
-                                    defaultMessage: 'Select Weight Unit'
-                                  })
-                                }}
-                              />
-                            </GridColumn>
                           </GridRow>
 
                           <GridRow columns={2}>
@@ -946,7 +926,34 @@ class ProductSidebar extends React.Component {
                                 }}
                               />
                             </GridColumn>
-                            {false && (
+                            <GridColumn>
+                              <Dropdown
+                                options={nmfcNumbersFiltered}
+                                inputProps={{
+                                  fluid: true,
+                                  search: val => val,
+                                  selection: true,
+                                  loading: nmfcNumbersFetching,
+                                  onSearchChange: (_, { searchQuery }) =>
+                                    this.handleSearchNmfcNumberChange(searchQuery),
+                                  placeholder: formatMessage({
+                                    id: 'productCatalog.selectNmfcCode',
+                                    defaultMessage: 'Select NMFC Code'
+                                  })
+                                }}
+                                name='nmfcNumber'
+                                label={
+                                  <>
+                                    <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code' />
+                                    <Required />
+                                  </>
+                                }
+                              />
+                            </GridColumn>
+                          </GridRow>
+
+                          {false && (
+                            <GridRow>
                               <GridColumn>
                                 <QuantityInput
                                   label={formatMessage({
@@ -961,8 +968,9 @@ class ProductSidebar extends React.Component {
                                   }}
                                 />
                               </GridColumn>
-                            )}
-                          </GridRow>
+                            </GridRow>
+                          )}
+
                           <GridRow>
                             <GridColumn width={4}>
                               <Checkbox
@@ -1163,7 +1171,7 @@ class ProductSidebar extends React.Component {
                                 defaultMessage: 'Select Type'
                               }),
                               onChange: (e, { value }) => {
-                                this.handleChangePackagingType(e, value, setFieldValue)
+                                this.handleChangePackagingType(e, value, setFieldValue, values)
                               }
                             }}
                           />
