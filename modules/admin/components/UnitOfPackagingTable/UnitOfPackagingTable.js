@@ -79,7 +79,9 @@ const mapStateToProps = (state, { datagrid }) => {
         measureTypeId: d.measureType.id,
         length: d.length,
         width: d.width,
-        height: d.height
+        height: d.height,
+        palletPkgMax: d.palletPkgMax,
+        palletPkgMin: d.palletPkgMin
       }
     }),
     filterValue: state.admin.filterValue,

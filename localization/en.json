@@ -858,6 +858,8 @@
   "global.palletSaleOnly": "Pallet Sale Only",
   "global.specifications": "Specifications",
   "global.property": "Property",
+  "global.palletPkgMin": "Pallet Pkg Min",
+  "global.palletPkgMax": "Pallet Pkg Max",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
