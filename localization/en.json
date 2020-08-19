@@ -978,7 +978,7 @@
   "confirm.deleteTemplate.title": "Delete Template",
   "confirm.deleteTemplate.content": "Do you really want to delete template {name}?",
   "confirm.logisticsAccount.title": "Delete Logistics Account",
-  "confirm.logisticsAccount.content": "Do you really want to delete logistics account {name}?",
+  "confirm.logisticsAccount.content": "Do you really want to delete logistics account '{name}'?",
   "confirm.missingCOfA.title": "Missing C of A",
   "confirm.missingCOfA.content": "You have allocated packages on lot without C of A document. Do you really want to proceed and assign lots?",
   "confirm.cancelPayment.title": "Cancel Payment",

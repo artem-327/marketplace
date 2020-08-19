@@ -108,8 +108,11 @@ class DeliveryAddressesTable extends Component {
                 confirm(
                   formatMessage({ id: 'confirm.deleteDeliveryAddress', defaultMessage: 'Delete Delivery Address' }),
                   formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.streetAddress}?` },
-                    { item: row.streetAddress }
+                    {
+                      id: 'confirm.deleteItem',
+                      defaultMessage: `Do you really want to delete ${row.streetAddressString}?`
+                    },
+                    { item: row.streetAddressString }
                   )
                 ).then(() => {
                   deleteDeliveryAddress(row.id)
@@ -133,11 +136,13 @@ const mapStateToProps = (state, { datagrid }) => {
     filterValue: state.settings.filterValue,
     loading: state.settings.loading,
     rows: datagrid.rows.map(d => {
+      const streetAddress = getSafe(() => d.address.streetAddress, '')
       return {
         rawData: d, // all row data, used for edit popup
+        streetAddressString: streetAddress,
         id: d.id,
         streetAddress: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {getSafe(() => d.address.streetAddress, '')}
+          {streetAddress}
         </div>,
         city: getSafe(() => d.address.city, ''),
         province: getSafe(() => d.address.province.name, ''),

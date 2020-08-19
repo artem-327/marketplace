@@ -42,7 +42,7 @@ class LogisticsPopup extends Component {
     return popupValues
       ? {
           providerIdentifier: JSON.stringify(popupValues.provider.identifier),
-          providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifier.value})`,
+          providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifierValue})`,
           username:
             popupValues.accountInfos && popupValues.accountInfos.length ? popupValues.accountInfos[0].username : '',
           password: ''
