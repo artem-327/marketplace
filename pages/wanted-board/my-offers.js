@@ -12,7 +12,7 @@ class MyOffersPage extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'title.myOffers', defaultMessage: 'My Offers' })}>
-        <MyOffers activeIndex={2} />
+        <MyOffers />
       </Layout>
     )
   }

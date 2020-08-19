@@ -14,7 +14,7 @@ class WantedBoardPage extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'title.wantedBoard', defaultMessage: 'Wanted Board' })}>
-        <WantedBoard activeIndex={0} type={type}/>
+        <WantedBoard type={type}/>
       </Layout>
     )
   }

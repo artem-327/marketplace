@@ -28,7 +28,7 @@ import {
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-import { InventoryFilter, Filter, OrderFilter, WantedBoardFilter } from '~/modules/filter'
+import { InventoryFilter, Filter, OrderFilter } from '~/modules/filter'
 import TabsOperations from '~/modules/operations/components/Tabs'
 import TabsProducts from '~/modules/products/components/Tabs'
 import TabsCompanies from '~/modules/companies/components/Tabs'
@@ -59,10 +59,11 @@ class Navigation extends Component {
     products: getSafe(() => Router.router.pathname === '/products', false),
     companies: getSafe(() => Router.router.pathname === '/companies', false),
     manageGuests: getSafe(() => Router.router.pathname === '/manage-guests', false),
+    wantedBoard: getSafe(() => Router.router.pathname === '/wanted-board/wanted-board', false) ||
+      getSafe(() => Router.router.pathname === '/wanted-board/my-offers', false) ||
+      getSafe(() => Router.router.pathname === '/wanted-board/my-requested-items', false),
     openedFilterMyInventory: true,
-    openedFilterMarketplace: true,
-    openedFilterOrders: false,
-    openedFilterWantedBoard: true
+    openedFilterMarketplace: true
   }
 
   componentDidMount() {
@@ -104,22 +105,11 @@ class Navigation extends Component {
             orders: false
           }))
           break
-        case '/wanted-board/wanted-board':
-          this.setState(prevState => ({ openedFilterWantedBoard: !prevState.openedFilterWantedBoard }))
-          break
-        case '/orders?type=sales':
-          //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
-          break
-        case '/orders?type=purchase':
-          //temporary disabled - this.setState(prevState => ({ openedFilterOrders: !prevState.openedFilterOrders }))
-          break
       }
     } else {
       this.setState({
         openedFilterMyInventory: false,
-        openedFilterMarketplace: false,
-        openedFilterOrders: false,
-        openedFilterWantedBoard: false
+        openedFilterMarketplace: false
       })
     }
 
@@ -175,7 +165,6 @@ class Navigation extends Component {
     this.setState({
       openedFilterMyInventory: false,
       openedFilterMarketplace: false,
-      openedFilterOrders: false,
       orders: false,
       settings: false,
       admin: false,
@@ -183,6 +172,7 @@ class Navigation extends Component {
       products: false,
       companies: false,
       manageGuests: false,
+      wantedBoard: false,
       [type]: !typeState
     })
 
@@ -248,7 +238,6 @@ class Navigation extends Component {
       collapsedMenu,
       activeInventoryFilter,
       activeMarketplaceFilter,
-      activeWantedBoardFilter,
       isClientCompanyAdmin
     } = this.props
 
@@ -261,10 +250,9 @@ class Navigation extends Component {
       products,
       companies,
       manageGuests,
+      wantedBoard,
       openedFilterMyInventory,
-      openedFilterMarketplace,
-      openedFilterOrders,
-      openedFilterWantedBoard
+      openedFilterMarketplace
     } = this.state
 
     const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className, dataTest }) => {
@@ -336,22 +324,40 @@ class Navigation extends Component {
           </>
         </MenuLink>
         {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
-        <MenuLink
-          to={isClientCompany ? '/wanted-board/my-requested-items' : '/wanted-board/wanted-board'}
-          dataTest='navigation_menu_wanted_board_drpdn'>
-          <>
-            <Grid size={22} />
-            {formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
-            {false && asPath === '/wanted-board/wanted-board' && activeWantedBoardFilter ? (
-              <div className='active-filter'>
-                <Sliders />
-              </div>
-            ) : null}
-          </>
-        </MenuLink>
-        {false && !collapsedMenu && openedFilterWantedBoard && asPath === '/wanted-board/wanted-board' ? (
-          <WantedBoardFilter />
-        ) : null}
+
+        <DropdownItem
+          icon={<Grid size={22} />}
+          text={formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
+          className={wantedBoard ? 'opened' : null}
+          opened={wantedBoard}
+          onClick={() => this.toggleOpened('wantedBoard')}
+          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+          refId={'wantedBoard'}
+          data-test='navigation_menu_wanted_board_drpdn'
+        >
+          <Dropdown.Menu data-test='navigation_menu_manage_wanted_board_menu'>
+            <PerfectScrollbar>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/wanted-board/wanted-board'
+                dataTest='navigation_wanted_board_listings_drpdn'>
+                {formatMessage({ id: 'navigation.wantedBoardListings', defaultMessage: 'Listings' })}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/wanted-board/my-offers'
+                dataTest='navigation_wanted_board_bids_sent_drpdn'>
+                {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/wanted-board/my-requested-items'
+                dataTest='navigation_wanted_board_bids_received_drpdn'>
+                {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'Bids Received' })}
+              </Dropdown.Item>
+            </PerfectScrollbar>
+          </Dropdown.Menu>
+        </DropdownItem>
         <DropdownItem
           icon={<FileText size={22} />}
           text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
@@ -487,16 +493,6 @@ class Navigation extends Component {
                       dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
-
-                    {false && !isClientCompanyAdmin && (
-                      <Dropdown.Item
-                        as={MenuLink}
-                        to='/settings?type=guest-companies'
-                        tab='guest-companies'
-                        data-test='navigation_settings_guest_companies_drpdn'>
-                        {formatMessage({ id: 'navigation.guestCompanies', defaultMessage: 'Guest Companies' })}
-                      </Dropdown.Item>
-                    )}
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings?type=logistics'
@@ -517,7 +513,7 @@ class Navigation extends Component {
             </Dropdown.Menu>
           </DropdownItem>
         )}
-        <MenuLink to='/alerts' dataTest='navigation_menu_wanted_board_drpdn'>
+        <MenuLink to='/alerts' dataTest='navigation_menu_alerts_menulink'>
           <>
             <Bell size={22} />
             {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
@@ -615,7 +611,6 @@ export default withAuth(
         collapsedMenu: store.layout.collapsedMenu,
         activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
         activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
-        activeWantedBoardFilter: getSafe(() => store.filter.wantedBoard.appliedFilter.filters.length > 0, false),
         isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator')
       }),
       {

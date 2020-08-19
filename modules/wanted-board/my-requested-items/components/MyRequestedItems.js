@@ -1,30 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import {
-  Container,
-  Grid,
-  GridColumn,
-  Input,
-  Menu,
-  Header,
-  Button,
-  Popup,
-  List,
-  Icon,
-  Tab,
-  Label
-} from 'semantic-ui-react'
+import { Container, Input, Button } from 'semantic-ui-react'
 import { PlusCircle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import styled from 'styled-components'
 import { withRouter } from 'next/router'
 import { debounce } from 'lodash'
 
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
-import AddCart from '~/src/pages/cart/components/AddCart'
-import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { WantedBoard } from '~/modules/wanted-board/wanted-board'
 import { MyOffers } from '~/modules/wanted-board/my-offers'
@@ -32,19 +16,9 @@ import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
-import { number } from 'prop-types'
-import Link from 'next/link'
 import Tutorial from '~/modules/tutorial/Tutorial'
 
-import { UpperCaseText, CustomRowDiv, ProductChemicalSwitch, TopButtons } from '../../constants/layout'
-
-const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
-  <Link prefetch href={to}>
-    <Menu.Item as='a' active={pathname === to}>
-      {children}
-    </Menu.Item>
-  </Link>
-))
+import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
 
 class MyRequestedItems extends Component {
   state = {
@@ -622,51 +596,13 @@ class MyRequestedItems extends Component {
 
   render() {
     const {
-      activeIndex,
-      intl: { formatMessage },
-      editWindowOpen,
-      isClientCompany,
       openSidebar
     } = this.props
 
-    const panes = [
-      !isClientCompany && {
-        menuItem: (
-          <MenuLink to='/wanted-board/wanted-board' data-test='wanted_board_submenu_tab_wanted_board'>
-            <UpperCaseText>{formatMessage({ id: 'title.wantedBoard', defaultMessage: 'Wanted Board' })}</UpperCaseText>
-          </MenuLink>
-        ),
-        render: () => <>{<WantedBoard />}</>
-      },
-      {
-        menuItem: (
-          <MenuLink to='/wanted-board/my-requested-items' data-test='wanted_board_submenu_tab_my_requested_items'>
-            <UpperCaseText>
-              {formatMessage({ id: 'title.myRequestedItems', defaultMessage: 'My Requested Itemsd' })}
-            </UpperCaseText>
-          </MenuLink>
-        ),
-        render: () => <>{this.renderContent()}</>
-      },
-      !isClientCompany && {
-        menuItem: (
-          <MenuLink to='/wanted-board/my-offers' data-test='wanted_board_submenu_tab_my_offers'>
-            <UpperCaseText>{formatMessage({ id: 'title.myOffers', defaultMessage: 'My Offers' })}</UpperCaseText>
-          </MenuLink>
-        ),
-        render: () => <>{<MyOffers />}</>
-      }
-    ]
-
     return (
       <>
-        <Container fluid style={{ padding: '0 30px' }} className='flex stretched'>
-          <Tab
-            activeIndex={activeIndex}
-            className='marketplace-container'
-            menu={{ secondary: true, pointing: true }}
-            panes={panes}
-          />
+        <Container fluid style={{ padding: '10px 30px 0 30px' }} className='flex stretched'>
+          {this.renderContent()}
         </Container>
         {openSidebar ? <DetailSidebar /> : null}
       </>
@@ -674,16 +610,7 @@ class MyRequestedItems extends Component {
   }
 }
 
-MyRequestedItems.propTypes = {
-  activeIndex: number
-}
-
-MyRequestedItems.defaultProps = {
-  activeIndex: 0
-}
-
 const mapStateToProps = state => ({
-  isClientCompany: getSafe(() => state.auth.identity.company.isClientCompany, false)
 })
 
 export default injectIntl(connect(mapStateToProps)(MyRequestedItems))

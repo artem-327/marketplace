@@ -14,7 +14,7 @@ class MyRequestedItemsPage extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'title.myRequestedItems', defaultMessage: 'My Requested Items' })}>
-        <MyRequestedItems activeIndex={1} type={type} />
+        <MyRequestedItems type={type} />
       </Layout>
     )
   }
