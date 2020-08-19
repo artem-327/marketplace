@@ -64,7 +64,15 @@ function mapStateToProps(store, { datagrid }) {
         id: po.id,
         rawData: po,
         product: getSafe(() => po.productOffer.companyProduct.companyGenericProduct.name, ''),
-        fobPrice: <FormattedNumber style='currency' currency={currency} value={po.pricePerUOM} />,
+        fobPrice: (
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={po.pricePerUOM}
+          />
+        ),
         manufacturer: getSafe(() => po.productOffer.companyProduct.companyGenericProduct.manufacturer.name, ''),
         condition:
           condition === null ? (

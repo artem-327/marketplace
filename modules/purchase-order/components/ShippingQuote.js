@@ -92,7 +92,15 @@ export default class ShippingQuote extends Component {
           />
         ),
         carrierName: rate.carrierName,
-        estimatedPrice: <FormattedNumber style='currency' currency={currency} value={rate.estimatedPrice} />,
+        estimatedPrice: (
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={rate.estimatedPrice}
+          />
+        ),
         deliveryTime,
         etd: timeObj ? timeObj.fromNow() : '',
         serviceType: rate.serviceType
