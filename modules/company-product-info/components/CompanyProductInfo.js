@@ -217,6 +217,36 @@ class CompanyProductInfo extends Component {
     )
   }
 
+  getTdsElements = ({ elements }) => {
+    return (
+      <>
+        <GridRow className='table-name'>
+          <GridColumn width={16}></GridColumn>
+        </GridRow>
+        <Table celled table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.property' defaultMessage='Property' />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.specifications' defaultMessage='Specifications' />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {elements.map((element, index) => (
+              <Table.Row>
+                <Table.Cell>{getSafe(() => element.property, '')}</Table.Cell>
+                <Table.Cell>{getSafe(() => element.specifications, '')}</Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </>
+    )
+  }
+
   getValue = (obj, i) => {
     return obj[i]
   }
@@ -913,17 +943,29 @@ class CompanyProductInfo extends Component {
           </Grid>
         )
       }
+
       case 1: {
+        // Tds
+        return (
+          <Grid verticalAlign='middle'>
+            {this.getTdsElements({
+              elements: getSafe(() => values.companyGenericProduct.tdsFields, [])
+            })}
+          </Grid>
+        )
+      }
+
+      case 2: {
         // Properties
         return <Grid verticalAlign='middle'>{this.getSharedContent('companyGenericProduct.')}</Grid>
       }
 
-      case 2: {
+      case 3: {
         // Regulatory
         return <Grid verticalAlign='middle'>{this.renderCasProduct()}</Grid>
       }
 
-      case 3: {
+      case 4: {
         // Transportation
         return (
           <Grid verticalAlign='middle'>
@@ -1042,7 +1084,7 @@ class CompanyProductInfo extends Component {
         )
       }
 
-      case 4: {
+      case 5: {
         // Documents
         return (
           <DocumentManager
@@ -1087,6 +1129,14 @@ class CompanyProductInfo extends Component {
 
     let { id, ...rest } = getSafe(() => companyGenericProduct.elements[this.state.casProductIndex].casProduct, {})
 
+    let tdsFields = null
+    //Convert tdsFields string array of objects to array
+    if (getSafe(() => popupValues.tdsFields, '')) {
+      let newJson = popupValues.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
+      newJson = newJson.replace(/'/g, '"')
+      tdsFields = JSON.parse(newJson)
+    }
+
     let initialValues = {
       ...companyGenericProduct,
       ...companyProduct,
@@ -1117,7 +1167,8 @@ class CompanyProductInfo extends Component {
         sdsRevisionDate:
           companyGenericProduct && companyGenericProduct.sdsRevisionDate
             ? moment(companyGenericProduct.sdsRevisionDate).format('MM/DD/YYYY')
-            : ''
+            : '',
+        tdsFields: getSafe(() => tdsFields, [{ property: '', specifications: '' }])
       }
     }
 

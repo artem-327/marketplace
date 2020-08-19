@@ -116,12 +116,9 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
       form: getSafe(() => parseInt(values.productForm)),
       grades: values.productGrades,
       splitPkg: parseInt(values.splits),
-      validityDate: values.expirationDate
-        ? moment(values.expirationDate)
-            .utc(values.expirationDate)
-            .format()
-        : null,
-      warehouse: parseInt(values.warehouse)
+      validityDate: values.expirationDate ? moment(values.expirationDate).utc(values.expirationDate).format() : null,
+      warehouse: parseInt(values.warehouse),
+      tdsFields: getSafe(() => values.tdsFields, '')
     }
   } else {
     params = values // ! ! az bude BE vracet pricingTiers, tak predelat zkombinovat tento radek s vytvarenim objektu vyse (prejmenovane / chybejici atributy)

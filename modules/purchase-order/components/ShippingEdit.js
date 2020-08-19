@@ -88,7 +88,7 @@ class ShippingEdit extends Component {
 
     return Yup.object().shape({
       contactName: Yup.string(invalidString).required(requiredMessage),
-      //addressName: Yup.string(invalidString).required(requiredMessage),
+      addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
       // lastName: Yup.string(invalidString).required(requiredMessage),
       contactEmail: Yup.string().trim().email(invalidEmail).required(requiredMessage),
       contactPhone: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
@@ -141,7 +141,12 @@ class ShippingEdit extends Component {
               <CustomSegment>
                 <FormGroup widths='equal'>
                   <Input
-                    label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
+                    label={
+                      <>
+                        <FormattedMessage id='global.addressName' defaultMessage='Address Name' />
+                        <Required />
+                      </>
+                    }
                     name='addressName'
                   />
                   <Input

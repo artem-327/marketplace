@@ -139,7 +139,7 @@ class AddEditCompanySidebar extends React.Component {
           if (mailingBranchRequired)
             return Yup.object().shape({
               deliveryAddress: Yup.object().shape({
-                addressName: minOrZeroLength(3),
+                addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
                 contactEmail: Yup.string()
                   .trim()
                   .email(errorMessages.invalidEmail)
@@ -493,7 +493,12 @@ class AddEditCompanySidebar extends React.Component {
                         <Accordion.Content active={accordionActive.billingAddress}>
                           <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchName_inp'>
                             <Input
-                              label={<FormattedMessage id='global.name' defaultMessage='Name' />}
+                              label={
+                                <>
+                                  <FormattedMessage id='global.name' defaultMessage='Name' />
+                                  <Required />
+                                </>
+                              }
                               name='primaryBranch.deliveryAddress.addressName'
                             />
                           </FormGroup>
@@ -654,8 +659,7 @@ class AddEditCompanySidebar extends React.Component {
               <ErrorFocus />
             </Form>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }
