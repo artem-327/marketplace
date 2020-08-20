@@ -94,7 +94,7 @@ class AddEditGuestCompanySidebar extends React.Component {
 
         primaryBranch: Yup.object().shape({
           deliveryAddress: Yup.object().shape({
-            addressName: minOrZeroLength(3),
+            addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
             contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
             contactName: Yup.string().trim().min(2, minLength).required(minLength),
             contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
@@ -115,14 +115,7 @@ class AddEditGuestCompanySidebar extends React.Component {
     })
 
   render() {
-    const {
-      closePopup,
-      popupValues,
-      updateClientCompany,
-      createClientCompany,
-      intl,
-      datagrid
-    } = this.props
+    const { closePopup, popupValues, updateClientCompany, createClientCompany, intl, datagrid } = this.props
 
     const { formatMessage } = intl
 
@@ -200,7 +193,7 @@ class AddEditGuestCompanySidebar extends React.Component {
         render={props => {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           return (
-            <CustomForm>
+            <CustomForm autoComplete='off'>
               <FlexSidebar
                 visible={true}
                 width='very wide'
@@ -280,7 +273,12 @@ class AddEditGuestCompanySidebar extends React.Component {
                     </Header>
                     <FormGroup widths='equal' data-test='guests_client_company_primaryBranchName_inp'>
                       <Input
-                        label={<FormattedMessage id='global.name' defaultMessage='Name' />}
+                        label={
+                          <>
+                            <FormattedMessage id='global.name' defaultMessage='Name' />
+                            <Required />
+                          </>
+                        }
                         name='primaryBranch.deliveryAddress.addressName'
                         inputProps={{
                           placeholder: formatMessage({

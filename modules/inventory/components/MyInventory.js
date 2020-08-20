@@ -20,9 +20,15 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import SearchByNamesAndTags from '~/modules/search'
 import SubMenu from '~/src/components/SubMenu'
 import ExportInventorySidebar from '~/modules/export-inventory/components/ExportInventory'
-import {ArrayToFirstItem} from '~/components/formatted-messages/'
+import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
 const defaultHiddenColumns = [
+  'expired',
+  'productStatus',
+  'productNumber',
+  'warehouse',
+  'cost',
+  'broadcast',
   'minOrderQuantity',
   'splits',
   'condition',
@@ -34,6 +40,7 @@ const defaultHiddenColumns = [
   'expDate',
   'allocatedPkg',
   'offerExpiration',
+  'groupId',
   'lotNumber'
 ]
 
@@ -101,22 +108,23 @@ const CustomRowDiv = styled.div`
   justify-content: space-between;
   margin: -5px -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 5px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
-  
+
   .ui.button {
     height: 40px;
     border-radius: 3px;
@@ -171,12 +179,22 @@ class MyInventory extends Component {
       {
         name: 'expired',
         title: <ClockIcon className='grey' />,
+        caption: (
+          <FormattedMessage id='global.expirationStatusIcon' defaultMessage='Expiration Status Icon'>
+            {text => text}
+          </FormattedMessage>
+        ),
         width: 40,
         align: 'center'
       },
       {
         name: 'productStatus',
         title: <FileTextIcon className='grey' />,
+        caption: (
+          <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon'>
+            {text => text}
+          </FormattedMessage>
+        ),
         width: 40,
         align: 'center'
       },
@@ -189,6 +207,17 @@ class MyInventory extends Component {
         ),
         width: 250,
         sortPath: 'ProductOffer.companyProduct.intProductName'
+      },
+      {
+        name: 'fobPrice',
+        title: (
+          <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 180,
+        align: 'right',
+        sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {
         name: 'productNumber',
@@ -252,17 +281,6 @@ class MyInventory extends Component {
         ),
         width: 100,
         align: 'right'
-      },
-      {
-        name: 'fobPrice',
-        title: (
-          <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 180,
-        align: 'right',
-        sortPath: 'ProductOffer.cfPricePerUOM'
       },
       {
         name: 'manufacturer',
@@ -431,15 +449,15 @@ class MyInventory extends Component {
     }
 
     if (tableHandlersFilters) {
-      this.setState({ filterValues: tableHandlersFilters },
-        () => {
-          const filter = {
-            ...this.state.filterValues,
-            ...(!!this.state.filterValues.SearchByNamesAndTags
-              && { ...this.state.filterValues.SearchByNamesAndTags.filters })
-          }
-          this.handleFiltersValue(filter)
-        })
+      this.setState({ filterValues: tableHandlersFilters }, () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.SearchByNamesAndTags && {
+            ...this.state.filterValues.SearchByNamesAndTags.filters
+          })
+        }
+        this.handleFiltersValue(filter)
+      })
     } else {
       this.handleFiltersValue(this.state.filterValues)
     }
@@ -475,18 +493,23 @@ class MyInventory extends Component {
   }, 300)
 
   SearchByNamesAndTagsChanged = data => {
-    this.setState({
-      filterValues: {
-        ...this.state.filterValues,
-        SearchByNamesAndTags: data
-      }}, () => {
-      const filter = {
-        ...this.state.filterValues,
-        ...(!!this.state.filterValues.SearchByNamesAndTags
-          && { ...this.state.filterValues.SearchByNamesAndTags.filters })
+    this.setState(
+      {
+        filterValues: {
+          ...this.state.filterValues,
+          SearchByNamesAndTags: data
+        }
+      },
+      () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.SearchByNamesAndTags && {
+            ...this.state.filterValues.SearchByNamesAndTags.filters
+          })
+        }
+        this.handleFiltersValue(filter)
       }
-      this.handleFiltersValue(filter)
-    })
+    )
   }
 
   getRows = rows => {
@@ -817,9 +840,7 @@ class MyInventory extends Component {
             <CustomSearchNameTags>
               <SearchByNamesAndTags
                 onChange={this.SearchByNamesAndTagsChanged}
-                initFilterState={
-                  getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)
-                }
+                initFilterState={getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)}
                 filterApply={false}
               />
             </CustomSearchNameTags>
@@ -886,7 +907,7 @@ class MyInventory extends Component {
           </CustomRowDiv>
         </Container>
 
-        <div className='flex stretched' style={{ padding: '10px 32px' }}>
+        <div className='flex stretched inventory-wrapper' style={{ padding: '10px 32px' }}>
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
@@ -901,7 +922,11 @@ class MyInventory extends Component {
                 .groupBy('echoName')
                 .map(v => {
                   return {
-                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}_${v[0].productGroup !== null ? v[0].productGroup+':' : formatMessage({ id: 'global.unmapped.cptlz', defaultMessage: 'Unmapped' })}_${v[0].tagsNames ? v[0].tagsNames : ''}`,
+                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}_${
+                      v[0].productGroup !== null
+                        ? v[0].productGroup + ':'
+                        : formatMessage({ id: 'global.unmapped.cptlz', defaultMessage: 'Unmapped' })
+                    }_${v[0].tagsNames ? v[0].tagsNames : ''}`,
                     childRows: v
                   }
                 })
@@ -958,11 +983,18 @@ class MyInventory extends Component {
               //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
               {
                 text: formatMessage({
+                  id: 'global.tds',
+                  defaultMessage: 'TDS'
+                }),
+                callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
+              },
+              {
+                text: formatMessage({
                   id: 'global.documents',
                   defaultMessage: 'Documents'
                 }),
                 disabled: row => row.groupId,
-                callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
+                callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
               },
               {
                 text: formatMessage({
@@ -970,7 +1002,7 @@ class MyInventory extends Component {
                   defaultMessage: 'Price Book'
                 }),
                 disabled: row => row.groupId,
-                callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
+                callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
               },
               {
                 text: formatMessage({
@@ -978,7 +1010,7 @@ class MyInventory extends Component {
                   defaultMessage: 'Price Tiers'
                 }),
                 disabled: row => row.groupId,
-                callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+                callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
               },
               {
                 text: formatMessage({

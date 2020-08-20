@@ -3,11 +3,7 @@ import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
 import { Formik } from 'formik'
 import { Header, FormGroup, Dimmer, Loader, Segment, Form } from 'semantic-ui-react'
-import {
-  closeSidebar,
-  updateDeliveryAddresses,
-  createDeliveryAddress
-} from '../../../actions'
+import { closeSidebar, updateDeliveryAddresses, createDeliveryAddress } from '../../../actions'
 import { Input, Checkbox, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import styled from 'styled-components'
@@ -44,13 +40,13 @@ const CustomSegment = styled(Segment)`
         }
       }
     }
-    
+
     .field {
       label {
         color: #546f93;
       }
     }
-    
+
     .phone-number {
       .phone-code,
       .phone-num {
@@ -79,7 +75,7 @@ const CustomHighSegment = styled(HighSegment)`
   font-size: 14px;
   font-weight: 500;
   color: #20273a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6  !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
   background-color: #ffffff;
   z-index: 1;
 `
@@ -93,19 +89,10 @@ const minLength = errorMessages.minLength(3)
 const formValidation = () =>
   Yup.object().shape({
     address: addressValidationSchema(),
-    addressName: minOrZeroLength(3),
-    contactName: Yup.string()
-      .trim()
-      .min(3, minLength)
-      .required(errorMessages.requiredMessage),
-    contactPhone: Yup.string()
-      .trim()
-      .min(3, minLength)
-      .required(errorMessages.requiredMessage),
-    contactEmail: Yup.string()
-      .trim()
-      .email(errorMessages.invalidEmail)
-      .required(errorMessages.requiredMessage),
+    addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+    contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+    contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+    contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
     readyTime: validateTime(),
     closeTime: validateTime()
   })
@@ -125,14 +112,8 @@ class DeliveryLocationsSidebar extends React.Component {
         ...values.address,
         country
       },
-      readyTime:
-        !values.readyTime || values.readyTime === ''
-          ? null
-          : values.readyTime,
-      closeTime:
-        !values.closeTime || values.closeTime === ''
-          ? null
-          : values.closeTime,
+      readyTime: !values.readyTime || values.readyTime === '' ? null : values.readyTime,
+      closeTime: !values.closeTime || values.closeTime === '' ? null : values.closeTime,
       addressName: values.addressName,
       callAhead: values.callAhead,
       contactEmail: values.contactEmail,
@@ -204,18 +185,20 @@ class DeliveryLocationsSidebar extends React.Component {
         <FormGroup
           widths='equal'
           style={{ marginTop: '14px' }}
-          data-test='settings_delivery_locations_sidebar_name_inp'
-        >
+          data-test='settings_delivery_locations_sidebar_name_inp'>
           <Input
             type='text'
-            label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
+            label={
+              <>
+                <FormattedMessage id='global.addressName' defaultMessage='Address Name' /> <Required />
+              </>
+            }
             name='addressName'
             inputProps={{
-              placeholder:
-                formatMessage({
-                  id: 'global.enterAddressName',
-                  defaultMessage: 'Enter Address Name'
-                })
+              placeholder: formatMessage({
+                id: 'global.enterAddressName',
+                defaultMessage: 'Enter Address Name'
+              })
             }}
           />
         </FormGroup>
@@ -225,11 +208,13 @@ class DeliveryLocationsSidebar extends React.Component {
           required={true}
           setFieldValue={setFieldValue}
           values={values}
-          initialZipCodes={[{
-            key: values.zipID.toString(),
-            value: values.address.zip,
-            text: values.address.zip
-          }]}
+          initialZipCodes={[
+            {
+              key: values.zipID.toString(),
+              value: values.address.zip,
+              text: values.address.zip
+            }
+          ]}
         />
 
         <Header as='h3'>
@@ -248,11 +233,10 @@ class DeliveryLocationsSidebar extends React.Component {
               name='contactName'
               fieldProps={{ width: 16 }}
               inputProps={{
-                placeholder:
-                  formatMessage({
-                    id: 'settings.warehouses.enterContactName',
-                    defaultMessage: 'Enter Contact Name'
-                  })
+                placeholder: formatMessage({
+                  id: 'settings.warehouses.enterContactName',
+                  defaultMessage: 'Enter Contact Name'
+                })
               }}
             />
           </FormGroup>
@@ -282,11 +266,10 @@ class DeliveryLocationsSidebar extends React.Component {
               }
               name='contactEmail'
               inputProps={{
-                placeholder:
-                  formatMessage({
-                    id: 'settings.warehouses.enterEmailAddress',
-                    defaultMessage: 'Enter Email Address'
-                  })
+                placeholder: formatMessage({
+                  id: 'settings.warehouses.enterEmailAddress',
+                  defaultMessage: 'Enter Email Address'
+                })
               }}
             />
           </FormGroup>
@@ -364,7 +347,7 @@ class DeliveryLocationsSidebar extends React.Component {
         loading={loading}>
         {formikProps => (
           <>
-            <CustomForm>
+            <CustomForm autoComplete='off'>
               <FlexSidebar
                 visible={true}
                 width='very wide'
@@ -388,10 +371,9 @@ class DeliveryLocationsSidebar extends React.Component {
                 </FlexContent>
                 <CustomDiv>
                   <Button.Reset
-                    style={{ margin: '0 5px'}}
+                    style={{ margin: '0 5px' }}
                     onClick={closeSidebar}
-                    data-test='settings_branches_popup_reset_btn'
-                  >
+                    data-test='settings_branches_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>

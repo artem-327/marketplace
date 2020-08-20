@@ -1730,6 +1730,54 @@ i.file {
           color: #848893;
           line-height: 19px;
 
+          .inventory-wrapper &,
+          .marketplace-wrapper & {
+            border-width: 1px 0;
+
+            &.p-0 + th {
+              border-width: 1px 0 1px 1px;
+            }
+
+            &:nth-last-child(2) {
+              border-right: 1px solid #dde2e6;
+            }
+
+            &:not(.p-0){
+              box-shadow: 0 0 0 0 transparent !important;
+
+              &:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -5px;
+                display: block;
+                height: 4px;
+                background: rgba(0,0,0, 0.01);
+                background: -moz-linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
+                background: -webkit-linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
+                background: linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
+              }
+            }
+
+            & .justify-content-end {
+              padding-right: 20px !important;
+              white-space: nowrap !important;
+
+              > span.sortable {
+                width: auto;
+                text-align: right;
+
+                i {
+                  width: auto;
+                  margin-right: 0;
+                  padding-left: 4px;
+                }
+              }
+            }
+          }
+
           &:first-child:not(.p-0) {
             border-width: 1px;
             border-top-left-radius: 4px;
@@ -1809,6 +1857,24 @@ i.file {
         border-color: #dde2e6;
         padding: 10px !important;
         line-height: 19px;
+
+        .inventory-wrapper &,
+        .marketplace-wrapper & {
+          border-width: 0 0 1px;
+
+          &.text-right {
+            padding-right: 30px !important;
+          }
+
+          &:nth-last-child(2) {
+            border-right: 1px solid #dde2e6;
+          }
+
+          &.p-0 + td {
+            border-width: 0 0 1px 1px;
+            box-shadow: 0 0 0 0 transparent;
+          }
+        }
 
         &:first-child:not(.p-0) {
           border-width: 0 1px 1px;

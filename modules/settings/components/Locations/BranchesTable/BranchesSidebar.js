@@ -101,7 +101,7 @@ const formValidation = () =>
   Yup.object().shape({
     deliveryAddress: Yup.object().shape({
       address: addressValidationSchema(),
-      addressName: minOrZeroLength(3),
+      addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
       contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
       contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
       contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
@@ -214,7 +214,12 @@ class BranchSidebar extends React.Component {
         <FormGroup widths='equal' style={{ marginTop: '14px' }} data-test='settings_branches_popup_name_inp'>
           <Input
             type='text'
-            label={<FormattedMessage id='settings.branchName' defaultMessage='Branch Name' />}
+            label={
+              <>
+                <FormattedMessage id='settings.branchName' defaultMessage='Branch Name' />
+                <Required />
+              </>
+            }
             name='deliveryAddress.addressName'
             inputProps={{
               placeholder: formatMessage({
@@ -334,7 +339,7 @@ class BranchSidebar extends React.Component {
         loading={loading}>
         {formikProps => (
           <>
-            <CustomForm>
+            <CustomForm autoComplete='off'>
               <FlexSidebar
                 visible={isOpenSidebar}
                 width='very wide'

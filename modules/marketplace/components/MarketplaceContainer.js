@@ -43,17 +43,28 @@ function mapStateToProps(store, { datagrid }) {
             <>
               {' '}
               <FormattedNumber
+                minimumFractionDigits={2}
+                maximumFractionDigits={2}
                 style='currency'
                 currency={currency}
                 value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM}
               />{' '}
-              - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].pricePerUOM} />{' '}
+              -{' '}
+              <FormattedNumber
+                minimumFractionDigits={2}
+                maximumFractionDigits={2}
+                style='currency'
+                currency={currency}
+                value={po.pricingTiers[0].pricePerUOM}
+              />{' '}
               {qtyPart && `/ ${qtyPart}`}{' '}
             </>
           ) : (
             <>
               {' '}
               <FormattedNumber
+                minimumFractionDigits={2}
+                maximumFractionDigits={2}
                 style='currency'
                 currency={currency}
                 value={getSafe(() => po.pricingTiers[0].pricePerUOM, 0)}

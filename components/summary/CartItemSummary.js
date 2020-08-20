@@ -350,9 +350,14 @@ class CartItemSummary extends Component {
 
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
-    let { deleteCart } = this.props
+    let {
+      deleteCart,
+      intl: { formatMessage }
+    } = this.props
     const externalNotes = getSafe(() => item.productOffer.externalNotes, '')
-    const leadTime = getSafe(() => item.productOffer.leadTime, 'N/A')
+    let leadTime = getSafe(() => item.productOffer.leadTime, null)
+    leadTime = leadTime ? `${leadTime} ${formatMessage({ id: 'global.days', defaultMessage: 'Days' })}` : 'N/A'
+
     return (
       <>
         <GridColumn computer={16}>
@@ -467,7 +472,13 @@ class CartItemSummary extends Component {
               </VerticalUnpaddedColumn>
 
               <VerticalUnpaddedColumn black>
-                <FormattedNumber style='currency' currency={currency} value={item.cfPriceSubtotal} />
+                <FormattedNumber
+                  minimumFractionDigits={2}
+                  maximumFractionDigits={2}
+                  style='currency'
+                  currency={currency}
+                  value={item.cfPriceSubtotal}
+                />
               </VerticalUnpaddedColumn>
             </RelaxedRow>
 

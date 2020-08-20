@@ -311,9 +311,9 @@ class BankAccountsTable extends Component {
                     formatMessage(
                       {
                         id: 'confirm.deleteItem',
-                        defaultMessage: `Do you really want to delete ${row.name}?`
+                        defaultMessage: `Do you really want to delete ${row.rawData.name}?`
                       },
-                      { item: row.name }
+                      { item: row.rawData.name }
                     )
                   ).then(() => deleteBankAccount(row.id))
               },
@@ -508,6 +508,7 @@ const mapStateToProps = state => {
     loading: state.settings.loading,
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
+      rawData: r,
       name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
       statusLabel: displayStatus(r, preferredBankAccountId),
       accountName: r.name // this is for search

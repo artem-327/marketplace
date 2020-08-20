@@ -243,7 +243,7 @@ class AddCart extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.sidebar.isOpen && !prevProps.sidebar.isOpen) {
+    if (getSafe(() => this.props.openInfo, '') !== getSafe(() => prevProps.openInfo, '')) {
       this.setState({ activeTab: this.props.openInfo ? 1 : 0 }) // Buy or Info tab
     }
     if (this.props.offer !== prevProps.offer) {
@@ -255,6 +255,13 @@ class AddCart extends Component {
     const { offer } = this.props
     const companyProduct = getSafe(() => offer.companyProduct, null)
     const companyGenericProduct = getSafe(() => offer.companyProduct.companyGenericProduct, null)
+    let tdsFields = null
+    //Convert tdsFields string array of objects to array
+    if (getSafe(() => offer.tdsFields, '')) {
+      let newJson = offer.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
+      newJson = newJson.replace(/'/g, '"')
+      tdsFields = JSON.parse(newJson)
+    }
     return {
       ...offer,
       companyProduct: {
@@ -265,7 +272,8 @@ class AddCart extends Component {
           sdsRevisionDate:
             companyGenericProduct && companyGenericProduct.sdsRevisionDate
               ? moment(companyGenericProduct.sdsRevisionDate).format('MM/DD/YYYY')
-              : ''
+              : '',
+          tdsFields: getSafe(() => tdsFields, [{ property: '', specifications: '' }])
         }
       }
     }
@@ -351,7 +359,13 @@ class AddCart extends Component {
           <>
             <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} />
             <FormattedUnit unit='' separator=' : ' value={quantityTo} />
-            <FormattedNumber style='currency' value={tier.pricePerUOM} currency={currencyCode} />
+            <FormattedNumber
+              minimumFractionDigits={2}
+              maximumFractionDigits={2}
+              style='currency'
+              value={tier.pricePerUOM}
+              currency={currencyCode}
+            />
             {nameAbbreviation && ` / ${nameAbbreviation}`}
           </>
         )
@@ -369,7 +383,13 @@ class AddCart extends Component {
         value: { quantityFrom: 1, price: value },
         text: (
           <>
-            <FormattedNumber minimumFractionDigits={0} value={value} style='currency' currency={currencyCode} />
+            <FormattedNumber
+              minimumFractionDigits={2}
+              maximumFractionDigits={2}
+              value={value}
+              style='currency'
+              currency={currencyCode}
+            />
             {nameAbbreviation && ` / ${nameAbbreviation}`}
           </>
         )
@@ -713,7 +733,13 @@ class AddCart extends Component {
               <GridColumn computer={10} textAlign='right'>
                 {price && !isNaN(price) ? (
                   <>
-                    <FormattedNumber style='currency' currency={currencyCode} value={price} />{' '}
+                    <FormattedNumber
+                      minimumFractionDigits={2}
+                      maximumFractionDigits={2}
+                      style='currency'
+                      currency={currencyCode}
+                      value={price}
+                    />{' '}
                     {nameAbbreviation && `/ ${nameAbbreviation}`}
                   </>
                 ) : null}
@@ -726,7 +752,13 @@ class AddCart extends Component {
               </GridColumn>
               <GridColumn computer={10} textAlign='right'>
                 {totalPrice ? (
-                  <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
+                  <FormattedNumber
+                    minimumFractionDigits={2}
+                    maximumFractionDigits={2}
+                    style='currency'
+                    currency={currencyCode}
+                    value={totalPrice}
+                  />
                 ) : (
                   <FormattedMessage id='cart.selectFirst' defaultMessage='Select desired Quantity first.' />
                 )}
@@ -1231,6 +1263,36 @@ class AddCart extends Component {
     )
   }
 
+  getTdsElements = ({ elements }) => {
+    return (
+      <>
+        <GridRow className='table-name'>
+          <GridColumn width={16}></GridColumn>
+        </GridRow>
+        <Table celled table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.property' defaultMessage='Property' />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.specifications' defaultMessage='Specifications' />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {elements.map((element, index) => (
+              <Table.Row>
+                <Table.Cell>{getSafe(() => element.property, '')}</Table.Cell>
+                <Table.Cell>{getSafe(() => element.specifications, '')}</Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </>
+    )
+  }
+
   getContent = () => {
     const { activeTab, offer } = this.state
     switch (activeTab) {
@@ -1383,6 +1445,40 @@ class AddCart extends Component {
         )
       }
       case 2: {
+        // Tds
+        return (
+          <>
+            <FlexContent basic>
+              <CustomGrid verticalAlign='middle'>
+                {this.getTdsElements({
+                  elements: getSafe(() => offer.companyProduct.companyGenericProduct.tdsFields, [])
+                })}
+              </CustomGrid>
+            </FlexContent>
+
+            <RelaxedSegment basic>
+              <Grid>
+                <GridRow className='action' columns={1}>
+                  <GridColumn textAlign='right'>
+                    <Button
+                      onClick={() => {
+                        this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
+                        this.setState({ showMore: false })
+                      }}
+                      className='cancel'
+                      data-test='add_cart_close_btn'>
+                      <FormattedMessage id='global.close' defaultMessage='Close'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </GridColumn>
+                </GridRow>
+              </Grid>
+            </RelaxedSegment>
+          </>
+        )
+      }
+      case 3: {
         // Properties
         const prefix = 'companyProduct.companyGenericProduct.'
         return (
@@ -1536,7 +1632,7 @@ class AddCart extends Component {
           </>
         )
       }
-      case 3: {
+      case 4: {
         // Regulatory
         return (
           <>
@@ -1566,7 +1662,7 @@ class AddCart extends Component {
           </>
         )
       }
-      case 4: {
+      case 5: {
         // Transportation
         const prefix = 'companyProduct.companyGenericProduct.'
         return (

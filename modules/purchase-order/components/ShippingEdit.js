@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Grid, GridColumn, Modal, Divider, FormGroup, Segment, Sidebar, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { bool, func, object } from 'prop-types'
-import { removeEmpty } from '~/utils/functions'
+import { removeEmpty, getSafe } from '~/utils/functions'
 
 import * as Yup from 'yup'
 import styled from 'styled-components'
@@ -13,6 +13,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { PHONE_REGEXP } from '../../../src/utils/constants'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
+
 import {
   FlexSidebar,
   FlexContent,
@@ -87,7 +88,7 @@ class ShippingEdit extends Component {
 
     return Yup.object().shape({
       contactName: Yup.string(invalidString).required(requiredMessage),
-      //addressName: Yup.string(invalidString).required(requiredMessage),
+      addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
       // lastName: Yup.string(invalidString).required(requiredMessage),
       contactEmail: Yup.string().trim().email(invalidEmail).required(requiredMessage),
       contactPhone: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
@@ -140,7 +141,12 @@ class ShippingEdit extends Component {
               <CustomSegment>
                 <FormGroup widths='equal'>
                   <Input
-                    label={<FormattedMessage id='global.addressName' defaultMessage='Address Name' />}
+                    label={
+                      <>
+                        <FormattedMessage id='global.addressName' defaultMessage='Address Name' />
+                        <Required />
+                      </>
+                    }
                     name='addressName'
                   />
                   <Input
@@ -292,6 +298,9 @@ class ShippingEdit extends Component {
     const { handleSubmit, toastManager } = this.props
 
     let payload = {}
+    if (getSafe(() => values.address.id, false)) delete values.address.id
+    if (getSafe(() => values.id, false)) delete values.id
+    if (getSafe(() => values.cfName, false)) delete values.cfName
 
     try {
       if (isWarehouse) {
@@ -307,6 +316,7 @@ class ShippingEdit extends Component {
           taxId: values.taxId,
           warehouse: true
         }
+        if (getSafe(() => payload.deliveryAddress.warehouse, false)) delete payload.deliveryAddress.warehouse
       } else {
         payload = {
           ...values,

@@ -136,7 +136,7 @@ const formValidation = () =>
   Yup.object().shape({
     deliveryAddress: Yup.object().shape({
       address: addressValidationSchema(),
-      addressName: minOrZeroLength(3),
+      addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
       contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
       contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
       contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
@@ -267,7 +267,12 @@ class PickUpLocationsSidebar extends React.Component {
         <FormGroup style={{ marginTop: '14px' }} widths='equal' data-test='settings_warehouse_popup_name_inp'>
           <Input
             type='text'
-            label={<FormattedMessage id='settings.pickUpLocationName' defaultMessage='Pick-Up Location Name' />}
+            label={
+              <>
+                <FormattedMessage id='settings.pickUpLocationName' defaultMessage='Pick-Up Location Name' />
+                <Required />
+              </>
+            }
             name='deliveryAddress.addressName'
             inputProps={{
               placeholder: formatMessage({
@@ -531,7 +536,7 @@ class PickUpLocationsSidebar extends React.Component {
         loading={loading}>
         {formikProps => (
           <>
-            <CustomForm>
+            <CustomForm autoComplete='off'>
               <FlexSidebar
                 visible={isOpenSidebar}
                 width='very wide'

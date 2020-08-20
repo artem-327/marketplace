@@ -9,6 +9,14 @@ import ProdexGrid from '~/components/table'
 
 const GridContainer = styled.div`
   padding-top: 15px !important;
+  
+  /* Fixes for Edge */
+  .table-responsive-wider,
+  .table-responsive-wider > div {
+    overflow: hidden;
+    margin-right: -32px;
+    padding-right: 32px;
+  }
 `
 
 const columns = [
@@ -92,7 +100,15 @@ export default class ShippingQuote extends Component {
           />
         ),
         carrierName: rate.carrierName,
-        estimatedPrice: <FormattedNumber style='currency' currency={currency} value={rate.estimatedPrice} />,
+        estimatedPrice: (
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={rate.estimatedPrice}
+          />
+        ),
         deliveryTime,
         etd: timeObj ? timeObj.fromNow() : '',
         serviceType: rate.serviceType

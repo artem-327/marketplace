@@ -189,6 +189,28 @@ export const config = {
         type: 'number',
         step: 0.01,
         required: true
+      },
+      {
+        name: 'palletPkgMax',
+        title: (
+          <FormattedMessage id='global.palletPkgMax' defaultMessage='Pallet Pkg Max'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 1,
+        required: true
+      },
+      {
+        name: 'palletPkgMin',
+        title: (
+          <FormattedMessage id='global.palletPkgMin' defaultMessage='Pallet Pkg Min'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 1,
+        required: true
       }
     ],
     api: {

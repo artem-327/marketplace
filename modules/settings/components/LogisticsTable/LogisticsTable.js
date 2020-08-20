@@ -56,6 +56,8 @@ class LogisticsTable extends Component {
         filterValue={filterValue}
         rows={logisticsAccounts.map(acc => ({
           ...acc,
+          rawData: acc,
+          stringName: acc.provider.name,
           logisticsProviderName: (
             <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{acc.provider.name}</div>
           ),
@@ -67,7 +69,7 @@ class LogisticsTable extends Component {
         rowActions={[
           {
             text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-            callback: row => openPopup(row)
+            callback: row => openPopup(row.rawData)
           },
           {
             text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -77,9 +79,9 @@ class LogisticsTable extends Component {
                 formatMessage(
                   {
                     id: 'confirm.logisticsAccount.content',
-                    defaultMessage: `Do you really want to delete ${row.logisticsProviderName}?`
+                    defaultMessage: `Do you really want to delete '${row.stringName}'?`
                   },
-                  { name: row.logisticsProviderName }
+                  { name: row.stringName }
                 )
               )
                 .then(async () => {

@@ -249,7 +249,8 @@ class Navigation extends Component {
       activeInventoryFilter,
       activeMarketplaceFilter,
       activeWantedBoardFilter,
-      isClientCompanyAdmin
+      isClientCompanyAdmin,
+      isClientCompanyManager
     } = this.props
 
     const {
@@ -378,7 +379,7 @@ class Navigation extends Component {
           </Dropdown.Menu>
         </DropdownItem>
 
-        {(isCompanyAdmin && !isClientCompany) || isClientCompanyAdmin ? (
+        {isCompanyAdmin || isClientCompanyManager ? (
           <DropdownItem
             icon={<Coffee size={22} />}
             text={formatMessage({ id: 'navigation.manageGuests', defaultMessage: 'Manage Guests' })}
@@ -387,24 +388,23 @@ class Navigation extends Component {
             onClick={() => this.toggleOpened('manageGuests')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'manageGuests'}
-            data-test='navigation_menu_manage_guests_drpdn'
-          >
+            data-test='navigation_menu_manage_guests_drpdn'>
             <Dropdown.Menu data-test='navigation_menu_manage_guests_drpdn_menu'>
               <PerfectScrollbar>
                 <Dropdown.Item
                   as={MenuLink}
                   to='/manage-guests?type=guests'
-
                   dataTest='navigation_manage_guests_guests_drpdn'>
                   {formatMessage({ id: 'navigation.guests', defaultMessage: 'Guests' })}
                 </Dropdown.Item>
-                {false && (<Dropdown.Item
-                  as={MenuLink}
-                  to='/manage-guests?type=chat'
-
-                  dataTest='navigation_manage_guests_chat_drpdn'>
-                  {formatMessage({ id: 'navigation.chat', defaultMessage: 'Chat' })}
-                </Dropdown.Item>)}
+                {false && (
+                  <Dropdown.Item
+                    as={MenuLink}
+                    to='/manage-guests?type=chat'
+                    dataTest='navigation_manage_guests_chat_drpdn'>
+                    {formatMessage({ id: 'navigation.chat', defaultMessage: 'Chat' })}
+                  </Dropdown.Item>
+                )}
               </PerfectScrollbar>
             </Dropdown.Menu>
           </DropdownItem>
@@ -612,6 +612,7 @@ export default withAuth(
         currentSettingsTab: store.settings.currentTab,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
+        isClientCompanyManager: getSafe(() => store.auth.identity.isClientCompanyManager, false),
         collapsedMenu: store.layout.collapsedMenu,
         activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
         activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),

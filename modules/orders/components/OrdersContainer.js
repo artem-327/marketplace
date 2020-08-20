@@ -65,14 +65,22 @@ function mapStateToProps(state, { router, datagrid }) {
       bl: '',
       sds: '',
       cofA: '',
-      orderTotal: <FormattedNumber style='currency' currency={currency} value={r.cfPriceTotal} />,
+      orderTotal: (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={r.cfPriceTotal}
+        />
+      ),
       accountingDocumentsCount: r.accountingDocumentsCount,
       attachments: r.attachments,
       orderItems: r.orderItems.map(item => {
-        let cofA = filterAttachments(item.attachments, 1)  // C of A
-        let sds = filterAttachments(item.attachments, 3)  // SDS
-        let bl = filterAttachments(item.attachments, 10)  // B/L
-        return ({
+        let cofA = filterAttachments(item.attachments, 1) // C of A
+        let sds = filterAttachments(item.attachments, 3) // SDS
+        let bl = filterAttachments(item.attachments, 10) // B/L
+        return {
           ...item,
           rawData: item,
           id: r.id + '_' + item.id,
@@ -80,8 +88,8 @@ function mapStateToProps(state, { router, datagrid }) {
           cofA,
           sds,
           bl
-        })
-      }),
+        }
+      })
     })),
     activeStatus: orders.statusFilter,
     listDocumentTypes: orders.listDocumentTypes,

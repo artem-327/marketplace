@@ -214,6 +214,7 @@ export default class PhoneNumber extends Component {
                   value={phoneCountryCode}
                 />
                 <StyledInputMask
+                  name={name}
                   className='phone-num'
                   mask='999 999 9999'
                   maskChar=' '
