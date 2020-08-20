@@ -249,7 +249,8 @@ class Navigation extends Component {
       activeInventoryFilter,
       activeMarketplaceFilter,
       activeWantedBoardFilter,
-      isClientCompanyAdmin
+      isClientCompanyAdmin,
+      isClientCompanyManager
     } = this.props
 
     const {
@@ -378,7 +379,7 @@ class Navigation extends Component {
           </Dropdown.Menu>
         </DropdownItem>
 
-        {isClientCompany || isCompanyAdmin || isClientCompanyAdmin ? (
+        {isCompanyAdmin || isClientCompanyManager ? (
           <DropdownItem
             icon={<Coffee size={22} />}
             text={formatMessage({ id: 'navigation.manageGuests', defaultMessage: 'Manage Guests' })}
@@ -611,6 +612,7 @@ export default withAuth(
         currentSettingsTab: store.settings.currentTab,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
+        isClientCompanyManager: getSafe(() => store.auth.identity.isClientCompanyManager, false),
         collapsedMenu: store.layout.collapsedMenu,
         activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
         activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
