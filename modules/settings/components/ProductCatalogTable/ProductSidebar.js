@@ -189,38 +189,6 @@ const DivTitleSegment = styled.div`
   margin-left: -26px !important;
 `
 
-const initialValues = {
-  companyGenericProduct: null,
-  freezeProtect: false,
-  freightClass: '',
-  hazardous: false,
-  palletSaleOnly: true,
-  inciName: '',
-  intProductCode: '',
-  intProductName: '',
-  nmfcNumber: '',
-  packageWeight: '',
-  packageWeightUnit: '',
-  packagingHeight: '',
-  packagingLength: '',
-  packagingWidth: '',
-  packagingSize: '',
-  packagingType: '',
-  packagingUnit: '',
-  palletMinPkgs: '',
-  palletMaxPkgs: '',
-  palletWeight: '',
-  palletLength: '',
-  palletWidth: '',
-  palletHeight: '',
-  stackable: false,
-  //packagesPerPallet: '',  // Not in ednpoint anymore?
-  documents: {
-    documentType: null,
-    attachments: []
-  }
-}
-
 const columns = [
   {
     name: 'name',
@@ -244,8 +212,6 @@ const columns = [
 
 const formValidation = () =>
   Yup.lazy(values => {
-    const palletParamsRequired = values.palletSaleOnly ? checkPalletParamsRequired(values) : false
-
     return Yup.object().shape({
       intProductName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       intProductCode: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
@@ -297,7 +263,7 @@ const formValidation = () =>
           .required(errorMessages.requiredMessage)
           .positive(errorMessages.positive)
       }),
-      ...(palletParamsRequired && {
+      ...(values.palletSaleOnly && {
         palletMinPkgs: Yup.number()
           .min(1, errorMessages.minimum(1))
           .test('int', errorMessages.integer, val => {
@@ -336,10 +302,6 @@ const formValidation = () =>
         .positive(errorMessages.positive)
     })
   })
-
-const checkPalletParamsRequired = v => {
-  return !!(v.palletMinPkgs || v.palletMaxPkgs || v.palletWeight || v.palletLength || v.palletWidth || v.palletHeight)
-}
 
 class ProductSidebar extends React.Component {
   state = {
@@ -409,8 +371,6 @@ class ProductSidebar extends React.Component {
     const { popupValues, handleSubmitProductEditPopup, handleSubmitProductAddPopup, datagrid } = this.props
     delete values.casProducts
 
-    const palletParamsRequired = checkPalletParamsRequired(values)
-
     const packagingDimensions = !getSafe(() => values.palletSaleOnly, false)
       ? {
           packagingLength: Number(values.packagingLength),
@@ -418,6 +378,10 @@ class ProductSidebar extends React.Component {
           packagingWidth: Number(values.packagingWidth)
         }
       : null
+
+    const palletDimensions = {}
+    const propsToInclude = ['palletWeight', 'palletLength', 'palletWidth', 'palletHeight']
+    propsToInclude.forEach(prop => (values[prop] ? (palletDimensions[prop] = Number(values[prop])) : null))
 
     let formValues = {
       intProductName: values.intProductName,
@@ -443,14 +407,11 @@ class ProductSidebar extends React.Component {
         values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet),
       */
       ...packagingDimensions,
-      ...(palletParamsRequired === true && {
+      ...{
         palletMinPkgs: Number(values.palletMinPkgs),
         palletMaxPkgs: Number(values.palletMaxPkgs),
-        palletWeight: Number(values.palletWeight),
-        palletLength: Number(values.palletLength),
-        palletWidth: Number(values.palletWidth),
-        palletHeight: Number(values.palletHeight)
-      })
+        ...palletDimensions
+      }
     }
 
     try {
@@ -502,48 +463,69 @@ class ProductSidebar extends React.Component {
       palletLengthInitFromSettings
     } = this.props
 
-    const palletSaleOnly =
-      popupValues && popupValues.palletSaleOnly
-        ? popupValues.palletSaleOnly
-        : popupValues && popupValues.palletSaleOnly === false
-        ? popupValues.palletSaleOnly
-        : true
+    if (!popupValues) {
+      return {
+        companyGenericProduct: null,
+        freezeProtect: false,
+        freightClass: '',
+        hazardous: false,
+        palletSaleOnly: true,
+        inciName: '',
+        intProductCode: '',
+        intProductName: '',
+        nmfcNumber: '',
+        packageWeight: '',
+        packageWeightUnit: '',
+        packagingHeight: '',
+        packagingLength: '',
+        packagingWidth: '',
+        packagingSize: '',
+        packagingType: '',
+        packagingUnit: '',
+        palletMinPkgs: '',
+        palletMaxPkgs: '',
+        palletWeight: getSafe(() => palletWeightInitFromSettings, ''),
+        palletLength: getSafe(() => palletLengthInitFromSettings, ''),
+        palletWidth: getSafe(() => palletWidthInitFromSettings, ''),
+        palletHeight: getSafe(() => palletHeightInitFromSettings, ''),
+        stackable: false,
+        //packagesPerPallet: '',  // Not in ednpoint anymore?
+        documents: {
+          documentType: null,
+          attachments: []
+        }
+      }
+    } else {
+      const palletSaleOnly =
+        popupValues && popupValues.palletSaleOnly
+          ? popupValues.palletSaleOnly
+          : popupValues && popupValues.palletSaleOnly === false
+          ? popupValues.palletSaleOnly
+          : true
 
-    return {
-      ...initialValues,
-      ...popupValues,
-      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.companyGenericProduct.elements, [])),
-      companyGenericProduct: getSafe(() => popupValues.companyGenericProduct.id, ''),
-      nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, ''),
-      packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id, ''),
-      packagingUnit: getSafe(() => popupValues.packagingUnit.id, ''),
-      packagingType: getSafe(() => popupValues.packagingType.id, ''),
-      packagingWidth: getSafe(() => popupValues.packagingWidth, ''),
-      palletSaleOnly: getSafe(() => palletSaleOnly, true),
-      packagingHeight: getSafe(() => popupValues.packagingHeight, ''),
-      packagingLength: getSafe(() => popupValues.packagingLength, ''),
-      palletMinPkgs: getSafe(() => popupValues.palletMinPkgs, ''),
-      palletMaxPkgs: getSafe(() => popupValues.palletMaxPkgs, ''),
-      palletWeight: getSafe(() => popupValues.palletWeight, '')
-        ? popupValues.palletWeight
-        : getSafe(() => palletWeightInitFromSettings, '')
-        ? palletWeightInitFromSettings
-        : '',
-      palletLength: getSafe(() => popupValues.palletLength, '')
-        ? popupValues.palletLength
-        : getSafe(() => palletLengthInitFromSettings, '')
-        ? palletLengthInitFromSettings
-        : '',
-      palletWidth: getSafe(() => popupValues.palletWidth, '')
-        ? popupValues.palletWidth
-        : getSafe(() => palletWidthInitFromSettings, '')
-        ? palletWidthInitFromSettings
-        : '',
-      palletHeight: getSafe(() => popupValues.palletHeight, '')
-        ? popupValues.palletHeight
-        : getSafe(() => palletHeightInitFromSettings, '')
-        ? palletHeightInitFromSettings
-        : ''
+      return {
+        ...popupValues,
+        casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.companyGenericProduct.elements, [])),
+        companyGenericProduct: getSafe(() => popupValues.companyGenericProduct.id, ''),
+        nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, ''),
+        packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id, ''),
+        packagingUnit: getSafe(() => popupValues.packagingUnit.id, ''),
+        packagingType: getSafe(() => popupValues.packagingType.id, ''),
+        packagingWidth: getSafe(() => popupValues.packagingWidth, ''),
+        palletSaleOnly: getSafe(() => palletSaleOnly, true),
+        packagingHeight: getSafe(() => popupValues.packagingHeight, ''),
+        packagingLength: getSafe(() => popupValues.packagingLength, ''),
+        palletMinPkgs: getSafe(() => popupValues.palletMinPkgs, ''),
+        palletMaxPkgs: getSafe(() => popupValues.palletMaxPkgs, ''),
+        palletWeight: popupValues && typeof popupValues.palletWeight !== 'undefined' ? popupValues.palletWeight : '',
+        palletLength: popupValues && typeof popupValues.palletLength !== 'undefined' ? popupValues.palletLength : '',
+        palletWidth: popupValues && typeof popupValues.palletWidth !== 'undefined' ? popupValues.palletWidth : '',
+        palletHeight: popupValues && typeof popupValues.palletHeight !== 'undefined' ? popupValues.palletHeight : '',
+        documents: {
+          documentType: null,
+          attachments: []
+        }
+      }
     }
   }
 
@@ -643,7 +625,6 @@ class ProductSidebar extends React.Component {
         {formikProps => {
           let { setFieldValue, values } = formikProps
           let casProducts = getSafe(() => values.casProducts, [])
-          const palletParamsRequired = checkPalletParamsRequired(values)
 
           return (
             <>
@@ -775,7 +756,7 @@ class ProductSidebar extends React.Component {
                             label={
                               <>
                                 <FormattedMessage id='global.palletMaxPkgs' defaultMessage='Max Pkgs per Pallet' />
-                                {palletParamsRequired && values.palletSaleOnly && <Required />}
+                                {values.palletSaleOnly && <Required />}
                               </>
                             }
                             inputProps={{
@@ -846,6 +827,31 @@ class ProductSidebar extends React.Component {
                           />
                         </GridColumn>
                       </GridRow>
+                      <GridRow columns={2}>
+                        <GridColumn>
+                          <Dropdown
+                            options={nmfcNumbersFiltered}
+                            inputProps={{
+                              fluid: true,
+                              search: val => val,
+                              selection: true,
+                              loading: nmfcNumbersFetching,
+                              onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery),
+                              placeholder: formatMessage({
+                                id: 'productCatalog.selectNmfcCode',
+                                defaultMessage: 'Select NMFC Code'
+                              })
+                            }}
+                            name='nmfcNumber'
+                            label={
+                              <>
+                                <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code' />
+                                <Required />
+                              </>
+                            }
+                          />
+                        </GridColumn>
+                      </GridRow>
 
                       <GridRow>
                         <GridColumn width={4}>
@@ -910,9 +916,6 @@ class ProductSidebar extends React.Component {
                                 }}
                               />
                             </GridColumn>
-                          </GridRow>
-
-                          <GridRow columns={2}>
                             <GridColumn>
                               <Input
                                 label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })}
@@ -924,30 +927,6 @@ class ProductSidebar extends React.Component {
                                     defaultMessage: 'Enter INCI Name'
                                   })
                                 }}
-                              />
-                            </GridColumn>
-                            <GridColumn>
-                              <Dropdown
-                                options={nmfcNumbersFiltered}
-                                inputProps={{
-                                  fluid: true,
-                                  search: val => val,
-                                  selection: true,
-                                  loading: nmfcNumbersFetching,
-                                  onSearchChange: (_, { searchQuery }) =>
-                                    this.handleSearchNmfcNumberChange(searchQuery),
-                                  placeholder: formatMessage({
-                                    id: 'productCatalog.selectNmfcCode',
-                                    defaultMessage: 'Select NMFC Code'
-                                  })
-                                }}
-                                name='nmfcNumber'
-                                label={
-                                  <>
-                                    <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code' />
-                                    <Required />
-                                  </>
-                                }
                               />
                             </GridColumn>
                           </GridRow>
@@ -1019,7 +998,7 @@ class ProductSidebar extends React.Component {
                                             id='global.palletMinPkgs'
                                             defaultMessage='Pallet Min Pkgs'
                                           />
-                                          {palletParamsRequired && values.palletSaleOnly && <Required />}
+                                          {values.palletSaleOnly && <Required />}
                                         </>
                                       }
                                       inputProps={{
@@ -1036,7 +1015,7 @@ class ProductSidebar extends React.Component {
                                       label={
                                         <>
                                           <FormattedMessage id='global.palletWeight' defaultMessage='Pallet Weight' />
-                                          {palletParamsRequired && values.palletSaleOnly && <Required />}
+                                          {values.palletSaleOnly && <Required />}
                                         </>
                                       }
                                       inputProps={{
@@ -1055,7 +1034,7 @@ class ProductSidebar extends React.Component {
                                       label={
                                         <>
                                           <FormattedMessage id='global.palletLength' defaultMessage='Pallet Length' />
-                                          {palletParamsRequired && values.palletSaleOnly && <Required />}
+                                          {values.palletSaleOnly && <Required />}
                                         </>
                                       }
                                       inputProps={{
@@ -1071,7 +1050,7 @@ class ProductSidebar extends React.Component {
                                       label={
                                         <>
                                           <FormattedMessage id='global.palletWidth' defaultMessage='Pallet Width' />
-                                          {palletParamsRequired && values.palletSaleOnly && <Required />}
+                                          {values.palletSaleOnly && <Required />}
                                         </>
                                       }
                                       inputProps={{
@@ -1089,7 +1068,7 @@ class ProductSidebar extends React.Component {
                                       label={
                                         <>
                                           <FormattedMessage id='global.palletHeight' defaultMessage='Pallet Height' />
-                                          {palletParamsRequired && values.palletSaleOnly && <Required />}
+                                          {values.palletSaleOnly && <Required />}
                                         </>
                                       }
                                       inputProps={{
