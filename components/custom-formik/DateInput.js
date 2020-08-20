@@ -5,17 +5,13 @@ import { FastField, Field, getIn } from 'formik'
 import { getFieldError, setFieldValue } from './helpers'
 
 import { DateInput } from 'semantic-ui-calendar-react'
-import { getLocaleDateFormat, getStringISODate } from '../date-format'
-import { FormattedMessage } from 'react-intl'
+import { getLocaleDateFormat } from '../date-format'
 
 class FormikInput extends Component {
   constructor(props) {
     super(props)
     const { id, name } = props
     this.id = id || `field_input_${name}`
-    this.state = {
-      value: null
-    }
   }
 
   handleRef = r => {
