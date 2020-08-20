@@ -212,6 +212,7 @@ const columns = [
 
 const formValidation = () =>
   Yup.lazy(values => {
+    const palletParamsRequired = values.palletSaleOnly || checkPalletParamsRequired(values) ? true : false
     return Yup.object().shape({
       intProductName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       intProductCode: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
@@ -263,7 +264,7 @@ const formValidation = () =>
           .required(errorMessages.requiredMessage)
           .positive(errorMessages.positive)
       }),
-      ...(values.palletSaleOnly && {
+      ...(palletParamsRequired && {
         palletMinPkgs: Yup.number()
           .min(1, errorMessages.minimum(1))
           .test('int', errorMessages.integer, val => {
@@ -302,6 +303,10 @@ const formValidation = () =>
         .positive(errorMessages.positive)
     })
   })
+
+const checkPalletParamsRequired = v => {
+  return !!(v.palletMinPkgs || v.palletMaxPkgs || v.palletWeight || v.palletLength || v.palletWidth || v.palletHeight)
+}
 
 class ProductSidebar extends React.Component {
   state = {
@@ -628,7 +633,7 @@ class ProductSidebar extends React.Component {
         {formikProps => {
           let { setFieldValue, values } = formikProps
           let casProducts = getSafe(() => values.casProducts, [])
-
+          const palletParamsRequired = checkPalletParamsRequired(values)
           return (
             <>
               <CustomForm autoComplete='off'>
@@ -759,7 +764,7 @@ class ProductSidebar extends React.Component {
                             label={
                               <>
                                 <FormattedMessage id='global.palletMaxPkgs' defaultMessage='Max Pkgs per Pallet' />
-                                {values.palletSaleOnly && <Required />}
+                                {(palletParamsRequired || values.palletSaleOnly) && <Required />}
                               </>
                             }
                             inputProps={{
@@ -1001,7 +1006,7 @@ class ProductSidebar extends React.Component {
                                             id='global.palletMinPkgs'
                                             defaultMessage='Pallet Min Pkgs'
                                           />
-                                          {values.palletSaleOnly && <Required />}
+                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
                                         </>
                                       }
                                       inputProps={{
@@ -1018,7 +1023,7 @@ class ProductSidebar extends React.Component {
                                       label={
                                         <>
                                           <FormattedMessage id='global.palletWeight' defaultMessage='Pallet Weight' />
-                                          {values.palletSaleOnly && <Required />}
+                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
                                         </>
                                       }
                                       inputProps={{
@@ -1037,7 +1042,7 @@ class ProductSidebar extends React.Component {
                                       label={
                                         <>
                                           <FormattedMessage id='global.palletLength' defaultMessage='Pallet Length' />
-                                          {values.palletSaleOnly && <Required />}
+                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
                                         </>
                                       }
                                       inputProps={{
@@ -1053,7 +1058,7 @@ class ProductSidebar extends React.Component {
                                       label={
                                         <>
                                           <FormattedMessage id='global.palletWidth' defaultMessage='Pallet Width' />
-                                          {values.palletSaleOnly && <Required />}
+                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
                                         </>
                                       }
                                       inputProps={{
@@ -1071,7 +1076,7 @@ class ProductSidebar extends React.Component {
                                       label={
                                         <>
                                           <FormattedMessage id='global.palletHeight' defaultMessage='Pallet Height' />
-                                          {values.palletSaleOnly && <Required />}
+                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
                                         </>
                                       }
                                       inputProps={{
