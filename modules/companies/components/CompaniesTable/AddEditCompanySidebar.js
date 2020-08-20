@@ -139,7 +139,7 @@ class AddEditCompanySidebar extends React.Component {
           if (mailingBranchRequired)
             return Yup.object().shape({
               deliveryAddress: Yup.object().shape({
-                addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+                addressName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
                 contactEmail: Yup.string()
                   .trim()
                   .email(errorMessages.invalidEmail)
@@ -154,7 +154,7 @@ class AddEditCompanySidebar extends React.Component {
 
         primaryBranch: Yup.object().shape({
           deliveryAddress: Yup.object().shape({
-            addressName: minOrZeroLength(3),
+            addressName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
             contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
             contactName: Yup.string().trim().min(2, minLength).required(minLength),
             contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),

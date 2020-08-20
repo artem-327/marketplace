@@ -151,7 +151,8 @@ const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }
                           <FormattedNumber
                             style='currency'
                             currency={currency}
-                            minimumFractionDigits={0}
+                            minimumFractionDigits={2}
+                            maximumFractionDigits={2}
                             value={getSafe(() => atr.value, 0)}
                           />
                         </>

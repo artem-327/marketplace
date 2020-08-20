@@ -15,7 +15,9 @@ const formValidation = Yup.object().shape({
   val1: Yup.number().required('Required'),
   val2: Yup.number().required('Required'),
   val3: Yup.number().required('Required'),
-  val4: Yup.number().required('Required')
+  val4: Yup.number().required('Required'),
+  val5: Yup.number().required('Required'),
+  val6: Yup.number().required('Required')
 })
 
 class EditUnitOfPackagingPopup extends React.Component {
@@ -29,7 +31,9 @@ class EditUnitOfPackagingPopup extends React.Component {
       val1: popupValues.measureTypeId,
       val2: popupValues.height,
       val3: popupValues.length,
-      val4: popupValues.width
+      val4: popupValues.width,
+      val5: popupValues.palletPkgMax,
+      val6: popupValues.palletPkgMin
     }
 
     return (
@@ -48,7 +52,9 @@ class EditUnitOfPackagingPopup extends React.Component {
                 [config.edit[1].name]: values.val1,
                 [config.edit[2].name]: parseFloat(values.val2),
                 [config.edit[3].name]: parseFloat(values.val3),
-                [config.edit[4].name]: parseFloat(values.val4)
+                [config.edit[4].name]: parseFloat(values.val4),
+                [config.edit[5].name]: parseFloat(values.val5),
+                [config.edit[6].name]: parseFloat(values.val6)
               }
               try {
                 await putEditedDataRequest(config, id, data)
@@ -111,6 +117,32 @@ class EditUnitOfPackagingPopup extends React.Component {
                 }
                 name='val4'
                 step={config.edit[4].step}
+              />
+            </FormGroup>
+            <FormGroup widths='equal' data-test='admin_add_pallet_pkg_max_inp'>
+              <Input
+                inputProps={{ type: config.edit[5].type, step: config.edit[5].step }}
+                label={
+                  <>
+                    {config.edit[5].title}
+                    <Required />
+                  </>
+                }
+                name='val5'
+                step={config.edit[5].step}
+              />
+            </FormGroup>
+            <FormGroup widths='equal' data-test='admin_add_pallet_pkg_min_inp'>
+              <Input
+                inputProps={{ type: config.edit[6].type, step: config.edit[6].step }}
+                label={
+                  <>
+                    {config.edit[6].title}
+                    <Required />
+                  </>
+                }
+                name='val6'
+                step={config.edit[6].step}
               />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>

@@ -60,10 +60,22 @@ function mapStateToProps(store, { datagrid }) {
         pkgsHeld: po.pkgsHeld ? <FormattedUnit unit={unit} separator=' ' value={po.pkgsHeld} /> : null,
         expirationTime: po.expirationTime ? getDurationTime(po.expirationTime) : null,
         holdPricePerUOM: po.holdPricePerUOM ? (
-          <FormattedNumber style='currency' currency={currency} value={po.holdPricePerUOM} />
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={po.holdPricePerUOM}
+          />
         ) : null,
         holdPriceSubtotal: po.holdPriceSubtotal ? (
-          <FormattedNumber style='currency' currency={currency} value={po.holdPriceSubtotal} />
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={po.holdPriceSubtotal}
+          />
         ) : null,
         status: po.status ? (
           <Label circular style={getStyleLabel(po.status)}>

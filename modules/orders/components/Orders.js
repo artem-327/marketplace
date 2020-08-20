@@ -10,7 +10,7 @@ import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import Link from 'next/link'
-import { CheckCircle, ChevronDown, ChevronRight} from 'react-feather'
+import { CheckCircle, ChevronDown, ChevronRight } from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
 import { AttachmentManager } from '~/modules/attachments'
@@ -442,11 +442,11 @@ class Orders extends Component {
       orderId: (
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            {
-              this.state.expandedRowIds.some(el => el === row.id)
-                ? <ChevronDown size={20} style={{ color: '#2599d5', cursor: 'pointer' }}/>
-                : <ChevronRight size={20} style={{ color: '#2599d5', cursor: 'pointer' }}/>
-            }
+            {this.state.expandedRowIds.some(el => el === row.id) ? (
+              <ChevronDown size={20} style={{ color: '#2599d5', cursor: 'pointer' }} />
+            ) : (
+              <ChevronRight size={20} style={{ color: '#2599d5', cursor: 'pointer' }} />
+            )}
           </div>
           <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}>
             <a onClick={e => e.stopPropagation()}>{row.id}</a>
@@ -859,7 +859,15 @@ class Orders extends Component {
           type: order.type,
           issuedAt: getSafe(() => <FormattedDate value={order.issuedAt.split('T')[0]} />, 'N/A'),
           issuerCompanyName: order.issuerCompanyName,
-          cfPriceTotal: <FormattedNumber style='currency' currency={currency} value={order.cfPriceTotal} />
+          cfPriceTotal: (
+            <FormattedNumber
+              minimumFractionDigits={2}
+              maximumFractionDigits={2}
+              style='currency'
+              currency={currency}
+              value={order.cfPriceTotal}
+            />
+          )
         })
       }
 
@@ -1086,7 +1094,7 @@ class Orders extends Component {
         )}
 
         {!tutorialCompleted && <Tutorial marginOrders />}
-        <Container fluid style={{padding: '20px 30px 10px 30px'}}>
+        <Container fluid style={{ padding: '20px 30px 10px 30px' }}>
           <TablesHandlers />
         </Container>
         <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>

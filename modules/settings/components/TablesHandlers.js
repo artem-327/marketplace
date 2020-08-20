@@ -182,10 +182,10 @@ class TablesHandlers extends Component {
     super(props)
     this.state = {
       filterValue: '',
-      'users': {
+      users: {
         searchInput: ''
       },
-      'products': {
+      products: {
         searchInput: '',
         productType: 'ALL'
       },
@@ -201,7 +201,7 @@ class TablesHandlers extends Component {
         searchInput: ''
       },
       */
-      'documents': {
+      documents: {
         searchInput: '',
         documentType: ''
       },
@@ -357,24 +357,26 @@ class TablesHandlers extends Component {
     const bankAccTab = currentTab.type === 'bank-accounts'
     return (
       <>
-        {currentTab.type !== 'global-broadcast' && currentTab.type !== 'documents' &&
-        currentTab.type !== 'logistics' && currentTab.type !== 'bank-accounts' && (
-          <div>
-            <div className='column'>
-              <Input
-                style={{ width: '370px' }}
-                icon='search'
-                name='searchInput'
-                value={filterValue ? filterValue.searchInput : ''}
-                placeholder={formatMessage({
-                  id: textsTable[currentTab.type].SearchText,
-                  defaultMessage: 'Select Credit Card'
-                })}
-                onChange={this.handleFilterChangeInputSearch}
-              />
+        {currentTab.type !== 'global-broadcast' &&
+          currentTab.type !== 'documents' &&
+          currentTab.type !== 'logistics' &&
+          currentTab.type !== 'bank-accounts' && (
+            <div>
+              <div className='column'>
+                <Input
+                  style={{ width: '370px' }}
+                  icon='search'
+                  name='searchInput'
+                  value={filterValue ? filterValue.searchInput : ''}
+                  placeholder={formatMessage({
+                    id: textsTable[currentTab.type].SearchText,
+                    defaultMessage: 'Select Credit Card'
+                  })}
+                  onChange={this.handleFilterChangeInputSearch}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {(currentTab.type === 'logistics' || currentTab.type === 'bank-accounts') && (
           <div>
@@ -511,6 +513,8 @@ class TablesHandlers extends Component {
                     <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />
                     <b>
                       <FormattedNumber
+                        minimumFractionDigits={2}
+                        maximumFractionDigits={2}
                         style='currency'
                         currency={dwollaAccBalance.currency}
                         value={dwollaAccBalance.value}
