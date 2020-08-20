@@ -2125,6 +2125,8 @@
   "logistics.label.username": "User Name",
   "logistics.placeholder.username": "Enter username",
   "logistics.label.password": "Password",
+  "logistics.placeholder.apiKey": "Enter API key",
+  "logistics.label.apiKey": "API key",
   "marketplace.available": "Available PKGs",
   "marketplace.packaging": "Packaging",
   "marketplace.quantity": "Quantity",
