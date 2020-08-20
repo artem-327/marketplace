@@ -29,7 +29,8 @@ const initialValues = {
   providerIdentifier: '',
   providerIdentifierName: '',
   username: '',
-  password: ''
+  password: '',
+  apiKey: ''
 }
 
 class LogisticsPopup extends Component {
@@ -45,7 +46,8 @@ class LogisticsPopup extends Component {
           providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifierValue})`,
           username:
             popupValues.accountInfos && popupValues.accountInfos.length ? popupValues.accountInfos[0].username : '',
-          password: ''
+          password: '',
+          apiKey: popupValues.accountInfos && popupValues.accountInfos.length ? popupValues.accountInfos[0].apiKey : ''
         }
       : initialValues
   }
@@ -79,11 +81,13 @@ class LogisticsPopup extends Component {
             validateOnBlur={false}
             initialValues={this.getInitialValues()}
             onSubmit={async (values, { setSubmitting }) => {
+              const apiKey = values.apiKey ? { apiKey: values.apiKey } : null
               try {
                 const payload = {
                   providerIdentifier: JSON.parse(values.providerIdentifier),
                   username: values.username,
-                  password: values.password
+                  password: values.password,
+                  ...apiKey
                 }
 
                 if (popupValues) {
@@ -137,6 +141,16 @@ class LogisticsPopup extends Component {
                         }}
                       />
                     )}
+                    <Input
+                      name='apiKey'
+                      label={<>{formatMessage({ id: 'logistics.label.apiKey', defaultMessage: 'API key' })}</>}
+                      inputProps={{
+                        placeholder: formatMessage({
+                          id: 'logistics.placeholder.apiKey',
+                          defaultMessage: 'Enter API key'
+                        })
+                      }}
+                    />
                   </FormGroup>
 
                   <FormGroup widths='equal' data-test='settings_logistics_namePassword_inp'>
