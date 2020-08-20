@@ -380,7 +380,14 @@ class ProductSidebar extends React.Component {
       : null
 
     const palletDimensions = {}
-    const propsToInclude = ['palletWeight', 'palletLength', 'palletWidth', 'palletHeight']
+    const propsToInclude = [
+      'palletWeight',
+      'palletLength',
+      'palletWidth',
+      'palletHeight',
+      'palletMinPkgs',
+      'palletMaxPkgs'
+    ]
     propsToInclude.forEach(prop => (values[prop] ? (palletDimensions[prop] = Number(values[prop])) : null))
 
     let formValues = {
@@ -407,11 +414,7 @@ class ProductSidebar extends React.Component {
         values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet),
       */
       ...packagingDimensions,
-      ...{
-        palletMinPkgs: Number(values.palletMinPkgs),
-        palletMaxPkgs: Number(values.palletMaxPkgs),
-        ...palletDimensions
-      }
+      ...palletDimensions
     }
 
     try {
