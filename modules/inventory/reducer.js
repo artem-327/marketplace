@@ -38,7 +38,9 @@ export const initialState = {
   datagridFilterUpdate: false,
   pricingEditOpenId: null,
   isExportInventoryOpen: false,
-  tableHandlersFilters: null
+  myProductsUnmappedValue: 'ALL',
+  myListingsFilters: null,
+  myProductsFilters: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -595,6 +597,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         [payload.variable]: payload.value
+      }
+    }
+
+    case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
+      return {
+        ...state,
+        myProductsUnmappedValue: action.payload
       }
     }
 

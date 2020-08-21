@@ -497,3 +497,12 @@ export function handleVariableSave(variable, value) {
     payload: { variable, value }
   }
 }
+
+export function handleProductCatalogUnmappedValue(value) {
+  return async dispatch => {
+    dispatch({
+      type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
+      payload: value
+    })
+  }
+}

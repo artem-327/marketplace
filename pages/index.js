@@ -11,7 +11,7 @@ class Index extends Component {
 
     if (isAdmin === null) await this.props.getIdentity()
     if (isAdmin) Router.push('/admin')
-    else Router.push('/inventory/my')
+    else Router.push('/inventory/my-listings')
   }
   render() {
     return null

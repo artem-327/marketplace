@@ -330,28 +330,9 @@ export function handleFiltersValue(value) {
       type: AT.HANDLE_FILTERS_VALUE,
       payload: value
     })
-    // switch (props.currentTab.type) {
-    //   case "delivery-addresses":
-    //     if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
-    //     else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))
-    //     break
-    //   case "products":
-    //     if (value.trim().length > 2) await dispatch(getProductsCatalogRequest({ body: value, unmapped: props.productCatalogUnmappedValue }))
-    //     else await dispatch(getProductsCatalogRequest({ body: props.productsFilter, unmapped: props.productCatalogUnmappedValue }))
-    //     break
-    // }
   }
 }
 
-export function handleProductCatalogUnmappedValue(value) {
-  return async dispatch => {
-    dispatch({
-      type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
-      payload: value
-    })
-    // ! !dispatch(handleFiltersValue({ ...props, productCatalogUnmappedValue: value }, props.filterValue))
-  }
-}
 //////////////////////
 export function putEditWarehouse(payload, id, attachmentFiles) {
   return async dispatch => {

@@ -8,7 +8,6 @@ import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
 // import Settings from '~/components/settings'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
-import { sidebarDetailTrigger } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 import {
   Layers,
@@ -27,11 +26,11 @@ import {
 } from 'react-feather'
 import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
-import { InventoryFilter, Filter, OrderFilter } from '~/modules/filter'
 import TabsOperations from '~/modules/operations/components/Tabs'
 import TabsProducts from '~/modules/products/components/Tabs'
 import TabsCompanies from '~/modules/companies/components/Tabs'
+
+import { InventoryFilter, Filter, OrderFilter } from '~/modules/filter' //! ! smazat
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -59,10 +58,11 @@ class Navigation extends Component {
     products: getSafe(() => Router.router.pathname === '/products', false),
     companies: getSafe(() => Router.router.pathname === '/companies', false),
     manageGuests: getSafe(() => Router.router.pathname === '/manage-guests', false),
-    wantedBoard: getSafe(() => Router.router.pathname === '/wanted-board/wanted-board', false) ||
-      getSafe(() => Router.router.pathname === '/wanted-board/my-offers', false) ||
-      getSafe(() => Router.router.pathname === '/wanted-board/my-requested-items', false),
-    openedFilterMyInventory: true,
+    wantedBoard: getSafe(() => Router.router.pathname === '/wanted-board/listings', false) ||
+      getSafe(() => Router.router.pathname === '/wanted-board/bids-sent', false) ||
+      getSafe(() => Router.router.pathname === '/wanted-board/bids-received', false),
+    inventory: getSafe(() => Router.router.pathname === '/inventory/my-products', false) ||
+      getSafe(() => Router.router.pathname === '/inventory/my-listings', false),
     openedFilterMarketplace: true
   }
 
@@ -91,13 +91,6 @@ class Navigation extends Component {
     } = this.props
     if (pathname === to) {
       switch (asPath) {
-        case '/inventory/my':
-          this.setState(prevState => ({
-            openedFilterMyInventory: !prevState.openedFilterMyInventory,
-            settings: false,
-            orders: false
-          }))
-          break
         case '/marketplace/all':
           this.setState(prevState => ({
             openedFilterMarketplace: !prevState.openedFilterMarketplace,
@@ -108,7 +101,6 @@ class Navigation extends Component {
       }
     } else {
       this.setState({
-        openedFilterMyInventory: false,
         openedFilterMarketplace: false
       })
     }
@@ -163,7 +155,6 @@ class Navigation extends Component {
     }
     // toggle dropdown state
     this.setState({
-      openedFilterMyInventory: false,
       openedFilterMarketplace: false,
       orders: false,
       settings: false,
@@ -173,6 +164,7 @@ class Navigation extends Component {
       companies: false,
       manageGuests: false,
       wantedBoard: false,
+      inventory: false,
       [type]: !typeState
     })
 
@@ -233,10 +225,8 @@ class Navigation extends Component {
       auth,
       takeover,
       intl: { formatMessage },
-      sidebarDetailTrigger,
       router: { pathname, asPath },
       collapsedMenu,
-      activeInventoryFilter,
       activeMarketplaceFilter,
       isClientCompanyAdmin
     } = this.props
@@ -250,8 +240,8 @@ class Navigation extends Component {
       products,
       companies,
       manageGuests,
+      inventory,
       wantedBoard,
-      openedFilterMyInventory,
       openedFilterMarketplace
     } = this.state
 
@@ -287,25 +277,33 @@ class Navigation extends Component {
           </>
         </MenuLink>
         {!isClientCompany && (
-          <>
-            <MenuLink
-              to='/inventory/my'
-              dataTest='navigation_menu_inventory_my_drpdn'
-              className={`menu ${
-                !collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? 'opened' : ''
-              }`}>
-              <>
-                <Layers size={22} />
-                {formatMessage({ id: 'navigation.myInventory', defaultMessage: 'My Inventory' })}
-                {!collapsedMenu && asPath === '/inventory/my' && activeInventoryFilter ? (
-                  <div className='active-filter'>
-                    <Sliders />
-                  </div>
-                ) : null}
-              </>
-            </MenuLink>
-            {!collapsedMenu && openedFilterMyInventory && asPath === '/inventory/my' ? <InventoryFilter /> : null}
-          </>
+          <DropdownItem
+            icon={<Layers size={22} />}
+            text={formatMessage({ id: 'navigation.inventory', defaultMessage: 'Inventory' })}
+            className={inventory ? 'opened' : null}
+            opened={inventory}
+            onClick={() => this.toggleOpened('inventory')}
+            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+            refId={'inventory'}
+            data-test='navigation_menu_inventory_drpdn'
+          >
+            <Dropdown.Menu data-test='navigation_menu_inventory_menu'>
+              <PerfectScrollbar>
+                <Dropdown.Item
+                  as={MenuLink}
+                  to='/inventory/my-products'
+                  dataTest='navigation_menu_inventory_my_products_drpdn'>
+                  {formatMessage({ id: 'navigation.InventoryMyProducts', defaultMessage: 'My Products' })}
+                </Dropdown.Item>
+                <Dropdown.Item
+                  as={MenuLink}
+                  to='/inventory/my-listings'
+                  dataTest='navigation_menu_inventory_my_listings_drpdn'>
+                  {formatMessage({ id: 'navigation.InventoryMyListings', defaultMessage: 'My Listings' })}
+                </Dropdown.Item>
+              </PerfectScrollbar>
+            </Dropdown.Menu>
+          </DropdownItem>
         )}
         <MenuLink
           to='/marketplace/all'
@@ -337,21 +335,25 @@ class Navigation extends Component {
         >
           <Dropdown.Menu data-test='navigation_menu_manage_wanted_board_menu'>
             <PerfectScrollbar>
+              {!isClientCompany && (
+                <>
+                  <Dropdown.Item
+                    as={MenuLink}
+                    to='/wanted-board/listings'
+                    dataTest='navigation_wanted_board_listings_drpdn'>
+                    {formatMessage({ id: 'navigation.wantedBoardListings', defaultMessage: 'Listings' })}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    as={MenuLink}
+                    to='/wanted-board/bids-sent'
+                    dataTest='navigation_wanted_board_bids_sent_drpdn'>
+                    {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
+                  </Dropdown.Item>
+                </>
+                )}
               <Dropdown.Item
                 as={MenuLink}
-                to='/wanted-board/wanted-board'
-                dataTest='navigation_wanted_board_listings_drpdn'>
-                {formatMessage({ id: 'navigation.wantedBoardListings', defaultMessage: 'Listings' })}
-              </Dropdown.Item>
-              <Dropdown.Item
-                as={MenuLink}
-                to='/wanted-board/my-offers'
-                dataTest='navigation_wanted_board_bids_sent_drpdn'>
-                {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
-              </Dropdown.Item>
-              <Dropdown.Item
-                as={MenuLink}
-                to='/wanted-board/my-requested-items'
+                to='/wanted-board/bids-received'
                 dataTest='navigation_wanted_board_bids_received_drpdn'>
                 {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'Bids Received' })}
               </Dropdown.Item>
@@ -608,13 +610,11 @@ export default withAuth(
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
         collapsedMenu: store.layout.collapsedMenu,
-        activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
         activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
         isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator')
       }),
       {
         triggerSystemSettingsModal,
-        sidebarDetailTrigger,
         tabChanged
       }
     )(injectIntl(Navigation))
