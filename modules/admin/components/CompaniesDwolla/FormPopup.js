@@ -16,11 +16,12 @@ import { ZipDropdown } from '~/modules/zip-dropdown'
 import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '~/components/custom-formik'
 import * as Yup from 'yup'
+
 // debug purposes only
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { validationSchema } from '~/modules/company-form/constants'
-import { errorMessages, addressValidationSchema } from '~/constants/yupValidation'
+import { errorMessages, addressValidationSchema, dateValidation } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form'
 
@@ -50,7 +51,7 @@ const formValidationNew = Yup.object().shape({
     firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
     lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
     jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
-    dateOfBirth: Yup.string().required(errorMessages.requiredMessage),
+    dateOfBirth: dateValidation(false).concat(Yup.string().required(errorMessages.requiredMessage)),
     ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage),
     address: addressValidationSchema()
 

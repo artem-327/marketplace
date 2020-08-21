@@ -29,19 +29,20 @@ const CustomRowDiv = styled.div`
   justify-content: space-between;
   margin: -5px -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: top;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 5px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
 `
@@ -161,32 +162,34 @@ const filters = {
 }
 
 const validationSchema = Yup.lazy(values => {
-
   let validationObject = {
-    dateFrom: values.dateFrom && values.dateTo && Yup.string().test(
-      'is-before',
-      <FormattedMessage
-        id='orders.dateMustBeSameOrBefore'
-        defaultMessage={`Date must be same or before ${values.dateTo}`}
-        values={{ date: values.dateTo }}
-      />,
-      function () {
-        let parsedDate = moment(this.parent['dateFrom'], getLocaleDateFormat())
-        let parsedBeforeDate = moment(this.parent['dateTo'], getLocaleDateFormat())
-        return (!parsedBeforeDate.isValid()) || parsedDate.isSameOrBefore(parsedBeforeDate)
-      }
-    ),
-    orderId: values.orderId && Yup.number()
-      .typeError(errorMessages.mustBeNumber)
-      .test('int', errorMessages.integer, val => {
-        return val % 1 === 0
-      })
-      .positive(errorMessages.positive)
-      .test(
-        'numbers',
-        errorMessages.mustBeNumber,
-        value => /^[0-9]*$/.test(value)
-      )
+    dateFrom:
+      values.dateFrom &&
+      values.dateTo &&
+      dateValidation(false).concat(
+        Yup.string().test(
+          'is-before',
+          <FormattedMessage
+            id='orders.dateMustBeSameOrBefore'
+            defaultMessage={`Date must be same or before ${values.dateTo}`}
+            values={{ date: values.dateTo }}
+          />,
+          function () {
+            let parsedDate = moment(this.parent['dateFrom'], getLocaleDateFormat())
+            let parsedBeforeDate = moment(this.parent['dateTo'], getLocaleDateFormat())
+            return !parsedBeforeDate.isValid() || parsedDate.isSameOrBefore(parsedBeforeDate)
+          }
+        )
+      ),
+    orderId:
+      values.orderId &&
+      Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .test('int', errorMessages.integer, val => {
+          return val % 1 === 0
+        })
+        .positive(errorMessages.positive)
+        .test('numbers', errorMessages.mustBeNumber, value => /^[0-9]*$/.test(value))
   }
   return Yup.object().shape({ ...validationObject })
 })
@@ -337,7 +340,7 @@ class TablesHandlers extends Component {
   renderHandler = () => {
     const {
       currentTab,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
     const filterValue = this.state[currentTab]
 
@@ -347,7 +350,7 @@ class TablesHandlers extends Component {
         validationSchema={validationSchema}
         onSubmit={() => {}}
         validateOnChange={true}
-        render={(formikProps) => {
+        render={formikProps => {
           this.formikProps = formikProps
 
           return (
@@ -384,7 +387,7 @@ class TablesHandlers extends Component {
               </div>
               <div>
                 <div className='column' style={{ paddingTop: '10px' }}>
-                  <FormattedMessage id='orders.orderDate' defaultMessage='Order Date'/>
+                  <FormattedMessage id='orders.orderDate' defaultMessage='Order Date' />
                 </div>
                 <div className='column'>
                   <DateInput
@@ -427,15 +430,13 @@ class TablesHandlers extends Component {
   render() {
     return (
       <PositionHeaderSettings>
-        <CustomRowDiv>
-          {this.renderHandler()}
-        </CustomRowDiv>
+        <CustomRowDiv>{this.renderHandler()}</CustomRowDiv>
       </PositionHeaderSettings>
     )
   }
 }
 
-const mapStateToProps = (state, { router } )=> {
+const mapStateToProps = (state, { router }) => {
   const query = router ? router.query : { type: 'sales' }
   const { type } = query
 
@@ -447,7 +448,5 @@ const mapStateToProps = (state, { router } )=> {
 }
 
 export default withDatagrid(
-  withDatagrid(withToastManager(withRouter(
-    connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers)))
-  ))
+  withDatagrid(withToastManager(withRouter(connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers)))))
 )

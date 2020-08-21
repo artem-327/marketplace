@@ -13,7 +13,7 @@ import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { withToastManager } from 'react-toast-notifications'
 import ProdexGrid from '~/components/table'
 import * as val from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from 'moment'
 import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
@@ -67,10 +67,12 @@ const validationSchema = () =>
         })
         .required(errorMessages.requiredMessage),
       ...(values.expiresAt.length && {
-        expiresAt: val.string().test('minDate', errorMessages.dateNotInPast, function (date) {
-          const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-          return enteredDate >= moment().endOf('day').format()
-        })
+        expiresAt: dateValidation(false).concat(
+          val.string().test('minDate', errorMessages.dateNotInPast, function (date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
+          })
+        )
       })
     })
   })
