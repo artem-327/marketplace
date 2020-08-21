@@ -20,7 +20,7 @@ import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { withToastManager } from 'react-toast-notifications'
 import ProdexGrid from '~/components/table'
 import * as val from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from 'moment'
 import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
@@ -140,13 +140,15 @@ const validationSchema = () =>
           })
       }),
       ...(values.neededNow === false && {
-        neededAt: val
-          .string()
-          .required(errorMessages.requiredMessage)
-          .test('minDate', errorMessages.dateNotInPast, function (date) {
-            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-            return enteredDate >= moment().endOf('day').format()
-          })
+        neededAt: dateValidation(false).concat(
+          val
+            .string()
+            .required(errorMessages.requiredMessage)
+            .test('minDate', errorMessages.dateNotInPast, function (date) {
+              const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+              return enteredDate >= moment().endOf('day').format()
+            })
+        )
       }),
       element: val.object().shape({
         productGroup: val

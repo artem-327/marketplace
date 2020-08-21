@@ -20,12 +20,13 @@ import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { getSafe, getPrice } from '~/utils/functions'
 import { FormattedMessage, FormattedNumber, FormattedDate, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { errorMessages } from '~/constants/yupValidation'
 import * as Yup from 'yup'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import moment from 'moment/moment'
 import { FormattedUnit } from '~/components/formatted-messages'
 import { DateInput } from '~/components/custom-formik'
+import { errorMessages, dateValidation } from '~/constants/yupValidation'
+
 // import { inputWrapper } from '../../../components'
 import { currency } from '~/constants/index'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
@@ -43,10 +44,12 @@ const validationSchema = () =>
         .typeError(errorMessages.requiredMessage)
         .required(errorMessages.requiredMessage),
       ...(values.lotExpirationDate && {
-        lotExpirationDate: Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
-          const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-          return enteredDate >= moment().endOf('day').format()
-        })
+        lotExpirationDate: dateValidation(false).concat(
+          Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
+            const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+            return enteredDate >= moment().endOf('day').format()
+          })
+        )
       })
     })
   })

@@ -1600,6 +1600,7 @@
   "cart.or": "OR",
   "validation.required": "Required",
   "validation.dateInFuture": "Date must be in future",
+  "validation.dateInPast": "Date must be in past",
   "validation.dateNotInPast": "Date must not be in past",
   "validation.requiredNonConforming": "Required if Condition is Non Conforming",
   "validation.invalidWebsiteHttp": "Invalid Website URL (make sure to include http:// or https://)",
