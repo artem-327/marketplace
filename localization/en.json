@@ -2101,6 +2101,7 @@
   "settings.documents.selectPermission": "Select permission",
   "settings.documents.selectSharingOption": "Select sharing option",
   "settings.documents.enterIssuerName": "Enter issuer name",
+  "settings.tableColumnSettings": "TABLE COLUMN SETTINGS",
   "shippingQuote.header": "Shipping Quote",
   "shippingQuote.shippingQuantity": "Shipping Quantity",
   "shippingQuote.purchase": "Purchase",
