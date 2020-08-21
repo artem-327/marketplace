@@ -222,742 +222,373 @@ export const getStringISODate = (stringDate = '') => {
 
   const formats = {
     ar: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     bg: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     ca: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     zh: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     cs: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '. '))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '. ')).set({ h, m }).format()
     },
     da: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     de: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     el: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     en: {
-      stringISODate: () =>
-        moment(getDateMDY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateMDY(stringDate, '/')).set({ h, m }).format()
     },
     fi: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     fr: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     he: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     hu: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '. '))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '. ')).set({ h, m }).format()
     },
     is: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     it: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     ja: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     ko: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '-')).set({ h, m }).format()
     },
     nl: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     nb: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     pl: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '-')).set({ h, m }).format()
     },
     pt: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     ro: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     ru: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     hr: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     sk: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '. '))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '. ')).set({ h, m }).format()
     },
     sq: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '-')).set({ h, m }).format()
     },
     sv: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '-')).set({ h, m }).format()
     },
     th: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     tr: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     ur: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     id: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     uk: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     be: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     sl: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     et: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     lv: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '.')).set({ h, m }).format()
     },
     lt: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '.')).set({ h, m }).format()
     },
     fa: {
-      stringISODate: () =>
-        moment(getDateMDY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateMDY(stringDate, '/')).set({ h, m }).format()
     },
     vi: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     hy: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     az: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     eu: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     mk: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     af: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     ka: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     fo: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     hi: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     ms: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     kk: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     ky: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     sw: {
-      stringISODate: () =>
-        moment(getDateMDY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateMDY(stringDate, '/')).set({ h, m }).format()
     },
     tt: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     pa: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     gu: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     ta: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     te: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     kn: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     mr: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     sa: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     mn: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '.')).set({ h, m }).format()
     },
     gl: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     kok: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     syr: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     dv: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     es: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     nn: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     sr: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     uz: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     am: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     tzm: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     iu: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     sma: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     gd: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     prs: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     bn: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     wo: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     rw: {
-      stringISODate: () =>
-        moment(getDateMDY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateMDY(stringDate, '/')).set({ h, m }).format()
     },
     qut: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     sah: {
-      stringISODate: () =>
-        moment(getDateMDY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateMDY(stringDate, '.')).set({ h, m }).format()
     },
     gsw: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     co: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     oc: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     mi: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     ga: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     se: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '-')).set({ h, m }).format()
     },
     br: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     smn: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     moh: {
-      stringISODate: () =>
-        moment(getDateMDY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateMDY(stringDate, '/')).set({ h, m }).format()
     },
     arn: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     ii: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     dsb: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '. '))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '. ')).set({ h, m }).format()
     },
     ig: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     kl: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     lb: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     ba: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     nso: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     quz: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     yo: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     ha: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     fil: {
-      stringISODate: () =>
-        moment(getDateMDY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateMDY(stringDate, '/')).set({ h, m }).format()
     },
     ps: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     fy: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     ne: {
-      stringISODate: () =>
-        moment(getDateMDY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateMDY(stringDate, '/')).set({ h, m }).format()
     },
     si: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '-')).set({ h, m }).format()
     },
     lo: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     km: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '-')).set({ h, m }).format()
     },
     cy: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     bo: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     sms: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     as: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     ml: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     or: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '-')).set({ h, m }).format()
     },
     tk: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     bs: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     mt: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     zu: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     xh: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     tn: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '/')).set({ h, m }).format()
     },
     hsb: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '. '))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '. ')).set({ h, m }).format()
     },
     tg: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     smj: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '.'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '.')).set({ h, m }).format()
     },
     rm: {
-      stringISODate: () =>
-        moment(getDateDMY(stringDate, '/'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateDMY(stringDate, '/')).set({ h, m }).format()
     },
     ug: {
-      stringISODate: () =>
-        moment(getDateYMD(stringDate, '-'))
-          .set({ h, m })
-          .format()
+      stringISODate: () => moment(getDateYMD(stringDate, '-')).set({ h, m }).format()
     }
   }
   const result = formats[navigator.language.slice(0, 2)] || formats['en']

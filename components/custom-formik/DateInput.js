@@ -6,7 +6,7 @@ import { getFieldError, setFieldValue } from './helpers'
 
 import { DateInput } from 'semantic-ui-calendar-react'
 import { getLocaleDateFormat } from '../date-format'
-import {FormattedMessage} from "react-intl";
+
 class FormikInput extends Component {
   constructor(props) {
     super(props)
@@ -16,7 +16,6 @@ class FormikInput extends Component {
 
   handleRef = r => {
     r && r.inputNode.setAttribute('autocomplete', 'off')
-    r && r.inputNode.setAttribute('readonly', true)
   }
 
   render() {
@@ -36,28 +35,28 @@ class FormikInput extends Component {
 
               {/* <InputRef inputRef={inputRef}> */}
               <DateInput
-                data-test={`FormikInput_${this.id}_DateInput`}
-                closable
-                id={this.id}
-                name={name}
-                placeholder={'00/00/0000'}
                 {...safeInputProps}
+                name={name}
                 value={field.value}
-                dateFormat={getLocaleDateFormat()}
-                animation='none'
+                clearable
                 onChange={(e, { name, value }) => {
                   setFieldValue(form, name, value, true)
                   Promise.resolve().then(() => {
                     onChange && onChange(e, { name, value })
                   })
                 }}
+                placeholder={getLocaleDateFormat()}
+                data-test={`FormikInput_${this.id}_DateInput`}
+                closable
+                id={this.id}
                 onBlur={form.handleBlur}
+                dateFormat={getLocaleDateFormat()}
+                animation='none'
                 ref={this.handleRef}
                 localization={typeof navigator !== 'undefined' ? window.navigator.language.slice(0, 2) : 'en'}
               />
-              {/* </InputRef> */}
-
               {error && <span className='sui-error-message'>{getIn(form.errors, name)}</span>}
+              {/* </InputRef> */}
             </Form.Field>
           )
         }}
