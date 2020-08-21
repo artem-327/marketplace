@@ -41,7 +41,7 @@ context("Generic Company Product CRUD", () => {
         cy.get("#code").type("TEST-05")
         cy.selectFromDropdown("[data-test='admin_product_popup_cas_0_drpdn']", "382-45-6")
         cy.selectFromDropdown("#field_dropdown_productGroup", "Product Group A")
-        cy.selectFromDropdown("#field_dropdown_company", "Norman Fox")
+        cy.selectFromDropdown("#field_dropdown_company", "Testering")
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
         cy.waitForUI()
@@ -75,61 +75,6 @@ context("Generic Company Product CRUD", () => {
 
         cy.get("#name").should("have.value", "Echoprod")
         cy.get("#code").should("have.value", "TEST-06")
-    })
-
-    it("Creates a alternative name", () => {
-        cy.route("POST","/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameSaving")
-        cy.route("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
-
-        cy.searchInList("Test")
-        cy.openElement(productId, 4)
-
-        cy.get("[data-test=settings_product_alt_name_add_btn]")
-            .click()
-
-        cy.get("input[id='field_input_productAltNames[0].alternativeName']")
-            .type("QAonium")
-            .should("have.value", "QAonium")
-
-        cy.get("[data-test=settings_product_alt_name_save_0_btn]").click()
-
-        cy.wait("@nameSaving")
-
-        cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
-
-        cy.openElement(productId, 4)
-
-        cy.wait("@nameGetting")
-
-        cy.get("input[id='field_input_productAltNames[0].alternativeName']")
-            .should("have.value", "QAonium")
-    })
-
-    it("Deletes a alternative name", () => {
-        cy.route("DELETE", "/prodex/api/company-generic-products/alternative-names/id/**").as("nameDelete")
-        cy.route("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
-
-        cy.searchInList("Test")
-        cy.openElement(productId, 4)
-
-        cy.get("input[id='field_input_productAltNames[0].alternativeName']")
-            .should("have.value", "QAonium")
-
-        cy.get("[data-test=settings_product_alt_name_delete_0_btn]").click()
-
-        cy.wait("@nameDelete")
-
-        cy.get("input[id='field_input_productAltNames[0].tradeName']")
-            .should("not.exist")
-
-        cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
-
-        cy.openElement(productId, 4)
-
-        cy.wait("@nameGetting")
-
-        cy.get("input[id='field_input_casAlternativeNames[0].alternativeName']")
-            .should("not.exist")
     })
 
     it("Checks error messages", () => {

@@ -38,6 +38,8 @@ context("Units of packaging CRUD", () => {
         cy.enterText("#field_input_val2", "10")
         cy.enterText("#field_input_val3", "10")
         cy.enterText("#field_input_val4", "10")
+        cy.enterText("#field_input_val5", "10")
+        cy.enterText("#field_input_val6", "10")
 
         cy.clickSave()
 
@@ -80,7 +82,7 @@ context("Units of packaging CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 4)
+            .should("have.length", 6)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

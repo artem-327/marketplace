@@ -2,7 +2,7 @@ context("CAS products CRUD", () => {
 
     let productId = null
     let filter = [{"operator": "LIKE", "path": "CasProduct.casIndexName", "values": ["%Testinonium%"]},
-        {"operator": "LIKE", "path": "CasProduct.casNumber", "values": ["%Testinonium%"]}]
+        {"operator": "LIKE", "path": "CasProduct.casNumber", "values": ["%100-95-521%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -32,7 +32,7 @@ context("CAS products CRUD", () => {
         cy.enterText("[name='casProduct.casIndexName']", "Testinonium")
         cy.clickSave()
 
-        cy.get('.left > .ui > input')
+        cy.get('.column > .ui > input')
             .type("Testinonium")
 
         cy.getToken().then(token => {
@@ -51,7 +51,7 @@ context("CAS products CRUD", () => {
     })
 
     it("Edits a CAS product", () => {
-        cy.get('.left > .ui > input')
+        cy.get('.column > .ui > input')
             .type("Testinonium")
 
         cy.openElement(productId, 0)
@@ -73,8 +73,8 @@ context("CAS products CRUD", () => {
         cy.route("POST", "/prodex/api/cas-products/alternative-names/**").as("nameSaving")
         cy.route("GET", "/prodex/api/cas-products/alternative-names/**").as("nameGetting")
 
-        cy.get('.left > .ui > input')
-            .type("Testerium")
+        cy.get('.column > .ui > input')
+            .type("100-95-521")
 
         cy.openElement(productId, 1)
 
@@ -104,8 +104,8 @@ context("CAS products CRUD", () => {
         cy.route("DELETE", "/prodex/api/cas-products/alternative-names/**").as("nameDelete")
         cy.route("GET", "/prodex/api/cas-products/alternative-names/**").as("nameGetting")
 
-        cy.get('.left > .ui > input')
-            .type("Testerium")
+        cy.get('.column > .ui > input')
+            .type("100-95-521")
 
         cy.openElement(productId, 1)
 
@@ -142,8 +142,8 @@ context("CAS products CRUD", () => {
     })
 
     it("Deletes a product", () => {
-        cy.get('.left > .ui > input')
-            .type("Testerium")
+        cy.get('.column > .ui > input')
+            .type("100-95-521")
 
         cy.openElement(productId, 2)
 

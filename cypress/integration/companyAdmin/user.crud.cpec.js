@@ -119,7 +119,7 @@ context("Prodex User CRUD", () => {
         cy.get("[data-test=settings_users_popup_submit_btn]").click()
 
         cy.get(".error")
-            .should("have.length", 13)
+            .should("have.length", 12)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

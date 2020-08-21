@@ -39,7 +39,7 @@ context("Inventory CRUD", () => {
 
         cy.get("[data-test=new_inventory_warehouse_drpdn]").click()
         cy.get("[data-test=new_inventory_warehouse_drpdn]").within(() => {
-            cy.contains("CGM Industries, Inc.").click()
+            cy.contains("Cargo").click()
         })
 
         cy.setNumberInput("[id='field_input_edit.pkgAvailable']", "5")
@@ -52,7 +52,7 @@ context("Inventory CRUD", () => {
         cy.wait("@inventoryLoading")
 
         cy.contains("20")
-        cy.contains("Houston Warehouse")
+        cy.contains("Cargo")
         cy.contains("5")
         cy.contains(productName)
     })
@@ -100,7 +100,10 @@ context("Inventory CRUD", () => {
 
         cy.contains("Mercer Distribution Services")
 
-        cy.get("[data-test=detail_inventory_tab_documents]").click()
+        cy.get("[data-test=detail_inventory_tab_documents]").eq(0).click()
+        cy.contains("Property").should("be.visible")
+
+        cy.get("[data-test=detail_inventory_tab_documents]").eq(1).click()
         cy.get("[id='field_dropdown_documents.documentType']").should("be.visible")
 
         cy.get("[data-test=detail_inventory_tab_priceBook]").click()
@@ -114,7 +117,7 @@ context("Inventory CRUD", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
                 cy.get("[data-test=action_" + itemId + "]").click()
-                cy.get("[data-test=action_" + itemId + "_4]").click()
+                cy.get("[data-test=action_" + itemId + "_5]").click()
 
                 cy.waitForUI()
                 cy.get("[data-test=confirm_dialog_proceed_btn]").click()
@@ -137,7 +140,7 @@ context("Inventory CRUD", () => {
             expect(element.text()).to.match(/(Required)|(Must be a number)/i)
         })
 
-        cy.get("[data-test=detail_inventory_tab_documents]").click()
+        cy.get("[data-test=detail_inventory_tab_documents]").eq(0).click()
         cy.contains("Save First").should("visible")
 
     })
@@ -149,7 +152,7 @@ context("Inventory CRUD", () => {
 
         cy.get("[data-test=new_inventory_warehouse_drpdn]").click()
         cy.get("[data-test=new_inventory_warehouse_drpdn]").within(() => {
-            cy.contains("CGM Industries, Inc.").click()
+            cy.contains("Cargo").click()
         })
 
         cy.setNumberInput("[id='field_input_edit.pkgAvailable']", "5")
@@ -183,7 +186,7 @@ context("Inventory CRUD", () => {
         cy.get("[data-test=sidebar_inventory_save_new]").click({force: true})
 
         cy.contains("20")
-        cy.contains("Houston Warehouse")
+        cy.contains("Cargo")
         cy.contains("5")
     })
 
@@ -222,7 +225,7 @@ context("Inventory CRUD", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
                 cy.get("[data-test=action_" + itemId + "]").click()
-                cy.get("[data-test=action_" + itemId + "_3]").click()
+                cy.get("[data-test=action_" + itemId + "_4]").click()
             })
         })
 
