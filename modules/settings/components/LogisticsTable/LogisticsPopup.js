@@ -9,6 +9,7 @@ import { errorMessages, passwordValidationAnyChar } from '~/constants/yupValidat
 
 const { requiredMessage } = errorMessages
 import { Required } from '~/components/constants/layout'
+import { getSafe } from '~/utils/functions'
 
 import {
   closePopup,
@@ -18,12 +19,6 @@ import {
   getLogisticsAccounts
 } from '~/modules/settings/actions'
 import ErrorFocus from '~/components/error-focus'
-
-const validationSchema = Yup.object().shape({
-  providerIdentifier: Yup.string(requiredMessage).required(requiredMessage),
-  username: Yup.string(requiredMessage).required(requiredMessage),
-  password: passwordValidationAnyChar()
-})
 
 const initialValues = {
   providerIdentifier: '',
@@ -52,6 +47,21 @@ class LogisticsPopup extends Component {
       : initialValues
   }
 
+  getValidationSchema = popupValues => {
+    if (popupValues) {
+      return Yup.object().shape({
+        username: Yup.string(requiredMessage).required(requiredMessage),
+        password: passwordValidationAnyChar()
+      })
+    } else {
+      return Yup.object().shape({
+        providerIdentifier: Yup.string(requiredMessage).required(requiredMessage),
+        username: Yup.string(requiredMessage).required(requiredMessage),
+        password: passwordValidationAnyChar()
+      })
+    }
+  }
+
   render() {
     let {
       popupValues,
@@ -75,21 +85,27 @@ class LogisticsPopup extends Component {
         </Modal.Header>
         <Modal.Content>
           <Form
-            validationSchema={validationSchema}
+            validationSchema={this.getValidationSchema(popupValues)}
             enableReinitialize={true}
             validateOnChange={false}
             validateOnBlur={false}
             initialValues={this.getInitialValues()}
             onSubmit={async (values, { setSubmitting }) => {
               const apiKey = values.apiKey ? { apiKey: values.apiKey } : null
-              try {
-                const payload = {
-                  providerIdentifier: JSON.parse(values.providerIdentifier),
-                  username: values.username,
-                  password: values.password,
-                  ...apiKey
-                }
 
+              const payload = {
+                providerIdentifier: getSafe(() => popupValues.provider.identifierType, '')
+                  ? {
+                      type: popupValues.provider.identifierType,
+                      value: popupValues.provider.identifierValue
+                    }
+                  : JSON.parse(values.providerIdentifier),
+                username: values.username,
+                password: values.password,
+                ...apiKey
+              }
+
+              try {
                 if (popupValues) {
                   await updateLogisticsAccount(popupValues.id, payload)
                 } else {
