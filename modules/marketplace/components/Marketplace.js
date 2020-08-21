@@ -22,8 +22,6 @@ import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 
 const defaultHiddenColumns = [
-  'conformingIcon',
-  'expired',
   'origin',
   'expiration',
   'condition',
@@ -133,13 +131,39 @@ class Marketplace extends Component {
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
       {
         name: 'conformingIcon',
-        title: <RedTriangle className='grey' />,
+        title:
+          <Popup
+            header={
+              <FormattedMessage
+                id='marketplace.tooltipConformingIcon'
+                defaultMessage='Shows if Product Offer has set conforming attribute'
+              />
+            }
+            trigger={
+              <div>
+                <RedTriangle className='grey' />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />,
         width: 45,
         align: 'center'
       },
       {
         name: 'expired',
-        title: <ClockIcon className='grey' />,
+        title:
+          <Popup
+            header={
+              <FormattedMessage
+                id='marketplace.tooltipExpired'
+                defaultMessage='Shows if Product Offer is expired'
+              />
+            }
+            trigger={
+              <div>
+                <ClockIcon className='grey' />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />,
         caption: (
           <FormattedMessage id='global.expirationStatusIcon' defaultMessage='Expiration Status Icon'>
             {text => text}
