@@ -113,6 +113,8 @@ const BottomButtons = styled.div`
   padding: 10px 25px;
   margin-top: 0px;
   box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
+  background: #2599d5;
+  color: #ffffff;
 `
 
 const CustomHighSegment = styled(HighSegment)`
