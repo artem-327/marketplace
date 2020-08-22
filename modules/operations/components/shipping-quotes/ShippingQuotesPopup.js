@@ -27,6 +27,7 @@ const initialFormValues = {
 const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
+      validityDate: dateValidation(false),
       carrierName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       quoteId: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       price: Yup.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)

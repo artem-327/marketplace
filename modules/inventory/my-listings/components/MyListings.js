@@ -23,8 +23,6 @@ import { ArrayToFirstItem } from '~/components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
 
 const defaultHiddenColumns = [
-  'expired',
-  'productStatus',
   'productNumber',
   'warehouse',
   'cost',
@@ -111,7 +109,20 @@ class MyListings extends Component {
     columns: [
       {
         name: 'expired',
-        title: <ClockIcon className='grey' />,
+        title:
+          <Popup
+            header={
+              <FormattedMessage
+                id='myInventory.tooltipExpired'
+                defaultMessage='Shows if Product offer is expired'
+              />
+            }
+            trigger={
+              <div>
+                <ClockIcon className='grey' />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />,
         caption: (
           <FormattedMessage id='global.expirationStatusIcon' defaultMessage='Expiration Status Icon'>
             {text => text}
@@ -122,7 +133,20 @@ class MyListings extends Component {
       },
       {
         name: 'productStatus',
-        title: <FileTextIcon className='grey' />,
+        title:
+          <Popup
+            header={
+              <FormattedMessage
+                id='myInventory.tooltipProductStatus'
+                defaultMessage="Shows if Product offer's Generic Product is published and offer is visible on the Marketplace"
+              />
+            }
+            trigger={
+              <div>
+                <FileTextIcon className='grey' />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />,
         caption: (
           <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon'>
             {text => text}

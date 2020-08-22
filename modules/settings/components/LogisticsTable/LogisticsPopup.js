@@ -9,6 +9,7 @@ import { errorMessages, passwordValidationAnyChar } from '~/constants/yupValidat
 
 const { requiredMessage } = errorMessages
 import { Required } from '~/components/constants/layout'
+import { getSafe } from '~/utils/functions'
 
 import {
   closePopup,
@@ -19,17 +20,12 @@ import {
 } from '~/modules/settings/actions'
 import ErrorFocus from '~/components/error-focus'
 
-const validationSchema = Yup.object().shape({
-  providerIdentifier: Yup.string(requiredMessage).required(requiredMessage),
-  username: Yup.string(requiredMessage).required(requiredMessage),
-  password: passwordValidationAnyChar()
-})
-
 const initialValues = {
   providerIdentifier: '',
   providerIdentifierName: '',
   username: '',
-  password: ''
+  password: '',
+  apiKey: ''
 }
 
 class LogisticsPopup extends Component {
@@ -42,12 +38,28 @@ class LogisticsPopup extends Component {
     return popupValues
       ? {
           providerIdentifier: JSON.stringify(popupValues.provider.identifier),
-          providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifier.value})`,
+          providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifierValue})`,
           username:
             popupValues.accountInfos && popupValues.accountInfos.length ? popupValues.accountInfos[0].username : '',
-          password: ''
+          password: '',
+          apiKey: popupValues.accountInfos && popupValues.accountInfos.length ? popupValues.accountInfos[0].apiKey : ''
         }
       : initialValues
+  }
+
+  getValidationSchema = popupValues => {
+    if (popupValues) {
+      return Yup.object().shape({
+        username: Yup.string(requiredMessage).required(requiredMessage),
+        password: passwordValidationAnyChar()
+      })
+    } else {
+      return Yup.object().shape({
+        providerIdentifier: Yup.string(requiredMessage).required(requiredMessage),
+        username: Yup.string(requiredMessage).required(requiredMessage),
+        password: passwordValidationAnyChar()
+      })
+    }
   }
 
   render() {
@@ -73,19 +85,27 @@ class LogisticsPopup extends Component {
         </Modal.Header>
         <Modal.Content>
           <Form
-            validationSchema={validationSchema}
+            validationSchema={this.getValidationSchema(popupValues)}
             enableReinitialize={true}
             validateOnChange={false}
             validateOnBlur={false}
             initialValues={this.getInitialValues()}
             onSubmit={async (values, { setSubmitting }) => {
-              try {
-                const payload = {
-                  providerIdentifier: JSON.parse(values.providerIdentifier),
-                  username: values.username,
-                  password: values.password
-                }
+              const apiKey = values.apiKey ? { apiKey: values.apiKey } : null
 
+              const payload = {
+                providerIdentifier: getSafe(() => popupValues.provider.identifierType, '')
+                  ? {
+                      type: popupValues.provider.identifierType,
+                      value: popupValues.provider.identifierValue
+                    }
+                  : JSON.parse(values.providerIdentifier),
+                username: values.username,
+                password: values.password,
+                ...apiKey
+              }
+
+              try {
                 if (popupValues) {
                   await updateLogisticsAccount(popupValues.id, payload)
                 } else {
@@ -137,6 +157,16 @@ class LogisticsPopup extends Component {
                         }}
                       />
                     )}
+                    <Input
+                      name='apiKey'
+                      label={<>{formatMessage({ id: 'logistics.label.apiKey', defaultMessage: 'API key' })}</>}
+                      inputProps={{
+                        placeholder: formatMessage({
+                          id: 'logistics.placeholder.apiKey',
+                          defaultMessage: 'Enter API key'
+                        })
+                      }}
+                    />
                   </FormGroup>
 
                   <FormGroup widths='equal' data-test='settings_logistics_namePassword_inp'>

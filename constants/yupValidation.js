@@ -14,6 +14,7 @@ export const errorMessages = {
     <FormattedMessage id='validation.dateBefore' defaultMessage={`Date must be before ${date}`} values={{ date }} />
   ),
   mustBeInFuture: <FormattedMessage id='validation.dateInFuture' defaultMessage='Date must be in future' />,
+  mustBeInPast: <FormattedMessage id='validation.dateInPast' defaultMessage='Date must be in past' />,
   dateNotInPast: <FormattedMessage id='validation.dateNotInPast' defaultMessage='Date must not be in past' />,
   invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
   invalidEmail: <FormattedMessage id='validation.invalidEmail' defaultMessage='Invalid e-mail address' />,
@@ -90,7 +91,7 @@ export const errorMessages = {
     />
   ),
   integer: <FormattedMessage id='validation.integer' defaultMessage='Number value should be integer' />,
-  invalidDateFormat: (example = 'YYYY-MM-DD') => (
+  invalidDateFormat: (example = 'MM/DD/YYYY') => (
     <FormattedMessage
       id='validation.invalidDateFormat'
       defaultMessage={`Invalid date format. Date should match ${example}`}
@@ -179,7 +180,7 @@ export const phoneValidation = () =>
 export const dateValidation = (required = true) => {
   let isValid = Yup.string().test(
     'date-format',
-    errorMessages.invalidDateFormat(),
+    errorMessages.invalidDateFormat(getLocaleDateFormat()),
     value => moment(value, getLocaleDateFormat(), true).isValid() || (!required && !value)
   )
 
@@ -239,7 +240,7 @@ export const addressValidationSchema = () => {
   )
 }
 
-export const dwollaControllerValidation = (fullSsnInput) =>
+export const dwollaControllerValidation = fullSsnInput =>
   Yup.object().shape({
     address: addressValidationSchema(),
     dateOfBirth: dateOfBirthValidation(),
@@ -249,12 +250,11 @@ export const dwollaControllerValidation = (fullSsnInput) =>
     //   country: Yup.string().required(errorMessages.requiredMessage),
     //   number: Yup.string().required(errorMessages.requiredMessage),
     // }),
-    ssn: (fullSsnInput
+    ssn: fullSsnInput
       ? ssnValidation()
       : Yup.string()
-        .test('num-length', errorMessages.exactDigits(4), value => /^[0-9]{4}$/.test(value))
-        .required(errorMessages.requiredMessage)
-      ),
+          .test('num-length', errorMessages.exactDigits(4), value => /^[0-9]{4}$/.test(value))
+          .required(errorMessages.requiredMessage),
     jobTitle: Yup.string().trim().required(errorMessages.requiredMessage)
   })
 
@@ -265,7 +265,7 @@ export const dateOfBirthValidation = (minimumAge = 18) =>
       errorMessages.aboveAge(minimumAge),
       val => moment().diff(getStringISODate(val), 'years') >= minimumAge
     )
-    .test('date-format', errorMessages.invalidDateFormat(), value =>
+    .test('date-format', errorMessages.invalidDateFormat(getLocaleDateFormat()), value =>
       moment(value, getLocaleDateFormat(), true).isValid()
     )
     .required(errorMessages.requiredMessage)

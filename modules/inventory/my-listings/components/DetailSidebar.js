@@ -54,7 +54,7 @@ import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import ProdexGrid from '~/components/table'
 import * as val from 'yup'
-import { errorMessages, dateBefore } from '~/constants/yupValidation'
+import { errorMessages, dateBefore, dateValidation } from '~/constants/yupValidation'
 import moment from 'moment'
 import UploadAttachment from '../../components/upload/UploadAttachment'
 import { withDatagrid } from '~/modules/datagrid'
@@ -314,16 +314,28 @@ const validationScheme = val.object().shape({
       is: false,
       then: val.string().required(errorMessages.requiredNonConforming)
     }),
-    expirationDate: val.string().when('doesExpire', {
-      is: true,
-      then: val
+    expirationDate: dateValidation(false).concat(
+      val.string().when('doesExpire', {
+        is: true,
+        then: val
+          .string()
+          .test(
+            'min-date',
+            errorMessages.mustBeInFuture,
+            val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
+          )
+      })
+    ),
+    lotExpirationDate: dateValidation(false),
+    lotManufacturedDate: dateValidation(false).concat(
+      val
         .string()
         .test(
-          'min-date',
-          errorMessages.mustBeInFuture,
-          val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
+          'max-date',
+          errorMessages.mustBeInPast,
+          val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') > -1
         )
-    })
+    )
   }),
   priceTiers: val.object().shape({
     priceTiers: val.number(),
@@ -1588,9 +1600,9 @@ class DetailSidebar extends Component {
                                               inputProps={{
                                                 disabled:
                                                   !values.edit.doesExpire || (sidebarValues && sidebarValues.grouped),
-                                                'data-test': 'sidebar_detail_expiration_date'
+                                                'data-test': 'sidebar_detail_expiration_date',
                                                 //! ! crashes on component calendar open if expirationDate is in past:
-                                                //! ! minDate: moment().add(1, 'days')
+                                                minDate: moment().add(1, 'days')
                                               }}
                                               name='edit.expirationDate'
                                             />
