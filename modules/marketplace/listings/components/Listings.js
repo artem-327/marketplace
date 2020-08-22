@@ -13,7 +13,6 @@ import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
-import Holds from '~/modules/marketplace/holds'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
@@ -74,11 +73,6 @@ const ClockIcon = styled(Clock)`
   }
 `
 
-const MarketplaceTab = styled(Tab)`
-  flex-grow: 1;
-  flex-shrink: 1;
-`
-
 const CustomDiv = styled.div`
   white-space: nowrap;
   overflow: hidden;
@@ -123,7 +117,7 @@ const FiltersRow = styled.div`
   margin-bottom: -5px;
 `
 
-class Marketplace extends Component {
+class Listings extends Component {
   state = {
     columns: [
       { name: 'productGroupName', disabled: true },
@@ -318,10 +312,10 @@ class Marketplace extends Component {
   }
 
   componentDidMount() {
-    const { tableHandlersFilters } = this.props
+    const { tableHandlersFiltersListings } = this.props
 
-    if (tableHandlersFilters) {
-      this.setState({ filterValues: tableHandlersFilters }, () => {
+    if (tableHandlersFiltersListings) {
+      this.setState({ filterValues: tableHandlersFiltersListings }, () => {
         const filter = {
           ...this.state.filterValues,
           ...(!!this.state.filterValues.SearchByNamesAndTags && {
@@ -339,14 +333,14 @@ class Marketplace extends Component {
     const { sidebarChanged } = this.props
     let { isOpen, isHoldRequest } = this.props.sidebar
 
-    this.props.handleVariableSave('tableHandlersFilters', this.state.filterValues)
+    this.props.handleVariableSave('tableHandlersFiltersListings', this.state.filterValues)
     if (isOpen || isHoldRequest) sidebarChanged({ isHoldRequest: false, isOpen: false })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter, datagridFilterReload, 'marketplace')
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'marketplaceListings')
     }
   }
 
@@ -444,7 +438,7 @@ class Marketplace extends Component {
     sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
-  renderTabMarketplace = () => {
+  render() {
     const {
       datagrid,
       intl,
@@ -453,7 +447,7 @@ class Marketplace extends Component {
       tutorialCompleted,
       isCompanyAdmin,
       sidebar: { openInfo },
-      tableHandlersFilters
+      tableHandlersFiltersListings
     } = this.props
     const { columns } = this.state
     let { formatMessage } = intl
@@ -491,14 +485,14 @@ class Marketplace extends Component {
     }
 
     return (
-      <>
+      <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
         {!tutorialCompleted && <Tutorial marginMarketplace />}
         <div style={{ padding: '10px 1px' }}>
           <CustomRowDiv>
             <CustomSearchNameTags>
               <SearchByNamesAndTags
                 onChange={this.SearchByNamesAndTagsChanged}
-                initFilterState={getSafe(() => tableHandlersFilters.SearchByNamesAndTags, null)}
+                initFilterState={getSafe(() => tableHandlersFiltersListings.SearchByNamesAndTags, null)}
                 filterApply={false}
                 isMarketplace={true}
               />
@@ -507,23 +501,22 @@ class Marketplace extends Component {
             <div>
               <div className='column'>
                 <FiltersRow>
-                  <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
+                  <FilterTags datagrid={datagrid} data-test='marketplace_listings_remove_filter' />
                 </FiltersRow>
               </div>
             </div>
           </CustomRowDiv>
         </div>
 
-        <div class='flex stretched marketplace-wrapper' style={{ padding: '10px 0' }}>
+        <div className='flex stretched marketplace-wrapper' style={{ padding: '10px 0' }}>
           <ProdexGrid
             defaultHiddenColumns={defaultHiddenColumns}
-            tableName='marketplace_grid'
+            tableName='marketplace_listings_grid'
             {...datagrid.tableProps}
             rows={rows}
             columns={columns}
             groupBy={['productNumber']}
             shrinkGroups={true}
-            // sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
                 .groupBy('productGroupName')
@@ -556,67 +549,26 @@ class Marketplace extends Component {
                 this.tableRowClicked(row.id, false, true)
               }
             }}
-            data-test='marketplace_row_action'
+            data-test='marketplace_listings_row_action'
             rowActions={rowActions}
           />
         </div>
         <AddCart openInfo={openInfo} />
-      </>
-    )
-  }
-
-  render() {
-    const { activeIndex } = this.props
-
-    const panes = [
-      {
-        menuItem: (
-          <MenuLink to='/marketplace/all' data-test='marketplace_submenu_tab_marketplace'>
-            MARKETPLACE
-          </MenuLink>
-        ),
-        render: () => <>{this.renderTabMarketplace()}</>
-      },
-      // {
-      //   menuItem: <MenuLink to='/marketplace/wanted-board' data-test='marketplace_submenu_tab_wanted_board'>WANTED BOARD</MenuLink>,
-      //   render: () => <>Tab 2 Content</>
-      // },
-      {
-        menuItem: (
-          <MenuLink to='/marketplace/holds' data-test='marketplace_submenu_tab_holds'>
-            HOLDS
-          </MenuLink>
-        ),
-        render: () => <>{<Holds />}</>
-      }
-    ]
-    return (
-      <>
-        <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
-          <MarketplaceTab
-            activeIndex={activeIndex}
-            className='marketplace-container'
-            menu={{ secondary: true, pointing: true }}
-            panes={panes}
-          />
-        </Container>
-      </>
+      </Container>
     )
   }
 }
 
-Marketplace.propTypes = {
-  activeIndex: number,
+Listings.propTypes = {
   isMerchant: boolean,
   isCompanyAdmin: boolean,
   tutorialCompleted: boolean
 }
 
-Marketplace.defaultProps = {
-  activeIndex: 0,
+Listings.defaultProps = {
   isMerchant: false,
   isCompanyAdmin: false,
   tutorialCompleted: false
 }
 
-export default injectIntl(Marketplace)
+export default injectIntl(Listings)

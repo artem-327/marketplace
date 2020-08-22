@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
-import { Marketplace } from '~/modules/marketplace'
+import Holds from '~/modules/marketplace/holds'
 import { injectIntl } from 'react-intl'
 
 class HoldsPage extends Component {
@@ -11,8 +11,8 @@ class HoldsPage extends Component {
     } = this.props
 
     return (
-      <Layout title={formatMessage({ id: 'hold.holdRequest', defaultMessage: 'Hold Requests' })}>
-        <Marketplace activeIndex={1} />
+      <Layout title={formatMessage({ id: 'hold.holds', defaultMessage: 'Holds' })}>
+        <Holds />
       </Layout>
     )
   }

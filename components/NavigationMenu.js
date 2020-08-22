@@ -30,8 +30,6 @@ import TabsOperations from '~/modules/operations/components/Tabs'
 import TabsProducts from '~/modules/products/components/Tabs'
 import TabsCompanies from '~/modules/companies/components/Tabs'
 
-import { InventoryFilter, Filter, OrderFilter } from '~/modules/filter' //! ! smazat
-
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
     <Dropdown
@@ -63,7 +61,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/wanted-board/bids-received', false),
     inventory: getSafe(() => Router.router.pathname === '/inventory/my-products', false) ||
       getSafe(() => Router.router.pathname === '/inventory/my-listings', false),
-    openedFilterMarketplace: true
+    marketplace: getSafe(() => Router.router.pathname === '/marketplace/listings', false) ||
+      getSafe(() => Router.router.pathname === '/marketplace/holds', false)
   }
 
   componentDidMount() {
@@ -89,21 +88,22 @@ class Navigation extends Component {
       tabsNames,
       currentSettingsTab
     } = this.props
-    if (pathname === to) {
+    /* // ! ! if (pathname === to) {
       switch (asPath) {
+        case '/inventory/my':
+          this.setState(prevState => ({ // ! !
+            settings: false,
+            orders: false
+          }))
+          break
         case '/marketplace/all':
           this.setState(prevState => ({
-            openedFilterMarketplace: !prevState.openedFilterMarketplace,
             settings: false,
             orders: false
           }))
           break
       }
-    } else {
-      this.setState({
-        openedFilterMarketplace: false
-      })
-    }
+    }*/
 
     if (pathname === '/settings' && tab) {
       const newTab = tabsNames.find(t => t.type === tab)
@@ -155,7 +155,6 @@ class Navigation extends Component {
     }
     // toggle dropdown state
     this.setState({
-      openedFilterMarketplace: false,
       orders: false,
       settings: false,
       admin: false,
@@ -165,6 +164,7 @@ class Navigation extends Component {
       manageGuests: false,
       wantedBoard: false,
       inventory: false,
+      marketplace: false,
       [type]: !typeState
     })
 
@@ -227,7 +227,6 @@ class Navigation extends Component {
       intl: { formatMessage },
       router: { pathname, asPath },
       collapsedMenu,
-      activeMarketplaceFilter,
       isClientCompanyAdmin,
       isClientCompanyManager
     } = this.props
@@ -242,8 +241,8 @@ class Navigation extends Component {
       companies,
       manageGuests,
       inventory,
-      wantedBoard,
-      openedFilterMarketplace
+      marketplace,
+      wantedBoard
     } = this.state
 
     const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className, dataTest }) => {
@@ -294,35 +293,46 @@ class Navigation extends Component {
                   as={MenuLink}
                   to='/inventory/my-products'
                   dataTest='navigation_menu_inventory_my_products_drpdn'>
-                  {formatMessage({ id: 'navigation.InventoryMyProducts', defaultMessage: 'My Products' })}
+                  {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
                 </Dropdown.Item>
                 <Dropdown.Item
                   as={MenuLink}
                   to='/inventory/my-listings'
                   dataTest='navigation_menu_inventory_my_listings_drpdn'>
-                  {formatMessage({ id: 'navigation.InventoryMyListings', defaultMessage: 'My Listings' })}
+                  {formatMessage({ id: 'navigation.inventoryMyListings', defaultMessage: 'My Listings' })}
                 </Dropdown.Item>
               </PerfectScrollbar>
             </Dropdown.Menu>
           </DropdownItem>
         )}
-        <MenuLink
-          to='/marketplace/all'
-          dataTest='navigation_menu_marketplace_drpdn'
-          className={`menu ${
-            !collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? 'opened' : ''
-          }`}>
-          <>
-            <ShoppingBag size={22} />
-            {formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
-            {!collapsedMenu && asPath === '/marketplace/all' && activeMarketplaceFilter ? (
-              <div className='active-filter'>
-                <Sliders />
-              </div>
-            ) : null}
-          </>
-        </MenuLink>
-        {!collapsedMenu && openedFilterMarketplace && asPath === '/marketplace/all' ? <Filter /> : null}
+
+        <DropdownItem
+          icon={<ShoppingBag size={22} />}
+          text={formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+          className={marketplace ? 'opened' : null}
+          opened={marketplace}
+          onClick={() => this.toggleOpened('marketplace')}
+          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+          refId={'marketplace'}
+          data-test='navigation_menu_marketplace_drpdn'
+        >
+          <Dropdown.Menu data-test='navigation_menu_marketplace_menu'>
+            <PerfectScrollbar>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/marketplace/listings'
+                dataTest='navigation_menu_marketplace_listings_drpdn'>
+                {formatMessage({ id: 'navigation.marketplaceListings', defaultMessage: 'Listings' })}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/marketplace/holds'
+                dataTest='navigation_menu_marketplace_holds_drpdn'>
+                {formatMessage({ id: 'navigation.marketplaceHolds', defaultMessage: 'Holds' })}
+              </Dropdown.Item>
+            </PerfectScrollbar>
+          </Dropdown.Menu>
+        </DropdownItem>
 
         <DropdownItem
           icon={<Grid size={22} />}
@@ -612,7 +622,6 @@ export default withAuth(
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
         isClientCompanyManager: getSafe(() => store.auth.identity.isClientCompanyManager, false),
         collapsedMenu: store.layout.collapsedMenu,
-        activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
         isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator')
       }),
       {

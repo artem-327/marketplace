@@ -23,7 +23,7 @@ export const initialState = {
   datagridFilter: { filters: [] },
   datagridFilterReload: false,
   datagridFilterUpdate: false,
-  tableHandlersFilters: null
+  tableHandlersFiltersListings: null
 }
 
 export default function reducer(state = initialState, action) {

@@ -7,7 +7,7 @@ export const initialState = {
   datagridFilterUpdate: false,
   typeHolds: 'my',
   countHolds: '',
-  tableHandlersFilters: null
+  tableHandlersFiltersHolds: null
 }
 
 export default function reducer(state = initialState, action) {

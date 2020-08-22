@@ -1,8 +1,8 @@
-import MarketplaceContainer from './components/MarketplaceContainer'
+import ListingsContainer from './components/ListingsContainer'
 import { DatagridProvider } from '~/modules/datagrid'
 import { CompanyProductInfo } from '~/modules/company-product-info'
 
-export const Marketplace = props => {
+export const Listings = props => {
   const urlApiConfig =
     {
       url: '/prodex/api/product-offers/broadcasted/datagrid/',
@@ -40,7 +40,7 @@ export const Marketplace = props => {
     <>
       <CompanyProductInfo fromMarketPlace />
       <DatagridProvider apiConfig={urlApiConfig} autoRefresh preserveFilters skipInitLoad>
-        <MarketplaceContainer {...props} />
+        <ListingsContainer {...props} />
       </DatagridProvider>
     </>
   )

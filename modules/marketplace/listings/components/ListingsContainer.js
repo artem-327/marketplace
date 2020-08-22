@@ -6,8 +6,8 @@ import moment from 'moment/moment'
 import { getLocationString } from '~/src/utils/functions'
 import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'
-import Marketplace from './Marketplace'
-import * as Actions from '../actions'
+import Listings from './Listings'
+import * as Actions from '../../actions'
 import { sidebarChanged } from '~/src/modules/cart'
 import { getProductOffer } from '~/modules/purchase-order/actions'
 import { openPopup, closePopup } from '~/modules/company-product-info/actions'
@@ -104,5 +104,5 @@ export default withDatagrid(
     closePopup,
     getProductOffer,
     applyFilter
-  })(Marketplace)
+  })(Listings)
 )

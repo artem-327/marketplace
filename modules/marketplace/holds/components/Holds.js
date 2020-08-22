@@ -119,11 +119,11 @@ class Holds extends Component {
   }
 
   componentDidMount() {
-    const { tableHandlersFilters } = this.props
+    const { tableHandlersFiltersHolds } = this.props
 
-    if (tableHandlersFilters) {
-      this.setState({ filterValue: tableHandlersFilters })
-      this.handleFiltersValue(tableHandlersFilters)
+    if (tableHandlersFiltersHolds) {
+      this.setState({ filterValue: tableHandlersFiltersHolds })
+      this.handleFiltersValue(tableHandlersFiltersHolds)
     } else {
       this.handleFiltersValue(this.state.filterValue)
     }
@@ -135,7 +135,7 @@ class Holds extends Component {
   }, 250)
 
   componentWillUnmount() {
-    this.props.handleVariableSave('tableHandlersFilters', this.state.filterValue)
+    this.props.handleVariableSave('tableHandlersFiltersHolds', this.state.filterValue)
   }
 
   handleFilterChange = (e, data) => {
@@ -326,7 +326,7 @@ class Holds extends Component {
               text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
             }))
           }}
-          tableName='hold_grid'
+          tableName='marketplace_hold_grid'
           {...datagrid.tableProps}
           rows={rows}
           columns={columns}
@@ -342,7 +342,7 @@ class Holds extends Component {
               }))
               .value()
           }
-          data-test='hold_row_action'
+          data-test='marketplace_holds_row_action'
           rowActions={rowActions}
         />
       </Container>
