@@ -134,7 +134,8 @@ export const bankAccountsConfig = {
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: false,
-    documentStatus: false
+    documentStatus: false,
+    registerVellociButton: true
   },
   deactivated: {
     registerButton: true,
@@ -144,7 +145,8 @@ export const bankAccountsConfig = {
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: false,
-    documentStatus: false
+    documentStatus: false,
+    registerVellociButton: true
   },
   retry: {
     registerButton: true,
@@ -154,7 +156,8 @@ export const bankAccountsConfig = {
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: false,
-    documentStatus: false
+    documentStatus: false,
+    registerVellociButton: true
   },
   document: {
     registerButton: false,
@@ -164,7 +167,8 @@ export const bankAccountsConfig = {
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: true,
-    documentStatus: true
+    documentStatus: true,
+    registerVellociButton: true
   },
   documentOwner: {
     registerButton: false,
@@ -176,7 +180,8 @@ export const bankAccountsConfig = {
     uploadDocumentsButton: false,
     documentStatus: true,
     uploadOwnerDocumentsButton: true,
-    documentOwner: true
+    documentOwner: true,
+    registerVellociButton: true
   },
   verified: {
     registerButton: false,
@@ -186,7 +191,8 @@ export const bankAccountsConfig = {
     accountStatus: false,
     bankAccountList: true,
     uploadDocumentsButton: false,
-    documentStatus: false
+    documentStatus: false,
+    registerVellociButton: true
   },
   suspended: {
     registerButton: false,
@@ -196,7 +202,8 @@ export const bankAccountsConfig = {
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: false,
-    documentStatus: false
+    documentStatus: false,
+    registerVellociButton: true
   }
 }
 

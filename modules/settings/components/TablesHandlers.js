@@ -156,6 +156,7 @@ const textsTable = {
   },
   'bank-accounts': {
     BtnAddText: 'settings.tables.bankAccounts.buttonAdd',
+    RgsVellociText: 'settings.tables.bankAccounts.buttonRegisterVelloci',
     SearchText: 'settings.tables.bankAccounts.search'
   },
   'delivery-addresses': {
@@ -542,6 +543,21 @@ class TablesHandlers extends Component {
                   <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
                     <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                  </Button>
+                </div>
+              )}
+              {(!bankAccTab || bankAccounts.registerVellociButton) && (
+                <div className='column'>
+                  <Button
+                    primary
+                    onClick={() => Router.push('/velloci-register')}
+                    data-test='settings_open_register_velloci_btn'>
+                    <PlusCircle />
+                    <FormattedMessage
+                      id='settings.tables.bankAccounts.registerVelloci'
+                      defaultMessage='Register Velloci'>
+                      {text => text}
+                    </FormattedMessage>
                   </Button>
                 </div>
               )}
