@@ -85,7 +85,7 @@ const SettingButton = styled(Settings)`
   height: 19px;
   font-size: 20px;
   line-height: 20px;
-  
+
   &:before {
     padding: 10px 16px 10px 10px;
     background-color: white !important;
@@ -105,6 +105,29 @@ const DivScrollDownText = styled.div`
   margin: 0 10px 0 10px;
 `
 
+const ModalHeader = styled(Modal.Header)`
+  font-size: 14px !important;
+  font-weight: bold !important;
+`
+
+const TableRow = styled(Table.Row)`
+  .ui.dropdown .menu > .item:hover {
+    background: #2599d5 !important;
+    color: #ffffff !important;
+  }
+  .ui.dropdown .menu {
+    color: #848893 !important;
+    line-height: 2.14 !important;
+  }
+`
+
+const CustomCheckbox = styled(Checkbox)`
+  .ui.checkbox input:checked ~ .box:after,
+  .ui.checkbox input:checked ~ label:after {
+    color: #2599d5 !important;
+  }
+`
+
 const ColumnsSetting = ({ onClick }) => <SettingButton onClick={onClick} data-test='table_setting_btn' name='setting' />
 
 const getSettingColumn = (columns, formatMessage, columnWidth) => {
@@ -113,7 +136,7 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
       {columns.map(c => {
         if (c.name) {
           return (
-            <Checkbox
+            <CustomCheckbox
               key={c.name}
               disabled={c.disabled}
               name={c.name}
@@ -126,14 +149,13 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
                       defaultMessage: c.title.props.defaultMessage
                     })
                   : c.caption
-                    ? (typeof c.caption === 'string'
-                        ? c.caption
-                        : formatMessage({
-                           id: c.caption.props.id,
-                            defaultMessage: c.caption.props.defaultMessage
-                        })
-                    )
+                  ? typeof c.caption === 'string'
+                    ? c.caption
                     : formatMessage({
+                        id: c.caption.props.id,
+                        defaultMessage: c.caption.props.defaultMessage
+                      })
+                  : formatMessage({
                       id: `global.${c.name}`,
                       defaultMessage: c.name
                     })
@@ -148,7 +170,7 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
 }
 
 const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open, formatMessage }) => {
-  const GridColumns = columns.length > 12 ? 2 : 1
+  const GridColumns = 2
   const modalWidth = GridColumns === 1 ? 300 : 500
   const columnWidth = GridColumns === 1 ? 16 : 8
 
@@ -157,6 +179,9 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
 
   return (
     <Modal open={open} closeIcon onClose={onClose} centered={false} style={{ width: modalWidth }}>
+      <ModalHeader>
+        <FormattedMessage id='settings.tableColumnSettings' defaultMessage='TABLE COLUMN SETTINGS' />
+      </ModalHeader>
       <Modal.Content>
         <Form
           initialValues={columns.reduce((acc, c) => {
@@ -192,6 +217,7 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
                   <Button
                     data-test='table_setting_save_btn'
                     primary
+                    style={{ backgroundColor: '#2599d5' }}
                     onClick={submitSettings}
                     inputProps={{ type: 'button' }}>
                     <FormattedMessage id='global.save' defaultMessage='Save'>
@@ -312,7 +338,7 @@ const Row = ({ tableRow, selected, onToggle, onClick, onRowClick, ...restProps }
     onClick && onClick(e, tableRow.row)
   }
   return (
-    <Table.Row
+    <TableRow
       {...restProps}
       onClick={rowAction}
       data-test='table_row_action'

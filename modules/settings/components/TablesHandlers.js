@@ -14,7 +14,6 @@ import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
-import { SETTINGS_CLOSE_UPLOAD_DOCUMENTS_POPUP_FULFILLED } from '../action-types'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
 
@@ -540,7 +539,7 @@ class TablesHandlers extends Component {
               )}
               {(!bankAccTab || bankAccounts.addButton) && (
                 <div className='column'>
-                  <Button primary onClick={() => openPopup()} data-test='settings_open_popup_btn'>
+                  <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
                     <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
