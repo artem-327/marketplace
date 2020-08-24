@@ -134,7 +134,8 @@ function mapStateToProps(store, { datagrid }) {
     unmappedRows: datagrid.rows,
     isOpenImportPopup: store.settings.isOpenImportPopup,
     isProductInfoOpen: store.companyProductInfo.isOpen,
-    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
+    activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false)
   }
 }
 

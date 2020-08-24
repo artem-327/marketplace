@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
-import { AlertTriangle, Clock } from 'react-feather'
+import { AlertTriangle, Clock, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number, boolean } from 'prop-types'
@@ -19,6 +19,8 @@ import { debounce } from 'lodash'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
+import { Filter } from '~/modules/filter'
+import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 
 const defaultHiddenColumns = [
   'origin',
@@ -77,30 +79,6 @@ const CustomDiv = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
-
-const CustomRowDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: -5px -5px;
-  flex-wrap: wrap;
-
-  > div {
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .column {
-    margin: 5px 5px;
-  }
-
-  input,
-  .ui.dropdown {
-    height: 40px;
-  }
 `
 
 const CustomSearchNameTags = styled.div`
@@ -447,7 +425,8 @@ class Listings extends Component {
       tutorialCompleted,
       isCompanyAdmin,
       sidebar: { openInfo },
-      tableHandlersFiltersListings
+      tableHandlersFiltersListings,
+      activeMarketplaceFilter
     } = this.props
     const { columns } = this.state
     let { formatMessage } = intl
@@ -485,18 +464,36 @@ class Listings extends Component {
     }
 
     return (
-      <Container fluid style={{ padding: '0 32px' }} className='flex stretched'>
+      <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
         {!tutorialCompleted && <Tutorial marginMarketplace />}
-        <div style={{ padding: '10px 1px' }}>
+        <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
-            <CustomSearchNameTags>
-              <SearchByNamesAndTags
-                onChange={this.SearchByNamesAndTagsChanged}
-                initFilterState={getSafe(() => tableHandlersFiltersListings.SearchByNamesAndTags, null)}
-                filterApply={false}
-                isMarketplace={true}
-              />
-            </CustomSearchNameTags>
+            <div>
+              <div className='column'>
+                <CustomSearchNameTags>
+                  <SearchByNamesAndTags
+                    onChange={this.SearchByNamesAndTagsChanged}
+                    initFilterState={getSafe(() => tableHandlersFiltersListings.SearchByNamesAndTags, null)}
+                    filterApply={false}
+                    isMarketplace={true}
+                  />
+                </CustomSearchNameTags>
+              </div>
+              <div className='column'>
+                <Button
+                  className='light'
+                  size='large'
+                  primary
+                  onClick={() => {console.log('Advanced Filters Button')}}
+                  data-test='my_inventory_advanced_filters_btn'>
+                  <Sliders />
+                  {formatMessage({
+                    id: 'myInventory.advancedFilters',
+                    defaultMessage: 'Advanced Filters'
+                  })}
+                </Button>
+              </div>
+            </div>
 
             <div>
               <div className='column'>
@@ -508,7 +505,7 @@ class Listings extends Component {
           </CustomRowDiv>
         </div>
 
-        <div className='flex stretched marketplace-wrapper' style={{ padding: '10px 0' }}>
+        <div className='flex stretched marketplace-wrapper' style={{ padding: '10px 5px' }}>
           <ProdexGrid
             defaultHiddenColumns={defaultHiddenColumns}
             tableName='marketplace_listings_grid'

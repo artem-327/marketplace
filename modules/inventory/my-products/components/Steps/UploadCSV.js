@@ -6,7 +6,7 @@ import Dropzone from 'react-dropzone'
 import { Grid, Segment, Header, Icon, Form } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 
-import { uploadCSVFile } from '../../../../settings/actions'
+import { uploadCSVFile } from '~/modules/settings/actions'
 
 const StyledDropzone = styled(Dropzone)`
   display: flex;

@@ -6,7 +6,7 @@ import { Label } from 'semantic-ui-react'
 
 import { withDatagrid } from '~/modules/datagrid'
 import Holds from './Holds'
-import * as Actions from '../actions'
+import * as Actions from '../../actions'
 import { FormattedUnit } from '~/components/formatted-messages'
 import { currency } from '~/constants'
 import { getSafe } from '~/utils/functions'
@@ -44,7 +44,7 @@ function getStyleLabel(status) {
 
 function mapStateToProps(store, { datagrid }) {
   return {
-    ...store.holds,
+    ...store.marketplace,
     isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
     isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
     isProductOfferManager: getSafe(() => store.auth.identity.isProductOfferManager, false),

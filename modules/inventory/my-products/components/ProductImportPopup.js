@@ -17,7 +17,7 @@ import {
   handleSaveMapCSV,
   postImportCompaniesCSV,
   changeCsvHeader
-} from '../../../settings/actions'
+} from '~/modules/settings/actions'
 
 import Upload from './Steps/UploadCSV'
 import Map from './Steps/Map'

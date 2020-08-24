@@ -23,7 +23,7 @@ import {
   postCSVMapCompanies,
   putCSVMapCompanies,
   deleteCSVMapCompanies
-} from '../../../../settings/actions'
+} from '~/modules/settings/actions'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import _invert from 'lodash/invert'

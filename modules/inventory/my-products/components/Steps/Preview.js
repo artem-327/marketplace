@@ -11,7 +11,7 @@ import {
   putCSVMapProductOffer,
   postCSVMapCompanies,
   putCSVMapCompanies
-} from '../../../../settings/actions'
+} from '~/modules/settings/actions'
 import _invert from 'lodash/invert'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'

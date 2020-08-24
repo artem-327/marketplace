@@ -24,14 +24,13 @@ import {
 } from 'semantic-ui-react'
 import { Formik } from 'formik'
 
-import { CompanyProductMixtures } from 'modules/inventory/my-products/components/ProductSidebar'
+import { CompanyProductMixtures } from '~/components/shared-components/'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 import { DisabledButtonWrapped } from '~/utils/components'
 import confirm from '~/src/components/Confirmable/confirm'
 import { Required } from '~/components/constants/layout'
 
 import {
-  closePopup,
   getProductsCatalogRequest,
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
@@ -43,7 +42,10 @@ import {
   removeAttachmentLinkCompanyProduct,
   loadFile,
   removeAttachment
-} from '../../../settings/actions'
+} from '~/modules/settings/actions'
+
+import { closePopup } from '../../actions'
+
 import { addAttachment } from '~/modules/inventory/actions'
 
 import { Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
@@ -373,7 +375,7 @@ class ProductSidebar extends React.Component {
   }
 
   handlerSubmit = async (values, actions) => {
-    const { popupValues, handleSubmitProductEditPopup, handleSubmitProductAddPopup, datagrid } = this.props
+    const { popupValues, handleSubmitProductEditPopup, handleSubmitProductAddPopup, datagrid, closePopup } = this.props
     delete values.casProducts
 
     const packagingDimensions = !getSafe(() => values.palletSaleOnly, false)
@@ -430,6 +432,7 @@ class ProductSidebar extends React.Component {
       }
       let status = popupValues ? 'productUpdated' : 'productCreated'
       datagrid.loadData()
+      closePopup()
     } catch (e) {
       console.error(e)
     } finally {
@@ -1446,7 +1449,7 @@ const mapDispatchToProps = {
   addAttachment,
   removeAttachment
 }
-const mapStateToProps = ({ settings, auth }) => {
+const mapStateToProps = ({ settings, simpleAdd, auth }) => {
   let settingsMap = new Map()
   if (getSafe(() => auth.identity.settings.length, false)) {
     for (let setting of auth.identity.settings) {
@@ -1456,7 +1459,7 @@ const mapStateToProps = ({ settings, auth }) => {
 
   return {
     attachments: getSafe(() => settings.popupValues.attachments, []),
-    popupValues: settings.popupValues,
+    popupValues: simpleAdd.popupValues,
     companyGenericProduct: settings.companyGenericProduct,
     companyGenericProductFetching: settings.companyGenericProductFetching,
     packagingType: settings.productsPackagingType,

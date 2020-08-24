@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { getCountHolds } from '~/modules/marketplace/holds/actions'
+import { getCountHolds } from '~/modules/marketplace/actions'
 import { Icon, Label } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { Clock } from 'react-feather'
@@ -42,7 +42,7 @@ class HoldIcon extends Component {
 
 const stateToProps = state => {
   return {
-    countHolds: getSafe(() => state.holds.countHolds, 0)
+    countHolds: getSafe(() => state.marketplace.countHolds, 0)
   }
 }
 

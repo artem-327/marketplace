@@ -10,7 +10,7 @@ import { debounce } from 'lodash'
 import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 import * as Yup from 'yup'
-import { CompanyProductMixtures } from 'modules/inventory/my-listings/components/SimpleEdit'
+import { CompanyProductMixtures } from '~/components/shared-components/'
 import { currency } from '~/constants/index'
 
 import { Datagrid } from '~/modules/datagrid'

@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 
-import * as Actions from '../../actions'
+import * as Actions from '~/modules/settings/actions'
+import { openPopup } from '../../actions'
 import Router from 'next/router'
 
 import confirm from '~/src/components/Confirmable/confirm'
@@ -15,6 +16,8 @@ import styled from 'styled-components'
 import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle } from 'react-feather'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { CustomRowDiv } from '../../constants/layout'
+import ProductSidebar from './ProductSidebar'
+import ProductImportPopup from './ProductImportPopup'
 
 const FileTextIcon = styled(FileText)`
   display: block;
@@ -215,128 +218,131 @@ class MyProducts extends Component {
       deleteProduct,
       intl,
       datagrid,
-      loading
+      loading,
+      isOpenPopup,
+      isOpenImportPopup
     } = this.props
 
     let { columns, filterValue } = this.state
     const { formatMessage } = intl
 
-    console.log('!!!!!!!!!! aaaaa filterValue', filterValue)
-
     return (
       <>
-        <Container fluid style={{ padding: '20px 32px 10px' }}>
-          <CustomRowDiv>
-            <div>
-              <div className='column'>
-                <Input
-                  style={{ width: '370px' }}
-                  icon='search'
-                  name='searchInput'
-                  value={filterValue ? filterValue.searchInput : ''}
-                  placeholder={formatMessage({
-                    id: 'settings.tables.products.search',
-                    defaultMessage: 'Search product by name, number ...'
-                  })}
-                  onChange={this.handleFilterChangeInputSearch}
-                />
+        <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
+          <div style={{ padding: '10px 0' }}>
+            <CustomRowDiv>
+              <div>
+                <div className='column'>
+                  <Input
+                    style={{ width: '370px' }}
+                    icon='search'
+                    name='searchInput'
+                    value={filterValue ? filterValue.searchInput : ''}
+                    placeholder={formatMessage({
+                      id: 'settings.tables.products.search',
+                      defaultMessage: 'Search product by name, number ...'
+                    })}
+                    onChange={this.handleFilterChangeInputSearch}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div>
-              <div className='column'>
-                <Dropdown
-                  style={{ width: '200px' }}
-                  placeholder={formatMessage({
-                    id: 'operations.tables.companyProductCatalog.MappedText',
-                    defaultMessage: 'Select mapped/unmapped only'
-                  })}
-                  selection
-                  options={[
-                    {
-                      key: 0,
-                      text: formatMessage({ id: 'operations.noSelection', defaultMessage: 'All' }),
-                      value: 'ALL'
-                    },
-                    {
-                      key: 1,
-                      text: formatMessage({ id: 'operations.unmapped', defaultMessage: 'Unmapped Only' }),
-                      value: 'UNMAPPED'
-                    },
-                    {
-                      key: 2,
-                      text: formatMessage({ id: 'operations.mappedOnly', defaultMessage: 'Mapped Only' }),
-                      value: 'MAPPED'
-                    }
-                  ]}
-                  name='productType'
-                  value={filterValue.productType}
-                  onChange={this.handleFilterChangeMappedUnmapped}
-                  data-test='settings_dwolla_unmapped_only_drpdn'
-                />
-              </div>
-              <div className='column'>
-                <Button
-                  className='light'
-                  size='large'
-                  primary
-                  onClick={() => openImportPopup()}
-                  data-test='settings_open_import_popup_btn'>
-                  <CornerLeftDown />
-                  <FormattedMessage id='settings.tables.products.buttonImport'>{text => text}</FormattedMessage>
-                </Button>
-              </div>
-              <div className='column'>
-                <Button
-                  className='secondary'
-                  size='large'
-                  primary
-                  onClick={() => openPopup()}
-                  data-test='settings_open_popup_btn'>
-                  <PlusCircle />
-                  <FormattedMessage id='settings.tables.products.buttonAdd'>{text => text}</FormattedMessage>
-                </Button>
-              </div>
-            </div>
-          </CustomRowDiv>
-        </Container>
-        <div className='flex stretched inventory-wrapper' style={{ padding: '10px 32px' }}>
-          <ProdexTable
-            tableName='settings_product_catalog'
-            {...datagrid.tableProps}
-            loading={datagrid.loading || loading}
-            rows={rows}
-            columns={columns}
-            style={{ marginTop: '5px' }}
-            defaultSorting={{
-              columnName: 'intProductName',
-              sortPath: 'CompanyProduct.intProductName',
-              direction: 'asc'
-            }}
-            rowActions={[
-              {
-                text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-                callback: row => openPopup(row.rawData)
-              },
-              {
-                text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-                callback: row => {
-                  return confirm(
-                    formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
-                    formatMessage(
+              <div>
+                <div className='column'>
+                  <Dropdown
+                    style={{ width: '200px', zIndex: '601 !important' }}
+                    placeholder={formatMessage({
+                      id: 'operations.tables.companyProductCatalog.MappedText',
+                      defaultMessage: 'Select mapped/unmapped only'
+                    })}
+                    selection
+                    options={[
                       {
-                        id: 'confirm.deleteItem',
-                        defaultMessage: `Do you really want to delete '${row.rawData.intProductName}'?`
+                        key: 0,
+                        text: formatMessage({ id: 'operations.noSelection', defaultMessage: 'All' }),
+                        value: 'ALL'
                       },
-                      { item: row.rawData.intProductName }
-                    )
-                  ).then(() => deleteProduct(row.id, row.intProductName))
+                      {
+                        key: 1,
+                        text: formatMessage({ id: 'operations.unmapped', defaultMessage: 'Unmapped Only' }),
+                        value: 'UNMAPPED'
+                      },
+                      {
+                        key: 2,
+                        text: formatMessage({ id: 'operations.mappedOnly', defaultMessage: 'Mapped Only' }),
+                        value: 'MAPPED'
+                      }
+                    ]}
+                    name='productType'
+                    value={filterValue.productType}
+                    onChange={this.handleFilterChangeMappedUnmapped}
+                    data-test='settings_dwolla_unmapped_only_drpdn'
+                  />
+                </div>
+                <div className='column'>
+                  <Button
+                    className='light'
+                    size='large'
+                    primary
+                    onClick={() => openImportPopup()}
+                    data-test='settings_open_import_popup_btn'>
+                    <CornerLeftDown />
+                    <FormattedMessage id='settings.tables.products.buttonImport'>{text => text}</FormattedMessage>
+                  </Button>
+                </div>
+                <div className='column'>
+                  <Button
+                    className='secondary'
+                    size='large'
+                    primary
+                    onClick={() => openPopup()}
+                    data-test='settings_open_popup_btn'>
+                    <PlusCircle />
+                    <FormattedMessage id='settings.tables.products.buttonAdd'>{text => text}</FormattedMessage>
+                  </Button>
+                </div>
+              </div>
+            </CustomRowDiv>
+          </div>
+          <div className='flex stretched inventory-wrapper' style={{ padding: '10px 0' }}>
+            <ProdexTable
+              tableName='inventory_my_products'
+              {...datagrid.tableProps}
+              loading={datagrid.loading || loading}
+              rows={rows}
+              columns={columns}
+              style={{ marginTop: '5px' }}
+              defaultSorting={{
+                columnName: 'intProductName',
+                sortPath: 'CompanyProduct.intProductName',
+                direction: 'asc'
+              }}
+              rowActions={[
+                {
+                  text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+                  callback: row => openPopup(row.rawData)
+                },
+                {
+                  text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+                  callback: row => {
+                    return confirm(
+                      formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
+                      formatMessage(
+                        {
+                          id: 'confirm.deleteItem',
+                          defaultMessage: `Do you really want to delete '${row.rawData.intProductName}'?`
+                        },
+                        { item: row.rawData.intProductName }
+                      )
+                    ).then(() => deleteProduct(row.id, row.intProductName))
+                  }
                 }
-              }
-            ]}
-          />
-        </div>
-        {/* ! ! Sidebar, import popup */}
+              ]}
+            />
+          </div>
+        </Container>
+        {isOpenImportPopup && (<ProductImportPopup />)}
+        {isOpenPopup && (<ProductSidebar />)}
       </>
     )
   }
@@ -398,6 +404,8 @@ const getProductStatus = product => {
 const mapStateToProps = (state, { datagrid }) => {
   return {
     ...state.simpleAdd,
+    isOpenImportPopup: state.settings.isOpenImportPopup,
+    isOpenPopup: state.simpleAdd.isOpenPopup,
     rows: datagrid.rows.map(product => {
       return {
         ...product,
@@ -450,4 +458,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(MyProducts)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openPopup })(injectIntl(MyProducts)))

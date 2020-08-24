@@ -267,9 +267,9 @@ class Holds extends Component {
       rowActions.push(buttonReject)
     }
     return (
-      <Container fluid style={{ padding: '10px 0' }} className='flex stretched'>
+      <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
         {!tutorialCompleted && <Tutorial marginHolds />}
-        <div style={{ padding: '0 0 6px' }}>
+        <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
               <div className='column'>
@@ -318,33 +318,35 @@ class Holds extends Component {
             </div>
           </CustomRowDiv>
         </div>
-        <ProdexGrid
-          groupActions={row => {
-            let values = row.key.split('_')
-            return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
-              ...a,
-              text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
-            }))
-          }}
-          tableName='marketplace_hold_grid'
-          {...datagrid.tableProps}
-          rows={rows}
-          columns={columns}
-          rowSelection
-          showSelectionColumn
-          onSelectionChange={selectedRows => this.setState({ selectedRows })}
-          getChildGroups={rows =>
-            _(rows)
-              .groupBy('productName')
-              .map(v => ({
-                key: `${v[0].productName}_${v.length}_${v[0].id}`,
-                childRows: v
+        <div className='flex stretched' style={{ padding: '10px 0' }}>
+          <ProdexGrid
+            groupActions={row => {
+              let values = row.key.split('_')
+              return groupActionsMarketplace(rows, values[values.length - 1], openPopup).map(a => ({
+                ...a,
+                text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
               }))
-              .value()
-          }
-          data-test='marketplace_holds_row_action'
-          rowActions={rowActions}
-        />
+            }}
+            tableName='marketplace_hold_grid'
+            {...datagrid.tableProps}
+            rows={rows}
+            columns={columns}
+            rowSelection
+            showSelectionColumn
+            onSelectionChange={selectedRows => this.setState({ selectedRows })}
+            getChildGroups={rows =>
+              _(rows)
+                .groupBy('productName')
+                .map(v => ({
+                  key: `${v[0].productName}_${v.length}_${v[0].id}`,
+                  childRows: v
+                }))
+                .value()
+            }
+            data-test='marketplace_holds_row_action'
+            rowActions={rowActions}
+          />
+        </div>
       </Container>
     )
   }

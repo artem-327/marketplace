@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import cn from 'classnames'
 import moment from 'moment/moment'
 import { debounce } from 'lodash'
-import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle } from 'react-feather'
+import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle, Sliders } from 'react-feather'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
@@ -21,6 +21,7 @@ import SearchByNamesAndTags from '~/modules/search'
 import ExportInventorySidebar from '~/modules/export-inventory/components/ExportInventory'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
+import { InventoryFilter } from '~/modules/filter'
 
 const defaultHiddenColumns = [
   'productNumber',
@@ -756,7 +757,8 @@ class MyListings extends Component {
       tutorialCompleted,
       isExportInventoryOpen,
       setExportSidebarOpenState,
-      myListingsFilters
+      myListingsFilters,
+      activeInventoryFilter
     } = this.props
     const { columns, clientMessage, request } = this.state
 
@@ -792,15 +794,33 @@ class MyListings extends Component {
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
         {!tutorialCompleted && <Tutorial />}
-        <Container fluid style={{ padding: '20px 32px 10px' }}>
+        <Container fluid style={{ padding: '20px 25px 10px' }}>
           <CustomRowDiv>
-            <CustomSearchNameTags>
-              <SearchByNamesAndTags
-                onChange={this.SearchByNamesAndTagsChanged}
-                initFilterState={getSafe(() => myListingsFilters.SearchByNamesAndTags, null)}
-                filterApply={false}
-              />
-            </CustomSearchNameTags>
+            <div>
+              <div className='column'>
+                <CustomSearchNameTags>
+                  <SearchByNamesAndTags
+                    onChange={this.SearchByNamesAndTagsChanged}
+                    initFilterState={getSafe(() => myListingsFilters.SearchByNamesAndTags, null)}
+                    filterApply={false}
+                  />
+                </CustomSearchNameTags>
+              </div>
+              <div className='column'>
+                <Button
+                  className='light'
+                  size='large'
+                  primary
+                  onClick={() => {console.log('Advanced Filters Button')}}
+                  data-test='my_inventory_advanced_filters_btn'>
+                  <Sliders />
+                  {formatMessage({
+                    id: 'myInventory.advancedFilters',
+                    defaultMessage: 'Advanced Filters'
+                  })}
+                </Button>
+              </div>
+            </div>
 
             {/*selectedRows.length > 0 ? (
               <Menu.Item>
@@ -864,7 +884,7 @@ class MyListings extends Component {
           </CustomRowDiv>
         </Container>
 
-        <div className='flex stretched inventory-wrapper' style={{ padding: '10px 32px' }}>
+        <div className='flex stretched inventory-wrapper' style={{ padding: '10px 30px' }}>
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}

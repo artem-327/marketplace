@@ -506,3 +506,17 @@ export function handleProductCatalogUnmappedValue(value) {
     })
   }
 }
+
+export function openPopup(rows = null) {
+  return {
+    type: AT.INVENTORY_OPEN_POPUP,
+    payload: rows
+  }
+}
+
+export function closePopup(rows = null) {
+  return {
+    type: AT.INVENTORY_CLOSE_POPUP,
+    payload: rows
+  }
+}

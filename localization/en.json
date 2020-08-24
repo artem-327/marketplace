@@ -866,6 +866,7 @@
   "global.property": "Property",
   "global.palletPkgMin": "Pallet Pkg Min",
   "global.palletPkgMax": "Pallet Pkg Max",
+  "global.advancedFilters": "Advanced Filters",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",

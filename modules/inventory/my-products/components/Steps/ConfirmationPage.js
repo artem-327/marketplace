@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/dist/client/router'
 
-import { closeImportPopup } from '../../../../settings/actions'
+import { closeImportPopup } from '~/modules/settings/actions'
 
 const StyledButton = styled(Button)`
   width: 200px;

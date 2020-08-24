@@ -307,7 +307,6 @@ class Settings extends Component {
       actionId,
       currentTab,
       isOpenPopup,
-      isOpenImportPopup,
       isOpenUploadDocumentsPopup,
       isDwollaOpenPopup,
       isUserAdmin,

@@ -8,7 +8,7 @@ import { getPricing, getLocationString } from '../../../../utils/functions'
 import { getSafe } from '~/utils/functions'
 import React from 'react'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
-import { createHold } from '~/modules/marketplace/holds/actions'
+import { createHold } from '~/modules/marketplace/actions'
 
 function mapStateToProps(store) {
   let pricing = getPricing(store.cart.offerDetail, store.cart.sidebar.pkgAmount)

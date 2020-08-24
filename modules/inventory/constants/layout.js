@@ -322,6 +322,7 @@ export const CustomRowDiv = styled.div`
     border-radius: 3px;
     font-weight: 500;
     color: #848893;
+    background: #ffffff;
     display: flex;
     align-items: center;
 
