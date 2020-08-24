@@ -1,7 +1,7 @@
 context("Generic Company Product CRUD", () => {
 
     let productId = null
-    let filter = [{"operator": "LIKE", "path": "CompanyGenericProduct.name", "values": ["%Test%"]}, {
+    let filter = [{ "operator": "LIKE", "path": "CompanyGenericProduct.name", "values": ["%Test%"] }, {
         "operator": "LIKE",
         "path": "CompanyGenericProduct.code",
         "values": ["%Test%"]
@@ -24,7 +24,7 @@ context("Generic Company Product CRUD", () => {
 
         cy.wait("@genericLoading")
         cy.waitForUI()
-        cy.viewport(2000, 3000)
+        cy.viewport(2000, 2500)
     })
 
     it("Creates a Generic Product", () => {
@@ -35,7 +35,7 @@ context("Generic Company Product CRUD", () => {
             })
         })
 
-        cy.get("[data-test=products_open_popup_btn]").click({force: true})
+        cy.get("[data-test=products_open_popup_btn]").click({ force: true })
 
         cy.get("#name").type("TestoEchoprod")
         cy.get("#code").type("TEST-05")
@@ -77,21 +77,80 @@ context("Generic Company Product CRUD", () => {
         cy.get("#code").should("have.value", "TEST-06")
     })
 
-    it("Checks error messages", () => {
-        cy.get("[data-test=products_open_popup_btn]").click()
+    it("Creates a alternative name", () => {
+        cy.route("POST", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameSaving")
+        cy.route("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
 
-        cy.get("#code").click()
-        cy.get("#name").click()
+        cy.searchInList("Test")
+        cy.openElement(productId, 4)
 
-        cy.get("[data-test='sidebar_inventory_save_new']").click()
+        cy.get("[data-test=settings_product_alt_name_add_btn]")
+            .click()
 
-        cy.get(".error")
-            .should("have.length", 5)
-            .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(At least one group should be selected)|(At least one company should be selected)/i)
-        })
+        cy.get("input[id='field_input_productAltNames[0].alternativeName']")
+            .type("QAonium")
+            .should("have.value", "QAonium")
+
+        cy.get("[data-test=settings_product_alt_name_save_0_btn]").click()
+
+        cy.wait("@nameSaving")
+
+        cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
+
+        cy.openElement(productId, 4)
+
+        cy.wait("@nameGetting")
+
+        cy.get("input[id='field_input_productAltNames[0].alternativeName']")
+            .should("have.value", "QAonium")
     })
 
+    it("Deletes a alternative name", () => {
+        cy.route("DELETE", "/prodex/api/company-generic-products/alternative-names/id/**").as("nameDelete")
+        cy.route("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
+
+        cy.searchInList("Test")
+        cy.openElement(productId, 4)
+
+        cy.get("input[id='field_input_productAltNames[0].alternativeName']")
+            .should("have.value", "QAonium")
+
+        cy.get("[data-test=settings_product_alt_name_delete_0_btn]").click()
+
+        cy.wait("@nameDelete")
+
+        cy.get("input[id='field_input_productAltNames[0].tradeName']")
+            .should("not.exist")
+
+        cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
+
+        cy.openElement(productId, 4)
+
+        cy.wait("@nameGetting")
+
+        cy.get("input[id='field_input_casAlternativeNames[0].alternativeName']")
+            .should("not.exist")
+    })
+
+    /* Causes Cypress to freeze
+        it("Checks error messages", () => {
+            cy.get("[data-test=products_open_popup_btn]").click()
+
+            cy.get("#name").click()
+            cy.waitForUI()
+            cy.get("#code").click()
+            cy.waitForUI()
+
+            cy.get("[data-test='sidebar_inventory_save_new']").click()
+            cy.waitForUI()
+
+            cy.get(".error")
+                .should("have.length", 5)
+                .find(".sui-error-message").each((element) => {
+                expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(At least one group should be selected)|(At least one company should be selected)/i)
+            })
+        })
+    */
     it("Deletes a product", () => {
         cy.searchInList("EchoProd")
 
