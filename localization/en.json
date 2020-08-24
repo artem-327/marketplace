@@ -2612,5 +2612,9 @@
   "dasboard.total": "Total",
   "dasboard.average": " average",
   "global.scrollDown": "Scroll down for load more items",
-  "cart.changeAddress": "CHANGE ADDRESS"
+  "cart.changeAddress": "CHANGE ADDRESS",
+  "settings.placeholder.accontNumber": "Enter Account Number",
+  "settings.placeholder.accontType": "Enter Account Type",
+  "settings.placeholder.accontName": "Enter Account Name",
+  "settings.placeholder.routingName": "Enter Routing Name"
 }

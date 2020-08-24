@@ -139,6 +139,13 @@ class BankAccountsSidebar extends React.Component {
                     </>
                   }
                   name='accountNumber'
+                  inputProps={{
+                    placeholder: formatMessage({
+                      id: 'settings.placeholder.accontNumber',
+                      defaultMessage: 'Enter Account Number'
+                    }),
+                    'data-test': 'settings_bank_account_sidebar_account_number_inpt'
+                  }}
                 />
                 <Dropdown
                   label={
@@ -149,7 +156,13 @@ class BankAccountsSidebar extends React.Component {
                   }
                   name='bankAccountType'
                   options={bankAccountType}
-                  inputProps={{ 'data-test': 'settings_bank_account_popup_type_drpdn' }}
+                  inputProps={{
+                    'data-test': 'settings_bank_account_sidebar_type_drpdn',
+                    placeholder: formatMessage({
+                      id: 'settings.placeholder.accontType',
+                      defaultMessage: 'Enter Account Type'
+                    })
+                  }}
                 />
               </FormGroup>
               <FormGroup widths='equal' data-test='settings_bank_account_nameNumber_inp'>
@@ -162,6 +175,13 @@ class BankAccountsSidebar extends React.Component {
                     </>
                   }
                   name='name'
+                  inputProps={{
+                    placeholder: formatMessage({
+                      id: 'settings.placeholder.accontName',
+                      defaultMessage: 'Enter Account Name'
+                    }),
+                    'data-test': 'settings_bank_account_sidebar_account_name_inpt'
+                  }}
                 />
                 <Input
                   type='text'
@@ -172,6 +192,13 @@ class BankAccountsSidebar extends React.Component {
                     </>
                   }
                   name='routingNumber'
+                  inputProps={{
+                    placeholder: formatMessage({
+                      id: 'settings.placeholder.routingName',
+                      defaultMessage: 'Enter Routing Name'
+                    }),
+                    'data-test': 'settings_bank_account_sidebar_routing_name_inpt'
+                  }}
                 />
               </FormGroup>
             </CustomSegmentContent>
