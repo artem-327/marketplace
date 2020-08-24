@@ -20,7 +20,7 @@ context("Document Types CRUD", () => {
         cy.wait("@typesLoad")
     })
 
-    it("Creates a tag", () => {
+    it("Creates a document", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'document-types', filter).then(itemId => {
                 if (itemId != null)
@@ -42,7 +42,7 @@ context("Document Types CRUD", () => {
         cy.get("#field_input_val0").should("have.value", "TYPE")
     })
 
-    it("Edits a tag", () => {
+    it("Edits a document", () => {
         cy.openElement(tagsId, 0)
 
         cy.get("#field_input_val0")
@@ -54,7 +54,7 @@ context("Document Types CRUD", () => {
 
         cy.openElement(tagsId, 0)
 
-        cy.get("#field_input_name").should("have.value", "TYPE2")
+        cy.get("#field_input_val0").should("have.value", "TYPE2")
     })
 
     it("Checks error message", () => {
@@ -69,7 +69,7 @@ context("Document Types CRUD", () => {
         })
     })
 
-    it("Deletes a tag", () => {
+    it("Deletes a document", () => {
         cy.openElement(tagsId, 1)
 
         cy.contains("Yes").click()

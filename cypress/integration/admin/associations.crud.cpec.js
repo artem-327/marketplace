@@ -78,7 +78,7 @@ context("Associations CRUD", () => {
         })
     })
 
-    it("Deletes a product", () => {
+    it("Deletes a association", () => {
         cy.searchInList("EchoProd")
 
         cy.openElement(productId, 1)

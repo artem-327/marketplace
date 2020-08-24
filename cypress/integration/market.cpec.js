@@ -19,7 +19,7 @@ context("Market place tests",() => {
         let searchedValue = null
 
         cy.server()
-        cy.route("GET","/prodex/api/company-generic-products/search/all-alternatives?**").as("search")
+        cy.route("GET","/prodex/api/product-groups/search?**").as("search")
 
         cy.waitForUI()
 
@@ -27,9 +27,8 @@ context("Market place tests",() => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 searchedValue = marketPlaceBody[0].pkgAvailable
 
-                cy.get("div[name=search]")
-                    .children("input")
-                    .type(marketPlaceBody[0].companyProduct.intProductName,{force: true} )
+                cy.get("[name='searchProductGroup']").children("input")
+                    .type(marketPlaceBody[0].companyProduct.companyGenericProduct.productGroup.name,{force: true} )
             })
         })
 
@@ -42,7 +41,7 @@ context("Market place tests",() => {
 
         cy.waitForUI()
 
-        cy.contains("Unmapped").click()
+        cy.get('.group-content').eq(0).click()
         cy.get('.actions').should("be.visible")
 
         cy.get("[name='quantity']").click()

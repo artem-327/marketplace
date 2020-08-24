@@ -220,5 +220,5 @@ context("Shopping cart CRUD", () => {
 })
 
 function addZeroes(num) {
-    return num.toLocaleString("en", { useGrouping: false, minimumFractionDigits: 3 })
+    return num.toLocaleString("en", { useGrouping: false, minimumFractionDigits: 2 })
 }

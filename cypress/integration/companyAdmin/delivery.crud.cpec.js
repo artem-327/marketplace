@@ -111,7 +111,7 @@ context("Prodex Delivery Addresses CRUD", () => {
         })
     })
 
-    it("Deletes a branch", () => {
+    it("Deletes a delivery adress", () => {
         cy.get('[data-test=action_' + addressId + ']').click({force: true})
         cy.get('[data-test=action_' + addressId + '_1]').click({force: true})
 

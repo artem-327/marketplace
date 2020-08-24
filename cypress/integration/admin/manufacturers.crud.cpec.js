@@ -85,7 +85,7 @@ context("Manufacturers CRUD", () => {
         })
     })
 
-    it("Deletes a market segment", () => {
+    it("Deletes a manufacturer", () => {
         cy.searchInList("Artio")
 
         cy.openElement(manufacturerId, 1)

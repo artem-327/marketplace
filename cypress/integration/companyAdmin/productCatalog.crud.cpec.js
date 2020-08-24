@@ -36,13 +36,14 @@ context("Company Product Catalog CRUD", () => {
 
         cy.enterText("#field_input_intProductName", "Our product")
         cy.enterText("#field_input_intProductCode", "OURPR")
-        cy.enterText("#field_input_packagingSize", "70")
+        cy.enterText("#field_input_palletMaxPkgs", "70")
+
+        cy.get("[data-test='settings_product_popup_packageWeightUnit_drpdn']").click()
+        cy.get("[data-test='settings_product_popup_packageWeightUnit_drpdn']").within(() => {
+            cy.contains("kilograms").click()
+        })
+
         cy.enterText("#field_input_packageWeight", "5")
-        cy.enterText("#field_input_packagingWidth", "5")
-        cy.enterText("#field_input_packagingHeight", "5")
-        cy.enterText("#field_input_packagingLength", "5")
-        cy.enterText("#field_input_palletMaxPkgs", "50")
-        cy.enterText("#field_input_palletMinPkgs", "10")
 
         cy.get("div[id='field_dropdown_nmfcNumber']")
             .children("input")
@@ -53,21 +54,20 @@ context("Company Product Catalog CRUD", () => {
             cy.get("div[role='option']").eq(0).click({force: true})
         })
 
-        cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").click()
-        cy.contains("kilograms").click()
-
-        cy.get("[data-test='settings_product_popup_packagingType_drpdn']").click()
-        cy.contains("paper bags").click()
-
-        cy.get("[data-test='settings_product_popup_packageWeightUnit_drpdn']").click()
-        cy.get("[data-test='settings_product_popup_packageWeightUnit_drpdn']").within(() => {
-            cy.contains("kilograms").click()
-        })
-
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").click()
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").within(() => {
             cy.contains("60").click()
         })
+
+        cy.enterText("#field_input_packagingSize", "5")
+
+        cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").click()
+        cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").within(() => {
+            cy.contains("kilograms").click()
+        })
+
+        cy.get("[data-test='settings_product_popup_packagingType_drpdn']").click()
+        cy.contains("paper bags").click()
 
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
         cy.waitForUI()
@@ -119,7 +119,7 @@ context("Company Product Catalog CRUD", () => {
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
 
         cy.get(".error")
-            .should("have.length", 29)
+            .should("have.length", 10)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(Number value should be integer)/i)
         })

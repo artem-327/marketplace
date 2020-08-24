@@ -21,6 +21,7 @@ context("Inventory Broadcasting", () => {
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("PATCH", '/prodex/api/product-offers/*/broadcast?broadcasted=***').as('broadcast')
         cy.route("POST", '/prodex/api/broadcast-rules/*').as('rulesSaving')
+        cy.route("GET", "/prodex/api/product-offers/*").as("offerLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
 
@@ -36,16 +37,37 @@ context("Inventory Broadcasting", () => {
         })
 
         cy.waitForUI()
+        cy.openElement(offerId, 0)
+        cy.wait("@offerLoading")
+        //Set broadcast
+        cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "No")
+        cy.get("[id='field_dropdown_edit.broadcasted']").click()
+        cy.get("[id='field_dropdown_edit.broadcasted']").within(() => {
+            cy.get("[role='option']").within(() => {
+                cy.contains("Yes").click()
+            })
+        })
 
-        cy.get("[data-test=my_inventory_broadcast_chckb]").eq(0).should("not.have.class", "checked")
-        cy.get("[data-test=my_inventory_broadcast_chckb]").eq(0).click()
-        cy.wait("@broadcast")
-        cy.get("[data-test=my_inventory_broadcast_chckb]").eq(0).should("have.class", "checked")
+        cy.get("[data-test=sidebar_inventory_save_new]").click()
+
+        cy.waitForUI()
+        //Set not broadcasted
+        cy.openElement(offerId, 0)
+
+        cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "Yes")
+        cy.get("[id='field_dropdown_edit.broadcasted']").click()
+        cy.get("[id='field_dropdown_edit.broadcasted']").within(() => {
+            cy.get("[role='option']").within(() => {
+                cy.contains("No").click()
+            })
+        })
+
+        cy.get("[data-test=sidebar_inventory_save_new]").click()
         cy.waitForUI()
 
-        cy.get("[data-test=my_inventory_broadcast_chckb]").eq(0).click()
-        cy.wait("@broadcast")
-        cy.get("[data-test=my_inventory_broadcast_chckb]").eq(0).should("not.have.class", "checked")
+        //Assert saved
+        cy.openElement(offerId, 0)
+        cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "No")
     })
 
     it('Turn on custom broadcasting', () => {
@@ -58,7 +80,7 @@ context("Inventory Broadcasting", () => {
         cy.reload()
         cy.waitForUI()
 
-        cy.openElement(offerId, 2)
+        cy.openElement(offerId, 3)
 
         cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
@@ -85,7 +107,7 @@ context("Inventory Broadcasting", () => {
             })
         })
 
-        cy.openElement(offerId, 2)
+        cy.openElement(offerId, 3)
 
         cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
@@ -110,7 +132,7 @@ context("Inventory Broadcasting", () => {
             })
         })
 
-        cy.openElement(offerId, 2)
+        cy.openElement(offerId, 3)
 
         cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
@@ -147,7 +169,7 @@ context("Inventory Broadcasting", () => {
             })
         })
 
-        cy.openElement(offerId, 2)
+        cy.openElement(offerId, 3)
 
         cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 

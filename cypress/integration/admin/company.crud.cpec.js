@@ -68,7 +68,7 @@ context("Companies CRUD", () => {
         cy.wait("@companyCreate")
     })
 
-    it("Edits a condition", () => {
+    it("Edits a company", () => {
         cy.searchInList("Donald The Ducks")
         cy.waitForUI()
 

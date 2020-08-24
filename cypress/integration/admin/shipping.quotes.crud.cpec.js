@@ -51,7 +51,7 @@ context("Shipping quotes CRUD", () => {
         })
     })
 
-    it("Deletes a form", () => {
+    it("Deletes a shipping quote", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'shipment/manual-quotes', filter).then(itemId => {
                 cy.openElement(itemId, 0)
