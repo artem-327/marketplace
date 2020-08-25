@@ -85,7 +85,7 @@ const SettingButton = styled(Settings)`
   height: 19px;
   font-size: 20px;
   line-height: 20px;
-  
+
   &:before {
     padding: 10px 16px 10px 10px;
     background-color: white !important;
@@ -126,14 +126,13 @@ const getSettingColumn = (columns, formatMessage, columnWidth) => {
                       defaultMessage: c.title.props.defaultMessage
                     })
                   : c.caption
-                    ? (typeof c.caption === 'string'
-                        ? c.caption
-                        : formatMessage({
-                           id: c.caption.props.id,
-                            defaultMessage: c.caption.props.defaultMessage
-                        })
-                    )
+                  ? typeof c.caption === 'string'
+                    ? c.caption
                     : formatMessage({
+                        id: c.caption.props.id,
+                        defaultMessage: c.caption.props.defaultMessage
+                      })
+                  : formatMessage({
                       id: `global.${c.name}`,
                       defaultMessage: c.name
                     })
@@ -1028,6 +1027,7 @@ class _Table extends Component {
                       column,
                       row,
                       restProps,
+                      groupLength: getChildGroups(rows).find(group => row.value === group.key).groupLength,
                       children: groupActions
                         ? rowActionsCellFormatter({
                             column: { actions: groupActions(row) },
