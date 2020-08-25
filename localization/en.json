@@ -2637,5 +2637,8 @@
   "settings.vellociRegistration.controlPerson.legalBusinessName": "Legal Business Name",
   "settings.vellociRegistration.controlPerson.kindBusiness.placeholder": "Pick one",
   "settings.vellociRegistration.controlPerson.legalBusinessName.placeholder": "Enter Business Name",
-  "settings.vellociRegistration.controlPerson.tax": "Tax Identification Number"
+  "settings.vellociRegistration.controlPerson.tax": "Tax Identification Number",
+  "settings.vellociRegistration.controlPerson.ein.placeholder": "Enter EIN",
+  "settings.vellociRegistration.controlPerson.ssn.placeholder": "Enter SSN",
+  "settings.vellociRegistration.controlPerson.establishedUs": "Established in the US?"
 }

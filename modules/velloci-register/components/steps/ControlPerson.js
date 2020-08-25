@@ -32,16 +32,33 @@ const CheckboxControlPerson = styled(Checkbox)`
   }
 `
 
+const ButtonOrCustom = styled(Button.Group)`
+  .ui.button {
+    background-color: #ffffff !important;
+    color: #848893 !important;
+    font-weight: bold !important;
+  }
+  .ui.active.button {
+    background-color: #2599d5 !important;
+    color: #ffffff !important;
+  }
+`
+
 const DivBusinessTypeTitle = styled.div`
   font-weight: bold;
 `
 
 const DivRectangleBusinessType = styled.div`
-  height: 320px;
+  height: 380px;
   border-radius: 4px;
   border: solid 1px #dee2e6;
   background-color: #f8f9fb;
 `
+
+const SpanEstablishedLabel = styled.span`
+  color: #848893;
+`
+
 //REMOVE me if you know options for the dropdown
 const options = [
   { key: 1, text: '1. kind of business', value: 1 },
@@ -108,7 +125,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
               <GridRowBusinessType>
                 <Grid.Column>
                   <Dropdown
-                    options={options}
+                    options={options} //TODO
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_drpdwn'
                     }}
@@ -153,29 +170,84 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                     id='settings.vellociRegistration.controlPerson.tax'
                     defaultMessage='Tax Identification Number'
                   />
-                  <Button.Group widths={8}>
+                  <ButtonOrCustom widths={8}>
                     <Button
                       onClick={e => {
-                        e.preventDefault()
-                        formikProps.setValues('ein', true)
-                        formikProps.setValues('ssn', false)
+                        formikProps.setFieldValue('isEin', true)
+                        formikProps.setFieldValue('isSsn', false)
                       }}
-                      active={formikProps.values.ein}
+                      active={formikProps.values.isEin}
                       data-test='settings_velloci_registration_control_person_ein_btn'>
                       <FormattedMessage id='settings.vellociRegistration.controlPerson.ein' defaultMessage='EIN' />
                     </Button>
                     <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
                     <Button
                       onClick={e => {
-                        e.preventDefault()
-                        formikProps.setValues('ein', false)
-                        formikProps.setValues('ssn', true)
+                        formikProps.setFieldValue('isEin', false)
+                        formikProps.setFieldValue('isSsn', true)
                       }}
-                      active={formikProps.values.ssn}
+                      active={formikProps.values.isSsn}
                       data-test='settings_velloci_registration_control_person_ssn_btn'>
                       <FormattedMessage id='settings.vellociRegistration.controlPerson.ssn' defaultMessage='SSN' />
                     </Button>
-                  </Button.Group>
+                  </ButtonOrCustom>
+                </Grid.Column>
+              </GridRowBusinessType>
+              <GridRowBusinessType columns={2}>
+                <Grid.Column width={8}>
+                  <Input
+                    name={formikProps.values.isEin ? 'ein' : 'ssn'}
+                    inputProps={{
+                      placeholder: formatMessage({
+                        id: `settings.vellociRegistration.controlPerson.${
+                          formikProps.values.isEin ? 'ein' : 'ssn'
+                        }.placeholder`,
+                        defaultMessage: `Enter ${formikProps.values.isEin ? 'EIN' : 'SSN'}`
+                      }),
+                      type: 'number',
+                      'data-test': `settings_velloci_registration_control_person_legal_${
+                        formikProps.values.isEin ? 'ein' : 'ssn'
+                      }_inpt`
+                    }}
+                  />
+                </Grid.Column>
+                <Grid.Column width={5} textAlign='center'>
+                  <SpanEstablishedLabel>
+                    {formatMessage({
+                      id: 'settings.vellociRegistration.controlPerson.establishedUs',
+                      defaultMessage: 'Established in the US?'
+                    })}
+                  </SpanEstablishedLabel>
+                  <Checkbox
+                    inputProps={{
+                      toggle: true,
+                      'data-test': 'settings_velloci_registration_control_person_legal_isEstablishedUs_chckbx'
+                    }}
+                    name='isEstablishedUs'
+                  />
+                </Grid.Column>
+              </GridRowBusinessType>
+              <GridRowBusinessType>
+                <Grid.Column width={8}>
+                  <Dropdown
+                    options={options} //TODO
+                    fieldProps={{
+                      'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
+                    }}
+                    inputProps={{
+                      placeholder: formatMessage({
+                        id: 'settings.vellociRegistration.controlPerson.industryType.placeholder',
+                        defaultMessage: 'Select industry type'
+                      }),
+                      search: true,
+                      selection: true
+                    }}
+                    name='kindBusiness'
+                    label={formatMessage({
+                      id: 'settings.vellociRegistration.controlPerson.industryType',
+                      defaultMessage: 'Your Industry Type'
+                    })}
+                  />
                 </Grid.Column>
               </GridRowBusinessType>
             </GridControlPersonBusinessType>

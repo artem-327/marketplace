@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 const DivRectangleForm = styled.div`
   padding: 0px !important;
   width: 740px;
-  height: 800px;
+  height: 860px;
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   border: solid 1px #dee2e6;

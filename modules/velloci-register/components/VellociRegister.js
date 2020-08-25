@@ -24,8 +24,11 @@ const initialValues = {
   isControlPerson: false,
   legalBusinessName: '',
   kindBusiness: '',
-  ein: true,
-  ssn: false
+  isEin: true,
+  isSsn: false,
+  ein: '',
+  ssn: '',
+  isEstablishedUs: true
 }
 
 class VellociRegister extends Component {
