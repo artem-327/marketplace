@@ -1054,6 +1054,7 @@ class _Table extends Component {
                       column,
                       row,
                       restProps,
+                      groupLength: getChildGroups(rows).find(group => row.value === group.key).groupLength,
                       children: groupActions
                         ? rowActionsCellFormatter({
                             column: { actions: groupActions(row) },
