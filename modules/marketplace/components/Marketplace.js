@@ -131,7 +131,7 @@ class Marketplace extends Component {
       // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
       {
         name: 'conformingIcon',
-        title:
+        title: (
           <Popup
             header={
               <FormattedMessage
@@ -144,26 +144,25 @@ class Marketplace extends Component {
                 <RedTriangle className='grey' />
               </div>
             } // <div> has to be there otherwise popup will be not shown
-          />,
+          />
+        ),
         width: 45,
         align: 'center'
       },
       {
         name: 'expired',
-        title:
+        title: (
           <Popup
             header={
-              <FormattedMessage
-                id='marketplace.tooltipExpired'
-                defaultMessage='Shows if Product Offer is expired'
-              />
+              <FormattedMessage id='marketplace.tooltipExpired' defaultMessage='Shows if Product Offer is expired' />
             }
             trigger={
               <div>
                 <ClockIcon className='grey' />
               </div>
             } // <div> has to be there otherwise popup will be not shown
-          />,
+          />
+        ),
         caption: (
           <FormattedMessage id='global.expirationStatusIcon' defaultMessage='Expiration Status Icon'>
             {text => text}
@@ -523,24 +522,25 @@ class Marketplace extends Component {
             columns={columns}
             groupBy={['productNumber']}
             shrinkGroups={true}
-            // sameGroupSelectionOnly
+            //sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
                 .groupBy('productGroupName')
                 .map(v => ({
-                  key: `${v[0].productGroupName}_${v[0].productNumber}_${v.length}_${v[0].companyProduct.id}_${v[0].tagsNames}`,
+                  key: `${v[0].productGroupName}_${v[0].productNumber}_${v[0].companyProduct.id}_${v[0].tagsNames}`,
+                  groupLength: v.length,
                   childRows: v
                 }))
                 .value()
             }
-            renderGroupLabel={({ row: { value }, children = null }) => {
-              const [name, number, count, id, tagsNames] = value.split('_')
+            renderGroupLabel={({ row: { value }, groupLength }) => {
+              const [name, number, id, tagsNames] = value.split('_')
               // const numberArray = number.split(' & ')
               const tagNames = tagsNames ? tagsNames.split(',') : []
               return (
                 <span>
                   <span style={{ fontWeight: '600', color: '#2599d5' }}>
-                    {name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({count})</span>
+                    {name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({groupLength})</span>
                   </span>
                   <span className='flex row right'>
                     <span>
