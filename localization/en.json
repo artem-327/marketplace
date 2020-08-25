@@ -1135,6 +1135,7 @@
   "filter.saveFilterHeader": "SAVE FILTER",
   "filter.saveFilter": "Save Filter",
   "filter.enterFilterName": "Your filter name",
+  "filter.advancedFilter": "Advanced Filter",
   "filter.savedFilters": "Saved Filters",
   "filter.ChemicalNameCAS": "Chemical name / CAS #",
   "filter.FromQuantity": "From",

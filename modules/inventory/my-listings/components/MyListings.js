@@ -377,7 +377,8 @@ class MyListings extends Component {
     request: null,
     filterValues: {
       SearchByNamesAndTags: null
-    }
+    },
+    openFilterPopup: false
   }
 
   componentDidMount() {
@@ -760,7 +761,7 @@ class MyListings extends Component {
       myListingsFilters,
       activeInventoryFilter
     } = this.props
-    const { columns, clientMessage, request } = this.state
+    const { columns, clientMessage, request, openFilterPopup } = this.state
 
     return (
       <>
@@ -811,7 +812,7 @@ class MyListings extends Component {
                   className='light'
                   size='large'
                   primary
-                  onClick={() => {console.log('Advanced Filters Button')}}
+                  onClick={() => this.setState({ openFilterPopup: true })}
                   data-test='my_inventory_advanced_filters_btn'>
                   <Sliders />
                   {formatMessage({
@@ -1050,6 +1051,7 @@ class MyListings extends Component {
         </div>
         {sidebarDetailOpen && <DetailSidebar />}
         {isExportInventoryOpen && <ExportInventorySidebar onClose={() => setExportSidebarOpenState(false)} />}
+        {openFilterPopup && <InventoryFilter onClose={() => this.setState({ openFilterPopup: false })} />}
       </>
     )
   }

@@ -286,7 +286,8 @@ class Listings extends Component {
     //pageNumber: 0,
     filterValues: {
       SearchByNamesAndTags: null
-    }
+    },
+    openFilterPopup: false
   }
 
   componentDidMount() {
@@ -428,7 +429,7 @@ class Listings extends Component {
       tableHandlersFiltersListings,
       activeMarketplaceFilter
     } = this.props
-    const { columns } = this.state
+    const { columns, openFilterPopup } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -484,7 +485,7 @@ class Listings extends Component {
                   className='light'
                   size='large'
                   primary
-                  onClick={() => {console.log('Advanced Filters Button')}}
+                  onClick={() => this.setState({ openFilterPopup: true })}
                   data-test='my_inventory_advanced_filters_btn'>
                   <Sliders />
                   {formatMessage({
@@ -551,6 +552,7 @@ class Listings extends Component {
           />
         </div>
         <AddCart openInfo={openInfo} />
+        {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
       </Container>
     )
   }

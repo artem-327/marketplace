@@ -1,5 +1,17 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow, Icon, Dropdown, Grid, GridColumn, FormField } from 'semantic-ui-react'
+import {
+  Sidebar,
+  Accordion,
+  Segment,
+  GridRow,
+  Icon,
+  Dropdown,
+  Grid,
+  GridColumn,
+  FormField,
+  Modal,
+  Menu
+} from 'semantic-ui-react'
 import Tooltip from '~/components/tooltip'
 
 const popupWidth = 400
@@ -159,23 +171,12 @@ export const TopButtons = styled.div`
 `
 export const BottomButtons = styled.div`
   margin: 0;
-  text-align: center;
   border-top: 1px solid #dee2e6;
   box-sizing: border-box;
   border-radius: 0 0 4px 4px;
-  padding: 0 5px;  
-  > .button {
-    padding-right: 0px;
-    padding-left: 0px;
-  }
-  > .button:nth-child(1) {
-    width: 110px;
-  }
-  > .button:nth-child(2) {
-    width: 65px;
-  }
-  > .button:nth-child(3) {
-    width: 65px;
+  padding: 10px 5px;
+  button {
+    margin: 0 5px !important;
   }
 `
 
@@ -591,4 +592,23 @@ export const QuantityWrapper = styled.div`
 
 export const BottomMargedField = styled(FormField)`
   margin-bottom: 13px !important
+`
+
+export const StyledModalContent = styled(Modal.Content)`
+  max-height: calc(80vh - 10em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px;
+`
+
+export const CustomMenu = styled(Menu)`
+  padding-left: 30px !important;
+  margin: 0 !important;
+  border: solid 1px #dee2e6 !important;
+  
+  > a.item {
+    padding: 16px 0 13px 0 !important;
+    margin: 0 15px !important;
+    text-transform: uppercase !important;
+  }
 `
