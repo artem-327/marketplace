@@ -75,7 +75,8 @@ import {
   QuantityWrapper,
   BottomMargedField,
   StyledModalContent,
-  CustomMenu
+  CustomMenu,
+  SmallGrid
 } from '../constants/layout'
 
 const optionsYesNo = [
@@ -338,7 +339,7 @@ class InventoryFilter extends Component {
     else this.setState({ openedSaveFilter: false })
   }
 
-  generateCheckboxes = (data, values, groupName = null) => {
+  generateDropdown = (data, values, groupName = null) => {
     if (!data) return []
     let group = null
 
@@ -366,21 +367,34 @@ class InventoryFilter extends Component {
       )
     }
 
+    /*
     for (let i = 0; i < data.length / 2 - (data.length % 2); i++) {
       tmp.push(
         <FormGroup widths='equal'>
-          {/* First/Last Item Increasing/Decreasing according to index */}
           {[data[i], data[data.length - (i + 1)]].map((el, j) => getCheckbox(el, i + j))}
         </FormGroup>
       )
     }
+    */
 
-    // Add last item, which is at index = middle of an array
-    if (data.length % 2 === 1) {
-      tmp.push(<FormGroup widths='equal'>{getCheckbox(data[Math.round(data.length / 2) - 1])}</FormGroup>)
-    }
+    const options = data.map(d => ({
+      key: d.id,
+      value: d.id,
+      text: d.name
+    }))
 
-    return tmp
+    return (
+      <Dropdown
+        name={groupName}
+        options={options}
+        selection
+        onChange={(e, data) => console.log('!!!!!!!!!! onChange 1', data)}
+        inputProps={{
+          multiple: true,
+          onChange: (e, data) => console.log('!!!!!!!!!! onChange 2', data)
+        }}
+      />
+    )
   }
 
   handleSavedFilterApply = async (filter, { setFieldValue, resetForm }) => {
@@ -581,47 +595,49 @@ class InventoryFilter extends Component {
     const { formatMessage } = intl
 
     return (
-      <>
-        <FormField width={8}>
-          <Dropdown
-            name={name}
-            options={dateDropdownOptions}
-            selection
-            onChange={handleChange}
-            inputProps={{
-              'data-test': 'filter_dateField_drpdn',
-              value: values[name],
-              disabled: !values[inputName],
-              onChange: (_, data) => {
-                setFieldValue(data.name, data.value)
-                setFieldValue(inputName, '')
-                this.setState(state => ({
-                  ...state,
-                  dateDropdown: {
-                    ...state.dateDropdown,
-                    [name]: data.value
-                  }
-                }))
-              }
-            }}
-          />
-        </FormField>
-        <FormField width={8} data-test='filter_dateField_inp'>
-          <DateInputStyledWrapper>
-            <Input
-              name={inputName}
+      <SmallGrid>
+        <GridRow>
+          <GridColumn width={8}>
+            <Dropdown
+              name={name}
+              options={dateDropdownOptions}
+              selection
               onChange={handleChange}
               inputProps={{
-                label: formatMessage({ id: 'filter.days', defaultMessage: 'days' }),
-                labelPosition: 'right',
-                type: 'number',
-                min: min.toString(),
-                placeholder: '0'
+                'data-test': 'filter_dateField_drpdn',
+                value: values[name],
+                disabled: !values[inputName],
+                onChange: (_, data) => {
+                  setFieldValue(data.name, data.value)
+                  setFieldValue(inputName, '')
+                  this.setState(state => ({
+                    ...state,
+                    dateDropdown: {
+                      ...state.dateDropdown,
+                      [name]: data.value
+                    }
+                  }))
+                }
               }}
             />
-          </DateInputStyledWrapper>
-        </FormField>
-      </>
+          </GridColumn>
+          <GridColumn width={8} data-test='filter_dateField_inp'>
+            <DateInputStyledWrapper>
+              <Input
+                name={inputName}
+                onChange={handleChange}
+                inputProps={{
+                  label: formatMessage({ id: 'filter.days', defaultMessage: 'days' }),
+                  labelPosition: 'right',
+                  type: 'number',
+                  min: min.toString(),
+                  placeholder: '0'
+                }}
+              />
+            </DateInputStyledWrapper>
+          </GridColumn>
+        </GridRow>
+      </SmallGrid>
     )
   }
 
@@ -736,10 +752,10 @@ class InventoryFilter extends Component {
 
     const { formatMessage } = intl
 
-    let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')
-    let productConditionRows = this.generateCheckboxes(productConditions, values, 'productConditions')
-    let productGradeRows = this.generateCheckboxes(productGrades, values, 'productGrades')
-    let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
+    let packagingTypesDropdown = this.generateDropdown(packagingTypes, values, 'packagingTypes')
+    let productConditionDropdown = this.generateDropdown(productConditions, values, 'productConditions')
+    let productGradeDropdown = this.generateDropdown(productGrades, values, 'productGrades')
+    let productFormsDropdown = this.generateDropdown(productForms, values, 'productForms')
 
     var noResultsMessage = null
 
@@ -895,110 +911,152 @@ class InventoryFilter extends Component {
       <Grid>
         <GridRow>
           <GridColumn width={8}>
-            <BottomMargedDropdown
-              {...dropdownProps}
-              label={'bla'}
-            />
+            <FormField>
+              <FormattedMessage id='filter.chemicalProductName' defaultMessage='Chemical / Product Name'>
+                {text => text}
+              </FormattedMessage>
+              <BottomMargedDropdown {...dropdownProps} />
+            </FormField>
           </GridColumn>
           <GridColumn width={8}>
-            <BottomMargedDropdown
-              {...dropdownWarehouseProps}
-              label={
-                <FormattedMessage id='filter.warehouse' defaultMessage='Warehouse'>
-                  {text => text}
-                </FormattedMessage>
-              }
-            />
+            <FormField>
+              <FormattedMessage id='filter.warehouse' defaultMessage='Warehouse'>
+                {text => text}
+              </FormattedMessage>
+              <BottomMargedDropdown {...dropdownWarehouseProps} />
+            </FormField>
           </GridColumn>
         </GridRow>
 
         <GridRow>
           <GridColumn width={8}>
-            <FormGroup widths='equal'>
-              <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
-              {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
-            </FormGroup>
+            <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
+            {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
           </GridColumn>
-
           <GridColumn width={8}>
             <FormGroup widths='equal'>
-              <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
+              <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
               {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
             </FormGroup>
           </GridColumn>
         </GridRow>
 
-
         <GridRow>
           <GridColumn width={8}>
             <FormattedMessage id='filter.quantity' />
-            <FormGroup widths='equal' data-test='filter_quantity_inp'>
-              <FormField width={8}>
-                {this.quantityWrapper('quantityFrom', {
-                  values,
-                  setFieldValue,
-                  setFieldTouched,
-                  label: <FormattedMessage id='filter.FromQuantity' defaultMessage='From' />
-                })}
-              </FormField>
-              <FormField width={8}>
-                {this.quantityWrapper('quantityTo', {
-                  values,
-                  setFieldValue,
-                  setFieldTouched,
-                  label: <FormattedMessage id='filter.ToQuantity' defaultMessage='To' />
-                })}
-              </FormField>
-            </FormGroup>
+            <SmallGrid>
+              <GridRow>
+                <GridColumn width={8}>
+                  {this.quantityWrapper('quantityFrom', {
+                    values,
+                    setFieldValue,
+                    setFieldTouched,
+                    label: <FormattedMessage id='filter.FromQuantity' defaultMessage='From' />
+                  })}
+                </GridColumn>
+                <GridColumn width={8}>
+                  {this.quantityWrapper('quantityTo', {
+                    values,
+                    setFieldValue,
+                    setFieldTouched,
+                    label: <FormattedMessage id='filter.ToQuantity' defaultMessage='To' />
+                  })}
+                </GridColumn>
+              </GridRow>
+            </SmallGrid>
           </GridColumn>
-
           <GridColumn width={8}>
             <FormattedMessage id='filter.price' />
-            <FormGroup>
-              <FormField className='price-input' width={8} data-test='filter_price_inp'>
-                {this.inputWrapper(
-                  'priceFrom',
-                  {
-                    type: 'number',
-                    min: 0.01,
-                    step: 0.01,
-                    placeholder: '0.000'
-                  },
-                  <FormattedMessage id='filter.FromPrice' defaultMessage='From' />,
-                  currencySymbol
-                )}
-              </FormField>
-              <FormField className='price-input' width={8}>
-                {this.inputWrapper(
-                  'priceTo',
-                  {
-                    type: 'number',
-                    min: 0.01,
-                    step: 0.01,
-                    placeholder: '0.000'
-                  },
-                  <FormattedMessage id='filter.ToPrice' defaultMessage='To' />,
-                  currencySymbol
-                )}
-              </FormField>
-            </FormGroup>
+            <SmallGrid>
+              <GridRow>
+                <GridColumn width={8} data-test='filter_price_inp'>
+                  {this.inputWrapper(
+                    'priceFrom',
+                    {
+                      type: 'number',
+                      min: 0.01,
+                      step: 0.01,
+                      placeholder: '0.000'
+                    },
+                    <FormattedMessage id='filter.FromPrice' defaultMessage='From' />,
+                    currencySymbol
+                  )}
+                </GridColumn>
+                <GridColumn className='price-input' width={8}>
+                  {this.inputWrapper(
+                    'priceTo',
+                    {
+                      type: 'number',
+                      min: 0.01,
+                      step: 0.01,
+                      placeholder: '0.000'
+                    },
+                    <FormattedMessage id='filter.ToPrice' defaultMessage='To' />,
+                    currencySymbol
+                  )}
+                </GridColumn>
+              </GridRow>
+            </SmallGrid>
           </GridColumn>
         </GridRow>
 
 
+        <GridRow>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.packaging' />
+            {packagingTypesDropdown}
+          </GridColumn>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.grade' defaultMessage='Grade' />
+            {productGradeDropdown}
+          </GridColumn>
+        </GridRow>
 
-        <FilterAccordion>
+        <GridRow>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.condition' defaultMessage='Condition' />
+            {productConditionDropdown}
+          </GridColumn>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.form' defaultMessage='Form' />
+            {productFormsDropdown}
+          </GridColumn>
+        </GridRow>
 
-        <AccordionItem>
-          {this.accordionTitle('quantity', )}
-          <AccordionContent active={this.state.activeAccordion.quantity}>
-
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('incomplete', <FormattedMessage id='filter.incomplete' defaultMessage='Incomplete' />)}
-          <AccordionContent active={this.state.activeAccordion.incomplete}>
+        <GridRow>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.percentage' />
+            <SmallGrid>
+              <GridRow>
+                <GridColumn width={8}>
+                  {this.inputWrapper(
+                    'assayFrom',
+                    {
+                      type: 'number',
+                      min: 0,
+                      placeholder: '0'
+                    },
+                    <FormattedMessage id='filter.Minimum' defaultMessage='Minimum' />,
+                    '%'
+                  )}
+                </GridColumn>
+                <GridColumn width={8}>
+                  {this.inputWrapper(
+                    'assayTo',
+                    {
+                      type: 'number',
+                      min: 0,
+                      placeholder: '0'
+                    },
+                    <FormattedMessage id='filter.Maximum' defaultMessage='Maximum' />,
+                    '%'
+                  )}
+                </GridColumn>
+              </GridRow>
+            </SmallGrid>
+          </GridColumn>
+          <GridColumn width={4}>
+            <FormattedMessage id='filter.incomplete' defaultMessage='Incomplete' />
             <FormField>
               <Radio
                 name='yes'
@@ -1015,95 +1073,9 @@ class InventoryFilter extends Component {
                 onClick={this.handleRadio}
               />
             </BottomMargedField>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
-          <AccordionContent active={this.state.activeAccordion.price}>
-
-          </AccordionContent>
-        </AccordionItem>
-
-        {false && (
-          <AccordionItem>
-            {this.accordionTitle('broadcasted', <FormattedMessage id='filter.broadcast' />)}
-            <AccordionContent active={this.state.activeAccordion.broadcasted}>
-              <BottomMargedDropdown {...dropdownBroadcastedProps} />
-            </AccordionContent>
-          </AccordionItem>
-        )}
-
-        <AccordionItem>
-          {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
-          <AccordionContent active={this.state.activeAccordion.packaging}>{packagingTypesRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('productGrades', <FormattedMessage id='filter.grade' defaultMessage='Grade' />)}
-          <AccordionContent active={this.state.activeAccordion.productGrades}>{productGradeRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('condition', <FormattedMessage id='filter.condition' defaultMessage='Condition' />)}
-          <AccordionContent active={this.state.activeAccordion.condition}>{productConditionRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
-          <AccordionContent active={this.state.activeAccordion.productForms}>{productFormsRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('assay', <FormattedMessage id='filter.percentage' />)}
-          <AccordionContent active={this.state.activeAccordion.assay}>
-            <FormGroup data-test='filter_assay_inp'>
-              <FormField width={8}>
-                {this.inputWrapper(
-                  'assayFrom',
-                  {
-                    type: 'number',
-                    min: 0,
-                    placeholder: '0'
-                  },
-                  <FormattedMessage id='filter.Minimum' defaultMessage='Minimum' />,
-                  '%'
-                )}
-              </FormField>
-              <FormField width={8}>
-                {this.inputWrapper(
-                  'assayTo',
-                  {
-                    type: 'number',
-                    min: 0,
-                    placeholder: '0'
-                  },
-                  <FormattedMessage id='filter.Maximum' defaultMessage='Maximum' />,
-                  '%'
-                )}
-              </FormField>
-            </FormGroup>
-          </AccordionContent>
-        </AccordionItem>
-
-        {false && (
-          <AccordionItem>
-            {this.accordionTitle('manufacturer', <FormattedMessage id='filter.manufacturer' />)}
-            <AccordionContent active={this.state.activeAccordion.manufacturer}>
-              <BottomMargedDropdown {...dropdownManufacturerProps} />
-            </AccordionContent>
-          </AccordionItem>
-        )}
-
-        {false && (
-          <AccordionItem>
-            {this.accordionTitle('origin', <FormattedMessage id='filter.origin' />)}
-            <AccordionContent active={this.state.activeAccordion.origin}>
-              <BottomMargedDropdown {...dropdownOriginProps} />
-            </AccordionContent>
-          </AccordionItem>
-        )}
-      </FilterAccordion>
+          </GridColumn>
+          <GridColumn width={4}></GridColumn>
+        </GridRow>
       </Grid>
     )
   }
@@ -1142,6 +1114,8 @@ class InventoryFilter extends Component {
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
           this.values = props.values
+
+          console.log('!!!!!!!!!! render values', props.values)
 
           return (
             <Modal onClose={() => onClose()} open centered={true}>

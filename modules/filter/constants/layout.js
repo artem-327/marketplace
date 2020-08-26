@@ -612,3 +612,15 @@ export const CustomMenu = styled(Menu)`
     text-transform: uppercase !important;
   }
 `
+
+export const SmallGrid = styled(Grid)`
+  & {
+  margin: 0 -0.357142857em !important;
+  > .row {
+    padding: 0.535714286em 0 !important;
+    > .column {
+      padding: 0 0.357142857em !important;
+    }    
+  }
+  }
+`
