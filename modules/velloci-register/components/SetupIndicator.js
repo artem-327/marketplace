@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { Button } from 'semantic-ui-react'
-import { Check } from 'react-feather'
 import styled from 'styled-components'
 
-import { getSafe } from '~/utils/functions'
 import { setupPages } from '../constants'
 
 const Rectangle = styled.div`
@@ -90,9 +86,6 @@ class SetupIndicator extends Component {
 
   render() {
     const { activeStep = 0 } = this.props
-    console.log('activeStep====================================')
-    console.log(activeStep)
-    console.log('====================================')
     if (!setupPages.length) return
     else {
       return (

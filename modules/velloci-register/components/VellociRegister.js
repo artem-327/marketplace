@@ -1,22 +1,13 @@
 import React, { Component } from 'react'
-import { Grid, GridColumn, GridRow, Segment, Header, Form, Button, Icon, Popup } from 'semantic-ui-react'
-import styled from 'styled-components'
+import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
-import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import {
-  errorMessages,
-  addressValidationSchema,
-  beneficialOwnersValidation,
-  dwollaControllerValidation,
-  einValidation,
-  websiteValidation
-} from '~/constants/yupValidation'
+import { errorMessages, addressValidationSchema, einValidation, websiteValidation } from '~/constants/yupValidation'
 
 import SetupIndicator from './SetupIndicator'
 import FormRectangle from './FormRectangle'
 import ControlPerson from './steps/ControlPerson'
-import { titleIds } from '../constants'
+import BusinessInfo from './steps/BusinessInfo'
+import { titleIds, subtitleIds } from '../constants'
 
 import * as Yup from 'yup'
 
@@ -28,7 +19,16 @@ const initialValues = {
   isSsn: false,
   ein: '',
   ssn: '',
-  isEstablishedUs: true
+  isEstablishedUs: true,
+  phoneNumber: '',
+  emailAddres: '',
+  url: '',
+  streetAddress: '',
+  city: '',
+  country: '',
+  zip: '',
+  province: '',
+  dbaName: ''
 }
 
 class VellociRegister extends Component {
@@ -39,7 +39,7 @@ class VellociRegister extends Component {
         return <ControlPerson formikProps={formikProps} />
       }
       case 1: {
-        return <ControlPerson formikProps={formikProps} />
+        return <BusinessInfo formikProps={formikProps} />
       }
       case 2: {
         return <ControlPerson formikProps={formikProps} />
@@ -77,12 +77,15 @@ class VellociRegister extends Component {
     const minLengthValue = 3
     const minLengthErr = minLength(minLengthValue)
     return {
-      firstName: Yup.string(invalidString)
+      legalBusinessName: Yup.string(invalidString)
         .typeError(invalidString)
         .min(minLengthValue, minLengthErr)
         .required(requiredMessage),
-      basicNumber: Yup.number(requiredMessage).typeError(requiredMessage).required(requiredMessage),
-      email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage)
+      ein: einValidation(),
+      ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage),
+      emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
+      url: websiteValidation(),
+      dbaName: Yup.string(invalidString).typeError(invalidString)
     }
   }
 
@@ -105,6 +108,7 @@ class VellociRegister extends Component {
                       <FormRectangle
                         formikProps={formikProps}
                         title={titleIds[activeStep]}
+                        subtitle={subtitleIds[activeStep]}
                         prevStep={prevStep}
                         activeStep={activeStep}>
                         {this.getContent(formikProps)}

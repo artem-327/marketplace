@@ -7,12 +7,7 @@ const mapStateToProps = store => {
   let identity = store.admin.company ? { company: store.admin.company } : store.auth.identity
   return {
     activeStep: store.vellociRegister.activeStep,
-    identity,
-    // adminCompanyId: getSafe(() => store.admin.company)
-    businessTypes: store.businessTypes,
-    businessClassifications: store.settings.businessClassifications,
-    dwollaSaving: store.settings.dwollaSaving,
-    isAdmin: getSafe(() => store.auth.identity.isAdmin, false)
+    identity
   }
 }
 

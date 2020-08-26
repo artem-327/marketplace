@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Grid, GridColumn, GridRow, Segment, Header, Form, Button, Icon, Popup } from 'semantic-ui-react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { Button } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
 const DivRectangleForm = styled.div`
   padding: 0px !important;
@@ -19,6 +19,8 @@ const DivRectangleForm = styled.div`
 const DivTitleRectangleForm = styled.div`
   border-bottom: solid 1px #dee2e6;
   height: 50px;
+  display: flex;
+  justify-content: space-between;
 `
 const DivTitleText = styled.div`
   font-weight: bold;
@@ -39,7 +41,14 @@ const ButtonSubmit = styled(Button)`
   margin-right: 0px !important;
 `
 
-function FormRectangle({ children, formikProps, title, prevStep, activeStep }) {
+const DivSubtitleText = styled.div`
+  text-align: right;
+  color: #848893;
+  font-size: 12px;
+  padding: 16px 30px;
+`
+
+function FormRectangle({ children, formikProps, title, subtitle, prevStep, activeStep }) {
   return (
     <DivRectangleForm>
       <DivTitleRectangleForm>
@@ -48,6 +57,13 @@ function FormRectangle({ children, formikProps, title, prevStep, activeStep }) {
             {text => text}
           </FormattedMessage>
         </DivTitleText>
+        {subtitle ? (
+          <DivSubtitleText>
+            <FormattedMessage id={subtitle} defaultMessage='Subtitle'>
+              {text => text}
+            </FormattedMessage>
+          </DivSubtitleText>
+        ) : null}
       </DivTitleRectangleForm>
       {children}
 
@@ -61,7 +77,7 @@ function FormRectangle({ children, formikProps, title, prevStep, activeStep }) {
         ) : null}
         <ButtonSubmit type='submit' onClick={formikProps.handleSubmit} primary>
           <FormattedMessage
-            id={activeStep === 5 ? 'global.submitApplication' : 'global.next'}
+            id={activeStep === 5 ? 'velloci.submitApplication' : 'global.next'}
             defaultMessage={activeStep === 5 ? 'Submit Application' : 'Next'}>
             {text => text}
           </FormattedMessage>

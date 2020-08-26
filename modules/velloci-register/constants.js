@@ -1,11 +1,13 @@
 export const titleIds = [
-  'settings.vellociRegister.controlPerson',
-  'settings.vellociRegister.businessInfo',
-  'settings.vellociRegister.companyFormationDocument',
-  'settings.vellociRegister.ownerInformation',
-  'settings.vellociRegister.verifyPersonalInformation',
-  'settings.vellociRegister.termsAndConditions'
+  'velloci.controlPerson',
+  'velloci.businessInfo',
+  'velloci.companyFormationDocument',
+  'velloci.ownerInformation',
+  'velloci.verifyPersonalInformation',
+  'velloci.termsAndConditions'
 ]
+
+export const subtitleIds = ['', 'velloci.businessInfo.subtitle', '', 'velloci.ownerInformation.subtitle', '', '']
 
 export const setupPages = [
   { title: 'velloci.setupIndicator.bussinesVerification', content: 'velloci.setupIndicator.enity' },
