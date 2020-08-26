@@ -90,6 +90,40 @@ const StyledImageIcon = styled(ImageIcon)`
   margin: 30px;
 `
 
+const ButtonsRow = styled(GridRow)`
+  
+  .button {
+    min-width: 100% !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  
+    svg {
+      margin-left: 0 !important;
+      margin-right: 5px !important;
+    }
+  }
+  
+  @media (max-width: 1800px) {
+  
+    .button {
+      position: relative;
+      overflow: hidden;
+      text-align: left;
+      text-indent: -5000px;
+      max-width: 100%;
+      min-width: 32px !important;
+      
+      svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0 !important;
+      }
+    }
+  }
+`
+
 class CompanyForm extends Component {
   state = {
     associations: [],
@@ -569,7 +603,7 @@ class CompanyForm extends Component {
               </GridColumn>
             </GridRow>
 
-            <GridRow>
+            <ButtonsRow>
               <GridColumn width={8}>
                 <Button className='delete' disabled={!hasLogo} type='button' fluid onClick={() => removeLogo()}>
                   <Trash />
@@ -597,7 +631,7 @@ class CompanyForm extends Component {
                   )}
                 </Button>
               </GridColumn>
-            </GridRow>
+            </ButtonsRow>
           </Grid>
           <div className='logo-hint'>
             <label>
