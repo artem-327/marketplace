@@ -7,6 +7,7 @@ import SetupIndicator from './SetupIndicator'
 import FormRectangle from './FormRectangle'
 import ControlPerson from './steps/ControlPerson'
 import BusinessInfo from './steps/BusinessInfo'
+import FormationDocument from './steps/FormationDocument'
 import { titleIds, subtitleIds } from '../constants'
 
 import * as Yup from 'yup'
@@ -28,7 +29,8 @@ const initialValues = {
   country: '',
   zip: '',
   province: '',
-  dbaName: ''
+  dbaName: '',
+  attachments: []
 }
 
 class VellociRegister extends Component {
@@ -42,7 +44,7 @@ class VellociRegister extends Component {
         return <BusinessInfo formikProps={formikProps} />
       }
       case 2: {
-        return <ControlPerson formikProps={formikProps} />
+        return <FormationDocument formikProps={formikProps} />
       }
       case 3: {
         return <ControlPerson formikProps={formikProps} />

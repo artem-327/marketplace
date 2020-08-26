@@ -2653,5 +2653,11 @@
   "velloci.businessInfo.dbaName": "DBA Name  (if applicable)",
   "velloci.businessInfo.dbaName.placeholder": "Business Name",
   "velloci.businessInfo.meanTitle": "What does this mean?",
-  "velloci.businessInfo.meanContent": "Unless your business has a registered trade or fictitious business name with a government body, you don't need to worry about this step"
+  "velloci.businessInfo.meanContent": "Unless your business has a registered trade or fictitious business name with a government body, you don't need to worry about this step",
+  "velloci.formationDocument.requiredTitle": "What files are required?",
+  "velloci.formationDocument.requiredContent": "EIN Documentation (IRS)",
+  "velloci.formationDocument.optionalTitle": "What files are optional",
+  "velloci.formationDocument.optionalContent": "Articles of Incorporation, Certificate of Formation, Articles of Organization",
+  "velloci.formationDocument.uploadDocuments": "Upload PNG, JPEG or PDF formats. ",
+  "velloci.formationDocument.availableDocuments": "Add as many documents as you have available."
 }
