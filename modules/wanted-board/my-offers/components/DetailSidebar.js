@@ -435,7 +435,7 @@ class DetailSidebar extends Component {
                               id: 'date.standardPlaceholder',
                               defaultMessage: '00/00/0000'
                             }),
-                            minDate: moment(),
+                            // minDate: moment(), TypeError: Cannot read property 'position' of undefined
                             clearable: true
                           }}
                         />

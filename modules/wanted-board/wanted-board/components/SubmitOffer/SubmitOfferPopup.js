@@ -586,7 +586,7 @@ class SubmitOfferPopup extends React.Component {
                               inputProps={{
                                 onChange: (e, { name, value }) =>
                                   this.handleChange(e, { name, value: getStringISODate(value) }),
-                                minDate: moment(),
+                                //minDate: moment(), TypeError: Cannot read property 'position' of undefined
                                 clearable: true
                               }}
                             />
