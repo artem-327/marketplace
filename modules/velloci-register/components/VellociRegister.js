@@ -8,6 +8,7 @@ import FormRectangle from './FormRectangle'
 import ControlPerson from './steps/ControlPerson'
 import BusinessInfo from './steps/BusinessInfo'
 import FormationDocument from './steps/FormationDocument'
+import OwnerInformation from './steps/OwnerInformation'
 import { titleIds, subtitleIds } from '../constants'
 
 import * as Yup from 'yup'
@@ -30,7 +31,11 @@ const initialValues = {
   zip: '',
   province: '',
   dbaName: '',
-  attachments: []
+  attachments: [],
+  isBeneficialOwner: false,
+  isNotBeneficialOwner: false,
+  isOtherBeneficialOwner: false,
+  isNotOtherBeneficialOwner: false
 }
 
 class VellociRegister extends Component {
@@ -47,7 +52,7 @@ class VellociRegister extends Component {
         return <FormationDocument formikProps={formikProps} />
       }
       case 3: {
-        return <ControlPerson formikProps={formikProps} />
+        return <OwnerInformation formikProps={formikProps} />
       }
       case 4: {
         return <ControlPerson formikProps={formikProps} />
