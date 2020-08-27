@@ -37,7 +37,7 @@ const LineGraph = ({ data, title, titleId, subTitle, subTitleId }) => {
       {data && data.length > 0 ? (
         <ResponsiveContainer width='100%' height='100%' minHeight={440}>
           <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-            <Area legendType='none' />
+            <Area legendType='none' dataKey='Transactions' />
             <XAxis tickLine={false} dataKey='name' axisLine={false} />
             <YAxis unit='$' tickLine={false} axisLine={false} width={80} />
             <CartesianGrid vertical={false} strokeDasharray='2 10' />
