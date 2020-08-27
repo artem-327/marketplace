@@ -2672,5 +2672,16 @@
   "velloci.ownerInformation.wouldComplete": "Would you like to complete this form for the remaining beneficial owners or email them a link to complete?",
   "velloci.ownerInformation.needInfo": "Here is the info you'll need:",
   "velloci.ownerInformation.obtainInfoTitle": "Can't Obtain this Information",
-  "velloci.ownerInformation.obtainInfoContent": "No problem. Please select email and we will send them a link to complete the process."
+  "velloci.ownerInformation.obtainInfoContent": "No problem. Please select email and we will send them a link to complete the process.",
+  "velloci.personalInfo.firstName.placeholder": "Enter first name",
+  "velloci.personalInfo.middleName.placeholder": "Enter middle name",
+  "velloci.personalInfo.lastName.placeholder": "Enter last name",
+  "velloci.personalInfo.homeAddress": "Home Address",
+  "velloci.personalInfo.businessRole": "Business Role (Title)",
+  "velloci.personalInfo.socialSecurityNumber": "Social Security Number",
+  "velloci.personalInfo.socialSecurityNumber.placeholder": "XXX-XX-XXXX",
+  "velloci.personalInfo.businessOwnershipPercentage": "Business Ownership Percentage",
+  "velloci.personalInfo.businessOwnershipPercentage.placeholder": "xx",
+  "velloci.termsAndConditions.title": "Here are a few legal terms that you'll have to read and accept before finishing",
+  "velloci.termsAndConditions.electronicComunications": "I agree that I have read, understood and consent to the Electronic Communications Agreement"
 }

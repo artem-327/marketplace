@@ -199,6 +199,7 @@ class AddressForm extends Component {
       countriesLoading,
       loading,
       required,
+      children,
       intl: { formatMessage }
     } = this.props
 
@@ -224,6 +225,7 @@ class AddressForm extends Component {
           </Header>
         )}
         <CustomSegment>
+          {children}
           <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
             <Input
               inputProps={{

@@ -64,10 +64,22 @@ const RectangleWarning = styled(Rectangle)`
   border: solid 1px #ff9d42;
 `
 
+const DivCategories = styled.div`
+  border-left: solid 2px #2599d5;
+  width: 110px;
+  padding-left: 6px;
+  color: #848893;
+`
+
+const GridColumnCategories = styled(GridColumn)`
+  display: flex !important;
+`
+
+const GridRowCategories = styled(GridRow)`
+  padding-top: 0px !important;
+`
+
 function OwnerInformation({ formikProps, intl: { formatMessage } }) {
-  console.log('formikProps====================================')
-  console.log(formikProps)
-  console.log('====================================')
   return (
     <GridOwnerInformation>
       <GridRow>
@@ -231,6 +243,37 @@ function OwnerInformation({ formikProps, intl: { formatMessage } }) {
           </lable>
         </GridColumn>
       </GridRow>
+
+      <GridRow style={{ display: 'flex !important' }}>
+        <GridColumnCategories>
+          <DivCategories>
+            <FormattedMessage id='velloci.ownerInformation.legalName' defaultMessage='Legal Name' />
+          </DivCategories>
+
+          <DivCategories>
+            <FormattedMessage id='velloci.ownerInformation.incomeType' defaultMessage='Income Type' />
+          </DivCategories>
+
+          <DivCategories>
+            <FormattedMessage id='velloci.ownerInformation.ssn' defaultMessage='SSN' />
+          </DivCategories>
+        </GridColumnCategories>
+      </GridRow>
+      <GridRowCategories style={{ display: 'flex !important' }}>
+        <GridColumnCategories>
+          <DivCategories>
+            <FormattedMessage id='velloci.ownerInformation.contactInfo' defaultMessage='Contact Info' />
+          </DivCategories>
+
+          <DivCategories>
+            <FormattedMessage id='velloci.ownerInformation.occupation' defaultMessage='Occupation' />
+          </DivCategories>
+
+          <DivCategories>
+            <FormattedMessage id='velloci.ownerInformation.address' defaultMessage='Address' />
+          </DivCategories>
+        </GridColumnCategories>
+      </GridRowCategories>
 
       <GridRow>
         <GridColumn>

@@ -39,9 +39,6 @@ export const CustomA = styled.a`
 `
 
 function FormationDocument({ formikProps, intl: { formatMessage } }) {
-  console.log('formikProps====================================')
-  console.log(formikProps)
-  console.log('====================================')
   return (
     <GridFormationDocument>
       <GridRow>

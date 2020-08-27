@@ -9,6 +9,8 @@ import ControlPerson from './steps/ControlPerson'
 import BusinessInfo from './steps/BusinessInfo'
 import FormationDocument from './steps/FormationDocument'
 import OwnerInformation from './steps/OwnerInformation'
+import PersonalInformation from './steps/PersonalInformation'
+import TermsAndConditions from './steps/TermsAndConditions'
 import { titleIds, subtitleIds } from '../constants'
 
 import * as Yup from 'yup'
@@ -35,7 +37,23 @@ const initialValues = {
   isBeneficialOwner: false,
   isNotBeneficialOwner: false,
   isOtherBeneficialOwner: false,
-  isNotOtherBeneficialOwner: false
+  isNotOtherBeneficialOwner: false,
+  firstName: '',
+  lastName: '',
+  middleName: '',
+  personalEmailAddress: '',
+  personalPhoneNumber: '',
+  dateOfBirth: '',
+  personalAddress: {
+    streetAddress: '',
+    city: '',
+    country: '',
+    zip: '',
+    province: ''
+  },
+  businessRole: '',
+  socialSecurityNumber: '',
+  businessOwnershipPercentage: ''
 }
 
 class VellociRegister extends Component {
@@ -55,10 +73,10 @@ class VellociRegister extends Component {
         return <OwnerInformation formikProps={formikProps} />
       }
       case 4: {
-        return <ControlPerson formikProps={formikProps} />
+        return <PersonalInformation formikProps={formikProps} />
       }
       case 5: {
-        return <ControlPerson formikProps={formikProps} />
+        return <TermsAndConditions formikProps={formikProps} />
       }
       default:
         return null

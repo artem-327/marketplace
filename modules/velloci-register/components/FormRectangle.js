@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl'
 const DivRectangleForm = styled.div`
   padding: 0px !important;
   width: 740px;
-  height: 860px;
+  height: ${props => (props.height ? props.height : '860px')};
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   border: solid 1px #dee2e6;
@@ -50,7 +50,7 @@ const DivSubtitleText = styled.div`
 
 function FormRectangle({ children, formikProps, title, subtitle, prevStep, activeStep }) {
   return (
-    <DivRectangleForm>
+    <DivRectangleForm height={activeStep === 3 || activeStep === 4 ? '1000px' : '860px'}>
       <DivTitleRectangleForm>
         <DivTitleText>
           <FormattedMessage id={title} defaultMessage='Title'>
