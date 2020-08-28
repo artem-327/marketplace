@@ -136,6 +136,9 @@ export const errorMessages = {
     <FormattedMessage id='validation.shipmentQuoteId' defaultMessage='Value should be in format "12365-4789"' />
   ),
   minOneRole: <FormattedMessage id='validation.minOneRole' defaultMessage='At least one role should be selected' />,
+  minOneAttachment: (
+    <FormattedMessage id='validation.minOneAttachment' defaultMessage='At least one attachment should be uploaded' />
+  ),
   minOneGroup: <FormattedMessage id='validation.minOneGroup' defaultMessage='At least one group should be selected' />,
   minOneCompany: (
     <FormattedMessage id='validation.minOneCompany' defaultMessage='At least one company should be selected' />
@@ -260,13 +263,13 @@ export const dwollaControllerValidation = fullSsnInput =>
 
 export const dateOfBirthValidation = (minimumAge = 18) =>
   Yup.string(errorMessages.requiredMessage)
+    .test('date-format', errorMessages.invalidDateFormat(getLocaleDateFormat()), value =>
+      moment(value, getLocaleDateFormat(), true).isValid()
+    )
     .test(
       'min-age',
       errorMessages.aboveAge(minimumAge),
       val => moment().diff(getStringISODate(val), 'years') >= minimumAge
-    )
-    .test('date-format', errorMessages.invalidDateFormat(getLocaleDateFormat()), value =>
-      moment(value, getLocaleDateFormat(), true).isValid()
     )
     .required(errorMessages.requiredMessage)
 

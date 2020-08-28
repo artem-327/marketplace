@@ -860,6 +860,7 @@
   "global.property": "Property",
   "global.palletPkgMin": "Pallet Pkg Min",
   "global.palletPkgMax": "Pallet Pkg Max",
+  "global.and": "and",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
@@ -2683,5 +2684,12 @@
   "velloci.personalInfo.businessOwnershipPercentage": "Business Ownership Percentage",
   "velloci.personalInfo.businessOwnershipPercentage.placeholder": "xx",
   "velloci.termsAndConditions.title": "Here are a few legal terms that you'll have to read and accept before finishing",
-  "velloci.termsAndConditions.electronicComunications": "I agree that I have read, understood and consent to the Electronic Communications Agreement"
+  "velloci.termsAndConditions.electronicComunications": "I agree that I have read, understood and consent to the ",
+  "velloci.termsAndConditions.electronicComunications.link": "Electronic Communications Agreement ",
+  "velloci.termsAndConditions.privacyPolicy": "I agree that I have read, understood and consent to Velloci's ",
+  "velloci.termsAndConditions.privacyPolicy.link": "Privacy Policy ",
+  "velloci.termsAndConditions.termsOfUse.link": "Terms of Use",
+  "velloci.termsAndConditions.depositAccountAgreement": "I agree that I have read, understood and consent to Banks's ",
+  "velloci.termsAndConditions.depositAccountAgreement.link": "Deposit Account Agreement ",
+  "velloci.termsAndConditions.serviceTerms.link": "Service terms "
 }

@@ -13,13 +13,17 @@ import {
   CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
 import { AddressForm } from '~/modules/address-form'
+import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
 
 const GridBusinessInfo = styled(Grid)`
   margin: 14px 16px !important;
 `
 
 const ColumnCustom = styled(Grid.Column)`
-  .ui.input input {
+  .ui.input input,
+  .phone-code,
+  .phone-num {
     background: #fdfdfd !important;
   }
 `
@@ -51,42 +55,49 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
       </GridRow>
       <GridRow columns={3}>
         <ColumnCustom>
-          <Input
-            name='phoneNumber'
-            label={formatMessage({
-              id: 'velloci.businessInfo.phoneNumber',
-              defaultMessage: 'Personal Phone Number'
-            })}
-            inputProps={{
-              placeholder: formatMessage({
-                id: 'velloci.businessInfo.phoneNumber.placeholder',
-                defaultMessage: 'Enter phone number'
-              }),
-              type: 'tel',
-              'data-test': 'settings_velloci_registration_business_info_phone_number_inpt'
-            }}
+          <PhoneNumber
+            name='businessInfo.phoneNumber'
+            values={formikProps.values}
+            label={
+              <>
+                <FormattedMessage id='velloci.businessInfo.phoneNumber' defaultMessage='Personal Phone Number' />
+                <Required />
+              </>
+            }
+            setFieldValue={formikProps.setFieldValue}
+            setFieldTouched={formikProps.setFieldTouched}
+            errors={formikProps.errors}
+            touched={formikProps.touched}
+            isSubmitting={formikProps.isSubmitting}
+            setErrors={formikProps.setErrors}
+            placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
           />
         </ColumnCustom>
         <ColumnCustom>
           <Input
-            name='emailAddress'
-            label={formatMessage({
-              id: 'velloci.businessInfo.emailAddress',
-              defaultMessage: 'Personal Phone Number'
-            })}
+            name='businessInfo.emailAddress'
+            label={
+              <>
+                {formatMessage({
+                  id: 'velloci.businessInfo.emailAddress',
+                  defaultMessage: 'Personal Phone Number'
+                })}
+                {<Required />}
+              </>
+            }
             inputProps={{
               placeholder: formatMessage({
                 id: 'velloci.businessInfo.emailAddress.placeholder',
                 defaultMessage: 'Enter your email address'
               }),
-              type: 'email',
+              type: 'text',
               'data-test': 'settings_velloci_registration_business_info_email_address_inpt'
             }}
           />
         </ColumnCustom>
         <ColumnCustom>
           <Input
-            name='url'
+            name='businessInfo.url'
             label={formatMessage({
               id: 'velloci.businessInfo.url',
               defaultMessage: 'URL'
@@ -108,17 +119,28 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
             <FormattedMessage id='velloci.businessInfo.legalAddress' defaultMessage='Your Legal Address' />
           </DivLegalAddressTitle>
 
-          <AddressForm values={formikProps.values} displayHeader={false} setFieldValue={formikProps.setFieldValue} />
+          <AddressForm
+            prefix='businessInfo'
+            values={formikProps.values}
+            displayHeader={false}
+            setFieldValue={formikProps.setFieldValue}
+            required={true}
+          />
         </GridColumn>
       </GridRow>
       <GridRow>
         <ColumnCustom>
           <Input
-            name='dbaName'
-            label={formatMessage({
-              id: 'velloci.businessInfo.dbaName',
-              defaultMessage: 'DBA Name (if applicable)'
-            })}
+            name='businessInfo.dbaName'
+            label={
+              <>
+                {formatMessage({
+                  id: 'velloci.businessInfo.dbaName',
+                  defaultMessage: 'DBA Name (if applicable)'
+                })}
+                {<Required />}
+              </>
+            }
             inputProps={{
               placeholder: formatMessage({
                 id: 'velloci.businessInfo.dbaName.placeholder',

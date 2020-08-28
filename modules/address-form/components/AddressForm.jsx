@@ -61,10 +61,9 @@ class AddressForm extends Component {
   async componentDidMount() {
     let { countries } = this.props
     const { addZip } = this.props
-
+    let { address } = this.getValues()
+    if (!address) return
     try {
-      let { address } = this.getValues()
-
       if (countries.length === 0) await this.props.getCountries()
       if (address.zip) await addZip(JSON.parse(address.zip))
       let { countryId, hasProvinces } =
@@ -176,7 +175,6 @@ class AddressForm extends Component {
 
   getValues = (values = this.props.values) => {
     let value = this.props.prefix ? getDeeply(this.props.prefix.split('.'), values) : values
-
     // TODO check wheter this works for array...
 
     if (value instanceof Array) return value[this.props.index]

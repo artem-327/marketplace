@@ -14,13 +14,17 @@ import {
 } from '~/modules/cart/components/StyledComponents'
 import { AddressForm } from '~/modules/address-form'
 import { DateInput } from '~/components/custom-formik'
+import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
 
 const GridPersonalInformation = styled(Grid)`
   margin: 14px 16px !important;
 `
 
 const ColumnCustom = styled(Grid.Column)`
-  .ui.input input {
+  .ui.input input,
+  .phone-code,
+  .phone-num {
     background: #fdfdfd !important;
   }
 `
@@ -35,11 +39,16 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
       <GridRow columns={3}>
         <ColumnCustom>
           <Input
-            name='firstName'
-            label={formatMessage({
-              id: 'global.firstName',
-              defaultMessage: 'First Name'
-            })}
+            name='verifyPersonalInformation.firstName'
+            label={
+              <>
+                {formatMessage({
+                  id: 'global.firstName',
+                  defaultMessage: 'First Name'
+                })}
+                {<Required />}
+              </>
+            }
             inputProps={{
               placeholder: formatMessage({
                 id: 'velloci.personalInfo.firstName.placeholder',
@@ -52,7 +61,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
         </ColumnCustom>
         <ColumnCustom>
           <Input
-            name='middleName'
+            name='verifyPersonalInformation.middleName'
             label={formatMessage({
               id: 'global.middleName',
               defaultMessage: 'Middle Name'
@@ -69,11 +78,16 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
         </ColumnCustom>
         <ColumnCustom>
           <Input
-            name='lastName'
-            label={formatMessage({
-              id: 'global.lastName',
-              defaultMessage: 'Last Name'
-            })}
+            name='verifyPersonalInformation.lastName'
+            label={
+              <>
+                {formatMessage({
+                  id: 'global.lastName',
+                  defaultMessage: 'Last Name'
+                })}
+                {<Required />}
+              </>
+            }
             inputProps={{
               placeholder: formatMessage({
                 id: 'velloci.personalInfo.lastName.placeholder',
@@ -89,11 +103,16 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
       <GridRow columns={2}>
         <ColumnCustom>
           <Input
-            name='personalEmailAddress'
-            label={formatMessage({
-              id: 'velloci.businessInfo.emailAddress',
-              defaultMessage: 'Email Address'
-            })}
+            name='verifyPersonalInformation.emailAddress'
+            label={
+              <>
+                {formatMessage({
+                  id: 'velloci.businessInfo.emailAddress',
+                  defaultMessage: 'Email Address'
+                })}
+                {<Required />}
+              </>
+            }
             inputProps={{
               placeholder: formatMessage({
                 id: 'global.enterEmailAddress',
@@ -105,20 +124,22 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
           />
         </ColumnCustom>
         <ColumnCustom>
-          <Input
-            name='personalPhoneNumber'
-            label={formatMessage({
-              id: 'global.phoneNumber',
-              defaultMessage: 'Phone Number'
-            })}
-            inputProps={{
-              placeholder: formatMessage({
-                id: 'validation.enterPhoneNumber',
-                defaultMessage: 'Enter phone number'
-              }),
-              type: 'text',
-              'data-test': 'settings_velloci_registration_personal_info_personal_phone_number_inpt'
-            }}
+          <PhoneNumber
+            name='verifyPersonalInformation.phoneNumber'
+            values={formikProps.values}
+            label={
+              <>
+                <FormattedMessage id='velloci.businessInfo.phoneNumber' defaultMessage='Personal Phone Number' />
+                <Required />
+              </>
+            }
+            setFieldValue={formikProps.setFieldValue}
+            setFieldTouched={formikProps.setFieldTouched}
+            errors={formikProps.errors}
+            touched={formikProps.touched}
+            isSubmitting={formikProps.isSubmitting}
+            setErrors={formikProps.setErrors}
+            placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
           />
         </ColumnCustom>
       </GridRow>
@@ -126,8 +147,13 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
         <ColumnCustom>
           <DateInput
             inputProps={{ fluid: true }}
-            label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
-            name='dateOfBirth'
+            label={
+              <>
+                {formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
+                {<Required />}
+              </>
+            }
+            name='verifyPersonalInformation.dateOfBirth'
           />
         </ColumnCustom>
       </GridRow>
@@ -138,9 +164,10 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
           </DivLegalAddressTitle>
 
           <AddressForm
-            prefix='personalAddress'
+            prefix='verifyPersonalInformation'
             values={formikProps.values}
             displayHeader={false}
+            required={true}
             setFieldValue={formikProps.setFieldValue}>
             <Rectangle style={{ margin: '0px 0px 10px 0px' }}>
               <CustomDivTitle>
@@ -162,11 +189,16 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
       <GridRow columns={2}>
         <ColumnCustom>
           <Input
-            name='businessRole'
-            label={formatMessage({
-              id: 'velloci.personalInfo.businessRole',
-              defaultMessage: 'Business Role (Title)'
-            })}
+            name='verifyPersonalInformation.businessRole'
+            label={
+              <>
+                {formatMessage({
+                  id: 'velloci.personalInfo.businessRole',
+                  defaultMessage: 'Business Role (Title)'
+                })}
+                {<Required />}
+              </>
+            }
             inputProps={{
               placeholder: formatMessage({
                 id: 'global.businessName',
@@ -179,11 +211,16 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
         </ColumnCustom>
         <ColumnCustom>
           <Input
-            name='socialSecurityNumber'
-            label={formatMessage({
-              id: 'velloci.personalInfo.socialSecurityNumber',
-              defaultMessage: 'Social Security Number'
-            })}
+            name='verifyPersonalInformation.socialSecurityNumber'
+            label={
+              <>
+                {formatMessage({
+                  id: 'velloci.personalInfo.socialSecurityNumber',
+                  defaultMessage: 'Social Security Number'
+                })}
+                {<Required />}
+              </>
+            }
             inputProps={{
               placeholder: formatMessage({
                 id: 'velloci.personalInfo.socialSecurityNumber.placeholder',
@@ -198,7 +235,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
       <GridRow>
         <ColumnCustom width={6}>
           <Input
-            name='businessOwnershipPercentage'
+            name='verifyPersonalInformation.businessOwnershipPercentage'
             label={formatMessage({
               id: 'velloci.personalInfo.businessOwnershipPercentage',
               defaultMessage: 'Business Ownership Percentage'
@@ -211,7 +248,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
                 defaultMessage: 'xx'
               }),
               type: 'text',
-              pattern: 'd*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
+              pattern: '\d*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
               maxLength: '2',
               'data-test': 'settings_velloci_registration_personal_info_business_ownership_percentage_inpt'
             }}

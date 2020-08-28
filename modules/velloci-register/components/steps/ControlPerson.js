@@ -11,6 +11,7 @@ import {
   CustomDivInTitle,
   CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
+import { Required } from '~/components/constants/layout'
 
 const GridControlPerson = styled(Grid)`
   margin: 14px 16px !important;
@@ -58,11 +59,18 @@ const SpanEstablishedLabel = styled.span`
 `
 
 //REMOVE me if you know options for the dropdowns
-const options = [
+const optionsKindOfBusiness = [
   { key: 1, text: '1. kind of business', value: 1 },
   { key: 2, text: '2. kind of business', value: 2 },
   { key: 3, text: '3. kind of business', value: 3 },
   { key: 4, text: '4. kind of business', value: 4 }
+]
+//REMOVE me if you know options for the dropdowns
+const optionsIndustryType = [
+  { key: 5, text: '1. industry type', value: 5 },
+  { key: 6, text: '2. industry type', value: 6 },
+  { key: 7, text: '3. industry type', value: 7 },
+  { key: 8, text: '4. industry type', value: 8 }
 ]
 
 function ControlPerson({ formikProps, intl: { formatMessage } }) {
@@ -104,7 +112,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
               id: 'velloci.controlPerson.checkboxLabel',
               defaultMessage: 'I will be the Control Person of this bank account'
             })}
-            name='isControlPerson'
+            name='controlPerson.isControlPerson'
           />
         </GridColumn>
       </GridRow>
@@ -120,7 +128,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
               <GridRowBusinessType>
                 <Grid.Column>
                   <Dropdown
-                    options={options} //TODO
+                    options={optionsKindOfBusiness} //TODO
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_drpdwn'
                     }}
@@ -132,22 +140,32 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                       search: true,
                       selection: true
                     }}
-                    name='kindBusiness'
-                    label={formatMessage({
-                      id: 'velloci.controlPerson.kindBusiness',
-                      defaultMessage: 'What kind of business are you opening this account for?'
-                    })}
+                    name='controlPerson.kindBusiness'
+                    label={
+                      <>
+                        {formatMessage({
+                          id: 'velloci.controlPerson.kindBusiness',
+                          defaultMessage: 'What kind of business are you opening this account for?'
+                        })}
+                        {<Required />}
+                      </>
+                    }
                   />
                 </Grid.Column>
               </GridRowBusinessType>
               <GridRowBusinessType>
                 <Grid.Column width={8}>
                   <Input
-                    name='legalBusinessName'
-                    label={formatMessage({
-                      id: 'velloci.controlPerson.legalBusinessName',
-                      defaultMessage: 'Legal Business Name'
-                    })}
+                    name='controlPerson.legalBusinessName'
+                    label={
+                      <>
+                        {formatMessage({
+                          id: 'velloci.controlPerson.legalBusinessName',
+                          defaultMessage: 'Legal Business Name'
+                        })}
+                        {<Required />}
+                      </>
+                    }
                     inputProps={{
                       placeholder: formatMessage({
                         id: 'velloci.controlPerson.legalBusinessName.placeholder',
@@ -162,23 +180,24 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
               <GridRowBusinessType>
                 <Grid.Column width={8}>
                   <FormattedMessage id='velloci.controlPerson.tax' defaultMessage='Tax Identification Number' />
+                  <Required />
                   <ButtonOrCustom widths={8}>
                     <Button
                       onClick={e => {
-                        formikProps.setFieldValue('isEin', true)
-                        formikProps.setFieldValue('isSsn', false)
+                        formikProps.setFieldValue('controlPerson.isEin', true)
+                        formikProps.setFieldValue('controlPerson.isSsn', false)
                       }}
-                      active={formikProps.values.isEin}
+                      active={formikProps.values.controlPerson.isEin}
                       data-test='settings_velloci_registration_control_person_ein_btn'>
                       <FormattedMessage id='velloci.controlPerson.ein' defaultMessage='EIN' />
                     </Button>
                     <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
                     <Button
                       onClick={e => {
-                        formikProps.setFieldValue('isEin', false)
-                        formikProps.setFieldValue('isSsn', true)
+                        formikProps.setFieldValue('controlPerson.isEin', false)
+                        formikProps.setFieldValue('controlPerson.isSsn', true)
                       }}
-                      active={formikProps.values.isSsn}
+                      active={formikProps.values.controlPerson.isSsn}
                       data-test='settings_velloci_registration_control_person_ssn_btn'>
                       <FormattedMessage id='velloci.controlPerson.ssn' defaultMessage='SSN' />
                     </Button>
@@ -188,15 +207,17 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
               <GridRowBusinessType columns={2}>
                 <Grid.Column width={8}>
                   <Input
-                    name={formikProps.values.isEin ? 'ein' : 'ssn'}
+                    name={formikProps.values.controlPerson.isEin ? 'controlPerson.ein' : 'controlPerson.ssn'}
                     inputProps={{
                       placeholder: formatMessage({
-                        id: `velloci.controlPerson.${formikProps.values.isEin ? 'ein' : 'ssn'}.placeholder`,
-                        defaultMessage: `Enter ${formikProps.values.isEin ? 'EIN' : 'SSN'}`
+                        id: `velloci.controlPerson.${
+                          formikProps.values.controlPerson.isEin ? 'ein' : 'ssn'
+                        }.placeholder`,
+                        defaultMessage: `Enter ${formikProps.values.controlPerson.isEin ? 'EIN' : 'SSN'}`
                       }),
                       type: 'text',
                       'data-test': `settings_velloci_registration_control_person_legal_${
-                        formikProps.values.isEin ? 'ein' : 'ssn'
+                        formikProps.values.controlPerson.isEin ? 'ein' : 'ssn'
                       }_inpt`
                     }}
                   />
@@ -213,14 +234,14 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                       toggle: true,
                       'data-test': 'settings_velloci_registration_control_person_legal_isEstablishedUs_chckbx'
                     }}
-                    name='isEstablishedUs'
+                    name='controlPerson.isEstablishedUs'
                   />
                 </Grid.Column>
               </GridRowBusinessType>
               <GridRowBusinessType>
                 <Grid.Column width={8}>
                   <Dropdown
-                    options={options} //TODO
+                    options={optionsIndustryType} //TODO
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
                     }}
@@ -232,11 +253,16 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                       search: true,
                       selection: true
                     }}
-                    name='kindBusiness'
-                    label={formatMessage({
-                      id: 'velloci.controlPerson.industryType',
-                      defaultMessage: 'Your Industry Type'
-                    })}
+                    name='controlPerson.industryType'
+                    label={
+                      <>
+                        {formatMessage({
+                          id: 'velloci.controlPerson.industryType',
+                          defaultMessage: 'Your Industry Type'
+                        })}
+                        {<Required />}
+                      </>
+                    }
                   />
                 </Grid.Column>
               </GridRowBusinessType>

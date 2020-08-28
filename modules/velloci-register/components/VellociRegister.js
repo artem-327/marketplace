@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
-import { errorMessages, addressValidationSchema, einValidation, websiteValidation } from '~/constants/yupValidation'
+import _ from 'lodash'
+import * as Yup from 'yup'
+import moment from 'moment'
 
+import {
+  errorMessages,
+  addressValidationSchema,
+  einValidation,
+  websiteValidationNotRequired,
+  dateValidation
+} from '~/constants/yupValidation'
 import SetupIndicator from './SetupIndicator'
 import FormRectangle from './FormRectangle'
 import ControlPerson from './steps/ControlPerson'
@@ -11,50 +20,10 @@ import FormationDocument from './steps/FormationDocument'
 import OwnerInformation from './steps/OwnerInformation'
 import PersonalInformation from './steps/PersonalInformation'
 import TermsAndConditions from './steps/TermsAndConditions'
-import { titleIds, subtitleIds } from '../constants'
-
-import * as Yup from 'yup'
-
-const initialValues = {
-  isControlPerson: false,
-  legalBusinessName: '',
-  kindBusiness: '',
-  isEin: true,
-  isSsn: false,
-  ein: '',
-  ssn: '',
-  isEstablishedUs: true,
-  phoneNumber: '',
-  emailAddres: '',
-  url: '',
-  streetAddress: '',
-  city: '',
-  country: '',
-  zip: '',
-  province: '',
-  dbaName: '',
-  attachments: [],
-  isBeneficialOwner: false,
-  isNotBeneficialOwner: false,
-  isOtherBeneficialOwner: false,
-  isNotOtherBeneficialOwner: false,
-  firstName: '',
-  lastName: '',
-  middleName: '',
-  personalEmailAddress: '',
-  personalPhoneNumber: '',
-  dateOfBirth: '',
-  personalAddress: {
-    streetAddress: '',
-    city: '',
-    country: '',
-    zip: '',
-    province: ''
-  },
-  businessRole: '',
-  socialSecurityNumber: '',
-  businessOwnershipPercentage: ''
-}
+import { titleIds, subtitleIds, titleForms, initialValues } from '../constants'
+import ErrorFocus from '~/components/error-focus'
+import { PHONE_REGEXP } from '~/src/utils/constants'
+import { getStringISODate } from '~/components/date-format'
 
 class VellociRegister extends Component {
   getContent = formikProps => {
@@ -87,35 +56,114 @@ class VellociRegister extends Component {
     this.props.cleareActiveStep()
   }
 
-  handleSubmit = async values => {
+  //TODO missing BE call
+  handleSubmit = async formikProps => {
+    const { activeStep } = this.props
+    if (activeStep !== 5) return
+    try {
+      console.log('Submit form successfully. Values for BE call:')
+      console.log(formikProps)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  submitForm = async formikProps => {
     const { nextStep, activeStep } = this.props
-
-    if (activeStep === 5) {
-      console.log('handleSubmit', values)
-    } else {
-      nextStep(activeStep + 1)
-    }
+    formikProps
+      .validateForm()
+      .then(errors => {
+        if ((_.isEmpty(errors) && activeStep !== 5) || (!errors[titleForms[activeStep]] && activeStep !== 5)) {
+          nextStep(activeStep + 1)
+          formikProps.setErrors({})
+        } else {
+          formikProps.handleSubmit()
+        }
+      })
+      .catch(err => console.log('catch', err))
   }
+  //TODO fix validation for all fields
+  getValidationSchema = () =>
+    Yup.lazy(values => {
+      const { requiredMessage, invalidString, invalidEmail, minLength, invalidPhoneNumber } = errorMessages
+      const minLengthValue = 3
+      const minLengthErr = minLength(minLengthValue)
 
-  getValidationSchema = () => {
-    const { requiredMessage, invalidString, invalidEmail, minLength } = errorMessages
-    const minLengthValue = 3
-    const minLengthErr = minLength(minLengthValue)
-    return {
-      legalBusinessName: Yup.string(invalidString)
-        .typeError(invalidString)
-        .min(minLengthValue, minLengthErr)
-        .required(requiredMessage),
-      ein: einValidation(),
-      ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage),
-      emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
-      url: websiteValidation(),
-      dbaName: Yup.string(invalidString).typeError(invalidString)
-    }
-  }
+      return Yup.object().shape({
+        controlPerson: Yup.lazy(() => {
+          const taxNumber = values.controlPerson.isEin
+            ? { ein: einValidation() }
+            : { ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage) }
+          return Yup.object().shape({
+            kindBusiness: Yup.number().required(errorMessages.requiredMessage),
+            legalBusinessName: Yup.string(invalidString)
+              .typeError(invalidString)
+              .min(minLengthValue, minLengthErr)
+              .required(requiredMessage),
+            ...taxNumber,
+            industryType: Yup.number().required(errorMessages.requiredMessage)
+          })
+        }),
+        businessInfo: Yup.lazy(() => {
+          return Yup.object().shape({
+            phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
+            emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
+            url: websiteValidationNotRequired(),
+            address: addressValidationSchema(),
+            dbaName: Yup.string(invalidString).typeError(invalidString).required(errorMessages.requiredMessage)
+          })
+        }),
+        formationDocument: Yup.lazy(() => {
+          return Yup.object().shape({
+            attachments: Yup.array().min(1, errorMessages.minOneAttachment)
+          })
+        }),
+        verifyPersonalInformation: Yup.lazy(() => {
+          return Yup.object().shape({
+            firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+            lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+            emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
+            phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
+            dateOfBirthday: dateValidation(true).concat(
+              Yup.string().test(
+                'min-age',
+                errorMessages.aboveAge(18),
+                val => moment().diff(getStringISODate(val), 'years') >= 18
+              )
+            ),
+            address: addressValidationSchema(),
+            businessRole: Yup.string()
+              .trim()
+              .min(3, errorMessages.minLength(3))
+              .required(errorMessages.requiredMessage),
+            socialSecurityNumber: Yup.string()
+              .trim()
+              .min(10, errorMessages.minLength(10))
+              .required(errorMessages.requiredMessage),
+            businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage)
+          })
+        }),
+        termsAndConditions: Yup.lazy(() => {
+          return Yup.object().shape({
+            electronicComunications: Yup.boolean()
+              .required(errorMessages.requiredMessage)
+              .oneOf([true], errorMessages.requiredMessage),
+            privacyPolicy: Yup.boolean()
+              .required(errorMessages.requiredMessage)
+              .oneOf([true], errorMessages.requiredMessage),
+            depositAccountAgreement: Yup.boolean()
+              .required(errorMessages.requiredMessage)
+              .oneOf([true], errorMessages.requiredMessage),
+            trueComplete: Yup.boolean()
+              .required(errorMessages.requiredMessage)
+              .oneOf([true], errorMessages.requiredMessage)
+          })
+        })
+      })
+    })
 
   render() {
-    const { activeStep, prevStep } = this.props
+    const { prevStep, activeStep } = this.props
     return (
       <Grid>
         <GridColumn>
@@ -124,9 +172,11 @@ class VellociRegister extends Component {
             <Formik
               onSubmit={this.handleSubmit}
               enableReinitialize
+              validateOnChange={true}
               initialValues={initialValues}
               validationSchema={this.getValidationSchema()}
               render={formikProps => {
+                this.formikProps = formikProps
                 return (
                   <Form>
                     <Grid verticalAlign='middle' centered>
@@ -135,10 +185,12 @@ class VellociRegister extends Component {
                         title={titleIds[activeStep]}
                         subtitle={subtitleIds[activeStep]}
                         prevStep={prevStep}
+                        submitForm={this.submitForm}
                         activeStep={activeStep}>
                         {this.getContent(formikProps)}
                       </FormRectangle>
                     </Grid>
+                    <ErrorFocus />
                   </Form>
                 )
               }}

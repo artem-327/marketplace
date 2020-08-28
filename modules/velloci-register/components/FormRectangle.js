@@ -48,9 +48,9 @@ const DivSubtitleText = styled.div`
   padding: 16px 30px;
 `
 
-function FormRectangle({ children, formikProps, title, subtitle, prevStep, activeStep }) {
+function FormRectangle({ children, formikProps, title, subtitle, prevStep, activeStep, submitForm }) {
   return (
-    <DivRectangleForm height={activeStep === 3 || activeStep === 4 ? '1000px' : '860px'}>
+    <DivRectangleForm height={activeStep === 3 || activeStep === 4 ? '1000px' : activeStep === 5 ? '400px' : '860px'}>
       <DivTitleRectangleForm>
         <DivTitleText>
           <FormattedMessage id={title} defaultMessage='Title'>
@@ -75,7 +75,7 @@ function FormRectangle({ children, formikProps, title, subtitle, prevStep, activ
             </FormattedMessage>
           </Button>
         ) : null}
-        <ButtonSubmit type='submit' onClick={formikProps.handleSubmit} primary>
+        <ButtonSubmit type='button' onClick={() => submitForm(formikProps)} primary>
           <FormattedMessage
             id={activeStep === 5 ? 'velloci.submitApplication' : 'global.next'}
             defaultMessage={activeStep === 5 ? 'Submit Application' : 'Next'}>

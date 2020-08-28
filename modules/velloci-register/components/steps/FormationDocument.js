@@ -5,6 +5,7 @@ import { Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info, UploadCloud } from 'react-feather'
+import get from 'lodash/get'
 
 import {
   Rectangle,
@@ -13,6 +14,8 @@ import {
   CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
+import { Required } from '~/components/constants/layout'
+import { getSafe } from '~/utils/functions'
 
 const GridFormationDocument = styled(Grid)`
   margin: 14px 16px !important;
@@ -39,6 +42,8 @@ export const CustomA = styled.a`
 `
 
 function FormationDocument({ formikProps, intl: { formatMessage } }) {
+  let error = getSafe(() => formikProps.errors.formationDocument.attachments, false)
+
   return (
     <GridFormationDocument>
       <GridRow>
@@ -97,8 +102,8 @@ function FormationDocument({ formikProps, intl: { formatMessage } }) {
                 defaultMessage='Add as many documents as you have available.'
               />
             </b>
+            <Required />
           </DivLegalAddressTitle>
-
           <UploadAttachment
             name='attachments'
             attachments={formikProps.values.attachments}
@@ -114,6 +119,7 @@ function FormationDocument({ formikProps, intl: { formatMessage } }) {
               )
               await formikProps.setFieldValue('attachments', newAttachments)
             }}
+            formikProps={formikProps}
             data-test='settings_velloci_registration_formation_document_attachments'
             emptyContent={
               <CustomDiv>
@@ -158,6 +164,7 @@ function FormationDocument({ formikProps, intl: { formatMessage } }) {
               </CustomDiv>
             }
           />
+          {error && <span className='sui-error-message'>{error}</span>}
         </GridColumn>
       </GridRow>
     </GridFormationDocument>

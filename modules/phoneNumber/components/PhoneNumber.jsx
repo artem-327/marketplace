@@ -58,7 +58,7 @@ function splitPhoneNumber(phone, phoneCountryCodes) {
     ) => d.value === phone.slice(0, d.value.length)
   )
 
-  let sorted = filtered.sort(function(a, b) {
+  let sorted = filtered.sort(function (a, b) {
     return b.value.length - a.value.length
   }) // sort by longest
 
@@ -174,7 +174,8 @@ export default class PhoneNumber extends Component {
       isSubmitting,
       disabled,
       clearable,
-      placeholder
+      placeholder,
+      setErrors
     } = this.props
 
     let { phoneCountryCode, phoneNumber } = this.state
@@ -185,7 +186,7 @@ export default class PhoneNumber extends Component {
       <Field
         name={name}
         render={({ field, form }) => {
-          if (!get(errors, name, null) && (form && !error || form.isValidating)) {
+          if (!get(errors, name, null) && ((form && !error) || form.isValidating)) {
             if (!phoneCountryCode && phoneNumber) {
               form.setFieldError(
                 name,
@@ -196,6 +197,11 @@ export default class PhoneNumber extends Component {
                 name,
                 formatMessage({ id: 'global.phoneNumberRequired', defaultMessage: 'Phone number required' })
               )
+            }
+          } else {
+            if (errors[name]) {
+              delete errors[name]
+              setErrors(errors)
             }
           }
 
@@ -217,13 +223,15 @@ export default class PhoneNumber extends Component {
                   name={name}
                   className='phone-num'
                   mask='999 999 9999'
-                  maskChar=' '
+                  maskchar=' '
                   compact='true'
                   disabled={disabled}
                   type='text'
                   value={phoneNumber}
                   onChange={this.handleChangeInput}
-                  placeholder={placeholder || formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
+                  placeholder={
+                    placeholder || formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })
+                  }
                 />
               </span>
               {error && <span className='sui-error-message'>{error}</span>}
@@ -238,6 +246,7 @@ export default class PhoneNumber extends Component {
 PhoneNumber.propTypes = {
   setFieldValue: func,
   setFieldTouched: func,
+  setErrors: func,
   name: string.isRequired,
   values: object,
   label: object,
@@ -253,6 +262,7 @@ PhoneNumber.propTypes = {
 PhoneNumber.defaultProps = {
   setFieldValue: () => console.warn('setFieldValue not supplied in PhoneNumber!'),
   setFieldTouched: () => console.warn('setFieldTouched not supplied in PhoneNumber!'),
+  setErrors: () => console.warn('setErrors not supplied in PhoneNumber!'),
   name: null,
   values: null,
   search: true,
