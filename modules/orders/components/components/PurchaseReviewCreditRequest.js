@@ -25,6 +25,18 @@ const AccordionTitle = styled(Accordion.Title)`
     vertical-align: center;
   }
 `
+
+const ButtonsRow = styled(Grid.Row)`
+  > .column {
+    width: auto !important;
+    margin-left: 0 !important;
+    
+    &:first-child {
+      margin-left: auto !important;
+    }
+  }
+`
+
 const initValues = {
   counterValue: null,
   messageBuyer: null
@@ -370,9 +382,8 @@ class PurchaseReviewCreditRequest extends React.Component {
                                 />
                               </Grid.Column>
                             </Grid.Row>
-                            <Grid.Row>
-                              <Grid.Column width={6}></Grid.Column>
-                              <Grid.Column floated='right' width={3}>
+                            <ButtonsRow>
+                              <Grid.Column floated='right'>
                                 <Button
                                   type='button'
                                   basic
@@ -386,7 +397,7 @@ class PurchaseReviewCreditRequest extends React.Component {
                                   </FormattedMessage>
                                 </Button>
                               </Grid.Column>
-                              <Grid.Column floated='right' width={4}>
+                              <Grid.Column floated='right'>
                                 <Button
                                   type='button'
                                   basic
@@ -402,14 +413,14 @@ class PurchaseReviewCreditRequest extends React.Component {
                                   </FormattedMessage>
                                 </Button>
                               </Grid.Column>
-                              <Grid.Column floated='right' width={3}>
+                              <Grid.Column floated='right'>
                                 <Button color='blue' fluid type='submit'>
                                   <FormattedMessage id='global.send' defaultMessage='Send' tagName='span'>
                                     {text => text}
                                   </FormattedMessage>
                                 </Button>
                               </Grid.Column>
-                            </Grid.Row>
+                            </ButtonsRow>
                           </>
                         )}
                       </Grid>

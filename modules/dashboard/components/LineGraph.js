@@ -61,7 +61,7 @@ const LineGraph = ({ data, dataKey, isCurrency, title, titleId, subTitle, subTit
       {data && data.length > 0 ? (
         <ResponsiveContainer width='100%' height='100%' minHeight={440}>
           <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-            <Area legendType='none' />
+            <Area legendType='none' dataKey='Transactions' />
             <XAxis tickLine={false} dataKey='name' axisLine={false} />
             <YAxis unit={isCurrency ? (unitsCurrency === 0 ? '$' : (unitsCurrency === 1 ? 'k$' : (unitsCurrency === 2 ? 'M$' : (unitsCurrency === 3 ? 'B$' : 'T$')))) : ''} tickLine={false} axisLine={false} width={80} />
             <CartesianGrid vertical={false} strokeDasharray='2 10' />

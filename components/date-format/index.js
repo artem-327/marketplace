@@ -173,7 +173,7 @@ export const getStringISODate = (stringDate = '') => {
   const getYear = stringYear => {
     let resultYear = stringYear
     if (stringYear && stringYear.length === 2) {
-      resultYear`20${stringYear}`
+      resultYear = `20${stringYear}`
     } else if (stringYear && stringYear.length > 4) {
       resultYear = stringYear.substring(0, 4)
       if (stringYear.includes(':')) {

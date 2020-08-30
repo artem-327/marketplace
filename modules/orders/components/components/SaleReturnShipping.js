@@ -19,8 +19,9 @@ import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import moment from 'moment'
 import { AlertCircle } from 'react-feather'
+import { debounce } from 'lodash'
 //Components
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import { DateInput } from '~/components/custom-formik'
 import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
@@ -146,7 +147,9 @@ class SaleReturnShipping extends React.Component {
     }
   }
 
-  onDateChange = async (event, { name, value }) => {
+  onDateChange = debounce(async (event, { name, value }) => {
+    if (!value || moment(value).format(getLocaleDateFormat()) === 'Invalid date' || this.errors.pickupDate) return
+
     let pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
     if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
       // if current date (today) is selected the pickupDate (datetime) is in past
@@ -162,7 +165,7 @@ class SaleReturnShipping extends React.Component {
       }
       this.setState({ selectedShippingQuote: 0 })
     }
-  }
+  }, 250)
 
   requestManualShippingQuote = async () => {
     const { order } = this.props
@@ -197,6 +200,19 @@ class SaleReturnShipping extends React.Component {
     return initialValues
   }
 
+  validationSchema = () =>
+    Yup.lazy(values => {
+      return Yup.object().shape({
+        pickupDate: dateValidation(false).concat(
+          Yup.string().test(
+            'min-date',
+            errorMessages.mustBeInFuture,
+            val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
+          )
+        )
+      })
+    })
+
   render() {
     const {
       intl: { formatMessage },
@@ -222,15 +238,17 @@ class SaleReturnShipping extends React.Component {
           <ModalBody>
             <Modal.Description>
               <Form
+                validationSchema={this.validationSchema()}
                 enableReinitialize
-                validateOnChange={false}
+                validateOnChange={true}
                 initialValues={this.getInitialFormValues()}
                 onSubmit={this.submitHandler}
                 className='flex stretched'
                 style={{ padding: '0' }}>
                 {formikProps => {
-                  let { touched, validateForm, resetForm, values, setFieldValue } = formikProps
+                  let { touched, validateForm, resetForm, values, setFieldValue, errors } = formikProps
                   const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
+                  this.errors = errors
                   return (
                     <>
                       <CustomGrid>
@@ -238,10 +256,10 @@ class SaleReturnShipping extends React.Component {
                           <Grid.Column width={8}>
                             <DateInput
                               inputProps={{
-                                minDate: moment(),
+                                // minDate: moment(),
                                 fluid: true,
                                 placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
-                                onChange: (event, val) => this.onDateChange(event, val),
+                                onChange: async (event, val) => await this.onDateChange(event, val),
                                 'data-test': 'return_shipping_pickup_date'
                               }}
                               label={
