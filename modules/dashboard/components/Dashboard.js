@@ -514,6 +514,7 @@ class Dashboard extends Component {
                 key='statsType'
                 style={{ marginLeft: 'auto' }}
                 item
+                pointing='top right'
                 options={Object.entries(statsTabs).map((stType) => {
                   return { text: stType[1][0], value: stType[0] }
                 })}
