@@ -15,7 +15,7 @@ import {
 } from '~/modules/cart/components/StyledComponents'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { Required } from '~/components/constants/layout'
-import { getSafe } from '~/utils/functions'
+import { titleForms } from '../../constants'
 
 const GridFormationDocument = styled(Grid)`
   margin: 14px 16px !important;
@@ -41,9 +41,7 @@ export const CustomA = styled.a`
   color: #2599d5;
 `
 
-function FormationDocument({ formikProps, intl: { formatMessage } }) {
-  let error = getSafe(() => formikProps.errors.formationDocument.attachments, false)
-
+function FormationDocument({ formikProps, intl: { formatMessage }, activeStep, error }) {
   return (
     <GridFormationDocument>
       <GridRow>
@@ -105,19 +103,19 @@ function FormationDocument({ formikProps, intl: { formatMessage } }) {
             <Required />
           </DivLegalAddressTitle>
           <UploadAttachment
-            name='attachments'
-            attachments={formikProps.values.attachments}
+            name='companyFormationDocument.attachments'
+            attachments={formikProps.values.companyFormationDocument.attachments}
             fileMaxSize={20}
             onChange={files => {
               if (files.length) {
-                formikProps.setFieldValue('attachments', files)
+                formikProps.setFieldValue(`companyFormationDocument.attachments`, files)
               }
             }}
             removeAttachment={async fileId => {
-              let newAttachments = await formikProps.values.attachments.filter(att =>
+              let newAttachments = await formikProps.values.companyFormationDocument.attachments.filter(att =>
                 att.id ? att.id !== fileId : att.lastModified !== fileId
               )
-              await formikProps.setFieldValue('attachments', newAttachments)
+              await formikProps.setFieldValue('companyFormationDocument.attachments', newAttachments)
             }}
             formikProps={formikProps}
             data-test='settings_velloci_registration_formation_document_attachments'

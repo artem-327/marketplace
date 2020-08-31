@@ -24,10 +24,13 @@ import { titleIds, subtitleIds, titleForms, initialValues } from '../constants'
 import ErrorFocus from '~/components/error-focus'
 import { PHONE_REGEXP } from '~/src/utils/constants'
 import { getStringISODate } from '~/components/date-format'
+import { getSafe } from '~/utils/functions'
 
 class VellociRegister extends Component {
   getContent = formikProps => {
     const { activeStep } = this.props
+    let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
+
     switch (activeStep) {
       case 0: {
         return <ControlPerson formikProps={formikProps} />
@@ -36,7 +39,7 @@ class VellociRegister extends Component {
         return <BusinessInfo formikProps={formikProps} />
       }
       case 2: {
-        return <FormationDocument formikProps={formikProps} />
+        return <FormationDocument formikProps={formikProps} activeStep={activeStep} error={error} />
       }
       case 3: {
         return <OwnerInformation formikProps={formikProps} />
@@ -58,31 +61,31 @@ class VellociRegister extends Component {
 
   //TODO missing BE call
   handleSubmit = async formikProps => {
-    const { activeStep } = this.props
+    const { activeStep, prevStep } = this.props
     if (activeStep !== 5) return
     try {
       console.log('Submit form successfully. Values for BE call:')
-      console.log(formikProps)
+      console.log(formikProps.values)
     } catch (error) {
       console.error(error)
     }
   }
 
   submitForm = async formikProps => {
-    const { nextStep, activeStep } = this.props
+    const { nextStep, activeStep, prevStep } = this.props
     formikProps
       .validateForm()
       .then(errors => {
-        if ((_.isEmpty(errors) && activeStep !== 5) || (!errors[titleForms[activeStep]] && activeStep !== 5)) {
+        if (errors[titleForms[activeStep]] || activeStep === 5) {
+          formikProps.handleSubmit()
+        } else if ((_.isEmpty(errors) && activeStep !== 5) || (!errors[titleForms[activeStep]] && activeStep !== 5)) {
           nextStep(activeStep + 1)
           formikProps.setErrors({})
-        } else {
-          formikProps.handleSubmit()
         }
       })
       .catch(err => console.log('catch', err))
   }
-  //TODO fix validation for all fields
+  //TODO fix validation based on BE fields and story
   getValidationSchema = () =>
     Yup.lazy(values => {
       const { requiredMessage, invalidString, invalidEmail, minLength, invalidPhoneNumber } = errorMessages
@@ -95,13 +98,14 @@ class VellociRegister extends Component {
             ? { ein: einValidation() }
             : { ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage) }
           return Yup.object().shape({
-            kindBusiness: Yup.number().required(errorMessages.requiredMessage),
+            isControlPerson: Yup.boolean().oneOf([true], errorMessages.requiredMessage),
+            kindBusiness: Yup.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
             legalBusinessName: Yup.string(invalidString)
               .typeError(invalidString)
               .min(minLengthValue, minLengthErr)
               .required(requiredMessage),
             ...taxNumber,
-            industryType: Yup.number().required(errorMessages.requiredMessage)
+            industryType: Yup.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage)
           })
         }),
         businessInfo: Yup.lazy(() => {
@@ -113,9 +117,17 @@ class VellociRegister extends Component {
             dbaName: Yup.string(invalidString).typeError(invalidString).required(errorMessages.requiredMessage)
           })
         }),
-        formationDocument: Yup.lazy(() => {
+        companyFormationDocument: Yup.lazy(() => {
           return Yup.object().shape({
             attachments: Yup.array().min(1, errorMessages.minOneAttachment)
+          })
+        }),
+        ownerInformation: Yup.lazy(() => {
+          return Yup.object().shape({
+            isBeneficialOwner: Yup.boolean(),
+            isNotBeneficialOwner: Yup.boolean(),
+            isOtherBeneficialOwner: Yup.boolean(),
+            isNotOtherBeneficialOwner: Yup.boolean()
           })
         }),
         verifyPersonalInformation: Yup.lazy(() => {
@@ -124,7 +136,7 @@ class VellociRegister extends Component {
             lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
             emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
             phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
-            dateOfBirthday: dateValidation(true).concat(
+            dateOfBirth: dateValidation(true).concat(
               Yup.string().test(
                 'min-age',
                 errorMessages.aboveAge(18),

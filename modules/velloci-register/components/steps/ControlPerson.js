@@ -48,10 +48,11 @@ const DivBusinessTypeTitle = styled.div`
 `
 
 const DivRectangleBusinessType = styled.div`
-  height: 380px;
+  overflow: auto;
   border-radius: 4px;
   border: solid 1px #dee2e6;
   background-color: #f8f9fb;
+  padding-bottom: 16px;
 `
 
 const SpanEstablishedLabel = styled.span`

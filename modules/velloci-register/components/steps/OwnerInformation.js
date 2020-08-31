@@ -55,9 +55,6 @@ const DivCheckboxes = styled.div`
   .field {
     padding-right: 20px !important;
   }
-  label {
-    color: #848893 !important;
-  }
 `
 
 const RectangleWarning = styled(Rectangle)`
@@ -125,13 +122,13 @@ function OwnerInformation({ formikProps, intl: { formatMessage } }) {
               })}
               inputProps={{
                 onChange: () => {
-                  formikProps.setFieldValue('isBeneficialOwner', true)
-                  formikProps.setFieldValue('isNotBeneficialOwner', false)
+                  formikProps.setFieldValue('ownerInformation.isBeneficialOwner', true)
+                  formikProps.setFieldValue('ownerInformation.isNotBeneficialOwner', false)
                 },
                 radio: true,
                 'data-test': 'settings_velloci_registration_owner_information_isBeneficialOwner_chckbx'
               }}
-              name='isBeneficialOwner'
+              name='ownerInformation.isBeneficialOwner'
             />
             <Checkbox
               label={formatMessage({
@@ -140,13 +137,13 @@ function OwnerInformation({ formikProps, intl: { formatMessage } }) {
               })}
               inputProps={{
                 onChange: () => {
-                  formikProps.setFieldValue('isBeneficialOwner', false)
-                  formikProps.setFieldValue('isNotBeneficialOwner', true)
+                  formikProps.setFieldValue('ownerInformation.isBeneficialOwner', false)
+                  formikProps.setFieldValue('ownerInformation.isNotBeneficialOwner', true)
                 },
                 radio: true,
                 'data-test': 'settings_velloci_registration_owner_information_isNotBeneficialOwner_chckbx'
               }}
-              name='isNotBeneficialOwner'
+              name='ownerInformation.isNotBeneficialOwner'
             />
           </DivCheckboxes>
         </GridColumn>
@@ -196,13 +193,13 @@ function OwnerInformation({ formikProps, intl: { formatMessage } }) {
               })}
               inputProps={{
                 onChange: () => {
-                  formikProps.setFieldValue('isOtherBeneficialOwner', true)
-                  formikProps.setFieldValue('isNotOtherBeneficialOwner', false)
+                  formikProps.setFieldValue('ownerInformation.isOtherBeneficialOwner', true)
+                  formikProps.setFieldValue('ownerInformation.isNotOtherBeneficialOwner', false)
                 },
                 radio: true,
                 'data-test': 'settings_velloci_registration_owner_information_isOtherBeneficialOwner_chckbx'
               }}
-              name='isOtherBeneficialOwner'
+              name='ownerInformation.isOtherBeneficialOwner'
             />
             <Checkbox
               label={formatMessage({
@@ -211,13 +208,13 @@ function OwnerInformation({ formikProps, intl: { formatMessage } }) {
               })}
               inputProps={{
                 onChange: () => {
-                  formikProps.setFieldValue('isOtherBeneficialOwner', false)
-                  formikProps.setFieldValue('isNotOtherBeneficialOwner', true)
+                  formikProps.setFieldValue('ownerInformation.isOtherBeneficialOwner', false)
+                  formikProps.setFieldValue('ownerInformation.isNotOtherBeneficialOwner', true)
                 },
                 radio: true,
                 'data-test': 'settings_velloci_registration_owner_information_isNotOtherBeneficialOwner_chckbx'
               }}
-              name='isNotOtherBeneficialOwner'
+              name='ownerInformation.isNotOtherBeneficialOwner'
             />
           </DivCheckboxes>
         </GridColumn>

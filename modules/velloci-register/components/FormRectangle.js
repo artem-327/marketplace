@@ -7,13 +7,14 @@ import { FormattedMessage } from 'react-intl'
 const DivRectangleForm = styled.div`
   padding: 0px !important;
   width: 740px;
-  height: ${props => (props.height ? props.height : '860px')};
+  overflow: auto;
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   border: solid 1px #dee2e6;
   background-color: #ffffff;
   text-align: initial;
   position: relative;
+  margin-bottom: 20px;
 `
 
 const DivTitleRectangleForm = styled.div`
@@ -29,16 +30,20 @@ const DivTitleText = styled.div`
 `
 
 const DivButtonsBottom = styled.div`
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
+  overflow: auto;
   color: #ffffff;
+  margin: 0 30px 30px 0;
 `
 
 const ButtonSubmit = styled(Button)`
+  float: right !important;
   background: #2599d5 !important;
   margin-left: 10px !important;
   margin-right: 0px !important;
+`
+
+const ButtonBack = styled(Button)`
+  float: right !important;
 `
 
 const DivSubtitleText = styled.div`
@@ -68,13 +73,6 @@ function FormRectangle({ children, formikProps, title, subtitle, prevStep, activ
       {children}
 
       <DivButtonsBottom>
-        {activeStep > 0 ? (
-          <Button type='button' onClick={() => prevStep(activeStep - 1)} basic>
-            <FormattedMessage id='global.back' defaultMessage='Back'>
-              {text => text}
-            </FormattedMessage>
-          </Button>
-        ) : null}
         <ButtonSubmit type='button' onClick={() => submitForm(formikProps)} primary>
           <FormattedMessage
             id={activeStep === 5 ? 'velloci.submitApplication' : 'global.next'}
@@ -82,6 +80,13 @@ function FormRectangle({ children, formikProps, title, subtitle, prevStep, activ
             {text => text}
           </FormattedMessage>
         </ButtonSubmit>
+        {activeStep > 0 ? (
+          <ButtonBack type='button' onClick={() => prevStep(activeStep - 1)} basic>
+            <FormattedMessage id='global.back' defaultMessage='Back'>
+              {text => text}
+            </FormattedMessage>
+          </ButtonBack>
+        ) : null}
       </DivButtonsBottom>
     </DivRectangleForm>
   )

@@ -52,7 +52,7 @@ export const initialValues = {
     },
     dbaName: ''
   },
-  formationDocument: {
+  companyFormationDocument: {
     attachments: []
   },
   ownerInformation: {
