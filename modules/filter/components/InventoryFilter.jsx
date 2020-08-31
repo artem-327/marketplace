@@ -379,8 +379,8 @@ class InventoryFilter extends Component {
 
     const options = data.map(d => ({
       key: d.id,
-      value: d.id,
-      text: d.name
+      value: JSON.stringify({ id: d.id, name: d.name }),
+      text: d.text ? d.text : d.name
     }))
 
     return (
@@ -388,10 +388,8 @@ class InventoryFilter extends Component {
         name={groupName}
         options={options}
         selection
-        onChange={(e, data) => console.log('!!!!!!!!!! onChange 1', data)}
         inputProps={{
-          multiple: true,
-          onChange: (e, data) => console.log('!!!!!!!!!! onChange 2', data)
+          multiple: true
         }}
       />
     )
@@ -529,14 +527,11 @@ class InventoryFilter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
-  inputWrapper = (name, inputProps, label, labelText) => {
+  inputWrapper = (name, inputProps, labelText) => {
     return (
       <InputWrapper>
-        {label && <div className='field-label'>{label}</div>}
-        <div>
-          <Input inputProps={inputProps} name={name} />
-          <Label>{labelText}</Label>
-        </div>
+        <Input name={name} inputProps={inputProps} />
+        <Label>{labelText}</Label>
       </InputWrapper>
     )
   }
@@ -544,46 +539,45 @@ class InventoryFilter extends Component {
   quantityWrapper = (name, { values, setFieldValue, setFieldTouched, label }) => {
     return (
       <QuantityWrapper>
-        {label && <div className='field-label'>{label}</div>}
-        <div>
-          <Input
-            name={name}
-            inputProps={{
-              placeholder: '0',
-              type: 'number'
-            }}
-          />
-          <div className='sideButtons'>
-            <Button
-              type='button'
-              className='buttonPlus'
-              onClick={() => {
-                if (isNaN(values[name]) || values[name] === '') {
-                  setFieldValue(name, 1)
-                  setFieldTouched(name, true, true)
-                } else {
-                  setFieldValue(name, parseInt(values[name]) + 1)
-                  setFieldTouched(name, true, true)
-                }
-              }}>
-              +
-            </Button>
-            <Button
-              type='button'
-              className='buttonMinus'
-              onClick={() => {
-                if (isNaN(values[name]) || values[name] === '') {
-                  setFieldValue(name, 1)
-                  setFieldTouched(name, true, true)
-                } else {
-                  const value = parseInt(values[name])
-                  if (value > 1) setFieldValue(name, value - 1)
-                  setFieldTouched(name, true, true)
-                }
-              }}>
-              -
-            </Button>
-          </div>
+        <Input
+          name={name}
+          inputProps={{
+            placeholder: '0',
+            type: 'number',
+            label: label,
+            labelPosition: 'left'
+          }}
+        />
+        <div className='sideButtons'>
+          <Button
+            type='button'
+            className='buttonPlus'
+            onClick={() => {
+              if (isNaN(values[name]) || values[name] === '') {
+                setFieldValue(name, 1)
+                setFieldTouched(name, true, true)
+              } else {
+                setFieldValue(name, parseInt(values[name]) + 1)
+                setFieldTouched(name, true, true)
+              }
+            }}>
+            +
+          </Button>
+          <Button
+            type='button'
+            className='buttonMinus'
+            onClick={() => {
+              if (isNaN(values[name]) || values[name] === '') {
+                setFieldValue(name, 1)
+                setFieldTouched(name, true, true)
+              } else {
+                const value = parseInt(values[name])
+                if (value > 1) setFieldValue(name, value - 1)
+                setFieldTouched(name, true, true)
+              }
+            }}>
+            -
+          </Button>
         </div>
       </QuantityWrapper>
     )
@@ -951,7 +945,7 @@ class InventoryFilter extends Component {
                     values,
                     setFieldValue,
                     setFieldTouched,
-                    label: <FormattedMessage id='filter.FromQuantity' defaultMessage='From' />
+                    label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' })
                   })}
                 </GridColumn>
                 <GridColumn width={8}>
@@ -959,7 +953,7 @@ class InventoryFilter extends Component {
                     values,
                     setFieldValue,
                     setFieldTouched,
-                    label: <FormattedMessage id='filter.ToQuantity' defaultMessage='To' />
+                    label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' })
                   })}
                 </GridColumn>
               </GridRow>
@@ -976,9 +970,10 @@ class InventoryFilter extends Component {
                       type: 'number',
                       min: 0.01,
                       step: 0.01,
-                      placeholder: '0.000'
+                      placeholder: '0.00',
+                      label: formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
+                      labelPosition: 'left'
                     },
-                    <FormattedMessage id='filter.FromPrice' defaultMessage='From' />,
                     currencySymbol
                   )}
                 </GridColumn>
@@ -989,9 +984,10 @@ class InventoryFilter extends Component {
                       type: 'number',
                       min: 0.01,
                       step: 0.01,
-                      placeholder: '0.000'
+                      placeholder: '0.00',
+                      label: formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
+                      labelPosition: 'left'
                     },
-                    <FormattedMessage id='filter.ToPrice' defaultMessage='To' />,
                     currencySymbol
                   )}
                 </GridColumn>
@@ -999,7 +995,6 @@ class InventoryFilter extends Component {
             </SmallGrid>
           </GridColumn>
         </GridRow>
-
 
         <GridRow>
           <GridColumn width={8}>
@@ -1034,9 +1029,10 @@ class InventoryFilter extends Component {
                     {
                       type: 'number',
                       min: 0,
-                      placeholder: '0'
+                      placeholder: '0.00',
+                      label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
+                      labelPosition: 'left'
                     },
-                    <FormattedMessage id='filter.Minimum' defaultMessage='Minimum' />,
                     '%'
                   )}
                 </GridColumn>
@@ -1046,9 +1042,10 @@ class InventoryFilter extends Component {
                     {
                       type: 'number',
                       min: 0,
-                      placeholder: '0'
+                      placeholder: '0.00',
+                      label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
+                      labelPosition: 'left'
                     },
-                    <FormattedMessage id='filter.Maximum' defaultMessage='Maximum' />,
                     '%'
                   )}
                 </GridColumn>

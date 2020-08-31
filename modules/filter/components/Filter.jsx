@@ -984,7 +984,7 @@ class Filter extends Component {
                     min: 0,
                     placeholder: '0'
                   },
-                  <FormattedMessage id='filter.Minimum' defaultMessage='Minimum' />,
+                  <FormattedMessage id='filter.min' defaultMessage='Min' />,
                   '%'
                 )}
               </FormField>
@@ -996,7 +996,7 @@ class Filter extends Component {
                     min: 0,
                     placeholder: '0'
                   },
-                  <FormattedMessage id='filter.Maximum' defaultMessage='Maximum' />,
+                  <FormattedMessage id='filter.max' defaultMessage='Max' />,
                   '%'
                 )}
               </FormField>
@@ -1054,6 +1054,8 @@ class Filter extends Component {
           this.values = props.values
 
           console.log('!!!!!!!!!! render values', props.values)
+
+          console.log('!!!!!!!!!! render productForms', props.values.productForms ? Object.keys(props.values.productForms) : '')
 
           return (
             <Modal onClose={() => onClose()} open centered={true}>

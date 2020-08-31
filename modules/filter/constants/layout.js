@@ -522,69 +522,59 @@ export const SavedFiltersNotifications = styled.div`
 `
 
 export const InputWrapper = styled.div`
-  > .field-label {
-    margin: 0em 0em 0.384615385em 0em;
-    font-size: 1em;
-    line-height: 1.38;
-    color: #546f93;
+  position: relative;
+
+  > .field .ui.input input {
+    position: static;
+    padding-right: 36px; 
   }
-  & div {
-    position: relative;
-    > .field .ui.input input {
-      position: static;
-      padding-right: 36px; 
-    }
-    > .ui.label {
-      height: 1.846153846em;
-      padding: 0.423076923em 0.615384615em;
-      font-size: 13px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      text-align: center;
-      color: #2599d5;
-      border-radius: 2px;
-      background-color: rgba(37, 153, 213, 0.1);
-      position: absolute;
-      top: 0.307692308em;
-      right: 0.307692308em;
-    }
+  > .ui.label {
+    height: 28px;
+    border-radius: 2px;
+    background-color: #84c22526;
+    
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.29;
+    letter-spacing: normal;
+    text-align: center;
+    color: #84c225;
+    
+    text-align: center;
+    position: absolute;
+    top: 6px;
+    right: 6px;
   }
 `
 
 export const QuantityWrapper = styled.div`
-  > .field-label {
-    margin: 0em 0em 0.384615385em 0em;
-    font-size: 1em;
-    line-height: 1.38;
-    color: #546f93;
-  }
-  & div {
-    position: relative;
-    > .sideButtons {
+  position: relative;
+  > .sideButtons {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    right: 0;
+    top: 0;
+    .ui.button {
       position: absolute;
-      width: 32px;
-      height: 32px;
-      right: 0;
-      top: 0;
-      .ui.button {
-        position: absolute;
-        margin: 0;
-        min-width: unset;
-        min-height: unset;
-        height: unset;
-        line-height: 12px;
-        border-radius: 0 3px 0 0;
-        border: solid 1px #dee2e6;
-        width: 32px;
+      margin: 0;
+      min-width: unset;
+      min-height: unset;
+      height: unset;
+      line-height: 14px;
+      border-radius: 0 3px 0 0;
+      border: solid 1px #dee2e6;
+      width: 40px;
+      background-color: #f8f9fb;
 
-        &.buttonPlus {
-          padding: 1px 0 2px 0;
-        }
-        &.buttonMinus {
-          padding: 0 0 2px 0;
-          top: 16px;
-        }
+      &.buttonPlus {
+        padding: 1px 0 2px 0;
+      }
+      &.buttonMinus {
+        padding: 0 0 2px 0;
+        top: 21px;
       }
     }
   }
