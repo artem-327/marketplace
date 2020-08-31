@@ -267,7 +267,21 @@ const StyledCalendar = styled(Calendar)`
   }
   
   .react-calendar__tile--now {
-    background: transparent;
+  
+    &,
+    &.react-calendar__tile--hover {
+      background: transparent;
+    }
+  }
+  
+  &.react-calendar--selectRange {
+  
+    .react-calendar__tile--now {
+    
+      &.react-calendar__tile--hover {
+        background: #e6e6e6;
+      }
+    }
   }
   
   .react-calendar__tile--range,
