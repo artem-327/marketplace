@@ -4,7 +4,7 @@ import { Grid, GridColumn, GridRow, Button } from 'semantic-ui-react'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-
+//Components
 import {
   Rectangle,
   CustomDivContent,
@@ -277,6 +277,10 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
 
 ControlPerson.propTypes = {
   formikProps: PropTypes.object
+}
+
+ControlPerson.defaultProps = {
+  formikProps: {}
 }
 
 export default injectIntl(ControlPerson)

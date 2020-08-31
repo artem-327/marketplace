@@ -93,16 +93,21 @@ function FormRectangle({ children, formikProps, title, subtitle, prevStep, activ
 }
 
 FormRectangle.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
   formikProps: PropTypes.object,
   title: PropTypes.string,
+  subtitle: PropTypes.string,
   prevStep: PropTypes.func,
+  submitForm: PropTypes.func,
   activeStep: PropTypes.number
 }
 
 FormRectangle.defaultProps = {
   formikProps: {},
   title: 'Title',
+  subtitle: '',
   prevStep: () => {},
+  submitForm: () => {},
   activeStep: 0
 }
 

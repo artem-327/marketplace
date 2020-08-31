@@ -1,41 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
-import { Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { Info, UploadCloud } from 'react-feather'
-
+import { Info } from 'react-feather'
+//Components
 import {
   Rectangle,
   CustomDivContent,
   CustomDivInTitle,
   CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
-import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 
 const GridOwnerInformation = styled(Grid)`
   margin: 14px 16px !important;
-`
-
-const DivLegalAddressTitle = styled.div`
-  padding-bottom: 6px;
-`
-
-const StyledUploadIcon = styled(UploadCloud)`
-  width: 48px;
-  height: 40px;
-  object-fit: contain;
-  color: #dee2e6;
-`
-
-const CustomDiv = styled.div`
-  padding: 1em;
-`
-
-const CustomA = styled.a`
-  font-weight: bold;
-  color: #2599d5;
 `
 
 const GridRowTitle = styled.div`
@@ -299,6 +278,10 @@ function OwnerInformation({ formikProps, intl: { formatMessage } }) {
 
 OwnerInformation.propTypes = {
   formikProps: PropTypes.object
+}
+
+OwnerInformation.defaultProps = {
+  formikProps: {}
 }
 
 export default injectIntl(OwnerInformation)

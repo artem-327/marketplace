@@ -5,7 +5,7 @@ import { Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info } from 'react-feather'
-
+//Components
 import {
   Rectangle,
   CustomDivContent,
@@ -172,6 +172,10 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
 
 BusinessInfo.propTypes = {
   formikProps: PropTypes.object
+}
+
+BusinessInfo.defaultProps = {
+  formikProps: {}
 }
 
 export default injectIntl(BusinessInfo)

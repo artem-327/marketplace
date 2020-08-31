@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
-import { Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { Info, UploadCloud } from 'react-feather'
 
 const GridTermsAndConditions = styled(Grid)`
   margin: 14px 16px !important;
@@ -170,6 +169,10 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
 
 TermsAndConditions.propTypes = {
   formikProps: PropTypes.object
+}
+
+TermsAndConditions.defaultProps = {
+  formikProps: {}
 }
 
 export default injectIntl(TermsAndConditions)

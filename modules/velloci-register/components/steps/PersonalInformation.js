@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Grid, GridColumn, GridRow, Label } from 'semantic-ui-react'
+import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
 import { Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info } from 'react-feather'
-
+//Components
 import {
   Rectangle,
   CustomDivContent,
@@ -248,7 +248,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
                 defaultMessage: 'xx'
               }),
               type: 'text',
-              pattern: '\d*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
+              pattern: 'd*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
               maxLength: '2',
               'data-test': 'settings_velloci_registration_personal_info_business_ownership_percentage_inpt'
             }}
@@ -261,6 +261,10 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
 
 PersonalInformation.propTypes = {
   formikProps: PropTypes.object
+}
+
+PersonalInformation.defaultProps = {
+  formikProps: {}
 }
 
 export default injectIntl(PersonalInformation)

@@ -1,12 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
-import { Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info, UploadCloud } from 'react-feather'
-import get from 'lodash/get'
-
+//Components
 import {
   Rectangle,
   CustomDivContent,
@@ -15,7 +13,6 @@ import {
 } from '~/modules/cart/components/StyledComponents'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { Required } from '~/components/constants/layout'
-import { titleForms } from '../../constants'
 
 const GridFormationDocument = styled(Grid)`
   margin: 14px 16px !important;
@@ -23,13 +20,6 @@ const GridFormationDocument = styled(Grid)`
 
 const DivLegalAddressTitle = styled.div`
   padding-bottom: 6px;
-`
-
-const StyledUploadIcon = styled(UploadCloud)`
-  width: 48px;
-  height: 40px;
-  object-fit: contain;
-  color: #dee2e6;
 `
 
 export const CustomDiv = styled.div`
@@ -41,7 +31,7 @@ export const CustomA = styled.a`
   color: #2599d5;
 `
 
-function FormationDocument({ formikProps, intl: { formatMessage }, activeStep, error }) {
+function FormationDocument({ formikProps, intl: { formatMessage }, error }) {
   return (
     <GridFormationDocument>
       <GridRow>
@@ -170,7 +160,12 @@ function FormationDocument({ formikProps, intl: { formatMessage }, activeStep, e
 }
 
 FormationDocument.propTypes = {
-  formikProps: PropTypes.object
+  formikProps: PropTypes.object,
+  error: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired
+}
+
+FormationDocument.defaultProps = {
+  formikProps: {}
 }
 
 export default injectIntl(FormationDocument)

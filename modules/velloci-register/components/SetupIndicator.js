@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
-
+//Components
 import { setupPages } from '../constants'
 
 const Rectangle = styled.div`
@@ -109,6 +110,14 @@ class SetupIndicator extends Component {
       )
     }
   }
+}
+
+SetupIndicator.propTypes = {
+  activeStep: PropTypes.number
+}
+
+SetupIndicator.defaultProps = {
+  activeStep: 0
 }
 
 export default SetupIndicator

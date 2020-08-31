@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import _ from 'lodash'
 import * as Yup from 'yup'
 import moment from 'moment'
-
+//Components
 import {
   errorMessages,
   addressValidationSchema,
@@ -39,7 +40,7 @@ class VellociRegister extends Component {
         return <BusinessInfo formikProps={formikProps} />
       }
       case 2: {
-        return <FormationDocument formikProps={formikProps} activeStep={activeStep} error={error} />
+        return <FormationDocument formikProps={formikProps} error={error} />
       }
       case 3: {
         return <OwnerInformation formikProps={formikProps} />
@@ -60,12 +61,12 @@ class VellociRegister extends Component {
   }
 
   //TODO missing BE call
-  handleSubmit = async formikProps => {
+  handleSubmit = async values => {
     const { activeStep, prevStep } = this.props
     if (activeStep !== 5) return
     try {
       console.log('Submit form successfully. Values for BE call:')
-      console.log(formikProps.values)
+      console.log(values)
     } catch (error) {
       console.error(error)
     }
@@ -212,6 +213,18 @@ class VellociRegister extends Component {
       </Grid>
     )
   }
+}
+
+VellociRegister.propTypes = {
+  nextStep: PropTypes.func,
+  prevStep: PropTypes.func,
+  activeStep: PropTypes.number
+}
+
+VellociRegister.defaultProps = {
+  nextStep: () => {},
+  prevStep: () => {},
+  activeStep: 0
 }
 
 export default VellociRegister
