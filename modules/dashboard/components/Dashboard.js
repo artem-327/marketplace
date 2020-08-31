@@ -495,7 +495,7 @@ class Dashboard extends Component {
           <TabPane key='stats' attached={false}>
             <LineGraph
               data={stats}
-              dataKey={statsType ? statsTabs[statsType][0] : 'none'}
+              dataKey={statsType ? statsTabs[statsType][0] : Object.entries(statsTabs)[0][1][0]}
               isCurrency={statsType ? statsTabs[statsType][1] : false}
               unitsCurrency={1}
               title='Daily Statistics'
@@ -585,8 +585,13 @@ class Dashboard extends Component {
                                    inputProps={{ 'data-test': 'dashboard_date_from_input' }}
                                    onChange={(e, { value }) => {
                                      if (value.length === 10 && moment(value, 'DD/MM/YYYY', true).isValid()) {
-                                       this.setState({ dateFromEdited: null })
-                                       this.filterDates(0, [moment(value, 'DD/MM/YYYY'), dateTo])
+                                       const newDate = moment(value, 'DD/MM/YYYY')
+                                       if (newDate.isAfter(dateTo)) {
+                                         this.setState({ dateFrom: newDate, dateFromEdited: null })
+                                       } else {
+                                         this.setState({ dateFromEdited: null })
+                                         this.filterDates(0, [newDate, dateTo])
+                                       }
                                      } else {
                                        this.setState({dateFromEdited: value})
                                      }
@@ -616,8 +621,13 @@ class Dashboard extends Component {
                                    }}
                                    onChange={(e, { value }) => {
                                      if (value.length === 10 && moment(value, 'DD/MM/YYYY', true).isValid()) {
-                                       this.setState({ dateToEdited: null })
-                                       this.filterDates(0, [dateFrom, moment(value, 'DD/MM/YYYY')])
+                                       const newDate = moment(value, 'DD/MM/YYYY')
+                                       if (newDate.isBefore(dateFrom)) {
+                                         this.setState({ dateTo: newDate, dateToEdited: null })
+                                       } else {
+                                         this.setState({ dateToEdited: null })
+                                         this.filterDates(0, [dateFrom, newDate])
+                                       }
                                      } else {
                                        this.setState({dateToEdited: value})
                                      }
