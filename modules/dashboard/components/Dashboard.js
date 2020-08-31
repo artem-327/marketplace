@@ -287,10 +287,19 @@ const StyledCalendar = styled(Calendar)`
   }
 `
 
-const StatsTypeSelect = styled(Dropdown.Menu)`
-  > .item {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+const StatsTypeSelect = styled(Dropdown)`
+
+  > .menu {
+  
+    > .item {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      
+      &,
+      &.active {
+        border-bottom-color: #ffffff !important
+      }
+    }
   }
 `
 
@@ -299,7 +308,9 @@ class Dashboard extends Component {
     activeTab: 0,
     activeQuick: 0,
     dateFrom: null,
+    dateFromEdited: null,
     dateTo: null,
+    dateToEdited: null,
     selectedDate: null,
     statsType: null
   }
@@ -321,12 +332,12 @@ class Dashboard extends Component {
         dateTo = moment().endOf('day')
         break;
       case 2:
-        dateFrom = moment().startOf('isoWeek')//.add(1, 'days')
-        dateTo = moment().endOf('isoWeek')//.add(1, 'days')
+        dateFrom = moment().startOf('week')
+        dateTo = moment().endOf('week')
         break;
       case 3:
-        dateFrom = moment().startOf('isoWeek').subtract(1, 'weeks')
-        dateTo = moment().endOf('isoWeek').subtract(1, 'weeks')
+        dateFrom = moment().startOf('week').subtract(1, 'weeks')
+        dateTo = moment().endOf('week').subtract(1, 'weeks')
         break;
       case 4:
         dateFrom = moment().startOf('month')
@@ -347,7 +358,7 @@ class Dashboard extends Component {
       case 8:
       default:
         dateFrom = moment('01/01/2020', 'DD/MM/YYYY')
-        dateTo = moment(dateFrom).add(80, 'years').subtract(1, 'days')
+        dateTo = moment()
         break;
     }
 
@@ -357,7 +368,7 @@ class Dashboard extends Component {
   filterDates = (type, dates) => {
     // get daily stats data
     this.props.getDailyStatistics(moment(dates[0]).format('YYYY-MM-DD')+'T00:00:00Z', moment(dates[1]).add(1, 'days').format('YYYY-MM-DD')+'T00:00:00Z')
-    this.setState({activeTab: 2, activeQuick: type, dateFrom: dates[0], dateTo: dates[1], selectedDate: moment(dates[0]).format('D MMM YYYY') + ' - ' + moment(dates[1]).format('D MMM YYYY')})
+    this.setState({activeTab: 2, activeQuick: type, dateFrom: dates[0], dateFromEdited: null, dateTo: dates[1], dateToEdited: null, selectedDate: moment(dates[0]).format('D MMM YYYY') + ' - ' + moment(dates[1]).format('D MMM YYYY')})
   }
 
   render() {
@@ -410,7 +421,7 @@ class Dashboard extends Component {
       })
     }
 
-    const { activeTab, activeQuick, dateFrom, dateTo, selectedDate, statsType } = this.state
+    const { activeTab, activeQuick, dateFrom, dateFromEdited, dateTo, dateToEdited, selectedDate, statsType } = this.state
 
     const saleTab = [
       {
@@ -477,7 +488,7 @@ class Dashboard extends Component {
       {
         menuItem: (
           <Menu.Item key='stats' onClick={() => this.setState({ activeTab: 2 })}>
-            <UpperCaseText>{formatMessage({ id: 'dasboard.daily', defaultMessage: 'DAILY' })}</UpperCaseText>
+            <UpperCaseText>{formatMessage({ id: 'dashboard.dailyStats', defaultMessage: 'DAILY STATS' })}</UpperCaseText>
           </Menu.Item>
         ),
         render: () => (
@@ -488,7 +499,7 @@ class Dashboard extends Component {
               isCurrency={statsType ? statsTabs[statsType][1] : false}
               unitsCurrency={1}
               title='Daily Statistics'
-              titleId='dasboard.daily.stats.title'
+              titleId='dashboard.daily.stats.title'
               subTitle=''
               subTitleId=''
             />
@@ -499,22 +510,16 @@ class Dashboard extends Component {
         menuItem: (
           <>
             {activeTab === 2 ? (
-              <Dropdown
+              <StatsTypeSelect
                 key='statsType'
                 style={{ marginLeft: 'auto' }}
                 item
-                text={statsType ? statsTabs[statsType][0] : formatMessage({ id: 'dashboard.stats.type', defaultMessage: 'Stats Type' })}
-                data-test='dashboard_stats_drpdn'>
-                <StatsTypeSelect data-test='dashboard_stats_type_drpdn_menu' direction='left'>
-                  {Object.entries(statsTabs).map((stType) => {
-                    return (
-                      <Dropdown.Item onClick={(e, { value }) => this.setState({ statsType: value })} value={stType[0]} dataTest={`dashboard_stats_type_${stType[0].replace(/([A-Z])/g, "_$1").toLowerCase()}_drpdn`}>
-                        {stType[1]}
-                      </Dropdown.Item>
-                    )
-                  })}
-                </StatsTypeSelect>
-              </Dropdown>
+                options={Object.entries(statsTabs).map((stType) => {
+                  return { text: stType[1][0], value: stType[0] }
+                })}
+                onChange={(e, { value }) => this.setState({ statsType: value })}
+                value={!statsType ? (Object.entries(statsTabs)[0][0]) : statsType}
+                data-test='dashboard_stats_drpdn' />
             ) : null}
           </>
         )
@@ -547,7 +552,16 @@ class Dashboard extends Component {
     const panes =
       isAdmin && !takeover ? saleTab : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
 
-    const quickFilters = [ 'Today', 'This week', 'Last week', 'This month', 'Last month', 'This year', 'Last year', 'All the time']
+    const quickFilters = [
+      formatMessage({ id: 'dashboard.dateFilter.today', defaultMessage: 'Today'}),
+      formatMessage({ id: 'dashboard.dateFilter.thisWeek', defaultMessage: 'This week' }),
+      formatMessage({ id: 'dashboard.dateFilter.lastWeek', defaultMessage: 'Last week' }),
+      formatMessage({ id: 'dashboard.dateFilter.thisMonth', defaultMessage: 'This month' }),
+      formatMessage({ id: 'dashboard.dateFilter.lastMonth', defaultMessage: 'Last month' }),
+      formatMessage({ id: 'dashboard.dateFilter.thisYear', defaultMessage: 'This year' }),
+      formatMessage({ id: 'dashboard.dateFilter.lastYear', defaultMessage: 'Last year' }),
+      formatMessage({ id: 'dashboard.dateFilter.allTime', defaultMessage: 'All the time' }),
+    ]
 
     return (
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
@@ -571,15 +585,28 @@ class Dashboard extends Component {
                                    inputProps={{ 'data-test': 'dashboard_date_from_input' }}
                                    onChange={(e, { value }) => {
                                      if (value.length === 10 && moment(value, 'DD/MM/YYYY', true).isValid()) {
+                                       this.setState({ dateFromEdited: null })
                                        this.filterDates(0, [moment(value, 'DD/MM/YYYY'), dateTo])
                                      } else {
-                                       this.setState({dateFrom: value})
+                                       this.setState({dateFromEdited: value})
                                      }
                                    }}
+                                   error={dateFromEdited ? true : (moment(dateFrom).isAfter(dateTo) ? true : false)}
                                    name={'dateFrom'}
-                                   value={dateFrom && moment(dateFrom, 'DD/MM/YYYY', true).isValid() ? moment(dateFrom).format('DD/MM/YYYY') : null}
+                                   value={dateFromEdited ? dateFromEdited : (dateFrom ? (moment(dateFrom, 'DD/MM/YYYY', true).isValid() ? moment(dateFrom, 'DD/MM/YYYY').format('DD/MM/YYYY') : (moment(dateFrom).isValid() ? moment(dateFrom).format('DD/MM/YYYY') : null)) : null)}
                                    fluid
                                  />
+                                 {dateFromEdited ? (
+                                   <span class='sui-error-message' style={{ position: 'absolute' }}>{formatMessage({
+                                     id: 'dashboard.error.invalidDate',
+                                     defaultMessage: 'Invalid Date'
+                                   })}</span>
+                                 ) : (moment(dateFrom).isAfter(dateTo) ? (
+                                   <span className='sui-error-message' style={{ position: 'absolute' }}>{formatMessage({
+                                     id: 'dashboard.error.invalidDateRange',
+                                     defaultMessage: 'Invalid Date Range'
+                                   })}</span>
+                                 ) : null)}
                                </Grid.Column>
                                <Grid.Column width={8}>
                                  <Input
@@ -589,19 +616,33 @@ class Dashboard extends Component {
                                    }}
                                    onChange={(e, { value }) => {
                                      if (value.length === 10 && moment(value, 'DD/MM/YYYY', true).isValid()) {
+                                       this.setState({ dateToEdited: null })
                                        this.filterDates(0, [dateFrom, moment(value, 'DD/MM/YYYY')])
                                      } else {
-                                       this.setState({dateTo: value})
+                                       this.setState({dateToEdited: value})
                                      }
                                    }}
+                                   error={dateToEdited ? true : (moment(dateTo).isBefore(dateFrom) ? true : false)}
                                    name='dateTo'
-                                   value={dateTo ? (moment(dateTo, 'DD/MM/YYYY', true).isValid() ? moment(dateTo, 'DD/MM/YYYY').format('DD/MM/YYYY') : (moment(dateTo).isValid() ? moment(dateTo).format('DD/MM/YYYY') : null)) : null}
+                                   value={dateToEdited ? dateToEdited : (dateTo ? (moment(dateTo, 'DD/MM/YYYY', true).isValid() ? moment(dateTo, 'DD/MM/YYYY').format('DD/MM/YYYY') : (moment(dateTo).isValid() ? moment(dateTo).format('DD/MM/YYYY') : null)) : null)}
                                    fluid
                                  />
+                                 {dateToEdited ? (
+                                   <span class='sui-error-message' style={{ position: 'absolute' }}>{formatMessage({
+                                     id: 'dashboard.error.invalidDate',
+                                     defaultMessage: 'Invalid Date'
+                                   })}</span>
+                                 ) : (moment(dateTo).isBefore(dateFrom) ? (
+                                   <span className='sui-error-message' style={{ position: 'absolute' }}>{formatMessage({
+                                     id: 'dashboard.error.invalidDateRange',
+                                     defaultMessage: 'Invalid Date Range'
+                                   })}</span>
+                                 ) : null)}
                                </Grid.Column>
                              </Grid.Row>
                            </Grid>
                            <StyledCalendar value={[dateFrom, dateTo]}
+                                     calendarType='US'
                                      onChange={dates => this.filterDates(0, dates)}
                                      formatShortWeekday={(locale, date) => moment(date).format('dd')}
                                      showDoubleView={true}
