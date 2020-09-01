@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { closePopup, postNewUserRequest, handlerSubmitUserEditPopup, getCompanyDetails } from '../../actions'
+import { closeSidebar, postNewUserRequest, handlerSubmitUserEditPopup, getCompanyDetails } from '../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../companies/actions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -299,7 +299,7 @@ class UsersSidebar extends React.Component {
     const {
       handlerSubmitUserEditPopup,
       postNewUserRequest,
-      closePopup,
+      closeSidebar,
       datagrid,
       currentUserId,
       getIdentity
@@ -335,7 +335,7 @@ class UsersSidebar extends React.Component {
         datagrid.loadData()
         sendSuccess = true
       }
-      if (closeOnSubmit) closePopup()
+      if (closeOnSubmit) closeSidebar()
     } catch {}
     actions.setSubmitting(false)
     return sendSuccess
@@ -433,7 +433,7 @@ class UsersSidebar extends React.Component {
 
   render() {
     const {
-      closePopup,
+      closeSidebar,
       userRoles,
       clientCompanyRoles,
       isClientCompany,
@@ -682,7 +682,7 @@ class UsersSidebar extends React.Component {
 
               <BottomButtons>
                 <div style={{ textAlign: 'right' }}>
-                  <Button className='light' onClick={closePopup} data-test='settings_users_popup_reset_btn'>
+                  <Button className='light' onClick={closeSidebar} data-test='settings_users_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
@@ -704,7 +704,7 @@ class UsersSidebar extends React.Component {
 }
 
 const mapDispatchToProps = {
-  closePopup,
+  closeSidebar,
   postNewUserRequest,
   handlerSubmitUserEditPopup,
   getCompanyDetails,
