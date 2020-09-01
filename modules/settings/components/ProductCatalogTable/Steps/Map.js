@@ -205,7 +205,17 @@ const simpleCompanyGenericProductList = {
     'optionalHeatOfCombustionMapper',
     'codeMapper',
     'elementsMapper',
-    'nameMapper'
+    'nameMapper',
+    'palletHeightMapper',
+    'palletLengthMapper',
+    'palletMaxPkgsMapper',
+    'palletMinPkgsMapper',
+    'palletSaleOnlyMapper',
+    'palletWeightMapper',
+    'palletWidthMapper',
+    'packagingWidthMapper',
+    'packagingHeightMapper',
+    'packagingLengthMapper'
   ]
 }
 

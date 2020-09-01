@@ -8,11 +8,11 @@ import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
-import { getDashboardData } from '../actions'
+import { getDashboardData, getDailyStatistics } from '../actions'
 
 function mapStateToProps(store) {
   const {
-    dashboard: { data }
+    dashboard: { data, dailyStats }
   } = store
 
   const isAdmin = getSafe(() => store.auth.identity.isAdmin, false)
@@ -107,10 +107,12 @@ function mapStateToProps(store) {
           name,
           value
         }))
-      : []
+      : [],
+    dailyStats: dailyStats
   }
 }
 
 export default connect(mapStateToProps, {
-  getDashboardData
+  getDashboardData,
+  getDailyStatistics
 })(Dashboard)

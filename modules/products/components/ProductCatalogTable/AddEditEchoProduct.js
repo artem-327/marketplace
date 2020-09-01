@@ -230,7 +230,11 @@ const validationScheme = Yup.object().shape({
             return v === null || v === '' || !isNaN(v)
           })
       })
-  )
+  ),
+  sdsIssuedDate: dateValidation(false),
+  sdsRevisionDate: dateValidation(false),
+  tdsIssuedDate: dateValidation(false),
+  tdsRevisionDate: dateValidation(false)
 })
 
 class AddEditEchoProduct extends React.Component {

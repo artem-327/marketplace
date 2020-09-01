@@ -31,7 +31,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { Required } from '~/components/constants/layout'
 
 import {
-  closePopup,
+  closeSidebar,
   getProductsCatalogRequest,
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
@@ -595,7 +595,7 @@ class ProductSidebar extends React.Component {
 
   render() {
     const {
-      closePopup,
+      closeSidebar,
       productsUnitsType,
       popupValues,
       freightClasses,
@@ -627,7 +627,7 @@ class ProductSidebar extends React.Component {
         initialValues={this.getInitialFormValues()}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={closePopup}
+        onReset={closeSidebar}
         onSubmit={this.handlerSubmit}
         loading={loading}>
         {formikProps => {
@@ -1380,7 +1380,7 @@ class ProductSidebar extends React.Component {
                   </FlexContent>
 
                   <BottomButtons>
-                    <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
+                    <Button.Reset onClick={closeSidebar} data-test='settings_product_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                         {text => text}
                       </FormattedMessage>
@@ -1432,7 +1432,7 @@ class ProductSidebar extends React.Component {
 }
 
 const mapDispatchToProps = {
-  closePopup,
+  closeSidebar,
   getProductsCatalogRequest,
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
