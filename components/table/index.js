@@ -396,7 +396,8 @@ class _Table extends Component {
     tableTreeColumn: pt.string,
     onExpandedRowIdsChange: pt.func,
     expandedRowIds: pt.array,
-    loadedAllData: pt.bool
+    loadedAllData: pt.bool,
+    shrinkGroups: pt.bool
   }
 
   static defaultProps = {
@@ -425,7 +426,8 @@ class _Table extends Component {
     tableTreeColumn: '',
     onExpandedRowIdsChange: () => {},
     expandedRowIds: [],
-    loadedAllData: true
+    loadedAllData: true,
+    shrinkGroups: false
   }
 
   constructor(props) {
@@ -1054,6 +1056,7 @@ class _Table extends Component {
                       column,
                       row,
                       restProps,
+                      groupLength: getChildGroups(rows).find(group => row.value === group.key).groupLength,
                       children: groupActions
                         ? rowActionsCellFormatter({
                             column: { actions: groupActions(row) },

@@ -189,7 +189,7 @@ class CompanyProductInfo extends Component {
             <FormattedMessage id={id} defaultMessage={defaultMessage} />
           </GridColumn>
         </GridRow>
-        <Table celled table>
+        <Table celled>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>
@@ -1191,14 +1191,14 @@ class CompanyProductInfo extends Component {
                 {this.props.fromMarketPlace
                   ? tabsMarketPlace.map((tab, i) =>
                       hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
-                        <Menu.Item onClick={() => tabChanged(i)} active={activeIndex === i}>
+                        <Menu.Item key={i} onClick={() => tabChanged(i)} active={activeIndex === i}>
                           {formatMessage(tab.text)}
                         </Menu.Item>
                       )
                     )
                   : tabs.map((tab, i) =>
                       hiddenTabs.findIndex(val => val === i) !== -1 ? null : (
-                        <Menu.Item onClick={() => tabChanged(i)} active={activeIndex === i}>
+                        <Menu.Item key={i} onClick={() => tabChanged(i)} active={activeIndex === i}>
                           {formatMessage(tab.text)}
                         </Menu.Item>
                       )

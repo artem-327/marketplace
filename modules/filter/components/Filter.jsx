@@ -738,7 +738,7 @@ class Filter extends Component {
       options: options,
       loading: autocompleteDataLoading,
       name: 'searchProductGroup',
-      placeholder: <FormattedMessage id='filter.searchProductGroup' defaultMessage='Search Product Group' />,
+      placeholder: formatMessage({ id: 'filter.searchProductGroup', defaultMessage: 'Search Product Group' }),
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
       value: values.searchProductGroup,
@@ -781,7 +781,7 @@ class Filter extends Component {
       }),
       loading: autocompleteWarehouseLoading,
       name: 'warehouse',
-      placeholder: <FormattedMessage id='filter.searchLocation' defaultMessage='Search Location' />,
+      placeholder: formatMessage({ id: 'filter.searchLocation', defaultMessage: 'Search Location' }),
       noWarehouseResultsMessage,
       onSearchChange: (_, data) => {
         this.handleSearchWarehouse(data)
@@ -806,7 +806,7 @@ class Filter extends Component {
       })),
       loading: countriesLoading,
       name: 'country',
-      placeholder: <FormattedMessage id='filter.selectCountry' defaultMessage='Select Country' />,
+      placeholder: formatMessage({ id: 'filter.selectCountry', defaultMessage: 'Select Country' }),
       value: values.country,
       onChange: async (e, data) => {
         setFieldValue('country', data.value)
@@ -850,7 +850,7 @@ class Filter extends Component {
       loading: provincesLoading,
       name: 'province',
       disabled: !this.state.provinceOptions.length,
-      placeholder: <FormattedMessage id='filter.selectState' defaultMessage='Select State' />,
+      placeholder: formatMessage({ id: 'filter.selectState', defaultMessage: 'Select State' }),
       value: values.province,
       onChange: (e, data) => {
         setFieldValue('province', data.value)

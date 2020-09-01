@@ -110,20 +110,18 @@ class MyListings extends Component {
     columns: [
       {
         name: 'expired',
-        title:
+        title: (
           <Popup
             header={
-              <FormattedMessage
-                id='myInventory.tooltipExpired'
-                defaultMessage='Shows if Product offer is expired'
-              />
+              <FormattedMessage id='myInventory.tooltipExpired' defaultMessage='Shows if Product offer is expired' />
             }
             trigger={
               <div>
                 <ClockIcon className='grey' />
               </div>
             } // <div> has to be there otherwise popup will be not shown
-          />,
+          />
+        ),
         caption: (
           <FormattedMessage id='global.expirationStatusIcon' defaultMessage='Expiration Status Icon'>
             {text => text}
@@ -134,7 +132,7 @@ class MyListings extends Component {
       },
       {
         name: 'productStatus',
-        title:
+        title: (
           <Popup
             header={
               <FormattedMessage
@@ -147,7 +145,8 @@ class MyListings extends Component {
                 <FileTextIcon className='grey' />
               </div>
             } // <div> has to be there otherwise popup will be not shown
-          />,
+          />
+        ),
         caption: (
           <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon'>
             {text => text}
@@ -900,24 +899,24 @@ class MyListings extends Component {
                 .groupBy('echoName')
                 .map(v => {
                   return {
-                    key: `${v[0].echoName}_${v[0].echoCode}_${v.length}_${v[0].companyProduct.id}_${
+                    key: `${v[0].echoName}_${v[0].echoCode}_${v[0].companyProduct.id}_${
                       v[0].productGroup !== null
                         ? v[0].productGroup + ':'
                         : formatMessage({ id: 'global.unmapped.cptlz', defaultMessage: 'Unmapped' })
                     }_${v[0].tagsNames ? v[0].tagsNames : ''}`,
-                    childRows: v
+                    childRows: v,
+                    groupLength: v.length
                   }
                 })
                 .value()
             }
-            renderGroupLabel={({ row, children = null }) => {
-              let { value } = row
-              const [name, number, count, id, productGroup, tagsNames] = value.split('_')
+            renderGroupLabel={({ row: { value }, groupLength }) => {
+              const [name, number, id, productGroup, tagsNames] = value.split('_')
               const tagNames = tagsNames ? tagsNames.split(',') : []
               return (
                 <span>
                   <span style={{ fontWeight: '600', color: '#2599d5' }}>
-                    {name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({count})</span>
+                    {name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({groupLength})</span>
                   </span>
                   <span className='flex row right'>
                     <span className='inventory-right'>

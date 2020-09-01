@@ -10,7 +10,7 @@ import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semant
 
 import { DateInput } from '~/components/custom-formik'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { errorMessages, minOrZeroLength } from '~/constants/yupValidation'
+import { errorMessages, minOrZeroLength, dateValidation } from '~/constants/yupValidation'
 import { withDatagrid } from '~/modules/datagrid'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { closePopup, updateShippingQuote, createShippingQuote } from '../../actions'
@@ -27,7 +27,13 @@ const initialFormValues = {
 const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
-      validityDate: dateValidation(false),
+      validityDate: dateValidation(false).concat(
+        Yup.string().test(
+          'min-date',
+          errorMessages.mustBeInFuture,
+          val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
+        )
+      ),
       carrierName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       quoteId: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       price: Yup.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
@@ -89,7 +95,8 @@ class ShippingQuotesPopup extends React.Component {
                   ),
                   { appearance: 'success' }
                 )
-              } catch {
+              } catch (err) {
+                console.error(err.message)
               } finally {
                 setSubmitting(false)
                 closePopup()
@@ -143,7 +150,10 @@ class ShippingQuotesPopup extends React.Component {
                     <DateInput
                       label={formatMessage({ id: 'operations.validityDate', defaultMessage: 'Validity Date' })}
                       name='validityDate'
-                      inputProps={{ minDate: moment(), clearable: true }}
+                      inputProps={{
+                        //minDate: moment(), TypeError: Cannot read property 'position' of undefined
+                        clearable: true
+                      }}
                       fieldProps={{ width: 8 }}
                     />
                   </FormGroup>

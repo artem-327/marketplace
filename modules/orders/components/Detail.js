@@ -879,7 +879,7 @@ class Detail extends Component {
             </Modal.Actions>
           </StyledModal>
         )}
-        <div class='scroll-area'>
+        <div className='scroll-area'>
           <TopRow>
             <a
               onClick={() => router.push(`/orders?type=${ordersType.toLowerCase()}`)}

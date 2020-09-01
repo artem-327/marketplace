@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import AnimatedNumber from 'animated-number-react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Button } from 'semantic-ui-react'
+import AnimatedNumber from 'animated-number-react'
 //styled
 import styled from 'styled-components'
 //components

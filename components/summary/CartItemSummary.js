@@ -404,7 +404,7 @@ class CartItemSummary extends Component {
                   }}
                   trigger={
                     <BlueText>
-                      <FormattedMessage id='global.viewEdit' defaultMessage='View/Edit'>
+                      <FormattedMessage id='global.view' defaultMessage='View'>
                         {text => text}
                       </FormattedMessage>
                     </BlueText>

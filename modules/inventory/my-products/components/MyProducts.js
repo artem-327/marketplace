@@ -46,20 +46,22 @@ class MyProducts extends Component {
     columns: [
       {
         name: 'productStatus',
-        title:
+        title: (
           <Popup
             size='small'
             header={
               <FormattedMessage
                 id='global.productStatusIndicator'
-                defaultMessage='Status indicator if Company Product will be shown on Marketplace' />
+                defaultMessage='Status indicator if Company Product will be shown on Marketplace'
+              />
             }
             trigger={
               <div>
                 <FileTextIcon />
               </div>
             } // <div> has to be there otherwise popup will be not shown
-          />,
+          />
+        ),
         width: 40,
         align: 'center'
       },
@@ -392,11 +394,7 @@ const getProductStatus = product => {
     <Popup
       size='small'
       header={popupText}
-      trigger={
-        <div>
-          {dispIcon}
-        </div>
-      } // <div> has to be there otherwise popup will be not shown
+      trigger={<div>{dispIcon}</div>} // <div> has to be there otherwise popup will be not shown
     />
   )
 }

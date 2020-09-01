@@ -375,7 +375,7 @@ class Navigation extends Component {
           icon={<FileText size={22} />}
           text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
           className={orders ? 'opened' : null}
-          opened={orders}
+          opened={orders.toString()}
           onClick={() => this.toggleOpened('orders')}
           refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
           refId={'orders'}
@@ -402,7 +402,7 @@ class Navigation extends Component {
             icon={<Coffee size={22} />}
             text={formatMessage({ id: 'navigation.manageGuests', defaultMessage: 'Manage Guests' })}
             className={manageGuests ? 'opened' : null}
-            opened={manageGuests}
+            opened={manageGuests.toString()}
             onClick={() => this.toggleOpened('manageGuests')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'manageGuests'}
@@ -433,7 +433,7 @@ class Navigation extends Component {
             icon={<Settings size={22} />}
             text={formatMessage({ id: 'navigation.myAccount', defaultMessage: 'My Account' })}
             className={settings ? 'opened' : null}
-            opened={settings}
+            opened={settings.toString()}
             onClick={() => this.toggleOpened('settings')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'settings'}
@@ -546,7 +546,7 @@ class Navigation extends Component {
               icon={<Briefcase size={22} />}
               text={formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
               className={companies ? 'opened' : null}
-              opened={companies}
+              opened={companies.toString()}
               onClick={() => this.toggleOpened('companies')}
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
               refId={'companies'}>
@@ -556,7 +556,7 @@ class Navigation extends Component {
               icon={<Package size={22} />}
               text={formatMessage({ id: 'navigation.products', defaultMessage: 'Products' })}
               className={products ? 'opened' : null}
-              opened={products}
+              opened={products.toString()}
               onClick={() => this.toggleOpened('products')}
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
               refId={'products'}>
@@ -584,7 +584,7 @@ class Navigation extends Component {
               icon={<Settings size={22} />}
               text={formatMessage({ id: 'navigation.adminSettings', defaultMessage: 'Admin Settings' })}
               className={admin ? 'opened' : null}
-              opened={admin}
+              opened={admin.toString()}
               onClick={() => this.toggleOpened('admin')}
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
               refId={'admin'}>
@@ -598,7 +598,7 @@ class Navigation extends Component {
               icon={<Archive size={22} />}
               text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
               className={operations ? 'opened' : null}
-              opened={operations}
+              opened={operations.toString()}
               onClick={() => this.toggleOpened('operations')}
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
               refId={'operations'}>

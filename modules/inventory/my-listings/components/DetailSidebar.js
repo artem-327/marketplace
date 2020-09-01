@@ -1600,9 +1600,9 @@ class DetailSidebar extends Component {
                                               inputProps={{
                                                 disabled:
                                                   !values.edit.doesExpire || (sidebarValues && sidebarValues.grouped),
-                                                'data-test': 'sidebar_detail_expiration_date',
+                                                'data-test': 'sidebar_detail_expiration_date'
                                                 //! ! crashes on component calendar open if expirationDate is in past:
-                                                minDate: moment().add(1, 'days')
+                                                // minDate: moment().add(1, 'days') TypeError: Cannot read property 'position' of undefined
                                               }}
                                               name='edit.expirationDate'
                                             />

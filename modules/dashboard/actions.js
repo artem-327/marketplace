@@ -7,3 +7,10 @@ export function getDashboardData() {
     payload: api.getDashboardData()
   }
 }
+
+export function getDailyStatistics(dateFrom, dateTo) {
+  return {
+    type: AT.GET_DAILY_STATISTICS,
+    payload: api.getDailyStatistics(dateFrom, dateTo)
+  }
+}
