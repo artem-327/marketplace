@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Button } from 'semantic-ui-react'
-import AnimatedNumber from 'animated-number-react'
 //styled
 import styled from 'styled-components'
 //components
@@ -113,8 +112,6 @@ const SummaryRectangle = ({
   styleCircle,
   isLastSummary
 }) => {
-  const formatValue = value => <FormattedNumber minimumFractionDigits={0} value={getSafe(() => value, 0)} />
-
   return (
     <RectangleSummary style={{ marginBottom: isLastSummary ? '0px' : '16px' }}>
       <RectangleSummaryHeader>
@@ -123,7 +120,7 @@ const SummaryRectangle = ({
         </DivIcon>
         <DivSummary>
           <DivNumbers>
-            <AnimatedNumber value={data} formatValue={formatValue} />
+            <FormattedNumber minimumFractionDigits={0} value={getSafe(() => data, 0)} />
           </DivNumbers>
           <DivTotalText>
             <FormattedMessage id={titleId} defaultMessage={title} />
