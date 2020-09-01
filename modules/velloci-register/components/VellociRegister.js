@@ -28,32 +28,10 @@ import { getStringISODate } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
 
 class VellociRegister extends Component {
-  getContent = formikProps => {
-    const { activeStep } = this.props
-    let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
-
-    switch (activeStep) {
-      case 0: {
-        return <ControlPerson formikProps={formikProps} />
-      }
-      case 1: {
-        return <BusinessInfo formikProps={formikProps} />
-      }
-      case 2: {
-        return <FormationDocument formikProps={formikProps} error={error} />
-      }
-      case 3: {
-        return <OwnerInformation formikProps={formikProps} />
-      }
-      case 4: {
-        return <PersonalInformation formikProps={formikProps} />
-      }
-      case 5: {
-        return <TermsAndConditions formikProps={formikProps} />
-      }
-      default:
-        return null
-    }
+  componentDidMount = () => {
+    const { businessTypes, businessClassifications, getBusinessTypes, getBusinessClassifications } = this.props
+    if (businessTypes.data.length === 0) getBusinessTypes()
+    if (businessClassifications.length === 0) getBusinessClassifications()
   }
 
   componentWillUnmount = () => {
@@ -73,7 +51,11 @@ class VellociRegister extends Component {
   }
 
   submitForm = async formikProps => {
-    const { nextStep, activeStep, prevStep } = this.props
+    const { nextStep, activeStep } = this.props
+    if (activeStep === 3 && !formikProps.values.ownerInformation.isBeneficialOwner) {
+      nextStep(activeStep + 2)
+      return
+    }
     formikProps
       .validateForm()
       .then(errors => {
@@ -106,7 +88,7 @@ class VellociRegister extends Component {
               .min(minLengthValue, minLengthErr)
               .required(requiredMessage),
             ...taxNumber,
-            industryType: Yup.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage)
+            industryType: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage)
           })
         }),
         businessInfo: Yup.lazy(() => {
@@ -115,7 +97,7 @@ class VellociRegister extends Component {
             emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
             url: websiteValidationNotRequired(),
             address: addressValidationSchema(),
-            dbaName: Yup.string(invalidString).typeError(invalidString).required(errorMessages.requiredMessage)
+            dbaName: Yup.string(invalidString).typeError(invalidString)
           })
         }),
         companyFormationDocument: Yup.lazy(() => {
@@ -132,29 +114,29 @@ class VellociRegister extends Component {
           })
         }),
         verifyPersonalInformation: Yup.lazy(() => {
-          return Yup.object().shape({
-            firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-            lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-            emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
-            phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
-            dateOfBirth: dateValidation(true).concat(
-              Yup.string().test(
-                'min-age',
-                errorMessages.aboveAge(18),
-                val => moment().diff(getStringISODate(val), 'years') >= 18
-              )
-            ),
-            address: addressValidationSchema(),
-            businessRole: Yup.string()
-              .trim()
-              .min(3, errorMessages.minLength(3))
-              .required(errorMessages.requiredMessage),
-            socialSecurityNumber: Yup.string()
-              .trim()
-              .min(10, errorMessages.minLength(10))
-              .required(errorMessages.requiredMessage),
-            businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage)
-          })
+          if (values.ownerInformation.isBeneficialOwner) {
+            return Yup.object().shape({
+              firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+              lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+              emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
+              phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
+              dateOfBirth: Yup.string()
+                .test('min-age', errorMessages.aboveAge(18), val => moment().diff(getStringISODate(val), 'years') >= 18)
+                .concat(dateValidation(true)),
+              address: addressValidationSchema(),
+              businessRole: Yup.string()
+                .trim()
+                .min(3, errorMessages.minLength(3))
+                .required(errorMessages.requiredMessage),
+              socialSecurityNumber: Yup.string()
+                .trim()
+                .min(10, errorMessages.minLength(10))
+                .required(errorMessages.requiredMessage),
+              businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage)
+            })
+          } else {
+            return Yup.mixed().notRequired()
+          }
         }),
         termsAndConditions: Yup.lazy(() => {
           return Yup.object().shape({
@@ -174,6 +156,45 @@ class VellociRegister extends Component {
         })
       })
     })
+
+  getContent = formikProps => {
+    const { activeStep, businessTypes, businessClassifications } = this.props
+    let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
+
+    let selectedBusiness = businessClassifications.find(el => el.id === '9ed35a3b-7d6f-11e3-83c8-5404a6144203')
+    let industryOptions = selectedBusiness
+      ? selectedBusiness.industryClassifications.map(el => ({
+          key: el.id,
+          value: el.id,
+          text: el.name
+        }))
+      : []
+
+    switch (activeStep) {
+      case 0: {
+        return (
+          <ControlPerson formikProps={formikProps} businessTypes={businessTypes} industryOptions={industryOptions} />
+        )
+      }
+      case 1: {
+        return <BusinessInfo formikProps={formikProps} />
+      }
+      case 2: {
+        return <FormationDocument formikProps={formikProps} error={error} />
+      }
+      case 3: {
+        return <OwnerInformation formikProps={formikProps} />
+      }
+      case 4: {
+        return <PersonalInformation formikProps={formikProps} />
+      }
+      case 5: {
+        return <TermsAndConditions formikProps={formikProps} />
+      }
+      default:
+        return null
+    }
+  }
 
   render() {
     const { prevStep, activeStep } = this.props
@@ -218,13 +239,21 @@ class VellociRegister extends Component {
 VellociRegister.propTypes = {
   nextStep: PropTypes.func,
   prevStep: PropTypes.func,
-  activeStep: PropTypes.number
+  activeStep: PropTypes.number,
+  businessTypes: PropTypes.object,
+  businessClassifications: PropTypes.array,
+  getBusinessTypes: PropTypes.func,
+  getBusinessClassifications: PropTypes.func
 }
 
 VellociRegister.defaultProps = {
   nextStep: () => {},
   prevStep: () => {},
-  activeStep: 0
+  getBusinessTypes: () => {},
+  getBusinessTypes: () => {},
+  activeStep: 0,
+  businessTypes: {},
+  businessClassifications: []
 }
 
 export default VellociRegister

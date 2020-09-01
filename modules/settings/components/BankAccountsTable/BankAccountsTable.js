@@ -124,7 +124,7 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
 ))
 
 const finalizeConfirm = createConfirmation(FinalizeConfirmDialog)
-
+//TODO registerVelloci
 export const bankAccountsConfig = {
   none: {
     registerButton: true,
@@ -135,7 +135,7 @@ export const bankAccountsConfig = {
     bankAccountList: false,
     uploadDocumentsButton: false,
     documentStatus: false,
-    registerVellociButton: true
+    registerVelloci: true
   },
   deactivated: {
     registerButton: true,
@@ -146,7 +146,7 @@ export const bankAccountsConfig = {
     bankAccountList: false,
     uploadDocumentsButton: false,
     documentStatus: false,
-    registerVellociButton: true
+    registerVelloci: true
   },
   retry: {
     registerButton: true,
@@ -157,7 +157,7 @@ export const bankAccountsConfig = {
     bankAccountList: false,
     uploadDocumentsButton: false,
     documentStatus: false,
-    registerVellociButton: true
+    registerVelloci: true
   },
   document: {
     registerButton: false,
@@ -168,7 +168,7 @@ export const bankAccountsConfig = {
     bankAccountList: false,
     uploadDocumentsButton: true,
     documentStatus: true,
-    registerVellociButton: true
+    registerVelloci: true
   },
   documentOwner: {
     registerButton: false,
@@ -181,7 +181,7 @@ export const bankAccountsConfig = {
     documentStatus: true,
     uploadOwnerDocumentsButton: true,
     documentOwner: true,
-    registerVellociButton: true
+    registerVelloci: true
   },
   verified: {
     registerButton: false,
@@ -192,7 +192,7 @@ export const bankAccountsConfig = {
     bankAccountList: true,
     uploadDocumentsButton: false,
     documentStatus: false,
-    registerVellociButton: true
+    registerVelloci: true
   },
   suspended: {
     registerButton: false,
@@ -203,7 +203,7 @@ export const bankAccountsConfig = {
     bankAccountList: false,
     uploadDocumentsButton: false,
     documentStatus: false,
-    registerVellociButton: true
+    registerVelloci: true
   }
 }
 
@@ -354,7 +354,7 @@ class BankAccountsTable extends Component {
           />
         )}
 
-        {(bankAccounts.accountStatus || bankAccounts.documentStatus) && (
+        {(bankAccounts.accountStatus || bankAccounts.vellociRegister || bankAccounts.documentStatus) && (
           <Container style={{ padding: '0 0 28px 0' }}>
             {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
               <>

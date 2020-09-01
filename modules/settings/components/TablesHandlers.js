@@ -546,7 +546,7 @@ class TablesHandlers extends Component {
                   </Button>
                 </div>
               )}
-              {(!bankAccTab || bankAccounts.registerVellociButton) && (
+              {currentTab.type === 'bank-accounts' && (!bankAccTab || bankAccounts.registerVelloci) && (
                 <div className='column'>
                   <Button
                     primary
@@ -555,7 +555,7 @@ class TablesHandlers extends Component {
                     <PlusCircle />
                     <FormattedMessage
                       id='settings.tables.bankAccounts.registerVelloci'
-                      defaultMessage='Register Velloci'>
+                      defaultMessage='Register Velloci Account'>
                       {text => text}
                     </FormattedMessage>
                   </Button>

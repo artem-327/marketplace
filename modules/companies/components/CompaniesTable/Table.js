@@ -97,6 +97,15 @@ const columns = [
     width: 145
   },
   {
+    name: 'hasVellociAccount',
+    title: (
+      <FormattedMessage id='global.vellociAccount' defaultMessage='Velloci Account'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    width: 145
+  },
+  {
     name: 'hasLogisticsAccounts',
     title: (
       <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>
@@ -256,6 +265,13 @@ class CompaniesTable extends Component {
               hidden: row => row.hasDwollaAccount === 'Yes'
             },
             {
+              text: formatMessage({ id: 'admin.registerVellociAccount', defaultMessage: 'Register Velloci Account' }),
+              callback: async row => {
+                Router.push(`/velloci-register?companyId=${row.id}`)
+              },
+              hidden: row => row.hasVellociAccount === 'Yes'
+            },
+            {
               text: <FormattedMessage id='admin.takeOver' defaultMessage='Take-over as Company Admin' />,
               callback: row => takeOverCompany(row.id),
               hidden: row => !row.primaryUser
@@ -288,6 +304,7 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
       ),
       hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
       hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified' ? 'Yes' : 'No',
+      hasVellociAccount: getSafe(() => c.vellociAccountStatus, false) === 'verified' ? 'Yes' : 'No',
       primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
         ? c.primaryBranch.deliveryAddress.address.streetAddress +
           ', ' +

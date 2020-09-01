@@ -44,6 +44,7 @@ const ButtonSubmit = styled(Button)`
 
 const ButtonBack = styled(Button)`
   float: right !important;
+  margin-left: 10px !important;
 `
 
 const DivSubtitleText = styled.div`
@@ -54,6 +55,7 @@ const DivSubtitleText = styled.div`
 `
 
 function FormRectangle({ children, formikProps, title, subtitle, prevStep, activeStep, submitForm }) {
+  const step = !formikProps.values.ownerInformation.isBeneficialOwner && activeStep === 5 ? 2 : 1
   return (
     <DivRectangleForm height={activeStep === 3 || activeStep === 4 ? '1000px' : activeStep === 5 ? '400px' : '860px'}>
       <DivTitleRectangleForm>
@@ -81,8 +83,15 @@ function FormRectangle({ children, formikProps, title, subtitle, prevStep, activ
           </FormattedMessage>
         </ButtonSubmit>
         {activeStep > 0 ? (
-          <ButtonBack type='button' onClick={() => prevStep(activeStep - 1)} basic>
+          <ButtonBack type='button' onClick={() => prevStep(activeStep - step)} basic>
             <FormattedMessage id='global.back' defaultMessage='Back'>
+              {text => text}
+            </FormattedMessage>
+          </ButtonBack>
+        ) : null}
+        {activeStep === 3 ? (
+          <ButtonBack type='button' onClick={() => console.log('email')} basic>
+            <FormattedMessage id='global.email' defaultMessage='Email'>
               {text => text}
             </FormattedMessage>
           </ButtonBack>

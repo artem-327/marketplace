@@ -132,15 +132,10 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
         <ColumnCustom>
           <Input
             name='businessInfo.dbaName'
-            label={
-              <>
-                {formatMessage({
-                  id: 'velloci.businessInfo.dbaName',
-                  defaultMessage: 'DBA Name (if applicable)'
-                })}
-                {<Required />}
-              </>
-            }
+            label={formatMessage({
+              id: 'velloci.businessInfo.dbaName',
+              defaultMessage: 'DBA Name (if applicable)'
+            })}
             inputProps={{
               placeholder: formatMessage({
                 id: 'velloci.businessInfo.dbaName.placeholder',

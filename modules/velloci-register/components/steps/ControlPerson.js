@@ -74,7 +74,7 @@ const optionsIndustryType = [
   { key: 8, text: '4. industry type', value: 8 }
 ]
 
-function ControlPerson({ formikProps, intl: { formatMessage } }) {
+function ControlPerson({ formikProps, intl: { formatMessage }, businessTypes, industryOptions }) {
   return (
     <GridControlPerson>
       <GridRow>
@@ -129,7 +129,16 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
               <GridRowBusinessType>
                 <Grid.Column>
                   <Dropdown
-                    options={optionsKindOfBusiness} //TODO
+                    loading={businessTypes && businessTypes.loading}
+                    options={
+                      businessTypes && businessTypes.data && businessTypes.data.length
+                        ? businessTypes.data.map(el => ({
+                            key: el.id,
+                            value: el.id,
+                            text: el.name
+                          }))
+                        : []
+                    }
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_drpdwn'
                     }}
@@ -242,7 +251,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
               <GridRowBusinessType>
                 <Grid.Column width={8}>
                   <Dropdown
-                    options={optionsIndustryType} //TODO
+                    options={industryOptions}
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
                     }}

@@ -76,9 +76,9 @@ class SetupIndicator extends Component {
       <Icons>
         {setupPages.map((_, index) => {
           if (index <= activeStep) {
-            return <OvalFocus />
+            return <OvalFocus key={index} />
           } else {
-            return <OvalEmpty />
+            return <OvalEmpty key={index} />
           }
         })}
       </Icons>

@@ -100,7 +100,7 @@ class AgreementModal extends Component {
             ))}
           <TopMargedDiv>
             <Checkbox
-              value={this.state.checked}
+              checked={this.state.checked}
               onChange={() => this.setState({ checked: !this.state.checked })}
               name='accept'
               label='Accept'
