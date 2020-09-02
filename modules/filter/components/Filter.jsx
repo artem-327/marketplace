@@ -75,7 +75,8 @@ import {
   QuantityWrapper,
   StyledModalContent,
   CustomMenu,
-  SmallGrid
+  SmallGrid,
+  PopupGrid
 } from '../constants/layout'
 
 class Filter extends Component {

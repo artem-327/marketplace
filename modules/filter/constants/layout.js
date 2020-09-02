@@ -322,19 +322,19 @@ export const SavedFilterItem = styled.div`
 export const SavedFilterTitle = styled(AccordionTitle)`
   font-weight: normal;
   margin: 0px !important;
+  padding: 2px 0 !important;
 `
 
 export const SavedFilterIcon = styled(Icon)`
   font-size: 20px !important;
-  float: right;
+  color: #848893;
+  margin-right: 10px !important;
 `
 
 export const DeleteFilterIcon = styled(Icon)`
   font-size: 20px !important;
   color: #f16844;
-  float: right;
-  padding: 0 !important;
-  right: 0;
+  
 `
 
 export const PopupRow = styled(GridRow)`
@@ -358,7 +358,6 @@ export const SavedFiltersGrid = styled(Grid)`
   margin: 0px !important;
   vertical-align: middle;
   > .row:nth-child(1) {       // Bold text
-    //padding: 0 !important;
     font-weight: bold !important;
     color: #20273a !important;
     > .column {
@@ -384,15 +383,12 @@ export const SavedFilterDetailGrid = styled(Grid)`
   }
 `
 
-export const SavedFilterRow = styled(GridRow)`
+export const SavedFilterRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
-  .column {
-    padding-right: 5px !important;
-    > i {
-      margin: 0;
-    }
-  }
 `
 
 export const BottomMargedDropdown = styled(Dropdown)`
@@ -524,9 +520,18 @@ export const SavedFiltersNotifications = styled.div`
 export const InputWrapper = styled.div`
   position: relative;
 
-  > .field .ui.input input {
-    position: static;
-    padding-right: 36px; 
+  > .field .ui.input {
+    input {
+      position: static;
+      padding-right: 36px; 
+    }
+    .ui.label {
+      font-size: 14px;
+      font-weight: normal;
+      background-color: #f8f9fb;
+      color: #20273a;
+      border: solid 1px #dee2e6;
+    }
   }
   > .ui.label {
     height: 28px;
@@ -537,12 +542,10 @@ export const InputWrapper = styled.div`
     font-weight: normal;
     font-stretch: normal;
     font-style: normal;
-    line-height: 1.29;
     letter-spacing: normal;
     text-align: center;
     color: #84c225;
-    
-    text-align: center;
+    align-items: center;
     position: absolute;
     top: 6px;
     right: 6px;
@@ -551,6 +554,15 @@ export const InputWrapper = styled.div`
 
 export const QuantityWrapper = styled.div`
   position: relative;
+  
+  > .field .ui.input .ui.label {
+    font-size: 14px;
+    font-weight: normal;
+    background-color: #f8f9fb;
+    color: #20273a;
+    border: solid 1px #dee2e6;
+  }
+  
   > .sideButtons {
     position: absolute;
     width: 40px;
@@ -570,11 +582,11 @@ export const QuantityWrapper = styled.div`
       background-color: #f8f9fb;
 
       &.buttonPlus {
-        padding: 1px 0 2px 0;
+        padding: 2px 0 3px 0;
       }
       &.buttonMinus {
-        padding: 0 0 2px 0;
-        top: 21px;
+        padding: 1px 0 3px 0;
+        top: 20px;
       }
     }
   }
@@ -612,5 +624,21 @@ export const SmallGrid = styled(Grid)`
       padding: 0 0.357142857em !important;
     }    
   }
+  }
+`
+
+export const PopupGrid = styled(Grid)`
+  > .row {
+    padding: 7.5px 0 !important;
+    .column {
+      //margin: 0 !important;
+      //padding: 0 !important;
+    }  
+  }
+  
+  .ui.dropdown,
+  .ui.input {
+    min-height: 40px;
+    min-width: 100px !important;
   }
 `

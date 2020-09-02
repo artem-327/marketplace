@@ -85,50 +85,54 @@ class SavedFilters extends Component {
     let filterDescription = groupFilters(filter.filters, this.props.params)
     return (
       <SavedFilterTitle>
-        <SavedFiltersGrid>
-          <SavedFilterRow>
+        <SavedFilterRow>
+          <Tooltip
+            trigger={
+              <div
+                onClick={() => this.handleFilterApply(filter)}
+                data-test={`filter_activateFilter_${i}`}
+                style={{ color: '#20273a', fontWeight: '600' }}
+              >
+                {name}
+              </div>
+            }
+            position='top center'>
+            <FormattedMessage id='filter.activateFilter' />
+          </Tooltip>
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
             <Tooltip
               trigger={
-                <GridColumn
-                  computer={10}
-                  onClick={() => this.handleFilterApply(filter)}
-                  data-test={`filter_activateFilter_${i}`}>
-                  {name}
-                </GridColumn>
-              }
-              position='top center'>
-              <FormattedMessage id='filter.activateFilter' />
-            </Tooltip>
-
-            <Tooltip
-              trigger={
-                <GridColumn computer={2} onClick={() => this.toggle(id)} data-test={`filter_editNotifications_${i}`}>
+                <div onClick={() => this.toggle(id)} data-test={`filter_editNotifications_${i}`}>
                   <SavedFilterIcon
                     name='bell outline'
                     color={this.state.activeIndex === id ? 'yellow' : 'gray'}
+                    size='mini'
                   />
-                </GridColumn>
-              }>
+                </div>
+              }
+              position='left center'>
               <FormattedMessage id='filter.editNotifications' />
             </Tooltip>
             <Tooltip
               trigger={
-                <GridColumn
+                <div
                   onClick={() => this.toggle(i, 'activeTooltip')}
-                  computer={2}
                   data-test={`filter_activeTooltip_${i}`}>
-                  <SavedFilterIcon color={this.state.activeTooltip === i ? 'blue' : 'gray'} name='info circle outline' />
-                </GridColumn>
+                  <SavedFilterIcon
+                    color={this.state.activeTooltip === i ? 'blue' : 'gray'}
+                    name='info circle outline'
+                    size='mini'
+                  />
+                </div>
               }
               position='left center'>
-              <GridColumn computer={8}>
+              <div >
                 <StyledGrid verticalAlign='top'>
                   {filterDescription && filterDescription.length > 0 ? (
                     filterDescription.map((f, index) => {
                       return (
                         <GridRow key={index}>
                           <GridColumn computer={8}>{f.description}:</GridColumn>
-
                           <GridColumn computer={8}>{this.handleValuesDescription(f)}</GridColumn>
                         </GridRow>
                       )
@@ -142,22 +146,21 @@ class SavedFilters extends Component {
                     </GridRow>
                   )}
                 </StyledGrid>
-              </GridColumn>
+              </div>
             </Tooltip>
             <Tooltip
               trigger={
-                <GridColumn
+                <div
                   onClick={() => this.props.deleteFilter(id)}
-                  computer={2}
                   data-test={`filter_deleteFilter_${i}`}>
-                  <DeleteFilterIcon name='trash alternate outline' />
-                </GridColumn>
+                  <DeleteFilterIcon name='trash alternate outline' size='mini' />
+                </div>
               }
               position='left center'>
               <FormattedMessage id='filter.deleteFilter' />
             </Tooltip>
-          </SavedFilterRow>
-        </SavedFiltersGrid>
+          </div>
+        </SavedFilterRow>
       </SavedFilterTitle>
     )
   }
@@ -244,9 +247,10 @@ class SavedFilters extends Component {
                       }}>
                       {formikProps => {
                         return (
-                          <SavedFilterDetailGrid>
+                          <div style={{ padding: '0 10px' }}>
+                          <SavedFilterDetailGrid style={{ backgroundColor: '#edeef2' }}>
                             <GridRow>
-                              <GridColumn computer={16} floated='left'>
+                              <GridColumn computer={8} floated='left'>
                                 <Notifications values={formikProps.values} formikProps={formikProps} />
                               </GridColumn>
                             </GridRow>
@@ -262,6 +266,7 @@ class SavedFilters extends Component {
                               </GridColumn>
                             </GridRow>
                           </SavedFilterDetailGrid>
+                          </div>
                         )
                       }}
                     </Form>

@@ -76,7 +76,8 @@ import {
   BottomMargedField,
   StyledModalContent,
   CustomMenu,
-  SmallGrid
+  SmallGrid,
+  PopupGrid
 } from '../constants/layout'
 
 const optionsYesNo = [
@@ -147,7 +148,7 @@ class InventoryFilter extends Component {
     //if (!autocompleteOrigin || !autocompleteOrigin.length) {
     //  this.props.getAutocompleteOrigin(this.props.getOriginUrl)
     //}
-    this.handleGetSavedFilters()
+    //this.handleGetSavedFilters()
 
     Promise.all([
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
@@ -389,7 +390,8 @@ class InventoryFilter extends Component {
         options={options}
         selection
         inputProps={{
-          multiple: true
+          multiple: true,
+          fluid: true
         }}
       />
     )
@@ -545,7 +547,8 @@ class InventoryFilter extends Component {
             placeholder: '0',
             type: 'number',
             label: label,
-            labelPosition: 'left'
+            labelPosition: 'left',
+            fluid: true
           }}
         />
         <div className='sideButtons'>
@@ -601,6 +604,7 @@ class InventoryFilter extends Component {
                 'data-test': 'filter_dateField_drpdn',
                 value: values[name],
                 disabled: !values[inputName],
+                fluid: true,
                 onChange: (_, data) => {
                   setFieldValue(data.name, data.value)
                   setFieldValue(inputName, '')
@@ -625,7 +629,8 @@ class InventoryFilter extends Component {
                   labelPosition: 'right',
                   type: 'number',
                   min: min.toString(),
-                  placeholder: '0'
+                  placeholder: '0',
+                  fluid: true
                 }}
               />
             </DateInputStyledWrapper>
@@ -902,7 +907,7 @@ class InventoryFilter extends Component {
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
     return (
-      <Grid>
+      <PopupGrid>
         <GridRow>
           <GridColumn width={8}>
             <FormField>
@@ -924,14 +929,16 @@ class InventoryFilter extends Component {
 
         <GridRow>
           <GridColumn width={8}>
-            <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
-            {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
+            <FormField>
+              <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
+              {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
+            </FormField>
           </GridColumn>
           <GridColumn width={8}>
-            <FormGroup widths='equal'>
+            <FormField>
               <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
               {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
-            </FormGroup>
+            </FormField>
           </GridColumn>
         </GridRow>
 
@@ -972,7 +979,8 @@ class InventoryFilter extends Component {
                       step: 0.01,
                       placeholder: '0.00',
                       label: formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
-                      labelPosition: 'left'
+                      labelPosition: 'left',
+                      fluid: true
                     },
                     currencySymbol
                   )}
@@ -986,7 +994,8 @@ class InventoryFilter extends Component {
                       step: 0.01,
                       placeholder: '0.00',
                       label: formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
-                      labelPosition: 'left'
+                      labelPosition: 'left',
+                      fluid: true
                     },
                     currencySymbol
                   )}
@@ -1031,7 +1040,8 @@ class InventoryFilter extends Component {
                       min: 0,
                       placeholder: '0.00',
                       label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
-                      labelPosition: 'left'
+                      labelPosition: 'left',
+                      fluid: true
                     },
                     '%'
                   )}
@@ -1044,7 +1054,8 @@ class InventoryFilter extends Component {
                       min: 0,
                       placeholder: '0.00',
                       label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
-                      labelPosition: 'left'
+                      labelPosition: 'left',
+                      fluid: true
                     },
                     '%'
                   )}
@@ -1073,7 +1084,7 @@ class InventoryFilter extends Component {
           </GridColumn>
           <GridColumn width={4}></GridColumn>
         </GridRow>
-      </Grid>
+      </PopupGrid>
     )
   }
 
