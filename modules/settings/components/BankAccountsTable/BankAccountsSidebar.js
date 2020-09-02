@@ -177,11 +177,11 @@ class BankAccountsSidebar extends React.Component {
             </CustomSegmentContent>
           </FlexContent>
           <BottomButtons>
-            <Button.Reset onClick={closeSidebar} data-test='settings_bank_account_popup_reset_btn'>
+            <Button type='button' basic onClick={closeSidebar} data-test='settings_bank_account_popup_reset_btn'>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                 {text => text}
               </FormattedMessage>
-            </Button.Reset>
+            </Button>
             <ButtonSubmit data-test='settings_bank_account_popup_submit_btn'>
               <FormattedMessage id='global.save' defaultMessage='Save'>
                 {text => text}
