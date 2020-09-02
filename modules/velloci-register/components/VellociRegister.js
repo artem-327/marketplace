@@ -40,11 +40,12 @@ class VellociRegister extends Component {
 
   //TODO missing BE call
   handleSubmit = async values => {
-    const { activeStep, prevStep } = this.props
+    const { activeStep, postRegisterVelloci } = this.props
     if (activeStep !== 5) return
     try {
       console.log('Submit form successfully. Values for BE call:')
       console.log(values)
+      //await postRegisterVelloci(body)
     } catch (error) {
       console.error(error)
     }
@@ -82,7 +83,7 @@ class VellociRegister extends Component {
             : { ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage) }
           return Yup.object().shape({
             isControlPerson: Yup.boolean().oneOf([true], errorMessages.requiredMessage),
-            kindBusiness: Yup.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+            entityType: Yup.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
             legalBusinessName: Yup.string(invalidString)
               .typeError(invalidString)
               .min(minLengthValue, minLengthErr)
@@ -94,10 +95,10 @@ class VellociRegister extends Component {
         businessInfo: Yup.lazy(() => {
           return Yup.object().shape({
             phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
-            emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
+            email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
             url: websiteValidationNotRequired(),
             address: addressValidationSchema(),
-            dbaName: Yup.string(invalidString).typeError(invalidString)
+            dba: Yup.string(invalidString).typeError(invalidString)
           })
         }),
         companyFormationDocument: Yup.lazy(() => {
@@ -118,7 +119,7 @@ class VellociRegister extends Component {
             return Yup.object().shape({
               firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
               lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-              emailAddress: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
+              email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
               phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
               dateOfBirth: Yup.string()
                 .test('min-age', errorMessages.aboveAge(18), val => moment().diff(getStringISODate(val), 'years') >= 18)

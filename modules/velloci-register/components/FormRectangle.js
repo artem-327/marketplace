@@ -54,6 +54,11 @@ const DivSubtitleText = styled.div`
   padding: 16px 30px;
 `
 
+const SpanSubtitleValue = styled.span`
+  font-weight: bold;
+  color: #84c225;
+`
+
 function FormRectangle({ children, formikProps, title, subtitle, prevStep, activeStep, submitForm }) {
   const step = !formikProps.values.ownerInformation.isBeneficialOwner && activeStep === 5 ? 2 : 1
   return (
@@ -66,9 +71,17 @@ function FormRectangle({ children, formikProps, title, subtitle, prevStep, activ
         </DivTitleText>
         {subtitle ? (
           <DivSubtitleText>
-            <FormattedMessage id={subtitle} defaultMessage='Subtitle'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage
+              id={subtitle}
+              defaultMessage={`Subtitle`}
+              values={{
+                percentage: (
+                  <SpanSubtitleValue>
+                    <FormattedMessage id='global.25percentage' defaultMessage={'25%'} />
+                  </SpanSubtitleValue>
+                )
+              }}
+            />
           </DivSubtitleText>
         ) : null}
       </DivTitleRectangleForm>

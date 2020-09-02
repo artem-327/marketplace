@@ -103,7 +103,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage } }) {
       <GridRow columns={2}>
         <ColumnCustom>
           <Input
-            name='verifyPersonalInformation.emailAddress'
+            name='verifyPersonalInformation.email'
             label={
               <>
                 {formatMessage({

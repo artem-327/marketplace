@@ -150,7 +150,7 @@ function ControlPerson({ formikProps, intl: { formatMessage }, businessTypes, in
                       search: true,
                       selection: true
                     }}
-                    name='controlPerson.kindBusiness'
+                    name='controlPerson.entityType'
                     label={
                       <>
                         {formatMessage({

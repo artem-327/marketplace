@@ -75,7 +75,7 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
         </ColumnCustom>
         <ColumnCustom>
           <Input
-            name='businessInfo.emailAddress'
+            name='businessInfo.email'
             label={
               <>
                 {formatMessage({
@@ -131,7 +131,7 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
       <GridRow>
         <ColumnCustom>
           <Input
-            name='businessInfo.dbaName'
+            name='businessInfo.dba'
             label={formatMessage({
               id: 'velloci.businessInfo.dbaName',
               defaultMessage: 'DBA Name (if applicable)'

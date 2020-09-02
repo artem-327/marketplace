@@ -31,7 +31,7 @@ export const initialValues = {
   controlPerson: {
     isControlPerson: false,
     legalBusinessName: '',
-    kindBusiness: '',
+    entityType: '',
     industryType: '',
     isEin: true,
     isSsn: false,
@@ -41,7 +41,7 @@ export const initialValues = {
   },
   businessInfo: {
     phoneNumber: '',
-    emailAddress: '',
+    email: '',
     url: '',
     address: {
       streetAddress: '',
@@ -50,7 +50,7 @@ export const initialValues = {
       zip: '',
       province: ''
     },
-    dbaName: ''
+    dba: ''
   },
   companyFormationDocument: {
     attachments: []
@@ -65,7 +65,7 @@ export const initialValues = {
     firstName: '',
     lastName: '',
     middleName: '',
-    emailAddress: '',
+    email: '',
     phoneNumber: '',
     dateOfBirth: '',
     address: {
