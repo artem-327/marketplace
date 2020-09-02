@@ -824,7 +824,7 @@ class ProductSidebar extends React.Component {
                         </GridColumn>
                       </GridRow>
 
-                      <GridRow columns={2}>
+                      <GridRow columns={3}>
                         <GridColumn>
                           <QuantityInput
                             name='palletMaxPkgs'
