@@ -240,7 +240,17 @@ const simpleCompanyProductList = {
     'freezeProtectMapper',
     'hazardousMapper',
     'inciNameMapper',
-    'packagesPerPalletMapper'
+    'packagesPerPalletMapper',
+    'palletHeightMapper',
+    'palletLengthMapper',
+    'palletMaxPkgsMapper',
+    'palletMinPkgsMapper',
+    'palletSaleOnlyMapper',
+    'palletWeightMapper',
+    'palletWidthMapper',
+    'packagingWidthMapper',
+    'packagingHeightMapper',
+    'packagingLengthMapper'
   ]
 }
 
