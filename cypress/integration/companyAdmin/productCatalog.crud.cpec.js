@@ -32,7 +32,7 @@ context("Company Product Catalog CRUD", () => {
         })
         cy.settingsAdd()
 
-        cy.selectFromDropdown("div[id='field_dropdown_companyGenericProduct']","ATMP")
+        cy.selectFromDropdown("div[id='field_dropdown_companyGenericProduct']","ABEX")
 
         cy.enterText("#field_input_intProductName", "Our product")
         cy.enterText("#field_input_intProductCode", "OURPR")
@@ -59,7 +59,7 @@ context("Company Product Catalog CRUD", () => {
             cy.contains("60").click()
         })
 
-        cy.enterText("#field_input_packagingSize", "5")
+        cy.enterText("#field_input_packagingSize", "70")
 
         cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").click()
         cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").within(() => {
@@ -107,6 +107,7 @@ context("Company Product Catalog CRUD", () => {
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
 
         cy.searchInList("My")
+        cy.waitForUI()
         cy.openElement(productId, 0)
 
         cy.get("#field_input_intProductName")
@@ -119,9 +120,9 @@ context("Company Product Catalog CRUD", () => {
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
 
         cy.get(".error")
-            .should("have.length", 10)
+            .should("have.length", 19)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)|(Number value should be integer)/i)
+            expect(element.text()).to.match(/(Required)|(Number value should be integer)|(Must be a number)/i)
         })
     })
 
@@ -142,17 +143,27 @@ context("Company Product Catalog CRUD", () => {
 
     it("Cannot select noncorresponding Unit and Type", () => {
         cy.settingsAdd()
+        cy.waitForUI()
 
         cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").click()
-        cy.contains("kilograms").click()
+        cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").within(() => {
+            cy.contains("kilograms").click()
+        })
 
         cy.get("[data-test='settings_product_popup_packagingType_drpdn']").click()
-        cy.contains("Drum").should("not.exist")
+        cy.get("[data-test='settings_product_popup_packagingType_drpdn']").within(() => {
+            cy.contains("Drum").should("not.exist")
+        })
+
 
         cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").click()
-        cy.contains("liters").click()
+        cy.get("[data-test='settings_product_popup_packagingUnit_drpdn']").within(() => {
+            cy.contains("liters").click()
+        })
 
         cy.get("[data-test='settings_product_popup_packagingType_drpdn']").click()
-        cy.contains("Bulk").should("not.exist")
+        cy.get("[data-test='settings_product_popup_packagingType_drpdn']").within(() => {
+            cy.contains("Bulk").should("not.exist")
+        })
     })
 })

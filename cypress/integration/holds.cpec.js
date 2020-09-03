@@ -47,7 +47,7 @@ context("Holds tests", () => {
                 if(sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup == undefined){
                     cy.contains("Unmapped").click()
                 }else{
-                    marketPlaceName = suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup.name
+                    marketPlaceName = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup.name
 
                     cy.contains(marketPlaceName).click()
                 }

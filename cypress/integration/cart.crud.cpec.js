@@ -5,7 +5,7 @@ context("Shopping cart CRUD", () => {
     const userJSON = require('../fixtures/user.json')
 
     beforeEach(function () {
-        cy.viewport(2750, 1500)
+        cy.viewport(2750, 3000)
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
@@ -106,15 +106,15 @@ context("Shopping cart CRUD", () => {
 
                 cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
                     let marketPlaceIdNum1 = sameWarehouseOffer[ 0 ].id
-                    let marketPlaceIdNum2 = sameWarehouseOffer[ 1 ].id
+                    let marketPlaceIdNum2 = sameWarehouseOffer[ 2 ].id
                     let marketPlaceName1 = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.name
-                    let marketPlaceName2 = sameWarehouseOffer[ 1 ].companyProduct.companyGenericProduct.name
+                    let marketPlaceName2 = sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.name
                     marketPlaceId = marketPlaceIdNum1
                     //Open tab
                     if(sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup == undefined){
                         cy.contains("Unmapped").click()
                     }else{
-                        marketPlaceName = suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup.name
+                        marketPlaceName = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup.name
 
                         cy.contains(marketPlaceName).click()
                     }
@@ -135,10 +135,10 @@ context("Shopping cart CRUD", () => {
 
                     cy.waitForUI()
                     //Open desired tab
-                    if(sameWarehouseOffer[ 1 ].companyProduct.companyGenericProduct.productGroup == undefined){
+                    if(sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.productGroup == undefined){
                         cy.contains("Unmapped").click()
                     }else{
-                        marketPlaceName = suitableOffers[ 1 ].companyProduct.companyGenericProduct.productGroup.name
+                        marketPlaceName = sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.productGroup.name
 
                         cy.contains(marketPlaceName).click()
                     }
