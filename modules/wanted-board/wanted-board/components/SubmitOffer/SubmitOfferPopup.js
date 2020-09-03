@@ -481,6 +481,8 @@ class SubmitOfferPopup extends React.Component {
                             <List.Description as='span'>
                               {popupValues.maximumPricePerUOM ? (
                                 <FormattedNumber
+                                  minimumFractionDigits={2}
+                                  maximumFractionDigits={2}
                                   style='currency'
                                   currency={currency}
                                   value={popupValues.maximumPricePerUOM}
