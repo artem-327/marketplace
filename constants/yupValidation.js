@@ -57,6 +57,13 @@ export const errorMessages = {
   greaterThan: value => (
     <FormattedMessage id='validation.greaterThan' values={{ value }} defaultMessage={`Must be greater than ${value}`} />
   ),
+  greaterOrEqual: value => (
+    <FormattedMessage
+      id='validation.greaterOrEqual'
+      values={{ value }}
+      defaultMessage={`Must be greater or equal to ${value}`}
+    />
+  ),
   maxDecimals: max => (
     <FormattedMessage
       id='validation.maxDecimals'
