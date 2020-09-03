@@ -1620,6 +1620,7 @@
   "validation.minimum": "Minimum is {min}",
   "validation.maximum": "Maximum is {max}",
   "validation.greaterThan": "Must be greater than {value}",
+  "validation.greaterOrEqual": "Must be greater or equal to {value}",
   "validation.maxDecimals": "There can be maximally {max} decimal places",
   "validation.mustBeNumber": "Must be a number",
   "validation.lostHasToBeSelected": "Lot has to be selected",
