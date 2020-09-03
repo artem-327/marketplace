@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
-import { Modal, FormGroup, Button } from 'semantic-ui-react'
-import { closeAddPopup } from '~/modules/admin/actions'
-import { Form, Input } from 'formik-semantic-ui-fixed-validation'
+import styled from 'styled-components'
+import { Modal, FormGroup, Form, Button } from 'semantic-ui-react'
+import { Form as Formik, Input } from 'formik-semantic-ui-fixed-validation'
 import { injectIntl } from 'react-intl'
 import * as Yup from 'yup'
-import { nmfcValidation } from '../../../../constants/yupValidation'
+
+import { closeAddPopup } from '~/modules/admin/actions'
+
+import { nmfcValidation } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { addNmfcNumber, editNmfcNumber } from '~/modules/admin/actions'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
 
-const validationSchema = Yup.object().shape({
-  code: nmfcValidation()
-})
-
+const CustomForm = styled(Form)`
+  flex-grow: 0 !important;
+`
 class Popup extends Component {
   getInitialValues = () => {
     const { popupValues } = this.props
@@ -26,6 +27,13 @@ class Popup extends Component {
       description: ''
     }
   }
+
+  validationSchema = () =>
+    Yup.lazy(values => {
+      return Yup.object().shape({
+        code: nmfcValidation()
+      })
+    })
 
   render() {
     const {
@@ -45,7 +53,8 @@ class Popup extends Component {
           {formatMessage({ id: `global.${type.id}`, defaultMessage: type.defaultMessage })} {config.addEditText}
         </Modal.Header>
         <Modal.Content>
-          <Form
+          <Formik
+            validateOnChange={true}
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 if (popupValues) {
@@ -57,12 +66,12 @@ class Popup extends Component {
               } catch (err) {}
               setSubmitting(false)
             }}
-            validationSchema={validationSchema}
+            validationSchema={this.validationSchema()}
             initialValues={this.getInitialValues()}
             render={props => {
               this.submitForm = props.submitForm
               return (
-                <>
+                <CustomForm autoComplete='off'>
                   <FormGroup widths='equal'>
                     <Input
                       name='code'
@@ -82,7 +91,7 @@ class Popup extends Component {
                     />
                     <ErrorFocus />
                   </FormGroup>
-                </>
+                </CustomForm>
               )
             }}
           />
