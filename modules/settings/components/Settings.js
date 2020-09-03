@@ -15,13 +15,13 @@ import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 import UsersSidebar from './UserTable/UsersSidebar'
 import ProductSidebar from './ProductCatalogTable/ProductSidebar'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
-import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
+import BankAccountsSidebar from './BankAccountsTable/BankAccountsSidebar'
 import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDocPopup'
 import TablesHandlers from './TablesHandlers'
 import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
 
 import LogisticsTable from './LogisticsTable/LogisticsTable'
-import LogisticsPopup from './LogisticsTable/LogisticsPopup'
+import LogisticsSidebar from './LogisticsTable/LogisticsSidebar'
 
 import SystemSettings from '~/components/settings'
 
@@ -218,12 +218,7 @@ class Settings extends Component {
   }
 
   componentWillUnmount() {
-    const {
-      isOpenPopup,
-      isOpenSidebar,
-      closePopup,
-      closeSidebar
-    } = this.props
+    const { isOpenPopup, isOpenSidebar, closePopup, closeSidebar } = this.props
     if (isOpenPopup) closePopup()
     if (isOpenSidebar) closeSidebar()
   }
@@ -341,10 +336,10 @@ class Settings extends Component {
       users: <UsersSidebar />,
       products: <ProductSidebar />,
       'global-broadcast': <PriceBook />,
-      'bank-accounts': <BankAccountsPopup />,
+      'bank-accounts': <BankAccountsSidebar />,
       'credit-cards': <CreditCardsPopup />,
       'guest-companies': <ClientCompanyPopup />,
-      logistics: <LogisticsPopup />,
+      logistics: <LogisticsSidebar />,
       documents: <DocumentManagerSidebar />
     }
 

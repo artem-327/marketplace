@@ -13,7 +13,7 @@ import { getSafe } from '~/utils/functions'
 
 import {
   getUsersDataRequest,
-  openPopup,
+  openSidebar,
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteUser,
@@ -128,7 +128,7 @@ class UsersTable extends Component {
       rows,
       filterValue,
       loading,
-      openPopup,
+      openSidebar,
       openRolesPopup,
       intl,
       datagrid,
@@ -159,7 +159,7 @@ class UsersTable extends Component {
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row.rawData)
+              callback: row => openSidebar(row.rawData)
               // hidden: row => currentUserId === row.id
             },
             /* #34139
@@ -206,7 +206,7 @@ class UsersTable extends Component {
 
 const mapDispatchToProps = {
   getUsersDataRequest,
-  openPopup,
+  openSidebar,
   openRolesPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,

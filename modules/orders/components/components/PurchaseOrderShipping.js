@@ -6,11 +6,13 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
 import * as Yup from 'yup'
 import { AlertCircle } from 'react-feather'
+import { debounce } from 'lodash'
+
 //Actions
 import * as Actions from '../../actions'
 //Components
 import { getSafe } from '~/utils/functions'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import { DateInput } from '~/components/custom-formik'
 import { currency } from '~/constants/index'
 import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
@@ -133,16 +135,15 @@ class PurchaseOrderShipping extends React.Component {
     }
   }
 
-  onDateChange = async (event, { name, value }) => {
-    let pickupDate = null
-    if (value) {
-      pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
-      if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
-        // if current date (today) is selected the pickupDate (datetime) is in past
-        pickupDate = moment().add(1, 'minutes') // BE needs to have pickupDate always in future
-      }
-      pickupDate = pickupDate.format()
+  onDateChange = debounce(async (event, { name, value }) => {
+    if (!value || this.errors.pickupDate) return
+    let pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
+    if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
+      // if current date (today) is selected the pickupDate (datetime) is in past
+      pickupDate = moment().add(1, 'minutes') // BE needs to have pickupDate always in future
     }
+    pickupDate = pickupDate.format()
+
     if (!this.props.order.cfWeightExceeded) {
       try {
         await this.props.getShippingQuotes(this.props.order.id, pickupDate)
@@ -150,7 +151,7 @@ class PurchaseOrderShipping extends React.Component {
       } finally {
       }
     }
-  }
+  }, 250)
 
   requestManualShippingQuote = async () => {
     const { order } = this.props
@@ -184,6 +185,19 @@ class PurchaseOrderShipping extends React.Component {
     return initialValues
   }
 
+  validationSchema = () =>
+    Yup.lazy(values => {
+      return Yup.object().shape({
+        pickupDate: dateValidation(false).concat(
+          Yup.string().test(
+            'min-date',
+            errorMessages.mustBeInFuture,
+            val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
+          )
+        )
+      })
+    })
+
   render() {
     const {
       intl: { formatMessage },
@@ -210,15 +224,17 @@ class PurchaseOrderShipping extends React.Component {
           <ModalBody>
             <Modal.Description>
               <Form
+                validationSchema={this.validationSchema()}
                 enableReinitialize
-                validateOnChange={false}
+                validateOnChange={true}
                 initialValues={this.getInitialFormValues()}
                 onSubmit={this.submitHandler}
                 className='flex stretched'
                 style={{ padding: '0' }}>
                 {formikProps => {
-                  let { touched, validateForm, resetForm, values, setFieldValue } = formikProps
+                  let { touched, validateForm, resetForm, values, setFieldValue, errors, handleChange } = formikProps
                   const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
+                  this.errors = errors
                   return (
                     <>
                       <CustomGrid>
@@ -226,11 +242,13 @@ class PurchaseOrderShipping extends React.Component {
                           <Grid.Column width={8}>
                             <DateInput
                               inputProps={{
-                                minDate: moment(),
+                                //minDate: moment(),
                                 fluid: true,
                                 clearable: true,
                                 placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
-                                onChange: (event, val) => this.onDateChange(event, val)
+                                onChange: async (event, val) => {
+                                  await this.onDateChange(event, val)
+                                }
                               }}
                               label={
                                 <FormattedMessage

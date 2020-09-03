@@ -513,7 +513,7 @@ class Marketplace extends Component {
           </CustomRowDiv>
         </div>
 
-        <div class='flex stretched marketplace-wrapper' style={{ padding: '10px 0' }}>
+        <div className='flex stretched marketplace-wrapper' style={{ padding: '10px 0' }}>
           <ProdexGrid
             defaultHiddenColumns={defaultHiddenColumns}
             tableName='marketplace_grid'
