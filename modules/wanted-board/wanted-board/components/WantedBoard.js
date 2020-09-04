@@ -327,7 +327,7 @@ class WantedBoard extends Component {
                 value={filterValues.searchInput}
                 placeholder={formatMessage({
                   id: 'wantedBoard.searchByProductName',
-                  defaultMessage: 'Search by product name...'
+                  defaultMessage: 'Search by product name'
                 })}
                 onChange={this.handleFilterChangeInputSearch}
               />

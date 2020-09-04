@@ -317,7 +317,7 @@ class DeliveryLocationsSidebar extends React.Component {
               inputProps={{
                 placeholder: formatMessage({
                   id: 'settings.warehouses.writeDeliveryNotesHere',
-                  defaultMessage: 'Write Delivery Notes Here...'
+                  defaultMessage: 'Write Delivery Notes Here'
                 })
               }}
             />
