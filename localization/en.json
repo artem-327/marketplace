@@ -25,7 +25,7 @@
   "alerts.status.read": "Read",
   "alerts.status.unread": "Unread",
   "auth.resetMyPassword": "Password Reset",
-  "auth.cancelPasswordReset": "Cancel Password Reset",
+  "auth.cancelPasswordReset": "Password Reset Cancel",
   "auth.username": "Username",
   "auth.password": "Password",
   "auth.login": "Log in",
