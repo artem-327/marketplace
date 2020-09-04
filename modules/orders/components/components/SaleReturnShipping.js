@@ -148,7 +148,7 @@ class SaleReturnShipping extends React.Component {
   }
 
   onDateChange = debounce(async (event, { name, value }) => {
-    if (!value || moment(value).format(getLocaleDateFormat()) === 'Invalid date' || this.errors.pickupDate) return
+    if (!value || this.errors.pickupDate) return
 
     let pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
     if (pickupDate.isBefore(moment().add(1, 'minutes'))) {

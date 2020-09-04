@@ -18,7 +18,7 @@ import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDo
 import TablesHandlers from './TablesHandlers'
 
 import LogisticsTable from './LogisticsTable/LogisticsTable'
-import LogisticsPopup from './LogisticsTable/LogisticsPopup'
+import LogisticsSidebar from './LogisticsTable/LogisticsSidebar'
 
 import SystemSettings from '~/components/settings'
 
@@ -332,7 +332,7 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsSidebar />,
       'credit-cards': <CreditCardsPopup />,
       'guest-companies': <ClientCompanyPopup />,
-      logistics: <LogisticsPopup />,
+      logistics: <LogisticsSidebar />,
       documents: <DocumentManagerSidebar />
     }
 

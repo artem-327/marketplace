@@ -904,7 +904,7 @@ class Filter extends Component {
                     type: 'number',
                     min: 0.01,
                     step: 0.01,
-                    placeholder: '0.000'
+                    placeholder: '0.00'
                   },
                   <FormattedMessage id='filter.FromPrice' defaultMessage='From' />,
                   currencySymbol
@@ -917,7 +917,7 @@ class Filter extends Component {
                     type: 'number',
                     min: 0.01,
                     step: 0.01,
-                    placeholder: '0.000'
+                    placeholder: '0.00'
                   },
                   <FormattedMessage id='filter.ToPrice' defaultMessage='To' />,
                   currencySymbol

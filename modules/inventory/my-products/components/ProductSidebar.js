@@ -637,6 +637,9 @@ class ProductSidebar extends React.Component {
           let { setFieldValue, values } = formikProps
           let casProducts = getSafe(() => values.casProducts, [])
           const palletParamsRequired = checkPalletParamsRequired(values)
+          const selectedWeightUnit = values.packageWeightUnit
+            ? packageWeightUnits.find(el => el.value === values.packageWeightUnit)
+            : null
           return (
             <>
               <CustomForm autoComplete='off'>
@@ -760,349 +763,7 @@ class ProductSidebar extends React.Component {
                         </GridColumn>
                       </GridRow>
 
-                      <GridRow columns={2}>
-                        <GridColumn>
-                          <QuantityInput
-                            name='palletMaxPkgs'
-                            label={
-                              <>
-                                <FormattedMessage id='global.palletMaxPkgs' defaultMessage='Max Pkgs per Pallet' />
-                                {(palletParamsRequired || values.palletSaleOnly) && <Required />}
-                              </>
-                            }
-                            inputProps={{
-                              placeholder: '0',
-                              type: 'number',
-                              min: 1
-                            }}
-                          />
-                        </GridColumn>
-                        <GridColumn>
-                          <Dropdown
-                            name='packageWeightUnit'
-                            options={packageWeightUnits}
-                            label={
-                              <>
-                                <FormattedMessage id='global.packageWeightUnit' defaultMessage='Package Weight Unit' />
-                                <Required />
-                              </>
-                            }
-                            inputProps={{
-                              'data-test': 'settings_product_popup_packageWeightUnit_drpdn',
-                              placeholder: formatMessage({
-                                id: 'productCatalog.selectWeightUnit',
-                                defaultMessage: 'Select Weight Unit'
-                              })
-                            }}
-                          />
-                        </GridColumn>
-                      </GridRow>
-
-                      <GridRow columns={2}>
-                        <GridColumn>
-                          <QuantityInput
-                            name='packageWeight'
-                            label={
-                              <>
-                                <FormattedMessage
-                                  id='global.packageWeight'
-                                  defaultMessage='Gross weight per individual package'
-                                />
-                                <Required />
-                              </>
-                            }
-                            inputProps={{
-                              placeholder: '0',
-                              type: 'number',
-                              min: 0
-                            }}
-                          />
-                        </GridColumn>
-                        <GridColumn>
-                          <Dropdown
-                            name='freightClass'
-                            options={freightClasses}
-                            label={
-                              <>
-                                <FormattedMessage id='global.freightClass' defaultMessage='Freight Class' />
-                                <Required />
-                              </>
-                            }
-                            inputProps={{
-                              'data-test': 'settings_product_popup_freightClass_drpdn',
-                              placeholder: formatMessage({
-                                id: 'productCatalog.selectFreightClass',
-                                defaultMessage: 'Select Freight Class'
-                              })
-                            }}
-                          />
-                        </GridColumn>
-                      </GridRow>
-                      <GridRow columns={2}>
-                        <GridColumn>
-                          <Dropdown
-                            options={nmfcNumbersFiltered}
-                            inputProps={{
-                              fluid: true,
-                              search: val => val,
-                              selection: true,
-                              loading: nmfcNumbersFetching,
-                              onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery),
-                              placeholder: formatMessage({
-                                id: 'productCatalog.selectNmfcCode',
-                                defaultMessage: 'Select NMFC Code'
-                              })
-                            }}
-                            name='nmfcNumber'
-                            label={
-                              <>
-                                <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code' />
-                                <Required />
-                              </>
-                            }
-                          />
-                        </GridColumn>
-                      </GridRow>
-
-                      <GridRow>
-                        <GridColumn width={4}>
-                          <Checkbox
-                            label={formatMessage({ id: 'global.palletSaleOnly', defaultMessage: 'Pallet Sale Only' })}
-                            name='palletSaleOnly'
-                            inputProps={{ 'data-test': 'settings_pallet_sale_only_chckb' }}
-                          />
-                        </GridColumn>
-                      </GridRow>
-
-                      {!values.palletSaleOnly ? (
-                        <>
-                          <GridRow columns={2}>
-                            <GridColumn>
-                              <QuantityInput
-                                name='packagingWidth'
-                                label={
-                                  <>
-                                    <FormattedMessage id='global.packagingWidth' defaultMessage='Packaging Width' />
-                                    <Required />
-                                  </>
-                                }
-                                inputProps={{
-                                  placeholder: '0',
-                                  type: 'number',
-                                  min: 0
-                                }}
-                              />
-                            </GridColumn>
-                            <GridColumn>
-                              <QuantityInput
-                                name='packagingHeight'
-                                label={
-                                  <>
-                                    <FormattedMessage id='global.packagingHeight' defaultMessage='Packaging Height' />
-                                    <Required />
-                                  </>
-                                }
-                                inputProps={{
-                                  placeholder: '0',
-                                  type: 'number',
-                                  min: 0
-                                }}
-                              />
-                            </GridColumn>
-                          </GridRow>
-                          <GridRow columns={2}>
-                            <GridColumn>
-                              <QuantityInput
-                                name='packagingLength'
-                                label={
-                                  <>
-                                    <FormattedMessage id='global.packagingLength' defaultMessage='Packaging Length' />
-                                    <Required />
-                                  </>
-                                }
-                                inputProps={{
-                                  placeholder: '0',
-                                  type: 'number',
-                                  min: 0
-                                }}
-                              />
-                            </GridColumn>
-                            <GridColumn>
-                              <Input
-                                label={formatMessage({ id: 'global.inciName', defaultMessage: 'INCI Name' })}
-                                type='string'
-                                name='inciName'
-                                inputProps={{
-                                  placeholder: formatMessage({
-                                    id: 'productCatalog.enterInciName',
-                                    defaultMessage: 'Enter INCI Name'
-                                  })
-                                }}
-                              />
-                            </GridColumn>
-                          </GridRow>
-
-                          {false && (
-                            <GridRow>
-                              <GridColumn>
-                                <QuantityInput
-                                  label={formatMessage({
-                                    id: 'global.packagesPerPallet',
-                                    defaultMessage: 'Packages per Pallet'
-                                  })}
-                                  name='packagesPerPallet'
-                                  inputProps={{
-                                    placeholder: '0',
-                                    type: 'number',
-                                    min: 1
-                                  }}
-                                />
-                              </GridColumn>
-                            </GridRow>
-                          )}
-
-                          <GridRow>
-                            <GridColumn width={4}>
-                              <Checkbox
-                                label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
-                                name='hazardous'
-                                inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
-                              />
-                            </GridColumn>
-                            <GridColumn width={4}>
-                              <Checkbox
-                                label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
-                                name='stackable'
-                                inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
-                              />
-                            </GridColumn>
-                            <GridColumn width={5}>
-                              <Checkbox
-                                label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
-                                name='freezeProtect'
-                              />
-                            </GridColumn>
-                          </GridRow>
-                        </>
-                      ) : null}
-
-                      <GridRow>
-                        <GridColumn>
-                          <Accordion fluid>
-                            <AccordionTitle
-                              active={activeIndex === 0}
-                              index={0}
-                              onClick={this.handleClick}
-                              data-test='company_product_advance_options_title'>
-                              <Chevron />
-                              <FormattedMessage id={'product.advanced.options'} defaultMessage='Advanced Options' />
-                            </AccordionTitle>
-                            <AccordionContent active={activeIndex === 0}>
-                              <Grid>
-                                <GridRow columns={2}>
-                                  <GridColumn>
-                                    <QuantityInput
-                                      name='palletMinPkgs'
-                                      label={
-                                        <>
-                                          <FormattedMessage
-                                            id='global.palletMinPkgs'
-                                            defaultMessage='Pallet Min Pkgs'
-                                          />
-                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
-                                        </>
-                                      }
-                                      inputProps={{
-                                        placeholder: '0',
-                                        type: 'number',
-                                        min: 1
-                                      }}
-                                    />
-                                  </GridColumn>
-
-                                  <GridColumn>
-                                    <QuantityInput
-                                      name='palletWeight'
-                                      label={
-                                        <>
-                                          <FormattedMessage id='global.palletWeight' defaultMessage='Pallet Weight' />
-                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
-                                        </>
-                                      }
-                                      inputProps={{
-                                        placeholder: '0',
-                                        type: 'number',
-                                        min: 0
-                                      }}
-                                    />
-                                  </GridColumn>
-                                </GridRow>
-
-                                <GridRow columns={2}>
-                                  <GridColumn>
-                                    <QuantityInput
-                                      name='palletLength'
-                                      label={
-                                        <>
-                                          <FormattedMessage id='global.palletLength' defaultMessage='Pallet Length' />
-                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
-                                        </>
-                                      }
-                                      inputProps={{
-                                        placeholder: '0',
-                                        type: 'number',
-                                        min: 0
-                                      }}
-                                    />
-                                  </GridColumn>
-                                  <GridColumn>
-                                    <QuantityInput
-                                      name='palletWidth'
-                                      label={
-                                        <>
-                                          <FormattedMessage id='global.palletWidth' defaultMessage='Pallet Width' />
-                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
-                                        </>
-                                      }
-                                      inputProps={{
-                                        placeholder: '0',
-                                        type: 'number',
-                                        min: 0
-                                      }}
-                                    />
-                                  </GridColumn>
-                                </GridRow>
-                                <GridRow columns={2}>
-                                  <GridColumn>
-                                    <QuantityInput
-                                      name='palletHeight'
-                                      label={
-                                        <>
-                                          <FormattedMessage id='global.palletHeight' defaultMessage='Pallet Height' />
-                                          {(palletParamsRequired || values.palletSaleOnly) && <Required />}
-                                        </>
-                                      }
-                                      inputProps={{
-                                        placeholder: '0',
-                                        type: 'number',
-                                        min: 0
-                                      }}
-                                    />
-                                  </GridColumn>
-                                </GridRow>
-                              </Grid>
-                            </AccordionContent>
-                          </Accordion>
-                        </GridColumn>
-                      </GridRow>
-                      <GridRow>
-                        <GridColumn>
-                          <DivTitleSegment>
-                            <FormattedMessage id='global.pricing' defaultMessage='PRICING' />
-                          </DivTitleSegment>
-                        </GridColumn>
-                      </GridRow>
-                      <GridRow columns={2}>
+                      <GridRow columns={3}>
                         <GridColumn>
                           <QuantityInput
                             name='packagingSize'
@@ -1142,8 +803,6 @@ class ProductSidebar extends React.Component {
                             }}
                           />
                         </GridColumn>
-                      </GridRow>
-                      <GridRow columns={2}>
                         <GridColumn>
                           <Dropdown
                             name='packagingType'
@@ -1166,8 +825,221 @@ class ProductSidebar extends React.Component {
                             }}
                           />
                         </GridColumn>
-                        <GridColumn></GridColumn>
                       </GridRow>
+
+                      <GridRow columns={3}>
+                        <GridColumn>
+                          <QuantityInput
+                            name='palletMaxPkgs'
+                            label={
+                              <>
+                                <FormattedMessage id='global.palletMaxPkgs' defaultMessage='Max Pkgs per Pallet' />
+                                {(palletParamsRequired || values.palletSaleOnly) && <Required />}
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 1
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn>
+                          <DivTitleSegment>
+                            <FormattedMessage id='global.freight' defaultMessage='FREIGHT' />
+                          </DivTitleSegment>
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow columns={2}>
+                        <GridColumn>
+                          <QuantityInput
+                            name='packageWeight'
+                            label={
+                              <>
+                                <FormattedMessage id='global.packageWeight' defaultMessage='Gross Weight per Package' />
+                                <Required />
+                              </>
+                            }
+                            inputProps={{
+                              placeholder: '0',
+                              type: 'number',
+                              min: 0
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn>
+                          <Dropdown
+                            name='packageWeightUnit'
+                            options={packageWeightUnits}
+                            label={
+                              <>
+                                <FormattedMessage id='global.weightUnit' defaultMessage='Weight Unit' />
+                                <Required />
+                              </>
+                            }
+                            inputProps={{
+                              'data-test': 'settings_product_popup_packageWeightUnit_drpdn',
+                              placeholder: formatMessage({
+                                id: 'productCatalog.selectWeightUnit',
+                                defaultMessage: 'Select Weight Unit'
+                              })
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                      <GridRow columns={2}>
+                        <GridColumn>
+                          <Dropdown
+                            options={nmfcNumbersFiltered}
+                            inputProps={{
+                              fluid: true,
+                              search: val => val,
+                              selection: true,
+                              loading: nmfcNumbersFetching,
+                              onSearchChange: (_, { searchQuery }) => this.handleSearchNmfcNumberChange(searchQuery),
+                              placeholder: formatMessage({
+                                id: 'productCatalog.selectNmfcCode',
+                                defaultMessage: 'Select NMFC Code'
+                              })
+                            }}
+                            name='nmfcNumber'
+                            label={
+                              <>
+                                <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code' />
+                                <Required />
+                              </>
+                            }
+                          />
+                        </GridColumn>
+                        <GridColumn>
+                          <Dropdown
+                            name='freightClass'
+                            options={freightClasses}
+                            label={
+                              <>
+                                <FormattedMessage id='global.freightClass' defaultMessage='Freight Class' />
+                                <Required />
+                              </>
+                            }
+                            inputProps={{
+                              'data-test': 'settings_product_popup_freightClass_drpdn',
+                              placeholder: formatMessage({
+                                id: 'productCatalog.selectFreightClass',
+                                defaultMessage: 'Select Freight Class'
+                              })
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn width={4}>
+                          <Checkbox
+                            label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
+                            name='stackable'
+                            inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
+                          />
+                          <Checkbox
+                            label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
+                            name='hazardous'
+                            inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
+                          />
+                          <Checkbox
+                            label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
+                            name='freezeProtect'
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      {!values.palletSaleOnly ? (
+                        <>
+                          <GridRow>
+                            <GridColumn>
+                              <DivTitleSegment>
+                                <FormattedMessage
+                                  id='global.packagingDimensions'
+                                  defaultMessage='PACKAGING DIMENSIONS'
+                                />
+                              </DivTitleSegment>
+                            </GridColumn>
+                          </GridRow>
+
+                          <GridRow columns={3}>
+                            <GridColumn>
+                              <QuantityInput
+                                name='packagingWidth'
+                                label={
+                                  <>
+                                    <FormattedMessage id='global.packageWidth' defaultMessage='Package Width' />
+                                    <Required />
+                                  </>
+                                }
+                                inputProps={{
+                                  placeholder: '0',
+                                  type: 'number',
+                                  min: 0
+                                }}
+                              />
+                            </GridColumn>
+                            <GridColumn>
+                              <QuantityInput
+                                name='packagingHeight'
+                                label={
+                                  <>
+                                    <FormattedMessage id='global.packageHeight' defaultMessage='Package Height' />
+                                    <Required />
+                                  </>
+                                }
+                                inputProps={{
+                                  placeholder: '0',
+                                  type: 'number',
+                                  min: 0
+                                }}
+                              />
+                            </GridColumn>
+                            <GridColumn>
+                              <QuantityInput
+                                name='packagingLength'
+                                label={
+                                  <>
+                                    <FormattedMessage id='global.packageLength' defaultMessage='Package Length' />
+                                    <Required />
+                                  </>
+                                }
+                                inputProps={{
+                                  placeholder: '0',
+                                  type: 'number',
+                                  min: 0
+                                }}
+                              />
+                            </GridColumn>
+                          </GridRow>
+
+                          {false && (
+                            <GridRow>
+                              <GridColumn>
+                                <QuantityInput
+                                  label={formatMessage({
+                                    id: 'global.packagesPerPallet',
+                                    defaultMessage: 'Packages per Pallet'
+                                  })}
+                                  name='packagesPerPallet'
+                                  inputProps={{
+                                    placeholder: '0',
+                                    type: 'number',
+                                    min: 1
+                                  }}
+                                />
+                              </GridColumn>
+                            </GridRow>
+                          )}
+                        </>
+                      ) : null}
+
                       <GridRow>
                         <GridColumn>
                           <DivTitleSegment>

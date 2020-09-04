@@ -569,7 +569,7 @@ class DetailSidebar extends Component {
                           {
                             min: 0,
                             type: 'number',
-                            placeholder: '0.000'
+                            placeholder: '0.00'
                           },
                           <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
                             {text => text}
@@ -889,7 +889,7 @@ class DetailSidebar extends Component {
                           {
                             min: 0,
                             type: 'number',
-                            placeholder: '0.000'
+                            placeholder: '0.00'
                           },
                           <FormattedMessage id='wantedBoard.maxDeliveredPrice' defaultMessage='Max Delivered Price/LB'>
                             {text => text}

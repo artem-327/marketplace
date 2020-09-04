@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import { openPopup, getLogisticsAccounts, deleteLogisticsAccount } from '~/modules/settings/actions'
+import { openSidebar, getLogisticsAccounts, deleteLogisticsAccount } from '~/modules/settings/actions'
 import { array } from 'prop-types'
 import { withToastManager } from 'react-toast-notifications'
 
@@ -40,7 +40,7 @@ class LogisticsTable extends Component {
 
   render() {
     const {
-      openPopup,
+      openSidebar,
       logisticsAccounts,
       loading,
       intl: { formatMessage },
@@ -69,7 +69,7 @@ class LogisticsTable extends Component {
         rowActions={[
           {
             text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-            callback: row => openPopup(row.rawData)
+            callback: row => openSidebar(row.rawData)
           },
           {
             text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -107,7 +107,7 @@ LogisticsTable.defaultProps = {
 }
 
 const mapDispatchToProps = {
-  openPopup,
+  openSidebar,
   getLogisticsAccounts,
   deleteLogisticsAccount
 }
