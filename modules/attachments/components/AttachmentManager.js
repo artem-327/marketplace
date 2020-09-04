@@ -154,15 +154,14 @@ class AttachmentClass extends Component {
           fluid
           type='button'
           onClick={() => {
-            this.setState({open: true})
+            this.setState({ open: true })
             if (documentTypeIds && documentTypeIds.length) {
-              this.handleSearch({name: '', type: documentTypeIds})
-              this.setState({documentTypes: documentTypeIds})
+              this.handleSearch({ name: '', type: documentTypeIds })
+              this.setState({ documentTypes: documentTypeIds })
             } else {
-              this.setState({documentTypes: []})
+              this.setState({ documentTypes: [] })
             }
-          }}
-        >
+          }}>
           <CustomIcon size='14' />
           <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
             {text => text}
@@ -175,7 +174,7 @@ class AttachmentClass extends Component {
               <PaddedIcon
                 onClick={() => {
                   this.returnCloseAttachmentManager()
-                  this.setState({open: false})
+                  this.setState({ open: false })
                 }}
               />
             }
@@ -183,7 +182,7 @@ class AttachmentClass extends Component {
             open={true}
             onClose={() => {
               this.returnCloseAttachmentManager()
-              this.setState({open: false})
+              this.setState({ open: false })
             }}>
             <CustomHeader>
               <Grid verticalAlign='middle'>
@@ -199,7 +198,7 @@ class AttachmentClass extends Component {
               </Grid>
             </CustomHeader>
             <Modal.Content scrolling>
-              <Grid style={{justifyContent: 'flex-end'}}>
+              <Grid style={{ justifyContent: 'flex-end' }}>
                 <GridRow>
                   <GridColumn width={7}>
                     <CustomDropdown
@@ -209,9 +208,9 @@ class AttachmentClass extends Component {
                       value={this.state.documentTypes}
                       selection
                       disabled={lockedFileTypes}
-                      onChange={(event, {name, value}) => {
-                        this.setState({[name]: value})
-                        this.handleSearch({name: this.state.searchValue, type: value})
+                      onChange={(event, { name, value }) => {
+                        this.setState({ [name]: value })
+                        this.handleSearch({ name: this.state.searchValue, type: value })
                       }}
                       placeholder={
                         <FormattedMessage id='related.documents.selectType' defaultMessage='Select type'>
@@ -223,10 +222,10 @@ class AttachmentClass extends Component {
                   <GridColumn width={5}>
                     <Input
                       icon='search'
-                      placeholder='Search...'
+                      placeholder='Search'
                       onChange={(_, data) => {
-                        this.setState({searchValue: data && data.value})
-                        this.handleSearch({name: data.value, type: this.state.documentTypes})
+                        this.setState({ searchValue: data && data.value })
+                        this.handleSearch({ name: data.value, type: this.state.documentTypes })
                       }}
                     />
                   </GridColumn>
@@ -234,7 +233,7 @@ class AttachmentClass extends Component {
                   <CustomGridColumn width={4}>
                     <Button
                       type='button'
-                      style={{color: 'white', backgroundColor: '#2599d5'}}
+                      style={{ color: 'white', backgroundColor: '#2599d5' }}
                       disabled={!this.state.selectedRows.length}
                       onClick={this.returnSelectedRows}>
                       {singleSelection ? (
@@ -245,8 +244,7 @@ class AttachmentClass extends Component {
                         <FormattedMessage id='attachments.attachSelectedFiles' defaultMessage='Attach Selected Files'>
                           {text => text}
                         </FormattedMessage>
-                      )
-                      }
+                      )}
                     </Button>
                   </CustomGridColumn>
                 </GridRow>
@@ -259,15 +257,15 @@ class AttachmentClass extends Component {
                 basic
                 onClick={() => {
                   this.returnCloseAttachmentManager()
-                  this.setState({open: false})
+                  this.setState({ open: false })
                 }}>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                   {text => text}
                 </FormattedMessage>
               </Button>
               <Button
-                style={{color: 'white', backgroundColor: '#2599d5'}}
-                onClick={() => this.setState({uploadOpen: true})}>
+                style={{ color: 'white', backgroundColor: '#2599d5' }}
+                onClick={() => this.setState({ uploadOpen: true })}>
                 <FormattedMessage id='global.uploadAnother' defaultMessage='Upload Another'>
                   {text => text}
                 </FormattedMessage>
@@ -275,13 +273,11 @@ class AttachmentClass extends Component {
               {this.state.uploadOpen && (
                 <DocumentManagerPopup
                   onClose={() => {
-                    this.setState({uploadOpen: false})
+                    this.setState({ uploadOpen: false })
                   }}
                   lockedFileType={false /*lockedFileTypes*/}
                   initialFileType={
-                    this.state.documentTypes && this.state.documentTypes.length
-                      ? this.state.documentTypes[0]
-                      : null
+                    this.state.documentTypes && this.state.documentTypes.length ? this.state.documentTypes[0] : null
                   }
                 />
               )}

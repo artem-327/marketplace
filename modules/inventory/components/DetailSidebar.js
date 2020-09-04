@@ -1480,7 +1480,7 @@ class DetailSidebar extends Component {
                                             disabled: sidebarValues && sidebarValues.grouped,
                                             placeholder: formatMessage({
                                               id: 'addInventory.writeShortNotesHere',
-                                              defaultMessage: 'Write short notes here...'
+                                              defaultMessage: 'Write short notes here'
                                             })
                                           }}
                                         />
@@ -1704,7 +1704,7 @@ class DetailSidebar extends Component {
                                           disabled: sidebarValues && sidebarValues.grouped,
                                           placeholder: formatMessage({
                                             id: 'addInventory.writeExternalNotesHere',
-                                            defaultMessage: 'Write external notes here...'
+                                            defaultMessage: 'Write external notes here'
                                           })
                                         }}
                                       />
@@ -1722,7 +1722,7 @@ class DetailSidebar extends Component {
                                           disabled: sidebarValues && sidebarValues.grouped,
                                           placeholder: formatMessage({
                                             id: 'addInventory.writeInternalNotesHere',
-                                            defaultMessage: 'Write internal notes here...'
+                                            defaultMessage: 'Write internal notes here'
                                           })
                                         }}
                                       />

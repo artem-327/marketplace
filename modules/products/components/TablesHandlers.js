@@ -81,11 +81,10 @@ class TablesHandlers extends Component {
     }
   }
 
-  handleFiltersValue = debounce( filter => {
-      const { datagrid } = this.props
-      datagrid.setSearch(filter, true, 'pageFilters')
-    }, 300
-  )
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }, 300)
 
   handleFilterChangeInputSearch = (e, data) => {
     const { currentTab } = this.props
@@ -123,7 +122,7 @@ class TablesHandlers extends Component {
                 value={filterValue && filterValue.searchInput ? filterValue.searchInput : ''}
                 placeholder={formatMessage({
                   id: item.SearchText,
-                  defaultMessage: 'Search CAS product by name or number ...'
+                  defaultMessage: 'Search CAS product by name or number '
                 })}
                 onChange={this.handleFilterChangeInputSearch}
               />
@@ -153,9 +152,7 @@ class TablesHandlers extends Component {
   }
 
   render() {
-    return (
-      <PositionHeaderSettings>{this.renderHandler()}</PositionHeaderSettings>
-    )
+    return <PositionHeaderSettings>{this.renderHandler()}</PositionHeaderSettings>
   }
 }
 

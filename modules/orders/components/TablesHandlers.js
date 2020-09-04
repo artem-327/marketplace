@@ -377,7 +377,7 @@ class TablesHandlers extends Component {
                       style: { width: '370px' },
                       placeholder: formatMessage({
                         id: 'orders.searchByOrderID',
-                        defaultMessage: 'Search By Order ID...'
+                        defaultMessage: 'Search By Order ID'
                       }),
                       icon: 'search',
                       onChange: this.handleFilterChange

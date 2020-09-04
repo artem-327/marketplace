@@ -737,7 +737,7 @@ class InventoryFilter extends Component {
     var noResultsMessage = null
 
     if (this.state.searchQuery.length <= 1)
-      noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+      noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
     if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
     const options = this.getOptions(uniqueArrayByKey(autocompleteData, 'key'))
 
@@ -760,7 +760,7 @@ class InventoryFilter extends Component {
 
     if (this.state.searchWarehouseQuery.length <= 1)
       noWarehouseResultsMessage = (
-        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
       )
     if (autocompleteWarehouseLoading)
       noWarehouseResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
@@ -804,7 +804,7 @@ class InventoryFilter extends Component {
     let noManufacturerResultsMessage = null
     if (this.state.searchManufacturerQuery.length <= 1)
       noManufacturerResultsMessage = (
-        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
       )
     if (autocompleteManufacturerLoading)
       noManufacturerResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
@@ -833,7 +833,7 @@ class InventoryFilter extends Component {
     let noOriginResultsMessage = null
     if (this.state.searchOriginQuery.length <= 1)
       noOriginResultsMessage = (
-        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
       )
     if (autocompleteOriginLoading)
       noOriginResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
