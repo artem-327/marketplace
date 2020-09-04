@@ -596,6 +596,12 @@ class Navigation extends Component {
               refId={'operations'}>
               <TabsOperations />
             </DropdownItem>
+            <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
+              <>
+                <Bell size={22} />
+                {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+              </>
+            </MenuLink>
           </>
         )}
       </div>
