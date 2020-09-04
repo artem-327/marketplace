@@ -204,12 +204,13 @@ export const nmfcValidation = () =>
   Yup.string(errorMessages.invalidString)
     .test(
       'code',
-      errorMessages.invalidValueFormat('9999 | 9999-19 | 999999 | 999999-19 | sub number max 12'),
+      errorMessages.invalidValueFormat('9999 to 999999 | 9999-19 to 999999-19 | sub number max 12'),
       value => {
         return (
-          (/^[0-9]{1,6}$/.test(value) && (value.length === 6 || value.length === 4)) ||
+          (/^[0-9]{1,6}$/.test(value) && value.length >= 4 && value.length <= 6) ||
           (/^[0-9]{1,6}\-[0-1][0-9]$/.test(value) &&
-            (value.length === 9 || value.length === 7) &&
+            value.length >= 7 &&
+            value.length <= 9 &&
             Number(value.split('-')[1]) <= 12)
         )
       }
