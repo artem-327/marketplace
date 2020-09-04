@@ -55,7 +55,7 @@ const RedTriangle = styled(AlertTriangle)`
   line-height: 20px;
 
   &.grey {
-    color: #848893;
+    color: #20273a;
   }
 `
 
@@ -70,7 +70,7 @@ const ClockIcon = styled(Clock)`
   line-height: 20px;
 
   &.grey {
-    color: #848893;
+    color: #20273a;
   }
 `
 

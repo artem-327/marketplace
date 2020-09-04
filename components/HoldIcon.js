@@ -7,7 +7,7 @@ import { getSafe } from '~/utils/functions'
 import { Clock } from 'react-feather'
 
 const HoldClockIcon = styled(Clock)`
-  color: #848893 !important;
+  color: #20273a !important;
 `
 const CircularLabel = styled(Label)`
   position: absolute;
