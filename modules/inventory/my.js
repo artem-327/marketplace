@@ -29,8 +29,7 @@ const MyInventory = () => (
         }
       }}
       preserveFilters
-      skipInitLoad
-      autoRefresh>
+      skipInitLoad>
       <MyInventoryContainer />
     </DatagridProvider>
   </>

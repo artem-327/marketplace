@@ -171,56 +171,27 @@ const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
 
+const DivRow = styled.div`
+  display: flex;
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
+
+const DivIcons = styled.div`
+  position: -webkit-sticky;
+  position: sticky;
+  right: 0px;
+  display: flex;
+  margin-left: 10px;
+`
+
 class MyInventory extends Component {
   state = {
     columns: [
-      {
-        name: 'expired',
-        title: (
-          <Popup
-            header={
-              <FormattedMessage id='myInventory.tooltipExpired' defaultMessage='Shows if Product offer is expired' />
-            }
-            trigger={
-              <div>
-                <ClockIcon className='grey' />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ),
-        caption: (
-          <FormattedMessage id='global.expirationStatusIcon' defaultMessage='Expiration Status Icon'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 40,
-        align: 'center'
-      },
-      {
-        name: 'productStatus',
-        title: (
-          <Popup
-            header={
-              <FormattedMessage
-                id='myInventory.tooltipProductStatus'
-                defaultMessage="Shows if Product offer's Generic Product is published and offer is visible on the Marketplace"
-              />
-            }
-            trigger={
-              <div>
-                <FileTextIcon className='grey' />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ),
-        caption: (
-          <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 40,
-        align: 'center'
-      },
       {
         name: 'productName',
         title: (
@@ -635,27 +606,34 @@ class MyInventory extends Component {
 
       return {
         ...r,
-        expired: r.expired ? (
-          <Popup
-            header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
-            trigger={
-              <div>
-                <ClockIcon />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ) : null,
-        productStatus: productStatusText ? (
-          <Popup
-            size='small'
-            header={productStatusText}
-            trigger={
-              <div>
-                <FileTextIcon />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ) : null,
+        productName: (
+          <DivRow>
+            <SpanText>{r.productName}</SpanText>
+            <DivIcons>
+              {r.expired ? (
+                <Popup
+                  header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+                  trigger={
+                    <div>
+                      <ClockIcon />
+                    </div>
+                  } // <div> has to be there otherwise popup will be not shown
+                />
+              ) : null}
+              {productStatusText ? (
+                <Popup
+                  size='small'
+                  header={productStatusText}
+                  trigger={
+                    <div>
+                      <FileTextIcon />
+                    </div>
+                  } // <div> has to be there otherwise popup will be not shown
+                />
+              ) : null}
+            </DivIcons>
+          </DivRow>
+        ),
         packaging: (
           <>
             {`${r.packagingSize} ${r.packagingUnit} `}
