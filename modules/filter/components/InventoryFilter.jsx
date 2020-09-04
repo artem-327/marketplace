@@ -77,7 +77,8 @@ import {
   StyledModalContent,
   CustomMenu,
   SmallGrid,
-  PopupGrid
+  PopupGrid,
+  StyledModalHeader
 } from '../constants/layout'
 
 const optionsYesNo = [
@@ -259,9 +260,10 @@ class InventoryFilter extends Component {
     // { setSubmitting }
     let { onApply, applyFilter, applyDatagridFilter } = this.props
 
-    console.log('!!!!!!!!!! handleSubmit 2')
+    console.log('!!!!!!!!!! handleSubmit 2 params', params)
 
     let filter = this.generateRequestData(params)
+    console.log('!!!!!!!!!! handleSubmit 2 filter', filter)
     let datagridFilter = this.toDatagridFilter(filter)
 
     applyFilter(filter)
@@ -340,49 +342,17 @@ class InventoryFilter extends Component {
     else this.setState({ openedSaveFilter: false })
   }
 
-  generateDropdown = (data, values, groupName = null) => {
+  generateDropdown = (data, values, placeholder, groupName = null) => {
     if (!data) return []
-    let group = null
 
-    if (groupName) group = `${groupName}.`
-
-    let tmp = []
-    var getCheckbox = (el, i) => {
-      let name = replaceAmbigiousCharacters(el.name)
-      let path = `${group}${name}`
-
-      return (
-        <FormField key={i}>
-          <FormikField
-            onChange={(e, data) => {
-              let { setFieldValue } = data.form
-              setFieldValue(path, data.checked ? { id: el.id, name: el.name } : false)
-            }}
-            component={Checkbox}
-            checked={!!values[groupName] && !!values[groupName][name]}
-            name={path}
-            label={el.name.charAt(0).toUpperCase() + el.name.slice(1)}
-            data-test='filter_FormikField_change'
-          />
-        </FormField>
-      )
-    }
-
-    /*
-    for (let i = 0; i < data.length / 2 - (data.length % 2); i++) {
-      tmp.push(
-        <FormGroup widths='equal'>
-          {[data[i], data[data.length - (i + 1)]].map((el, j) => getCheckbox(el, i + j))}
-        </FormGroup>
-      )
-    }
-    */
-
-    const options = data.map(d => ({
-      key: d.id,
-      value: JSON.stringify({ id: d.id, name: d.name }),
-      text: d.text ? d.text : d.name
-    }))
+    const options = data.map(d => {
+      const text = d.text ? d.text : d.name
+      return {
+        key: d.id,
+        value: JSON.stringify({ id: d.id, name: d.name }),
+        text: text.charAt(0).toUpperCase() + text.slice(1)
+      }
+    })
 
     return (
       <Dropdown
@@ -391,7 +361,8 @@ class InventoryFilter extends Component {
         selection
         inputProps={{
           multiple: true,
-          fluid: true
+          fluid: true,
+          placeholder
         }}
       />
     )
@@ -425,7 +396,7 @@ class InventoryFilter extends Component {
             this.searchProductOffer(filters[i].values)
           }
 
-          formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
+          formikValues[key] = datagrid.toFormik(filters[i], this.props)
         }
       })
     }
@@ -529,11 +500,11 @@ class InventoryFilter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
-  inputWrapper = (name, inputProps, labelText) => {
+  inputWrapper = (name, inputProps, labelText, labelClass = null) => {
     return (
       <InputWrapper>
         <Input name={name} inputProps={inputProps} />
-        <Label>{labelText}</Label>
+        <Label className={labelClass}>{labelText}</Label>
       </InputWrapper>
     )
   }
@@ -625,14 +596,13 @@ class InventoryFilter extends Component {
                 name={inputName}
                 onChange={handleChange}
                 inputProps={{
-                  label: formatMessage({ id: 'filter.days', defaultMessage: 'days' }),
-                  labelPosition: 'right',
                   type: 'number',
                   min: min.toString(),
                   placeholder: '0',
                   fluid: true
                 }}
               />
+              <Label>{formatMessage({ id: 'filter.days', defaultMessage: 'days' })}</Label>
             </DateInputStyledWrapper>
           </GridColumn>
         </GridRow>
@@ -647,55 +617,46 @@ class InventoryFilter extends Component {
 
     return (
       <>
-        <SaveFiltersGrid>
-          <GridRow>
-            <GridColumn width={9}>
-              <SaveFilterTitle>
-                <FormattedMessage id='filter.saveFilterHeader' defaultMessage='SAVE FILTER' />
-              </SaveFilterTitle>
-            </GridColumn>
-            <GridColumn width={7} textAlign='right'>
-              <Button type='button' size='large' onClick={this.toggleSaveFilter} data-test='filter_save_cancel_btn'>
-                {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-              </Button>
-            </GridColumn>
-          </GridRow>
-        </SaveFiltersGrid>
-        <PerfectScrollbar>
-          <SaveFiltersGrid>
-            {/* Save Filter */}
-            <GridRow>
-              <GridColumn computer={16} data-test='filter_name_inp'>
-                <FormattedMessage id='filter.filterNameHeader' defaultMessage='Filter Name' />
-              </GridColumn>
-            </GridRow>
-            <GridRow>
-              <GridColumn computer={16} data-test='filter_name_inp'>
-                <Input
-                  inputProps={{
-                    placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Your filter name' })
-                  }}
-                  name='name'
-                  fluid
-                />
-              </GridColumn>
-            </GridRow>
-            <GridRow>
-              <GridColumn computer={12}>
-                <label>
-                  {formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
-                </label>
-              </GridColumn>
-              <GridColumn computer={4}>
-                <FormikCheckbox
-                  inputProps={{ toggle: true, style: { marginBottom: '-4px' } }}
-                  name='checkboxes.automaticallyApply'
-                />
-              </GridColumn>
-            </GridRow>
-          </SaveFiltersGrid>
-          <Notifications values={values} formikProps={formikProps} />
-        </PerfectScrollbar>
+        <StyledModalHeader>
+          <FormattedMessage id='filter.saveFilterHeader' defaultMessage='SAVE FILTER' />
+        </StyledModalHeader>
+        <StyledModalContent>
+          <PerfectScrollbar style={{ margin: '-10px -10px' }}>
+            <SaveFiltersGrid>
+              {/* Save Filter */}
+              <GridRow>
+                <GridColumn computer={16} data-test='filter_name_inp'>
+                  <FormattedMessage id='filter.filterNameHeader' defaultMessage='Filter Name' />
+                </GridColumn>
+              </GridRow>
+              <GridRow>
+                <GridColumn computer={16} data-test='filter_name_inp'>
+                  <Input
+                    inputProps={{
+                      placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Your filter name' }),
+                      fluid: true
+                    }}
+                    name='name'
+                  />
+                </GridColumn>
+              </GridRow>
+              <GridRow>
+                <GridColumn computer={12}>
+                  <label>
+                    {formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                  </label>
+                </GridColumn>
+                <GridColumn computer={4}>
+                  <FormikCheckbox
+                    inputProps={{ toggle: true, style: { marginBottom: '-4px' } }}
+                    name='checkboxes.automaticallyApply'
+                  />
+                </GridColumn>
+              </GridRow>
+            </SaveFiltersGrid>
+            <Notifications values={values} formikProps={formikProps} />
+          </PerfectScrollbar>
+        </StyledModalContent>
       </>
     )
   }
@@ -751,10 +712,30 @@ class InventoryFilter extends Component {
 
     const { formatMessage } = intl
 
-    let packagingTypesDropdown = this.generateDropdown(packagingTypes, values, 'packagingTypes')
-    let productConditionDropdown = this.generateDropdown(productConditions, values, 'productConditions')
-    let productGradeDropdown = this.generateDropdown(productGrades, values, 'productGrades')
-    let productFormsDropdown = this.generateDropdown(productForms, values, 'productForms')
+    let packagingTypesDropdown = this.generateDropdown(
+      packagingTypes,
+      values,
+      formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
+      'packagingTypes'
+    )
+    let productConditionDropdown = this.generateDropdown(
+      productConditions,
+      values,
+      formatMessage({ id: 'filter.selectCondition', defaultMessage: 'Select Condition (Multiple Select)' }),
+      'productConditions'
+    )
+    let productGradeDropdown = this.generateDropdown(
+      productGrades,
+      values,
+      formatMessage({ id: 'filter.selectGrade', defaultMessage: 'Select Grade (Multiple Select)' }),
+      'productGrades'
+    )
+    let productFormsDropdown = this.generateDropdown(
+      productForms,
+      values,
+      formatMessage({ id: 'filter.selectForm', defaultMessage: 'Select Form (Multiple Select)' }),
+      'productForms'
+    )
 
     var noResultsMessage = null
 
@@ -982,7 +963,8 @@ class InventoryFilter extends Component {
                       labelPosition: 'left',
                       fluid: true
                     },
-                    currencySymbol
+                    currencySymbol,
+                    'green'
                   )}
                 </GridColumn>
                 <GridColumn className='price-input' width={8}>
@@ -997,7 +979,8 @@ class InventoryFilter extends Component {
                       labelPosition: 'left',
                       fluid: true
                     },
-                    currencySymbol
+                    currencySymbol,
+                    'green'
                   )}
                 </GridColumn>
               </GridRow>
@@ -1123,54 +1106,57 @@ class InventoryFilter extends Component {
           this.setFieldValue = props.setFieldValue
           this.values = props.values
 
-          console.log('!!!!!!!!!! render values', props.values)
-
           return (
-            <Modal onClose={() => onClose()} open centered={true}>
-              <CustomMenu pointing secondary>
-                <Menu.Item
-                  key={'advancedFilter'}
-                  onClick={() => this.toggleFilter(false)}
-                  active={!savedFiltersActive}
-                  data-test='filter_advanced_filter'>
-                  {formatMessage({ id: 'filter.advancedFilter', defaultMessage: 'Advanced Filter' })}
-                </Menu.Item>
-                <Menu.Item
-                  key={'savedFilters'}
-                  onClick={() => this.toggleFilter(true)}
-                  active={savedFiltersActive}
-                  data-test='filter_saved_filters'>
-                  {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
-                </Menu.Item>
-              </CustomMenu>
+            <Modal onClose={() => onClose()} open centered={true} size={openedSaveFilter ? 'tiny' : 'large'}>
+              {!openedSaveFilter ? (
+                <>
+                  <CustomMenu pointing secondary>
+                    <Menu.Item
+                      key={'advancedFilter'}
+                      onClick={() => this.toggleFilter(false)}
+                      active={!savedFiltersActive}
+                      data-test='filter_advanced_filter'>
+                      {formatMessage({ id: 'filter.advancedFilter', defaultMessage: 'Advanced Filter' })}
+                    </Menu.Item>
+                    <Menu.Item
+                      key={'savedFilters'}
+                      onClick={() => this.toggleFilter(true)}
+                      active={savedFiltersActive}
+                      data-test='filter_saved_filters'>
+                      {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
+                    </Menu.Item>
+                  </CustomMenu>
 
-              <StyledModalContent>
-                <Dimmer.Dimmable as={FlexContent}>
-                  {!this.state.savedFiltersActive ? (
-                    <PerfectScrollbar key='set'>{this.formMarkup(props)}</PerfectScrollbar>
-                  ) : (
-                    <PerfectScrollbar key='saved'>
-                      <SavedFilters
-                        params={this.props.params}
-                        onApply={filter => this.handleSavedFilterApply(filter, props)}
-                        savedFilters={this.props.savedFilters}
-                        savedFiltersLoading={this.props.savedFiltersLoading}
-                        getSavedFilters={this.handleGetSavedFilters}
-                        deleteFilter={this.props.deleteFilter}
-                        updateFilterNotifications={this.props.updateFilterNotifications}
-                        savedFilterUpdating={this.props.savedFilterUpdating}
-                      />
-                    </PerfectScrollbar>
-                  )}
-                  <Dimmer active={this.state.openedSaveFilter} />
-                </Dimmer.Dimmable>
-                <Transition visible={openedSaveFilter} animation='fade up' duration={500}>
-                  <div>{this.formSaveFilter(props)}</div>
-                </Transition>
-              </StyledModalContent>
+                  <StyledModalContent>
+                    <Dimmer.Dimmable as={FlexContent}>
+                      {!this.state.savedFiltersActive ? (
+                        <PerfectScrollbar key='set'>{this.formMarkup(props)}</PerfectScrollbar>
+                      ) : (
+                        <PerfectScrollbar key='saved'>
+                          <SavedFilters
+                            params={this.props.params}
+                            onApply={filter => this.handleSavedFilterApply(filter, props)}
+                            savedFilters={this.props.savedFilters}
+                            savedFiltersLoading={this.props.savedFiltersLoading}
+                            getSavedFilters={this.handleGetSavedFilters}
+                            deleteFilter={this.props.deleteFilter}
+                            updateFilterNotifications={this.props.updateFilterNotifications}
+                            savedFilterUpdating={this.props.savedFilterUpdating}
+                          />
+                        </PerfectScrollbar>
+                      )}
+                      <Dimmer active={this.state.openedSaveFilter} />
+                    </Dimmer.Dimmable>
+                  </StyledModalContent>
+                </>
+              ) : (
+                <div>
+                  {this.formSaveFilter(props)}
+                </div>
+              )}
 
               <BottomButtons>
-                {!this.state.savedFiltersActive ? (
+                {!openedSaveFilter ? (
                   <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                     <div>
                       <Button
@@ -1204,26 +1190,7 @@ class InventoryFilter extends Component {
                         type={'button'}
                         size='large'
                         loading={isFilterSaving}
-                        onClick={async () => {
-                          if (openedSaveFilter) {
-                            let {values} = props
-                            const {validateForm, submitForm} = props
-
-                            validateForm().then(err => {
-                              const errors = Object.keys(err)
-                              if (errors.length && errors[0] !== 'isCanceled') {
-                                // Errors found
-                                submitForm() // to show errors
-                                return
-                              } else {
-                                // No errors found
-                                this.handleFilterSave(values)
-                              }
-                            })
-                          } else {
-                            this.toggleSaveFilter()
-                          }
-                        }}
+                        onClick={async () => this.toggleSaveFilter()}
                         inputProps={{type: 'button'}}
                         data-test='filter_save_new'>
                         {formatMessage({id: 'filter.saveFilter', defaultMessage: 'Save Filter'})}
@@ -1234,6 +1201,22 @@ class InventoryFilter extends Component {
                         loading={isFilterApplying}
                         type='submit'
                         primary
+                        onClick={async () => {
+                          let {values} = props
+                          const {validateForm, submitForm} = props
+
+                          validateForm().then(err => {
+                            const errors = Object.keys(err)
+                            if (errors.length && errors[0] !== 'isCanceled') {
+                              // Errors found
+                              submitForm() // to show errors
+                            } else {
+                              submitForm()
+                              // No errors found
+                              //this.handleFilterSave(values)
+                            }
+                          })
+                        }}
                         data-test='filter_apply'>
                         {formatMessage({id: 'global.apply', defaultMessage: 'Apply'})}
                       </Button>
@@ -1244,10 +1227,32 @@ class InventoryFilter extends Component {
                     <Button
                       type='button'
                       size='large'
-                      onClick={() => onClose()}
-                      inputProps={{type: 'button'}}
-                      data-test='filter_cancel'>
-                      {formatMessage({id: 'global.close', defaultMessage: 'Close'})}
+                      onClick={this.toggleSaveFilter}
+                      data-test='filter_save_cancel_btn'>
+                      {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
+                    </Button>
+                    <Button
+                      disabled={savedFiltersActive}
+                      type='button'
+                      size='large'
+                      loading={isFilterSaving}
+                      onClick={async () => {
+                        let {values} = props
+                        const {validateForm, submitForm} = props
+
+                        validateForm().then(err => {
+                          const errors = Object.keys(err)
+                          if (errors.length && errors[0] !== 'isCanceled') {
+                            // Errors found
+                            submitForm() // to show errors
+                          } else {
+                            // No errors found
+                            this.handleFilterSave(values)
+                          }
+                        })
+                      }}
+                      data-test='filter_save_new'>
+                      {formatMessage({id: 'global.save', defaultMessage: 'Save'})}
                     </Button>
                   </div>
                 )}

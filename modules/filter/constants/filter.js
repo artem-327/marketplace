@@ -70,7 +70,7 @@ export const dateFormat = getLocaleDateFormat()
 export const replaceAmbigiousCharacters = text =>
   text.toLowerCase().replace(/ /g, '').replace(/\//g, '').replace(/-/g, '')
 
-const checkboxesToFormik = (values, checkboxes) => {
+const checkboxesToFormik = (values, checkboxes) => {  // ! ! can be deleted?
   let obj = {}
   let tmp = values.map(val => checkboxes.find(ch => ch.id === parseInt(val.value)))
 
@@ -83,6 +83,15 @@ const checkboxesToFormik = (values, checkboxes) => {
   })
 
   return obj
+}
+
+const toFormikArray = (values, arr) => {
+  const tmp = values.map(val => {
+    let parsed = JSON.parse(val.description)
+    return JSON.stringify({ id: parseInt(val.value), name: parsed.name })
+  })
+
+  return tmp
 }
 
 export const datagridValues = {
@@ -374,120 +383,170 @@ export const datagridValues = {
     description: 'Packaging Types',
     operator: operators.EQUALS,
 
-    toFilter: function (values, valuesDescription) {
+    toFilter: function (values) {
+      let modifiedValues = values.map(val => {
+        let parsed = JSON.parse(val)
+
+        return {
+          value: parsed.id,
+          description: JSON.stringify({
+            name: parsed.name
+          })
+        }
+      })
+
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: values.map((val, i) => ({
-          value: val,
-          description: valuesDescription[i]
-        }))
+        values: modifiedValues,
+        description: this.description
       }
     },
 
     valuesDescription: function (values) {
-      return values.map(val => val.description)
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return parsed.name
+      })
     },
 
     tagDescription: function (values) {
       return this.valuesDescription(values)
     },
 
-    toFormik: function ({ values }, packagingTypes) {
-      return checkboxesToFormik(values, packagingTypes)
-    },
+    toFormik: function ({ values }, { packagingTypes }) {
+      console.log('!!!!!!!!!! toFormik values', values)
+      console.log('!!!!!!!!!! toFormik packagingTypes', packagingTypes)
 
-    nested: true
+      const tmp = toFormikArray(values, packagingTypes)
+      console.log('!!!!!!!!!! toFormik toFormikArray', tmp)
+
+      //return[]  // ! ! debug
+      return toFormikArray(values, packagingTypes)
+    }
   },
   productConditions: {
     paths: [paths.productOffers.productConditions],
     description: 'Product Conditions',
     operator: operators.EQUALS,
 
-    toFilter: function (values, valuesDescription) {
+    toFilter: function (values) {
+      let modifiedValues = values.map(val => {
+        let parsed = JSON.parse(val)
+
+        return {
+          value: parsed.id,
+          description: JSON.stringify({
+            name: parsed.name
+          })
+        }
+      })
+
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: values.map((val, i) => ({
-          value: val,
-          description: valuesDescription[i]
-        }))
+        values: modifiedValues,
+        description: this.description
       }
     },
 
     valuesDescription: function (values) {
-      return values.map(val => val.description)
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return parsed.name
+      })
     },
 
     tagDescription: function (values) {
       return this.valuesDescription(values)
     },
 
-    toFormik: function ({ values }, productConditions) {
-      return checkboxesToFormik(values, productConditions)
-    },
-
-    nested: true
+    toFormik: function ({ values }, { productConditions }) {
+      //return[]  // ! ! debug
+      return toFormikArray(values, productConditions)
+    }
   },
   productGrades: {
     paths: [paths.productOffers.productGrades],
     description: 'Product Grades',
     operator: operators.EQUALS,
 
-    toFilter: function (values, valuesDescription) {
+    toFilter: function (values) {
+      let modifiedValues = values.map(val => {
+        let parsed = JSON.parse(val)
+
+        return {
+          value: parsed.id,
+          description: JSON.stringify({
+            name: parsed.name
+          })
+        }
+      })
+
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: values.map((val, i) => ({
-          value: val,
-          description: valuesDescription[i]
-        }))
+        values: modifiedValues,
+        description: this.description
       }
     },
 
     valuesDescription: function (values) {
-      return values.map(val => val.description)
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return parsed.name
+      })
     },
 
     tagDescription: function (values) {
       return this.valuesDescription(values)
     },
 
-    toFormik: function ({ values }, productGrades) {
-      return checkboxesToFormik(values, productGrades)
-    },
-
-    nested: true
+    toFormik: function ({ values }, { productGrades }) {
+      //return[]  // ! ! debug
+      return toFormikArray(values, productGrades)
+    }
   },
   productForms: {
     operator: operators.EQUALS,
     paths: [paths.productOffers.productForms],
     description: 'Product Forms',
 
-    toFilter: function (values, valuesDescription) {
+    toFilter: function (values) {
+      let modifiedValues = values.map(val => {
+        let parsed = JSON.parse(val)
+
+        return {
+          value: parsed.id,
+          description: JSON.stringify({
+            name: parsed.name
+          })
+        }
+      })
+
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: values.map((val, i) => ({
-          value: val,
-          description: valuesDescription[i]
-        }))
+        values: modifiedValues,
+        description: this.description
       }
     },
 
     valuesDescription: function (values) {
-      return values.map(val => val.description)
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return parsed.name
+      })
     },
 
     tagDescription: function (values) {
       return this.valuesDescription(values)
     },
 
-    toFormik: function ({ values }, productForms) {
-      return checkboxesToFormik(values, productForms)
-    },
-
-    nested: true
+    toFormik: function ({ values }, { productForms }) {
+      //return[]  // ! ! debug
+      return toFormikArray(values, productForms)
+    }
   },
 
   expirationFrom: {

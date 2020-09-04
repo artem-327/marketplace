@@ -262,12 +262,20 @@ export const AccordionContent = styled(Accordion.Content)`
 `
 
 export const DateInputStyledWrapper = styled.div`
+  position: relative;
+
   .ui.label {
-    font-size: 13px !important;
-    font-weight: normal;
+    font-size: 14px !important;
+    font-weight: normal;    
+    text-align: center;
+    align-items: center;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    height: 28px;
+    border-radius: 2px;
+    background-color: #edeef2;
     color: #848893;
-    background-color: #f8f9fb;
-    border: 1px solid #dee2e6;
   }
 `
 
@@ -427,7 +435,6 @@ export const StyledGrid = styled(Grid)`
 export const SaveFiltersGrid = styled(Grid)`
   margin: 0px !important;
   vertical-align: middle;
-  background-color: #edeef2;  
   > .row {
     padding: 0 !important;
     .column {
@@ -463,7 +470,8 @@ export const SaveFiltersGrid = styled(Grid)`
 export const NotificationsFiltersGrid = styled(Grid)`
   margin: 0px !important;
   vertical-align: middle;
-  background-color: #edeef2;  
+  display: flex;
+  flex-direction: row;
   > .row {
     padding: 0 !important;
     .column {
@@ -536,19 +544,23 @@ export const InputWrapper = styled.div`
   > .ui.label {
     height: 28px;
     border-radius: 2px;
-    background-color: #84c22526;
-    
     font-size: 14px;
     font-weight: normal;
     font-stretch: normal;
     font-style: normal;
     letter-spacing: normal;
     text-align: center;
-    color: #84c225;
+    color: #848893;
+    background-color: #edeef2;
     align-items: center;
     position: absolute;
     top: 6px;
     right: 6px;
+  }
+  
+  > .ui.label.green {
+    color: #84c225 !important;
+    background-color: #84c22526 !important;
   }
 `
 
@@ -641,4 +653,15 @@ export const PopupGrid = styled(Grid)`
     min-height: 40px;
     min-width: 100px !important;
   }
+`
+
+export const StyledModalHeader = styled(Modal.Header)`
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  padding: 16px 30px;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #20273a;
 `

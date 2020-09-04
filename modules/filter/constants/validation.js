@@ -19,6 +19,10 @@ export const initialValues = {
   expirationFrom: '',
   mfgTo: '',
   mfgFrom: '',
+  packagingTypes: [],
+  productConditions: [],
+  productGrades: [],
+  productForms: [],
   incomplete: {
     yes: false,
     no: false

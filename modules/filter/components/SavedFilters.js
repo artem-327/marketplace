@@ -173,7 +173,7 @@ class SavedFilters extends Component {
 
     if (this.props.savedFiltersLoading) {
       return (
-        <Segment basic>
+        <Segment basic style={{ margin: '-28px 0 30px 0' }}>
           <StyledDimmer active inverted>
             <Loader active />
           </StyledDimmer>
@@ -182,72 +182,71 @@ class SavedFilters extends Component {
     }
 
     return (
-
-        <FilterAccordion>
-          {savedFilters.length ? savedFilters.map((filter, i) => {
-            let {
+      <FilterAccordion style={{ marginTop: '-28px' }}>
+        {savedFilters.length ? savedFilters.map((filter, i) => {
+          let {
+            notificationEnabled,
+            notifyMail,
+            notifyPhone,
+            notifySystem,
+            notificationMail,
+            notificationPhone
+          } = filter
+          let initialValues = {
+            checkboxes: {
               notificationEnabled,
               notifyMail,
               notifyPhone,
-              notifySystem,
+              notifySystem
+            },
+            notifications: {
               notificationMail,
               notificationPhone
-            } = filter
-            let initialValues = {
-              checkboxes: {
-                notificationEnabled,
-                notifyMail,
-                notifyPhone,
-                notifySystem
-              },
-              notifications: {
-                notificationMail,
-                notificationPhone
-              }
             }
+          }
 
-            return (
-              <SavedFilterItem key={filter.id}>
-                {this.getTitle(filter, i)}
+          return (
+            <SavedFilterItem key={filter.id}>
+              {this.getTitle(filter, i)}
 
-                <AccordionContent key={i} active={this.state.activeIndex === filter.id}>
-                  {this.state.activeIndex === filter.id && (
-                    <Form
-                      enableReinitialize={true}
-                      validationSchema={savedFilterValidation}
-                      initialValues={initialValues}
-                      validateOnChange={false}
-                      validateOnBlur={false}
-                      onSubmit={async (values, { setSubmitting }) => {
-                        try {
-                          let { notificationMail, notificationPhone } = values.notifications
+              <AccordionContent key={i} active={this.state.activeIndex === filter.id}>
+                {this.state.activeIndex === filter.id && (
+                  <Form
+                    enableReinitialize={true}
+                    validationSchema={savedFilterValidation}
+                    initialValues={initialValues}
+                    validateOnChange={false}
+                    validateOnBlur={false}
+                    onSubmit={async (values, { setSubmitting }) => {
+                      try {
+                        let { notificationMail, notificationPhone } = values.notifications
 
-                          let body = {
-                            name: filter.name,
-                            ...values.checkboxes,
-                            ...(notificationMail === undefined || notificationMail === ''
-                              ? null
-                              : { notificationMail }),
-                            ...(notificationPhone === undefined || notificationPhone === ''
-                              ? null
-                              : { notificationPhone })
-                          }
+                        let body = {
+                          name: filter.name,
+                          ...values.checkboxes,
+                          ...(notificationMail === undefined || notificationMail === ''
+                            ? null
+                            : { notificationMail }),
+                          ...(notificationPhone === undefined || notificationPhone === ''
+                            ? null
+                            : { notificationPhone })
+                        }
 
-                          await this.props.updateFilterNotifications(this.state.activeIndex, body)
-                          this.props.toastManager.add(
-                            <div>
-                              <strong>
-                                <FormattedMessage id='confirm.filter.updated' values={{ name: filter.name }} />
-                              </strong>
-                            </div>,
-                            { appearance: 'success', pauseOnHover: true }
-                          )
-                        } catch (err) {}
-                        setSubmitting(false)
-                      }}>
-                      {formikProps => {
-                        return (
-                          <div style={{ padding: '0 10px' }}>
+                        await this.props.updateFilterNotifications(this.state.activeIndex, body)
+                        this.props.toastManager.add(
+                          <div>
+                            <strong>
+                              <FormattedMessage id='confirm.filter.updated' values={{ name: filter.name }} />
+                            </strong>
+                          </div>,
+                          { appearance: 'success', pauseOnHover: true }
+                        )
+                      } catch (err) {}
+                      setSubmitting(false)
+                    }}>
+                    {formikProps => {
+                      return (
+                        <div style={{ padding: '0 10px' }}>
                           <SavedFilterDetailGrid style={{ backgroundColor: '#edeef2' }}>
                             <GridRow>
                               <GridColumn computer={8} floated='left'>
@@ -266,27 +265,27 @@ class SavedFilters extends Component {
                               </GridColumn>
                             </GridRow>
                           </SavedFilterDetailGrid>
-                          </div>
-                        )
-                      }}
-                    </Form>
-                  )}
-                </AccordionContent>
-              </SavedFilterItem>
-            )
-          }) : (
-            <SavedFilterItem>
-              <AccordionContent>
-                <NoSavedFilters>
-                  <FormattedMessage
-                    id='filter.noSavedFilters'
-                    defaultMessage='You don’t have saved filters'
-                  />
-                </NoSavedFilters>
+                        </div>
+                      )
+                    }}
+                  </Form>
+                )}
               </AccordionContent>
             </SavedFilterItem>
-          )}
-        </FilterAccordion>
+          )
+        }) : (
+          <SavedFilterItem>
+            <AccordionContent>
+              <NoSavedFilters>
+                <FormattedMessage
+                  id='filter.noSavedFilters'
+                  defaultMessage='You don’t have saved filters'
+                />
+              </NoSavedFilters>
+            </AccordionContent>
+          </SavedFilterItem>
+        )}
+      </FilterAccordion>
     )
   }
 }

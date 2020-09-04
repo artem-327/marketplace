@@ -379,7 +379,7 @@ class Filter extends Component {
           if (filters[i].path === 'ProductOffer.companyProduct.companyGenericProduct.productGroup.id') {
             this.searchProductOffer(filters[i].values)
           }
-          formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
+          formikValues[key] = datagrid.toFormik(filters[i], this.props)
         }
       })
     }
