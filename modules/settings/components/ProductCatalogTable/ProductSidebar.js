@@ -229,13 +229,10 @@ const formValidation = () =>
         .required(errorMessages.requiredMessage)
         .positive(errorMessages.positive),
       palletSaleOnly: Yup.boolean(),
-      packageWeightUnit: Yup.number().when('palletSaleOnly', {
-        is: false,
-        then: Yup.number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive)
-      }),
+      packageWeightUnit: Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
+        .positive(errorMessages.positive),
       /*
       packagesPerPallet: Yup.number()
         .typeError(errorMessages.mustBeNumber)
