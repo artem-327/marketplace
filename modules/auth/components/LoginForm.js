@@ -92,6 +92,11 @@ const validationScheme = val.object().shape({
     .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
 })
 
+
+const resetScheme = val.object().shape({
+  username: val.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
+})
+
 const initialValues = {
   username: '',
   password: ''
@@ -142,7 +147,7 @@ class LoginForm extends Component {
             <StyledForm
               initialValues={initialValues}
               validateOnChange={true}
-              validationSchema={validationScheme}
+              validationSchema={this.state.resetPassword ? resetScheme : validationScheme}
               onSubmit={async (values, actions) => {
                 const { username, password } = values
                 const { login, resetPasswordRequest } = this.props
