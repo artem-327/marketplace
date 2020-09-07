@@ -555,6 +555,7 @@ class UsersSidebar extends React.Component {
                         touched={touched}
                         isSubmitting={isSubmitting}
                         placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
+                        clearable={true}
                       />
                     </GridColumn>
                   </GridRow>
@@ -583,7 +584,7 @@ class UsersSidebar extends React.Component {
                             if (company) {
                               let newRoles = values.roles.slice()
                               newRoles = newRoles.filter(role => adminRoles.every(d => role !== d.id))
-                              if (company.isClientCompany && (isClientCompany !== company.isClientCompany)) {
+                              if (company.isClientCompany && isClientCompany !== company.isClientCompany) {
                                 newRoles = newRoles.filter(role => !clientCompanyRoles.every(d => role !== d.id))
                               }
                               setFieldValue('roles', newRoles)
@@ -709,12 +710,7 @@ class UsersSidebar extends React.Component {
                   </GridRow>
                   <GridRow>
                     {this.generateCheckboxes(
-                      values.company !== ''
-                        ? (isClientCompany
-                          ? clientCompanyRoles
-                          : userRoles
-                        )
-                        : adminRoles,
+                      values.company !== '' ? (isClientCompany ? clientCompanyRoles : userRoles) : adminRoles,
                       values,
                       'roles',
                       errorRoles
