@@ -182,7 +182,11 @@ export const phoneValidation = () =>
   Yup.string()
     .trim()
     //.test('phone-validation', errorMessages.invalidPhoneNumber, (val) => val && validator.isMobilePhone(val + '', null, { strictMode: true })) // tohle nejak nefunguje
-    .test('phone-validation', errorMessages.invalidPhoneNumber, val => !val || (val[0] === '+' && val.length > 5)) // Delka vcetne '+' a predcisli, '+' povinne (tzn. bylo zvolene predcisli)
+    .test(
+      'phone-validation',
+      errorMessages.invalidPhoneNumber,
+      val => !val || (val[0] === '+' && val.length > 8 && !val.includes('_'))
+    ) // Delka vcetne '+' a predcisli, '+' povinne (tzn. bylo zvolene predcisli)
 
 export const dateValidation = (required = true) => {
   let isValid = Yup.string().test(
