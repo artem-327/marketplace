@@ -171,7 +171,7 @@ class Operations extends Component {
             filter.and = filter.and.concat([
               {
                 operator: 'GREATER_THAN_OR_EQUAL_TO',
-                path: 'Order.orderDate',
+                path: 'Order.createdAt',
                 values: [`${v.dateFrom}`]
               }
             ])
@@ -180,7 +180,7 @@ class Operations extends Component {
             filter.and = filter.and.concat([
               {
                 operator: 'LESS_THAN_OR_EQUAL_TO',
-                path: 'Order.orderDate',
+                path: 'Order.createdAt',
                 values: [`${v.dateTo}`]
               }
             ])

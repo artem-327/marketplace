@@ -8,7 +8,7 @@ export default {
       pageSize: 50,
       pageStart: 0,
       sortDirection: 'DESC',
-      sortPath: 'Order.orderDate'
+      sortPath: 'Order.createdAt'
     }),
   create: model => api.post('/prodex/api/orders', model),
   getOrder: (endpointType, orderId) => api.get(`/prodex/api/${endpointType}-orders/${orderId}`),
