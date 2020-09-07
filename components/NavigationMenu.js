@@ -566,12 +566,7 @@ class Navigation extends Component {
                 {formatMessage({ id: 'navigation.marketSegments', defaultMessage: 'Market Segments' })}
               </>
             </MenuLink>
-            <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
-              <>
-                <Bell size={22} />
-                {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
-              </>
-            </MenuLink>
+
             <DropdownItem
               icon={<Settings size={22} />}
               text={formatMessage({ id: 'navigation.adminSettings', defaultMessage: 'Admin Settings' })}
@@ -596,14 +591,14 @@ class Navigation extends Component {
               refId={'operations'}>
               <TabsOperations />
             </DropdownItem>
-            <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
-              <>
-                <Bell size={22} />
-                {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
-              </>
-            </MenuLink>
           </>
         )}
+        <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
+          <>
+            <Bell size={22} />
+            {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+          </>
+        </MenuLink>
       </div>
     )
   }
