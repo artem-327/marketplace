@@ -37,8 +37,8 @@ export const paths = {
     productGrades: 'ProductGrade.id',
     productForms: 'ProductOffer.form.id',
     expirationDate: 'ProductOffer.lotExpirationDate',
-    assayFrom: 'ProductOffer.assayMin',
-    assayTo: 'ProductOffer.assayMax',
+    assayFrom: 'ProductOffer.companyProduct.companyGenericProduct.elements.assayMin',
+    assayTo: 'ProductOffer.companyProduct.companyGenericProduct.elements.assayMax',
     manufacturedDate: 'ProductOffer.lotManufacturedDate',
     warehouseId: 'ProductOffer.warehouse.id',
     manufacturerId: 'ProductOffer.companyProduct.companyGenericProduct.manufacturer.id',
@@ -86,11 +86,13 @@ const checkboxesToFormik = (values, checkboxes) => {  // ! ! can be deleted?
 }
 
 const toFormikArray = (values, arr) => {
-  const tmp = values.map(val => {
-    let parsed = JSON.parse(val.description)
-    return JSON.stringify({ id: parseInt(val.value), name: parsed.name })
+  let tmp = []
+  values.forEach(val => {
+    const element = arr.find(el => el.id === parseInt(val.value))
+    if (element) {
+      tmp.push (JSON.stringify({id: element.id, name: element.name}))
+    }
   })
-
   return tmp
 }
 
@@ -130,8 +132,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: data,
-        description: this.description
+        values: data
       }
     },
 
@@ -179,8 +180,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: modifiedValues,
-        description: this.description
+        values: modifiedValues
       }
     },
 
@@ -226,8 +226,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: modifiedValues,
-        description: this.description
+        values: modifiedValues
       }
     },
 
@@ -256,11 +255,10 @@ export const datagridValues = {
     operator: operators.LIKE,
 
     toFilter: function (values) {
-      let { yes, no } = values
       let returnValues = null
 
-      if (!(yes || no)) return null
-      if (yes) returnValues = ['Incomplete', 'Unmapped']
+      if (values === '') return null
+      if (values) returnValues = ['Incomplete', 'Unmapped']
       else returnValues = ['Broadcasting', 'Not broadcasting']
 
       return {
@@ -271,9 +269,7 @@ export const datagridValues = {
     },
     tagDescription: values => values.map(val => val.description).toString(),
     valuesDescription: values => values.map(val => val.description).toString(),
-    toFormik: values => ({
-      incomplete: values.includes('Incomplete') ? { yes: true, no: false } : { yes: false, no: true }
-    })
+    toFormik: ({ values }) => values.includes('Incomplete')
   },
 
   quantityFrom: {
@@ -285,8 +281,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{ value: values, description: values }],
-        description: this.description
+        values: [{ value: values, description: values }]
       }
     },
 
@@ -310,8 +305,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{ value: values, description: values }],
-        description: this.description
+        values: [{ value: values, description: values }]
       }
     },
 
@@ -335,8 +329,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{ value: values, description: values }],
-        description: this.description
+        values: [{ value: values, description: values }]
       }
     },
 
@@ -361,8 +354,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: [{ value: values, description: values }],
-        description: this.description
+        values: [{ value: values, description: values }]
       }
     },
 
@@ -398,8 +390,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: modifiedValues,
-        description: this.description
+        values: modifiedValues
       }
     },
 
@@ -415,13 +406,6 @@ export const datagridValues = {
     },
 
     toFormik: function ({ values }, { packagingTypes }) {
-      console.log('!!!!!!!!!! toFormik values', values)
-      console.log('!!!!!!!!!! toFormik packagingTypes', packagingTypes)
-
-      const tmp = toFormikArray(values, packagingTypes)
-      console.log('!!!!!!!!!! toFormik toFormikArray', tmp)
-
-      //return[]  // ! ! debug
       return toFormikArray(values, packagingTypes)
     }
   },
@@ -445,8 +429,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: modifiedValues,
-        description: this.description
+        values: modifiedValues
       }
     },
 
@@ -486,8 +469,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: modifiedValues,
-        description: this.description
+        values: modifiedValues
       }
     },
 
@@ -503,7 +485,6 @@ export const datagridValues = {
     },
 
     toFormik: function ({ values }, { productGrades }) {
-      //return[]  // ! ! debug
       return toFormikArray(values, productGrades)
     }
   },
@@ -527,8 +508,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: modifiedValues,
-        description: this.description
+        values: modifiedValues
       }
     },
 
@@ -544,7 +524,6 @@ export const datagridValues = {
     },
 
     toFormik: function ({ values }, { productForms }) {
-      //return[]  // ! ! debug
       return toFormikArray(values, productForms)
     }
   },
@@ -770,8 +749,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: data,
-        description: this.description
+        values: data
       }
     },
 
@@ -813,8 +791,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: data,
-        description: this.description
+        values: data
       }
     },
 
@@ -878,8 +855,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: data,
-        description: this.description
+        values: data
       }
     },
 
@@ -919,8 +895,7 @@ export const datagridValues = {
 
       return {
         path: this.paths[0],
-        values: data,
-        description: this.description
+        values: data
       }
     },
     toFormik: function (operator) {
@@ -946,8 +921,7 @@ export const datagridValues = {
 
       return {
         path: this.paths[0],
-        values: data,
-        description: this.description
+        values: data
       }
     },
     toFormik: function (operator) {
@@ -997,8 +971,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: data,
-        description: this.description
+        values: data
       }
     },
 
@@ -1054,8 +1027,7 @@ export const datagridValues = {
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: data,
-        description: this.description
+        values: data
       }
     },
 

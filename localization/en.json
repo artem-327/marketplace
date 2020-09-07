@@ -871,6 +871,7 @@
   "global.companyGenericProductCode": "Company Generic Product Code",
   "global.companyGenericProductNameOrCode": "Company Generic Product Name Or Code",
   "global.advancedFilters": "Advanced Filters",
+  "global.select": "Select",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",

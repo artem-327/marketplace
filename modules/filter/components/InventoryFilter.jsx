@@ -113,10 +113,6 @@ class InventoryFilter extends Component {
     isTyping: false,
     searchManufacturerQuery: '',
     searchOriginQuery: '',
-    incomplete: {
-      yes: false,
-      no: false
-    }
   }
 
   componentDidMount() {
@@ -278,6 +274,9 @@ class InventoryFilter extends Component {
 
     async function callback(id) {
       let requestData = self.generateRequestData(params)
+
+      console.log('!!!!!!!!!! handleFilterSave requestData', requestData)
+
       try {
         if (id) await self.props.updateFilter(id, requestData)
         else {
@@ -686,10 +685,6 @@ class InventoryFilter extends Component {
     })
   }
 
-  handleRadio = (_e, { name }) => {
-    this.setState(state => ({ ...state, incomplete: { yes: false, no: false, [name]: !state.incomplete[name] } }))
-  }
-
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError, setFieldTouched }) => {
     let {
       productConditions,
@@ -1048,24 +1043,28 @@ class InventoryFilter extends Component {
           </GridColumn>
           <GridColumn width={4}>
             <FormattedMessage id='filter.incomplete' defaultMessage='Incomplete' />
-            <FormField>
-              <Radio
-                name='yes'
-                checked={this.state.incomplete.yes}
-                label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })}
-                onClick={this.handleRadio}
-              />
-            </FormField>
-            <BottomMargedField>
-              <Radio
-                name='no'
-                checked={this.state.incomplete.no}
-                label={formatMessage({ id: 'global.no', defaultMessage: 'No' })}
-                onClick={this.handleRadio}
-              />
-            </BottomMargedField>
+            <Dropdown
+              name={'incomplete'}
+              options={[
+                {
+                  key: 1,
+                  text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
+                  value: true
+                },
+                {
+                  id: 2,
+                  text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
+                  value: false
+                },
+              ]}
+              selection
+              inputProps={{
+                fluid: true,
+                clearable: true,
+                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
+              }}
+            />
           </GridColumn>
-          <GridColumn width={4}></GridColumn>
         </GridRow>
       </PopupGrid>
     )
@@ -1096,7 +1095,7 @@ class InventoryFilter extends Component {
         onSubmit={(values, { setSubmitting }) => {
           console.log('!!!!!!!!!! onSubmit 1')
           if (!openedSaveFilter) {
-            this.handleSubmit({ ...values, incomplete: this.state.incomplete })
+            this.handleSubmit(values)
           }
           setSubmitting(false)
         }}>
@@ -1105,6 +1104,8 @@ class InventoryFilter extends Component {
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
           this.values = props.values
+
+          console.log('!!!!!!!!!! aaaaa values', props.values)
 
           return (
             <Modal onClose={() => onClose()} open centered={true} size={openedSaveFilter ? 'tiny' : 'large'}>
@@ -1156,73 +1157,7 @@ class InventoryFilter extends Component {
               )}
 
               <BottomButtons>
-                {!openedSaveFilter ? (
-                  <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <div>
-                      <Button
-                        type='button'
-                        size='large'
-                        onClick={() => onClose()}
-                        inputProps={{type: 'button'}}
-                        data-test='filter_cancel'>
-                        {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
-                      </Button>
-                      <Button
-                        disabled={openedSaveFilter || savedFiltersActive}
-                        type='button'
-                        size='large'
-                        onClick={(e, data) => {
-                          this.resetForm({...initialValues})
-                          //! !toggleFilter(false)
-                          this.props.applyFilter({filters: []})
-                          this.props.applyDatagridFilter({filters: []})
-                          this.props.onClear(e, data)
-                        }}
-                        inputProps={{type: 'button'}}
-                        data-test='filter_clear'>
-                        {formatMessage({id: 'filter.clear', defaultMessage: 'Clear'})}
-                      </Button>
-                    </div>
-
-                    <div>
-                      <Button
-                        disabled={savedFiltersActive}
-                        type={'button'}
-                        size='large'
-                        loading={isFilterSaving}
-                        onClick={async () => this.toggleSaveFilter()}
-                        inputProps={{type: 'button'}}
-                        data-test='filter_save_new'>
-                        {formatMessage({id: 'filter.saveFilter', defaultMessage: 'Save Filter'})}
-                      </Button>
-                      <Button
-                        disabled={openedSaveFilter || savedFiltersActive}
-                        size='large'
-                        loading={isFilterApplying}
-                        type='submit'
-                        primary
-                        onClick={async () => {
-                          let {values} = props
-                          const {validateForm, submitForm} = props
-
-                          validateForm().then(err => {
-                            const errors = Object.keys(err)
-                            if (errors.length && errors[0] !== 'isCanceled') {
-                              // Errors found
-                              submitForm() // to show errors
-                            } else {
-                              submitForm()
-                              // No errors found
-                              //this.handleFilterSave(values)
-                            }
-                          })
-                        }}
-                        data-test='filter_apply'>
-                        {formatMessage({id: 'global.apply', defaultMessage: 'Apply'})}
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
+                {openedSaveFilter ? (
                   <div style={{ textAlign: 'right'}}>
                     <Button
                       type='button'
@@ -1255,6 +1190,81 @@ class InventoryFilter extends Component {
                       {formatMessage({id: 'global.save', defaultMessage: 'Save'})}
                     </Button>
                   </div>
+                ) : (
+                  savedFiltersActive ? (
+                    <div style={{ textAlign: 'right'}}>
+                      <Button
+                        type='button'
+                        size='large'
+                        onClick={() => onClose()}
+                        inputProps={{type: 'button'}}
+                        data-test='filter_close'>
+                        {formatMessage({id: 'global.close', defaultMessage: 'Close'})}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                      <div>
+                        <Button
+                          type='button'
+                          size='large'
+                          onClick={() => onClose()}
+                          inputProps={{type: 'button'}}
+                          data-test='filter_cancel'>
+                          {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
+                        </Button>
+                        <Button
+                          type='button'
+                          size='large'
+                          onClick={(e, data) => {
+                            this.resetForm({...initialValues})
+                            //! !toggleFilter(false)
+                            this.props.applyFilter({filters: []})
+                            this.props.applyDatagridFilter({filters: []})
+                            this.props.onClear(e, data)
+                          }}
+                          inputProps={{type: 'button'}}
+                          data-test='filter_clear'>
+                          {formatMessage({id: 'filter.clear', defaultMessage: 'Clear'})}
+                        </Button>
+                      </div>
+                      <div>
+                        <Button
+                          type={'button'}
+                          size='large'
+                          loading={isFilterSaving}
+                          onClick={async () => this.toggleSaveFilter()}
+                          inputProps={{type: 'button'}}
+                          data-test='filter_save_new'>
+                          {formatMessage({id: 'filter.saveFilter', defaultMessage: 'Save Filter'})}
+                        </Button>
+                        <Button
+                          size='large'
+                          loading={isFilterApplying}
+                          type='submit'
+                          primary
+                          onClick={async () => {
+                            let {values} = props
+                            const {validateForm, submitForm} = props
+
+                            validateForm().then(err => {
+                              const errors = Object.keys(err)
+                              if (errors.length && errors[0] !== 'isCanceled') {
+                                // Errors found
+                                submitForm() // to show errors
+                              } else {
+                                submitForm()
+                                // No errors found
+                                //this.handleFilterSave(values)
+                              }
+                            })
+                          }}
+                          data-test='filter_apply'>
+                          {formatMessage({id: 'global.apply', defaultMessage: 'Apply'})}
+                        </Button>
+                      </div>
+                    </div>
+                  )
                 )}
               </BottomButtons>
             </Modal>

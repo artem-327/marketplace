@@ -23,10 +23,7 @@ export const initialValues = {
   productConditions: [],
   productGrades: [],
   productForms: [],
-  incomplete: {
-    yes: false,
-    no: false
-  },
+  incomplete: '',
   checkboxes: {
     notificationEnabled: false,
     automaticallyApply: true,
