@@ -246,5 +246,8 @@ export default {
   },
   setPrimaryUser: (companyId, userId) =>
     api.patch(`/prodex/api/companies/${companyId}/primary-user?userId=${userId}`).then(response => response.data),
+  setPrimaryBranch: (companyId, branchId) =>
+    api.patch(`/prodex/api/companies/id/${companyId}/primary-branch?branchId=${branchId}`)
+      .then(response => response.data),
   getCompanyDetails: id => api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
 }

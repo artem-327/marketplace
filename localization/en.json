@@ -2089,6 +2089,7 @@
   "settings.locations.menu.deliveryLocations": "Delivery Locations",
   "settings.locations.menu.pickUpLocations": "Pick-Up Locations",
   "settings.locations.menu.branches": "Branches",
+  "settings.branches.setAsPrimaryBranch": "Set as Primary Branch",
   "related.documents.addDocument": "Add Document",
   "order.related.documents.add": "ADD DOCUMENTS",
   "related.documents.documentType": "Document Type",
