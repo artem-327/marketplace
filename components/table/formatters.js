@@ -5,9 +5,7 @@ import { getSafe } from '~/utils/functions'
 import styled from 'styled-components'
 
 const DropdownActions = styled(Dropdown)`
-  .ui.dropdown {
-    display: block !important;
-  }
+  display: block !important;
 `
 
 const getDropdownItems = (actions = [], row) =>

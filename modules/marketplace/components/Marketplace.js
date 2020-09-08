@@ -9,6 +9,7 @@ import styled from 'styled-components'
 
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
@@ -143,7 +144,8 @@ const DivIcons = styled.div`
 
 const DivSetting = styled.div`
   justify-content: center;
-  width: 50px;
+  width: 40px;
+  height: 40px;
   cursor: pointer !important;
   border-radius: 3px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
@@ -512,17 +514,16 @@ class Marketplace extends Component {
                 isMarketplace={true}
               />
             </CustomSearchNameTags>
-
-            <div>
-              <div className='column'>
-                <FiltersRow>
-                  <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
-                </FiltersRow>
+            {false && (
+              <div>
+                <div className='column'>
+                  <FiltersRow>
+                    <FilterTags datagrid={datagrid} data-test='marketplace_remove_filter' />
+                  </FiltersRow>
+                </div>
               </div>
-            </div>
-            <DivSetting onClick={() => console.log('jsem tu')} data-test='table_setting_btn' name='setting'>
-              <Settings size='20' />
-            </DivSetting>
+            )}
+            <ColumnSettingButton />
           </CustomRowDiv>
         </div>
 
@@ -622,6 +623,7 @@ Marketplace.propTypes = {
   activeIndex: number,
   isMerchant: boolean,
   isCompanyAdmin: boolean,
+  isOpenColumnSettingModal: boolean,
   tutorialCompleted: boolean
 }
 
@@ -629,7 +631,8 @@ Marketplace.defaultProps = {
   activeIndex: 0,
   isMerchant: false,
   isCompanyAdmin: false,
-  tutorialCompleted: false
+  tutorialCompleted: false,
+  isOpenColumnSettingModal: false
 }
 
 export default injectIntl(Marketplace)

@@ -38,7 +38,8 @@ export const initialState = {
   datagridFilterUpdate: false,
   pricingEditOpenId: null,
   isExportInventoryOpen: false,
-  tableHandlersFilters: null
+  tableHandlersFilters: null,
+  isOpenColumnSettingModal: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -595,6 +596,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         [payload.variable]: payload.value
+      }
+    }
+
+    case AT.TOGGLE_COLUMN_SETTING_MODAL: {
+      return {
+        ...state,
+        isOpenColumnSettingModal: payload
       }
     }
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import pt from 'prop-types'
 import { Getter, Plugin } from '@devexpress/dx-react-core'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
@@ -38,6 +39,8 @@ import {
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
 import { getSafe } from '~/utils/functions'
+//Actions
+import { toggleColumnSettingModal } from '~/modules/inventory/actions'
 
 import { RowActionsFormatterProvider, DropdownFormatterProvider } from './providers'
 
@@ -400,7 +403,9 @@ class _Table extends Component {
     expandedRowIds: pt.array,
     loadedAllData: pt.bool,
     shrinkGroups: pt.bool,
-    columnAction: pt.string
+    columnAction: pt.string,
+    toggleColumnSettingModal: pt.func,
+    isOpenColumnSettingModal: pt.bool
   }
 
   static defaultProps = {
@@ -431,7 +436,9 @@ class _Table extends Component {
     expandedRowIds: [],
     loadedAllData: true,
     shrinkGroups: false,
-    columnActions: ''
+    columnActions: '',
+    toggleColumnSettingModal: () => {},
+    isOpenColumnSettingModal: false
   }
 
   constructor(props) {
@@ -878,6 +885,8 @@ class _Table extends Component {
       expandedRowIds,
       loadedAllData,
       columnActions,
+      isOpenColumnSettingModal,
+      toggleColumnSettingModal,
       ...restProps
     } = this.props
     const {
@@ -887,7 +896,9 @@ class _Table extends Component {
 
     const { columnSettingOpen, expandedGroups, columnsSettings, loaded, scrolledBottom } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
-    const columnsFiltered = columns.filter(c => !c.disabled && (showColumnsWhenGrouped || !groupBy.includes(c.name)))
+    const columnsFiltered = columns.filter(
+      c => !c.disabled && !c.actions && (showColumnsWhenGrouped || !groupBy.includes(c.name))
+    )
 
     const hiddenColumns = [
       ...this.getColumns()
@@ -895,6 +906,7 @@ class _Table extends Component {
         .map(c => c.name),
       ...(columnsSettings.hiddenColumnNames || [])
     ]
+
     return (
       <Segment
         basic
@@ -913,13 +925,13 @@ class _Table extends Component {
           ref={c => c && (this.gridWrapper = c)}>
           <ColumnsSettingModal
             columns={columnsFiltered}
-            open={columnSettingOpen}
+            open={isOpenColumnSettingModal}
             formatMessage={formatMessage}
             hiddenColumnNames={this.state.columnsSettings.hiddenColumnNames}
-            onClose={() => this.setState({ columnSettingOpen: false })}
+            onClose={() => toggleColumnSettingModal(false)}
             onChange={hiddenColumnNames => {
               this.handleColumnsSettings({ hiddenColumnNames })
-              this.setState({ columnSettingOpen: false })
+              toggleColumnSettingModal(false)
             }}
             data-test='table_columns_setting_modal'
           />
@@ -1117,4 +1129,12 @@ class _Table extends Component {
   }
 }
 
-export default injectIntl(_Table)
+const mapDispatchToProps = {
+  toggleColumnSettingModal
+}
+
+const mapStateToProps = state => ({
+  isOpenColumnSettingModal: getSafe(() => state.simpleAdd.isOpenColumnSettingModal, false)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(_Table))

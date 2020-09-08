@@ -42,19 +42,18 @@ a.ui.button {
   background: transparent !important;
   text-decoration: none !important;
   font-weight: inherit !important;
-  color: #2185D0 !important;
+  color: #2185d0 !important;
 
   &:hover {
     background: transparent !important;
     text-decoration: underline !important;
-    color: #2185D0 !important;
+    color: #2185d0 !important;
   }
 }
 
 .ui.buttons .or:before {
   background-color: #dee2e6 !important;
 }
-
 
 .ui.button {
   min-width: 110px;
@@ -71,7 +70,7 @@ a.ui.button {
   }
 
   &.primary {
-    background: #84C225;
+    background: #84c225;
     color: #ffffff;
 
     &:hover {
@@ -323,8 +322,12 @@ a.ui.button {
 .flex {
   display: flex !important;
   flex-direction: column;
-  &.column { flex-direction: column; }
-  &.row { flex-direction: row; }
+  &.column {
+    flex-direction: column;
+  }
+  &.row {
+    flex-direction: row;
+  }
   &.stretched {
     flex: 1 auto;
     min-height: 0px;
@@ -332,7 +335,9 @@ a.ui.button {
 
   &.stretched-all {
     flex: 1 auto;
-    .ui.container, .ui.segment, .ui.grid  {
+    .ui.container,
+    .ui.segment,
+    .ui.grid {
       display: flex !important;
       flex: 1 auto;
       flex-direction: column;
@@ -376,7 +381,7 @@ body > *:not(.modals) .bootstrapiso .table-responsive {
   }
 }
 
-.bootstrapiso .table-responsive table .tree-cell [class*="table-tree-content"] {
+.bootstrapiso .table-responsive table .tree-cell [class*='table-tree-content'] {
   margin-top: -5px !important;
   margin-bottom: -5px !important;
   line-height: 29px;
@@ -398,11 +403,10 @@ i.icon.thick {
 }
 
 i.icon.clickable:hover {
-  color: #4183C4;
+  color: #4183c4;
 }
 
 .product-details {
-
   > div {
     height: 100%;
     padding-bottom: 6.5rem !important;
@@ -426,16 +430,14 @@ i.icon.clickable:hover {
 
 @media (max-width: 1680px) {
   .product-details {
-
     .segment-fixed {
-      width: calc((100% - (2 * 1.2857143rem)) * 0.3125 - 2rem - 2px)
+      width: calc((100% - (2 * 1.2857143rem)) * 0.3125 - 2rem - 2px);
     }
   }
 }
 
 @media (max-width: 767px) {
   .product-details {
-
     .segment-fixed {
       width: calc(100% - 100px);
     }
@@ -449,8 +451,8 @@ i.icon.clickable:hover {
 
   > .column {
     min-height: 2em;
-    padding-top: .111111em;
-    padding-bottom: .111111em;
+    padding-top: 0.111111em;
+    padding-bottom: 0.111111em;
     line-height: 1.777778em;
 
     &.key {
@@ -530,7 +532,7 @@ i.icon.clickable:hover {
 // }
 
 .ui.segment:after {
-  content: "";
+  content: '';
   clear: both;
   display: block;
 }
@@ -557,7 +559,6 @@ i.icon.clickable:hover {
 }
 
 .accordion {
-
   > .title {
     padding: 0 0 1em;
   }
@@ -668,7 +669,7 @@ div.page-wrapper {
         position: absolute;
         width: 0.8em;
         margin: 0 0.1em;
-        background: rgba(0,0,0,0.15);
+        background: rgba(0, 0, 0, 0.15);
       }
     }
   }
@@ -732,7 +733,6 @@ div.page-wrapper {
   }
 
   thead tr {
-
     th {
       position: relative;
 
@@ -762,7 +762,6 @@ div.page-wrapper {
     }
   }
 }
-
 
 h1.ui.header {
   text-transform: uppercase;
@@ -1054,7 +1053,6 @@ div.cart-sidebar {
           }
 
           .input {
-
             input {
               width: 100%;
             }
@@ -1102,7 +1100,7 @@ div.cart-sidebar {
           padding-top: 16px;
           padding-bottom: 17px;
 
-          &:nth-child(n+2) {
+          &:nth-child(n + 2) {
             margin-top: 30px;
           }
 
@@ -1169,9 +1167,8 @@ table.ui.table.table-fields {
       right: 0.78571429em;
       bottom: 0.60714286em;
 
-      .ui.icon.input  {
-
-        >input {
+      .ui.icon.input {
+        > input {
           padding-right: 2em !important;
         }
 
@@ -1202,7 +1199,6 @@ table.ui.table.table-fields {
     }
 
     .error.field {
-
       .ui.input {
         vertical-align: top;
       }
@@ -1284,11 +1280,10 @@ table.ui.table.table-fields.basic {
   }
 }
 
-table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
+table.order-total.ui[class*='very basic']:not(.sortable):not(.striped) {
   min-width: 35%;
 
   tr {
-
     th:first-child,
     td:first-child {
       padding-left: 0.5em;
@@ -1339,7 +1334,6 @@ table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
   background-color: #e7e7e7;
 }
 
-
 .ui.toggle.checkbox.independent input:checked ~ .box:before,
 .ui.toggle.checkbox.independent input:checked ~ label:before,
 .ui.toggle.checkbox.independent input:focus:checked ~ .box:before,
@@ -1366,7 +1360,7 @@ i.file {
     border-radius: 0;
 
     &:before {
-      content: "" !important;
+      content: '' !important;
       position: absolute;
       top: 50%;
       left: 0;
@@ -1386,24 +1380,24 @@ i.file {
   }
 
   &.non-related:before {
-    background-image: url("../images/attachment-non-related.svg") !important;
+    background-image: url('../images/attachment-non-related.svg') !important;
   }
   &.related:before {
-    background-image: url("../images/attachment-related.svg") !important;
+    background-image: url('../images/attachment-related.svg') !important;
   }
   &.unknown:before {
-    background-image: url("../images/attachment-unknown.svg") !important;
+    background-image: url('../images/attachment-unknown.svg') !important;
   }
   &.positive:before {
-    background-image: url("../images/attachment-positive.svg") !important;
+    background-image: url('../images/attachment-positive.svg') !important;
   }
   &.negative:before {
-    background-image: url("../images/attachment-negative.svg") !important;
+    background-image: url('../images/attachment-negative.svg') !important;
   }
 }
 
-.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ .box:before,
-.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ label:before {
+.ui.toggle.checkbox input:not([type='radio']):indeterminate ~ .box:before,
+.ui.toggle.checkbox input:not([type='radio']):indeterminate ~ label:before {
   background: #ffc65d !important;
   border: none;
 }
@@ -1432,8 +1426,12 @@ i.file {
 }
 
 @keyframes heightDown {
-  0% { height: 100%; }
-  100% { height: 0%; }
+  0% {
+    height: 100%;
+  }
+  100% {
+    height: 0%;
+  }
 }
 
 .prodex-toast {
@@ -1453,7 +1451,7 @@ i.file {
     transform: translateX(0%);
   }
 
-  div[role="button"] {
+  div[role='button'] {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -1484,7 +1482,7 @@ i.file {
     height: auto;
 
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       bottom: 0;
@@ -1513,35 +1511,54 @@ i.file {
   }
 
   &.error {
-
-    > .dismiss-bar { background-color: #f16844; }
-    > .dismiss-bar:after { background-color: #d84a27; }
-    > svg { color: #f16844; }
+    > .dismiss-bar {
+      background-color: #f16844;
+    }
+    > .dismiss-bar:after {
+      background-color: #d84a27;
+    }
+    > svg {
+      color: #f16844;
+    }
   }
 
   &.info {
-
-    > .dismiss-bar { background-color: #2599d5; }
-    > .dismiss-bar:after { background-color: #0d82bc; }
-    > svg { color: #2599d5; }
+    > .dismiss-bar {
+      background-color: #2599d5;
+    }
+    > .dismiss-bar:after {
+      background-color: #0d82bc;
+    }
+    > svg {
+      color: #2599d5;
+    }
   }
 
   &.success {
-
-    > .dismiss-bar { background-color: #84c225; }
-    > .dismiss-bar:after { background-color: #6ba80f; }
-    > svg { color: #84c225; }
+    > .dismiss-bar {
+      background-color: #84c225;
+    }
+    > .dismiss-bar:after {
+      background-color: #6ba80f;
+    }
+    > svg {
+      color: #84c225;
+    }
   }
 
   &.warning {
-
-    > .dismiss-bar { background-color: #ffc65d; }
-    > .dismiss-bar:after { background-color: #ff9d42; }
-    > svg { color: #ffc65d; }
+    > .dismiss-bar {
+      background-color: #ffc65d;
+    }
+    > .dismiss-bar:after {
+      background-color: #ff9d42;
+    }
+    > svg {
+      color: #ffc65d;
+    }
   }
 
   .toast-content {
-
     > div {
       font-size: 14px;
       line-height: 1.43;
@@ -1560,14 +1577,12 @@ i.file {
 }
 
 @media (max-width: 1024px) {
-
   .prodex-toast {
     width: 370px;
   }
 }
 
 @media (max-width: 767px) {
-
   .prodex-toast {
     width: 280px;
   }
@@ -1576,9 +1591,10 @@ i.file {
 /* -----------------
   MODALS
  */
- // fix scrolling for big modals
-.page.modals.dimmer {overflow: auto;}
-
+// fix scrolling for big modals
+.page.modals.dimmer {
+  overflow: auto;
+}
 
 .ui.modal .content.scrolling {
   max-width: 100%;
@@ -1600,7 +1616,6 @@ i.file {
  */
 
 .ui.segment:not(.inverted) {
-
   > svg {
     position: absolute;
     top: 13px;
@@ -1642,7 +1657,9 @@ i.file {
   &.blue {
     border: 1px solid #2599d5 !important;
 
-    > svg { color: #2599d5; }
+    > svg {
+      color: #2599d5;
+    }
   }
 
   .ui.basic.blue.buttons .button,
@@ -1654,7 +1671,9 @@ i.file {
   &.green {
     border: 1px solid #84c225 !important;
 
-    > svg { color: #84c225; }
+    > svg {
+      color: #84c225;
+    }
   }
 
   .ui.basic.green.buttons .button,
@@ -1666,7 +1685,9 @@ i.file {
   &.red {
     border: 1px solid #f16844 !important;
 
-    > svg { color: #f16844; }
+    > svg {
+      color: #f16844;
+    }
   }
 
   .ui.basic.red.buttons .button,
@@ -1679,7 +1700,9 @@ i.file {
   &.yellow {
     border: 1px solid #ff9d42 !important;
 
-    > svg { color: #ff9d42; }
+    > svg {
+      color: #ff9d42;
+    }
   }
 
   .ui.basic.orange.buttons .button,
@@ -1700,7 +1723,6 @@ i.file {
 }
 
 .table-responsive {
-
   &-wider {
     background: transparent;
   }
@@ -1710,13 +1732,12 @@ i.file {
     background: transparent !important;
 
     thead,
-    &[class*="table-head"] {
+    &[class*='table-head'] {
       border-collapse: separate;
       border-top-left-radius: 4px;
       border-top-right-radius: 4px;
 
       tr {
-
         th {
           box-sizing: content-box;
           height: 19px;
@@ -1742,21 +1763,21 @@ i.file {
               border-right: 1px solid #dde2e6;
             }
 
-            &:not(.p-0){
+            &:not(.p-0) {
               box-shadow: 0 0 0 0 transparent !important;
 
               &:after {
-                content: "";
+                content: '';
                 position: absolute;
                 left: 0;
                 right: 0;
                 bottom: -5px;
                 display: block;
                 height: 4px;
-                background: rgba(0,0,0, 0.01);
-                background: -moz-linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
-                background: -webkit-linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
-                background: linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0) 100%);
+                background: rgba(0, 0, 0, 0.01);
+                background: -moz-linear-gradient(180deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0) 100%);
+                background: -webkit-linear-gradient(180deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0) 100%);
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0) 100%);
                 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#000000",GradientType=1);
               }
             }
@@ -1804,7 +1825,7 @@ i.file {
           .sortable,
           .justify-content-start .sortable,
           .justify-content-center .sortable,
-          .justify-content-end .sortable{
+          .justify-content-end .sortable {
             width: 100%; // aligned left
 
             i.icon.sort:before {
@@ -1812,13 +1833,13 @@ i.file {
             }
 
             i.icon.sort.up:after {
-              content: "\f0dd";
+              content: '\f0dd';
               opacity: 0.2;
               display: inline-block;
             }
 
             i.icon.sort.down:after {
-              content: "\f0de";
+              content: '\f0de';
               opacity: 0.2;
               display: inline-block;
             }
@@ -1836,7 +1857,6 @@ i.file {
     }
 
     tr {
-
       &.dx-g-bs4-table-invisible-row {
         height: 0;
 
@@ -1927,16 +1947,14 @@ i.file {
             vertical-align: top;
           }
 
-          i[class="icon"] {
+          i[class='icon'] {
             display: none;
           }
         }
       }
 
       &.group-row {
-
         &:hover {
-
           td {
             background-color: #eff9ff;
           }
@@ -1944,9 +1962,7 @@ i.file {
       }
 
       &.row-click {
-
         &:hover {
-
           td {
             background-color: #eff9ff;
           }
@@ -1982,8 +1998,7 @@ i.file {
           transition: width 250ms linear;
           float: right;
           display: block;
-          width: calc(100vw - 430px);
-          max-width: calc(100% - 30px);
+          max-width: 100%;
 
           .row.right {
             margin-right: 0 !important;
@@ -2008,7 +2023,6 @@ i.file {
     }
 
     tbody {
-
       td {
         background: #fff;
 
@@ -2029,7 +2043,6 @@ i.file {
       }
 
       tr:last-child {
-
         td:first-child:not(.p-0),
         td.p-0:first-child + td {
           border-bottom-left-radius: 4px;
@@ -2073,9 +2086,8 @@ i.file {
   }
 }
 
-
-.price-input input[type=number]::-webkit-inner-spin-button,
-.price-input input[type=number]::-webkit-outer-spin-button {
+.price-input input[type='number']::-webkit-inner-spin-button,
+.price-input input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
