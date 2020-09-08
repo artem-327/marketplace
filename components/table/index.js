@@ -266,12 +266,10 @@ const TreeTableCells = (props, rowChildActions) => {
       }
     }
   }
-  return <Table.Cell {...newProps} className={props.column.name === 'intProductName' ? 'actions' : ''} />
+  return <Table.Cell {...newProps} className={props.column.actions ? 'actions' : ''} />
 }
 
-const TableCells = props => (
-  <Table.Cell {...props} className={props.column.name === 'intProductName' ? 'actions' : ''} />
-)
+const TableCells = props => <Table.Cell {...props} className={props.column.actions ? 'actions' : ''} />
 const NoDataTableCells = props => {
   const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
   const modifiedProps = {
@@ -1075,7 +1073,8 @@ class _Table extends Component {
                       children: groupActions
                         ? rowActionsCellFormatter({
                             column: { actions: groupActions(row) },
-                            row
+                            row,
+                            groupRow: 'asd'
                           })
                         : null
                     })
@@ -1097,7 +1096,8 @@ class _Table extends Component {
                       groupActions
                         ? rowActionsCellFormatter({
                             column: { actions: groupActions(props.row) },
-                            row: props.row
+                            row: props.row,
+                            groupRow: 'asd'
                           })
                         : null
                     }

@@ -60,13 +60,13 @@ function repositionMenu(element) {
   }
 }
 
-export function rowActionsCellFormatter({ column: { actions }, row }) {
+export function rowActionsCellFormatter({ column: { actions, name }, row, groupRow }) {
   const dropdownItems = getDropdownItems(actions, row)
   // Don't display if all dropdownItems are null
   const displayMenu = dropdownItems.findIndex(p => p !== null) >= 0
 
   return displayMenu ? (
-    <DropdownActions icon='' trigger={row.intProductName} onOpen={e => repositionMenu(e.currentTarget)}>
+    <DropdownActions icon='' trigger={groupRow ? groupRow : row[name]} onOpen={e => repositionMenu(e.currentTarget)}>
       <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
     </DropdownActions>
   ) : null

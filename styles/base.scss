@@ -1998,7 +1998,8 @@ i.file {
           transition: width 250ms linear;
           float: right;
           display: block;
-          max-width: 100%;
+          width: calc(100vw - 360px);
+          max-width: calc(100%);
 
           .row.right {
             margin-right: 0 !important;
