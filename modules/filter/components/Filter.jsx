@@ -718,7 +718,7 @@ class Filter extends Component {
     var noResultsMessage = null
 
     if (this.state.searchQuery.length <= 1)
-      noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+      noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
     if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
     const options = this.getOptions(uniqueArrayByKey(autocompleteData, 'key'))
 
@@ -730,7 +730,7 @@ class Filter extends Component {
       options: options,
       loading: autocompleteDataLoading,
       name: 'searchProductGroup',
-      placeholder: <FormattedMessage id='filter.searchProductGroup' defaultMessage='Search Product Group' />,
+      placeholder: formatMessage({ id: 'filter.searchProductGroup', defaultMessage: 'Search Product Group' }),
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
       value: values.searchProductGroup,
@@ -741,7 +741,7 @@ class Filter extends Component {
 
     if (this.state.searchWarehouseQuery.length <= 1)
       noWarehouseResultsMessage = (
-        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
       )
     if (autocompleteWarehouseLoading)
       noWarehouseResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
@@ -773,7 +773,7 @@ class Filter extends Component {
       }),
       loading: autocompleteWarehouseLoading,
       name: 'warehouse',
-      placeholder: <FormattedMessage id='filter.searchLocation' defaultMessage='Search Location' />,
+      placeholder: formatMessage({ id: 'filter.searchLocation', defaultMessage: 'Search Location' }),
       noWarehouseResultsMessage,
       onSearchChange: (_, data) => {
         this.handleSearchWarehouse(data)
@@ -798,7 +798,7 @@ class Filter extends Component {
       })),
       loading: countriesLoading,
       name: 'country',
-      placeholder: <FormattedMessage id='filter.selectCountry' defaultMessage='Select Country' />,
+      placeholder: formatMessage({ id: 'filter.selectCountry', defaultMessage: 'Select Country' }),
       value: values.country,
       onChange: async (e, data) => {
         setFieldValue('country', data.value)
@@ -842,7 +842,7 @@ class Filter extends Component {
       loading: provincesLoading,
       name: 'province',
       disabled: !this.state.provinceOptions.length,
-      placeholder: <FormattedMessage id='filter.selectState' defaultMessage='Select State' />,
+      placeholder: formatMessage({ id: 'filter.selectState', defaultMessage: 'Select State' }),
       value: values.province,
       onChange: (e, data) => {
         setFieldValue('province', data.value)
@@ -895,7 +895,7 @@ class Filter extends Component {
                     type: 'number',
                     min: 0.01,
                     step: 0.01,
-                    placeholder: '0.000'
+                    placeholder: '0.00'
                   },
                   <FormattedMessage id='filter.FromPrice' defaultMessage='From' />,
                   currencySymbol
@@ -908,7 +908,7 @@ class Filter extends Component {
                     type: 'number',
                     min: 0.01,
                     step: 0.01,
-                    placeholder: '0.000'
+                    placeholder: '0.00'
                   },
                   <FormattedMessage id='filter.ToPrice' defaultMessage='To' />,
                   currencySymbol
@@ -1111,7 +1111,6 @@ class Filter extends Component {
                       this.toggleSaveFilter()
                     }
                   }}
-                  inputProps={{ type: 'button' }}
                   data-test='filter_save_new'>
                   {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
                 </Button>
@@ -1125,7 +1124,6 @@ class Filter extends Component {
                     this.props.applyDatagridFilter({ filters: [] })
                     this.props.onClear(e, data)
                   }}
-                  inputProps={{ type: 'button' }}
                   data-test='filter_clear'>
                   {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
                 </Button>
@@ -1135,7 +1133,6 @@ class Filter extends Component {
                   loading={isFilterApplying}
                   type='submit'
                   primary
-                  inputProps={{ type: 'button' }}
                   data-test='filter_apply'>
                   {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
                 </Button>

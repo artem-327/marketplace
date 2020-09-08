@@ -281,7 +281,7 @@ class Holds extends Component {
                   onChange={this.handleFilterChange}
                   placeholder={formatMessage({
                     id: 'myInventory.searchByProductName',
-                    defaultMessage: 'Search by product name...'
+                    defaultMessage: 'Search by product name'
                   })}
                   style={{ width: '370px' }}
                 />

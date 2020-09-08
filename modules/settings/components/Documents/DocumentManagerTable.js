@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 
-import { openPopup } from '~/modules/settings/actions'
+import { openSidebar } from '~/modules/settings/actions'
 import { removeAttachment } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 import { bool, array } from 'prop-types'
@@ -98,7 +98,16 @@ class DocumentManager extends Component {
 
   render() {
     const {
-      datagrid, openPopup, removeAttachment, edit, download, deletable, loading, items, normalWidth, reduceColumns
+      datagrid,
+      openSidebar,
+      removeAttachment,
+      edit,
+      download,
+      deletable,
+      loading,
+      items,
+      normalWidth,
+      reduceColumns
     } = this.props
 
     let rows = this.getRows(items ? items : this.props.rows)
@@ -121,7 +130,7 @@ class DocumentManager extends Component {
                       {text => text}
                     </FormattedMessage>
                   ),
-                  callback: row => openPopup(row)
+                  callback: row => openSidebar(row)
                 }
               ]
             : []),
@@ -166,7 +175,7 @@ DocumentManager.propTypes = {
   delete: bool,
   items: array,
   normalWidth: bool,
-  reduceColumns: bool,
+  reduceColumns: bool
 }
 
 DocumentManager.defaultProps = {
@@ -185,7 +194,7 @@ const mapStateToProps = (store, { datagrid }) => {
 }
 
 const mapDispatchToProps = {
-  openPopup,
+  openSidebar,
   removeAttachment
 }
 

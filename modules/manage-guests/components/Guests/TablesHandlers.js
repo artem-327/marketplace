@@ -1,7 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
-import { Header, Menu, Button, Checkbox, Input, Dropdown, Grid, GridRow, GridColumn, Container, List} from 'semantic-ui-react'
+import {
+  Header,
+  Menu,
+  Button,
+  Checkbox,
+  Input,
+  Dropdown,
+  Grid,
+  GridRow,
+  GridColumn,
+  Container,
+  List
+} from 'semantic-ui-react'
 import { debounce } from 'lodash'
 import Router from 'next/router'
 import styled from 'styled-components'
@@ -17,7 +29,7 @@ import { currency } from '~/constants/index'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { PlusCircle, ArrowLeft, DownloadCloud } from 'react-feather'
 import { StyledSwitch } from '../../constants'
-import {ProductChemicalSwitch} from "../../../wanted-board/constants/layout";
+import { ProductChemicalSwitch } from '../../../wanted-board/constants/layout'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -39,19 +51,20 @@ const CustomRowDiv = styled.div`
   justify-content: space-between;
   margin: 0 -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 10px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
 `
@@ -89,7 +102,7 @@ export const CustomList = styled(List)`
 `
 
 const textsTable = {
-  'users': {
+  users: {
     SearchText: 'manageGuests.searchClient',
     BtnAddText: 'manageGuests.addClient'
   },
@@ -99,7 +112,7 @@ const textsTable = {
     BtnDownloadAllText: 'manageGuests.downloadAll',
     BtnAddText: 'manageGuests.addDocument'
   },
-  'quote': {
+  quote: {
     SearchText: 'manageGuests.searchQuote'
   }
 }
@@ -110,7 +123,7 @@ class TablesHandlers extends Component {
     this.state = {
       documentTypeOptions: [],
       filterValue: {
-        'users': {
+        users: {
           searchInput: ''
         },
         'document-manager': {
@@ -118,7 +131,7 @@ class TablesHandlers extends Component {
           documentType: '',
           documentManagerDocumentFilter: false
         },
-        'quote': {
+        quote: {
           searchInput: ''
         }
       }
@@ -142,10 +155,7 @@ class TablesHandlers extends Component {
         {
           key: 'All document types',
           text: (
-            <FormattedMessage
-              id='manageGuests.allDocumentTypes'
-              defaultMessage='All Document Types'
-            >
+            <FormattedMessage id='manageGuests.allDocumentTypes' defaultMessage='All Document Types'>
               {text => text}
             </FormattedMessage>
           ),
@@ -233,7 +243,7 @@ class TablesHandlers extends Component {
     const {
       currentTab,
       openPopup,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     const filterValue = this.state.filterValue[currentTab]
@@ -252,7 +262,7 @@ class TablesHandlers extends Component {
                   value={filterValue.searchInput}
                   placeholder={formatMessage({
                     id: fieldsConfig.SearchText,
-                    defaultMessage: 'Search guest...'
+                    defaultMessage: 'Search guest'
                   })}
                   onChange={this.handleFilterChangeInputSearch}
                 />
@@ -261,10 +271,7 @@ class TablesHandlers extends Component {
 
             <div>
               <div className='column'>
-                <Button
-                  primary
-                  onClick={() => openPopup()}
-                  data-test='settings_open_popup_btn'>
+                <Button primary onClick={() => openPopup()} data-test='settings_open_popup_btn'>
                   <PlusCircle />
                   <FormattedMessage id={fieldsConfig.BtnAddText}>{text => text}</FormattedMessage>
                 </Button>
@@ -308,7 +315,7 @@ class TablesHandlers extends Component {
                     value={filterValue.searchInput}
                     placeholder={formatMessage({
                       id: fieldsConfig.SearchText,
-                      defaultMessage: 'Search guest...'
+                      defaultMessage: 'Search guest'
                     })}
                     onChange={this.handleFilterChangeInputSearch}
                   />
@@ -330,19 +337,16 @@ class TablesHandlers extends Component {
               </div>
 
               <div>
-                {false &&(<div className='column'>
-                  <Button
-                    onClick={() => {}}
-                    data-test='settings_open_popup_btn'>
-                    <DownloadCloud />
-                    <FormattedMessage id={fieldsConfig.BtnDownloadAllText}>{text => text}</FormattedMessage>
-                  </Button>
-                </div>)}
+                {false && (
+                  <div className='column'>
+                    <Button onClick={() => {}} data-test='settings_open_popup_btn'>
+                      <DownloadCloud />
+                      <FormattedMessage id={fieldsConfig.BtnDownloadAllText}>{text => text}</FormattedMessage>
+                    </Button>
+                  </div>
+                )}
                 <div className='column'>
-                  <Button
-                    primary
-                    onClick={() => openPopup()}
-                    data-test='settings_open_popup_btn'>
+                  <Button primary onClick={() => openPopup()} data-test='settings_open_popup_btn'>
                     <PlusCircle />
                     <FormattedMessage id={fieldsConfig.BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
@@ -364,7 +368,7 @@ class TablesHandlers extends Component {
                   value={filterValue.searchInput}
                   placeholder={formatMessage({
                     id: fieldsConfig.SearchText,
-                    defaultMessage: 'Search guest...'
+                    defaultMessage: 'Search guest'
                   })}
                   onChange={this.handleFilterChangeInputSearch}
                 />
@@ -380,7 +384,7 @@ class TablesHandlers extends Component {
       openPopup,
       closeCompanyEdit,
       companyEditValues,
-      intl: {formatMessage},
+      intl: { formatMessage },
       cfDisplayName,
       companyAdmin,
       adminEmail,
@@ -390,13 +394,9 @@ class TablesHandlers extends Component {
 
     return (
       <PositionHeaderSettings>
-
         <TopRowDiv>
           <div style={{ margin: '10px 0' }}>
-            <Button
-              fluid
-              onClick={() => closeCompanyEdit()}
-              data-test='settings_open_popup_btn'>
+            <Button fluid onClick={() => closeCompanyEdit()} data-test='settings_open_popup_btn'>
               <ArrowLeft />
               <FormattedMessage id='manageGuests.backToGuests' defaultMessage='Back To Guests'>
                 {text => text}
@@ -409,9 +409,7 @@ class TablesHandlers extends Component {
                 <List.Header as='label'>
                   <FormattedMessage id='global.companyName' defaultMessage='Company Name' />
                 </List.Header>
-                <List.Description as='span'>
-                  {cfDisplayName}
-                </List.Description>
+                <List.Description as='span'>{cfDisplayName}</List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
@@ -419,9 +417,7 @@ class TablesHandlers extends Component {
                 <List.Header as='label'>
                   <FormattedMessage id='global.companyAdmin' defaultMessage='Company Admin' />
                 </List.Header>
-                <List.Description as='span'>
-                  {companyAdmin}
-                </List.Description>
+                <List.Description as='span'>{companyAdmin}</List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
@@ -429,9 +425,7 @@ class TablesHandlers extends Component {
                 <List.Header as='label'>
                   <FormattedMessage id='global.adminEmail' defaultMessage='Admin Email' />
                 </List.Header>
-                <List.Description as='span'>
-                  {adminEmail}
-                </List.Description>
+                <List.Description as='span'>{adminEmail}</List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
@@ -439,9 +433,7 @@ class TablesHandlers extends Component {
                 <List.Header as='label'>
                   <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
                 </List.Header>
-                <List.Description as='span'>
-                  {phoneNumber}
-                </List.Description>
+                <List.Description as='span'>{phoneNumber}</List.Description>
               </List.Content>
             </List.Item>
           </CustomList>
@@ -479,16 +471,18 @@ class TablesHandlers extends Component {
               active={currentTab === 'document-manager'}
               data-test='menu_guests_edit_company_guest_company_info'
             />
-            {false &&(<Menu.Item
-              style={{ textTransform: 'uppercase' }}
-              name={formatMessage({
-                id: 'manageGuests.companyEdit.tab.quote',
-                defaultMessage: 'Quote'
-              })}
-              onClick={() => this.tabSwitch('quote')}
-              active={currentTab === 'quote'}
-              data-test='menu_guests_edit_company_guest_company_info'
-            />)}
+            {false && (
+              <Menu.Item
+                style={{ textTransform: 'uppercase' }}
+                name={formatMessage({
+                  id: 'manageGuests.companyEdit.tab.quote',
+                  defaultMessage: 'Quote'
+                })}
+                onClick={() => this.tabSwitch('quote')}
+                active={currentTab === 'quote'}
+                data-test='menu_guests_edit_company_guest_company_info'
+              />
+            )}
           </Menu>
         </Container>
 
@@ -515,10 +509,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(
-  withToastManager(
-    connect(mapStateToProps, { ...Actions })(
-      injectIntl(TablesHandlers)
-    )
-  )
-)
+export default withDatagrid(withToastManager(connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers))))

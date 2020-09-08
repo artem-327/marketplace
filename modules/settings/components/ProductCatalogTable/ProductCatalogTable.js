@@ -42,20 +42,22 @@ class ProductCatalogTable extends Component {
     columns: [
       {
         name: 'productStatus',
-        title:
+        title: (
           <Popup
             size='small'
             header={
               <FormattedMessage
                 id='global.productStatusIndicator'
-                defaultMessage='Status indicator if Company Product will be shown on Marketplace' />
+                defaultMessage='Status indicator if Company Product will be shown on Marketplace'
+              />
             }
             trigger={
               <div>
                 <FileTextIcon />
               </div>
             } // <div> has to be there otherwise popup will be not shown
-          />,
+          />
+        ),
         width: 40,
         align: 'center'
       },
@@ -144,7 +146,7 @@ class ProductCatalogTable extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { action, actionId, currentTab, loaded, openPopup, rows } = this.props
+    const { action, actionId, currentTab, loaded, openSidebar, rows } = this.props
 
     if (action === 'edit' && actionId && loaded) {
       if (currentTab.type === 'products') {
@@ -152,7 +154,7 @@ class ProductCatalogTable extends Component {
           return product.id === parseInt(actionId)
         })
 
-        openPopup(editRow)
+        openSidebar(editRow)
       }
     }
   }
@@ -161,7 +163,7 @@ class ProductCatalogTable extends Component {
     const {
       rows,
       // filterValue,
-      openPopup,
+      openSidebar,
       deleteProduct,
       intl,
       datagrid,
@@ -188,7 +190,7 @@ class ProductCatalogTable extends Component {
           rowActions={[
             {
               text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row.rawData)
+              callback: row => openSidebar(row.rawData)
             },
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -256,11 +258,7 @@ const getProductStatus = product => {
     <Popup
       size='small'
       header={popupText}
-      trigger={
-        <div>
-          {dispIcon}
-        </div>
-      } // <div> has to be there otherwise popup will be not shown
+      trigger={<div>{dispIcon}</div>} // <div> has to be there otherwise popup will be not shown
     />
   )
 }
@@ -311,7 +309,12 @@ const mapStateToProps = (state, { datagrid }) => {
               } // <div> has to be there otherwise popup will be not shown
             />
           ) : null,
-        productGroup: getSafe(() => product.companyGenericProduct.productGroup.name, (<FormattedMessage id='global.unmapped.cptlz' defaultMessage='Unmapped'>{text => text}</FormattedMessage>))
+        productGroup: getSafe(
+          () => product.companyGenericProduct.productGroup.name,
+          <FormattedMessage id='global.unmapped.cptlz' defaultMessage='Unmapped'>
+            {text => text}
+          </FormattedMessage>
+        )
       }
     }),
     filterValue: state.settings.filterValue,

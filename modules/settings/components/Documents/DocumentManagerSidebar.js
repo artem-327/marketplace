@@ -13,7 +13,7 @@ import { errorMessages, dateValidation, dateBefore } from '~/constants/yupValida
 import { otherPermissions, sharedTo } from '~/constants/index'
 import { getSafe, removeEmpty } from '~/utils/functions'
 
-import { closePopup } from '~/modules/settings/actions'
+import { closeSidebar } from '~/modules/settings/actions'
 import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
 import { bool, func, number } from 'prop-types'
 import { getStringISODate } from '~/components/date-format'
@@ -113,6 +113,7 @@ const BottomButtons = styled.div`
   padding: 10px 25px;
   margin-top: 0px;
   box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
+  color: #ffffff;
 `
 
 const CustomHighSegment = styled(HighSegment)`
@@ -178,7 +179,7 @@ class DocumentManagerSidebar extends Component {
 
   render() {
     const {
-      closePopup,
+      closeSidebar,
       popupValues,
       documentTypes,
       intl: { formatMessage },
@@ -225,7 +226,7 @@ class DocumentManagerSidebar extends Component {
             console.error(e)
           } finally {
             setSubmitting(false)
-            if (enableClose) closePopup()
+            if (enableClose) closeSidebar()
             onClose()
           }
         }}
@@ -483,7 +484,7 @@ class DocumentManagerSidebar extends Component {
                   <Button
                     basic
                     onClick={() => {
-                      if (enableClose) closePopup()
+                      if (enableClose) closeSidebar()
                       onClose()
                     }}
                     data-test='settings_documents_sidebar_reset_btn'>
@@ -536,7 +537,7 @@ const mapStateToProps = ({ simpleAdd, settings }) => {
 }
 
 const mapDispatchToProps = {
-  closePopup,
+  closeSidebar,
   getDocumentTypes,
   addAttachment,
   updateAttachment

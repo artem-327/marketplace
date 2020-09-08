@@ -643,7 +643,7 @@ class DetailSidebar extends Component {
                           {
                             min: 0,
                             type: 'number',
-                            placeholder: '0.000'
+                            placeholder: '0.00'
                           },
                           <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
                             {text => text}
@@ -798,8 +798,8 @@ class DetailSidebar extends Component {
                               defaultMessage: '00/00/0000'
                             }),
                             clearable: true,
-                            disabled: values.neededNow !== false,
-                            minDate: moment()
+                            disabled: values.neededNow !== false
+                            // minDate: moment() TypeError: Cannot read property 'position' of undefined
                           }}
                         />
                       </GridColumn>
@@ -812,8 +812,8 @@ class DetailSidebar extends Component {
                               id: 'date.standardPlaceholder',
                               defaultMessage: '00/00/0000'
                             }),
-                            disabled: values.doesExpire !== true,
-                            minDate: moment()
+                            disabled: values.doesExpire !== true
+                            //  minDate: moment() TypeError: Cannot read property 'position' of undefined
                           }}
                         />
                       </GridColumn>
@@ -964,7 +964,7 @@ class DetailSidebar extends Component {
                             {
                               min: 0,
                               type: 'number',
-                              placeholder: '0.000'
+                              placeholder: '0.00'
                             },
                             <FormattedMessage
                               id='wantedBoard.maxDeliveredPrice'
