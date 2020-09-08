@@ -3,11 +3,10 @@ import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { openSidebar, deleteBranch, getBranch } from '../../../actions'
-import Router from 'next/router'
+import { openSidebar, deleteBranch, getBranch, setPrimaryBranch } from '../../../actions'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
-import { Popup, Icon } from 'semantic-ui-react'
+import { getIdentity } from '~/modules/auth/actions'
 
 import { getSafe } from '~/utils/functions'
 
@@ -109,7 +108,13 @@ class BranchesTable extends Component {
       openSidebar,
       deleteBranch,
       intl,
-      getBranch
+      getBranch,
+      currentCompanyId,
+      currentPrimaryBranchId,
+      setPrimaryBranch,
+      getIdentity,
+      isCompanyAdmin,
+      identityLoading
     } = this.props
 
     const { formatMessage } = intl
@@ -121,7 +126,7 @@ class BranchesTable extends Component {
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={this.state.columns}
-          loading={datagrid.loading}
+          loading={datagrid.loading || loading || identityLoading}
           rows={rows}
           style={{ marginTop: '5px' }}
           rowActions={[
@@ -142,6 +147,19 @@ class BranchesTable extends Component {
                     { item: row.name }
                   )
                 ).then(() => deleteBranch(row.id))
+            },
+            {
+              text: (
+                <FormattedMessage id='settings.branches.setAsPrimaryBranch' defaultMessage='Set as Primary Branch' />
+              ),
+              callback: async row => {
+                try {
+                  const {value} = await setPrimaryBranch(currentCompanyId, row.id)
+                  getIdentity()
+                  datagrid.loadData()
+                } catch (e) { console.error(e) }
+              },
+              hidden: row => !isCompanyAdmin || currentPrimaryBranchId === row.id
             }
           ]}
         />
@@ -153,7 +171,9 @@ class BranchesTable extends Component {
 const mapDispatchToProps = {
   openSidebar,
   deleteBranch,
-  getBranch
+  getBranch,
+  setPrimaryBranch,
+  getIdentity
 }
 
 const mapStateToProps = (state, { datagrid }) => {
@@ -175,7 +195,11 @@ const mapStateToProps = (state, { datagrid }) => {
       }
     }),
     filterValue: state.settings.filterValue,
-    loading: state.settings.loading
+    loading: state.settings.loading,
+    currentCompanyId: getSafe(() => state.auth.identity.company.id, null),
+    currentPrimaryBranchId: getSafe(() => state.auth.identity.company.primaryBranch.id, null),
+    isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
+    identityLoading: getSafe(() => state.auth.loading, false),
   }
 }
 
