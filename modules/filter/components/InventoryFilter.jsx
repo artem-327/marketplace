@@ -49,7 +49,6 @@ import Notifications from './Notifications'
 import {
   FlexSidebar,
   FlexContent,
-  FiltersContainer,
   FilterAccordion,
   AccordionTitle,
   AccordionItem,
@@ -253,13 +252,9 @@ class InventoryFilter extends Component {
   }
 
   handleSubmit = params => {
-    // { setSubmitting }
     let { onApply, applyFilter, applyDatagridFilter } = this.props
 
-    console.log('!!!!!!!!!! handleSubmit 2 params', params)
-
     let filter = this.generateRequestData(params)
-    console.log('!!!!!!!!!! handleSubmit 2 filter', filter)
     let datagridFilter = this.toDatagridFilter(filter)
 
     applyFilter(filter)
@@ -274,9 +269,6 @@ class InventoryFilter extends Component {
 
     async function callback(id) {
       let requestData = self.generateRequestData(params)
-
-      console.log('!!!!!!!!!! handleFilterSave requestData', requestData)
-
       try {
         if (id) await self.props.updateFilter(id, requestData)
         else {
@@ -420,7 +412,7 @@ class InventoryFilter extends Component {
 
     this.toggleFilter(false)
 
-    this.handleSubmit(formikValues)
+    //this.handleSubmit(formikValues)
   }
 
   handleGetSavedFilters = () => {
@@ -905,16 +897,12 @@ class InventoryFilter extends Component {
 
         <GridRow>
           <GridColumn width={8}>
-            <FormField>
-              <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
-              {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
-            </FormField>
+            <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
+            {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
           </GridColumn>
           <GridColumn width={8}>
-            <FormField>
-              <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
-              {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
-            </FormField>
+            <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
+            {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
           </GridColumn>
         </GridRow>
 
@@ -985,12 +973,16 @@ class InventoryFilter extends Component {
 
         <GridRow>
           <GridColumn width={8}>
-            <FormattedMessage id='filter.packaging' />
-            {packagingTypesDropdown}
+            <FormField>
+              <FormattedMessage id='filter.packaging' />
+              {packagingTypesDropdown}
+            </FormField>
           </GridColumn>
           <GridColumn width={8}>
-            <FormattedMessage id='filter.grade' defaultMessage='Grade' />
-            {productGradeDropdown}
+            <FormField>
+              <FormattedMessage id='filter.grade' defaultMessage='Grade' />
+              {productGradeDropdown}
+            </FormField>
           </GridColumn>
         </GridRow>
 
@@ -1044,7 +1036,7 @@ class InventoryFilter extends Component {
           <GridColumn width={4}>
             <FormattedMessage id='filter.incomplete' defaultMessage='Incomplete' />
             <Dropdown
-              name={'incomplete'}
+              name='incomplete'
               options={[
                 {
                   key: 1,
@@ -1061,6 +1053,7 @@ class InventoryFilter extends Component {
               inputProps={{
                 fluid: true,
                 clearable: true,
+                upward: true,
                 placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
               }}
             />
@@ -1093,7 +1086,6 @@ class InventoryFilter extends Component {
         validateOnChange={true}
         validationSchema={validationSchema(openedSaveFilter)}
         onSubmit={(values, { setSubmitting }) => {
-          console.log('!!!!!!!!!! onSubmit 1')
           if (!openedSaveFilter) {
             this.handleSubmit(values)
           }
@@ -1104,8 +1096,6 @@ class InventoryFilter extends Component {
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
           this.values = props.values
-
-          console.log('!!!!!!!!!! aaaaa values', props.values)
 
           return (
             <Modal onClose={() => onClose()} open centered={true} size={openedSaveFilter ? 'tiny' : 'large'}>
@@ -1151,17 +1141,18 @@ class InventoryFilter extends Component {
                   </StyledModalContent>
                 </>
               ) : (
-                <div>
+                <>
                   {this.formSaveFilter(props)}
-                </div>
+                </>
               )}
 
               <BottomButtons>
                 {openedSaveFilter ? (
-                  <div style={{ textAlign: 'right'}}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Button
                       type='button'
                       size='large'
+                      className='light'
                       onClick={this.toggleSaveFilter}
                       data-test='filter_save_cancel_btn'>
                       {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
@@ -1170,6 +1161,7 @@ class InventoryFilter extends Component {
                       disabled={savedFiltersActive}
                       type='button'
                       size='large'
+                      className='secondary'
                       loading={isFilterSaving}
                       onClick={async () => {
                         let {values} = props
@@ -1187,7 +1179,7 @@ class InventoryFilter extends Component {
                         })
                       }}
                       data-test='filter_save_new'>
-                      {formatMessage({id: 'global.save', defaultMessage: 'Save'})}
+                      {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                     </Button>
                   </div>
                 ) : (
@@ -1196,71 +1188,70 @@ class InventoryFilter extends Component {
                       <Button
                         type='button'
                         size='large'
+                        className='light'
                         onClick={() => onClose()}
-                        inputProps={{type: 'button'}}
                         data-test='filter_close'>
-                        {formatMessage({id: 'global.close', defaultMessage: 'Close'})}
+                        {formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
                       </Button>
                     </div>
                   ) : (
-                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                       <div>
                         <Button
                           type='button'
                           size='large'
                           onClick={() => onClose()}
-                          inputProps={{type: 'button'}}
+                          className='light greyText'
                           data-test='filter_cancel'>
-                          {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
+                          {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
                         </Button>
                         <Button
                           type='button'
                           size='large'
+                          className='light danger'
                           onClick={(e, data) => {
                             this.resetForm({...initialValues})
-                            //! !toggleFilter(false)
-                            this.props.applyFilter({filters: []})
-                            this.props.applyDatagridFilter({filters: []})
-                            this.props.onClear(e, data)
+                            //this.props.applyFilter({filters: []})
+                            //this.props.applyDatagridFilter({filters: []})
+                            //this.props.onClear(e, data)
                           }}
-                          inputProps={{type: 'button'}}
                           data-test='filter_clear'>
-                          {formatMessage({id: 'filter.clear', defaultMessage: 'Clear'})}
+                          {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
                         </Button>
                       </div>
                       <div>
                         <Button
                           type={'button'}
                           size='large'
+                          className='secondary outline'
                           loading={isFilterSaving}
                           onClick={async () => this.toggleSaveFilter()}
-                          inputProps={{type: 'button'}}
                           data-test='filter_save_new'>
-                          {formatMessage({id: 'filter.saveFilter', defaultMessage: 'Save Filter'})}
+                          {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
                         </Button>
                         <Button
                           size='large'
                           loading={isFilterApplying}
                           type='submit'
-                          primary
+                          secondary
                           onClick={async () => {
                             let {values} = props
                             const {validateForm, submitForm} = props
 
-                            validateForm().then(err => {
+                            validateForm().then(async (err) => {
                               const errors = Object.keys(err)
                               if (errors.length && errors[0] !== 'isCanceled') {
                                 // Errors found
                                 submitForm() // to show errors
                               } else {
-                                submitForm()
                                 // No errors found
-                                //this.handleFilterSave(values)
+                                await submitForm()
+                                onClose()
                               }
                             })
                           }}
                           data-test='filter_apply'>
-                          {formatMessage({id: 'global.apply', defaultMessage: 'Apply'})}
+                          {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
                         </Button>
                       </div>
                     </div>

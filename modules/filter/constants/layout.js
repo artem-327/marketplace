@@ -33,7 +33,7 @@ export const FlexSidebar = styled.div`
       height: 32px;
       padding-top: 0.538461538em;
       padding-bottom: 0.435896923em;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
@@ -48,7 +48,7 @@ export const FlexSidebar = styled.div`
       min-height: 32px;
       padding-top: 0.538461538em;
       padding-bottom: 0.435896923em;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
@@ -67,7 +67,7 @@ export const FlexSidebar = styled.div`
     .ui.dropdown{
       padding-top: 9px;
       padding-bottom: 5.7px;
-      font-size: 13px;
+      font-size: 14px;
       background-color: #fdfdfd;
       > .menu {
         left: -20% !important;
@@ -80,8 +80,14 @@ export const FlexSidebar = styled.div`
     input {
       padding-top: 8px;
       padding-bottom: 6.7px;
-      font-size: 13px;
-      background-color: #fdfdfd;
+      font-size: 14px;
+      background-color: #fd4040;
+      
+      border-radius: 3px;
+      border: solid 1px #dee2e6;
+
+      
+      
     }
   }
   
@@ -175,8 +181,42 @@ export const BottomButtons = styled.div`
   box-sizing: border-box;
   border-radius: 0 0 4px 4px;
   padding: 10px 5px;
-  button {
+  .ui.button {
     margin: 0 5px !important;
+    font-weight: 500;
+
+    &.light {
+      border-radius: 3px;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      color: #20273a;
+      
+      &.greyText {
+        color: #848893;
+      }
+      
+      &.danger {
+        color: #f16844;
+      }
+
+      &:hover {
+        background-color: #f8f9fb;
+      }
+
+      &:focus {
+        background-color: #edeef2;
+      }
+
+      &[disabled] {
+        color: #cecfd4;
+        
+        &.danger {
+          color: #f16844;
+          opacity: 0.3;
+        }
+      }
+    }    
   }
 `
 
@@ -215,7 +255,7 @@ export const FilterAccordion = styled(Accordion)`
 `
 
 export const AccordionContent = styled(Accordion.Content)`
-  font-size: 13px;
+  font-size: 14px;
   padding-top: 0px !important;
   > .field-label {
     margin: 0em 0em 0.384615385em 0em;
@@ -378,7 +418,7 @@ export const SavedFilterDetailGrid = styled(Grid)`
   margin: 0px -10px !important;
   vertical-align: middle;
   padding: 0 !important;
-    .ui.primary.button,
+    .ui.button,
     .ui.large.button {
       margin: 5px 5px 11px 10px !important;
   }
@@ -642,16 +682,29 @@ export const SmallGrid = styled(Grid)`
 export const PopupGrid = styled(Grid)`
   > .row {
     padding: 7.5px 0 !important;
-    .column {
-      //margin: 0 !important;
-      //padding: 0 !important;
+    > .column {
+      > .field .ui.dropdown {
+        margin-top: 7px;
+      }
     }  
   }
-  
+
   .ui.dropdown,
   .ui.input {
     min-height: 40px;
     min-width: 100px !important;
+    
+    &.multiple.selection > a.ui.label {
+      border-radius: 2px;
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      background-color: #edeef2;
+      color: #848893;
+      box-shadow: unset;
+      margin: 4px 3px 0 0;
+    }
   }
 `
 

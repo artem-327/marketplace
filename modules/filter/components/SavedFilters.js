@@ -257,8 +257,7 @@ class SavedFilters extends Component {
                               <GridColumn computer={4} floated='left'>
                                 <Button
                                   onClick={formikProps.submitForm}
-                                  loading={this.props.savedFilterUpdating}
-                                  primary
+                                  secondary
                                   data-test='filter_save_btn'>
                                   {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                                 </Button>

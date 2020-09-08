@@ -319,9 +319,6 @@ class Filter extends Component {
       let name = replaceAmbigiousCharacters(el.name)
       let path = `${group}${name}`
 
-      console.log('!!!!!!!!!! aaaaa name', name)
-      console.log('!!!!!!!!!! aaaaa path', path)
-
       return (
         <FormField key={i}>
           <FormikField
@@ -1053,10 +1050,6 @@ class Filter extends Component {
           this.resetForm = props.resetForm
           this.setFieldValue = props.setFieldValue
           this.values = props.values
-
-          console.log('!!!!!!!!!! render values', props.values)
-
-          console.log('!!!!!!!!!! render productForms', props.values.productForms ? Object.keys(props.values.productForms) : '')
 
           return (
             <Modal onClose={() => onClose()} open centered={true}>
