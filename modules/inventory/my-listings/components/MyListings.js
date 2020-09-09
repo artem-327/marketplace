@@ -960,14 +960,7 @@ class MyListings extends Component {
                   </FormattedMessage>
                 </Button>
               </div>
-              <ColumnSettingButton />
-              {false && (
-                <div className='column'>
-                  <FiltersRow>
-                    <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
-                  </FiltersRow>
-                </div>
-              )}
+              <ColumnSettingButton divide={true} />
             </div>
           </CustomRowDiv>
         </Container>

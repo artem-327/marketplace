@@ -1,4 +1,5 @@
 import React from 'react'
+import { bool, func } from 'prop-types'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { Settings } from 'react-feather'
@@ -14,6 +15,7 @@ const DivSetting = styled.div`
   border: solid 1px #dee2e6;
   background-color: #ffffff;
   margin: 5px 5px 5px 9px;
+  align-self: center;
 `
 
 const CustomSettings = styled(Settings)`
@@ -26,12 +28,13 @@ const CustomSettings = styled(Settings)`
 const DivDivide = styled.div`
   height: 40px;
   border-left: solid 1px #dee2e6;
+  align-self: center;
 `
 
-const ColumnSettingButton = ({ toggleColumnSettingModal }) => {
+const ColumnSettingButton = ({ toggleColumnSettingModal, divide }) => {
   return (
     <>
-      <DivDivide />
+      {divide && <DivDivide />}
       <DivSetting onClick={() => toggleColumnSettingModal(true)} data-test='table_setting_btn' name='setting'>
         <CustomSettings size='20' />
       </DivSetting>
@@ -39,6 +42,14 @@ const ColumnSettingButton = ({ toggleColumnSettingModal }) => {
   )
 }
 
-const mapStateToProps = state => ({})
+ColumnSettingButton.propTypes = {
+  toggleColumnSettingModal: func,
+  divide: bool
+}
 
-export default connect(mapStateToProps, { toggleColumnSettingModal })(ColumnSettingButton)
+ColumnSettingButton.defaultProps = {
+  toggleColumnSettingModal: () => {},
+  divide: false
+}
+
+export default connect(null, { toggleColumnSettingModal })(ColumnSettingButton)
