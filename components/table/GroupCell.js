@@ -54,7 +54,7 @@ const Cell = ({
         </td>
       )}
       {hideActions ? (
-        <td style={{ position: 'sticky' }} className={'dx-g-bs4-cursor-pointer'} onClick={handleClick}>
+        <td className={'dx-g-bs4-cursor-pointer'} onClick={handleClick}>
           {actionsDropdown}
         </td>
       ) : (

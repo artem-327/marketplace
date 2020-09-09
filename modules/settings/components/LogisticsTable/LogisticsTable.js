@@ -10,49 +10,83 @@ import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
-const columns = [
-  { name: 'logisticsProviderNameForSearch', disabled: true },
-  { name: 'usernameForSearch', disabled: true },
-  {
-    name: 'logisticsProviderName',
-    title: (
-      <FormattedMessage id='logistics.label.logisticsProvider' defaultMessage='Logistics Provider'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 300
-  },
-  {
-    name: 'username',
-    title: (
-      <FormattedMessage id='logistics.label.username' defaultMessage='User Name'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 300
-  }
-]
-
 class LogisticsTable extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        { name: 'logisticsProviderNameForSearch', disabled: true },
+        { name: 'usernameForSearch', disabled: true },
+        {
+          name: 'logisticsProviderName',
+          title: (
+            <FormattedMessage id='logistics.label.logisticsProvider' defaultMessage='Logistics Provider'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 300,
+          actions: this.getActions()
+        },
+        {
+          name: 'username',
+          title: (
+            <FormattedMessage id='logistics.label.username' defaultMessage='User Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 300
+        }
+      ]
+    }
+  }
   componentDidMount() {
     this.props.getLogisticsAccounts()
   }
 
-  render() {
+  getActions = () => {
     const {
       openSidebar,
-      logisticsAccounts,
-      loading,
       intl: { formatMessage },
-      deleteLogisticsAccount,
-      toastManager,
-      filterValue
+      deleteLogisticsAccount
     } = this.props
+
+    return [
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: row => openSidebar(row.rawData)
+      },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row => {
+          confirm(
+            formatMessage({ id: 'confirm.logisticsAccount.title', defaultMessage: 'Delete Logistics Account' }),
+            formatMessage(
+              {
+                id: 'confirm.logisticsAccount.content',
+                defaultMessage: `Do you really want to delete '${row.stringName}'?`
+              },
+              { name: row.stringName }
+            )
+          )
+            .then(async () => {
+              try {
+                await deleteLogisticsAccount(row.id)
+              } catch {}
+            })
+            .catch(() => {})
+        }
+      }
+    ]
+  }
+
+  render() {
+    const { logisticsAccounts, loading, filterValue } = this.props
 
     return (
       <ProdexTable
         tableName='settings_logistics_table'
-        columns={columns}
+        columns={this.state.columns}
         filterValue={filterValue}
         rows={logisticsAccounts.map(acc => ({
           ...acc,
@@ -66,33 +100,7 @@ class LogisticsTable extends Component {
           usernameForSearch: acc.accountInfos && acc.accountInfos.map(d => d.username)
         }))}
         loading={loading}
-        rowActions={[
-          {
-            text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-            callback: row => openSidebar(row.rawData)
-          },
-          {
-            text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-            callback: row => {
-              confirm(
-                formatMessage({ id: 'confirm.logisticsAccount.title', defaultMessage: 'Delete Logistics Account' }),
-                formatMessage(
-                  {
-                    id: 'confirm.logisticsAccount.content',
-                    defaultMessage: `Do you really want to delete '${row.stringName}'?`
-                  },
-                  { name: row.stringName }
-                )
-              )
-                .then(async () => {
-                  try {
-                    await deleteLogisticsAccount(row.id)
-                  } catch {}
-                })
-                .catch(() => {})
-            }
-          }
-        ]}
+        columnActions='logisticsProviderName'
       />
     )
   }
