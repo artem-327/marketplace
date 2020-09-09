@@ -38,7 +38,7 @@ export const Listings = props => {
   return (
     <>
       <CompanyProductInfo fromMarketPlace />
-      <DatagridProvider apiConfig={urlApiConfig} autoRefresh preserveFilters skipInitLoad>
+      <DatagridProvider apiConfig={urlApiConfig} preserveFilters skipInitLoad>
         <ListingsContainer {...props} />
       </DatagridProvider>
     </>

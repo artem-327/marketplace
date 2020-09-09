@@ -1998,7 +1998,6 @@ i.file {
           transition: width 250ms linear;
           float: right;
           display: block;
-          width: calc(100vw - 360px);
           max-width: calc(100%);
 
           .row.right {

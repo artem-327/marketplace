@@ -8,8 +8,9 @@ const DropdownActions = styled(Dropdown)`
   display: block !important;
 `
 
-const getDropdownItems = (actions = [], row) =>
-  actions.map((a, i) =>
+const getDropdownItems = (actions = [], row) => {
+  if (!getSafe(() => actions.length, false)) return
+  return actions.map((a, i) =>
     'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
       <Dropdown.Item
         data-test={`action_${row.id}_${i}`}
@@ -20,6 +21,7 @@ const getDropdownItems = (actions = [], row) =>
       />
     )
   )
+}
 
 function getContainerDimensions(element) {
   let parentEl = element.parentElement
@@ -60,16 +62,29 @@ function repositionMenu(element) {
   }
 }
 
-export function rowActionsCellFormatter({ column: { actions, name }, row, groupRow }) {
+export function rowActionsCellFormatter({ column: { actions, name }, row, groupLength }) {
   const dropdownItems = getDropdownItems(actions, row)
+
   // Don't display if all dropdownItems are null
-  const displayMenu = dropdownItems.findIndex(p => p !== null) >= 0
+  const displayMenu = getSafe(() => dropdownItems.length, false) ? dropdownItems.findIndex(p => p !== null) >= 0 : false
+
+  let trigger = row[name]
+  if (row.groupedBy && row.key) {
+    const nameGroup = row.key.split('_')[0]
+    trigger = (
+      <span style={{ fontWeight: '600', color: '#2599d5' }}>
+        {nameGroup ? nameGroup : 'Unmapped'} <span style={{ color: '#848893' }}>({groupLength})</span>
+      </span>
+    )
+  }
 
   return displayMenu ? (
-    <DropdownActions icon='' trigger={groupRow ? groupRow : row[name]} onOpen={e => repositionMenu(e.currentTarget)}>
+    <DropdownActions icon='' trigger={trigger} onOpen={e => repositionMenu(e.currentTarget)}>
       <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
     </DropdownActions>
-  ) : null
+  ) : (
+    trigger
+  )
 }
 
 export const dropdownFormatter = ({ column: { options }, row }) => {

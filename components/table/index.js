@@ -1070,13 +1070,10 @@ class _Table extends Component {
                       row,
                       restProps,
                       groupLength: getChildGroups(rows).find(group => row.value === group.key).groupLength,
-                      children: groupActions
-                        ? rowActionsCellFormatter({
-                            column: { actions: groupActions(row) },
-                            row,
-                            groupRow: 'asd'
-                          })
-                        : null
+                      children: rowActionsCellFormatter({
+                        column: { actions: groupActions ? groupActions(row) : null },
+                        row
+                      })
                     })
                   ) : (
                     <span {...restProps}>
@@ -1092,15 +1089,11 @@ class _Table extends Component {
                     hideActions={groupActions ? false : true}
                     hideCheckboxes={hideCheckboxes}
                     onSelectionChange={this.handleGroupSelectionChange}
-                    actionsDropdown={
-                      groupActions
-                        ? rowActionsCellFormatter({
-                            column: { actions: groupActions(props.row) },
-                            row: props.row,
-                            groupRow: 'asd'
-                          })
-                        : null
-                    }
+                    actionsDropdown={rowActionsCellFormatter({
+                      column: { actions: groupActions ? groupActions(props.row) : null },
+                      row: props.row,
+                      groupLength: getChildGroups(rows).find(group => props.row.value === group.key).groupLength
+                    })}
                     {...props}
                   />
                 )}
