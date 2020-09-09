@@ -50,15 +50,9 @@ class SearchByNamesAndTags extends Component {
 
   componentDidMount() {
     const { initFilterState } = this.props
-    // ! ! console.log('!!!!!!!!!! SearchByNamesAndTags componentDidMount this.props', this.props)
     if (initFilterState) {
       this.setState(initFilterState.state)
       if (this.props.filterApply) this.handleFiltersValue(initFilterState.filters)
-    }
-    try {
-      this.props.searchTags('')
-    } catch (error) {
-      console.error(error)
     }
   }
 

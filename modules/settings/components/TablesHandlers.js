@@ -569,12 +569,6 @@ class TablesHandlers extends Component {
     return (
       <PositionHeaderSettings>
         <CustomRowDiv>{!this.props.currentTab.hideHandler && this.renderHandler()}</CustomRowDiv>
-
-        {false && (
-          <Grid as={Menu} secondary verticalAlign='middle' className='page-part'>
-            <GridRow>{!this.props.currentTab.hideHandler && this.renderHandler()}</GridRow>
-          </Grid>
-        )}
       </PositionHeaderSettings>
     )
   }
@@ -605,7 +599,6 @@ const mapStateToProps = state => {
     bankAccounts: bankAccountsConfig[dwollaAccountStatus],
     currentTab: state.settings.currentTab,
     tableHandlersFilters: state.settings.tableHandlersFiltersSettings,
-    productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,
     filterValue: state.settings.filterValue,

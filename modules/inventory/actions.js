@@ -497,3 +497,26 @@ export function handleVariableSave(variable, value) {
     payload: { variable, value }
   }
 }
+
+export function handleProductCatalogUnmappedValue(value) {
+  return async dispatch => {
+    dispatch({
+      type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
+      payload: value
+    })
+  }
+}
+
+export function openPopup(rows = null) {
+  return {
+    type: AT.INVENTORY_OPEN_POPUP,
+    payload: rows
+  }
+}
+
+export function closePopup(rows = null) {
+  return {
+    type: AT.INVENTORY_CLOSE_POPUP,
+    payload: rows
+  }
+}

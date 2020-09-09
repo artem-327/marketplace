@@ -59,7 +59,6 @@ export const initialState = {
   deleteUserById: null,
   deleteRowById: null,
   filterValue: '',
-  productCatalogUnmappedValue: 'ALL',
   editPopupSearchProducts: [],
   fileCSVId: null,
   CSV: null,
@@ -343,13 +342,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         mapName: action.payload
-      }
-    }
-
-    case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
-      return {
-        ...state,
-        productCatalogUnmappedValue: action.payload
       }
     }
 

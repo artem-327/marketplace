@@ -37,9 +37,9 @@ export const initialState = {
   popupValues: null,
   wantedBoardType: 'product',
   myRequestedItemsType: 'product',
-  tableHandlersFiltersWantedBoard: null,
-  tableHandlersFiltersMyReqItems: null,
-  tableHandlersFiltersMyOffers: null,
+  tableHandlersFiltersListings: null,
+  tableHandlersFiltersBidsReceived: null,
+  tableHandlersFiltersBidsSent: null,
   openSidebar: false
 }
 
@@ -189,7 +189,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         editInitTrig: !state.editInitTrig,
-        editWindowOpen: 'my-offers',
+        editWindowOpen: 'bids-sent',
         sidebarValues: row,
         ...(row && {
           searchedManufacturers: manufacturer
