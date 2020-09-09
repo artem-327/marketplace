@@ -9,35 +9,35 @@ import unitedStates from '../../../components/unitedStates'
 const textsTable = {
   Users: {
     BtnAddText: 'Add User',
-    SearchText: 'Search user by name, title or branch ...'
+    SearchText: 'Search user by name, title or branch '
   },
   Branches: {
     BtnAddText: 'Add Branch',
-    SearchText: 'Search branch by name, address or contact ...'
+    SearchText: 'Search branch by name, address or contact '
   },
   Warehouses: {
     BtnAddText: 'Add Warehouse',
-    SearchText: 'Search warehouse by name, address or contact ...'
+    SearchText: 'Search warehouse by name, address or contact '
   },
   'Product catalog': {
     BtnAddText: 'Add Product Catalog',
-    SearchText: 'Search product catalog by name, number ...'
+    SearchText: 'Search product catalog by name, number '
   },
   'Global Broadcast': {
     BtnAddText: 'Add Global Broadcast',
-    SearchText: 'Search global broadcast by name ...'
+    SearchText: 'Search global broadcast by name '
   },
   'Credit cards': {
     BtnAddText: 'Add Credit Card',
-    SearchText: 'Search credit card ...'
+    SearchText: 'Search credit card '
   },
   'Bank accounts': {
     BtnAddText: 'Add Bank Account',
-    SearchText: 'Search bank account ...'
+    SearchText: 'Search bank account '
   },
   'Import Maps': {
     BtnAddText: 'Add map',
-    SearchText: 'Search map ...'
+    SearchText: 'Search map '
   }
 }
 

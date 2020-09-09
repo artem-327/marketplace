@@ -1170,6 +1170,13 @@ export function setPrimaryUser(companyId, userId) {
   }
 }
 
+export function setPrimaryBranch(companyId, branchId) {
+  return {
+    type: AT.SETTINGS_SET_PRIMARY_BRANCH,
+    payload: api.setPrimaryBranch(companyId, branchId)
+  }
+}
+
 export function changeCsvHeader() {
   return {
     type: AT.CHANGE_CSV_HEADER

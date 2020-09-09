@@ -196,7 +196,7 @@ class PurchaseRequestCreditDelivery extends React.Component {
                                 name='reasonText'
                                 label={formatMessage({
                                   id: 'order.reject.EnterReasonHere',
-                                  defaultMessage: 'Enter reason here...'
+                                  defaultMessage: 'Enter reason here'
                                 })}
                               />
                               <UploadAttachment

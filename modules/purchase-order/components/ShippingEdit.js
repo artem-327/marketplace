@@ -253,7 +253,7 @@ class ShippingEdit extends Component {
                         inputProps={{
                           placeholder: formatMessage({
                             id: 'global.placeholder.deliveryNotes',
-                            defaultMessage: '!Write delivery notes here...'
+                            defaultMessage: '!Write delivery notes here'
                           })
                         }}
                       />

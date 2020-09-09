@@ -175,7 +175,7 @@ class SearchByNamesAndTags extends Component {
             ref={this.refDropdownMenu}
             placeholder={formatMessage({
               id: 'myInventory.searchByProductOrTagName',
-              defaultMessage: 'Search by product or tag name...'
+              defaultMessage: 'Search by product or tag name'
             })}
             noResultsMessage={formatMessage({
               id: 'global.startTypingToSearch',

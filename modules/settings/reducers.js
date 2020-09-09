@@ -634,6 +634,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_SET_PRIMARY_BRANCH_PENDING:
     case AT.SETTINGS_SET_PRIMARY_USER_PENDING:
     case AT.DELETE_PRODUCT_PENDING:
     case AT.DELETE_USER_PENDING: {
@@ -643,6 +644,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_SET_PRIMARY_BRANCH_REJECTED:
+    case AT.SETTINGS_SET_PRIMARY_BRANCH_FULFILLED:
     case AT.SETTINGS_SET_PRIMARY_USER_FULFILLED:
     case AT.DELETE_PRODUCT_FULFILLED:
     case AT.DELETE_USER_FULFILLED:

@@ -83,6 +83,15 @@ const LoginButton = styled(Button)`
   margin-top: 40px !important;
 `
 
+const AutoColumn = styled(GridColumn)`
+  width: auto !important;
+  white-space: nowrap;
+  
+  &.right.aligned {
+    margin-left: auto !important;
+  }
+`
+
 const validationScheme = val.object().shape({
   username: val.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
   password: val
@@ -90,6 +99,11 @@ const validationScheme = val.object().shape({
     .min(3, errorMessages.minLength(3))
     .required(errorMessages.requiredMessage)
     .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
+})
+
+
+const resetScheme = val.object().shape({
+  username: val.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
 })
 
 const initialValues = {
@@ -142,7 +156,7 @@ class LoginForm extends Component {
             <StyledForm
               initialValues={initialValues}
               validateOnChange={true}
-              validationSchema={validationScheme}
+              validationSchema={this.state.resetPassword ? resetScheme : validationScheme}
               onSubmit={async (values, actions) => {
                 const { username, password } = values
                 const { login, resetPasswordRequest } = this.props
@@ -218,10 +232,10 @@ class LoginForm extends Component {
 
             <Grid>
               <GridRow>
-                <GridColumn computer={8}>
+                <AutoColumn>
                   <ToggleLabel onClick={this.toggleResetPassword} data-test='login_reset_toggle_btn'>
                     {this.state.resetPassword ? (
-                      <FormattedMessage id='auth.cancelPasswordReset' defaultMessage='Cancel Password Reset'>
+                      <FormattedMessage id='auth.cancelPasswordReset' defaultMessage='Password Reset Cancel'>
                         {text => text}
                       </FormattedMessage>
                     ) : (
@@ -230,11 +244,11 @@ class LoginForm extends Component {
                       </FormattedMessage>
                     )}
                   </ToggleLabel>
-                </GridColumn>
+                </AutoColumn>
 
-                <GridColumn computer={8} textAlign='right'>
+                <AutoColumn textAlign='right'>
                   {version && `v${version}`}
-                </GridColumn>
+                </AutoColumn>
               </GridRow>
             </Grid>
           </LoginSegment>

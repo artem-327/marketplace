@@ -667,7 +667,7 @@ class Filter extends Component {
     var noResultsMessage = null
 
     if (this.state.searchQuery.length <= 1)
-      noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+      noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
     if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
     const options = this.getOptions(uniqueArrayByKey(autocompleteData, 'key'))
 
@@ -690,7 +690,7 @@ class Filter extends Component {
 
     if (this.state.searchWarehouseQuery.length <= 1)
       noWarehouseResultsMessage = (
-        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
       )
     if (autocompleteWarehouseLoading)
       noWarehouseResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />

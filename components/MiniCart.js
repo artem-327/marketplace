@@ -3,16 +3,19 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { getCart } from '~/modules/purchase-order/actions'
 import { Icon, Label } from 'semantic-ui-react'
+import { ShoppingCart } from 'react-feather'
 import { getSafe } from '~/utils/functions'
 
-const IconCart = styled(Icon)`
-  color: #848893 !important;
+const IconCart = styled(ShoppingCart)`
+  width: 24px;
+  height: 25px;
+  color: #20273a !important;
 `
 const CircularLabel = styled(Label)`
   position: absolute;
-  top: -0.7em;
+  top: -0.75em;
   left: auto;
-  right: -0.7em;
+  right: -1em;
   bottom: auto;
   font-size: 0.7142857rem !important;
   font-style: normal !important;

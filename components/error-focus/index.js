@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'formik'
 import deepKeys from 'deep-keys'
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 
@@ -39,7 +39,15 @@ class ErrorFocus extends Component {
 
     if (errNames.length > 0 && isSubmitting && !isValidating) {
       const selector = `[name="${errNames[0]}"]`
-      const errorElement = document.querySelector(selector)
+
+      let errorElement = document.querySelector(selector)
+      if (
+        errorElement &&
+        errorElement.tagName !== 'INPUT' &&
+        getSafe(() => errorElement.getElementsByTagName('input').length, false)
+      ) {
+        errorElement = errorElement.getElementsByTagName('input')[0]
+      }
 
       toastManager.add(
         generateToastMarkup(

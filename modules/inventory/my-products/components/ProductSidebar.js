@@ -231,13 +231,10 @@ const formValidation = () =>
         .required(errorMessages.requiredMessage)
         .positive(errorMessages.positive),
       palletSaleOnly: Yup.boolean(),
-      packageWeightUnit: Yup.number().when('palletSaleOnly', {
-        is: false,
-        then: Yup.number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive)
-      }),
+      packageWeightUnit: Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .required(errorMessages.requiredMessage)
+        .positive(errorMessages.positive),
       /*
       packagesPerPallet: Yup.number()
         .typeError(errorMessages.mustBeNumber)
@@ -665,7 +662,7 @@ class ProductSidebar extends React.Component {
                         <div style={{ margin: '0 10px 6px' }}>
                           <FormattedMessage
                             id='settings.associatedCompanyGenericProduct'
-                            defaultMessage='What is the Associated Generic Product that you would like to map to?'
+                            defaultMessage='What is the Company Generic Product that you would like to map to?'
                           />
                           <Required />
                         </div>
@@ -860,7 +857,7 @@ class ProductSidebar extends React.Component {
                             name='packageWeight'
                             label={
                               <>
-                                <FormattedMessage id='global.packageWeight' defaultMessage='Gross Weight per Package' />
+                                <FormattedMessage id='global.packageWeight' defaultMessage='Gross Weight Per Package' />
                                 <Required />
                               </>
                             }
@@ -1066,12 +1063,17 @@ class ProductSidebar extends React.Component {
                                     this.handleChangeDocumentType(e, name, value)
                                   }
                                 }}
-                                label={<FormattedMessage id='global.uploadDocument' defaultMessage='Upload document' />}
+                                label={
+                                  <FormattedMessage id='global.uploadDocumentTitle' defaultMessage='Upload Document' />
+                                }
                               />
                             </GridColumn>
                             <GridColumn>
                               <div style={{ marginBottom: '6px' }}>
-                                <FormattedMessage id='global.existingDocuments' defaultMessage='Existing documents' />
+                                <FormattedMessage
+                                  id='global.existingDocumentsTitle'
+                                  defaultMessage='Existing Documents'
+                                />
                               </div>
                               <AttachmentManager
                                 asModal
