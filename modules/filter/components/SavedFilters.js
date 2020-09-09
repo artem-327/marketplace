@@ -85,50 +85,54 @@ class SavedFilters extends Component {
     let filterDescription = groupFilters(filter.filters, this.props.params)
     return (
       <SavedFilterTitle>
-        <SavedFiltersGrid>
-          <SavedFilterRow>
+        <SavedFilterRow>
+          <Tooltip
+            trigger={
+              <div
+                onClick={() => this.handleFilterApply(filter)}
+                data-test={`filter_activateFilter_${i}`}
+                style={{ color: '#20273a', fontWeight: '600' }}
+              >
+                {name}
+              </div>
+            }
+            position='top center'>
+            <FormattedMessage id='filter.activateFilter' />
+          </Tooltip>
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
             <Tooltip
               trigger={
-                <GridColumn
-                  computer={10}
-                  onClick={() => this.handleFilterApply(filter)}
-                  data-test={`filter_activateFilter_${i}`}>
-                  {name}
-                </GridColumn>
-              }
-              position='top center'>
-              <FormattedMessage id='filter.activateFilter' />
-            </Tooltip>
-
-            <Tooltip
-              trigger={
-                <GridColumn computer={2} onClick={() => this.toggle(id)} data-test={`filter_editNotifications_${i}`}>
+                <div onClick={() => this.toggle(id)} data-test={`filter_editNotifications_${i}`}>
                   <SavedFilterIcon
                     name='bell outline'
                     color={this.state.activeIndex === id ? 'yellow' : 'gray'}
+                    size='mini'
                   />
-                </GridColumn>
-              }>
+                </div>
+              }
+              position='left center'>
               <FormattedMessage id='filter.editNotifications' />
             </Tooltip>
             <Tooltip
               trigger={
-                <GridColumn
+                <div
                   onClick={() => this.toggle(i, 'activeTooltip')}
-                  computer={2}
                   data-test={`filter_activeTooltip_${i}`}>
-                  <SavedFilterIcon color={this.state.activeTooltip === i ? 'blue' : 'gray'} name='info circle outline' />
-                </GridColumn>
+                  <SavedFilterIcon
+                    color={this.state.activeTooltip === i ? 'blue' : 'gray'}
+                    name='info circle outline'
+                    size='mini'
+                  />
+                </div>
               }
               position='left center'>
-              <GridColumn computer={8}>
+              <div >
                 <StyledGrid verticalAlign='top'>
                   {filterDescription && filterDescription.length > 0 ? (
                     filterDescription.map((f, index) => {
                       return (
                         <GridRow key={index}>
                           <GridColumn computer={8}>{f.description}:</GridColumn>
-
                           <GridColumn computer={8}>{this.handleValuesDescription(f)}</GridColumn>
                         </GridRow>
                       )
@@ -142,22 +146,21 @@ class SavedFilters extends Component {
                     </GridRow>
                   )}
                 </StyledGrid>
-              </GridColumn>
+              </div>
             </Tooltip>
             <Tooltip
               trigger={
-                <GridColumn
+                <div
                   onClick={() => this.props.deleteFilter(id)}
-                  computer={2}
                   data-test={`filter_deleteFilter_${i}`}>
-                  <DeleteFilterIcon name='trash alternate outline' />
-                </GridColumn>
+                  <DeleteFilterIcon name='trash alternate outline' size='mini' />
+                </div>
               }
               position='left center'>
               <FormattedMessage id='filter.deleteFilter' />
             </Tooltip>
-          </SavedFilterRow>
-        </SavedFiltersGrid>
+          </div>
+        </SavedFilterRow>
       </SavedFilterTitle>
     )
   }
@@ -170,7 +173,7 @@ class SavedFilters extends Component {
 
     if (this.props.savedFiltersLoading) {
       return (
-        <Segment basic>
+        <Segment basic style={{ margin: '-28px 0 30px 0' }}>
           <StyledDimmer active inverted>
             <Loader active />
           </StyledDimmer>
@@ -179,74 +182,74 @@ class SavedFilters extends Component {
     }
 
     return (
-
-        <FilterAccordion>
-          {savedFilters.length ? savedFilters.map((filter, i) => {
-            let {
+      <FilterAccordion style={{ marginTop: '-28px' }}>
+        {savedFilters.length ? savedFilters.map((filter, i) => {
+          let {
+            notificationEnabled,
+            notifyMail,
+            notifyPhone,
+            notifySystem,
+            notificationMail,
+            notificationPhone
+          } = filter
+          let initialValues = {
+            checkboxes: {
               notificationEnabled,
               notifyMail,
               notifyPhone,
-              notifySystem,
+              notifySystem
+            },
+            notifications: {
               notificationMail,
               notificationPhone
-            } = filter
-            let initialValues = {
-              checkboxes: {
-                notificationEnabled,
-                notifyMail,
-                notifyPhone,
-                notifySystem
-              },
-              notifications: {
-                notificationMail,
-                notificationPhone
-              }
             }
+          }
 
-            return (
-              <SavedFilterItem key={filter.id}>
-                {this.getTitle(filter, i)}
+          return (
+            <SavedFilterItem key={filter.id}>
+              {this.getTitle(filter, i)}
 
-                <AccordionContent key={i} active={this.state.activeIndex === filter.id}>
-                  {this.state.activeIndex === filter.id && (
-                    <Form
-                      enableReinitialize={true}
-                      validationSchema={savedFilterValidation}
-                      initialValues={initialValues}
-                      validateOnChange={false}
-                      validateOnBlur={false}
-                      onSubmit={async (values, { setSubmitting }) => {
-                        try {
-                          let { notificationMail, notificationPhone } = values.notifications
+              <AccordionContent key={i} active={this.state.activeIndex === filter.id}>
+                {this.state.activeIndex === filter.id && (
+                  <Form
+                    enableReinitialize={true}
+                    validationSchema={savedFilterValidation}
+                    initialValues={initialValues}
+                    validateOnChange={false}
+                    validateOnBlur={false}
+                    onSubmit={async (values, { setSubmitting }) => {
+                      try {
+                        let { notificationMail, notificationPhone } = values.notifications
 
-                          let body = {
-                            name: filter.name,
-                            ...values.checkboxes,
-                            ...(notificationMail === undefined || notificationMail === ''
-                              ? null
-                              : { notificationMail }),
-                            ...(notificationPhone === undefined || notificationPhone === ''
-                              ? null
-                              : { notificationPhone })
-                          }
+                        let body = {
+                          name: filter.name,
+                          ...values.checkboxes,
+                          ...(notificationMail === undefined || notificationMail === ''
+                            ? null
+                            : { notificationMail }),
+                          ...(notificationPhone === undefined || notificationPhone === ''
+                            ? null
+                            : { notificationPhone })
+                        }
 
-                          await this.props.updateFilterNotifications(this.state.activeIndex, body)
-                          this.props.toastManager.add(
-                            <div>
-                              <strong>
-                                <FormattedMessage id='confirm.filter.updated' values={{ name: filter.name }} />
-                              </strong>
-                            </div>,
-                            { appearance: 'success', pauseOnHover: true }
-                          )
-                        } catch (err) {}
-                        setSubmitting(false)
-                      }}>
-                      {formikProps => {
-                        return (
-                          <SavedFilterDetailGrid>
+                        await this.props.updateFilterNotifications(this.state.activeIndex, body)
+                        this.props.toastManager.add(
+                          <div>
+                            <strong>
+                              <FormattedMessage id='confirm.filter.updated' values={{ name: filter.name }} />
+                            </strong>
+                          </div>,
+                          { appearance: 'success', pauseOnHover: true }
+                        )
+                      } catch (err) {}
+                      setSubmitting(false)
+                    }}>
+                    {formikProps => {
+                      return (
+                        <div style={{ padding: '0 10px' }}>
+                          <SavedFilterDetailGrid style={{ backgroundColor: '#edeef2' }}>
                             <GridRow>
-                              <GridColumn computer={16} floated='left'>
+                              <GridColumn computer={8} floated='left'>
                                 <Notifications values={formikProps.values} formikProps={formikProps} />
                               </GridColumn>
                             </GridRow>
@@ -254,34 +257,34 @@ class SavedFilters extends Component {
                               <GridColumn computer={4} floated='left'>
                                 <Button
                                   onClick={formikProps.submitForm}
-                                  loading={this.props.savedFilterUpdating}
-                                  primary
+                                  secondary
                                   data-test='filter_save_btn'>
                                   {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                                 </Button>
                               </GridColumn>
                             </GridRow>
                           </SavedFilterDetailGrid>
-                        )
-                      }}
-                    </Form>
-                  )}
-                </AccordionContent>
-              </SavedFilterItem>
-            )
-          }) : (
-            <SavedFilterItem>
-              <AccordionContent>
-                <NoSavedFilters>
-                  <FormattedMessage
-                    id='filter.noSavedFilters'
-                    defaultMessage='You don’t have saved filters'
-                  />
-                </NoSavedFilters>
+                        </div>
+                      )
+                    }}
+                  </Form>
+                )}
               </AccordionContent>
             </SavedFilterItem>
-          )}
-        </FilterAccordion>
+          )
+        }) : (
+          <SavedFilterItem>
+            <AccordionContent>
+              <NoSavedFilters>
+                <FormattedMessage
+                  id='filter.noSavedFilters'
+                  defaultMessage='You don’t have saved filters'
+                />
+              </NoSavedFilters>
+            </AccordionContent>
+          </SavedFilterItem>
+        )}
+      </FilterAccordion>
     )
   }
 }

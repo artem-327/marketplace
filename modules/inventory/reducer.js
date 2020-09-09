@@ -26,6 +26,8 @@ export const initialState = {
   documentTypesFetching: false,
   simpleEditOpen: false,
   popupValues: {},
+  isOpenPopup: false,
+  editTrig: false,
   sidebarDetailOpen: false,
   sidebarActiveTab: -1,
   sidebarValues: {},
@@ -39,13 +41,32 @@ export const initialState = {
   pricingEditOpenId: null,
   isExportInventoryOpen: false,
   tableHandlersFilters: null,
-  isOpenColumnSettingModal: false
+  isOpenColumnSettingModal: false,
+  myProductsUnmappedValue: 'ALL',
+  myListingsFilters: null,
+  myProductsFilters: null
 }
 
 export default function reducer(state = initialState, action) {
   const { type, payload } = action
 
   switch (type) {
+    case AT.INVENTORY_OPEN_POPUP: {
+      return {
+        ...state,
+        isOpenPopup: true,
+        editTrig: !state.editTrig,
+        popupValues: action.payload
+      }
+    }
+    case AT.INVENTORY_CLOSE_POPUP: {
+      return {
+        ...state,
+        isOpenPopup: false,
+        popupValues: null
+      }
+    }
+
     case AT.INVENTORY_ADD_PRODUCT_OFFER_PENDING: {
       return {
         ...state,
@@ -603,6 +624,12 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isOpenColumnSettingModal: payload
+      }
+    }
+    case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
+      return {
+        ...state,
+        myProductsUnmappedValue: action.payload
       }
     }
 

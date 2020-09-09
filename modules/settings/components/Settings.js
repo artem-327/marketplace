@@ -11,14 +11,11 @@ import Locations from './Locations/Locations'
 
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
-import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 import UsersSidebar from './UserTable/UsersSidebar'
-import ProductSidebar from './ProductCatalogTable/ProductSidebar'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsSidebar from './BankAccountsTable/BankAccountsSidebar'
 import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDocPopup'
 import TablesHandlers from './TablesHandlers'
-import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
 
 import LogisticsTable from './LogisticsTable/LogisticsTable'
 import LogisticsSidebar from './LogisticsTable/LogisticsSidebar'
@@ -305,18 +302,15 @@ class Settings extends Component {
       actionId,
       currentTab,
       isOpenPopup,
-      isOpenImportPopup,
       isOpenUploadDocumentsPopup,
       isDwollaOpenPopup,
       isUserAdmin,
-      isProductCatalogAdmin,
       isOpenSidebar
     } = this.props
 
     const tables = {
       'company-details': this.companyDetails(),
       users: <UsersTable />,
-      products: <ProductCatalogTable />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
@@ -334,17 +328,12 @@ class Settings extends Component {
 
     const popupForm = {
       users: <UsersSidebar />,
-      products: <ProductSidebar />,
       'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsSidebar />,
       'credit-cards': <CreditCardsPopup />,
       'guest-companies': <ClientCompanyPopup />,
       logistics: <LogisticsSidebar />,
       documents: <DocumentManagerSidebar />
-    }
-
-    const importForm = {
-      products: <ProductImportPopup />
     }
 
     const addDwollaForms = {
@@ -358,7 +347,6 @@ class Settings extends Component {
     return (
       <>
         {(isOpenPopup || isOpenSidebar) && popupForm[currentTab.type]}
-        {isOpenImportPopup && importForm[currentTab.type]}
         {isOpenUploadDocumentsPopup && uploadDocForms[currentTab.type]}
         {/* {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')} */}
         {tables[currentTab.type] || <p>This page is still under construction</p>}
@@ -367,7 +355,7 @@ class Settings extends Component {
   }
 
   getApiConfig = () => {
-    const { currentTab, productCatalogUnmappedValue } = this.props
+    const { currentTab } = this.props
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
       users: {
@@ -389,34 +377,6 @@ class Settings extends Component {
         url: '/prodex/api/companies/client/datagrid',
         searchToFilter: v =>
           v && v.searchInput ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }] : []
-      },
-      products: {
-        url: `/prodex/api/company-products/datagrid?type=${productCatalogUnmappedValue}`,
-        searchToFilter: v =>
-          v && v.searchInput
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'CompanyProduct.intProductName',
-                  values: [`%${v.searchInput}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'CompanyProduct.intProductCode',
-                  values: [`%${v.searchInput}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'CompanyProduct.companyGenericProduct.name',
-                  values: [`%${v.searchInput}%`]
-                },
-                {
-                  operator: 'LIKE',
-                  path: 'CompanyProduct.companyGenericProduct.code',
-                  values: [`%${v.searchInput}%`]
-                }
-              ]
-            : []
       },
       // 'bank-accounts': null,
       // 'credit-cards': null,
@@ -495,7 +455,6 @@ const mapStateToProps = ({ settings, auth }) => {
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
     documentsOwner: getSafe(() => settings.documentsOwner, []),
-    productCatalogUnmappedValue: settings.productCatalogUnmappedValue,
     isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false),
     companyId: getSafe(() => auth.identity.company.id, false),
     hasLogo: getSafe(() => auth.identity.company.hasLogo, false)

@@ -8,7 +8,7 @@ import { getSafe, uniqueArrayByKey } from '~/utils/functions'
 import { openSidebar, searchCompanyFilter, saveFilters } from '../actions'
 import { openImportPopup } from '~/modules/settings/actions'
 import { withDatagrid } from '~/modules/datagrid'
-import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
+import ProductImportPopup from '~/modules/inventory/my-products/components/ProductImportPopup'
 import styled from 'styled-components'
 import { CustomRowDiv } from '../constants'
 

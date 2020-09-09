@@ -76,8 +76,8 @@ const clientCompanyRoutes = {
     '/orders?type=sales',
     '/settings?type=products',
     '/settings?type=global-broadcast',
-    '/wanted-board/wanted-board',
-    '/wanted-board/my-offers'
+    '/wanted-board/listings',
+    '/wanted-board/bids-sent'
   ],
   redirectTo: '/marketplace/all'
 }
@@ -109,7 +109,7 @@ class Layout extends Component {
     if (this.state.fatalError) this.setState({ fatalError: false })
     if (!phoneCountryCodes.length) getCountryCodes()
     if (this.props.takeover && this.props.auth.identity.isAdmin && Router.router.route === '/admin') {
-      Router.push('/inventory/my')
+      Router.push('/inventory/my-listings')
     }
 
     const mainClass = this.props.takeover ? 'takeover' : null

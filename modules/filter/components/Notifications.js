@@ -51,10 +51,10 @@ class Notifications extends Component {
             trigger={
               <GridColumn computer={16} data-test='filter_notifications_email_inp'>
                 <Input
-                  fluid
                   fieldProps={{disabled: !(values.checkboxes && values.checkboxes.notifyMail) || disabled}}
                   inputProps={{
-                    placeholder: formatMessage({id: 'filter.useMyEmail', defaultMessage: 'Your Email Address'})
+                    placeholder: formatMessage({id: 'filter.useMyEmail', defaultMessage: 'Your Email Address'}),
+                    fluid: true
                   }}
                   type='text'
                   name='notifications.notificationMail'
