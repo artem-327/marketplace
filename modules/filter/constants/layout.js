@@ -544,6 +544,19 @@ export const NotificationsFiltersGrid = styled(Grid)`
   > .row:last-child {
     padding-bottom: 15px !important;
   }
+  
+  input.phone-num {
+    border-radius: 3px;
+    border: solid 1px #dee2e6;
+    background-color: #fdfdfd;
+    font-size: 14px;
+    font-weight: normal;
+    color: #20273a;
+    
+    &[disabled] { 
+      opacity: 0.45;
+    }
+  }
 `
 
 export const NormalColumn = styled(GridColumn)` // ! ! smazat?
@@ -714,7 +727,7 @@ export const StyledModalHeader = styled(Modal.Header)`
   padding: 16px 30px;
   border: solid 1px #dee2e6;
   background-color: #ffffff;
-  font-size: 14px;
+  font-size: 14px !important;
   font-weight: 500;
   color: #20273a;
 `

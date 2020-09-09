@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Field as FormikField } from 'formik'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import { getSafe } from '~/utils/functions'
@@ -11,21 +10,11 @@ import { withToastManager } from 'react-toast-notifications'
 
 import {
   Button,
-  Accordion,
-  Segment,
-  FormGroup,
-  Icon,
   FormField,
-  Checkbox,
-  Grid,
   GridRow,
   GridColumn,
-  Dropdown as SemanticDropdown,
-  Transition,
-  Header,
   Dimmer,
   Label,
-  Radio,
   Modal,
   Menu
 } from 'semantic-ui-react'
@@ -36,8 +25,6 @@ import confirm from '~/src/components/Confirmable/confirm'
 
 import {
   datagridValues,
-  replaceAmbigiousCharacters,
-  dateFormat,
   dateDropdownOptions,
   filterTypes
 } from '../constants/filter'
@@ -47,32 +34,15 @@ import SavedFilters from './SavedFilters'
 import Notifications from './Notifications'
 
 import {
-  FlexSidebar,
   FlexContent,
-  FilterAccordion,
-  AccordionTitle,
-  AccordionItem,
-  AccordionContent,
-  WhiteSegment,
-  GraySegment,
-  Title,
   BottomMargedDropdown,
-  LessPaddedRow,
-  SaveFilterButtonRow,
-  SaveFilterTitle,
-  SaveFilterClose,
   StyledGrid,
   SmallerTextColumn,
-  TopButtons,
   BottomButtons,
-  IconRight,
   DateInputStyledWrapper,
   SaveFiltersGrid,
-  NormalColumn,
-  SaveFilterNormalRow,
   InputWrapper,
   QuantityWrapper,
-  BottomMargedField,
   StyledModalContent,
   CustomMenu,
   SmallGrid,
@@ -102,7 +72,6 @@ class InventoryFilter extends Component {
   state = {
     savedFiltersActive: false,
     openedSaveFilter: false,
-    activeAccordion: { chemicalType: true },
     dateDropdown: {
       expiration: dateDropdownOptions[0].value,
       mfg: dateDropdownOptions[0].value
@@ -214,17 +183,13 @@ class InventoryFilter extends Component {
               names.push(inputs[key][k].name)
             }
           })
-          if (ids.length > 0) {
-            datagridFilter.filters.push(datagridValues[key].toFilter(ids, names))
-          }
+          if (ids.length > 0) datagridFilter.filters.push(datagridValues[key].toFilter(ids, names))
         } else {
           try {
             if (typeof datagridValues[key] !== 'undefined') {
               let filter = datagridValues[key] && datagridValues[key].toFilter(inputs[key], this.props.filterType)
-
               if (filter) {
                 if (!(filter.values instanceof Array)) filter.values = [filter.values] // We need values to be an array
-
                 datagridFilter.filters.push(filter)
               }
             }
@@ -386,7 +351,6 @@ class InventoryFilter extends Component {
           if (filters[i].path === 'ProductOffer.companyProduct.id') {
             this.searchProductOffer(filters[i].values)
           }
-
           formikValues[key] = datagrid.toFormik(filters[i], this.props)
         }
       })
@@ -406,9 +370,7 @@ class InventoryFilter extends Component {
       ...formikValues
     }
 
-    Object.keys(formikValues).forEach(key => {
-      setFieldValue(key, formikValues[key])
-    })
+    Object.keys(formikValues).forEach(key => setFieldValue(key, formikValues[key]))
 
     this.toggleFilter(false)
 
@@ -423,12 +385,6 @@ class InventoryFilter extends Component {
       this.props.apiUrl,
       this.props.filterType
     )
-  }
-
-  toggleAccordion = name => {
-    let { activeAccordion } = this.state
-    let active = activeAccordion[name]
-    this.setState({ activeAccordion: { ...this.state.activeAccordion, [name]: !active } })
   }
 
   handleSearch = debounce(({ searchQuery }) => {
@@ -476,15 +432,6 @@ class InventoryFilter extends Component {
       }
     }
   }
-
-  accordionTitle = (name, text) => (
-    <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
-      {text}
-      <IconRight>
-        <Icon name={this.state.activeAccordion[name] ? 'chevron down' : 'chevron right'} />
-      </IconRight>
-    </AccordionTitle>
-  )
 
   toggleSaveFilter = () => {
     //e.preventDefault()
@@ -684,13 +631,10 @@ class InventoryFilter extends Component {
       packagingTypes,
       productGrades,
       intl,
-      isFilterSaving,
       autocompleteData,
       autocompleteDataLoading,
       autocompleteWarehouse,
       autocompleteWarehouseLoading,
-      layout,
-      savedAutocompleteData,
       autocompleteManufacturer,
       autocompleteManufacturerLoading,
       autocompleteOrigin,
@@ -739,7 +683,7 @@ class InventoryFilter extends Component {
       options: options,
       loading: autocompleteDataLoading,
       name: 'search',
-      placeholder: <FormattedMessage id='filter.searchProductsInventory' defaultMessage='Chemical, CAS, Trade' />,
+      placeholder: formatMessage({ id: 'filter.searchProductsInventory', defaultMessage: 'Chemical, CAS, Trade' }),
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
       value: values.search,
@@ -973,16 +917,12 @@ class InventoryFilter extends Component {
 
         <GridRow>
           <GridColumn width={8}>
-            <FormField>
-              <FormattedMessage id='filter.packaging' />
-              {packagingTypesDropdown}
-            </FormField>
+            <FormattedMessage id='filter.packaging' />
+            {packagingTypesDropdown}
           </GridColumn>
           <GridColumn width={8}>
-            <FormField>
-              <FormattedMessage id='filter.grade' defaultMessage='Grade' />
-              {productGradeDropdown}
-            </FormField>
+            <FormattedMessage id='filter.grade' defaultMessage='Grade' />
+            {productGradeDropdown}
           </GridColumn>
         </GridRow>
 
@@ -1065,11 +1005,6 @@ class InventoryFilter extends Component {
 
   render() {
     let {
-      isOpen,
-      width,
-      direction,
-      animation,
-      additionalSidebarProps,
       isFilterApplying,
       isFilterSaving,
       intl: { formatMessage },
