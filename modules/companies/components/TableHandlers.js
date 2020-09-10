@@ -11,6 +11,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import ProductImportPopup from '~/modules/inventory/my-products/components/ProductImportPopup'
 import styled from 'styled-components'
 import { CustomRowDiv } from '../constants'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -18,11 +19,11 @@ const PositionHeaderSettings = styled.div`
 `
 
 const textsTable = {
-  'companies': {
+  companies: {
     BtnAddText: 'admin.addCompany',
     SearchText: 'admin.searchCompany'
   },
-  'users': {
+  users: {
     BtnAddText: 'admin.addUser',
     SearchText: 'admin.searchUser'
   }
@@ -190,29 +191,21 @@ class TablesHandlers extends Component {
           <div>
             {currentTab === 'companies' && (
               <div className='column'>
-                <Button
-                  size='large'
-                  onClick={() => openImportPopup()}
-                  data-test='companies_import_btn'
-                >
+                <Button size='large' onClick={() => openImportPopup()} data-test='companies_import_btn'>
                   <CornerLeftDown />
                   {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
                 </Button>
               </div>
             )}
             <div className='column'>
-              <Button
-                size='large'
-                data-test='companies_table_add_btn'
-                primary
-                onClick={() => openSidebar()}
-              >
+              <Button size='large' data-test='companies_table_add_btn' primary onClick={() => openSidebar()}>
                 <PlusCircle />
                 <FormattedMessage id={item.BtnAddText} defaultMessage='Add'>
                   {text => `${text} `}
                 </FormattedMessage>
               </Button>
             </div>
+            <ColumnSettingButton divide={true} />
           </div>
         </CustomRowDiv>
       </PositionHeaderSettings>

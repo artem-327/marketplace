@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import pt from 'prop-types'
 import { Getter, Plugin } from '@devexpress/dx-react-core'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
@@ -38,6 +39,8 @@ import {
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
 import { getSafe } from '~/utils/functions'
+//Actions
+import { toggleColumnSettingModal } from '~/modules/inventory/actions'
 
 import { RowActionsFormatterProvider, DropdownFormatterProvider } from './providers'
 
@@ -237,7 +240,7 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
 // const TableGroupRow = props => <TableGroupRow {...props} />
 const TreeTableCells = (props, rowChildActions) => {
   let newProps = props
-  if (props.column.name === '__actions' && rowChildActions && !props.row.root) {
+  if (props.column.name === 'intProductName' && rowChildActions && !props.row.root) {
     newProps = {
       ...props,
       tableColumn: {
@@ -263,10 +266,10 @@ const TreeTableCells = (props, rowChildActions) => {
       }
     }
   }
-  return <Table.Cell {...newProps} className={props.column.name === '__actions' ? 'actions' : ''} />
+  return <Table.Cell {...newProps} className={props.column.actions ? 'actions' : ''} />
 }
 
-const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
+const TableCells = props => <Table.Cell {...props} className={props.column.actions ? 'actions' : ''} />
 const NoDataTableCells = props => {
   const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
   const modifiedProps = {
@@ -397,7 +400,10 @@ class _Table extends Component {
     onExpandedRowIdsChange: pt.func,
     expandedRowIds: pt.array,
     loadedAllData: pt.bool,
-    shrinkGroups: pt.bool
+    shrinkGroups: pt.bool,
+    columnAction: pt.string,
+    toggleColumnSettingModal: pt.func,
+    isOpenColumnSettingModal: pt.bool
   }
 
   static defaultProps = {
@@ -427,7 +433,10 @@ class _Table extends Component {
     onExpandedRowIdsChange: () => {},
     expandedRowIds: [],
     loadedAllData: true,
-    shrinkGroups: false
+    shrinkGroups: false,
+    columnActions: '',
+    toggleColumnSettingModal: () => {},
+    isOpenColumnSettingModal: false
   }
 
   constructor(props) {
@@ -647,28 +656,29 @@ class _Table extends Component {
 
   getColumns = () => {
     const { rowActions, columns, hideSettingsIcon } = this.props
-    return rowActions
-      ? [
-          {
-            name: '__actions',
-            title: !hideSettingsIcon ? (
-              <ColumnsSetting
-                onClick={() =>
-                  this.setState(prevState => ({
-                    columnSettingOpen: !prevState.columnSettingOpen
-                  }))
-                }
-                data-test='table_columns_setting_action'
-              />
-            ) : (
-              ''
-            ),
-            width: 40,
-            actions: rowActions
-          },
-          ...columns
-        ]
-      : columns
+    return columns
+    // return rowActions
+    //   ? [
+    //       {
+    //         name: '__actions',
+    //         title: !hideSettingsIcon ? (
+    //           <ColumnsSetting
+    //             onClick={() =>
+    //               this.setState(prevState => ({
+    //                 columnSettingOpen: !prevState.columnSettingOpen
+    //               }))
+    //             }
+    //             data-test='table_columns_setting_action'
+    //           />
+    //         ) : (
+    //           ''
+    //         ),
+    //         width: 40,
+    //         actions: rowActions
+    //       },
+    //       ...columns
+    //     ]
+    //   : columns
   }
 
   getColumnsExtension = () => {
@@ -682,13 +692,11 @@ class _Table extends Component {
   }
 
   loadColumnsSettings = () => {
-    const { tableName, columns, rowActions, defaultHiddenColumns, defaultSorting } = this.props
+    const { tableName, columns, defaultHiddenColumns, defaultSorting } = this.props
     // get column names from current table settings
     let colNames = columns.map(column => {
       return column.name
     })
-
-    if (rowActions) colNames.push('__actions')
 
     if (tableName && localStorage[tableName]) {
       // if saved table settings exists then compare it with current settings
@@ -846,7 +854,6 @@ class _Table extends Component {
       selectByRowClick,
       showSelectAll,
       sameGroupSelectionOnly,
-      rowActions,
       rowChildActions,
       showHeader,
       onSelectionChange,
@@ -875,6 +882,9 @@ class _Table extends Component {
       onExpandedRowIdsChange,
       expandedRowIds,
       loadedAllData,
+      columnActions,
+      isOpenColumnSettingModal,
+      toggleColumnSettingModal,
       ...restProps
     } = this.props
     const {
@@ -884,7 +894,9 @@ class _Table extends Component {
 
     const { columnSettingOpen, expandedGroups, columnsSettings, loaded, scrolledBottom } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
-    const columnsFiltered = columns.filter(c => !c.disabled && (showColumnsWhenGrouped || !groupBy.includes(c.name)))
+    const columnsFiltered = columns.filter(
+      c => !c.disabled && !c.actions && (showColumnsWhenGrouped || !groupBy.includes(c.name))
+    )
 
     const hiddenColumns = [
       ...this.getColumns()
@@ -892,6 +904,7 @@ class _Table extends Component {
         .map(c => c.name),
       ...(columnsSettings.hiddenColumnNames || [])
     ]
+
     return (
       <Segment
         basic
@@ -910,13 +923,13 @@ class _Table extends Component {
           ref={c => c && (this.gridWrapper = c)}>
           <ColumnsSettingModal
             columns={columnsFiltered}
-            open={columnSettingOpen}
+            open={isOpenColumnSettingModal}
             formatMessage={formatMessage}
             hiddenColumnNames={this.state.columnsSettings.hiddenColumnNames}
-            onClose={() => this.setState({ columnSettingOpen: false })}
+            onClose={() => toggleColumnSettingModal(false)}
             onChange={hiddenColumnNames => {
               this.handleColumnsSettings({ hiddenColumnNames })
-              this.setState({ columnSettingOpen: false })
+              toggleColumnSettingModal(false)
             }}
             data-test='table_columns_setting_modal'
           />
@@ -992,7 +1005,7 @@ class _Table extends Component {
             />
             {columnReordering && <DragDropProvider />}
             {showHeader && <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />}
-            <RowActionsFormatterProvider for={['__actions']} actions={rowActions} />
+            <RowActionsFormatterProvider for={[columnActions]} />
 
             {treeDataType && (
               <TableTreeColumn
@@ -1057,12 +1070,10 @@ class _Table extends Component {
                       row,
                       restProps,
                       groupLength: getChildGroups(rows).find(group => row.value === group.key).groupLength,
-                      children: groupActions
-                        ? rowActionsCellFormatter({
-                            column: { actions: groupActions(row) },
-                            row
-                          })
-                        : null
+                      children: rowActionsCellFormatter({
+                        column: { actions: groupActions ? groupActions(row) : null },
+                        row
+                      })
                     })
                   ) : (
                     <span {...restProps}>
@@ -1078,14 +1089,11 @@ class _Table extends Component {
                     hideActions={groupActions ? false : true}
                     hideCheckboxes={hideCheckboxes}
                     onSelectionChange={this.handleGroupSelectionChange}
-                    actionsDropdown={
-                      groupActions
-                        ? rowActionsCellFormatter({
-                            column: { actions: groupActions(props.row) },
-                            row: props.row
-                          })
-                        : null
-                    }
+                    actionsDropdown={rowActionsCellFormatter({
+                      column: { actions: groupActions ? groupActions(props.row) : null },
+                      row: props.row,
+                      groupLength: getChildGroups(rows).find(group => props.row.value === group.key).groupLength
+                    })}
                     {...props}
                   />
                 )}
@@ -1114,4 +1122,12 @@ class _Table extends Component {
   }
 }
 
-export default injectIntl(_Table)
+const mapDispatchToProps = {
+  toggleColumnSettingModal
+}
+
+const mapStateToProps = state => ({
+  isOpenColumnSettingModal: getSafe(() => state.simpleAdd.isOpenColumnSettingModal, false)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(_Table))

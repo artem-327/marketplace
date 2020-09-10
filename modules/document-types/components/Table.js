@@ -7,22 +7,54 @@ import { getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation } 
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage } from 'react-intl'
 
-const columns = [
-  {
-    name: 'name',
-    title: (
-      <FormattedMessage id='global.name' defaultMessage='Name'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    sortPath: 'DocumentType.name'
-  }
-]
 class Table extends Component {
-  render() {
-    const { intl, loading, rows, datagrid, filterValue, openEditPopup, deleteConfirmation } = this.props
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.name' defaultMessage='Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'DocumentType.name',
+          actions: this.getActions()
+        }
+      ]
+    }
+  }
+
+  getActions = () => {
+    const { intl, openEditPopup, deleteConfirmation } = this.props
 
     const { formatMessage } = intl
+    return [
+      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({
+              id: `confirm.deleteDocumentType.title`,
+              defaultMessage: `Delete Document Type`
+            }),
+            formatMessage(
+              {
+                id: `confirm.deleteDocumentType.content`,
+                defaultMessage: `Do you really want to delete '${row.name}' document type?`
+              },
+              { name: row.name }
+            )
+          ).then(() => deleteConfirmation(row.id))
+      }
+    ]
+  }
+
+  render() {
+    const { loading, rows, datagrid, filterValue } = this.props
 
     return (
       <React.Fragment>
@@ -31,28 +63,9 @@ class Table extends Component {
           {...datagrid.tableProps}
           filterValue={filterValue}
           loading={datagrid.loading || loading}
-          columns={columns}
+          columns={this.state.columns}
           rows={rows}
-          rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({
-                    id: `confirm.deleteDocumentType.title`,
-                    defaultMessage: `Delete Document Type`
-                  }),
-                  formatMessage(
-                    {
-                      id: `confirm.deleteDocumentType.content`,
-                      defaultMessage: `Do you really want to delete '${row.name}' document type?`
-                    },
-                    { name: row.name }
-                  )
-                ).then(() => deleteConfirmation(row.id))
-            }
-          ]}
+          columnActions='name'
         />
       </React.Fragment>
     )

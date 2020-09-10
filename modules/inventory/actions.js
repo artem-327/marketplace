@@ -498,6 +498,12 @@ export function handleVariableSave(variable, value) {
   }
 }
 
+export function toggleColumnSettingModal(isOpen) {
+  return {
+    type: AT.TOGGLE_COLUMN_SETTING_MODAL,
+    payload: isOpen
+  }
+}
 export function handleProductCatalogUnmappedValue(value) {
   return async dispatch => {
     dispatch({

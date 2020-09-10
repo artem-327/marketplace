@@ -19,6 +19,7 @@ import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/function
 import Tutorial from '~/modules/tutorial/Tutorial'
 import SearchByNamesAndTags from '~/modules/search'
 import ExportInventorySidebar from '~/modules/export-inventory/components/ExportInventory'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
 import { InventoryFilter } from '~/modules/filter'
@@ -105,279 +106,253 @@ const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
 
+const DivRow = styled.div`
+  display: flex !important;
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+`
+
+const DivIcons = styled.div`
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  right: 0px !important;
+  display: flex !important;
+  margin-left: 10px !important;
+`
+
 class MyListings extends Component {
-  state = {
-    columns: [
-      {
-        name: 'expired',
-        title: (
-          <Popup
-            header={
-              <FormattedMessage id='myInventory.tooltipExpired' defaultMessage='Shows if Product offer is expired' />
-            }
-            trigger={
-              <div>
-                <ClockIcon className='grey' />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ),
-        caption: (
-          <FormattedMessage id='global.expirationStatusIcon' defaultMessage='Expiration Status Icon'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 40,
-        align: 'center'
-      },
-      {
-        name: 'productStatus',
-        title: (
-          <Popup
-            header={
-              <FormattedMessage
-                id='myInventory.tooltipProductStatus'
-                defaultMessage="Shows if Product offer's Generic Product is published and offer is visible on the Marketplace"
-              />
-            }
-            trigger={
-              <div>
-                <FileTextIcon className='grey' />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ),
-        caption: (
-          <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 40,
-        align: 'center'
-      },
-      {
-        name: 'productName',
-        title: (
-          <FormattedMessage id='global.intProductName' defaultMessage='Product Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 250,
-        sortPath: 'ProductOffer.companyProduct.intProductName'
-      },
-      {
-        name: 'fobPrice',
-        title: (
-          <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 180,
-        align: 'right',
-        sortPath: 'ProductOffer.cfPricePerUOM'
-      },
-      {
-        name: 'productNumber',
-        title: (
-          <FormattedMessage id='global.intProductCode' defaultMessage='Product Code'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160,
-        sortPath: 'ProductOffer.companyProduct.intProductCode'
-      },
-      { name: 'echoName', disabled: true },
-      { name: 'echoCode', disabled: true },
-      {
-        name: 'warehouse',
-        title: (
-          <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 180,
-        sortPath: 'ProductOffer.warehouse.warehouse'
-      },
-      {
-        name: 'available',
-        title: (
-          <FormattedMessage id='myInventory.available' defaultMessage='Available PKGs'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130,
-        align: 'right',
-        sortPath: 'ProductOffer.quantity'
-      },
-      {
-        name: 'packaging',
-        title: (
-          <FormattedMessage id='myInventory.packaging' defaultMessage='Packaging'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      {
-        name: 'quantity',
-        title: (
-          <FormattedMessage id='myInventory.quantity' defaultMessage='Quantity'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130,
-        align: 'right',
-        sortPath: 'ProductOffer.quantity'
-      },
-      {
-        name: 'cost',
-        title: (
-          <FormattedMessage id='myInventory.cost' defaultMessage='Cost'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        align: 'right'
-      },
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 220
-      },
-      // { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #'>{(text) => text}</FormattedMessage>, width: 70 },
-      {
-        name: 'broadcast',
-        title: (
-          <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        align: 'right',
-        sortPath: 'ProductOffer.broadcasted'
-      },
-      {
-        name: 'minOrderQuantity',
-        title: (
-          <FormattedMessage id='myInventory.minOrderQuantity' defaultMessage='Min Order Q.'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
-        name: 'splits',
-        title: (
-          <FormattedMessage id='myInventory.splits' defaultMessage='Splits'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
-        name: 'condition',
-        title: (
-          <FormattedMessage id='myInventory.condition' defaultMessage='Condition'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
-        name: 'grade',
-        title: (
-          <FormattedMessage id='myInventory.grade' defaultMessage='Grade'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80
-      },
-      {
-        name: 'origin',
-        title: (
-          <FormattedMessage id='myInventory.origin' defaultMessage='Origin'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
-        name: 'form',
-        title: (
-          <FormattedMessage id='myInventory.form' defaultMessage='Form'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'mfgDate',
-        title: (
-          <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFR Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
-        name: 'expDate',
-        title: (
-          <FormattedMessage id='myInventory.expDate' defaultMessage='Lot Exp. Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
-        name: 'allocatedPkg',
-        title: (
-          <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'offerExpiration',
-        title: (
-          <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer Exp. Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
-        name: 'groupId',
-        title: (
-          <FormattedMessage id='myInventory.groupId' defaultMessage='Group ID'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 200
-      },
-      {
-        name: 'lotNumber',
-        title: (
-          <FormattedMessage id='myInventory.lotNumber' defaultMessage='Lot Number'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 200
+  constructor(props) {
+    super(props)
+    this.state = {
+      columns: [
+        {
+          name: 'productName',
+          title: (
+            <FormattedMessage id='global.intProductName' defaultMessage='Product Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 250,
+          sortPath: 'ProductOffer.companyProduct.intProductName',
+          actions: this.getActions()
+        },
+        {
+          name: 'fobPrice',
+          title: (
+            <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180,
+          align: 'right',
+          sortPath: 'ProductOffer.cfPricePerUOM'
+        },
+        {
+          name: 'productNumber',
+          title: (
+            <FormattedMessage id='global.intProductCode' defaultMessage='Product Code'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160,
+          sortPath: 'ProductOffer.companyProduct.intProductCode'
+        },
+        { name: 'echoName', disabled: true },
+        { name: 'echoCode', disabled: true },
+        {
+          name: 'warehouse',
+          title: (
+            <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180,
+          sortPath: 'ProductOffer.warehouse.warehouse'
+        },
+        {
+          name: 'available',
+          title: (
+            <FormattedMessage id='myInventory.available' defaultMessage='Available PKGs'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130,
+          align: 'right',
+          sortPath: 'ProductOffer.quantity'
+        },
+        {
+          name: 'packaging',
+          title: (
+            <FormattedMessage id='myInventory.packaging' defaultMessage='Packaging'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        {
+          name: 'quantity',
+          title: (
+            <FormattedMessage id='myInventory.quantity' defaultMessage='Quantity'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130,
+          align: 'right',
+          sortPath: 'ProductOffer.quantity'
+        },
+        {
+          name: 'cost',
+          title: (
+            <FormattedMessage id='myInventory.cost' defaultMessage='Cost'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          align: 'right'
+        },
+        {
+          name: 'manufacturer',
+          title: (
+            <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 220
+        },
+        // { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #'>{(text) => text}</FormattedMessage>, width: 70 },
+        {
+          name: 'broadcast',
+          title: (
+            <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          align: 'right',
+          sortPath: 'ProductOffer.broadcasted'
+        },
+        {
+          name: 'minOrderQuantity',
+          title: (
+            <FormattedMessage id='myInventory.minOrderQuantity' defaultMessage='Min Order Q.'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
+          name: 'splits',
+          title: (
+            <FormattedMessage id='myInventory.splits' defaultMessage='Splits'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
+          name: 'condition',
+          title: (
+            <FormattedMessage id='myInventory.condition' defaultMessage='Condition'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
+          name: 'grade',
+          title: (
+            <FormattedMessage id='myInventory.grade' defaultMessage='Grade'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 80
+        },
+        {
+          name: 'origin',
+          title: (
+            <FormattedMessage id='myInventory.origin' defaultMessage='Origin'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
+          name: 'form',
+          title: (
+            <FormattedMessage id='myInventory.form' defaultMessage='Form'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'mfgDate',
+          title: (
+            <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFR Date'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
+          name: 'expDate',
+          title: (
+            <FormattedMessage id='myInventory.expDate' defaultMessage='Lot Exp. Date'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
+          name: 'allocatedPkg',
+          title: (
+            <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'offerExpiration',
+          title: (
+            <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer Exp. Date'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
+          name: 'groupId',
+          title: (
+            <FormattedMessage id='myInventory.groupId' defaultMessage='Group ID'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200
+        },
+        {
+          name: 'lotNumber',
+          title: (
+            <FormattedMessage id='myInventory.lotNumber' defaultMessage='Lot Number'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200
+        }
+      ],
+      selectedRows: [],
+      // pageNumber: 0,
+      open: false,
+      clientMessage: '',
+      request: null,
+      filterValues: {
+        SearchByNamesAndTags: null
       }
-    ],
-    selectedRows: [],
-    // pageNumber: 0,
-    open: false,
-    clientMessage: '',
-    request: null,
-    filterValues: {
-      SearchByNamesAndTags: null
-    },
-    openFilterPopup: false
+    }
   }
 
   componentDidMount() {
@@ -449,6 +424,109 @@ class MyListings extends Component {
     const { datagrid } = this.props
     datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
+
+  getActions = () => {
+    const {
+      intl: { formatMessage },
+      sidebarDetailTrigger,
+      editedId,
+      datagrid
+    } = this.props
+    return [
+      /*{
+        text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) =>
+          // Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
+          simpleEditTrigger(datagrid.rows.find((r) => r.id === row.id), true)
+      },*/
+      {
+        text: formatMessage({
+          id: 'global.edit',
+          defaultMessage: 'Edit'
+        }),
+        callback: row => this.tableRowClickedProductOffer(row, true, 0, sidebarDetailTrigger)
+      },
+      //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
+      {
+        text: formatMessage({
+          id: 'global.tds',
+          defaultMessage: 'TDS'
+        }),
+        callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
+      },
+      {
+        text: formatMessage({
+          id: 'global.documents',
+          defaultMessage: 'Documents'
+        }),
+        disabled: row => row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
+      },
+      {
+        text: formatMessage({
+          id: 'inventory.broadcast',
+          defaultMessage: 'Price Book'
+        }),
+        disabled: row => row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+      },
+      {
+        text: formatMessage({
+          id: 'inventory.priceTiers',
+          defaultMessage: 'Price Tiers'
+        }),
+        disabled: row => row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
+      },
+      {
+        text: formatMessage({
+          id: 'global.delete',
+          defaultMessage: 'Delete'
+        }),
+        disabled: row => editedId === row.id,
+        callback: row => {
+          confirm(
+            formatMessage({
+              id: 'confirm.deleteOfferHeader',
+              defaultMessage: 'Delete Product Offer'
+            }),
+            formatMessage(
+              {
+                id: 'confirm.deleteItem',
+                defaultMessage: `Do you really want to remove ${row.chemicalName}?`
+              },
+              { item: row.chemicalName }
+            )
+          ).then(() => {
+            this.props.deleteProductOffer(row.id)
+            datagrid.removeRow(row.id)
+          })
+        }
+      },
+      {
+        text: formatMessage({
+          id: 'inventory.groupOffer',
+          defaultMessage: 'Join/Create Virtual Group'
+        }),
+        callback: row =>
+          this.groupOffer(
+            {
+              overrideBroadcastRules: false,
+              productOfferIds: [row.id]
+            },
+            row
+          ),
+        disabled: row => !!row.parentOffer
+      },
+      {
+        text: formatMessage({
+          id: 'inventory.detachOffer',
+          defaultMessage: 'Detach from Virtual Group'
+        }),
+        callback: row => this.detachOffer([row.id], row),
+        disabled: row => !row.parentOffer
+      }
+    ]
+  }
 
   SearchByNamesAndTagsChanged = data => {
     this.setState(
@@ -570,27 +648,34 @@ class MyListings extends Component {
 
       return {
         ...r,
-        expired: r.expired ? (
-          <Popup
-            header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
-            trigger={
-              <div>
-                <ClockIcon />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ) : null,
-        productStatus: productStatusText ? (
-          <Popup
-            size='small'
-            header={productStatusText}
-            trigger={
-              <div>
-                <FileTextIcon />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ) : null,
+        productName: (
+          <DivRow>
+            <SpanText>{r.productName}</SpanText>
+            <DivIcons>
+              {r.expired ? (
+                <Popup
+                  header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+                  trigger={
+                    <div>
+                      <ClockIcon />
+                    </div>
+                  } // <div> has to be there otherwise popup will be not shown
+                />
+              ) : null}
+              {productStatusText ? (
+                <Popup
+                  size='small'
+                  header={productStatusText}
+                  trigger={
+                    <div>
+                      <FileTextIcon />
+                    </div>
+                  } // <div> has to be there otherwise popup will be not shown
+                />
+              ) : null}
+            </DivIcons>
+          </DivRow>
+        ),
         packaging: (
           <>
             {`${r.packagingSize} ${r.packagingUnit} `}
@@ -875,11 +960,7 @@ class MyListings extends Component {
                   </FormattedMessage>
                 </Button>
               </div>
-              <div className='column'>
-                <FiltersRow>
-                  <FilterTags datagrid={datagrid} data-test='my_inventory_filter_btn' />
-                </FiltersRow>
-              </div>
+              <ColumnSettingButton divide={true} />
             </div>
           </CustomRowDiv>
         </Container>
@@ -915,12 +996,8 @@ class MyListings extends Component {
               const tagNames = tagsNames ? tagsNames.split(',') : []
               return (
                 <span>
-                  <span style={{ fontWeight: '600', color: '#2599d5' }}>
-                    {name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({groupLength})</span>
-                  </span>
                   <span className='flex row right'>
-                    <span className='inventory-right'>
-                      <span style={{ fontWeight: '600' }}>{productGroup} </span>
+                    <span>
                       {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
                     </span>
                   </span>
@@ -944,100 +1021,6 @@ class MyListings extends Component {
                 text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
               }))
             }}
-            rowActions={[
-              /*{
-                text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) =>
-                  // Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
-                  simpleEditTrigger(datagrid.rows.find((r) => r.id === row.id), true)
-              },*/
-              {
-                text: formatMessage({
-                  id: 'global.edit',
-                  defaultMessage: 'Edit'
-                }),
-                callback: row => this.tableRowClickedProductOffer(row, true, 0, sidebarDetailTrigger)
-              },
-              //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
-              {
-                text: formatMessage({
-                  id: 'global.tds',
-                  defaultMessage: 'TDS'
-                }),
-                callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
-              },
-              {
-                text: formatMessage({
-                  id: 'global.documents',
-                  defaultMessage: 'Documents'
-                }),
-                disabled: row => row.groupId,
-                callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
-              },
-              {
-                text: formatMessage({
-                  id: 'inventory.broadcast',
-                  defaultMessage: 'Price Book'
-                }),
-                disabled: row => row.groupId,
-                callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
-              },
-              {
-                text: formatMessage({
-                  id: 'inventory.priceTiers',
-                  defaultMessage: 'Price Tiers'
-                }),
-                disabled: row => row.groupId,
-                callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
-              },
-              {
-                text: formatMessage({
-                  id: 'global.delete',
-                  defaultMessage: 'Delete'
-                }),
-                disabled: row => editedId === row.id,
-                callback: row => {
-                  confirm(
-                    formatMessage({
-                      id: 'confirm.deleteOfferHeader',
-                      defaultMessage: 'Delete Product Offer'
-                    }),
-                    formatMessage(
-                      {
-                        id: 'confirm.deleteItem',
-                        defaultMessage: `Do you really want to remove ${row.chemicalName}?`
-                      },
-                      { item: row.chemicalName }
-                    )
-                  ).then(() => {
-                    this.props.deleteProductOffer(row.id)
-                    datagrid.removeRow(row.id)
-                  })
-                }
-              },
-              {
-                text: formatMessage({
-                  id: 'inventory.groupOffer',
-                  defaultMessage: 'Join/Create Virtual Group'
-                }),
-                callback: row =>
-                  this.groupOffer(
-                    {
-                      overrideBroadcastRules: false,
-                      productOfferIds: [row.id]
-                    },
-                    row
-                  ),
-                disabled: row => !!row.parentOffer
-              },
-              {
-                text: formatMessage({
-                  id: 'inventory.detachOffer',
-                  defaultMessage: 'Detach from Virtual Group'
-                }),
-                callback: row => this.detachOffer([row.id], row),
-                disabled: row => !row.parentOffer
-              }
-            ]}
             /* COMMENTED #30916
           onRowClick={(e, row) => {
             const targetTag = e.target.tagName.toLowerCase()
@@ -1046,6 +1029,7 @@ class MyListings extends Component {
             }
           }}*/
             editingRowId={editedId}
+            columnActions='productName'
           />
         </div>
         {sidebarDetailOpen && <DetailSidebar />}

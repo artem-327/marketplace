@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Input, Button, } from 'semantic-ui-react'
+import { Container, Input, Button } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { debounce } from 'lodash'
@@ -12,154 +12,58 @@ import { Datagrid } from '~/modules/datagrid'
 import { SubmitOffer } from './SubmitOffer/index'
 import { PlusCircle } from 'react-feather'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import {
-  CustomRowDiv,
-  ProductChemicalSwitch
-} from '../../constants/layout'
+import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
 import { getSafe } from '~/utils/functions'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 class Listings extends Component {
-  state = {
-    columnsProduct: [
-      {
-        name: 'product',
-        title: (
-          <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 290
-        //align: 'right',
-        //sortPath: 'ProductOffer.pkgAvailable'
-      },
-      {
-        name: 'casNumber',
-        title: (
-          <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 225,
-        disabled: true
-      },
-      {
-        name: 'assay',
-        title: (
-          <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130,
-        disabled: true
-      },
-      {
-        name: 'packaging',
-        title: (
-          <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      /*
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 420
-      },
-      */
-      {
-        name: 'form',
-        title: (
-          <FormattedMessage id='wantedBoard.form' defaultMessage='Form'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'fobPrice',
-        title: (
-          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      {
-        name: 'quantity',
-        title: (
-          <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 180
-      },
-      {
-        name: 'neededBy',
-        title: (
-          <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'createdAt',
-        title: (
-          <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-        sortPath: 'PurchaseRequest.createdAt'
-      }
-    ],
-    columnsChemical: [
-      {
-        name: 'product',
-        title: (
-          <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 290,
-        disabled: true
-        //align: 'right',
-        //sortPath: 'ProductOffer.pkgAvailable'
-      },
-      {
-        name: 'casNumber',
-        title: (
-          <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 225
-      },
-      {
-        name: 'assay',
-        title: (
-          <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130
-      },
-      {
-        name: 'packaging',
-        title: (
-          <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      /*
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columnsProduct: [
+        {
+          name: 'product',
+          title: (
+            <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 290,
+          actions: this.getActions()
+          //align: 'right',
+          //sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
+          name: 'casNumber',
+          title: (
+            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 225,
+          disabled: true
+        },
+        {
+          name: 'assay',
+          title: (
+            <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130,
+          disabled: true
+        },
+        {
+          name: 'packaging',
+          title: (
+            <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        /*
       {
         name: 'manufacturer',
         title: (
@@ -170,60 +74,159 @@ class Listings extends Component {
         width: 420
       },
       */
+        {
+          name: 'form',
+          title: (
+            <FormattedMessage id='wantedBoard.form' defaultMessage='Form'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'fobPrice',
+          title: (
+            <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        {
+          name: 'quantity',
+          title: (
+            <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        {
+          name: 'neededBy',
+          title: (
+            <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'createdAt',
+          title: (
+            <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120,
+          sortPath: 'PurchaseRequest.createdAt'
+        }
+      ],
+      columnsChemical: [
+        {
+          name: 'product',
+          title: (
+            <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 290,
+          disabled: true
+          //align: 'right',
+          //sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
+          name: 'casNumber',
+          title: (
+            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 225
+        },
+        {
+          name: 'assay',
+          title: (
+            <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130
+        },
+        {
+          name: 'packaging',
+          title: (
+            <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        /*
       {
-        name: 'form',
+        name: 'manufacturer',
         title: (
-          <FormattedMessage id='wantedBoard.form' defaultMessage='Form'>
+          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 420
       },
-      {
-        name: 'fobPrice',
-        title: (
-          <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      {
-        name: 'quantity',
-        title: (
-          <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 180
-      },
-      {
-        name: 'neededBy',
-        title: (
-          <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'createdAt',
-        title: (
-          <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-        sortPath: 'PurchaseRequest.createdAt',
-        disabled: true
+      */
+        {
+          name: 'form',
+          title: (
+            <FormattedMessage id='wantedBoard.form' defaultMessage='Form'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'fobPrice',
+          title: (
+            <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        {
+          name: 'quantity',
+          title: (
+            <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        {
+          name: 'neededBy',
+          title: (
+            <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'createdAt',
+          title: (
+            <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120,
+          sortPath: 'PurchaseRequest.createdAt',
+          disabled: true
+        }
+      ],
+      selectedRows: [],
+      pageNumber: 0,
+      open: false,
+      popupValues: null,
+      filterValues: {
+        searchInput: ''
       }
-    ],
-    selectedRows: [],
-    pageNumber: 0,
-    open: false,
-    popupValues: null,
-    filterValues: {
-      searchInput: ''
     }
   }
 
@@ -274,6 +277,20 @@ class Listings extends Component {
       filterName: data.value
     }
     this.handleFiltersValue(filter)
+  }
+
+  getActions = () => {
+    const { intl } = this.props
+    let { formatMessage } = intl
+    return [
+      {
+        text: formatMessage({
+          id: 'wantedBoard.submitOffer',
+          defaultMessage: 'Submit Offer'
+        }),
+        callback: row => this.props.openSubmitOffer(row)
+      }
+    ]
   }
 
   renderContent = () => {
@@ -343,6 +360,7 @@ class Listings extends Component {
                   </FormattedMessage>
                 </Button>
               </div>
+              <ColumnSettingButton divide={true} />
             </div>
           </CustomRowDiv>
         </div>
@@ -354,15 +372,7 @@ class Listings extends Component {
             columns={type === 'product' ? columnsProduct : columnsChemical}
             rowSelection={false}
             showSelectionColumn={false}
-            rowActions={[
-              {
-                text: formatMessage({
-                  id: 'wantedBoard.submitOffer',
-                  defaultMessage: 'Submit Offer'
-                }),
-                callback: row => this.props.openSubmitOffer(row)
-              }
-            ]}
+            columnActions='product'
           />
         </div>
       </>
@@ -370,9 +380,7 @@ class Listings extends Component {
   }
 
   render() {
-    const {
-      openSidebar
-    } = this.props
+    const { openSidebar } = this.props
 
     return (
       <>

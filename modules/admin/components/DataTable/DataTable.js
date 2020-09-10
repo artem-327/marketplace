@@ -7,13 +7,41 @@ import { getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation } 
 import { withDatagrid } from '~/modules/datagrid'
 
 class DataTable extends Component {
-  render() {
-    const { config, intl, loading, rows, datagrid, filterValue, openEditPopup, deleteConfirmation } = this.props
+  getActions = () => {
+    const { config, intl, openEditPopup, deleteConfirmation } = this.props
 
     const { formatMessage } = intl
+    const { addEditText, formattedMessageName } = this.props.config
+    return [
+      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({
+              id: `confirm.delete${formattedMessageName.charAt(0).toUpperCase() + formattedMessageName.slice(1)}.title`,
+              defaultMessage: `Delete ${addEditText}`
+            }),
+            formatMessage(
+              {
+                id: `confirm.delete${
+                  formattedMessageName.charAt(0).toUpperCase() + formattedMessageName.slice(1)
+                }.content`,
+                defaultMessage: `Do you really want to delete '${row.name}' ${formattedMessageName}?`
+              },
+              { name: row.name }
+            )
+          ).then(() => deleteConfirmation(row.id, config))
+      }
+    ]
+  }
+
+  render() {
+    const { loading, rows, datagrid, filterValue } = this.props
+
     const { tableName } = this.props.config
     const { columns } = this.props.config.display
-    const { addEditText, formattedMessageName } = this.props.config
+    columns[0].actions = this.getActions()
 
     return (
       <React.Fragment>
@@ -24,28 +52,7 @@ class DataTable extends Component {
           loading={datagrid.loading || loading}
           columns={columns}
           rows={rows}
-          rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({
-                    id: `confirm.delete${formattedMessageName.charAt(0).toUpperCase() +
-                      formattedMessageName.slice(1)}.title`,
-                    defaultMessage: `Delete ${addEditText}`
-                  }),
-                  formatMessage(
-                    {
-                      id: `confirm.delete${formattedMessageName.charAt(0).toUpperCase() +
-                        formattedMessageName.slice(1)}.content`,
-                      defaultMessage: `Do you really want to delete '${row.name}' ${formattedMessageName}?`
-                    },
-                    { name: row.name }
-                  )
-                ).then(() => deleteConfirmation(row.id, config))
-            }
-          ]}
+          columnActions='name'
         />
       </React.Fragment>
     )

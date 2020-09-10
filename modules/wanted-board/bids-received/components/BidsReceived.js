@@ -17,330 +17,336 @@ import { getSafe } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
 
 import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 class BidsReceived extends Component {
-  state = {
-    columnsProduct: [
-      //{ name: 'productName', disabled: true },
-      //{ name: 'productNumber', disabled: true },
-      {
-        name: 'casNumber',
-        title: (
-          <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 225,
-        disabled: true
-      },
-      {
-        name: 'assay',
-        title: (
-          <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-        disabled: true
-      },
-      {
-        name: 'product',
-        title: (
-          <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 304
-        //align: 'right',
-        //sortPath: 'ProductOffer.pkgAvailable'
-      },
-      {
-        name: 'orderQuantity',
-        title: (
-          <FormattedMessage id='wantedBoard.orderQuantity' defaultMessage='Order Quantity'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 145
-      },
-      {
-        name: 'orderFrequency',
-        title: (
-          <FormattedMessage id='wantedBoard.orderFrequency' defaultMessage='orderFrequency'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160
-      },
-      {
-        name: 'neededBy',
-        title: (
-          <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 110
-      },
-      {
-        name: 'dealExpired',
-        title: (
-          <FormattedMessage id='wantedBoard.dealExpired' defaultMessage='Deal Expired'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130
-      },
-      /*
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130
-      },
-      */
-      {
-        name: 'condition',
-        title: (
-          <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'deliveryLocation',
-        title: (
-          <FormattedMessage id='wantedBoard.deliveryLoc' defaultMessage='Delivery Loc'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'packaging',
-        title: (
-          <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 110
-      },
-      {
-        name: 'deliveryPriceMax',
-        title: (
-          <FormattedMessage id='wantedBoard.deliveryPriceMax' defaultMessage='Delivery Price Max'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 170
-      },
-      {
-        name: 'measurement',
-        title: (
-          <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 135
-      },
-      {
-        name: 'fobQuote',
-        title: (
-          <FormattedMessage id='wantedBoard.fobQuote' defaultMessage='FOB Quote'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 110
-      },
-      {
-        name: 'deliveredQuote',
-        title: (
-          <FormattedMessage id='wantedBoard.deliveredQuote' defaultMessage='Delivered Quote'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 145
-      },
-      {
-        name: 'ownerBranch',
-        title: (
-          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 145
-      }
-    ],
-    columnsChemical: [
-      //{ name: 'productName', disabled: true },
-      //{ name: 'productNumber', disabled: true },
-      {
-        name: 'product',
-        title: (
-          <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 304,
-        disabled: true
-      },
-      {
-        name: 'casNumber',
-        title: (
-          <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 225
-        //align: 'right',
-        //sortPath: 'ProductOffer.pkgAvailable'
-      },
-      {
-        name: 'assay',
-        title: (
-          <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80
-      },
-      {
-        name: 'orderQuantity',
-        title: (
-          <FormattedMessage id='wantedBoard.orderQuantity' defaultMessage='Order Quantity'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 145
-      },
-      {
-        name: 'orderFrequency',
-        title: (
-          <FormattedMessage id='wantedBoard.orderFrequency' defaultMessage='orderFrequency'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160
-      },
-      {
-        name: 'neededBy',
-        title: (
-          <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 110
-      },
-      {
-        name: 'dealExpired',
-        title: (
-          <FormattedMessage id='wantedBoard.dealExpired' defaultMessage='Deal Expired'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130
-      },
-      /*
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130
-      },
-      */
-      {
-        name: 'condition',
-        title: (
-          <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'deliveryLocation',
-        title: (
-          <FormattedMessage id='wantedBoard.deliveryLoc' defaultMessage='Delivery Loc'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'packaging',
-        title: (
-          <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 110
-      },
-      {
-        name: 'deliveryPriceMax',
-        title: (
-          <FormattedMessage id='wantedBoard.deliveryPriceMax' defaultMessage='Delivery Price Max'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 170
-      },
-      {
-        name: 'measurement',
-        title: (
-          <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 135
-      },
-      {
-        name: 'fobQuote',
-        title: (
-          <FormattedMessage id='wantedBoard.fobQuote' defaultMessage='FOB Quote'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 110
-      },
-      {
-        name: 'deliveredQuote',
-        title: (
-          <FormattedMessage id='wantedBoard.deliveredQuote' defaultMessage='Delivered Quote'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 145
-      },
-      {
-        name: 'ownerBranch',
-        title: (
-          <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 145
-      }
-    ],
+  constructor(props) {
+    super(props)
 
-    selectedRows: [],
-    pageNumber: 0,
-    open: false,
-    filterValue: {
-      searchInput: ''
-    },
-    expandedRowIds: []
+    this.state = {
+      columnsProduct: [
+        //{ name: 'productName', disabled: true },
+        //{ name: 'productNumber', disabled: true },
+        {
+          name: 'casNumber',
+          title: (
+            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 225,
+          disabled: true
+        },
+        {
+          name: 'assay',
+          title: (
+            <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 80,
+          disabled: true
+        },
+        {
+          name: 'product',
+          title: (
+            <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 304,
+          actions: this.getActions()
+          //align: 'right',
+          //sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
+          name: 'orderQuantity',
+          title: (
+            <FormattedMessage id='wantedBoard.orderQuantity' defaultMessage='Order Quantity'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 145
+        },
+        {
+          name: 'orderFrequency',
+          title: (
+            <FormattedMessage id='wantedBoard.orderFrequency' defaultMessage='orderFrequency'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        {
+          name: 'neededBy',
+          title: (
+            <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 110
+        },
+        {
+          name: 'dealExpired',
+          title: (
+            <FormattedMessage id='wantedBoard.dealExpired' defaultMessage='Deal Expired'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130
+        },
+        /*
+      {
+        name: 'manufacturer',
+        title: (
+          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 130
+      },
+      */
+        {
+          name: 'condition',
+          title: (
+            <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'deliveryLocation',
+          title: (
+            <FormattedMessage id='wantedBoard.deliveryLoc' defaultMessage='Delivery Loc'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'packaging',
+          title: (
+            <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 110
+        },
+        {
+          name: 'deliveryPriceMax',
+          title: (
+            <FormattedMessage id='wantedBoard.deliveryPriceMax' defaultMessage='Delivery Price Max'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          align: 'right',
+          width: 170
+        },
+        {
+          name: 'measurement',
+          title: (
+            <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 135
+        },
+        {
+          name: 'fobQuote',
+          title: (
+            <FormattedMessage id='wantedBoard.fobQuote' defaultMessage='FOB Quote'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          align: 'right',
+          width: 110
+        },
+        {
+          name: 'deliveredQuote',
+          title: (
+            <FormattedMessage id='wantedBoard.deliveredQuote' defaultMessage='Delivered Quote'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          align: 'right',
+          width: 145
+        },
+        {
+          name: 'ownerBranch',
+          title: (
+            <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 145
+        }
+      ],
+      columnsChemical: [
+        //{ name: 'productName', disabled: true },
+        //{ name: 'productNumber', disabled: true },
+        {
+          name: 'product',
+          title: (
+            <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 304,
+          disabled: true
+        },
+        {
+          name: 'casNumber',
+          title: (
+            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 225
+          //align: 'right',
+          //sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
+          name: 'assay',
+          title: (
+            <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 80
+        },
+        {
+          name: 'orderQuantity',
+          title: (
+            <FormattedMessage id='wantedBoard.orderQuantity' defaultMessage='Order Quantity'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 145
+        },
+        {
+          name: 'orderFrequency',
+          title: (
+            <FormattedMessage id='wantedBoard.orderFrequency' defaultMessage='orderFrequency'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        {
+          name: 'neededBy',
+          title: (
+            <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 110
+        },
+        {
+          name: 'dealExpired',
+          title: (
+            <FormattedMessage id='wantedBoard.dealExpired' defaultMessage='Deal Expired'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130
+        },
+        /*
+      {
+        name: 'manufacturer',
+        title: (
+          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 130
+      },
+      */
+        {
+          name: 'condition',
+          title: (
+            <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'deliveryLocation',
+          title: (
+            <FormattedMessage id='wantedBoard.deliveryLoc' defaultMessage='Delivery Loc'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'packaging',
+          title: (
+            <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 110
+        },
+        {
+          name: 'deliveryPriceMax',
+          title: (
+            <FormattedMessage id='wantedBoard.deliveryPriceMax' defaultMessage='Delivery Price Max'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          align: 'right',
+          width: 170
+        },
+        {
+          name: 'measurement',
+          title: (
+            <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 135
+        },
+        {
+          name: 'fobQuote',
+          title: (
+            <FormattedMessage id='wantedBoard.fobQuote' defaultMessage='FOB Quote'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          align: 'right',
+          width: 110
+        },
+        {
+          name: 'deliveredQuote',
+          title: (
+            <FormattedMessage id='wantedBoard.deliveredQuote' defaultMessage='Delivered Quote'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          align: 'right',
+          width: 145
+        },
+        {
+          name: 'ownerBranch',
+          title: (
+            <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 145
+        }
+      ],
+
+      selectedRows: [],
+      pageNumber: 0,
+      open: false,
+      filterValue: {
+        searchInput: ''
+      },
+      expandedRowIds: []
+    }
   }
 
   handleFiltersValue = debounce(filter => {
@@ -416,6 +422,46 @@ class BidsReceived extends Component {
     this.handleFiltersValue(filter)
   }
 
+  getActions = () => {
+    const { intl, sidebarDetailTrigger, editedId, datagrid, deletePurchaseRequestItem } = this.props
+    let { formatMessage } = intl
+    return [
+      {
+        text: formatMessage({
+          id: 'global.edit',
+          defaultMessage: 'Edit'
+        }),
+        callback: row => {
+          sidebarDetailTrigger(row, 'bids-received')
+        }
+      },
+      {
+        text: formatMessage({
+          id: 'global.delete',
+          defaultMessage: 'Delete'
+        }),
+        disabled: row => editedId === row.id,
+        callback: row => {
+          confirm(
+            formatMessage({
+              id: 'confirm.deleteRequestedItem.Header',
+              defaultMessage: 'Delete Requested Item'
+            }),
+            formatMessage({
+              id: 'confirm.deleteRequestedItem.Content',
+              defaultMessage: 'Do you really want to delete requested item?'
+            })
+          ).then(async () => {
+            try {
+              await deletePurchaseRequestItem(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {}
+          })
+        }
+      }
+    ]
+  }
+
   renderContent = () => {
     const { datagrid, intl, rows, editedId, sidebarDetailTrigger, type, tutorialCompleted } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
@@ -484,6 +530,7 @@ class BidsReceived extends Component {
                 </Button>
               </div>
             </div>
+            <ColumnSettingButton divide={true} />
           </CustomRowDiv>
         </div>
         <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
@@ -514,41 +561,7 @@ class BidsReceived extends Component {
             }}
             expandedRowIds={this.state.expandedRowIds}
             onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-            rowActions={[
-              {
-                text: formatMessage({
-                  id: 'global.edit',
-                  defaultMessage: 'Edit'
-                }),
-                callback: row => {
-                  sidebarDetailTrigger(row, 'bids-received')
-                }
-              },
-              {
-                text: formatMessage({
-                  id: 'global.delete',
-                  defaultMessage: 'Delete'
-                }),
-                disabled: row => editedId === row.id,
-                callback: row => {
-                  confirm(
-                    formatMessage({
-                      id: 'confirm.deleteRequestedItem.Header',
-                      defaultMessage: 'Delete Requested Item'
-                    }),
-                    formatMessage({
-                      id: 'confirm.deleteRequestedItem.Content',
-                      defaultMessage: 'Do you really want to delete requested item?'
-                    })
-                  ).then(async () => {
-                    try {
-                      await this.props.deletePurchaseRequestItem(row.id)
-                      datagrid.removeRow(row.id)
-                    } catch (e) {}
-                  })
-                }
-              }
-            ]}
+            columnActions='product'
             rowChildActions={[
               {
                 text: formatMessage({
@@ -593,9 +606,7 @@ class BidsReceived extends Component {
   }
 
   render() {
-    const {
-      openSidebar
-    } = this.props
+    const { openSidebar } = this.props
 
     return (
       <>
@@ -608,7 +619,6 @@ class BidsReceived extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-})
+const mapStateToProps = state => ({})
 
 export default injectIntl(connect(mapStateToProps)(BidsReceived))

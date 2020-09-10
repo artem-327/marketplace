@@ -11,24 +11,60 @@ import { openPopup, deleteTag } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 
 class TagsTable extends Component {
-  state = {
-    columns: [
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='operations.tagName' defaultMessage='Tag Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'Tag.name',
+          actions: this.getActions()
+        }
+      ]
+    }
+  }
+
+  getActions = () => {
+    const { intl, openPopup, deleteTag } = this.props
+
+    const { formatMessage } = intl
+    return [
+      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
       {
-        name: 'name',
-        title: (
-          <FormattedMessage id='operations.tagName' defaultMessage='Tag Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        sortPath: 'Tag.name'
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({
+              id: `confirm.delete.operations.tag.title`,
+              defaultMessage: `Delete`
+            }),
+            formatMessage(
+              {
+                id: `confirm.delete.operations.tag.content`,
+                defaultMessage: `Do you really want to delete tag?`
+              },
+              { name: row.name }
+            )
+          )
+            .then(() => {
+              deleteTag(row.id)
+            })
+            .catch(err => {
+              console.error(err)
+            })
       }
     ]
   }
 
   render() {
-    const { intl, loading, rows, datagrid, filterValue, openPopup, deleteTag, toastManager } = this.props
+    const { loading, rows, datagrid, filterValue } = this.props
 
-    const { formatMessage } = intl
     const { columns } = this.state
     return (
       <React.Fragment>
@@ -39,32 +75,7 @@ class TagsTable extends Component {
           loading={datagrid.loading || loading}
           columns={columns}
           rows={rows}
-          rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({
-                    id: `confirm.delete.operations.tag.title`,
-                    defaultMessage: `Delete`
-                  }),
-                  formatMessage(
-                    {
-                      id: `confirm.delete.operations.tag.content`,
-                      defaultMessage: `Do you really want to delete tag?`
-                    },
-                    { name: row.name }
-                  )
-                )
-                  .then(() => {
-                    deleteTag(row.id)
-                  })
-                  .catch(err => {
-                    console.error(err)
-                  })
-            }
-          ]}
+          columnActions='name'
         />
       </React.Fragment>
     )

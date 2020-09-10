@@ -15,6 +15,7 @@ import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -27,22 +28,23 @@ const CustomRowDiv = styled.div`
   justify-content: space-between;
   margin: -5px -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 5px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
-  
+
   .ui.button {
     height: 40px;
     border-radius: 3px;
@@ -50,7 +52,7 @@ const CustomRowDiv = styled.div`
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
     border: solid 1px #dee2e6;
     background-color: #ffffff;
-    color: #848893;   
+    color: #848893;
     display: flex;
     align-items: center;
     &:hover {
@@ -61,20 +63,20 @@ const CustomRowDiv = styled.div`
       background-color: #edeef2;
       color: #20273a;
     }
-  
+
     svg {
-        width: 18px;
-        height: 20px;
-        margin-right: 10px;
-        vertical-align: top;
-        color: inherit;
+      width: 18px;
+      height: 20px;
+      margin-right: 10px;
+      vertical-align: top;
+      color: inherit;
     }
-      
+
     &.light {
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
       border: solid 1px #dee2e6;
       background-color: #ffffff;
-      color: #848893;    
+      color: #848893;
       &:hover {
         background-color: #f8f9fb;
         color: #20273a;
@@ -84,7 +86,7 @@ const CustomRowDiv = styled.div`
         color: #20273a;
       }
     }
-    
+
     &.primary {
       box-shadow: none;
       border: none;
@@ -112,6 +114,10 @@ const CustomLabel = styled.div`
   align-items: center;
 `
 
+const ButtonAdd = styled(Button)`
+  margin-right: 9px !important;
+`
+
 const textsTable = {
   'delivery-locations': {
     BtnAddText: 'settings.tables.deliveryAddresses.buttonAdd',
@@ -137,9 +143,9 @@ class TablesHandlers extends Component {
       'pick-up-locations': {
         searchInput: ''
       },
-      'branches': {
+      branches: {
         searchInput: ''
-      },
+      }
     }
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
@@ -189,7 +195,7 @@ class TablesHandlers extends Component {
     const {
       currentTab,
       openSidebar,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     const filterValue = this.state[currentTab]
@@ -212,13 +218,11 @@ class TablesHandlers extends Component {
           </div>
         </div>
         <div className='column'>
-          <Button
-            primary
-            onClick={() => openSidebar()}
-            data-test='settings_open_popup_btn'>
+          <ButtonAdd primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
             <PlusCircle />
             <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
-          </Button>
+          </ButtonAdd>
+          <ColumnSettingButton divide={true} />
         </div>
       </>
     )
@@ -227,9 +231,7 @@ class TablesHandlers extends Component {
   render() {
     return (
       <PositionHeaderSettings>
-        <CustomRowDiv>
-          {this.renderHandler()}
-        </CustomRowDiv>
+        <CustomRowDiv>{this.renderHandler()}</CustomRowDiv>
       </PositionHeaderSettings>
     )
   }
@@ -245,10 +247,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(
-  withToastManager(
-    connect(mapStateToProps, { ...Actions })(
-      injectIntl(TablesHandlers)
-    )
-  )
-)
+export default withDatagrid(withToastManager(connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers))))

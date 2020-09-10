@@ -118,273 +118,278 @@ const CustomDivTextAddedMewDocument = styled.div`
 `
 
 class Orders extends Component {
-  state = {
-    columns: [
-      {
-        name: 'orderId',
-        title: (
-          <FormattedMessage id='order.orderId' defaultMessage='Order ID'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        sortPath: 'Order.id'
-      },
-      {
-        name: 'globalStatus',
-        title: (
-          <FormattedMessage id='order.cfGlobalStatus' defaultMessage='Status'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-        sortPath: 'Order.cfGlobalStatus'
-      },
-      {
-        name: 'date',
-        title: (
-          <FormattedMessage id='order.date' defaultMessage='Order Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-        sortPath: 'Order.createdAt'
-      },
-      {
-        name: 'customerName',
-        title: (
-          <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-        sortPath: 'Order.sellerCompanyName'
-      }, // ! ! ? seller vs purchaser
-      {
-        name: 'productName',
-        title: (
-          <FormattedMessage id='order.productName' defaultMessage='Product Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160
-      },
-      {
-        name: 'orderStatus',
-        title: (
-          <FormattedMessage id='order' defaultMessage='Order'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'shippingStatus',
-        title: (
-          <FormattedMessage id='order.shipping' defaultMessage='Shipping'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'reviewStatus',
-        title: (
-          <FormattedMessage id='order.review' defaultMessage='Review'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'creditStatus',
-        title: (
-          <FormattedMessage id='order.credit' defaultMessage='Credit'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'paymentStatus',
-        title: (
-          <FormattedMessage id='order.payment' defaultMessage='Payment'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'bl',
-        title: (
-          <FormattedMessage id='order.bl' defaultMessage='B/L'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-        align: 'center'
-      },
-      {
-        name: 'sds',
-        title: (
-          <FormattedMessage id='order.sds' defaultMessage='SDS'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-        align: 'center'
-      },
-      {
-        name: 'cofA',
-        title: (
-          <FormattedMessage id='order.cOfa' defaultMessage='C of A'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-        align: 'center'
-      },
-      {
-        name: 'related',
-        title: (
-          <FormattedMessage id='order.related' defaultMessage='Related'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-        align: 'center'
-      },
-      {
-        name: 'orderTotal',
-        title: (
-          <FormattedMessage id='order.orderTotal' defaultMessage='Order Total'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160,
-        align: 'right',
-        sortPath: 'Order.cfPriceSubtotal'
-      }
-    ],
-    sorting: {
-      sortDirection: '',
-      sortPath: ''
-    },
-    LastEndpointType: '',
+  constructor(props) {
+    super(props)
 
-    openModal: false,
-    columnsRelatedOrders: [
-      {
-        name: 'documentNumber',
-        title: (
-          <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
+    this.state = {
+      columns: [
+        {
+          name: 'orderId',
+          title: (
+            <FormattedMessage id='order.orderId' defaultMessage='Order ID'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          sortPath: 'Order.id'
+        },
+        {
+          name: 'globalStatus',
+          title: (
+            <FormattedMessage id='order.cfGlobalStatus' defaultMessage='Status'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120,
+          sortPath: 'Order.cfGlobalStatus'
+        },
+        {
+          name: 'date',
+          title: (
+            <FormattedMessage id='order.date' defaultMessage='Order Date'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120,
+          sortPath: 'Order.createdAt'
+        },
+        {
+          name: 'customerName',
+          title: (
+            <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120,
+          sortPath: 'Order.sellerCompanyName'
+        }, // ! ! ? seller vs purchaser
+        {
+          name: 'productName',
+          title: (
+            <FormattedMessage id='order.productName' defaultMessage='Product Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        {
+          name: 'orderStatus',
+          title: (
+            <FormattedMessage id='order' defaultMessage='Order'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'shippingStatus',
+          title: (
+            <FormattedMessage id='order.shipping' defaultMessage='Shipping'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'reviewStatus',
+          title: (
+            <FormattedMessage id='order.review' defaultMessage='Review'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'creditStatus',
+          title: (
+            <FormattedMessage id='order.credit' defaultMessage='Credit'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'paymentStatus',
+          title: (
+            <FormattedMessage id='order.payment' defaultMessage='Payment'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'bl',
+          title: (
+            <FormattedMessage id='order.bl' defaultMessage='B/L'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 80,
+          align: 'center'
+        },
+        {
+          name: 'sds',
+          title: (
+            <FormattedMessage id='order.sds' defaultMessage='SDS'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 80,
+          align: 'center'
+        },
+        {
+          name: 'cofA',
+          title: (
+            <FormattedMessage id='order.cOfa' defaultMessage='C of A'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 80,
+          align: 'center'
+        },
+        {
+          name: 'related',
+          title: (
+            <FormattedMessage id='order.related' defaultMessage='Related'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 80,
+          align: 'center'
+        },
+        {
+          name: 'orderTotal',
+          title: (
+            <FormattedMessage id='order.orderTotal' defaultMessage='Order Total'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160,
+          align: 'right',
+          sortPath: 'Order.cfPriceSubtotal'
+        }
+      ],
+      sorting: {
+        sortDirection: '',
+        sortPath: ''
       },
-      {
-        name: 'type',
-        title: (
-          <FormattedMessage id='order.related.type' defaultMessage='Type'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      {
-        name: 'issuedAt',
-        title: (
-          <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'issuerCompanyName',
-        title: (
-          <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
-        name: 'download',
-        title: (
-          <FormattedMessage id='order.related.download' defaultMessage='Download'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        align: 'center'
-      }
-    ],
-    columnsAccountingDocuments: [
-      {
-        name: 'documentNumber',
-        title: (
-          <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      {
-        name: 'type',
-        title: (
-          <FormattedMessage id='order.related.type' defaultMessage='Type'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      {
-        name: 'issuedAt',
-        title: (
-          <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'issuerCompanyName',
-        title: (
-          <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100
-      },
-      {
-        name: 'cfPriceTotal',
-        title: (
-          <FormattedMessage id='order.related.cfPriceTotal' defaultMessage='Total'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        align: 'center'
-      }
-    ],
-    documentType: '',
-    openUploadAttachment: false,
-    relatedDocumentsTypeDropdown: [],
-    documentFiles: [],
-    isAddedNewDocument: false,
-    isOpenManager: false,
-    relatedDocumentType: [],
-    row: '',
-    isUnlinkDocument: false,
-    replaceExisting: false,
-    replaceRow: '',
-    openModalAccounting: false,
-    openRelatedPopup: false,
-    relatedPopupParams: {},
-    expandedRowIds: [],
-    filterDocumentType: 0
+      LastEndpointType: '',
+
+      openModal: false,
+      columnsRelatedOrders: [
+        {
+          name: 'documentNumber',
+          title: (
+            <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          actions: this.getActions()
+        },
+        {
+          name: 'type',
+          title: (
+            <FormattedMessage id='order.related.type' defaultMessage='Type'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        {
+          name: 'issuedAt',
+          title: (
+            <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'issuerCompanyName',
+          title: (
+            <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
+          name: 'download',
+          title: (
+            <FormattedMessage id='order.related.download' defaultMessage='Download'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          align: 'center'
+        }
+      ],
+      columnsAccountingDocuments: [
+        {
+          name: 'documentNumber',
+          title: (
+            <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        {
+          name: 'type',
+          title: (
+            <FormattedMessage id='order.related.type' defaultMessage='Type'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        {
+          name: 'issuedAt',
+          title: (
+            <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        },
+        {
+          name: 'issuerCompanyName',
+          title: (
+            <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
+          name: 'cfPriceTotal',
+          title: (
+            <FormattedMessage id='order.related.cfPriceTotal' defaultMessage='Total'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          align: 'center'
+        }
+      ],
+      documentType: '',
+      openUploadAttachment: false,
+      relatedDocumentsTypeDropdown: [],
+      documentFiles: [],
+      isAddedNewDocument: false,
+      isOpenManager: false,
+      relatedDocumentType: [],
+      row: '',
+      isUnlinkDocument: false,
+      replaceExisting: false,
+      replaceRow: '',
+      openModalAccounting: false,
+      openRelatedPopup: false,
+      relatedPopupParams: {},
+      expandedRowIds: [],
+      filterDocumentType: 0
+    }
   }
 
   getMimeType = documentName => {
@@ -884,6 +889,28 @@ class Orders extends Component {
     )
   }
 
+  getActions = () => {
+    const {
+      intl: { formatMessage }
+    } = this.props
+    return [
+      {
+        text: formatMessage({
+          id: 'global.replaceExisting',
+          defaultMessage: 'Replace Existing'
+        }),
+        callback: row => this.replaceExiting(row)
+      },
+      {
+        text: formatMessage({
+          id: 'global.unlink',
+          defaultMessage: 'Unlink'
+        }),
+        callback: row => this.handleUnlink(row)
+      }
+    ]
+  }
+
   getRelatedDocumentsContent = () => {
     const {
       intl: { formatMessage },
@@ -902,12 +929,7 @@ class Orders extends Component {
 
     const rowsRelatedDocuments = filteredAttachments.map(attach => ({
       id: attach.id,
-      documentNumber: (
-        <Button as='a' onClick={() => this.downloadAttachment(attach.name, attach.id)}>
-          <Icon name='download' />
-          {attach.name}
-        </Button>
-      ),
+      documentNumber: attach.name,
       type: getSafe(() => attach.documentType.name, 'N/A'),
       issuedAt: getSafe(() => <FormattedDate value={attach.issuedAt.split('T')[0]} />, 'N/A'),
       issuerCompanyName: 'N/A',
@@ -986,22 +1008,7 @@ class Orders extends Component {
           tableName='related_orders_documents'
           columns={this.state.columnsRelatedOrders}
           rows={rowsRelatedDocuments}
-          rowActions={[
-            {
-              text: formatMessage({
-                id: 'global.replaceExisting',
-                defaultMessage: 'Replace Existing'
-              }),
-              callback: row => this.replaceExiting(row)
-            },
-            {
-              text: formatMessage({
-                id: 'global.unlink',
-                defaultMessage: 'Unlink'
-              }),
-              callback: row => this.handleUnlink(row)
-            }
-          ]}
+          columnActions='documentNumber'
         />
       </>
     )

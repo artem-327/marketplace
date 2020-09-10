@@ -17,6 +17,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { errorMessages, dateValidation, dateBefore } from '~/constants/yupValidation'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -420,6 +421,7 @@ class TablesHandlers extends Component {
                   />
                 </div>
               </div>
+              <ColumnSettingButton />
             </>
           )
         }}
