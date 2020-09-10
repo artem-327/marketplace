@@ -12,6 +12,7 @@ import styled from 'styled-components'
 import { withDatagrid } from '~/modules/datagrid'
 import { CustomRowDiv } from '~/modules/companies/constants'
 import { PlusCircle } from 'react-feather'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -67,11 +68,10 @@ class TablesHandlers extends Component {
     }
   }
 
-  handleFiltersValue = debounce( filter => {
-      const { datagrid } = this.props
-      datagrid.setSearch(filter, true, 'pageFilters')
-    }, 300
-  )
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }, 300)
 
   handleFilterChangeInputSearch = (e, data) => {
     const { currentTab } = this.props
@@ -116,6 +116,7 @@ class TablesHandlers extends Component {
                 {config[currentTab].addEditText}
               </Button>
             </div>
+            <ColumnSettingButton divide={true} />
           </div>
         </CustomRowDiv>
       </PositionHeaderSettings>

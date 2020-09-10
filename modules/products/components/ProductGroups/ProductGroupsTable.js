@@ -12,32 +12,69 @@ import { withDatagrid } from '~/modules/datagrid'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 
 class ProductGroupsTable extends Component {
-  state = {
-    columns: [
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='product.groups.name' defaultMessage='Group Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'ProductGroup.name',
+          actions: this.getActions()
+        },
+        {
+          name: 'tags',
+          title: (
+            <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'marketSegments',
+          title: (
+            <FormattedMessage id='product.groups.marketSegments' defaultMessage='Market Segment'>
+              {text => text}
+            </FormattedMessage>
+          )
+        }
+      ]
+    }
+  }
+
+  getActions = () => {
+    const { intl, openPopup, deleteProductGroups } = this.props
+
+    const { formatMessage } = intl
+    return [
+      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
       {
-        name: 'name',
-        title: (
-          <FormattedMessage id='product.groups.name' defaultMessage='Group Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        sortPath: 'ProductGroup.name'
-      },
-      {
-        name: 'tags',
-        title: (
-          <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'marketSegments',
-        title: (
-          <FormattedMessage id='product.groups.marketSegments' defaultMessage='Market Segment'>
-            {text => text}
-          </FormattedMessage>
-        )
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({
+              id: `confirm.delete.operations.tag.title`,
+              defaultMessage: `Delete`
+            }),
+            formatMessage(
+              {
+                id: `confirm.delete.product.groups.content`,
+                defaultMessage: `Do you really want to delete Product Group?`
+              },
+              { name: row.name }
+            )
+          )
+            .then(() => {
+              deleteProductGroups(row.id)
+            })
+            .catch(err => {
+              console.error(err)
+            })
       }
     ]
   }
@@ -56,32 +93,7 @@ class ProductGroupsTable extends Component {
           loading={datagrid.loading || loading}
           columns={columns}
           rows={rows}
-          rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({
-                    id: `confirm.delete.operations.tag.title`,
-                    defaultMessage: `Delete`
-                  }),
-                  formatMessage(
-                    {
-                      id: `confirm.delete.product.groups.content`,
-                      defaultMessage: `Do you really want to delete Product Group?`
-                    },
-                    { name: row.name }
-                  )
-                )
-                  .then(() => {
-                    deleteProductGroups(row.id)
-                  })
-                  .catch(err => {
-                    console.error(err)
-                  })
-            }
-          ]}
+          columnActions='name'
         />
       </React.Fragment>
     )

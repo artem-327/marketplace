@@ -11,10 +11,15 @@ import { getSafe } from '~/utils/functions'
 import { openImportPopup } from '~/modules/settings/actions'
 import { CustomRowDiv } from '~/modules/companies/constants'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
   z-index: 602;
+`
+
+const DivColumn = styled.div`
+  margin-right: 9px !important;
 `
 
 const textsTable = {
@@ -139,13 +144,14 @@ class TablesHandlers extends Component {
             </div>
           ) : null}
           {item.BtnAddText && (
-            <div className='column'>
+            <DivColumn className='column'>
               <Button fluid primary onClick={() => openPopup()} data-test='products_open_popup_btn'>
                 <PlusCircle />
                 <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
               </Button>
-            </div>
+            </DivColumn>
           )}
+          <ColumnSettingButton divide={true} />
         </div>
       </CustomRowDiv>
     )
