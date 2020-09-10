@@ -478,15 +478,6 @@ class Navigation extends Component {
                     </Dropdown.Item>
                   </>
                 ) : null}
-                {(isCompanyAdmin || isProductCatalogAdmin) && !isClientCompany ? (
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/settings?type=products'
-                    tab='products'
-                    dataTest='navigation_settings_products_drpdn'>
-                    {formatMessage({ id: 'navigation.productCatalog', defaultMessage: 'Product Catalog' })}
-                  </Dropdown.Item>
-                ) : null}
                 {(isCompanyAdmin && !isClientCompany) || isClientCompanyAdmin ? (
                   <>
                     {!isClientCompanyAdmin && (
