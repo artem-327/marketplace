@@ -20,17 +20,21 @@ import {
 import Router from 'next/router'
 
 class ShippingQuotesTable extends Component {
-  state = {
-    columns: [
-      {
-        name: 'carrierName',
-        title: (
-          <FormattedMessage id='operations.carrierName' defaultMessage='Carrier Name'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      /*{
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'carrierName',
+          title: (
+            <FormattedMessage id='operations.carrierName' defaultMessage='Carrier Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          actions: this.getActions()
+        },
+        /*{
         name: 'createdAt',
         title: (
           <FormattedMessage id='operations.createdAt' defaultMessage='Created At'>
@@ -38,23 +42,23 @@ class ShippingQuotesTable extends Component {
           </FormattedMessage>
         )
       },*/
-      {
-        name: 'price',
-        title: (
-          <FormattedMessage id='operations.price' defaultMessage='Price'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'quoteId',
-        title: (
-          <FormattedMessage id='operations.quoteId' defaultMessage='Quote Id'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      /*{
+        {
+          name: 'price',
+          title: (
+            <FormattedMessage id='operations.price' defaultMessage='Price'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'quoteId',
+          title: (
+            <FormattedMessage id='operations.quoteId' defaultMessage='Quote Id'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        /*{
         name: 'updatedAt',
         title: (
           <FormattedMessage id='operations.updatedAt' defaultMessage='Updated At'>
@@ -62,22 +66,47 @@ class ShippingQuotesTable extends Component {
           </FormattedMessage>
         )
       },*/
+        {
+          name: 'validityDate',
+          title: (
+            <FormattedMessage id='operations.validityDate' defaultMessage='Validity Date'>
+              {text => text}
+            </FormattedMessage>
+          )
+        }
+      ]
+    }
+  }
+
+  getActions = () => {
+    const { intl, deleteShippingQuote } = this.props
+
+    const { formatMessage } = intl
+    return [
+      /*{ // temporary? - missing edit endpoint
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: row => openPopup(row.data)
+      },*/
       {
-        name: 'validityDate',
-        title: (
-          <FormattedMessage id='operations.validityDate' defaultMessage='Validity Date'>
-            {text => text}
-          </FormattedMessage>
-        )
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({ id: 'confirm.deleteShippingQuote', defaultMessage: 'Delete Shipping Quote' }),
+            formatMessage(
+              { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.quoteId}?` },
+              { item: row.quoteId }
+            )
+          ).then(() => {
+            deleteShippingQuote(row.id)
+          })
       }
     ]
   }
 
   render() {
-    const { datagrid, rows, filterValue, loading, openPopup, intl, deleteShippingQuote } = this.props
+    const { datagrid, rows, filterValue, loading } = this.props
 
     let { columns } = this.state
-    const { formatMessage } = intl
 
     return (
       <React.Fragment>
@@ -89,25 +118,7 @@ class ShippingQuotesTable extends Component {
           rows={rows}
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
-          rowActions={[
-            /*{ // temporary? - missing edit endpoint
-              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row.data)
-            },*/
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({ id: 'confirm.deleteShippingQuote', defaultMessage: 'Delete Shipping Quote' }),
-                  formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.quoteId}?` },
-                    { item: row.quoteId }
-                  )
-                ).then(() => {
-                  deleteShippingQuote(row.id)
-                })
-            }
-          ]}
+          columnActions='carrierName'
         />
       </React.Fragment>
     )

@@ -1,23 +1,76 @@
 import React, { Component } from 'react'
+import { FormattedMessage } from 'react-intl'
 import ProdexTable from '~/components/table'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import confirm from '~/src/components/Confirmable/confirm'
 
 export default class Table extends Component {
-  render() {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'code',
+          title: (
+            <FormattedMessage id='global.code' defaultMessage='Code'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'NmfcNumber.prefix',
+          actions: this.getActions()
+        },
+        {
+          name: 'description',
+          title: (
+            <FormattedMessage id='global.description' defaultMessage='Description'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'NmfcNumber.description'
+        }
+      ]
+    }
+  }
+
+  getActions = () => {
     const {
       config,
       intl: { formatMessage },
-      loading,
-      datagrid,
-      filterValue,
       openEditPopup,
-      deleteNmfcNumber,
-      toastManager
+      deleteNmfcNumber
     } = this.props
 
-    const { tableName, formattedMessageName } = config
-    const { columns } = config.display
+    const { formattedMessageName } = config
+
+    return [
+      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({
+              id: `confirm.delete${formattedMessageName}.title`,
+              defaultMessage: 'Delete NMFC Number'
+            }),
+            formatMessage(
+              {
+                id: `confirm.delete${formattedMessageName}.content`,
+                defaultMessage: `Do you really want to delete NMFC Number with code: ${row.code}?`
+              },
+              { code: row.code }
+            )
+          ).then(async () => {
+            await deleteNmfcNumber(row.id)
+          })
+      }
+    ]
+  }
+
+  render() {
+    const { config, loading, datagrid, filterValue } = this.props
+
+    const { tableName } = config
 
     return (
       <ProdexTable
@@ -25,29 +78,8 @@ export default class Table extends Component {
         {...datagrid.tableProps}
         filterValue={filterValue}
         loading={datagrid.loading || loading}
-        columns={columns}
-        rowActions={[
-          { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
-          {
-            text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-            callback: row =>
-              confirm(
-                formatMessage({
-                  id: `confirm.delete${formattedMessageName}.title`,
-                  defaultMessage: 'Delete NMFC Number'
-                }),
-                formatMessage(
-                  {
-                    id: `confirm.delete${formattedMessageName}.content`,
-                    defaultMessage: `Do you really want to delete NMFC Number with code: ${row.code}?`
-                  },
-                  { code: row.code }
-                )
-              ).then(async () => {
-                await deleteNmfcNumber(row.id)
-              })
-          }
-        ]}
+        columns={this.state.columns}
+        columnActions='code'
       />
     )
   }

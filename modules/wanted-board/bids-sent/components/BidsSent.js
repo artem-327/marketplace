@@ -13,30 +13,35 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 
 import { CustomRowDiv } from '../../constants/layout'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 class BidsSent extends Component {
-  state = {
-    columns: [
-      {
-        name: 'product',
-        title: (
-          <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 375
-      },
-      {
-        name: 'fobPrice',
-        title: (
-          <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'right',
-        width: 125
-      },
-      /*
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'product',
+          title: (
+            <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 375,
+          actions: this.getActions()
+        },
+        {
+          name: 'fobPrice',
+          title: (
+            <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='FOB Price'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          align: 'right',
+          width: 125
+        },
+        /*
       {
         name: 'manufacturer',
         title: (
@@ -47,30 +52,31 @@ class BidsSent extends Component {
         width: 310
       },
       */
-      {
-        name: 'condition',
-        title: (
-          <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 145
-      },
-      {
-        name: 'status',
-        title: (
-          <FormattedMessage id='wantedBoard.status' defaultMessage='Status'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 135
+        {
+          name: 'condition',
+          title: (
+            <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 145
+        },
+        {
+          name: 'status',
+          title: (
+            <FormattedMessage id='wantedBoard.status' defaultMessage='Status'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 135
+        }
+      ],
+      selectedRows: [],
+      pageNumber: 0,
+      open: false,
+      filterValue: {
+        searchInput: ''
       }
-    ],
-    selectedRows: [],
-    pageNumber: 0,
-    open: false,
-    filterValue: {
-      searchInput: ''
     }
   }
 
@@ -110,6 +116,51 @@ class BidsSent extends Component {
     this.handleFiltersValue(filter)
   }
 
+  getActions = () => {
+    const { datagrid, intl, editedId, myOffersSidebarTrigger } = this.props
+    let { formatMessage } = intl
+    return [
+      {
+        text: formatMessage({
+          id: 'global.edit',
+          defaultMessage: 'Edit'
+        }),
+        hidden: row => row.hiddenActions,
+        callback: row => myOffersSidebarTrigger(row)
+      },
+      {
+        text: formatMessage({
+          id: 'global.delete',
+          defaultMessage: 'Delete'
+        }),
+        hidden: row => row.hiddenActions,
+        disabled: row => editedId === row.id,
+        callback: row => {
+          confirm(
+            formatMessage({
+              id: 'confirm.deleteItemOffer.Header',
+              defaultMessage: 'Delete Item Offer'
+            }),
+            formatMessage(
+              {
+                id: 'confirm.deleteItemOffer.Content',
+                defaultMessage: 'Do you really want to remove item offer?'
+              },
+              { item: row.chemicalName }
+            )
+          ).then(async () => {
+            try {
+              await this.props.deleteMyOfferItem(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.log('DELETE ERROR')
+            }
+          })
+        }
+      }
+    ]
+  }
+
   renderContent = () => {
     const { datagrid, intl, rows, editedId, myOffersSidebarTrigger, tutorialCompleted } = this.props
     const { columns, selectedRows, filterValue } = this.state
@@ -135,6 +186,7 @@ class BidsSent extends Component {
                 />
               </div>
             </div>
+            <ColumnSettingButton />
           </CustomRowDiv>
         </div>
         <div className='flex stretched' style={{ padding: '10px 0' }}>
@@ -145,46 +197,7 @@ class BidsSent extends Component {
             columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
-            rowActions={[
-              {
-                text: formatMessage({
-                  id: 'global.edit',
-                  defaultMessage: 'Edit'
-                }),
-                hidden: row => row.hiddenActions,
-                callback: row => myOffersSidebarTrigger(row)
-              },
-              {
-                text: formatMessage({
-                  id: 'global.delete',
-                  defaultMessage: 'Delete'
-                }),
-                hidden: row => row.hiddenActions,
-                disabled: row => editedId === row.id,
-                callback: row => {
-                  confirm(
-                    formatMessage({
-                      id: 'confirm.deleteItemOffer.Header',
-                      defaultMessage: 'Delete Item Offer'
-                    }),
-                    formatMessage(
-                      {
-                        id: 'confirm.deleteItemOffer.Content',
-                        defaultMessage: 'Do you really want to remove item offer?'
-                      },
-                      { item: row.chemicalName }
-                    )
-                  ).then(async () => {
-                    try {
-                      await this.props.deleteMyOfferItem(row.id)
-                      datagrid.removeRow(row.id)
-                    } catch (e) {
-                      console.log('DELETE ERROR')
-                    }
-                  })
-                }
-              }
-            ]}
+            columnActions='product'
           />
         </div>
       </>
@@ -192,9 +205,7 @@ class BidsSent extends Component {
   }
 
   render() {
-    const {
-      editWindowOpen
-    } = this.props
+    const { editWindowOpen } = this.props
 
     return (
       <>

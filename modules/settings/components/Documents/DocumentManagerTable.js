@@ -22,71 +22,77 @@ const BasicLink = styled.a`
   }
 `
 
-const columns = [
-  // TODO - check en.json for those ids
-  {
-    name: 'name',
-    title: (
-      <FormattedMessage id='global.docName' defaultMessage='Document Name'>
-        {text => text}
-      </FormattedMessage>
-    )
-  },
-  {
-    name: 'documentTypeName',
-    title: (
-      <FormattedMessage id='global.docType' defaultMessage='Document Type'>
-        {text => text}
-      </FormattedMessage>
-    )
-  },
-  {
-    name: 'linkCount',
-    title: (
-      <FormattedMessage id='global.linkCount' defaultMessage='Links Count'>
-        {text => text}
-      </FormattedMessage>
-    )
-  },
-  {
-    name: 'expirationDate',
-    title: (
-      <FormattedMessage id='global.expirationDate' defaultMessage='Expiration Date'>
-        {text => text}
-      </FormattedMessage>
-    )
-  }
-]
-
-const columnsReduced = [
-  // TODO - check en.json for those ids
-  {
-    name: 'name',
-    title: (
-      <FormattedMessage id='global.docName' defaultMessage='Document Name'>
-        {text => text}
-      </FormattedMessage>
-    )
-  },
-  {
-    name: 'documentTypeName',
-    title: (
-      <FormattedMessage id='global.docType' defaultMessage='Document Type'>
-        {text => text}
-      </FormattedMessage>
-    )
-  },
-  {
-    name: 'expirationDate',
-    title: (
-      <FormattedMessage id='global.expirationDate' defaultMessage='Expiration Date'>
-        {text => text}
-      </FormattedMessage>
-    )
-  }
-]
-
 class DocumentManager extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        // TODO - check en.json for those ids
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.docName' defaultMessage='Document Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          actions: this.getActions()
+        },
+        {
+          name: 'documentTypeName',
+          title: (
+            <FormattedMessage id='global.docType' defaultMessage='Document Type'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'linkCount',
+          title: (
+            <FormattedMessage id='global.linkCount' defaultMessage='Links Count'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'expirationDate',
+          title: (
+            <FormattedMessage id='global.expirationDate' defaultMessage='Expiration Date'>
+              {text => text}
+            </FormattedMessage>
+          )
+        }
+      ],
+      columnsReduced: [
+        // TODO - check en.json for those ids
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.docName' defaultMessage='Document Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          actions: this.getActions()
+        },
+        {
+          name: 'documentTypeName',
+          title: (
+            <FormattedMessage id='global.docType' defaultMessage='Document Type'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'expirationDate',
+          title: (
+            <FormattedMessage id='global.expirationDate' defaultMessage='Expiration Date'>
+              {text => text}
+            </FormattedMessage>
+          )
+        }
+      ]
+    }
+  }
   getRows = (data = []) =>
     data.map(row => ({
       ...row,
@@ -96,19 +102,56 @@ class DocumentManager extends Component {
       customName: getSafe(() => row.customName, row.name)
     }))
 
+  getActions = () => {
+    const { datagrid, openSidebar, removeAttachment, edit, download, deletable } = this.props
+
+    return [
+      ...(edit
+        ? [
+            {
+              text: (
+                <FormattedMessage id='global.edit' defaultMessage='Edit'>
+                  {text => text}
+                </FormattedMessage>
+              ),
+              callback: row => openSidebar(row)
+            }
+          ]
+        : []),
+      ...(download
+        ? [
+            {
+              text: row => (
+                <BasicLink target='_blank' href={`/download/attachments/${row.id}`}>
+                  <FormattedMessage id='global.download' defaultMessage='Download'>
+                    {text => text}
+                  </FormattedMessage>
+                </BasicLink>
+              ),
+              callback: () => {}
+            }
+          ]
+        : []),
+      ...(deletable
+        ? [
+            {
+              text: (
+                <FormattedMessage id='global.delete' defaultMessage='Delete'>
+                  {text => text}
+                </FormattedMessage>
+              ),
+              callback: async row => {
+                await removeAttachment(row.id)
+                datagrid.removeRow(row.id)
+              }
+            }
+          ]
+        : [])
+    ]
+  }
+
   render() {
-    const {
-      datagrid,
-      openSidebar,
-      removeAttachment,
-      edit,
-      download,
-      deletable,
-      loading,
-      items,
-      normalWidth,
-      reduceColumns
-    } = this.props
+    const { datagrid, loading, items, normalWidth, reduceColumns } = this.props
 
     let rows = this.getRows(items ? items : this.props.rows)
 
@@ -116,54 +159,12 @@ class DocumentManager extends Component {
       <ProdexGrid
         tableName='settings_documents'
         {...datagrid.tableProps}
-        columns={reduceColumns ? columnsReduced : columns}
+        columns={reduceColumns ? this.state.columnsReduced : this.state.columns}
         rows={rows}
         loading={items ? false : loading || datagrid.loading}
         style={{ marginTop: '5px' }}
         normalWidth={normalWidth}
-        rowActions={[
-          ...(edit
-            ? [
-                {
-                  text: (
-                    <FormattedMessage id='global.edit' defaultMessage='Edit'>
-                      {text => text}
-                    </FormattedMessage>
-                  ),
-                  callback: row => openSidebar(row)
-                }
-              ]
-            : []),
-          ...(download
-            ? [
-                {
-                  text: row => (
-                    <BasicLink target='_blank' href={`/download/attachments/${row.id}`}>
-                      <FormattedMessage id='global.download' defaultMessage='Download'>
-                        {text => text}
-                      </FormattedMessage>
-                    </BasicLink>
-                  ),
-                  callback: () => {}
-                }
-              ]
-            : []),
-          ...(deletable
-            ? [
-                {
-                  text: (
-                    <FormattedMessage id='global.delete' defaultMessage='Delete'>
-                      {text => text}
-                    </FormattedMessage>
-                  ),
-                  callback: async row => {
-                    await removeAttachment(row.id)
-                    datagrid.removeRow(row.id)
-                  }
-                }
-              ]
-            : [])
-        ]}
+        columnActions='name'
       />
     )
   }

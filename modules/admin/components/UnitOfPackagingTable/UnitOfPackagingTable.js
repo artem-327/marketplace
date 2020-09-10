@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import {
@@ -14,16 +14,65 @@ import {
 import { withDatagrid } from '~/modules/datagrid'
 
 class UnitOfPackagingTable extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.name' defaultMessage='Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'PackagingType.name',
+          actions: this.getActions()
+        },
+        {
+          name: 'measureType',
+          title: (
+            <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'PackagingType.measureType.name'
+        }
+      ]
+    }
+  }
   componentDidMount() {
     this.props.getMeasureTypesDataRequest()
   }
 
-  render() {
-    const { intl, loading, rows, datagrid, filterValue, openEditPopup, deleteUnitOfPackaging } = this.props
+  getActions = () => {
+    const { intl, openEditPopup, deleteUnitOfPackaging } = this.props
 
     const { formatMessage } = intl
+
+    return [
+      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({ id: 'confirm.deletePackaging.title', defaultMessage: 'Delete Unit of Packaging' }),
+            formatMessage(
+              {
+                id: 'confirm.deletePackaging.content',
+                defaultMessage: `Do you really want to delete '${row.name}' unit?`
+              },
+              { name: row.name }
+            )
+          ).then(() => deleteUnitOfPackaging(row.id))
+      }
+    ]
+  }
+
+  render() {
+    const { loading, rows, datagrid, filterValue } = this.props
+
     const { tableName } = this.props.config
-    const { columns } = this.props.config.display
 
     return (
       <React.Fragment>
@@ -32,25 +81,9 @@ class UnitOfPackagingTable extends Component {
           {...datagrid.tableProps}
           filterValue={filterValue}
           loading={datagrid.loading || loading}
-          columns={columns}
+          columns={this.state.columns}
           rows={rows}
-          rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({ id: 'confirm.deletePackaging.title', defaultMessage: 'Delete Unit of Packaging' }),
-                  formatMessage(
-                    {
-                      id: 'confirm.deletePackaging.content',
-                      defaultMessage: `Do you really want to delete '${row.name}' unit?`
-                    },
-                    { name: row.name }
-                  )
-                ).then(() => deleteUnitOfPackaging(row.id))
-            }
-          ]}
+          columnActions='name'
         />
       </React.Fragment>
     )

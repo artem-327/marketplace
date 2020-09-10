@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
 //import ProdexGrid from '~/components/table'
 import ProdexTable from '~/components/table'
@@ -15,16 +15,78 @@ import {
 import { withDatagrid } from '~/modules/datagrid'
 
 class UnitOfMeasureTable extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.name' defaultMessage='Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          actions: this.getActions()
+        },
+        {
+          name: 'nameAbbreviation',
+          title: (
+            <FormattedMessage id='global.nameAbbreviation' defaultMessage='Name Abbreviation'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'measureType',
+          title: (
+            <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'ratioToBaseSiUnit',
+          title: (
+            <FormattedMessage id='global.ratioToBaseSiUnit' defaultMessage='Ratio to Base SI Unit'>
+              {text => text}
+            </FormattedMessage>
+          )
+        }
+      ]
+    }
+  }
   componentDidMount() {
     this.props.getMeasureTypesDataRequest()
   }
 
-  render() {
-    const { intl, loading, rows, datagrid, filterValue, openEditPopup, deleteUnit } = this.props
+  getActions = () => {
+    const { intl, openEditPopup, deleteUnit } = this.props
 
     const { formatMessage } = intl
+    return [
+      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({ id: 'confirm.deleteMeasurement.title', defaultMessage: 'Delete Unit of Measure' }),
+            formatMessage(
+              {
+                id: 'confirm.deleteMeasurement.content',
+                defaultMessage: `Do you really want to delete '${row.name}' unit?`
+              },
+              { name: row.name }
+            )
+          ).then(() => deleteUnit(row.id))
+      }
+    ]
+  }
+
+  render() {
+    const { loading, rows, datagrid, filterValue } = this.props
+
     const { tableName } = this.props.config
-    const { columns } = this.props.config.display
 
     return (
       <React.Fragment>
@@ -33,25 +95,9 @@ class UnitOfMeasureTable extends Component {
           {...datagrid.tableProps}
           filterValue={filterValue}
           loading={datagrid.loading || loading}
-          columns={columns}
+          columns={this.state.columns}
           rows={rows}
-          rowActions={[
-            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({ id: 'confirm.deleteMeasurement.title', defaultMessage: 'Delete Unit of Measure' }),
-                  formatMessage(
-                    {
-                      id: 'confirm.deleteMeasurement.content',
-                      defaultMessage: `Do you really want to delete '${row.name}' unit?`
-                    },
-                    { name: row.name }
-                  )
-                ).then(() => deleteUnit(row.id))
-            }
-          ]}
+          columnActions='name'
         />
       </React.Fragment>
     )

@@ -30,77 +30,82 @@ const handleSwitchEnabled = id => {
 }
 
 class UsersTable extends Component {
-  state = {
-    columns: [
-      {
-        name: 'name',
-        title: (
-          <FormattedMessage id='global.user' defaultMessage='User'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'jobTitle',
-        title: (
-          <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'email',
-        title: (
-          <FormattedMessage id='global.email' defaultMessage='E-mail'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'phoneFormatted',
-        title: (
-          <FormattedMessage id='global.phone' defaultMessage='Phone'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'homeBranchName',
-        title: (
-          <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'userRoles',
-        title: (
-          <FormattedMessage id='global.roles' defaultMessage='Roles'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 200
-      },
-      {
-        name: 'lastLoginAt',
-        title: (
-          <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 200
-      },
-      {
-        name: 'switchEnable',
-        title: (
-          <FormattedMessage id='global.enableUser' defaultMessage='Enable User'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-        align: 'center'
-      }
-    ]
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.user' defaultMessage='User'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          actions: this.getActions()
+        },
+        {
+          name: 'jobTitle',
+          title: (
+            <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'email',
+          title: (
+            <FormattedMessage id='global.email' defaultMessage='E-mail'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'phoneFormatted',
+          title: (
+            <FormattedMessage id='global.phone' defaultMessage='Phone'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'homeBranchName',
+          title: (
+            <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'userRoles',
+          title: (
+            <FormattedMessage id='global.roles' defaultMessage='Roles'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200
+        },
+        {
+          name: 'lastLoginAt',
+          title: (
+            <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200
+        },
+        {
+          name: 'switchEnable',
+          title: (
+            <FormattedMessage id='global.enableUser' defaultMessage='Enable User'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120,
+          align: 'center'
+        }
+      ]
+    }
   }
 
   componentDidUpdate(oldProps) {
@@ -121,6 +126,52 @@ class UsersTable extends Component {
 
   getEditedUser = () => {
     return this.props.editedItem
+  }
+
+  getActions = () => {
+    const { openSidebar, intl, deleteUser, resendWelcomeEmail, currentUserId, setPrimaryUser } = this.props
+
+    const { formatMessage } = intl
+    return [
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: row => openSidebar(row.rawData)
+        // hidden: row => currentUserId === row.id
+      },
+      /* #34139
+      {
+        text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }),
+        callback: row => openRolesPopup(row.rawData)
+        // hidden: row => currentUserId === row.id
+      },
+      */
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
+            formatMessage(
+              { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` },
+              { item: row.name }
+            )
+          ).then(() => deleteUser(row.id, row.name)),
+        hidden: row => currentUserId === row.id
+      },
+      {
+        text: <FormattedMessage id='settings.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
+        callback: async row => {
+          const { value } = await resendWelcomeEmail(row.id)
+        },
+        hidden: row => !!row.lastLoginAt || currentUserId === row.id
+      },
+      {
+        text: <FormattedMessage id='settings.user.setAsCompPrimUser' defaultMessage='Set as Company Primary User' />,
+        callback: async row => {
+          const { value } = await setPrimaryUser(this.props.currentCompanyId, row.id)
+        },
+        hidden: row => !row.isCompanyAdmin || this.props.currentCompanyId === null
+      }
+    ]
   }
 
   render() {
@@ -156,48 +207,7 @@ class UsersTable extends Component {
           rows={rows}
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
-          rowActions={[
-            {
-              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openSidebar(row.rawData)
-              // hidden: row => currentUserId === row.id
-            },
-            /* #34139
-            {
-              text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }),
-              callback: row => openRolesPopup(row.rawData)
-              // hidden: row => currentUserId === row.id
-            },
-            */
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
-                  formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.rawData.name}?` },
-                    { item: row.rawData.name }
-                  )
-                ).then(() => deleteUser(row.id, row.rawData.name)),
-              hidden: row => currentUserId === row.id
-            },
-            {
-              text: <FormattedMessage id='settings.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
-              callback: async row => {
-                const { value } = await resendWelcomeEmail(row.id)
-              },
-              hidden: row => !!row.lastLoginAt || currentUserId === row.id
-            },
-            {
-              text: (
-                <FormattedMessage id='settings.user.setAsCompPrimUser' defaultMessage='Set as Company Primary User' />
-              ),
-              callback: async row => {
-                const { value } = await setPrimaryUser(this.props.currentCompanyId, row.id)
-              },
-              hidden: row => !row.isCompanyAdmin || this.props.currentCompanyId === null
-            }
-          ]}
+          columnActions='name'
         />
       </React.Fragment>
     )
