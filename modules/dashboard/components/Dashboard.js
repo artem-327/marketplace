@@ -380,9 +380,19 @@ class Dashboard extends Component {
   }
 
   filterDates = (type, dates) => {
+    const { isAdmin, takeover } = this.props
     // get daily stats data
     this.props.getDailyStatistics(moment(dates[0]).format('YYYY-MM-DD')+'T00:00:00Z', moment(dates[1]).add(1, 'days').format('YYYY-MM-DD')+'T00:00:00Z')
-    this.setState({activeTab: 2, activeQuick: type, dateFrom: dates[0], dateFromEdited: null, dateTo: dates[1], dateToEdited: null, selectedDate: moment(dates[0]).format('D MMM YYYY') + ' - ' + moment(dates[1]).format('D MMM YYYY')})
+    this.setState({
+      activeTab: isAdmin && !takeover ? 1 : 2,
+      activeQuick: type,
+      dateFrom: dates[0],
+      dateFromEdited: null,
+      dateTo: dates[1],
+      dateToEdited: null,
+      selectedDate:
+        moment(dates[0]).format('D MMM YYYY') + ' - ' + moment(dates[1]).format('D MMM YYYY')
+    })
   }
 
   render() {
@@ -409,7 +419,7 @@ class Dashboard extends Component {
       intl: { formatMessage }
     } = this.props
 
-    const statsTabs = {
+    const companyTabs = {
       clientCompaniesCount: [formatMessage({id: 'dashboard.clientCompaniesCount', defaultMessage: '# of Client Companies'}), false],
       companiesCount: [formatMessage({id: 'dashboard.companiesCount', defaultMessage: '# of Companies'}), false],
       companyGenericProductsCount: [formatMessage({id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products'}), false],
@@ -419,6 +429,19 @@ class Dashboard extends Component {
       totalProductOfferValue: [formatMessage({ id: 'dashboard.totalPOValue', defaultMessage: 'Total Product Offer Value' }), true],
       totalValueOfBroadcastedProductOffers: [formatMessage({ id: 'dashboard.totalValueBroadcastedPO', defaultMessage: 'Total Value of Broadcasted Product Offers' }), true]
     }
+
+    const adminTabs = {
+      //clientCompaniesCount: [formatMessage({id: 'dashboard.clientCompaniesCount', defaultMessage: '# of Client Companies'}), false],
+      //companiesCount: [formatMessage({id: 'dashboard.companiesCount', defaultMessage: '# of Companies'}), false],
+      companyGenericProductsCount: [formatMessage({id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products'}), false],
+      //productOfferCount: [formatMessage({id: 'dashboard.productOffersCount', defaultMessage: '# of Product Offers'}), false],
+      //usersCount: [formatMessage({id: 'dashboard.usersCount', defaultMessage: '# of Users'}), false],
+      //sales: [formatMessage({ id: 'dashboard.sales', defaultMessage: 'Sales' }), false],
+      //totalProductOfferValue: [formatMessage({ id: 'dashboard.totalPOValue', defaultMessage: 'Total Product Offer Value' }), true],
+      //totalValueOfBroadcastedProductOffers: [formatMessage({ id: 'dashboard.totalValueBroadcastedPO', defaultMessage: 'Total Value of Broadcasted Product Offers' }), true]
+    }
+
+    const statsTabs = isAdmin && !takeover ? adminTabs : companyTabs
 
     let stats = []
     if (dailyStats && dailyStats.length) {
@@ -437,7 +460,7 @@ class Dashboard extends Component {
 
     const { activeTab, activeQuick, dateFrom, dateFromEdited, dateTo, dateToEdited, selectedDate, statsType } = this.state
 
-    const saleTab = [
+    const adminMenuTabs = [
       {
         menuItem: (
           <Menu.Item key='sales' onClick={() => this.setState({ activeTab: 0 })}>
@@ -454,6 +477,46 @@ class Dashboard extends Component {
               subTitleId='dasboard.sales.graph.subtitle'
             />{' '}
           </TabPane>
+        )
+      },
+      {
+        menuItem: (
+          <Menu.Item key='stats' onClick={() => this.setState({ activeTab: 1 })}>
+            <UpperCaseText>{formatMessage({ id: 'dashboard.dailyStats', defaultMessage: 'DAILY STATS' })}</UpperCaseText>
+          </Menu.Item>
+        ),
+        render: () => (
+          <TabPane key='stats' attached={false}>
+            <LineGraph
+              data={stats}
+              dataKey={statsType ? statsTabs[statsType][0] : Object.entries(statsTabs)[0][1][0]}
+              isCurrency={statsType ? statsTabs[statsType][1] : false}
+              unitsCurrency={1}
+              title='Daily Statistics'
+              titleId='dashboard.daily.stats.title'
+              subTitle=''
+              subTitleId=''
+            />
+          </TabPane>
+        )
+      },
+      {
+        menuItem: (
+          <>
+            {activeTab === 1 ? (
+              <StatsTypeSelect
+                key='statsType'
+                style={{ marginLeft: 'auto' }}
+                item
+                pointing='top right'
+                options={Object.entries(statsTabs).map((stType) => {
+                  return { text: stType[1][0], value: stType[0] }
+                })}
+                onChange={(e, { value }) => this.setState({ statsType: value })}
+                value={!statsType ? (Object.entries(statsTabs)[0][0]) : statsType}
+                data-test='dashboard_stats_drpdn' />
+            ) : null}
+          </>
         )
       }
     ]
@@ -565,7 +628,7 @@ class Dashboard extends Component {
     ]
 
     const panes =
-      isAdmin && !takeover ? saleTab : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
+      isAdmin && !takeover ? adminMenuTabs : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
 
     const quickFilters = [
       formatMessage({ id: 'dashboard.dateFilter.today', defaultMessage: 'Today'}),
