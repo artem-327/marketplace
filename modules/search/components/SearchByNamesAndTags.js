@@ -50,15 +50,9 @@ class SearchByNamesAndTags extends Component {
 
   componentDidMount() {
     const { initFilterState } = this.props
-    // ! ! console.log('!!!!!!!!!! SearchByNamesAndTags componentDidMount this.props', this.props)
     if (initFilterState) {
       this.setState(initFilterState.state)
       if (this.props.filterApply) this.handleFiltersValue(initFilterState.filters)
-    }
-    try {
-      this.props.searchTags('')
-    } catch (error) {
-      console.error(error)
     }
   }
 
@@ -181,7 +175,7 @@ class SearchByNamesAndTags extends Component {
             ref={this.refDropdownMenu}
             placeholder={formatMessage({
               id: 'myInventory.searchByProductOrTagName',
-              defaultMessage: 'Search by product or tag name...'
+              defaultMessage: 'Search by product or tag name'
             })}
             noResultsMessage={formatMessage({
               id: 'global.startTypingToSearch',

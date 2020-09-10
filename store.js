@@ -69,7 +69,6 @@ import phoneNumber from '~/modules/phoneNumber/reducer'
 
 import companyProductInfo from '~/modules/company-product-info/reducer'
 import operations from '~/modules/operations/reducers'
-import holds from '~/modules/marketplace/holds/reducer'
 import wantedBoard from '~/modules/wanted-board/reducer'
 import search from '~/modules/search/reducer'
 import alerts from '~/modules/alerts/reducer'
@@ -138,7 +137,6 @@ const reducer = combineReducers({
   phoneNumber,
   chatWidget,
   operations,
-  holds,
   wantedBoard,
   search,
   layout,

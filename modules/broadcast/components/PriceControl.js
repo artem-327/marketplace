@@ -116,8 +116,24 @@ export default class PriceControl extends Component {
       low = calc(getSafe(() => offer.pricingTiers[offer.pricingTiers.length - 1].pricePerUOM, null))
 
     return {
-      highStr: <FormattedNumber style='currency' currency={currency} value={high ? high : 0} />,
-      lowStr: <FormattedNumber style='currency' currency={currency} value={low ? low : 0} />,
+      highStr: (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={high ? high : 0}
+        />
+      ),
+      lowStr: (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={low ? low : 0}
+        />
+      ),
       low,
       high
     }

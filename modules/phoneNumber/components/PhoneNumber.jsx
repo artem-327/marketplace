@@ -179,23 +179,35 @@ export default class PhoneNumber extends Component {
     } = this.props
 
     let { phoneCountryCode, phoneNumber } = this.state
-
     let error = (get(touched, name, null) || isSubmitting) && get(errors, name, null)
 
     return (
       <Field
         name={name}
         render={({ field, form }) => {
+          if (
+            (!phoneCountryCode && !phoneNumber && errors[name]) ||
+            (phoneCountryCode && phoneNumber && !phoneNumber.includes('_') && phoneNumber.length > 8 && errors[name])
+          ) {
+            let newErrors = errors
+            delete newErrors[name]
+            form.setErrors(newErrors)
+          }
+
           if (!get(errors, name, null) && ((form && !error) || form.isValidating)) {
             if (!phoneCountryCode && phoneNumber) {
               form.setFieldError(
                 name,
                 formatMessage({ id: 'global.phoneCountryCodeRequired', defaultMessage: 'Phone country code required' })
               )
-            } else if (phoneCountryCode && !phoneNumber) {
+            } else if (
+              (phoneCountryCode && !phoneNumber) ||
+              (phoneNumber && phoneNumber.includes('_')) ||
+              (phoneNumber && phoneNumber.length < 9)
+            ) {
               form.setFieldError(
                 name,
-                formatMessage({ id: 'global.phoneNumberRequired', defaultMessage: 'Phone number required' })
+                formatMessage({ id: 'global.phoneNumberIsInvalid', defaultMessage: 'Phone number is invalid' })
               )
             }
           } else {
@@ -206,7 +218,7 @@ export default class PhoneNumber extends Component {
           }
 
           return (
-            <FormField error={!!error}>
+            <FormField error={!!errors[name]}>
               {label && <label>{label}</label>}
               <span style={{ display: 'flex' }} className='phone-number'>
                 <StyledDropdown
@@ -234,7 +246,7 @@ export default class PhoneNumber extends Component {
                   }
                 />
               </span>
-              {error && <span className='sui-error-message'>{error}</span>}
+              {!!errors[name] && <span className='sui-error-message'>{error}</span>}
             </FormField>
           )
         }}

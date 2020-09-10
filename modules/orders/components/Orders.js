@@ -148,7 +148,7 @@ class Orders extends Component {
           </FormattedMessage>
         ),
         width: 120,
-        sortPath: 'Order.orderDate'
+        sortPath: 'Order.createdAt'
       },
       {
         name: 'customerName',

@@ -59,7 +59,6 @@ export const initialState = {
   deleteUserById: null,
   deleteRowById: null,
   filterValue: '',
-  productCatalogUnmappedValue: 'ALL',
   editPopupSearchProducts: [],
   fileCSVId: null,
   CSV: null,
@@ -343,13 +342,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         mapName: action.payload
-      }
-    }
-
-    case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
-      return {
-        ...state,
-        productCatalogUnmappedValue: action.payload
       }
     }
 
@@ -642,6 +634,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_SET_PRIMARY_BRANCH_PENDING:
     case AT.SETTINGS_SET_PRIMARY_USER_PENDING:
     case AT.DELETE_PRODUCT_PENDING:
     case AT.DELETE_USER_PENDING: {
@@ -651,6 +644,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_SET_PRIMARY_BRANCH_REJECTED:
+    case AT.SETTINGS_SET_PRIMARY_BRANCH_FULFILLED:
     case AT.SETTINGS_SET_PRIMARY_USER_FULFILLED:
     case AT.DELETE_PRODUCT_FULFILLED:
     case AT.DELETE_USER_FULFILLED:

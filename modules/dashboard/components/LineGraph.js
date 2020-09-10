@@ -40,10 +40,9 @@ function CustomTooltip({ payload, label, active, unitsCurrency }) {
         </ul>
       </div>
 
-    );
+    )
   }
-
-  return null;
+  return null
 }
 
 const LineGraph = ({ data, dataKey, isCurrency, title, titleId, subTitle, subTitleId, unitsCurrency }) => {

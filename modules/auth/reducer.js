@@ -58,6 +58,7 @@ export const initialState = {
     isLogged: false,
     version: ''
   },
+  loading: false,
   identity: null
 }
 
@@ -90,6 +91,15 @@ export default function reducer(state = initialState, action) {
         }
       }
     }
+
+    case AT.GET_IDENTITY_PENDING: {
+      return { ...state, loading: true }
+    }
+
+    case AT.GET_IDENTITY_REJECTED: {
+      return { ...state, loading: false }
+    }
+
     case AT.GET_IDENTITY_FULFILLED:
     case AT.LOGIN_FULFILLED: {
       let deliveryAddress = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress, null)
@@ -98,6 +108,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        loading: false,
         confirmationForm:
           getSafe(() => payload.identity.company.reviewRequested, false) && primaryUser
             ? {

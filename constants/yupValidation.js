@@ -57,6 +57,13 @@ export const errorMessages = {
   greaterThan: value => (
     <FormattedMessage id='validation.greaterThan' values={{ value }} defaultMessage={`Must be greater than ${value}`} />
   ),
+  greaterOrEqual: value => (
+    <FormattedMessage
+      id='validation.greaterOrEqual'
+      values={{ value }}
+      defaultMessage={`Must be greater or equal to ${value}`}
+    />
+  ),
   maxDecimals: max => (
     <FormattedMessage
       id='validation.maxDecimals'
@@ -178,7 +185,11 @@ export const phoneValidation = () =>
   Yup.string()
     .trim()
     //.test('phone-validation', errorMessages.invalidPhoneNumber, (val) => val && validator.isMobilePhone(val + '', null, { strictMode: true })) // tohle nejak nefunguje
-    .test('phone-validation', errorMessages.invalidPhoneNumber, val => !val || (val[0] === '+' && val.length > 5)) // Delka vcetne '+' a predcisli, '+' povinne (tzn. bylo zvolene predcisli)
+    .test(
+      'phone-validation',
+      errorMessages.invalidPhoneNumber,
+      val => !val || (val[0] === '+' && val.length > 8 && !val.includes('_'))
+    ) // Delka vcetne '+' a predcisli, '+' povinne (tzn. bylo zvolene predcisli)
 
 export const dateValidation = (required = true) => {
   let isValid = Yup.string().test(
@@ -196,16 +207,22 @@ export const ssnValidation = () =>
     .test('ssn', errorMessages.invalidValueFormat('123-45-6789'), value => /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/.test(value))
     .required(errorMessages.requiredMessage)
 
-export const nmfcValidation = (required = true) =>
+export const nmfcValidation = () =>
   Yup.string(errorMessages.invalidString)
-    // .min(6, errorMessages.minLength(6))
-    // .max(8, errorMessages.maxLength(8))
     .test(
       'code',
-      errorMessages.invalidValueFormat('1 .. 123456 or 1-1 .. 123456-78'),
-      value => /^[0-9]{1,6}$/.test(value) || /^[0-9]{1,6}\-[0-9]{1,2}$/.test(value)
+      errorMessages.invalidValueFormat('9999 to 999999 | 9999-19 to 999999-19 | sub number max 12'),
+      value => {
+        return (
+          (/^[0-9]{1,6}$/.test(value) && value.length >= 4 && value.length <= 6) ||
+          (/^[0-9]{1,6}\-[0-1][0-9]$/.test(value) &&
+            value.length >= 7 &&
+            value.length <= 9 &&
+            Number(value.split('-')[1]) <= 12)
+        )
+      }
     )
-    .concat(required ? Yup.string().required() : Yup.string().notRequired())
+    .required(errorMessages.requiredMessage)
 
 export const freightClassValidation = () =>
   Yup.number(errorMessages.mustBeNumber)

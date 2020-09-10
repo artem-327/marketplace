@@ -27,19 +27,20 @@ const CustomRowDiv = styled.div`
   justify-content: space-between;
   margin: -5px -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 5px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
 `
@@ -57,7 +58,7 @@ const CustomLabel = styled.div`
 `
 
 const textsTable = {
-  'guests': {
+  guests: {
     BtnAddText: 'manageGuests.addCompany',
     SearchText: 'manageGuests.searchGuest'
   }
@@ -67,7 +68,7 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      'guests': {
+      guests: {
         searchInput: ''
       }
     }
@@ -134,7 +135,7 @@ class TablesHandlers extends Component {
     const {
       currentTab,
       openPopup,
-      intl: {formatMessage}
+      intl: { formatMessage }
     } = this.props
 
     const filterValue = this.state[currentTab]
@@ -150,17 +151,14 @@ class TablesHandlers extends Component {
               value={filterValue.searchInput}
               placeholder={formatMessage({
                 id: textsTable[currentTab].SearchText,
-                defaultMessage: 'Search guest...'
+                defaultMessage: 'Search guest'
               })}
               onChange={this.handleFilterChangeInputSearch}
             />
           </div>
         </div>
         <div className='column'>
-          <Button
-            primary
-            onClick={() => openPopup()}
-            data-test='settings_open_popup_btn'>
+          <Button primary onClick={() => openPopup()} data-test='settings_open_popup_btn'>
             <PlusCircle />
             <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
           </Button>
@@ -172,9 +170,7 @@ class TablesHandlers extends Component {
   render() {
     return (
       <PositionHeaderSettings>
-        <CustomRowDiv>
-          {this.renderHandler()}
-        </CustomRowDiv>
+        <CustomRowDiv>{this.renderHandler()}</CustomRowDiv>
       </PositionHeaderSettings>
     )
   }
@@ -186,10 +182,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(
-  withToastManager(
-    connect(mapStateToProps, { ...Actions })(
-      injectIntl(TablesHandlers)
-    )
-  )
-)
+export default withDatagrid(withToastManager(connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers))))

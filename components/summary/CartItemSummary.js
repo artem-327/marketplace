@@ -461,8 +461,15 @@ class CartItemSummary extends Component {
               </VerticalUnpaddedColumn>
 
               <VerticalUnpaddedColumn black>
-                <FormattedNumber style='currency' currency={currency} id='cart.packs' value={item.cfPricePerUOM} /> /{' '}
-                {productOffer.companyProduct.packagingUnit.nameAbbreviation}
+                <FormattedNumber
+                  minimumFractionDigits={2}
+                  maximumFractionDigits={2}
+                  style='currency'
+                  currency={currency}
+                  id='cart.packs'
+                  value={item.cfPricePerUOM}
+                />{' '}
+                / {productOffer.companyProduct.packagingUnit.nameAbbreviation}
               </VerticalUnpaddedColumn>
             </RelaxedRow>
 

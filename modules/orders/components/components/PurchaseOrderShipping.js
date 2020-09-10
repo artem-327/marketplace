@@ -136,9 +136,8 @@ class PurchaseOrderShipping extends React.Component {
   }
 
   onDateChange = debounce(async (event, { name, value }) => {
-    if (!value || moment(value).format(getLocaleDateFormat()) === 'Invalid date' || this.errors.pickupDate) return
-    let pickupDate = null
-    pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
+    if (!value || this.errors.pickupDate) return
+    let pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
     if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
       // if current date (today) is selected the pickupDate (datetime) is in past
       pickupDate = moment().add(1, 'minutes') // BE needs to have pickupDate always in future

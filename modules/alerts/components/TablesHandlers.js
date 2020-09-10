@@ -15,19 +15,20 @@ const CustomDiv = styled.div`
   justify-content: space-between;
   margin: -5px -5px;
   flex-wrap: wrap;
-  
+
   > div {
     align-items: center;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-  
+
   .column {
     margin: 5px 5px;
   }
-  
-  input, .ui.dropdown {
+
+  input,
+  .ui.dropdown {
     height: 40px;
   }
 `
@@ -42,7 +43,7 @@ const StyledButtonsGroup = styled(Button.Group)`
     font-weight: 500;
     color: #848893;
   }
-  
+
   .ui.button.active {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
     border: solid 1px #dee2e6;
@@ -104,11 +105,10 @@ class TablesHandlers extends Component {
     }
   }
 
-  handleFiltersValue = debounce( filter => {
+  handleFiltersValue = debounce(filter => {
     const { datagrid } = this.props
     datagrid.setSearch(filter, true, 'pageFilters')
-    }, 300
-  )
+  }, 300)
 
   handleFilterChangeInputSearch = (e, data) => {
     const { currentTab } = this.props
@@ -122,7 +122,7 @@ class TablesHandlers extends Component {
     this.handleFiltersValue({ ...filter, category: currentTab })
   }
 
-  handleButtonsChange = (value) => {
+  handleButtonsChange = value => {
     this.handleFilterChangeInputSearch(null, {
       name: 'switchButtonsValue',
       value
@@ -148,7 +148,7 @@ class TablesHandlers extends Component {
               value={filterValue && filterValue.searchInput ? filterValue.searchInput : ''}
               placeholder={formatMessage({
                 id: 'alerts.searchNotification',
-                defaultMessage: 'Search Notification...'
+                defaultMessage: 'Search Notification'
               })}
               onChange={this.handleFilterChangeInputSearch}
             />
@@ -159,20 +159,17 @@ class TablesHandlers extends Component {
             <StyledButtonsGroup>
               <Button
                 active={!filterValue || !filterValue.switchButtonsValue}
-                onClick={() => this.handleButtonsChange('')}
-              >
+                onClick={() => this.handleButtonsChange('')}>
                 {formatMessage({ id: 'alerts.button.all', defaultMessage: 'All' })}
               </Button>
               <Button
                 active={filterValue && filterValue.switchButtonsValue === 'read'}
-                onClick={() => this.handleButtonsChange('read')}
-              >
+                onClick={() => this.handleButtonsChange('read')}>
                 {formatMessage({ id: 'alerts.button.read', defaultMessage: 'Read' })}
               </Button>
               <Button
                 active={filterValue && filterValue.switchButtonsValue === 'unread'}
-                onClick={() => this.handleButtonsChange('unread')}
-              >
+                onClick={() => this.handleButtonsChange('unread')}>
                 {formatMessage({ id: 'alerts.button.unread', defaultMessage: 'Unread' })}
               </Button>
             </StyledButtonsGroup>

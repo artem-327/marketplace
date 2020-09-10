@@ -19,7 +19,7 @@ export const sidebarDetailTrigger = (row = null, activeTab = '') => {
         response = await api.getPurchaseRequest(row.id)
       }
 
-      return { row: activeTab === 'my-requested-items' && row ? { ...response, rawData: response } : row }
+      return { row: activeTab === 'bids-received' && row ? { ...response, rawData: response } : row }
     }
   }
 }

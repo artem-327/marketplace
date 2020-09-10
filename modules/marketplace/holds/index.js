@@ -44,7 +44,7 @@ Holds.defaultProps = {
 }
 
 const mapStateToProps = state => ({
-  typeHolds: state.holds.typeHolds
+  typeHolds: state.marketplace.typeHolds
 })
 
 export default connect(mapStateToProps)(Holds)

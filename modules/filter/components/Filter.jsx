@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Field as FormikField } from 'formik'
-import { bool, string, object, func, array } from 'prop-types'
+import { bool, string, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import { getSafe } from '~/utils/functions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -11,20 +10,14 @@ import { withToastManager } from 'react-toast-notifications'
 
 import {
   Button,
-  Accordion,
-  Segment,
-  FormGroup,
-  Icon,
   FormField,
-  Checkbox,
-  Grid,
   GridRow,
   GridColumn,
   Dropdown as SemanticDropdown,
-  Transition,
-  Header,
   Dimmer,
-  Label
+  Label,
+  Modal,
+  Menu
 } from 'semantic-ui-react'
 
 import { uniqueArrayByKey } from '~/utils/functions'
@@ -33,8 +26,6 @@ import confirm from '~/src/components/Confirmable/confirm'
 
 import {
   datagridValues,
-  replaceAmbigiousCharacters,
-  dateFormat,
   dateDropdownOptions,
   filterTypes
 } from '../constants/filter'
@@ -44,33 +35,19 @@ import SavedFilters from './SavedFilters'
 import Notifications from './Notifications'
 
 import {
-  FlexSidebar,
   FlexContent,
-  FiltersContainer,
-  FilterAccordion,
-  AccordionTitle,
-  AccordionItem,
-  AccordionContent,
-  WhiteSegment,
-  GraySegment,
-  Title,
   BottomMargedDropdown,
-  LessPaddedRow,
-  SaveFilterButtonRow,
-  SaveFilterRow,
-  SaveFilterTitle,
-  SaveFilterClose,
   StyledGrid,
-  SmallerTextColumn,
-  TopButtons,
   BottomButtons,
-  IconRight,
   DateInputStyledWrapper,
   SaveFiltersGrid,
-  NormalColumn,
-  SaveFilterNormalRow,
   InputWrapper,
-  QuantityWrapper
+  QuantityWrapper,
+  StyledModalContent,
+  CustomMenu,
+  SmallGrid,
+  PopupGrid,
+  StyledModalHeader
 } from '../constants/layout'
 
 class Filter extends Component {
@@ -87,8 +64,7 @@ class Filter extends Component {
     isTyping: false,
     hasProvinces: false,
     savedProvinces: {},
-    provinceOptions: [],
-    applyingSavedFilter: false
+    provinceOptions: []
   }
 
   componentDidMount() {
@@ -111,8 +87,6 @@ class Filter extends Component {
 
     //if (typeof this.props.searchWarehouseUrl !== 'undefined')
     //  this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
-
-    this.handleGetSavedFilters()
 
     Promise.all([
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
@@ -184,7 +158,6 @@ class Filter extends Component {
               names.push(inputs[key][k].name)
             }
           })
-
           if (ids.length > 0) datagridFilter.filters.push(datagridValues[key].toFilter(ids, names))
         } else {
           try {
@@ -219,7 +192,6 @@ class Filter extends Component {
   }
 
   handleSubmit = params => {
-    // { setSubmitting }
     let { onApply, applyFilter, applyDatagridFilter } = this.props
 
     let filter = this.generateRequestData(params)
@@ -302,53 +274,33 @@ class Filter extends Component {
     else this.setState({ openedSaveFilter: false })
   }
 
-  generateCheckboxes = (data, values, groupName = null) => {
+  generateDropdown = (data, values, placeholder, groupName = null) => {
     if (!data) return []
-    let group = null
 
-    if (groupName) group = `${groupName}.`
+    const options = data.map(d => {
+      const text = d.text ? d.text : d.name
+      return {
+        key: d.id,
+        value: JSON.stringify({ id: d.id, name: d.name }),
+        text: text.charAt(0).toUpperCase() + text.slice(1)
+      }
+    })
 
-    let tmp = []
-    var getCheckbox = (el, i) => {
-      let name = replaceAmbigiousCharacters(el.name)
-      let path = `${group}${name}`
-
-      return (
-        <FormField key={i}>
-          <FormikField
-            onChange={(e, data) => {
-              let { setFieldValue } = data.form
-              setFieldValue(path, data.checked ? { id: el.id, name: el.name } : false)
-            }}
-            component={Checkbox}
-            checked={!!values[groupName] && !!values[groupName][name]}
-            name={path}
-            label={el.name.charAt(0).toUpperCase() + el.name.slice(1)}
-            data-test='filter_FormikField_change'
-          />
-        </FormField>
-      )
-    }
-
-    for (let i = 0; i < data.length / 2 - (data.length % 2); i++) {
-      tmp.push(
-        <FormGroup widths='equal'>
-          {/* First/Last Item Increasing/Decreasing according to index */}
-          {[data[i], data[data.length - (i + 1)]].map((el, j) => getCheckbox(el, i + j))}
-        </FormGroup>
-      )
-    }
-
-    // Add last item, which is at index = middle of an array
-    if (data.length % 2 === 1) {
-      tmp.push(<FormGroup widths='equal'>{getCheckbox(data[Math.round(data.length / 2) - 1])}</FormGroup>)
-    }
-
-    return tmp
+    return (
+      <Dropdown
+        name={groupName}
+        options={options}
+        selection
+        inputProps={{
+          multiple: true,
+          fluid: true,
+          placeholder
+        }}
+      />
+    )
   }
 
   handleSavedFilterApply = async (filter, { setFieldValue, resetForm }) => {
-    this.setState({ applyingSavedFilter: true })
     resetForm({ ...initialValues })
 
     let formikValues = {}
@@ -360,7 +312,12 @@ class Filter extends Component {
     for (let i = 0; i < filters.length; i++) {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
-        if (datagrid.paths.includes(filters[i].path) && filters[i].operator === datagrid.operator) {
+        if (
+          datagrid &&
+          datagrid.paths &&
+          datagrid.paths.includes(filters[i].path) &&
+          filters[i].operator === datagrid.operator
+        ) {
           if (filters[i].path === 'ProductOffer.lotExpirationDate') {
             formikValues['expiration'] = datagridValues['expiration'].toFormik(filters[i].operator)
           }
@@ -370,7 +327,7 @@ class Filter extends Component {
           if (filters[i].path === 'ProductOffer.companyProduct.companyGenericProduct.productGroup.id') {
             this.searchProductOffer(filters[i].values)
           }
-          formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
+          formikValues[key] = datagrid.toFormik(filters[i], this.props)
         }
       })
     }
@@ -414,9 +371,9 @@ class Filter extends Component {
         }
       }
     }
-    this.setState({ savedProvinces, provinceOptions, applyingSavedFilter: false })
+    this.setState({ savedProvinces, provinceOptions })
     this.toggleFilter(false)
-    this.handleSubmit(formikValues)
+    //this.handleSubmit(formikValues)
   }
 
   handleGetSavedFilters = () => {
@@ -429,13 +386,7 @@ class Filter extends Component {
     )
   }
 
-  toggleAccordion = name => {
-    let { activeAccordion } = this.state
-    let active = activeAccordion[name]
-    this.setState({ activeAccordion: { ...this.state.activeAccordion, [name]: !active } })
-  }
-
-  handleSearch = debounce(({ searchQuery, name }) => {
+  handleSearch = debounce(({ searchQuery }) => {
     if (searchQuery.length > 1) {
       let params = { searchUrl: this.props.searchUrl(searchQuery), searchQuery }
       this.props.getAutocompleteData(params)
@@ -481,28 +432,16 @@ class Filter extends Component {
     }
   }
 
-  accordionTitle = (name, text) => (
-    <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
-      {text}
-      <IconRight>
-        <Icon name={this.state.activeAccordion[name] ? 'chevron down' : 'chevron right'} />
-      </IconRight>
-    </AccordionTitle>
-  )
-
   toggleSaveFilter = () => {
     //e.preventDefault()
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
-  inputWrapper = (name, inputProps, label, labelText) => {
+  inputWrapper = (name, inputProps, labelText, labelClass = null) => {
     return (
       <InputWrapper>
-        {label && <div className='field-label'>{label}</div>}
-        <div>
-          <Input inputProps={inputProps} name={name} />
-          <Label>{labelText}</Label>
-        </div>
+        <Input name={name} inputProps={inputProps} />
+        <Label className={labelClass}>{labelText}</Label>
       </InputWrapper>
     )
   }
@@ -510,46 +449,46 @@ class Filter extends Component {
   quantityWrapper = (name, { values, setFieldValue, setFieldTouched, label }) => {
     return (
       <QuantityWrapper>
-        {label && <div className='field-label'>{label}</div>}
-        <div>
-          <Input
-            name={name}
-            inputProps={{
-              placeholder: '0',
-              type: 'number'
-            }}
-          />
-          <div className='sideButtons'>
-            <Button
-              type='button'
-              className='buttonPlus'
-              onClick={() => {
-                if (isNaN(values[name]) || values[name] === '') {
-                  setFieldValue(name, 1)
-                  setFieldTouched(name, true, true)
-                } else {
-                  setFieldValue(name, parseInt(values[name]) + 1)
-                  setFieldTouched(name, true, true)
-                }
-              }}>
-              +
-            </Button>
-            <Button
-              type='button'
-              className='buttonMinus'
-              onClick={() => {
-                if (isNaN(values[name]) || values[name] === '') {
-                  setFieldValue(name, 1)
-                  setFieldTouched(name, true, true)
-                } else {
-                  const value = parseInt(values[name])
-                  if (value > 1) setFieldValue(name, value - 1)
-                  setFieldTouched(name, true, true)
-                }
-              }}>
-              -
-            </Button>
-          </div>
+        <Input
+          name={name}
+          inputProps={{
+            placeholder: '0',
+            type: 'number',
+            label: label,
+            labelPosition: 'left',
+            fluid: true
+          }}
+        />
+        <div className='sideButtons'>
+          <Button
+            type='button'
+            className='buttonPlus'
+            onClick={() => {
+              if (isNaN(values[name]) || values[name] === '') {
+                setFieldValue(name, 1)
+                setFieldTouched(name, true, true)
+              } else {
+                setFieldValue(name, parseInt(values[name]) + 1)
+                setFieldTouched(name, true, true)
+              }
+            }}>
+            +
+          </Button>
+          <Button
+            type='button'
+            className='buttonMinus'
+            onClick={() => {
+              if (isNaN(values[name]) || values[name] === '') {
+                setFieldValue(name, 1)
+                setFieldTouched(name, true, true)
+              } else {
+                const value = parseInt(values[name])
+                if (value > 1) setFieldValue(name, value - 1)
+                setFieldTouched(name, true, true)
+              }
+            }}>
+            -
+          </Button>
         </div>
       </QuantityWrapper>
     )
@@ -561,48 +500,50 @@ class Filter extends Component {
     const { formatMessage } = intl
 
     return (
-      <>
-        <FormField width={8}>
-          <Dropdown
-            name={name}
-            options={dateDropdownOptions}
-            selection
-            onChange={handleChange}
-            inputProps={{
-              'data-test': 'filter_dateField_drpdn',
-              value: this.state.dateDropdown[name],
-              disabled: !values[inputName],
-              onChange: (_, data) => {
-                setFieldValue(data.name, data.value)
-                setFieldValue(inputName, '')
-                this.setState(state => ({
-                  ...state,
-                  dateDropdown: {
-                    ...state.dateDropdown,
-                    [name]: data.value
-                  }
-                }))
-              }
-            }}
-          />
-        </FormField>
-
-        <FormField width={8} data-test='filter_dateField_inp'>
-          <DateInputStyledWrapper>
-            <Input
-              name={inputName}
+      <SmallGrid>
+        <GridRow>
+          <GridColumn width={8}>
+            <Dropdown
+              name={name}
+              options={dateDropdownOptions}
+              selection
               onChange={handleChange}
               inputProps={{
-                label: formatMessage({ id: 'filter.days', defaultMessage: 'days' }),
-                labelPosition: 'right',
-                type: 'number',
-                min: min.toString(),
-                placeholder: '0'
+                'data-test': 'filter_dateField_drpdn',
+                value: values[name],
+                disabled: !values[inputName],
+                fluid: true,
+                onChange: (_, data) => {
+                  setFieldValue(data.name, data.value)
+                  setFieldValue(inputName, '')
+                  this.setState(state => ({
+                    ...state,
+                    dateDropdown: {
+                      ...state.dateDropdown,
+                      [name]: data.value
+                    }
+                  }))
+                }
               }}
             />
-          </DateInputStyledWrapper>
-        </FormField>
-      </>
+          </GridColumn>
+          <GridColumn width={8} data-test='filter_dateField_inp'>
+            <DateInputStyledWrapper>
+              <Input
+                name={inputName}
+                onChange={handleChange}
+                inputProps={{
+                  type: 'number',
+                  min: min.toString(),
+                  placeholder: '0',
+                  fluid: true
+                }}
+              />
+              <Label>{formatMessage({ id: 'filter.days', defaultMessage: 'days' })}</Label>
+            </DateInputStyledWrapper>
+          </GridColumn>
+        </GridRow>
+      </SmallGrid>
     )
   }
 
@@ -613,55 +554,46 @@ class Filter extends Component {
 
     return (
       <>
-        <SaveFiltersGrid>
-          <GridRow>
-            <GridColumn width={9}>
-              <SaveFilterTitle>
-                <FormattedMessage id='filter.saveFilterHeader' defaultMessage='SAVE FILTER' />
-              </SaveFilterTitle>
-            </GridColumn>
-            <GridColumn width={7} textAlign='right'>
-              <Button type='button' size='large' onClick={this.toggleSaveFilter} data-test='filter_save_cancel_btn'>
-                {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-              </Button>
-            </GridColumn>
-          </GridRow>
-        </SaveFiltersGrid>
-        <PerfectScrollbar>
-          <SaveFiltersGrid>
-            {/* Save Filter */}
-            <GridRow>
-              <GridColumn computer={16} data-test='filter_name_inp'>
-                <FormattedMessage id='filter.filterNameHeader' defaultMessage='Filter Name' />
-              </GridColumn>
-            </GridRow>
-            <GridRow>
-              <GridColumn computer={16} data-test='filter_name_inp'>
-                <Input
-                  inputProps={{
-                    placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Your filter name' })
-                  }}
-                  name='name'
-                  fluid
-                />
-              </GridColumn>
-            </GridRow>
-            <GridRow>
-              <GridColumn computer={12}>
-                <label>
-                  {formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
-                </label>
-              </GridColumn>
-              <GridColumn computer={4}>
-                <FormikCheckbox
-                  inputProps={{ toggle: true, style: { marginBottom: '-4px' } }}
-                  name='checkboxes.automaticallyApply'
-                />
-              </GridColumn>
-            </GridRow>
-          </SaveFiltersGrid>
-          <Notifications values={values} formikProps={formikProps} />
-        </PerfectScrollbar>
+        <StyledModalHeader>
+          <FormattedMessage id='filter.saveFilterHeader' defaultMessage='SAVE FILTER' />
+        </StyledModalHeader>
+        <StyledModalContent>
+          <PerfectScrollbar style={{ margin: '-10px -10px' }}>
+            <SaveFiltersGrid>
+              {/* Save Filter */}
+              <GridRow>
+                <GridColumn computer={16} data-test='filter_name_inp'>
+                  <FormattedMessage id='filter.filterNameHeader' defaultMessage='Filter Name' />
+                </GridColumn>
+              </GridRow>
+              <GridRow>
+                <GridColumn computer={16} data-test='filter_name_inp'>
+                  <Input
+                    inputProps={{
+                      placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Your filter name' }),
+                      fluid: true
+                    }}
+                    name='name'
+                  />
+                </GridColumn>
+              </GridRow>
+              <GridRow>
+                <GridColumn computer={12}>
+                  <label>
+                    {formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                  </label>
+                </GridColumn>
+                <GridColumn computer={4}>
+                  <FormikCheckbox
+                    inputProps={{ toggle: true, style: { marginBottom: '-4px' } }}
+                    name='checkboxes.automaticallyApply'
+                  />
+                </GridColumn>
+              </GridRow>
+            </SaveFiltersGrid>
+            <Notifications values={values} formikProps={formikProps} />
+          </PerfectScrollbar>
+        </StyledModalContent>
       </>
     )
   }
@@ -694,13 +626,10 @@ class Filter extends Component {
       packagingTypes,
       productGrades,
       intl,
-      isFilterSaving,
       autocompleteData,
       autocompleteDataLoading,
       autocompleteWarehouse,
       autocompleteWarehouseLoading,
-      layout,
-      savedAutocompleteData,
       countries,
       countriesLoading,
       provinces,
@@ -710,15 +639,35 @@ class Filter extends Component {
 
     const { formatMessage } = intl
 
-    let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')
-    let productConditionRows = this.generateCheckboxes(productConditions, values, 'productConditions')
-    let productGradeRows = this.generateCheckboxes(productGrades, values, 'productGrades')
-    let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
+    let packagingTypesDropdown = this.generateDropdown(
+      packagingTypes,
+      values,
+      formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
+      'packagingTypes'
+    )
+    let productConditionDropdown = this.generateDropdown(
+      productConditions,
+      values,
+      formatMessage({ id: 'filter.selectCondition', defaultMessage: 'Select Condition (Multiple Select)' }),
+      'productConditions'
+    )
+    let productGradeDropdown = this.generateDropdown(
+      productGrades,
+      values,
+      formatMessage({ id: 'filter.selectGrade', defaultMessage: 'Select Grade (Multiple Select)' }),
+      'productGrades'
+    )
+    let productFormsDropdown = this.generateDropdown(
+      productForms,
+      values,
+      formatMessage({ id: 'filter.selectForm', defaultMessage: 'Select Form (Multiple Select)' }),
+      'productForms'
+    )
 
     var noResultsMessage = null
 
     if (this.state.searchQuery.length <= 1)
-      noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+      noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
     if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
     const options = this.getOptions(uniqueArrayByKey(autocompleteData, 'key'))
 
@@ -741,7 +690,7 @@ class Filter extends Component {
 
     if (this.state.searchWarehouseQuery.length <= 1)
       noWarehouseResultsMessage = (
-        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
       )
     if (autocompleteWarehouseLoading)
       noWarehouseResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
@@ -852,179 +801,188 @@ class Filter extends Component {
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
     return (
-      <FilterAccordion>
-        <AccordionItem>
-          {this.accordionTitle('chemicalType', <FormattedMessage id='filter.productGroupName' />)}
-          <AccordionContent active={this.state.activeAccordion.chemicalType}>
-            <BottomMargedDropdown {...dropdownProps} />
-          </AccordionContent>
-        </AccordionItem>
+      <PopupGrid>
+        <GridRow>
+          <GridColumn width={8}>
+            <FormField>
+              <FormattedMessage id='filter.chemicalProductName' defaultMessage='Chemical / Product Name'>
+                {text => text}
+              </FormattedMessage>
+              <BottomMargedDropdown {...dropdownProps} />
+            </FormField>
+          </GridColumn>
+          <GridColumn width={8}>
+            <FormField>
+              <FormattedMessage id='filter.warehouse' defaultMessage='Warehouse'>
+                {text => text}
+              </FormattedMessage>
+              <SmallGrid>
+                <GridRow>
+                  <GridColumn width={8}>
+                    <SemanticDropdown {...dropdownCountry} style={{ margin: '0' }} />
+                  </GridColumn>
+                  <GridColumn width={8}>
+                    <SemanticDropdown {...dropdownProvince} style={{ margin: '0' }} />
+                  </GridColumn>
+                </GridRow>
+              </SmallGrid>
+            </FormField>
+          </GridColumn>
+        </GridRow>
 
-        <AccordionItem>
-          {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
-          <AccordionContent active={this.state.activeAccordion.quantity}>
-            <FormGroup widths='equal' data-test='filter_quantity_inp'>
-              <FormField width={8}>
-                {this.quantityWrapper('quantityFrom', {
-                  values,
-                  setFieldValue,
-                  setFieldTouched,
-                  label: <FormattedMessage id='filter.FromQuantity' defaultMessage='From' />
-                })}
-              </FormField>
-              <FormField width={8}>
-                {this.quantityWrapper('quantityTo', {
-                  values,
-                  setFieldValue,
-                  setFieldTouched,
-                  label: <FormattedMessage id='filter.ToQuantity' defaultMessage='To' />
-                })}
-              </FormField>
-            </FormGroup>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
-          <AccordionContent active={this.state.activeAccordion.price}>
-            <FormGroup>
-              <FormField className='price-input' width={8} data-test='filter_price_inp'>
-                {this.inputWrapper(
-                  'priceFrom',
-                  {
-                    type: 'number',
-                    min: 0.01,
-                    step: 0.01,
-                    placeholder: '0.000'
-                  },
-                  <FormattedMessage id='filter.FromPrice' defaultMessage='From' />,
-                  currencySymbol
-                )}
-              </FormField>
-              <FormField className='price-input' width={8}>
-                {this.inputWrapper(
-                  'priceTo',
-                  {
-                    type: 'number',
-                    min: 0.01,
-                    step: 0.01,
-                    placeholder: '0.000'
-                  },
-                  <FormattedMessage id='filter.ToPrice' defaultMessage='To' />,
-                  currencySymbol
-                )}
-              </FormField>
-            </FormGroup>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('location', <FormattedMessage id='filter.location' />)}
-          <AccordionContent active={this.state.activeAccordion.location}>
-            <div className='field-label'>
-              <FormattedMessage id='global.country' />
-            </div>
-            <BottomMargedDropdown {...dropdownCountry} />
-            <div className='field-label'>
-              <FormattedMessage id='global.state' />
-            </div>
-            <BottomMargedDropdown {...dropdownProvince} />
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}
-          <AccordionContent active={this.state.activeAccordion.packaging}>{packagingTypesRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('productGrades', <FormattedMessage id='filter.grade' defaultMessage='Grade' />)}
-          <AccordionContent active={this.state.activeAccordion.productGrades}>{productGradeRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('condition', <FormattedMessage id='filter.condition' defaultMessage='Condition' />)}
-          <AccordionContent active={this.state.activeAccordion.condition}>{productConditionRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('productForms', <FormattedMessage id='filter.form' defaultMessage='Form' />)}
-          <AccordionContent active={this.state.activeAccordion.productForms}>{productFormsRows}</AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle(
-            'expiration',
+        <GridRow>
+          <GridColumn width={8}>
             <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />
-          )}
-          <AccordionContent active={this.state.activeAccordion.expiration}>
-            <FormGroup widths='equal'>
-              {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
-            </FormGroup>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle('assay', <FormattedMessage id='filter.percentage' />)}
-          <AccordionContent active={this.state.activeAccordion.assay}>
-            <FormGroup data-test='filter_assay_inp'>
-              <FormField width={8}>
-                {this.inputWrapper(
-                  'assayFrom',
-                  {
-                    type: 'number',
-                    min: 0,
-                    placeholder: '0'
-                  },
-                  <FormattedMessage id='filter.Minimum' defaultMessage='Minimum' />,
-                  '%'
-                )}
-              </FormField>
-              <FormField width={8}>
-                {this.inputWrapper(
-                  'assayTo',
-                  {
-                    type: 'number',
-                    min: 0,
-                    placeholder: '0'
-                  },
-                  <FormattedMessage id='filter.Maximum' defaultMessage='Maximum' />,
-                  '%'
-                )}
-              </FormField>
-            </FormGroup>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem>
-          {this.accordionTitle(
-            'mfg',
+            {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
+          </GridColumn>
+          <GridColumn width={8}>
             <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
-          )}
-          <AccordionContent active={this.state.activeAccordion.mfg}>
-            <FormGroup widths='equal'>
-              {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
-            </FormGroup>
-          </AccordionContent>
-        </AccordionItem>
-      </FilterAccordion>
+            {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
+          </GridColumn>
+        </GridRow>
+
+        <GridRow>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.quantity' />
+            <SmallGrid>
+              <GridRow>
+                <GridColumn width={8}>
+                  {this.quantityWrapper('quantityFrom', {
+                    values,
+                    setFieldValue,
+                    setFieldTouched,
+                    label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' })
+                  })}
+                </GridColumn>
+                <GridColumn width={8}>
+                  {this.quantityWrapper('quantityTo', {
+                    values,
+                    setFieldValue,
+                    setFieldTouched,
+                    label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' })
+                  })}
+                </GridColumn>
+              </GridRow>
+            </SmallGrid>
+          </GridColumn>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.price' />
+            <SmallGrid>
+              <GridRow>
+                <GridColumn width={8} data-test='filter_price_inp'>
+                  {this.inputWrapper(
+                    'priceFrom',
+                    {
+                      type: 'number',
+                      min: 0.01,
+                      step: 0.01,
+                      placeholder: '0.00',
+                      label: formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    },
+                    currencySymbol,
+                    'green'
+                  )}
+                </GridColumn>
+                <GridColumn className='price-input' width={8}>
+                  {this.inputWrapper(
+                    'priceTo',
+                    {
+                      type: 'number',
+                      min: 0.01,
+                      step: 0.01,
+                      placeholder: '0.00',
+                      label: formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    },
+                    currencySymbol,
+                    'green'
+                  )}
+                </GridColumn>
+              </GridRow>
+            </SmallGrid>
+          </GridColumn>
+        </GridRow>
+
+        <GridRow>
+          <GridColumn width={8}>
+            <FormField>
+              <FormattedMessage id='filter.packaging' />
+              {packagingTypesDropdown}
+            </FormField>
+          </GridColumn>
+          <GridColumn width={8}>
+            <FormField>
+              <FormattedMessage id='filter.grade' defaultMessage='Grade' />
+              {productGradeDropdown}
+            </FormField>
+          </GridColumn>
+        </GridRow>
+
+        <GridRow>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.condition' defaultMessage='Condition' />
+            {productConditionDropdown}
+          </GridColumn>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.form' defaultMessage='Form' />
+            {productFormsDropdown}
+          </GridColumn>
+        </GridRow>
+
+        <GridRow>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.percentage' />
+            <SmallGrid>
+              <GridRow>
+                <GridColumn width={8}>
+                  {this.inputWrapper(
+                    'assayFrom',
+                    {
+                      type: 'number',
+                      min: 0,
+                      placeholder: '0.00',
+                      label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    },
+                    '%'
+                  )}
+                </GridColumn>
+                <GridColumn width={8}>
+                  {this.inputWrapper(
+                    'assayTo',
+                    {
+                      type: 'number',
+                      min: 0,
+                      placeholder: '0.00',
+                      label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    },
+                    '%'
+                  )}
+                </GridColumn>
+              </GridRow>
+            </SmallGrid>
+          </GridColumn>
+        </GridRow>
+      </PopupGrid>
     )
   }
 
   render() {
     let {
-      isOpen,
-      width,
-      direction,
-      animation,
-      additionalSidebarProps,
       isFilterApplying,
       isFilterSaving,
       intl: { formatMessage },
-      filterState
+      filterState,
+      onClose
     } = this.props
 
-    const { savedFiltersActive, openedSaveFilter, applyingSavedFilter } = this.state
+    const { savedFiltersActive, openedSaveFilter } = this.state
 
     return (
       <Form
@@ -1045,99 +1003,166 @@ class Filter extends Component {
           this.values = props.values
 
           return (
-            <FlexSidebar {...additionalSidebarProps}>
-              <TopButtons>
-                <Button
-                  type='button'
-                  onClick={() => this.toggleFilter(false)}
-                  primary={!this.state.savedFiltersActive}
-                  data-test='filter_set_filters'>
-                  {formatMessage({ id: 'filter.activeFilters', defaultMessage: 'Set Filters' })}
-                </Button>
+            <Modal onClose={() => onClose()} open centered={true} size={openedSaveFilter ? 'tiny' : 'large'}>
+              {!openedSaveFilter ? (
+                <>
+                  <CustomMenu pointing secondary>
+                    <Menu.Item
+                      key={'advancedFilter'}
+                      onClick={() => this.toggleFilter(false)}
+                      active={!savedFiltersActive}
+                      data-test='filter_advanced_filter'>
+                      {formatMessage({ id: 'filter.advancedFilter', defaultMessage: 'Advanced Filter' })}
+                    </Menu.Item>
+                    <Menu.Item
+                      key={'savedFilters'}
+                      onClick={() => this.toggleFilter(true)}
+                      active={savedFiltersActive}
+                      data-test='filter_saved_filters'>
+                      {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
+                    </Menu.Item>
+                  </CustomMenu>
 
-                <Button
-                  type='button'
-                  onClick={() => this.toggleFilter(true)}
-                  primary={this.state.savedFiltersActive}
-                  data-test='filter_saved_filters'>
-                  {formatMessage({ id: 'filter.savedFilter', defaultMessage: 'Saved Filters' })}
-                </Button>
-              </TopButtons>
-              <Dimmer.Dimmable as={FlexContent}>
-                {!this.state.savedFiltersActive ? (
-                  <PerfectScrollbar key='set'>{this.formMarkup(props)}</PerfectScrollbar>
-                ) : (
-                  <PerfectScrollbar key='saved'>
-                    <SavedFilters
-                      params={this.props.params}
-                      onApply={filter => this.handleSavedFilterApply(filter, props)}
-                      savedFilters={this.props.savedFilters}
-                      savedFiltersLoading={this.props.savedFiltersLoading || applyingSavedFilter}
-                      getSavedFilters={this.handleGetSavedFilters}
-                      deleteFilter={this.props.deleteFilter}
-                      updateFilterNotifications={this.props.updateFilterNotifications}
-                      savedFilterUpdating={this.props.savedFilterUpdating}
-                    />
-                  </PerfectScrollbar>
-                )}
-                <Dimmer active={this.state.openedSaveFilter} />
-              </Dimmer.Dimmable>
-              <Transition visible={openedSaveFilter} animation='fade up' duration={500}>
-                <div basic>{this.formSaveFilter(props)}</div>
-              </Transition>
+                  <StyledModalContent>
+                    <Dimmer.Dimmable as={FlexContent}>
+                      {!this.state.savedFiltersActive ? (
+                        <PerfectScrollbar key='set'>{this.formMarkup(props)}</PerfectScrollbar>
+                      ) : (
+                        <PerfectScrollbar key='saved'>
+                          <SavedFilters
+                            params={this.props.params}
+                            onApply={filter => this.handleSavedFilterApply(filter, props)}
+                            savedFilters={this.props.savedFilters}
+                            savedFiltersLoading={this.props.savedFiltersLoading}
+                            getSavedFilters={this.handleGetSavedFilters}
+                            deleteFilter={this.props.deleteFilter}
+                            updateFilterNotifications={this.props.updateFilterNotifications}
+                            savedFilterUpdating={this.props.savedFilterUpdating}
+                          />
+                        </PerfectScrollbar>
+                      )}
+                      <Dimmer active={this.state.openedSaveFilter} />
+                    </Dimmer.Dimmable>
+                  </StyledModalContent>
+                </>
+              ) : (
+                <>
+                  {this.formSaveFilter(props)}
+                </>
+              )}
               <BottomButtons>
-                <Button
-                  disabled={savedFiltersActive}
-                  type={'button'}
-                  size='large'
-                  loading={isFilterSaving}
-                  onClick={async () => {
-                    if (openedSaveFilter) {
-                      let { values } = props
-                      const { validateForm, submitForm } = props
+                {openedSaveFilter ? (
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      type='button'
+                      size='large'
+                      className='light'
+                      onClick={this.toggleSaveFilter}
+                      data-test='filter_save_cancel_btn'>
+                      {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
+                    </Button>
+                    <Button
+                      disabled={savedFiltersActive}
+                      type='button'
+                      size='large'
+                      className='secondary'
+                      loading={isFilterSaving}
+                      onClick={async () => {
+                        let {values} = props
+                        const {validateForm, submitForm} = props
 
-                      validateForm().then(err => {
-                        const errors = Object.keys(err)
-                        if (errors.length && errors[0] !== 'isCanceled') {
-                          // Errors found
-                          submitForm() // to show errors
-                          return
-                        } else {
-                          // No errors found
-                          this.handleFilterSave(values)
-                        }
-                      })
-                    } else {
-                      this.toggleSaveFilter()
-                    }
-                  }}
-                  data-test='filter_save_new'>
-                  {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
-                </Button>
-                <Button
-                  disabled={openedSaveFilter || savedFiltersActive}
-                  type='button'
-                  size='large'
-                  onClick={(e, data) => {
-                    this.resetForm({ ...initialValues })
-                    this.props.applyFilter({ filters: [] })
-                    this.props.applyDatagridFilter({ filters: [] })
-                    this.props.onClear(e, data)
-                  }}
-                  data-test='filter_clear'>
-                  {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
-                </Button>
-                <Button
-                  disabled={openedSaveFilter || savedFiltersActive}
-                  size='large'
-                  loading={isFilterApplying}
-                  type='submit'
-                  primary
-                  data-test='filter_apply'>
-                  {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
-                </Button>
+                        validateForm().then(err => {
+                          const errors = Object.keys(err)
+                          if (errors.length && errors[0] !== 'isCanceled') {
+                            // Errors found
+                            submitForm() // to show errors
+                          } else {
+                            // No errors found
+                            this.handleFilterSave(values)
+                          }
+                        })
+                      }}
+                      data-test='filter_save_new'>
+                      {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                    </Button>
+                  </div>
+                ) : (
+                  savedFiltersActive ? (
+                    <div style={{ textAlign: 'right'}}>
+                      <Button
+                        type='button'
+                        size='large'
+                        className='light'
+                        onClick={() => onClose()}
+                        data-test='filter_close'>
+                        {formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <div>
+                        <Button
+                          type='button'
+                          size='large'
+                          onClick={() => onClose()}
+                          className='light greyText'
+                          data-test='filter_cancel'>
+                          {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                        </Button>
+                        <Button
+                          type='button'
+                          size='large'
+                          className='light danger'
+                          onClick={(e, data) => {
+                            this.resetForm({...initialValues})
+                            //this.props.applyFilter({filters: []})
+                            //this.props.applyDatagridFilter({filters: []})
+                            //this.props.onClear(e, data)
+                          }}
+                          data-test='filter_clear'>
+                          {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
+                        </Button>
+                      </div>
+                      <div>
+                        <Button
+                          type={'button'}
+                          size='large'
+                          className='secondary outline'
+                          loading={isFilterSaving}
+                          onClick={async () => this.toggleSaveFilter()}
+                          data-test='filter_save_new'>
+                          {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
+                        </Button>
+                        <Button
+                          size='large'
+                          loading={isFilterApplying}
+                          type='submit'
+                          secondary
+                          onClick={async () => {
+                            let {values} = props
+                            const {validateForm, submitForm} = props
+
+                            validateForm().then(async (err) => {
+                              const errors = Object.keys(err)
+                              if (errors.length && errors[0] !== 'isCanceled') {
+                                // Errors found
+                                submitForm() // to show errors
+                              } else {
+                                // No errors found
+                                await submitForm()
+                                onClose()
+                              }
+                            })
+                          }}
+                          data-test='filter_apply'>
+                          {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
+                        </Button>
+                      </div>
+                    </div>
+                  )
+                )}
               </BottomButtons>
-            </FlexSidebar>
+            </Modal>
           )
         }}
       </Form>
@@ -1150,7 +1175,6 @@ Filter.propTypes = {
   width: string,
   direction: string,
   animation: string,
-  additionalSidebarProps: object,
   onApply: func,
   onClear: func,
   filters: array,
@@ -1165,7 +1189,8 @@ Filter.propTypes = {
   searchUrl: func,
   searchWarehouseUrl: func,
   layout: string,
-  filterType: string
+  filterType: string,
+  onClose: func
 }
 
 Filter.defaultProps = {
@@ -1173,7 +1198,6 @@ Filter.defaultProps = {
   width: 'very wide',
   direction: 'right',
   animation: 'overlay',
-  additionalSidebarProps: {},
   filters: [],
   autocompleteData: [],
   autocompleteWarehouse: [],
@@ -1185,7 +1209,8 @@ Filter.defaultProps = {
   searchUrl: text => `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`,
   searchWarehouseUrl: text => `/prodex/api/branches/warehouses/search?pattern=${text}`,
   onApply: filter => {},
-  onClear: () => {}
+  onClear: () => {},
+  onClose: () => {}
 }
 
 export default withToastManager(injectIntl(Filter))
