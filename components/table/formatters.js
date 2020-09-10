@@ -6,6 +6,13 @@ import styled from 'styled-components'
 
 const DropdownActions = styled(Dropdown)`
   display: block !important;
+  height: 100% !important;
+`
+
+const DivName = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const getDropdownItems = (actions = [], row) => {
@@ -79,11 +86,11 @@ export function rowActionsCellFormatter({ column: { actions, name }, row, groupL
   }
 
   return displayMenu ? (
-    <DropdownActions icon='' trigger={trigger} onOpen={e => repositionMenu(e.currentTarget)}>
+    <DropdownActions icon='' trigger={<DivName>{trigger}</DivName>} onOpen={e => repositionMenu(e.currentTarget)}>
       <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
     </DropdownActions>
   ) : (
-    trigger
+    <DivName>{trigger}</DivName>
   )
 }
 

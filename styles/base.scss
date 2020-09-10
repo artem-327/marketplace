@@ -385,6 +385,7 @@ body > *:not(.modals) .bootstrapiso .table-responsive {
   margin-top: -5px !important;
   margin-bottom: -5px !important;
   line-height: 29px;
+  overflow: inherit !important;
 }
 
 .ui.menu .item > i.chevron.icon {
