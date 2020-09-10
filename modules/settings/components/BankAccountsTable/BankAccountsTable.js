@@ -24,7 +24,8 @@ import {
   dwollaFinalizeVerification,
   dwollaFinalizeVerificationConfirmOpen,
   getCurrentUser,
-  dwollaSetPreferred
+  dwollaSetPreferred,
+  getVellociAccBalance
 } from '../../actions'
 import Router from 'next/router'
 
@@ -129,81 +130,74 @@ export const bankAccountsConfig = {
   none: {
     registerButton: true,
     addButton: false,
-    dwollaBalance: false,
+    balance: false,
     searchField: false,
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: false,
-    documentStatus: false,
-    registerVelloci: true
+    documentStatus: false
   },
   deactivated: {
     registerButton: true,
     addButton: false,
-    dwollaBalance: false,
+    balance: false,
     searchField: false,
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: false,
-    documentStatus: false,
-    registerVelloci: true
+    documentStatus: false
   },
   retry: {
     registerButton: true,
     addButton: false,
-    dwollaBalance: false,
+    balance: false,
     searchField: false,
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: false,
-    documentStatus: false,
-    registerVelloci: true
+    documentStatus: false
   },
   document: {
     registerButton: false,
     addButton: false,
-    dwollaBalance: false,
+    balance: false,
     searchField: false,
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: true,
-    documentStatus: true,
-    registerVelloci: true
+    documentStatus: true
   },
   documentOwner: {
     registerButton: false,
     addButton: false,
-    dwollaBalance: false,
+    balance: false,
     searchField: false,
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: false,
     documentStatus: true,
     uploadOwnerDocumentsButton: true,
-    documentOwner: true,
-    registerVelloci: true
+    documentOwner: true
   },
   verified: {
     registerButton: false,
     addButton: true,
-    dwollaBalance: true,
+    balance: true,
     searchField: true,
     accountStatus: false,
     bankAccountList: true,
     uploadDocumentsButton: false,
-    documentStatus: false,
-    registerVelloci: true
+    documentStatus: false
   },
   suspended: {
     registerButton: false,
     addButton: false,
-    dwollaBalance: false,
+    balance: false,
     searchField: false,
     accountStatus: true,
     bankAccountList: false,
     uploadDocumentsButton: false,
-    documentStatus: false,
-    registerVelloci: true
+    documentStatus: false
   }
 }
 
@@ -252,10 +246,10 @@ class BankAccountsTable extends Component {
     this.props.getBankAccountsDataRequest()
     this.props.getCurrentUser()
     this.props.getIdentity().then(resp => {
-      const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
-      if (hasDwollaAccount) {
+      getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
         this.props.getDwollaAccBalance()
-      }
+      getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
+        this.props.getVellociAccBalance()
     })
   }
 
@@ -264,10 +258,10 @@ class BankAccountsTable extends Component {
       this.props.getBankAccountsDataRequest()
       this.props.getCurrentUser()
       this.props.getIdentity().then(resp => {
-        const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
-        if (hasDwollaAccount) {
+        getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
           this.props.getDwollaAccBalance()
-        }
+        getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
+          this.props.getVellociAccBalance()
       })
     }
   }
@@ -284,10 +278,11 @@ class BankAccountsTable extends Component {
       getBankAccountsDataRequest,
       intl,
       bankAccounts,
-      dwollaAccountStatus,
-      dwollaDocumentRequired,
+      accountStatus,
+      documentRequired,
       dwollaSetPreferred,
-      preferredBankAccountId
+      preferredBankAccountId,
+      method
     } = this.props
 
     let { columns } = this.state
@@ -354,7 +349,7 @@ class BankAccountsTable extends Component {
           />
         )}
 
-        {(bankAccounts.accountStatus || bankAccounts.vellociRegister || bankAccounts.documentStatus) && (
+        {(bankAccounts.accountStatus || bankAccounts.documentStatus) && (
           <Container style={{ padding: '0 0 28px 0' }}>
             {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
               <>
@@ -362,7 +357,10 @@ class BankAccountsTable extends Component {
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell width={4}>
-                        <FormattedMessage id='dwolla.registrationStatus' defaultMessage='Dwolla Registration Status' />
+                        <FormattedMessage
+                          id={`${method}.registrationStatus`}
+                          defaultMessage='Dwolla Registration Status'
+                        />
                       </Table.HeaderCell>
                       <Table.HeaderCell width={10}>
                         <FormattedMessage id='dwolla.info' defaultMessage='Info' />
@@ -372,17 +370,17 @@ class BankAccountsTable extends Component {
                   <Table.Body>
                     <Table.Row>
                       <Table.Cell>
-                        <FormattedMessage id={`dwolla.registrationStatus.${dwollaAccountStatus}`} />
+                        <FormattedMessage id={`${method}.registrationStatus.${accountStatus}`} />
                       </Table.Cell>
                       <Table.Cell>
                         {bankAccounts.documentStatus ? (
                           <>
-                            <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`} />
+                            <FormattedMessage id={`${method}.info.${accountStatus}`} />
                             &nbsp;
-                            <FormattedMessage id={`dwolla.document.${dwollaDocumentRequired}`} />
+                            <FormattedMessage id={`${method}.document.${documentRequired}`} />
                           </>
                         ) : (
-                          <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`} />
+                          <FormattedMessage id={`${method}.info.${accountStatus}`} />
                         )}
                       </Table.Cell>
                     </Table.Row>
@@ -393,45 +391,69 @@ class BankAccountsTable extends Component {
 
             {bankAccounts.accountStatus && bankAccounts.documentOwner && (
               <CustomDiv>
-                <FormattedMessage id='dwolla.document.owner.header1'>{text => <h3>{text}</h3>}</FormattedMessage>
-                <FormattedMessage id='dwolla.document.owner.text1'>{text => <div>{text}</div>}</FormattedMessage>
-                <FormattedMessage id='dwolla.document.owner.text2'>{text => <div>{text}</div>}</FormattedMessage>
-                <FormattedMessage id='dwolla.document.owner.text3'>{text => <div>{text}</div>}</FormattedMessage>
+                <FormattedMessage id={`${method}.document.owner.header1`}>{text => <h3>{text}</h3>}</FormattedMessage>
+                <FormattedMessage id={`${method}.document.owner.text1`}>{text => <div>{text}</div>}</FormattedMessage>
+                <FormattedMessage id={`${method}.document.owner.text2`}>{text => <div>{text}</div>}</FormattedMessage>
+                <FormattedMessage id={`${method}.document.owner.text3`}>{text => <div>{text}</div>}</FormattedMessage>
               </CustomDiv>
             )}
 
             {bankAccounts.documentStatus && !bankAccounts.documentOwner && (
               <CustomDiv>
-                <FormattedMessage id='dwolla.document.explanatory.header1'>{text => <h3>{text}</h3>}</FormattedMessage>
-                <FormattedMessage id='dwolla.document.explanatory.text1'>{text => <div>{text}</div>}</FormattedMessage>
-                <FormattedMessage id='dwolla.document.explanatory.header2'>{text => <h3>{text}</h3>}</FormattedMessage>
-                <FormattedMessage id='dwolla.document.explanatory.text21'>{text => <div>{text}</div>}</FormattedMessage>
+                <FormattedMessage id={`${method}.document.explanatory.header1`}>
+                  {text => <h3>{text}</h3>}
+                </FormattedMessage>
+                <FormattedMessage id={`${method}.document.explanatory.text1`}>
+                  {text => <div>{text}</div>}
+                </FormattedMessage>
+                <FormattedMessage id={`${method}.document.explanatory.header2`}>
+                  {text => <h3>{text}</h3>}
+                </FormattedMessage>
+                <FormattedMessage id={`${method}.document.explanatory.text21`}>
+                  {text => <div>{text}</div>}
+                </FormattedMessage>
                 <br></br>
                 <li>
-                  <FormattedMessage id='dwolla.document.explanatory.BoldLi11'>{text => <b>{text}</b>}</FormattedMessage>
-                  <FormattedMessage id='dwolla.document.explanatory.TextLi11'>
+                  <FormattedMessage id={`${method}.document.explanatory.BoldLi11`}>
+                    {text => <b>{text}</b>}
+                  </FormattedMessage>
+                  <FormattedMessage id={`${method}.document.explanatory.TextLi11`}>
                     {text => <span>{text}</span>}
                   </FormattedMessage>
                 </li>
                 <li>
-                  <FormattedMessage id='dwolla.document.explanatory.BoldLi12'>{text => <b>{text}</b>}</FormattedMessage>
-                  <FormattedMessage id='dwolla.document.explanatory.TextLi12'>
+                  <FormattedMessage id={`${method}.document.explanatory.BoldLi12`}>
+                    {text => <b>{text}</b>}
+                  </FormattedMessage>
+                  <FormattedMessage id={`${method}.document.explanatory.TextLi12`}>
                     {text => <span>{text}</span>}
                   </FormattedMessage>
                 </li>
                 <li>
-                  <FormattedMessage id='dwolla.document.explanatory.BoldLi13'>{text => <b>{text}</b>}</FormattedMessage>
-                  <FormattedMessage id='dwolla.document.explanatory.TextLi13'>
+                  <FormattedMessage id={`${method}.document.explanatory.BoldLi13`}>
+                    {text => <b>{text}</b>}
+                  </FormattedMessage>
+                  <FormattedMessage id={`${method}.document.explanatory.TextLi13`}>
                     {text => <span>{text}</span>}
                   </FormattedMessage>
                 </li>
                 <br></br>
-                <FormattedMessage id='dwolla.document.explanatory.text22'>{text => <div>{text}</div>}</FormattedMessage>
+                <FormattedMessage id={`${method}.document.explanatory.text22`}>
+                  {text => <div>{text}</div>}
+                </FormattedMessage>
                 <br></br>
-                <FormattedMessage id='dwolla.document.explanatory.li21'>{text => <li>{text}</li>}</FormattedMessage>
-                <FormattedMessage id='dwolla.document.explanatory.li22'>{text => <li>{text}</li>}</FormattedMessage>
-                <FormattedMessage id='dwolla.document.explanatory.li23'>{text => <li>{text}</li>}</FormattedMessage>
-                <FormattedMessage id='dwolla.document.explanatory.li24'>{text => <li>{text}</li>}</FormattedMessage>
+                <FormattedMessage id={`${method}.document.explanatory.li21`}>
+                  {text => <li>{text}</li>}
+                </FormattedMessage>
+                <FormattedMessage id={`${method}.document.explanatory.li22`}>
+                  {text => <li>{text}</li>}
+                </FormattedMessage>
+                <FormattedMessage id={`${method}.document.explanatory.li23`}>
+                  {text => <li>{text}</li>}
+                </FormattedMessage>
+                <FormattedMessage id={`${method}.document.explanatory.li24`}>
+                  {text => <li>{text}</li>}
+                </FormattedMessage>
               </CustomDiv>
             )}
           </Container>
@@ -453,7 +475,8 @@ const mapDispatchToProps = {
   dwollaFinalizeVerificationConfirmOpen,
   getCurrentUser,
   dwollaSetPreferred,
-  getIdentity
+  getIdentity,
+  getVellociAccBalance
 }
 
 const statusToLabel = {
@@ -490,28 +513,36 @@ const displayStatus = (r, preferredBankAccountId) => {
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
   const preferredBankAccountId = get(state, 'settings.currentUser.company.preferredBankAccountId', '')
+  let documentRequired = 'verify-with-document'
+  let accountStatus = 'none'
 
-  let dwollaDocumentRequired =
-    company && company.dwollaDocumentRequired ? company.dwollaDocumentRequired : 'verify-with-document'
-  let dwollaAccountStatus = 'none'
-  if (company.dwollaAccountStatus) dwollaAccountStatus = company.dwollaAccountStatus
-  if (
-    dwollaAccountStatus === 'verified' &&
-    getSafe(() => state.settings.documentsOwner.length, '') &&
-    getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
-  )
-    dwollaAccountStatus = 'documentOwner'
+  if (company.dwollaAccountStatus) {
+    dwollaAccountStatus = company.dwollaAccountStatus
+    documentRequired = company.dwollaDocumentRequired && company.dwollaDocumentRequired
+
+    if (
+      accountStatus === 'verified' &&
+      getSafe(() => state.settings.documentsOwner.length, '') &&
+      getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
+    )
+      accountStatus = 'documentOwner'
+  } else if (company.vellociAccountStatus) {
+    accountStatus = company.vellociAccountStatus
+    documentRequired = company.vellociDocumentRequired && company.vellociDocumentRequired
+  }
   //const dwollaAccountStatus = 'document'
-  //let dwollaDocumentRequired = 'verify-with-document'
+  //let documentRequired = 'verify-with-document'
 
-  dwollaDocumentRequired = dwollaDocumentRequired.replace(/-/g, '')
+  documentRequired = documentRequired && documentRequired.replace(/-/g, '')
   const hasDwollaAccount = getSafe(() => company.dwollaAccountStatus, '') === 'verified'
+  const isDwolla = getSafe(() => company.dwollaAccountStatus, false) ? true : false
 
   return {
+    method: isDwolla ? 'dwolla' : 'velloci',
     hasDwollaAccount,
-    bankAccounts: bankAccountsConfig[dwollaAccountStatus],
-    dwollaAccountStatus,
-    dwollaDocumentRequired,
+    bankAccounts: bankAccountsConfig[accountStatus],
+    accountStatus,
+    documentRequired,
     loading: state.settings.loading,
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,

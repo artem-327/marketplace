@@ -38,13 +38,83 @@ class VellociRegister extends Component {
     this.props.cleareActiveStep()
   }
 
+  getBody = values => {
+    const {
+      controlPerson,
+      businessInfo,
+      companyFormationDocument,
+      ownerInformation,
+      verifyPersonalInformation
+    } = values
+
+    let naicsCode = getSafe(() => controlPerson.isEin, false)
+      ? getSafe(() => controlPerson.ein, '')
+      : getSafe(() => controlPerson.ssn, '')
+
+    let beneficialOwners = getSafe(() => ownerInformation.isBeneficialOwner, false)
+      ? {
+          beneficialOwners: [
+            {
+              address: getSafe(() => verifyPersonalInformation.address, ''),
+              businessRole: getSafe(() => verifyPersonalInformation.businessRole, ''),
+              businessTitle: getSafe(() => verifyPersonalInformation.businessRole, ''),
+              city: getSafe(() => verifyPersonalInformation.address.city, ''),
+              dateOfBirth: getSafe(() => verifyPersonalInformation.dateOfBirth, ''),
+              firstName: getSafe(() => verifyPersonalInformation.firstName, ''),
+              lastName: getSafe(() => verifyPersonalInformation.lastName, ''),
+              ownershipPercentage: getSafe(() => verifyPersonalInformation.businessOwnershipPercentage, ''),
+              phone: getSafe(() => verifyPersonalInformation.phoneNumber, ''),
+              state: getSafe(() => verifyPersonalInformation.address.country, ''),
+              zipCode: getSafe(() => verifyPersonalInformation.address.zip, ''),
+              ssn: getSafe(() => verifyPersonalInformation.socialSecurityNumber, ''),
+              email: getSafe(() => verifyPersonalInformation.email, '')
+            }
+          ]
+        }
+      : null
+    let result = {
+      attachments: getSafe(() => companyFormationDocument.attachments, ''),
+      dba: getSafe(() => businessInfo.dba, ''),
+      email: getSafe(() => businessInfo.email, ''),
+      entityType: getSafe(() => controlPerson.entityType, ''),
+      legalAddress: getSafe(() => businessInfo.address.streetAddress, ''),
+      legalCity: getSafe(() => businessInfo.address.city, ''),
+      legalName: getSafe(() => businessInfo.address.streetAddress, ''),
+      legalState: getSafe(() => businessInfo.address.country, ''),
+      legalZipCode: getSafe(() => businessInfo.address.zip, ''),
+      naicsCode,
+      phone: getSafe(() => businessInfo.phoneNumber, ''),
+      tinNumber: getSafe(() => controlPerson.industryType, ''),
+      controller: {
+        address: getSafe(() => verifyPersonalInformation.address, ''),
+        businessRole: getSafe(() => verifyPersonalInformation.businessRole, ''),
+        businessTitle: getSafe(() => verifyPersonalInformation.businessRole, ''),
+        city: getSafe(() => verifyPersonalInformation.address.city, ''),
+        dateOfBirth: getSafe(() => verifyPersonalInformation.dateOfBirth, ''),
+        firstName: getSafe(() => verifyPersonalInformation.firstName, ''),
+        lastName: getSafe(() => verifyPersonalInformation.lastName, ''),
+        ownershipPercentage: getSafe(() => verifyPersonalInformation.businessOwnershipPercentage, ''),
+        phone: getSafe(() => verifyPersonalInformation.phoneNumber, ''),
+        state: getSafe(() => verifyPersonalInformation.address.country, ''),
+        zipCode: getSafe(() => verifyPersonalInformation.address.zip, ''),
+        ssn: getSafe(() => verifyPersonalInformation.socialSecurityNumber, ''),
+        email: getSafe(() => verifyPersonalInformation.email, '')
+      },
+      beneficialOwners,
+      website: getSafe(() => businessInfo.url, '')
+    }
+    return result
+  }
+
   //TODO missing BE call
   handleSubmit = async values => {
     const { activeStep, postRegisterVelloci } = this.props
     if (activeStep !== 5) return
+
     try {
+      const body = this.getBody(values)
       console.log('Submit form successfully. Values for BE call:')
-      console.log(values)
+      console.log(body)
       //await postRegisterVelloci(body)
     } catch (error) {
       console.error(error)

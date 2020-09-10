@@ -12,7 +12,7 @@ import * as Actions from '../actions'
 import { openGlobalBroadcast, saveRules, initGlobalBroadcast } from '~/modules/broadcast/actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
-import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
+import { bankAccountsConfig, vellociAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
@@ -156,7 +156,6 @@ const textsTable = {
   },
   'bank-accounts': {
     BtnAddText: 'settings.tables.bankAccounts.buttonAdd',
-    RgsVellociText: 'settings.tables.bankAccounts.buttonRegisterVelloci',
     SearchText: 'settings.tables.bankAccounts.search'
   },
   'delivery-addresses': {
@@ -350,6 +349,8 @@ class TablesHandlers extends Component {
       treeData,
       toastManager,
       openSidebar,
+      isDwolla,
+      vellociAccBalance,
       intl: { formatMessage }
     } = this.props
 
@@ -466,17 +467,24 @@ class TablesHandlers extends Component {
             <div className='column'>
               <CustomButton
                 fluid
-                onClick={() => Router.push('/dwolla-register')}
-                data-test='settings_dwolla_open_popup_btn'>
+                onClick={() => {
+                  isDwolla ? Router.push('/dwolla-register') : Router.push('/velloci-register')
+                }}
+                data-test={isDwolla ? 'settings_dwolla_open_popup_btn' : 'settings_open_register_velloci_btn'}>
                 <CustomIcon size='20' />
                 <FormattedMessage
-                  id='settings.tables.bankAccounts.registerDwolla'
-                  defaultMessage='Register Dwolla Account'>
+                  id={
+                    isDwolla
+                      ? 'settings.tables.bankAccounts.registerDwolla'
+                      : 'settings.tables.bankAccounts.registerVelloci'
+                  }
+                  defaultMessage={isDwolla ? 'Register Dwolla Account' : 'Register Velloci Account'}>
                   {text => text}
                 </FormattedMessage>
               </CustomButton>
             </div>
           )}
+
           {bankAccTab && bankAccounts.uploadDocumentsButton && (
             <div className='column'>
               <CustomButton
@@ -505,19 +513,22 @@ class TablesHandlers extends Component {
               </CustomButton>
             </div>
           )}
-          {bankAccTab && bankAccounts.dwollaBalance && (
+          {bankAccTab && bankAccounts.balance && (
             <>
               <div className='column'>
                 <CustomLabel>
                   <div>
-                    <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />
+                    <FormattedMessage
+                      id={isDwolla ? 'settings.dwollaAccBalance' : 'settings.vellociAccBalance'}
+                      defaultMessage={isDwolla ? 'Dwolla Ballance: ' : 'Velloci Balance: '}
+                    />
                     <b>
                       <FormattedNumber
                         minimumFractionDigits={2}
                         maximumFractionDigits={2}
                         style='currency'
-                        currency={dwollaAccBalance.currency}
-                        value={dwollaAccBalance.value}
+                        currency={isDwolla ? dwollaAccBalance.currency : vellociAccBalance.currency}
+                        value={isDwolla ? dwollaAccBalance.value : vellociAccBalance.value}
                       />
                     </b>
                   </div>
@@ -543,21 +554,6 @@ class TablesHandlers extends Component {
                   <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
                     <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
-                  </Button>
-                </div>
-              )}
-              {currentTab.type === 'bank-accounts' && (!bankAccTab || bankAccounts.registerVelloci) && (
-                <div className='column'>
-                  <Button
-                    primary
-                    onClick={() => Router.push('/velloci-register')}
-                    data-test='settings_open_register_velloci_btn'>
-                    <PlusCircle />
-                    <FormattedMessage
-                      id='settings.tables.bankAccounts.registerVelloci'
-                      defaultMessage='Register Velloci Account'>
-                      {text => text}
-                    </FormattedMessage>
                   </Button>
                 </div>
               )}
@@ -592,32 +588,41 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
-  let dwollaAccountStatus = 'none'
-  if (company.dwollaAccountStatus) dwollaAccountStatus = company.dwollaAccountStatus
-  if (
-    dwollaAccountStatus === 'verified' &&
-    getSafe(() => state.settings.documentsOwner.length, '') &&
-    getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
-  )
-    dwollaAccountStatus = 'documentOwner'
+  let accountStatus = 'none'
+  if (company.dwollaAccountStatus) {
+    accountStatus = company.dwollaAccountStatus
+    if (
+      accountStatus === 'verified' &&
+      getSafe(() => state.settings.documentsOwner.length, '') &&
+      getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
+    ) {
+      accountStatus = 'documentOwner'
+    }
+  } else if (company.vellociAccountStatus) {
+    accountStatus = company.vellociAccountStatus
+  }
   const {
     broadcast: { data, filter, ...rest }
   } = state
   const treeData = data
     ? new TreeModel({ childrenPropertyName: 'elements' }).parse(data)
     : new TreeModel().parse({ model: { rule: {} } })
-  //const dwollaAccountStatus = 'document'
+  //const accountStatus = 'document'
 
   return {
+    isDwolla: getSafe(() => company.dwollaAccountStatus, false) ? true : false,
     logisticsFilter: state.settings.logisticsFilter,
     'bank-accountsFilter': state.settings['bank-accountsFilter'],
     documentTypes: state.settings.documentTypes,
-    bankAccounts: bankAccountsConfig[dwollaAccountStatus],
+    bankAccounts: bankAccountsConfig[accountStatus],
     currentTab: state.settings.currentTab,
     tableHandlersFilters: state.settings.tableHandlersFiltersSettings,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,
     filterValue: state.settings.filterValue,
+    vellociAccBalance: state.settings.vellociAccBalance
+      ? state.settings.vellociAccBalance.balance
+      : { value: '', currency },
     dwollaAccBalance: state.settings.dwollaAccBalance
       ? state.settings.dwollaAccBalance.balance
       : { value: '', currency },
