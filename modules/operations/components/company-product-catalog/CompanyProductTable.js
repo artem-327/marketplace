@@ -112,10 +112,7 @@ const mapStateToProps = (state, { datagrid }) => {
         ),
         cfProductOfferCount: d.cfProductOfferCount
       }
-    }),
-    currentTab: getSafe(() => Router.router.query.type)
-      ? state.operations.tabsNames.find(tab => tab.type === Router.router.query.type)
-      : state.operations.tabsNames[0]
+    })
   }
 }
 

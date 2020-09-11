@@ -114,10 +114,7 @@ const mapStateToProps = (state, { datagrid }) => {
             <FormattedMessage id='global.no' defaultMessage='No' />
           )
       }
-    }),
-    currentTab: getSafe(() => Router.router.query.type)
-      ? state.operations.tabsNames.find(tab => tab.type === Router.router.query.type)
-      : state.operations.tabsNames[0]
+    })
   }
 }
 

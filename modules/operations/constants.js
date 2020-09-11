@@ -7,6 +7,10 @@ export const defaultTabs = [
   { name: 'Company Generic Products', id: 5, type: 'company-generic-products' }
 ]
 
+export const orderOperatorTabs = [
+  { name: 'Orders', id: 4, type: 'orders' }
+]
+
 export const OrdersFilters = {
   all: {
     filters: []

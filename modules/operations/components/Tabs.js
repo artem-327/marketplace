@@ -3,9 +3,12 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { Menu, Dropdown } from 'semantic-ui-react'
 import Link from 'next/link'
+import { getSafe } from '~/utils/functions'
 
 import { handleActiveTab } from '../actions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
+
+import { defaultTabs, orderOperatorTabs } from '../constants'
 
 const MenuLink = ({ active, children, onClick, className, dataTest }) => {
   return (
@@ -17,11 +20,14 @@ const MenuLink = ({ active, children, onClick, className, dataTest }) => {
 
 function TabsOperations(props) {
   const {
-    tabsNames,
     handleActiveTab,
     currentTab,
-    intl: { formatMessage }
+    intl: { formatMessage },
+    isOrderOperator,
+    isAdmin
   } = props
+
+  const tabsNames = (!isAdmin && isOrderOperator) ? orderOperatorTabs : defaultTabs
 
   return (
     <Dropdown.Menu data-test='navigation_menu_operations_drpdn'>
@@ -48,8 +54,9 @@ function TabsOperations(props) {
 
 const mapStateToProps = state => {
   return {
-    tabsNames: state.operations.tabsNames,
-    currentTab: state.operations.currentTab
+    currentTab: state.operations.currentTab,
+    isOrderOperator: getSafe(() => state.auth.identity.isOrderOperator, false),
+    isAdmin: getSafe(() => state.auth.identity.isAdmin, false)
   }
 }
 

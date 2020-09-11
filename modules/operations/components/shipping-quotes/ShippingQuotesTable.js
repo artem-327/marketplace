@@ -153,10 +153,7 @@ const mapStateToProps = (state, { datagrid }) => {
         quoteId: d.quoteId || '',
         validityDate: d.validityDate ? moment(d.validityDate).format(getLocaleDateFormat()) : 'N/A'
       }
-    }),
-    currentTab: getSafe(() => Router.router.query.type)
-      ? state.operations.tabsNames.find(tab => tab.type === Router.router.query.type)
-      : state.operations.tabsNames[0]
+    })
   }
 }
 

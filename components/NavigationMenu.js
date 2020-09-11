@@ -222,6 +222,7 @@ class Navigation extends Component {
     const {
       isAdmin,
       isEchoOperator,
+      isOrderOperator,
       auth,
       takeover,
       intl: { formatMessage },
@@ -268,7 +269,7 @@ class Navigation extends Component {
     })
 
     const { isClientCompany } = getSafe(() => company, { isClientCompany: false })
-    return (!isAdmin && !isEchoOperator) || takeover ? (
+    return (!isAdmin && !isEchoOperator && !isOrderOperator) || takeover ? (
       <div className='flex-wrapper'>
         <MenuLink to='/dashboard' dataTest='navigation_menu_admin_dashboard'>
           <>
@@ -587,7 +588,7 @@ class Navigation extends Component {
             </DropdownItem>
           </>
         )}
-        {(isAdmin || isEchoOperator) && (
+        {(isAdmin || isEchoOperator || isOrderOperator) && (
           <>
             <DropdownItem
               icon={<Archive size={22} />}
@@ -620,6 +621,7 @@ export default withAuth(
         tabsNames: store.settings.tabsNames,
         currentSettingsTab: store.settings.currentTab,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
+        isOrderOperator: getSafe(() => store.auth.identity.isOrderOperator, false),
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
         isClientCompanyManager: getSafe(() => store.auth.identity.isClientCompanyManager, false),
         collapsedMenu: store.layout.collapsedMenu,
