@@ -4,7 +4,6 @@ import { defaultTabs } from './constants'
 export const initialState = {
   popupValues: null,
   isOpenPopup: false,
-  tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
   loading: false,
   searchedCompanies: [],

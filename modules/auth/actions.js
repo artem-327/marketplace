@@ -74,6 +74,7 @@ export function login(username, password) {
         }
 
         const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
+        const isOrderOperator = identity.roles.map(r => r.id).indexOf(37) > -1
 
         let accessRights = {}
 
@@ -111,7 +112,7 @@ export function login(username, password) {
         ) {
           urlPage = '/settings'
         }
-        if (identity.roles.find(role => role.name === 'Echo Operator')) {
+        if (isOrderOperator || identity.roles.find(role => role.name === 'Echo Operator')) {
           urlPage = '/operations'
         }
         if (

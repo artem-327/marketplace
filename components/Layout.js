@@ -295,6 +295,7 @@ class Layout extends Component {
       useCompanyLogo,
       companyName,
       isEchoOperator,
+      isOrderOperator,
       renderCopyright
     } = this.props
     let icon = Icon && <Icon name='user' />
@@ -355,7 +356,7 @@ class Layout extends Component {
             <MainTitle as='h1'>{title}</MainTitle>
 
             <Menu.Menu position='right' className='black'>
-              {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && (
+              {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && !isOrderOperator && (
                 <>
                   <Menu.Item
                     onClick={() => Router.push('/marketplace/holds')}
@@ -517,6 +518,7 @@ const mapStateToProps = state => {
     useCompanyLogo: getSafe(() => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false),
     companyName: getSafe(() => state.auth.identity.company.name, false),
     isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+    isOrderOperator: getSafe(() => state.auth.identity.isOrderOperator, false),
     renderCopyright: getSafe(() => state.settings.renderCopyright, false),
     adminTab: getSafe(() => state.admin.currentTab.id, null),
     companyTab: getSafe(() => state.companiesAdmin.currentTab.id, null),
