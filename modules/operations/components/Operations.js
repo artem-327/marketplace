@@ -19,12 +19,20 @@ import CompanyGenericProductsTable from './company-generic-products/CompanyGener
 import { getSafe } from '~/utils/functions'
 import { DatagridProvider } from '~/modules/datagrid'
 import * as Actions from '../actions'
+import { orderOperatorTabs } from '../constants'
 
 const CustomGridColumn = styled(GridColumn)`
   padding: 0 30px !important;
 `
 
 class Operations extends Component {
+  componentDidMount() {
+    const { handleActiveTab, auth, currentTab } = this.props
+    if (getSafe(() => auth.identity.isOrderOperator, false)) {
+      handleActiveTab(orderOperatorTabs[0], currentTab)
+    }
+  }
+
   componentWillUnmount() {
     const { isOpenPopup, closePopup } = this.props
     if (isOpenPopup) closePopup()
