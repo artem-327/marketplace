@@ -151,10 +151,10 @@ class UsersTable extends Component {
           confirm(
             formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
             formatMessage(
-              { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` },
-              { item: row.name }
+              { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.rawData.name}?` },
+              { item: row.rawData.name }
             )
-          ).then(() => deleteUser(row.id, row.name)),
+          ).then(() => deleteUser(row.id, row.rawData.name)),
         hidden: row => currentUserId === row.id
       },
       {
