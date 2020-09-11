@@ -16,6 +16,7 @@ import { bankAccountsConfig, vellociAccountsConfig } from './BankAccountsTable/B
 import { currency } from '~/constants/index'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -572,6 +573,7 @@ class TablesHandlers extends Component {
               </Button>
             </GridColumn>
           )}*/}
+          {currentTab.type !== 'global-broadcast' && <ColumnSettingButton divide={true} />}
         </div>
       </>
     )

@@ -23,97 +23,104 @@ const handleSwitchEnabled = (id, row) => {
   userSwitchEnableDisable(id, row)
 }
 
-const columns = [
-  {
-    name: 'name',
-    title: (
-      <FormattedMessage id='global.user' defaultMessage='User'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 180,
-    sortPath: 'User.name'
-  },
-  {
-    name: 'companyName',
-    title: (
-      <FormattedMessage id='global.companyName' defaultMessage='Company Name'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 180
-  },
-  {
-    name: 'jobTitle',
-    title: (
-      <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 130
-  },
-  {
-    name: 'email',
-    title: (
-      <FormattedMessage id='global.email' defaultMessage='E-mail'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 180,
-    sortPath: 'User.email'
-  },
-  {
-    name: 'phoneFormatted',
-    title: (
-      <FormattedMessage id='global.phone' defaultMessage='Phone'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 160
-  },
-  /*
-  {
-    name: 'homeBranchName',
-    title: (
-      <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 180
-  },
-  */
-  {
-    name: 'userRoles',
-    title: (
-      <FormattedMessage id='global.roles' defaultMessage='Roles'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 160
-  },
-  /*
-  {
-    name: 'lastLoginAt',
-    title: (
-      <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 180
-  },
-  */
-  {
-    name: 'switchEnable',
-    title: (
-      <FormattedMessage id='global.enableUser' defaultMessage='Enable User'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 120
-  }
-]
-
 class UsersTable extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.user' defaultMessage='User'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180,
+          sortPath: 'User.name',
+          actions: this.getActions()
+        },
+        {
+          name: 'companyName',
+          title: (
+            <FormattedMessage id='global.companyName' defaultMessage='Company Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        {
+          name: 'jobTitle',
+          title: (
+            <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130
+        },
+        {
+          name: 'email',
+          title: (
+            <FormattedMessage id='global.email' defaultMessage='E-mail'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180,
+          sortPath: 'User.email'
+        },
+        {
+          name: 'phoneFormatted',
+          title: (
+            <FormattedMessage id='global.phone' defaultMessage='Phone'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        /*
+        {
+          name: 'homeBranchName',
+          title: (
+            <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        */
+        {
+          name: 'userRoles',
+          title: (
+            <FormattedMessage id='global.roles' defaultMessage='Roles'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        /*
+        {
+          name: 'lastLoginAt',
+          title: (
+            <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180
+        },
+        */
+        {
+          name: 'switchEnable',
+          title: (
+            <FormattedMessage id='global.enableUser' defaultMessage='Enable User'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120
+        }
+      ]
+    }
+  }
+
   componentDidMount() {
     this.props.getUsersMe()
     if (!this.props.userRoles.length) this.props.getUserRoles()
@@ -121,20 +128,39 @@ class UsersTable extends Component {
     if (!this.props.adminRoles.length) this.props.getAdminRoles()
   }
 
-  render() {
-    const {
-      intl,
-      loading,
-      rows,
-      datagrid,
-      openSidebar,
-      deleteUser,
-      currentUserId,
-      editId,
-      adminRoles
-    } = this.props
+  getActions = () => {
+    const { intl, datagrid, openSidebar, deleteUser, currentUserId, editId } = this.props
 
     const { formatMessage } = intl
+    return [
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: row => openSidebar(row)
+      },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        disabled: row => currentUserId === row.id || editId === row.id,
+        callback: row =>
+          confirm(
+            formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
+            formatMessage({
+              id: 'confirm.deleteUser.content',
+              defaultMessage: 'Do you really want to delete user?'
+            })
+          ).then(async () => {
+            try {
+              await deleteUser(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.log('DELETE ERROR')
+            }
+          })
+      }
+    ]
+  }
+
+  render() {
+    const { loading, rows, datagrid } = this.props
 
     return (
       <React.Fragment>
@@ -142,33 +168,9 @@ class UsersTable extends Component {
           tableName={'admin_users'}
           {...datagrid.tableProps}
           loading={datagrid.loading || loading}
-          columns={columns}
+          columns={this.state.columns}
           rows={rows}
-          rowActions={[
-            {
-              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openSidebar(row)
-            },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              disabled: row => currentUserId === row.id || editId === row.id,
-              callback: row =>
-                confirm(
-                  formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
-                  formatMessage({
-                    id: 'confirm.deleteUser.content',
-                    defaultMessage: 'Do you really want to delete user?'
-                  })
-                ).then(async () => {
-                  try {
-                    await deleteUser(row.id)
-                    datagrid.removeRow(row.id)
-                  } catch (e) {
-                    console.log('DELETE ERROR')
-                  }
-                })
-            }
-          ]}
+          columnActions='name'
         />
       </React.Fragment>
     )

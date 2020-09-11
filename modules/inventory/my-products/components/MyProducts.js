@@ -18,6 +18,7 @@ import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, D
 import { CustomRowDiv } from '../../constants/layout'
 import ProductSidebar from './ProductSidebar'
 import ProductImportPopup from './ProductImportPopup'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const FileTextIcon = styled(FileText)`
   display: block;
@@ -42,114 +43,119 @@ const Circle = styled.div`
 `
 
 class MyProducts extends Component {
-  state = {
-    columns: [
-      {
-        name: 'productStatus',
-        title: (
-          <Popup
-            size='small'
-            header={
-              <FormattedMessage
-                id='global.productStatusIndicator'
-                defaultMessage='Status indicator if Company Product will be shown on Marketplace'
-              />
-            }
-            trigger={
-              <div>
-                <FileTextIcon />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ),
-        width: 40,
-        align: 'center'
-      },
-      {
-        name: 'intProductName',
-        title: (
-          <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 200,
-        sortPath: 'CompanyProduct.intProductName'
-      },
-      {
-        name: 'intProductCode',
-        title: (
-          <FormattedMessage id='global.intProductCode' defaultMessage='Internal Product Code'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 190,
-        sortPath: 'CompanyProduct.intProductCode'
-      },
-      {
-        name: 'genericProductName',
-        title: (
-          <FormattedMessage id='global.genericProductName' defaultMessage='Generic Product Name!'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 230,
-        sortPath: 'CompanyProduct.companyGenericProduct.name'
-      },
-      {
-        name: 'genericProductCode',
-        title: (
-          <FormattedMessage id='global.genericProductCode' defaultMessage='Generic Product Code!'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 200,
-        sortPath: 'CompanyProduct.companyGenericProduct.code'
-      },
-      {
-        name: 'packagingSizeFormatted',
-        title: (
-          <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 140,
-        sortPath: 'CompanyProduct.packagingSize'
-      },
-      {
-        name: 'unit',
-        title: (
-          <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 140,
-        sortPath: 'CompanyProduct.packagingUnit.nameAbbreviation'
-      },
-      {
-        name: 'packagingTypeName',
-        title: (
-          <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyProduct.packagingType.name'
-      },
-      {
-        name: 'productGroup',
-        title: (
-          <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 200,
-        sortPath: 'CompanyProduct.companyGenericProduct.name'
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'productStatus',
+          title: (
+            <Popup
+              size='small'
+              header={
+                <FormattedMessage
+                  id='global.productStatusIndicator'
+                  defaultMessage='Status indicator if Company Product will be shown on Marketplace'
+                />
+              }
+              trigger={
+                <div>
+                  <FileTextIcon />
+                </div>
+              } // <div> has to be there otherwise popup will be not shown
+            />
+          ),
+          width: 40,
+          align: 'center'
+        },
+        {
+          name: 'intProductName',
+          title: (
+            <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200,
+          sortPath: 'CompanyProduct.intProductName',
+          actions: this.getActions()
+        },
+        {
+          name: 'intProductCode',
+          title: (
+            <FormattedMessage id='global.intProductCode' defaultMessage='Internal Product Code'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 190,
+          sortPath: 'CompanyProduct.intProductCode'
+        },
+        {
+          name: 'genericProductName',
+          title: (
+            <FormattedMessage id='global.genericProductName' defaultMessage='Generic Product Name!'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 230,
+          sortPath: 'CompanyProduct.companyGenericProduct.name'
+        },
+        {
+          name: 'genericProductCode',
+          title: (
+            <FormattedMessage id='global.genericProductCode' defaultMessage='Generic Product Code!'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200,
+          sortPath: 'CompanyProduct.companyGenericProduct.code'
+        },
+        {
+          name: 'packagingSizeFormatted',
+          title: (
+            <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140,
+          sortPath: 'CompanyProduct.packagingSize'
+        },
+        {
+          name: 'unit',
+          title: (
+            <FormattedMessage id='global.packagingUnit' defaultMessage='Packaging Unit'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140,
+          sortPath: 'CompanyProduct.packagingUnit.nameAbbreviation'
+        },
+        {
+          name: 'packagingTypeName',
+          title: (
+            <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyProduct.packagingType.name'
+        },
+        {
+          name: 'productGroup',
+          title: (
+            <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200,
+          sortPath: 'CompanyProduct.companyGenericProduct.name'
+        }
+      ],
+      companyGenericProduct: [],
+      filterValue: {
+        searchInput: '',
+        productType: 'ALL'
       }
-    ],
-    companyGenericProduct: [],
-    filterValue: {
-      searchInput: '',
-      productType: 'ALL'
     }
   }
 
@@ -210,6 +216,32 @@ class MyProducts extends Component {
     }
     this.setState({ filterValue: filter })
     this.handleFiltersValue(filter)
+  }
+
+  getActions = () => {
+    const { openPopup, deleteProduct, intl } = this.props
+    const { formatMessage } = intl
+    return [
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: row => openPopup(row.rawData)
+      },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row => {
+          return confirm(
+            formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
+            formatMessage(
+              {
+                id: 'confirm.deleteItem',
+                defaultMessage: `Do you really want to delete '${row.rawData.intProductName}'?`
+              },
+              { item: row.rawData.intProductName }
+            )
+          ).then(() => deleteProduct(row.id, row.intProductName))
+        }
+      }
+    ]
   }
 
   render() {
@@ -303,6 +335,7 @@ class MyProducts extends Component {
                     <FormattedMessage id='settings.tables.products.buttonAdd'>{text => text}</FormattedMessage>
                   </Button>
                 </div>
+                <ColumnSettingButton divide={true} />
               </div>
             </CustomRowDiv>
           </div>
@@ -319,32 +352,12 @@ class MyProducts extends Component {
                 sortPath: 'CompanyProduct.intProductName',
                 direction: 'asc'
               }}
-              rowActions={[
-                {
-                  text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-                  callback: row => openPopup(row.rawData)
-                },
-                {
-                  text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-                  callback: row => {
-                    return confirm(
-                      formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
-                      formatMessage(
-                        {
-                          id: 'confirm.deleteItem',
-                          defaultMessage: `Do you really want to delete '${row.rawData.intProductName}'?`
-                        },
-                        { item: row.rawData.intProductName }
-                      )
-                    ).then(() => deleteProduct(row.id, row.intProductName))
-                  }
-                }
-              ]}
+              columnActions='intProductName'
             />
           </div>
         </Container>
-        {isOpenImportPopup && (<ProductImportPopup />)}
-        {isOpenPopup && (<ProductSidebar />)}
+        {isOpenImportPopup && <ProductImportPopup />}
+        {isOpenPopup && <ProductSidebar />}
       </>
     )
   }
@@ -448,11 +461,16 @@ const mapStateToProps = (state, { datagrid }) => {
               } // <div> has to be there otherwise popup will be not shown
             />
           ) : null,
-        productGroup: getSafe(() => product.companyGenericProduct.productGroup.name, (<FormattedMessage id='global.unmapped.cptlz' defaultMessage='Unmapped'>{text => text}</FormattedMessage>))
+        productGroup: getSafe(
+          () => product.companyGenericProduct.productGroup.name,
+          <FormattedMessage id='global.unmapped.cptlz' defaultMessage='Unmapped'>
+            {text => text}
+          </FormattedMessage>
+        )
       }
     }),
-    action: getSafe(() => Router.router.query.action),  // ! ! ?
-    actionId: getSafe(() => Router.router.query.id)     // ! ! ?
+    action: getSafe(() => Router.router.query.action), // ! ! ?
+    actionId: getSafe(() => Router.router.query.id) // ! ! ?
   }
 }
 

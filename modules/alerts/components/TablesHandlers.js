@@ -8,6 +8,7 @@ import * as Actions from '../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const CustomDiv = styled.div`
   display: flex;
@@ -71,18 +72,18 @@ class TablesHandlers extends Component {
       if (currentTab) {
         const filter = tableHandlersFilters[currentTab]
         if (filter) {
-          this.handleFiltersValue({...filter, category: currentTab})
+          this.handleFiltersValue({ ...filter, category: currentTab })
         } else {
-          this.handleFiltersValue({category: currentTab})
+          this.handleFiltersValue({ category: currentTab })
         }
       }
     } else {
       if (currentTab) {
         const filter = this.state[currentTab]
         if (filter) {
-          this.handleFiltersValue({...filter, category: currentTab})
+          this.handleFiltersValue({ ...filter, category: currentTab })
         } else {
-          this.handleFiltersValue({category: currentTab})
+          this.handleFiltersValue({ category: currentTab })
         }
       }
     }
@@ -155,7 +156,7 @@ class TablesHandlers extends Component {
           </div>
         </div>
         <div>
-          <div className='column'>
+          <div className='column' style={{ marginRight: '9px' }}>
             <StyledButtonsGroup>
               <Button
                 active={!filterValue || !filterValue.switchButtonsValue}
@@ -174,6 +175,7 @@ class TablesHandlers extends Component {
               </Button>
             </StyledButtonsGroup>
           </div>
+          <ColumnSettingButton divide={true} />
         </div>
       </CustomDiv>
     )

@@ -9,6 +9,7 @@ import styled from 'styled-components'
 
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
@@ -95,198 +96,189 @@ const FiltersRow = styled.div`
   margin-bottom: -5px;
 `
 
+const DivRow = styled.div`
+  display: flex !important;
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+`
+
+const DivIcons = styled.div`
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  right: 0px !important;
+  display: flex !important;
+  margin-left: 10px !important;
+`
+
+const DivSetting = styled.div`
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer !important;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+`
+
 class Listings extends Component {
-  state = {
-    columns: [
-      { name: 'productGroupName', disabled: true },
-      { name: 'productNumber', disabled: true },
-      // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
-      {
-        name: 'conformingIcon',
-        title: (
-          <Popup
-            header={
-              <FormattedMessage
-                id='marketplace.tooltipConformingIcon'
-                defaultMessage='Shows if Product Offer has set conforming attribute'
-              />
-            }
-            trigger={
-              <div>
-                <RedTriangle className='grey' />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ),
-        width: 45,
-        align: 'center'
-      },
-      {
-        name: 'expired',
-        title: (
-          <Popup
-            header={
-              <FormattedMessage id='marketplace.tooltipExpired' defaultMessage='Shows if Product Offer is expired' />
-            }
-            trigger={
-              <div>
-                <ClockIcon className='grey' />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ),
-        caption: (
-          <FormattedMessage id='global.expirationStatusIcon' defaultMessage='Expiration Status Icon'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 45,
-        align: 'center'
-      },
-      {
-        name: 'intProductName',
-        title: (
-          <FormattedMessage id='global.productName' defaultMessage='Product Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 180,
-        sortPath: 'ProductOffer.companyProduct.intProductName'
-      },
-      {
-        name: 'fobPrice',
-        title: (
-          <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160,
-        align: 'right',
-        sortPath: 'ProductOffer.cfPricePerUOM'
-      },
-      {
-        name: 'available',
-        title: (
-          <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 140,
-        align: 'right',
-        sortPath: 'ProductOffer.pkgAvailable'
-      },
-      {
-        name: 'packaging',
-        title: (
-          <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 140
-      },
-      {
-        name: 'quantity',
-        title: (
-          <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 140,
-        align: 'right',
-        sortPath: 'ProductOffer.quantity'
-      },
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='marketplace.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 220,
-        sortPath: 'ProductOffer.companyProduct.companyGenericProduct.manufacturer.name'
-      },
-      {
-        name: 'origin',
-        title: (
-          <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-        sortPath: 'ProductOffer.origin.name'
-      },
-      {
-        name: 'expiration',
-        title: (
-          <FormattedMessage id='marketplace.expirationDate' defaultMessage='Expiration Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120,
-        sortPath: 'ProductOffer.lotExpirationDate'
-      },
-      {
-        name: 'condition',
-        title: (
-          <FormattedMessage id='marketplace.condition' defaultMessage='Condition'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        sortPath: 'ProductOffer.condition.name'
-      },
-      {
-        name: 'form',
-        title: (
-          <FormattedMessage id='marketplace.form' defaultMessage='Form'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        sortPath: 'ProductOffer.form.name'
-      },
-      {
-        name: 'location',
-        title: (
-          <FormattedMessage id='marketplace.location' defaultMessage='Location'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160
-      },
-      {
-        name: 'association',
-        title: (
-          <FormattedMessage id='marketplace.association' defaultMessage='Association'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160
-      },
-      {
-        name: 'notes',
-        title: (
-          <FormattedMessage id='marketplace.notes' defaultMessage='Notes'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160
-      },
-      {
-        name: 'leadTime',
-        title: (
-          <FormattedMessage id='marketplace.leadTime' defaultMessage='Lead Time (days)'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160
+  constructor(props) {
+    super(props)
+    //this.getRowActions = this.getRowActions.bind(this)
+    this.state = {
+      columns: [
+        { name: 'productGroupName', disabled: true },
+        { name: 'productNumber', disabled: true },
+        // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
+        {
+          name: 'intProductName',
+          title: (
+            <FormattedMessage id='global.productName' defaultMessage='Product Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 180,
+          sortPath: 'ProductOffer.companyProduct.intProductName',
+          actions: this.getRowActions()
+        },
+        {
+          name: 'fobPrice',
+          title: (
+            <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160,
+          align: 'right',
+          sortPath: 'ProductOffer.cfPricePerUOM'
+        },
+        {
+          name: 'available',
+          title: (
+            <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140,
+          align: 'right',
+          sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
+          name: 'packaging',
+          title: (
+            <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140
+        },
+        {
+          name: 'quantity',
+          title: (
+            <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140,
+          align: 'right',
+          sortPath: 'ProductOffer.quantity'
+        },
+        {
+          name: 'manufacturer',
+          title: (
+            <FormattedMessage id='marketplace.manufacturer' defaultMessage='Manufacturer'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 220,
+          sortPath: 'ProductOffer.companyProduct.companyGenericProduct.manufacturer.name'
+        },
+        {
+          name: 'origin',
+          title: (
+            <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120,
+          sortPath: 'ProductOffer.origin.name'
+        },
+        {
+          name: 'expiration',
+          title: (
+            <FormattedMessage id='marketplace.expirationDate' defaultMessage='Expiration Date'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 120,
+          sortPath: 'ProductOffer.lotExpirationDate'
+        },
+        {
+          name: 'condition',
+          title: (
+            <FormattedMessage id='marketplace.condition' defaultMessage='Condition'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          sortPath: 'ProductOffer.condition.name'
+        },
+        {
+          name: 'form',
+          title: (
+            <FormattedMessage id='marketplace.form' defaultMessage='Form'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          sortPath: 'ProductOffer.form.name'
+        },
+        {
+          name: 'location',
+          title: (
+            <FormattedMessage id='marketplace.location' defaultMessage='Location'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        {
+          name: 'association',
+          title: (
+            <FormattedMessage id='marketplace.association' defaultMessage='Association'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        {
+          name: 'notes',
+          title: (
+            <FormattedMessage id='marketplace.notes' defaultMessage='Notes'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        {
+          name: 'leadTime',
+          title: (
+            <FormattedMessage id='marketplace.leadTime' defaultMessage='Lead Time (days)'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        }
+      ],
+      //pageNumber: 0,
+      filterValues: {
+        SearchByNamesAndTags: null
       }
-    ],
-    //pageNumber: 0,
-    filterValues: {
-      SearchByNamesAndTags: null
-    },
-    openFilterPopup: false
+    }
   }
 
   componentDidMount() {
@@ -356,29 +348,39 @@ class Listings extends Component {
     return rows.map(r => ({
       ...r,
       clsName: r.condition ? 'non-conforming' : '',
-      conformingIcon: r.condition ? (
-        <Popup
-          header={
-            <FormattedMessage id='global.nonConforming.tooltip' defaultMessage='This is a non-conforming product.' />
-          }
-          content={r.conditionNotes}
-          trigger={
-            <div>
-              <RedTriangle />
-            </div>
-          } // <div> has to be there otherwise popup will be not shown
-        />
-      ) : null,
-      expired: r.expired ? (
-        <Popup
-          header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
-          trigger={
-            <div>
-              <ClockIcon />
-            </div>
-          } // <div> has to be there otherwise popup will be not shown
-        />
-      ) : null,
+      intProductName: (
+        <DivRow>
+          <SpanText>{r.intProductName}</SpanText>
+          <DivIcons>
+            {r.expired ? (
+              <Popup
+                header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+                trigger={
+                  <div>
+                    <ClockIcon />
+                  </div>
+                } // <div> has to be there otherwise popup will be not shown
+              />
+            ) : null}
+            {r.condition ? (
+              <Popup
+                size='small'
+                header={
+                  <FormattedMessage
+                    id='global.nonConforming.tooltip'
+                    defaultMessage='This is a non-conforming product.'
+                  />
+                }
+                trigger={
+                  <div>
+                    <RedTriangle />
+                  </div>
+                } // <div> has to be there otherwise popup will be not shown
+              />
+            ) : null}
+          </DivIcons>
+        </DivRow>
+      ),
       condition: r.condition ? (
         <Popup
           content={r.conditionNotes}
@@ -416,22 +418,13 @@ class Listings extends Component {
     sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
-  render() {
+  getRowActions = () => {
     const {
-      datagrid,
-      intl,
       openPopup,
       isMerchant,
-      tutorialCompleted,
       isCompanyAdmin,
-      sidebar: { openInfo },
-      tableHandlersFiltersListings,
-      activeMarketplaceFilter
+      intl: { formatMessage }
     } = this.props
-    const { columns, openFilterPopup } = this.state
-    let { formatMessage } = intl
-    const rows = this.getRows()
-
     const rowActions = []
     const buttonInfo = {
       text: formatMessage({
@@ -462,6 +455,24 @@ class Listings extends Component {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
     }
+    return rowActions
+  }
+
+  render = () => {
+    const {
+      datagrid,
+      intl,
+      openPopup,
+      isMerchant,
+      tutorialCompleted,
+      isCompanyAdmin,
+      sidebar: { openInfo },
+      tableHandlersFiltersListings,
+      activeMarketplaceFilter
+    } = this.props
+    const { columns, openFilterPopup } = this.state
+    let { formatMessage } = intl
+    const rows = this.getRows()
 
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
@@ -495,13 +506,7 @@ class Listings extends Component {
               </div>
             </div>
 
-            <div>
-              <div className='column'>
-                <FiltersRow>
-                  <FilterTags datagrid={datagrid} data-test='marketplace_listings_remove_filter' />
-                </FiltersRow>
-              </div>
-            </div>
+            <ColumnSettingButton />
           </CustomRowDiv>
         </div>
 
@@ -530,9 +535,6 @@ class Listings extends Component {
               const tagNames = tagsNames ? tagsNames.split(',') : []
               return (
                 <span>
-                  <span style={{ fontWeight: '600', color: '#2599d5' }}>
-                    {name ? name : 'Unmapped'} <span style={{ color: '#848893' }}>({groupLength})</span>
-                  </span>
                   <span className='flex row right'>
                     <span>
                       {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
@@ -548,7 +550,7 @@ class Listings extends Component {
               }
             }}
             data-test='marketplace_listings_row_action'
-            rowActions={rowActions}
+            columnActions={'intProductName'}
           />
         </div>
         <AddCart openInfo={openInfo} />
@@ -561,13 +563,15 @@ class Listings extends Component {
 Listings.propTypes = {
   isMerchant: boolean,
   isCompanyAdmin: boolean,
+  isOpenColumnSettingModal: boolean,
   tutorialCompleted: boolean
 }
 
 Listings.defaultProps = {
   isMerchant: false,
   isCompanyAdmin: false,
-  tutorialCompleted: false
+  tutorialCompleted: false,
+  isOpenColumnSettingModal: false
 }
 
 export default injectIntl(Listings)

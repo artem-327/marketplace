@@ -28,117 +28,112 @@ const StyledReRegisterButton = styled(Button)`
   min-width: unset !important;
 `
 
-const columns = [
-  {
-    name: 'displayName',
-    title: (
-      <FormattedMessage id='global.companyName' defaultMessage='Company Name'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 220,
-    sortPath: 'Company.name'
-  },
-  {
-    name: 'p44CompanyId',
-    title: (
-      <FormattedMessage id='global.p44CompanyId' defaultMessage='P44 Company ID'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 210
-  },
-  {
-    name: 'associations',
-    title: (
-      <FormattedMessage id='admin.associations' defaultMessage='Associations'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 165
-  },
-  {
-    name: 'primaryBranchAddress',
-    title: (
-      <FormattedMessage id='global.headquaterAddress' defaultMessage='Headquarters Address'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 185,
-    sortPath: 'Company.primaryBranch.deliveryAddress.address.streetAddress'
-  },
-  {
-    name: 'primaryContact',
-    title: (
-      <FormattedMessage id='global.primaryContact' defaultMessage='Primary Contact'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150,
-    sortPath: 'Company.primaryBranch.deliveryAddress.contactName'
-  },
-  {
-    name: 'contactEmail',
-    title: (
-      <FormattedMessage id='global.contactEmail' defaultMessage='Contact E-mail'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 175,
-    sortPath: 'Company.primaryBranch.deliveryAddress.contactEmail'
-  },
-  {
-    name: 'hasDwollaAccount',
-    title: (
-      <FormattedMessage id='global.dwollaAccount' defaultMessage='Dwolla Account'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 145
-  },
-  {
-    name: 'hasVellociAccount',
-    title: (
-      <FormattedMessage id='global.vellociAccount' defaultMessage='Velloci Account'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 145
-  },
-  {
-    name: 'hasLogisticsAccounts',
-    title: (
-      <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150
-  },
-  {
-    name: 'reviewRequested',
-    title: (
-      <FormattedMessage id='global.reviewRequested' defaultMessage='Review Requested'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150,
-    align: 'center'
-  },
-  {
-    name: 'enabled',
-    title: (
-      <FormattedMessage id='global.enabled' defaultMessage='Enabled'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 130,
-    align: 'center'
-  }
-]
-
 class CompaniesTable extends Component {
-  state = {
-    reRegisterCompanyId: null
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'displayName',
+          title: (
+            <FormattedMessage id='global.companyName' defaultMessage='Company Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 220,
+          sortPath: 'Company.name',
+          actions: this.getActions()
+        },
+        {
+          name: 'p44CompanyId',
+          title: (
+            <FormattedMessage id='global.p44CompanyId' defaultMessage='P44 Company ID'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 210
+        },
+        {
+          name: 'associations',
+          title: (
+            <FormattedMessage id='admin.associations' defaultMessage='Associations'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 165
+        },
+        {
+          name: 'primaryBranchAddress',
+          title: (
+            <FormattedMessage id='global.headquaterAddress' defaultMessage='Headquarters Address'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 185,
+          sortPath: 'Company.primaryBranch.deliveryAddress.address.streetAddress'
+        },
+        {
+          name: 'primaryContact',
+          title: (
+            <FormattedMessage id='global.primaryContact' defaultMessage='Primary Contact'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'Company.primaryBranch.deliveryAddress.contactName'
+        },
+        {
+          name: 'contactEmail',
+          title: (
+            <FormattedMessage id='global.contactEmail' defaultMessage='Contact E-mail'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 175,
+          sortPath: 'Company.primaryBranch.deliveryAddress.contactEmail'
+        },
+        {
+          name: 'hasDwollaAccount',
+          title: (
+            <FormattedMessage id='global.dwollaAccount' defaultMessage='Dwolla Account'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 145
+        },
+        {
+          name: 'hasLogisticsAccounts',
+          title: (
+            <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        {
+          name: 'reviewRequested',
+          title: (
+            <FormattedMessage id='global.reviewRequested' defaultMessage='Review Requested'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          align: 'center'
+        },
+        {
+          name: 'enabled',
+          title: (
+            <FormattedMessage id='global.enabled' defaultMessage='Enabled'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130,
+          align: 'center'
+        }
+      ],
+      reRegisterCompanyId: null
+    }
   }
 
   getRows = rows => {
@@ -205,85 +200,70 @@ class CompaniesTable extends Component {
     }
   }
 
-  render() {
-    const {
-      datagrid,
-      rows,
-      loading,
-      openEditCompany,
-      confirmMessage,
-      handleOpenConfirmPopup,
-      deleteCompany,
-      openRegisterDwollaAccount,
-      takeOverCompany,
-      resendWelcomeEmail,
-      intl,
-      isOpenSidebar
-    } = this.props
+  getActions = () => {
+    const { datagrid, openEditCompany, deleteCompany, takeOverCompany, resendWelcomeEmail, intl } = this.props
 
     const { formatMessage } = intl
+    return [
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: row => openEditCompany(row.id, row.rawData)
+      },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({ id: 'confirm.deleteCompany.title', defaultMessage: 'Delete Company?' }),
+            formatMessage(
+              {
+                id: 'confirm.deleteCompany.content',
+                defaultMessage: `Do you really want to delete '${row.name}' company?`
+              },
+              { name: row.name }
+            )
+          ).then(() => {
+            try {
+              deleteCompany(row.id)
+              datagrid.removeRow(row.id)
+            } catch (err) {
+              console.error(err)
+            }
+          })
+      },
+      {
+        text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }),
+        callback: async row => {
+          Router.push(`/admin/dwolla-register?companyId=${row.id}`)
+        },
+        hidden: row => row.hasDwollaAccount === 'Yes'
+      },
+      {
+        text: <FormattedMessage id='admin.takeOver' defaultMessage='Take-over as Company Admin' />,
+        callback: row => takeOverCompany(row.id),
+        hidden: row => !row.primaryUser
+      },
+      {
+        text: <FormattedMessage id='admin.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
+        callback: async row => {
+          const { value } = await resendWelcomeEmail(row.primaryUser.id)
+        },
+        hidden: row => !row.reviewRequested || !row.primaryUser
+      }
+    ]
+  }
+
+  render() {
+    const { datagrid, rows } = this.props
 
     return (
       <React.Fragment>
         <ProdexTable
           {...datagrid.tableProps}
           tableName='admin_companies'
-          columns={columns}
+          columns={this.state.columns}
           defaultSorting={{ columnName: 'displayName', direction: 'asc', sortPath: 'Company.name' }}
           rows={this.getRows(rows)}
-          rowActions={[
-            {
-              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openEditCompany(row.id, row.rawData)
-            },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({ id: 'confirm.deleteCompany.title', defaultMessage: 'Delete Company?' }),
-                  formatMessage(
-                    {
-                      id: 'confirm.deleteCompany.content',
-                      defaultMessage: `Do you really want to delete '${row.name}' company?`
-                    },
-                    { name: row.name }
-                  )
-                ).then(() => {
-                  try {
-                    deleteCompany(row.id)
-                    datagrid.removeRow(row.id)
-                  } catch (err) {
-                    console.error(err)
-                  }
-                })
-            },
-            {
-              text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }),
-              callback: async row => {
-                Router.push(`/admin/dwolla-register?companyId=${row.id}`)
-              },
-              hidden: row => row.hasDwollaAccount === 'Yes'
-            },
-            {
-              text: formatMessage({ id: 'admin.registerVellociAccount', defaultMessage: 'Register Velloci Account' }),
-              callback: async row => {
-                Router.push(`/velloci-register?companyId=${row.id}`)
-              },
-              hidden: row => row.hasVellociAccount === 'Yes'
-            },
-            {
-              text: <FormattedMessage id='admin.takeOver' defaultMessage='Take-over as Company Admin' />,
-              callback: row => takeOverCompany(row.id),
-              hidden: row => !row.primaryUser
-            },
-            {
-              text: <FormattedMessage id='admin.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
-              callback: async row => {
-                const { value } = await resendWelcomeEmail(row.primaryUser.id)
-              },
-              hidden: row => !row.reviewRequested || !row.primaryUser
-            }
-          ]}
+          columnActions='displayName'
         />
       </React.Fragment>
     )

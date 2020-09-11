@@ -40,6 +40,8 @@ export const initialState = {
   datagridFilterUpdate: false,
   pricingEditOpenId: null,
   isExportInventoryOpen: false,
+  tableHandlersFilters: null,
+  isOpenColumnSettingModal: false,
   myProductsUnmappedValue: 'ALL',
   myListingsFilters: null,
   myProductsFilters: null
@@ -618,6 +620,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.TOGGLE_COLUMN_SETTING_MODAL: {
+      return {
+        ...state,
+        isOpenColumnSettingModal: payload
+      }
+    }
     case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
       return {
         ...state,

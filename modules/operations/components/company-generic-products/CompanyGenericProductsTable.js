@@ -66,124 +66,129 @@ const StatusLabel = val => (
 )
 
 class CompanyGenericProductsTable extends Component {
-  state = {
-    columns: [
-      {
-        name: 'processed',
-        title: (
-          <FormattedMessage id='global.processed' defaultMessage='Processed'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        align: 'center',
-        sortPath: 'CompanyGenericProductRequest.processed'
-      },
-      {
-        name: 'requestedAt',
-        title: (
-          <FormattedMessage id='operations.requestedAt' defaultMessage='Requested At'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProductRequest.createdAt'
-      },
-      {
-        name: 'productName',
-        title: (
-          <FormattedMessage id='global.productName' defaultMessage='Product Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProductRequest.productName'
-      },
-      {
-        name: 'notes',
-        title: (
-          <FormattedMessage id='global.notes' defaultMessage='Notes'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 250,
-        //sortPath: 'CompanyProduct.intProductCode'
-      },
-      {
-        name: 'processedAt',
-        title: (
-          <FormattedMessage id='operations.processedAt' defaultMessage='Processed At'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProductRequest.processedDate'
-      },
-      {
-        name: 'requestedBy',
-        title: (
-          <FormattedMessage id='operations.requestedBy' defaultMessage='Requested by'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 250,
-        sortPath: 'CompanyGenericProductRequest.requestedBy.name'
-      },
-      {
-        name: 'attachments',
-        title: (
-          <FormattedMessage id='global.documents' defaultMessage='Documents'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        align: 'center'
-      },
-    ],
-    columnsAttachments: [
-      {
-        name: 'documentNumber',
-        title: (
-          <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 250
-      },
-      {
-        name: 'type',
-        title: (
-          <FormattedMessage id='order.related.type' defaultMessage='Type'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      {
-        name: 'issuedAt',
-        title: (
-          <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130
-      },
-      {
-        name: 'download',
-        title: (
-          <FormattedMessage id='global.download' defaultMessage='Download'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 100,
-        align: 'center'
-      }
-    ],
-    openAttachmentsPopup: false,
-    attachments: []
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'processed',
+          title: (
+            <FormattedMessage id='global.processed' defaultMessage='Processed'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          align: 'center',
+          sortPath: 'CompanyGenericProductRequest.processed',
+          actions: this.getActions()
+        },
+        {
+          name: 'requestedAt',
+          title: (
+            <FormattedMessage id='operations.requestedAt' defaultMessage='Requested At'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProductRequest.createdAt'
+        },
+        {
+          name: 'productName',
+          title: (
+            <FormattedMessage id='global.productName' defaultMessage='Product Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProductRequest.productName'
+        },
+        {
+          name: 'notes',
+          title: (
+            <FormattedMessage id='global.notes' defaultMessage='Notes'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 250
+          //sortPath: 'CompanyProduct.intProductCode'
+        },
+        {
+          name: 'processedAt',
+          title: (
+            <FormattedMessage id='operations.processedAt' defaultMessage='Processed At'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProductRequest.processedDate'
+        },
+        {
+          name: 'requestedBy',
+          title: (
+            <FormattedMessage id='operations.requestedBy' defaultMessage='Requested by'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 250,
+          sortPath: 'CompanyGenericProductRequest.requestedBy.name'
+        },
+        {
+          name: 'attachments',
+          title: (
+            <FormattedMessage id='global.documents' defaultMessage='Documents'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          align: 'center'
+        }
+      ],
+      columnsAttachments: [
+        {
+          name: 'documentNumber',
+          title: (
+            <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 250
+        },
+        {
+          name: 'type',
+          title: (
+            <FormattedMessage id='order.related.type' defaultMessage='Type'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        {
+          name: 'issuedAt',
+          title: (
+            <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 130
+        },
+        {
+          name: 'download',
+          title: (
+            <FormattedMessage id='global.download' defaultMessage='Download'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          align: 'center'
+        }
+      ],
+      openAttachmentsPopup: false,
+      attachments: []
+    }
   }
 
-  markRequestAsProcessed = async (row) => {
+  markRequestAsProcessed = async row => {
     const { markRequestAsProcessed, datagrid } = this.props
     try {
       const { value } = await markRequestAsProcessed(row.id)
@@ -193,7 +198,7 @@ class CompanyGenericProductsTable extends Component {
     }
   }
 
-  denyRequest = async (row) => {
+  denyRequest = async row => {
     const { denyRequest, datagrid } = this.props
     try {
       await denyRequest(row.id)
@@ -203,7 +208,7 @@ class CompanyGenericProductsTable extends Component {
     }
   }
 
-  deleteRequest = async (row) => {
+  deleteRequest = async row => {
     const { deleteRequest, datagrid } = this.props
     try {
       await deleteRequest(row.id)
@@ -216,14 +221,70 @@ class CompanyGenericProductsTable extends Component {
   getRows = () => {
     return this.props.rows.map(row => ({
       ...row,
-      attachments: row.attachments && row.attachments.length ? (
-        <a href='#' onClick={e => this.openAttachmentsPopup(e, row.attachments)}>
-          <Icon className='file related' />
-        </a>
-      ) : (
-        <Icon className='file non-related' />
-      )
+      attachments:
+        row.attachments && row.attachments.length ? (
+          <a href='#' onClick={e => this.openAttachmentsPopup(e, row.attachments)}>
+            <Icon className='file related' />
+          </a>
+        ) : (
+          <Icon className='file non-related' />
+        )
     }))
+  }
+
+  getActions = () => {
+    const { intl } = this.props
+
+    const { formatMessage } = intl
+    return [
+      {
+        text: formatMessage({ id: 'operations.markRequestAsProcessed', defaultMessage: 'Mark Request as Processed' }),
+        callback: row => this.markRequestAsProcessed(row),
+        hidden: row => row.rawData.processed
+      },
+      {
+        text: formatMessage({ id: 'operations.denyRequest', defaultMessage: 'Deny Request' }),
+        callback: row => {
+          confirm(
+            formatMessage({
+              id: 'confirm.operations.denyRequest.title',
+              defaultMessage: 'Deny Create Request?'
+            }),
+            formatMessage(
+              {
+                id: 'confirm.operations.denyRequest.content',
+                defaultMessage: `Do you really want to deny '${row.rawData.productName}' create request?`
+              },
+              { name: row.rawData.productName }
+            )
+          ).then(() => {
+            this.denyRequest(row)
+          })
+        },
+        hidden: row => row.rawData.processed
+      },
+      {
+        text: formatMessage({ id: 'operations.deleteRequest', defaultMessage: 'Delete Request' }),
+        callback: row => {
+          confirm(
+            formatMessage({
+              id: 'confirm.operations.deleteRequest.title',
+              defaultMessage: 'Delete Create Request?'
+            }),
+            formatMessage(
+              {
+                id: 'confirm.operations.deleteRequest.content',
+                defaultMessage: `Do you really want to delete '${row.rawData.productName}' create request?`
+              },
+              { name: row.rawData.productName }
+            )
+          ).then(() => {
+            this.deleteRequest(row)
+          })
+        },
+        hidden: row => !row.rawData.processed
+      }
+    ]
   }
 
   openAttachmentsPopup(e, attachments) {
@@ -349,27 +410,14 @@ class CompanyGenericProductsTable extends Component {
   }
 
   render() {
-    const {
-      datagrid,
-      rows,
-      filterValue,
-      loading,
-      intl
-    } = this.props
+    const { datagrid, filterValue, loading } = this.props
 
     let { columns } = this.state
-    const { formatMessage } = intl
 
     return (
       <React.Fragment>
         {this.state.openAttachmentsPopup && (
-          <StyledModal
-            size='small'
-            closeIcon={false}
-            onClose={this.closePopup}
-            centered={true}
-            open={true}
-          >
+          <StyledModal size='small' closeIcon={false} onClose={this.closePopup} centered={true} open={true}>
             <Modal.Header style={{ textTransform: 'uppercase' }}>
               <FormattedMessage id='operations.attachedDocuments' defaultMessage='Attached Documents'>
                 {text => text}
@@ -393,56 +441,7 @@ class CompanyGenericProductsTable extends Component {
           rows={this.getRows()}
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
-          rowActions={[
-            {
-              text:
-                formatMessage({ id: 'operations.markRequestAsProcessed', defaultMessage: 'Mark Request as Processed' }),
-              callback: row => this.markRequestAsProcessed(row),
-              hidden: row => row.rawData.processed
-            },
-            {
-              text: formatMessage({ id: 'operations.denyRequest', defaultMessage: 'Deny Request' }),
-              callback: row => {
-                confirm(
-                  formatMessage({
-                    id: 'confirm.operations.denyRequest.title',
-                    defaultMessage: 'Deny Create Request?'
-                  }),
-                  formatMessage(
-                    {
-                      id: 'confirm.operations.denyRequest.content',
-                      defaultMessage: `Do you really want to deny '${row.rawData.productName}' create request?`
-                    },
-                    { name: row.rawData.productName }
-                  )
-                ).then(() => {
-                  this.denyRequest(row)
-                })
-              },
-              hidden: row => row.rawData.processed
-            },
-            {
-              text: formatMessage({ id: 'operations.deleteRequest', defaultMessage: 'Delete Request' }),
-              callback: row => {
-                confirm(
-                  formatMessage({
-                    id: 'confirm.operations.deleteRequest.title',
-                    defaultMessage: 'Delete Create Request?'
-                  }),
-                  formatMessage(
-                    {
-                      id: 'confirm.operations.deleteRequest.content',
-                      defaultMessage: `Do you really want to delete '${row.rawData.productName}' create request?`
-                    },
-                    { name: row.rawData.productName }
-                  )
-                ).then(() => {
-                  this.deleteRequest(row)
-                })
-              },
-              hidden: row => !row.rawData.processed
-            },
-          ]}
+          columnActions='processed'
         />
       </React.Fragment>
     )
@@ -461,12 +460,10 @@ const mapStateToProps = (state, { datagrid }) => {
         id: d.id,
         rawData: d,
         attachments: d.attachments,
-        productName: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {d.productName}
-        </div>,
-        notes: <div style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {d.notes}
-        </div>,
+        productName: (
+          <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{d.productName}</div>
+        ),
+        notes: <div style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{d.notes}</div>,
         processed: StatusLabel(d.processed),
         processed2: d.processed ? (
           <FormattedMessage id='global.yes' defaultMessage='Yes' />
@@ -476,8 +473,12 @@ const mapStateToProps = (state, { datagrid }) => {
         processedAt: d.processedAt && moment(d.processedAt).format(getLocaleDateFormat()),
         requestedAt: d.requestedAt && moment(d.requestedAt).format(getLocaleDateFormat()),
         requestedBy: requestedByName
-          ? (requestedByCompany ? requestedByName + ', ' + requestedByCompany : requestedByName)
-          : (requestedByCompany ? requestedByCompany : 'N/A')
+          ? requestedByCompany
+            ? requestedByName + ', ' + requestedByCompany
+            : requestedByName
+          : requestedByCompany
+          ? requestedByCompany
+          : 'N/A'
       }
     }),
     currentTab: state.operations.currentTab

@@ -53,7 +53,13 @@ const Cell = ({
           />
         </td>
       )}
-      {hideActions ? null : <td className='actions'>{actionsDropdown}</td>}
+      {hideActions ? (
+        <td className={'dx-g-bs4-cursor-pointer'} onClick={handleClick}>
+          {actionsDropdown}
+        </td>
+      ) : (
+        <td className={'actions'}>{actionsDropdown}</td>
+      )}
       <td
         key={row.key}
         colSpan={colSpan + (hideActions ? 1 : 0) - (rowSelection && !hideCheckboxes ? 4 : 3)}

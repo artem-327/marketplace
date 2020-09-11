@@ -202,44 +202,49 @@ export const bankAccountsConfig = {
 }
 
 class BankAccountsTable extends Component {
-  state = {
-    amount1: 0,
-    amount2: 0,
-    columns: [
-      { name: 'accountName', disabled: true },
-      {
-        name: 'name',
-        title: (
-          <FormattedMessage id='settings.accountName' defaultMessage='Account Name'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'bankAccountType',
-        title: (
-          <FormattedMessage id='settings.accountType' defaultMessage='Account Type'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'bankName',
-        title: (
-          <FormattedMessage id='settings.bankName' defaultMessage='Bank Name'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },
-      {
-        name: 'statusLabel',
-        title: (
-          <FormattedMessage id='settings.status' defaultMessage='Status'>
-            {text => text}
-          </FormattedMessage>
-        )
-      }
-    ]
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      amount1: 0,
+      amount2: 0,
+      columns: [
+        { name: 'accountName', disabled: true },
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='settings.accountName' defaultMessage='Account Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          actions: this.getActions()
+        },
+        {
+          name: 'bankAccountType',
+          title: (
+            <FormattedMessage id='settings.accountType' defaultMessage='Account Type'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'bankName',
+          title: (
+            <FormattedMessage id='settings.bankName' defaultMessage='Bank Name'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'statusLabel',
+          title: (
+            <FormattedMessage id='settings.status' defaultMessage='Status'>
+              {text => text}
+            </FormattedMessage>
+          )
+        }
+      ]
+    }
   }
 
   componentDidMount() {
@@ -266,16 +271,11 @@ class BankAccountsTable extends Component {
     }
   }
 
-  render() {
+  getActions = () => {
     const {
-      rows,
-      loading,
-      filterValue,
-      openPopup,
       deleteBankAccount,
       dwollaInitiateVerification,
       dwollaFinalizeVerification,
-      getBankAccountsDataRequest,
       intl,
       bankAccounts,
       accountStatus,
@@ -285,8 +285,62 @@ class BankAccountsTable extends Component {
       method
     } = this.props
 
-    let { columns } = this.state
     const { formatMessage } = intl
+    return [
+      // { text: 'Edit', callback: row => openPopup(row) },
+      {
+        text: formatMessage({
+          id: 'global.delete',
+          defaultMessage: 'Delete'
+        }),
+        callback: row =>
+          confirm(
+            formatMessage({
+              id: 'confirm.deleteBankAccount',
+              defaultMessage: 'Delete Bank Account'
+            }),
+            formatMessage(
+              {
+                id: 'confirm.deleteItem',
+                defaultMessage: `Do you really want to delete ${row.rawData.name}?`
+              },
+              { item: row.rawData.name }
+            )
+          ).then(() => deleteBankAccount(row.id))
+      },
+      {
+        text: formatMessage({
+          id: 'settings.initiateVerification',
+          defaultMessage: 'Initiate Verification'
+        }),
+        callback: row => dwollaInitiateVerification(row.id),
+        hidden: row => row.status !== 'unverified'
+      },
+      {
+        text: formatMessage({
+          id: 'settings.finalizeVerification',
+          defaultMessage: 'Finalize Verification'
+        }),
+        callback: row => {
+          finalizeConfirm().then(v => dwollaFinalizeVerification(row.id, v.amount1, v.amount2))
+        },
+        hidden: row => row.status !== 'verification_in_process'
+      },
+      {
+        text: formatMessage({
+          id: 'settings.setAsPreferredBankAccount',
+          defaultMessage: 'Set as Preferred Bank Account'
+        }),
+        callback: row => dwollaSetPreferred(row.id),
+        hidden: row => row.status !== 'verified' || row.id === preferredBankAccountId
+      }
+    ]
+  }
+
+  render() {
+    const { rows, loading, filterValue, intl, bankAccounts, dwollaAccountStatus, dwollaDocumentRequired } = this.props
+
+    let { columns } = this.state
 
     return (
       <React.Fragment>
@@ -297,55 +351,7 @@ class BankAccountsTable extends Component {
             loading={loading}
             columns={columns}
             filterValue={filterValue}
-            rowActions={[
-              // { text: 'Edit', callback: row => openPopup(row) },
-              {
-                text: formatMessage({
-                  id: 'global.delete',
-                  defaultMessage: 'Delete'
-                }),
-                callback: row =>
-                  confirm(
-                    formatMessage({
-                      id: 'confirm.deleteBankAccount',
-                      defaultMessage: 'Delete Bank Account'
-                    }),
-                    formatMessage(
-                      {
-                        id: 'confirm.deleteItem',
-                        defaultMessage: `Do you really want to delete ${row.rawData.name}?`
-                      },
-                      { item: row.rawData.name }
-                    )
-                  ).then(() => deleteBankAccount(row.id))
-              },
-              {
-                text: formatMessage({
-                  id: 'settings.initiateVerification',
-                  defaultMessage: 'Initiate Verification'
-                }),
-                callback: row => dwollaInitiateVerification(row.id),
-                hidden: row => row.status !== 'unverified'
-              },
-              {
-                text: formatMessage({
-                  id: 'settings.finalizeVerification',
-                  defaultMessage: 'Finalize Verification'
-                }),
-                callback: row => {
-                  finalizeConfirm().then(v => dwollaFinalizeVerification(row.id, v.amount1, v.amount2))
-                },
-                hidden: row => row.status !== 'verification_in_process'
-              },
-              {
-                text: formatMessage({
-                  id: 'settings.setAsPreferredBankAccount',
-                  defaultMessage: 'Set as Preferred Bank Account'
-                }),
-                callback: row => dwollaSetPreferred(row.id),
-                hidden: row => row.status !== 'verified' || row.id === preferredBankAccountId
-              }
-            ]}
+            columnActions='name'
           />
         )}
 

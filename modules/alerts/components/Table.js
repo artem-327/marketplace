@@ -45,7 +45,7 @@ class Table extends Component {
         ),
         sortPath: 'Message.text',
         width: 720,
-        maxWidth: 2000,
+        maxWidth: 2000
       },
       {
         name: 'readStatus',
@@ -56,7 +56,7 @@ class Table extends Component {
         ),
         //sortPath: '',
         align: 'center',
-        width: 130,
+        width: 130
       },
       {
         name: 'timeCreated',
@@ -66,7 +66,7 @@ class Table extends Component {
           </FormattedMessage>
         ),
         sortPath: 'Message.createdAt',
-        width: 160,
+        width: 160
       },
       {
         name: 'timeRead',
@@ -76,36 +76,37 @@ class Table extends Component {
           </FormattedMessage>
         ),
         sortPath: 'Message.readAt',
-        width: 160,
-      },
+        width: 160
+      }
     ]
   }
 
   statusLabel = (row, val) => {
     const read = val === 'read'
-    return <StyledStatusLabel
-      className={val}
-      onClick={() => {
-        if (read) this.handleClickOnRead(row)
-        else this.handleClickOnUnread(row)
-      }}
-    >
-      {read
-        ? <FormattedMessage id='alerts.status.read' defaultMessage='Read' />
-        : <FormattedMessage id='alerts.status.unread' defaultMessage='Unread' />
-      }
-    </StyledStatusLabel>
+    return (
+      <StyledStatusLabel
+        className={val}
+        onClick={() => {
+          if (read) this.handleClickOnRead(row)
+          else this.handleClickOnUnread(row)
+        }}>
+        {read ? (
+          <FormattedMessage id='alerts.status.read' defaultMessage='Read' />
+        ) : (
+          <FormattedMessage id='alerts.status.unread' defaultMessage='Unread' />
+        )}
+      </StyledStatusLabel>
+    )
   }
 
-  notificationText = (row) => {
+  notificationText = row => {
     return (
       <div
         style={{ cursor: 'pointer' }}
         onClick={() => {
           if (row.read) this.handleClickOnRead(row)
           else this.handleClickOnUnread(row)
-        }}
-      >
+        }}>
         {ReactHtmlParser(row.text)}
       </div>
     )
@@ -114,12 +115,12 @@ class Table extends Component {
   getRows = () => {
     return this.props.rows.map(r => {
       const read = r.read ? 'read' : 'unread'
-      return ({
+      return {
         ...r,
         clsName: read,
         notification: this.notificationText(r.rawData),
-        readStatus: this.statusLabel(r.rawData, read),
-      })
+        readStatus: this.statusLabel(r.rawData, read)
+      }
     })
   }
 
@@ -154,12 +155,7 @@ class Table extends Component {
   }
 
   render() {
-    const {
-      intl,
-      datagrid,
-      markSeenSending,
-      menuStatusFilter
-    } = this.props
+    const { intl, datagrid, markSeenSending, menuStatusFilter } = this.props
 
     const { formatMessage } = intl
     const { columns } = this.state
@@ -185,13 +181,13 @@ const mapStateToProps = (state, { datagrid }) => {
     rows: datagrid.rows.map(r => {
       const createdAt = r.createdAt && moment(r.createdAt)
       const readAt = r.readAt && moment(r.readAt)
-      return ({
+      return {
         ...r,
         rawData: r,
         timeCreated: createdAt ? createdAt.fromNow() : 'N/A',
         timeRead: readAt ? readAt.fromNow() : '-'
-      })
-    }),
+      }
+    })
   }
 }
 

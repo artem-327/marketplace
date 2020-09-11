@@ -15,83 +15,94 @@ import {
 } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 
-const columns = [
-  {
-    name: 'casIndexName',
-    title: (
-      <FormattedMessage id='global.indexName' defaultMessage='Index Name'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 375,
-    sortPath: 'CasProduct.casIndexName'
-  },
-  {
-    name: 'casNumber',
-    title: (
-      <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 150,
-    sortPath: 'CasProduct.casNumber'
-  }
-  // { name: 'chemicalName', title: <FormattedMessage id='global.chemicalName' defaultMessage='Chemical Name'>{text => text}</FormattedMessage>, width: 375, sortPath: 'CasProduct.chemicalName' },
-  // { name: 'unNumberCode', title: <FormattedMessage id='global.unNumber' defaultMessage='UN Number'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.unNumber.unNumberCode' },
-  // { name: 'packagingGroup', title: <FormattedMessage id='global.packagingGroup' defaultMessage='Packaging Group'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.packagingGroup.groupCode' },
-  // { name: 'hazardClassesLabeled', title: <FormattedMessage id='global.hazardClasses' defaultMessage='Hazard Classes'>{text => text}</FormattedMessage>, width: 150 },
-]
-
 class CasProductsTable extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'casIndexName',
+          title: (
+            <FormattedMessage id='global.indexName' defaultMessage='Index Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 375,
+          sortPath: 'CasProduct.casIndexName',
+          actions: this.getActions()
+        },
+        {
+          name: 'casNumber',
+          title: (
+            <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CasProduct.casNumber'
+        }
+        // { name: 'chemicalName', title: <FormattedMessage id='global.chemicalName' defaultMessage='Chemical Name'>{text => text}</FormattedMessage>, width: 375, sortPath: 'CasProduct.chemicalName' },
+        // { name: 'unNumberCode', title: <FormattedMessage id='global.unNumber' defaultMessage='UN Number'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.unNumber.unNumberCode' },
+        // { name: 'packagingGroup', title: <FormattedMessage id='global.packagingGroup' defaultMessage='Packaging Group'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.packagingGroup.groupCode' },
+        // { name: 'hazardClassesLabeled', title: <FormattedMessage id='global.hazardClasses' defaultMessage='Hazard Classes'>{text => text}</FormattedMessage>, width: 150 },
+      ]
+    }
+  }
   componentDidMount() {
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
   }
 
-  render() {
-    const { datagrid, config, intl, rows, openPopup, openEditAltNamesCasPopup, deleteCasProduct } = this.props
+  getActions = () => {
+    const { datagrid, intl, openPopup, openEditAltNamesCasPopup, deleteCasProduct } = this.props
 
     const { formatMessage } = intl
+    return [
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: ({ hazardClassesLabeled, ...rest }) => openPopup(rest)
+      },
+      {
+        text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }),
+        callback: row => openEditAltNamesCasPopup(row)
+      },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({ id: 'confirm.deleteCasProduct.title', defaultMessage: 'Delete CAS Product?' }),
+            formatMessage(
+              {
+                id: 'confirm.deleteCasProduct.content',
+                defaultMessage: `Do you really want to delete '${row.chemicalName}' CAS product?`
+              },
+              { name: row.chemicalName }
+            )
+          ).then(() => {
+            deleteCasProduct(row.id)
+            datagrid.removeRow(row.id)
+          })
+      }
+    ]
+  }
+
+  render() {
+    const { datagrid, rows } = this.props
 
     return (
       <React.Fragment>
         <ProdexTable
           {...datagrid.tableProps}
           tableName='admin_cas_products'
-          columns={columns}
+          columns={this.state.columns}
           rows={rows}
           defaultSorting={{
             columnName: 'casIndexName',
             sortPath: 'CasProduct.casIndexName',
             direction: 'asc'
           }}
-          rowActions={[
-            {
-              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: ({ hazardClassesLabeled, ...rest }) => openPopup(rest)
-            },
-            {
-              text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }),
-              callback: row => openEditAltNamesCasPopup(row)
-            },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({ id: 'confirm.deleteCasProduct.title', defaultMessage: 'Delete CAS Product?' }),
-                  formatMessage(
-                    {
-                      id: 'confirm.deleteCasProduct.content',
-                      defaultMessage: `Do you really want to delete '${row.chemicalName}' CAS product?`
-                    },
-                    { name: row.chemicalName }
-                  )
-                ).then(() => {
-                  deleteCasProduct(row.id)
-                  datagrid.removeRow(row.id)
-                })
-            }
-          ]}
+          columnActions='casIndexName'
         />
       </React.Fragment>
     )

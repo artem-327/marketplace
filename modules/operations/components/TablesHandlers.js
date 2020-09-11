@@ -16,6 +16,7 @@ import * as Actions from '../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe, uniqueArrayByKey } from '~/utils/functions'
+import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -44,6 +45,10 @@ const CustomRowDiv = styled.div`
   .ui.dropdown {
     height: 40px;
   }
+`
+
+const DivColumn = styled.div`
+  margin-right: 9px !important;
 `
 
 const textsTable = {
@@ -365,7 +370,7 @@ class TablesHandlers extends Component {
                         onChange={this.handleFilterChangeCompany}
                       />
                     </div>
-                    <div className='column'>
+                    <DivColumn className='column'>
                       <Dropdown
                         style={{ width: 250 }}
                         name='mappedUnmapped'
@@ -395,7 +400,8 @@ class TablesHandlers extends Component {
                         value={companyProductUnmappedOnly}
                         onChange={this.handleFilterChangeMappedUnmapped}
                       />
-                    </div>
+                    </DivColumn>
+                    <ColumnSettingButton divide={true} />
                   </div>
                 </>
               )
@@ -474,7 +480,7 @@ class TablesHandlers extends Component {
                         }}
                       />
                     </div>
-                    <div className='column'>
+                    <DivColumn className='column'>
                       <DateInput
                         name='dateTo'
                         inputProps={{
@@ -488,7 +494,8 @@ class TablesHandlers extends Component {
                           onChange: this.handleFilterChangeInputSearch
                         }}
                       />
-                    </div>
+                    </DivColumn>
+                    <ColumnSettingButton divide={true} />
                   </div>
                 </>
               )
@@ -515,12 +522,13 @@ class TablesHandlers extends Component {
                   </div>
                   <div>
                     {item.BtnAddText && (
-                      <div className='column'>
+                      <DivColumn className='column'>
                         <Button fluid primary onClick={() => openPopup()} data-test='operations_open_popup_btn'>
                           <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
                         </Button>
-                      </div>
+                      </DivColumn>
                     )}
+                    <ColumnSettingButton divide={currentTab === 'company-generic-products' ? false : true} />
                   </div>
                 </>
               )

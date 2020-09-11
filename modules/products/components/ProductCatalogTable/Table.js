@@ -40,105 +40,156 @@ const Circle = styled.div`
 `
 
 class ProductCatalogTable extends Component {
-  state = {
-    columns: [
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'publishedStatus',
+          title: (
+            <Popup
+              size='small'
+              header={
+                <FormattedMessage
+                  id='global.productStatusIndicator'
+                  defaultMessage='Status indicator if Company Product will be shown on Marketplace'
+                />
+              }
+              trigger={
+                <div>
+                  <FileTextIcon />
+                </div>
+              } // <div> has to be there otherwise popup will be not shown
+            />
+          ),
+          width: 40,
+          align: 'center'
+        },
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.productName' defaultMessage='Product Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProduct.name',
+          actions: this.getActions()
+        },
+        {
+          name: 'code',
+          title: (
+            <FormattedMessage id='global.productCode' defaultMessage='Product Code'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProduct.code'
+        },
+        {
+          name: 'manufacturerName',
+          title: (
+            <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProduct.manufacturer.name'
+        },
+        {
+          name: 'sds',
+          title: (
+            <FormattedMessage id='admin.companyGenericProduct.sds' defaultMessage='SDS'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+        },
+        {
+          name: 'sdsVersionNumber',
+          title: (
+            <FormattedMessage id='admin.companyGenericProduct.sdsVersion' defaultMessage='SDS Version'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProduct.sdsVersionNumber'
+        },
+        {
+          name: 'sdsRevisionDate',
+          title: (
+            <FormattedMessage id='admin.companyGenericProduct.sdsRevisionDate' defaultMessage='SDS Revision Date'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProduct.sdsRevisionDate'
+        },
+        {
+          name: 'productGroup',
+          title: (
+            <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProduct.productGroup.name'
+        },
+        {
+          name: 'company',
+          title: (
+            <FormattedMessage id='global.company' defaultMessage='Company'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProduct.company.name'
+        }
+      ]
+    }
+  }
+
+  getActions = () => {
+    const {
+      datagrid,
+      intl: { formatMessage },
+      openEditEchoProduct,
+      openEditEchoAltNamesPopup,
+      deleteCompanyGenericProduct,
+      editedId
+    } = this.props
+
+    return [
+      ...echoRowActions((row, i) => openEditEchoProduct(row.id, i, true)),
       {
-        name: 'publishedStatus',
-        title:
-          <Popup
-            size='small'
-            header={
-              <FormattedMessage
-                id='global.productStatusIndicator'
-                defaultMessage='Status indicator if Company Product will be shown on Marketplace' />
-            }
-            trigger={
-              <div>
-                <FileTextIcon />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />,
-        width: 40,
-        align: 'center'
+        text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }),
+        callback: row => openEditEchoAltNamesPopup(row)
       },
       {
-        name: 'name',
-        title: (
-          <FormattedMessage id='global.productName' defaultMessage='Product Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProduct.name'
-      },
-      {
-        name: 'code',
-        title: (
-          <FormattedMessage id='global.productCode' defaultMessage='Product Code'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProduct.code'
-      },
-      {
-        name: 'manufacturerName',
-        title: (
-          <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProduct.manufacturer.name'
-      },
-      {
-        name: 'sds',
-        title: (
-          <FormattedMessage id='admin.companyGenericProduct.sds' defaultMessage='SDS'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150
-      },
-      {
-        name: 'sdsVersionNumber',
-        title: (
-          <FormattedMessage id='admin.companyGenericProduct.sdsVersion' defaultMessage='SDS Version'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProduct.sdsVersionNumber'
-      },
-      {
-        name: 'sdsRevisionDate',
-        title: (
-          <FormattedMessage id='admin.companyGenericProduct.sdsRevisionDate' defaultMessage='SDS Revision Date'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProduct.sdsRevisionDate'
-      },
-      {
-        name: 'productGroup',
-        title: (
-          <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProduct.productGroup.name'
-      },
-      {
-        name: 'company',
-        title: (
-          <FormattedMessage id='global.company' defaultMessage='Company'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 150,
-        sortPath: 'CompanyGenericProduct.company.name'
+        text: formatMessage({
+          id: 'admin.deleteCompanyGenericProduct',
+          defaultMessage: 'Delete Company Generic Product'
+        }),
+        disabled: row => editedId === row.id,
+        callback: row => {
+          confirm(
+            formatMessage({
+              id: 'confirm.deleteCompanyGenericProduct.title',
+              defaultMessage: 'Delete Company Generic Product?'
+            }),
+            formatMessage(
+              {
+                id: 'confirm.deleteCompanyGenericProduct.content',
+                defaultMessage: `Do you really want to delete '${row.name}' company generic product?`
+              },
+              { name: row.name }
+            )
+          ).then(() => {
+            deleteCompanyGenericProduct(row.id)
+            datagrid.removeRow(row.id)
+          })
+        }
       }
     ]
   }
@@ -150,38 +201,37 @@ class ProductCatalogTable extends Component {
     return rows.map(row => {
       return {
         ...row,
-        publishedStatus: row.isPublished
-          ? (
-            <Popup
-              size='small'
-              header={
-                <FormattedMessage
-                  id='global.productOk'
-                  defaultMessage='This Company Generic Product is published and will be shown on the Marketplace'
-                />
-              }
-              trigger={
-                <div>
-                  <Circle />
-                </div>
-              } // <div> has to be there otherwise popup will be not shown
-            />
-          ) : (
-            <Popup
-              size='small'
-              header={
-                <FormattedMessage
-                  id='global.notPublished'
-                  defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace'
-                />
-              }
-              trigger={
-                <div>
-                  <Circle className='red' />
-                </div>
-              } // <div> has to be there otherwise popup will be not shown
-            />
-          ),
+        publishedStatus: row.isPublished ? (
+          <Popup
+            size='small'
+            header={
+              <FormattedMessage
+                id='global.productOk'
+                defaultMessage='This Company Generic Product is published and will be shown on the Marketplace'
+              />
+            }
+            trigger={
+              <div>
+                <Circle />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : (
+          <Popup
+            size='small'
+            header={
+              <FormattedMessage
+                id='global.notPublished'
+                defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace'
+              />
+            }
+            trigger={
+              <div>
+                <Circle className='red' />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ),
         sds:
           row.attachments && row.attachments.length ? (
             <Button as='a' onClick={() => this.downloadAttachment(row.attachments[0].name, row.attachments[0].id)}>
@@ -269,16 +319,7 @@ class ProductCatalogTable extends Component {
   }
 
   render() {
-    const {
-      datagrid,
-      rows,
-      intl: { formatMessage },
-      openEditEchoProduct,
-      openEditEchoAltNamesPopup,
-      deleteCompanyGenericProduct,
-      editedId,
-      filterValue
-    } = this.props
+    const { datagrid, rows, filterValue } = this.props
 
     let { columns } = this.state
 
@@ -291,38 +332,7 @@ class ProductCatalogTable extends Component {
           filterValue={filterValue}
           loading={datagrid.loading}
           rows={this.getRows(rows)}
-          rowActions={[
-            ...echoRowActions((row, i) => openEditEchoProduct(row.id, i, true)),
-            {
-              text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }),
-              callback: row => openEditEchoAltNamesPopup(row)
-            },
-            {
-              text: formatMessage({
-                id: 'admin.deleteCompanyGenericProduct',
-                defaultMessage: 'Delete Company Generic Product'
-              }),
-              disabled: row => editedId === row.id,
-              callback: row => {
-                confirm(
-                  formatMessage({
-                    id: 'confirm.deleteCompanyGenericProduct.title',
-                    defaultMessage: 'Delete Company Generic Product?'
-                  }),
-                  formatMessage(
-                    {
-                      id: 'confirm.deleteCompanyGenericProduct.content',
-                      defaultMessage: `Do you really want to delete '${row.name}' company generic product?`
-                    },
-                    { name: row.name }
-                  )
-                ).then(() => {
-                  deleteCompanyGenericProduct(row.id)
-                  datagrid.removeRow(row.id)
-                })
-              }
-            }
-          ]}
+          columnActions='name'
         />
       </React.Fragment>
     )
