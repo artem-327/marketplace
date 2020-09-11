@@ -687,9 +687,10 @@ class MyListings extends Component {
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
         ),
+
         fobPrice: (
           <StyledPopup
-            content={<QuickEditPricingPopup rawData={r.rawData} />}
+            content={<QuickEditPricingPopup rawData={{ ...r.rawData, pricingTiers: r.rawData.pricingTiers.slice() }} />}
             on='click'
             trigger={<div style={{ cursor: 'pointer' }}>{r.fobPrice}</div>}
             open={pricingEditOpenId === r.rawData.id}

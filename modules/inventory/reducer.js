@@ -43,6 +43,7 @@ export const initialState = {
   tableHandlersFilters: null,
   isOpenColumnSettingModal: false,
   myProductsUnmappedValue: 'ALL',
+  pricingEditValues: null,
   myListingsFilters: null,
   myProductsFilters: null
 }
@@ -598,11 +599,11 @@ export default function reducer(state = initialState, action) {
         datagridFilterUpdate: !state.datagridFilterUpdate
       }
     }
-
     case AT.INVENTORY_SET_PRICING_EDIT_OPEN_ID: {
       return {
         ...state,
-        pricingEditOpenId: payload
+        pricingEditOpenId: payload,
+        ...( payload === null && { pricingEditValues: null })
       }
     }
 

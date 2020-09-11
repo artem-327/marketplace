@@ -218,6 +218,31 @@ const validationSchema = (min) => val.object().shape({
 })
 
 class QuickEditPricingPopup extends React.Component {
+
+
+  componentDidMount() {
+    const { pricingEditOpenId, pricingEditValues } = this.props
+
+    //console.log('!!!!!!!!!! componentDidMount pricingEditOpenId', pricingEditOpenId)
+    //console.log('!!!!!!!!!! componentDidMount pricingEditValues', pricingEditValues)
+    //console.log('!!!!!!!!!! componentDidMount formikProps', this.formikProps)
+
+    if (pricingEditOpenId && this.formikProps && pricingEditValues) {
+      this.formikProps.values.pricingTiers = pricingEditValues
+    }
+  }
+
+  componentWillUnmount = async () => {
+    const { pricingEditOpenId, pricingEditValues } = this.props
+
+    //console.log('!!!!!!!!!! componentWillUnmount props', this.props)
+    //console.log('!!!!!!!!!! componentWillUnmount pricingEditValues', pricingEditValues)
+
+    if (this.formikProps && pricingEditValues !== this.formikProps.values.pricingTiers) {
+      await this.props.handleVariableSave('pricingEditValues', this.formikProps.values.pricingTiers)
+    }
+  }
+
   renderPricingTiers = () => {
     const {
       intl: { formatMessage }
@@ -425,7 +450,7 @@ class QuickEditPricingPopup extends React.Component {
 
     return (
       <StyledForm
-        initialValues={this.props.rawData}
+        initialValues={rawData}
         validationSchema={validationSchema(rawData.minPkg)}
 
         onSubmit={async () => {
@@ -473,8 +498,10 @@ class QuickEditPricingPopup extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = store => {
   return {
+    pricingEditOpenId: store.simpleAdd.pricingEditOpenId,
+    pricingEditValues: store.simpleAdd.pricingEditValues
   }
 }
 
