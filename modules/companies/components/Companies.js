@@ -52,6 +52,7 @@ class Companies extends Component {
           if (v && v.searchInput) {
             filters.or = [
               {operator: 'LIKE', path: 'User.name', values: [`%${v.searchInput}%`]},
+              {operator: 'LIKE', path: 'User.email', values: [`%${v.searchInput}%`]},
               {
                 operator: 'LIKE',
                 path: 'User.homeBranch.deliveryAddress.contactName',
