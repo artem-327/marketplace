@@ -219,7 +219,6 @@ const validationSchema = (min) => val.object().shape({
 
 class QuickEditPricingPopup extends React.Component {
 
-
   componentDidMount() {
     const { pricingEditOpenId, pricingEditValues } = this.props
 
