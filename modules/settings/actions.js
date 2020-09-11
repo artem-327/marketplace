@@ -597,6 +597,13 @@ export function getDwollaAccBalance() {
   }
 }
 
+export function getVellociAccBalance() {
+  return {
+    type: AT.SETTINGS_GET_VELLOCI_BALANCE,
+    payload: api.getVellociAccBalance()
+  }
+}
+
 export function getDwollaBeneficiaryOwners() {
   return {
     type: AT.SETTINGS_GET_DWOLLA_BENEFICIARY_OWNERS,

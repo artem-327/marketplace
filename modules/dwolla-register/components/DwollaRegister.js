@@ -142,13 +142,14 @@ class DwollaRegister extends Component {
     } = this.props
 
     let selectedBusiness = businessClassifications.find(el => el.id === values.businessClassification)
-    let industryOptions = selectedBusiness
-      ? selectedBusiness.industryClassifications.map(el => ({
-          key: el.id,
-          value: el.id,
-          text: el.name
-        }))
-      : []
+    let industryOptions =
+      selectedBusiness && selectedBusiness.length
+        ? selectedBusiness.industryClassifications.map(el => ({
+            key: el.id,
+            value: el.id,
+            text: el.name
+          }))
+        : []
 
     const fullSsnInput = getSafe(() => identity.company.dwollaAccountStatus, '') === 'retry'
 

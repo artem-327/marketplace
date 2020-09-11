@@ -52,12 +52,12 @@ class UploadAttachment extends Component {
         this.props
           .removeAttachmentLink(this.props.lot ? true : false, this.props.lot ? this.props.lot.id : poId, file.id)
           .then(() => {
-            this.props.removeAttachment(file.id)
+            this.props.removeAttachment(file.id || file.lastModified)
             if (this.props.onRemoveFile) this.props.onRemoveFile(file.id)
           })
       }
     } else {
-      this.props.removeAttachment(file.id)
+      this.props.removeAttachment(file.id || file.lastModified)
       if (this.props.onRemoveFile) this.props.onRemoveFile(file.id)
     }
   }
@@ -304,7 +304,7 @@ class UploadAttachment extends Component {
   }
 
   render() {
-    let { attachments, disabled, filesLimit, toastManager, hideAttachments } = this.props
+    let { attachments, disabled, filesLimit, toastManager, hideAttachments, formikProps, name } = this.props
     let hasFile = attachments && attachments.length !== 0
 
     const limitMsg = generateToastMarkup(
@@ -364,12 +364,8 @@ class UploadAttachment extends Component {
                       }
                     }
                   }}
-                  onDropRejected={this.onDropRejected}
-                >
-                  {hasFile
-                    ? this.props.uploadedContent
-                    : <div>{this.props.emptyContent}</div>
-                  }
+                  onDropRejected={this.onDropRejected}>
+                  {hasFile ? this.props.uploadedContent : <div>{this.props.emptyContent}</div>}
                 </ReactDropzone>
               ) : (
                 ''

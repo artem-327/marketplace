@@ -64,6 +64,14 @@ export const companyDatagridColumns = [
     )
   },
   {
+    name: 'hasVellociAccount',
+    title: (
+      <FormattedMessage id='global.vellociAccount' defaultMessage='Velloci Account'>
+        {text => text}
+      </FormattedMessage>
+    )
+  },
+  {
     name: 'hasLogisticsAccounts',
     title: (
       <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>
@@ -90,6 +98,7 @@ export const mapCompanyRows = companyRows =>
     ),
     hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
     hasDwollaAccount: getSafe(() => c.dwollaAccountStatus === 'verified', '') ? 'Yes' : 'No',
+    hasVellociAccount: getSafe(() => c.vellociAccountStatus === 'verified', '') ? 'Yes' : 'No',
     primaryBranchAddress: getFormattedAddress({
       street: getSafe(() => c.primaryBranch.deliveryAddress.address.streetAddress, ''),
       city: getSafe(() => c.primaryBranch.deliveryAddress.address.city, ''),
