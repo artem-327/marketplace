@@ -4,7 +4,12 @@ import { getSafe } from '~/utils/functions'
 
 export const initialState = {
   activeStep: 0,
-  loading: false
+  loading: false,
+  numberBeneficialOwners: 0,
+  entityTypes: {
+    data: [],
+    loading: false
+  }
 }
 
 export default function reducer(state = initialState, action) {
@@ -32,6 +37,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.COUNT_BENEFICIAL_OWNERS: {
+      return {
+        ...state,
+        numberBeneficialOwners: payload
+      }
+    }
+
     case AT.REGISTER_VELLOCI_PENDING: {
       return {
         ...state,
@@ -50,6 +62,27 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.GET_ENTITY_TYPES_PENDING: {
+      return {
+        ...state,
+        entityTypes: { loading: true }
+      }
+    }
+
+    case AT.GET_ENTITY_TYPES_REJECTED: {
+      return {
+        ...state,
+        entityTypes: { loading: false }
+      }
+    }
+
+    case AT.GET_ENTITY_TYPES_FULFILLED: {
+      return {
+        ...state,
+        entityTypes: { data: payload, loading: false }
       }
     }
 

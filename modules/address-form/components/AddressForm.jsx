@@ -61,7 +61,9 @@ class AddressForm extends Component {
   async componentDidMount() {
     let { countries } = this.props
     const { addZip } = this.props
-    let { address } = this.getValues()
+    let values = this.getValues()
+    if (!values || (values && !values.address)) return
+    let { address } = values
     if (!address) return
     try {
       if (countries.length === 0) await this.props.getCountries()

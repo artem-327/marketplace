@@ -21,17 +21,25 @@ import FormationDocument from './steps/FormationDocument'
 import OwnerInformation from './steps/OwnerInformation'
 import PersonalInformation from './steps/PersonalInformation'
 import TermsAndConditions from './steps/TermsAndConditions'
-import { titleIds, subtitleIds, titleForms, initialValues } from '../constants'
+import { titleIds, subtitleIds, titleForms, initialValues, verifyPersonalInformation } from '../constants'
 import ErrorFocus from '~/components/error-focus'
 import { PHONE_REGEXP } from '~/src/utils/constants'
 import { getStringISODate } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
 
 class VellociRegister extends Component {
+  state = {
+    initialValues: { ...initialValues, verifyPersonalInformation: [verifyPersonalInformation] }
+  }
   componentDidMount = () => {
-    const { businessTypes, businessClassifications, getBusinessTypes, getBusinessClassifications } = this.props
-    if (businessTypes.data.length === 0) getBusinessTypes()
-    if (businessClassifications.length === 0) getBusinessClassifications()
+    const { entityTypes, getEntityTypes } = this.props
+    if (getSafe(() => entityTypes.data.length, 0) === 0) {
+      try {
+        getEntityTypes()
+      } catch (error) {
+        console.error(error)
+      }
+    }
   }
 
   componentWillUnmount = () => {
@@ -51,27 +59,28 @@ class VellociRegister extends Component {
       ? getSafe(() => controlPerson.ein, '')
       : getSafe(() => controlPerson.ssn, '')
 
-    let beneficialOwners = getSafe(() => ownerInformation.isBeneficialOwner, false)
-      ? {
-          beneficialOwners: [
-            {
-              address: getSafe(() => verifyPersonalInformation.address, ''),
-              businessRole: getSafe(() => verifyPersonalInformation.businessRole, ''),
-              businessTitle: getSafe(() => verifyPersonalInformation.businessRole, ''),
-              city: getSafe(() => verifyPersonalInformation.address.city, ''),
-              dateOfBirth: getSafe(() => verifyPersonalInformation.dateOfBirth, ''),
-              firstName: getSafe(() => verifyPersonalInformation.firstName, ''),
-              lastName: getSafe(() => verifyPersonalInformation.lastName, ''),
-              ownershipPercentage: getSafe(() => verifyPersonalInformation.businessOwnershipPercentage, ''),
-              phone: getSafe(() => verifyPersonalInformation.phoneNumber, ''),
-              state: getSafe(() => verifyPersonalInformation.address.country, ''),
-              zipCode: getSafe(() => verifyPersonalInformation.address.zip, ''),
-              ssn: getSafe(() => verifyPersonalInformation.socialSecurityNumber, ''),
-              email: getSafe(() => verifyPersonalInformation.email, '')
+    let beneficialOwners =
+      getSafe(() => ownerInformation.isBeneficialOwner, false) ||
+      (getSafe(() => ownerInformation.isOtherBeneficialOwner, false) &&
+        getSafe(() => verifyPersonalInformation.length, false))
+        ? verifyPersonalInformation.map((val, i) => {
+            return {
+              address: getSafe(() => val.address.streetAddress, ''),
+              businessRole: getSafe(() => val.businessRole, ''),
+              businessTitle: getSafe(() => val.businessRole, ''),
+              city: getSafe(() => val.address.city, ''),
+              dateOfBirth: getSafe(() => getStringISODate(val.dateOfBirth), ''),
+              firstName: getSafe(() => val.firstName, ''),
+              lastName: getSafe(() => val.lastName, ''),
+              ownershipPercentage: getSafe(() => val.businessOwnershipPercentage, ''),
+              phone: getSafe(() => val.phoneNumber, ''),
+              state: getSafe(() => val.address.country, ''),
+              zipCode: getSafe(() => val.address.zip, ''),
+              ssn: getSafe(() => val.socialSecurityNumber, ''),
+              email: getSafe(() => val.email, '')
             }
-          ]
-        }
-      : null
+          })
+        : null
     let result = {
       attachments: getSafe(() => companyFormationDocument.attachments, ''),
       dba: getSafe(() => businessInfo.dba, ''),
@@ -84,21 +93,21 @@ class VellociRegister extends Component {
       legalZipCode: getSafe(() => businessInfo.address.zip, ''),
       naicsCode,
       phone: getSafe(() => businessInfo.phoneNumber, ''),
-      tinNumber: getSafe(() => controlPerson.industryType, ''),
+      tinNumber: getSafe(() => controlPerson.tinNumber, ''),
       controller: {
-        address: getSafe(() => verifyPersonalInformation.address, ''),
-        businessRole: getSafe(() => verifyPersonalInformation.businessRole, ''),
-        businessTitle: getSafe(() => verifyPersonalInformation.businessRole, ''),
-        city: getSafe(() => verifyPersonalInformation.address.city, ''),
-        dateOfBirth: getSafe(() => verifyPersonalInformation.dateOfBirth, ''),
-        firstName: getSafe(() => verifyPersonalInformation.firstName, ''),
-        lastName: getSafe(() => verifyPersonalInformation.lastName, ''),
-        ownershipPercentage: getSafe(() => verifyPersonalInformation.businessOwnershipPercentage, ''),
-        phone: getSafe(() => verifyPersonalInformation.phoneNumber, ''),
-        state: getSafe(() => verifyPersonalInformation.address.country, ''),
-        zipCode: getSafe(() => verifyPersonalInformation.address.zip, ''),
-        ssn: getSafe(() => verifyPersonalInformation.socialSecurityNumber, ''),
-        email: getSafe(() => verifyPersonalInformation.email, '')
+        address: getSafe(() => verifyPersonalInformation[0].address.streetAddress, ''),
+        businessRole: getSafe(() => verifyPersonalInformation[0].businessRole, ''),
+        businessTitle: getSafe(() => verifyPersonalInformation[0].businessRole, ''),
+        city: getSafe(() => verifyPersonalInformation[0].address.city, ''),
+        dateOfBirth: getSafe(() => getStringISODate(verifyPersonalInformation[0].dateOfBirth), ''),
+        firstName: getSafe(() => verifyPersonalInformation[0].firstName, ''),
+        lastName: getSafe(() => verifyPersonalInformation[0].lastName, ''),
+        ownershipPercentage: getSafe(() => verifyPersonalInformation[0].businessOwnershipPercentage, ''),
+        phone: getSafe(() => verifyPersonalInformation[0].phoneNumber, ''),
+        state: getSafe(() => verifyPersonalInformation[0].address.country, ''),
+        zipCode: getSafe(() => verifyPersonalInformation[0].address.zip, ''),
+        ssn: getSafe(() => verifyPersonalInformation[0].socialSecurityNumber, ''),
+        email: getSafe(() => verifyPersonalInformation[0].email, '')
       },
       beneficialOwners,
       website: getSafe(() => businessInfo.url, '')
@@ -106,16 +115,15 @@ class VellociRegister extends Component {
     return result
   }
 
-  //TODO missing BE call
   handleSubmit = async values => {
     const { activeStep, postRegisterVelloci } = this.props
     if (activeStep !== 5) return
 
     try {
       const body = this.getBody(values)
-      console.log('Submit form successfully. Values for BE call:')
+      console.log('Submit form. Values for BE call:')
       console.log(body)
-      //await postRegisterVelloci(body)
+      await postRegisterVelloci(body)
     } catch (error) {
       console.error(error)
     }
@@ -123,10 +131,7 @@ class VellociRegister extends Component {
 
   submitForm = async formikProps => {
     const { nextStep, activeStep } = this.props
-    if (activeStep === 3 && !formikProps.values.ownerInformation.isBeneficialOwner) {
-      nextStep(activeStep + 2)
-      return
-    }
+
     formikProps
       .validateForm()
       .then(errors => {
@@ -153,13 +158,13 @@ class VellociRegister extends Component {
             : { ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage) }
           return Yup.object().shape({
             isControlPerson: Yup.boolean().oneOf([true], errorMessages.requiredMessage),
-            entityType: Yup.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+            entityType: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage),
             legalBusinessName: Yup.string(invalidString)
               .typeError(invalidString)
               .min(minLengthValue, minLengthErr)
               .required(requiredMessage),
             ...taxNumber,
-            industryType: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage)
+            tinNumber: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage)
           })
         }),
         businessInfo: Yup.lazy(() => {
@@ -184,8 +189,10 @@ class VellociRegister extends Component {
             isNotOtherBeneficialOwner: Yup.boolean()
           })
         }),
-        verifyPersonalInformation: Yup.lazy(() => {
-          if (values.ownerInformation.isBeneficialOwner) {
+        verifyPersonalInformation: Yup.array().of(
+          Yup.lazy(v => {
+            //let isAnyValueFilled = deepSearch(v, (val, key) => val !== '' && key !== 'country')
+
             return Yup.object().shape({
               firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
               lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -205,10 +212,8 @@ class VellociRegister extends Component {
                 .required(errorMessages.requiredMessage),
               businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage)
             })
-          } else {
-            return Yup.mixed().notRequired()
-          }
-        }),
+          })
+        ),
         termsAndConditions: Yup.lazy(() => {
           return Yup.object().shape({
             electronicComunications: Yup.boolean()
@@ -229,23 +234,12 @@ class VellociRegister extends Component {
     })
 
   getContent = formikProps => {
-    const { activeStep, businessTypes, businessClassifications } = this.props
+    const { activeStep, entityTypes, numberBeneficialOwners } = this.props
     let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
-
-    let selectedBusiness = businessClassifications.find(el => el.id === '9ed35a3b-7d6f-11e3-83c8-5404a6144203')
-    let industryOptions = selectedBusiness
-      ? selectedBusiness.industryClassifications.map(el => ({
-          key: el.id,
-          value: el.id,
-          text: el.name
-        }))
-      : []
 
     switch (activeStep) {
       case 0: {
-        return (
-          <ControlPerson formikProps={formikProps} businessTypes={businessTypes} industryOptions={industryOptions} />
-        )
+        return <ControlPerson formikProps={formikProps} entityTypes={entityTypes} />
       }
       case 1: {
         return <BusinessInfo formikProps={formikProps} />
@@ -257,7 +251,7 @@ class VellociRegister extends Component {
         return <OwnerInformation formikProps={formikProps} />
       }
       case 4: {
-        return <PersonalInformation formikProps={formikProps} />
+        return <PersonalInformation formikProps={formikProps} numberBeneficialOwners={numberBeneficialOwners} />
       }
       case 5: {
         return <TermsAndConditions formikProps={formikProps} />
@@ -268,7 +262,7 @@ class VellociRegister extends Component {
   }
 
   render() {
-    const { prevStep, activeStep } = this.props
+    const { prevStep, activeStep, countBeneficialOwners, numberBeneficialOwners } = this.props
     return (
       <Grid>
         <GridColumn>
@@ -278,10 +272,9 @@ class VellociRegister extends Component {
               onSubmit={this.handleSubmit}
               enableReinitialize
               validateOnChange={true}
-              initialValues={initialValues}
+              initialValues={this.state.initialValues}
               validationSchema={this.getValidationSchema()}
               render={formikProps => {
-                this.formikProps = formikProps
                 return (
                   <Form>
                     <Grid verticalAlign='middle' centered>
@@ -291,7 +284,9 @@ class VellociRegister extends Component {
                         subtitle={subtitleIds[activeStep]}
                         prevStep={prevStep}
                         submitForm={this.submitForm}
-                        activeStep={activeStep}>
+                        activeStep={activeStep}
+                        numberBeneficialOwners={numberBeneficialOwners}
+                        countBeneficialOwners={countBeneficialOwners}>
                         {this.getContent(formikProps)}
                       </FormRectangle>
                     </Grid>
@@ -312,19 +307,19 @@ VellociRegister.propTypes = {
   prevStep: PropTypes.func,
   activeStep: PropTypes.number,
   businessTypes: PropTypes.object,
-  businessClassifications: PropTypes.array,
   getBusinessTypes: PropTypes.func,
-  getBusinessClassifications: PropTypes.func
+  countBeneficialOwners: PropTypes.func,
+  numberBeneficialOwners: PropTypes.number
 }
 
 VellociRegister.defaultProps = {
   nextStep: () => {},
   prevStep: () => {},
   getBusinessTypes: () => {},
-  getBusinessTypes: () => {},
   activeStep: 0,
   businessTypes: {},
-  businessClassifications: []
+  countBeneficialOwners: () => {},
+  numberBeneficialOwners: 0
 }
 
 export default VellociRegister

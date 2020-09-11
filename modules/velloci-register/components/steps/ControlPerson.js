@@ -48,33 +48,31 @@ const DivBusinessTypeTitle = styled.div`
 `
 
 const DivRectangleBusinessType = styled.div`
-  overflow: auto;
   border-radius: 4px;
   border: solid 1px #dee2e6;
   background-color: #f8f9fb;
   padding-bottom: 16px;
+  overflow: inherit !important;
 `
 
 const SpanEstablishedLabel = styled.span`
   color: #848893;
 `
 
-//REMOVE me if you know options for the dropdowns
+//FIXME remove if BE call is ready
 const optionsKindOfBusiness = [
-  { key: 1, text: '1. kind of business', value: 1 },
-  { key: 2, text: '2. kind of business', value: 2 },
-  { key: 3, text: '3. kind of business', value: 3 },
-  { key: 4, text: '4. kind of business', value: 4 }
-]
-//REMOVE me if you know options for the dropdowns
-const optionsIndustryType = [
-  { key: 5, text: '1. industry type', value: 5 },
-  { key: 6, text: '2. industry type', value: 6 },
-  { key: 7, text: '3. industry type', value: 7 },
-  { key: 8, text: '4. industry type', value: 8 }
+  { key: 'corporation', text: 'Corporation', value: 'corporation' },
+  { key: 'llc', text: 'LLC', value: 'llc' },
+  { key: 'lp', text: 'LP', value: 'lp' },
+  { key: 'non_profit', text: 'Non Profit', value: 'non_profit' },
+  { key: 'partnership', text: 'Partnership', value: 'partnership' },
+  { key: 'public_corporation', text: 'Public Corporation', value: 'public_corporation' },
+  { key: 'sole_proprietorship', text: 'Sole Proprietorship', value: 'sole_proprietorship' },
+  { key: 'trust', text: 'Trust', value: 'trust' },
+  { key: 'unincorporated_association', text: 'Unincorporated Association', value: 'unincorporated_association' }
 ]
 
-function ControlPerson({ formikProps, intl: { formatMessage }, businessTypes, industryOptions }) {
+function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes }) {
   return (
     <GridControlPerson>
       <GridRow>
@@ -129,15 +127,15 @@ function ControlPerson({ formikProps, intl: { formatMessage }, businessTypes, in
               <GridRowBusinessType>
                 <Grid.Column>
                   <Dropdown
-                    loading={businessTypes && businessTypes.loading}
+                    loading={entityTypes && entityTypes.loading}
                     options={
-                      businessTypes && businessTypes.data && businessTypes.data.length
-                        ? businessTypes.data.map(el => ({
+                      entityTypes && entityTypes.data && entityTypes.data.length
+                        ? entityTypes.data.map(el => ({
                             key: el.id,
                             value: el.id,
                             text: el.name
                           }))
-                        : []
+                        : optionsKindOfBusiness //FIXME replace to [] if BE call is ready
                     }
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_drpdwn'
@@ -248,31 +246,28 @@ function ControlPerson({ formikProps, intl: { formatMessage }, businessTypes, in
                   />
                 </Grid.Column>
               </GridRowBusinessType>
-              <GridRowBusinessType>
+
+              <GridRowBusinessType columns={2}>
                 <Grid.Column width={8}>
-                  <Dropdown
-                    options={industryOptions}
-                    fieldProps={{
-                      'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
-                    }}
-                    inputProps={{
-                      placeholder: formatMessage({
-                        id: 'velloci.controlPerson.industryType.placeholder',
-                        defaultMessage: 'Select industry type'
-                      }),
-                      search: true,
-                      selection: true
-                    }}
-                    name='controlPerson.industryType'
+                  <Input
+                    name='controlPerson.tinNumber'
                     label={
                       <>
                         {formatMessage({
-                          id: 'velloci.controlPerson.industryType',
-                          defaultMessage: 'Your Industry Type'
+                          id: 'velloci.controlPerson.tinNumber',
+                          defaultMessage: 'Tax Identification Number'
                         })}
                         {<Required />}
                       </>
                     }
+                    inputProps={{
+                      placeholder: formatMessage({
+                        id: 'velloci.controlPerson.tinNumber.placeholder',
+                        defaultMessage: 'Enter Tax Identification Number'
+                      }),
+                      type: 'text',
+                      'data-test': 'settings_velloci_registration_control_person_tin_number_inpt'
+                    }}
                   />
                 </Grid.Column>
               </GridRowBusinessType>
@@ -285,11 +280,13 @@ function ControlPerson({ formikProps, intl: { formatMessage }, businessTypes, in
 }
 
 ControlPerson.propTypes = {
-  formikProps: PropTypes.object
+  formikProps: PropTypes.object,
+  entityTypes: PropTypes.object
 }
 
 ControlPerson.defaultProps = {
-  formikProps: {}
+  formikProps: {},
+  entityTypes: {}
 }
 
 export default injectIntl(ControlPerson)

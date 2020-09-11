@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button } from 'semantic-ui-react'
+import { Button, Popup, Icon } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 
 const DivRectangleForm = styled.div`
@@ -58,8 +58,23 @@ const SpanSubtitleValue = styled.span`
   font-weight: bold;
   color: #84c225;
 `
+const RightAlignedDiv = styled.div`
+  text-align: right !important;
+  margin: 0 30px 10px 0;
+`
 
-function FormRectangle({ children, formikProps, title, subtitle, prevStep, activeStep, submitForm }) {
+function FormRectangle({
+  children,
+  formikProps,
+  title,
+  subtitle,
+  prevStep,
+  activeStep,
+  submitForm,
+  countBeneficialOwners,
+  numberBeneficialOwners,
+  changeInitialValues
+}) {
   const step = !formikProps.values.ownerInformation.isBeneficialOwner && activeStep === 5 ? 2 : 1
   return (
     <DivRectangleForm height={activeStep === 3 || activeStep === 4 ? '1000px' : activeStep === 5 ? '400px' : '860px'}>
@@ -86,6 +101,49 @@ function FormRectangle({ children, formikProps, title, subtitle, prevStep, activ
         ) : null}
       </DivTitleRectangleForm>
       {children}
+      {activeStep === 4 && (
+        <RightAlignedDiv>
+          {numberBeneficialOwners > 0 && (
+            <Popup
+              trigger={
+                <a href={`#form${numberBeneficialOwners}`}>
+                  <Button
+                    style={{ float: 'right !important', marginLeft: '10px !important', marginRight: '0px !important' }}
+                    type='button'
+                    negative
+                    onClick={() => {
+                      countBeneficialOwners(numberBeneficialOwners - 1)
+                    }}
+                    icon>
+                    <Icon name='minus' />
+                  </Button>
+                </a>
+              }
+              content={
+                <FormattedMessage id='settings.removeBeneficialOwner' defaultMessage='Remove beneficial owner' />
+              }
+            />
+          )}
+
+          <Popup
+            trigger={
+              <a href={`#form${numberBeneficialOwners}`}>
+                <Button
+                  type='button'
+                  style={{ marginLeft: '10px !important', marginRight: '0px !important' }}
+                  positive
+                  onClick={() => {
+                    countBeneficialOwners(numberBeneficialOwners + 1)
+                  }}
+                  icon>
+                  <Icon name='plus' />
+                </Button>
+              </a>
+            }
+            content={<FormattedMessage id='settings.addBeneficialOwner' defaultMessage='Add beneficial owner' />}
+          />
+        </RightAlignedDiv>
+      )}
 
       <DivButtonsBottom>
         <ButtonSubmit type='button' onClick={() => submitForm(formikProps)} primary>
@@ -121,7 +179,9 @@ FormRectangle.propTypes = {
   subtitle: PropTypes.string,
   prevStep: PropTypes.func,
   submitForm: PropTypes.func,
-  activeStep: PropTypes.number
+  activeStep: PropTypes.number,
+  countBeneficialOwners: PropTypes.func,
+  numberBeneficialOwners: PropTypes.number
 }
 
 FormRectangle.defaultProps = {
@@ -130,7 +190,9 @@ FormRectangle.defaultProps = {
   subtitle: '',
   prevStep: () => {},
   submitForm: () => {},
-  activeStep: 0
+  activeStep: 0,
+  countBeneficialOwners: () => {},
+  numberBeneficialOwners: 0
 }
 
 export default FormRectangle

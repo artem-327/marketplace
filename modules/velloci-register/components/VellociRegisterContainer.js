@@ -9,8 +9,8 @@ import { getSafe } from '~/utils/functions'
 
 const mapStateToProps = store => ({
   activeStep: store.vellociRegister.activeStep,
-  businessTypes: getSafe(() => store.businessTypes, {}),
-  businessClassifications: getSafe(() => store.settings.businessClassifications, [])
+  entityTypes: getSafe(() => store.vellociRegister.entityTypes, {}),
+  numberBeneficialOwners: getSafe(() => store.vellociRegister.numberBeneficialOwners, 0)
 })
 
 const mapDispatchToProps = {

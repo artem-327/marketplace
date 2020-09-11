@@ -27,6 +27,25 @@ export const setupPages = [
   { title: 'velloci.setupIndicator.personalIdentify', content: 'velloci.setupIndicator.individualOwners' }
 ]
 
+export const verifyPersonalInformation = {
+  firstName: '',
+  lastName: '',
+  middleName: '',
+  email: '',
+  phoneNumber: '',
+  dateOfBirth: '',
+  address: {
+    streetAddress: '',
+    city: '',
+    country: '',
+    zip: '',
+    province: ''
+  },
+  businessRole: '',
+  socialSecurityNumber: '',
+  businessOwnershipPercentage: ''
+}
+
 export const initialValues = {
   controlPerson: {
     isControlPerson: false,
@@ -37,7 +56,8 @@ export const initialValues = {
     isSsn: false,
     ein: '',
     ssn: '',
-    isEstablishedUs: true
+    isEstablishedUs: true,
+    tinNumber: ''
   },
   businessInfo: {
     phoneNumber: '',
@@ -61,24 +81,7 @@ export const initialValues = {
     isOtherBeneficialOwner: false,
     isNotOtherBeneficialOwner: false
   },
-  verifyPersonalInformation: {
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    email: '',
-    phoneNumber: '',
-    dateOfBirth: '',
-    address: {
-      streetAddress: '',
-      city: '',
-      country: '',
-      zip: '',
-      province: ''
-    },
-    businessRole: '',
-    socialSecurityNumber: '',
-    businessOwnershipPercentage: ''
-  },
+  verifyPersonalInformation: [verifyPersonalInformation],
   termsAndConditions: {
     electronicComunications: false,
     privacyPolicy: false,
