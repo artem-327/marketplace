@@ -596,3 +596,23 @@ export function handleVariableSave(variable, value) {
     payload: { variable, value }
   }
 }
+
+export const getLogisticsProviders = () => ({
+  type: AT.ADMIN_GET_LOGISTICS_PROVIDERS,
+  payload: api.getLogisticsProviders()
+})
+
+export const postNewLogisticsProvider = data => ({
+  type: AT.ADMIN_POST_NEW_LOGISTICS_PROVIDER,
+  payload: api.postNewLogisticsProvider(data)
+})
+
+export const updateLogisticsProvider = (id, data) => ({
+  type: AT.ADMIN_EDIT_LOGISTICS_PROVIDER,
+  payload: api.updateLogisticsProvider(id, data)
+})
+
+export const deleteLogisticsProvider = id => ({
+  type: AT.ADMIN_DELETE_LOGISTICS_PROVIDER,
+  payload: api.deleteLogisticsProvider(id)
+})

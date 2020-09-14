@@ -220,3 +220,11 @@ export const searchMarketSegments = filter =>
 
 export const udpateEnabled = (id, enabled) =>
   api.patch(`/prodex/api/companies/admin/id/${id}/enabled?enabled=${enabled}`)
+
+export const getLogisticsProviders = () =>
+  api.get('/prodex/api/logistics-providers').then(response => response.data)
+export const postNewLogisticsProvider = body =>
+  api.post('/prodex/api/logistics-providers/stored', body).then(response => response.data)
+export const updateLogisticsProvider = (id, body) =>
+  api.patch(`/prodex/api/logistics-providers/stored/${id}`, body).then(response => response.data)
+export const deleteLogisticsProvider = id => api.delete(`/prodex/api/logistics-providers/stored/${id}`).then(() => id)
