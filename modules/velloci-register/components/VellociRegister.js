@@ -28,22 +28,27 @@ import { getStringISODate } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
 
 class VellociRegister extends Component {
-  state = {
-    initialValues: { ...initialValues, verifyPersonalInformation: [verifyPersonalInformation] }
-  }
   componentDidMount = () => {
-    const { entityTypes, getEntityTypes } = this.props
-    if (getSafe(() => entityTypes.data.length, 0) === 0) {
-      try {
-        getEntityTypes()
-      } catch (error) {
-        console.error(error)
-      }
+    const { entityTypes, getEntityTypes, naicsCodes, getNaicsCodes } = this.props
+    try {
+      getSafe(() => entityTypes.data.length, false) && getEntityTypes()
+      getSafe(() => naicsCodes.data.length, false) && getNaicsCodes()
+    } catch (error) {
+      console.error(error)
     }
   }
 
   componentWillUnmount = () => {
     this.props.cleareActiveStep()
+  }
+
+  clean = obj => {
+    for (var propName in obj) {
+      if (obj[propName] === null || obj[propName] === undefined || obj[propName] === '') {
+        delete obj[propName]
+      }
+    }
+    return obj
   }
 
   getBody = values => {
@@ -55,16 +60,12 @@ class VellociRegister extends Component {
       verifyPersonalInformation
     } = values
 
-    let naicsCode = getSafe(() => controlPerson.isEin, false)
-      ? getSafe(() => controlPerson.ein, '')
-      : getSafe(() => controlPerson.ssn, '')
-
     let beneficialOwners =
       getSafe(() => ownerInformation.isBeneficialOwner, false) ||
       (getSafe(() => ownerInformation.isOtherBeneficialOwner, false) &&
         getSafe(() => verifyPersonalInformation.length, false))
         ? verifyPersonalInformation.map((val, i) => {
-            return {
+            const obj = {
               address: getSafe(() => val.address.streetAddress, ''),
               businessRole: getSafe(() => val.businessRole, ''),
               businessTitle: getSafe(() => val.businessRole, ''),
@@ -79,6 +80,7 @@ class VellociRegister extends Component {
               ssn: getSafe(() => val.socialSecurityNumber, ''),
               email: getSafe(() => val.email, '')
             }
+            return this.clean(obj)
           })
         : null
     let result = {
@@ -91,7 +93,7 @@ class VellociRegister extends Component {
       legalName: getSafe(() => businessInfo.address.streetAddress, ''),
       legalState: getSafe(() => businessInfo.address.country, ''),
       legalZipCode: getSafe(() => businessInfo.address.zip, ''),
-      naicsCode,
+      naicsCode: getSafe(() => controlPerson.naicsCode, ''),
       phone: getSafe(() => businessInfo.phoneNumber, ''),
       tinNumber: getSafe(() => controlPerson.tinNumber, ''),
       controller: {
@@ -112,7 +114,7 @@ class VellociRegister extends Component {
       beneficialOwners,
       website: getSafe(() => businessInfo.url, '')
     }
-    return result
+    return this.clean(result)
   }
 
   handleSubmit = async values => {
@@ -121,8 +123,6 @@ class VellociRegister extends Component {
 
     try {
       const body = this.getBody(values)
-      console.log('Submit form. Values for BE call:')
-      console.log(body)
       await postRegisterVelloci(body)
     } catch (error) {
       console.error(error)
@@ -164,7 +164,11 @@ class VellociRegister extends Component {
               .min(minLengthValue, minLengthErr)
               .required(requiredMessage),
             ...taxNumber,
-            tinNumber: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage)
+            tinNumber: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage),
+            naicsCodes: Yup.number()
+              .typeError(errorMessages.requiredMessage)
+              .required(errorMessages.requiredMessage)
+              .positive(errorMessages.positive)
           })
         }),
         businessInfo: Yup.lazy(() => {
@@ -234,12 +238,12 @@ class VellociRegister extends Component {
     })
 
   getContent = formikProps => {
-    const { activeStep, entityTypes, numberBeneficialOwners } = this.props
+    const { activeStep, entityTypes, numberBeneficialOwners, naicsCodes } = this.props
     let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
 
     switch (activeStep) {
       case 0: {
-        return <ControlPerson formikProps={formikProps} entityTypes={entityTypes} />
+        return <ControlPerson formikProps={formikProps} entityTypes={entityTypes} naicsCodes={naicsCodes} />
       }
       case 1: {
         return <BusinessInfo formikProps={formikProps} />
@@ -272,7 +276,7 @@ class VellociRegister extends Component {
               onSubmit={this.handleSubmit}
               enableReinitialize
               validateOnChange={true}
-              initialValues={this.state.initialValues}
+              initialValues={initialValues}
               validationSchema={this.getValidationSchema()}
               render={formikProps => {
                 return (

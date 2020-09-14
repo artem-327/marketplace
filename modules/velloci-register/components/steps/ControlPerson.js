@@ -72,7 +72,17 @@ const optionsKindOfBusiness = [
   { key: 'unincorporated_association', text: 'Unincorporated Association', value: 'unincorporated_association' }
 ]
 
-function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes }) {
+//FIXME remove if BE call is ready
+
+const optionsNaicsCodes = [
+  { key: 111, text: 'Crop Production', value: 111 },
+  { key: 112, text: 'Animal Production', value: 112 },
+  { key: 113, text: 'Forestry and Logging', value: 113 },
+  { key: 114, text: 'Fishing, Hunting and Trapping', value: 114 },
+  { key: 115, text: 'Support Activities for Agriculture and Forestry', value: 115 }
+]
+
+function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naicsCodes }) {
   return (
     <GridControlPerson>
       <GridRow>
@@ -271,6 +281,44 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes }) {
                   />
                 </Grid.Column>
               </GridRowBusinessType>
+              <GridRowBusinessType columns={2}>
+                <Grid.Column width={8}>
+                  <Dropdown
+                    loading={naicsCodes && naicsCodes.loading}
+                    options={
+                      //FIXME
+                      naicsCodes && naicsCodes.data && naicsCodes.data.length
+                        ? naicsCodes.data.map(el => ({
+                            key: el.id,
+                            value: el.id,
+                            text: el.name
+                          }))
+                        : optionsNaicsCodes //FIXME replace to [] if BE call is ready
+                    }
+                    fieldProps={{
+                      'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
+                    }}
+                    inputProps={{
+                      placeholder: formatMessage({
+                        id: 'velloci.controlPerson.industryType.placeholder',
+                        defaultMessage: 'Select industry type'
+                      }),
+                      search: true,
+                      selection: true
+                    }}
+                    name='controlPerson.naicsCodes'
+                    label={
+                      <>
+                        {formatMessage({
+                          id: 'velloci.controlPerson.industryType',
+                          defaultMessage: 'Your Industry Type'
+                        })}
+                        {<Required />}
+                      </>
+                    }
+                  />
+                </Grid.Column>
+              </GridRowBusinessType>
             </GridControlPersonBusinessType>
           </DivRectangleBusinessType>
         </GridColumn>
@@ -281,12 +329,14 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes }) {
 
 ControlPerson.propTypes = {
   formikProps: PropTypes.object,
-  entityTypes: PropTypes.object
+  entityTypes: PropTypes.object,
+  naicsCodes: PropTypes.object
 }
 
 ControlPerson.defaultProps = {
   formikProps: {},
-  entityTypes: {}
+  entityTypes: {},
+  naicsCodes: {}
 }
 
 export default injectIntl(ControlPerson)

@@ -304,7 +304,7 @@ class UploadAttachment extends Component {
   }
 
   render() {
-    let { attachments, disabled, filesLimit, toastManager, hideAttachments, formikProps, name } = this.props
+    let { attachments, disabled, filesLimit, toastManager, hideAttachments } = this.props
     let hasFile = attachments && attachments.length !== 0
 
     const limitMsg = generateToastMarkup(

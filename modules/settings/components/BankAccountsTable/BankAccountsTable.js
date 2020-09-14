@@ -522,8 +522,8 @@ const mapStateToProps = state => {
   let documentRequired = 'verify-with-document'
   let accountStatus = 'none'
 
-  if (company.dwollaAccountStatus) {
-    dwollaAccountStatus = company.dwollaAccountStatus
+  if (company && company.dwollaAccountStatus) {
+    accountStatus = company.dwollaAccountStatus
     documentRequired = company.dwollaDocumentRequired && company.dwollaDocumentRequired
 
     if (
@@ -532,7 +532,7 @@ const mapStateToProps = state => {
       getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
     )
       accountStatus = 'documentOwner'
-  } else if (company.vellociAccountStatus) {
+  } else if (company && company.vellociAccountStatus) {
     accountStatus = company.vellociAccountStatus
     documentRequired = company.vellociDocumentRequired && company.vellociDocumentRequired
   }
