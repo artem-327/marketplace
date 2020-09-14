@@ -174,7 +174,8 @@ export default class PhoneNumber extends Component {
       isSubmitting,
       disabled,
       clearable,
-      placeholder
+      placeholder,
+      setErrors
     } = this.props
 
     let { phoneCountryCode, phoneNumber } = this.state
@@ -209,6 +210,11 @@ export default class PhoneNumber extends Component {
                 formatMessage({ id: 'global.phoneNumberIsInvalid', defaultMessage: 'Phone number is invalid' })
               )
             }
+          } else {
+            if (errors[name]) {
+              delete errors[name]
+              setErrors(errors)
+            }
           }
 
           return (
@@ -229,7 +235,7 @@ export default class PhoneNumber extends Component {
                   name={name}
                   className='phone-num'
                   mask='999 999 9999'
-                  maskChar=' '
+                  maskchar=' '
                   compact='true'
                   disabled={disabled}
                   type='text'
@@ -252,6 +258,7 @@ export default class PhoneNumber extends Component {
 PhoneNumber.propTypes = {
   setFieldValue: func,
   setFieldTouched: func,
+  setErrors: func,
   name: string.isRequired,
   values: object,
   label: object,
@@ -267,6 +274,7 @@ PhoneNumber.propTypes = {
 PhoneNumber.defaultProps = {
   setFieldValue: () => console.warn('setFieldValue not supplied in PhoneNumber!'),
   setFieldTouched: () => console.warn('setFieldTouched not supplied in PhoneNumber!'),
+  setErrors: () => console.warn('setErrors not supplied in PhoneNumber!'),
   name: null,
   values: null,
   search: true,

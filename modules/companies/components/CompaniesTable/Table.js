@@ -284,6 +284,7 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
       ),
       hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
       hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified' ? 'Yes' : 'No',
+      hasVellociAccount: getSafe(() => c.vellociAccountStatus, false) === 'verified' ? 'Yes' : 'No',
       primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
         ? c.primaryBranch.deliveryAddress.address.streetAddress +
           ', ' +

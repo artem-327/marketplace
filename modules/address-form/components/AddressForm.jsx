@@ -61,10 +61,11 @@ class AddressForm extends Component {
   async componentDidMount() {
     let { countries } = this.props
     const { addZip } = this.props
-
+    let values = this.getValues()
+    if (!values || (values && !values.address)) return
+    let { address } = values
+    if (!address) return
     try {
-      let { address } = this.getValues()
-
       if (countries.length === 0) await this.props.getCountries()
       if (address.zip) await addZip(JSON.parse(address.zip))
       let { countryId, hasProvinces } =
@@ -176,7 +177,6 @@ class AddressForm extends Component {
 
   getValues = (values = this.props.values) => {
     let value = this.props.prefix ? getDeeply(this.props.prefix.split('.'), values) : values
-
     // TODO check wheter this works for array...
 
     if (value instanceof Array) return value[this.props.index]
@@ -199,6 +199,7 @@ class AddressForm extends Component {
       countriesLoading,
       loading,
       required,
+      children,
       intl: { formatMessage }
     } = this.props
 
@@ -224,6 +225,7 @@ class AddressForm extends Component {
           </Header>
         )}
         <CustomSegment>
+          {children}
           <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
             <Input
               inputProps={{

@@ -131,7 +131,8 @@ export const initialState = {
   tableHandlersFiltersLocations: null,
   logisticsFilter: '',
   'bank-accountsFilter': '',
-  renderCopyright: false
+  renderCopyright: false,
+  vellociAccBalance: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -560,6 +561,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         dwollaAccBalance: action.payload
+      }
+    }
+
+    case AT.SETTINGS_GET_VELLOCI_BALANCE_FULFILLED: {
+      return {
+        ...state,
+        vellociAccBalance: action.payload
       }
     }
 

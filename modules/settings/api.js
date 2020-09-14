@@ -45,6 +45,7 @@ export default {
   getCreditCardsData: () => api.get('/prodex/api/payments/cards').then(response => response.data),
   getBankAccountsData: () => api.get('/prodex/api/payments/bank-accounts').then(response => response.data),
   getDwollaAccBalance: () => api.get('/prodex/api/payments/dwolla/balance').then(response => response.data),
+  getVellociAccBalance: () => api.get('/prodex/api/payments/velloci/balance').then(response => response.data),
   getDwollaBeneficiaryOwners: () =>
     api.get(`/prodex/api/payments/dwolla/beneficiary-owners`).then(response => response.data),
   getProductsCatalogByString: async (data, limit = 30) => {
@@ -247,7 +248,8 @@ export default {
   setPrimaryUser: (companyId, userId) =>
     api.patch(`/prodex/api/companies/${companyId}/primary-user?userId=${userId}`).then(response => response.data),
   setPrimaryBranch: (companyId, branchId) =>
-    api.patch(`/prodex/api/companies/id/${companyId}/primary-branch?branchId=${branchId}`)
+    api
+      .patch(`/prodex/api/companies/id/${companyId}/primary-branch?branchId=${branchId}`)
       .then(response => response.data),
   getCompanyDetails: id => api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
 }
