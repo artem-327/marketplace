@@ -592,6 +592,17 @@ export const config = {
       }
     }
   },
+
+  Logistics: {
+    tableName: 'admin_logistics',
+    addEditText: (
+      <FormattedMessage id='global.logistics' defaultMessage='Logistics'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    searchText: 'admin.searchLogisticsProvider',
+  },
+
   'Admin Settings': {
     hideHandler: true
   }

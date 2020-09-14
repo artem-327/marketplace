@@ -28,6 +28,9 @@ import { DatagridProvider } from '~/modules/datagrid'
 import Settings from '~/components/settings'
 import * as Actions from '../actions'
 
+import LogisticsTable from './LogisticsTable/LogisticsTable'
+import AddEditLogisticProvider from './LogisticsTable/AddEditLogisticProvider'
+
 import styled from 'styled-components'
 
 const FixyWrapper = styled.div`
@@ -51,6 +54,7 @@ const tables = {
   Conditions: <DataTable />,
   'NMFC Numbers': <NmfcTable />,
   Associations: <DataTable />,
+  Logistics: <LogisticsTable />,
   'Admin Settings': (
     <FixyWrapper>
       <AdminSegment basic padded='very'>
@@ -107,6 +111,11 @@ const datagridConfig = {
     url: '/prodex/api/units/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  'Logistics': {
+    url: '/prodex/api/logistics-providers/stored/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
   }
 }
 
@@ -118,7 +127,8 @@ const editForms = {
   Forms: <EditPopup1Parameter />,
   Conditions: <EditPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
-  Associations: <EditPopup1Parameter />
+  Associations: <EditPopup1Parameter />,
+  Logistics: <AddEditLogisticProvider />,
 }
 
 const addForms = {
@@ -129,7 +139,8 @@ const addForms = {
   Forms: <AddNewPopup1Parameter />,
   Conditions: <AddNewPopup1Parameter />,
   'NMFC Numbers': <NmfcPopup />,
-  Associations: <AddNewPopup1Parameter />
+  Associations: <AddNewPopup1Parameter />,
+  Logistics: <AddEditLogisticProvider />,
 }
 
 const addDwollaForms = {

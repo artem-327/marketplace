@@ -35,6 +35,7 @@ export const initialState = {
     { name: 'Conditions', id: 6 },
     { name: 'NMFC Numbers', id: 14 },
     { name: 'Associations', id: 15 },
+    { name: 'Logistics', id: 16 },
     { name: 'Admin Settings', id: 11, hideHandler: true }
   ],
   currentTab: { name: 'Units of Measure', id: 1 },
@@ -78,6 +79,8 @@ export const initialState = {
   searchedSellMarketSegmentsLoading: false,
   searchedBuyMarketSegments: [],
   searchedBuyMarketSegmentsLoading: false,
+  logisticsProvidersFetching: false,
+  logisticsProviders: [],
   tableHandlersFilters: null
 }
 
@@ -302,6 +305,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_LOGISTICS_PROVIDER_PENDING:
     case AT.ADMIN_DELETE_USER_PENDING:
     case AT.ADMIN_ADD_ATTACHMENT_PENDING:
     case AT.ADMIN_LINK_ATTACHMENT_PENDING:
@@ -412,6 +416,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_LOGISTICS_PROVIDER_FULFILLED:
     case AT.ADMIN_DELETE_USER_FULFILLED:
     case AT.ADMIN_ADD_ATTACHMENT_FULFILLED:
     case AT.ADMIN_LINK_ATTACHMENT_FULFILLED:
@@ -423,6 +428,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_LOGISTICS_PROVIDER_REJECTED:
     case AT.ADMIN_DELETE_USER_REJECTED:
     case AT.ADMIN_ADD_ATTACHMENT_REJECTED:
     case AT.ADMIN_LINK_ATTACHMENT_REJECTED:
@@ -675,11 +681,17 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_POST_NEW_LOGISTICS_PROVIDER_PENDING:
+    case AT.ADMIN_EDIT_LOGISTICS_PROVIDER_PENDING:
     case AT.ADMIN_EDIT_USER_PENDING:
     case AT.ADMIN_POST_NEW_USER_PENDING: {
       return { ...state, updating: true }
     }
 
+    case AT.ADMIN_POST_NEW_LOGISTICS_PROVIDER_FULFILLED:
+    case AT.ADMIN_POST_NEW_LOGISTICS_PROVIDER_REJECTED:
+    case AT.ADMIN_EDIT_LOGISTICS_PROVIDER_FULFILLED:
+    case AT.ADMIN_EDIT_LOGISTICS_PROVIDER_REJECTED:
     case AT.ADMIN_POST_NEW_USER_REJECTED:
     case AT.ADMIN_POST_NEW_USER_FULFILLED:
     case AT.ADMIN_EDIT_USER_REJECTED:
@@ -747,6 +759,28 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         [payload.variable]: payload.value
+      }
+    }
+
+    case AT.ADMIN_GET_LOGISTICS_PROVIDERS_PENDING: {
+      return {
+        ...state,
+        logisticsProvidersFetching: true
+      }
+    }
+
+    case AT.ADMIN_GET_LOGISTICS_PROVIDERS_FULFILLED: {
+      return {
+        ...state,
+        logisticsProvidersFetching: false,
+        logisticsProviders: payload
+      }
+    }
+
+    case AT.ADMIN_GET_LOGISTICS_PROVIDERS_REJECTED: {
+      return {
+        ...state,
+        logisticsProvidersFetching: false
       }
     }
 
