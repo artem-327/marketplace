@@ -153,7 +153,7 @@ class BidsSent extends Component {
               await this.props.deleteMyOfferItem(row.id)
               datagrid.removeRow(row.id)
             } catch (e) {
-              console.log('DELETE ERROR')
+              console.error(e)
             }
           })
         }

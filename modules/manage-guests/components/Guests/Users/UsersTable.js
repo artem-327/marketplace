@@ -124,7 +124,7 @@ class UsersTable extends Component {
               await deleteUser(row.id, companyId)
               datagrid.removeRow(row.id)
             } catch (e) {
-              console.log('DELETE ERROR')
+              console.error(e)
             }
           }),
         hidden: row => currentUserId === row.id

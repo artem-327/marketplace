@@ -87,7 +87,7 @@ class LogisticsTable extends Component {
               await deleteLogisticsProvider(row.id)
               datagrid.removeRow(row.id)
             } catch (e) {
-              console.log('DELETE ERROR')
+              console.error(e)
             }
           })
       }
