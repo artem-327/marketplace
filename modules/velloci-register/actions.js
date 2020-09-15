@@ -7,3 +7,4 @@ export const countBeneficialOwners = number => ({ type: AT.COUNT_BENEFICIAL_OWNE
 export const cleareActiveStep = () => ({ type: AT.CLEARE_ACTIVE_STEP })
 export const postRegisterVelloci = body => ({ type: AT.REGISTER_VELLOCI, payload: api.postRegisterVelloci(body) })
 export const getEntityTypes = () => ({ type: AT.GET_ENTITY_TYPES, payload: api.getEntityTypes() })
+export const getNaicsCodes = () => ({ type: AT.GET_NAICS_CODES, payload: api.getNaicsCodes() })

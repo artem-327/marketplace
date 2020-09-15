@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button, Popup, Icon } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
+import { getSafe } from '~/utils/functions'
 
 const DivRectangleForm = styled.div`
   padding: 0px !important;
@@ -72,10 +73,10 @@ function FormRectangle({
   activeStep,
   submitForm,
   countBeneficialOwners,
-  numberBeneficialOwners,
-  changeInitialValues
+  numberBeneficialOwners
 }) {
-  const step = !formikProps.values.ownerInformation.isBeneficialOwner && activeStep === 5 ? 2 : 1
+  //if user is not beneficial owner, is on last form (Term and Conditions) and pressed button Back then must skip Beneficial form. That means activeStep minus 2
+  const step = !getSafe(() => formikProps.values.ownerInformation.isBeneficialOwner, false) && activeStep === 5 ? 2 : 1
   return (
     <DivRectangleForm height={activeStep === 3 || activeStep === 4 ? '1000px' : activeStep === 5 ? '400px' : '860px'}>
       <DivTitleRectangleForm>

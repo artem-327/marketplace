@@ -10,6 +10,7 @@ import { getSafe } from '~/utils/functions'
 const mapStateToProps = store => ({
   activeStep: store.vellociRegister.activeStep,
   entityTypes: getSafe(() => store.vellociRegister.entityTypes, {}),
+  naicsCodes: getSafe(() => store.vellociRegister.naicsCodes, {}),
   numberBeneficialOwners: getSafe(() => store.vellociRegister.numberBeneficialOwners, 0)
 })
 

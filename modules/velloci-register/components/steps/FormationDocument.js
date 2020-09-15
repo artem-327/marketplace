@@ -13,6 +13,7 @@ import {
 } from '~/modules/cart/components/StyledComponents'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { Required } from '~/components/constants/layout'
+import { getSafe } from '~/utils/functions'
 
 const GridFormationDocument = styled(Grid)`
   margin: 14px 16px !important;
@@ -97,9 +98,10 @@ function FormationDocument({ formikProps, intl: { formatMessage }, error }) {
             attachments={formikProps.values.companyFormationDocument.attachments}
             fileMaxSize={20}
             onChange={files => {
-              if (files.length) {
-                formikProps.setFieldValue(`companyFormationDocument.attachments`, files)
-              }
+              const len = getSafe(() => formikProps.values.companyFormationDocument.attachments.length, 0)
+              files.forEach((file, i) => {
+                formikProps.setFieldValue(`companyFormationDocument.attachments[${len + i}]`, file)
+              })
             }}
             removeAttachment={async fileId => {
               let newAttachments = await formikProps.values.companyFormationDocument.attachments.filter(att =>
@@ -107,7 +109,6 @@ function FormationDocument({ formikProps, intl: { formatMessage }, error }) {
               )
               await formikProps.setFieldValue('companyFormationDocument.attachments', newAttachments)
             }}
-            formikProps={formikProps}
             data-test='settings_velloci_registration_formation_document_attachments'
             emptyContent={
               <CustomDiv>

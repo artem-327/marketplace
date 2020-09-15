@@ -9,6 +9,10 @@ export const initialState = {
   entityTypes: {
     data: [],
     loading: false
+  },
+  naicsCodes: {
+    data: [],
+    loading: false
   }
 }
 
@@ -83,6 +87,27 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         entityTypes: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_NAICS_CODES_PENDING: {
+      return {
+        ...state,
+        naicsCodes: { loading: true }
+      }
+    }
+
+    case AT.GET_NAICS_CODES_REJECTED: {
+      return {
+        ...state,
+        naicsCodes: { loading: false }
+      }
+    }
+
+    case AT.GET_NAICS_CODES_FULFILLED: {
+      return {
+        ...state,
+        naicsCodes: { data: payload, loading: false }
       }
     }
 

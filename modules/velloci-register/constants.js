@@ -57,7 +57,8 @@ export const initialValues = {
     ein: '',
     ssn: '',
     isEstablishedUs: true,
-    tinNumber: ''
+    tinNumber: '',
+    naicsCodes: ''
   },
   businessInfo: {
     phoneNumber: '',
