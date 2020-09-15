@@ -130,7 +130,7 @@ class GuestCompaniesTable extends Component {
               await deleteClientCompany(row.id)
               datagrid.removeRow(row.id)
             } catch (e) {
-              console.log('DELETE ERROR')
+              console.error(e)
             }
           })
       }
