@@ -131,7 +131,8 @@ class Orders extends Component {
             </FormattedMessage>
           ),
           width: 100,
-          sortPath: 'Order.id'
+          sortPath: 'Order.id',
+          actions: this.getActionsOrdersList()
         },
         {
           name: 'globalStatus',
@@ -448,14 +449,29 @@ class Orders extends Component {
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {this.state.expandedRowIds.some(el => el === row.id) ? (
-              <ChevronDown size={20} style={{ color: '#2599d5', cursor: 'pointer' }} />
+              <ChevronDown
+                size={20}
+                style={{ color: '#2599d5', cursor: 'pointer' }}
+                onClick={e => {
+                  e.stopPropagation()
+                  const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
+                  this.setState({ expandedRowIds })
+                }}
+              />
             ) : (
-              <ChevronRight size={20} style={{ color: '#2599d5', cursor: 'pointer' }} />
+              <ChevronRight
+                size={20}
+                style={{ color: '#2599d5', cursor: 'pointer' }}
+                onClick={e => {
+                  e.stopPropagation()
+                  let expandedRowIds = this.state.expandedRowIds.slice()
+                  expandedRowIds.push(row.id)
+                  this.setState({ expandedRowIds })
+                }}
+              />
             )}
           </div>
-          <Link href={`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`}>
-            <a onClick={e => e.stopPropagation()}>{row.id}</a>
-          </Link>
+          <div>{row.id}</div>
         </div>
       ),
       productName: (
@@ -911,6 +927,34 @@ class Orders extends Component {
     ]
   }
 
+  getActionsOrdersList = () => {
+    const {
+      queryType,
+      router,
+      intl: { formatMessage }
+    } = this.props
+
+    let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
+
+    return [
+      {
+        text: formatMessage({
+          id: 'orders.detail',
+          defaultMessage: 'Detail'
+        }),
+        callback: row => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
+      },
+      {
+        text: formatMessage({
+          id: 'orders.accountingDocuments',
+          defaultMessage: 'Accounting Documents'
+        }),
+        disabled: row => row.accountingDocumentsCount === 0,
+        callback: row => this.openModalWindow(row.id)
+      }
+    ]
+  }
+
   getRelatedDocumentsContent = () => {
     const {
       intl: { formatMessage },
@@ -1018,10 +1062,8 @@ class Orders extends Component {
     const {
       isFetching,
       queryType,
-      router,
       datagrid,
-      tutorialCompleted,
-      intl: { formatMessage }
+      tutorialCompleted
     } = this.props
 
     const { columns, relatedPopupParams } = this.state
@@ -1135,23 +1177,7 @@ class Orders extends Component {
               onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
               // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
               defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
-              rowActions={[
-                {
-                  text: formatMessage({
-                    id: 'orders.detail',
-                    defaultMessage: 'Detail'
-                  }),
-                  callback: row => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
-                },
-                {
-                  text: formatMessage({
-                    id: 'orders.accountingDocuments',
-                    defaultMessage: 'Accounting Documents'
-                  }),
-                  disabled: row => row.accountingDocumentsCount === 0,
-                  callback: row => this.openModalWindow(row.id)
-                }
-              ]}
+              columnActions='orderId'
               rowChildActions={[]}
             />
           )}

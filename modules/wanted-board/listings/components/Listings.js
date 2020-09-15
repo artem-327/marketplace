@@ -141,7 +141,8 @@ class Listings extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 225
+          width: 225,
+          actions: this.getActions()
         },
         {
           name: 'assay',
@@ -366,13 +367,14 @@ class Listings extends Component {
         </div>
         <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
+            key={type}
             tableName={`wanted_board_${type}_grid`}
             {...datagrid.tableProps}
             rows={rows}
             columns={type === 'product' ? columnsProduct : columnsChemical}
             rowSelection={false}
             showSelectionColumn={false}
-            columnActions='product'
+            columnActions={type === 'product' ? 'product' : 'casNumber'}
           />
         </div>
       </>

@@ -202,7 +202,8 @@ class BidsReceived extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 225
+          width: 225,
+          actions: this.getActions()
           //align: 'right',
           //sortPath: 'ProductOffer.pkgAvailable'
         },
@@ -529,8 +530,8 @@ class BidsReceived extends Component {
                   </FormattedMessage>
                 </Button>
               </div>
+              <ColumnSettingButton divide={true} />
             </div>
-            <ColumnSettingButton divide={true} />
           </CustomRowDiv>
         </div>
         <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
@@ -561,7 +562,7 @@ class BidsReceived extends Component {
             }}
             expandedRowIds={this.state.expandedRowIds}
             onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-            columnActions='product'
+            columnActions={type === 'product' ? 'product' : 'casNumber'}
             rowChildActions={[
               {
                 text: formatMessage({

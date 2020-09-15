@@ -66,6 +66,12 @@ class MyProducts extends Component {
               } // <div> has to be there otherwise popup will be not shown
             />
           ),
+          caption: (
+            <FormattedMessage
+              id='global.productStatusIcon'
+              defaultMessage='Product Status Icon'
+            />
+          ),
           width: 40,
           align: 'center'
         },

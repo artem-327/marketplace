@@ -22,9 +22,15 @@ class PickUpLocationsTable extends Component {
       columns: [
         {
           name: 'certificateIcon',
-          title: ' ',
+          title: <div></div>,
           width: 45,
-          align: 'center'
+          align: 'center',
+          caption: (
+            <FormattedMessage
+              id='global.productStatusIcon'
+              defaultMessage='Product Status Icon'
+            />
+          )
         },
         {
           name: 'addressName',
@@ -144,7 +150,7 @@ class PickUpLocationsTable extends Component {
         callback: row => {
           const indexTabofSidebar = 0
           getBranch(row.id)
-          openSidebar(row, indexTabofSidebar)
+          openSidebar(row.rawData, indexTabofSidebar)
         }
       },
       {
@@ -199,6 +205,7 @@ const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(r => {
       return {
+        rawData: r,
         streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
         city: getSafe(() => r.deliveryAddress.address.city),
         countryName: getSafe(() => r.deliveryAddress.address.country.name),

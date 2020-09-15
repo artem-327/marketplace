@@ -1,4 +1,5 @@
 import api from '~/api'
+import { generateQueryString } from '~/utils/functions'
 
 export const findProducts = search => api.get(`/prodex/api/company-products/search?search=${search}`)
 
