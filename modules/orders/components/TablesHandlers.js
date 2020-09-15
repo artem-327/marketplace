@@ -405,7 +405,7 @@ class TablesHandlers extends Component {
                     }}
                   />
                 </div>
-                <div className='column'>
+                <div className='column' style={{ marginRight: '10px' }}>
                   <DateInput
                     name='dateTo'
                     inputProps={{
@@ -420,8 +420,8 @@ class TablesHandlers extends Component {
                     }}
                   />
                 </div>
+                <ColumnSettingButton divide={true} />
               </div>
-              <ColumnSettingButton />
             </>
           )
         }}

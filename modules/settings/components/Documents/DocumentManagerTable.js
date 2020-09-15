@@ -17,7 +17,7 @@ const BasicLink = styled.a`
   color: black !important;
   text-decoration: none !important;
   &:hover {
-    color: black !important;
+    color: white !important;
     text-decoration: none !important;
   }
 `

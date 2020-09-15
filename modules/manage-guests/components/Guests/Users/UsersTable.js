@@ -18,69 +18,74 @@ import {
 } from '../../../actions'
 
 class UsersTable extends Component {
-  state = {
-    columns: [
-      {
-        name: 'name',
-        title: (
-          <FormattedMessage id='global.user' defaultMessage='User'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        sortPath: 'User.name',
-        width: 300
-      },
-      {
-        name: 'jobTitle',
-        title: (
-          <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        //sortPath: 'User.name',
-        width: 130
-      },
-      {
-        name: 'email',
-        title: (
-          <FormattedMessage id='global.email' defaultMessage='E-mail'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        sortPath: 'User.email',
-        width: 180
-      },
-      {
-        name: 'phoneFormatted',
-        title: (
-          <FormattedMessage id='global.phone' defaultMessage='Phone'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        //sortPath: 'User.phone',
-        width: 160
-      },
-      {
-        name: 'homeBranchName',
-        title: (
-          <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        sortPath: 'User.homeBranch.deliveryAddress.cfName',
-        width: 180
-      },
-      {
-        name: 'userRoles',
-        title: (
-          <FormattedMessage id='global.roles' defaultMessage='Roles'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        //sortPath: 'User.roles',
-        width: 140
-      }
-    ]
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.user' defaultMessage='User'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'User.name',
+          width: 300,
+          actions: this.getActions()
+        },
+        {
+          name: 'jobTitle',
+          title: (
+            <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          //sortPath: 'User.name',
+          width: 130
+        },
+        {
+          name: 'email',
+          title: (
+            <FormattedMessage id='global.email' defaultMessage='E-mail'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'User.email',
+          width: 180
+        },
+        {
+          name: 'phoneFormatted',
+          title: (
+            <FormattedMessage id='global.phone' defaultMessage='Phone'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          //sortPath: 'User.phone',
+          width: 160
+        },
+        {
+          name: 'homeBranchName',
+          title: (
+            <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'User.homeBranch.deliveryAddress.cfName',
+          width: 180
+        },
+        {
+          name: 'userRoles',
+          title: (
+            <FormattedMessage id='global.roles' defaultMessage='Roles'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          //sortPath: 'User.roles',
+          width: 140
+        }
+      ]
+    }
   }
 
   componentDidMount() {
@@ -88,11 +93,8 @@ class UsersTable extends Component {
     if (!clientCompanyRoles.length) getClientCompanyRoles()
   }
 
-  render() {
+  getActions = () => {
     const {
-      rows,
-      filterValue,
-      loading,
       openPopup,
       intl,
       datagrid,
@@ -100,9 +102,45 @@ class UsersTable extends Component {
       currentUserId,
       companyId
     } = this.props
+    const { formatMessage } = intl
+
+    return [
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: row => openPopup(row.rawData)
+        // hidden: row => currentUserId === row.id
+      },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        callback: row =>
+          confirm(
+            formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
+            formatMessage(
+              { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.rawData.name}?` },
+              { item: row.rawData.name }
+            )
+          ).then(async () => {
+            try {
+              await deleteUser(row.id, companyId)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.log('DELETE ERROR')
+            }
+          }),
+        hidden: row => currentUserId === row.id
+      }
+    ]
+  }
+
+  render() {
+    const {
+      rows,
+      filterValue,
+      loading,
+      datagrid
+    } = this.props
 
     let { columns } = this.state
-    const { formatMessage } = intl
 
     return (
       <React.Fragment>
@@ -114,32 +152,7 @@ class UsersTable extends Component {
           rows={rows}
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
-          rowActions={[
-            {
-              text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-              callback: row => openPopup(row.rawData)
-              // hidden: row => currentUserId === row.id
-            },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row =>
-                confirm(
-                  formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
-                  formatMessage(
-                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.rawData.name}?` },
-                    { item: row.rawData.name }
-                  )
-                ).then(async () => {
-                  try {
-                    await deleteUser(row.id, companyId)
-                    datagrid.removeRow(row.id)
-                  } catch (e) {
-                    console.log('DELETE ERROR')
-                  }
-                }),
-              hidden: row => currentUserId === row.id
-            },
-          ]}
+          columnActions={'name'}
         />
       </React.Fragment>
     )

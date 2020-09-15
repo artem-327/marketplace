@@ -163,10 +163,6 @@ class PickUpLocationsSidebar extends React.Component {
     }
   }
 
-  fetchIfNoData = (name, fn) => {
-    if (this.props[name].length === 0) fn()
-  }
-
   submitHandler = async (values, setSubmitting) => {
     const { popupValues, putEditWarehouse, postNewWarehouseRequest } = this.props
     const { attachmentFiles } = this.state
