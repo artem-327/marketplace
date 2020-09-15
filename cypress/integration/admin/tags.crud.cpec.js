@@ -15,7 +15,7 @@ context("Tags CRUD", () => {
 
         cy.wait("@loading")
 
-        cy.get('.flex-wrapper > :nth-child(8)').click()
+        cy.get('.flex-wrapper > :nth-child(7)').click()
         cy.waitForUI()
         cy.get('[data-test=tabs_menu_item_tags]').click()
 

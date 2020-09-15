@@ -15,7 +15,7 @@ context("Shipping quotes CRUD", () => {
 
         cy.wait("@loading")
 
-        cy.get('.flex-wrapper > :nth-child(8)').click()
+        cy.get('.flex-wrapper > :nth-child(7)').click()
 
         cy.wait("@quotesLoad")
     })
@@ -45,7 +45,7 @@ context("Shipping quotes CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 3)
+            .should("have.length", 4)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

@@ -14,7 +14,7 @@ context("Units of measure CRUD", () => {
         cy.wait("@loading")
         cy.waitForUI()
 
-        cy.get('.flex-wrapper > :nth-child(7)').click()
+        cy.get('.flex-wrapper > :nth-child(6)').click()
         cy.waitForUI()
         cy.get('[data-test=tabs_menu_item_units-of-measure]').click()
 

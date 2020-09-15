@@ -14,7 +14,7 @@ context("Units of packaging CRUD", () => {
         cy.url().should("include", "dashboard")
 
         cy.wait("@loading")
-        cy.get('.flex-wrapper > :nth-child(7)').click()
+        cy.get('.flex-wrapper > :nth-child(6)').click()
         cy.waitForUI()
         cy.get('[data-test=tabs_menu_item_packaging-types]').click()
 
