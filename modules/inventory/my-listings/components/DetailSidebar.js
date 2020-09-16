@@ -283,7 +283,6 @@ const validationScheme = val.lazy(values => {
           return v === null || v === '' || isNaN(v) || Number(v) >= 0
         }),
       lotNumber: val.string().typeError(errorMessages.invalidString).nullable(),
-      lotManufacturedDate: val.lazy(_value => dateBefore()),
       inStock: val.bool().required(errorMessages.requiredMessage),
       minimum: val
         .number()
@@ -778,7 +777,7 @@ class DetailSidebar extends Component {
     if (tabs.includes(this.state.tabs[this.state.activeTab])) {
       switch (tabs[0]) {
         case 'priceTiers':
-          this.switchTab(3)
+          this.switchTab(4)
           const priceErrors = errors.priceTiers[Object.keys(errors.priceTiers)[0]]
           if (Array.isArray(priceErrors)) {
             const index = priceErrors.findIndex(o => typeof o !== 'undefined')
@@ -1178,7 +1177,7 @@ class DetailSidebar extends Component {
                                       this.switchTab(0)
                                     })
                                     .catch(e => {
-                                      console.log('CATCH', e)
+                                      console.error(e)
                                     })
                                 }}
                                 data-test='detail_inventory_tab_edit'>
@@ -1766,7 +1765,7 @@ class DetailSidebar extends Component {
                                       this.switchTab(1)
                                     })
                                     .catch(e => {
-                                      console.log('CATCH', e)
+                                      console.error(e)
                                     })
                                 }}
                                 data-test='detail_inventory_tab_documents'>
@@ -1888,7 +1887,7 @@ class DetailSidebar extends Component {
                                       this.switchTab(2)
                                     })
                                     .catch(e => {
-                                      console.log('CATCH', e)
+                                      console.error(e)
                                     })
                                 }}
                                 data-test='detail_inventory_tab_documents'>
@@ -1959,7 +1958,7 @@ class DetailSidebar extends Component {
                                       this.switchTab(3)
                                     })
                                     .catch(e => {
-                                      console.log('CATCH', e)
+                                      console.error(e)
                                     })
                                 }}
                                 data-test='detail_inventory_tab_priceBook'>
@@ -2012,7 +2011,7 @@ class DetailSidebar extends Component {
                                       this.switchTab(4)
                                     })
                                     .catch(e => {
-                                      console.log('CATCH', e)
+                                      console.error(e)
                                     })
                                 }}
                                 data-test='detail_inventory_tab_priceTiers'>
