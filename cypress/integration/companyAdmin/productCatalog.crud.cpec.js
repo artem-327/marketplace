@@ -14,7 +14,7 @@ context("Company Product Catalog CRUD", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
-        cy.openSettings()
+        cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
 
         cy.contains("Product Catalog").click()
 
@@ -67,7 +67,9 @@ context("Company Product Catalog CRUD", () => {
         })
 
         cy.get("[data-test='settings_product_popup_packagingType_drpdn']").click()
-        cy.contains("paper bags").click()
+        cy.get("[data-test='settings_product_popup_packagingType_drpdn']").within(() => {
+            cy.contains("paper bags").click()
+        })
 
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
         cy.waitForUI()
@@ -120,7 +122,7 @@ context("Company Product Catalog CRUD", () => {
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
 
         cy.get(".error")
-            .should("have.length", 19)
+            .should("have.length", 17)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(Number value should be integer)|(Must be a number)/i)
         })

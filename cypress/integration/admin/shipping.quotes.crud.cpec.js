@@ -32,6 +32,7 @@ context("Shipping quotes CRUD", () => {
         cy.enterText("#field_input_carrierName", "POST")
         cy.enterText("#field_input_quoteId", "AAA")
         cy.enterText("#field_input_price", "10")
+        cy.enterText("#field_input_validityDate", "30. 9. 2020")
         cy.clickSave()
 
         cy.contains("POST")
@@ -47,7 +48,7 @@ context("Shipping quotes CRUD", () => {
         cy.get(".error")
             .should("have.length", 4)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(Required)/i)
+            expect(element.text()).to.match(/(Required)|(Date must be in future)/i)
         })
     })
 

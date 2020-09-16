@@ -21,6 +21,7 @@ context("Permissions tests",() => {
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
+        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
         cy.wait('@loading')
         cy.get('tbody > :nth-child(1)').should("be.visible")
 
@@ -37,6 +38,7 @@ context("Permissions tests",() => {
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
+        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
         cy.wait('@loading')
         cy.contains("No records found.")
 
@@ -62,6 +64,7 @@ context("Permissions tests",() => {
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
+        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
         cy.waitForUI()
         cy.wait('@loading')
         cy.contains("No records found.")
@@ -86,6 +89,7 @@ context("Permissions tests",() => {
         cy.get(':nth-child(2) > .actions').should('be.visible')
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
+        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
@@ -99,6 +103,7 @@ context("Permissions tests",() => {
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
+        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
         cy.wait('@loading')
         cy.contains("No records found.")
 
@@ -127,6 +132,7 @@ context("Permissions tests",() => {
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
+        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
         cy.waitForUI()
         cy.wait('@loading')
         cy.contains("No records found.")

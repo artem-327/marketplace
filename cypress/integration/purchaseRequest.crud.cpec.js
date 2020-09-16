@@ -14,11 +14,12 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
-        cy.visit("/inventory/my")
+        cy.visit("/inventory/my-listings")
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.url().should("include", "inventory")
 
         cy.contains("Wanted Board").click()
+        cy.get('[data-test=navigation_wanted_board_listings_drpdn]').click()
         cy.wait("@wantedBoardLoading", { timeout: 30000 })
     })
 
@@ -37,12 +38,11 @@ context("Wanted Board Purchase Request CRUD", () => {
     })
 
     it("Update purchase request", () => {
-        cy.get('.pointing > :nth-child(2)').click()
+        cy.get('[data-test=navigation_wanted_board_bids_received_drpdn]').click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstPurchaseRequestWithFilter(token, purchaseRequestFilter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-                cy.get("[data-test=action_" + itemId + "_0]").click()
+                cy.openElement(itemId, 0)
             })
         })
 
@@ -55,20 +55,18 @@ context("Wanted Board Purchase Request CRUD", () => {
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstPurchaseRequestWithFilter(token, purchaseRequestFilter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-                cy.get("[data-test=action_" + itemId + "_0]").click()
+                cy.openElement(itemId, 0)
             })
         })
         cy.contains("100")
     })
 
     it("Delete Purchase Request", () => {
-        cy.get('.pointing > :nth-child(2)').click()
+        cy.get('[data-test=navigation_wanted_board_bids_received_drpdn]').click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstPurchaseRequestWithFilter(token, purchaseRequestFilter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-                cy.get("[data-test=action_" + itemId + "_1]").click()
+                cy.openElement(itemId, 1)
             })
         })
 

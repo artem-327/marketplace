@@ -35,17 +35,17 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
-        cy.visit("/inventory/my")
+        cy.visit("/inventory/my-listings")
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.url().should("include", "inventory")
 
-        cy.contains("Wanted Board").click()
+        cy.get('[data-test=navigation_menu_wanted_board_drpdn]').click()
+        cy.get('[data-test=navigation_wanted_board_listings_drpdn]').click()
         cy.wait("@wantedBoardLoading", { timeout: 30000 })
     })
 
     it("Create new Purchase Request Offer", () => {
-        cy.get("[data-test=action_" + purchaseRequestId + "]").click()
-        cy.get("[data-test=action_" + purchaseRequestId + "_0]").click()
+        cy.openElement(purchaseRequestId, 0)
 
         cy.wait("@matchingLoading")
 
@@ -58,18 +58,10 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
         })
 
         cy.wait("@createOffer", { timeout: 100000 })
-        /*
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstPurchaseRequestWithFilter(token, purchaseRequestFilter).then(itemId => {
-                cy.get("[data-test=action_" + purchaseRequestId + "]").click()
-                cy.get("[data-test=action_" + purchaseRequestId + "_0]").click()
-            })
-        })*/
-
     })
 
     it("Update purchase request Offer", () => {
-        cy.get('.pointing > :nth-child(3)').click()
+        cy.get('[data-test=navigation_wanted_board_bids_sent_drpdn]').click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, "purchase-request-offers/own" ,purchaseRequestFilter).then(itemId => {
@@ -84,23 +76,22 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
         //Save button
         cy.get('.primary').click({force: true})
         cy.contains("Success")
+        cy.waitForUI()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, "purchase-request-offers/own", purchaseRequestFilter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-                cy.get("[data-test=action_" + itemId + "_0]").click()
+                cy.openElement(itemId, 0)
             })
         })
         cy.contains("100")
     })
 
     it("Delete Purchase Request Offer", () => {
-        cy.get('.pointing > :nth-child(3)').click()
+        cy.get('[data-test=navigation_wanted_board_bids_sent_drpdn]').click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, "purchase-request-offers/own", purchaseRequestFilter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
-                cy.get("[data-test=action_" + itemId + "_1]").click()
+                cy.openElement(itemId, 1)
             })
         })
 

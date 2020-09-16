@@ -18,9 +18,10 @@ context("Holds tests", () => {
         cy.FElogin(userJSON1.email, userJSON1.password)
         cy.waitForUI()
 
-        cy.visit("/inventory/my")
+        cy.visit("/inventory/my-listings")
         cy.wait('@inventoryLoading', {timeout: 30000})
         cy.contains("Marketplace").click()
+        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
 
         cy.wait("@marketplaceLoading", {timeout: 30000})
     })

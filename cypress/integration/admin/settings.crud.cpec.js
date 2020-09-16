@@ -12,7 +12,7 @@ context("Admin Settings RUD", () => {
         cy.wait("@loading")
         cy.url().should("include", "dashboard")
 
-        cy.get('.flex-wrapper > :nth-child(7)').click()
+        cy.get('.flex-wrapper > :nth-child(6)').click()
         cy.waitForUI()
         cy.get('[data-test=tabs_menu_item_admin-settings]').click()
 

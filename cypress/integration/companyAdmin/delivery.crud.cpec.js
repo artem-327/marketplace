@@ -55,9 +55,7 @@ context("Prodex Delivery Addresses CRUD", () => {
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstAddressIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-
-                cy.get('[data-test=action_' + itemId + '_0]').click()
+                cy.openElement(itemId, 0)
 
                 addressId = itemId
             })
@@ -80,8 +78,7 @@ context("Prodex Delivery Addresses CRUD", () => {
     })
 
     it("Edits a delivery address", () => {
-        cy.get('[data-test=action_' + addressId + ']').click({force: true})
-        cy.get('[data-test=action_' + addressId + '_0]').click({force: true})
+        cy.openElement(addressId, 0)
 
         cy.get("#field_input_contactName")
             .clear()
@@ -92,8 +89,7 @@ context("Prodex Delivery Addresses CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get('[data-test=action_' + addressId + ']').click()
-        cy.get('[data-test=action_' + addressId + '_0]').click()
+        cy.openElement(addressId, 0)
 
         cy.get("#field_input_contactName")
             .should("have.value", "Adolf Schwarzenegger")
@@ -105,15 +101,14 @@ context("Prodex Delivery Addresses CRUD", () => {
         cy.get('[data-test=settings_branches_popup_submit_btn]').click()
 
         cy.get(".error")
-            .should("have.length", 8)
+            .should("have.length", 7)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
     })
 
     it("Deletes a delivery adress", () => {
-        cy.get('[data-test=action_' + addressId + ']').click({force: true})
-        cy.get('[data-test=action_' + addressId + '_1]').click({force: true})
+        cy.openElement(addressId, 1)
 
         cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
