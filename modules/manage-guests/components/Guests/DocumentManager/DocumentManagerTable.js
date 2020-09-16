@@ -18,7 +18,7 @@ const BasicLink = styled.a`
   color: black !important;
   text-decoration: none !important;
   &:hover {
-    color: black !important;
+    color: white !important;
     text-decoration: none !important;
   }
 `
@@ -129,13 +129,14 @@ class DocumentManagerTable extends Component {
             )
           ).then(async () => {
             try {
-              removeAttachment(row.id)
+              await removeAttachment(row.id)
               datagrid.removeRow(row.id)
             } catch (e) {
               console.error(e)
             }
           }),
-        hidden: () => documentManagerDatagridSharedWithMe
+        hidden: () => documentManagerDatagridSharedWithMe,
+        disabled: row => this.props.editedId === row.id
       },
       {
         text: row => (
@@ -152,7 +153,7 @@ class DocumentManagerTable extends Component {
 
   render() {
     const {
-      rows, datagrid
+      rows, datagrid, editedId
     } = this.props
 
     return (
@@ -164,6 +165,7 @@ class DocumentManagerTable extends Component {
         loading={datagrid.loading}
         style={{ marginTop: '5px' }}
         columnActions={'name'}
+        editingRowId={editedId}
       />
     )
   }
@@ -171,9 +173,8 @@ class DocumentManagerTable extends Component {
 
 const mapStateToProps = ({ manageGuests }, { datagrid }) => {
   return {
-    loading: manageGuests.loading,
-    rows: datagrid.rows,
-    documentManagerDatagridSharedWithMe: manageGuests.documentManagerDatagridSharedWithMe
+    ...manageGuests,
+    rows: datagrid.rows
   }
 }
 

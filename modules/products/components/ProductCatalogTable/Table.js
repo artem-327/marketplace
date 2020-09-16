@@ -162,8 +162,7 @@ class ProductCatalogTable extends Component {
       intl: { formatMessage },
       openEditEchoProduct,
       openEditEchoAltNamesPopup,
-      deleteCompanyGenericProduct,
-      editedId
+      deleteCompanyGenericProduct
     } = this.props
 
     return [
@@ -177,7 +176,7 @@ class ProductCatalogTable extends Component {
           id: 'admin.deleteCompanyGenericProduct',
           defaultMessage: 'Delete Company Generic Product'
         }),
-        disabled: row => editedId === row.id,
+        disabled: row => this.props.editedId === row.id,
         callback: row => {
           confirm(
             formatMessage({
@@ -191,9 +190,13 @@ class ProductCatalogTable extends Component {
               },
               { name: row.name }
             )
-          ).then(() => {
-            deleteCompanyGenericProduct(row.id)
-            datagrid.removeRow(row.id)
+          ).then(async () => {
+            try {
+              await deleteCompanyGenericProduct(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
           })
         }
       }
@@ -325,7 +328,7 @@ class ProductCatalogTable extends Component {
   }
 
   render() {
-    const { datagrid, rows, filterValue } = this.props
+    const { datagrid, rows, filterValue, editedId } = this.props
 
     let { columns } = this.state
 
@@ -339,6 +342,7 @@ class ProductCatalogTable extends Component {
           loading={datagrid.loading}
           rows={this.getRows(rows)}
           columnActions='name'
+          editingRowId={editedId}
         />
       </React.Fragment>
     )

@@ -38,7 +38,8 @@ export default class Table extends Component {
       config,
       intl: { formatMessage },
       openEditPopup,
-      deleteNmfcNumber
+      deleteNmfcNumber,
+      datagrid
     } = this.props
 
     const { formattedMessageName } = config
@@ -61,7 +62,12 @@ export default class Table extends Component {
               { code: row.code }
             )
           ).then(async () => {
-            await deleteNmfcNumber(row.id)
+            try {
+              await deleteNmfcNumber(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
           })
       }
     ]

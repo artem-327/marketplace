@@ -46,7 +46,7 @@ class UnitOfPackagingTable extends Component {
   }
 
   getActions = () => {
-    const { intl, openEditPopup, deleteUnitOfPackaging } = this.props
+    const { intl, openEditPopup, deleteUnitOfPackaging, datagrid } = this.props
 
     const { formatMessage } = intl
 
@@ -64,7 +64,14 @@ class UnitOfPackagingTable extends Component {
               },
               { name: row.name }
             )
-          ).then(() => deleteUnitOfPackaging(row.id))
+          ).then(async () => {
+            try {
+              await deleteUnitOfPackaging(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          })
       }
     ]
   }

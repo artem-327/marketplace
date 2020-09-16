@@ -225,7 +225,7 @@ class MyProducts extends Component {
   }
 
   getActions = () => {
-    const { openPopup, deleteProduct, intl } = this.props
+    const { openPopup, deleteProduct, intl, datagrid } = this.props
     const { formatMessage } = intl
     return [
       {
@@ -234,6 +234,7 @@ class MyProducts extends Component {
       },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        disabled: row => this.props.editedId === row.id,
         callback: row => {
           return confirm(
             formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
@@ -244,7 +245,14 @@ class MyProducts extends Component {
               },
               { item: row.rawData.intProductName }
             )
-          ).then(() => deleteProduct(row.id, row.intProductName))
+          ).then(async () => {
+            try {
+              await deleteProduct(row.id, row.intProductName)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          })
         }
       }
     ]
@@ -255,10 +263,10 @@ class MyProducts extends Component {
       rows,
       openPopup,
       openImportPopup,
-      deleteProduct,
       intl,
       datagrid,
       loading,
+      editedId,
       isOpenPopup,
       isOpenImportPopup
     } = this.props
@@ -358,6 +366,7 @@ class MyProducts extends Component {
                 sortPath: 'CompanyProduct.intProductName',
                 direction: 'asc'
               }}
+              editingRowId={editedId}
               columnActions='intProductName'
             />
           </div>
@@ -419,8 +428,11 @@ const getProductStatus = product => {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
+  const editedId = state.simpleAdd.isOpenPopup && state.simpleAdd.editedId ? state.simpleAdd.editedId : -1
   return {
     ...state.simpleAdd,
+    editedId,
+    loading: state.simpleAdd.loading || state.settings.loading,
     isOpenImportPopup: state.settings.isOpenImportPopup,
     isOpenPopup: state.simpleAdd.isOpenPopup,
     rows: datagrid.rows.map(product => {

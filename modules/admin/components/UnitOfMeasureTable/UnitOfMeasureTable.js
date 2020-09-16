@@ -61,7 +61,7 @@ class UnitOfMeasureTable extends Component {
   }
 
   getActions = () => {
-    const { intl, openEditPopup, deleteUnit } = this.props
+    const { intl, openEditPopup, deleteUnit, datagrid } = this.props
 
     const { formatMessage } = intl
     return [
@@ -78,7 +78,14 @@ class UnitOfMeasureTable extends Component {
               },
               { name: row.name }
             )
-          ).then(() => deleteUnit(row.id))
+          ).then(async () => {
+            try {
+              await deleteUnit(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          })
       }
     ]
   }

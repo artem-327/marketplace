@@ -136,7 +136,15 @@ class BranchesTable extends Component {
               { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.addressName}! ? ` },
               { item: row.name }
             )
-          ).then(() => deleteBranch(row.id))
+          ).then(async () => {
+            try {
+              await deleteBranch(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          }),
+        disabled: row => this.props.editedId === row.id
       },
       {
         text: <FormattedMessage id='settings.branches.setAsPrimaryBranch' defaultMessage='Set as Primary Branch' />,
@@ -155,7 +163,7 @@ class BranchesTable extends Component {
   }
 
   render() {
-    const { filterValue, rows, datagrid, loading, identityLoading } = this.props
+    const { filterValue, rows, datagrid, loading, identityLoading, editedId } = this.props
 
     return (
       <React.Fragment>
@@ -168,6 +176,7 @@ class BranchesTable extends Component {
           rows={rows}
           style={{ marginTop: '5px' }}
           columnActions='addressName'
+          editingRowId={editedId}
         />
       </React.Fragment>
     )
@@ -204,6 +213,7 @@ const mapStateToProps = (state, { datagrid }) => {
     }),
     filterValue: state.settings.filterValue,
     loading: state.settings.loading,
+    editedId: state.settings.editedId,
     currentCompanyId: getSafe(() => state.auth.identity.company.id, null),
     currentPrimaryBranchId: getSafe(() => state.auth.identity.company.primaryBranch.id, null),
     isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),

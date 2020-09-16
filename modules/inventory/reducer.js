@@ -56,14 +56,16 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: true,
         editTrig: !state.editTrig,
-        popupValues: action.payload
+        popupValues: action.payload,
+        editedId: action.payload ? action.payload.id : null
       }
     }
     case AT.INVENTORY_CLOSE_POPUP: {
       return {
         ...state,
         isOpenPopup: false,
-        popupValues: null
+        popupValues: null,
+        editedId: null
       }
     }
 

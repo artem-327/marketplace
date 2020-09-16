@@ -79,7 +79,7 @@ class ShippingQuotesTable extends Component {
   }
 
   getActions = () => {
-    const { intl, deleteShippingQuote } = this.props
+    const { intl, deleteShippingQuote, datagrid } = this.props
 
     const { formatMessage } = intl
     return [
@@ -96,8 +96,13 @@ class ShippingQuotesTable extends Component {
               { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.quoteId}?` },
               { item: row.quoteId }
             )
-          ).then(() => {
-            deleteShippingQuote(row.id)
+          ).then(async () => {
+            try {
+              await deleteShippingQuote(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
           })
       }
     ]

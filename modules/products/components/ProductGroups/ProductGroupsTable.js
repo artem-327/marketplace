@@ -48,7 +48,7 @@ class ProductGroupsTable extends Component {
   }
 
   getActions = () => {
-    const { intl, openPopup, deleteProductGroups } = this.props
+    const { intl, openPopup, deleteProductGroups, datagrid } = this.props
 
     const { formatMessage } = intl
     return [
@@ -68,19 +68,31 @@ class ProductGroupsTable extends Component {
               },
               { name: row.name }
             )
-          )
-            .then(() => {
-              deleteProductGroups(row.id)
-            })
-            .catch(err => {
-              console.error(err)
-            })
+          ).then(async () => {
+            try {
+              await deleteProductGroups(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          }),
+        disabled: row => this.props.editedId === row.id,
       }
     ]
   }
 
   render() {
-    const { intl, loading, rows, datagrid, filterValue, openPopup, deleteProductGroups, toastManager } = this.props
+    const {
+      intl,
+      loading,
+      rows,
+      datagrid,
+      filterValue,
+      openPopup,
+      deleteProductGroups,
+      editedId,
+      toastManager
+    } = this.props
 
     const { formatMessage } = intl
     const { columns } = this.state
@@ -94,6 +106,7 @@ class ProductGroupsTable extends Component {
           columns={columns}
           rows={rows}
           columnActions='name'
+          editingRowId={editedId}
         />
       </React.Fragment>
     )
@@ -130,6 +143,7 @@ const mapStateToProps = (state, { handleFilterChange, datagrid }) => {
     })),
     filterValue: state.productsAdmin.filterValue,
     currentTab: state.productsAdmin.currentTab,
+    editedId: state.productsAdmin.editedId,
     loading: state.productsAdmin.loading
   }
 }

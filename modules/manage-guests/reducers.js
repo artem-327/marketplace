@@ -6,6 +6,7 @@ export const initialState = {
   popupValues: null,
   isOpenPopup: false,
   editTrig: false,
+  editedId: null,
   loading: false,
   updating: false,
   //currentTab: '',
@@ -29,14 +30,16 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: true,
         editTrig: !state.editTrig,
-        popupValues: payload
+        popupValues: payload,
+        editedId: payload ? payload.id : null
       }
     }
     case AT.GUESTS_CLOSE_POPUP: {
       return {
         ...state,
         isOpenPopup: false,
-        popupValues: null
+        popupValues: null,
+        editedId: null
       }
     }
 

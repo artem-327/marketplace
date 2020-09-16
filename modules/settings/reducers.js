@@ -14,6 +14,7 @@ export const initialState = {
   popupValues: null,
   isOpenPopup: false,
   editTrig: false,
+  editedId: null,
   updating: false,
   isOpenUploadDocumentsPopup: null,
   usersRows: [],
@@ -145,14 +146,16 @@ export default function reducer(state = initialState, action) {
         loaded: false,
         isOpenPopup: true,
         editTrig: !state.editTrig,
-        popupValues: action.payload
+        popupValues: action.payload,
+        editedId: payload ? payload.id : null
       }
     }
     case AT.CLOSE_POPUP: {
       return {
         ...state,
         isOpenPopup: false,
-        popupValues: null
+        popupValues: null,
+        editedId: null
       }
     }
     case AT.OPEN_SIDEBAR: {
@@ -162,7 +165,8 @@ export default function reducer(state = initialState, action) {
         isOpenSidebar: true,
         editTrig: !state.editTrig,
         openTab: action.payload.openTab,
-        popupValues: action.payload.data
+        popupValues: action.payload.data,
+        editedId: payload.data ? payload.data.id : null
       }
     }
     case AT.CLOSE_SIDEBAR: {
@@ -170,7 +174,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenSidebar: false,
         openTab: null,
-        popupValues: null
+        popupValues: null,
+        editedId: null
       }
     }
     case AT.OPEN_DWOLLA_POPUP: {
@@ -232,7 +237,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         currentForm: state.currentTab, // ! ! ???
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
-        popupValues: action.payload
+        popupValues: action.payload,
+        editedId: payload ? payload.id : null
       }
     }
     case AT.CLOSE_EDIT_POPUP: {
@@ -240,7 +246,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         currentForm: null,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
-        popupValues: null
+        popupValues: null,
+        editedId: null
       }
     }
     case AT.OPEN_CONFIRM_POPUP: {
@@ -305,14 +312,16 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentForm: state.currentTab,
-        popupValues: action.payload
+        popupValues: action.payload,
+        editedId: payload ? payload.id : null
       }
     }
     case AT.CLOSE_ADD_POPUP: {
       return {
         ...state,
         currentForm: null,
-        currentEditForm: null
+        currentEditForm: null,
+        editedId: null
       }
     }
 
@@ -1090,6 +1099,7 @@ export default function reducer(state = initialState, action) {
         isOpenPopup: state.currentTab !== payload ? false : state.isOpenPopup,
         popupValues: state.currentTab !== payload ? null : state.popupValues,
         filterValue: state.currentTab !== payload ? '' : state.filterValue,
+        editedId: state.currentTab !== payload ? null : state.editedId,
         tabClicked: !state.tabClicked
       }
     }
@@ -1528,7 +1538,8 @@ export default function reducer(state = initialState, action) {
         locationsTab: payload,
         isOpenSidebar: state.locationsTab !== payload ? false : state.isOpenSidebar,
         openTab: state.locationsTab !== payload ? null : state.openTab,
-        popupValues: state.locationsTab !== payload ? null : state.popupValues
+        popupValues: state.locationsTab !== payload ? null : state.popupValues,
+        editedId: state.locationsTab !== payload ? null : state.editedId,
       }
     }
 

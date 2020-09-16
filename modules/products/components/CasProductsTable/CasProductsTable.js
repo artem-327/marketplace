@@ -79,16 +79,21 @@ class CasProductsTable extends Component {
               },
               { name: row.chemicalName }
             )
-          ).then(() => {
-            deleteCasProduct(row.id)
-            datagrid.removeRow(row.id)
-          })
+          ).then(async () => {
+            try {
+              await deleteCasProduct(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          }),
+        disabled: row => this.props.editedId === row.id
       }
     ]
   }
 
   render() {
-    const { datagrid, rows } = this.props
+    const { datagrid, rows, editedId } = this.props
 
     return (
       <React.Fragment>
@@ -103,6 +108,7 @@ class CasProductsTable extends Component {
             direction: 'asc'
           }}
           columnActions='casIndexName'
+          editingRowId={editedId}
         />
       </React.Fragment>
     )
@@ -139,6 +145,7 @@ const transformHazardClasses = classes => {
 
 const mapStateToProps = (state, { datagrid }) => {
   return {
+    editedId: state.productsAdmin.editedId,
     rows: datagrid.rows.map(d => {
       return {
         ...d,

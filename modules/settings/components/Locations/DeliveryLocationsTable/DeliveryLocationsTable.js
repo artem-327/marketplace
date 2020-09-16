@@ -75,7 +75,7 @@ class DeliveryAddressesTable extends Component {
   }
 
   getActions = () => {
-    const { openSidebar, intl, deleteDeliveryAddress } = this.props
+    const { openSidebar, intl, deleteDeliveryAddress, datagrid } = this.props
 
     const { formatMessage } = intl
     return [
@@ -95,15 +95,21 @@ class DeliveryAddressesTable extends Component {
               },
               { item: row.streetAddressString }
             )
-          ).then(() => {
-            deleteDeliveryAddress(row.id)
-          })
+          ).then(async () => {
+            try {
+              await deleteDeliveryAddress(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          }),
+        disabled: row => this.props.editedId === row.id
       }
     ]
   }
 
   render() {
-    const { datagrid, rows, loading, intl } = this.props
+    const { datagrid, rows, loading, intl, editedId } = this.props
 
     let { columns } = this.state
 
@@ -118,6 +124,7 @@ class DeliveryAddressesTable extends Component {
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
           columnActions='streetAddress'
+          editingRowId={editedId}
         />
       </React.Fragment>
     )
@@ -134,6 +141,7 @@ const mapStateToProps = (state, { datagrid }) => {
   return {
     filterValue: state.settings.filterValue,
     loading: state.settings.loading,
+    editedId: state.settings.editedId,
     rows: datagrid.rows.map(d => {
       const streetAddress = getSafe(() => d.address.streetAddress, '')
       return {
