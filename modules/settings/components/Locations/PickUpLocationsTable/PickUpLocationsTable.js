@@ -141,7 +141,7 @@ class PickUpLocationsTable extends Component {
   }
 
   getActions = () => {
-    const { openSidebar, deleteBranch, intl } = this.props
+    const { openSidebar, deleteBranch, intl, datagrid } = this.props
 
     const { formatMessage } = intl
     return [
@@ -170,13 +170,21 @@ class PickUpLocationsTable extends Component {
               { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.addressName}! ? ` },
               { item: row.name }
             )
-          ).then(() => deleteBranch(row.id))
+          ).then(async () => {
+            try {
+              await deleteBranch(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          }),
+        disabled: row => this.props.editedId === row.id
       }
     ]
   }
 
   render() {
-    const { filterValue, rows, datagrid } = this.props
+    const { filterValue, rows, datagrid, editedId } = this.props
 
     return (
       <React.Fragment>
@@ -189,6 +197,7 @@ class PickUpLocationsTable extends Component {
           rows={this.getRows(rows)}
           style={{ marginTop: '5px' }}
           columnActions='addressName'
+          editingRowId={editedId}
         />
       </React.Fragment>
     )
@@ -224,6 +233,7 @@ const mapStateToProps = (state, { datagrid }) => {
       }
     }),
     filterValue: state.settings.filterValue,
+    editedId: state.settings.editedId,
     loading: state.settings.loading
   }
 }

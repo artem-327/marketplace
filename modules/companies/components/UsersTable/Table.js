@@ -129,7 +129,7 @@ class UsersTable extends Component {
   }
 
   getActions = () => {
-    const { intl, datagrid, openSidebar, deleteUser, currentUserId, editId } = this.props
+    const { intl, datagrid, openSidebar, deleteUser, currentUserId } = this.props
 
     const { formatMessage } = intl
     return [
@@ -139,7 +139,7 @@ class UsersTable extends Component {
       },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-        disabled: row => currentUserId === row.id || editId === row.id,
+        disabled: row => currentUserId === row.id || this.props.editedId === row.id,
         callback: row =>
           confirm(
             formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
@@ -160,7 +160,7 @@ class UsersTable extends Component {
   }
 
   render() {
-    const { loading, rows, datagrid } = this.props
+    const { loading, rows, datagrid, editedId } = this.props
 
     return (
       <React.Fragment>
@@ -171,6 +171,7 @@ class UsersTable extends Component {
           columns={this.state.columns}
           rows={rows}
           columnActions='name'
+          editingRowId={editedId}
         />
       </React.Fragment>
     )
@@ -251,6 +252,7 @@ const mapStateToProps = (state, { datagrid }) => {
     editId: state.companiesAdmin.popupValues && state.companiesAdmin.popupValues.id,
     currentTab: state.companiesAdmin.currentTab,
     loading: state.companiesAdmin.loading,
+    editedId: state.companiesAdmin.editedId,
     userRoles: state.companiesAdmin.userRoles,
     clientCompanyRoles: state.companiesAdmin.clientCompanyRoles.map(d => d.id),
     adminRoles: state.companiesAdmin.adminRoles.map(d => d.id)

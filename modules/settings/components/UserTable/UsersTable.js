@@ -129,20 +129,20 @@ class UsersTable extends Component {
   }
 
   getActions = () => {
-    const { openSidebar, intl, deleteUser, resendWelcomeEmail, currentUserId, setPrimaryUser } = this.props
+    const { openSidebar, intl, deleteUser, resendWelcomeEmail, setPrimaryUser, datagrid } = this.props
 
     const { formatMessage } = intl
     return [
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
         callback: row => openSidebar(row.rawData)
-        // hidden: row => currentUserId === row.id
+        // hidden: row => this.props.currentUserId === row.id
       },
       /* #34139
       {
         text: formatMessage({ id: 'settings.editRoles', defaultMessage: 'Edit Roles' }),
         callback: row => openRolesPopup(row.rawData)
-        // hidden: row => currentUserId === row.id
+        // hidden: row => this.props.currentUserId === row.id
       },
       */
       {
@@ -154,15 +154,23 @@ class UsersTable extends Component {
               { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.rawData.name}?` },
               { item: row.rawData.name }
             )
-          ).then(() => deleteUser(row.id, row.rawData.name)),
-        hidden: row => currentUserId === row.id
+          ).then(async () => {
+            try {
+              await deleteUser(row.id, row.rawData.name)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          }),
+        hidden: row => this.props.currentUserId === row.id,
+        disabled: row => this.props.editedId === row.id
       },
       {
         text: <FormattedMessage id='settings.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
         callback: async row => {
           const { value } = await resendWelcomeEmail(row.id)
         },
-        hidden: row => !!row.lastLoginAt || currentUserId === row.id
+        hidden: row => !!row.lastLoginAt || this.props.currentUserId === row.id
       },
       {
         text: <FormattedMessage id='settings.user.setAsCompPrimUser' defaultMessage='Set as Company Primary User' />,
@@ -179,19 +187,9 @@ class UsersTable extends Component {
       rows,
       filterValue,
       loading,
-      openSidebar,
-      openRolesPopup,
       intl,
       datagrid,
-      deleteUser,
-      resendWelcomeEmail,
-      currentUserId,
-      setPrimaryUser
-      // confirmMessage,
-      // handleOpenConfirmPopup,
-      // closeConfirmPopup,
-      // deleteRowById,
-      // currentTab
+      editedId
     } = this.props
 
     let { columns } = this.state
@@ -208,6 +206,7 @@ class UsersTable extends Component {
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
           columnActions='name'
+          editingRowId={editedId}
         />
       </React.Fragment>
     )
@@ -298,6 +297,7 @@ const mapStateToProps = (state, { datagrid }) => {
       }
     }),
     currentUserId,
+    editedId: state.settings.editedId,
     addedItem: state.settings.addedItem,
     editedItem: state.settings.editedItem,
     filterValue: state.settings.filterValue,

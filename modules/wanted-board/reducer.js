@@ -128,7 +128,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         editInitTrig: !state.editInitTrig,
-        editWindowOpen: payload.activeTab,
+        editWindowOpen: 'bids-received',
         sidebarValues: payload.row,
         ...(row && {
           searchedManufacturers: uniqueArrayByKey(

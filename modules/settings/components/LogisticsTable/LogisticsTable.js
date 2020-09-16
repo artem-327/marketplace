@@ -9,6 +9,7 @@ import { generateToastMarkup } from '~/utils/functions'
 import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
+import { withDatagrid } from '~/modules/datagrid'
 
 class LogisticsTable extends Component {
   constructor(props) {
@@ -48,7 +49,8 @@ class LogisticsTable extends Component {
     const {
       openSidebar,
       intl: { formatMessage },
-      deleteLogisticsAccount
+      deleteLogisticsAccount,
+      datagrid
     } = this.props
 
     return [
@@ -72,16 +74,20 @@ class LogisticsTable extends Component {
             .then(async () => {
               try {
                 await deleteLogisticsAccount(row.id)
-              } catch {}
+                datagrid.removeRow(row.id)
+              } catch (e) {
+                console.error(e)
+              }
             })
             .catch(() => {})
-        }
+        },
+        disabled: row => this.props.editedId === row.id,
       }
     ]
   }
 
   render() {
-    const { logisticsAccounts, loading, filterValue } = this.props
+    const { logisticsAccounts, loading, filterValue, editedId } = this.props
 
     return (
       <ProdexTable
@@ -101,6 +107,7 @@ class LogisticsTable extends Component {
         }))}
         loading={loading}
         columnActions='logisticsProviderName'
+        editingRowId={editedId}
       />
     )
   }
@@ -120,13 +127,20 @@ const mapDispatchToProps = {
   deleteLogisticsAccount
 }
 
-const mapStateToProps = ({ settings: { loading, logisticsAccounts, deleteLogisticsAccount, logisticsFilter } }) => {
+const mapStateToProps = ({ settings: {
+  loading,
+  logisticsAccounts,
+  deleteLogisticsAccount,
+  logisticsFilter,
+  editedId
+} }) => {
   return {
     loading,
+    editedId,
     logisticsAccounts,
     deleteLogisticsAccount,
     filterValue: logisticsFilter
   }
 }
 
-export default withToastManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(LogisticsTable)))
+export default withDatagrid(withToastManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(LogisticsTable))))

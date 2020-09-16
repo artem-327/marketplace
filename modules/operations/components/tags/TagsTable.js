@@ -31,7 +31,7 @@ class TagsTable extends Component {
   }
 
   getActions = () => {
-    const { intl, openPopup, deleteTag } = this.props
+    const { intl, openPopup, deleteTag, datagrid } = this.props
 
     const { formatMessage } = intl
     return [
@@ -52,11 +52,13 @@ class TagsTable extends Component {
               { name: row.name }
             )
           )
-            .then(() => {
-              deleteTag(row.id)
-            })
-            .catch(err => {
-              console.error(err)
+            .then(async () => {
+              try {
+                await deleteTag(row.id)
+                datagrid.removeRow(row.id)
+              } catch (e) {
+                console.error(e)
+              }
             })
       }
     ]

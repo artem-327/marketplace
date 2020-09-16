@@ -8,7 +8,7 @@ import { withDatagrid } from '~/modules/datagrid'
 
 class DataTable extends Component {
   getActions = () => {
-    const { config, intl, openEditPopup, deleteConfirmation } = this.props
+    const { config, intl, openEditPopup, deleteConfirmation, datagrid } = this.props
 
     const { formatMessage } = intl
     const { addEditText, formattedMessageName } = this.props.config
@@ -31,7 +31,14 @@ class DataTable extends Component {
               },
               { name: row.name }
             )
-          ).then(() => deleteConfirmation(row.id, config))
+          ).then(async () => {
+            try {
+              await deleteConfirmation(row.id, config)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          })
       }
     ]
   }

@@ -429,7 +429,6 @@ class MyListings extends Component {
     const {
       intl: { formatMessage },
       sidebarDetailTrigger,
-      editedId,
       datagrid
     } = this.props
     return [
@@ -482,7 +481,7 @@ class MyListings extends Component {
           id: 'global.delete',
           defaultMessage: 'Delete'
         }),
-        disabled: row => editedId === row.id,
+        disabled: row => this.props.editedId === row.id,
         callback: row => {
           confirm(
             formatMessage({
@@ -496,9 +495,13 @@ class MyListings extends Component {
               },
               { item: row.chemicalName }
             )
-          ).then(() => {
-            this.props.deleteProductOffer(row.id)
-            datagrid.removeRow(row.id)
+          ).then(async () => {
+            try {
+              this.props.deleteProductOffer(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
           })
         }
       },

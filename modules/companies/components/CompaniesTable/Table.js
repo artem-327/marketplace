@@ -221,14 +221,15 @@ class CompaniesTable extends Component {
               },
               { name: row.name }
             )
-          ).then(() => {
+          ).then(async () => {
             try {
-              deleteCompany(row.id)
+              await deleteCompany(row.id)
               datagrid.removeRow(row.id)
             } catch (err) {
               console.error(err)
             }
-          })
+          }),
+        disabled: row => this.props.editedId === row.id
       },
       {
         text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }),
@@ -253,7 +254,7 @@ class CompaniesTable extends Component {
   }
 
   render() {
-    const { datagrid, rows } = this.props
+    const { datagrid, rows, editedId } = this.props
 
     return (
       <React.Fragment>
@@ -264,6 +265,7 @@ class CompaniesTable extends Component {
           defaultSorting={{ columnName: 'displayName', direction: 'asc', sortPath: 'Company.name' }}
           rows={this.getRows(rows)}
           columnActions='displayName'
+          editingRowId={editedId}
         />
       </React.Fragment>
     )
@@ -275,6 +277,7 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
     isOpenSidebar: companiesAdmin.isOpenSidebar,
     companyListDataRequest: companiesAdmin.companyListDataRequest,
     reRegisterP44Pending: companiesAdmin.reRegisterP44Pending,
+    editedId: companiesAdmin.editedId,
     rows: datagrid.rows.map(c => ({
       rawData: c,
       ...c,

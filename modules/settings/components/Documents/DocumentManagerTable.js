@@ -141,9 +141,14 @@ class DocumentManager extends Component {
                 </FormattedMessage>
               ),
               callback: async row => {
-                await removeAttachment(row.id)
-                datagrid.removeRow(row.id)
-              }
+                try {
+                  await removeAttachment(row.id)
+                  datagrid.removeRow(row.id)
+                } catch (e) {
+                  console.error(e)
+                }
+              },
+              disabled: row => this.props.editedId === row.id
             }
           ]
         : [])
@@ -151,7 +156,7 @@ class DocumentManager extends Component {
   }
 
   render() {
-    const { datagrid, loading, items, normalWidth, reduceColumns } = this.props
+    const { datagrid, loading, items, normalWidth, reduceColumns, editedId } = this.props
 
     let rows = this.getRows(items ? items : this.props.rows)
 
@@ -165,6 +170,7 @@ class DocumentManager extends Component {
         style={{ marginTop: '5px' }}
         normalWidth={normalWidth}
         columnActions='name'
+        editingRowId={editedId}
       />
     )
   }
@@ -190,6 +196,7 @@ DocumentManager.defaultProps = {
 const mapStateToProps = (store, { datagrid }) => {
   return {
     loading: store.settings.loading,
+    editedId: store.settings.editedId,
     rows: datagrid.rows
   }
 }

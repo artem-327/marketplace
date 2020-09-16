@@ -28,7 +28,7 @@ class Table extends Component {
   }
 
   getActions = () => {
-    const { intl, openEditPopup, deleteConfirmation } = this.props
+    const { intl, openEditPopup, deleteConfirmation, datagrid } = this.props
 
     const { formatMessage } = intl
     return [
@@ -48,7 +48,14 @@ class Table extends Component {
               },
               { name: row.name }
             )
-          ).then(() => deleteConfirmation(row.id))
+          ).then(async () => {
+            try {
+              await deleteConfirmation(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          })
       }
     ]
   }

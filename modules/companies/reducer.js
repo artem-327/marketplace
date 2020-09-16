@@ -6,6 +6,7 @@ export const initialState = {
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
   editTrig: false,
+  editedId: null,
   popupValues: null,
   loading: false,
   updating: false,
@@ -44,7 +45,8 @@ export default function reducer(state = initialState, action) {
         currentTab: payload.tab,
         popupValues: state.currentTab !== payload.tab ? null : state.popupValues,
         loading: state.currentTab !== payload.tab ? false : state.loading,
-        isOpenSidebar: state.currentTab !== payload.tab ? false : state.isOpenSidebar
+        isOpenSidebar: state.currentTab !== payload.tab ? false : state.isOpenSidebar,
+        editedId: state.currentTab !== payload.tab ? null : state.editedId,
       }
     }
 
@@ -53,7 +55,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenSidebar: true,
         editTrig: !state.editTrig,
-        popupValues: payload.data
+        popupValues: payload.data,
+        editedId: payload.data ? payload.data.id : null
       }
     }
     /* DELETE COMPANY */
@@ -85,7 +88,8 @@ export default function reducer(state = initialState, action) {
     case AT.COMPANIES_CLOSE_POPUP: {
       return {
         ...state,
-        isOpenSidebar: false
+        isOpenSidebar: false,
+        editedId: null
       }
     }
 

@@ -420,11 +420,12 @@ class BidsReceived extends Component {
       ...this.state.filterValue,
       [data.name]: data.value
     }
+    this.props.closeDetailSidebar()
     this.handleFiltersValue(filter)
   }
 
   getActions = () => {
-    const { intl, sidebarDetailTrigger, editedId, datagrid, deletePurchaseRequestItem } = this.props
+    const { intl, sidebarDetailTrigger, datagrid, deletePurchaseRequestItem } = this.props
     let { formatMessage } = intl
     return [
       {
@@ -441,7 +442,7 @@ class BidsReceived extends Component {
           id: 'global.delete',
           defaultMessage: 'Delete'
         }),
-        disabled: row => editedId === row.id,
+        disabled: row => this.props.editedId === row.id,
         callback: row => {
           confirm(
             formatMessage({
@@ -456,7 +457,9 @@ class BidsReceived extends Component {
             try {
               await deletePurchaseRequestItem(row.id)
               datagrid.removeRow(row.id)
-            } catch (e) {}
+            } catch (e) {
+              console.error(e)
+            }
           })
         }
       }

@@ -117,7 +117,7 @@ class BidsSent extends Component {
   }
 
   getActions = () => {
-    const { datagrid, intl, editedId, myOffersSidebarTrigger } = this.props
+    const { datagrid, intl, myOffersSidebarTrigger } = this.props
     let { formatMessage } = intl
     return [
       {
@@ -134,7 +134,7 @@ class BidsSent extends Component {
           defaultMessage: 'Delete'
         }),
         hidden: row => row.hiddenActions,
-        disabled: row => editedId === row.id,
+        disabled: row => this.props.editedId === row.id,
         callback: row => {
           confirm(
             formatMessage({
@@ -198,6 +198,7 @@ class BidsSent extends Component {
             rowSelection={false}
             showSelectionColumn={false}
             columnActions='product'
+            editingRowId={editedId}
           />
         </div>
       </>

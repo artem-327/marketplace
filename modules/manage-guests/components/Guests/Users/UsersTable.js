@@ -99,7 +99,6 @@ class UsersTable extends Component {
       intl,
       datagrid,
       deleteUser,
-      currentUserId,
       companyId
     } = this.props
     const { formatMessage } = intl
@@ -108,7 +107,7 @@ class UsersTable extends Component {
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
         callback: row => openPopup(row.rawData)
-        // hidden: row => currentUserId === row.id
+        // hidden: row => this.props.editedId === row.id
       },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -127,7 +126,7 @@ class UsersTable extends Component {
               console.error(e)
             }
           }),
-        hidden: row => currentUserId === row.id
+        disabled: row => this.props.editedId === row.id
       }
     ]
   }
@@ -137,7 +136,8 @@ class UsersTable extends Component {
       rows,
       filterValue,
       loading,
-      datagrid
+      datagrid,
+      editedId
     } = this.props
 
     let { columns } = this.state
@@ -153,6 +153,7 @@ class UsersTable extends Component {
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
           columnActions={'name'}
+          editingRowId={editedId}
         />
       </React.Fragment>
     )
