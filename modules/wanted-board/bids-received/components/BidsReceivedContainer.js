@@ -18,22 +18,6 @@ import BidsReceived from './BidsReceived'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import styled from 'styled-components'
 
-const CountedName = styled.div`
-  > .ui.label {
-    margin: 0 12px 0 0;
-    font-weight: normal;
-    font-size: 12px;
-    color: #2599d5;
-    border-radius: 2px;
-    background-color: #b7e7ff;
-    &.cnt-0 {
-      color: #848893;
-      border: solid 1px #dee2e6;
-      background-color: #f8f9fb;
-    }
-  }
-`
-
 const StyledArrayToFirstItem = styled(ArrayToFirstItem)`
   .ui.label.bordered.right {
     color: #848893;
@@ -112,18 +96,8 @@ function mapStateToProps(store, { datagrid }) {
         root: true,
         treeRoot: true,
         offer: false,
-        product: (
-          <CountedName>
-            <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
-            {product ? product : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />}
-          </CountedName>
-        ),
-        casNumber: (
-          <CountedName>
-            <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
-            {casNumber ? casNumber : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />}
-          </CountedName>
-        ),
+        product: product ? product : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
+        casNumber: casNumber ? casNumber : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         assay: productName ? (
           'N/A'
         ) : (
