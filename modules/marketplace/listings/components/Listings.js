@@ -504,6 +504,9 @@ class Listings extends Component {
                   })}
                 </Button>
               </div>
+              <FiltersRow>
+                <FilterTags />
+              </FiltersRow>
             </div>
 
             <ColumnSettingButton />

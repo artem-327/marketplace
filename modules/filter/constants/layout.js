@@ -582,6 +582,17 @@ export const InputWrapper = styled.div`
   position: relative;
 
   > .field .ui.input {
+  
+    input[type=number]::-webkit-outer-spin-button,    // Remove browser arrows
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    input[type=number] {                              // Remove browser arrows
+      -moz-appearance:textfield;
+    }
+  
     input {
       position: static;
       padding-right: 36px; 
@@ -620,12 +631,24 @@ export const InputWrapper = styled.div`
 export const QuantityWrapper = styled.div`
   position: relative;
   
-  > .field .ui.input .ui.label {
-    font-size: 14px;
-    font-weight: normal;
-    background-color: #f8f9fb;
-    color: #20273a;
-    border: solid 1px #dee2e6;
+  > .field .ui.input {
+    input[type=number]::-webkit-outer-spin-button,    // Remove browser arrows
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    input[type=number] {                              // Remove browser arrows
+      -moz-appearance:textfield;
+    } 
+  
+    .ui.label {
+      font-size: 14px;
+      font-weight: normal;
+      background-color: #f8f9fb;
+      color: #20273a;
+      border: solid 1px #dee2e6;
+    }
   }
   
   > .sideButtons {

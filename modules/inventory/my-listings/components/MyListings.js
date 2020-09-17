@@ -908,6 +908,9 @@ class MyListings extends Component {
                   })}
                 </Button>
               </div>
+              <FiltersRow>
+                <FilterTags />
+              </FiltersRow>
             </div>
 
             {/*selectedRows.length > 0 ? (
