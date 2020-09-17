@@ -1072,7 +1072,6 @@ class DetailSidebar extends Component {
                         : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
                     </Button>
                     <Button
-                      disabled={!(Object.keys(touched).length || this.state.changedForm)}
                       primary
                       size='large'
                       type='button'
