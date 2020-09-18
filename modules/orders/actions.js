@@ -114,9 +114,9 @@ export const closeReinitiateTransfer = () => ({
   type: AT.ORDER_CLOSE_REINITIATE_TRANSFER,
   payload: {}
 })
-export const loadBankAccounts = () => ({
+export const loadBankAccounts = type => ({
   type: AT.ORDER_LOAD_BANK_ACCOUNTS,
-  payload: Api.loadBankAccounts()
+  payload: type === 'DWOLLA' ? Api.loadDwollaBankAccounts() : Api.loadVellociBankAccounts()
 })
 export const payOrder = (orderId, bankAccount) => ({
   type: AT.ORDER_PAY_ORDER,

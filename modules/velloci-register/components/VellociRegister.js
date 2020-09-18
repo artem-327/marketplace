@@ -75,7 +75,7 @@ class VellociRegister extends Component {
               lastName: getSafe(() => val.lastName, ''),
               ownershipPercentage: getSafe(() => val.businessOwnershipPercentage, ''),
               phone: getSafe(() => val.phoneNumber, ''),
-              state: getSafe(() => val.address.country, ''),
+              provinceId: getSafe(() => val.address.country, ''),
               zipCode: getSafe(() => val.address.zip, ''),
               ssn: getSafe(() => val.socialSecurityNumber, ''),
               email: getSafe(() => val.email, '')
@@ -91,7 +91,7 @@ class VellociRegister extends Component {
       legalAddress: getSafe(() => businessInfo.address.streetAddress, ''),
       legalCity: getSafe(() => businessInfo.address.city, ''),
       legalName: getSafe(() => businessInfo.address.streetAddress, ''),
-      legalState: getSafe(() => businessInfo.address.country, ''),
+      provinceId: getSafe(() => businessInfo.address.country, ''),
       legalZipCode: getSafe(() => businessInfo.address.zip, ''),
       naicsCode: getSafe(() => controlPerson.naicsCode, ''),
       phone: getSafe(() => businessInfo.phoneNumber, ''),
@@ -106,7 +106,7 @@ class VellociRegister extends Component {
         lastName: getSafe(() => verifyPersonalInformation[0].lastName, ''),
         ownershipPercentage: getSafe(() => verifyPersonalInformation[0].businessOwnershipPercentage, ''),
         phone: getSafe(() => verifyPersonalInformation[0].phoneNumber, ''),
-        state: getSafe(() => verifyPersonalInformation[0].address.country, ''),
+        provinceId: getSafe(() => verifyPersonalInformation[0].address.country, ''),
         zipCode: getSafe(() => verifyPersonalInformation[0].address.zip, ''),
         ssn: getSafe(() => verifyPersonalInformation[0].socialSecurityNumber, ''),
         email: getSafe(() => verifyPersonalInformation[0].email, '')

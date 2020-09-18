@@ -70,7 +70,7 @@ export function dwollaFinalizeVerification(id, value1, value2) {
     type: AT.DWOLLA_FINALIZE_VERIFICATION,
     async payload() {
       await api.dwollaFinalizeVerification(id, value1, value2)
-      const data = await api.getBankAccountsData()
+      const data = await api.getDwollaBankAccountsData()
 
       return data
     }
@@ -238,10 +238,10 @@ export const deleteProduct = (id, name) => ({
   }
 })
 
-export const deleteBankAccount = id => ({
+export const deleteBankAccount = (id, type) => ({
   type: AT.DELETE_BANK_ACCOUNT,
   async payload() {
-    const response = await api.deleteBankAccount(id)
+    const response = type === 'DWOLLA' ? await api.deleteDwollaBankAccount(id) : await api.deleteVellociBankAccount(id)
     Datagrid.removeRow(id)
     return response
   }
@@ -554,7 +554,7 @@ export function getCurrencies() {
   }
 }
 
-export function getBankAccountsDataRequest() {
+export function getBankAccountsDataRequest(type) {
   return dispatch => {
     dispatch({
       type: AT.GET_BANK_ACCOUNTS_DATA,
@@ -564,7 +564,7 @@ export function getBankAccountsDataRequest() {
           country
           // currency
         ] = await Promise.all([
-          api.getBankAccountsData(),
+          type === 'DWOLLA' ? api.getDwollaBankAccountsData() : api.getVellociBankAccountsData(),
           api.getCountry()
           // api.getCurrencies(),
         ])
@@ -671,11 +671,11 @@ export function handleSubmitProductAddPopup(payload, attachments) {
   }
 }
 
-export function postNewBankAccountRequest(payload) {
+export function postNewDwollaBankAccountRequest(payload) {
   return {
     type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
     async payload() {
-      const { data } = await api.postNewBankAccount(payload)
+      const { data } = await api.postNewDwollaBankAccount(payload)
       Datagrid.loadData()
       return data
     }
@@ -996,11 +996,11 @@ export function loadFile(attachment) {
   }
 }
 
-export function addVerificationDocument(attachment, type) {
+export function dwollaAddVerificationDocument(attachment, type) {
   return {
     type: AT.SETTINGS_ADD_VERIFICATION_DOCUMENT,
     async payload() {
-      return await api.addVerificationDocument(attachment, type)
+      return await api.dwollaAddVerificationDocument(attachment, type)
     }
   }
 }
@@ -1086,9 +1086,9 @@ export const triggerAgreementModal = (force = null, modalProps = {}) => ({
   payload: { force, modalProps }
 })
 
-export const getVerificationDocumentTypes = () => ({
+export const dwollaGetVerificationDocumentTypes = () => ({
   type: AT.SETTINGS_GET_VERIFICATION_DOCUMENT_TYPES,
-  payload: api.getVerificationDocumentTypes()
+  payload: api.dwollaGetVerificationDocumentTypes()
 })
 
 export const getLanguages = () => ({ type: AT.GET_LANGUAGES, payload: api.getLanguages() })
