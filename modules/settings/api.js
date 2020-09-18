@@ -21,7 +21,7 @@ export default {
     )
   },
 
-  addVerificationDocument: (attachment, docType) => {
+  dwollaAddVerificationDocument: (attachment, docType) => {
     const formData = new FormData()
     formData.append('file', attachment)
 
@@ -43,7 +43,10 @@ export default {
   getWarehouses: () => api.get('/prodex/api/branches/warehouses').then(response => response.data),
   getBranches: () => api.get('/prodex/api/branches').then(response => response.data),
   getCreditCardsData: () => api.get('/prodex/api/payments/cards').then(response => response.data),
-  getBankAccountsData: () => api.get('/prodex/api/payments/bank-accounts').then(response => response.data),
+  getDwollaBankAccountsData: () =>
+    api.get('/prodex/api/payments/bank-accounts/dwolla').then(response => response.data),
+  getVellociBankAccountsData: () =>
+    api.get('/prodex/api/payments/bank-accounts/velloci').then(response => response.data),
   getDwollaAccBalance: () => api.get('/prodex/api/payments/dwolla/balance').then(response => response.data),
   getVellociAccBalance: () => api.get('/prodex/api/payments/velloci/balance').then(response => response.data),
   getDwollaBeneficiaryOwners: () =>
@@ -96,7 +99,7 @@ export default {
   postNewWarehouse: (createWarehouse, body) =>
     api.post(`/prodex/api/branches?createWarehouse=${createWarehouse ? 'true' : 'false'}`, body),
   postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
-  postNewBankAccount: body => api.post('/prodex/api/payments/bank-accounts/add', body),
+  postNewDwollaBankAccount: body => api.post('/prodex/api/payments/bank-accounts/dwolla', body),
   postNewProduct: body => api.post('/prodex/api/company-products', body),
   updateProduct: (id, body) => api.put(`/prodex/api/company-products/id/${id}`, body),
   postNewDwollaAccount: body => api.post('/prodex/api/payments/dwolla/register', body),
@@ -158,8 +161,10 @@ export default {
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`).then(() => branchId),
   deleteProduct: productId => api.delete(`/prodex/api/company-products/id/${productId}`).then(() => productId),
   deleteCreditCard: cardId => api.delete(`/prodex/api/payments/cards/${cardId}`).then(() => cardId),
-  deleteBankAccount: bankAccountId =>
-    api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`).then(() => bankAccountId),
+  deleteDwollaBankAccount: bankAccountId =>
+    api.delete(`/prodex/api/payments/bank-accounts/dwolla/${bankAccountId}`).then(() => bankAccountId),
+  deleteVellociBankAccount: bankAccountId =>
+    api.delete(`/prodex/api/payments/bank-accounts/velloci/${bankAccountId}`).then(() => bankAccountId),
   getAddressSearch: body => api.post('/prodex/api/addresses/search', body).then(response => response.data),
   getDeliveryAddressesByStringRequest: async (value, limit = 30) => {
     return await api
@@ -181,10 +186,11 @@ export default {
   },
   updateDeliveryAddresses: (id, value) => api.put(`/prodex/api/delivery-addresses/id/${id}`, value),
   dwollaInitiateVerification: async id => {
-    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify/initialize`).then(response => response.data)
+    return await api.post(`/prodex/api/payments/bank-accounts/dwolla/${id}/verify/initialize`)
+      .then(response => response.data)
   },
   dwollaFinalizeVerification: async (id, value1, value2) => {
-    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify?value1=${value1}&value2=${value2}`)
+    return await api.post(`/prodex/api/payments/bank-accounts/dwolla/${id}/verify?value1=${value1}&value2=${value2}`)
   },
   dwollaSetPreferred: async id => {
     return await api.patch(`/prodex/api/payments/bank-accounts/${id}/preferred`)
@@ -210,7 +216,7 @@ export default {
   getSettings: role => api.get(`/prodex/api/settings/${role}`).then(response => response.data),
   updateSettings: (role, payload) => api.patch(`/prodex/api/settings/${role}`, payload).then(response => response.data),
   getBusinessClassifications: () => api.get('/prodex/api/business-classifications').then(response => response.data),
-  getVerificationDocumentTypes: () =>
+  dwollaGetVerificationDocumentTypes: () =>
     api.get('/prodex/api/payments/dwolla/documents/types').then(response => response.data),
   getLanguages: () => api.get('/prodex/api/cms/languages/').then(response => response.data),
   setPreferredLanguage: language =>

@@ -248,7 +248,7 @@ class BankAccountsTable extends Component {
   }
 
   componentDidMount() {
-    this.props.getBankAccountsDataRequest()
+    this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
     this.props.getCurrentUser()
     this.props.getIdentity().then(resp => {
       getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
@@ -260,7 +260,7 @@ class BankAccountsTable extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.tabClicked !== prevProps.tabClicked) {
-      this.props.getBankAccountsDataRequest()
+      this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
       this.props.getCurrentUser()
       this.props.getIdentity().then(resp => {
         getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
@@ -282,7 +282,7 @@ class BankAccountsTable extends Component {
       documentRequired,
       dwollaSetPreferred,
       preferredBankAccountId,
-      method
+      paymentProcessor
     } = this.props
 
     const { formatMessage } = intl
@@ -306,7 +306,7 @@ class BankAccountsTable extends Component {
               },
               { item: row.rawData.name }
             )
-          ).then(() => deleteBankAccount(row.id))
+          ).then(() => deleteBankAccount(row.id, paymentProcessor))
       },
       {
         text: formatMessage({
@@ -338,7 +338,15 @@ class BankAccountsTable extends Component {
   }
 
   render() {
-    const { rows, loading, filterValue, intl, bankAccounts, dwollaAccountStatus, dwollaDocumentRequired } = this.props
+    const {
+      rows,
+      loading,
+      filterValue,
+      intl,
+      bankAccounts,
+      method,
+      accountStatus
+    } = this.props
 
     let { columns } = this.state
 
@@ -518,6 +526,8 @@ const displayStatus = (r, preferredBankAccountId) => {
 
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
+  const paymentProcessor = company.paymentProcessor
+
   const preferredBankAccountId = get(state, 'settings.currentUser.company.preferredBankAccountId', '')
   let documentRequired = 'verify-with-document'
   let accountStatus = 'none'
@@ -545,6 +555,7 @@ const mapStateToProps = state => {
 
   return {
     method: isDwolla ? 'dwolla' : 'velloci',
+    paymentProcessor,
     hasDwollaAccount,
     bankAccounts: bankAccountsConfig[accountStatus],
     accountStatus,
@@ -553,10 +564,11 @@ const mapStateToProps = state => {
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
       rawData: r,
-      name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
+      name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {r.name || r.display_name}
+      </div>,
       statusLabel: displayStatus(r, preferredBankAccountId),
-      accountName: r.name // this is for search
-      // some changes here
+      accountName: r.name || r.display_name // this is for search
     })),
     preferredBankAccountId,
     filterValue: state.settings['bank-accountsFilter'],

@@ -211,18 +211,19 @@ class TablesHandlers extends Component {
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     const {
       documentTypes,
       getDocumentTypes,
       initGlobalBroadcast,
       getDwollaBeneficiaryOwners,
       tableHandlersFilters,
-      currentTab
+      currentTab,
+      isDwolla
     } = this.props
     try {
       //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts') {
+      if (currentTab.type === 'bank-accounts' && isDwolla) {
         await getDwollaBeneficiaryOwners()
       }
     } catch (err) {
@@ -275,11 +276,11 @@ class TablesHandlers extends Component {
     this.props.handleVariableSave('tableHandlersFiltersSettings', this.state)
   }
 
-  async componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate = async (prevProps, prevState, snapshot) => {
     if (prevProps.currentTab !== this.props.currentTab) {
-      const { currentTab } = this.props
+      const { currentTab, isDwolla } = this.props
       //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts') {
+      if (currentTab.type === 'bank-accounts' && isDwolla) {
         try {
           await this.props.getDwollaBeneficiaryOwners()
         } catch (error) {

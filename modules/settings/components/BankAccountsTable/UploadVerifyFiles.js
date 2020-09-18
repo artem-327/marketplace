@@ -51,7 +51,7 @@ class UploadVerifyFiles extends Component {
       unspecifiedTypes,
       toastManager,
       loadFile,
-      addVerificationDocument,
+      dwollaAddVerificationDocument,
       documentsOwner,
       addVerificationDocumentsOwner,
       getDwollaBeneficiaryOwners,
@@ -107,7 +107,7 @@ class UploadVerifyFiles extends Component {
       }
     }
     // upload new files as temporary attachments
-    if (loadFile && addVerificationDocument) {
+    if (loadFile && dwollaAddVerificationDocument) {
       ;(async function loop(j) {
         if (j < files.length)
           await new Promise((resolve, reject) => {
@@ -134,7 +134,7 @@ class UploadVerifyFiles extends Component {
                       resolve()
                     })
                 } else {
-                  addVerificationDocument(file.value, type)
+                  dwollaAddVerificationDocument(file.value, type)
                     .then(aId => {
                       onUploadSuccess({
                         name: file.value.name,

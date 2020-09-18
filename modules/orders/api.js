@@ -36,7 +36,8 @@ export default {
   payOrder: (orderId, bankAccount) =>
     api.post(`/prodex/api/payments/pay?purchaseOrderId=${orderId}&bankAccountId=${bankAccount}`), // nevraci body
   cancelPayment: orderId => api.patch(`/prodex/api/payments/dwolla/transfer/${orderId}/cancel`), // nevraci body
-  loadBankAccounts: () => api.get(`/prodex/api/payments/bank-accounts`),
+  loadDwollaBankAccounts: () => api.get(`/prodex/api/payments/bank-accounts/dwolla`),
+  loadVellociBankAccounts: () => api.get(`/prodex/api/payments/bank-accounts/velloci`),
   getRelatedOrders: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`),
   cancelOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`),
   approveOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/approve`),

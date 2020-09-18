@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { FormGroup, Segment } from 'semantic-ui-react'
 
-import { closeSidebar, putBankAccountRequest, postNewBankAccountRequest } from '../../actions'
+import { closeSidebar, putBankAccountRequest, postNewDwollaBankAccountRequest } from '../../actions'
 
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import Router from 'next/router'
@@ -88,10 +88,10 @@ const bankAccountType = [
 
 class BankAccountsSidebar extends React.Component {
   submitHandler = async (values, { setSubmitting }) => {
-    const { postNewBankAccountRequest } = this.props
+    const { postNewDwollaBankAccountRequest } = this.props
 
     try {
-      await postNewBankAccountRequest(values)
+      await postNewDwollaBankAccountRequest(values)
     } catch {
     } finally {
       setSubmitting(false)
@@ -223,7 +223,7 @@ class BankAccountsSidebar extends React.Component {
 }
 
 const mapDispatchToProps = {
-  postNewBankAccountRequest,
+  postNewDwollaBankAccountRequest,
   putBankAccountRequest,
   closeSidebar
 }
