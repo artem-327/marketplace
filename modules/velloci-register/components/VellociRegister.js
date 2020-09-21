@@ -144,7 +144,14 @@ class VellociRegister extends Component {
       const body = this.getBody(values)
       const files = getSafe(() => values.companyFormationDocument.attachments, '')
       const documentType = getSafe(() => values.companyFormationDocument.documentType, '')
-      await postRegisterVelloci(body, files, documentType)
+      let companyId = null
+      if (typeof window !== 'undefined') {
+        const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
+        if (searchParams.has('companyId')) {
+          companyId = { companyId: Number(searchParams.get('companyId')) }
+        }
+      }
+      await postRegisterVelloci(body, files, documentType, companyId)
     } catch (error) {
       console.error(error)
     }

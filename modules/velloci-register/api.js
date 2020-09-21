@@ -1,13 +1,16 @@
 import api from '~/api'
 
+import { getSafe, generateQueryString } from '~/utils/functions'
+
 export default {
-  postRegisterVelloci: (body, files, documentType) => {
+  postRegisterVelloci: (body, files, documentType, companyId) => {
     //TODO append files
     const formData = new FormData()
     for (let i in files) {
       formData.append('files', files[i])
     }
-    api.post(`/prodex/api/payments/velloci/register`, body)
+    let queryParams = generateQueryString(companyId)
+    api.post(`/prodex/api/payments/velloci/register${queryParams}`, body)
   },
   getEntityTypes: () => api.get('/prodex/api/payments/velloci/enums/entity-types').then(response => response.data),
   getNaicsCodes: () => api.get('/prodex/api/payments/velloci/enums/naics-codes').then(response => response.data),
