@@ -21,7 +21,14 @@ import FormationDocument from './steps/FormationDocument'
 import OwnerInformation from './steps/OwnerInformation'
 import PersonalInformation from './steps/PersonalInformation'
 import TermsAndConditions from './steps/TermsAndConditions'
-import { titleIds, subtitleIds, titleForms, initialValues, verifyPersonalInformation } from '../constants'
+import {
+  titleIds,
+  subtitleIds,
+  titleForms,
+  initialValues,
+  initialValuesTest,
+  verifyPersonalInformation
+} from '../constants'
 import ErrorFocus from '~/components/error-focus'
 import { PHONE_REGEXP } from '~/src/utils/constants'
 import { getStringISODate } from '~/components/date-format'
@@ -71,12 +78,7 @@ class VellociRegister extends Component {
   }
 
   getBody = values => {
-    const {
-      controlPerson,
-      businessInfo,
-      ownerInformation,
-      verifyPersonalInformation
-    } = values
+    const { controlPerson, businessInfo, ownerInformation, verifyPersonalInformation } = values
 
     let beneficialOwners =
       getSafe(() => ownerInformation.isBeneficialOwner, false) ||
@@ -92,7 +94,7 @@ class VellociRegister extends Component {
               firstName: getSafe(() => val.firstName, ''),
               lastName: getSafe(() => val.lastName, ''),
               ownershipPercentage: parseInt(getSafe(() => val.businessOwnershipPercentage, '')),
-              phone: getSafe(() => val.phoneNumber, ''),
+              phone: getSafe(() => val.phoneNumber.substring(1), ''),
               provinceId: getSafe(() => val.address.province, ''),
               zipCode: getSafe(() => val.address.zip, ''),
               ssn: getSafe(() => val.socialSecurityNumber, ''),
@@ -111,7 +113,7 @@ class VellociRegister extends Component {
       provinceId: getSafe(() => businessInfo.address.province, ''),
       legalZipCode: getSafe(() => businessInfo.address.zip, ''),
       naicsCode: getSafe(() => controlPerson.naicsCode, ''),
-      phone: getSafe(() => businessInfo.phoneNumber, ''),
+      phone: getSafe(() => businessInfo.phoneNumber.substring(1), ''),
       tinNumber: getSafe(() => controlPerson.tinNumber, ''),
       controller: {
         address: getSafe(() => verifyPersonalInformation[0].address.streetAddress, ''),
@@ -283,11 +285,13 @@ class VellociRegister extends Component {
         return <OwnerInformation formikProps={formikProps} />
       }
       case 4: {
-        return <PersonalInformation
-          formikProps={formikProps}
-          businessRoles={businessRoles}
-          numberBeneficialOwners={numberBeneficialOwners}
-        />
+        return (
+          <PersonalInformation
+            formikProps={formikProps}
+            businessRoles={businessRoles}
+            numberBeneficialOwners={numberBeneficialOwners}
+          />
+        )
       }
       case 5: {
         return <TermsAndConditions formikProps={formikProps} />
@@ -308,7 +312,7 @@ class VellociRegister extends Component {
               onSubmit={this.handleSubmit}
               enableReinitialize
               validateOnChange={true}
-              initialValues={initialValues}
+              initialValues={initialValuesTest} //FIXME initialValues
               validationSchema={this.getValidationSchema()}
               render={formikProps => {
                 return (
