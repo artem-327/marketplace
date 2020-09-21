@@ -4,7 +4,7 @@ import * as Actions from '../../actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
 
-import { Modal, FormGroup, FormField } from 'semantic-ui-react'
+import { Modal, FormGroup, FormField, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 
 import * as Yup from 'yup'
@@ -20,7 +20,8 @@ const initialValuesAdd = {
   identifierType: '',
   identifierValue: '',
   note: '',
-  reinvoice: false
+  reinvoice: false,
+  email: ''
 }
 
 class AddEditLogisticProvider extends React.Component {
@@ -33,6 +34,7 @@ class AddEditLogisticProvider extends React.Component {
     return popupValues
       ? {
         note: popupValues.note || '',
+        email: popupValues.email || '',
         reinvoice: popupValues.reinvoice,
         providerIdentifierName: `${popupValues.name} (${popupValues.identifierValue})`
       } : initialValuesAdd
@@ -40,10 +42,13 @@ class AddEditLogisticProvider extends React.Component {
 
   getValidationSchema = popupValues => {
     if (popupValues) {
-      return Yup.object().shape({})
+      return Yup.object().shape({
+        email: Yup.string().trim().email(errorMessages.invalidEmail)
+      })
     } else {
       return Yup.object().shape({
-        providerIdentifier: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage)
+        providerIdentifier: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+        email: Yup.string().trim().email(errorMessages.invalidEmail)
       })
     }
   }
@@ -83,8 +88,8 @@ class AddEditLogisticProvider extends React.Component {
                 if (popupValues) {
                   const payload = {
                     note: values.note,
+                    email: values.email,
                     reinvoice: values.reinvoice
-
                   }
                   removeEmpty(payload)
                   const { value } = await updateLogisticsProvider(popupValues.id, payload)
@@ -95,6 +100,7 @@ class AddEditLogisticProvider extends React.Component {
                     identifierType: parsed.type,
                     identifierValue: parsed.value,
                     note: values.note,
+                    email: values.email,
                     reinvoice: values.reinvoice
 
                   }
@@ -111,75 +117,96 @@ class AddEditLogisticProvider extends React.Component {
             render={props => {
               this.submitForm = props.submitForm
               return (
-                <>
-                  <FormGroup widths='equal' data-test='admin_logistics__inp'>
-                    {popupValues
-                      ? (
-                        <Input
-                          name='providerIdentifierName'
-                          label={formatMessage({
-                            id: 'logistics.label.logisticsProvider',
-                            defaultMessage: 'Logistics Provider'
-                          })}
-                          inputProps={{
-                            readOnly: true
-                          }}
-                        />
-                      )
-                      : (
-                        <Dropdown
-                          name='providerIdentifier'
-                          options={logisticsProviders.map((provider, index) => ({
-                            key: provider.identifier.value,
-                            text: `${provider.name} (${provider.identifier.value})`,
-                            value: JSON.stringify(provider.identifier)
-                          }))}
-                          label={
-                            <>
-                              {formatMessage({
-                                id: 'logistics.label.logisticsProvider',
-                                defaultMessage: 'Logistics Provider'
-                              })}
-                              <Required/>
-                            </>}
-                          inputProps={{
-                            search: true,
-                            'data-test': 'admin_logistics_provider_drpdn',
-                            placeholder: formatMessage({
-                              id: 'logistics.placeholder.logisticsProvider',
-                              label: 'Select Logistics Provider'
-                            }),
-                            loading: logisticsProvidersFetching
-                          }}
-                        />
-                      )
-                    }
-                    <FormField style={{ marginTop: '32px', marginLeft: '30px' }}>
-                      <Checkbox
-                        style={{ marginTop: '20px' }}
-                        label={formatMessage({
-                          id: 'admin.admin',
-                          defaultMessage: 'Re-Invoice'
-                        })}
-                        name='reinvoice'
-                        inputProps={{ 'data-test': 'admin_logistics_provider_reinvoice_chckb' }}
-                      />
-                  </FormField>
-                  </FormGroup>
+                <Grid>
+                  <GridRow>
+                    <GridColumn width={7}>
+                      {popupValues
+                        ? (
+                          <Input
+                            name='providerIdentifierName'
+                            label={formatMessage({
+                              id: 'logistics.label.logisticsProvider',
+                              defaultMessage: 'Logistics Provider'
+                            })}
+                            inputProps={{
+                              readOnly: true
+                            }}
+                          />
+                        )
+                        : (
+                          <Dropdown
+                            name='providerIdentifier'
+                            options={logisticsProviders.map((provider, index) => ({
+                              key: provider.identifier.value,
+                              text: `${provider.name} (${provider.identifier.value})`,
+                              value: JSON.stringify(provider.identifier)
+                            }))}
+                            label={
+                              <>
+                                {formatMessage({
+                                  id: 'logistics.label.logisticsProvider',
+                                  defaultMessage: 'Logistics Provider'
+                                })}
+                                <Required/>
+                              </>}
+                            inputProps={{
+                              search: true,
+                              'data-test': 'admin_logistics_provider_drpdn',
+                              placeholder: formatMessage({
+                                id: 'logistics.placeholder.logisticsProvider',
+                                label: 'Select Logistics Provider'
+                              }),
+                              loading: logisticsProvidersFetching
+                            }}
+                          />
+                        )
+                      }
+                    </GridColumn>
 
-                  <FormGroup widths='equal' data-test='admin_logistics__inp'>
-                    <TextArea
-                      name='note'
-                      label={formatMessage({ id: 'global.notes', defaultMessage: 'Notes' })}
-                      inputProps={{
-                        placeholder: formatMessage({
-                          id: 'global.placeholder.notes',
-                          defaultMessage: 'Write notes here'
-                        })
-                      }}
-                    />
-                  </FormGroup>
-                </>
+                    <GridColumn width={6}>
+                      <Input
+                        type='text'
+                        label={formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
+                        name='email'
+                        inputProps={{
+                          placeholder: formatMessage({
+                            id: 'global.enterEmailAddress',
+                            defaultMessage: 'Enter Email Address'
+                          })
+                        }}
+                      />
+                    </GridColumn>
+
+                    <GridColumn width={3}>
+                      <FormField style={{ marginTop: '32px', marginLeft: '30px' }}>
+                        <Checkbox
+                          style={{ marginTop: '20px' }}
+                          label={formatMessage({
+                            id: 'admin.admin',
+                            defaultMessage: 'Re-Invoice'
+                          })}
+                          name='reinvoice'
+                          inputProps={{ 'data-test': 'admin_logistics_provider_reinvoice_chckb' }}
+                        />
+                      </FormField>
+                    </GridColumn>
+                  </GridRow>
+
+                  <GridRow data-test='admin_logistics__inp'>
+                    <GridColumn>
+                      <TextArea
+                        name='note'
+                        label={formatMessage({ id: 'global.notes', defaultMessage: 'Notes' })}
+                        inputProps={{
+                          placeholder: formatMessage({
+                            id: 'global.placeholder.notes',
+                            defaultMessage: 'Write notes here'
+                          })
+                        }}
+                      />
+                    </GridColumn>
+                  </GridRow>
+                </Grid>
               )
             }}
           />

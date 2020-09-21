@@ -52,6 +52,15 @@ class LogisticsTable extends Component {
             </FormattedMessage>
           ),
           width: 120
+        },
+        {
+          name: 'email',
+          title: (
+            <FormattedMessage id='global.email' defaultMessage='Email'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200
         }
       ]
     }
