@@ -456,7 +456,8 @@ class BidsReceived extends Component {
         }),
         callback: row => {
           sidebarDetailTrigger(row, 'bids-received')
-        }
+        },
+        hidden: row => !row.treeRoot
       },
       {
         text: formatMessage({
@@ -482,7 +483,45 @@ class BidsReceived extends Component {
               console.error(e)
             }
           })
-        }
+        },
+        hidden: row => !row.treeRoot
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.reject',
+          defaultMessage: 'Reject'
+        }),
+        disabled: row => editedId === row.id,
+        callback: row => {
+          confirm(
+            formatMessage({
+              id: 'confirm.rejectReceivedBid.Header',
+              defaultMessage: 'Reject Received Bid'
+            }),
+            formatMessage({
+              id: 'confirm.rejectReceivedBid.Content',
+              defaultMessage: 'Do you really want to reject received bid?'
+            })
+          ).then(async () => {
+            try {
+              await this.props.rejectRequestedItem(row.id.split('_')[1])
+              datagrid.loadData()
+            } catch (e) {}
+          })
+        },
+        hidden: row => row.treeRoot
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.purchase',
+          defaultMessage: 'Purchase'
+        }),
+        disabled: row => editedId === row.id,
+        callback: async row => {
+          await this.props.purchaseRequestedItem(row.id.split('_')[1])
+          datagrid.loadData()
+        },
+        hidden: row => row.treeRoot
       }
     ]
   }
@@ -658,43 +697,6 @@ class BidsReceived extends Component {
             expandedRowIds={this.state.expandedRowIds}
             onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
             columnActions={type === 'product' ? 'product' : 'casNumber'}
-            rowChildActions={[
-              {
-                text: formatMessage({
-                  id: 'wantedBoard.reject',
-                  defaultMessage: 'Reject'
-                }),
-                disabled: row => editedId === row.id,
-                callback: row => {
-                  confirm(
-                    formatMessage({
-                      id: 'confirm.rejectReceivedBid.Header',
-                      defaultMessage: 'Reject Received Bid'
-                    }),
-                    formatMessage({
-                      id: 'confirm.rejectReceivedBid.Content',
-                      defaultMessage: 'Do you really want to reject received bid?'
-                    })
-                  ).then(async () => {
-                    try {
-                      await this.props.rejectRequestedItem(row.id.split('_')[1])
-                      datagrid.loadData()
-                    } catch (e) {}
-                  })
-                }
-              },
-              {
-                text: formatMessage({
-                  id: 'wantedBoard.purchase',
-                  defaultMessage: 'Purchase'
-                }),
-                disabled: row => editedId === row.id,
-                callback: async row => {
-                  await this.props.purchaseRequestedItem(row.id.split('_')[1])
-                  datagrid.loadData()
-                }
-              }
-            ]}
           />
         </div>
       </>
