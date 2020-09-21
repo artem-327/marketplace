@@ -188,7 +188,11 @@ export default function reducer(state = initialState, action) {
     case AT.PAYMENTS_FETCH_FULFILLED: {
       return {
         ...state,
-        payments: action.payload,
+        payments: action.payload.map(acc => ({
+          id: acc.id || acc.account_public_id,
+          name: acc.name || acc.display_name,
+          status: acc.status
+        })),
         isFetching: false
       }
     }

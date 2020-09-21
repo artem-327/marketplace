@@ -13,6 +13,26 @@ export const initialState = {
   naicsCodes: {
     data: [],
     loading: false
+  },
+  businessRoles: {
+    data: [],
+    loading: false
+  },
+  entityDocuments: {
+    data: [],
+    loading: false
+  },
+  politicallyExposedPersons: {
+    data: [],
+    loading: false
+  },
+  tinTypes: {
+    data: [],
+    loading: false
+  },
+  businessDetails: {
+    data: [],
+    loading: false
   }
 }
 
@@ -108,6 +128,111 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         naicsCodes: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_ROLES_PENDING: {
+      return {
+        ...state,
+        businessRoles: { loading: true }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_ROLES_REJECTED: {
+      return {
+        ...state,
+        businessRoles: { loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_ROLES_FULFILLED: {
+      return {
+        ...state,
+        businessRoles: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_ENTITY_DOCUMENTS_PENDING: {
+      return {
+        ...state,
+        entityDocuments: { loading: true }
+      }
+    }
+
+    case AT.GET_VELLOCI_ENTITY_DOCUMENTS_REJECTED: {
+      return {
+        ...state,
+        entityDocuments: { loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_ENTITY_DOCUMENTS_FULFILLED: {
+      return {
+        ...state,
+        entityDocuments: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_POLITICALLY_EXPOSED_PERSONS_PENDING: {
+      return {
+        ...state,
+        politicallyExposedPersons: { loading: true }
+      }
+    }
+
+    case AT.GET_VELLOCI_POLITICALLY_EXPOSED_PERSONS_REJECTED: {
+      return {
+        ...state,
+        politicallyExposedPersons: { loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_POLITICALLY_EXPOSED_PERSONS_FULFILLED: {
+      return {
+        ...state,
+        politicallyExposedPersons: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_TIN_TYPES_PENDING: {
+      return {
+        ...state,
+        tinTypes: { loading: true }
+      }
+    }
+
+    case AT.GET_VELLOCI_TIN_TYPES_REJECTED: {
+      return {
+        ...state,
+        tinTypes: { loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_TIN_TYPES_FULFILLED: {
+      return {
+        ...state,
+        tinTypes: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_DETAILS_PENDING: {
+      return {
+        ...state,
+        businessDetails: { loading: true }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_DETAILS_REJECTED: {
+      return {
+        ...state,
+        businessDetails: { loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_DETAILS_FULFILLED: {
+      return {
+        ...state,
+        businessDetails: { data: payload, loading: false }
       }
     }
 

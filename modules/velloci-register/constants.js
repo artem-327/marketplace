@@ -37,7 +37,7 @@ export const verifyPersonalInformation = {
   address: {
     streetAddress: '',
     city: '',
-    country: '',
+    country: '{"countryId":1,"hasProvinces":true}',
     zip: '',
     province: ''
   },
@@ -58,7 +58,7 @@ export const initialValues = {
     ssn: '',
     isEstablishedUs: true,
     tinNumber: '',
-    naicsCodes: ''
+    naicsCode: ''
   },
   businessInfo: {
     phoneNumber: '',
@@ -67,14 +67,15 @@ export const initialValues = {
     address: {
       streetAddress: '',
       city: '',
-      country: '',
+      country: '{"countryId":1,"hasProvinces":true}',
       zip: '',
       province: ''
     },
     dba: ''
   },
   companyFormationDocument: {
-    attachments: []
+    attachments: [],
+    documentType: ''
   },
   ownerInformation: {
     isBeneficialOwner: false,
