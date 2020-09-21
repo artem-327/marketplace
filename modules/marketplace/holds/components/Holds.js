@@ -42,85 +42,13 @@ const CustomRowDiv = styled.div`
 `
 
 class Holds extends Component {
-  constructor(props) {
-    super(props)
-    const me = this
-    this.state = {
-      selectedRows: [],
-      //pageNumber: 0,
-      open: false,
-      filterValue: {
-        searchInput: '',
-        holdDropdown: 'My Holds'
-      },
-      columns: [
-        { name: 'id', title: '', disabled: true },
-        {
-          name: 'intProductName',
-          title: (
-            <FormattedMessage id='holds.intProductName' defaultMessage='Product Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160,
-          sortPath: 'InventoryHold.productOffer.companyProduct.intProductName',
-          actions: this.getActions(me)
-        },
-        {
-          name: 'pkgsHeld',
-          title: (
-            <FormattedMessage id='holds.pkgsHeld' defaultMessage='Quantity'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 140,
-          align: 'right',
-          sortPath: 'InventoryHold.pkgsHeld'
-        },
-        {
-          name: 'expirationTime',
-          title: (
-            <FormattedMessage id='holds.expirationTime' defaultMessage='Expires'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160,
-          align: 'right',
-          sortPath: 'InventoryHold.expirationTime'
-        },
-        {
-          name: 'holdPricePerUOM',
-          title: (
-            <FormattedMessage id='holds.holdPricePerUOM' defaultMessage='Price/LB'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160,
-          align: 'right',
-          sortPath: 'InventoryHold.holdPricePerUOM'
-        },
-        {
-          name: 'holdPriceSubtotal',
-          title: (
-            <FormattedMessage id='holds.holdPriceSubtotal' defaultMessage='Subtotal'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160,
-          align: 'right',
-          sortPath: 'InventoryHold.holdPriceSubtotal'
-        },
-        {
-          name: 'status',
-          title: (
-            <FormattedMessage id='holds.status' defaultMessage='Status'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120,
-          sortPath: 'InventoryHold.status'
-        }
-      ]
+  state = {
+    selectedRows: [],
+    //pageNumber: 0,
+    open: false,
+    filterValue: {
+      searchInput: '',
+      holdDropdown: 'My Holds'
     }
   }
 
@@ -272,6 +200,77 @@ class Holds extends Component {
     return rowActions
   }
 
+  getColumns = () => {
+    return [
+      { name: 'id', title: '', disabled: true },
+      {
+        name: 'intProductName',
+        title: (
+          <FormattedMessage id='holds.intProductName' defaultMessage='Product Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160,
+        sortPath: 'InventoryHold.productOffer.companyProduct.intProductName',
+        actions: this.getActions()
+      },
+      {
+        name: 'pkgsHeld',
+        title: (
+          <FormattedMessage id='holds.pkgsHeld' defaultMessage='Quantity'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 140,
+        align: 'right',
+        sortPath: 'InventoryHold.pkgsHeld'
+      },
+      {
+        name: 'expirationTime',
+        title: (
+          <FormattedMessage id='holds.expirationTime' defaultMessage='Expires'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160,
+        align: 'right',
+        sortPath: 'InventoryHold.expirationTime'
+      },
+      {
+        name: 'holdPricePerUOM',
+        title: (
+          <FormattedMessage id='holds.holdPricePerUOM' defaultMessage='Price/LB'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160,
+        align: 'right',
+        sortPath: 'InventoryHold.holdPricePerUOM'
+      },
+      {
+        name: 'holdPriceSubtotal',
+        title: (
+          <FormattedMessage id='holds.holdPriceSubtotal' defaultMessage='Subtotal'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160,
+        align: 'right',
+        sortPath: 'InventoryHold.holdPriceSubtotal'
+      },
+      {
+        name: 'status',
+        title: (
+          <FormattedMessage id='holds.status' defaultMessage='Status'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+        sortPath: 'InventoryHold.status'
+      }
+    ]
+  }
+
   render() {
     const { rows, datagrid, intl, tutorialCompleted, toggleHolds } = this.props
     const { columns, filterValue } = this.state
@@ -343,7 +342,7 @@ class Holds extends Component {
             tableName='marketplace_hold_grid'
             {...datagrid.tableProps}
             rows={rows}
-            columns={columns}
+            columns={this.getColumns()}
             rowSelection
             showSelectionColumn
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
