@@ -53,10 +53,10 @@ function mapStateToProps(store, { datagrid }) {
             id: row.id + '_' + pro.id,
             clsName: 'tree-table nested-row',
             rawData: pro,
-            product: getSafe(() => pro.productOffer.companyProduct.productGroup.name, ''),
+            product: getSafe(() => pro.productOffer.companyProduct.productGroup.name, '...'),
             casNumber: getSafe(
               () => pro.productOffer.companyProduct.productGroup.elements[0].casProduct.casNumber,
-              'N/A'
+              '...'
             ),
             orderQuantity: '',
             orderFrequency: '',
