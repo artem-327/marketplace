@@ -198,6 +198,16 @@ export const bankAccountsConfig = {
     bankAccountList: false,
     uploadDocumentsButton: false,
     documentStatus: false
+  },
+  active: {
+    registerButton: false,
+    addButton: false,
+    balance: false,
+    searchField: true,
+    accountStatus: false,
+    bankAccountList: true,
+    uploadDocumentsButton: false,
+    documentStatus: false
   }
 }
 
@@ -282,7 +292,8 @@ class BankAccountsTable extends Component {
       documentRequired,
       dwollaSetPreferred,
       preferredBankAccountId,
-      paymentProcessor
+      paymentProcessor,
+      method
     } = this.props
 
     const { formatMessage } = intl
@@ -293,6 +304,7 @@ class BankAccountsTable extends Component {
           id: 'global.delete',
           defaultMessage: 'Delete'
         }),
+        hidden: () => method !== 'dwolla',
         callback: row =>
           confirm(
             formatMessage({
@@ -345,7 +357,8 @@ class BankAccountsTable extends Component {
       intl,
       bankAccounts,
       method,
-      accountStatus
+      accountStatus,
+      documentRequired
     } = this.props
 
     let { columns } = this.state
@@ -508,6 +521,11 @@ const statusToLabel = {
     <StatusLabel style={{ backgroundColor: '#ffb24f' }} horizontal>
       <FormattedMessage id='settings.verificationInProcess' defaultMessage='Verification in process' />
     </StatusLabel>
+  ),
+  active: (
+    <StatusLabel style={{ backgroundColor: '#84c225' }} horizontal>
+      <FormattedMessage id='settings.active' defaultMessage='Active' />
+    </StatusLabel>
   )
 }
 
@@ -564,11 +582,19 @@ const mapStateToProps = state => {
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
       rawData: r,
-      name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-        {r.name || r.display_name}
-      </div>,
-      statusLabel: displayStatus(r, preferredBankAccountId),
-      accountName: r.name || r.display_name // this is for search
+      ...(isDwolla ? {
+        name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
+        statusLabel: displayStatus(r, preferredBankAccountId),
+        accountName: r.name || r.display_name // this is for search
+      } : {
+        name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.display_name}</div>,
+        bankAccountType: r.account_type
+          ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
+          : '',
+        bankName: r.institution_name,
+        statusLabel: displayStatus(r, preferredBankAccountId),
+        accountName: r.name || r.display_name  // this is for search
+      })
     })),
     preferredBankAccountId,
     filterValue: state.settings['bank-accountsFilter'],

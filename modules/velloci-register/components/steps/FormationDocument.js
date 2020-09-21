@@ -4,6 +4,7 @@ import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info, UploadCloud } from 'react-feather'
+import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 //Components
 import {
   Rectangle,
@@ -32,7 +33,7 @@ export const CustomA = styled.a`
   color: #2599d5;
 `
 
-function FormationDocument({ formikProps, intl: { formatMessage }, error }) {
+function FormationDocument({ formikProps, intl: { formatMessage }, error, entityDocuments }) {
   return (
     <GridFormationDocument>
       <GridRow>
@@ -75,6 +76,45 @@ function FormationDocument({ formikProps, intl: { formatMessage }, error }) {
               />
             </CustomDivContent>
           </Rectangle>
+        </GridColumn>
+      </GridRow>
+
+      <GridRow>
+        <GridColumn>
+          <Dropdown
+            options={
+              entityDocuments && entityDocuments.data && entityDocuments.data.length
+                ? entityDocuments.data.map(el => ({
+                  key: el,
+                  value: el,
+                  text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
+                }))
+                : []
+            }
+            fieldProps={{
+              'data-test': 'settings_velloci_registration_formation_document_drpdwn'
+            }}
+            inputProps={{
+              placeholder: formatMessage({
+                id: 'velloci.formationDocument.documentTypePlaceholder',
+                defaultMessage: 'Pick one'
+              }),
+              search: true,
+              selection: true,
+              loading: entityDocuments && entityDocuments.loading
+            }}
+            name='companyFormationDocument.documentType'
+            label={
+              <>
+                {formatMessage({
+                  id: 'velloci.formationDocument.documentTypeLabel',
+                  defaultMessage: 'Select document type'
+                })}
+                {<Required />}
+              </>
+            }
+          />
+
         </GridColumn>
       </GridRow>
 
@@ -162,11 +202,13 @@ function FormationDocument({ formikProps, intl: { formatMessage }, error }) {
 
 FormationDocument.propTypes = {
   formikProps: PropTypes.object,
+  entityDocuments: PropTypes.object,
   error: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired
 }
 
 FormationDocument.defaultProps = {
-  formikProps: {}
+  formikProps: {},
+  entityDocuments: {}
 }
 
 export default injectIntl(FormationDocument)

@@ -125,6 +125,7 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
             displayHeader={false}
             setFieldValue={formikProps.setFieldValue}
             required={true}
+            additionalCountryInputProps={{ disabled: true }}
           />
         </GridColumn>
       </GridRow>

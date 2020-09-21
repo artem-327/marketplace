@@ -29,10 +29,29 @@ import { getSafe } from '~/utils/functions'
 
 class VellociRegister extends Component {
   componentDidMount = () => {
-    const { entityTypes, getEntityTypes, naicsCodes, getNaicsCodes } = this.props
+    const {
+      entityTypes,
+      getEntityTypes,
+      naicsCodes,
+      getNaicsCodes,
+      businessRoles,
+      getBusinessRoles,
+      entityDocuments,
+      getEntityDocuments,
+      politicallyExposedPersons,
+      getPoliticallyExposedPersons,
+      tinTypes,
+      getTinTypes,
+      businessDetails,
+      getBusinessDetails
+    } = this.props
     try {
-      getSafe(() => entityTypes.data.length, false) && getEntityTypes()
-      getSafe(() => naicsCodes.data.length, false) && getNaicsCodes()
+      !getSafe(() => entityTypes.data.length, false) && getEntityTypes()
+      !getSafe(() => naicsCodes.data.length, false) && getNaicsCodes()
+      !getSafe(() => businessRoles.data.length, false) && getBusinessRoles()
+      !getSafe(() => entityDocuments.data.length, false) && getEntityDocuments()
+      !getSafe(() => politicallyExposedPersons.data.length, false) && getPoliticallyExposedPersons()
+      //!getSafe(() => tinTypes.data.length, false) && getTinTypes()
     } catch (error) {
       console.error(error)
     }
@@ -55,7 +74,6 @@ class VellociRegister extends Component {
     const {
       controlPerson,
       businessInfo,
-      companyFormationDocument,
       ownerInformation,
       verifyPersonalInformation
     } = values
@@ -73,9 +91,9 @@ class VellociRegister extends Component {
               dateOfBirth: getSafe(() => getStringISODate(val.dateOfBirth), ''),
               firstName: getSafe(() => val.firstName, ''),
               lastName: getSafe(() => val.lastName, ''),
-              ownershipPercentage: getSafe(() => val.businessOwnershipPercentage, ''),
+              ownershipPercentage: parseInt(getSafe(() => val.businessOwnershipPercentage, '')),
               phone: getSafe(() => val.phoneNumber, ''),
-              provinceId: getSafe(() => val.address.country, ''),
+              provinceId: getSafe(() => val.address.province, ''),
               zipCode: getSafe(() => val.address.zip, ''),
               ssn: getSafe(() => val.socialSecurityNumber, ''),
               email: getSafe(() => val.email, '')
@@ -84,14 +102,13 @@ class VellociRegister extends Component {
           })
         : null
     let result = {
-      attachments: getSafe(() => companyFormationDocument.attachments, ''),
       dba: getSafe(() => businessInfo.dba, ''),
       email: getSafe(() => businessInfo.email, ''),
       entityType: getSafe(() => controlPerson.entityType, ''),
       legalAddress: getSafe(() => businessInfo.address.streetAddress, ''),
       legalCity: getSafe(() => businessInfo.address.city, ''),
       legalName: getSafe(() => businessInfo.address.streetAddress, ''),
-      provinceId: getSafe(() => businessInfo.address.country, ''),
+      provinceId: getSafe(() => businessInfo.address.province, ''),
       legalZipCode: getSafe(() => businessInfo.address.zip, ''),
       naicsCode: getSafe(() => controlPerson.naicsCode, ''),
       phone: getSafe(() => businessInfo.phoneNumber, ''),
@@ -106,7 +123,7 @@ class VellociRegister extends Component {
         lastName: getSafe(() => verifyPersonalInformation[0].lastName, ''),
         ownershipPercentage: getSafe(() => verifyPersonalInformation[0].businessOwnershipPercentage, ''),
         phone: getSafe(() => verifyPersonalInformation[0].phoneNumber, ''),
-        provinceId: getSafe(() => verifyPersonalInformation[0].address.country, ''),
+        provinceId: getSafe(() => verifyPersonalInformation[0].address.province, ''),
         zipCode: getSafe(() => verifyPersonalInformation[0].address.zip, ''),
         ssn: getSafe(() => verifyPersonalInformation[0].socialSecurityNumber, ''),
         email: getSafe(() => verifyPersonalInformation[0].email, '')
@@ -123,7 +140,9 @@ class VellociRegister extends Component {
 
     try {
       const body = this.getBody(values)
-      await postRegisterVelloci(body)
+      const files = getSafe(() => values.companyFormationDocument.attachments, '')
+      const documentType = getSafe(() => values.companyFormationDocument.documentType, '')
+      await postRegisterVelloci(body, files, documentType)
     } catch (error) {
       console.error(error)
     }
@@ -165,7 +184,7 @@ class VellociRegister extends Component {
               .required(requiredMessage),
             ...taxNumber,
             tinNumber: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage),
-            naicsCodes: Yup.number()
+            naicsCode: Yup.number()
               .typeError(errorMessages.requiredMessage)
               .required(errorMessages.requiredMessage)
               .positive(errorMessages.positive)
@@ -182,6 +201,7 @@ class VellociRegister extends Component {
         }),
         companyFormationDocument: Yup.lazy(() => {
           return Yup.object().shape({
+            documentType: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage),
             attachments: Yup.array().min(1, errorMessages.minOneAttachment)
           })
         }),
@@ -238,7 +258,15 @@ class VellociRegister extends Component {
     })
 
   getContent = formikProps => {
-    const { activeStep, entityTypes, numberBeneficialOwners, naicsCodes } = this.props
+    const {
+      activeStep,
+      entityTypes,
+      numberBeneficialOwners,
+      naicsCodes,
+      businessRoles,
+      entityDocuments,
+      politicallyExposedPersons
+    } = this.props
     let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
 
     switch (activeStep) {
@@ -249,13 +277,17 @@ class VellociRegister extends Component {
         return <BusinessInfo formikProps={formikProps} />
       }
       case 2: {
-        return <FormationDocument formikProps={formikProps} error={error} />
+        return <FormationDocument formikProps={formikProps} error={error} entityDocuments={entityDocuments} />
       }
       case 3: {
         return <OwnerInformation formikProps={formikProps} />
       }
       case 4: {
-        return <PersonalInformation formikProps={formikProps} numberBeneficialOwners={numberBeneficialOwners} />
+        return <PersonalInformation
+          formikProps={formikProps}
+          businessRoles={businessRoles}
+          numberBeneficialOwners={numberBeneficialOwners}
+        />
       }
       case 5: {
         return <TermsAndConditions formikProps={formikProps} />

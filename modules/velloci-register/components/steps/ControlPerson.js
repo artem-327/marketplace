@@ -59,30 +59,20 @@ const SpanEstablishedLabel = styled.span`
   color: #848893;
 `
 
-//FIXME remove if BE call is ready
-const optionsKindOfBusiness = [
-  { key: 'corporation', text: 'Corporation', value: 'corporation' },
-  { key: 'llc', text: 'LLC', value: 'llc' },
-  { key: 'lp', text: 'LP', value: 'lp' },
-  { key: 'non_profit', text: 'Non Profit', value: 'non_profit' },
-  { key: 'partnership', text: 'Partnership', value: 'partnership' },
-  { key: 'public_corporation', text: 'Public Corporation', value: 'public_corporation' },
-  { key: 'sole_proprietorship', text: 'Sole Proprietorship', value: 'sole_proprietorship' },
-  { key: 'trust', text: 'Trust', value: 'trust' },
-  { key: 'unincorporated_association', text: 'Unincorporated Association', value: 'unincorporated_association' }
-]
-
-//FIXME remove if BE call is ready
-
-const optionsNaicsCodes = [
-  { key: 111, text: 'Crop Production', value: 111 },
-  { key: 112, text: 'Animal Production', value: 112 },
-  { key: 113, text: 'Forestry and Logging', value: 113 },
-  { key: 114, text: 'Fishing, Hunting and Trapping', value: 114 },
-  { key: 115, text: 'Support Activities for Agriculture and Forestry', value: 115 }
-]
-
 function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naicsCodes }) {
+  let naicsOptions = []
+  if (naicsCodes && naicsCodes.data) {
+    Object.keys(naicsCodes.data).forEach(key => {
+      naicsCodes.data[key].forEach(obj => {
+        naicsOptions.push({
+          key: obj.code,
+          text: obj.subcategory,
+          value: obj.code
+        })
+      })
+    })
+  }
+
   return (
     <GridControlPerson>
       <GridRow>
@@ -137,15 +127,14 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
               <GridRowBusinessType>
                 <Grid.Column>
                   <Dropdown
-                    loading={entityTypes && entityTypes.loading}
                     options={
                       entityTypes && entityTypes.data && entityTypes.data.length
                         ? entityTypes.data.map(el => ({
-                            key: el.id,
-                            value: el.id,
-                            text: el.name
+                            key: el,
+                            value: el,
+                            text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
                           }))
-                        : optionsKindOfBusiness //FIXME replace to [] if BE call is ready
+                        : []
                     }
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_drpdwn'
@@ -156,7 +145,8 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
                         defaultMessage: 'Pick one'
                       }),
                       search: true,
-                      selection: true
+                      selection: true,
+                      loading: entityTypes && entityTypes.loading
                     }}
                     name='controlPerson.entityType'
                     label={
@@ -284,17 +274,7 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
               <GridRowBusinessType columns={2}>
                 <Grid.Column width={8}>
                   <Dropdown
-                    loading={naicsCodes && naicsCodes.loading}
-                    options={
-                      //FIXME
-                      naicsCodes && naicsCodes.data && naicsCodes.data.length
-                        ? naicsCodes.data.map(el => ({
-                            key: el.id,
-                            value: el.id,
-                            text: el.name
-                          }))
-                        : optionsNaicsCodes //FIXME replace to [] if BE call is ready
-                    }
+                    options={naicsOptions}
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
                     }}
@@ -304,9 +284,10 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
                         defaultMessage: 'Select industry type'
                       }),
                       search: true,
-                      selection: true
+                      selection: true,
+                      loading: naicsCodes && naicsCodes.loading
                     }}
-                    name='controlPerson.naicsCodes'
+                    name='controlPerson.naicsCode'
                     label={
                       <>
                         {formatMessage({
