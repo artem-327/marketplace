@@ -220,10 +220,10 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
               options={
                 businessRoles && businessRoles.data && businessRoles.data.length
                   ? businessRoles.data.map(el => ({
-                    key: el,
-                    value: el,
-                    text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
-                  }))
+                      key: el,
+                      value: el,
+                      text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
+                    }))
                   : []
               }
               fieldProps={{
@@ -289,8 +289,8 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
                   defaultMessage: 'xx'
                 }),
                 type: 'text',
-                pattern: 'd*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
-                maxLength: '2',
+                pattern: '\d*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
+                maxLength: '3',
                 'data-test': 'settings_velloci_registration_personal_info_business_ownership_percentage_inpt'
               }}
             />

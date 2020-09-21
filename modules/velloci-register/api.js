@@ -7,7 +7,7 @@ export default {
     for (let i in files) {
       formData.append('files', files[i])
     }
-    api.post(`/prodex/api/payments/velloci/register?file=${formData}`, body)
+    api.post(`/prodex/api/payments/velloci/register`, body)
   },
   getEntityTypes: () => api.get('/prodex/api/payments/velloci/enums/entity-types').then(response => response.data),
   getNaicsCodes: () => api.get('/prodex/api/payments/velloci/enums/naics-codes').then(response => response.data),
