@@ -431,7 +431,7 @@ class Dashboard extends Component {
     }
 
     const adminTabs = {
-      //clientCompaniesCount: [formatMessage({id: 'dashboard.guestCompaniesCount', defaultMessage: '# of Client Companies'}), false],
+      //clientCompaniesCount: [formatMessage({id: 'dashboard.guestCompaniesCount', defaultMessage: '# of Guest Companies'}), false],
       //companiesCount: [formatMessage({id: 'dashboard.companiesCount', defaultMessage: '# of Companies'}), false],
       companyGenericProductsCount: [formatMessage({id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products'}), false],
       //productOfferCount: [formatMessage({id: 'dashboard.productOffersCount', defaultMessage: '# of Product Offers'}), false],
