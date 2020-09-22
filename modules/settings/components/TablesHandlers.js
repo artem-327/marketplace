@@ -219,11 +219,11 @@ class TablesHandlers extends Component {
       getDwollaBeneficiaryOwners,
       tableHandlersFilters,
       currentTab,
-      isDwolla
+      paymentProcessor
     } = this.props
     try {
       //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts' && isDwolla) {
+      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA') {
         await getDwollaBeneficiaryOwners()
       }
     } catch (err) {
@@ -278,9 +278,9 @@ class TablesHandlers extends Component {
 
   componentDidUpdate = async (prevProps, prevState, snapshot) => {
     if (prevProps.currentTab !== this.props.currentTab) {
-      const { currentTab, isDwolla } = this.props
+      const { currentTab, paymentProcessor } = this.props
       //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts' && isDwolla) {
+      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA') {
         try {
           await this.props.getDwollaBeneficiaryOwners()
         } catch (error) {
@@ -351,13 +351,14 @@ class TablesHandlers extends Component {
       treeData,
       toastManager,
       openSidebar,
-      isDwolla,
       vellociAccBalance,
+      paymentProcessor,
       intl: { formatMessage }
     } = this.props
 
     const filterValue = this.state[currentTab.type]
     const bankAccTab = currentTab.type === 'bank-accounts'
+
     return (
       <>
         {currentTab.type !== 'global-broadcast' &&
@@ -470,17 +471,23 @@ class TablesHandlers extends Component {
               <CustomButton
                 fluid
                 onClick={() => {
-                  isDwolla ? Router.push('/dwolla-register') : Router.push('/velloci-register')
+                  paymentProcessor === 'DWOLLA' ? Router.push('/dwolla-register') : Router.push('/velloci-register')
                 }}
-                data-test={isDwolla ? 'settings_dwolla_open_popup_btn' : 'settings_open_register_velloci_btn'}>
+                data-test={
+                  paymentProcessor === 'DWOLLA'
+                    ? 'settings_dwolla_open_popup_btn'
+                    : 'settings_open_register_velloci_btn'
+                }>
                 <CustomIcon size='20' />
                 <FormattedMessage
                   id={
-                    isDwolla
+                    paymentProcessor === 'DWOLLA'
                       ? 'settings.tables.bankAccounts.registerDwolla'
                       : 'settings.tables.bankAccounts.registerVelloci'
                   }
-                  defaultMessage={isDwolla ? 'Register Dwolla Account' : 'Register Velloci Account'}>
+                  defaultMessage={
+                    paymentProcessor === 'DWOLLA' ? 'Register Dwolla Account' : 'Register Velloci Account'
+                  }>
                   {text => text}
                 </FormattedMessage>
               </CustomButton>
@@ -521,16 +528,18 @@ class TablesHandlers extends Component {
                 <CustomLabel>
                   <div>
                     <FormattedMessage
-                      id={isDwolla ? 'settings.dwollaAccBalance' : 'settings.vellociAccBalance'}
-                      defaultMessage={isDwolla ? 'Dwolla Ballance: ' : 'Velloci Balance: '}
+                      id={paymentProcessor === 'DWOLLA' ? 'settings.dwollaAccBalance' : 'settings.vellociAccBalance'}
+                      defaultMessage={paymentProcessor === 'DWOLLA' ? 'Dwolla Ballance: ' : 'Velloci Balance: '}
                     />
                     <b>
                       <FormattedNumber
                         minimumFractionDigits={2}
                         maximumFractionDigits={2}
                         style='currency'
-                        currency={isDwolla ? dwollaAccBalance.currency : vellociAccBalance.currency}
-                        value={isDwolla ? dwollaAccBalance.value : vellociAccBalance.value}
+                        currency={
+                          paymentProcessor === 'DWOLLA' ? dwollaAccBalance.currency : vellociAccBalance.currency
+                        }
+                        value={paymentProcessor === 'DWOLLA' ? dwollaAccBalance.value : vellociAccBalance.value}
                       />
                     </b>
                   </div>
@@ -553,7 +562,144 @@ class TablesHandlers extends Component {
               )}
               {(!bankAccTab || bankAccounts.addButton) && (
                 <div className='column'>
-                  <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
+                  <Button
+                    className={paymentProcessor === 'VELLOCI' && 'velloci-link-button'}
+                    primary
+                    onClick={() => {
+                      ;(async function ($) {
+                        /*************************************************************************
+
+  fetchLinkToken will call your backend to get the secure token 
+  necessary to allow a user to add their bank.
+
+  Velloci Endpoint: 
+      * POST: /api/accounts/token
+
+  Body: 
+
+    products: this should always be set to 'auth'
+    link_customization_name: this should always be set to 'echo'
+    account_types: this should always be set to 'all'
+    business_public_id: public ID of the business adding the bank account
+    account_public_id: null unless an existing account needs to be fixed.
+
+**************************************************************************/
+
+                        const fetchLinkToken = async () => {
+                          const options = {
+                            method: 'POST',
+                            body: JSON.stringify({
+                              products: 'auth',
+                              link_customization_name: 'echo',
+                              account_types: 'all',
+                              business_public_id: business_public_id,
+                              account_public_id: null
+                            })
+                          }
+
+                          // Send this data to your backend function that calls the Velloci /api/accounts/token endpoint
+                          const response = await fetch('/getToken', options)
+                          return (token = await response.json())
+                        }
+
+                        const configs = {
+                          // Token must be retrieved before being able to open the velloci link modal
+                          token: await fetchLinkToken(),
+
+                          onLoad: function () {
+                            console.log('LOADED.')
+                          },
+
+                          /*************************************************************************
+
+    onSuccess is called when a user successfully adds their bank, 
+    from here you will pass the metadata to Velloci
+
+    Velloci Endpoint: 
+        * POST: /api/accounts
+
+    Body:
+
+      metadata: passed back on success
+      business_public_id: public ID of the business adding accounts
+
+**************************************************************************/
+
+                          onSuccess: async function (public_token, metadata) {
+                            const options = {
+                              method: 'POST',
+                              body: JSON.stringify({
+                                metadata: metadata,
+                                business_public_id: business_public_id
+                              })
+                            }
+
+                            // Send this data to your backend function that calls the Velloci /api/accounts endpoint
+                            const response = await fetch('/addAccounts', options)
+                            res = await response.json()
+
+                            if (res.hasOwnProperty('error_type')) {
+                              console.log(res.description)
+                            } else {
+                              console.log('Your accounts have been added.')
+                            }
+                          },
+                          onExit: async function (err, metadata) {
+                            // The user exited the Velloci Link flow.
+                            if (err != null) {
+                              // The user encountered a API error prior to exiting.
+                              if (err.error_code === 'INVALID_LINK_TOKEN') {
+                                // The token expired or the user entered too many
+                                // invalid credentials. We want to destroy the old iframe
+                                // and reinitialize Velloci Link with a new link_token.
+                                handler.destroy()
+                                handler = Plaid.create({
+                                  ...configs,
+                                  token: await fetchLinkToken()
+                                })
+                              }
+                            }
+                          },
+                          onEvent: async function (event_name, metadata) {
+                            /*************************************************************************
+
+    onEvent tracks velloci link flow events.
+
+    Velloci Endpoint: 
+        * POST: /api/accounts/log
+
+    Body:
+
+      event_name: passed back on new event
+      metadata: passed back on new event
+      business_public_id: public ID of the business adding accounts
+
+**************************************************************************/
+
+                            const options = {
+                              method: 'POST',
+                              body: JSON.stringify({
+                                metadata: metadata,
+                                event_name: event_name,
+                                business_public_id: business_public_id
+                              })
+                            }
+
+                            // Send this data to your backend function that calls the Velloci /api/accounts/log endpoint
+                            const response = await fetch('/log', options)
+                            res = await response.json()
+                          }
+                        }
+
+                        let handler = Plaid.create(configs)
+
+                        // Add velloci-link-button class to the button you want to use to open the account linking modal
+                        $('.velloci-link-button').on('click', function (e) {
+                          handler.open()
+                        })
+                      })(jQuery)
+                    }}
+                    data-test='settings_open_popup_btn'>
                     <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
@@ -592,7 +738,10 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
   let accountStatus = 'none'
-  if (company.dwollaAccountStatus) {
+  console.log('company====================================')
+  console.log(company)
+  console.log('====================================')
+  if (company.dwollaAccountStatus && company.paymentProcessor === 'DWOLLA') {
     accountStatus = company.dwollaAccountStatus
     if (
       accountStatus === 'verified' &&
@@ -601,7 +750,7 @@ const mapStateToProps = state => {
     ) {
       accountStatus = 'documentOwner'
     }
-  } else if (company.vellociAccountStatus) {
+  } else if (company.vellociAccountStatus && company.paymentProcessor === 'VELLOCI') {
     accountStatus = company.vellociAccountStatus
   }
   const {
@@ -613,7 +762,7 @@ const mapStateToProps = state => {
   //const accountStatus = 'document'
 
   return {
-    isDwolla: getSafe(() => company.dwollaAccountStatus, false) ? true : false,
+    paymentProcessor: getSafe(() => company.paymentProcessor, 'DWOLLA'),
     logisticsFilter: state.settings.logisticsFilter,
     'bank-accountsFilter': state.settings['bank-accountsFilter'],
     documentTypes: state.settings.documentTypes,

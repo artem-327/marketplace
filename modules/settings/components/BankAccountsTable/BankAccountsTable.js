@@ -201,7 +201,7 @@ export const bankAccountsConfig = {
   },
   active: {
     registerButton: false,
-    addButton: false,
+    addButton: true,
     balance: false,
     searchField: true,
     accountStatus: false,
@@ -350,16 +350,7 @@ class BankAccountsTable extends Component {
   }
 
   render() {
-    const {
-      rows,
-      loading,
-      filterValue,
-      intl,
-      bankAccounts,
-      method,
-      accountStatus,
-      documentRequired
-    } = this.props
+    const { rows, loading, filterValue, intl, bankAccounts, method, accountStatus, documentRequired } = this.props
 
     let { columns } = this.state
 
@@ -582,19 +573,23 @@ const mapStateToProps = state => {
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
       rawData: r,
-      ...(isDwolla ? {
-        name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
-        statusLabel: displayStatus(r, preferredBankAccountId),
-        accountName: r.name || r.display_name // this is for search
-      } : {
-        name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.display_name}</div>,
-        bankAccountType: r.account_type
-          ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
-          : '',
-        bankName: r.institution_name,
-        statusLabel: displayStatus(r, preferredBankAccountId),
-        accountName: r.name || r.display_name  // this is for search
-      })
+      ...(isDwolla
+        ? {
+            name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
+            statusLabel: displayStatus(r, preferredBankAccountId),
+            accountName: r.name || r.display_name // this is for search
+          }
+        : {
+            name: (
+              <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.display_name}</div>
+            ),
+            bankAccountType: r.account_type
+              ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
+              : '',
+            bankName: r.institution_name,
+            statusLabel: displayStatus(r, preferredBankAccountId),
+            accountName: r.name || r.display_name // this is for search
+          })
     })),
     preferredBankAccountId,
     filterValue: state.settings['bank-accountsFilter'],
