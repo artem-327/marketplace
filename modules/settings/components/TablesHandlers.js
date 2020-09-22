@@ -17,6 +17,8 @@ import { currency } from '~/constants/index'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
+import { PlaidLink } from 'react-plaid-link'
+import api from '~/api'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -137,6 +139,22 @@ const CustomUploadCloud = styled(UploadCloud)`
   margin-right: 10px;
 `
 
+const PlaidButton = styled(PlaidLink)`
+  cursor: pointer !important;
+  margin-right: 4px;
+  width: 200px !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: #ffffff !important;
+  background-color: #2599d5 !important;
+  height: 40px !important;
+  border-radius: 3px !important;
+  font-weight: 500 !important;
+  align-items: center !important;
+  display: flex !important;
+  justify-content: center !important;
+`
+
 const textsTable = {
   users: {
     BtnAddText: 'settings.tables.users.buttonAdd',
@@ -221,6 +239,7 @@ class TablesHandlers extends Component {
       currentTab,
       paymentProcessor
     } = this.props
+
     try {
       //check dwolla if exist some document which has to be verified
       if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA') {
@@ -335,6 +354,63 @@ class TablesHandlers extends Component {
     } catch (e) {
       console.error(e)
     }
+  }
+
+  onExit = async (err, metadata) => {
+    console.log('onExit', err, metadata)
+  }
+
+  onSuccess = async (public_token, metadata) => {
+    console.log('onSuccess', public_token, metadata)
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        metadata: metadata,
+        business_public_id: '' //FIXME
+      })
+    }
+
+    const response = await api.post('/prodex/api/payments/velloci/accounts', options)
+    const res = await response.json()
+
+    if (res.hasOwnProperty('error_type')) {
+      console.log(res)
+    } else {
+      console.log('Your accounts have been added.')
+    }
+  }
+
+  token = async () => {
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        products: 'auth',
+        link_customization_name: 'echo',
+        account_types: 'all',
+        business_public_id: '', //FIXME
+        account_public_id: null
+      })
+    }
+
+    const response = await api.post('/prodex/api/payments/velloci/token', options)
+    return await response.json()
+  }
+
+  onEvent = async (event_name, metadata) => {
+    console.log('onEvent', event_name, metadata)
+
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        metadata: metadata,
+        event_name: event_name,
+        business_public_id: '' //FIXME
+      })
+    }
+
+    const response = await api.post('/prodex/api/payments/velloci/log', options)
+    const res = await response.json()
+    console.log('res', res)
   }
 
   renderHandler = () => {
@@ -562,147 +638,24 @@ class TablesHandlers extends Component {
               )}
               {(!bankAccTab || bankAccounts.addButton) && (
                 <div className='column'>
-                  <Button
-                    className={paymentProcessor === 'VELLOCI' && 'velloci-link-button'}
-                    primary
-                    onClick={() => {
-                      ;(async function ($) {
-                        /*************************************************************************
-
-  fetchLinkToken will call your backend to get the secure token 
-  necessary to allow a user to add their bank.
-
-  Velloci Endpoint: 
-      * POST: /api/accounts/token
-
-  Body: 
-
-    products: this should always be set to 'auth'
-    link_customization_name: this should always be set to 'echo'
-    account_types: this should always be set to 'all'
-    business_public_id: public ID of the business adding the bank account
-    account_public_id: null unless an existing account needs to be fixed.
-
-**************************************************************************/
-
-                        const fetchLinkToken = async () => {
-                          const options = {
-                            method: 'POST',
-                            body: JSON.stringify({
-                              products: 'auth',
-                              link_customization_name: 'echo',
-                              account_types: 'all',
-                              business_public_id: business_public_id,
-                              account_public_id: null
-                            })
-                          }
-
-                          // Send this data to your backend function that calls the Velloci /api/accounts/token endpoint
-                          const response = await fetch('/getToken', options)
-                          return (token = await response.json())
-                        }
-
-                        const configs = {
-                          // Token must be retrieved before being able to open the velloci link modal
-                          token: await fetchLinkToken(),
-
-                          onLoad: function () {
-                            console.log('LOADED.')
-                          },
-
-                          /*************************************************************************
-
-    onSuccess is called when a user successfully adds their bank, 
-    from here you will pass the metadata to Velloci
-
-    Velloci Endpoint: 
-        * POST: /api/accounts
-
-    Body:
-
-      metadata: passed back on success
-      business_public_id: public ID of the business adding accounts
-
-**************************************************************************/
-
-                          onSuccess: async function (public_token, metadata) {
-                            const options = {
-                              method: 'POST',
-                              body: JSON.stringify({
-                                metadata: metadata,
-                                business_public_id: business_public_id
-                              })
-                            }
-
-                            // Send this data to your backend function that calls the Velloci /api/accounts endpoint
-                            const response = await fetch('/addAccounts', options)
-                            res = await response.json()
-
-                            if (res.hasOwnProperty('error_type')) {
-                              console.log(res.description)
-                            } else {
-                              console.log('Your accounts have been added.')
-                            }
-                          },
-                          onExit: async function (err, metadata) {
-                            // The user exited the Velloci Link flow.
-                            if (err != null) {
-                              // The user encountered a API error prior to exiting.
-                              if (err.error_code === 'INVALID_LINK_TOKEN') {
-                                // The token expired or the user entered too many
-                                // invalid credentials. We want to destroy the old iframe
-                                // and reinitialize Velloci Link with a new link_token.
-                                handler.destroy()
-                                handler = Plaid.create({
-                                  ...configs,
-                                  token: await fetchLinkToken()
-                                })
-                              }
-                            }
-                          },
-                          onEvent: async function (event_name, metadata) {
-                            /*************************************************************************
-
-    onEvent tracks velloci link flow events.
-
-    Velloci Endpoint: 
-        * POST: /api/accounts/log
-
-    Body:
-
-      event_name: passed back on new event
-      metadata: passed back on new event
-      business_public_id: public ID of the business adding accounts
-
-**************************************************************************/
-
-                            const options = {
-                              method: 'POST',
-                              body: JSON.stringify({
-                                metadata: metadata,
-                                event_name: event_name,
-                                business_public_id: business_public_id
-                              })
-                            }
-
-                            // Send this data to your backend function that calls the Velloci /api/accounts/log endpoint
-                            const response = await fetch('/log', options)
-                            res = await response.json()
-                          }
-                        }
-
-                        let handler = Plaid.create(configs)
-
-                        // Add velloci-link-button class to the button you want to use to open the account linking modal
-                        $('.velloci-link-button').on('click', function (e) {
-                          handler.open()
-                        })
-                      })(jQuery)
-                    }}
-                    data-test='settings_open_popup_btn'>
-                    <PlusCircle />
-                    <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
-                  </Button>
+                  {paymentProcessor === 'VELLOCI' ? (
+                    <PlaidButton
+                      token={this.token}
+                      publicKey={''} //FIXME
+                      onExit={this.onExit}
+                      onSuccess={this.onSuccess}
+                      onEvent={this.onEvent}>
+                      <PlusCircle />
+                      <div style={{ marginLeft: '10px' }}>
+                        <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                      </div>
+                    </PlaidButton>
+                  ) : (
+                    <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
+                      <PlusCircle />
+                      <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                    </Button>
+                  )}
                 </div>
               )}
             </>
@@ -738,9 +691,6 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
   let accountStatus = 'none'
-  console.log('company====================================')
-  console.log(company)
-  console.log('====================================')
   if (company.dwollaAccountStatus && company.paymentProcessor === 'DWOLLA') {
     accountStatus = company.dwollaAccountStatus
     if (

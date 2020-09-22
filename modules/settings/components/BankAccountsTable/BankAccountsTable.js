@@ -572,6 +572,7 @@ const mapStateToProps = state => {
     loading: state.settings.loading,
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
+      id: r.account_public_id,
       rawData: r,
       ...(isDwolla
         ? {
