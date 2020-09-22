@@ -420,7 +420,7 @@ class Dashboard extends Component {
     } = this.props
 
     const companyTabs = {
-      clientCompaniesCount: [formatMessage({id: 'dashboard.clientCompaniesCount', defaultMessage: '# of Client Companies'}), false],
+      clientCompaniesCount: [formatMessage({id: 'dashboard.guestCompaniesCount', defaultMessage: '# of Guest Companies'}), false],
       companiesCount: [formatMessage({id: 'dashboard.companiesCount', defaultMessage: '# of Companies'}), false],
       companyGenericProductsCount: [formatMessage({id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products'}), false],
       productOfferCount: [formatMessage({id: 'dashboard.productOffersCount', defaultMessage: '# of Product Offers'}), false],
@@ -431,7 +431,7 @@ class Dashboard extends Component {
     }
 
     const adminTabs = {
-      //clientCompaniesCount: [formatMessage({id: 'dashboard.clientCompaniesCount', defaultMessage: '# of Client Companies'}), false],
+      //clientCompaniesCount: [formatMessage({id: 'dashboard.guestCompaniesCount', defaultMessage: '# of Client Companies'}), false],
       //companiesCount: [formatMessage({id: 'dashboard.companiesCount', defaultMessage: '# of Companies'}), false],
       companyGenericProductsCount: [formatMessage({id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products'}), false],
       //productOfferCount: [formatMessage({id: 'dashboard.productOffersCount', defaultMessage: '# of Product Offers'}), false],
@@ -766,17 +766,17 @@ class Dashboard extends Component {
                 <SummaryRectangle
                   icon={<Briefcase />}
                   data={companiesCount}
-                  title={isAdmin && !takeover ? 'Total Companies' : 'Total Client Companies'}
+                  title={isAdmin && !takeover ? 'Total Companies' : 'Total Guest Companies'}
                   titleId={
-                    isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalClientCompanies.title'
+                    isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalGuestCompanies.title'
                   }
                 />
                 <SummaryRectangle
                   icon={<Package />}
                   data={companyProductsCount}
-                  title={isAdmin && !takeover ? 'Total Products' : 'Total Client Products'}
+                  title={isAdmin && !takeover ? 'Total Products' : 'Total Guest Products'}
                   titleId={
-                    isAdmin && !takeover ? 'dashboard.totalProducts.title' : 'dashboard.totalClientProducts.title'
+                    isAdmin && !takeover ? 'dashboard.totalProducts.title' : 'dashboard.totalGuestProducts.title'
                   }
                   styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
                 />
