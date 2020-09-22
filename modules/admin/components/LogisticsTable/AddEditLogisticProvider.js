@@ -4,7 +4,7 @@ import * as Actions from '../../actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
 
-import { Modal, FormGroup, FormField, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { Modal, FormGroup, FormField, Grid, GridRow, GridColumn, Popup, Icon } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 
 import * as Yup from 'yup'
@@ -164,9 +164,23 @@ class AddEditLogisticProvider extends React.Component {
                     </GridColumn>
 
                     <GridColumn width={6}>
+
+
                       <Input
                         type='text'
-                        label={formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
+                            <Popup
+                              content={
+                                <FormattedMessage
+                                  id='logistics.emailInfo'
+                                  defaultMessage='When generated, BOL will be sent to provided email addresses. If kept empty, BOL will not be sent automatically.'
+                                />
+                              }
+                              trigger={<Icon name='info circle' color='blue' style={{ marginLeft: '5px' }} />}
+                            />
+                          </>}
                         name='email'
                         inputProps={{
                           placeholder: formatMessage({
