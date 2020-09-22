@@ -75,9 +75,9 @@ class CasProductsTable extends Component {
             formatMessage(
               {
                 id: 'confirm.deleteCasProduct.content',
-                defaultMessage: `Do you really want to delete '${row.chemicalName}' CAS product?`
+                defaultMessage: `Do you really want to delete '${row.casIndexName}' CAS product?`
               },
-              { name: row.chemicalName }
+              { name: row.casIndexName }
             )
           ).then(async () => {
             try {
