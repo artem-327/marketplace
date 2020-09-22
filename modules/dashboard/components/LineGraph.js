@@ -77,6 +77,7 @@ const LineGraph = ({ data, dataKey, isCurrency, title, titleId, subTitle, subTit
               type='linear'
               dataKey={dataKey ? dataKey : 'Transactions'}
               stroke='#2599d5'
+              isAnimationActive={false}
               activeDot={{ r: 8 }}
             />
           </LineChart>
