@@ -42,6 +42,7 @@ export const verifyPersonalInformation = {
     province: ''
   },
   businessRole: '',
+  businessTitle: '',
   socialSecurityNumber: '',
   businessOwnershipPercentage: ''
 }
@@ -107,6 +108,7 @@ export const verifyPersonalInformationTest = {
     province: 10
   },
   businessRole: 'controlling_officer',
+  businessTitle: 'Test Business Title',
   socialSecurityNumber: '12345678912',
   businessOwnershipPercentage: 56
 }

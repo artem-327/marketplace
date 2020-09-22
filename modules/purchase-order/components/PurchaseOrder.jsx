@@ -279,7 +279,7 @@ class PurchaseOrder extends Component {
     const { shipmentQuoteId, dwollaBankAccountId, freightType } = payload
     const data = {
       [this.state.addressId]: this.state.selectedAddress.id,
-      dwollaBankAccountId,
+      bankAccountId: dwollaBankAccountId,
       freightType
     }
     freightType === FREIGHT_TYPES.ECHO ? (data.shipmentQuoteId = shipmentQuoteId) : null
