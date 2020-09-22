@@ -4,7 +4,7 @@ import ProdexTable from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 
 import * as Actions from '~/modules/settings/actions'
-import { openPopup } from '../../actions'
+import { openPopup, handleProductCatalogUnmappedValue } from '../../actions'
 import Router from 'next/router'
 
 import confirm from '~/src/components/Confirmable/confirm'
@@ -40,6 +40,10 @@ const Circle = styled.div`
   &.red {
     background-color: #f16844;
   }
+`
+
+const StyledDropdown = styled(Dropdown)`
+  z-index: 601 !important;
 `
 
 class MyProducts extends Component {
@@ -297,8 +301,8 @@ class MyProducts extends Component {
 
               <div>
                 <div className='column'>
-                  <Dropdown
-                    style={{ width: '200px', zIndex: '601 !important' }}
+                  <StyledDropdown
+                    style={{ width: '200px' }}
                     placeholder={formatMessage({
                       id: 'operations.tables.companyProductCatalog.MappedText',
                       defaultMessage: 'Select mapped/unmapped only'
@@ -492,4 +496,8 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openPopup })(injectIntl(MyProducts)))
+export default withDatagrid(connect(mapStateToProps, {
+  ...Actions,
+  openPopup,
+  handleProductCatalogUnmappedValue
+})(injectIntl(MyProducts)))

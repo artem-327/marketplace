@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Grid, GridColumn, GridRow, Header } from 'semantic-ui-react'
-import { Input } from 'formik-semantic-ui-fixed-validation'
+import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info } from 'react-feather'
@@ -43,7 +43,7 @@ const GridRowTitle = styled.div`
   font-weight: 500;
 `
 
-function PersonalInformation({ formikProps, intl: { formatMessage }, numberBeneficialOwners }) {
+function PersonalInformation({ formikProps, intl: { formatMessage }, numberBeneficialOwners, businessRoles }) {
   let forms = []
   for (let i = 0; i <= numberBeneficialOwners; i++) {
     forms.push(
@@ -192,6 +192,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
               values={formikProps.values}
               displayHeader={false}
               required={true}
+              additionalCountryInputProps={{ disabled: true }}
               setFieldValue={formikProps.setFieldValue}>
               <Rectangle style={{ margin: '0px 0px 10px 0px' }}>
                 <CustomDivTitle>
@@ -213,27 +214,62 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
             </AddressForm>
           </GridColumn>
         </GridRow>
-        <GridRow columns={2}>
+        <GridRow columns={3}>
           <ColumnCustom>
             <Input
-              name={`verifyPersonalInformation[${i}].businessRole`}
+              name={`verifyPersonalInformation[${i}].businessTitle`}
               label={
                 <>
                   {formatMessage({
-                    id: 'velloci.personalInfo.businessRole',
-                    defaultMessage: 'Business Role (Title)'
+                    id: 'velloci.personalInfo.businessTitle',
+                    defaultMessage: 'Business Title'
                   })}
                   {<Required />}
                 </>
               }
               inputProps={{
                 placeholder: formatMessage({
+                  id: 'velloci.personalInfo.businessTitle.placeholder',
+                  defaultMessage: 'Enter Business Title'
+                }),
+                type: 'text',
+                'data-test': 'settings_velloci_registration_personal_info_business_title_inpt'
+              }}
+            />
+          </ColumnCustom>
+          <ColumnCustom>
+            <Dropdown
+              options={
+                businessRoles && businessRoles.data && businessRoles.data.length
+                  ? businessRoles.data.map(el => ({
+                      key: el,
+                      value: el,
+                      text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
+                    }))
+                  : []
+              }
+              fieldProps={{
+                'data-test': 'settings_velloci_registration_personal_info_business_role_inpt'
+              }}
+              inputProps={{
+                placeholder: formatMessage({
                   id: 'global.businessName',
                   defaultMessage: 'Business Name'
                 }),
-                type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_business_role_inpt'
+                search: true,
+                selection: true,
+                loading: businessRoles && businessRoles.loading
               }}
+              name={`verifyPersonalInformation[${i}].businessRole`}
+              label={
+                <>
+                  {formatMessage({
+                    id: 'velloci.personalInfo.businessRole',
+                    defaultMessage: 'Business Role'
+                  })}
+                  {<Required />}
+                </>
+              }
             />
           </ColumnCustom>
           <ColumnCustom>
@@ -275,8 +311,8 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
                   defaultMessage: 'xx'
                 }),
                 type: 'text',
-                pattern: 'd*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
-                maxLength: '2',
+                pattern: '\d*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
+                maxLength: '3',
                 'data-test': 'settings_velloci_registration_personal_info_business_ownership_percentage_inpt'
               }}
             />
@@ -290,11 +326,13 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
 
 PersonalInformation.propTypes = {
   formikProps: PropTypes.object,
+  businessRoles: PropTypes.object,
   numberBeneficialOwners: PropTypes.number
 }
 
 PersonalInformation.defaultProps = {
   formikProps: {},
+  businessRoles: {},
   numberBeneficialOwners: 0
 }
 

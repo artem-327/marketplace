@@ -37,11 +37,12 @@ export const verifyPersonalInformation = {
   address: {
     streetAddress: '',
     city: '',
-    country: '',
+    country: '{"countryId":1,"hasProvinces":true}',
     zip: '',
     province: ''
   },
   businessRole: '',
+  businessTitle: '',
   socialSecurityNumber: '',
   businessOwnershipPercentage: ''
 }
@@ -58,7 +59,7 @@ export const initialValues = {
     ssn: '',
     isEstablishedUs: true,
     tinNumber: '',
-    naicsCodes: ''
+    naicsCode: ''
   },
   businessInfo: {
     phoneNumber: '',
@@ -67,14 +68,15 @@ export const initialValues = {
     address: {
       streetAddress: '',
       city: '',
-      country: '',
+      country: '{"countryId":1,"hasProvinces":true}',
       zip: '',
       province: ''
     },
     dba: ''
   },
   companyFormationDocument: {
-    attachments: []
+    attachments: [],
+    documentType: ''
   },
   ownerInformation: {
     isBeneficialOwner: false,
@@ -88,5 +90,71 @@ export const initialValues = {
     privacyPolicy: false,
     depositAccountAgreement: false,
     trueComplete: false
+  }
+}
+
+export const verifyPersonalInformationTest = {
+  firstName: 'Honza',
+  lastName: 'Novák',
+  middleName: '',
+  email: 'sdfgdsfgv@yds.ch',
+  phoneNumber: '+12345678901',
+  dateOfBirth: '01. 01. 1980',
+  address: {
+    streetAddress: '627 Sugar Run Rd',
+    city: 'Altoona 3',
+    country: '{"countryId":1,"hasProvinces":true}',
+    zip: '16601',
+    province: 10
+  },
+  businessRole: 'controlling_officer',
+  businessTitle: 'Test Business Title',
+  socialSecurityNumber: '12345678912',
+  businessOwnershipPercentage: 56
+}
+
+export const initialValuesTest = {
+  controlPerson: {
+    isControlPerson: true,
+    legalBusinessName: 'Jan Novak',
+    entityType: 'corporation',
+    industryType: 111,
+    isEin: true,
+    isSsn: false,
+    ein: '123456789',
+    ssn: '',
+    isEstablishedUs: true,
+    tinNumber: '1234564864',
+    naicsCode: 721
+  },
+  businessInfo: {
+    phoneNumber: '+12345678901',
+    email: 'sdfg@sdfu.cv',
+    url: 'https://www.aaaa.cz',
+    address: {
+      streetAddress: '627 Sugar Run Rd',
+      city: 'Altoona 3',
+      country: '{"countryId":1,"hasProvinces":true}',
+      zip: '16601',
+      province: 10
+    },
+    dba: 'Jak mak'
+  },
+  companyFormationDocument: {
+    attachments: [],
+    documentType: 'articles_of_incorporation'
+  },
+  ownerInformation: {
+    isBeneficialOwner: true,
+    isNotBeneficialOwner: false,
+    isOtherBeneficialOwner: false,
+    isNotOtherBeneficialOwner: false
+  },
+  verifyPersonalInformation: [verifyPersonalInformationTest],
+  termsAndConditions: {
+    electronicComunications: true,
+    privacyPolicy: true,
+    depositAccountAgreement: true,
+    trueComplete: true
   }
 }

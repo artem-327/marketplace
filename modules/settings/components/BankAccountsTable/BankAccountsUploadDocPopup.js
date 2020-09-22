@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Dropdown, Form } from 'formik-semantic-ui-fixed-validation'
 import { UploadCloud } from 'react-feather'
 import styled from 'styled-components'
-//import { closeUploadDocumentsPopup, getVerificationDocumentTypes } from "../../actions";
+//import { closeUploadDocumentsPopup, dwollaGetVerificationDocumentTypes } from "../../actions";
 import * as Actions from '../../actions'
 import Router from 'next/dist/client/router'
 import UploadVerifyFiles from './UploadVerifyFiles'
@@ -47,7 +47,7 @@ export const CustomSpanFiles = styled.span`
 
 class BankAccountsUploadDocPopup extends React.Component {
   componentDidMount() {
-    if (!this.props.verificationDocumentTypes.length) this.props.getVerificationDocumentTypes()
+    if (!this.props.verificationDocumentTypes.length) this.props.dwollaGetVerificationDocumentTypes()
   }
 
   getInitialFormValues = () => {

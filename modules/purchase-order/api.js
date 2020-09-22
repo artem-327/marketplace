@@ -14,7 +14,8 @@ export const postNewDeliveryAddress = address =>
 export const updateDeliveryAddress = (address, id) =>
   api.put(`/prodex/api/delivery-addresses/id/${id}`, address).then(response => response.data)
 export const getDeliveryAddresses = () => api.get('/prodex/api/delivery-addresses').then(response => response.data)
-export const getPayments = () => api.get('/prodex/api/payments/bank-accounts').then(response => response.data)
+export const getDwollaPayments = () => api.get('/prodex/api/payments/bank-accounts/dwolla').then(response => response.data)
+export const getVellociPayments = () => api.get('/prodex/api/payments/bank-accounts/velloci').then(response => response.data)
 export const getShippingQuotes = (countryId, zip) =>
   api
     .get(`/prodex/api/shipment/cart?destinationCountryId=${countryId}&destinationZIP=${zip}`)

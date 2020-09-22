@@ -30,6 +30,7 @@ function mapStateToProps(store) {
 
   return {
     ...store.cart,
+    paymentProcessor: getSafe(() => store.auth.identity.company.paymentProcessor, ''),
     selectedAddressId: store.forms.cart.selectedAddressId,
     initialValues: selectedAddress && {
       ...selectedAddress,

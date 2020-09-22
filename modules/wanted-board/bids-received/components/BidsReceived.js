@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { Container, Input, Button } from 'semantic-ui-react'
-import { PlusCircle } from 'react-feather'
+import { Container, Input, Button, Label } from 'semantic-ui-react'
+import { PlusCircle, ChevronDown, ChevronRight } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { debounce } from 'lodash'
@@ -18,6 +18,27 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 
 import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
+import styled from 'styled-components'
+
+const CountedName = styled.div`
+  display: flex;
+  alignItems: center;
+  flexDirection: row;
+  
+  > .ui.label {
+    margin: 0;
+    font-weight: normal;
+    font-size: 12px;
+    color: #2599d5;
+    border-radius: 2px;
+    background-color: #b7e7ff;
+    &.cnt-0 {
+      color: #848893;
+      border: solid 1px #dee2e6;
+      background-color: #f8f9fb;
+    }
+  }
+`
 
 class BidsReceived extends Component {
   constructor(props) {
@@ -435,7 +456,8 @@ class BidsReceived extends Component {
         }),
         callback: row => {
           sidebarDetailTrigger(row, 'bids-received')
-        }
+        },
+        hidden: row => !row.treeRoot
       },
       {
         text: formatMessage({
@@ -461,9 +483,118 @@ class BidsReceived extends Component {
               console.error(e)
             }
           })
-        }
+        },
+        hidden: row => !row.treeRoot
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.reject',
+          defaultMessage: 'Reject'
+        }),
+        disabled: row => editedId === row.id,
+        callback: row => {
+          confirm(
+            formatMessage({
+              id: 'confirm.rejectReceivedBid.Header',
+              defaultMessage: 'Reject Received Bid'
+            }),
+            formatMessage({
+              id: 'confirm.rejectReceivedBid.Content',
+              defaultMessage: 'Do you really want to reject received bid?'
+            })
+          ).then(async () => {
+            try {
+              await this.props.rejectRequestedItem(row.id.split('_')[1])
+              datagrid.loadData()
+            } catch (e) {}
+          })
+        },
+        hidden: row => row.treeRoot
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.purchase',
+          defaultMessage: 'Purchase'
+        }),
+        disabled: row => editedId === row.id,
+        callback: async row => {
+          await this.props.purchaseRequestedItem(row.id.split('_')[1])
+          datagrid.loadData()
+        },
+        hidden: row => row.treeRoot
       }
     ]
+  }
+
+  getRows = rows => {
+    return rows.map(row => {
+      const offersLength = row.purchaseRequestOffers.length
+      return {
+        ...row,
+        product: (
+          <CountedName>
+            <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
+            <div style={{ width: '30px', height: '20px', padding: '5px' }}>
+            {offersLength
+              ? (this.state.expandedRowIds.some(el => el === row.id)
+                ? (<ChevronDown
+                    size={20}
+                    style={{ color: '#2599d5', cursor: 'pointer' }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
+                      this.setState({ expandedRowIds })
+                    }}
+                  />)
+                : (<ChevronRight
+                    size={20}
+                    style={{ color: '#2599d5', cursor: 'pointer' }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      let expandedRowIds = this.state.expandedRowIds.slice()
+                      expandedRowIds.push(row.id)
+                      this.setState({ expandedRowIds })
+                    }}
+                  />)
+              ) : <div style={{ padding: '0 10px' }} />
+            }
+            </div>
+            {row.product}
+          </CountedName>
+        ),
+        casNumber: (
+          <CountedName>
+            <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
+            <div style={{ width: '30px', height: '20px', paddingLeft: '5px', paddingTop: '5px' }}>
+              {offersLength
+                ? (this.state.expandedRowIds.some(el => el === row.id)
+                    ? (<ChevronDown
+                      size={20}
+                      style={{ color: '#2599d5', cursor: 'pointer' }}
+                      onClick={e => {
+                        e.stopPropagation()
+                        const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
+                        this.setState({ expandedRowIds })
+                      }}
+                    />)
+                    : (<ChevronRight
+                      size={20}
+                      style={{ color: '#2599d5', cursor: 'pointer' }}
+                      onClick={e => {
+                        e.stopPropagation()
+                        let expandedRowIds = this.state.expandedRowIds.slice()
+                        expandedRowIds.push(row.id)
+                        this.setState({ expandedRowIds })
+                      }}
+                    />)
+                ) : <div style={{ padding: '0 10px' }} />
+              }
+            </div>
+            {row.casNumber}
+          </CountedName>
+        )
+      }
+    })
   }
 
   renderContent = () => {
@@ -542,7 +673,7 @@ class BidsReceived extends Component {
             key={type}
             tableName={`bids_received_${type}_grid`}
             {...datagrid.tableProps}
-            rows={rows}
+            rows={this.getRows(rows)}
             columns={type === 'product' ? columnsProduct : columnsChemical}
             rowSelection={false}
             showSelectionColumn={false}
@@ -566,43 +697,6 @@ class BidsReceived extends Component {
             expandedRowIds={this.state.expandedRowIds}
             onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
             columnActions={type === 'product' ? 'product' : 'casNumber'}
-            rowChildActions={[
-              {
-                text: formatMessage({
-                  id: 'wantedBoard.reject',
-                  defaultMessage: 'Reject'
-                }),
-                disabled: row => editedId === row.id,
-                callback: row => {
-                  confirm(
-                    formatMessage({
-                      id: 'confirm.rejectReceivedBid.Header',
-                      defaultMessage: 'Reject Received Bid'
-                    }),
-                    formatMessage({
-                      id: 'confirm.rejectReceivedBid.Content',
-                      defaultMessage: 'Do you really want to reject received bid?'
-                    })
-                  ).then(async () => {
-                    try {
-                      await this.props.rejectRequestedItem(row.id.split('_')[1])
-                      datagrid.loadData()
-                    } catch (e) {}
-                  })
-                }
-              },
-              {
-                text: formatMessage({
-                  id: 'wantedBoard.purchase',
-                  defaultMessage: 'Purchase'
-                }),
-                disabled: row => editedId === row.id,
-                callback: async row => {
-                  await this.props.purchaseRequestedItem(row.id.split('_')[1])
-                  datagrid.loadData()
-                }
-              }
-            ]}
           />
         </div>
       </>

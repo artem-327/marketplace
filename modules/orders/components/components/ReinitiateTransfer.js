@@ -32,7 +32,7 @@ class ReinitiateTransfer extends React.Component {
   }
 
   componentDidMount() {
-    this.props.loadBankAccounts()
+    this.props.loadBankAccounts(this.props.paymentProcessor)
   }
 
   render() {
@@ -132,7 +132,8 @@ function mapStateToProps(state) {
   return {
     orderId: state.orders.detail.id,
     bankAccounts: state.orders.bankAccounts,
-    bankAccountsLoading: state.orders.bankAccountsLoading
+    bankAccountsLoading: state.orders.bankAccountsLoading,
+    paymentProcessor: getSafe(() => state.auth.identity.company.paymentProcessor, ''),
   }
 }
 

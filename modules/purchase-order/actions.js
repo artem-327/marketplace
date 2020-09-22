@@ -46,7 +46,10 @@ export const shippingChanged = values => ({ type: AT.SHIPPING_CHANGED, payload: 
 
 export const getDeliveryAddresses = () => ({ type: AT.DELIVERY_ADDRESSES_FETCH, payload: api.getDeliveryAddresses() })
 
-export const getPayments = () => ({ type: AT.PAYMENTS_FETCH, payload: api.getPayments() })
+export const getPayments = paymentProcessor => ({
+  type: AT.PAYMENTS_FETCH,
+  payload: paymentProcessor === 'DWOLLA' ? api.getDwollaPayments() : api.getVellociPayments()
+})
 
 export const postNewDeliveryAddress = address => ({
   type: AT.DELIVERY_ADDRESS_CREATE,

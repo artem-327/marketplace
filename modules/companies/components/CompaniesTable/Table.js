@@ -94,9 +94,9 @@ class CompaniesTable extends Component {
           sortPath: 'Company.primaryBranch.deliveryAddress.contactEmail'
         },
         {
-          name: 'hasDwollaAccount',
+          name: 'paymentAccountStatus',
           title: (
-            <FormattedMessage id='global.dwollaAccount' defaultMessage='Dwolla Account'>
+            <FormattedMessage id='global.paymentAccount' defaultMessage='Payment Account'>
               {text => text}
             </FormattedMessage>
           ),
@@ -140,6 +140,11 @@ class CompaniesTable extends Component {
     return rows.map(row => {
       return {
         ...row,
+        paymentAccountStatus:
+          row.paymentProcessor === 'DWOLLA'
+            ? (row.hasDwollaAccount ? 'Dwolla' : 'No')
+            : (row.hasVellociAccount ? 'Velloci' : 'No')
+        ,
         reviewRequested: (
           <Checkbox
             key={`review${row.id}`}
@@ -232,11 +237,16 @@ class CompaniesTable extends Component {
         disabled: row => this.props.editedId === row.id
       },
       {
-        text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }),
+        text: formatMessage({
+          id: 'admin.registerToPaymentProcessor',
+          defaultMessage: 'Register to Payment Processor'
+        }),
         callback: async row => {
-          Router.push(`/admin/dwolla-register?companyId=${row.id}`)
+          row.paymentProcessor === 'DWOLLA'
+            ? !row.hasDwollaAccount && Router.push(`/admin/dwolla-register?companyId=${row.id}`)
+            : !row.hasVellociAccount && Router.push(`/admin/velloci-register?companyId=${row.id}`)
         },
-        hidden: row => row.hasDwollaAccount === 'Yes'
+        hidden: row => row.hasDwollaAccount || row.hasVellociAccount
       },
       {
         text: <FormattedMessage id='admin.takeOver' defaultMessage='Take-over as Company Admin' />,
@@ -286,8 +296,8 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
         <ArrayToFirstItem values={getSafe(() => c.associations, '') ? c.associations.map(r => r.name) : []} />
       ),
       hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
-      hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified' ? 'Yes' : 'No',
-      hasVellociAccount: getSafe(() => c.vellociAccountStatus, false) === 'verified' ? 'Yes' : 'No',
+      hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified',
+      hasVellociAccount: getSafe(() => c.vellociAccountStatus, false) === 'verified',
       primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
         ? c.primaryBranch.deliveryAddress.address.streetAddress +
           ', ' +

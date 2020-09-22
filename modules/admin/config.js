@@ -541,7 +541,7 @@ export const config = {
         {text => text}
       </FormattedMessage>
     ),
-    formattedMessageName: 'associations',
+    formattedMessageName: 'association',
     searchText: 'admin.searchAssociations',
     display: {
       columns: [

@@ -17,6 +17,8 @@ import { currency } from '~/constants/index'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
+import { PlaidLink } from 'react-plaid-link'
+import api from '~/api'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -137,6 +139,22 @@ const CustomUploadCloud = styled(UploadCloud)`
   margin-right: 10px;
 `
 
+const PlaidButton = styled(PlaidLink)`
+  cursor: pointer !important;
+  margin-right: 4px;
+  width: 200px !important;
+  box-shadow: none !important;
+  border: none !important;
+  color: #ffffff !important;
+  background-color: #2599d5 !important;
+  height: 40px !important;
+  border-radius: 3px !important;
+  font-weight: 500 !important;
+  align-items: center !important;
+  display: flex !important;
+  justify-content: center !important;
+`
+
 const textsTable = {
   users: {
     BtnAddText: 'settings.tables.users.buttonAdd',
@@ -211,18 +229,20 @@ class TablesHandlers extends Component {
     this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     const {
       documentTypes,
       getDocumentTypes,
       initGlobalBroadcast,
       getDwollaBeneficiaryOwners,
       tableHandlersFilters,
-      currentTab
+      currentTab,
+      paymentProcessor
     } = this.props
+
     try {
       //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts') {
+      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA') {
         await getDwollaBeneficiaryOwners()
       }
     } catch (err) {
@@ -275,11 +295,11 @@ class TablesHandlers extends Component {
     this.props.handleVariableSave('tableHandlersFiltersSettings', this.state)
   }
 
-  async componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate = async (prevProps, prevState, snapshot) => {
     if (prevProps.currentTab !== this.props.currentTab) {
-      const { currentTab } = this.props
+      const { currentTab, paymentProcessor } = this.props
       //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts') {
+      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA') {
         try {
           await this.props.getDwollaBeneficiaryOwners()
         } catch (error) {
@@ -336,6 +356,63 @@ class TablesHandlers extends Component {
     }
   }
 
+  onExit = async (err, metadata) => {
+    console.log('onExit', err, metadata)
+  }
+
+  onSuccess = async (public_token, metadata) => {
+    console.log('onSuccess', public_token, metadata)
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        metadata: metadata,
+        business_public_id: '' //FIXME
+      })
+    }
+
+    const response = await api.post('/prodex/api/payments/velloci/accounts', options)
+    const res = await response.json()
+
+    if (res.hasOwnProperty('error_type')) {
+      console.log(res)
+    } else {
+      console.log('Your accounts have been added.')
+    }
+  }
+
+  token = async () => {
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        products: 'auth',
+        link_customization_name: 'echo',
+        account_types: 'all',
+        business_public_id: '', //FIXME
+        account_public_id: null
+      })
+    }
+
+    const response = await api.post('/prodex/api/payments/velloci/token', options)
+    return await response.json()
+  }
+
+  onEvent = async (event_name, metadata) => {
+    console.log('onEvent', event_name, metadata)
+
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        metadata: metadata,
+        event_name: event_name,
+        business_public_id: '' //FIXME
+      })
+    }
+
+    const response = await api.post('/prodex/api/payments/velloci/log', options)
+    const res = await response.json()
+    console.log('res', res)
+  }
+
   renderHandler = () => {
     const {
       currentTab,
@@ -350,13 +427,14 @@ class TablesHandlers extends Component {
       treeData,
       toastManager,
       openSidebar,
-      isDwolla,
       vellociAccBalance,
+      paymentProcessor,
       intl: { formatMessage }
     } = this.props
 
     const filterValue = this.state[currentTab.type]
     const bankAccTab = currentTab.type === 'bank-accounts'
+
     return (
       <>
         {currentTab.type !== 'global-broadcast' &&
@@ -469,17 +547,23 @@ class TablesHandlers extends Component {
               <CustomButton
                 fluid
                 onClick={() => {
-                  isDwolla ? Router.push('/dwolla-register') : Router.push('/velloci-register')
+                  paymentProcessor === 'DWOLLA' ? Router.push('/dwolla-register') : Router.push('/velloci-register')
                 }}
-                data-test={isDwolla ? 'settings_dwolla_open_popup_btn' : 'settings_open_register_velloci_btn'}>
+                data-test={
+                  paymentProcessor === 'DWOLLA'
+                    ? 'settings_dwolla_open_popup_btn'
+                    : 'settings_open_register_velloci_btn'
+                }>
                 <CustomIcon size='20' />
                 <FormattedMessage
                   id={
-                    isDwolla
+                    paymentProcessor === 'DWOLLA'
                       ? 'settings.tables.bankAccounts.registerDwolla'
                       : 'settings.tables.bankAccounts.registerVelloci'
                   }
-                  defaultMessage={isDwolla ? 'Register Dwolla Account' : 'Register Velloci Account'}>
+                  defaultMessage={
+                    paymentProcessor === 'DWOLLA' ? 'Register Dwolla Account' : 'Register Velloci Account'
+                  }>
                   {text => text}
                 </FormattedMessage>
               </CustomButton>
@@ -520,16 +604,18 @@ class TablesHandlers extends Component {
                 <CustomLabel>
                   <div>
                     <FormattedMessage
-                      id={isDwolla ? 'settings.dwollaAccBalance' : 'settings.vellociAccBalance'}
-                      defaultMessage={isDwolla ? 'Dwolla Ballance: ' : 'Velloci Balance: '}
+                      id={paymentProcessor === 'DWOLLA' ? 'settings.dwollaAccBalance' : 'settings.vellociAccBalance'}
+                      defaultMessage={paymentProcessor === 'DWOLLA' ? 'Dwolla Ballance: ' : 'Velloci Balance: '}
                     />
                     <b>
                       <FormattedNumber
                         minimumFractionDigits={2}
                         maximumFractionDigits={2}
                         style='currency'
-                        currency={isDwolla ? dwollaAccBalance.currency : vellociAccBalance.currency}
-                        value={isDwolla ? dwollaAccBalance.value : vellociAccBalance.value}
+                        currency={
+                          paymentProcessor === 'DWOLLA' ? dwollaAccBalance.currency : vellociAccBalance.currency
+                        }
+                        value={paymentProcessor === 'DWOLLA' ? dwollaAccBalance.value : vellociAccBalance.value}
                       />
                     </b>
                   </div>
@@ -552,10 +638,24 @@ class TablesHandlers extends Component {
               )}
               {(!bankAccTab || bankAccounts.addButton) && (
                 <div className='column'>
-                  <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
-                    <PlusCircle />
-                    <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
-                  </Button>
+                  {paymentProcessor === 'VELLOCI' ? (
+                    <PlaidButton
+                      token={this.token}
+                      publicKey={''} //FIXME
+                      onExit={this.onExit}
+                      onSuccess={this.onSuccess}
+                      onEvent={this.onEvent}>
+                      <PlusCircle />
+                      <div style={{ marginLeft: '10px' }}>
+                        <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                      </div>
+                    </PlaidButton>
+                  ) : (
+                    <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
+                      <PlusCircle />
+                      <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                    </Button>
+                  )}
                 </div>
               )}
             </>
@@ -591,7 +691,7 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
   let accountStatus = 'none'
-  if (company.dwollaAccountStatus) {
+  if (company.dwollaAccountStatus && company.paymentProcessor === 'DWOLLA') {
     accountStatus = company.dwollaAccountStatus
     if (
       accountStatus === 'verified' &&
@@ -600,7 +700,7 @@ const mapStateToProps = state => {
     ) {
       accountStatus = 'documentOwner'
     }
-  } else if (company.vellociAccountStatus) {
+  } else if (company.vellociAccountStatus && company.paymentProcessor === 'VELLOCI') {
     accountStatus = company.vellociAccountStatus
   }
   const {
@@ -612,7 +712,7 @@ const mapStateToProps = state => {
   //const accountStatus = 'document'
 
   return {
-    isDwolla: getSafe(() => company.dwollaAccountStatus, false) ? true : false,
+    paymentProcessor: getSafe(() => company.paymentProcessor, 'DWOLLA'),
     logisticsFilter: state.settings.logisticsFilter,
     'bank-accountsFilter': state.settings['bank-accountsFilter'],
     documentTypes: state.settings.documentTypes,

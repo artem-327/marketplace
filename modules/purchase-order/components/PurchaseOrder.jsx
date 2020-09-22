@@ -131,9 +131,9 @@ class PurchaseOrder extends Component {
     selectedAddress: ''
   }
   componentDidMount = async () => {
-    const { preFilledValues, clearPreFilledValues, getWarehouses } = this.props
+    const { preFilledValues, clearPreFilledValues, getWarehouses, paymentProcessor } = this.props
     this.props.getDeliveryAddresses()
-    this.props.getPayments()
+    this.props.getPayments(paymentProcessor)
     this.props.getIdentity()
     await this.props.getCart()
 
@@ -279,7 +279,7 @@ class PurchaseOrder extends Component {
     const { shipmentQuoteId, dwollaBankAccountId, freightType } = payload
     const data = {
       [this.state.addressId]: this.state.selectedAddress.id,
-      dwollaBankAccountId,
+      bankAccountId: dwollaBankAccountId,
       freightType
     }
     freightType === FREIGHT_TYPES.ECHO ? (data.shipmentQuoteId = shipmentQuoteId) : null

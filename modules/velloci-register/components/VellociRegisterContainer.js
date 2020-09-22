@@ -8,10 +8,7 @@ import { getBusinessTypes } from '~/modules/company-form/actions'
 import { getSafe } from '~/utils/functions'
 
 const mapStateToProps = store => ({
-  activeStep: store.vellociRegister.activeStep,
-  entityTypes: getSafe(() => store.vellociRegister.entityTypes, {}),
-  naicsCodes: getSafe(() => store.vellociRegister.naicsCodes, {}),
-  numberBeneficialOwners: getSafe(() => store.vellociRegister.numberBeneficialOwners, 0)
+  ...store.vellociRegister
 })
 
 const mapDispatchToProps = {
