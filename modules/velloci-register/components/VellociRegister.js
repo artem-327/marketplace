@@ -88,7 +88,7 @@ class VellociRegister extends Component {
             const obj = {
               address: getSafe(() => val.address.streetAddress, ''),
               businessRole: getSafe(() => val.businessRole, ''),
-              businessTitle: getSafe(() => val.businessRole, ''),
+              businessTitle: getSafe(() => val.businessTitle, ''),
               city: getSafe(() => val.address.city, ''),
               dateOfBirth: getSafe(() => getStringISODate(val.dateOfBirth), ''),
               firstName: getSafe(() => val.firstName, ''),
@@ -109,7 +109,7 @@ class VellociRegister extends Component {
       entityType: getSafe(() => controlPerson.entityType, ''),
       legalAddress: getSafe(() => businessInfo.address.streetAddress, ''),
       legalCity: getSafe(() => businessInfo.address.city, ''),
-      legalName: getSafe(() => businessInfo.address.streetAddress, ''),
+      legalName: getSafe(() => controlPerson.legalBusinessName, ''),
       provinceId: getSafe(() => businessInfo.address.province, ''),
       legalZipCode: getSafe(() => businessInfo.address.zip, ''),
       naicsCode: getSafe(() => controlPerson.naicsCode, ''),
@@ -118,13 +118,13 @@ class VellociRegister extends Component {
       controller: {
         address: getSafe(() => verifyPersonalInformation[0].address.streetAddress, ''),
         businessRole: getSafe(() => verifyPersonalInformation[0].businessRole, ''),
-        businessTitle: getSafe(() => verifyPersonalInformation[0].businessRole, ''),
+        businessTitle: getSafe(() => verifyPersonalInformation[0].businessTitle, ''),
         city: getSafe(() => verifyPersonalInformation[0].address.city, ''),
         dateOfBirth: getSafe(() => getStringISODate(verifyPersonalInformation[0].dateOfBirth), ''),
         firstName: getSafe(() => verifyPersonalInformation[0].firstName, ''),
         lastName: getSafe(() => verifyPersonalInformation[0].lastName, ''),
         ownershipPercentage: getSafe(() => verifyPersonalInformation[0].businessOwnershipPercentage, ''),
-        phone: getSafe(() => verifyPersonalInformation[0].phoneNumber, ''),
+        phone: getSafe(() => verifyPersonalInformation[0].phoneNumber.substring(1), ''),
         provinceId: getSafe(() => verifyPersonalInformation[0].address.province, ''),
         zipCode: getSafe(() => verifyPersonalInformation[0].address.zip, ''),
         ssn: getSafe(() => verifyPersonalInformation[0].socialSecurityNumber, ''),
@@ -183,7 +183,10 @@ class VellociRegister extends Component {
         controlPerson: Yup.lazy(() => {
           const taxNumber = values.controlPerson.isEin
             ? { ein: einValidation() }
-            : { ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage) }
+            : { ssn: Yup.string().trim()
+                .test('num-length', errorMessages.exactDigits(9), value => /^[0-9]{9}$/.test(value))
+                .required(errorMessages.requiredMessage)
+          }
           return Yup.object().shape({
             isControlPerson: Yup.boolean().oneOf([true], errorMessages.requiredMessage),
             entityType: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage),
@@ -236,6 +239,10 @@ class VellociRegister extends Component {
                 .concat(dateValidation(true)),
               address: addressValidationSchema(),
               businessRole: Yup.string()
+                .trim()
+                .min(3, errorMessages.minLength(3))
+                .required(errorMessages.requiredMessage),
+              businessTitle: Yup.string()
                 .trim()
                 .min(3, errorMessages.minLength(3))
                 .required(errorMessages.requiredMessage),

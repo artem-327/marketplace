@@ -214,7 +214,29 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
             </AddressForm>
           </GridColumn>
         </GridRow>
-        <GridRow columns={2}>
+        <GridRow columns={3}>
+          <ColumnCustom>
+            <Input
+              name={`verifyPersonalInformation[${i}].businessTitle`}
+              label={
+                <>
+                  {formatMessage({
+                    id: 'velloci.personalInfo.businessTitle',
+                    defaultMessage: 'Business Title'
+                  })}
+                  {<Required />}
+                </>
+              }
+              inputProps={{
+                placeholder: formatMessage({
+                  id: 'velloci.personalInfo.businessTitle.placeholder',
+                  defaultMessage: 'Enter Business Title'
+                }),
+                type: 'text',
+                'data-test': 'settings_velloci_registration_personal_info_business_title_inpt'
+              }}
+            />
+          </ColumnCustom>
           <ColumnCustom>
             <Dropdown
               options={
@@ -243,7 +265,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
                 <>
                   {formatMessage({
                     id: 'velloci.personalInfo.businessRole',
-                    defaultMessage: 'Business Role (Title)'
+                    defaultMessage: 'Business Role'
                   })}
                   {<Required />}
                 </>
