@@ -174,8 +174,7 @@ export default class PhoneNumber extends Component {
       isSubmitting,
       disabled,
       clearable,
-      placeholder,
-      setErrors
+      placeholder
     } = this.props
 
     let { phoneCountryCode, phoneNumber } = this.state
@@ -185,15 +184,6 @@ export default class PhoneNumber extends Component {
       <Field
         name={name}
         render={({ field, form }) => {
-          if (
-            (!phoneCountryCode && !phoneNumber && errors[name]) ||
-            (phoneCountryCode && phoneNumber && !phoneNumber.includes('_') && phoneNumber.length > 8 && errors[name])
-          ) {
-            let newErrors = errors
-            delete newErrors[name]
-            form.setErrors(newErrors)
-          }
-
           if (!get(errors, name, null) && ((form && !error) || form.isValidating)) {
             if (!phoneCountryCode && phoneNumber) {
               form.setFieldError(
@@ -209,11 +199,6 @@ export default class PhoneNumber extends Component {
                 name,
                 formatMessage({ id: 'global.phoneNumberIsInvalid', defaultMessage: 'Phone number is invalid' })
               )
-            }
-          } else {
-            if (errors[name]) {
-              delete errors[name]
-              setErrors(errors)
             }
           }
 
