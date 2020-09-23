@@ -16,7 +16,7 @@ import {
   Radio,
   FormGroup
 } from 'semantic-ui-react'
-import { Form, Input } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { getSafe, getPrice } from '~/utils/functions'
 import { FormattedMessage, FormattedNumber, FormattedDate, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -226,6 +226,7 @@ const LeftColumn = styled(GridColumn)`
 
 const RightColumn = styled(GridColumn)`
   padding-right: 1.5rem !important;
+  margin-top: 11.667px !important;
 `
 
 const ToggleForm = styled(Form)`
@@ -235,6 +236,11 @@ const ToggleForm = styled(Form)`
 const GreenLabel = styled(Label)`
   background-color: rgba(132, 194, 37, 0.15) !important;
   color: #84c225 !important;
+`
+
+const SubmitButton = styled(Button)`
+  background-color: #2599d5 !important;
+  color: #ffffff !important;
 `
 
 class SubmitOfferPopup extends React.Component {
@@ -311,7 +317,8 @@ class SubmitOfferPopup extends React.Component {
         width: 150
       }
     ],
-    select: ''
+    select: '',
+    nextSubmit: false
   }
 
   componentDidMount() {
@@ -344,6 +351,10 @@ class SubmitOfferPopup extends React.Component {
   }
 
   submitOffer = async ({ pricePerUOM, lotExpirationDate }) => {
+    if (!this.state.nextSubmit) {
+      this.setState({ nextSubmit: true })
+      return
+    }
     const { closePopup, submitOffer, popupValues, rows } = this.props
 
     let expiresAt = null
@@ -375,6 +386,7 @@ class SubmitOfferPopup extends React.Component {
             onChange={(_e, { value }) => {
               this.setState({ select: value })
               this.setFieldValue('pricePerUOM', row.pricePerUOM)
+              this.setFieldValue('productName', row.companyProduct.intProductName)
             }}
             // inputProps={{  }}
           />
@@ -425,195 +437,268 @@ class SubmitOfferPopup extends React.Component {
     const { columns } = this.state
     const rows = this.getRows()
 
+    console.log('====================================')
+    console.log(this.state.nextSubmit)
+    console.log('====================================')
+    console.log('====================================')
+    console.log(this.state.select)
+    console.log('====================================')
+
     const qtyPart = popupValues.unit.nameAbbreviation
 
     return (
       <>
-        <Modal closeIcon onClose={closePopup} open={true} size='large'>
-          <Dimmer active={isSending} inverted>
-            <Loader />
-          </Dimmer>
-          <Modal.Header>
-            <FormattedMessage id='wantedBoard.submitOfferHeader' defaultMessage='SUBMIT OFFER' />
-          </Modal.Header>
-          <ModalContent scrolling={rows.length !== 0}>
-            <>
-              <SubmitOfferHighSegment>
-                <Grid verticalAlign='middle'>
-                  <GridRow>
-                    <Grid.Column>
-                      <OrderList divided relaxed horizontal size='large'>
-                        <List.Item>
-                          <List.Content>
-                            <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging' />
-                            </List.Header>
-                            <List.Description as='span'>
-                              {popupValues.packagingTypes && popupValues.packagingTypes.length ? (
-                                <ArrayToFirstItem values={popupValues.packagingTypes.map(d => d.name)} />
-                              ) : (
-                                <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-                              )}
-                            </List.Description>
-                          </List.Content>
-                        </List.Item>
+        <ToggleForm
+          onSubmit={(values, { setSubmitting }) => {
+            console.log('====================================')
+            console.log('aaaa')
+            console.log('====================================')
+            setSubmitting(false)
+            this.submitOffer(values)
+          }}
+          validationSchema={validationSchema()}
+          validateOnChange
+          enableReinitialize
+          initialValues={{
+            pricePerUOM: '',
+            expirationDate: '',
+            productName: ''
+          }}
+          render={({ setFieldValue, values, submitForm }) => {
+            this.setFieldValue = setFieldValue
+            this.submitForm = submitForm
+            return (
+              <>
+                <Modal closeIcon onClose={closePopup} open={true} size='large'>
+                  <Dimmer active={isSending} inverted>
+                    <Loader />
+                  </Dimmer>
+                  <Modal.Header>
+                    <FormattedMessage id='wantedBoard.submitOfferHeader' defaultMessage='SUBMIT OFFER' />
+                  </Modal.Header>
 
-                        <List.Item>
-                          <List.Content>
-                            <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.form' defaultMessage='Form' />
-                            </List.Header>
-                            <List.Description as='span'>
-                              {popupValues.forms && popupValues.forms.length ? (
-                                <ArrayToFirstItem values={popupValues.forms.map(d => d.name)} />
-                              ) : (
-                                <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-                              )}
-                            </List.Description>
-                          </List.Content>
-                        </List.Item>
+                  <ModalContent scrolling={rows.length !== 0}>
+                    <>
+                      <SubmitOfferHighSegment>
+                        <Grid verticalAlign='middle'>
+                          <GridRow>
+                            <Grid.Column>
+                              <OrderList divided relaxed horizontal size='large'>
+                                <List.Item>
+                                  <List.Content>
+                                    <List.Header as='label'>
+                                      <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging' />
+                                    </List.Header>
+                                    <List.Description as='span'>
+                                      {popupValues.packagingTypes && popupValues.packagingTypes.length ? (
+                                        <ArrayToFirstItem values={popupValues.packagingTypes.map(d => d.name)} />
+                                      ) : (
+                                        <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
+                                      )}
+                                    </List.Description>
+                                  </List.Content>
+                                </List.Item>
 
-                        <List.Item>
-                          <List.Content>
-                            <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit' />
-                            </List.Header>
-                            <List.Description as='span'>
-                              {popupValues.maximumPricePerUOM ? (
-                                <FormattedNumber
-                                  minimumFractionDigits={2}
-                                  maximumFractionDigits={2}
-                                  style='currency'
-                                  currency={currency}
-                                  value={popupValues.maximumPricePerUOM}
-                                />
-                              ) : (
-                                'N/A'
-                              )}
-                            </List.Description>
-                          </List.Content>
-                        </List.Item>
+                                <List.Item>
+                                  <List.Content>
+                                    <List.Header as='label'>
+                                      <FormattedMessage id='wantedBoard.form' defaultMessage='Form' />
+                                    </List.Header>
+                                    <List.Description as='span'>
+                                      {popupValues.forms && popupValues.forms.length ? (
+                                        <ArrayToFirstItem values={popupValues.forms.map(d => d.name)} />
+                                      ) : (
+                                        <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
+                                      )}
+                                    </List.Description>
+                                  </List.Content>
+                                </List.Item>
 
-                        <List.Item>
-                          <List.Content>
-                            <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed' />
-                            </List.Header>
-                            <List.Description as='span'>
-                              {qtyPart ? (
-                                <FormattedUnit unit={qtyPart} separator='' value={popupValues.quantity} />
-                              ) : (
-                                <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-                              )}
-                            </List.Description>
-                          </List.Content>
-                        </List.Item>
+                                <List.Item>
+                                  <List.Content>
+                                    <List.Header as='label'>
+                                      <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit' />
+                                    </List.Header>
+                                    <List.Description as='span'>
+                                      {popupValues.maximumPricePerUOM ? (
+                                        <FormattedNumber
+                                          minimumFractionDigits={2}
+                                          maximumFractionDigits={2}
+                                          style='currency'
+                                          currency={currency}
+                                          value={popupValues.maximumPricePerUOM}
+                                        />
+                                      ) : (
+                                        'N/A'
+                                      )}
+                                    </List.Description>
+                                  </List.Content>
+                                </List.Item>
 
-                        <List.Item>
-                          <List.Content>
-                            <List.Header as='label'>
-                              <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By' />
-                            </List.Header>
-                            <List.Description as='span'>
-                              {popupValues.neededAt ? (
-                                moment(popupValues.neededAt).format(getLocaleDateFormat())
-                              ) : (
-                                <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-                              )}
-                            </List.Description>
-                          </List.Content>
-                        </List.Item>
-                      </OrderList>
-                    </Grid.Column>
-                  </GridRow>
-                </Grid>
-              </SubmitOfferHighSegment>
+                                <List.Item>
+                                  <List.Content>
+                                    <List.Header as='label'>
+                                      <FormattedMessage
+                                        id='wantedBoard.quantityNeeded'
+                                        defaultMessage='Quantity Needed'
+                                      />
+                                    </List.Header>
+                                    <List.Description as='span'>
+                                      {qtyPart ? (
+                                        <FormattedUnit unit={qtyPart} separator='' value={popupValues.quantity} />
+                                      ) : (
+                                        <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
+                                      )}
+                                    </List.Description>
+                                  </List.Content>
+                                </List.Item>
 
-              <div className='table-responsive'>
-                <ProdexGrid
-                  tableName='submit_offer_grid'
-                  {...datagrid.tableProps}
-                  loading={datagrid.loading || purchaseRequestPending}
-                  rows={rows}
-                  columns={columns}
-                />
-              </div>
-            </>
-          </ModalContent>
+                                <List.Item>
+                                  <List.Content>
+                                    <List.Header as='label'>
+                                      <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By' />
+                                    </List.Header>
+                                    <List.Description as='span'>
+                                      {popupValues.neededAt ? (
+                                        moment(popupValues.neededAt).format(getLocaleDateFormat())
+                                      ) : (
+                                        <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
+                                      )}
+                                    </List.Description>
+                                  </List.Content>
+                                </List.Item>
+                              </OrderList>
+                            </Grid.Column>
+                          </GridRow>
+                        </Grid>
+                      </SubmitOfferHighSegment>
 
-          <Modal.Actions>
-            <ToggleForm
-              onSubmit={(values, { setSubmitting }) => {
-                setSubmitting(false)
-                this.submitOffer(values)
-              }}
-              validationSchema={validationSchema()}
-              validateOnChange
-              enableReinitialize
-              initialValues={{
-                pricePerUOM: '',
-                expirationDate: ''
-              }}
-              hidden={this.state.select === ''}
-              render={({ setFieldValue, values, submitForm }) => {
-                this.setFieldValue = setFieldValue
-                this.submitForm = submitForm
-                return (
-                  <>
+                      {!this.state.nextSubmit ? (
+                        <div className='table-responsive'>
+                          <ProdexGrid
+                            tableName='submit_offer_grid'
+                            {...datagrid.tableProps}
+                            loading={datagrid.loading || purchaseRequestPending}
+                            rows={rows}
+                            columns={columns}
+                          />
+                        </div>
+                      ) : (
+                        <Grid verticalAlign='middle'>
+                          <GridRow columns={2}>
+                            <Grid.Column width={8}>
+                              <Dropdown
+                                options={[
+                                  { key: 'PARTIAL', name: 'partial', value: 'partial' },
+                                  { key: 'COMPLETE_SCHEDULE', name: 'COMPLETE_SCHEDULE', value: 'COMPLETE_SCHEDULE' },
+                                  { key: 'COMPLETE_IMMEDIATE', name: 'COMPLETE_IMMEDIATE', value: 'COMPLETE_IMMEDIATE' }
+                                ]}
+                                fieldProps={{
+                                  'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
+                                }}
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'velloci.controlPerson.industryType.placeholder',
+                                    defaultMessage: 'Select industry type'
+                                  }),
+                                  search: true,
+                                  selection: true,
+                                  loading: naicsCodes && naicsCodes.loading
+                                }}
+                                name='controlPerson.naicsCode'
+                                label={
+                                  <>
+                                    {formatMessage({
+                                      id: 'velloci.controlPerson.industryType',
+                                      defaultMessage: 'Your Industry Type'
+                                    })}
+                                    {<Required />}
+                                  </>
+                                }
+                              />
+                            </Grid.Column>
+                            <Grid.Column width={8}>
+                              <FormattedMessage id='submitOffer.product' defaultMessage='Product'>
+                                {text => text}
+                              </FormattedMessage>
+                              <Required />
+                              <Input
+                                name='productName'
+                                inputProps={{
+                                  type: 'text',
+                                  disabled: true,
+                                  fluid: true
+                                }}
+                              />
+                            </Grid.Column>
+                          </GridRow>
+                        </Grid>
+                      )}
+                    </>
+                  </ModalContent>
+
+                  <Modal.Actions>
                     <Grid verticalAlign='middle'>
-                      <GridRow columns={2}>
-                        <LeftColumn textAlign='left'>
-                          <FormGroup className='price-input'>
-                            <Input
-                              name='pricePerUOM'
-                              label={
-                                <>
-                                  <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
-                                    {text => text}
-                                  </FormattedMessage>
-                                  <Required />
-                                </>
-                              }
-                              inputProps={{
-                                type: 'number',
-                                onChange: this.handleChange,
-                                label: <GreenLabel>{currencySymbol}</GreenLabel>,
-                                labelPosition: 'right'
-                              }}
-                            />
-
-                            <DateInput
-                              name='lotExpirationDate'
-                              label='Expiration Date'
-                              inputProps={{
-                                onChange: (e, { name, value }) =>
-                                  this.handleChange(e, { name, value: getStringISODate(value) }),
-                                //minDate: moment(), TypeError: Cannot read property 'position' of undefined
-                                clearable: true
-                              }}
-                            />
-                          </FormGroup>
-                        </LeftColumn>
-                        <RightColumn>
+                      <GridRow columns={3}>
+                        {!this.state.nextSubmit && this.state.select !== '' && (
+                          <>
+                            <LeftColumn textAlign='left' width={5}>
+                              <Input
+                                name='pricePerUOM'
+                                label={
+                                  <>
+                                    <FormattedMessage id='submitOffer.fobPrice' defaultMessage='FOB Price'>
+                                      {text => text}
+                                    </FormattedMessage>
+                                    <Required />
+                                  </>
+                                }
+                                inputProps={{
+                                  type: 'number',
+                                  onChange: this.handleChange,
+                                  label: <GreenLabel>{currencySymbol}</GreenLabel>,
+                                  labelPosition: 'right'
+                                }}
+                              />
+                            </LeftColumn>
+                            <LeftColumn textAlign='left' width={5}>
+                              <DateInput
+                                name='lotExpirationDate'
+                                label='Expiration Date'
+                                inputProps={{
+                                  onChange: (e, { name, value }) =>
+                                    this.handleChange(e, { name, value: getStringISODate(value) }),
+                                  //minDate: moment(), TypeError: Cannot read property 'position' of undefined
+                                  clearable: true
+                                }}
+                              />
+                            </LeftColumn>
+                          </>
+                        )}
+                        <RightColumn floated='right'>
                           <Button basic type='button' onClick={closePopup}>
                             <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
                               {text => text}
                             </FormattedMessage>
                           </Button>
-                          <Button primary type='submit' disabled={this.state.select === ''}>
+                          <SubmitButton
+                            primary
+                            type='submit'
+                            onClick={this.submitForm}
+                            disabled={this.state.select === ''}>
                             <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span'>
                               {text => text}
                             </FormattedMessage>
-                          </Button>
+                          </SubmitButton>
                         </RightColumn>
                       </GridRow>
                     </Grid>
-                  </>
-                )
-              }}
-            />
-          </Modal.Actions>
-        </Modal>
+                  </Modal.Actions>
+                </Modal>
+              </>
+            )
+          }}
+        />
       </>
     )
   }
