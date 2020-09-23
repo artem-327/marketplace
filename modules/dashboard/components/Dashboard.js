@@ -342,8 +342,8 @@ class Dashboard extends Component {
 
     switch (type) {
       case 1:
-        dateFrom = moment().startOf('day')
-        dateTo = moment().endOf('day')
+        dateFrom = moment().startOf('day').subtract(1, 'day')
+        dateTo = moment().endOf('day').subtract(1, 'day')
         break;
       case 2:
         dateFrom = moment().startOf('week')
@@ -419,29 +419,16 @@ class Dashboard extends Component {
       intl: { formatMessage }
     } = this.props
 
-    const companyTabs = {
+    const statsTabs = {
+      companyGenericProductsCount: [formatMessage({id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products'}), false],
       clientCompaniesCount: [formatMessage({id: 'dashboard.guestCompaniesCount', defaultMessage: '# of Guest Companies'}), false],
       companiesCount: [formatMessage({id: 'dashboard.companiesCount', defaultMessage: '# of Companies'}), false],
-      companyGenericProductsCount: [formatMessage({id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products'}), false],
-      productOfferCount: [formatMessage({id: 'dashboard.productOffersCount', defaultMessage: '# of Product Offers'}), false],
+      //productOfferCount: [formatMessage({id: 'dashboard.productOffersCount', defaultMessage: '# of Product Offers'}), false],
       usersCount: [formatMessage({id: 'dashboard.usersCount', defaultMessage: '# of Users'}), false],
       sales: [formatMessage({ id: 'dashboard.sales', defaultMessage: 'Sales' }), false],
       totalProductOfferValue: [formatMessage({ id: 'dashboard.totalPOValue', defaultMessage: 'Total Product Offer Value' }), true],
       totalValueOfBroadcastedProductOffers: [formatMessage({ id: 'dashboard.totalValueBroadcastedPO', defaultMessage: 'Total Value of Broadcasted Product Offers' }), true]
     }
-
-    const adminTabs = {
-      //clientCompaniesCount: [formatMessage({id: 'dashboard.guestCompaniesCount', defaultMessage: '# of Guest Companies'}), false],
-      //companiesCount: [formatMessage({id: 'dashboard.companiesCount', defaultMessage: '# of Companies'}), false],
-      companyGenericProductsCount: [formatMessage({id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products'}), false],
-      //productOfferCount: [formatMessage({id: 'dashboard.productOffersCount', defaultMessage: '# of Product Offers'}), false],
-      //usersCount: [formatMessage({id: 'dashboard.usersCount', defaultMessage: '# of Users'}), false],
-      //sales: [formatMessage({ id: 'dashboard.sales', defaultMessage: 'Sales' }), false],
-      //totalProductOfferValue: [formatMessage({ id: 'dashboard.totalPOValue', defaultMessage: 'Total Product Offer Value' }), true],
-      //totalValueOfBroadcastedProductOffers: [formatMessage({ id: 'dashboard.totalValueBroadcastedPO', defaultMessage: 'Total Value of Broadcasted Product Offers' }), true]
-    }
-
-    const statsTabs = isAdmin && !takeover ? adminTabs : companyTabs
 
     let stats = []
     if (dailyStats && dailyStats.length) {
@@ -564,27 +551,6 @@ class Dashboard extends Component {
       },
       {
         menuItem: (
-          <Menu.Item key='stats' onClick={() => this.setState({ activeTab: 2 })}>
-            <UpperCaseText>{formatMessage({ id: 'dashboard.dailyStats', defaultMessage: 'DAILY STATS' })}</UpperCaseText>
-          </Menu.Item>
-        ),
-        render: () => (
-          <TabPane key='stats' attached={false}>
-            <LineGraph
-              data={stats}
-              dataKey={statsType ? statsTabs[statsType][0] : Object.entries(statsTabs)[0][1][0]}
-              isCurrency={statsType ? statsTabs[statsType][1] : false}
-              unitsCurrency={1}
-              title='Daily Statistics'
-              titleId='dashboard.daily.stats.title'
-              subTitle=''
-              subTitleId=''
-            />
-          </TabPane>
-        )
-      },
-      {
-        menuItem: (
           <>
             {activeTab === 2 ? (
               <StatsTypeSelect
@@ -631,7 +597,7 @@ class Dashboard extends Component {
       isAdmin && !takeover ? adminMenuTabs : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
 
     const quickFilters = [
-      formatMessage({ id: 'dashboard.dateFilter.today', defaultMessage: 'Today'}),
+      formatMessage({ id: 'dashboard.dateFilter.lastDay', defaultMessage: 'Last day'}),
       formatMessage({ id: 'dashboard.dateFilter.thisWeek', defaultMessage: 'This week' }),
       formatMessage({ id: 'dashboard.dateFilter.lastWeek', defaultMessage: 'Last week' }),
       formatMessage({ id: 'dashboard.dateFilter.thisMonth', defaultMessage: 'This month' }),
@@ -645,7 +611,8 @@ class Dashboard extends Component {
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
         <Grid.Row>
           <Grid.Column width={16}>
-            <Popup on='click'
+            {isAdmin && !takeover && (
+              <Popup on='click'
                    trigger={<Select>{activeQuick > 0 ? quickFilters[activeQuick - 1] : (selectedDate ? selectedDate : 'Select')}</Select>}
                    position='bottom left'
                    flowing
@@ -744,7 +711,8 @@ class Dashboard extends Component {
                        </Grid.Row>
                      </DateGrid>
                    )}
-            />
+              />
+            )}
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
