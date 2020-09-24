@@ -982,14 +982,14 @@ export default function reducer(state = initialState, action) {
     case AT.POST_NEW_BANK_ACCOUNT_REQUEST_PENDING: {
       return {
         ...state,
-        loading: true
+        updating: true
       }
     }
 
     case AT.POST_NEW_BANK_ACCOUNT_REQUEST_REJECTED: {
       return {
         ...state,
-        loading: false,
+        updating: false,
         popupValues: null
         // isOpenPopup: false,
       }
@@ -998,7 +998,7 @@ export default function reducer(state = initialState, action) {
     case AT.POST_NEW_BANK_ACCOUNT_REQUEST_FULFILLED: {
       return {
         ...state,
-        loading: false,
+        updating: false,
         popupValues: null,
         isOpenPopup: false,
         bankAccountsRows: [...state.bankAccountsRows, action.payload]
