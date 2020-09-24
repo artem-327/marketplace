@@ -102,11 +102,6 @@ class Filter extends Component {
         loaded: true
       })
     )
-    if (appliedFilter && appliedFilter.filters) {
-      let datagridFilter = this.toDatagridFilter(appliedFilter)
-      applyDatagridFilter(datagridFilter, false)
-      onApply(datagridFilter)
-    }
   }
 
   componentWillUnmount() {

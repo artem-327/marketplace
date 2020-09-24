@@ -355,8 +355,8 @@ class MyListings extends Component {
     }
   }
 
-  componentDidMount() {
-    const { sidebarDetailTrigger, myListingsFilters } = this.props
+  componentDidMount = async () => {
+    const { sidebarDetailTrigger, myListingsFilters, advancedFilters, datagrid, applyDatagridFilter } = this.props
     if (window) {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
@@ -389,10 +389,15 @@ class MyListings extends Component {
             ...this.state.filterValues.SearchByNamesAndTags.filters
           })
         }
-        this.handleFiltersValue(filter)
+        datagrid.setSearch(filter, !advancedFilters.filters, 'pageFilters')
       })
     } else {
-      this.handleFiltersValue(this.state.filterValues)
+      datagrid.setSearch(this.state.filterValues, !advancedFilters.filters, 'pageFilters')
+    }
+
+    if (advancedFilters.filters) {
+      let datagridFilter = this.toDatagridFilter(advancedFilters)
+      applyDatagridFilter(datagridFilter, true)
     }
   }
 
@@ -414,9 +419,22 @@ class MyListings extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
-
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
       datagrid.setFilter(datagridFilter, datagridFilterReload, 'inventory')
+    }
+  }
+
+  toDatagridFilter = savedFilter => {
+    let { filters, ...rest } = savedFilter
+
+    return {
+      filters: filters.map(filter => ({
+        operator: filter.operator,
+        path: filter.path,
+        values: filter.values.map(val => val.value)
+      })),
+      //pageNumber: savedFilter.pageNumber,
+      pageSize: 50
     }
   }
 
@@ -909,7 +927,7 @@ class MyListings extends Component {
                 </Button>
               </div>
               <FiltersRow>
-                <FilterTags />
+                <FilterTags filterType='inventory' datagrid={datagrid} />
               </FiltersRow>
             </div>
 
