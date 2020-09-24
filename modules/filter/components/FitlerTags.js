@@ -74,7 +74,6 @@ class FilterTags extends Component {
             </Grid>
           </WiderTooltip>
         )
-        // {tagDescription.toString().replace(/,/g, ', ')}
       } else {
         return (
           <FilterTag key={i} ref={this.myRef}>
@@ -149,8 +148,8 @@ FilterTags.defaultProps = {
   filters: []
 }
 
-function mapStateToProps(store) {
-  const filterType = getSafe(() => store.filter.params.filterType, null)
+function mapStateToProps(store, props) {
+  const { filterType } = props
   return {
     appliedFilter: filterType && store.filter[filterType] ? store.filter[filterType].appliedFilter : [],
     params: store.filter.params,

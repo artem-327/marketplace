@@ -282,7 +282,7 @@ class Listings extends Component {
   }
 
   componentDidMount() {
-    const { tableHandlersFiltersListings } = this.props
+    const { tableHandlersFiltersListings, advancedFilters, datagrid, applyDatagridFilter } = this.props
 
     if (tableHandlersFiltersListings) {
       this.setState({ filterValues: tableHandlersFiltersListings }, () => {
@@ -292,10 +292,15 @@ class Listings extends Component {
             ...this.state.filterValues.SearchByNamesAndTags.filters
           })
         }
-        this.handleFiltersValue(filter)
+        datagrid.setSearch(filter, !advancedFilters.filters, 'pageFilters')
       })
     } else {
-      this.handleFiltersValue(this.state.filterValues)
+      datagrid.setSearch(this.state.filterValues, !advancedFilters.filters, 'pageFilters')
+    }
+
+    if (advancedFilters.filters) {
+      let datagridFilter = this.toDatagridFilter(advancedFilters)
+      applyDatagridFilter(datagridFilter, true)
     }
   }
 
@@ -310,7 +315,21 @@ class Listings extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
-      datagrid.setFilter(datagridFilter, datagridFilterReload, 'marketplaceListings')
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'marketplace')
+    }
+  }
+
+  toDatagridFilter = savedFilter => {
+    let { filters, ...rest } = savedFilter
+
+    return {
+      filters: filters.map(filter => ({
+        operator: filter.operator,
+        path: filter.path,
+        values: filter.values.map(val => val.value)
+      })),
+      //pageNumber: savedFilter.pageNumber,
+      pageSize: 50
     }
   }
 
@@ -504,6 +523,9 @@ class Listings extends Component {
                   })}
                 </Button>
               </div>
+              <FiltersRow>
+                <FilterTags filterType='marketplace' datagrid={datagrid} />
+              </FiltersRow>
             </div>
 
             <ColumnSettingButton />
