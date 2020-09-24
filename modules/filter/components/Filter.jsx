@@ -102,11 +102,6 @@ class Filter extends Component {
         loaded: true
       })
     )
-    if (appliedFilter && appliedFilter.filters) {
-      let datagridFilter = this.toDatagridFilter(appliedFilter)
-      applyDatagridFilter(datagridFilter, false)
-      onApply(datagridFilter)
-    }
   }
 
   componentWillUnmount() {
@@ -511,7 +506,6 @@ class Filter extends Component {
               inputProps={{
                 'data-test': 'filter_dateField_drpdn',
                 value: values[name],
-                disabled: !values[inputName],
                 fluid: true,
                 onChange: (_, data) => {
                   setFieldValue(data.name, data.value)

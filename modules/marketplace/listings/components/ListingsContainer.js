@@ -19,6 +19,7 @@ import { getLocaleDateFormat } from '~/components/date-format'
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.marketplace,
+    advancedFilters: store.filter.marketplace.appliedFilter,
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
     appliedFilter: store.filter.marketplace.appliedFilter,
     activeMarketplaceFilter: getSafe(() => store.filter.marketplace.appliedFilter.filters.length > 0, false),
