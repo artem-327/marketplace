@@ -1222,3 +1222,22 @@ export function cleanRenderCopyright() {
     type: AT.SETTINGS_CLEAN_RENDER_COPYRIGHT
   }
 }
+
+export function vellociOnEvent(options) {
+  return {
+    type: AT.VELLOCI_ON_EVENT,
+    payload: api.vellociOnEvent(options)
+  }
+}
+export function vellociGetToken(options) {
+  return {
+    type: AT.VELLOCI_GET_TOKEN,
+    payload: api.vellociGetToken(options)
+  }
+}
+export function vellociAddAcount(options) {
+  return {
+    type: AT.VELLOCI_ADD_ACOUNT,
+    payload: api.vellociAddAcount(options)
+  }
+}

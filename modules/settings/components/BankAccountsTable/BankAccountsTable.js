@@ -217,43 +217,7 @@ class BankAccountsTable extends Component {
 
     this.state = {
       amount1: 0,
-      amount2: 0,
-      columns: [
-        { name: 'accountName', disabled: true },
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='settings.accountName' defaultMessage='Account Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          actions: this.getActions()
-        },
-        {
-          name: 'bankAccountType',
-          title: (
-            <FormattedMessage id='settings.accountType' defaultMessage='Account Type'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'bankName',
-          title: (
-            <FormattedMessage id='settings.bankName' defaultMessage='Bank Name'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'statusLabel',
-          title: (
-            <FormattedMessage id='settings.status' defaultMessage='Status'>
-              {text => text}
-            </FormattedMessage>
-          )
-        }
-      ]
+      amount2: 0
     }
   }
 
@@ -280,6 +244,43 @@ class BankAccountsTable extends Component {
       })
     }
   }
+
+  getColumns = () => [
+    { name: 'accountName', disabled: true },
+    {
+      name: 'name',
+      title: (
+        <FormattedMessage id='settings.accountName' defaultMessage='Account Name'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      actions: this.getActions()
+    },
+    {
+      name: 'bankAccountType',
+      title: (
+        <FormattedMessage id='settings.accountType' defaultMessage='Account Type'>
+          {text => text}
+        </FormattedMessage>
+      )
+    },
+    {
+      name: 'bankName',
+      title: (
+        <FormattedMessage id='settings.bankName' defaultMessage='Bank Name'>
+          {text => text}
+        </FormattedMessage>
+      )
+    },
+    {
+      name: 'statusLabel',
+      title: (
+        <FormattedMessage id='settings.status' defaultMessage='Status'>
+          {text => text}
+        </FormattedMessage>
+      )
+    }
+  ]
 
   getActions = () => {
     const {
@@ -326,7 +327,7 @@ class BankAccountsTable extends Component {
           defaultMessage: 'Initiate Verification'
         }),
         callback: row => dwollaInitiateVerification(row.id),
-        hidden: row => row.status !== 'unverified'
+        hidden: row => row.status !== 'unverified' || method !== 'dwolla'
       },
       {
         text: formatMessage({
@@ -336,7 +337,7 @@ class BankAccountsTable extends Component {
         callback: row => {
           finalizeConfirm().then(v => dwollaFinalizeVerification(row.id, v.amount1, v.amount2))
         },
-        hidden: row => row.status !== 'verification_in_process'
+        hidden: row => row.status !== 'verification_in_process' || method !== 'dwolla'
       },
       {
         text: formatMessage({
@@ -352,8 +353,6 @@ class BankAccountsTable extends Component {
   render() {
     const { rows, loading, filterValue, intl, bankAccounts, method, accountStatus, documentRequired } = this.props
 
-    let { columns } = this.state
-
     return (
       <React.Fragment>
         {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
@@ -361,7 +360,7 @@ class BankAccountsTable extends Component {
             tableName='settings_bankaccounts'
             rows={rows}
             loading={loading}
-            columns={columns}
+            columns={this.getColumns()}
             filterValue={filterValue}
             columnActions='name'
           />
@@ -535,13 +534,13 @@ const displayStatus = (r, preferredBankAccountId) => {
 
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
-  const paymentProcessor = company.paymentProcessor
+  const paymentProcessor = getSafe(() => company.paymentProcessor, 'DWOLLA')
 
   const preferredBankAccountId = get(state, 'settings.currentUser.company.preferredBankAccountId', '')
   let documentRequired = 'verify-with-document'
   let accountStatus = 'none'
 
-  if (company && company.dwollaAccountStatus) {
+  if (company && paymentProcessor === 'DWOLLA') {
     accountStatus = company.dwollaAccountStatus
     documentRequired = company.dwollaDocumentRequired && company.dwollaDocumentRequired
 
@@ -551,7 +550,7 @@ const mapStateToProps = state => {
       getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
     )
       accountStatus = 'documentOwner'
-  } else if (company && company.vellociAccountStatus) {
+  } else if (company && paymentProcessor === 'VELLOCI') {
     accountStatus = company.vellociAccountStatus
     documentRequired = company.vellociDocumentRequired && company.vellociDocumentRequired
   }
@@ -560,10 +559,9 @@ const mapStateToProps = state => {
 
   documentRequired = documentRequired && documentRequired.replace(/-/g, '')
   const hasDwollaAccount = getSafe(() => company.dwollaAccountStatus, '') === 'verified'
-  const isDwolla = getSafe(() => company.dwollaAccountStatus, false) ? true : false
 
   return {
-    method: isDwolla ? 'dwolla' : 'velloci',
+    method: paymentProcessor === 'DWOLLA' ? 'dwolla' : 'velloci',
     paymentProcessor,
     hasDwollaAccount,
     bankAccounts: bankAccountsConfig[accountStatus],

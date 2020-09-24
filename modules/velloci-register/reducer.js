@@ -89,6 +89,27 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.UPLOAD_DOCUMENTS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.UPLOAD_DOCUMENTS_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.UPLOAD_DOCUMENTS_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     case AT.GET_ENTITY_TYPES_PENDING: {
       return {
         ...state,

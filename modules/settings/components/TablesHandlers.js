@@ -361,16 +361,17 @@ class TablesHandlers extends Component {
   }
 
   onSuccess = async (public_token, metadata) => {
-    console.log('onSuccess', public_token, metadata)
+    console.log('onSuccess', public_token, metadata) //REMOVE
     const options = {
       method: 'POST',
       body: JSON.stringify({
         metadata: metadata,
-        business_public_id: '' //FIXME
+        business_public_id: this.props.businessPublicId //CHECK
       })
     }
 
-    const response = await api.post('/prodex/api/payments/velloci/accounts', options)
+    const response = await this.props.vellociAddAcount(options)
+    console.log('response', response) //REMOVE
     const res = await response.json()
 
     if (res.hasOwnProperty('error_type')) {
@@ -380,6 +381,7 @@ class TablesHandlers extends Component {
     }
   }
 
+  //FIXME maybe isn't needed and BE prepare token
   token = async () => {
     const options = {
       method: 'POST',
@@ -387,30 +389,31 @@ class TablesHandlers extends Component {
         products: 'auth',
         link_customization_name: 'echo',
         account_types: 'all',
-        business_public_id: '', //FIXME
+        business_public_id: this.props.businessPublicId, //CHECK
         account_public_id: null
       })
     }
 
-    const response = await api.post('/prodex/api/payments/velloci/token', options)
+    const response = await this.props.vellociGetToken(options)
+    console.log('response', response) //REMOVE
     return await response.json()
   }
 
   onEvent = async (event_name, metadata) => {
-    console.log('onEvent', event_name, metadata)
+    console.log('onEvent', event_name, metadata) //REMOVE
 
     const options = {
       method: 'POST',
       body: JSON.stringify({
         metadata: metadata,
         event_name: event_name,
-        business_public_id: '' //FIXME
+        business_public_id: this.props.businessPublicId //CHECK
       })
     }
 
-    const response = await api.post('/prodex/api/payments/velloci/log', options)
+    const response = await this.props.vellociOnEvent(options)
+    console.log('response', response) //REMOVE
     const res = await response.json()
-    console.log('res', res)
   }
 
   renderHandler = () => {
@@ -429,6 +432,7 @@ class TablesHandlers extends Component {
       openSidebar,
       vellociAccBalance,
       paymentProcessor,
+      businessPublicId,
       intl: { formatMessage }
     } = this.props
 
@@ -640,8 +644,7 @@ class TablesHandlers extends Component {
                 <div className='column'>
                   {paymentProcessor === 'VELLOCI' ? (
                     <PlaidButton
-                      token={this.token}
-                      publicKey={''} //FIXME
+                      publicKey={businessPublicId} //FIXME
                       onExit={this.onExit}
                       onSuccess={this.onSuccess}
                       onEvent={this.onEvent}>
@@ -730,7 +733,8 @@ const mapStateToProps = state => {
       : { value: '', currency },
     treeData,
     filter,
-    ...rest
+    ...rest,
+    businessPublicId: getSafe(() => company.businessPublicId, '') //CHECK
   }
 }
 
