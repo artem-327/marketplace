@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { FormGroup, Segment } from 'semantic-ui-react'
-
+import { Form, FormGroup, Segment, Dimmer, Loader, Button } from 'semantic-ui-react'
+import { Formik } from 'formik'
 import { closeSidebar, putBankAccountRequest, postNewDwollaBankAccountRequest } from '../../actions'
 
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import Router from 'next/router'
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -40,11 +40,6 @@ const BottomButtons = styled.div`
   padding: 10px 25px;
   margin-top: 0px;
   box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
-`
-
-const ButtonSubmit = styled(Button.Submit)`
-  background-color: #2599d5 !important;
-  color: #ffffff !important;
 `
 
 const CustomForm = styled(Form)`
@@ -88,10 +83,10 @@ const bankAccountType = [
 
 class BankAccountsSidebar extends React.Component {
   submitHandler = async (values, { setSubmitting }) => {
-    const { postNewDwollaBankAccountRequest } = this.props
-
+    const { postNewDwollaBankAccountRequest, closeSidebar } = this.props
     try {
       await postNewDwollaBankAccountRequest(values)
+      closeSidebar()
     } catch {
     } finally {
       setSubmitting(false)
@@ -102,11 +97,12 @@ class BankAccountsSidebar extends React.Component {
     const {
       closeSidebar,
       popupValues,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      updating
     } = this.props
 
     return (
-      <CustomForm
+      <Formik
         enableReinitialize
         initialValues={{
           ...initialFormValues,
@@ -116,108 +112,129 @@ class BankAccountsSidebar extends React.Component {
         onReset={closeSidebar}
         onSubmit={this.submitHandler}
         // validateOnChange={false}
-        validateOnBlur={false}>
-        <FlexSidebar visible={true} width='very wide' style={{ width: '630px' }} direction='right' animation='overlay'>
-          <div>
-            <CustomHighSegment basic>
-              {popupValues ? (
-                <FormattedMessage id='settings.EditBankAcc' defaultMessage='Edit Bank Account' />
-              ) : (
-                <FormattedMessage id='settings.AddBankAcc' defaultMessage='Add Bank Account' />
-              )}
-            </CustomHighSegment>
-          </div>
-          <FlexContent style={{ padding: '16px' }}>
-            <CustomSegmentContent basic>
-              <FormGroup widths='equal' data-test='settings_bank_account_accountNumber_inp'>
-                <Input
-                  type='text'
-                  label={
-                    <>
-                      {formatMessage({ id: 'settings.accountNumber', defaultMessage: 'Account Number' })}
-                      <Required />
-                    </>
-                  }
-                  name='accountNumber'
-                  inputProps={{
-                    placeholder: formatMessage({
-                      id: 'settings.placeholder.accontNumber',
-                      defaultMessage: 'Enter Account Number'
-                    }),
-                    'data-test': 'settings_bank_account_sidebar_account_number_inpt'
-                  }}
-                />
-                <Dropdown
-                  label={
-                    <>
-                      {formatMessage({ id: 'settings.accountType', defaultMessage: 'Account Type' })}
-                      <Required />
-                    </>
-                  }
-                  name='bankAccountType'
-                  options={bankAccountType}
-                  inputProps={{
-                    'data-test': 'settings_bank_account_sidebar_type_drpdn',
-                    placeholder: formatMessage({
-                      id: 'settings.placeholder.accontType',
-                      defaultMessage: 'Enter Account Type'
-                    })
-                  }}
-                />
-              </FormGroup>
-              <FormGroup widths='equal' data-test='settings_bank_account_nameNumber_inp'>
-                <Input
-                  type='text'
-                  label={
-                    <>
-                      {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
-                      <Required />
-                    </>
-                  }
-                  name='name'
-                  inputProps={{
-                    placeholder: formatMessage({
-                      id: 'settings.placeholder.accontName',
-                      defaultMessage: 'Enter Account Name'
-                    }),
-                    'data-test': 'settings_bank_account_sidebar_account_name_inpt'
-                  }}
-                />
-                <Input
-                  type='text'
-                  label={
-                    <>
-                      {formatMessage({ id: 'settings.routingNumber', defaultMessage: 'Routing Number' })}
-                      <Required />
-                    </>
-                  }
-                  name='routingNumber'
-                  inputProps={{
-                    placeholder: formatMessage({
-                      id: 'settings.placeholder.routingName',
-                      defaultMessage: 'Enter Routing Name'
-                    }),
-                    'data-test': 'settings_bank_account_sidebar_routing_name_inpt'
-                  }}
-                />
-              </FormGroup>
-            </CustomSegmentContent>
-          </FlexContent>
-          <BottomButtons>
-            <Button type='button' basic onClick={closeSidebar} data-test='settings_bank_account_popup_reset_btn'>
-              <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                {text => text}
-              </FormattedMessage>
-            </Button>
-            <ButtonSubmit data-test='settings_bank_account_popup_submit_btn'>
-              <FormattedMessage id='global.save' defaultMessage='Save'>
-                {text => text}
-              </FormattedMessage>
-            </ButtonSubmit>
-          </BottomButtons>
-        </FlexSidebar>
-        <ErrorFocus />
-      </CustomForm>
+        loading={false}
+        validateOnBlur={false}
+        render={({ values, errors, submitForm }) => {
+          this.submitForm = submitForm
+          return (
+            <CustomForm>
+              <FlexSidebar
+                visible={true}
+                width='very wide'
+                style={{ width: '630px' }}
+                direction='right'
+                animation='overlay'
+              >
+                <Dimmer inverted active={updating}>
+                  <Loader />
+                </Dimmer>
+                <div>
+                  <CustomHighSegment basic>
+                    {popupValues ? (
+                      <FormattedMessage id='settings.EditBankAcc' defaultMessage='Edit Bank Account' />
+                    ) : (
+                      <FormattedMessage id='settings.AddBankAcc' defaultMessage='Add Bank Account' />
+                    )}
+                  </CustomHighSegment>
+                </div>
+                <FlexContent style={{ padding: '16px' }}>
+                  <CustomSegmentContent basic>
+                    <FormGroup widths='equal' data-test='settings_bank_account_accountNumber_inp'>
+                      <Input
+                        type='text'
+                        label={
+                          <>
+                            {formatMessage({ id: 'settings.accountNumber', defaultMessage: 'Account Number' })}
+                            <Required />
+                          </>
+                        }
+                        name='accountNumber'
+                        inputProps={{
+                          placeholder: formatMessage({
+                            id: 'settings.placeholder.accontNumber',
+                            defaultMessage: 'Enter Account Number'
+                          }),
+                          'data-test': 'settings_bank_account_sidebar_account_number_inpt'
+                        }}
+                      />
+                      <Dropdown
+                        label={
+                          <>
+                            {formatMessage({ id: 'settings.accountType', defaultMessage: 'Account Type' })}
+                            <Required />
+                          </>
+                        }
+                        name='bankAccountType'
+                        options={bankAccountType}
+                        inputProps={{
+                          'data-test': 'settings_bank_account_sidebar_type_drpdn',
+                          placeholder: formatMessage({
+                            id: 'settings.placeholder.accontType',
+                            defaultMessage: 'Enter Account Type'
+                          })
+                        }}
+                      />
+                    </FormGroup>
+                    <FormGroup widths='equal' data-test='settings_bank_account_nameNumber_inp'>
+                      <Input
+                        type='text'
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                            <Required />
+                          </>
+                        }
+                        name='name'
+                        inputProps={{
+                          placeholder: formatMessage({
+                            id: 'settings.placeholder.accontName',
+                            defaultMessage: 'Enter Account Name'
+                          }),
+                          'data-test': 'settings_bank_account_sidebar_account_name_inpt'
+                        }}
+                      />
+                      <Input
+                        type='text'
+                        label={
+                          <>
+                            {formatMessage({ id: 'settings.routingNumber', defaultMessage: 'Routing Number' })}
+                            <Required />
+                          </>
+                        }
+                        name='routingNumber'
+                        inputProps={{
+                          placeholder: formatMessage({
+                            id: 'settings.placeholder.routingName',
+                            defaultMessage: 'Enter Routing Name'
+                          }),
+                          'data-test': 'settings_bank_account_sidebar_routing_name_inpt'
+                        }}
+                      />
+                    </FormGroup>
+                  </CustomSegmentContent>
+                </FlexContent>
+                <BottomButtons>
+                  <Button type='button' basic onClick={closeSidebar} data-test='settings_bank_account_popup_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                  <Button
+                    secondary
+                    onClick={() => this.submitForm()}
+                    data-test='settings_bank_account_popup_submit_btn'
+                  >
+                    <FormattedMessage id='global.save' defaultMessage='Save'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                </BottomButtons>
+              </FlexSidebar>
+              <ErrorFocus />
+            </CustomForm>
+          )
+        }}
+      />
     )
   }
 }
@@ -230,6 +247,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
+    updating: state.settings.updating,
     country: state.settings.country,
     currency: getSafe(() => state.settings.currency, currency),
     currentTab:
