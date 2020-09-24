@@ -117,7 +117,7 @@ class VellociRegister extends Component {
       tinNumber: getSafe(() => controlPerson.tinNumber, ''),
       controller: {
         address: getSafe(() => verifyPersonalInformation[0].address.streetAddress, ''),
-        businessRole: getSafe(() => verifyPersonalInformation[0].businessRole, ''),
+        businessRole: getSafe(() => controlPerson.isControlPerson, '') ? 'controlling_officer' : '',
         businessTitle: getSafe(() => verifyPersonalInformation[0].businessTitle, ''),
         city: getSafe(() => verifyPersonalInformation[0].address.city, ''),
         dateOfBirth: getSafe(() => getStringISODate(verifyPersonalInformation[0].dateOfBirth), ''),
@@ -151,7 +151,9 @@ class VellociRegister extends Component {
           companyId = { companyId: Number(searchParams.get('companyId')) }
         }
       }
-      await postRegisterVelloci(body, files, documentType, companyId)
+      let res = await postRegisterVelloci(body, companyId)
+      console.log('response', res) //REMOVE after test
+      await postUploadDocuments(files, documentType, res.data.id)
     } catch (error) {
       console.error(error)
     }
@@ -183,10 +185,12 @@ class VellociRegister extends Component {
         controlPerson: Yup.lazy(() => {
           const taxNumber = values.controlPerson.isEin
             ? { ein: einValidation() }
-            : { ssn: Yup.string().trim()
-                .test('num-length', errorMessages.exactDigits(9), value => /^[0-9]{9}$/.test(value))
-                .required(errorMessages.requiredMessage)
-          }
+            : {
+                ssn: Yup.string()
+                  .trim()
+                  .test('num-length', errorMessages.exactDigits(9), value => /^[0-9]{9}$/.test(value))
+                  .required(errorMessages.requiredMessage)
+              }
           return Yup.object().shape({
             isControlPerson: Yup.boolean().oneOf([true], errorMessages.requiredMessage),
             entityType: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage),
@@ -248,7 +252,7 @@ class VellociRegister extends Component {
                 .required(errorMessages.requiredMessage),
               socialSecurityNumber: Yup.string()
                 .trim()
-                .min(10, errorMessages.minLength(10))
+                .min(9, errorMessages.minLength(9))
                 .required(errorMessages.requiredMessage),
               businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage)
             })

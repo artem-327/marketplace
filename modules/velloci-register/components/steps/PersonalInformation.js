@@ -287,7 +287,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
               inputProps={{
                 placeholder: formatMessage({
                   id: 'velloci.personalInfo.socialSecurityNumber.placeholder',
-                  defaultMessage: 'XXX-XX-XXXX'
+                  defaultMessage: '123456789'
                 }),
                 type: 'text',
                 'data-test': 'settings_velloci_registration_personal_info_social_security_number_inpt'
