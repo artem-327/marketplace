@@ -1223,21 +1223,21 @@ export function cleanRenderCopyright() {
   }
 }
 
-export function vellociOnEvent(options) {
+export function vellociOnEvent(eventName, metadata) {
   return {
     type: AT.VELLOCI_ON_EVENT,
-    payload: api.vellociOnEvent(options)
+    payload: api.vellociOnEvent(eventName, metadata)
   }
 }
-export function vellociGetToken(options) {
+export function vellociGetToken() {
   return {
     type: AT.VELLOCI_GET_TOKEN,
-    payload: api.vellociGetToken(options)
+    payload: api.vellociGetToken()
   }
 }
-export function vellociAddAcount(options) {
+export function vellociAddAcount(publicToken) {
   return {
     type: AT.VELLOCI_ADD_ACOUNT,
-    payload: api.vellociAddAcount(options)
+    payload: api.vellociAddAcount(publicToken)
   }
 }

@@ -259,9 +259,14 @@ export default {
       .then(response => response.data),
   getCompanyDetails: id => api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data),
 
-  vellociOnEvent: options =>
-    api.post('/prodex/api/payments/bank-accounts/velloci/add/log', options).then(response => response.data),
-  vellociGetToken: options => api.post('/prodex/api/payments/velloci/token', options).then(response => response.data),
-  vellociAddAcount: options =>
-    api.post('/prodex/api/payments/bank-accounts/velloci/add', options).then(response => response.data)
+  vellociOnEvent: (eventName, metadata) =>
+    api
+      .post(`/prodex/api/payments/bank-accounts/velloci/add/log?eventName=${eventName}`, metadata)
+      .then(response => response.data),
+  vellociGetToken: () =>
+    api.get('/prodex/api/payments/bank-accounts/velloci/add/token').then(response => response.data),
+  vellociAddAcount: publicToken =>
+    api
+      .post(`/prodex/api/payments/bank-accounts/velloci/add?publicToken=${publicToken}`)
+      .then(response => response.data)
 }
