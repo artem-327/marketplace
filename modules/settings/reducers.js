@@ -1020,6 +1020,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DWOLLA_SET_PREFERRED_REJECTED:
     case AT.DWOLLA_SET_PREFERRED_FULFILLED:
     case AT.DELETE_BANK_ACCOUNT_REJECTED: {
       return {

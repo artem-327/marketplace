@@ -76,7 +76,8 @@ function FormRectangle({
   numberBeneficialOwners
 }) {
   //if user is not beneficial owner, is on last form (Term and Conditions) and pressed button Back then must skip Beneficial form. That means activeStep minus 2
-  const step = !getSafe(() => formikProps.values.ownerInformation.isBeneficialOwner, false) && activeStep === 5 ? 2 : 1
+  const { values } = formikProps
+  const step = !getSafe(() => values.ownerInformation.isBeneficialOwner, false) && activeStep === 5 ? 2 : 1
   return (
     <DivRectangleForm height={activeStep === 3 || activeStep === 4 ? '1000px' : activeStep === 5 ? '400px' : '860px'}>
       <DivTitleRectangleForm>
@@ -126,23 +127,25 @@ function FormRectangle({
             />
           )}
 
-          <Popup
-            trigger={
-              <a href={`#form${numberBeneficialOwners}`}>
-                <Button
-                  type='button'
-                  style={{ marginLeft: '10px !important', marginRight: '0px !important' }}
-                  positive
-                  onClick={() => {
-                    countBeneficialOwners(numberBeneficialOwners + 1)
-                  }}
-                  icon>
-                  <Icon name='plus' />
-                </Button>
-              </a>
-            }
-            content={<FormattedMessage id='settings.addBeneficialOwner' defaultMessage='Add beneficial owner' />}
-          />
+          {values.ownerInformation.isOtherBeneficialOwner && (
+            <Popup
+              trigger={
+                <a href={`#form${numberBeneficialOwners}`}>
+                  <Button
+                    type='button'
+                    style={{ marginLeft: '10px !important', marginRight: '0px !important' }}
+                    positive
+                    onClick={() => {
+                      countBeneficialOwners(numberBeneficialOwners + 1)
+                    }}
+                    icon>
+                    <Icon name='plus' />
+                  </Button>
+                </a>
+              }
+              content={<FormattedMessage id='settings.addBeneficialOwner' defaultMessage='Add beneficial owner' />}
+            />
+          )}
         </RightAlignedDiv>
       )}
 

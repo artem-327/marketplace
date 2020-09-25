@@ -237,12 +237,13 @@ class TablesHandlers extends Component {
       getDwollaBeneficiaryOwners,
       tableHandlersFilters,
       currentTab,
-      paymentProcessor
+      paymentProcessor,
+      accountStatus
     } = this.props
 
     try {
       //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA') {
+      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA' && accountStatus) {
         await getDwollaBeneficiaryOwners()
       }
     } catch (err) {
@@ -715,6 +716,7 @@ const mapStateToProps = state => {
   //const accountStatus = 'document'
 
   return {
+    accountStatus,
     paymentProcessor: getSafe(() => company.paymentProcessor, 'DWOLLA'),
     logisticsFilter: state.settings.logisticsFilter,
     'bank-accountsFilter': state.settings['bank-accountsFilter'],

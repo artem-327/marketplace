@@ -68,6 +68,24 @@ class VellociRegister extends Component {
     this.props.cleareActiveStep()
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.numberBeneficialOwners > prevProps.numberBeneficialOwners) {
+      // Add Benefical owner
+      const { values, setFieldValue } = this.formikProps
+      let newPersonalInformation = values.verifyPersonalInformation.slice()
+      newPersonalInformation.push({
+        ...verifyPersonalInformation,
+        businessRole: 'beneficial_owner'
+      })
+      setFieldValue('verifyPersonalInformation', newPersonalInformation)
+    } else if (this.props.numberBeneficialOwners < prevProps.numberBeneficialOwners) {
+      // Delete last Benefical owner
+      const { values, setFieldValue } = this.formikProps
+      let newPersonalInformation = values.verifyPersonalInformation.slice(0, -1)
+      setFieldValue('verifyPersonalInformation', newPersonalInformation)
+    }
+  }
+
   clean = obj => {
     for (var propName in obj) {
       if (obj[propName] === null || obj[propName] === undefined || obj[propName] === '') {
@@ -87,7 +105,7 @@ class VellociRegister extends Component {
         ? verifyPersonalInformation.map((val, i) => {
             const obj = {
               address: getSafe(() => val.address.streetAddress, ''),
-              businessRole: getSafe(() => val.businessRole, ''),
+              businessRole: 'beneficial_owner',
               businessTitle: getSafe(() => val.businessTitle, ''),
               city: getSafe(() => val.address.city, ''),
               dateOfBirth: getSafe(() => getStringISODate(val.dateOfBirth), ''),
@@ -137,7 +155,7 @@ class VellociRegister extends Component {
   }
 
   handleSubmit = async values => {
-    const { activeStep, postRegisterVelloci } = this.props
+    const { activeStep, postRegisterVelloci, postUploadDocuments } = this.props
     if (activeStep !== 5) return
 
     try {
@@ -285,7 +303,8 @@ class VellociRegister extends Component {
       naicsCodes,
       businessRoles,
       entityDocuments,
-      politicallyExposedPersons
+      politicallyExposedPersons,
+      countBeneficialOwners
     } = this.props
     let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
 
@@ -300,7 +319,7 @@ class VellociRegister extends Component {
         return <FormationDocument formikProps={formikProps} error={error} entityDocuments={entityDocuments} />
       }
       case 3: {
-        return <OwnerInformation formikProps={formikProps} />
+        return <OwnerInformation formikProps={formikProps} countBeneficialOwners={countBeneficialOwners} />
       }
       case 4: {
         return (
@@ -333,6 +352,7 @@ class VellociRegister extends Component {
               initialValues={initialValuesTest} //FIXME initialValues
               validationSchema={this.getValidationSchema()}
               render={formikProps => {
+                this.formikProps = formikProps
                 return (
                   <Form>
                     <Grid verticalAlign='middle' centered>
