@@ -55,7 +55,7 @@ const GridRowCategories = styled(GridRow)`
   padding-top: 0px !important;
 `
 
-function OwnerInformation({ formikProps, intl: { formatMessage } }) {
+function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficialOwners }) {
   return (
     <GridOwnerInformation>
       <GridRow>
@@ -187,8 +187,12 @@ function OwnerInformation({ formikProps, intl: { formatMessage } }) {
               })}
               inputProps={{
                 onChange: () => {
-                  formikProps.setFieldValue('ownerInformation.isOtherBeneficialOwner', false)
-                  formikProps.setFieldValue('ownerInformation.isNotOtherBeneficialOwner', true)
+                  const { values, setFieldValue } = formikProps
+                  const newPersonalInformation = values.verifyPersonalInformation.slice(0, 1)
+                  setFieldValue('verifyPersonalInformation', newPersonalInformation)
+                  setFieldValue('ownerInformation.isOtherBeneficialOwner', false)
+                  setFieldValue('ownerInformation.isNotOtherBeneficialOwner', true)
+                  countBeneficialOwners(0)
                 },
                 radio: true,
                 'data-test': 'settings_velloci_registration_owner_information_isNotOtherBeneficialOwner_chckbx'
@@ -277,11 +281,13 @@ function OwnerInformation({ formikProps, intl: { formatMessage } }) {
 }
 
 OwnerInformation.propTypes = {
-  formikProps: PropTypes.object
+  formikProps: PropTypes.object,
+  countBeneficialOwners: PropTypes.func
 }
 
 OwnerInformation.defaultProps = {
-  formikProps: {}
+  formikProps: {},
+  countBeneficialOwners: () => {}
 }
 
 export default injectIntl(OwnerInformation)

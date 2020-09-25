@@ -345,7 +345,7 @@ class BankAccountsTable extends Component {
           defaultMessage: 'Set as Preferred Bank Account'
         }),
         callback: row => dwollaSetPreferred(row.id),
-        hidden: row => row.status !== 'verified' || row.id === preferredBankAccountId
+        hidden: row => !(row.status === 'verified' || row.status === 'active') || row.id === preferredBankAccountId
       }
     ]
   }
@@ -523,7 +523,7 @@ const displayStatus = (r, preferredBankAccountId) => {
   return (
     <>
       {statusToLabel[r.status]}
-      {preferredBankAccountId === r.id ? (
+      {preferredBankAccountId === r.id || preferredBankAccountId === r.account_public_id? (
         <StatusLabel style={{ backgroundColor: '#2599d5' }} horizontal>
           <FormattedMessage id='settings.preferred' defaultMessage='Preferred' />
         </StatusLabel>
@@ -541,8 +541,8 @@ const mapStateToProps = state => {
   let accountStatus = 'none'
 
   if (company && paymentProcessor === 'DWOLLA') {
-    accountStatus = company.dwollaAccountStatus
-    documentRequired = company.dwollaDocumentRequired && company.dwollaDocumentRequired
+    if (company.dwollaAccountStatus) accountStatus = company.dwollaAccountStatus
+    if (company.dwollaDocumentRequired) documentRequired = company.dwollaDocumentRequired
 
     if (
       accountStatus === 'verified' &&
@@ -551,8 +551,8 @@ const mapStateToProps = state => {
     )
       accountStatus = 'documentOwner'
   } else if (company && paymentProcessor === 'VELLOCI') {
-    accountStatus = company.vellociAccountStatus
-    documentRequired = company.vellociDocumentRequired && company.vellociDocumentRequired
+    if (company.vellociAccountStatus) accountStatus = company.vellociAccountStatus
+    if (company.vellociDocumentRequired) documentRequired = company.vellociDocumentRequired
   }
   //const dwollaAccountStatus = 'document'
   //let documentRequired = 'verify-with-document'
@@ -570,15 +570,16 @@ const mapStateToProps = state => {
     loading: state.settings.loading,
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
-      id: r.account_public_id,
       rawData: r,
-      ...(isDwolla
+      ...(paymentProcessor === 'DWOLLA'
         ? {
+            id: r.id,
             name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
             statusLabel: displayStatus(r, preferredBankAccountId),
             accountName: r.name || r.display_name // this is for search
           }
         : {
+            id: r.account_public_id,
             name: (
               <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.display_name}</div>
             ),
