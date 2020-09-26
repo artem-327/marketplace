@@ -75,9 +75,7 @@ function FormRectangle({
   countBeneficialOwners,
   numberBeneficialOwners
 }) {
-  //if user is not beneficial owner, is on last form (Term and Conditions) and pressed button Back then must skip Beneficial form. That means activeStep minus 2
   const { values } = formikProps
-  const step = !getSafe(() => values.ownerInformation.isBeneficialOwner, false) && activeStep === 5 ? 2 : 1
   return (
     <DivRectangleForm height={activeStep === 3 || activeStep === 4 ? '1000px' : activeStep === 5 ? '400px' : '860px'}>
       <DivTitleRectangleForm>
@@ -158,7 +156,7 @@ function FormRectangle({
           </FormattedMessage>
         </ButtonSubmit>
         {activeStep > 0 ? (
-          <ButtonBack type='button' onClick={() => prevStep(activeStep - step)} basic>
+          <ButtonBack type='button' onClick={() => prevStep(activeStep - 1)} basic>
             <FormattedMessage id='global.back' defaultMessage='Back'>
               {text => text}
             </FormattedMessage>

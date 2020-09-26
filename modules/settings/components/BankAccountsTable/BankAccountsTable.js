@@ -351,14 +351,14 @@ class BankAccountsTable extends Component {
   }
 
   render() {
-    const { rows, loading, filterValue, intl, bankAccounts, method, accountStatus, documentRequired } = this.props
+    const { myRows, loading, filterValue, intl, bankAccounts, method, accountStatus, documentRequired } = this.props
 
     return (
       <React.Fragment>
         {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
           <ProdexTable
             tableName='settings_bankaccounts'
-            rows={rows}
+            rows={myRows}
             loading={loading}
             columns={this.getColumns()}
             filterValue={filterValue}
@@ -523,7 +523,7 @@ const displayStatus = (r, preferredBankAccountId) => {
   return (
     <>
       {statusToLabel[r.status]}
-      {preferredBankAccountId === r.id || preferredBankAccountId === r.account_public_id? (
+      {preferredBankAccountId === r.id || preferredBankAccountId === r.account_public_id ? (
         <StatusLabel style={{ backgroundColor: '#2599d5' }} horizontal>
           <FormattedMessage id='settings.preferred' defaultMessage='Preferred' />
         </StatusLabel>
@@ -568,27 +568,36 @@ const mapStateToProps = state => {
     accountStatus,
     documentRequired,
     loading: state.settings.loading,
-    rows: state.settings.bankAccountsRows.map(r => ({
+    myRows: state.settings.bankAccountsRows.map(r => ({
       ...r,
+      id: r.account_public_id || r.id,
       rawData: r,
       ...(paymentProcessor === 'DWOLLA'
         ? {
-            id: r.id,
+            id: r.account_public_id || r.id,
             name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
             statusLabel: displayStatus(r, preferredBankAccountId),
-            accountName: r.name || r.display_name // this is for search
+            accountName: r.name || r.display_name, // this is for search
+            bankAccountType: r.account_type
+              ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
+              : r.bankAccountType
+              ? r.bankAccountType
+              : '',
+            bankName: r.institution_name || r.bankName
           }
         : {
-            id: r.account_public_id,
+            id: r.account_public_id || r.id,
             name: (
               <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.display_name}</div>
             ),
             bankAccountType: r.account_type
               ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
+              : r.bankAccountType
+              ? r.bankAccountType
               : '',
-            bankName: r.institution_name,
+            bankName: r.institution_name || r.bankName,
             statusLabel: displayStatus(r, preferredBankAccountId),
-            accountName: r.name || r.display_name // this is for search
+            accountName: r.name || r.display_name || r.bankName // this is for search
           })
     })),
     preferredBankAccountId,

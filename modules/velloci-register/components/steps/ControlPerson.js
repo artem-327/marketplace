@@ -249,30 +249,6 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
 
               <GridRowBusinessType columns={2}>
                 <Grid.Column width={8}>
-                  <Input
-                    name='controlPerson.tinNumber'
-                    label={
-                      <>
-                        {formatMessage({
-                          id: 'velloci.controlPerson.tinNumber',
-                          defaultMessage: 'Tax Identification Number'
-                        })}
-                        {<Required />}
-                      </>
-                    }
-                    inputProps={{
-                      placeholder: formatMessage({
-                        id: 'velloci.controlPerson.tinNumber.placeholder',
-                        defaultMessage: 'Enter Tax Identification Number'
-                      }),
-                      type: 'text',
-                      'data-test': 'settings_velloci_registration_control_person_tin_number_inpt'
-                    }}
-                  />
-                </Grid.Column>
-              </GridRowBusinessType>
-              <GridRowBusinessType columns={2}>
-                <Grid.Column width={8}>
                   <Dropdown
                     options={naicsOptions}
                     fieldProps={{

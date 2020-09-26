@@ -238,13 +238,17 @@ class TablesHandlers extends Component {
       tableHandlersFilters,
       currentTab,
       paymentProcessor,
-      accountStatus
+      accountStatus,
+      vellociGetToken
     } = this.props
 
     try {
       //check dwolla if exist some document which has to be verified
       if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA' && accountStatus) {
         await getDwollaBeneficiaryOwners()
+      }
+      if (paymentProcessor === 'VELLOCI') {
+        await vellociGetToken()
       }
     } catch (err) {
       console.error(err)
@@ -356,65 +360,17 @@ class TablesHandlers extends Component {
       console.error(e)
     }
   }
-
+  //TODO could be helpful if we will create additional action when close modal
   onExit = async (err, metadata) => {
     console.log('onExit', err, metadata)
   }
 
-  onSuccess = async (public_token, metadata) => {
-    console.log('onSuccess', public_token, metadata) //REMOVE
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        metadata: metadata,
-        business_public_id: this.props.businessPublicId //CHECK
-      })
-    }
-
-    const response = await this.props.vellociAddAcount(options)
-    console.log('response', response) //REMOVE
-    const res = await response.json()
-
-    if (res.hasOwnProperty('error_type')) {
-      console.log(res)
-    } else {
-      console.log('Your accounts have been added.')
-    }
+  onSuccess = async (publicToken, metadata) => {
+    await this.props.vellociAddAcount(publicToken)
   }
 
-  //FIXME maybe isn't needed and BE prepare token
-  token = async () => {
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        products: 'auth',
-        link_customization_name: 'echo',
-        account_types: 'all',
-        business_public_id: this.props.businessPublicId, //CHECK
-        account_public_id: null
-      })
-    }
-
-    const response = await this.props.vellociGetToken(options)
-    console.log('response', response) //REMOVE
-    return await response.json()
-  }
-
-  onEvent = async (event_name, metadata) => {
-    console.log('onEvent', event_name, metadata) //REMOVE
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        metadata: metadata,
-        event_name: event_name,
-        business_public_id: this.props.businessPublicId //CHECK
-      })
-    }
-
-    const response = await this.props.vellociOnEvent(options)
-    console.log('response', response) //REMOVE
-    const res = await response.json()
+  onEvent = async (eventName, metadata) => {
+    this.props.vellociOnEvent(eventName, metadata)
   }
 
   renderHandler = () => {
@@ -433,7 +389,8 @@ class TablesHandlers extends Component {
       openSidebar,
       vellociAccBalance,
       paymentProcessor,
-      businessPublicId,
+      vellociBusinessId,
+      vellociToken,
       intl: { formatMessage }
     } = this.props
 
@@ -643,9 +600,10 @@ class TablesHandlers extends Component {
               )}
               {(!bankAccTab || bankAccounts.addButton) && (
                 <div className='column'>
-                  {paymentProcessor === 'VELLOCI' ? (
+                  {paymentProcessor === 'VELLOCI' && vellociToken && vellociBusinessId ? (
                     <PlaidButton
-                      publicKey={businessPublicId} //FIXME
+                      token={vellociToken}
+                      publicKey={vellociBusinessId}
                       onExit={this.onExit}
                       onSuccess={this.onSuccess}
                       onEvent={this.onEvent}>
@@ -736,7 +694,8 @@ const mapStateToProps = state => {
     treeData,
     filter,
     ...rest,
-    businessPublicId: getSafe(() => company.businessPublicId, '') //CHECK
+    vellociBusinessId: getSafe(() => company.vellociBusinessId, ''),
+    vellociToken: getSafe(() => state.settings.vellociToken, '')
   }
 }
 
