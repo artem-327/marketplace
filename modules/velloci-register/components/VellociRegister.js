@@ -33,6 +33,7 @@ import ErrorFocus from '~/components/error-focus'
 import { PHONE_REGEXP } from '~/src/utils/constants'
 import { getStringISODate } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
+import Router from 'next/router'
 
 class VellociRegister extends Component {
   componentDidMount = () => {
@@ -175,6 +176,11 @@ class VellociRegister extends Component {
         }
       }
       await postRegisterVelloci(body, companyId, files)
+      if (companyId) {
+        Router.push('/companies')
+      } else {
+        Router.push('/settings?type=bank-accounts')
+      }
     } catch (error) {
       console.error(error)
     }
