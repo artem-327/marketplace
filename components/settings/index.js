@@ -16,6 +16,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import styled from 'styled-components'
 import api from '~/modules/settings/api'
+import { getIdentity } from '~/modules/auth/actions'
 
 const FixyWrapper = styled.div`
   position: relative;
@@ -214,7 +215,7 @@ class Settings extends Component {
 
       this.setState({ systemSettings })
       this.resetForm(this.parseInitialValues(systemSettings))
-
+      this.props.getIdentity()
       triggerSystemSettingsModal(false)
     } catch (e) {
       console.error(e)
@@ -465,5 +466,5 @@ export default connect(
       isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, null)
     }
   }),
-  { triggerSystemSettingsModal, getCurrentUser }
+  { triggerSystemSettingsModal, getCurrentUser, getIdentity }
 )(injectIntl(Settings))

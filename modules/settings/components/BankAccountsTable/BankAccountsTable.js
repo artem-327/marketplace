@@ -217,43 +217,7 @@ class BankAccountsTable extends Component {
 
     this.state = {
       amount1: 0,
-      amount2: 0,
-      columns: [
-        { name: 'accountName', disabled: true },
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='settings.accountName' defaultMessage='Account Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          actions: this.getActions()
-        },
-        {
-          name: 'bankAccountType',
-          title: (
-            <FormattedMessage id='settings.accountType' defaultMessage='Account Type'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'bankName',
-          title: (
-            <FormattedMessage id='settings.bankName' defaultMessage='Bank Name'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'statusLabel',
-          title: (
-            <FormattedMessage id='settings.status' defaultMessage='Status'>
-              {text => text}
-            </FormattedMessage>
-          )
-        }
-      ]
+      amount2: 0
     }
   }
 
@@ -280,6 +244,43 @@ class BankAccountsTable extends Component {
       })
     }
   }
+
+  getColumns = () => [
+    { name: 'accountName', disabled: true },
+    {
+      name: 'name',
+      title: (
+        <FormattedMessage id='settings.accountName' defaultMessage='Account Name'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      actions: this.getActions()
+    },
+    {
+      name: 'bankAccountType',
+      title: (
+        <FormattedMessage id='settings.accountType' defaultMessage='Account Type'>
+          {text => text}
+        </FormattedMessage>
+      )
+    },
+    {
+      name: 'bankName',
+      title: (
+        <FormattedMessage id='settings.bankName' defaultMessage='Bank Name'>
+          {text => text}
+        </FormattedMessage>
+      )
+    },
+    {
+      name: 'statusLabel',
+      title: (
+        <FormattedMessage id='settings.status' defaultMessage='Status'>
+          {text => text}
+        </FormattedMessage>
+      )
+    }
+  ]
 
   getActions = () => {
     const {
@@ -326,7 +327,7 @@ class BankAccountsTable extends Component {
           defaultMessage: 'Initiate Verification'
         }),
         callback: row => dwollaInitiateVerification(row.id),
-        hidden: row => row.status !== 'unverified'
+        hidden: row => row.status !== 'unverified' || method !== 'dwolla'
       },
       {
         text: formatMessage({
@@ -336,7 +337,7 @@ class BankAccountsTable extends Component {
         callback: row => {
           finalizeConfirm().then(v => dwollaFinalizeVerification(row.id, v.amount1, v.amount2))
         },
-        hidden: row => row.status !== 'verification_in_process'
+        hidden: row => row.status !== 'verification_in_process' || method !== 'dwolla'
       },
       {
         text: formatMessage({
@@ -344,24 +345,22 @@ class BankAccountsTable extends Component {
           defaultMessage: 'Set as Preferred Bank Account'
         }),
         callback: row => dwollaSetPreferred(row.id),
-        hidden: row => row.status !== 'verified' || row.id === preferredBankAccountId
+        hidden: row => !(row.status === 'verified' || row.status === 'active') || row.id === preferredBankAccountId
       }
     ]
   }
 
   render() {
-    const { rows, loading, filterValue, intl, bankAccounts, method, accountStatus, documentRequired } = this.props
-
-    let { columns } = this.state
+    const { myRows, loading, filterValue, intl, bankAccounts, method, accountStatus, documentRequired } = this.props
 
     return (
       <React.Fragment>
         {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
           <ProdexTable
             tableName='settings_bankaccounts'
-            rows={rows}
+            rows={myRows}
             loading={loading}
-            columns={columns}
+            columns={this.getColumns()}
             filterValue={filterValue}
             columnActions='name'
           />
@@ -524,7 +523,7 @@ const displayStatus = (r, preferredBankAccountId) => {
   return (
     <>
       {statusToLabel[r.status]}
-      {preferredBankAccountId === r.id ? (
+      {preferredBankAccountId === r.id || preferredBankAccountId === r.account_public_id ? (
         <StatusLabel style={{ backgroundColor: '#2599d5' }} horizontal>
           <FormattedMessage id='settings.preferred' defaultMessage='Preferred' />
         </StatusLabel>
@@ -535,15 +534,15 @@ const displayStatus = (r, preferredBankAccountId) => {
 
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
-  const paymentProcessor = company.paymentProcessor
+  const paymentProcessor = getSafe(() => company.paymentProcessor, 'DWOLLA')
 
   const preferredBankAccountId = get(state, 'settings.currentUser.company.preferredBankAccountId', '')
   let documentRequired = 'verify-with-document'
   let accountStatus = 'none'
 
-  if (company && company.dwollaAccountStatus) {
-    accountStatus = company.dwollaAccountStatus
-    documentRequired = company.dwollaDocumentRequired && company.dwollaDocumentRequired
+  if (company && paymentProcessor === 'DWOLLA') {
+    if (company.dwollaAccountStatus) accountStatus = company.dwollaAccountStatus
+    if (company.dwollaDocumentRequired) documentRequired = company.dwollaDocumentRequired
 
     if (
       accountStatus === 'verified' &&
@@ -551,45 +550,54 @@ const mapStateToProps = state => {
       getSafe(() => state.settings.documentsOwner[0].verificationStatus, '') !== 'verified'
     )
       accountStatus = 'documentOwner'
-  } else if (company && company.vellociAccountStatus) {
-    accountStatus = company.vellociAccountStatus
-    documentRequired = company.vellociDocumentRequired && company.vellociDocumentRequired
+  } else if (company && paymentProcessor === 'VELLOCI') {
+    if (company.vellociAccountStatus) accountStatus = company.vellociAccountStatus
+    if (company.vellociDocumentRequired) documentRequired = company.vellociDocumentRequired
   }
   //const dwollaAccountStatus = 'document'
   //let documentRequired = 'verify-with-document'
 
   documentRequired = documentRequired && documentRequired.replace(/-/g, '')
   const hasDwollaAccount = getSafe(() => company.dwollaAccountStatus, '') === 'verified'
-  const isDwolla = getSafe(() => company.dwollaAccountStatus, false) ? true : false
 
   return {
-    method: isDwolla ? 'dwolla' : 'velloci',
+    method: paymentProcessor === 'DWOLLA' ? 'dwolla' : 'velloci',
     paymentProcessor,
     hasDwollaAccount,
     bankAccounts: bankAccountsConfig[accountStatus],
     accountStatus,
     documentRequired,
     loading: state.settings.loading,
-    rows: state.settings.bankAccountsRows.map(r => ({
+    myRows: state.settings.bankAccountsRows.map(r => ({
       ...r,
-      id: r.account_public_id,
+      id: r.account_public_id || r.id,
       rawData: r,
-      ...(isDwolla
+      ...(paymentProcessor === 'DWOLLA'
         ? {
+            id: r.account_public_id || r.id,
             name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
             statusLabel: displayStatus(r, preferredBankAccountId),
-            accountName: r.name || r.display_name // this is for search
+            accountName: r.name || r.display_name, // this is for search
+            bankAccountType: r.account_type
+              ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
+              : r.bankAccountType
+              ? r.bankAccountType
+              : '',
+            bankName: r.institution_name || r.bankName
           }
         : {
+            id: r.account_public_id || r.id,
             name: (
               <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.display_name}</div>
             ),
             bankAccountType: r.account_type
               ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
+              : r.bankAccountType
+              ? r.bankAccountType
               : '',
-            bankName: r.institution_name,
+            bankName: r.institution_name || r.bankName,
             statusLabel: displayStatus(r, preferredBankAccountId),
-            accountName: r.name || r.display_name // this is for search
+            accountName: r.name || r.display_name || r.bankName // this is for search
           })
     })),
     preferredBankAccountId,

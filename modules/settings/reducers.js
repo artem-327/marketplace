@@ -133,7 +133,8 @@ export const initialState = {
   logisticsFilter: '',
   'bank-accountsFilter': '',
   renderCopyright: false,
-  vellociAccBalance: null
+  vellociAccBalance: null,
+  vellociToken: ''
 }
 
 export default function reducer(state = initialState, action) {
@@ -1020,6 +1021,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DWOLLA_SET_PREFERRED_REJECTED:
     case AT.DWOLLA_SET_PREFERRED_FULFILLED:
     case AT.DELETE_BANK_ACCOUNT_REJECTED: {
       return {
@@ -1539,7 +1541,7 @@ export default function reducer(state = initialState, action) {
         isOpenSidebar: state.locationsTab !== payload ? false : state.isOpenSidebar,
         openTab: state.locationsTab !== payload ? null : state.openTab,
         popupValues: state.locationsTab !== payload ? null : state.popupValues,
-        editedId: state.locationsTab !== payload ? null : state.editedId,
+        editedId: state.locationsTab !== payload ? null : state.editedId
       }
     }
 
@@ -1561,6 +1563,30 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         renderCopyright: false
+      }
+    }
+
+    /* GET_VELLOCI_TOKEN */
+
+    case AT.VELLOCI_GET_TOKEN_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.VELLOCI_GET_TOKEN_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        vellociToken: payload
+      }
+    }
+
+    case AT.VELLOCI_GET_TOKEN_REJECTED: {
+      return {
+        ...state,
+        loading: false
       }
     }
 

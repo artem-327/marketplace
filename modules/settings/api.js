@@ -43,8 +43,7 @@ export default {
   getWarehouses: () => api.get('/prodex/api/branches/warehouses').then(response => response.data),
   getBranches: () => api.get('/prodex/api/branches').then(response => response.data),
   getCreditCardsData: () => api.get('/prodex/api/payments/cards').then(response => response.data),
-  getDwollaBankAccountsData: () =>
-    api.get('/prodex/api/payments/bank-accounts/dwolla').then(response => response.data),
+  getDwollaBankAccountsData: () => api.get('/prodex/api/payments/bank-accounts/dwolla').then(response => response.data),
   getVellociBankAccountsData: () =>
     api.get('/prodex/api/payments/bank-accounts/velloci').then(response => response.data),
   getDwollaAccBalance: () => api.get('/prodex/api/payments/dwolla/balance').then(response => response.data),
@@ -186,7 +185,8 @@ export default {
   },
   updateDeliveryAddresses: (id, value) => api.put(`/prodex/api/delivery-addresses/id/${id}`, value),
   dwollaInitiateVerification: async id => {
-    return await api.post(`/prodex/api/payments/bank-accounts/dwolla/${id}/verify/initialize`)
+    return await api
+      .post(`/prodex/api/payments/bank-accounts/dwolla/${id}/verify/initialize`)
       .then(response => response.data)
   },
   dwollaFinalizeVerification: async (id, value1, value2) => {
@@ -257,5 +257,16 @@ export default {
     api
       .patch(`/prodex/api/companies/id/${companyId}/primary-branch?branchId=${branchId}`)
       .then(response => response.data),
-  getCompanyDetails: id => api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
+  getCompanyDetails: id => api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data),
+
+  vellociOnEvent: (eventName, metadata) =>
+    api
+      .post(`/prodex/api/payments/bank-accounts/velloci/add/log?eventName=${eventName}`, metadata)
+      .then(response => response.data),
+  vellociGetToken: () =>
+    api.get('/prodex/api/payments/bank-accounts/velloci/add/token').then(response => response.data),
+  vellociAddAcount: publicToken =>
+    api
+      .post(`/prodex/api/payments/bank-accounts/velloci/add?publicToken=${publicToken}`)
+      .then(response => response.data)
 }
