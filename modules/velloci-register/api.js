@@ -7,7 +7,6 @@ export default {
     let queryParams = companyId ? generateQueryString(companyId) : ''
     return api.post(`/prodex/api/payments/velloci/register${queryParams}`, body)
   },
-  //FIXME
   postUploadDocuments: (files, documentType, id) => {
     const formData = new FormData()
     for (let i in files) {

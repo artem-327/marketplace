@@ -13,7 +13,7 @@ export const postRegisterVelloci = (body, companyId, files) => {
   }
 }
 export const postUploadDocuments = files => ({
-  type: AT.REGISTER_VELLOCI,
+  type: AT.UPLOAD_DOCUMENTS,
   payload: api.postUploadDocuments(files)
 })
 export const getEntityTypes = () => ({ type: AT.GET_ENTITY_TYPES, payload: api.getEntityTypes() })
