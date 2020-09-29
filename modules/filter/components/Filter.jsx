@@ -509,6 +509,8 @@ class Filter extends Component {
                 fluid: true,
                 onChange: (_, data) => {
                   setFieldValue(data.name, data.value)
+                  let newInputName = `${data.name}${data.value}`
+                  setFieldValue(newInputName, values[inputName])
                   setFieldValue(inputName, '')
                   this.setState(state => ({
                     ...state,
