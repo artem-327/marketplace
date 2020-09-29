@@ -122,154 +122,6 @@ class Orders extends Component {
     super(props)
 
     this.state = {
-      columns: [
-        {
-          name: 'orderId',
-          title: (
-            <FormattedMessage id='order.orderId' defaultMessage='Order ID'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 100,
-          sortPath: 'Order.id',
-          actions: this.getActionsOrdersList()
-        },
-        {
-          name: 'globalStatus',
-          title: (
-            <FormattedMessage id='order.cfGlobalStatus' defaultMessage='Status'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120,
-          sortPath: 'Order.cfGlobalStatus'
-        },
-        {
-          name: 'date',
-          title: (
-            <FormattedMessage id='order.date' defaultMessage='Order Date'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120,
-          sortPath: 'Order.createdAt'
-        },
-        {
-          name: 'customerName',
-          title: (
-            <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120,
-          sortPath: 'Order.sellerCompanyName'
-        }, // ! ! ? seller vs purchaser
-        {
-          name: 'productName',
-          title: (
-            <FormattedMessage id='order.productName' defaultMessage='Product Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160
-        },
-        {
-          name: 'orderStatus',
-          title: (
-            <FormattedMessage id='order' defaultMessage='Order'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'shippingStatus',
-          title: (
-            <FormattedMessage id='order.shipping' defaultMessage='Shipping'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'reviewStatus',
-          title: (
-            <FormattedMessage id='order.review' defaultMessage='Review'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'creditStatus',
-          title: (
-            <FormattedMessage id='order.credit' defaultMessage='Credit'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'paymentStatus',
-          title: (
-            <FormattedMessage id='order.payment' defaultMessage='Payment'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'bl',
-          title: (
-            <FormattedMessage id='order.bl' defaultMessage='B/L'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 80,
-          align: 'center'
-        },
-        {
-          name: 'sds',
-          title: (
-            <FormattedMessage id='order.sds' defaultMessage='SDS'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 80,
-          align: 'center'
-        },
-        {
-          name: 'cofA',
-          title: (
-            <FormattedMessage id='order.cOfa' defaultMessage='C of A'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 80,
-          align: 'center'
-        },
-        {
-          name: 'related',
-          title: (
-            <FormattedMessage id='order.related' defaultMessage='Related'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 80,
-          align: 'center'
-        },
-        {
-          name: 'orderTotal',
-          title: (
-            <FormattedMessage id='order.orderTotal' defaultMessage='Order Total'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160,
-          align: 'right',
-          sortPath: 'Order.cfPriceSubtotal'
-        }
-      ],
       sorting: {
         sortDirection: '',
         sortPath: ''
@@ -437,6 +289,157 @@ class Orders extends Component {
 
   failedWrapper = value => {
     return <span style={{ color: '#DB2828' }}>{value}</span>
+  }
+
+  getColumns = () => {
+    return [
+      {
+        name: 'orderId',
+        title: (
+          <FormattedMessage id='order.orderId' defaultMessage='Order ID'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 100,
+        sortPath: 'Order.id',
+        actions: this.getActionsOrdersList()
+      },
+      {
+        name: 'globalStatus',
+        title: (
+          <FormattedMessage id='order.cfGlobalStatus' defaultMessage='Status'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+        sortPath: 'Order.cfGlobalStatus'
+      },
+      {
+        name: 'date',
+        title: (
+          <FormattedMessage id='order.date' defaultMessage='Order Date'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+        sortPath: 'Order.createdAt'
+      },
+      {
+        name: 'customerName',
+        title: (
+          <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120,
+        sortPath: 'Order.sellerCompanyName'
+      }, // ! ! ? seller vs purchaser
+      {
+        name: 'productName',
+        title: (
+          <FormattedMessage id='order.productName' defaultMessage='Product Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160
+      },
+      {
+        name: 'orderStatus',
+        title: (
+          <FormattedMessage id='order' defaultMessage='Order'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'shippingStatus',
+        title: (
+          <FormattedMessage id='order.shipping' defaultMessage='Shipping'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'reviewStatus',
+        title: (
+          <FormattedMessage id='order.review' defaultMessage='Review'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'creditStatus',
+        title: (
+          <FormattedMessage id='order.credit' defaultMessage='Credit'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'paymentStatus',
+        title: (
+          <FormattedMessage id='order.payment' defaultMessage='Payment'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 120
+      },
+      {
+        name: 'bl',
+        title: (
+          <FormattedMessage id='order.bl' defaultMessage='B/L'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 80,
+        align: 'center'
+      },
+      {
+        name: 'sds',
+        title: (
+          <FormattedMessage id='order.sds' defaultMessage='SDS'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 80,
+        align: 'center'
+      },
+      {
+        name: 'cofA',
+        title: (
+          <FormattedMessage id='order.cOfa' defaultMessage='C of A'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 80,
+        align: 'center'
+      },
+      {
+        name: 'related',
+        title: (
+          <FormattedMessage id='order.related' defaultMessage='Related'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 80,
+        align: 'center'
+      },
+      {
+        name: 'orderTotal',
+        title: (
+          <FormattedMessage id='order.orderTotal' defaultMessage='Order Total'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        width: 160,
+        align: 'right',
+        sortPath: 'Order.cfPriceSubtotal'
+      }
+    ]
   }
 
   getRows = () => {
@@ -1066,7 +1069,7 @@ class Orders extends Component {
       tutorialCompleted
     } = this.props
 
-    const { columns, relatedPopupParams } = this.state
+    const { relatedPopupParams } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
     return (
@@ -1152,7 +1155,7 @@ class Orders extends Component {
           ) : (
             <ProdexGrid
               tableName={`orders_grid_${queryType}`}
-              columns={columns}
+              columns={this.getColumns()}
               {...datagrid.tableProps}
               loading={datagrid.loading}
               rows={this.getRows()}

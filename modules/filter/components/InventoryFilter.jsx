@@ -128,11 +128,6 @@ class InventoryFilter extends Component {
         loaded: true
       })
     )
-    if (appliedFilter && appliedFilter.filters) {
-      let datagridFilter = this.toDatagridFilter(appliedFilter)
-      applyDatagridFilter(datagridFilter, false)
-      onApply(datagridFilter)
-    }
   }
 
   componentWillUnmount() {
@@ -512,10 +507,11 @@ class InventoryFilter extends Component {
               inputProps={{
                 'data-test': 'filter_dateField_drpdn',
                 value: values[name],
-                disabled: !values[inputName],
                 fluid: true,
                 onChange: (_, data) => {
                   setFieldValue(data.name, data.value)
+                  let newInputName = `${data.name}${data.value}`
+                  setFieldValue(newInputName, values[inputName])
                   setFieldValue(inputName, '')
                   this.setState(state => ({
                     ...state,
@@ -818,6 +814,8 @@ class InventoryFilter extends Component {
 
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
+    console.log('!!!!!!!!!! aaaaa values', values)
+
     return (
       <PopupGrid>
         <GridRow>
@@ -883,8 +881,6 @@ class InventoryFilter extends Component {
                     'priceFrom',
                     {
                       type: 'number',
-                      min: 0.01,
-                      step: 0.01,
                       placeholder: '0.00',
                       label: formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
                       labelPosition: 'left',
@@ -899,8 +895,6 @@ class InventoryFilter extends Component {
                     'priceTo',
                     {
                       type: 'number',
-                      min: 0.01,
-                      step: 0.01,
                       placeholder: '0.00',
                       label: formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
                       labelPosition: 'left',
@@ -947,7 +941,6 @@ class InventoryFilter extends Component {
                     'assayFrom',
                     {
                       type: 'number',
-                      min: 0,
                       placeholder: '0.00',
                       label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
                       labelPosition: 'left',
@@ -961,7 +954,6 @@ class InventoryFilter extends Component {
                     'assayTo',
                     {
                       type: 'number',
-                      min: 0,
                       placeholder: '0.00',
                       label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
                       labelPosition: 'left',

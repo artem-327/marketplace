@@ -10,7 +10,8 @@ import styled from 'styled-components'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { addressValidationSchema, errorMessages, minOrZeroLength, validateTime } from '~/constants/yupValidation'
+import { addressValidationSchema, errorMessages, validateTime } from '~/constants/yupValidation'
+import { PHONE_REGEXP } from '~/src/utils/constants'
 
 import { AddressForm } from '~/modules/address-form/'
 
@@ -20,6 +21,7 @@ import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/const
 import { Required } from '~/components/constants/layout'
 import { removeEmpty } from '~/utils/functions'
 import { TimeInput } from '~/components/custom-formik/'
+import ErrorFocus from '~/components/error-focus'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -91,7 +93,9 @@ const formValidation = () =>
     address: addressValidationSchema(),
     addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
     contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-    contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+    contactPhone: Yup.string()
+      .matches(PHONE_REGEXP, errorMessages.invalidPhoneNumber)
+      .required(errorMessages.requiredMessage),
     contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
     readyTime: validateTime(),
     closeTime: validateTime()
@@ -345,63 +349,66 @@ class DeliveryLocationsSidebar extends React.Component {
         onReset={closeSidebar}
         onSubmit={this.submitHandler}
         loading={loading}>
-        {formikProps => (
-          <>
-            <CustomForm autoComplete='off'>
-              <FlexSidebar
-                visible={true}
-                width='very wide'
-                style={{ width: '630px' }}
-                direction='right'
-                animation='overlay'>
-                <div>
-                  <Dimmer inverted active={loading || this.state.loadSidebar}>
-                    <Loader />
-                  </Dimmer>
-                  <CustomHighSegment basic>
-                    {popupValues ? (
-                      <FormattedMessage id='sidebar.edit' defaultMessage='EDIT' />
-                    ) : (
-                      <FormattedMessage id='sidebar.addNew' defaultMessage='ADD NEW' />
-                    )}
-                  </CustomHighSegment>
-                </div>
-                <FlexContent style={{ padding: '16px' }}>
-                  <CustomSegmentContent basic>{this.renderEdit(formikProps)}</CustomSegmentContent>
-                </FlexContent>
-                <CustomDiv>
-                  <Button.Reset
-                    style={{ margin: '0 5px' }}
-                    onClick={closeSidebar}
-                    data-test='settings_branches_popup_reset_btn'>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button.Reset>
-                  <CustomButtonSubmit
-                    onClick={() => {
-                      formikProps.validateForm().then(err => {
-                        const errors = Object.keys(err)
-                        if (errors.length && errors[0] !== 'isCanceled') {
-                          // Errors found
-                          formikProps.submitForm() // to show errors
-                        } else {
-                          // No errors found
-                          this.setState({ loadSidebar: true })
-                          this.submitHandler(formikProps.values, formikProps.setSubmitting)
-                        }
-                      })
-                    }}
-                    data-test='settings_branches_popup_submit_btn'>
-                    <FormattedMessage id='global.save' defaultMessage='Save'>
-                      {text => text}
-                    </FormattedMessage>
-                  </CustomButtonSubmit>
-                </CustomDiv>
-              </FlexSidebar>
-            </CustomForm>
-          </>
-        )}
+        {formikProps => {
+          return (
+            <>
+              <CustomForm autoComplete='off'>
+                <FlexSidebar
+                  visible={true}
+                  width='very wide'
+                  style={{ width: '630px' }}
+                  direction='right'
+                  animation='overlay'>
+                  <div>
+                    <Dimmer inverted active={loading || this.state.loadSidebar}>
+                      <Loader />
+                    </Dimmer>
+                    <CustomHighSegment basic>
+                      {popupValues ? (
+                        <FormattedMessage id='sidebar.edit' defaultMessage='EDIT' />
+                      ) : (
+                        <FormattedMessage id='sidebar.addNew' defaultMessage='ADD NEW' />
+                      )}
+                    </CustomHighSegment>
+                  </div>
+                  <FlexContent style={{ padding: '16px' }}>
+                    <CustomSegmentContent basic>{this.renderEdit(formikProps)}</CustomSegmentContent>
+                  </FlexContent>
+                  <CustomDiv>
+                    <Button.Reset
+                      style={{ margin: '0 5px' }}
+                      onClick={closeSidebar}
+                      data-test='settings_branches_popup_reset_btn'>
+                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button.Reset>
+                    <CustomButtonSubmit
+                      onClick={() => {
+                        formikProps.validateForm().then(err => {
+                          const errors = Object.keys(err)
+                          if (errors.length && errors[0] !== 'isCanceled') {
+                            // Errors found
+                            formikProps.submitForm() // to show errors
+                          } else {
+                            // No errors found
+                            this.setState({ loadSidebar: true })
+                            this.submitHandler(formikProps.values, formikProps.setSubmitting)
+                          }
+                        })
+                      }}
+                      data-test='settings_branches_popup_submit_btn'>
+                      <FormattedMessage id='global.save' defaultMessage='Save'>
+                        {text => text}
+                      </FormattedMessage>
+                    </CustomButtonSubmit>
+                  </CustomDiv>
+                </FlexSidebar>
+                <ErrorFocus />
+              </CustomForm>
+            </>
+          )
+        }}
       </Formik>
     )
   }

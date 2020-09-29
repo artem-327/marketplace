@@ -132,7 +132,7 @@ let urlTabs = [
   '/settings?type=locations',
   '/settings?type=users',
   '/settings?type=locations',
-  '/settings?type=products',
+  '/inventory/my-products',
   '/inventory/my-listings',
   '/settings?type=global-broadcast',
   '/settings?type=bank-accounts',
@@ -166,7 +166,7 @@ class Tutorial extends Component {
       }
       if (isProductCatalogAdmin) {
         tutorials.push('products')
-        urls.push('/settings?type=products')
+        urls.push('/inventory/my-products')
       }
       if (isProductOfferManager) {
         tutorials.push('inventory', 'marketplace')
