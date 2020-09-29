@@ -272,6 +272,16 @@ const DivAddInputTds = styled.div`
 
 const TableCell = styled(Table.Cell)`
   padding: 2px !important;
+  .input {
+    input {
+      background-color: #fdfdfd !important;
+    }
+  }
+  .disabled.input {
+    input {
+      background-color: #f1f1f1 !important;
+    }
+  }
 `
 
 const GridRowPlusIcon = styled(Grid.Row)`
@@ -280,6 +290,29 @@ const GridRowPlusIcon = styled(Grid.Row)`
 
 const DivIconTrash = styled.div`
   min-width: 30px;
+`
+
+const GridColumnDropdown = styled(Grid.Column)`
+  .ui.fluid.selection.dropdown {
+    background-color: #fdfdfd !important;
+  }
+`
+
+const GridColumnInput = styled(Grid.Column)`
+  .ui.disabled.fluid.input {
+    input {
+      background-color: #f1f1f1 !important;
+    }
+  }
+  .fluid.input {
+    input {
+      background-color: #fdfdfd !important;
+    }
+  }
+`
+
+const GridRowInputs = styled(Grid.Row)`
+  padding-top: 0px !important;
 `
 
 class SubmitOfferPopup extends React.Component {
@@ -363,11 +396,33 @@ class SubmitOfferPopup extends React.Component {
 
   validationSchema = () =>
     Yup.lazy(values => {
+      let fulfillmentType = ''
+      if (this.state.nextSubmit)
+        fulfillmentType = { fulfillmentType: Yup.string().required(errorMessages.requiredMessage) }
       return Yup.object().shape({
+        ...(values.lotExpirationDate && {
+          lotExpirationDate: dateValidation(false).concat(
+            Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
+              const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+              return enteredDate >= moment().endOf('day').format()
+            })
+          )
+        }),
+        ...fulfillmentType,
         items: Yup.array().of(
           Yup.lazy(v => {
+            let fulfilledAt = ''
+            if (values.fulfillmentType === 'COMPLETE_SCHEDULE')
+              fulfilledAt = {
+                fulfilledAt: dateValidation(this.state.nextSubmit ? true : false).concat(
+                  Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
+                    const enteredDate = moment(getStringISODate(date)).endOf('day').format()
+                    return enteredDate >= moment().endOf('day').format()
+                  })
+                )
+              }
             return Yup.object().shape({
-              fulfilledAt: dateValidation(this.state.nextSubmit ? true : false),
+              ...fulfilledAt,
               pkgAmount: Yup.number()
                 .positive(errorMessages.positive)
                 .typeError(errorMessages.requiredMessage)
@@ -375,15 +430,7 @@ class SubmitOfferPopup extends React.Component {
               pricePerUOM: Yup.number()
                 .positive(errorMessages.positive)
                 .typeError(errorMessages.requiredMessage)
-                .required(errorMessages.requiredMessage),
-              ...(values.lotExpirationDate && {
-                lotExpirationDate: dateValidation(false).concat(
-                  Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
-                    const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-                    return enteredDate >= moment().endOf('day').format()
-                  })
-                )
-              })
+                .required(errorMessages.requiredMessage)
             })
           })
         )
@@ -464,8 +511,10 @@ class SubmitOfferPopup extends React.Component {
     }
 
     this.clean(body)
-
-    await submitOffer(this.clean(body)) //CHECK new BE
+    console.log('body====================================')
+    console.log(body)
+    console.log('====================================')
+    //await submitOffer(this.clean(body)) //CHECK new BE
     closePopup()
   }
 
@@ -518,7 +567,10 @@ class SubmitOfferPopup extends React.Component {
     const row = rows[this.state.select]
     row[name] = value
 
-    if (this.values.fulfillmentType === 'COMPLETE_SCHEDULE') {
+    if (
+      this.values.fulfillmentType === 'COMPLETE_SCHEDULE' &&
+      (name.includes('pkgAmount') || name.includes('pricePerUOM'))
+    ) {
       let total = 0
       if (name.includes('pkgAmount')) {
         total = Number(value) * Number(this.values.items[index].pricePerUOM)
@@ -527,6 +579,7 @@ class SubmitOfferPopup extends React.Component {
       }
       this.setFieldValue(`items[${index}].total`, total)
     }
+
     if (name === 'fulfillmentType' && !this.values.items[index].total) {
       this.setFieldValue(
         `items[${index}].total`,
@@ -556,7 +609,7 @@ class SubmitOfferPopup extends React.Component {
                 <FormattedMessage id='submitOffer.price' defaultMessage='Price'>
                   {text => text}
                 </FormattedMessage>
-                <Required />
+                <Required style={{ marginRight: '4px' }} />
               </>
             )
           }
@@ -564,7 +617,8 @@ class SubmitOfferPopup extends React.Component {
             type: 'number',
             onChange: (e, data) => this.handleChange(e, data, index),
             label: <GreenLabel>{this.props.currencySymbol}</GreenLabel>,
-            labelPosition: 'right'
+            labelPosition: 'right',
+            fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'
           }}
         />
       </>
@@ -584,7 +638,8 @@ class SubmitOfferPopup extends React.Component {
           inputProps={{
             onChange: (e, { name, value }) => this.handleChange(e, { name, value: getStringISODate(value) }),
             //minDate: moment(), TypeError: Cannot read property 'position' of undefined
-            clearable: true
+            clearable: true,
+            fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'
           }}
         />
       </>
@@ -606,7 +661,8 @@ class SubmitOfferPopup extends React.Component {
           name={`items[${index}].fulfilledAt`}
           inputProps={{
             onChange: (e, { name, value }) => this.handleChange(e, { name, value: getStringISODate(value) }),
-            clearable: true
+            clearable: true,
+            fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'
           }}
         />
       </>
@@ -631,7 +687,8 @@ class SubmitOfferPopup extends React.Component {
             onChange: (e, data) => this.handleChange(e, data, index),
             label: <QuantityLabel>lbs</QuantityLabel>,
             labelPosition: 'right',
-            disabled: fulfillmentType === 'COMPLETE_IMMEDIATE'
+            disabled: fulfillmentType === 'COMPLETE_IMMEDIATE',
+            fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'
           }}
         />
       </>
@@ -676,15 +733,23 @@ class SubmitOfferPopup extends React.Component {
                     <TableCell>{this.renderDateInputFulfilledAt(fulfillmentType, index)}</TableCell>
                     <TableCell>{this.renderPriceInput(fulfillmentType, index)}</TableCell>
                     <TableCell>{this.renderTotal(index)}</TableCell>
-                    <TableCell
-                      verticalAlign='middle'
-                      textAlign='center'
-                      onClick={e => {
-                        arrayHelpers.remove(index)
-                      }}>
-                      <DivIconTrash>
-                        <IconTrash />
-                      </DivIconTrash>
+                    <TableCell verticalAlign='middle' textAlign='center'>
+                      {items.length > 1 && (
+                        <DivIconTrash
+                          onClick={async e => {
+                            if (
+                              getSafe(() => this.values.items[index + 1], false) &&
+                              !getSafe(() => this.values.items[index + 1].total, false)
+                            ) {
+                              //Clear total number before remove row
+                              await this.setFieldValue(`items[${index}].total`, '')
+                            }
+
+                            await arrayHelpers.remove(index)
+                          }}>
+                          <IconTrash />
+                        </DivIconTrash>
+                      )}
                     </TableCell>
                   </Table.Row>
                 )
@@ -853,7 +918,7 @@ class SubmitOfferPopup extends React.Component {
                       ) : (
                         <Grid style={{ minHeight: '200px' }}>
                           <GridRow columns={2}>
-                            <Grid.Column width={8}>
+                            <GridColumnDropdown width={8}>
                               <FormattedMessage id='submitOffer.optionToOffer' defaultMessage='Option to offer'>
                                 {text => text}
                               </FormattedMessage>
@@ -873,8 +938,8 @@ class SubmitOfferPopup extends React.Component {
                                 }}
                                 name='fulfillmentType'
                               />
-                            </Grid.Column>
-                            <Grid.Column width={8}>
+                            </GridColumnDropdown>
+                            <GridColumnInput width={8}>
                               <FormattedMessage id='submitOffer.product' defaultMessage='Product'>
                                 {text => text}
                               </FormattedMessage>
@@ -887,7 +952,7 @@ class SubmitOfferPopup extends React.Component {
                                   fluid: true
                                 }}
                               />
-                            </Grid.Column>
+                            </GridColumnInput>
                           </GridRow>
                           <FieldArray
                             name='items'
@@ -895,25 +960,27 @@ class SubmitOfferPopup extends React.Component {
                               <>
                                 {values.fulfillmentType === 'PARTIAL' ||
                                 values.fulfillmentType === 'COMPLETE_IMMEDIATE' ? (
-                                  <GridRow columns={3}>
-                                    <Grid.Column>{this.renderPriceInput(values.fulfillmentType)}</Grid.Column>
-                                    <Grid.Column>{this.renderDateInput(values.fulfillmentType)}</Grid.Column>
-                                    <Grid.Column>{this.renderQuantityInput(values.fulfillmentType)}</Grid.Column>
-                                  </GridRow>
+                                  <GridRowInputs columns={3}>
+                                    <GridColumnInput>{this.renderPriceInput(values.fulfillmentType)}</GridColumnInput>
+                                    <GridColumnInput>{this.renderDateInput(values.fulfillmentType)}</GridColumnInput>
+                                    <GridColumnInput>
+                                      {this.renderQuantityInput(values.fulfillmentType)}
+                                    </GridColumnInput>
+                                  </GridRowInputs>
                                 ) : null}
                                 {values.fulfillmentType === 'COMPLETE_SCHEDULE' && (
                                   <>
-                                    <GridRow>
+                                    <GridRowInputs>
                                       <Grid.Column>
                                         {this.renderTableInputs(values.fulfillmentType, values.items, arrayHelpers)}
                                       </Grid.Column>
-                                    </GridRow>
+                                    </GridRowInputs>
                                     <GridRowPlusIcon>
-                                      <GridColumn
-                                        onClick={e => {
-                                          arrayHelpers.push({ fulfilledAt: '', pkgAmount: '', pricePerUOM: '' })
-                                        }}>
-                                        <DivAddInputTds>
+                                      <GridColumn>
+                                        <DivAddInputTds
+                                          onClick={e => {
+                                            arrayHelpers.push({ fulfilledAt: '', pkgAmount: '', pricePerUOM: '' })
+                                          }}>
                                           <DivIconPlusCircle>
                                             <IconPlusCircle />
                                           </DivIconPlusCircle>
@@ -943,22 +1010,24 @@ class SubmitOfferPopup extends React.Component {
                             </LeftColumn>
                           </>
                         )}
-                        <RightColumn width={4} floated='right'>
-                          <Button basic type='button' onClick={closePopup}>
-                            <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
-                              {text => text}
-                            </FormattedMessage>
-                          </Button>
-                          <SubmitButton
-                            primary
-                            type='submit'
-                            onClick={this.submitForm}
-                            disabled={this.state.select === ''}>
-                            <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span'>
-                              {text => text}
-                            </FormattedMessage>
-                          </SubmitButton>
-                        </RightColumn>
+                        {this.state.select !== '' && (
+                          <RightColumn width={4} floated='right'>
+                            <Button basic type='button' onClick={closePopup}>
+                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
+                                {text => text}
+                              </FormattedMessage>
+                            </Button>
+                            <SubmitButton
+                              primary
+                              type='submit'
+                              onClick={this.submitForm}
+                              disabled={this.state.select === ''}>
+                              <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span'>
+                                {text => text}
+                              </FormattedMessage>
+                            </SubmitButton>
+                          </RightColumn>
+                        )}
                       </GridRow>
                     </Grid>
                   </Modal.Actions>
