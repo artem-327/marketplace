@@ -53,7 +53,7 @@ function mapStateToProps(store, { datagrid }) {
             id: row.id + '_' + pro.id,
             clsName: 'tree-table nested-row',
             rawData: pro,
-            product: getSafe(() => pro.productOffer.companyProduct.productGroup.name, '...'),
+            product: getSafe(() => productName, '...'),
             casNumber: getSafe(
               () => pro.productOffer.companyProduct.productGroup.elements[0].casProduct.casNumber,
               '...'
@@ -84,7 +84,8 @@ function mapStateToProps(store, { datagrid }) {
                 value={pro.pricePerUOM}
               />
             ),
-            deliveredQuote: 'N/A'
+            deliveredQuote: 'N/A',
+            status: getSafe(() => pro.status, '')
           }
         })
         .filter(el => el.rawData.status === 'NEW')

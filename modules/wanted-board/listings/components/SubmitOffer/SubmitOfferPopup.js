@@ -315,6 +315,15 @@ const GridRowInputs = styled(Grid.Row)`
   padding-top: 0px !important;
 `
 
+const DivRadio = styled.div`
+  margin: -10px !important;
+  padding: 10px 10px 12px 10px !important;
+  border-left: ${props => props.borderLeft && '2px solid #2599d5 !important'};
+  .ui.radio.checkbox input:checked ~ label:after {
+    background-color: #2599d5 !important;
+  }
+`
+
 class SubmitOfferPopup extends React.Component {
   state = {
     columns: [
@@ -438,6 +447,10 @@ class SubmitOfferPopup extends React.Component {
     })
 
   componentDidMount() {
+    if (this.props.counterRequestedItem) {
+      this.setState({ nextSubmit: true, select: 0 })
+      return
+    }
     if (!this.props.datagrid.loading) this.handleDatagridResult()
   }
 
@@ -480,8 +493,7 @@ class SubmitOfferPopup extends React.Component {
       this.setState({ nextSubmit: true })
       return
     }
-    const { closePopup, submitOffer, popupValues, rows } = this.props
-
+    const { closePopup, submitOffer, popupValues, rows, counterRequestedItem } = this.props
     let expiresAt = null
     if (lotExpirationDate) {
       expiresAt = moment(getStringISODate(lotExpirationDate)).endOf('day').format()
@@ -502,19 +514,21 @@ class SubmitOfferPopup extends React.Component {
       }
     })
 
+    const productOffer = getSafe(() => rows[this.state.select].id, '')
+      ? rows[this.state.select].id
+      : getSafe(() => popupValues.productOffer.id, '')
+
     const body = {
       expiresAt,
       fulfillmentType,
       items: editedItems,
-      productOffer: rows[this.state.select].id,
+      productOffer,
       purchaseRequest: popupValues.id
     }
 
-    this.clean(body)
-    console.log('body====================================')
-    console.log(body)
-    console.log('====================================')
-    //await submitOffer(this.clean(body)) //CHECK new BE
+    counterRequestedItem
+      ? await counterRequestedItem(popupValues.id, this.clean(body)) //CHECK new BE
+      : await submitOffer(this.clean(body)) //CHECK new BE
     closePopup()
   }
 
@@ -525,17 +539,19 @@ class SubmitOfferPopup extends React.Component {
       return {
         ...row,
         radio: (
-          <Radio
-            checked={this.state.select === index}
-            value={index}
-            onChange={(_e, { value }) => {
-              this.setState({ select: value })
-              this.setFieldValue('items[0].pricePerUOM', row.pricePerUOM)
-              this.setFieldValue('items[0].pkgAmount', row.pkgAvailable)
-              this.setFieldValue('productName', row.companyProduct.intProductName)
-            }}
-            // inputProps={{  }}
-          />
+          <DivRadio borderLeft={this.state.select === index}>
+            <Radio
+              checked={this.state.select === index}
+              value={index}
+              onChange={(_e, { value }) => {
+                this.setState({ select: value })
+                this.setFieldValue('items[0].pricePerUOM', row.pricePerUOM)
+                this.setFieldValue('items[0].pkgAmount', row.pkgAvailable)
+                this.setFieldValue('productName', row.companyProduct.intProductName)
+              }}
+              // inputProps={{  }}
+            />
+          </DivRadio>
         ),
         product: getSafe(() => row.companyProduct.intProductName, 'N/A'),
         pricePerUOM: (
@@ -562,11 +578,6 @@ class SubmitOfferPopup extends React.Component {
   }
 
   handleChange = (_e, { name, value }, index = 0) => {
-    const { datagrid } = this.props
-    const { rows } = datagrid
-    const row = rows[this.state.select]
-    row[name] = value
-
     if (
       this.values.fulfillmentType === 'COMPLETE_SCHEDULE' &&
       (name.includes('pkgAmount') || name.includes('pricePerUOM'))
@@ -586,8 +597,13 @@ class SubmitOfferPopup extends React.Component {
         Number(this.values.items[index].pricePerUOM) * Number(this.values.items[index].pkgAmount)
       )
     }
-
-    datagrid.updateRow(row.id, () => row)
+    const { datagrid, counterRequestedItem } = this.props
+    if (getSafe(() => datagrid.rows.length, '') && !counterRequestedItem) {
+      const { rows } = datagrid
+      const row = rows[this.state.select]
+      row[name] = value
+      datagrid.updateRow(row.id, () => row)
+    }
   }
 
   renderPriceInput = (fulfillmentType, index = 0) => {
@@ -773,7 +789,7 @@ class SubmitOfferPopup extends React.Component {
     const { columns } = this.state
     const rows = this.getRows()
 
-    const qtyPart = popupValues.unit.nameAbbreviation
+    const qtyPart = getSafe(() => popupValues.unit.nameAbbreviation, '')
 
     return (
       <>
@@ -787,9 +803,19 @@ class SubmitOfferPopup extends React.Component {
           enableReinitialize
           initialValues={{
             expirationDate: '',
-            productName: '',
+            productName: getSafe(() => popupValues.productOffer.companyProduct.companyGenericProduct.name, ''),
             fulfillmentType: '',
-            items: [{ fulfilledAt: '', pkgAmount: '', pricePerUOM: '', total: '' }]
+            items: [
+              {
+                fulfilledAt: '',
+                pkgAmount: getSafe(() => popupValues.pkgAmount, ''),
+                pricePerUOM: getSafe(() => popupValues.pricePerUOM, ''),
+                total:
+                  getSafe(() => popupValues.pkgAmount, '') && getSafe(() => popupValues.pricePerUOM, '')
+                    ? popupValues.pkgAmount * popupValues.pricePerUOM
+                    : ''
+              }
+            ]
           }}
           render={({ setFieldValue, values, submitForm }) => {
             this.setFieldValue = setFieldValue

@@ -19,12 +19,13 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import styled from 'styled-components'
+import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
 
 const CountedName = styled.div`
   display: flex;
-  alignItems: center;
-  flexDirection: row;
-  
+  alignitems: center;
+  flexdirection: row;
+
   > .ui.label {
     margin: 0;
     font-weight: normal;
@@ -79,6 +80,15 @@ class BidsReceived extends Component {
           actions: this.getActions()
           //align: 'right',
           //sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
+          name: 'status',
+          title: (
+            <FormattedMessage id='wantedBoard.status' defaultMessage='Status'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 145
         },
         {
           name: 'orderQuantity',
@@ -522,6 +532,30 @@ class BidsReceived extends Component {
           datagrid.loadData()
         },
         hidden: row => row.treeRoot
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.accept',
+          defaultMessage: 'Accept'
+        }),
+        disabled: row => editedId === row.id,
+        callback: async row => {
+          await this.props.acceptRequestedItem(row.id.split('_')[1])
+          datagrid.loadData()
+        },
+        hidden: row => row.treeRoot
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.counter',
+          defaultMessage: 'Counter'
+        }),
+        disabled: row => editedId === row.id,
+        callback: async row => {
+          await this.props.openSubmitOffer(row)
+          datagrid.loadData()
+        },
+        hidden: row => row.treeRoot
       }
     ]
   }
@@ -535,9 +569,9 @@ class BidsReceived extends Component {
           <CountedName>
             <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
             <div style={{ width: '30px', height: '20px', padding: '5px' }}>
-            {offersLength
-              ? (this.state.expandedRowIds.some(el => el === row.id)
-                ? (<ChevronDown
+              {offersLength ? (
+                this.state.expandedRowIds.some(el => el === row.id) ? (
+                  <ChevronDown
                     size={20}
                     style={{ color: '#2599d5', cursor: 'pointer' }}
                     onClick={e => {
@@ -545,8 +579,9 @@ class BidsReceived extends Component {
                       const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
                       this.setState({ expandedRowIds })
                     }}
-                  />)
-                : (<ChevronRight
+                  />
+                ) : (
+                  <ChevronRight
                     size={20}
                     style={{ color: '#2599d5', cursor: 'pointer' }}
                     onClick={e => {
@@ -555,9 +590,11 @@ class BidsReceived extends Component {
                       expandedRowIds.push(row.id)
                       this.setState({ expandedRowIds })
                     }}
-                  />)
-              ) : <div style={{ padding: '0 10px' }} />
-            }
+                  />
+                )
+              ) : (
+                <div style={{ padding: '0 10px' }} />
+              )}
             </div>
             {row.product}
           </CountedName>
@@ -566,29 +603,32 @@ class BidsReceived extends Component {
           <CountedName>
             <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
             <div style={{ width: '30px', height: '20px', paddingLeft: '5px', paddingTop: '5px' }}>
-              {offersLength
-                ? (this.state.expandedRowIds.some(el => el === row.id)
-                    ? (<ChevronDown
-                      size={20}
-                      style={{ color: '#2599d5', cursor: 'pointer' }}
-                      onClick={e => {
-                        e.stopPropagation()
-                        const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
-                        this.setState({ expandedRowIds })
-                      }}
-                    />)
-                    : (<ChevronRight
-                      size={20}
-                      style={{ color: '#2599d5', cursor: 'pointer' }}
-                      onClick={e => {
-                        e.stopPropagation()
-                        let expandedRowIds = this.state.expandedRowIds.slice()
-                        expandedRowIds.push(row.id)
-                        this.setState({ expandedRowIds })
-                      }}
-                    />)
-                ) : <div style={{ padding: '0 10px' }} />
-              }
+              {offersLength ? (
+                this.state.expandedRowIds.some(el => el === row.id) ? (
+                  <ChevronDown
+                    size={20}
+                    style={{ color: '#2599d5', cursor: 'pointer' }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
+                      this.setState({ expandedRowIds })
+                    }}
+                  />
+                ) : (
+                  <ChevronRight
+                    size={20}
+                    style={{ color: '#2599d5', cursor: 'pointer' }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      let expandedRowIds = this.state.expandedRowIds.slice()
+                      expandedRowIds.push(row.id)
+                      this.setState({ expandedRowIds })
+                    }}
+                  />
+                )
+              ) : (
+                <div style={{ padding: '0 10px' }} />
+              )}
             </div>
             {row.casNumber}
           </CountedName>
@@ -598,13 +638,25 @@ class BidsReceived extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, editedId, sidebarDetailTrigger, type, tutorialCompleted } = this.props
+    const {
+      datagrid,
+      intl,
+      rows,
+      editedId,
+      sidebarDetailTrigger,
+      type,
+      tutorialCompleted,
+      openedSubmitOfferPopup,
+      popupValues,
+      counterRequestedItem
+    } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
     return (
       <>
         {!tutorialCompleted && <Tutorial marginWantedBoard />}
+        {openedSubmitOfferPopup && <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>

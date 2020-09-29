@@ -2590,6 +2590,8 @@
   "wantedBoard.submit": "Submit",
   "wantedBoard.purchased": "Purchased",
   "wantedBoard.rejected": "Rejected",
+  "wantedBoard.accept": "Accept",
+  "wantedBoard.counter": "Counter",
   "wantedBoard.submitOfferHeader": "SUBMIT OFFER",
   "wantedBoard.requestedBy": "Requested By",
   "wantedBoard.notify.noInventoryItems.Header": "No Items Match",

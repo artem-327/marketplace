@@ -189,3 +189,13 @@ export function handleVariableSave(variable, value) {
     payload: { variable, value }
   }
 }
+
+export const acceptRequestedItem = id => ({
+  type: AT.WB_ACCEPT_REQUESTED_ITEM,
+  payload: api.acceptRequestedItem(id)
+})
+
+export const counterRequestedItem = (id, body) => ({
+  type: AT.WB_COUNTER_REQUESTED_ITEM,
+  payload: api.counterRequestedItem(id, body)
+})

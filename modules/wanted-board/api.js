@@ -84,9 +84,19 @@ export const purchaseRequestedItem = id => {
 }
 
 export const rejectRequestedItem = id => {
-  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/decline`).then(response => response.data)
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/reject-last-offer`).then(response => response.data)
 }
 
 export const getPurchaseRequest = id => {
   return api.get(`/prodex/api/purchase-requests/id/${id}`).then(response => response.data)
+}
+
+export const acceptRequestedItem = id => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/accept-last-offer`).then(response => response.data)
+}
+
+export const counterRequestedItem = (id, body) => {
+  return api
+    .patch(`/prodex/api/purchase-request-offers/id/${id}/counter-last-offer`, body)
+    .then(response => response.data)
 }
