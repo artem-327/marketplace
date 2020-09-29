@@ -510,6 +510,8 @@ class InventoryFilter extends Component {
                 fluid: true,
                 onChange: (_, data) => {
                   setFieldValue(data.name, data.value)
+                  let newInputName = `${data.name}${data.value}`
+                  setFieldValue(newInputName, values[inputName])
                   setFieldValue(inputName, '')
                   this.setState(state => ({
                     ...state,
@@ -811,6 +813,8 @@ class InventoryFilter extends Component {
     //if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
+
+    console.log('!!!!!!!!!! aaaaa values', values)
 
     return (
       <PopupGrid>
