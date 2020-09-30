@@ -394,8 +394,8 @@ export function getAddressSearchMailingBranch(body) {
 export const takeOverCompanyFinish = () => {
   return async dispatch => {
     let payload = await api.takeOverCompanyFinish()
-    dispatch(updateIdentity(payload))
-    Router.push('/admin')
+    await dispatch(updateIdentity(payload))
+    Router.push('/companies')
   }
 }
 
