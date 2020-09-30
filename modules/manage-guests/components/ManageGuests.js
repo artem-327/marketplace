@@ -18,6 +18,7 @@ import CompanyEdit from './Guests/CompanyEdit'
 import { closePopup } from '../actions'
 
 import { StyledContainer } from '../constants'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const SettingsGrid = styled(Grid)`
   flex-direction: column !important;
@@ -74,17 +75,14 @@ class ManageGuests extends Component {
   }
 
   renderContent = () => {
-    const {
-      currentTab,
-      isOpenPopup
-    } = this.props
+    const { currentTab, isOpenPopup } = this.props
 
     const tables = {
-      guests: <GuestCompaniesTable />,
+      guests: <GuestCompaniesTable />
     }
 
     const popupForm = {
-      guests: <AddEditGuestCompanySidebar />,
+      guests: <AddEditGuestCompanySidebar />
     }
 
     return (
@@ -119,35 +117,29 @@ class ManageGuests extends Component {
   }
 
   render() {
-    const {
-      currentTab,
-      isOpenCompanyEdit
-    } = this.props
+    const { currentTab, isOpenCompanyEdit, tutorialCompleted } = this.props
 
     if (currentTab === 'chat') {
-      return (
-        <>Chat</>
-      )
+      return <>Chat</>
     } else if (isOpenCompanyEdit) {
-      return (<CompanyEdit />)
+      return <CompanyEdit />
     } else {
       return (
-        <DatagridProvider
-          apiConfig={this.getApiConfig()}
-          preserveFilters
-          skipInitLoad
-        >
-          <StyledContainer fluid className='flex stretched scrolling'>
-            <Container fluid style={{padding: '20px 30px'}}>
-              <TablesHandlers currentTab={currentTab} />
-            </Container>
-            <SettingsGrid columns='equal' style={{padding: '0 30px'}} className='flex stretched'>
-              <Grid.Row>
-                <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
-              </Grid.Row>
-            </SettingsGrid>
-          </StyledContainer>
-        </DatagridProvider>
+        <>
+          {!tutorialCompleted && <Tutorial />}
+          <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
+            <StyledContainer fluid className='flex stretched scrolling'>
+              <Container fluid style={{ padding: '20px 30px' }}>
+                <TablesHandlers currentTab={currentTab} />
+              </Container>
+              <SettingsGrid columns='equal' style={{ padding: '0 30px' }} className='flex stretched'>
+                <Grid.Row>
+                  <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
+                </Grid.Row>
+              </SettingsGrid>
+            </StyledContainer>
+          </DatagridProvider>
+        </>
       )
     }
   }
@@ -156,7 +148,8 @@ class ManageGuests extends Component {
 const mapStateToProps = ({ manageGuests, auth }, { router }) => {
   return {
     ...manageGuests,
-    currentTab: getSafe(() => router.query.type, '')
+    currentTab: getSafe(() => router.query.type, ''),
+    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
   }
 }
 

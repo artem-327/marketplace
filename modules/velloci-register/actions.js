@@ -5,9 +5,16 @@ export const nextStep = index => ({ type: AT.NEXT_STEP, payload: index })
 export const prevStep = index => ({ type: AT.PREV_STEP, payload: index })
 export const countBeneficialOwners = number => ({ type: AT.COUNT_BENEFICIAL_OWNERS, payload: number })
 export const cleareActiveStep = () => ({ type: AT.CLEARE_ACTIVE_STEP })
-export const postRegisterVelloci = (body, files, documentType, companyId) => ({
+export const postRegisterVelloci = (body, companyId, files) => {
+  return async dispatch => {
+    return api.postRegisterVelloci(body, companyId).then(() => {
+      dispatch(postUploadDocuments(files))
+    })
+  }
+}
+export const postUploadDocuments = files => ({
   type: AT.REGISTER_VELLOCI,
-  payload: api.postRegisterVelloci(body, files, documentType)
+  payload: api.postUploadDocuments(files)
 })
 export const getEntityTypes = () => ({ type: AT.GET_ENTITY_TYPES, payload: api.getEntityTypes() })
 export const getNaicsCodes = () => ({ type: AT.GET_NAICS_CODES, payload: api.getNaicsCodes() })

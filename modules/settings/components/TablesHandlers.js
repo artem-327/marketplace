@@ -237,13 +237,18 @@ class TablesHandlers extends Component {
       getDwollaBeneficiaryOwners,
       tableHandlersFilters,
       currentTab,
-      paymentProcessor
+      paymentProcessor,
+      accountStatus,
+      vellociGetToken
     } = this.props
 
     try {
       //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA') {
+      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA' && accountStatus) {
         await getDwollaBeneficiaryOwners()
+      }
+      if (paymentProcessor === 'VELLOCI') {
+        await vellociGetToken()
       }
     } catch (err) {
       console.error(err)
@@ -355,62 +360,17 @@ class TablesHandlers extends Component {
       console.error(e)
     }
   }
-
+  //TODO could be helpful if we will create additional action when close modal
   onExit = async (err, metadata) => {
     console.log('onExit', err, metadata)
   }
 
-  onSuccess = async (public_token, metadata) => {
-    console.log('onSuccess', public_token, metadata)
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        metadata: metadata,
-        business_public_id: '' //FIXME
-      })
-    }
-
-    const response = await api.post('/prodex/api/payments/velloci/accounts', options)
-    const res = await response.json()
-
-    if (res.hasOwnProperty('error_type')) {
-      console.log(res)
-    } else {
-      console.log('Your accounts have been added.')
-    }
+  onSuccess = async (publicToken, metadata) => {
+    await this.props.vellociAddAcount(publicToken)
   }
 
-  token = async () => {
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        products: 'auth',
-        link_customization_name: 'echo',
-        account_types: 'all',
-        business_public_id: '', //FIXME
-        account_public_id: null
-      })
-    }
-
-    const response = await api.post('/prodex/api/payments/velloci/token', options)
-    return await response.json()
-  }
-
-  onEvent = async (event_name, metadata) => {
-    console.log('onEvent', event_name, metadata)
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        metadata: metadata,
-        event_name: event_name,
-        business_public_id: '' //FIXME
-      })
-    }
-
-    const response = await api.post('/prodex/api/payments/velloci/log', options)
-    const res = await response.json()
-    console.log('res', res)
+  onEvent = async (eventName, metadata) => {
+    this.props.vellociOnEvent(eventName, metadata)
   }
 
   renderHandler = () => {
@@ -429,6 +389,8 @@ class TablesHandlers extends Component {
       openSidebar,
       vellociAccBalance,
       paymentProcessor,
+      vellociBusinessId,
+      vellociToken,
       intl: { formatMessage }
     } = this.props
 
@@ -638,10 +600,10 @@ class TablesHandlers extends Component {
               )}
               {(!bankAccTab || bankAccounts.addButton) && (
                 <div className='column'>
-                  {paymentProcessor === 'VELLOCI' ? (
+                  {paymentProcessor === 'VELLOCI' && vellociToken && vellociBusinessId ? (
                     <PlaidButton
-                      token={this.token}
-                      publicKey={''} //FIXME
+                      token={vellociToken}
+                      publicKey={vellociBusinessId}
                       onExit={this.onExit}
                       onSuccess={this.onSuccess}
                       onEvent={this.onEvent}>
@@ -712,6 +674,7 @@ const mapStateToProps = state => {
   //const accountStatus = 'document'
 
   return {
+    accountStatus,
     paymentProcessor: getSafe(() => company.paymentProcessor, 'DWOLLA'),
     logisticsFilter: state.settings.logisticsFilter,
     'bank-accountsFilter': state.settings['bank-accountsFilter'],
@@ -730,7 +693,9 @@ const mapStateToProps = state => {
       : { value: '', currency },
     treeData,
     filter,
-    ...rest
+    ...rest,
+    vellociBusinessId: getSafe(() => company.vellociBusinessId, ''),
+    vellociToken: getSafe(() => state.settings.vellociToken, '')
   }
 }
 

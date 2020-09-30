@@ -2748,7 +2748,7 @@
   "velloci.personalInfo.businessTitle": "Business Title",
   "velloci.personalInfo.businessTitle.placeholder": "Enter Business Title",
   "velloci.personalInfo.socialSecurityNumber": "Social Security Number",
-  "velloci.personalInfo.socialSecurityNumber.placeholder": "XXX-XX-XXXX",
+  "velloci.personalInfo.socialSecurityNumber.placeholder": "123456789",
   "velloci.personalInfo.businessOwnershipPercentage": "Business Ownership Percentage",
   "velloci.personalInfo.businessOwnershipPercentage.placeholder": "xx",
   "velloci.termsAndConditions.title": "Here are a few legal terms that you'll have to read and accept before finishing",

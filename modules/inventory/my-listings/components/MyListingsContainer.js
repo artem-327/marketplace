@@ -25,6 +25,7 @@ function mapStateToProps(store, { datagrid }) {
 
   return {
     ...store.simpleAdd,
+    advancedFilters: store.filter.inventory.appliedFilter,
     editedId,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
     sidebarValues,

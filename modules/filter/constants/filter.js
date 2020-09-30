@@ -34,7 +34,7 @@ export const paths = {
     price: 'ProductOffer.cfPricePerUOM',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
     productConditions: 'ProductOffer.condition.id',
-    productGrades: 'ProductGrade.id',
+    productGrades: 'ProductOffer.grades.id',
     productForms: 'ProductOffer.form.id',
     expirationDate: 'ProductOffer.lotExpirationDate',
     assayFrom: 'ProductOffer.companyProduct.companyGenericProduct.elements.assayMin',

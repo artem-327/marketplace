@@ -50,9 +50,9 @@ class FilterTags extends Component {
 
   tagMarkup = filters => {
     return filters.map((filter, i) => {
-      let { tagDescription } = filter
+      let { tagDescription, description } = filter
       if (
-        (tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) ||
+        (true || tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) ||
         (typeof tagDescription === 'string' && this.state.hasOverflowingChildren)
       ) {
         return (
@@ -61,29 +61,30 @@ class FilterTags extends Component {
             position='bottom center'
             trigger={
               <FilterTag>
-                <span>
-                  {filter.description} {typeof tagDescription === 'string' ? '...' : `(${tagDescription.length})...`}
-                  <Icon onClick={() => this.removeFilter(filter)} name='delete' data-test='filter_tags_remove_filter' />
-                </span>
+                <div className='description'>
+                  {filter && tagDescription && typeof tagDescription === 'string'
+                    ? tagDescription.replace(/,/g, ', ')
+                    : tagDescription}
+                </div>
+                <Icon onClick={() => this.removeFilter(filter)} name='delete' data-test='filter_tags_remove_filter' />
               </FilterTag>
             }>
             <Grid verticalAlign='middle'>
               <PopupRow>
-                <GridColumn>{tagDescription.toString().replace(/,/g, ', ')}</GridColumn>
+                <GridColumn>{`${description}: ${tagDescription.toString().replace(/,/g, ', ')}`}</GridColumn>
               </PopupRow>
             </Grid>
           </WiderTooltip>
         )
-        // {tagDescription.toString().replace(/,/g, ', ')}
       } else {
         return (
           <FilterTag key={i} ref={this.myRef}>
-            <span>
-              {filter && filter.tagDescription && typeof filter.tagDescription === 'string'
-                ? filter.tagDescription.replace(/,/g, ', ')
-                : filter.tagDescription}
-              <Icon onClick={() => this.removeFilter(filter)} name='delete' data-test='filter_tags_remove_filter' />
-            </span>
+            <div className='description'>
+              {filter && tagDescription && typeof tagDescription === 'string'
+                ? tagDescription.replace(/,/g, ', ')
+                : tagDescription}
+            </div>
+            <Icon onClick={() => this.removeFilter(filter)} name='delete' data-test='filter_tags_remove_filter' />
           </FilterTag>
         )
       }
@@ -105,6 +106,7 @@ class FilterTags extends Component {
         <WiderTooltip
           key={TAGS_TO_DISPLAY}
           disabled={!!!filters[0].description}
+          hoverable
           trigger={
             <FilterTag key={TAGS_TO_DISPLAY}>
               <span>
@@ -117,8 +119,16 @@ class FilterTags extends Component {
               if (el.description && el.valuesDescription)
                 return (
                   <PopupRow key={i}>
-                    <GridColumn computer={8}>{el.description}:</GridColumn>
-                    <GridColumn computer={8}>{el.valuesDescription.toString().replace(/,/g, ', ')}</GridColumn>
+                    <GridColumn computer={7}>{el.description}:</GridColumn>
+                    <GridColumn computer={7}>{el.valuesDescription.toString().replace(/,/g, ', ')}</GridColumn>
+                    <GridColumn computer={2}>
+                      <Icon
+                        onClick={() => this.removeFilter(el)}
+                        name='delete'
+                        style={{ cursor: 'pointer' }}
+                        data-test='filter_tags_remove_filter'
+                      />
+                    </GridColumn>
                   </PopupRow>
                 )
             })}
@@ -149,8 +159,8 @@ FilterTags.defaultProps = {
   filters: []
 }
 
-function mapStateToProps(store) {
-  const filterType = getSafe(() => store.filter.params.filterType, null)
+function mapStateToProps(store, props) {
+  const { filterType } = props
   return {
     appliedFilter: filterType && store.filter[filterType] ? store.filter[filterType].appliedFilter : [],
     params: store.filter.params,
