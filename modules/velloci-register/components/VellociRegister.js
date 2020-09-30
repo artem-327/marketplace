@@ -170,15 +170,13 @@ class VellociRegister extends Component {
           companyId = { companyId: Number(searchParams.get('companyId')) }
         }
       }
-      console.log('body====================================')
-      console.log(body)
-      console.log('====================================')
-      // await postRegisterVelloci(body, companyId, files)
-      // if (companyId) {
-      //   Router.push('/companies')
-      // } else {
-      //   Router.push('/settings?type=bank-accounts')
-      // }
+
+      await postRegisterVelloci(body, companyId, files)
+      if (companyId) {
+        Router.push('/companies')
+      } else {
+        Router.push('/settings?type=bank-accounts')
+      }
     } catch (error) {
       console.error(error)
     }
