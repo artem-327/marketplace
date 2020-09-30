@@ -600,28 +600,27 @@ class TablesHandlers extends Component {
                   </Button>
                 </div>
               )}
-              {(!bankAccTab || bankAccounts.addButton) && (
-                <div className='column'>
-                  {paymentProcessor === 'VELLOCI' && vellociToken && vellociBusinessId ? (
-                    <PlaidButton
-                      token={vellociToken}
-                      publicKey={vellociBusinessId}
-                      onExit={this.onExit}
-                      onSuccess={this.onSuccess}
-                      onEvent={this.onEvent}>
-                      <PlusCircle />
-                      <div style={{ marginLeft: '10px' }}>
-                        <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
-                      </div>
-                    </PlaidButton>
-                  ) : (
-                    <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
-                      <PlusCircle />
+
+              <div className='column'>
+                {bankAccTab && paymentProcessor === 'VELLOCI' && vellociToken && vellociBusinessId ? (
+                  <PlaidButton
+                    token={vellociToken}
+                    publicKey={vellociBusinessId}
+                    onExit={this.onExit}
+                    onSuccess={this.onSuccess}
+                    onEvent={this.onEvent}>
+                    <PlusCircle />
+                    <div style={{ marginLeft: '10px' }}>
                       <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
-                    </Button>
-                  )}
-                </div>
-              )}
+                    </div>
+                  </PlaidButton>
+                ) : (
+                  <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
+                    <PlusCircle />
+                    <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                  </Button>
+                )}
+              </div>
             </>
           )}
           {/*{currentTab.type === 'global-broadcast' && (
