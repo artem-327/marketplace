@@ -80,9 +80,9 @@ export const initialValues = {
   },
   ownerInformation: {
     isBeneficialOwner: false,
-    isNotBeneficialOwner: false,
+    isNotBeneficialOwner: true,
     isOtherBeneficialOwner: false,
-    isNotOtherBeneficialOwner: false
+    isNotOtherBeneficialOwner: true
   },
   verifyPersonalInformation: [verifyPersonalInformation],
   termsAndConditions: {

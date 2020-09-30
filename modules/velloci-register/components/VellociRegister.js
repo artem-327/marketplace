@@ -99,31 +99,42 @@ class VellociRegister extends Component {
   getBody = values => {
     const { controlPerson, businessInfo, ownerInformation, verifyPersonalInformation } = values
     let tinNumber = getSafe(() => controlPerson.isEin, false) ? controlPerson.ein : controlPerson.ssn
-    let beneficialOwners =
-      getSafe(() => ownerInformation.isBeneficialOwner, false) ||
-      (getSafe(() => ownerInformation.isOtherBeneficialOwner, false) &&
-        getSafe(() => verifyPersonalInformation.length, false))
-        ? verifyPersonalInformation.map((val, i) => {
-            const obj = {
-              address: getSafe(() => val.address.streetAddress, ''),
-              businessRole: 'beneficial_owner',
-              businessTitle: getSafe(() => val.businessTitle, ''),
-              city: getSafe(() => val.address.city, ''),
-              dateOfBirth: getSafe(() => getStringISODate(val.dateOfBirth), '')
-                ? new Date(getStringISODate(val.dateOfBirth))
-                : '',
-              firstName: getSafe(() => val.firstName, ''),
-              lastName: getSafe(() => val.lastName, ''),
-              ownershipPercentage: parseInt(getSafe(() => val.businessOwnershipPercentage, '')),
-              phone: getSafe(() => val.phoneNumber.substring(1), ''),
-              provinceId: getSafe(() => val.address.province, ''),
-              zipCode: getSafe(() => val.address.zip, ''),
-              ssn: getSafe(() => val.socialSecurityNumber, ''),
-              email: getSafe(() => val.email, '')
-            }
-            return this.clean(obj)
-          })
-        : null
+    let beneficialOwners = getSafe(() => verifyPersonalInformation.length, false)
+      ? verifyPersonalInformation.map((val, i) => {
+          const obj = {
+            address: getSafe(() => val.address.streetAddress, ''),
+            businessRole: getSafe(() => val.businessRole, ''),
+            businessTitle: getSafe(() => val.businessTitle, ''),
+            city: getSafe(() => val.address.city, ''),
+            dateOfBirth: getSafe(() => getStringISODate(val.dateOfBirth), '')
+              ? new Date(getStringISODate(val.dateOfBirth))
+              : '',
+            firstName: getSafe(() => val.firstName, ''),
+            lastName: getSafe(() => val.lastName, ''),
+            ownershipPercentage: parseInt(getSafe(() => val.businessOwnershipPercentage, '')),
+            phone: getSafe(() => val.phoneNumber.substring(1), ''),
+            provinceId: getSafe(() => val.address.province, ''),
+            zipCode: getSafe(() => val.address.zip, ''),
+            ssn: getSafe(() => val.socialSecurityNumber, ''),
+            email: getSafe(() => val.email, '')
+          }
+          return this.clean(obj)
+        })
+      : null
+
+    let controller = { ...beneficialOwners[0] }
+    if (getSafe(() => ownerInformation.isBeneficialOwner, false)) {
+      controller.businessRole = 'controlling_officer'
+    }
+    if (beneficialOwners.length > 1) {
+      beneficialOwners.shift()
+    } else {
+      beneficialOwners = null
+    }
+    if (getSafe(() => ownerInformation.isNotBeneficialOwner, false) && controller && controller.ownershipPercentage) {
+      delete controller.ownershipPercentage
+    }
+
     let result = {
       dba: getSafe(() => businessInfo.dba, ''),
       email: getSafe(() => businessInfo.email, ''),
@@ -136,23 +147,7 @@ class VellociRegister extends Component {
       naicsCode: getSafe(() => controlPerson.naicsCode, ''),
       phone: getSafe(() => businessInfo.phoneNumber.substring(1), ''),
       tinNumber: getSafe(() => tinNumber, ''),
-      controller: {
-        address: getSafe(() => verifyPersonalInformation[0].address.streetAddress, ''),
-        businessRole: getSafe(() => controlPerson.isControlPerson, '') ? 'controlling_officer' : '',
-        businessTitle: getSafe(() => verifyPersonalInformation[0].businessTitle, ''),
-        city: getSafe(() => verifyPersonalInformation[0].address.city, ''),
-        dateOfBirth: getSafe(() => getStringISODate(verifyPersonalInformation[0].dateOfBirth), '')
-          ? new Date(getStringISODate(verifyPersonalInformation[0].dateOfBirth))
-          : '',
-        firstName: getSafe(() => verifyPersonalInformation[0].firstName, ''),
-        lastName: getSafe(() => verifyPersonalInformation[0].lastName, ''),
-        ownershipPercentage: getSafe(() => verifyPersonalInformation[0].businessOwnershipPercentage, ''),
-        phone: getSafe(() => verifyPersonalInformation[0].phoneNumber.substring(1), ''),
-        provinceId: getSafe(() => verifyPersonalInformation[0].address.province, ''),
-        zipCode: getSafe(() => verifyPersonalInformation[0].address.zip, ''),
-        ssn: getSafe(() => verifyPersonalInformation[0].socialSecurityNumber, ''),
-        email: getSafe(() => verifyPersonalInformation[0].email, '')
-      },
+      controller,
       beneficialOwners,
       website: getSafe(() => businessInfo.url, '')
     }
@@ -175,6 +170,7 @@ class VellociRegister extends Component {
           companyId = { companyId: Number(searchParams.get('companyId')) }
         }
       }
+
       await postRegisterVelloci(body, companyId, files)
       if (companyId) {
         Router.push('/companies')
@@ -258,7 +254,9 @@ class VellociRegister extends Component {
         verifyPersonalInformation: Yup.array().of(
           Yup.lazy(v => {
             //let isAnyValueFilled = deepSearch(v, (val, key) => val !== '' && key !== 'country')
-
+            const businessOwnershipPercentage = values.ownerInformation.isBeneficialOwner
+              ? { businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage) }
+              : null
             return Yup.object().shape({
               firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
               lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -281,7 +279,7 @@ class VellociRegister extends Component {
                 .min(9, errorMessages.minLength(9))
                 .max(9, errorMessages.maxLength(9))
                 .required(errorMessages.requiredMessage),
-              businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage)
+              ...businessOwnershipPercentage
             })
           })
         ),

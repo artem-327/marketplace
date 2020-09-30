@@ -360,9 +360,8 @@ class TablesHandlers extends Component {
       console.error(e)
     }
   }
-  //TODO could be helpful if we will create additional action when close modal
   onExit = async (err, metadata) => {
-    console.log('onExit', err, metadata)
+    this.props.reloadBankAccounts(true)
   }
 
   onSuccess = async (publicToken, metadata) => {
@@ -370,6 +369,9 @@ class TablesHandlers extends Component {
   }
 
   onEvent = async (eventName, metadata) => {
+    if (eventName === 'HANDOFF') {
+      this.props.reloadBankAccounts(true)
+    }
     this.props.vellociOnEvent(eventName, metadata)
   }
 

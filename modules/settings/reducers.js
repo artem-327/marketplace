@@ -134,7 +134,8 @@ export const initialState = {
   'bank-accountsFilter': '',
   renderCopyright: false,
   vellociAccBalance: null,
-  vellociToken: ''
+  vellociToken: '',
+  isReloadBankAcounts: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1587,6 +1588,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.RELOAD_BANK_ACCOUNTS: {
+      return {
+        ...state,
+        isReloadBankAcounts: payload
       }
     }
 

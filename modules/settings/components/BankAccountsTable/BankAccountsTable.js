@@ -25,7 +25,8 @@ import {
   dwollaFinalizeVerificationConfirmOpen,
   getCurrentUser,
   dwollaSetPreferred,
-  getVellociAccBalance
+  getVellociAccBalance,
+  reloadBankAccounts
 } from '../../actions'
 import Router from 'next/router'
 
@@ -208,6 +209,56 @@ export const bankAccountsConfig = {
     bankAccountList: true,
     uploadDocumentsButton: false,
     documentStatus: false
+  },
+  pending_kyb: {
+    registerButton: false,
+    addButton: false,
+    balance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
+  member_pending: {
+    registerButton: false,
+    addButton: false,
+    balance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
+  member_review: {
+    registerButton: false,
+    addButton: false,
+    balance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
+  member_unverified: {
+    registerButton: false,
+    addButton: false,
+    balance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
+  member_failed: {
+    registerButton: false,
+    addButton: false,
+    balance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
   }
 }
 
@@ -233,7 +284,7 @@ class BankAccountsTable extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.tabClicked !== prevProps.tabClicked) {
+    if (this.props.tabClicked !== prevProps.tabClicked || this.props.isReloadBankAcounts) {
       this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
       this.props.getCurrentUser()
       this.props.getIdentity().then(resp => {
@@ -242,6 +293,7 @@ class BankAccountsTable extends Component {
         getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
           this.props.getVellociAccBalance()
       })
+      this.props.reloadBankAccounts(false)
     }
   }
 
@@ -493,7 +545,8 @@ const mapDispatchToProps = {
   getCurrentUser,
   dwollaSetPreferred,
   getIdentity,
-  getVellociAccBalance
+  getVellociAccBalance,
+  reloadBankAccounts
 }
 
 const statusToLabel = {
@@ -610,7 +663,8 @@ const mapStateToProps = state => {
         : state.settings.tabsNames[0],
     company: company,
     currentUser: state.settings.currentUser,
-    tabClicked: state.settings.tabClicked
+    tabClicked: state.settings.tabClicked,
+    isReloadBankAcounts: state.settings.isReloadBankAcounts
   }
 }
 
