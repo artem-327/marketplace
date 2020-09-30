@@ -145,7 +145,7 @@ const initValues = {
     conforming: true,
     costPerUOM: '',
     externalNotes: '',
-    pkgAvailable: '',
+    pkgAvailable: 1,
     product: null,
     warehouse: null,
     fobPrice: '',
@@ -297,10 +297,11 @@ const validationScheme = val.lazy(values => {
         .number()
         .positive(errorMessages.positive)
         .typeError(errorMessages.mustBeNumber)
-        .required(errorMessages.requiredMessage)
-        .test('match', errorMessages.greaterOrEqual(values.edit.minimum), function (pkgAvailable) {
-          return typeof values.edit.minimum === 'undefined' || pkgAvailable >= values.edit.minimum
-        }),
+        .required(errorMessages.requiredMessage),
+      //This validation maybe return back. It will be depends on new BE logic.
+      // .test('match', errorMessages.greaterOrEqual(values.edit.minimum), function (pkgAvailable) {
+      //   return typeof values.edit.minimum === 'undefined' || pkgAvailable >= values.edit.minimum
+      // }),
       leadTime: val.number().min(1, errorMessages.minimum(1)).typeError(errorMessages.mustBeNumber),
       splits: val
         .number()
@@ -982,6 +983,16 @@ class DetailSidebar extends Component {
   quantityWrapper = (name, inputProps, label = null) => {
     const { values, setFieldTouched, setFieldValue } = this.formikProps
     const value = _.get(values, name)
+    const warning =
+      name === 'edit.pkgAvailable' &&
+      (typeof this.values.edit.minimum === 'undefined' || this.values.edit.pkgAvailable < this.values.edit.minimum) ? (
+        <span style={{ color: 'orange', fontSize: '10px' }}>
+          <FormattedMessage
+            id='validation.greaterThan'
+            defaultMessage={`Warning. PKGs Available is less than Minimum PKGs.`}
+          />
+        </span>
+      ) : null
     return (
       <QuantityWrapper>
         {label && <div className='field-label'>{label}</div>}
@@ -1021,6 +1032,7 @@ class DetailSidebar extends Component {
             </Button>
           </div>
         </div>
+        {warning}
       </QuantityWrapper>
     )
   }
