@@ -124,7 +124,7 @@ export function login(username, password) {
           isAdmin
             ? Router.push('/dashboard')
             : isClientCompanyAdmin
-            ? Router.push('/marketplace/all')
+            ? Router.push('/marketplace/listings')
             : Router.push(urlPage)
         }
 

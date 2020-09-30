@@ -22,7 +22,7 @@ function mapStateToProps(store) {
   return {
     isAdmin,
     takeover,
-    isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
+    isClientCompany: getSafe(() => store.auth.identity.company.isClientCompany, false),
     companySumOfPurchasesMonthly: getSafe(() => data.companySumOfPurchasesMonthly, '')
       ? Object.entries(data.companySumOfPurchasesMonthly)
           .map(([name, value]) => ({
