@@ -155,7 +155,7 @@ class VellociRegister extends Component {
   }
 
   handleSubmit = async values => {
-    const { activeStep, postRegisterVelloci, postUploadDocuments } = this.props
+    const { activeStep, postRegisterVelloci, postUploadDocuments, getIdentity } = this.props
     if (activeStep !== 5) return
 
     try {
@@ -175,6 +175,7 @@ class VellociRegister extends Component {
       if (companyId) {
         Router.push('/companies')
       } else {
+        await getIdentity()
         Router.push('/settings?type=bank-accounts')
       }
     } catch (error) {
