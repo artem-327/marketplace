@@ -203,6 +203,8 @@ class Tutorial extends Component {
 
     const cookieTutorialTabs = cookies.get('tutorial')
 
+    const isSettings = getSafe(() => Router.router.pathname.includes('settings'), false)
+
     if (cookieTutorialTabs && cookieTutorialTabs.length) {
       // if completed all tutorial tabs (index is more than 7)
       if (!tutorialTabs[cookieTutorialTabs.length + 1]) {
@@ -226,25 +228,25 @@ class Tutorial extends Component {
           console.error(error)
         }
       } else {
-        !skip && Router.push(urlTabs[cookieTutorialTabs.length])
-        const tabType = urlTabs[cookieTutorialTabs.length].split('=')[1]
-        !skip && tutorialTabs[cookieTutorialTabs.length] !== 'inventory' && tabChanged(tabsNamesMap.get(tabType))
         if (tutorialTabs[cookieTutorialTabs.length] === 'pickup') {
           handleLocationsTab('pick-up-locations')
         }
+        const tabType = urlTabs[cookieTutorialTabs.length].split('=')[1]
+
+        !skip && isSettings && tabType && tabChanged(tabsNamesMap.get(tabType))
+        !skip && Router.push(urlTabs[cookieTutorialTabs.length])
+
         cookies.set('tutorial', [...cookieTutorialTabs, this.getNextTab()], { path: '/' }) // set all existing cookies + next checked tab
         this.setState({ tutorialTab: tutorialTabs[cookieTutorialTabs.length + 1] }) // set another tutorial tab for show correct content and icons in tab
       }
     } else {
+      cookies.set('tutorial', [this.getNextTab()], { path: '/' }) // set first checked tab 'locations'
+      this.setState({ tutorialTab: tutorialTabs[1] }) // set second tutorial tab after checked first tab
+      !skip && isSettings && (await tabChanged(tabsNamesMap.get(tutorialTabs[0])))
       !skip && (await Router.push(urlTabs[0]))
       if (tutorialTabs[0] === 'locations') {
         !skip && (await handleLocationsTab('branches'))
-      } else {
-        !skip && (await tabChanged(tabsNamesMap.get(tutorialTabs[0])))
       }
-
-      cookies.set('tutorial', [this.getNextTab()], { path: '/' }) // set first checked tab 'locations'
-      this.setState({ tutorialTab: tutorialTabs[1] }) // set second tutorial tab after checked first tab
     }
   }
 
