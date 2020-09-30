@@ -34,8 +34,7 @@ export const paths = {
     price: 'ProductOffer.cfPricePerUOM',
     packagingTypes: 'ProductOffer.companyProduct.packagingType.id',
     productConditions: 'ProductOffer.condition.id',
-    productGradesInventory: 'ProductOffer.grades.id',
-    productGradesMarketplace: 'BroadcastedOffer.productOffer.grades.id',
+    productGrades: 'ProductOffer.grades.id',
     productForms: 'ProductOffer.form.id',
     expirationDate: 'ProductOffer.lotExpirationDate',
     assayFrom: 'ProductOffer.companyProduct.companyGenericProduct.elements.assayMin',
@@ -451,11 +450,11 @@ export const datagridValues = {
     }
   },
   productGrades: {
-    paths: [paths.productOffers.productGradesInventory, paths.productOffers.productGradesMarketplace],
+    paths: [paths.productOffers.productGrades],
     description: 'Product Grades',
     operator: operators.EQUALS,
 
-    toFilter: function (values, filterType = '') {
+    toFilter: function (values) {
       let modifiedValues = values.map(val => {
         let parsed = JSON.parse(val)
 
@@ -469,7 +468,7 @@ export const datagridValues = {
 
       return {
         operator: this.operator,
-        path: filterType === 'inventory' ? this.paths[0] : this.paths[1],
+        path: this.paths[0],
         values: modifiedValues
       }
     },
