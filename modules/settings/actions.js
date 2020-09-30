@@ -1241,3 +1241,10 @@ export function vellociAddAcount(publicToken) {
     payload: api.vellociAddAcount(publicToken)
   }
 }
+
+export function reloadBankAccounts(isReload) {
+  return {
+    type: AT.RELOAD_BANK_ACCOUNTS,
+    payload: isReload
+  }
+}
