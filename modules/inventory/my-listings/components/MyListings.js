@@ -534,7 +534,7 @@ class MyListings extends Component {
               overrideBroadcastRules: false,
               productOfferIds: [row.id]
             },
-            row
+            row.rawData
           ),
         disabled: row => !!row.parentOffer
       },
@@ -543,7 +543,7 @@ class MyListings extends Component {
           id: 'inventory.detachOffer',
           defaultMessage: 'Detach from Virtual Group'
         }),
-        callback: row => this.detachOffer([row.id], row),
+        callback: row => this.detachOffer([row.id], row.rawData),
         disabled: row => !row.parentOffer
       }
     ]
