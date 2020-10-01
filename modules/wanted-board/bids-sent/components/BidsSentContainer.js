@@ -83,7 +83,8 @@ function mapStateToProps(store, { datagrid }) {
             <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
           ),
         status: StatusLabel(po.status),
-        hiddenActions: po.status === 'PURCHASED' || po.status === 'REJECTED' || po.status === 'ACCEPTED'
+        hiddenActions: po.status === 'PURCHASED' || po.status === 'REJECTED' || po.status === 'ACCEPTED',
+        cfHistoryLastType: getSafe(() => po.purchaseRequest.cfHistoryLastType, 'COUNTER') // REMOVE counter
       }
     })
   }

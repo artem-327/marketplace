@@ -447,8 +447,9 @@ class SubmitOfferPopup extends React.Component {
     })
 
   componentDidMount() {
-    if (this.props.counterRequestedItem) {
+    if (this.props.isSecondPage) {
       this.setState({ nextSubmit: true, select: 0 })
+      this.props.falseIsSecondPage()
       return
     }
     if (!this.props.datagrid.loading) this.handleDatagridResult()

@@ -25,6 +25,41 @@ const StyledArrayToFirstItem = styled(ArrayToFirstItem)`
     background-color: rgba(27, 52, 84, 0.15);
   }
 `
+const LabelStatus = styled.div`
+  font-size: 12px;
+  padding: 5px 5px 5px 10px;
+  background-color: ${props => (props.backgroundColor ? props.backgroundColor : '#2599d5')};
+  height: 22px;
+  border-radius: 11px;
+  color: #ffffff;
+  text-align: center;
+  width: fit-content;
+  padding: 1px 10px;
+`
+
+const StatusLabel = val => {
+  if (!val) return ''
+
+  let text, backgroundColor
+  switch (val) {
+    case 'NEW':
+      text = <FormattedMessage id='global.new' defaultMessage='New' />
+      backgroundColor = '#2599d5'
+      break
+    case 'ACCEPTED':
+    case 'PURCHASED':
+      text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
+      backgroundColor = '#84c225'
+      break
+    case 'REJECTED':
+      text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
+      backgroundColor = '#f16844'
+      break
+    default:
+      return null
+  }
+  return <LabelStatus backgroundColor={backgroundColor}>{text}</LabelStatus>
+}
 
 function mapStateToProps(store, { datagrid }) {
   const casNumberAndName = casProduct => {
@@ -49,6 +84,7 @@ function mapStateToProps(store, { datagrid }) {
       const purchaseRequestOffers = row.purchaseRequestOffers
         .map(pro => {
           const condition = getSafe(() => pro.productOffer.conforming, null)
+
           return {
             id: row.id + '_' + pro.id,
             clsName: 'tree-table nested-row',
@@ -85,7 +121,7 @@ function mapStateToProps(store, { datagrid }) {
               />
             ),
             deliveredQuote: 'N/A',
-            status: getSafe(() => pro.status, '')
+            status: StatusLabel(getSafe(() => pro.status, ''))
           }
         })
         .filter(el => el.rawData.status === 'NEW')

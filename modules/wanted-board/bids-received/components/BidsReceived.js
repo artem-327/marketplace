@@ -552,7 +552,7 @@ class BidsReceived extends Component {
         }),
         disabled: row => editedId === row.id,
         callback: async row => {
-          await this.props.openSubmitOffer(row)
+          await this.props.openSubmitOffer(row, true)
           datagrid.loadData()
         },
         hidden: row => row.treeRoot
@@ -720,7 +720,7 @@ class BidsReceived extends Component {
             </div>
           </CustomRowDiv>
         </div>
-        <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
+        <div className='flex stretched wanted-wrapper' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
             key={type}
             tableName={`bids_received_${type}_grid`}

@@ -45,10 +45,10 @@ export const deleteMyOfferItem = id => {
   }
 }
 
-export const openSubmitOffer = row => {
+export const openSubmitOffer = (row, isSecondPage = false) => {
   return {
     type: AT.WB_OPEN_SUBMIT_OFFER,
-    payload: row
+    payload: { row, isSecondPage }
   }
 }
 export const closePopup = () => {
@@ -198,4 +198,8 @@ export const acceptRequestedItem = id => ({
 export const counterRequestedItem = (id, body) => ({
   type: AT.WB_COUNTER_REQUESTED_ITEM,
   payload: api.counterRequestedItem(id, body)
+})
+
+export const falseIsSecondPage = () => ({
+  type: AT.WB_FALSE_SECOND_PAGE
 })

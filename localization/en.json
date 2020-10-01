@@ -2550,6 +2550,7 @@
   "wantedBoard.purchase": "Purchase",
   "wantedBoard.delete": "Delete",
   "wantedBoard.datePost": "Date Post",
+  "wantedBoard.readyPurchase": "Ready for purchase",
   "confirm.rejectReceivedBid.Header": "Reject Received Bid",
   "confirm.rejectReceivedBid.Content": "Do you really want to reject received bid?",
   "confirm.deleteRequestedItem.Header": "Delete Requested Item",

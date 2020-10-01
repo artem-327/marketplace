@@ -40,7 +40,8 @@ export const initialState = {
   tableHandlersFiltersListings: null,
   tableHandlersFiltersBidsReceived: null,
   tableHandlersFiltersBidsSent: null,
-  openSidebar: false
+  openSidebar: false,
+  isSecondPage: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -51,7 +52,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         openedSubmitOfferPopup: true,
-        popupValues: payload
+        popupValues: payload.row,
+        isSecondPage: payload.isSecondPage
+      }
+    }
+    case AT.WB_FALSE_SECOND_PAGE: {
+      return {
+        ...state,
+        isSecondPage: false
       }
     }
 
