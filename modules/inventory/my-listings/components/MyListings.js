@@ -468,6 +468,7 @@ class MyListings extends Component {
           id: 'global.tds',
           defaultMessage: 'TDS'
         }),
+        disabled: row => row.groupId,
         callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
       },
       {
@@ -534,7 +535,7 @@ class MyListings extends Component {
               overrideBroadcastRules: false,
               productOfferIds: [row.id]
             },
-            row
+            row.rawData
           ),
         disabled: row => !!row.parentOffer
       },
@@ -543,7 +544,7 @@ class MyListings extends Component {
           id: 'inventory.detachOffer',
           defaultMessage: 'Detach from Virtual Group'
         }),
-        callback: row => this.detachOffer([row.id], row),
+        callback: row => this.detachOffer([row.id], row.rawData),
         disabled: row => !row.parentOffer
       }
     ]

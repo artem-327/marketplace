@@ -19,6 +19,7 @@ import { CustomRowDiv } from '../../constants/layout'
 import ProductSidebar from './ProductSidebar'
 import ProductImportPopup from './ProductImportPopup'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
+import Tutorial from '~/modules/tutorial/Tutorial'
 
 const FileTextIcon = styled(FileText)`
   display: block;
@@ -70,12 +71,7 @@ class MyProducts extends Component {
               } // <div> has to be there otherwise popup will be not shown
             />
           ),
-          caption: (
-            <FormattedMessage
-              id='global.productStatusIcon'
-              defaultMessage='Product Status Icon'
-            />
-          ),
+          caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />,
           width: 40,
           align: 'center'
         },
@@ -272,7 +268,8 @@ class MyProducts extends Component {
       loading,
       editedId,
       isOpenPopup,
-      isOpenImportPopup
+      isOpenImportPopup,
+      tutorialCompleted
     } = this.props
 
     let { columns, filterValue } = this.state
@@ -280,7 +277,9 @@ class MyProducts extends Component {
 
     return (
       <>
-        <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
+        {!tutorialCompleted && <Tutorial />}
+
+        <Container fluid style={{ padding: '0px 30px' }} className='flex stretched'>
           <div style={{ padding: '10px 0' }}>
             <CustomRowDiv>
               <div>
@@ -492,12 +491,15 @@ const mapStateToProps = (state, { datagrid }) => {
       }
     }),
     action: getSafe(() => Router.router.query.action), // ! ! ?
-    actionId: getSafe(() => Router.router.query.id) // ! ! ?
+    actionId: getSafe(() => Router.router.query.id), // ! ! ?
+    tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, {
-  ...Actions,
-  openPopup,
-  handleProductCatalogUnmappedValue
-})(injectIntl(MyProducts)))
+export default withDatagrid(
+  connect(mapStateToProps, {
+    ...Actions,
+    openPopup,
+    handleProductCatalogUnmappedValue
+  })(injectIntl(MyProducts))
+)
