@@ -988,7 +988,7 @@ class DetailSidebar extends Component {
       (typeof this.values.edit.minimum === 'undefined' || this.values.edit.pkgAvailable < this.values.edit.minimum) ? (
         <span style={{ color: 'orange', fontSize: '10px' }}>
           <FormattedMessage
-            id='validation.greaterThan'
+            id='validation.isLessThan'
             defaultMessage={`Warning. PKGs Available is less than Minimum PKGs.`}
           />
         </span>

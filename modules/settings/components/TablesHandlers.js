@@ -602,24 +602,29 @@ class TablesHandlers extends Component {
               )}
 
               <div className='column'>
-                {bankAccTab && paymentProcessor === 'VELLOCI' && vellociToken && vellociBusinessId ? (
-                  <PlaidButton
-                    token={vellociToken}
-                    publicKey={vellociBusinessId}
-                    onExit={this.onExit}
-                    onSuccess={this.onSuccess}
-                    onEvent={this.onEvent}>
-                    <PlusCircle />
-                    <div style={{ marginLeft: '10px' }}>
-                      <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
-                    </div>
-                  </PlaidButton>
-                ) : (
+                {bankAccTab &&
+                  bankAccounts.addButton &&
+                  paymentProcessor === 'VELLOCI' &&
+                  vellociToken &&
+                  vellociBusinessId && (
+                    <PlaidButton
+                      token={vellociToken}
+                      publicKey={vellociBusinessId}
+                      onExit={this.onExit}
+                      onSuccess={this.onSuccess}
+                      onEvent={this.onEvent}>
+                      <PlusCircle />
+                      <div style={{ marginLeft: '10px' }}>
+                        <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                      </div>
+                    </PlaidButton>
+                  )}
+                {(bankAccTab && bankAccounts.addButton && paymentProcessor !== 'VELLOCI') || !bankAccTab ? (
                   <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
                     <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
-                )}
+                ) : null}
               </div>
             </>
           )}
