@@ -468,6 +468,7 @@ class MyListings extends Component {
           id: 'global.tds',
           defaultMessage: 'TDS'
         }),
+        disabled: row => row.groupId,
         callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
       },
       {
