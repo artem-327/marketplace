@@ -535,7 +535,7 @@ class Dashboard extends Component {
       top10Buyers,
       isAdmin,
       takeover,
-      isClientCompanyAdmin,
+      isClientCompany,
       dailyStats,
       intl: { formatMessage }
     } = this.props
@@ -715,7 +715,7 @@ class Dashboard extends Component {
     ]
 
     const panes =
-      isAdmin && !takeover ? adminMenuTabs : isClientCompanyAdmin ? companyPurchasesTab : companySalesPurchasesTabs
+      isAdmin && !takeover ? adminMenuTabs : isClientCompany ? companyPurchasesTab : companySalesPurchasesTabs
 
     const quickFilters = [
       formatMessage({ id: 'dashboard.dateFilter.lastDay', defaultMessage: 'Last day'}),
@@ -850,7 +850,7 @@ class Dashboard extends Component {
           </Grid.Column>
 
           <Grid.Column width={5}>
-            {!isClientCompanyAdmin && (
+            {!isClientCompany && (
               <>
                 <SummaryRectangle
                   icon={<Briefcase />}
@@ -880,7 +880,7 @@ class Dashboard extends Component {
               styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
             />
 
-            {!isClientCompanyAdmin && (
+            {!isClientCompany && (
               <>
                 <SummaryRectangle
                   icon={<DollarSign />}
@@ -932,7 +932,7 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        {(!isAdmin && !isClientCompanyAdmin) || takeover ? (
+        {(!isAdmin && !isClientCompany) || takeover ? (
           <Grid.Row>
             {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
               <Grid.Column width={5}>
@@ -1003,7 +1003,7 @@ Dashboard.propTypes = {
   totalSumOfSalesMonthly: array,
   isAdmin: bool,
   takeover: bool,
-  isClientCompanyAdmin: bool
+  isClientCompany: bool
 }
 
 Dashboard.defaultProps = {
@@ -1024,7 +1024,7 @@ Dashboard.defaultProps = {
   totalSumOfSalesMonthly: [],
   isAdmin: false,
   takeover: false,
-  isClientCompanyAdmin: false
+  isClientCompany: false
 }
 
 export default injectIntl(Dashboard)

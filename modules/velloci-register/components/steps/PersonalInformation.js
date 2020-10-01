@@ -305,6 +305,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
                 defaultMessage: 'Business Ownership Percentage'
               })}
               inputProps={{
+                disabled: formikProps.values.ownerInformation.isNotBeneficialOwner && i === 0,
                 label: '%',
                 labelPosition: 'right',
                 placeholder: formatMessage({

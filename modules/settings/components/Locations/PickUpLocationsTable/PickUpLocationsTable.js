@@ -25,12 +25,7 @@ class PickUpLocationsTable extends Component {
           title: <div></div>,
           width: 45,
           align: 'center',
-          caption: (
-            <FormattedMessage
-              id='global.productStatusIcon'
-              defaultMessage='Product Status Icon'
-            />
-          )
+          caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />
         },
         {
           name: 'addressName',
@@ -158,7 +153,7 @@ class PickUpLocationsTable extends Component {
         callback: row => {
           const indexTabofSidebar = 1
           getBranch(row.id)
-          openSidebar(row, indexTabofSidebar)
+          openSidebar(row.rawData, indexTabofSidebar)
         }
       },
       {
