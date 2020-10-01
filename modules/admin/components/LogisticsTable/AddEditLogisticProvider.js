@@ -24,6 +24,12 @@ const initialValuesAdd = {
   email: ''
 }
 
+const GridColumnEmail = styled(GridColumn)`
+  .field {
+    margin-bottom: 2px !important;
+  }
+`
+
 class AddEditLogisticProvider extends React.Component {
   componentDidMount() {
     this.props.getLogisticsProviders()
@@ -33,22 +39,23 @@ class AddEditLogisticProvider extends React.Component {
     let { popupValues } = this.props
     return popupValues
       ? {
-        note: popupValues.note || '',
-        email: popupValues.email || '',
-        reinvoice: popupValues.reinvoice,
-        providerIdentifierName: `${popupValues.name} (${popupValues.identifierValue})`
-      } : initialValuesAdd
+          note: popupValues.note || '',
+          email: popupValues.email || '',
+          reinvoice: popupValues.reinvoice,
+          providerIdentifierName: `${popupValues.name} (${popupValues.identifierValue})`
+        }
+      : initialValuesAdd
   }
 
   getValidationSchema = popupValues => {
     if (popupValues) {
       return Yup.object().shape({
-        email: Yup.string().trim().email(errorMessages.invalidEmail)
+        email: Yup.string().trim()
       })
     } else {
       return Yup.object().shape({
         providerIdentifier: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-        email: Yup.string().trim().email(errorMessages.invalidEmail)
+        email: Yup.string().trim()
       })
     }
   }
@@ -67,14 +74,22 @@ class AddEditLogisticProvider extends React.Component {
     } = this.props
 
     let type = popupValues ? { id: 'edit', defaultMessage: 'Edit' } : { id: 'add', defaultMessage: 'Add' }
-
+    let labelMultipleEmail = (
+      <span style={{ color: 'orange', fontSize: '10px' }}>
+        <FormattedMessage
+          id='validation.multipleEmails'
+          defaultMessage={'Divide by semicolon ; (user1@gmail.com;user2@gmail.com)'}
+        />
+      </span>
+    )
     return (
       <Modal open onClose={() => closePopup()}>
         <Modal.Header>
-          {popupValues
-            ? <FormattedMessage id='admin.editLogisticsProvider' defaultMessage='Edit Logistics Provider'/>
-            : <FormattedMessage id='admin.addLogisticsProvider' defaultMessage='Add Logistics Provider'/>
-          }
+          {popupValues ? (
+            <FormattedMessage id='admin.editLogisticsProvider' defaultMessage='Edit Logistics Provider' />
+          ) : (
+            <FormattedMessage id='admin.addLogisticsProvider' defaultMessage='Add Logistics Provider' />
+          )}
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -102,7 +117,6 @@ class AddEditLogisticProvider extends React.Component {
                     note: values.note,
                     email: values.email,
                     reinvoice: values.reinvoice
-
                   }
                   removeEmpty(payload)
                   await postNewLogisticsProvider(payload)
@@ -120,52 +134,48 @@ class AddEditLogisticProvider extends React.Component {
                 <Grid>
                   <GridRow>
                     <GridColumn width={7}>
-                      {popupValues
-                        ? (
-                          <Input
-                            name='providerIdentifierName'
-                            label={formatMessage({
-                              id: 'logistics.label.logisticsProvider',
-                              defaultMessage: 'Logistics Provider'
-                            })}
-                            inputProps={{
-                              readOnly: true
-                            }}
-                          />
-                        )
-                        : (
-                          <Dropdown
-                            name='providerIdentifier'
-                            options={logisticsProviders.map((provider, index) => ({
-                              key: provider.identifier.value,
-                              text: `${provider.name} (${provider.identifier.value})`,
-                              value: JSON.stringify(provider.identifier)
-                            }))}
-                            label={
-                              <>
-                                {formatMessage({
-                                  id: 'logistics.label.logisticsProvider',
-                                  defaultMessage: 'Logistics Provider'
-                                })}
-                                <Required/>
-                              </>}
-                            inputProps={{
-                              search: true,
-                              'data-test': 'admin_logistics_provider_drpdn',
-                              placeholder: formatMessage({
-                                id: 'logistics.placeholder.logisticsProvider',
-                                label: 'Select Logistics Provider'
-                              }),
-                              loading: logisticsProvidersFetching
-                            }}
-                          />
-                        )
-                      }
+                      {popupValues ? (
+                        <Input
+                          name='providerIdentifierName'
+                          label={formatMessage({
+                            id: 'logistics.label.logisticsProvider',
+                            defaultMessage: 'Logistics Provider'
+                          })}
+                          inputProps={{
+                            readOnly: true
+                          }}
+                        />
+                      ) : (
+                        <Dropdown
+                          name='providerIdentifier'
+                          options={logisticsProviders.map((provider, index) => ({
+                            key: provider.identifier.value,
+                            text: `${provider.name} (${provider.identifier.value})`,
+                            value: JSON.stringify(provider.identifier)
+                          }))}
+                          label={
+                            <>
+                              {formatMessage({
+                                id: 'logistics.label.logisticsProvider',
+                                defaultMessage: 'Logistics Provider'
+                              })}
+                              <Required />
+                            </>
+                          }
+                          inputProps={{
+                            search: true,
+                            'data-test': 'admin_logistics_provider_drpdn',
+                            placeholder: formatMessage({
+                              id: 'logistics.placeholder.logisticsProvider',
+                              label: 'Select Logistics Provider'
+                            }),
+                            loading: logisticsProvidersFetching
+                          }}
+                        />
+                      )}
                     </GridColumn>
 
-                    <GridColumn width={6}>
-
-
+                    <GridColumnEmail width={6}>
                       <Input
                         type='text'
                         label={
@@ -180,16 +190,18 @@ class AddEditLogisticProvider extends React.Component {
                               }
                               trigger={<Icon name='info circle' color='blue' style={{ marginLeft: '5px' }} />}
                             />
-                          </>}
+                          </>
+                        }
                         name='email'
                         inputProps={{
                           placeholder: formatMessage({
                             id: 'global.enterEmailAddress',
-                            defaultMessage: 'Enter Email Address'
+                            defaultMessage: 'Enter Email Addresses'
                           })
                         }}
                       />
-                    </GridColumn>
+                      {labelMultipleEmail}
+                    </GridColumnEmail>
 
                     <GridColumn width={3}>
                       <FormField style={{ marginTop: '32px', marginLeft: '30px' }}>

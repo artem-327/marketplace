@@ -1677,6 +1677,7 @@
   "validation.minOneRole": "At least one role should be selected",
   "validation.trailingSpaces": "Space was detected as leading or trailing character, please check enter password is correct",
   "validation.invalidTime": "Invalid time",
+  "validation.multipleEmails": "Divide by semicolon ; (user1@gmail.com;user2@gmail.com)",
   "password.change": "Change Password",
   "password.current": "Current Password",
   "password.new": "New Password",
