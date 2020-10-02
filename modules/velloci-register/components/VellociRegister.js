@@ -111,7 +111,9 @@ class VellociRegister extends Component {
               : '',
             firstName: getSafe(() => val.firstName, ''),
             lastName: getSafe(() => val.lastName, ''),
-            ownershipPercentage: parseInt(getSafe(() => val.businessOwnershipPercentage, '')),
+            ownershipPercentage: val.businessOwnershipPercentage
+              ? parseInt(getSafe(() => val.businessOwnershipPercentage, 0))
+              : 0,
             phone: getSafe(() => val.phoneNumber.substring(1), ''),
             provinceId: getSafe(() => val.address.province, ''),
             zipCode: getSafe(() => val.address.zip, ''),
@@ -152,10 +154,11 @@ class VellociRegister extends Component {
   }
 
   handleSubmit = async values => {
-    const { activeStep, postRegisterVelloci, postUploadDocuments, getIdentity } = this.props
+    const { activeStep, postRegisterVelloci, postUploadDocuments, getIdentity, loadSubmitButton } = this.props
     if (activeStep !== 5) return
 
     try {
+      loadSubmitButton(true)
       const body = this.getBody(values)
 
       const files = getSafe(() => values.companyFormationDocument.attachments, '')
@@ -176,6 +179,9 @@ class VellociRegister extends Component {
       }
     } catch (error) {
       console.error(error)
+    } finally {
+      loadSubmitButton(false)
+      this.formikProps.setSubmitting(false)
     }
   }
 
@@ -342,7 +348,7 @@ class VellociRegister extends Component {
   }
 
   render() {
-    const { prevStep, activeStep, countBeneficialOwners, numberBeneficialOwners } = this.props
+    const { prevStep, activeStep, countBeneficialOwners, numberBeneficialOwners, isLoadingSubmitButton } = this.props
     return (
       <Grid>
         <GridColumn>
@@ -367,7 +373,8 @@ class VellociRegister extends Component {
                         submitForm={this.submitForm}
                         activeStep={activeStep}
                         numberBeneficialOwners={numberBeneficialOwners}
-                        countBeneficialOwners={countBeneficialOwners}>
+                        countBeneficialOwners={countBeneficialOwners}
+                        isLoadingSubmitButton={isLoadingSubmitButton}>
                         {this.getContent(formikProps)}
                       </FormRectangle>
                     </Grid>

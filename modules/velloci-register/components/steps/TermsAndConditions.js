@@ -90,14 +90,14 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
               {text => (
                 <>
                   {text}
-                  <LinkLabelCheckbox href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                  <LinkLabelCheckbox href='https://velloci.com/privacy_policy.pdf' target='_blank'>
                     <FormattedMessage
                       id='velloci.termsAndConditions.privacyPolicy.link'
                       defaultMessage='Privacy Policy '
                     />
                   </LinkLabelCheckbox>
                   <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                  <LinkLabelCheckbox href='https://velloci.com/terms_of_use.pdf' target='_blank'>
                     <FormattedMessage id='velloci.termsAndConditions.termsOfUse.link' defaultMessage='Terms of Use' />
                   </LinkLabelCheckbox>
                 </>

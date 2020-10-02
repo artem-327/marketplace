@@ -44,7 +44,7 @@ export const verifyPersonalInformation = {
   businessRole: '',
   businessTitle: '',
   socialSecurityNumber: '',
-  businessOwnershipPercentage: ''
+  businessOwnershipPercentage: 0
 }
 
 export const initialValues = {

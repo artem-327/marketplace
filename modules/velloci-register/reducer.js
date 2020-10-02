@@ -33,7 +33,8 @@ export const initialState = {
   businessDetails: {
     data: [],
     loading: false
-  }
+  },
+  isLoadingSubmitButton: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -269,6 +270,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         businessDetails: { data: payload, loading: false }
+      }
+    }
+
+    case AT.LOAD_SUBMIT_BUTTON: {
+      return {
+        ...state,
+        isLoadingSubmitButton: payload
       }
     }
 
