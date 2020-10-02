@@ -159,7 +159,6 @@ class VellociRegister extends Component {
       const body = this.getBody(values)
 
       const files = getSafe(() => values.companyFormationDocument.attachments, '')
-      //const documentType = getSafe(() => values.companyFormationDocument.documentType, '')
       let companyId = null
       if (typeof window !== 'undefined') {
         const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
@@ -237,7 +236,6 @@ class VellociRegister extends Component {
         }),
         companyFormationDocument: Yup.lazy(() => {
           return Yup.object().shape({
-            documentType: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage),
             attachments: Yup.array().min(1, errorMessages.minOneAttachment)
           })
         }),
