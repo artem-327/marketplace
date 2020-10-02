@@ -73,7 +73,8 @@ function FormRectangle({
   activeStep,
   submitForm,
   countBeneficialOwners,
-  numberBeneficialOwners
+  numberBeneficialOwners,
+  isLoadingSubmitButton
 }) {
   const { values } = formikProps
   return (
@@ -148,7 +149,12 @@ function FormRectangle({
       )}
 
       <DivButtonsBottom>
-        <ButtonSubmit type='button' onClick={() => submitForm(formikProps)} primary>
+        <ButtonSubmit
+          disabled={isLoadingSubmitButton}
+          loading={isLoadingSubmitButton}
+          type='button'
+          onClick={() => submitForm(formikProps)}
+          primary>
           <FormattedMessage
             id={activeStep === 5 ? 'velloci.submitApplication' : 'global.next'}
             defaultMessage={activeStep === 5 ? 'Submit Application' : 'Next'}>

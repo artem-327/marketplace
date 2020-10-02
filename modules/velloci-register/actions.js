@@ -27,3 +27,4 @@ export const getPoliticallyExposedPersons = () => ({
 })
 export const getTinTypes = () => ({ type: AT.GET_VELLOCI_TIN_TYPES, payload: api.getTinTypes() })
 export const getBusinessDetails = () => ({ type: AT.GET_VELLOCI_BUSINESS_DETAILS, payload: api.getBusinessDetails() })
+export const loadSubmitButton = isLoading => ({ type: AT.LOAD_SUBMIT_BUTTON, payload: isLoading })

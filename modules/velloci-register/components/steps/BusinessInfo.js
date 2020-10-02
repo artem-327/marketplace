@@ -60,7 +60,7 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
             values={formikProps.values}
             label={
               <>
-                <FormattedMessage id='velloci.businessInfo.phoneNumber' defaultMessage='Personal Phone Number' />
+                <FormattedMessage id='velloci.businessInfo.phoneNumber' defaultMessage='Business Phone Number' />
                 <Required />
               </>
             }
@@ -116,7 +116,7 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
       <GridRow>
         <GridColumn>
           <DivLegalAddressTitle>
-            <FormattedMessage id='velloci.businessInfo.legalAddress' defaultMessage='Your Legal Address' />
+            <FormattedMessage id='velloci.businessInfo.legalAddress' defaultMessage='Business Address' />
           </DivLegalAddressTitle>
 
           <AddressForm
