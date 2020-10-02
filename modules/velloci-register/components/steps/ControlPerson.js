@@ -127,15 +127,7 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
               <GridRowBusinessType>
                 <Grid.Column>
                   <Dropdown
-                    options={
-                      entityTypes && entityTypes.data && entityTypes.data.length
-                        ? entityTypes.data.map(el => ({
-                            key: el,
-                            value: el,
-                            text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
-                          }))
-                        : []
-                    }
+                    options={entityTypes && entityTypes.data && entityTypes.data.length ? entityTypes.data : []}
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_drpdwn'
                     }}

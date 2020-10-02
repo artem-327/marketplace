@@ -179,7 +179,6 @@ export default class PhoneNumber extends Component {
 
     let { phoneCountryCode, phoneNumber } = this.state
     let error = (get(touched, name, null) || isSubmitting) && get(errors, name, null)
-
     return (
       <Field
         name={name}
@@ -203,7 +202,7 @@ export default class PhoneNumber extends Component {
           }
 
           return (
-            <FormField error={!!errors[name]}>
+            <FormField error={!!error}>
               {label && <label>{label}</label>}
               <span style={{ display: 'flex' }} className='phone-number'>
                 <StyledDropdown
@@ -231,7 +230,7 @@ export default class PhoneNumber extends Component {
                   }
                 />
               </span>
-              {!!errors[name] && <span className='sui-error-message'>{error}</span>}
+              {!!error && <span className='sui-error-message'>{error}</span>}
             </FormField>
           )
         }}
