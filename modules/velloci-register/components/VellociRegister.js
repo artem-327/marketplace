@@ -131,9 +131,6 @@ class VellociRegister extends Component {
     } else {
       beneficialOwners = null
     }
-    if (getSafe(() => ownerInformation.isNotBeneficialOwner, false) && controller && controller.ownershipPercentage) {
-      delete controller.ownershipPercentage
-    }
 
     let result = {
       dba: getSafe(() => businessInfo.dba, ''),
