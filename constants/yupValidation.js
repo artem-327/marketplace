@@ -372,3 +372,13 @@ export const validateTime = () =>
     .test('time', errorMessages.invalidTime, t => {
       return moment(t, ['hh:mm a', 'HH:mm']).isValid() || !t
     })
+
+export const multipleEmails = () =>
+  Yup.string()
+    .trim()
+    .test('emails', errorMessages.invalidEmail, inputEmails => {
+      const emails = inputEmails.split(';')
+      return !emails.some(email => {
+        return !Yup.string().trim().email().isValidSync(email)
+      })
+    })
