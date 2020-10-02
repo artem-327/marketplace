@@ -814,8 +814,6 @@ class InventoryFilter extends Component {
 
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
-    console.log('!!!!!!!!!! aaaaa values', values)
-
     return (
       <PopupGrid>
         <GridRow>

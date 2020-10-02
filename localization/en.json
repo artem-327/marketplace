@@ -112,6 +112,8 @@
   "broadcast.byCompany": "By Company",
   "broadcast.controls": "Broadcast Controls",
   "broadcast.broadcastingTo": "Visible to",
+  "broadcast.broadcastingBranches": " branches of ",
+  "broadcast.broadcastingCompanies": " companies",
   "broadcast.categoryFilter": "Category filter",
   "broadcast.filter": "Filter",
   "broadcast.regionSelect": "Region Select",

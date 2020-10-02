@@ -350,12 +350,21 @@ export const FilterTag = styled.div`
   text-align: center;
   color: #979797;
   border-radius: 25px;
-  cursor: pointer;
+  
   margin-right: 5px;
   max-width: 10vw;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: row;
+  
+  .description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  i.delete.icon {
+    cursor: pointer;
+  }
 `
 
 export const SavedFiltersSegment = styled(Segment)`
