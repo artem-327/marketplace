@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
-import {Menu, Grid, Tab, Popup, Input, Dropdown} from 'semantic-ui-react'
-import {Briefcase, Package, DollarSign, User} from 'react-feather'
+import { Menu, Grid, Tab, Popup, Input, Dropdown } from 'semantic-ui-react'
+import { Briefcase, Package, DollarSign, User } from 'react-feather'
 //components
 import { getSafe } from '~/utils/functions'
 import PieGraph from './PieGraph'
@@ -30,11 +30,11 @@ const DivContainerGraph = styled.div`
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   border: solid 1px #dee2e6;
   background-color: #ffffff;
-  
-  [class*="LineGraph"] {
+
+  [class*='LineGraph'] {
     min-height: 479px;
-    
-    [class*="LineGraph"] {
+
+    [class*='LineGraph'] {
       min-height: 0;
     }
   }
@@ -64,9 +64,9 @@ const Select = styled.div`
   color: #848893;
   line-height: 38px;
   cursor: pointer;
-  
+
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     top: 12px;
     right: 14px;
@@ -78,7 +78,7 @@ const Select = styled.div`
     border-style: solid;
     border-color: #dee2e6;
   }
-  
+
   &:hover:after {
     border-color: #2599d5;
   }
@@ -103,11 +103,11 @@ const QuickFilter = styled.div`
   color: #222222;
   line-height: 40px;
   cursor: pointer;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
-  
+
   &:hover,
   &.active {
     background: #2599d5;
@@ -116,7 +116,6 @@ const QuickFilter = styled.div`
 `
 
 const StyledCalendar = styled(Calendar)`
-
   /* Calendar.css */
   &.react-calendar {
     width: 350px;
@@ -240,14 +239,14 @@ const StyledCalendar = styled(Calendar)`
 
   &.react-calendar {
     border: 0 none;
-    
+
     abbr[title] {
       text-transform: capitalize;
       text-decoration: none;
       font-size: 13px;
       font-weight: 700;
     }
-    
+
     button {
       width: 32px;
       height: 32px;
@@ -255,7 +254,7 @@ const StyledCalendar = styled(Calendar)`
       text-align: center;
       font-size: 13px;
       line-height: 32px;
-      
+
       &:hover,
       &:focus {
         border-radius: 4px;
@@ -264,19 +263,19 @@ const StyledCalendar = styled(Calendar)`
       }
     }
   }
-  
+
   .react-calendar__navigation {
     height: 32px;
     margin: 24px 0 0;
-    
+
     button {
       min-width: 32px;
-      
+
       &.react-calendar__navigation__prev2-button,
       &.react-calendar__navigation__next2-button {
         display: none !important;
       }
-      
+
       &.react-calendar__navigation__prev-button,
       &.react-calendar__navigation__next-button {
         position: relative;
@@ -284,9 +283,9 @@ const StyledCalendar = styled(Calendar)`
         display: block;
         text-align: left;
         text-indent: -5000px;
-        
+
         &:after {
-          content: "";
+          content: '';
           position: absolute;
           top: 50%;
           left: 50%;
@@ -299,22 +298,22 @@ const StyledCalendar = styled(Calendar)`
           border-style: solid;
           border-color: #222222;
         }
-        
+
         &:hover:after {
           border-color: #ffffff;
         }
       }
-      
+
       &.react-calendar__navigation__prev-button:after {
         margin-left: 2px;
         border-width: 2px 0 0 2px;
       }
-      
+
       &.react-calendar__navigation__next-button:after {
         margin-left: -2px;
         border-width: 0 2px 2px 0;
       }
-      
+
       .react-calendar__navigation__label__labelText--from,
       .react-calendar__navigation__label__labelText--to {
         width: 160px;
@@ -326,34 +325,33 @@ const StyledCalendar = styled(Calendar)`
         color: #222222;
         line-height: 32px;
       }
-      
+
       .react-calendar__navigation__label__labelText--from {
         float: left;
       }
-      
+
       .react-calendar__navigation__label__labelText--to {
         float: right;
       }
-      
+
       &.react-calendar__navigation__label {
-      
         &:focus {
           background: transparent;
           box-shadow: 0 0 0 0 transparent;
           color: #222222;
-        
+
           .react-calendar__navigation__label__labelText--from,
           .react-calendar__navigation__label__labelText--to {
             background-color: transparent;
             color: #222222;
           }
         }
-      
+
         &:hover {
           background: transparent;
           box-shadow: 0 0 0 0 transparent;
           color: #222222;
-        
+
           .react-calendar__navigation__label__labelText--from,
           .react-calendar__navigation__label__labelText--to {
             background-color: #2599d9;
@@ -363,15 +361,15 @@ const StyledCalendar = styled(Calendar)`
       }
     }
   }
-  
+
   .react-calendar__month-view {
     width: 224px !important;
-    
+
     + .react-calendar__month-view {
       margin-left: auto;
     }
-  } 
-  
+  }
+
   .react-calendar__month-view__weekdays__weekday {
     width: 32px;
     height: 32px;
@@ -382,35 +380,32 @@ const StyledCalendar = styled(Calendar)`
     color: #222222;
     line-height: 32px;
   }
-  
+
   .react-calendar__month-view__days__day--weekend {
     color: #222222;
   }
-  
+
   .react-calendar__tile--now {
-  
     &,
     &.react-calendar__tile--hover {
       background: transparent;
     }
   }
-  
+
   &.react-calendar--selectRange {
-  
     .react-calendar__tile--now {
-    
       &.react-calendar__tile--hover {
         background: #e6e6e6;
       }
     }
   }
-  
+
   .react-calendar__tile--range,
   .react-calendar__tile--active {
     background: #eff1f5;
     color: #222222;
   }
-  
+
   .react-calendar__tile--rangeStart,
   .react-calendar__tile--rangeEnd {
     border-radius: 4px;
@@ -423,16 +418,14 @@ const StyledCalendar = styled(Calendar)`
 `
 
 const StatsTypeSelect = styled(Dropdown)`
-
   > .menu {
-  
     > .item {
       margin-left: 0 !important;
       margin-right: 0 !important;
-      
+
       &,
       &.active {
-        border-bottom-color: #ffffff !important
+        border-bottom-color: #ffffff !important;
       }
     }
   }
@@ -458,43 +451,44 @@ class Dashboard extends Component {
     }
   }
 
-  filterQuickDate = (type) => {
-    let dateFrom, dateTo = null
+  filterQuickDate = type => {
+    let dateFrom,
+      dateTo = null
 
     switch (type) {
       case 1:
         dateFrom = moment().startOf('day').subtract(1, 'day')
         dateTo = moment().endOf('day').subtract(1, 'day')
-        break;
+        break
       case 2:
         dateFrom = moment().startOf('week')
         dateTo = moment().endOf('week')
-        break;
+        break
       case 3:
         dateFrom = moment().startOf('week').subtract(1, 'weeks')
         dateTo = moment().endOf('week').subtract(1, 'weeks')
-        break;
+        break
       case 4:
         dateFrom = moment().startOf('month')
         dateTo = moment().endOf('month')
-        break;
+        break
       case 5:
         dateFrom = moment().startOf('month').subtract(1, 'months')
         dateTo = moment().endOf('month').subtract(1, 'months')
-        break;
+        break
       case 6:
         dateFrom = moment().startOf('year')
         dateTo = moment().endOf('year')
-        break;
+        break
       case 7:
         dateFrom = moment().startOf('year').subtract(1, 'years')
         dateTo = moment().endOf('year').subtract(1, 'years')
-        break;
+        break
       case 8:
       default:
         dateFrom = moment('01/01/2020', 'DD/MM/YYYY')
         dateTo = moment()
-        break;
+        break
     }
 
     this.filterDates(type, [dateFrom, dateTo])
@@ -503,7 +497,10 @@ class Dashboard extends Component {
   filterDates = (type, dates) => {
     const { isAdmin, takeover } = this.props
     // get daily stats data
-    this.props.getDailyStatistics(moment(dates[0]).format('YYYY-MM-DD')+'T00:00:00Z', moment(dates[1]).add(1, 'days').format('YYYY-MM-DD')+'T00:00:00Z')
+    this.props.getDailyStatistics(
+      moment(dates[0]).format('YYYY-MM-DD') + 'T00:00:00Z',
+      moment(dates[1]).add(1, 'days').format('YYYY-MM-DD') + 'T00:00:00Z'
+    )
     this.setState({
       activeTab: isAdmin && !takeover ? 1 : 2,
       activeQuick: type,
@@ -511,8 +508,7 @@ class Dashboard extends Component {
       dateFromEdited: null,
       dateTo: dates[1],
       dateToEdited: null,
-      selectedDate:
-        moment(dates[0]).format('D MMM YYYY') + ' - ' + moment(dates[1]).format('D MMM YYYY')
+      selectedDate: moment(dates[0]).format('D MMM YYYY') + ' - ' + moment(dates[1]).format('D MMM YYYY')
     })
   }
 
@@ -541,14 +537,29 @@ class Dashboard extends Component {
     } = this.props
 
     const statsTabs = {
-      companyGenericProductsCount: [formatMessage({id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products'}), false],
-      clientCompaniesCount: [formatMessage({id: 'dashboard.guestCompaniesCount', defaultMessage: '# of Guest Companies'}), false],
-      companiesCount: [formatMessage({id: 'dashboard.companiesCount', defaultMessage: '# of Companies'}), false],
+      companyGenericProductsCount: [
+        formatMessage({ id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products' }),
+        false
+      ],
+      clientCompaniesCount: [
+        formatMessage({ id: 'dashboard.guestCompaniesCount', defaultMessage: '# of Guest Companies' }),
+        false
+      ],
+      companiesCount: [formatMessage({ id: 'dashboard.companiesCount', defaultMessage: '# of Companies' }), false],
       //productOfferCount: [formatMessage({id: 'dashboard.productOffersCount', defaultMessage: '# of Product Offers'}), false],
-      usersCount: [formatMessage({id: 'dashboard.usersCount', defaultMessage: '# of Users'}), false],
+      usersCount: [formatMessage({ id: 'dashboard.usersCount', defaultMessage: '# of Users' }), false],
       sales: [formatMessage({ id: 'dashboard.sales', defaultMessage: 'Sales' }), false],
-      totalProductOfferValue: [formatMessage({ id: 'dashboard.totalPOValue', defaultMessage: 'Total Product Offer Value' }), true],
-      totalValueOfBroadcastedProductOffers: [formatMessage({ id: 'dashboard.totalValueBroadcastedPO', defaultMessage: 'Total Value of Broadcasted Product Offers' }), true]
+      totalProductOfferValue: [
+        formatMessage({ id: 'dashboard.totalPOValue', defaultMessage: 'Total Product Offer Value' }),
+        true
+      ],
+      totalValueOfBroadcastedProductOffers: [
+        formatMessage({
+          id: 'dashboard.totalValueBroadcastedPO',
+          defaultMessage: 'Total Value of Broadcasted Product Offers'
+        }),
+        true
+      ]
     }
 
     let stats = []
@@ -566,7 +577,16 @@ class Dashboard extends Component {
       })
     }
 
-    const { activeTab, activeQuick, dateFrom, dateFromEdited, dateTo, dateToEdited, selectedDate, statsType } = this.state
+    const {
+      activeTab,
+      activeQuick,
+      dateFrom,
+      dateFromEdited,
+      dateTo,
+      dateToEdited,
+      selectedDate,
+      statsType
+    } = this.state
 
     const adminMenuTabs = [
       {
@@ -590,7 +610,9 @@ class Dashboard extends Component {
       {
         menuItem: (
           <Menu.Item key='stats' onClick={() => this.setState({ activeTab: 1 })}>
-            <UpperCaseText>{formatMessage({ id: 'dashboard.dailyStats', defaultMessage: 'DAILY STATS' })}</UpperCaseText>
+            <UpperCaseText>
+              {formatMessage({ id: 'dashboard.dailyStats', defaultMessage: 'DAILY STATS' })}
+            </UpperCaseText>
           </Menu.Item>
         ),
         render: () => (
@@ -617,12 +639,13 @@ class Dashboard extends Component {
                 style={{ marginLeft: 'auto' }}
                 item
                 pointing='top right'
-                options={Object.entries(statsTabs).map((stType) => {
+                options={Object.entries(statsTabs).map(stType => {
                   return { text: stType[1][0], value: stType[0] }
                 })}
                 onChange={(e, { value }) => this.setState({ statsType: value })}
-                value={!statsType ? (Object.entries(statsTabs)[0][0]) : statsType}
-                data-test='dashboard_stats_drpdn' />
+                value={!statsType ? Object.entries(statsTabs)[0][0] : statsType}
+                data-test='dashboard_stats_drpdn'
+              />
             ) : null}
           </>
         )
@@ -679,12 +702,13 @@ class Dashboard extends Component {
                 style={{ marginLeft: 'auto' }}
                 item
                 pointing='top right'
-                options={Object.entries(statsTabs).map((stType) => {
+                options={Object.entries(statsTabs).map(stType => {
                   return { text: stType[1][0], value: stType[0] }
                 })}
                 onChange={(e, { value }) => this.setState({ statsType: value })}
-                value={!statsType ? (Object.entries(statsTabs)[0][0]) : statsType}
-                data-test='dashboard_stats_drpdn' />
+                value={!statsType ? Object.entries(statsTabs)[0][0] : statsType}
+                data-test='dashboard_stats_drpdn'
+              />
             ) : null}
           </>
         )
@@ -718,14 +742,14 @@ class Dashboard extends Component {
       isAdmin && !takeover ? adminMenuTabs : isClientCompany ? companyPurchasesTab : companySalesPurchasesTabs
 
     const quickFilters = [
-      formatMessage({ id: 'dashboard.dateFilter.lastDay', defaultMessage: 'Last day'}),
+      formatMessage({ id: 'dashboard.dateFilter.lastDay', defaultMessage: 'Last day' }),
       formatMessage({ id: 'dashboard.dateFilter.thisWeek', defaultMessage: 'This week' }),
       formatMessage({ id: 'dashboard.dateFilter.lastWeek', defaultMessage: 'Last week' }),
       formatMessage({ id: 'dashboard.dateFilter.thisMonth', defaultMessage: 'This month' }),
       formatMessage({ id: 'dashboard.dateFilter.lastMonth', defaultMessage: 'Last month' }),
       formatMessage({ id: 'dashboard.dateFilter.thisYear', defaultMessage: 'This year' }),
       formatMessage({ id: 'dashboard.dateFilter.lastYear', defaultMessage: 'Last year' }),
-      formatMessage({ id: 'dashboard.dateFilter.allTime', defaultMessage: 'All the time' }),
+      formatMessage({ id: 'dashboard.dateFilter.allTime', defaultMessage: 'All the time' })
     ]
 
     return (
@@ -733,105 +757,144 @@ class Dashboard extends Component {
         <Grid.Row>
           <Grid.Column width={16}>
             {isAdmin && !takeover && (
-              <Popup on='click'
-                   trigger={<Select>{activeQuick > 0 ? quickFilters[activeQuick - 1] : (selectedDate ? selectedDate : 'Select')}</Select>}
-                   position='bottom left'
-                   flowing
-                   pinned
-                   style={{ zIndex: 999 /* less than timeout modal */ }}
-                   content={(
-                     <DateGrid>
-                       <Grid.Row>
-                         <Grid.Column width={12}>
-                           <Grid>
-                             <Grid.Row>
-                               <Grid.Column width={8}>
-                                 <Input
-                                   placeholder={formatMessage({ id: 'global.dateFrom', defaultMessage: 'Date From' })}
-                                   inputProps={{ 'data-test': 'dashboard_date_from_input' }}
-                                   onChange={(e, { value }) => {
-                                     if (value.length === 10 && moment(value, 'DD/MM/YYYY', true).isValid()) {
-                                       const newDate = moment(value, 'DD/MM/YYYY')
-                                       if (newDate.isAfter(dateTo)) {
-                                         this.setState({ dateFrom: newDate, dateFromEdited: null })
-                                       } else {
-                                         this.setState({ dateFromEdited: null })
-                                         this.filterDates(0, [newDate, dateTo])
-                                       }
-                                     } else {
-                                       this.setState({dateFromEdited: value})
-                                     }
-                                   }}
-                                   error={dateFromEdited ? true : (moment(dateFrom).isAfter(dateTo) ? true : false)}
-                                   name={'dateFrom'}
-                                   value={dateFromEdited ? dateFromEdited : (dateFrom ? (moment(dateFrom, 'DD/MM/YYYY', true).isValid() ? moment(dateFrom, 'DD/MM/YYYY').format('DD/MM/YYYY') : (moment(dateFrom).isValid() ? moment(dateFrom).format('DD/MM/YYYY') : null)) : null)}
-                                   fluid
-                                 />
-                                 {dateFromEdited ? (
-                                   <span class='sui-error-message' style={{ position: 'absolute' }}>{formatMessage({
-                                     id: 'dashboard.error.invalidDate',
-                                     defaultMessage: 'Invalid Date'
-                                   })}</span>
-                                 ) : (moment(dateFrom).isAfter(dateTo) ? (
-                                   <span className='sui-error-message' style={{ position: 'absolute' }}>{formatMessage({
-                                     id: 'dashboard.error.invalidDateRange',
-                                     defaultMessage: 'Invalid Date Range'
-                                   })}</span>
-                                 ) : null)}
-                               </Grid.Column>
-                               <Grid.Column width={8}>
-                                 <Input
-                                   placeholder={formatMessage({ id: 'global.dateTo', defaultMessage: 'Date To'})}
-                                   inputProps={{
-                                     'data-test': 'dashboard_date_to_input'
-                                   }}
-                                   onChange={(e, { value }) => {
-                                     if (value.length === 10 && moment(value, 'DD/MM/YYYY', true).isValid()) {
-                                       const newDate = moment(value, 'DD/MM/YYYY')
-                                       if (newDate.isBefore(dateFrom)) {
-                                         this.setState({ dateTo: newDate, dateToEdited: null })
-                                       } else {
-                                         this.setState({ dateToEdited: null })
-                                         this.filterDates(0, [dateFrom, newDate])
-                                       }
-                                     } else {
-                                       this.setState({dateToEdited: value})
-                                     }
-                                   }}
-                                   error={dateToEdited ? true : (moment(dateTo).isBefore(dateFrom) ? true : false)}
-                                   name='dateTo'
-                                   value={dateToEdited ? dateToEdited : (dateTo ? (moment(dateTo, 'DD/MM/YYYY', true).isValid() ? moment(dateTo, 'DD/MM/YYYY').format('DD/MM/YYYY') : (moment(dateTo).isValid() ? moment(dateTo).format('DD/MM/YYYY') : null)) : null)}
-                                   fluid
-                                 />
-                                 {dateToEdited ? (
-                                   <span class='sui-error-message' style={{ position: 'absolute' }}>{formatMessage({
-                                     id: 'dashboard.error.invalidDate',
-                                     defaultMessage: 'Invalid Date'
-                                   })}</span>
-                                 ) : (moment(dateTo).isBefore(dateFrom) ? (
-                                   <span className='sui-error-message' style={{ position: 'absolute' }}>{formatMessage({
-                                     id: 'dashboard.error.invalidDateRange',
-                                     defaultMessage: 'Invalid Date Range'
-                                   })}</span>
-                                 ) : null)}
-                               </Grid.Column>
-                             </Grid.Row>
-                           </Grid>
-                           <StyledCalendar value={[dateFrom, dateTo]}
-                                     calendarType='US'
-                                     onChange={dates => this.filterDates(0, dates)}
-                                     formatShortWeekday={(locale, date) => moment(date).format('dd')}
-                                     showDoubleView={true}
-                                     selectRange={true} />
-                         </Grid.Column>
-                         <Grid.Column width={4}>
-                           {quickFilters.map((item, index) => (
-                             <QuickFilter className={activeQuick === (index+1) ? 'active' : null} onClick={() => this.filterQuickDate(++index)}>{item}</QuickFilter>
-                           ))}
-                         </Grid.Column>
-                       </Grid.Row>
-                     </DateGrid>
-                   )}
+              <Popup
+                on='click'
+                trigger={
+                  <Select>
+                    {activeQuick > 0 ? quickFilters[activeQuick - 1] : selectedDate ? selectedDate : 'Select'}
+                  </Select>
+                }
+                position='bottom left'
+                flowing
+                pinned
+                style={{ zIndex: 999 /* less than timeout modal */ }}
+                content={
+                  <DateGrid>
+                    <Grid.Row>
+                      <Grid.Column width={12}>
+                        <Grid>
+                          <Grid.Row>
+                            <Grid.Column width={8}>
+                              <Input
+                                placeholder={formatMessage({ id: 'global.dateFrom', defaultMessage: 'Date From' })}
+                                inputProps={{ 'data-test': 'dashboard_date_from_input' }}
+                                onChange={(e, { value }) => {
+                                  if (value.length === 10 && moment(value, 'DD/MM/YYYY', true).isValid()) {
+                                    const newDate = moment(value, 'DD/MM/YYYY')
+                                    if (newDate.isAfter(dateTo)) {
+                                      this.setState({ dateFrom: newDate, dateFromEdited: null })
+                                    } else {
+                                      this.setState({ dateFromEdited: null })
+                                      this.filterDates(0, [newDate, dateTo])
+                                    }
+                                  } else {
+                                    this.setState({ dateFromEdited: value })
+                                  }
+                                }}
+                                error={dateFromEdited ? true : moment(dateFrom).isAfter(dateTo) ? true : false}
+                                name={'dateFrom'}
+                                value={
+                                  dateFromEdited
+                                    ? dateFromEdited
+                                    : dateFrom
+                                    ? moment(dateFrom, 'DD/MM/YYYY', true).isValid()
+                                      ? moment(dateFrom, 'DD/MM/YYYY').format('DD/MM/YYYY')
+                                      : moment(dateFrom).isValid()
+                                      ? moment(dateFrom).format('DD/MM/YYYY')
+                                      : null
+                                    : null
+                                }
+                                fluid
+                              />
+                              {dateFromEdited ? (
+                                <span class='sui-error-message' style={{ position: 'absolute' }}>
+                                  {formatMessage({
+                                    id: 'dashboard.error.invalidDate',
+                                    defaultMessage: 'Invalid Date'
+                                  })}
+                                </span>
+                              ) : moment(dateFrom).isAfter(dateTo) ? (
+                                <span className='sui-error-message' style={{ position: 'absolute' }}>
+                                  {formatMessage({
+                                    id: 'dashboard.error.invalidDateRange',
+                                    defaultMessage: 'Invalid Date Range'
+                                  })}
+                                </span>
+                              ) : null}
+                            </Grid.Column>
+                            <Grid.Column width={8}>
+                              <Input
+                                placeholder={formatMessage({ id: 'global.dateTo', defaultMessage: 'Date To' })}
+                                inputProps={{
+                                  'data-test': 'dashboard_date_to_input'
+                                }}
+                                onChange={(e, { value }) => {
+                                  if (value.length === 10 && moment(value, 'DD/MM/YYYY', true).isValid()) {
+                                    const newDate = moment(value, 'DD/MM/YYYY')
+                                    if (newDate.isBefore(dateFrom)) {
+                                      this.setState({ dateTo: newDate, dateToEdited: null })
+                                    } else {
+                                      this.setState({ dateToEdited: null })
+                                      this.filterDates(0, [dateFrom, newDate])
+                                    }
+                                  } else {
+                                    this.setState({ dateToEdited: value })
+                                  }
+                                }}
+                                error={dateToEdited ? true : moment(dateTo).isBefore(dateFrom) ? true : false}
+                                name='dateTo'
+                                value={
+                                  dateToEdited
+                                    ? dateToEdited
+                                    : dateTo
+                                    ? moment(dateTo, 'DD/MM/YYYY', true).isValid()
+                                      ? moment(dateTo, 'DD/MM/YYYY').format('DD/MM/YYYY')
+                                      : moment(dateTo).isValid()
+                                      ? moment(dateTo).format('DD/MM/YYYY')
+                                      : null
+                                    : null
+                                }
+                                fluid
+                              />
+                              {dateToEdited ? (
+                                <span class='sui-error-message' style={{ position: 'absolute' }}>
+                                  {formatMessage({
+                                    id: 'dashboard.error.invalidDate',
+                                    defaultMessage: 'Invalid Date'
+                                  })}
+                                </span>
+                              ) : moment(dateTo).isBefore(dateFrom) ? (
+                                <span className='sui-error-message' style={{ position: 'absolute' }}>
+                                  {formatMessage({
+                                    id: 'dashboard.error.invalidDateRange',
+                                    defaultMessage: 'Invalid Date Range'
+                                  })}
+                                </span>
+                              ) : null}
+                            </Grid.Column>
+                          </Grid.Row>
+                        </Grid>
+                        <StyledCalendar
+                          value={[dateFrom, dateTo]}
+                          calendarType='US'
+                          onChange={dates => this.filterDates(0, dates)}
+                          formatShortWeekday={(locale, date) => moment(date).format('dd')}
+                          showDoubleView={true}
+                          selectRange={true}
+                        />
+                      </Grid.Column>
+                      <Grid.Column width={4}>
+                        {quickFilters.map((item, index) => (
+                          <QuickFilter
+                            className={activeQuick === index + 1 ? 'active' : null}
+                            onClick={() => this.filterQuickDate(++index)}>
+                            {item}
+                          </QuickFilter>
+                        ))}
+                      </Grid.Column>
+                    </Grid.Row>
+                  </DateGrid>
+                }
               />
             )}
           </Grid.Column>
@@ -885,14 +948,14 @@ class Dashboard extends Component {
                 <SummaryRectangle
                   icon={<DollarSign />}
                   data={productOffersValue && Math.round(productOffersValue)}
-                  title={'Total Products Value $'}
+                  title={'Total Products Value'}
                   titleId={'dashboard.totalValueWithoutMilion.title'}
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
                 />
                 <SummaryRectangle
                   icon={<DollarSign />}
                   data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
-                  title={'Total Broadcasted Value $'}
+                  title={'Total Broadcasted Value'}
                   titleId={'dashboard.totalBroadcastedValueWithoutMilion.title'}
                   styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
                   isLastSummary
