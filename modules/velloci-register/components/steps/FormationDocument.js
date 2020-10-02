@@ -81,45 +81,6 @@ function FormationDocument({ formikProps, intl: { formatMessage }, error, entity
 
       <GridRow>
         <GridColumn>
-          <Dropdown
-            options={
-              entityDocuments && entityDocuments.data && entityDocuments.data.length
-                ? entityDocuments.data.map(el => ({
-                  key: el,
-                  value: el,
-                  text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
-                }))
-                : []
-            }
-            fieldProps={{
-              'data-test': 'settings_velloci_registration_formation_document_drpdwn'
-            }}
-            inputProps={{
-              placeholder: formatMessage({
-                id: 'velloci.formationDocument.documentTypePlaceholder',
-                defaultMessage: 'Pick one'
-              }),
-              search: true,
-              selection: true,
-              loading: entityDocuments && entityDocuments.loading
-            }}
-            name='companyFormationDocument.documentType'
-            label={
-              <>
-                {formatMessage({
-                  id: 'velloci.formationDocument.documentTypeLabel',
-                  defaultMessage: 'Select document type'
-                })}
-                {<Required />}
-              </>
-            }
-          />
-
-        </GridColumn>
-      </GridRow>
-
-      <GridRow>
-        <GridColumn>
           <DivLegalAddressTitle>
             <FormattedMessage
               id='velloci.formationDocument.uploadDocuments'

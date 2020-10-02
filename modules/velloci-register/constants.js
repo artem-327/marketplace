@@ -75,8 +75,7 @@ export const initialValues = {
     dba: ''
   },
   companyFormationDocument: {
-    attachments: [],
-    documentType: ''
+    attachments: []
   },
   ownerInformation: {
     isBeneficialOwner: false,
