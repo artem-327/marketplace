@@ -2604,6 +2604,8 @@
   "addDocuments.existingDocuments": "Existing Documents",
   "addDocuments.addDocuments": "ADD DOCUMENTS",
   "wantedBoard.notify.noInventoryItems.Content": "You do not have any Inventory item matching the requested item to offer.",
+  "wantedBoard.pendingOffer": "Pending Offer",
+  "wantedBoard.pendingCounterOffer": "Pending Counter Offer",
   "global.enabled": "Enabled",
   "global.selectTags": "Select tags",
   "global.marketSegments": "Market Segments",

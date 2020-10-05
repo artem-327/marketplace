@@ -37,27 +37,44 @@ const LabelStatus = styled.div`
   padding: 1px 10px;
 `
 
-const StatusLabel = val => {
-  if (!val) return ''
+const StatusLabel = (status, type) => {
+  if (!status || !type) return ''
 
   let text, backgroundColor
-  switch (val) {
-    case 'NEW':
-      text = <FormattedMessage id='global.new' defaultMessage='New' />
-      backgroundColor = '#2599d5'
-      break
-    case 'ACCEPTED':
-    case 'PURCHASED':
-      text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
-      backgroundColor = '#84c225'
-      break
-    case 'REJECTED':
-      text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
-      backgroundColor = '#f16844'
-      break
-    default:
-      return null
+  if (status === 'NEW' && type === 'NORMAL') {
+    text = <FormattedMessage id='wantedBoard.pendingOffer' defaultMessage='Pending Offer' />
+    backgroundColor = '#2599d5'
+  } else if (status === 'REJECTED' && type === 'NORMAL') {
+    text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
+    backgroundColor = '#f16844'
+  } else if (status === 'NEW' && type === 'COUNTER') {
+    text = <FormattedMessage id='wantedBoard.pendingCounterOffer' defaultMessage='Pending Counter Offer' />
+    backgroundColor = '#2599d5'
+  } else if (
+    (status === 'ACCEPTED_BY_BUYER' && type === 'NORMAL') ||
+    (status === 'ACCEPTED_BY_SELLER' && type === 'COUNTER ')
+  ) {
+    text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
+    backgroundColor = '#84c225'
   }
+  //OLD
+  // switch (status) {
+  //   case 'NEW':
+  //     text = <FormattedMessage id='global.new' defaultMessage='New' />
+  //     backgroundColor = '#2599d5'
+  //     break
+  //   case 'ACCEPTED':
+  //   case 'PURCHASED':
+  //     text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
+  //     backgroundColor = '#84c225'
+  //     break
+  //   case 'REJECTED':
+  //     text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
+  //     backgroundColor = '#f16844'
+  //     break
+  //   default:
+  //     return null
+  // }
   return <LabelStatus backgroundColor={backgroundColor}>{text}</LabelStatus>
 }
 
@@ -81,50 +98,51 @@ function mapStateToProps(store, { datagrid }) {
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
       const product = getSafe(() => row.element.productGroup.name, null)
       const casNumber = casNumberAndName(getSafe(() => row.element.casProduct, null))
-      const purchaseRequestOffers = row.purchaseRequestOffers
-        .map(pro => {
-          const condition = getSafe(() => pro.productOffer.conforming, null)
+      const purchaseRequestOffers = row.purchaseRequestOffers.map(pro => {
+        const condition = getSafe(() => pro.productOffer.conforming, null)
 
-          return {
-            id: row.id + '_' + pro.id,
-            clsName: 'tree-table nested-row',
-            rawData: pro,
-            product: getSafe(() => productName, '...'),
-            casNumber: getSafe(
-              () => pro.productOffer.companyProduct.productGroup.elements[0].casProduct.casNumber,
-              '...'
+        return {
+          id: row.id + '_' + pro.id,
+          clsName: 'tree-table nested-row',
+          rawData: pro,
+          product: getSafe(() => productName, '...'),
+          casNumber: getSafe(
+            () => pro.productOffer.companyProduct.productGroup.elements[0].casProduct.casNumber,
+            '...'
+          ),
+          orderQuantity: '',
+          orderFrequency: '',
+          neededBy: '',
+          dealExpired: '',
+          manufacturer: getSafe(() => pro.productOffer.companyProduct.companyGenericProduct.manufacturer.name, ''),
+          condition:
+            condition === null ? (
+              <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
+            ) : condition ? (
+              <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+            ) : (
+              <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
             ),
-            orderQuantity: '',
-            orderFrequency: '',
-            neededBy: '',
-            dealExpired: '',
-            manufacturer: getSafe(() => pro.productOffer.companyProduct.companyGenericProduct.manufacturer.name, ''),
-            condition:
-              condition === null ? (
-                <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-              ) : condition ? (
-                <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
-              ) : (
-                <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
-              ),
-            deliveryLocation: '',
-            packaging: getSafe(() => pro.productOffer.companyProduct.packagingType.name, ''),
-            measurement: getSafe(() => pro.productOffer.companyProduct.packagingUnit.nameAbbreviation, ''),
-            deliveryPriceMax: 'N/A',
-            fobQuote: (
-              <FormattedNumber
-                minimumFractionDigits={2}
-                maximumFractionDigits={2}
-                style='currency'
-                currency={currency}
-                value={pro.pricePerUOM}
-              />
-            ),
-            deliveredQuote: 'N/A',
-            status: StatusLabel(getSafe(() => pro.status, ''))
-          }
-        })
-        .filter(el => el.rawData.status === 'NEW')
+          deliveryLocation: '',
+          packaging: getSafe(() => pro.productOffer.companyProduct.packagingType.name, ''),
+          measurement: getSafe(() => pro.productOffer.companyProduct.packagingUnit.nameAbbreviation, ''),
+          deliveryPriceMax: 'N/A',
+          fobQuote: (
+            <FormattedNumber
+              minimumFractionDigits={2}
+              maximumFractionDigits={2}
+              style='currency'
+              currency={currency}
+              value={pro.cfHistoryLastAveragePricePerUOM} //OLD pro.pricePerUOM
+            />
+          ),
+          deliveredQuote: 'N/A',
+          status: StatusLabel(
+            getSafe(() => pro.cfHistoryLastStatus, ''),
+            getSafe(() => pro.cfHistoryLastType, '')
+          ) //OLD new  getSafe(() => pro.status, '')
+        }
+      })
       const offersLength = purchaseRequestOffers.length
       return {
         id: row.id,
