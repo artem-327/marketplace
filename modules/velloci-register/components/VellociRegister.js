@@ -166,7 +166,7 @@ class VellociRegister extends Component {
       if (typeof window !== 'undefined') {
         const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
         if (searchParams.has('companyId')) {
-          companyId = { companyId: Number(searchParams.get('companyId')) }
+          companyId = Number(searchParams.get('companyId'))
         }
       }
 
