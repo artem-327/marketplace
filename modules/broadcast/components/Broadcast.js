@@ -754,7 +754,7 @@ class Broadcast extends Component {
                       mappedBroadcastRules: {
                         ...this.getFilteredTree().model.rule
                       },
-                      ...values
+                      name: values.name
                     }
 
                     if (templates.some(el => el.name === values.name)) {
