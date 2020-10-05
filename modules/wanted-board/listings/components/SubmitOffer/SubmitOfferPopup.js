@@ -400,7 +400,8 @@ class SubmitOfferPopup extends React.Component {
     ],
     select: '',
     nextSubmit: false,
-    inputRows: 0
+    inputRows: 0,
+    pkgAvailable: ''
   }
 
   validationSchema = () =>
@@ -449,7 +450,6 @@ class SubmitOfferPopup extends React.Component {
   componentDidMount() {
     if (this.props.isSecondPage) {
       this.setState({ nextSubmit: true, select: 0 })
-      this.props.falseIsSecondPage()
       return
     }
     if (!this.props.datagrid.loading) this.handleDatagridResult()
@@ -459,6 +459,10 @@ class SubmitOfferPopup extends React.Component {
     if (prevProps.datagrid.loading && !this.props.datagrid.loading) {
       this.handleDatagridResult()
     }
+  }
+
+  componentWillUnmount() {
+    this.props.falseIsSecondPage()
   }
 
   handleDatagridResult = () => {
@@ -489,12 +493,13 @@ class SubmitOfferPopup extends React.Component {
     return obj
   }
 
-  submitOffer = async ({ lotExpirationDate, fulfillmentType, items }) => {
+  submitOffer = async ({ lotExpirationDate, fulfillmentType, items }, validateForm) => {
     if (!this.state.nextSubmit) {
       this.setState({ nextSubmit: true })
       return
     }
-    const { closePopup, submitOffer, popupValues, rows, counterRequestedItem } = this.props
+
+    const { closePopup, submitOffer, popupValues, rows, counterRequestedItem, isSecondPage } = this.props
     let expiresAt = null
     if (lotExpirationDate) {
       expiresAt = moment(getStringISODate(lotExpirationDate)).endOf('day').format()
@@ -526,11 +531,15 @@ class SubmitOfferPopup extends React.Component {
       productOffer,
       purchaseRequest: popupValues.id
     }
-
-    counterRequestedItem
-      ? await counterRequestedItem(popupValues.id, this.clean(body)) //CHECK new BE
-      : await submitOffer(this.clean(body)) //CHECK new BE
-    closePopup()
+    try {
+      this.props.isSecondPage
+        ? await counterRequestedItem(popupValues.id, this.clean(body)) //CHECK new BE
+        : await submitOffer(this.clean(body)) //CHECK new BE
+    } catch (error) {
+      console.error(error)
+    } finally {
+      closePopup()
+    }
   }
 
   getRows = () => {
@@ -548,6 +557,7 @@ class SubmitOfferPopup extends React.Component {
                 this.setState({ select: value })
                 this.setFieldValue('items[0].pricePerUOM', row.pricePerUOM)
                 this.setFieldValue('items[0].pkgAmount', row.pkgAvailable)
+                this.setState({ pkgAvailable: row.pkgAvailable })
                 this.setFieldValue('productName', row.companyProduct.intProductName)
               }}
               // inputProps={{  }}
@@ -579,6 +589,16 @@ class SubmitOfferPopup extends React.Component {
   }
 
   handleChange = (_e, { name, value }, index = 0) => {
+    if (name === 'fulfillmentType' && value === 'COMPLETE_SCHEDULE') {
+      this.validateForm()
+        .then(() => {
+          this.setErrors({})
+        })
+        .catch(err => console.log('catch', err))
+    }
+    if (name === 'fulfillmentType' && value === 'COMPLETE_IMMEDIATE') {
+      this.setFieldValue('items[0].pkgAmount', this.state.pkgAvailable)
+    }
     if (
       this.values.fulfillmentType === 'COMPLETE_SCHEDULE' &&
       (name.includes('pkgAmount') || name.includes('pricePerUOM'))
@@ -691,7 +711,7 @@ class SubmitOfferPopup extends React.Component {
       <>
         {fulfillmentType !== 'COMPLETE_SCHEDULE' && (
           <>
-            <FormattedMessage id='submitOffer.quantity' defaultMessage='Quantity'>
+            <FormattedMessage id='submitOffer.pkgAmount' defaultMessage='PKG Amount'>
               {text => text}
             </FormattedMessage>
             <Required />
@@ -702,8 +722,6 @@ class SubmitOfferPopup extends React.Component {
           inputProps={{
             type: 'number',
             onChange: (e, data) => this.handleChange(e, data, index),
-            label: <QuantityLabel>lbs</QuantityLabel>,
-            labelPosition: 'right',
             disabled: fulfillmentType === 'COMPLETE_IMMEDIATE',
             fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'
           }}
@@ -733,10 +751,18 @@ class SubmitOfferPopup extends React.Component {
       <Table basic>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Quantity</Table.HeaderCell>
-            <Table.HeaderCell>Available Date</Table.HeaderCell>
-            <Table.HeaderCell>Price</Table.HeaderCell>
-            <Table.HeaderCell>Total</Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='submitOffer.pkgAmount' defaultMessage='PKG Amount' />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='submitOffer.availableDate' defaultMessage='Available Date' />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='submitOffer.price' defaultMessage='Price' />
+            </Table.HeaderCell>
+            <Table.HeaderCell>
+              <FormattedMessage id='submitOffer.total' defaultMessage='Total' />
+            </Table.HeaderCell>
             <Table.HeaderCell></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -795,9 +821,9 @@ class SubmitOfferPopup extends React.Component {
     return (
       <>
         <ToggleForm
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={(values, { setSubmitting, validateForm }) => {
             setSubmitting(false)
-            this.submitOffer(values)
+            this.submitOffer(values, validateForm)
           }}
           validationSchema={this.validationSchema()}
           validateOnChange
@@ -818,10 +844,14 @@ class SubmitOfferPopup extends React.Component {
               }
             ]
           }}
-          render={({ setFieldValue, values, submitForm }) => {
+          render={({ setFieldValue, values, submitForm, errors, setErrors, validateForm }) => {
             this.setFieldValue = setFieldValue
             this.submitForm = submitForm
             this.values = values
+            this.errors = errors
+            this.setErrors = setErrors
+            this.validateForm = validateForm
+
             return (
               <>
                 <Modal closeIcon onClose={closePopup} open={true} size='large'>
@@ -1081,7 +1111,7 @@ function mapStateToProps(store, props) {
     popupValues: props.rawData,
     currencySymbol: '$',
     options: [
-      { key: 'PARTIAL', text: 'Partial fulfillment of a requst', value: 'PARTIAL' },
+      { key: 'PARTIAL', text: 'Partial fulfillment of a reqeust', value: 'PARTIAL' },
       {
         key: 'COMPLETE_SCHEDULE',
         text: 'Complete fulfillment of the request over a defined period of time',

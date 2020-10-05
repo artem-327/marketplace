@@ -2815,5 +2815,7 @@
   "submitOffer.optionToOffer.placeholder": "Select option",
   "submitOffer.price": "Price",
   "submitOffer.expirationDate": "Expiration Date",
-  "submitOffer.quantity": "Quantity"
+  "submitOffer.pkgAmount": "PKG Amount",
+  "submitOffer.availableDate": "Available Date",
+  "submitOffer.total": "Total"
 }
