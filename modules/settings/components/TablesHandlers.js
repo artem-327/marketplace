@@ -9,7 +9,7 @@ import TreeModel from 'tree-model'
 import { withToastManager } from 'react-toast-notifications'
 
 import * as Actions from '../actions'
-import { openGlobalBroadcast, saveRules, initGlobalBroadcast } from '~/modules/broadcast/actions'
+import { saveRules, initGlobalBroadcast } from '~/modules/broadcast/actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig, vellociAccountsConfig } from './BankAccountsTable/BankAccountsTable'
@@ -384,7 +384,6 @@ class TablesHandlers extends Component {
       // handleProductCatalogUnmappedValue,
       openDwollaPopup,
       dwollaAccBalance,
-      // openGlobalBroadcast,
       bankAccounts,
       treeData,
       toastManager,
@@ -706,9 +705,5 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(
-  withToastManager(
-    connect(mapStateToProps, { ...Actions, openGlobalBroadcast, saveRules, initGlobalBroadcast })(
-      injectIntl(TablesHandlers)
-    )
-  )
+  withToastManager(connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast })(injectIntl(TablesHandlers)))
 )

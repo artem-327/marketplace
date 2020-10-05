@@ -5,8 +5,6 @@ import { Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header } fro
 import { Formik } from 'formik'
 import {
   closePopup,
-  updateCompany,
-  createCompany,
   getCountries,
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,
@@ -204,8 +202,6 @@ class CompanyModal extends React.Component {
     const {
       closePopup,
       popupValues,
-      updateCompany,
-      createCompany,
       config,
       intl,
       header,
@@ -505,16 +501,13 @@ class CompanyModal extends React.Component {
               </Modal.Actions>
             </Modal>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }
 
 const mapDispatchToProps = {
   closePopup,
-  updateCompany,
-  createCompany,
   getCountries,
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,

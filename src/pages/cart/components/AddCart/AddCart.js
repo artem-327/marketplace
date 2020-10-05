@@ -1873,7 +1873,6 @@ class AddCart extends Component {
 AddCart.propTypes = {
   offer: object,
   order: object,
-  postNewOrder: func,
   openInfo: boolean
   // id: number,
   // pkgAmount: number,

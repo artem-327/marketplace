@@ -22,7 +22,6 @@ import { withToastManager } from 'react-toast-notifications'
 
 import { FormattedPhone } from '~/components/formatted-messages/'
 import * as Actions from '../../actions'
-import { openGlobalBroadcast, saveRules, initGlobalBroadcast } from '~/modules/broadcast/actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
