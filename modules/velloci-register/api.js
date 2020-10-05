@@ -4,7 +4,7 @@ import { getSafe, generateQueryString } from '~/utils/functions'
 
 export default {
   postRegisterVelloci: (body, companyId) => {
-    let queryParams = companyId ? generateQueryString(companyId) : ''
+    let queryParams = companyId ? `/${companyId}` : ''
     return api.post(`/prodex/api/payments/velloci/register${queryParams}`, body)
   },
   postUploadDocuments: (files, documentType, id) => {

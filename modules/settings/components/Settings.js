@@ -35,7 +35,7 @@ import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo, renderCopyright, closePopup, closeSidebar } from '../actions'
+import { addTab, tabChanged, resetSettings, renderCopyright, closePopup, closeSidebar } from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -466,7 +466,6 @@ export default connect(mapStateToProps, {
   updateCompany,
   tabChanged,
   resetSettings,
-  loadLogo,
   postCompanyLogo,
   deleteCompanyLogo,
   getIdentity,

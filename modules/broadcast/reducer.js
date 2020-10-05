@@ -102,9 +102,7 @@ export default typeToReducer(
         ...state,
         loading: false,
         open: false,
-        broadcastTemplateName: payload && payload.broadcastTemplateName
-          ? payload.broadcastTemplateName
-          : null
+        broadcastTemplateName: payload && payload.broadcastTemplateName ? payload.broadcastTemplateName : null
       }
     },
 
@@ -124,7 +122,7 @@ export default typeToReducer(
       templates: state.templates.concat(payload)
     }),
 
-    [saveTemplate.rejeted]: state => ({
+    [saveTemplate.rejected]: state => ({
       ...state,
       templateSaving: false
     }),
@@ -253,7 +251,7 @@ export default typeToReducer(
     [getAssociations.fulfilled]: (state, { payload }) => {
       return {
         ...state,
-        associations: payload.map((a) => a.name),
+        associations: payload.map(a => a.name),
         associationsFetching: false
       }
     },

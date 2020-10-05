@@ -291,7 +291,7 @@ const SortLabel = ({ column, onSort, children, direction }) => (
   <span onClick={onSort} data-test={`table_sort_action_${column.name}`} className={column.sortPath ? 'sortable' : ''}>
     {children}
     {direction && <Icon className='thick' name={direction === 'asc' ? 'sort up' : 'sort down'} />}
-    {!direction && column.sortPath && <Icon className='thick' name={'sort up inactive'} />}
+    {!direction && column.sortPath && <Icon className='thick' name={'sort up'} />}
   </span>
 )
 

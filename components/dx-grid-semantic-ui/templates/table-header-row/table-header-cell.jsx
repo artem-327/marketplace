@@ -1,5 +1,5 @@
-import * as React from "react"
-import { Table as TableSUI } from "semantic-ui-react"
+import * as React from 'react'
+import { Table as TableSUI } from 'semantic-ui-react'
 
 export const TableHeaderCell = ({
   column,
@@ -13,7 +13,6 @@ export const TableHeaderCell = ({
   onWidthChange,
   onWidthDraft,
   tableRow,
-  getMessage,
   showSortingControls,
   sortingDirection,
   sortingEnabled,
@@ -28,7 +27,7 @@ export const TableHeaderCell = ({
     style={{
       ...style,
       width: column.width || 'auto',
-      overflow: column.dropdown ? 'unset':'hidden'
+      overflow: column.dropdown ? 'unset' : 'hidden'
     }}
     {...restProps}
   />
