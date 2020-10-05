@@ -33,7 +33,8 @@ export const initialState = {
   businessDetails: {
     data: [],
     loading: false
-  }
+  },
+  isLoadingSubmitButton: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -127,7 +128,22 @@ export default function reducer(state = initialState, action) {
     case AT.GET_ENTITY_TYPES_FULFILLED: {
       return {
         ...state,
-        entityTypes: { data: payload, loading: false }
+        entityTypes: {
+          data:
+            payload && payload.length
+              ? payload.map(el => {
+                  let text = ''
+                  if (el === 'llc' || el === 'llp' || el === 'lp') text = el.toUpperCase()
+                  else text = el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
+                  return {
+                    key: el,
+                    value: el,
+                    text
+                  }
+                })
+              : [],
+          loading: false
+        }
       }
     }
 
@@ -254,6 +270,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         businessDetails: { data: payload, loading: false }
+      }
+    }
+
+    case AT.LOAD_SUBMIT_BUTTON: {
+      return {
+        ...state,
+        isLoadingSubmitButton: payload
       }
     }
 

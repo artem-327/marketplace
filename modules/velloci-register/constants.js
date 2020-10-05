@@ -44,7 +44,7 @@ export const verifyPersonalInformation = {
   businessRole: '',
   businessTitle: '',
   socialSecurityNumber: '',
-  businessOwnershipPercentage: ''
+  businessOwnershipPercentage: 0
 }
 
 export const initialValues = {
@@ -75,8 +75,7 @@ export const initialValues = {
     dba: ''
   },
   companyFormationDocument: {
-    attachments: [],
-    documentType: ''
+    attachments: []
   },
   ownerInformation: {
     isBeneficialOwner: false,
