@@ -329,6 +329,7 @@ class CompanyForm extends Component {
             errors={errors}
             touched={touched}
             isSubmitting={isSubmitting}
+            clearable
           />
         </FormGroup>
 
@@ -502,6 +503,7 @@ class CompanyForm extends Component {
             errors={errors}
             touched={touched}
             isSubmitting={isSubmitting}
+            clearable
           />
           <FormField className='upload-input'>
             <label htmlFor='field_dropdown_associations'>

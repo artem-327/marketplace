@@ -145,11 +145,15 @@ class AddEditCompanySidebar extends React.Component {
                   .email(errorMessages.invalidEmail)
                   .required(errorMessages.invalidEmail),
                 contactName: Yup.string().trim().min(2, minLength).required(minLength),
-                contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
+                contactPhone: phoneValidation(),
                 address: addressValidationSchema()
               })
             })
-          return Yup.mixed().notRequired()
+          return Yup.object().shape({
+            deliveryAddress: Yup.object().shape({
+              contactPhone: phoneValidation()
+            })
+          })
         }),
 
         primaryBranch: Yup.object().shape({
@@ -468,6 +472,7 @@ class AddEditCompanySidebar extends React.Component {
                               errors={errors}
                               touched={touched}
                               isSubmitting={isSubmitting}
+                              clearable
                             />
                           </FormGroup>
                         </Accordion.Content>
@@ -605,6 +610,7 @@ class AddEditCompanySidebar extends React.Component {
                               errors={errors}
                               touched={touched}
                               isSubmitting={isSubmitting}
+                              clearable={!mailingBranchRequired}
                             />
                           </FormGroup>
                           <FormGroup widths='equal'>
