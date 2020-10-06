@@ -27,7 +27,7 @@ context("Inventory CRUD", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
-        cy.visit("/inventory/my")
+        cy.visit("/inventory/my-listings")
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.url().should("include", "inventory")
     })

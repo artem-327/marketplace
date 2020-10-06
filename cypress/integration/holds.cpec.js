@@ -61,8 +61,8 @@ context("Holds tests", () => {
                 cy.get("[data-test=add_cart_create_order_btn]").click()
 
                 cy.url().should("include", "/holds")
-                cy.get("[data-test='hold_row_action']").within(() => {
-                    cy.get("tbody").should("be.visible")
+                cy.get("[data-test='table_row_action']").within(() => {
+                    cy.get("[role='listbox']").should("be.visible")
                 })
             })
         })
@@ -76,13 +76,13 @@ context("Holds tests", () => {
         cy.FElogin(userJSON2.email, userJSON2.password)
 
         cy.waitForUI()
-        cy.visit("/inventory/my")
+        cy.visit("/inventory/my-listings")
         cy.wait('@inventoryLoading', {timeout: 30000})
         cy.url().should("include", "inventory")
         cy.contains("Marketplace").click()
         cy.waitForUI()
 
-        cy.contains("HOLDS").click()
+        cy.get("[data-test='navigation_menu_marketplace_holds_drpdn']").click()
         cy.wait("@holdLoading", {timeout: 30000})
 
         cy.get("[name = 'holdDropdown']").click()

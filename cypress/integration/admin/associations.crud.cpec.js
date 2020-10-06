@@ -2,6 +2,7 @@ context("Associations CRUD", () => {
 
     let productId = null
     let filter = [{"operator": "LIKE", "path": "Association.name", "values": ["%Test%"]}]
+    let filter2 = [{"operator": "LIKE", "path": "Association.name", "values": ["%Echoprod%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -28,12 +29,16 @@ context("Associations CRUD", () => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'associations/id', itemId)
             })
+            cy.getFirstEntityWithFilter(token, 'associations', filter2).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'associations/id', itemId)
+            })
         })
 
         cy.get('[data-test=admin_table_add_btn]').click()
 
         cy.get("#field_input_val0").type("TestGroup")
-        cy.get("[data-test='admin_add_associations_save_btn']").click()
+        cy.get('[data-test=admin_add_association_save_btn]').click()
 
         cy.waitForUI()
         cy.searchInList("Test")
@@ -56,7 +61,7 @@ context("Associations CRUD", () => {
         cy.openElement(productId, 0)
 
         cy.get('#field_input_val0').clear().type("Echoprod")
-        cy.get('[data-test=admin_edit_associations_save_btn]').click()
+        cy.get('[data-test=admin_edit_association_save_btn]').click()
         cy.searchInList("Echoprod")
 
         cy.openElement(productId, 0)
@@ -69,7 +74,7 @@ context("Associations CRUD", () => {
 
         cy.get('#field_input_val0').click()
 
-        cy.get('[data-test=admin_add_associations_save_btn]').click()
+        cy.get('[data-test=admin_add_association_save_btn]').click()
 
         cy.get(".error")
             .should("have.length", 1)
