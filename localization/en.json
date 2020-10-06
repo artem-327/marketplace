@@ -2807,5 +2807,6 @@
   "velloci.document.explanatory.li21": "Filed and stamped Articles of Organization or Incorporation",
   "velloci.document.explanatory.li22": "Sales/Use Tax License",
   "velloci.document.explanatory.li23": "Business License",
-  "velloci.document.explanatory.li24": "Certificate of Good Standing"
+  "velloci.document.explanatory.li24": "Certificate of Good Standing",
+  "settings.velloci.difficulties": "Velloci is experiencing some difficulties, please try again later"
 }
