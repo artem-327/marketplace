@@ -44,7 +44,7 @@ context("Shopping cart CRUD", () => {
                 }else{
                     marketPlaceName = suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup.name
 
-                    cy.contains(marketPlaceName).click()
+                    //cy.contains(marketPlaceName).click()
                 }
 
                 cy.openElement(marketPlaceId, 1)
@@ -116,7 +116,7 @@ context("Shopping cart CRUD", () => {
                     }else{
                         marketPlaceName = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup.name
 
-                        cy.contains(marketPlaceName).click()
+                        //cy.contains(marketPlaceName).click()
                     }
                     cy.openElement(sameWarehouseOffer[ 0 ].id, 1)
 
@@ -134,13 +134,14 @@ context("Shopping cart CRUD", () => {
                     cy.wait("@marketplaceLoading", { timeout: 30000 })
 
                     cy.waitForUI()
+                    cy.selectFromDropdown('div.selection', sameWarehouseOffer[ 2 ].companyProduct.intProductName)
                     //Open desired tab
                     if(sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.productGroup == undefined){
-                        cy.contains("Unmapped").click()
+                        //cy.contains("Unmapped").click()
                     }else{
                         marketPlaceName = sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.productGroup.name
 
-                        cy.contains(marketPlaceName).click()
+                        //cy.contains(marketPlaceName).click()
                     }
                     cy.openElement(marketPlaceIdNum2, 1)
 

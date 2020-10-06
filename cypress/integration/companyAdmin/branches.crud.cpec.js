@@ -20,6 +20,7 @@ context("Prodex Branches CRUD", () => {
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.openSettings()
+        cy.waitForUI()
         cy.get("[data-test='navigation_settings_locations_drpdn']").click()
         cy.wait("@deliveryLoadingPOST")
 

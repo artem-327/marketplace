@@ -7,7 +7,7 @@ context("Holds tests", () => {
     const userJSON2 = require('../fixtures/user2.json')
 
     beforeEach(function () {
-        cy.viewport(2750, 1250)
+        cy.viewport(2750, 3000)
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
@@ -18,12 +18,12 @@ context("Holds tests", () => {
         cy.FElogin(userJSON1.email, userJSON1.password)
         cy.waitForUI()
 
-        cy.visit("/inventory/my-listings")
+        cy.visit("/marketplace/listings")
         cy.wait('@inventoryLoading', {timeout: 30000})
-        cy.contains("Marketplace").click()
-        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
+        //cy.contains("Marketplace").click()
+        //cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
 
-        cy.wait("@marketplaceLoading", {timeout: 30000})
+        //cy.wait("@marketplaceLoading", {timeout: 30000})
     })
 
     after(function() {
@@ -46,11 +46,11 @@ context("Holds tests", () => {
 
                 //Open tab
                 if(sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup == undefined){
-                    cy.contains("Unmapped").click()
+                    //cy.contains("Unmapped").click()
                 }else{
                     marketPlaceName = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup.name
 
-                    cy.contains(marketPlaceName).click()
+                    //cy.contains(marketPlaceName).click()
                 }
                 cy.waitForUI()
                 cy.openElement(marketPlaceId, 2)

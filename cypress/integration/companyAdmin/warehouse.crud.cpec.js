@@ -98,7 +98,7 @@ context("Prodex Warehouse CRUD", () => {
         cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
 
         cy.get(".error")
-            .should("have.length",7)
+            .should("have.length",8)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

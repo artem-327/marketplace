@@ -26,7 +26,7 @@ context("Inventory Broadcasting", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
-        cy.visit("/inventory/my")
+        cy.visit("/inventory/my-listings")
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.url().should("include", "inventory")
     })
@@ -37,7 +37,9 @@ context("Inventory Broadcasting", () => {
         })
 
         cy.waitForUI()
-        cy.openElement(offerId, 0)
+        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_0]").click()
+
         cy.wait("@offerLoading")
         //Set broadcast
         cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "No")
@@ -52,7 +54,8 @@ context("Inventory Broadcasting", () => {
 
         cy.waitForUI()
         //Set not broadcasted
-        cy.openElement(offerId, 0)
+        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_0]").click()
 
         cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "Yes")
         cy.get("[id='field_dropdown_edit.broadcasted']").click()
@@ -66,7 +69,8 @@ context("Inventory Broadcasting", () => {
         cy.waitForUI()
 
         //Assert saved
-        cy.openElement(offerId, 0)
+        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_0]").click()
         cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "No")
     })
 
@@ -80,7 +84,8 @@ context("Inventory Broadcasting", () => {
         cy.reload()
         cy.waitForUI()
 
-        cy.openElement(offerId, 3)
+        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_3]").click()
 
         cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
@@ -107,7 +112,8 @@ context("Inventory Broadcasting", () => {
             })
         })
 
-        cy.openElement(offerId, 3)
+        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_3]").click()
 
         cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
@@ -132,7 +138,8 @@ context("Inventory Broadcasting", () => {
             })
         })
 
-        cy.openElement(offerId, 3)
+        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_3]").click()
 
         cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 
@@ -169,7 +176,8 @@ context("Inventory Broadcasting", () => {
             })
         })
 
-        cy.openElement(offerId, 3)
+        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_3]").click()
 
         cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
 

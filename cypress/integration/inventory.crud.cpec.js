@@ -6,13 +6,13 @@ context("Inventory CRUD", () => {
     before(function () {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getInventoryDatagridBody(token).then(inventoryBody => {
-               // cy.deleteEntity(token,'product-offers',inventoryBody[0].id)
+                // cy.deleteEntity(token,'product-offers',inventoryBody[0].id)
                 //TODO Found out why some assigning doesn't work
-                let helper = inventoryBody[1].companyProduct.intProductName
-                let idHelper = inventoryBody[1].companyProduct.id
+                let helper = inventoryBody[ 1 ].companyProduct.intProductName
+                let idHelper = inventoryBody[ 1 ].companyProduct.id
 
                 productName = helper
-                filter = [{"operator": "EQUALS", "path": "ProductOffer.companyProduct.id", "values": [idHelper]}]
+                filter = [{ "operator": "EQUALS", "path": "ProductOffer.companyProduct.id", "values": [idHelper] }]
             })
         })
     })
@@ -28,7 +28,7 @@ context("Inventory CRUD", () => {
 
         cy.waitForUI()
         cy.visit("/inventory/my-listings")
-        cy.wait("@inventoryLoading", {timeout: 100000})
+        cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.url().should("include", "inventory")
     })
 
@@ -46,7 +46,7 @@ context("Inventory CRUD", () => {
         cy.setNumberInput("[id='field_input_edit.fobPrice']", "20")
         cy.setNumberInput("[id='field_input_edit.costPerUOM']", "0")
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click({force:true})
+        cy.get("[data-test=sidebar_inventory_save_new]").click({ force: true })
         cy.get('[data-test=confirm_dialog_cancel_btn]').click()
 
         cy.wait("@inventoryLoading")
@@ -60,7 +60,7 @@ context("Inventory CRUD", () => {
     it("Update item", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
+                cy.get("[data-test=action_" + itemId + "_0]").parent().parent().click()
                 cy.get("[data-test=action_" + itemId + "_0]").click()
             })
         })
@@ -83,7 +83,7 @@ context("Inventory CRUD", () => {
     it("See item details", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
+                cy.get("[data-test=action_" + itemId + "_0]").parent().parent().click()
                 cy.get("[data-test=action_" + itemId + "_0]").click()
             })
         })
@@ -116,7 +116,7 @@ context("Inventory CRUD", () => {
     it("Delete item", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
+                cy.get("[data-test=action_" + itemId + "_5]").parent().parent().click()
                 cy.get("[data-test=action_" + itemId + "_5]").click()
 
                 cy.waitForUI()
@@ -133,9 +133,9 @@ context("Inventory CRUD", () => {
         cy.get("[id='field_input_edit.pkgAvailable']").click()
         cy.get("[id='field_input_edit.fobPrice']").click()
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click({force:true})
+        cy.get("[data-test=sidebar_inventory_save_new]").click({ force: true })
         cy.get(".error")
-            .should("have.length", 4)
+            .should("have.length", 3)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(Must be a number)/i)
         })
@@ -183,7 +183,7 @@ context("Inventory CRUD", () => {
             cy.contains("Yes").click()
         })
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click({force: true})
+        cy.get("[data-test=sidebar_inventory_save_new]").click({ force: true })
 
         cy.contains("20")
         cy.contains("Cargo")
@@ -195,26 +195,29 @@ context("Inventory CRUD", () => {
         cy.route("GET", '/prodex/api/company-products/own/search?*').as('search')
 
         cy.waitForUI()
-
+        cy.get("[data-test='my_inventory_advanced_filters_btn']").click()
+        cy.waitForUI()
         cy.get("div[name=search]")
             .children("input")
-            .type(productName, {force: true})
+            .type(productName, { force: true })
 
         cy.wait('@search')
-
-        cy.get("[role=listbox]").within(() => {
-            cy.contains(productName).click()
+        cy.get("div[name=search]").within(() => {
+            cy.get("[role=listbox]").within(() => {
+                cy.contains(productName).click()
+            })
         })
 
         cy.contains("Apply").click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstItemIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']')
+                cy.get('[data-test=action_' + itemId + '_0]')
             })
         })
 
-        cy.get("[name=quantity]").click()
+        cy.get("[data-test='my_inventory_advanced_filters_btn']").click()
+        cy.waitForUI()
         cy.get("#field_input_quantityTo").type("10")
         cy.contains("Apply").click()
 
@@ -224,12 +227,12 @@ context("Inventory CRUD", () => {
     it("Set price triers", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "]").click()
+                cy.get("[data-test=action_" + itemId + "_4]").parent().parent().click()
                 cy.get("[data-test=action_" + itemId + "_4]").click()
             })
         })
 
-        cy.get("[data-test='new_inventory_price_tiers_drpdn']", {timeout: 10000}).click()
+        cy.get("[data-test='new_inventory_price_tiers_drpdn']", { timeout: 10000 }).click()
         cy.get("[data-test='new_inventory_price_tiers_drpdn']").within(() => {
             cy.contains("2").click()
         })

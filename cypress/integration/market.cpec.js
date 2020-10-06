@@ -23,6 +23,7 @@ context("Market place tests",() => {
 
         cy.waitForUI()
 
+        cy.get("[data-test='my_inventory_advanced_filters_btn']").click()
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 searchedValue = marketPlaceBody[0].pkgAvailable
@@ -31,7 +32,6 @@ context("Market place tests",() => {
                     .type(marketPlaceBody[0].companyProduct.companyGenericProduct.productGroup.name,{force: true} )
             })
         })
-
         cy.wait("@search")
         cy.waitForUI()
 
@@ -40,11 +40,9 @@ context("Market place tests",() => {
         cy.contains("Apply").click()
 
         cy.waitForUI()
-
-        cy.get('.group-content').eq(0).click()
         cy.get('.actions').should("be.visible")
 
-        cy.get("[name='quantity']").click()
+        cy.get("[data-test='my_inventory_advanced_filters_btn']").click()
         cy.get("#field_input_quantityTo").type(searchedValue + 5)
         cy.contains("Apply").click()
 
