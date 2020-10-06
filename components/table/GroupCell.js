@@ -62,7 +62,7 @@ const Cell = ({
       )}
       <td
         key={row.key}
-        colSpan={colSpan + (hideActions ? 0 : 0) - (rowSelection && !hideCheckboxes ? 4 : 3)}
+        colSpan={colSpan - (rowSelection && !hideCheckboxes ? 4 : 3)}
         className={cn('dx-g-bs4-cursor-pointer', className)}
         onClick={handleClick}
         {...restProps}>
