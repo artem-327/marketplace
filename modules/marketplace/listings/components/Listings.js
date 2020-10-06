@@ -540,7 +540,6 @@ class Listings extends Component {
             rows={rows}
             columns={columns}
             groupBy={['productNumber']}
-            shrinkGroups={true}
             getChildGroups={rows =>
               _(rows)
                 .groupBy('productGroupName')
