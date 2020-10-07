@@ -28,7 +28,6 @@ const defaultHiddenColumns = [
   'productNumber',
   'warehouse',
   'cost',
-  'broadcast',
   'minOrderQuantity',
   'splits',
   'condition',
