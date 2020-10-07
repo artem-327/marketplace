@@ -71,7 +71,17 @@ class FilterTags extends Component {
             }>
             <Grid verticalAlign='middle'>
               <PopupRow>
-                <GridColumn>{`${description}: ${tagDescription.toString().replace(/,/g, ', ')}`}</GridColumn>
+                <GridColumn>
+                  {filter && tagDescription && typeof tagDescription === 'string'
+                    ? `${description}: ${tagDescription.replace(/,/g, ', ')}`
+                    : (
+                      <>
+                        {`${description}: `}
+                        {tagDescription}
+                      </>
+                    )
+                  }
+                </GridColumn>
               </PopupRow>
             </Grid>
           </WiderTooltip>

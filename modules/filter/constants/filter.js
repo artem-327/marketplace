@@ -147,7 +147,7 @@ export const datagridValues = {
     },
 
     tagDescription: function (values) {
-      return `Warehouse: ${this.valuesDescription(values)[0]}`
+      return this.valuesDescription(values)[0]
     },
 
     toFormik: function ({ values }) {
@@ -986,7 +986,7 @@ export const datagridValues = {
     },
 
     tagDescription: function (values) {
-      return `Country: ${this.valuesDescription(values)}`
+      return this.valuesDescription(values)
     },
 
     toFormik: function ({ values }) {
@@ -1042,7 +1042,7 @@ export const datagridValues = {
     },
 
     tagDescription: function (values) {
-      return `Province: ${this.valuesDescription(values)}`
+      return this.valuesDescription(values)
     },
 
     toFormik: function ({ values }) {
