@@ -8,7 +8,8 @@ context("Prodex Admin User CRUD", () => {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
-        cy.route("GET", "/prodex/api/settings/user").as("usersLogin")
+        cy.route("POST", "/prodex/api/users/datagrid/all").as("usersLogin")
+        cy.route("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
         cy.route("POST", "/prodex/api/users").as("usersSave")
         cy.route("GET", "/prodex/api/dashboard").as("dashboardload")
         cy.viewport(2000, 800)
@@ -21,7 +22,7 @@ context("Prodex Admin User CRUD", () => {
         cy.get('.flex-wrapper > :nth-child(2)').click()
         cy.waitForUI()
         cy.get("[data-test=tabs_menu_item_users]").click()
-        cy.wait("@usersLogin")
+        cy.wait("@usersLogin", {timeout: 100000})
     })
 
     it("Creates a user", () => {
@@ -77,6 +78,7 @@ context("Prodex Admin User CRUD", () => {
     it("Edits a user", () => {
         cy.waitForUI()
         cy.searchInList("John Automator")
+        cy.wait("@usersLogin")
         cy.waitForUI()
 
         cy.openElement(userID, 0)
@@ -98,6 +100,7 @@ context("Prodex Admin User CRUD", () => {
     it("Edit user roles", () => {
         cy.waitForUI()
         cy.searchInList("Jen Automator")
+        cy.wait("@usersLogin")
         cy.waitForUI()
         cy.openElement(userID, 0)
 
@@ -133,16 +136,21 @@ context("Prodex Admin User CRUD", () => {
     it("Deletes a user", () => {
         cy.waitForUI()
         cy.searchInList("Jen Automator")
+        cy.wait("@usersLogin")
         cy.waitForUI()
         cy.openElement(userID, 1)
 
         cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
         cy.contains("Jen Automator").should("not.exist")
-
+/*
         cy.reload()
-        cy.wait("@usersLogin")
-
+        cy.wait("@companiesLoad", {timeout: 100000})
+        cy.get('.flex-wrapper > :nth-child(2)').click()
+        cy.waitForUI()
+        cy.get("[data-test=tabs_menu_item_users]").click()
+        cy.wait("@usersLogin", {timeout: 100000})
+*/
         cy.contains("Jen Automator").should("not.exist")
     })
 })

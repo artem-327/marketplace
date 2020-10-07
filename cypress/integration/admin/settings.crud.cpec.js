@@ -6,7 +6,7 @@ context("Admin Settings RUD", () => {
         cy.server()
         cy.route("GET", "/prodex/api/dashboard").as("loading")
         cy.route("GET", "/prodex/api/settings/admin").as("adminLoading")
-
+        cy.route("PATCH", "/prodex/api/settings/admin").as("settingsSaving")
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
@@ -32,7 +32,7 @@ context("Admin Settings RUD", () => {
         cy.get("button[class='ui primary button']").click({force: true})
         cy.wait(1000)
 
-        cy.contains("Success!")
+        cy.get('@settingsSaving').should('have.property', 'status', 200)
 
        /* cy.get(":nth-child(30)").within(() => {
             cy.get("input")

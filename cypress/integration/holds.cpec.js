@@ -19,16 +19,14 @@ context("Holds tests", () => {
         cy.waitForUI()
 
         cy.visit("/marketplace/listings")
-        cy.wait('@inventoryLoading', {timeout: 30000})
-        //cy.contains("Marketplace").click()
-        //cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
-
-        //cy.wait("@marketplaceLoading", {timeout: 30000})
+        cy.wait('@marketplaceLoading', {timeout: 30000})
     })
 
     after(function() {
         cy.getUserToken(userJSON1.email, userJSON1.password).then(token => {
-            cy.cancelOffer(token,holdId)
+            if(holdId != null){
+                cy.cancelOffer(token,holdId)
+            }
             cy.deleteWholeCart(token)
             cy.getRefreshToken(userJSON1.email, userJSON1.password).then(refreshTok => {
                 cy.refreshToken(refreshTok)

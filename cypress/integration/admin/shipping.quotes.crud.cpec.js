@@ -32,7 +32,13 @@ context("Shipping quotes CRUD", () => {
         cy.enterText("#field_input_carrierName", "POST")
         cy.enterText("#field_input_quoteId", "AAA")
         cy.enterText("#field_input_price", "10")
-        cy.enterText("#field_input_validityDate", "30. 9. 2021")
+        cy.waitForUI()
+        cy.get("#field_input_validityDate").click()
+        cy.get("div.popup").within(() => {
+            cy.get("i.right.icon").click()
+            cy.contains("15").click()
+        })
+        cy.waitForUI()
         cy.clickSave()
 
         cy.contains("POST")

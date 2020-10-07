@@ -4,7 +4,7 @@ context("Prodex Bank Account CRUD", () => {
     beforeEach(function () {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/payments/*").as("accountsLoading")
+        cy.route("GET", "/prodex/api/payments/bank-accounts/dwolla").as("accountsLoading")
         cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.route("POST", "/prodex/api/payments/**").as("verifyLoading")
 
@@ -14,6 +14,7 @@ context("Prodex Bank Account CRUD", () => {
 
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.openSettings()
+        cy.wait("@settingsLoading",{timeout: 100000})
         cy.contains("Bank Accounts").click()
 
         cy.wait("@accountsLoading",{timeout: 100000})

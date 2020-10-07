@@ -11,7 +11,7 @@ context("Prodex User CRUD", () => {
         cy.route("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
         cy.route("GET", "/prodex/api/settings/user").as("usersLogin")
         cy.route("POST", "/prodex/api/users").as("usersSave")
-        cy.viewport(2000, 800)
+        cy.viewport(2500, 1200)
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
