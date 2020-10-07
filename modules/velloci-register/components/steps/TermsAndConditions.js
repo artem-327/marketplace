@@ -63,7 +63,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
               {text => (
                 <>
                   {text}
-                  <LinkLabelCheckbox href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                  <LinkLabelCheckbox href='https://velloci.com/ecc' target='_blank'>
                     <FormattedMessage
                       id='velloci.termsAndConditions.electronicComunications.link'
                       defaultMessage='Electronic Communications Agreement'
@@ -97,7 +97,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
                     />
                   </LinkLabelCheckbox>
                   <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href='https://velloci.com/terms_of_use.pdf' target='_blank'>
+                  <LinkLabelCheckbox href='https://velloci.com/end_user_tos.pdf' target='_blank'>
                     <FormattedMessage id='velloci.termsAndConditions.termsOfUse.link' defaultMessage='Terms of Use' />
                   </LinkLabelCheckbox>
                 </>
@@ -121,21 +121,21 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
               {text => (
                 <>
                   {text}
-                  <LinkLabelCheckbox href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                  <LinkLabelCheckbox href='https://silamoney.com/evolve-bank-deposit-agreement/' target='_blank'>
                     <FormattedMessage
                       id='velloci.termsAndConditions.depositAccountAgreement.link'
                       defaultMessage='Deposit Account Agreement '
                     />
                   </LinkLabelCheckbox>
                   <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                  <LinkLabelCheckbox href='https://silamoney.com/terms-of-service/' target='_blank'>
                     <FormattedMessage
                       id='velloci.termsAndConditions.serviceTerms.link'
                       defaultMessage='Service terms '
                     />
                   </LinkLabelCheckbox>
                   <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                  <LinkLabelCheckbox href='https://silamoney.com/privacy-policy/' target='_blank'>
                     <FormattedMessage
                       id='velloci.termsAndConditions.privacyPolicy.link'
                       defaultMessage='Privacy Policy'
