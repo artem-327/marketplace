@@ -926,10 +926,8 @@ class Dashboard extends Component {
                 <SummaryRectangle
                   icon={<Package />}
                   data={companyProductsCount}
-                  title={isAdmin && !takeover ? 'Total Products' : 'Total Guest Products'}
-                  titleId={
-                    isAdmin && !takeover ? 'dashboard.totalProducts.title' : 'dashboard.totalGuestProducts.title'
-                  }
+                  title='Total Products'
+                  titleId='dashboard.totalProducts.title'
                   styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
                 />
               </>
