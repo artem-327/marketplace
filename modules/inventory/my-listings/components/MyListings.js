@@ -28,7 +28,6 @@ const defaultHiddenColumns = [
   'productNumber',
   'warehouse',
   'cost',
-  'broadcast',
   'minOrderQuantity',
   'splits',
   'condition',
@@ -980,7 +979,7 @@ class MyListings extends Component {
                   onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
                   data-test='my_inventory_add_btn'>
                   <PlusCircle />
-                  <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
+                  <FormattedMessage id='global.addListing' defaultMessage='Add Listing'>
                     {text => text}
                   </FormattedMessage>
                 </Button>
