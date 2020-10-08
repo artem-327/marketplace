@@ -88,7 +88,7 @@ class BidsReceived extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 145
+          width: 200
         },
         {
           name: 'orderQuantity',
@@ -519,7 +519,11 @@ class BidsReceived extends Component {
             } catch (e) {}
           })
         },
-        hidden: row => row.treeRoot
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       },
       {
         text: formatMessage({
@@ -531,7 +535,10 @@ class BidsReceived extends Component {
           await this.props.purchaseRequestedItem(row.id.split('_')[1])
           datagrid.loadData()
         },
-        hidden: row => row.treeRoot
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER')
       },
       {
         text: formatMessage({
@@ -543,7 +550,12 @@ class BidsReceived extends Component {
           await this.props.acceptRequestedItem(row.id.split('_')[1])
           datagrid.loadData()
         },
-        hidden: row => row.treeRoot
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       },
       {
         text: formatMessage({
@@ -555,7 +567,12 @@ class BidsReceived extends Component {
           await this.props.openSubmitOffer(row, true)
           datagrid.loadData()
         },
-        hidden: row => row.treeRoot
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       }
     ]
   }

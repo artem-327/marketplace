@@ -44,7 +44,7 @@ const StatusLabel = (status, type) => {
   if (status === 'NEW' && type === 'NORMAL') {
     text = <FormattedMessage id='wantedBoard.pendingOffer' defaultMessage='Pending Offer' />
     backgroundColor = '#2599d5'
-  } else if (status === 'REJECTED' && type === 'NORMAL') {
+  } else if ((status === 'REJECTED' && type === 'NORMAL') || (status === 'REJECTED' && type === 'COUNTER')) {
     text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
     backgroundColor = '#f16844'
   } else if (status === 'NEW' && type === 'COUNTER') {
@@ -57,24 +57,6 @@ const StatusLabel = (status, type) => {
     text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
     backgroundColor = '#84c225'
   }
-  //OLD
-  // switch (status) {
-  //   case 'NEW':
-  //     text = <FormattedMessage id='global.new' defaultMessage='New' />
-  //     backgroundColor = '#2599d5'
-  //     break
-  //   case 'ACCEPTED':
-  //   case 'PURCHASED':
-  //     text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
-  //     backgroundColor = '#84c225'
-  //     break
-  //   case 'REJECTED':
-  //     text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
-  //     backgroundColor = '#f16844'
-  //     break
-  //   default:
-  //     return null
-  // }
   return <LabelStatus backgroundColor={backgroundColor}>{text}</LabelStatus>
 }
 
@@ -133,14 +115,16 @@ function mapStateToProps(store, { datagrid }) {
               maximumFractionDigits={2}
               style='currency'
               currency={currency}
-              value={pro.cfHistoryLastAveragePricePerUOM} //OLD pro.pricePerUOM
+              value={pro.cfHistoryLastAveragePricePerUOM}
             />
           ),
           deliveredQuote: 'N/A',
+          cfHistoryLastStatus: getSafe(() => pro.cfHistoryLastStatus, ''),
+          cfHistoryLastType: getSafe(() => pro.cfHistoryLastType, ''),
           status: StatusLabel(
             getSafe(() => pro.cfHistoryLastStatus, ''),
             getSafe(() => pro.cfHistoryLastType, '')
-          ) //OLD new  getSafe(() => pro.status, '')
+          )
         }
       })
       const offersLength = purchaseRequestOffers.length

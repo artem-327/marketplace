@@ -106,7 +106,7 @@ export default function reducer(state = initialState, action) {
         filterValue: action.payload
       }
     }
-
+    case AT.WB_COUNTER_REQUESTED_ITEM_PENDING:
     case AT.WB_SUBMIT_OFFER_PENDING: {
       return {
         ...state,
@@ -114,6 +114,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_COUNTER_REQUESTED_ITEM_FULFILLED:
+    case AT.WB_COUNTER_REQUESTED_ITEM_REJECTED:
     case AT.WB_SUBMIT_OFFER_REJECTED:
     case AT.WB_SUBMIT_OFFER_FULFILLED: {
       return {
@@ -458,7 +460,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_PENDING:
-    case AT.WB_COUNTER_REQUESTED_ITEM_PENDING:
     case AT.WB_ACCEPT_REQUESTED_ITEM_PENDING:
     case AT.WB_PURCHASE_REQUESTED_ITEM_PENDING:
     case AT.WB_REJECT_REQUESTED_ITEM_PENDING:
@@ -469,7 +470,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_REJECTED:
-    case AT.WB_COUNTER_REQUESTED_ITEM_REJECTED:
     case AT.WB_ACCEPT_REQUESTED_ITEM_REJECTED:
     case AT.WB_PURCHASE_REQUESTED_ITEM_REJECTED:
     case AT.WB_REJECT_REQUESTED_ITEM_REJECTED:
@@ -480,7 +480,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_FULFILLED:
-    case AT.WB_COUNTER_REQUESTED_ITEM_FULFILLED:
     case AT.WB_ACCEPT_REQUESTED_ITEM_FULFILLED:
     case AT.WB_PURCHASE_REQUESTED_ITEM_FULFILLED:
     case AT.WB_REJECT_REQUESTED_ITEM_FULFILLED:

@@ -69,7 +69,7 @@ class BidsSent extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 135
+          width: 200
         }
       ],
       selectedRows: [],
@@ -126,7 +126,10 @@ class BidsSent extends Component {
           id: 'global.delete',
           defaultMessage: 'Delete'
         }),
-        hidden: row => row.hiddenActions,
+        hidden: row =>
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER',
         disabled: row => this.props.editedId === row.id,
         callback: row => {
           confirm(
@@ -161,7 +164,11 @@ class BidsSent extends Component {
           await this.props.openSubmitOffer(row, true)
           datagrid.loadData()
         },
-        hidden: row => row.cfHistoryLastType !== 'COUNTER'
+        hidden: row =>
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'NORMAL') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       },
       {
         text: formatMessage({
@@ -173,7 +180,11 @@ class BidsSent extends Component {
           await this.props.acceptRequestedItem(row.id)
           datagrid.loadData()
         },
-        hidden: row => row.cfHistoryLastType !== 'COUNTER'
+        hidden: row =>
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'NORMAL') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       }
     ]
   }

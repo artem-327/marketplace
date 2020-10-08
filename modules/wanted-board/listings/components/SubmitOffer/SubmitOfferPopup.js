@@ -531,10 +531,15 @@ class SubmitOfferPopup extends React.Component {
       productOffer,
       purchaseRequest: popupValues.id
     }
+
     try {
-      this.props.isSecondPage
-        ? await counterRequestedItem(popupValues.id, this.clean(body)) //CHECK new BE
-        : await submitOffer(this.clean(body)) //CHECK new BE
+      if (this.props.isSecondPage) {
+        delete body.productOffer
+        delete body.purchaseRequest
+        await counterRequestedItem(popupValues.id, this.clean(body)) //CHECK new BE
+      } else {
+        await submitOffer(this.clean(body)) //CHECK new BE
+      }
     } catch (error) {
       console.error(error)
     } finally {
@@ -1075,10 +1080,11 @@ class SubmitOfferPopup extends React.Component {
                               </FormattedMessage>
                             </Button>
                             <SubmitButton
+                              loading={purchaseRequestPending}
                               primary
                               type='submit'
                               onClick={this.submitForm}
-                              disabled={this.state.select === ''}>
+                              disabled={this.state.select === '' || purchaseRequestPending}>
                               <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
@@ -1111,7 +1117,7 @@ function mapStateToProps(store, props) {
     popupValues: props.rawData,
     currencySymbol: '$',
     options: [
-      { key: 'PARTIAL', text: 'Partial fulfillment of a reqeust', value: 'PARTIAL' },
+      { key: 'PARTIAL', text: 'Partial fulfillment of a request', value: 'PARTIAL' },
       {
         key: 'COMPLETE_SCHEDULE',
         text: 'Complete fulfillment of the request over a defined period of time',
