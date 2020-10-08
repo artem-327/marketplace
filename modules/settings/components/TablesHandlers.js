@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
-import { Header, Menu, Button, Checkbox, Input, Dropdown, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { Header, Menu, Button, Checkbox, Input, Dropdown, Grid, GridRow, GridColumn, Popup } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 import Router from 'next/router'
 import styled from 'styled-components'
@@ -140,13 +140,14 @@ const CustomUploadCloud = styled(UploadCloud)`
 `
 
 const PlaidButton = styled(PlaidLink)`
-  cursor: pointer !important;
+  cursor: ${props => (props.disabled ? 'not-allowed !important' : 'pointer !important')};
+  pointer-events: ${props => (props.disabled ? 'none !important' : 'auto !important')};
   margin-right: 4px;
   width: 200px !important;
   box-shadow: none !important;
   border: none !important;
   color: #ffffff !important;
-  background-color: #2599d5 !important;
+  background-color: ${props => (props.disabled ? '#bde0f2 !important' : '#2599d5 !important')};
   height: 40px !important;
   border-radius: 3px !important;
   font-weight: 500 !important;
@@ -602,23 +603,36 @@ class TablesHandlers extends Component {
               )}
 
               <div className='column'>
-                {bankAccTab &&
-                  bankAccounts.addButton &&
-                  paymentProcessor === 'VELLOCI' &&
-                  vellociToken &&
-                  vellociBusinessId && (
-                    <PlaidButton
-                      token={vellociToken}
-                      publicKey={vellociBusinessId}
-                      onExit={this.onExit}
-                      onSuccess={this.onSuccess}
-                      onEvent={this.onEvent}>
-                      <PlusCircle />
-                      <div style={{ marginLeft: '10px' }}>
-                        <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                {bankAccTab && bankAccounts.addButton && paymentProcessor === 'VELLOCI' && (
+                  <Popup
+                    size='small'
+                    disabled={vellociToken || vellociBusinessId}
+                    header={
+                      <FormattedMessage
+                        id='settings.velloci.difficulties'
+                        defaultMessage='Velloci is experiencing some difficulties, please try again later'
+                      />
+                    }
+                    trigger={
+                      <div>
+                        <PlaidButton
+                          disabled={!vellociToken || !vellociBusinessId}
+                          token={vellociToken}
+                          publicKey={vellociBusinessId}
+                          onExit={this.onExit}
+                          onSuccess={this.onSuccess}
+                          onEvent={this.onEvent}>
+                          <PlusCircle />
+                          <div style={{ marginLeft: '10px' }}>
+                            <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>
+                              {text => text}
+                            </FormattedMessage>
+                          </div>
+                        </PlaidButton>
                       </div>
-                    </PlaidButton>
-                  )}
+                    }
+                  />
+                )}
                 {(bankAccTab && bankAccounts.addButton && paymentProcessor !== 'VELLOCI') || !bankAccTab ? (
                   <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
                     <PlusCircle />
