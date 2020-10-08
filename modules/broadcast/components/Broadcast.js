@@ -613,11 +613,15 @@ class Broadcast extends Component {
 
     const { templateInitialValues } = this.state
 
-    let totalCompanies = treeData.all(n => n.model.type === 'company').length
+    let totalCompanies = _.uniqBy(
+      treeData.all(n => n.model.type === 'company'),
+      n => n.model.id
+    ).length
     let totalBranches = treeData.all(n => !n.hasChildren() && n.model.type === 'branch').length
 
-    let broadcastingCompanies = treeData.all(
-      n => getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && n.model.type === 'company'
+    let broadcastingCompanies = _.uniqBy(
+      treeData.all(n => getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && n.model.type === 'company'),
+      n => n.model.id
     ).length
     let broadcastingBranches = treeData.all(
       n => !n.hasChildren() && n.model.broadcast === 1 && n.model.type === 'branch'
