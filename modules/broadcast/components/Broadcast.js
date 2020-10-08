@@ -613,15 +613,19 @@ class Broadcast extends Component {
 
     const { templateInitialValues } = this.state
 
-    let total =
-      this.props.filter.category === 'region'
-        ? treeData.all(n => !n.hasChildren()).length
-        : treeData.all(n => !n.hasChildren() && n.model.type === 'branch').length
+    let totalCompanies = _.uniqBy(
+      treeData.all(n => n.model.type === 'company'),
+      n => n.model.id
+    ).length
+    let totalBranches = treeData.all(n => !n.hasChildren() && n.model.type === 'branch').length
 
-    let broadcastingTo =
-      this.props.filter.category === 'region'
-        ? treeData.all(n => !n.hasChildren() && getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1).length
-        : treeData.all(n => !n.hasChildren() && n.model.broadcast === 1 && n.model.type === 'branch').length
+    let broadcastingCompanies = _.uniqBy(
+      treeData.all(n => getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && n.model.type === 'company'),
+      n => n.model.id
+    ).length
+    let broadcastingBranches = treeData.all(
+      n => !n.hasChildren() && n.model.broadcast === 1 && n.model.type === 'branch'
+    ).length
 
     return (
       <>
@@ -648,10 +652,15 @@ class Broadcast extends Component {
                       />
                     }
                   />
-                  <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Visible to' />:{' '}
+                  <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Visible to' />{' '}
                   <strong>
-                    {broadcastingTo}/{total}
+                    {broadcastingBranches}/{totalBranches}
                   </strong>
+                  <FormattedMessage id='broadcast.broadcastingBranches' defaultMessage=' branches of ' />
+                  <strong>
+                    {broadcastingCompanies}/{totalCompanies}
+                  </strong>
+                  <FormattedMessage id='broadcast.broadcastingCompanies' defaultMessage=' companies' />
                 </Message>
                 <Form>
                   {asSidebar ? (
