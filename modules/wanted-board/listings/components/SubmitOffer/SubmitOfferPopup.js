@@ -406,6 +406,12 @@ class SubmitOfferPopup extends React.Component {
 
   validationSchema = () =>
     Yup.lazy(values => {
+      const { matchingOfferInfo } = this.props
+      const sumPkgAmount =
+        getSafe(() => values.items.length, '') > 1
+          ? values.items.reduce((acc, cur) => Number(acc.pkgAmount) + Number(cur.pkgAmount))
+          : Number(getSafe(() => values.items[0].pkgAmount, 0))
+
       let fulfillmentType = ''
       if (this.state.nextSubmit)
         fulfillmentType = { fulfillmentType: Yup.string().required(errorMessages.requiredMessage) }
@@ -421,6 +427,39 @@ class SubmitOfferPopup extends React.Component {
         ...fulfillmentType,
         items: Yup.array().of(
           Yup.lazy(v => {
+            let pkgAmount = {
+              pkgAmount: Yup.number()
+                .positive(errorMessages.positive)
+                .typeError(errorMessages.requiredMessage)
+                .required(errorMessages.requiredMessage)
+            }
+
+            if (getSafe(() => matchingOfferInfo.maximumPackageAmount, 0) < sumPkgAmount) {
+              pkgAmount = {
+                pkgAmount: Yup.number()
+                  .positive(errorMessages.positive)
+                  .typeError(errorMessages.requiredMessage)
+                  .required(errorMessages.requiredMessage)
+                  .test(
+                    'is_over_max',
+                    errorMessages.maximum(matchingOfferInfo.maximumPackageAmount),
+                    () => sumPkgAmount < matchingOfferInfo.maximumPackageAmount
+                  )
+              }
+            } else if (getSafe(() => matchingOfferInfo.minimumPackageAmount, 0) > sumPkgAmount) {
+              pkgAmount = {
+                pkgAmount: Yup.number()
+                  .positive(errorMessages.positive)
+                  .typeError(errorMessages.requiredMessage)
+                  .required(errorMessages.requiredMessage)
+                  .test(
+                    'is_over_min',
+                    errorMessages.minimum(matchingOfferInfo.minimumPackageAmount),
+                    () => sumPkgAmount > matchingOfferInfo.minimumPackageAmount
+                  )
+              }
+            }
+
             let fulfilledAt = ''
             if (values.fulfillmentType === 'COMPLETE_SCHEDULE')
               fulfilledAt = {
@@ -431,12 +470,10 @@ class SubmitOfferPopup extends React.Component {
                   })
                 )
               }
+
             return Yup.object().shape({
               ...fulfilledAt,
-              pkgAmount: Yup.number()
-                .positive(errorMessages.positive)
-                .typeError(errorMessages.requiredMessage)
-                .required(errorMessages.requiredMessage),
+              ...pkgAmount,
               pricePerUOM: Yup.number()
                 .positive(errorMessages.positive)
                 .typeError(errorMessages.requiredMessage)
@@ -447,9 +484,17 @@ class SubmitOfferPopup extends React.Component {
       })
     })
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { popupValues } = this.props
     if (this.props.isSecondPage) {
       this.setState({ nextSubmit: true, select: 0 })
+      try {
+        if (popupValues.purchaseRequest.id && popupValues.productOffer.id) {
+          await this.props.matchingProductOfferInfo(popupValues.purchaseRequest.id, popupValues.productOffer.id)
+        }
+      } catch (error) {
+        console.error(error)
+      }
       return
     }
     if (!this.props.datagrid.loading) this.handleDatagridResult()
@@ -499,7 +544,15 @@ class SubmitOfferPopup extends React.Component {
       return
     }
 
-    const { closePopup, submitOffer, popupValues, rows, counterRequestedItem, isSecondPage } = this.props
+    const {
+      closePopup,
+      submitOffer,
+      popupValues,
+      rows,
+      counterRequestedItem,
+      isSecondPage,
+      matchingOfferInfo
+    } = this.props
     let expiresAt = null
     if (lotExpirationDate) {
       expiresAt = moment(getStringISODate(lotExpirationDate)).endOf('day').format()
@@ -808,6 +861,22 @@ class SubmitOfferPopup extends React.Component {
     )
   }
 
+  getPkgAmount = () => {
+    const { matchingOfferInfo, popupValues } = this.props
+    let result = ''
+    if (
+      getSafe(() => popupValues.cfHistoryLastFulfillmentType, '') === 'COMPLETE_IMMIDIATE' &&
+      getSafe(() => matchingOfferInfo.automaticPackageAmount, '')
+    ) {
+      result = matchingOfferInfo.automaticPackageAmount
+    } else if (getSafe(() => popupValues.pkgAmount, '')) {
+      result = popupValues.pkgAmount
+    } else if (getSafe(() => popupValues.cfHistoryLastPkgAmount, '')) {
+      result = popupValues.cfHistoryLastPkgAmount
+    }
+    return result
+  }
+
   render() {
     const {
       intl: { formatMessage },
@@ -820,9 +889,8 @@ class SubmitOfferPopup extends React.Component {
     } = this.props
     const { columns } = this.state
     const rows = this.getRows()
-
     const qtyPart = getSafe(() => popupValues.unit.nameAbbreviation, '')
-
+    const pkgAmount = this.getPkgAmount()
     return (
       <>
         <ToggleForm
@@ -834,17 +902,22 @@ class SubmitOfferPopup extends React.Component {
           validateOnChange
           enableReinitialize
           initialValues={{
-            expirationDate: '',
+            expirationDate: getSafe(() => popupValues.expiresAt, ''),
             productName: getSafe(() => popupValues.productOffer.companyProduct.companyGenericProduct.name, ''),
-            fulfillmentType: '',
+            fulfillmentType: getSafe(() => popupValues.cfHistoryLastFulfillmentType, ''),
             items: [
               {
-                fulfilledAt: '',
-                pkgAmount: getSafe(() => popupValues.pkgAmount, ''),
-                pricePerUOM: getSafe(() => popupValues.pricePerUOM, ''),
+                fulfilledAt: getSafe(() => popupValues.fulfilledAt, ''),
+                pkgAmount,
+                pricePerUOM: getSafe(() => popupValues.pricePerUOM, '')
+                  ? popupValues.pricePerUOM
+                  : getSafe(() => popupValues.cfHistoryLastAveragePricePerUOM, ''),
                 total:
                   getSafe(() => popupValues.pkgAmount, '') && getSafe(() => popupValues.pricePerUOM, '')
                     ? popupValues.pkgAmount * popupValues.pricePerUOM
+                    : getSafe(() => popupValues.cfHistoryLastAveragePricePerUOM, '') &&
+                      getSafe(() => popupValues.cfHistoryLastPkgAmount, '')
+                    ? popupValues.cfHistoryLastAveragePricePerUOM * popupValues.cfHistoryLastPkgAmount
                     : ''
               }
             ]

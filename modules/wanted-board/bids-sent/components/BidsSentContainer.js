@@ -41,7 +41,7 @@ const StatusLabel = (status, type) => {
   } else if (status === 'NEW' && type === 'COUNTER') {
     text = <FormattedMessage id='wantedBoard.pendingCounterOffer' defaultMessage='Pending Counter Offer' />
     backgroundColor = '#2599d5'
-  } else if ((status === 'ACCEPTED_BY_BUYER' && type === 'NORMAL') || (status === '32' && type === 'COUNTER ')) {
+  } else if ((status === 'ACCEPTED_BY_BUYER' && type === 'NORMAL') || (status === '32' && type === 'COUNTER')) {
     text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
     backgroundColor = '#84c225'
   }

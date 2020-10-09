@@ -203,3 +203,8 @@ export const counterRequestedItem = (id, body) => ({
 export const falseIsSecondPage = () => ({
   type: AT.WB_FALSE_SECOND_PAGE
 })
+
+export const matchingProductOfferInfo = (id, productOfferId) => ({
+  type: AT.WB_MATCHING_PRODUCT_OFFER_INFO,
+  payload: api.matchingProductOfferInfo(id, productOfferId)
+})

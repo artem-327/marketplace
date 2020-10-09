@@ -41,7 +41,8 @@ export const initialState = {
   tableHandlersFiltersBidsReceived: null,
   tableHandlersFiltersBidsSent: null,
   openSidebar: false,
-  isSecondPage: false
+  isSecondPage: false,
+  matchingOfferInfo: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -459,6 +460,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_MATCHING_PRODUCT_OFFER_INFO_PENDING:
     case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_PENDING:
     case AT.WB_ACCEPT_REQUESTED_ITEM_PENDING:
     case AT.WB_PURCHASE_REQUESTED_ITEM_PENDING:
@@ -469,6 +471,7 @@ export default function reducer(state = initialState, action) {
       return { ...state, loading: true }
     }
 
+    case AT.WB_MATCHING_PRODUCT_OFFER_INFO_REJECTED:
     case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_REJECTED:
     case AT.WB_ACCEPT_REQUESTED_ITEM_REJECTED:
     case AT.WB_PURCHASE_REQUESTED_ITEM_REJECTED:
@@ -493,6 +496,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         [payload.variable]: payload.value
+      }
+    }
+
+    case AT.WB_MATCHING_PRODUCT_OFFER_INFO_FULFILLED: {
+      return {
+        ...state,
+        matchingOfferInfo: payload
       }
     }
 

@@ -52,7 +52,7 @@ const StatusLabel = (status, type) => {
     backgroundColor = '#2599d5'
   } else if (
     (status === 'ACCEPTED_BY_BUYER' && type === 'NORMAL') ||
-    (status === 'ACCEPTED_BY_SELLER' && type === 'COUNTER ')
+    (status === 'ACCEPTED_BY_SELLER' && type === 'COUNTER')
   ) {
     text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
     backgroundColor = '#84c225'

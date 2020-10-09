@@ -100,3 +100,9 @@ export const counterRequestedItem = (id, body) => {
     .patch(`/prodex/api/purchase-request-offers/id/${id}/counter-last-offer`, body)
     .then(response => response.data)
 }
+
+export const matchingProductOfferInfo = (id, productOfferId) => {
+  return api
+    .get(`/prodex/api/purchase-requests/id/${id}/matching-product-offer-info/${productOfferId}`)
+    .then(response => response.data)
+}
