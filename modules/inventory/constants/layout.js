@@ -47,13 +47,19 @@ export const FlexSidebar = styled(Sidebar)`
       }      
     }
     > .ui.multiple.selection.dropdown {
+      padding: 7.5px 11px;
       > a.ui.label {
-        margin: 0;
-        padding: 1px 0.714285714em;
+        margin: 1.5px;
+        padding: 3px 0.357142857em;
         box-shadow: none;
         background: none;
-        color: #404040;
+        border-radius: 2px;
+        background-color: #edeef2;
+        color: #848893;
         font-weight: normal;
+      }
+      > .default.text {
+        margin: 3px 15px;
       }
     }
   }

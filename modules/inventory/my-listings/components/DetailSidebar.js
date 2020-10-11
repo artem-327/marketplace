@@ -1216,7 +1216,7 @@ class DetailSidebar extends Component {
                                     </CustomGridRow>
                                   )}
                                   <GridRow>
-                                    <GridColumn width={8}>
+                                    <GridColumn>
                                       <FormField>
                                         <FormattedMessage
                                           id='addInventory.companyProduct'
@@ -1230,14 +1230,28 @@ class DetailSidebar extends Component {
                                         </FormattedMessage>
                                         <Dropdown
                                           name='edit.product'
-                                          options={this.props.autocompleteData.map((el, i) => ({
-                                            key: i,
-                                            text: `${getSafe(() => el.intProductCode, '')} ${getSafe(
-                                              () => el.intProductName,
-                                              ''
-                                            )}`,
-                                            value: el.id
-                                          }))}
+                                          options={this.props.autocompleteData.map((el, i) => {
+                                            const code = getSafe(() => el.intProductCode, '')
+                                            const name = getSafe(() => el.intProductName, '')
+                                            const dispName = code && name
+                                              ? `${name} (${code})`
+                                              : (code ? code : name)
+                                            const packagingSize = getSafe(() => el.packagingSize, '')
+                                            const packagingUnit = getSafe(() => el.packagingUnit.nameAbbreviation, '')
+                                            const packagingType = getSafe(() => el.packagingType.name, '')
+                                            return {
+                                              key: i,
+                                              text:
+                                                <>
+                                                  {`${dispName}: ${packagingSize} ${packagingUnit} `}
+                                                  <span style={{ textTransform: 'capitalize' }}>
+                                                    {packagingType}
+                                                  </span>
+                                                </>,
+                                              value: el.id
+
+                                            }
+                                          })}
                                           inputProps={{
                                             placeholder: (
                                               <FormattedMessage
@@ -1263,7 +1277,9 @@ class DetailSidebar extends Component {
                                         />
                                       </FormField>
                                     </GridColumn>
-                                    <GridColumn width={8}>
+                                  </GridRow>
+                                  <GridRow>
+                                    <GridColumn>
                                       <Dropdown
                                         label={
                                           <FormattedMessage id='addInventory.grades' defaultMessage='Grades'>
