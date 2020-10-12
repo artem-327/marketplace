@@ -550,20 +550,24 @@ class Listings extends Component {
                 }))
                 .value()
             }
-            renderGroupLabel={({ row: { value }, groupLength }) => {
-              const [name, number, id, tagsNames] = value.split('_')
-              // const numberArray = number.split(' & ')
-              const tagNames = tagsNames ? tagsNames.split(',') : []
-              return (
-                <span>
-                  <span className='flex row right'>
-                    <span>
-                      {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+            renderGroupLabel={({ row: { value }, groupLength }) => null
+              /* #35127
+              {
+                const [name, number, id, tagsNames] = value.split('_')
+                // const numberArray = number.split(' & ')
+                const tagNames = tagsNames ? tagsNames.split(',') : []
+                return (
+                  <span>
+                    <span className='flex row right'>
+                      <span>
+                        {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+                      </span>
                     </span>
                   </span>
-                </span>
-              )
-            }}
+                )
+              }
+              */
+            }
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
