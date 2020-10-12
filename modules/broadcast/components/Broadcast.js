@@ -752,7 +752,7 @@ class Broadcast extends Component {
                   onSubmit={async (values, { setSubmitting, setFieldValue }) => {
                     let payload = {
                       mappedBroadcastRules: {
-                        ...this.getFilteredTree().model.rule
+                        ...this.treeToModel(undefined, undefined, true)
                       },
                       name: values.name
                     }
