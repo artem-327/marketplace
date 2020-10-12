@@ -181,14 +181,19 @@ export const passwordValidationAnyChar = () =>
     .required(errorMessages.requiredMessage)
     .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
 
-export const phoneValidation = () =>
+export const phoneValidation = (minLength = 5) =>
   Yup.string()
     .trim()
     //.test('phone-validation', errorMessages.invalidPhoneNumber, (val) => val && validator.isMobilePhone(val + '', null, { strictMode: true })) // tohle nejak nefunguje
     .test(
       'phone-validation',
       errorMessages.invalidPhoneNumber,
-      val => !val || (val[0] === '+' && val.length > 8 && !val.includes('_'))
+      val => !val || (val[0] === '+' && !val.includes('_'))
+    )
+    .test(
+      'phone-length-validation',
+      errorMessages.minDigits(minLength),
+      val => !val || (val[0] === '+' && val.length > minLength)
     ) // Delka vcetne '+' a predcisli, '+' povinne (tzn. bylo zvolene predcisli)
 
 export const dateValidation = (required = true) => {
