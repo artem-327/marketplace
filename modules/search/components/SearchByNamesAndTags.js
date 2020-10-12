@@ -54,14 +54,18 @@ class SearchByNamesAndTags extends Component {
       filterTags: [],
       filterTagsValues: [],
       active: [],
-      usedOptions: []
+      usedOptions: [],
+      searchQuery: ''
     }
   }
 
   componentDidMount() {
     const { initFilterState } = this.props
     if (initFilterState) {
-      this.setState({ active: initFilterState.active, usedOptions: initFilterState.usedOptions })
+      this.setState({
+        active: initFilterState.active,
+        usedOptions: initFilterState.usedOptions
+      })
     }
   }
 
@@ -69,7 +73,12 @@ class SearchByNamesAndTags extends Component {
     this.props.clearProductOffers()
   }
 
-  handleSearchChange = debounce((e, { searchQuery }) => {
+  handleSearchChange = (e, data) => {
+    this.setState({ searchQuery: data.searchQuery })
+    this.handleSearchQuery(e, data)
+  }
+
+  handleSearchQuery = debounce((e, { searchQuery }) => {
     e && e.persist()
     try {
       this.props.searchProductOffersInventory(searchQuery, this.props.isMarketplace)
@@ -150,7 +159,7 @@ class SearchByNamesAndTags extends Component {
       loading,
       intl: { formatMessage }
     } = this.props
-    const { active, usedOptions } = this.state
+    const { active, usedOptions, searchQuery } = this.state
 
     const searchedTags = tags.slice().filter(el =>
       !active.length || !active.some(opt => opt === el.value))
@@ -173,6 +182,7 @@ class SearchByNamesAndTags extends Component {
             options={allOptions}
             value={active}
             multiple
+            searchQuery={searchQuery}
             clearable
             ref={this.refDropdownMenu}
             placeholder={formatMessage({
