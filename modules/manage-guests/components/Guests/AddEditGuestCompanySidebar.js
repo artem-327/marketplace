@@ -78,7 +78,8 @@ const initialFormValues = {
   },
   primaryUser: {
     email: '',
-    name: ''
+    name: '',
+    phone: ''
   }
 }
 
@@ -105,7 +106,8 @@ class AddEditGuestCompanySidebar extends React.Component {
           // if (primaryUserRequired)
           return Yup.object().shape({
             email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-            name: Yup.string().trim().min(2, minLength).required(minLength)
+            name: Yup.string().trim().min(2, minLength).required(minLength),
+            phone: phoneValidation()
           })
           // return Yup.mixed().notRequired()
         })
@@ -192,6 +194,8 @@ class AddEditGuestCompanySidebar extends React.Component {
         onReset={closePopup}
         render={props => {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
+
+          console.log('!!!!!!!!!! aaaaa values', values)
           return (
             <CustomForm autoComplete='off'>
               <FlexSidebar
@@ -265,6 +269,7 @@ class AddEditGuestCompanySidebar extends React.Component {
                         errors={errors}
                         touched={touched}
                         isSubmitting={isSubmitting}
+                        clearable
                       />
                     </FormGroup>
 
