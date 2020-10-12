@@ -376,8 +376,8 @@ export const validateTime = () =>
 export const multipleEmails = () =>
   Yup.string()
     .trim()
-    .test('emails', errorMessages.invalidEmail, inputEmails => {
-      const emails = inputEmails.split(';')
+    .test('email-validation', errorMessages.invalidEmail, function(inputEmails) {
+      const emails = inputEmails ? inputEmails.split(';') : []
       return !emails.some(email => {
         return !Yup.string().trim().email().isValidSync(email)
       })
