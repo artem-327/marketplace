@@ -809,7 +809,7 @@ class Filter extends Component {
           </GridColumn>
           <GridColumn width={8}>
             <FormField>
-              <FormattedMessage id='filter.warehouse' defaultMessage='Warehouse'>
+              <FormattedMessage id='filter.location' defaultMessage='Location'>
                 {text => text}
               </FormattedMessage>
               <SmallGrid>
