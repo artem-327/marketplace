@@ -11,7 +11,6 @@ import get from 'lodash/get'
 import styled from 'styled-components'
 import { getSafe } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
-import securePage from '~/hocs/securePage'
 
 import {
   openPopup,
@@ -667,4 +666,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default securePage(connect(mapStateToProps, mapDispatchToProps)(injectIntl(BankAccountsTable)))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(BankAccountsTable))
