@@ -47,6 +47,10 @@ const securePageHoc = Page =>
     static propTypes = {
       isAuthenticated: PropTypes.bool.isRequired
     }
+    constructor(props) {
+      super(props)
+      this.count = 0
+    }
 
     logoutEvent = eve => {
       if (eve.key === 'logout') {
@@ -60,15 +64,18 @@ const securePageHoc = Page =>
 
     componentWillUnmount() {
       window.removeEventListener('storage', this.logoutEvent, false)
+      delete this.count
     }
 
     render() {
       const { auth } = this.props
+      //hack for only one render component Timeout
+      this.count = this.count + 1
 
       return (
         <SecureContext.Provider value={{ auth }}>
           <Page {...this.props} />
-          <Timeout />
+          {this.count === 1 && <Timeout />}
         </SecureContext.Provider>
       )
     }

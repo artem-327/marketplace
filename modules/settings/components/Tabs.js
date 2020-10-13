@@ -42,7 +42,7 @@ class Tabs extends Component {
 
   handleTabClick = tab => {
     let { currentTab, tabChanged } = this.props
-      tabChanged(tab, currentTab)
+    tabChanged(tab, currentTab)
   }
 
   render() {
