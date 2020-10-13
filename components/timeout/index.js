@@ -78,7 +78,7 @@ export default class TimeoutWarning extends Component {
   }
 
   componentDidMount() {
-    this.timeoutMount = setTimeout(this.resetIdleTimer, 30000)
+    this.timeoutMount = setTimeout(this.resetIdleTimer, 15000)
   }
 
   render() {
