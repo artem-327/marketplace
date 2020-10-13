@@ -158,9 +158,6 @@ class Broadcast extends Component {
     let copy = this.props.treeData
     const { filter } = this.props
 
-    console.log('!!!!!!!!!! updateInTreeData copy', copy)
-    console.log('!!!!!!!!!! updateInTreeData node', node)
-
     if (!node.isRoot()) {
       let found = copy.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)
       let index = found.getIndex()
@@ -187,9 +184,9 @@ class Broadcast extends Component {
           if (!n.isRoot()) {
             let found = copy.first(c => c.model.id === n.model.rule.id && c.model.type === n.model.rule.type)
 
-              let index = found.getIndex()
-              let path = found.getPath()
-              let parent = path[path.length - 2]
+            let index = found.getIndex()
+            let path = found.getPath()
+            let parent = path[path.length - 2]
 
             if (found && index) {
               // Remove node
@@ -209,8 +206,9 @@ class Broadcast extends Component {
           ...copy.model,
           rule: {
             ...this.treeToModel(copy),
-            ...node.model.rule,
-          }}
+            ...node.model.rule
+          }
+        }
       })
     }
     return copy
@@ -314,7 +312,6 @@ class Broadcast extends Component {
           }))
       }
     }
-    console.log('!!!!!!!!!! getFilteredTree presets', presets)
 
     let preset = presets[filterCategory]
 
@@ -357,7 +354,6 @@ class Broadcast extends Component {
       return obj
     }
 
-    console.log('!!!!!!!!!! treeToModel tree', tree)
     return {
       ...extractFromRule(getSafe(() => tree.model.rule, tree.model)),
       broadcast: getBroadcast(tree.getPath()[0]),
