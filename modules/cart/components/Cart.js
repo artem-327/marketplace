@@ -43,7 +43,7 @@ export default class Cart extends Component {
   }
 
   handleContinueShopping = () => {
-    Router.push('/marketplace/all')
+    Router.push('/marketplace/listings')
   }
 
   handleContinue = () => {
