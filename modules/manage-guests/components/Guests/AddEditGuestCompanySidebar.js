@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Form, FormGroup, Header, Loader, Dimmer } from 'semantic-ui-react'
+import { Form, FormGroup, Header, Loader, Dimmer, Segment } from 'semantic-ui-react'
 import { Formik } from 'formik'
 
 import * as Actions from '../../actions'
@@ -33,6 +33,10 @@ import ErrorFocus from '~/components/error-focus'
 
 const CustomForm = styled(Form)`
   flex-grow: 0 !important;
+`
+
+const CustomSegment = styled(Segment)`
+  background-color: #f8f9fb !important;
 `
 
 const initialFormValues = {
@@ -78,7 +82,8 @@ const initialFormValues = {
   },
   primaryUser: {
     email: '',
-    name: ''
+    name: '',
+    phone: ''
   }
 }
 
@@ -105,7 +110,8 @@ class AddEditGuestCompanySidebar extends React.Component {
           // if (primaryUserRequired)
           return Yup.object().shape({
             email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-            name: Yup.string().trim().min(2, minLength).required(minLength)
+            name: Yup.string().trim().min(2, minLength).required(minLength),
+            phone: phoneValidation()
           })
           // return Yup.mixed().notRequired()
         })
@@ -208,137 +214,143 @@ class AddEditGuestCompanySidebar extends React.Component {
                 </HighSegment>
                 <FlexContent>
                   <>
-                    <FormGroup widths='equal' data-test='guests_client_company_primaryUserNameEmail_inp'>
-                      <Input
-                        label={
-                          <>
-                            <FormattedMessage id='global.companyName' defaultMessage='Company Name' />
-                            <Required />
-                          </>
-                        }
-                        name='name'
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'global.enterCompanyName',
-                            defaultMessage: 'Enter Company Name'
-                          })
-                        }}
-                      />
-                      <Input
-                        label={
-                          <>
-                            <FormattedMessage id='global.companyAdmin' defaultMessage='Company Admin' />
-                            <Required />
-                          </>
-                        }
-                        name='primaryUser.name'
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'global.enterCompanyAdmin',
-                            defaultMessage: 'Enter Company Admin'
-                          })
-                        }}
-                      />
-                    </FormGroup>
-                    <FormGroup widths='equal' data-test='guests_client_company_primaryUserTitlePhone_inp'>
-                      <Input
-                        label={
-                          <>
-                            <FormattedMessage id='global.adminEmail' defaultMessage='Admin Email' />
-                            <Required />
-                          </>
-                        }
-                        name='primaryUser.email'
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'global.enterAdminEmail',
-                            defaultMessage: 'Enter Admin Email'
-                          })
-                        }}
-                      />
-                      <PhoneNumber
-                        label={<FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />}
-                        name='primaryUser.phone'
-                        values={values}
-                        setFieldValue={setFieldValue}
-                        setFieldTouched={setFieldTouched}
-                        errors={errors}
-                        touched={touched}
-                        isSubmitting={isSubmitting}
-                      />
-                    </FormGroup>
+                    <CustomSegment>
+                      <FormGroup widths='equal' data-test='guests_client_company_primaryUserNameEmail_inp'>
+                        <Input
+                          label={
+                            <>
+                              <FormattedMessage id='global.companyName' defaultMessage='Company Name' />
+                              <Required />
+                            </>
+                          }
+                          name='name'
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'global.enterCompanyName',
+                              defaultMessage: 'Enter Company Name'
+                            })
+                          }}
+                        />
+                        <Input
+                          label={
+                            <>
+                              <FormattedMessage id='global.companyAdmin' defaultMessage='Company Admin' />
+                              <Required />
+                            </>
+                          }
+                          name='primaryUser.name'
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'global.enterCompanyAdmin',
+                              defaultMessage: 'Enter Company Admin'
+                            })
+                          }}
+                        />
+                      </FormGroup>
+                      <FormGroup widths='equal' data-test='guests_client_company_primaryUserTitlePhone_inp'>
+                        <Input
+                          label={
+                            <>
+                              <FormattedMessage id='global.adminEmail' defaultMessage='Admin Email' />
+                              <Required />
+                            </>
+                          }
+                          name='primaryUser.email'
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'global.enterAdminEmail',
+                              defaultMessage: 'Enter Admin Email'
+                            })
+                          }}
+                        />
+                        <PhoneNumber
+                          label={<FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />}
+                          name='primaryUser.phone'
+                          values={values}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          errors={errors}
+                          touched={touched}
+                          isSubmitting={isSubmitting}
+                          clearable
+                        />
+                      </FormGroup>
+                    </CustomSegment>
 
                     <Header as='h3'>
                       <FormattedMessage id='global.primaryBranchAddress' defaultMessage='Primary Branch Address' />
                     </Header>
-                    <FormGroup widths='equal' data-test='guests_client_company_primaryBranchName_inp'>
-                      <Input
-                        label={
-                          <>
-                            <FormattedMessage id='global.name' defaultMessage='Name' />
-                            <Required />
-                          </>
-                        }
-                        name='primaryBranch.deliveryAddress.addressName'
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'global.enterPrimaryBranchAddress',
-                            defaultMessage: 'Enter Primary Branch Address'
-                          })
-                        }}
-                      />
-                    </FormGroup>
-                    <FormGroup widths='equal' data-test='guests_client_company_primaryBranchNameEmailPhone_inp'>
-                      <Input
-                        inputProps={{ fluid: true }}
-                        label={
-                          <>
-                            <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />
-                            <Required />
-                          </>
-                        }
-                        name='primaryBranch.deliveryAddress.contactName'
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'global.enterContactName',
-                            defaultMessage: 'Enter Contact Name'
-                          })
-                        }}
-                      />
-                      <PhoneNumber
-                        label={
-                          <>
-                            <FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />
-                            <Required />
-                          </>
-                        }
-                        name='primaryBranch.deliveryAddress.contactPhone'
-                        values={values}
-                        setFieldValue={setFieldValue}
-                        setFieldTouched={setFieldTouched}
-                        errors={errors}
-                        touched={touched}
-                        isSubmitting={isSubmitting}
-                      />
-                    </FormGroup>
-                    <FormGroup widths='equal' data-test='guests_client_company_primaryBranchNameEmailPhone_inp'>
-                      <Input
-                        inputProps={{ fluid: true }}
-                        label={
-                          <>
-                            <FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />
-                            <Required />
-                          </>
-                        }
-                        name='primaryBranch.deliveryAddress.contactEmail'
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'global.enterContactEmail',
-                            defaultMessage: 'Enter Contact Email'
-                          })
-                        }}
-                      />
-                    </FormGroup>
+                    <CustomSegment>
+                      <FormGroup widths='equal' data-test='guests_client_company_primaryBranchName_inp'>
+                        <Input
+                          label={
+                            <>
+                              <FormattedMessage id='global.name' defaultMessage='Name' />
+                              <Required />
+                            </>
+                          }
+                          name='primaryBranch.deliveryAddress.addressName'
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'global.enterPrimaryBranchAddress',
+                              defaultMessage: 'Enter Primary Branch Address'
+                            })
+                          }}
+                        />
+                      </FormGroup>
+                      <FormGroup widths='equal' data-test='guests_client_company_primaryBranchNameEmailPhone_inp'>
+                        <Input
+                          inputProps={{ fluid: true }}
+                          label={
+                            <>
+                              <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />
+                              <Required />
+                            </>
+                          }
+                          name='primaryBranch.deliveryAddress.contactName'
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'global.enterContactName',
+                              defaultMessage: 'Enter Contact Name'
+                            })
+                          }}
+                        />
+                        <PhoneNumber
+                          label={
+                            <>
+                              <FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />
+                              <Required />
+                            </>
+                          }
+                          name='primaryBranch.deliveryAddress.contactPhone'
+                          values={values}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          errors={errors}
+                          touched={touched}
+                          isSubmitting={isSubmitting}
+                        />
+                      </FormGroup>
+                      <FormGroup widths='equal' data-test='guests_client_company_primaryBranchNameEmailPhone_inp'>
+                        <Input
+                          inputProps={{ fluid: true }}
+                          label={
+                            <>
+                              <FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />
+                              <Required />
+                            </>
+                          }
+                          name='primaryBranch.deliveryAddress.contactEmail'
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'global.enterContactEmail',
+                              defaultMessage: 'Enter Contact Email'
+                            })
+                          }}
+                        />
+                      </FormGroup>
+                    </CustomSegment>
+
                     <AddressForm
                       values={values}
                       setFieldValue={setFieldValue}

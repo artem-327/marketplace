@@ -144,7 +144,7 @@ export default class PhoneNumber extends Component {
   handleChangeInput = data => {
     const { name, setFieldValue, setFieldTouched } = this.props
     const { value } = data && data.target
-    const newValue = value.replace(/\s+/g, '')
+    const newValue = value.replace(/[\s+_]/g, '')
 
     const phone = { ...this.state, ...{ phoneNumber: newValue } }
     const phoneFull =
@@ -191,8 +191,7 @@ export default class PhoneNumber extends Component {
               )
             } else if (
               (phoneCountryCode && !phoneNumber) ||
-              (phoneNumber && phoneNumber.includes('_')) ||
-              (phoneNumber && phoneNumber.length < 9)
+              (phoneNumber && phoneNumber.includes('_'))
             ) {
               form.setFieldError(
                 name,
