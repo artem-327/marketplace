@@ -70,9 +70,6 @@ export default class TimeoutWarning extends Component {
     let ttl = window.localStorage.getItem('ttl')
     let date = new Date(parseInt(ttl, 10))
     const timeout = moment(date).diff(moment())
-    console.log('timeout - WARNING_OFFSET====================================')
-    console.log(timeout - WARNING_OFFSET)
-    console.log('====================================')
     this.setState({ timeout })
     this.timeoutInterval = setTimeout(this.handleIdle, timeout - WARNING_OFFSET)
   }
