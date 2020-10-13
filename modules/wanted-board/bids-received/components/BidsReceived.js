@@ -564,6 +564,8 @@ class BidsReceived extends Component {
         }),
         disabled: row => editedId === row.id,
         callback: async row => {
+          row.rawData.purchaseRequest = { id: Number(row.id.split('_')[0]) }
+
           await this.props.openSubmitOffer(row, true)
           datagrid.loadData()
         },

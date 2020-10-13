@@ -488,8 +488,9 @@ class SubmitOfferPopup extends React.Component {
     const { popupValues } = this.props
     if (this.props.isSecondPage) {
       this.setState({ nextSubmit: true, select: 0 })
+
       try {
-        if (popupValues.purchaseRequest.id && popupValues.productOffer.id) {
+        if (getSafe(() => popupValues.purchaseRequest.id, '') && getSafe(() => popupValues.productOffer.id, '')) {
           await this.props.matchingProductOfferInfo(popupValues.purchaseRequest.id, popupValues.productOffer.id)
         }
       } catch (error) {
@@ -888,6 +889,7 @@ class SubmitOfferPopup extends React.Component {
       options
     } = this.props
     const { columns } = this.state
+
     const rows = this.getRows()
     const qtyPart = getSafe(() => popupValues.unit.nameAbbreviation, '')
     const pkgAmount = this.getPkgAmount()
