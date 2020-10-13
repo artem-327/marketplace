@@ -8,13 +8,13 @@ export const cleareActiveStep = () => ({ type: AT.CLEARE_ACTIVE_STEP })
 export const postRegisterVelloci = (body, companyId, files) => {
   return async dispatch => {
     return api.postRegisterVelloci(body, companyId).then(() => {
-      dispatch(postUploadDocuments(files))
+      dispatch(postUploadDocuments(files, companyId))
     })
   }
 }
-export const postUploadDocuments = files => ({
+export const postUploadDocuments = (files, companyId) => ({
   type: AT.UPLOAD_DOCUMENTS,
-  payload: api.postUploadDocuments(files)
+  payload: api.postUploadDocuments(files, companyId)
 })
 export const getEntityTypes = () => ({ type: AT.GET_ENTITY_TYPES, payload: api.getEntityTypes() })
 export const getNaicsCodes = () => ({ type: AT.GET_NAICS_CODES, payload: api.getNaicsCodes() })
