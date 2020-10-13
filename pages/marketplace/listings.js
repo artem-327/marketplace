@@ -9,7 +9,7 @@ class ListingsPage extends Component {
     const { intl: { formatMessage } } = this.props
 
     return (
-      <Layout title={formatMessage({ id: 'global.listings', defaultMessage: 'Listings' })}>
+      <Layout title={formatMessage({ id: 'global.marketplace', defaultMessage: 'Marketplace' })}>
         <Listings />
       </Layout>
     )
