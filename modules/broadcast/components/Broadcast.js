@@ -157,6 +157,7 @@ class Broadcast extends Component {
   updateInTreeData = node => {
     let copy = this.props.treeData
     const { filter } = this.props
+
     if (!node.isRoot()) {
       let found = copy.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)
       let index = found.getIndex()
@@ -177,9 +178,37 @@ class Broadcast extends Component {
       })
     } else {
       normalizeTree(node)
+      let cnt = 1
+      if (node.hasChildren()) {
+        node.all().forEach(n => {
+          if (!n.isRoot()) {
+            let found = copy.first(c => c.model.id === n.model.rule.id && c.model.type === n.model.rule.type)
+
+            let index = found.getIndex()
+            let path = found.getPath()
+            let parent = path[path.length - 2]
+
+            if (found && index) {
+              // Remove node
+              found.drop()
+              // Set proper values
+              found.model = n.model.rule
+              // Add back removed node (with updated data)
+              parent.addChildAtIndex(found, index)
+            }
+          }
+        })
+      }
+
       this.props.treeDataChanged({
-        ...node,
-        model: { ...node.model, rule: { ...node.model.rule, ...this.treeToModel(node) } }
+        ...copy,
+        model: {
+          ...copy.model,
+          rule: {
+            ...this.treeToModel(copy),
+            ...node.model.rule
+          }
+        }
       })
     }
     return copy
@@ -326,6 +355,7 @@ class Broadcast extends Component {
     }
 
     return {
+      ...extractFromRule(getSafe(() => tree.model.rule, tree.model)),
       broadcast: getBroadcast(tree.getPath()[0]),
       type: 'root',
       elements: tree.children.map(ch1 => ({
@@ -613,11 +643,15 @@ class Broadcast extends Component {
 
     const { templateInitialValues } = this.state
 
-    let totalCompanies = treeData.all(n => n.model.type === 'company').length
+    let totalCompanies = _.uniqBy(
+      treeData.all(n => n.model.type === 'company'),
+      n => n.model.id
+    ).length
     let totalBranches = treeData.all(n => !n.hasChildren() && n.model.type === 'branch').length
 
-    let broadcastingCompanies = treeData.all(
-      n => getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && n.model.type === 'company'
+    let broadcastingCompanies = _.uniqBy(
+      treeData.all(n => getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && n.model.type === 'company'),
+      n => n.model.id
     ).length
     let broadcastingBranches = treeData.all(
       n => !n.hasChildren() && n.model.broadcast === 1 && n.model.type === 'branch'
@@ -752,7 +786,7 @@ class Broadcast extends Component {
                   onSubmit={async (values, { setSubmitting, setFieldValue }) => {
                     let payload = {
                       mappedBroadcastRules: {
-                        ...this.getFilteredTree().model.rule
+                        ...this.treeToModel(undefined, undefined, true)
                       },
                       name: values.name
                     }

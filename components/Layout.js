@@ -79,7 +79,7 @@ const clientCompanyRoutes = {
     '/wanted-board/listings',
     '/wanted-board/bids-sent'
   ],
-  redirectTo: '/marketplace/all'
+  redirectTo: '/marketplace/listings'
 }
 
 class Layout extends Component {
