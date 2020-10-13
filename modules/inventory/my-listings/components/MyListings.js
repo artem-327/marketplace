@@ -864,6 +864,7 @@ class MyListings extends Component {
       isExportInventoryOpen,
       setExportSidebarOpenState,
       myListingsFilters,
+      updatingDatagrid,
       activeInventoryFilter
     } = this.props
     const { columns, clientMessage, request, openFilterPopup } = this.state
@@ -998,6 +999,7 @@ class MyListings extends Component {
             rows={this.getRows(rows)}
             selectByRowClick
             hideCheckboxes
+            loading={datagrid.loading || updatingDatagrid}
             groupBy={['echoCode']}
             getChildGroups={rows =>
               _(rows)

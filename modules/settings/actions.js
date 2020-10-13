@@ -213,20 +213,12 @@ export function handleOpenConfirmPopup(payload) {
 
 export const deleteUser = (id, name) => ({
   type: AT.DELETE_USER,
-  async payload() {
-    await api.deleteUser(id)
-    Datagrid.removeRow(id)
-    return name
-  }
+  payload: api.deleteUser(id)
 })
 
 export const deleteBranch = id => ({
   type: AT.DELETE_BRANCH,
-  async payload() {
-    await api.deleteWarehouse(id)
-    Datagrid.removeRow(id)
-    return id
-  }
+  payload: api.deleteWarehouse(id)
 })
 
 export const deleteProduct = (id, name) => ({
@@ -240,20 +232,12 @@ export const deleteProduct = (id, name) => ({
 
 export const deleteBankAccount = (id, type) => ({
   type: AT.DELETE_BANK_ACCOUNT,
-  async payload() {
-    const response = type === 'DWOLLA' ? await api.deleteDwollaBankAccount(id) : await api.deleteVellociBankAccount(id)
-    Datagrid.removeRow(id)
-    return response
-  }
+  payload: type === 'DWOLLA' ? api.deleteDwollaBankAccount(id) : api.deleteVellociBankAccount(id)
 })
 
 export const deleteDeliveryAddress = id => ({
   type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES,
-  async payload() {
-    const response = await api.deleteDeliveryAddress(id)
-    Datagrid.removeRow(id)
-    return response
-  }
+  payload: api.deleteDeliveryAddress(id)
 })
 
 // export function deleteConfirmation(deleteRowById, currentTab, reloadFilter=null) {
