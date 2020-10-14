@@ -486,19 +486,20 @@ class SubmitOfferPopup extends React.Component {
 
   async componentDidMount() {
     const { popupValues } = this.props
+
+    try {
+      if (getSafe(() => popupValues.purchaseRequest.id, '') && getSafe(() => popupValues.productOffer.id, '')) {
+        await this.props.matchingProductOfferInfo(popupValues.purchaseRequest.id, popupValues.productOffer.id)
+      }
+      if (!this.props.datagrid.loading) this.handleDatagridResult()
+    } catch (error) {
+      console.error(error)
+    }
     if (this.props.isSecondPage) {
       this.setState({ nextSubmit: true, select: 0 })
 
-      try {
-        if (getSafe(() => popupValues.purchaseRequest.id, '') && getSafe(() => popupValues.productOffer.id, '')) {
-          await this.props.matchingProductOfferInfo(popupValues.purchaseRequest.id, popupValues.productOffer.id)
-        }
-      } catch (error) {
-        console.error(error)
-      }
       return
     }
-    if (!this.props.datagrid.loading) this.handleDatagridResult()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
