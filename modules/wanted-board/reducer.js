@@ -9,6 +9,7 @@ export const initialState = {
   sidebarValues: null,
   editInitTrig: false,
   loading: false,
+  updatingDatagrid: false,
   purchaseRequestPending: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
@@ -461,10 +462,28 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.WB_MATCHING_PRODUCT_OFFER_INFO_PENDING:
+    case AT.WB_DELETE_MY_OFFER_ITEM_PENDING:
     case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_PENDING:
     case AT.WB_ACCEPT_REQUESTED_ITEM_PENDING:
     case AT.WB_PURCHASE_REQUESTED_ITEM_PENDING:
-    case AT.WB_REJECT_REQUESTED_ITEM_PENDING:
+    case AT.WB_REJECT_REQUESTED_ITEM_PENDING: {
+      return { ...state, updatingDatagrid: true }
+    }
+
+    case AT.WB_DELETE_MY_OFFER_ITEM_REJECTED:
+    case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_REJECTED:
+    case AT.WB_PURCHASE_REQUESTED_ITEM_REJECTED:
+    case AT.WB_REJECT_REQUESTED_ITEM_REJECTED: {
+      return { ...state, updatingDatagrid: false }
+    }
+
+    case AT.WB_DELETE_MY_OFFER_ITEM_FULFILLED:
+    case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_FULFILLED:
+    case AT.WB_PURCHASE_REQUESTED_ITEM_FULFILLED:
+    case AT.WB_REJECT_REQUESTED_ITEM_FULFILLED: {
+      return { ...state, updatingDatagrid: false }
+    }
+
     case AT.WB_EDIT_PURCHASE_REQUEST_PENDING:
     case AT.WB_ADD_PURCHASE_REQUEST_PENDING:
     case AT.WB_EDIT_MY_PURCHASE_OFFER_PENDING: {
