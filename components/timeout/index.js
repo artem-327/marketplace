@@ -23,7 +23,6 @@ export default class TimeoutWarning extends Component {
 
   componentWillUnmount() {
     this.checkTimeInterval && clearInterval(this.checkTimeInterval)
-    this.timeoutMount && clearInterval(this.timeoutMount)
   }
 
   getRemainingTimeString = () => {
@@ -75,7 +74,7 @@ export default class TimeoutWarning extends Component {
   }
 
   componentDidMount() {
-    this.timeoutMount = setTimeout(this.resetIdleTimer, 15000)
+    this.setIdleTimeout()
   }
 
   render() {
