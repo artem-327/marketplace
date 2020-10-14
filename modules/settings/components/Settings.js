@@ -109,9 +109,6 @@ class Settings extends Component {
     wrongUrl: true
   }
 
-  componentWillMount() {
-    this.props.resetSettings()
-  }
   // marked tab based on role of user or if tab changed.
   changeRoute = queryTab => {
     const {
