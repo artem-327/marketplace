@@ -153,7 +153,7 @@ class DocumentManagerTable extends Component {
 
   render() {
     const {
-      rows, datagrid, editedId
+      rows, datagrid, editedId, updatingDatagrid
     } = this.props
 
     return (
@@ -162,7 +162,7 @@ class DocumentManagerTable extends Component {
         {...datagrid.tableProps}
         columns={this.state.columns}
         rows={this.getRows(rows)}
-        loading={datagrid.loading}
+        loading={datagrid.loading || updatingDatagrid}
         style={{ marginTop: '5px' }}
         columnActions={'name'}
         editingRowId={editedId}
@@ -171,9 +171,10 @@ class DocumentManagerTable extends Component {
   }
 }
 
-const mapStateToProps = ({ manageGuests }, { datagrid }) => {
+const mapStateToProps = ({ manageGuests, simpleAdd }, { datagrid }) => {
   return {
     ...manageGuests,
+    updatingDatagrid: simpleAdd.updatingDatagrid,
     rows: datagrid.rows
   }
 }
