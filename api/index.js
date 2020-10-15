@@ -2,18 +2,27 @@ import axios from 'axios'
 import Cookie from 'js-cookie'
 import Router from 'next/router'
 import { Message } from '~/modules/messages'
-//axios.defaults.baseURL = process.env.REACT_APP_API_URL
+import { refreshToken } from '~/utils/auth'
+import { getSafe } from '~/utils/functions'
 
-axios.defaults.validateStatus = status => {
+//axios.defaults.baseURL = process.env.REACT_APP_API_URL
+const axiosApiInstance = axios.create()
+
+axiosApiInstance.defaults.validateStatus = status => {
   return status < 400
 }
 
-axios.interceptors.request.use(
-  function (config) {
+axiosApiInstance.interceptors.request.use(
+  async function (config) {
     // Do something before request is sent
-    const auth = Cookie.getJSON('auth')
-
-    if (auth && !config.headers['Authorization']) config.headers['Authorization'] = 'Bearer ' + auth.access_token
+    const auth = await Cookie.getJSON('auth')
+    console.log('auth====================================')
+    console.log(auth)
+    console.log('====================================')
+    console.log('config====================================')
+    console.log(config)
+    console.log('====================================')
+    if (auth) config.headers['Authorization'] = 'Bearer ' + auth.access_token
 
     return config
   },
@@ -23,7 +32,7 @@ axios.interceptors.request.use(
   }
 )
 
-axios.interceptors.response.use(
+axiosApiInstance.interceptors.response.use(
   response => {
     try {
       Message && Message.checkForMessages && Message.checkForMessages(response)
@@ -32,14 +41,54 @@ axios.interceptors.response.use(
     }
     return response
   },
-  function (error) {
+  async function (error) {
+    console.log('error===interceptors=================================')
+    console.log(error.response)
+    console.log('====================================')
+    const originalRequest = getSafe(() => error.response.config, '')
+
+    if (getSafe(() => error.response.status, '') === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+      const data = await refreshToken()
+      console.log('data===refreshToken=================================')
+      console.log(data)
+      console.log('====================================')
+      //axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.access_token
+      if (data) return await axiosApiInstance(originalRequest)
+    }
+
+    if (getSafe(() => error.response.status, '') >= 403) {
+      switch (error.response.status) {
+        case 500:
+          hasWindow && window.localStorage.setItem('errorStatus', '500')
+          Router.push('/errors')
+          break
+        case 504:
+          hasWindow && window.localStorage.setItem('errorStatus', '504')
+          Router.push('/errors')
+          break
+        case 403:
+          hasWindow && window.localStorage.setItem('errorStatus', '403')
+          Router.push('/errors')
+          break
+        default:
+          break
+      }
+    }
+
+    try {
+      Message.checkForMessages(error.response)
+    } catch (error) {
+      console.error(error)
+    }
+
     const hasWindow = typeof window !== 'undefined'
     // const errData = error && error.response && error.response.data
     if (
-      error.request.responseType === 'blob' &&
-      error.response.data instanceof Blob &&
-      error.response.data.type &&
-      error.response.data.type.toLowerCase().indexOf('json') != -1
+      getSafe(() => error.request.responseType, '') === 'blob' &&
+      getSafe(() => error.response.data, '') instanceof Blob &&
+      getSafe(() => error.response.data.type, '') &&
+      getSafe(() => error.response.data.type.toLowerCase().indexOf('json'), '') != -1
     ) {
       return new Promise((resolve, reject) => {
         let reader = new FileReader()
@@ -48,10 +97,11 @@ axios.interceptors.response.use(
 
           Message.checkForMessages(error.response)
 
-          if (error.response.status >= 401) {
+          if (getSafe(() => error.response.status, '') >= 403) {
             switch (error.response.status) {
-              case 401:
-                Router.push('/auth/logout?auto=true')
+              case 500:
+                hasWindow && window.localStorage.setItem('errorStatus', '500')
+                Router.push('/errors')
                 break
               case 504:
                 hasWindow && window.localStorage.setItem('errorStatus', '504')
@@ -76,30 +126,6 @@ axios.interceptors.response.use(
       })
     }
 
-    try {
-      Message.checkForMessages(error.response)
-    } catch (error) {
-      console.error(error)
-    }
-
-    if (error.response.status >= 401) {
-      switch (error.response.status) {
-        case 401:
-          Router.push('/auth/logout?auto=true')
-          break
-        case 504:
-          hasWindow && window.localStorage.setItem('errorStatus', '504')
-          Router.push('/errors')
-          break
-        case 403:
-          hasWindow && window.localStorage.setItem('errorStatus', '403')
-          Router.push('/errors')
-          break
-        default:
-          break
-      }
-    }
-
     if (
       error &&
       error.response &&
@@ -115,4 +141,4 @@ axios.interceptors.response.use(
   }
 )
 
-export default axios
+export default axiosApiInstance
