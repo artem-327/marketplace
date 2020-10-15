@@ -179,7 +179,7 @@ class PickUpLocationsTable extends Component {
   }
 
   render() {
-    const { filterValue, rows, datagrid, editedId } = this.props
+    const { filterValue, rows, datagrid, loading, editedId } = this.props
 
     return (
       <React.Fragment>
@@ -188,7 +188,7 @@ class PickUpLocationsTable extends Component {
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={this.state.columns}
-          loading={datagrid.loading}
+          loading={datagrid.loading || loading}
           rows={this.getRows(rows)}
           style={{ marginTop: '5px' }}
           columnActions='addressName'

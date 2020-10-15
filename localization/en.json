@@ -1631,6 +1631,13 @@
   "cart.holdRequestInfo": "2. Hold Request Info",
   "cart.freightCost": "Freight Cost",
   "cart.or": "OR",
+  "createMenu.create": "Create",
+  "createMenu.newProduct": "New Product",
+  "createMenu.newListing": "New Listing",
+  "createMenu.newWanted": "New Wanted",
+  "createMenu.newUser": "New User",
+  "createMenu.newGuest": "New Guest",
+  "createMenu.newWarehouse": "New Warehouse",
   "validation.required": "Required",
   "validation.dateInFuture": "Date must be in future",
   "validation.dateInPast": "Date must be in past",
@@ -2635,7 +2642,7 @@
   "dashboard.totalCompanies.title": "Total Companies",
   "dashboard.totalGuestCompanies.title": "Total Guest Companies",
   "dashboard.totalProducts.title": "Total Products",
-  "dashboard.totalGuestProducts.title": "Total Guest Products",
+  "dashboard.totalGuestProducts.title": "Total Products",
   "dashboard.totalValue.title": "Total Products Value",
   "dashboard.totalValueWithoutMilion.title": "Total Products Value",
   "dashboard.totalBroadcastedValue.title": "Total Broadcasted Value",
@@ -2807,5 +2814,6 @@
   "velloci.document.explanatory.li21": "Filed and stamped Articles of Organization or Incorporation",
   "velloci.document.explanatory.li22": "Sales/Use Tax License",
   "velloci.document.explanatory.li23": "Business License",
-  "velloci.document.explanatory.li24": "Certificate of Good Standing"
+  "velloci.document.explanatory.li24": "Certificate of Good Standing",
+  "settings.velloci.difficulties": "Velloci is experiencing some difficulties, please try again later"
 }

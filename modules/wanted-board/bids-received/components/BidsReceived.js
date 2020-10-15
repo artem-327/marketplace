@@ -506,7 +506,9 @@ class BidsReceived extends Component {
             try {
               await this.props.rejectRequestedItem(row.id.split('_')[1])
               datagrid.loadData()
-            } catch (e) {}
+            } catch (e) {
+              console.error(e)
+            }
           })
         },
         hidden: row => row.treeRoot
@@ -518,8 +520,12 @@ class BidsReceived extends Component {
         }),
         disabled: row => editedId === row.id,
         callback: async row => {
-          await this.props.purchaseRequestedItem(row.id.split('_')[1])
-          datagrid.loadData()
+          try {
+            await this.props.purchaseRequestedItem(row.id.split('_')[1])
+            datagrid.loadData()
+          } catch (e) {
+            console.error(e)
+          }
         },
         hidden: row => row.treeRoot
       }
@@ -598,7 +604,16 @@ class BidsReceived extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, editedId, sidebarDetailTrigger, type, tutorialCompleted } = this.props
+    const {
+      datagrid,
+      intl,
+      rows,
+      editedId,
+      sidebarDetailTrigger,
+      type,
+      updatingDatagrid,
+      tutorialCompleted
+    } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
@@ -673,6 +688,7 @@ class BidsReceived extends Component {
             key={type}
             tableName={`bids_received_${type}_grid`}
             {...datagrid.tableProps}
+            loading={datagrid.loading || updatingDatagrid}
             rows={this.getRows(rows)}
             columns={type === 'product' ? columnsProduct : columnsChemical}
             rowSelection={false}

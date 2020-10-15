@@ -39,7 +39,8 @@ export const initialValues = {
   province: [],
   broadcast: '',
   manufacturer: '',
-  origin: ''
+  origin: '',
+  warehouse: ''
 }
 
 const errorMessages = {

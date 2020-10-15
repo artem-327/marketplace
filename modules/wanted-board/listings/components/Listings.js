@@ -289,7 +289,13 @@ class Listings extends Component {
           id: 'wantedBoard.submitOffer',
           defaultMessage: 'Submit Offer'
         }),
-        callback: row => this.props.openSubmitOffer(row)
+        callback: async row => {
+          try {
+            this.props.openSubmitOffer(row)
+          } catch (e) {
+            console.error(e)
+          }
+        }
       }
     ]
   }

@@ -11,7 +11,18 @@ import {
   searchBuyMarketSegments
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Sidebar, Dimmer, Loader, Grid, GridRow, GridColumn, Checkbox, FormField, FormGroup } from 'semantic-ui-react'
+import {
+  Sidebar,
+  Dimmer,
+  Loader,
+  Grid,
+  GridRow,
+  GridColumn,
+  Checkbox,
+  FormField,
+  FormGroup,
+  Segment
+} from 'semantic-ui-react'
 import { CheckboxWithValue } from '~/components/custom-formik'
 import { Field as FormikField } from 'formik'
 import * as Yup from 'yup'
@@ -93,6 +104,10 @@ const GridColumnWError = styled(GridColumn)`
   &.column.error {
     color: #9f3a38;
   }
+`
+
+const CustomSegment = styled(Segment)`
+  background-color: #f8f9fb !important;
 `
 
 const initValues = {
@@ -496,234 +511,247 @@ class UsersSidebar extends React.Component {
               </HighSegment>
 
               <FlexContent>
-                <Grid>
-                  <GridRow>
-                    <GridColumn width={8} data-test='admin_users_popup_name_inp'>
-                      <Input
-                        type='text'
-                        label={
-                          <>
-                            {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
-                            <Required />
-                          </>
-                        }
-                        name='name'
-                        inputProps={{
-                          placeholder: formatMessage({ id: 'global.enterName', defaultMessage: 'Enter Name' })
-                        }}
-                      />
-                    </GridColumn>
-                    <GridColumn width={8} data-test='admin_users_popup_title_inp'>
-                      <Input
-                        type='text'
-                        label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
-                        name='jobTitle'
-                        inputProps={{
-                          placeholder: formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
-                        }}
-                      />
-                    </GridColumn>
-                  </GridRow>
+                <CustomSegment>
+                  <Grid>
+                    <GridRow>
+                      <GridColumn width={8} data-test='admin_users_popup_name_inp'>
+                        <Input
+                          type='text'
+                          label={
+                            <>
+                              {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                              <Required />
+                            </>
+                          }
+                          name='name'
+                          inputProps={{
+                            placeholder: formatMessage({ id: 'global.enterName', defaultMessage: 'Enter Name' })
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8} data-test='admin_users_popup_title_inp'>
+                        <Input
+                          type='text'
+                          label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
+                          name='jobTitle'
+                          inputProps={{
+                            placeholder:
+                              formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
+                          }}
+                        />
+                      </GridColumn>
+                    </GridRow>
 
-                  <GridRow>
-                    <GridColumn width={8} data-test='admin_users_popup_email_inp'>
-                      <Input
-                        type='text'
-                        label={
-                          <>
-                            {formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
-                            <Required />
-                          </>
-                        }
-                        name='email'
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'global.enterEmailAddress',
-                            defaultMessage: 'Enter Email Address'
-                          })
-                        }}
-                      />
-                    </GridColumn>
-                    <GridColumn width={8} data-test='admin_users_popup_Phone_inp'>
-                      <PhoneNumber
-                        name='phone'
-                        values={values}
-                        label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
-                        setFieldValue={setFieldValue}
-                        setFieldTouched={setFieldTouched}
-                        errors={errors}
-                        touched={touched}
-                        isSubmitting={isSubmitting}
-                        placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
-                        clearable={true}
-                      />
-                    </GridColumn>
-                  </GridRow>
-
-                  <GridRow>
-                    <GridColumn>
-                      <Dropdown
-                        label={
-                          <>
-                            {formatMessage({ id: 'global.companyName', defaultMessage: 'Company Name' })}
-                            {!disabledCompany && <Required />}
-                          </>
-                        }
-                        name='company'
-                        options={companiesOptions}
-                        inputProps={{
-                          icon: 'search',
-                          disabled: disabledCompany,
-                          search: options => options,
-                          selection: true,
-                          onSearchChange: (e, { searchQuery }) =>
-                            searchQuery.length > 0 && this.searchCompanies(searchQuery),
-                          onChange: (_, { value }) => {
-                            const company = companiesAll.find(el => el.id === value)
-                            let homeBranch = ''
-                            if (company) {
-                              let newRoles = values.roles.slice()
-                              newRoles = newRoles.filter(role => adminRoles.every(d => role !== d.id))
-                              if (company.isClientCompany && isClientCompany !== company.isClientCompany) {
-                                newRoles = newRoles.filter(role => !clientCompanyRoles.every(d => role !== d.id))
-                              }
-                              setFieldValue('roles', newRoles)
-                              if (company.primaryBranch) homeBranch = company.primaryBranch.id
-                            }
-                            this.setState({
-                              branches: company ? this.getBranchesOptions(company.branches) : [],
-                              selectedCompany: value ? companiesAll.find(d => d.id === value) : [],
-                              isClientCompany: company && company.isClientCompany
+                    <GridRow>
+                      <GridColumn width={8} data-test='admin_users_popup_email_inp'>
+                        <Input
+                          type='text'
+                          label={
+                            <>
+                              {formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
+                              <Required />
+                            </>
+                          }
+                          name='email'
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'global.enterEmailAddress',
+                              defaultMessage: 'Enter Email Address'
                             })
-                            setFieldValue('homeBranch', homeBranch)
-                            setFieldValue('additionalBranches', [])
-                          },
-                          loading: searchedCompaniesLoading,
-                          placeholder: formatMessage({ id: 'global.selectCompany', defaultMessage: 'Select Company' }),
-                          'data-test': 'admin_users_popup_company_drpdn'
-                        }}
-                      />
-                    </GridColumn>
-                  </GridRow>
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8} data-test='admin_users_popup_Phone_inp'>
+                        <PhoneNumber
+                          name='phone'
+                          values={values}
+                          label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          errors={errors}
+                          touched={touched}
+                          isSubmitting={isSubmitting}
+                          placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
+                          clearable={true}
+                        />
+                      </GridColumn>
+                    </GridRow>
+                  </Grid>
+                </CustomSegment>
 
-                  <GridRow>
-                    <GridColumn width={8}>
-                      <Dropdown
-                        label={
-                          <>
-                            {formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
-                            {!disabledCompany && values.company !== '' && <Required />}
-                          </>
-                        }
-                        name='homeBranch'
-                        options={branches}
-                        inputProps={{
-                          disabled: disabledCompany || values.company === '',
-                          placeholder: formatMessage({
-                            id: 'global.selectHomeBranch',
-                            defaultMessage: 'Select Home Branch'
-                          }),
-                          'data-test': 'admin_users_popup_homeBranch_drpdn'
-                        }}
-                      />
-                    </GridColumn>
-                    <GridColumn width={8}>
-                      <Dropdown
-                        label={formatMessage({
-                          id: 'global.additionalBranches',
-                          defaultMessage: 'Additional Branches'
-                        })}
-                        name='additionalBranches'
-                        options={branches}
-                        inputProps={{
-                          disabled: disabledCompany || values.company === '',
-                          placeholder: formatMessage({
-                            id: 'global.selectAdditionalHomeBranch',
-                            defaultMessage: 'Select Additional Home Branch'
-                          }),
-                          'data-test': 'admin_users_popup_additionalBranches_drpdn',
-                          multiple: true
-                        }}
-                      />
-                    </GridColumn>
-                  </GridRow>
-                  <GridRow>
-                    <GridColumn width={8}>
-                      <Dropdown
-                        label={
-                          <>
-                            {formatMessage({ id: 'global.sellMarketSegments', defaultMessage: 'Sell Market Segment' })}
-                          </>
-                        }
-                        name='sellMarketSegments'
-                        options={allSellMarketSegmentsOptions}
-                        inputProps={{
-                          loading: searchedSellMarketSegmentsLoading,
-                          search: true,
-                          icon: 'search',
-                          selection: true,
-                          multiple: true,
-                          disabled: !values.homeBranch,
-                          noResultsMessage: formatMessage({
-                            id: 'global.startTypingToSearch',
-                            defaultMessage: 'Start typing to begin search'
-                          }),
-                          onSearchChange: this.handleSellMarketSegmentsSearchChange,
-                          onChange: (_, { value }) =>
-                            this.handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
-                        }}
-                      />
-                    </GridColumn>
-                    <GridColumn width={8}>
-                      <Dropdown
-                        label={
-                          <>{formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}</>
-                        }
-                        name='buyMarketSegments'
-                        options={allBuyMarketSegmentsOptions}
-                        inputProps={{
-                          loading: searchedBuyMarketSegmentsLoading,
-                          search: true,
-                          icon: 'search',
-                          selection: true,
-                          multiple: true,
-                          disabled: !values.homeBranch,
-                          noResultsMessage: formatMessage({
-                            id: 'global.startTypingToSearch',
-                            defaultMessage: 'Start typing to begin search'
-                          }),
-                          onSearchChange: this.handleBuyMarketSegmentsSearchChange,
-                          onChange: (_, { value }) =>
-                            this.handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions)
-                        }}
-                      />
-                    </GridColumn>
-                  </GridRow>
+                <CustomSegment>
+                  <Grid>
+                    <GridRow>
+                      <GridColumn>
+                        <Dropdown
+                          label={
+                            <>
+                              {formatMessage({ id: 'global.companyName', defaultMessage: 'Company Name' })}
+                              {!disabledCompany && <Required />}
+                            </>
+                          }
+                          name='company'
+                          options={companiesOptions}
+                          inputProps={{
+                            icon: 'search',
+                            disabled: disabledCompany,
+                            search: options => options,
+                            selection: true,
+                            onSearchChange: (e, { searchQuery }) =>
+                              searchQuery.length > 0 && this.searchCompanies(searchQuery),
+                            onChange: (_, { value }) => {
+                              const company = companiesAll.find(el => el.id === value)
+                              let homeBranch = ''
+                              if (company) {
+                                let newRoles = values.roles.slice()
+                                newRoles = newRoles.filter(role => adminRoles.every(d => role !== d.id))
+                                if (company.isClientCompany && isClientCompany !== company.isClientCompany) {
+                                  newRoles = newRoles.filter(role => !clientCompanyRoles.every(d => role !== d.id))
+                                }
+                                setFieldValue('roles', newRoles)
+                                if (company.primaryBranch) homeBranch = company.primaryBranch.id
+                              }
+                              this.setState({
+                                branches: company ? this.getBranchesOptions(company.branches) : [],
+                                selectedCompany: value ? companiesAll.find(d => d.id === value) : [],
+                                isClientCompany: company && company.isClientCompany
+                              })
+                              setFieldValue('homeBranch', homeBranch)
+                              setFieldValue('additionalBranches', [])
+                            },
+                            loading: searchedCompaniesLoading,
+                            placeholder: formatMessage({ id: 'global.selectCompany', defaultMessage: 'Select Company' }),
+                            'data-test': 'admin_users_popup_company_drpdn'
+                          }}
+                        />
+                      </GridColumn>
+                    </GridRow>
 
-                  <GridRow style={{ paddingBottom: '2.5px' }}>
-                    <GridColumnWError className={errorRoles ? 'error' : ''}>
-                      <FormattedMessage id='global.roles' defaultMessage='Roles'>
-                        {text => text}
-                      </FormattedMessage>
-                      <Required />
-                    </GridColumnWError>
-                  </GridRow>
-                  <GridRow>
-                    {this.generateCheckboxes(
-                      values.company !== '' ? (isClientCompany ? clientCompanyRoles : userRoles) : adminRoles,
-                      values,
-                      'roles',
-                      errorRoles
-                    )}
-                  </GridRow>
-                  <GridRow style={{ paddingTop: '0' }}>
-                    <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
-                  </GridRow>
+                    <GridRow>
+                      <GridColumn width={8}>
+                        <Dropdown
+                          label={
+                            <>
+                              {formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
+                              {!disabledCompany && values.company !== '' && <Required />}
+                            </>
+                          }
+                          name='homeBranch'
+                          options={branches}
+                          inputProps={{
+                            disabled: disabledCompany || values.company === '',
+                            placeholder: formatMessage({
+                              id: 'global.selectHomeBranch',
+                              defaultMessage: 'Select Home Branch'
+                            }),
+                            'data-test': 'admin_users_popup_homeBranch_drpdn'
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8}>
+                        <Dropdown
+                          label={formatMessage({
+                            id: 'global.additionalBranches',
+                            defaultMessage: 'Additional Branches'
+                          })}
+                          name='additionalBranches'
+                          options={branches}
+                          inputProps={{
+                            disabled: disabledCompany || values.company === '',
+                            placeholder: formatMessage({
+                              id: 'global.selectAdditionalHomeBranch',
+                              defaultMessage: 'Select Additional Home Branch'
+                            }),
+                            'data-test': 'admin_users_popup_additionalBranches_drpdn',
+                            multiple: true
+                          }}
+                        />
+                      </GridColumn>
+                    </GridRow>
+                    <GridRow>
+                      <GridColumn width={8}>
+                        <Dropdown
+                          label={
+                            <>
+                              {formatMessage({ id: 'global.sellMarketSegments', defaultMessage: 'Sell Market Segment' })}
+                            </>
+                          }
+                          name='sellMarketSegments'
+                          options={allSellMarketSegmentsOptions}
+                          inputProps={{
+                            loading: searchedSellMarketSegmentsLoading,
+                            search: true,
+                            icon: 'search',
+                            selection: true,
+                            multiple: true,
+                            disabled: !values.homeBranch,
+                            noResultsMessage: formatMessage({
+                              id: 'global.startTypingToSearch',
+                              defaultMessage: 'Start typing to begin search'
+                            }),
+                            onSearchChange: this.handleSellMarketSegmentsSearchChange,
+                            onChange: (_, { value }) =>
+                              this.handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8}>
+                        <Dropdown
+                          label={
+                            <>
+                              {formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}
+                            </>
+                          }
+                          name='buyMarketSegments'
+                          options={allBuyMarketSegmentsOptions}
+                          inputProps={{
+                            loading: searchedBuyMarketSegmentsLoading,
+                            search: true,
+                            icon: 'search',
+                            selection: true,
+                            multiple: true,
+                            disabled: !values.homeBranch,
+                            noResultsMessage: formatMessage({
+                              id: 'global.startTypingToSearch',
+                              defaultMessage: 'Start typing to begin search'
+                            }),
+                            onSearchChange: this.handleBuyMarketSegmentsSearchChange,
+                            onChange: (_, { value }) =>
+                              this.handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions)
+                          }}
+                        />
+                      </GridColumn>
+                    </GridRow>
+                  </Grid>
+                </CustomSegment>
 
-                  {/*<pre>
-                      {JSON.stringify(values, null, 2)}
-                    </pre>*/}
-                </Grid>
+                <CustomSegment>
+                  <Grid>
+                    <GridRow style={{ paddingBottom: '2.5px' }}>
+                      <GridColumnWError className={errorRoles ? 'error' : ''}>
+                        <FormattedMessage id='global.roles' defaultMessage='Roles'>
+                          {text => text}
+                        </FormattedMessage>
+                        <Required />
+                      </GridColumnWError>
+                    </GridRow>
+                    <GridRow>
+                      {this.generateCheckboxes(
+                        values.company !== '' ? (isClientCompany ? clientCompanyRoles : userRoles) : adminRoles,
+                        values,
+                        'roles',
+                        errorRoles
+                      )}
+                    </GridRow>
+                    <GridRow style={{ paddingTop: '0' }}>
+                      <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
+                    </GridRow>
+
+                    {/*<pre>
+                        {JSON.stringify(values, null, 2)}
+                      </pre>*/}
+                  </Grid>
+                </CustomSegment>
               </FlexContent>
 
               <BottomButtons>

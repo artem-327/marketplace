@@ -29,6 +29,7 @@ import LogoSmall from '~/assets/images/nav/logo4x.png'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
+import CreateMenu from './CreateMenu'
 import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
 import Settings from '~/components/settings'
@@ -79,7 +80,7 @@ const clientCompanyRoutes = {
     '/wanted-board/listings',
     '/wanted-board/bids-sent'
   ],
-  redirectTo: '/marketplace/all'
+  redirectTo: '/marketplace/listings'
 }
 
 class Layout extends Component {
@@ -358,6 +359,9 @@ class Layout extends Component {
             <Menu.Menu position='right' className='black'>
               {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && !isOrderOperator && (
                 <>
+                  <Menu.Item>
+                    <CreateMenu />
+                  </Menu.Item>
                   <Menu.Item
                     onClick={() => Router.push('/marketplace/holds')}
                     data-test='navigation_marketplace'

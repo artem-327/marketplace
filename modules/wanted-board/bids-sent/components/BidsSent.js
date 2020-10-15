@@ -162,7 +162,7 @@ class BidsSent extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, editedId, myOffersSidebarTrigger, tutorialCompleted } = this.props
+    const { datagrid, intl, rows, editedId, myOffersSidebarTrigger, updatingDatagrid, tutorialCompleted } = this.props
     const { columns, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
@@ -193,6 +193,7 @@ class BidsSent extends Component {
           <ProdexGrid
             tableName='my_offers_grid'
             {...datagrid.tableProps}
+            loading={datagrid.loading || updatingDatagrid}
             rows={rows}
             columns={columns}
             rowSelection={false}

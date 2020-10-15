@@ -47,6 +47,7 @@ const DropdownItem = ({ children, refFunc, refId, ...props }) => {
 class Navigation extends Component {
   state = {
     dropdowns: {},
+    currentType: '',
     settings: getSafe(() => Router.router.pathname === '/settings', false),
     orders:
       getSafe(() => Router.router.pathname === '/orders', false) ||
@@ -56,12 +57,15 @@ class Navigation extends Component {
     products: getSafe(() => Router.router.pathname === '/products', false),
     companies: getSafe(() => Router.router.pathname === '/companies', false),
     manageGuests: getSafe(() => Router.router.pathname === '/manage-guests', false),
-    wantedBoard: getSafe(() => Router.router.pathname === '/wanted-board/listings', false) ||
+    wantedBoard:
+      getSafe(() => Router.router.pathname === '/wanted-board/listings', false) ||
       getSafe(() => Router.router.pathname === '/wanted-board/bids-sent', false) ||
       getSafe(() => Router.router.pathname === '/wanted-board/bids-received', false),
-    inventory: getSafe(() => Router.router.pathname === '/inventory/my-products', false) ||
+    inventory:
+      getSafe(() => Router.router.pathname === '/inventory/my-products', false) ||
       getSafe(() => Router.router.pathname === '/inventory/my-listings', false),
-    marketplace: getSafe(() => Router.router.pathname === '/marketplace/listings', false) ||
+    marketplace:
+      getSafe(() => Router.router.pathname === '/marketplace/listings', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/holds', false)
   }
 
@@ -96,7 +100,7 @@ class Navigation extends Component {
             orders: false
           }))
           break
-        case '/marketplace/all':
+        case '/marketplace/listings':
           this.setState(prevState => ({
             settings: false,
             orders: false
@@ -138,8 +142,8 @@ class Navigation extends Component {
     }
   }
 
-  toggleOpened = type => {
-    const { dropdowns } = this.state
+  toggleOpened = (type, defaultLink) => {
+    const { currentType } = this.state
     const typeState = this.state[type]
     if (type === 'admin') {
       Router.push('/admin')
@@ -153,6 +157,10 @@ class Navigation extends Component {
     if (type === 'companies') {
       Router.push('/companies')
     }
+
+    if (defaultLink && !(type === currentType || this.state[type])) {
+      Router.push(defaultLink)
+    }
     // toggle dropdown state
     this.setState({
       orders: false,
@@ -165,7 +173,8 @@ class Navigation extends Component {
       wantedBoard: false,
       inventory: false,
       marketplace: false,
-      [type]: !typeState
+      [type]: !typeState,
+      currentType: type
     })
 
     // resize dropdown
@@ -283,11 +292,10 @@ class Navigation extends Component {
             text={formatMessage({ id: 'navigation.inventory', defaultMessage: 'Inventory' })}
             className={inventory ? 'opened' : null}
             opened={inventory}
-            onClick={() => this.toggleOpened('inventory')}
+            onClick={() => this.toggleOpened('inventory', '/inventory/my-products')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'inventory'}
-            data-test='navigation_menu_inventory_drpdn'
-          >
+            data-test='navigation_menu_inventory_drpdn'>
             <Dropdown.Menu data-test='navigation_menu_inventory_menu'>
               <PerfectScrollbar>
                 <Dropdown.Item
@@ -312,11 +320,10 @@ class Navigation extends Component {
           text={formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
           className={marketplace ? 'opened' : null}
           opened={marketplace}
-          onClick={() => this.toggleOpened('marketplace')}
+          onClick={() => this.toggleOpened('marketplace', '/marketplace/listings')}
           refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
           refId={'marketplace'}
-          data-test='navigation_menu_marketplace_drpdn'
-        >
+          data-test='navigation_menu_marketplace_drpdn'>
           <Dropdown.Menu data-test='navigation_menu_marketplace_menu'>
             <PerfectScrollbar>
               <Dropdown.Item
@@ -325,10 +332,7 @@ class Navigation extends Component {
                 dataTest='navigation_menu_marketplace_listings_drpdn'>
                 {formatMessage({ id: 'navigation.marketplaceListings', defaultMessage: 'Listings' })}
               </Dropdown.Item>
-              <Dropdown.Item
-                as={MenuLink}
-                to='/marketplace/holds'
-                dataTest='navigation_menu_marketplace_holds_drpdn'>
+              <Dropdown.Item as={MenuLink} to='/marketplace/holds' dataTest='navigation_menu_marketplace_holds_drpdn'>
                 {formatMessage({ id: 'navigation.marketplaceHolds', defaultMessage: 'Holds' })}
               </Dropdown.Item>
             </PerfectScrollbar>
@@ -340,11 +344,10 @@ class Navigation extends Component {
           text={formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
           className={wantedBoard ? 'opened' : null}
           opened={wantedBoard}
-          onClick={() => this.toggleOpened('wantedBoard')}
+          onClick={() => this.toggleOpened('wantedBoard', '/wanted-board/listings')}
           refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
           refId={'wantedBoard'}
-          data-test='navigation_menu_wanted_board_drpdn'
-        >
+          data-test='navigation_menu_wanted_board_drpdn'>
           <Dropdown.Menu data-test='navigation_menu_manage_wanted_board_menu'>
             <PerfectScrollbar>
               {!isClientCompany && (
@@ -362,7 +365,7 @@ class Navigation extends Component {
                     {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
                   </Dropdown.Item>
                 </>
-                )}
+              )}
               <Dropdown.Item
                 as={MenuLink}
                 to='/wanted-board/bids-received'
@@ -377,7 +380,7 @@ class Navigation extends Component {
           text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
           className={orders ? 'opened' : null}
           opened={orders.toString()}
-          onClick={() => this.toggleOpened('orders')}
+          onClick={() => this.toggleOpened('orders', '/orders?type=sales')}
           refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
           refId={'orders'}
           data-test='navigation_orders_drpdn'>
@@ -404,7 +407,7 @@ class Navigation extends Component {
             text={formatMessage({ id: 'navigation.manageGuests', defaultMessage: 'Manage Guests' })}
             className={manageGuests ? 'opened' : null}
             opened={manageGuests.toString()}
-            onClick={() => this.toggleOpened('manageGuests')}
+            onClick={() => this.toggleOpened('manageGuests', '/manage-guests?type=guests')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'manageGuests'}
             data-test='navigation_menu_manage_guests_drpdn'>
@@ -435,7 +438,7 @@ class Navigation extends Component {
             text={formatMessage({ id: 'navigation.myAccount', defaultMessage: 'My Account' })}
             className={settings ? 'opened' : null}
             opened={settings.toString()}
-            onClick={() => this.toggleOpened('settings')}
+            onClick={() => this.toggleOpened('settings', '/settings?type=company-details')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'settings'}
             data-test='navigation_menu_settings_drpdn'>

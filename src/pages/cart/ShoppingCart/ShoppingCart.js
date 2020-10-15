@@ -30,7 +30,7 @@ export default class ShoppingCart extends Component {
   }
 
   handleContinueShopping = () => {
-    Router.push('/marketplace/all')
+    Router.push('/marketplace/listings')
   }
 
   handleContinue = () => {

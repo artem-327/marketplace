@@ -451,9 +451,10 @@ DocumentManagerSidebar.defaultProps = {
   initialFileType: null
 }
 
-const mapStateToProps = ({ manageGuests }) => {
+const mapStateToProps = ({ manageGuests, simpleAdd }) => {
   return {
     ...manageGuests,
+    loading: simpleAdd.loading,
     documentTypes: manageGuests.documentTypes.map(d => ({
       key: d.id,
       text: d.name,

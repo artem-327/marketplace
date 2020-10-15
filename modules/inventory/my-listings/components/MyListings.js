@@ -28,7 +28,6 @@ const defaultHiddenColumns = [
   'productNumber',
   'warehouse',
   'cost',
-  'broadcast',
   'minOrderQuantity',
   'splits',
   'condition',
@@ -865,6 +864,7 @@ class MyListings extends Component {
       isExportInventoryOpen,
       setExportSidebarOpenState,
       myListingsFilters,
+      updatingDatagrid,
       activeInventoryFilter
     } = this.props
     const { columns, clientMessage, request, openFilterPopup } = this.state
@@ -980,7 +980,7 @@ class MyListings extends Component {
                   onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
                   data-test='my_inventory_add_btn'>
                   <PlusCircle />
-                  <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
+                  <FormattedMessage id='global.addListing' defaultMessage='Add Listing'>
                     {text => text}
                   </FormattedMessage>
                 </Button>
@@ -999,6 +999,7 @@ class MyListings extends Component {
             rows={this.getRows(rows)}
             selectByRowClick
             hideCheckboxes
+            loading={datagrid.loading || updatingDatagrid}
             groupBy={['echoCode']}
             getChildGroups={rows =>
               _(rows)
@@ -1016,19 +1017,23 @@ class MyListings extends Component {
                 })
                 .value()
             }
-            renderGroupLabel={({ row: { value }, groupLength }) => {
-              const [name, number, id, productGroup, tagsNames] = value.split('_')
-              const tagNames = tagsNames ? tagsNames.split(',') : []
-              return (
-                <span>
-                  <span className='flex row right'>
-                    <span>
-                      {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+            renderGroupLabel={({ row: { value }, groupLength }) => null
+              /* #35127
+              {
+                const [name, number, id, productGroup, tagsNames] = value.split('_')
+                const tagNames = tagsNames ? tagsNames.split(',') : []
+                return (
+                  <span>
+                    <span className='flex row right'>
+                      <span>
+                        {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+                      </span>
                     </span>
                   </span>
-                </span>
-              )
-            }}
+                )
+              }
+              */
+            }
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             groupActions={row => {
               let values = row.key.split('_')
