@@ -916,7 +916,7 @@ class Dashboard extends Component {
             {!isClientCompany && (
               <>
                 <SummaryRectangle
-                  onClickUrl={isAdmin && !takeover ? '/companies' : '/manage-guests?type=guests'}
+                  onClickUrl={isAdmin && !takeover ? '/companies/companies' : '/manage-guests?type=guests'}
                   icon={<Briefcase />}
                   data={companiesCount}
                   title={isAdmin && !takeover ? 'Total Companies' : 'Total Guest Companies'}

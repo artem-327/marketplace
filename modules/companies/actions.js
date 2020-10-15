@@ -5,14 +5,6 @@ import { Datagrid } from '~/modules/datagrid'
 
 import { updateIdentity } from '~/modules/auth/actions'
 
-export function handleActiveTab(tab, currentTab) {
-  if (tab.type !== currentTab.type && Datagrid) Datagrid.clear()
-  return {
-    type: AT.COMPANIES_HANDLE_ACTIVE_TAB,
-    payload: { tab }
-  }
-}
-
 export function udpateEnabled(id, enabled) {
   return {
     type: AT.COMPANIES_ENABLED_COMPANY,

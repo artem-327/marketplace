@@ -28,7 +28,6 @@ import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import TabsOperations from '~/modules/operations/components/Tabs'
 import TabsProducts from '~/modules/products/components/Tabs'
-import TabsCompanies from '~/modules/companies/components/Tabs'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -55,7 +54,9 @@ class Navigation extends Component {
     admin: getSafe(() => Router.router.pathname === '/admin', false),
     operations: getSafe(() => Router.router.pathname === '/operations', false),
     products: getSafe(() => Router.router.pathname === '/products', false),
-    companies: getSafe(() => Router.router.pathname === '/companies', false),
+    companies:
+      getSafe(() => Router.router.pathname === '/companies/companies', false) ||
+      getSafe(() => Router.router.pathname === '/companies/users', false),
     manageGuests: getSafe(() => Router.router.pathname === '/manage-guests', false),
     wantedBoard:
       getSafe(() => Router.router.pathname === '/wanted-board/listings', false) ||
@@ -155,7 +156,7 @@ class Navigation extends Component {
       Router.push('/products')
     }
     if (type === 'companies') {
-      Router.push('/companies')
+      Router.push('/companies/companies')
     }
 
     if (defaultLink && !(type === currentType || this.state[type])) {
@@ -238,7 +239,8 @@ class Navigation extends Component {
       router: { pathname, asPath },
       collapsedMenu,
       isClientCompanyAdmin,
-      isClientCompanyManager
+      isClientCompanyManager,
+      companiesTabsNames
     } = this.props
 
     const {
@@ -541,12 +543,26 @@ class Navigation extends Component {
               icon={<Briefcase size={22} />}
               text={formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
               className={companies ? 'opened' : null}
-              opened={companies.toString()}
-              onClick={() => this.toggleOpened('companies')}
+              opened={companies}
+              onClick={() => this.toggleOpened('companies', '/companies/companies')}
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-              refId={'companies'}>
-              <TabsCompanies />
+              refId={'companies'}
+              data-test='navigation_menu_companies_drpdn'>
+              <Dropdown.Menu data-test='navigation_menu_companies_menu'>
+                <PerfectScrollbar>
+                  {companiesTabsNames.map((tab, i) => (
+                    <Dropdown.Item
+                      key={tab.id}
+                      as={MenuLink}
+                      to={`/companies/${tab.type}`}
+                      dataTest={`navigation_companies_${tab.type}_drpdn`}>
+                      {formatMessage({ id: `navigation.${tab.type}`, defaultMessage: `${tab.name}` })}
+                    </Dropdown.Item>
+                  ))}
+                </PerfectScrollbar>
+              </Dropdown.Menu>
             </DropdownItem>
+
             <DropdownItem
               icon={<Package size={22} />}
               text={formatMessage({ id: 'navigation.products', defaultMessage: 'Products' })}
@@ -619,7 +635,8 @@ export default withAuth(
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
         isClientCompanyManager: getSafe(() => store.auth.identity.isClientCompanyManager, false),
         collapsedMenu: store.layout.collapsedMenu,
-        isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator')
+        isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+        companiesTabsNames: store.companiesAdmin.tabsNames
       }),
       {
         triggerSystemSettingsModal,

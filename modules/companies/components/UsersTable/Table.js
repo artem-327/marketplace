@@ -250,7 +250,6 @@ const mapStateToProps = (state, { datagrid }) => {
     currentUser,
     currentUserId,
     editId: state.companiesAdmin.popupValues && state.companiesAdmin.popupValues.id,
-    currentTab: state.companiesAdmin.currentTab,
     loading: state.companiesAdmin.loading,
     editedId: state.companiesAdmin.editedId,
     userRoles: state.companiesAdmin.userRoles,
