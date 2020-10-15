@@ -216,7 +216,7 @@ class ProductCatalogTable extends Component {
             header={
               <FormattedMessage
                 id='global.productOk'
-                defaultMessage='This Company Generic Product is published and will be shown on the Marketplace'
+                defaultMessage='This product is being broadcasted to the marketplace'
               />
             }
             trigger={
