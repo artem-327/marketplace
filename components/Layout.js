@@ -356,27 +356,8 @@ class Layout extends Component {
           <TopMenuContainer>
             <MainTitle as='h1'>{title}</MainTitle>
 
-            <Menu.Menu position='right' className='black'>
-              {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && !isOrderOperator && (
-                <>
-                  <Menu.Item>
-                    <CreateMenu />
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => Router.push('/marketplace/holds')}
-                    data-test='navigation_marketplace'
-                    className='item-cart'>
-                    <HoldIcon />
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => Router.push('/cart')}
-                    data-test='navigation_menu_cart'
-                    className='item-cart'>
-                    <MiniCart />
-                  </Menu.Item>
-                </>
-              )}
-              <Dropdown className='user-menu-wrapper' item icon={icon}>
+            <Menu.Menu position='right' className='black' style={{ flexFlow: 'row-reverse nowrap' }}>
+              <Dropdown key='user-menu' className='user-menu-wrapper' item icon={icon} direction='left'>
                 <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
                   <Dropdown.Item>
                     <Dropdown.Header>{getSafe(() => auth.identity.name, '')}</Dropdown.Header>
@@ -392,15 +373,14 @@ class Layout extends Component {
                     })}
                   </Dropdown.Item>
                   {/* <Dropdown.Item
-                    as={Menu.Item}
-                    onClick={() => chatWidgetToggle()}
-                    data-test='navigation_menu_user_support_chat_drpdn'>
-                    {formatMessage({
-                      id: 'global.supportChat',
-                      defaultMessage: 'Support Chat'
-                    })}
-                  </Dropdown.Item> */}
-
+        as={Menu.Item}
+        onClick={() => chatWidgetToggle()}
+        data-test='navigation_menu_user_support_chat_drpdn'>
+        {formatMessage({
+          id: 'global.supportChat',
+          defaultMessage: 'Support Chat'
+        })}
+      </Dropdown.Item> */}
                   {getSafe(() => auth.identity.isAdmin, false) && takeover && (
                     <Dropdown.Item
                       as={Menu.Item}
@@ -443,6 +423,25 @@ class Layout extends Component {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
+              {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && !isOrderOperator && (
+                <>
+                  <Menu.Item
+                    onClick={() => Router.push('/cart')}
+                    data-test='navigation_menu_cart'
+                    className='item-cart'>
+                    <MiniCart />
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => Router.push('/marketplace/holds')}
+                    data-test='navigation_marketplace'
+                    className='item-cart'>
+                    <HoldIcon />
+                  </Menu.Item>
+                  <Menu.Item>
+                    <CreateMenu />
+                  </Menu.Item>
+                </>
+              )}
             </Menu.Menu>
           </TopMenuContainer>
         </TopMenu>

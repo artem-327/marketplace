@@ -6,7 +6,6 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Dropdown } from 'semantic-ui-react'
 import { Plus } from 'react-feather'
 import { AddBox, Widgets, Inbox, Person, FolderShared, Store } from '@material-ui/icons'
-import Router from 'next/router'
 
 import {
   openPopup as openProductAddForm,
@@ -84,7 +83,6 @@ class CreateMenu extends Component {
 
           <Dropdown.Item
             onClick={() => {
-              Router.push('/inventory/my-products')
               this.props.openProductAddForm()
             }}
           >
@@ -94,7 +92,6 @@ class CreateMenu extends Component {
 
           <Dropdown.Item
             onClick={() => {
-              Router.push('/inventory/my-listings')
               this.props.openListingAddForm(null, true, 0)
             }}
           >
@@ -104,7 +101,6 @@ class CreateMenu extends Component {
 
           <Dropdown.Item
             onClick={() => {
-              Router.push('/wanted-board/listings')
               this.props.openWantedAddForm()
             }}
           >
@@ -114,7 +110,6 @@ class CreateMenu extends Component {
 
           <Dropdown.Item
             onClick={async () => {
-              Router.push('/settings?type=users')
               await this.props.settingsTabChanged({name: "Users", id: 1, type: "users"}, null)
               this.props.openSettingsAddForm()
             }}
@@ -125,7 +120,6 @@ class CreateMenu extends Component {
 
           <Dropdown.Item
             onClick={async () => {
-              Router.push('/manage-guests?type=guests')
               await this.props.guestInitState()
               this.props.openGuestAddForm()
             }}
@@ -136,7 +130,6 @@ class CreateMenu extends Component {
 
           <Dropdown.Item
             onClick={async () => {
-              Router.push('/settings?type=locations')
               await this.props.settingsTabChanged({name: "Locations", id: 2, type: "locations"}, null)
               await this.props.handleLocationsTab('pick-up-locations')
               this.props.openSettingsAddForm()
