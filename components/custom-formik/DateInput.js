@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form } from 'semantic-ui-react'
 import { FastField, Field, getIn } from 'formik'
+import moment from 'moment'
 
 import { getFieldError, setFieldValue } from './helpers'
 
@@ -28,6 +29,11 @@ class FormikInput extends Component {
         name={name}
         validate={validate}
         render={({ field, form }) => {
+          //automatic adjust date in input based on format date
+          const years = moment(field.value, getLocaleDateFormat()).year()
+          const canAutomaticallyAdjustDateFormat =
+            years > 1000 && field.value.length >= 8 && moment(field.value, getLocaleDateFormat()).isValid()
+
           const error = getFieldError(field, form)
           return (
             <Form.Field error={!!error} {...fieldProps}>
@@ -37,7 +43,11 @@ class FormikInput extends Component {
               <DateInput
                 {...safeInputProps}
                 name={name}
-                value={field.value}
+                value={
+                  canAutomaticallyAdjustDateFormat
+                    ? moment(field.value, getLocaleDateFormat()).format(getLocaleDateFormat())
+                    : field.value
+                }
                 clearable
                 onChange={(e, { name, value }) => {
                   setFieldValue(form, name, value, true)
