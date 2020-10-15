@@ -487,6 +487,8 @@ class SubmitOfferPopup extends React.Component {
   async componentDidMount() {
     const { popupValues } = this.props
 
+    if (popupValues) this.getInitialValues()
+
     try {
       if (getSafe(() => popupValues.purchaseRequest.id, '') && getSafe(() => popupValues.productOffer.id, '')) {
         await this.props.matchingProductOfferInfo(popupValues.purchaseRequest.id, popupValues.productOffer.id)
@@ -863,7 +865,7 @@ class SubmitOfferPopup extends React.Component {
     )
   }
 
-  getPkgAmount = () => {
+  getPkgAmount = item => {
     const { matchingOfferInfo, popupValues } = this.props
     let result = ''
     if (
@@ -871,12 +873,46 @@ class SubmitOfferPopup extends React.Component {
       getSafe(() => matchingOfferInfo.automaticPackageAmount, '')
     ) {
       result = matchingOfferInfo.automaticPackageAmount
-    } else if (getSafe(() => popupValues.pkgAmount, '')) {
-      result = popupValues.pkgAmount
+    } else if (getSafe(() => item.pkgAmount, '')) {
+      result = item.pkgAmount
     } else if (getSafe(() => popupValues.cfHistoryLastPkgAmount, '')) {
       result = popupValues.cfHistoryLastPkgAmount
     }
     return result
+  }
+
+  getInitialValues = () => {
+    const { popupValues } = this.props
+
+    const arrayTimestamps = getSafe(() => popupValues.histories.length)
+      ? popupValues.histories.map(historie => (historie.updatedAt ? Date.parse(historie.updatedAt) : ''))
+      : ''
+
+    const newestDate = getSafe(() => arrayTimestamps.length, '') ? Math.max.apply(Math, arrayTimestamps) : ''
+
+    const i =
+      newestDate && getSafe(() => arrayTimestamps.length, '') ? arrayTimestamps.findIndex(el => el === newestDate) : 0
+
+    let items = popupValues.histories[i].items.map(item => ({
+      fulfilledAt: getSafe(() => item.fulfilledAt, '') ? moment(item.fulfilledAt) : '',
+      pkgAmount: this.getPkgAmount(item.pkgAmount),
+      pricePerUOM: getSafe(() => item.pricePerUOM, ''),
+      total:
+        getSafe(() => item.pkgAmount, '') && getSafe(() => item.pricePerUOM, '')
+          ? item.pkgAmount * item.pricePerUOM
+          : getSafe(() => popupValues.cfHistoryLastAveragePricePerUOM, '') &&
+            getSafe(() => popupValues.cfHistoryLastPkgAmount, '')
+          ? popupValues.cfHistoryLastAveragePricePerUOM * popupValues.cfHistoryLastPkgAmount
+          : ''
+    }))
+
+    let initialValues = {
+      expirationDate: getSafe(() => popupValues.expiresAt, ''),
+      productName: getSafe(() => popupValues.productOffer.companyProduct.companyGenericProduct.name, ''),
+      fulfillmentType: getSafe(() => popupValues.cfHistoryLastFulfillmentType, ''),
+      items
+    }
+    this.setState({ initialValues })
   }
 
   render() {
@@ -889,11 +925,9 @@ class SubmitOfferPopup extends React.Component {
       purchaseRequestPending,
       options
     } = this.props
-    const { columns } = this.state
-
+    const { columns, initialValues } = this.state
     const rows = this.getRows()
     const qtyPart = getSafe(() => popupValues.unit.nameAbbreviation, '')
-    const pkgAmount = this.getPkgAmount()
     return (
       <>
         <ToggleForm
@@ -904,27 +938,7 @@ class SubmitOfferPopup extends React.Component {
           validationSchema={this.validationSchema()}
           validateOnChange
           enableReinitialize
-          initialValues={{
-            expirationDate: getSafe(() => popupValues.expiresAt, ''),
-            productName: getSafe(() => popupValues.productOffer.companyProduct.companyGenericProduct.name, ''),
-            fulfillmentType: getSafe(() => popupValues.cfHistoryLastFulfillmentType, ''),
-            items: [
-              {
-                fulfilledAt: getSafe(() => popupValues.fulfilledAt, ''),
-                pkgAmount,
-                pricePerUOM: getSafe(() => popupValues.pricePerUOM, '')
-                  ? popupValues.pricePerUOM
-                  : getSafe(() => popupValues.cfHistoryLastAveragePricePerUOM, ''),
-                total:
-                  getSafe(() => popupValues.pkgAmount, '') && getSafe(() => popupValues.pricePerUOM, '')
-                    ? popupValues.pkgAmount * popupValues.pricePerUOM
-                    : getSafe(() => popupValues.cfHistoryLastAveragePricePerUOM, '') &&
-                      getSafe(() => popupValues.cfHistoryLastPkgAmount, '')
-                    ? popupValues.cfHistoryLastAveragePricePerUOM * popupValues.cfHistoryLastPkgAmount
-                    : ''
-              }
-            ]
-          }}
+          initialValues={initialValues}
           render={({ setFieldValue, values, submitForm, errors, setErrors, validateForm }) => {
             this.setFieldValue = setFieldValue
             this.submitForm = submitForm
