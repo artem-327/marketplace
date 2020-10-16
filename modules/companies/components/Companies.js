@@ -70,7 +70,7 @@ class Companies extends Component {
       }
     }
 
-    return datagridApiMap[currentTab.type]
+    return datagridApiMap[currentTab]
   }
 
   renderContent = () => {
@@ -78,7 +78,7 @@ class Companies extends Component {
 
     return (
       <>
-        {tables[currentTab.type] || <p>This page is still under construction</p>}
+        {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )
   }
@@ -93,13 +93,13 @@ class Companies extends Component {
       >
         <Container fluid className='flex stretched'>
           <div style={{ padding: '20px 30px 0' }}>
-            <TableHandlers />
+            <TableHandlers currentTab={currentTab} />
           </div>
           <div style={{ padding: '20px 30px' }} className='flex stretched'>
             {this.renderContent()}
           </div>
         </Container>
-        {isOpenSidebar && sidebars[currentTab.type]}
+        {isOpenSidebar && sidebars[currentTab]}
       </DatagridProvider>
     )
   }
@@ -108,7 +108,6 @@ class Companies extends Component {
 const mapStateToProps = state => {
   return {
     ...state.companiesAdmin,
-    currentTab: state.companiesAdmin.currentTab,
     auth: state.auth
   }
 }

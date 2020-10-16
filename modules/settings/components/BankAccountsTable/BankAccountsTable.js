@@ -27,7 +27,6 @@ import {
   getVellociAccBalance,
   reloadBankAccounts
 } from '../../actions'
-import Router from 'next/router'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -680,10 +679,6 @@ const mapStateToProps = state => {
     filterValue: state.settings['bank-accountsFilter'],
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0],
     company: company,
     currentUser: state.settings.currentUser,
     tabClicked: state.settings.tabClicked,

@@ -916,6 +916,7 @@ class Dashboard extends Component {
             {!isClientCompany && (
               <>
                 <SummaryRectangle
+                  onClickUrl={isAdmin && !takeover ? '/companies/companies' : '/manage-guests/guests'}
                   icon={<Briefcase />}
                   data={companiesCount}
                   title={isAdmin && !takeover ? 'Total Companies' : 'Total Guest Companies'}
@@ -924,6 +925,7 @@ class Dashboard extends Component {
                   }
                 />
                 <SummaryRectangle
+                  onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-products'}
                   icon={<Package />}
                   data={companyProductsCount}
                   title='Total Products'
@@ -934,6 +936,7 @@ class Dashboard extends Component {
             )}
 
             <SummaryRectangle
+              onClickUrl={'/settings/users'}
               icon={<User />}
               data={usersCount}
               title='Total Users Count'
@@ -944,6 +947,7 @@ class Dashboard extends Component {
             {!isClientCompany && (
               <>
                 <SummaryRectangle
+                  onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-listings'}
                   icon={<DollarSign />}
                   data={productOffersValue && Math.round(productOffersValue)}
                   title={'Total Products Value'}
@@ -951,6 +955,7 @@ class Dashboard extends Component {
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
                 />
                 <SummaryRectangle
+                  onClickUrl={isAdmin && !takeover ? '' : '/marketplace/listings'}
                   icon={<DollarSign />}
                   data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
                   title={'Total Broadcasted Value'}

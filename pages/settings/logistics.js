@@ -11,24 +11,22 @@ class Index extends Component {
     const {
       intl: { formatMessage }
     } = this.props
-    let tabName = getSafe(() => this.props.router.query.type, '')
-    const id = tabName ? `title.settings.${tabName}` : 'title.settings.company-details'
     const titleName = formatMessage(
       {
-        id: 'title.settings', // ! ! !
+        id: 'title.settings',
         defaultMessage: 'Settings - {tab}'
       },
       {
         tab: formatMessage({
-          id: id,
-          defaultMessage: 'Preparing'
+          id: 'title.settings.logistics',
+          defaultMessage: 'Logistics'
         })
       }
     )
 
     return (
       <Layout title={titleName}>
-        <SettingsPage type={tabName} />
+        <SettingsPage currentTab={'logistics'} />
       </Layout>
     )
   }

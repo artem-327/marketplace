@@ -49,7 +49,6 @@ export const initialState = {
   systemSettingsModalOpen: false,
   sysSettingsUpdating: false,
   tabsNames: defaultTabs,
-  currentTab: [],
   locationsTab: 'delivery-locations',
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
@@ -237,7 +236,7 @@ export default function reducer(state = initialState, action) {
     case AT.OPEN_EDIT_POPUP: {
       return {
         ...state,
-        currentForm: state.currentTab, // ! ! ???
+        currentForm: true,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload,
         editedId: payload ? payload.id : null
@@ -313,7 +312,7 @@ export default function reducer(state = initialState, action) {
     case AT.OPEN_ADD_POPUP: {
       return {
         ...state,
-        currentForm: state.currentTab,
+        currentForm: true,
         popupValues: action.payload,
         editedId: payload ? payload.id : null
       }
@@ -326,15 +325,6 @@ export default function reducer(state = initialState, action) {
         editedId: null
       }
     }
-
-    /*case AT.HANDLE_ACTIVE_TAB: {
-      return {
-        ...state,
-        currentTab: action.payload.tab,
-        currentAddForm: null,
-        currentEditForm: null
-      }
-    }*/
 
     case AT.HANDLE_FILTERS_VALUE: {
       return {
@@ -742,7 +732,7 @@ export default function reducer(state = initialState, action) {
     case AT.POST_NEW_WAREHOUSE_POPUP: {
       return {
         ...state,
-        currentAddForm: state.currentTab
+        currentAddForm: true
       }
     }
 
@@ -1078,12 +1068,9 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.DELETE_BRANCH_FULFILLED: {
-      let property = state.currentTab.type === 'warehouses' ? 'warehousesRows' : 'branchesRows'
-
       return {
         ...state,
-        loading: false,
-        [property]: state[property].filter(warehouse => warehouse.id !== payload)
+        loading: false
       }
     }
 
@@ -1091,19 +1078,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
-      }
-    }
-
-    case AT.TAB_CHANGED: {
-      return {
-        ...state,
-        currentTab: payload,
-        isOpenSidebar: state.currentTab !== payload ? false : state.isOpenSidebar,
-        isOpenPopup: state.currentTab !== payload ? false : state.isOpenPopup,
-        popupValues: state.currentTab !== payload ? null : state.popupValues,
-        filterValue: state.currentTab !== payload ? '' : state.filterValue,
-        editedId: state.currentTab !== payload ? null : state.editedId,
-        tabClicked: !state.tabClicked
       }
     }
 

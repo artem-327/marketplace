@@ -172,10 +172,10 @@ class VellociRegister extends Component {
 
       await postRegisterVelloci(body, companyId, files)
       if (companyId) {
-        Router.push('/companies')
+        Router.push('/companies/companies')
       } else {
         await getIdentity()
-        Router.push('/settings?type=bank-accounts')
+        Router.push('/settings/bank-accounts')
       }
     } catch (error) {
       console.error(error)

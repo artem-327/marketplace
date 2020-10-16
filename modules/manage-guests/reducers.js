@@ -9,7 +9,6 @@ export const initialState = {
   editedId: null,
   loading: false,
   updating: false,
-  //currentTab: '',
   guestsTab: 'company-info',
   isOpenCompanyEdit: false,
   companyEditValues: null,
