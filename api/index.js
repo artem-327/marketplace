@@ -6,23 +6,23 @@ import { refreshToken } from '~/utils/auth'
 import { getSafe } from '~/utils/functions'
 
 //axios.defaults.baseURL = process.env.REACT_APP_API_URL
-const axiosApiInstance = axios.create()
 
-axiosApiInstance.defaults.validateStatus = status => {
+axios.defaults.validateStatus = status => {
   return status < 400
 }
 
-axiosApiInstance.interceptors.request.use(
+axios.interceptors.request.use(
   async function (config) {
     // Do something before request is sent
     const auth = await Cookie.getJSON('auth')
-    console.log('auth====================================')
-    console.log(auth)
-    console.log('====================================')
-    console.log('config====================================')
-    console.log(config)
-    console.log('====================================')
-    if (auth) config.headers['Authorization'] = 'Bearer ' + auth.access_token
+
+    if (
+      auth &&
+      (!config.headers['Authorization'] ||
+        (getSafe(() => auth.access_token, '') !== getSafe(() => config.headers['Authorization'], '') &&
+          !getSafe(() => config.headers['Authorization'], '').includes('Basic'))) // 'Basic' means Authorization from refresh token request from auth.js from refreshToken()
+    )
+      config.headers['Authorization'] = 'Bearer ' + auth.access_token
 
     return config
   },
@@ -32,7 +32,18 @@ axiosApiInstance.interceptors.request.use(
   }
 )
 
-axiosApiInstance.interceptors.response.use(
+let isAlreadyFetchingAccessToken = false
+let subscribers = []
+
+function onAccessTokenFetched(access_token) {
+  subscribers = subscribers.filter(callback => callback(access_token))
+}
+
+function addSubscriber(callback) {
+  subscribers.push(callback)
+}
+
+axios.interceptors.response.use(
   response => {
     try {
       Message && Message.checkForMessages && Message.checkForMessages(response)
@@ -42,38 +53,43 @@ axiosApiInstance.interceptors.response.use(
     return response
   },
   async function (error) {
-    console.log('error===interceptors=================================')
-    console.log(error.response)
-    console.log('====================================')
-    const originalRequest = getSafe(() => error.response.config, '')
+    const {
+      response: { status, config }
+    } = error
+    const originalRequest = config
 
-    if (getSafe(() => error.response.status, '') === 401 && !originalRequest._retry) {
-      originalRequest._retry = true
-      const data = await refreshToken()
-      console.log('data===refreshToken=================================')
-      console.log(data)
-      console.log('====================================')
-      //axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.access_token
-      if (data) return await axiosApiInstance(originalRequest)
+    if (status === 401) {
+      if (!isAlreadyFetchingAccessToken) {
+        isAlreadyFetchingAccessToken = true
+        const data = await refreshToken()
+        isAlreadyFetchingAccessToken = false
+        onAccessTokenFetched(data.access_token)
+      }
+
+      const retryOriginalRequest = new Promise(resolve => {
+        addSubscriber(access_token => {
+          originalRequest.headers.Authorization = 'Bearer ' + access_token
+          resolve(axios(originalRequest))
+        })
+      })
+      return retryOriginalRequest
     }
 
-    if (getSafe(() => error.response.status, '') >= 403) {
-      switch (error.response.status) {
-        case 500:
-          hasWindow && window.localStorage.setItem('errorStatus', '500')
-          Router.push('/errors')
-          break
-        case 504:
-          hasWindow && window.localStorage.setItem('errorStatus', '504')
-          Router.push('/errors')
-          break
-        case 403:
-          hasWindow && window.localStorage.setItem('errorStatus', '403')
-          Router.push('/errors')
-          break
-        default:
-          break
-      }
+    switch (status) {
+      case 500:
+        hasWindow && window.localStorage.setItem('errorStatus', '500')
+        Router.push('/errors')
+        break
+      case 504:
+        hasWindow && window.localStorage.setItem('errorStatus', '504')
+        Router.push('/errors')
+        break
+      case 403:
+        hasWindow && window.localStorage.setItem('errorStatus', '403')
+        Router.push('/errors')
+        break
+      default:
+        break
     }
 
     try {
@@ -97,24 +113,23 @@ axiosApiInstance.interceptors.response.use(
 
           Message.checkForMessages(error.response)
 
-          if (getSafe(() => error.response.status, '') >= 403) {
-            switch (error.response.status) {
-              case 500:
-                hasWindow && window.localStorage.setItem('errorStatus', '500')
-                Router.push('/errors')
-                break
-              case 504:
-                hasWindow && window.localStorage.setItem('errorStatus', '504')
-                Router.push('/errors')
-                break
-              case 403:
-                hasWindow && window.localStorage.setItem('errorStatus', '403')
-                Router.push('/errors')
-                break
-              default:
-                break
-            }
+          switch (status) {
+            case 500:
+              hasWindow && window.localStorage.setItem('errorStatus', '500')
+              Router.push('/errors')
+              break
+            case 504:
+              hasWindow && window.localStorage.setItem('errorStatus', '504')
+              Router.push('/errors')
+              break
+            case 403:
+              hasWindow && window.localStorage.setItem('errorStatus', '403')
+              Router.push('/errors')
+              break
+            default:
+              break
           }
+
           resolve(Promise.reject(error))
         }
 
@@ -141,4 +156,4 @@ axiosApiInstance.interceptors.response.use(
   }
 )
 
-export default axiosApiInstance
+export default axios

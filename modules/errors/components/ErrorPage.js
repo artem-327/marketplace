@@ -112,7 +112,7 @@ class ErrorPage extends Component {
 
   render() {
     const { errorSvg, errorType, errorStatus } = this.state
-    const isUnathorized = errorStatus === ERROR_STATUSES.INTERNATL_SERVER_ERROR
+    const isInternalServerError = errorStatus === ERROR_STATUSES.INTERNATL_SERVER_ERROR
 
     return (
       <PageError>
@@ -131,13 +131,13 @@ class ErrorPage extends Component {
         <ButtonDiv>
           <CustomButton
             type='button'
-            onClick={() => (isUnathorized ? Router.push('/auth/logout?auto=true') : Router.back())}>
+            onClick={() => (isInternalServerError ? Router.push('/auth/logout?auto=true') : Router.back())}>
             <div>
               <Layers size={22} />
             </div>
             <ButtonContent>
               <FormattedMessage
-                id={isUnathorized ? 'error.logout' : 'error.bringMeBack'}
+                id={isInternalServerError ? 'error.logout' : 'error.bringMeBack'}
                 defaultMessage='Bring me back to last page'>
                 {text => text}
               </FormattedMessage>
