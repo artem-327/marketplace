@@ -496,7 +496,7 @@
   "global.unmapped": "unmapped",
   "global.unmapped.cptlz": "Unmapped",
   "global.notPublished": "This Company Generic Product is not published and will not be shown on the Marketplace",
-  "global.productOk": "This Company Generic Product is published and will be shown on the Marketplace",
+  "global.productOk": "This product is being broadcasted to the marketplace",
   "global.productStatusIndicator": "Status indicator if Company Product will be shown on Marketplace",
   "global.country": "Country",
   "global.province": "Province",
