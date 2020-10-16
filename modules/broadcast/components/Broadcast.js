@@ -57,6 +57,13 @@ const CustomButton = styled(Button)`
   min-width: auto !important;
 `
 
+const FormFieldBroadcastAllButton = styled(Form.Field)`
+  .ui.button.basic,
+  .ui.button.outline {
+    padding: 7px !important;
+  }
+`
+
 class Broadcast extends Component {
   state = {
     filterSearch: '',
@@ -560,6 +567,7 @@ class Broadcast extends Component {
     await deleteTemplate(id)
 
     setFieldValue('name', '')
+    this.setState({ selectedTemplate: { id: '' } })
 
     toastManager.add(
       generateToastMarkup(
@@ -594,17 +602,16 @@ class Broadcast extends Component {
       </Form.Field>
     )
     const broadcastButton = (
-      <Form.Field>
+      <FormFieldBroadcastAllButton>
         <label>&nbsp;</label>
-        <Button
-          style={{ padding: '5px !important' }}
+        <CustomButton
           onClick={e => this.handleChange(this.getFilteredTree().getPath()[0], 'broadcast', e)}
           fluid
           basic
           color='blue'>
           {formatMessage({ id: 'broadcast.toAll', defaultMessage: 'Broadcast to All' })}
-        </Button>
-      </Form.Field>
+        </CustomButton>
+      </FormFieldBroadcastAllButton>
     )
     if (asSidebar) {
       return (
@@ -897,7 +904,7 @@ class Broadcast extends Component {
                                 />
                               </GridColumn>
                               <GridColumn computer={6}>
-                                <Button
+                                <CustomButton
                                   data-test='broadcast_modal_delete_btn'
                                   onClick={() => this.handleTemplateDelete(props.setFieldValue)}
                                   disabled={!this.state.selectedTemplate.id}
@@ -910,7 +917,7 @@ class Broadcast extends Component {
                                     id: 'global.delete',
                                     defaultMessage: 'Delete'
                                   })}
-                                </Button>
+                                </CustomButton>
                               </GridColumn>
                             </GridRow>
                           ) : (
@@ -1009,22 +1016,24 @@ class Broadcast extends Component {
               width={asSidebar ? 16 : 10}
               stretched
               style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
-              <Rule.Root style={asSidebar ? null : { overflowY: 'scroll', flexBasis: '344px' }}>
+              <Rule.Root
+                style={
+                  asSidebar ? { flexBasis: '298px' } : { overflowY: 'scroll', flexBasis: '128px', marginTop: '0px' }
+                }>
                 <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                   <Rule.RowContent>
                     <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select'>
                       {text => text}
                     </FormattedMessage>
                   </Rule.RowContent>
-                  <Rule.Toggle
-                    style={asSidebar ? { flex: '0 0 62px', maxWidth: '60px' } : { flex: '0 0 88px', maxWidth: '60px' }}>
+                  <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : { flex: '0 0 88px', maxWidth: '60px' }}>
                     <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                   </Rule.Toggle>
 
-                  <Rule.Toggle style={{ maxWidth: '110px' }}>
+                  <Rule.Toggle style={!asSidebar ? { maxWidth: '110px' } : {}}>
                     <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
                   </Rule.Toggle>
-                  <Rule.Toggle style={{ maxWidth: '60px' }}>
+                  <Rule.Toggle style={!asSidebar ? { maxWidth: '60px' } : {}}>
                     {!hideFobPrice && <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />}
                   </Rule.Toggle>
                 </Rule.Header>
