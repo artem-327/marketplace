@@ -6,6 +6,7 @@ import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 //components
 import { getSafe } from '~/utils/functions'
+import Router from 'next/router'
 
 const RectangleSummary = styled.div`
   width: 100%;
@@ -110,10 +111,17 @@ const SummaryRectangle = ({
   textAverage,
   average,
   styleCircle,
-  isLastSummary
+  isLastSummary,
+  onClickUrl
 }) => {
   return (
-    <RectangleSummary style={{ marginBottom: isLastSummary ? '0px' : '16px' }}>
+    <RectangleSummary
+      style={{
+        marginBottom: isLastSummary ? '0px' : '16px',
+        ...(onClickUrl && { cursor: 'pointer' })
+      }}
+      onClick={onClickUrl ? () => Router.push(onClickUrl) : undefined}
+    >
       <RectangleSummaryHeader>
         <DivIcon>
           <Circle style={styleCircle}>{icon}</Circle>
@@ -153,7 +161,8 @@ SummaryRectangle.propTypes = {
   textAverage: PropTypes.string,
   average: PropTypes.number,
   styleCircle: PropTypes.object,
-  isLastSummary: PropTypes.bool
+  isLastSummary: PropTypes.bool,
+  onClickUrl: PropTypes.string,
 }
 
 SummaryRectangle.defaultProps = {
@@ -165,7 +174,8 @@ SummaryRectangle.defaultProps = {
   textAverageId: 'dashboard.avg',
   average: 0,
   styleCircle: { border: 'solid 5px #c5ebff', backgroundColor: '#2599d5' },
-  isLastSummary: false
+  isLastSummary: false,
+  onClickUrl: ''
 }
 
 export default SummaryRectangle

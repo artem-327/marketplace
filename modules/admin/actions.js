@@ -395,7 +395,7 @@ export const takeOverCompanyFinish = () => {
   return async dispatch => {
     let payload = await api.takeOverCompanyFinish()
     await dispatch(updateIdentity(payload))
-    Router.push('/companies')
+    Router.push('/companies/companies')
   }
 }
 

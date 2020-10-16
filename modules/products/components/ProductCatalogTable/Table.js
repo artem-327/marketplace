@@ -216,7 +216,7 @@ class ProductCatalogTable extends Component {
             header={
               <FormattedMessage
                 id='global.productOk'
-                defaultMessage='This Company Generic Product is published and will be shown on the Marketplace'
+                defaultMessage='This product is being broadcasted to the marketplace'
               />
             }
             trigger={
@@ -351,7 +351,6 @@ class ProductCatalogTable extends Component {
 
 const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
   const editedId =
-    productsAdmin.currentTab.name === 'Product Catalog' &&
     (!!productsAdmin.currentAddForm || !!productsAdmin.currentEditForm) &&
     productsAdmin.popupValues
       ? productsAdmin.popupValues.id
@@ -360,7 +359,6 @@ const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
   return {
     editedId,
     filterValue: productsAdmin.filterValue,
-    currentTab: productsAdmin.currentTab,
     rows: datagrid.rows.map(c => ({
       ...c,
       company: getSafe(() => c.company, [])

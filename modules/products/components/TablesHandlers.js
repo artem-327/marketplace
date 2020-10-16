@@ -164,7 +164,6 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: getSafe(() => state.productsAdmin.currentTab.type, ''),
     tableHandlersFilters: state.productsAdmin.tableHandlersFilters,
     searchedCompanies: state.productsAdmin.searchedCompanies.map(d => ({
       key: d.id,

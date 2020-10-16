@@ -135,6 +135,10 @@ const StyledButton = styled(Button)`
   }
 `
 
+const CustomForm = styled(Form)`
+  flex-grow: 0 !important;
+`
+
 Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
   return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
@@ -265,61 +269,56 @@ class AddEditEchoProduct extends React.Component {
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
     if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
+
+    if (this.props.addForm) {
+      // Sidebar just opened - Add
+      this.setInitialState(null, { editTab: 0 })
+      this.resetForm()
+    } else {
+      // Sidebar just opened - Edit
+      this.props.loadEditEchoProduct(this.props.popupValues.id, this.props.editTab, true)
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.visible) {
-      if (!prevProps.visible) {
-        if (this.props.addForm) {
-          // Sidebar just opened - Add
-          this.setInitialState(null, { editTab: 0 })
-          this.resetForm()
-        } else {
-          // Sidebar just opened - Edit
-          this.props.loadEditEchoProduct(this.props.popupValues.id, this.props.editTab, true)
-        }
-        return
-      }
+    const { popupValues, editTab } = this.props
 
-      const { popupValues, editTab } = this.props
-
-      if (prevProps.editForm && !prevProps.addForm && this.props.addForm) {
-        // Changed from Edit to Add form
-        this.validateSaveOrSwitchToErrors(() => {
-          this.setInitialState(null, { codesList: [], changedForm: false, editTab: 0 })
-          this.resetForm()
-        })
-        return
-      }
-
-      if (prevProps.addForm && !prevProps.editForm && this.props.editForm) {
-        // Changed from Add to Edit form
-        this.validateSaveOrSwitchToErrors(() => {
-          this.props.loadEditEchoProduct(popupValues.id, editTab, true)
-        })
-        return
-      }
-
-      if (prevProps.editForm && this.props.editForm && prevProps.editInitTrig !== this.props.editInitTrig) {
-        // Changed edit product
-        this.validateSaveOrSwitchToErrors(() => {
-          this.props.loadEditEchoProduct(popupValues.id, editTab, false)
-        })
-        return
-      }
-
-      if (
-        this.props.editForm &&
-        this.props.popupValues &&
-        ((prevProps.popupValues && prevProps.popupValues !== this.props.popupValues) || prevProps.popupValues === null)
-      ) {
-        this.props.searchManufacturers(
-          getSafe(() => this.props.popupValues.manufacturer.name, ''),
-          200
-        )
-        this.setInitialState(this.props.popupValues, { editTab: this.props.editTab })
+    if (prevProps.editForm && !prevProps.addForm && this.props.addForm) {
+      // Changed from Edit to Add form
+      this.validateSaveOrSwitchToErrors(() => {
+        this.setInitialState(null, { codesList: [], changedForm: false, editTab: 0 })
         this.resetForm()
-      }
+      })
+      return
+    }
+
+    if (prevProps.addForm && !prevProps.editForm && this.props.editForm) {
+      // Changed from Add to Edit form
+      this.validateSaveOrSwitchToErrors(() => {
+        this.props.loadEditEchoProduct(popupValues.id, editTab, true)
+      })
+      return
+    }
+
+    if (prevProps.editForm && this.props.editForm && prevProps.editInitTrig !== this.props.editInitTrig) {
+      // Changed edit product
+      this.validateSaveOrSwitchToErrors(() => {
+        this.props.loadEditEchoProduct(popupValues.id, editTab, false)
+      })
+      return
+    }
+
+    if (
+      this.props.editForm &&
+      this.props.popupValues &&
+      ((prevProps.popupValues && prevProps.popupValues !== this.props.popupValues) || prevProps.popupValues === null)
+    ) {
+      this.props.searchManufacturers(
+        getSafe(() => this.props.popupValues.manufacturer.name, ''),
+        200
+      )
+      this.setInitialState(this.props.popupValues, { editTab: this.props.editTab })
+      this.resetForm()
     }
   }
 
@@ -2144,7 +2143,6 @@ class AddEditEchoProduct extends React.Component {
 
   render() {
     const {
-      visible,
       closePopup,
       intl: { formatMessage },
       isLoading,
@@ -2154,7 +2152,7 @@ class AddEditEchoProduct extends React.Component {
     const { editTab } = this.state
 
     return (
-      <Form
+      <CustomForm
         enableReinitialize
         initialValues={this.getInitialFormValues()}
         validationSchema={validationScheme}
@@ -2168,7 +2166,7 @@ class AddEditEchoProduct extends React.Component {
 
           return (
             <FlexSidebar
-              visible={visible}
+              visible={true}
               width='very wide'
               style={{ width: '500px' }}
               direction='right'

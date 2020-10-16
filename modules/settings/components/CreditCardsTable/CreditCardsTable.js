@@ -29,7 +29,6 @@ class ProductCatalogTable extends Component {
       handleOpenConfirmPopup,
       closeConfirmPopup,
       deleteRowById,
-      currentTab,
       loading,
       intl: { formatMessage }
     } = this.props
@@ -78,11 +77,7 @@ const mapStateToProps = state => {
     loading: state.settings.loading,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
-    deleteRowById: state.settings.deleteRowById,
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0]
+    deleteRowById: state.settings.deleteRowById
   }
 }
 

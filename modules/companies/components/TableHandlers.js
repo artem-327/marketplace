@@ -215,7 +215,6 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: getSafe(() => state.companiesAdmin.currentTab.type, ''),
     tableHandlersFilters: state.companiesAdmin.tableHandlersFilters,
     isOpenImportPopup: state.settings.isOpenImportPopup,
     searchedCompaniesFilterLoading: state.companiesAdmin.searchedCompaniesFilterLoading,

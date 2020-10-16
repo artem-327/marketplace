@@ -22,7 +22,7 @@ export default class Payment extends Component {
                 values={{
                   addBankAccount: (
                     <FormattedMessage id='payments.addBankAccount'>
-                      {text => <Link href='/settings?type=bank-accounts'>{text}</Link>}
+                      {text => <Link href='/settings/bank-accounts'>{text}</Link>}
                     </FormattedMessage>
                   )
                 }}

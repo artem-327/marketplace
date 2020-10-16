@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
-import ManageGuests from '~/modules/manage-guests'
+import SettingsPage from '~/modules/settings'
 import Router, { withRouter } from 'next/router'
 import { injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
@@ -13,14 +13,20 @@ class Index extends Component {
     } = this.props
     const titleName = formatMessage(
       {
-        id: 'manageGuests.manageGuestCompanies',
-        defaultMessage: 'Manage Guest Companies'
+        id: 'title.settings',
+        defaultMessage: 'Settings - {tab}'
+      },
+      {
+        tab: formatMessage({
+          id: 'title.settings.users',
+          defaultMessage: 'Users'
+        })
       }
     )
 
     return (
       <Layout title={titleName}>
-        <ManageGuests />
+        <SettingsPage currentTab={'users'} />
       </Layout>
     )
   }

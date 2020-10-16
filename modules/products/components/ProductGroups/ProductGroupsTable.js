@@ -142,7 +142,6 @@ const mapStateToProps = (state, { handleFilterChange, datagrid }) => {
       )
     })),
     filterValue: state.productsAdmin.filterValue,
-    currentTab: state.productsAdmin.currentTab,
     editedId: state.productsAdmin.editedId,
     loading: state.productsAdmin.loading
   }

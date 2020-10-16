@@ -53,7 +53,7 @@ class Tabs extends Component {
       <Menu pointing secondary vertical fluid>
         {tabsNames &&
           tabsNames.map((tab, i) => (
-            <Link href={`/settings?type=${tab.type}`} key={i}>
+            <Link href={`/settings/${tab.type}`} key={i}>
               <Menu.Item
                 onClick={() => this.handleTabClick(tab)}
                 name={tab.name.toUpperCase()}

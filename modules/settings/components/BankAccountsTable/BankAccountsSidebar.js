@@ -6,7 +6,6 @@ import { Formik } from 'formik'
 import { closeSidebar, putBankAccountRequest, postNewDwollaBankAccountRequest } from '../../actions'
 
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import Router from 'next/router'
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -249,11 +248,7 @@ const mapStateToProps = state => {
     popupValues: state.settings.popupValues,
     updating: state.settings.updating,
     country: state.settings.country,
-    currency: getSafe(() => state.settings.currency, currency),
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0]
+    currency: getSafe(() => state.settings.currency, currency)
   }
 }
 
