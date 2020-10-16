@@ -22,7 +22,7 @@ import {
   resendWelcomeEmail,
   setPrimaryUser
 } from '../../actions'
-import Router from 'next/router'
+
 import { Checkbox, Popup, Label, List, Icon } from 'semantic-ui-react'
 
 const handleSwitchEnabled = id => {
@@ -303,10 +303,6 @@ const mapStateToProps = (state, { datagrid }) => {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0],
     loading: state.settings.loading,
     roles: state.settings.roles,
     currentCompanyId: getSafe(() => state.auth.identity.company.id, null)

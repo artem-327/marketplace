@@ -129,14 +129,14 @@ let tutorialTabs = [
 ]
 
 let urlTabs = [
-  '/settings?type=locations',
-  '/settings?type=users',
-  '/settings?type=locations',
+  '/settings/locations',
+  '/settings/users',
+  '/settings/locations',
   '/inventory/my-products',
   '/inventory/my-listings',
-  '/settings?type=global-broadcast',
-  '/settings?type=bank-accounts',
-  '/settings?type=bank-accounts'
+  '/settings/global-broadcast',
+  '/settings/bank-accounts',
+  '/settings/bank-accounts'
 ]
 
 class Tutorial extends Component {
@@ -156,12 +156,12 @@ class Tutorial extends Component {
       if (isClientCompanyAdmin) {
         tutorials.push('locations', 'users', 'pickup', 'marketplace', 'registerAccount', 'addAccount')
         urls.push(
-          '/settings?type=locations',
-          '/settings?type=users',
-          '/settings?type=locations',
-          '/settings?type=global-broadcast',
-          '/settings?type=bank-accounts',
-          '/settings?type=bank-accounts'
+          '/settings/locations',
+          '/settings/users',
+          '/settings/locations',
+          '/settings/global-broadcast',
+          '/settings/bank-accounts',
+          '/settings/bank-accounts'
         )
       }
       if (isProductCatalogAdmin) {
@@ -170,7 +170,7 @@ class Tutorial extends Component {
       }
       if (isProductOfferManager) {
         tutorials.push('inventory', 'marketplace')
-        urls.push('/inventory/my-listings', '/settings?type=global-broadcast')
+        urls.push('/inventory/my-listings', '/settings/global-broadcast')
       }
       tutorialTabs = [...new Set(tutorials)]
       urlTabs = [...new Set(urls)]

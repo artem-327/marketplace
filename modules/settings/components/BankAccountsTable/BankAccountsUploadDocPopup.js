@@ -7,7 +7,6 @@ import { UploadCloud } from 'react-feather'
 import styled from 'styled-components'
 //import { closeUploadDocumentsPopup, dwollaGetVerificationDocumentTypes } from "../../actions";
 import * as Actions from '../../actions'
-import Router from 'next/dist/client/router'
 import UploadVerifyFiles from './UploadVerifyFiles'
 import { getIdentity } from '~/modules/auth/actions'
 import { getSafe } from '~/utils/functions'
@@ -235,11 +234,7 @@ const mapStateToProps = state => {
       }
     }),
     documentsOwner: getSafe(() => state.settings.documentsOwner, ''),
-    dwollaAccountStatus: getSafe(() => state.auth.identity.company.dwollaAccountStatus, ''),
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0]
+    dwollaAccountStatus: getSafe(() => state.auth.identity.company.dwollaAccountStatus, '')
   }
 }
 

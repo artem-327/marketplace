@@ -46,7 +46,14 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     currentType: '',
-    settings: getSafe(() => Router.router.pathname === '/settings', false),
+    settings: getSafe(() => Router.router.pathname === '/settings/company-details', false) ||
+      getSafe(() => Router.router.pathname === '/settings/system-settings', false) ||
+      getSafe(() => Router.router.pathname === '/settings/users', false) ||
+      getSafe(() => Router.router.pathname === '/settings/locations', false) ||
+      getSafe(() => Router.router.pathname === '/settings/global-broadcast', false) ||
+      getSafe(() => Router.router.pathname === '/settings/bank-accounts', false) ||
+      getSafe(() => Router.router.pathname === '/settings/logistics', false) ||
+      getSafe(() => Router.router.pathname === '/settings/documents', false),
     orders:
       getSafe(() => Router.router.pathname === '/orders', false) ||
       getSafe(() => Router.router.pathname === '/orders/detail', false),
@@ -59,7 +66,8 @@ class Navigation extends Component {
     companies:
       getSafe(() => Router.router.pathname === '/companies/companies', false) ||
       getSafe(() => Router.router.pathname === '/companies/users', false),
-    manageGuests: getSafe(() => Router.router.pathname === '/manage-guests', false),
+    manageGuests: getSafe(() => Router.router.pathname === '/manage-guests/guests', false) ||
+      getSafe(() => Router.router.pathname === '/manage-guests/chat', false),
     wantedBoard:
       getSafe(() => Router.router.pathname === '/wanted-board/listings', false) ||
       getSafe(() => Router.router.pathname === '/wanted-board/bids-sent', false) ||
@@ -111,14 +119,7 @@ class Navigation extends Component {
           break
       }
     }*/
-
-    if (pathname === '/settings' && tab) {
-      const newTab = tabsNames.find(t => t.type === tab)
-      tabChanged(newTab, currentSettingsTab)
-      router.push('/settings?type=' + tab)
-    } else {
-      router.push(to)
-    }
+    router.push(to)
   }
 
   createRef = (dropdownItem, refId) => {
@@ -411,8 +412,8 @@ class Navigation extends Component {
             icon={<Coffee size={22} />}
             text={formatMessage({ id: 'navigation.manageGuests', defaultMessage: 'Manage Guests' })}
             className={manageGuests ? 'opened' : null}
-            opened={manageGuests.toString()}
-            onClick={() => this.toggleOpened('manageGuests', '/manage-guests?type=guests')}
+            opened={manageGuests}
+            onClick={() => this.toggleOpened('manageGuests', '/manage-guests/guests')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'manageGuests'}
             data-test='navigation_menu_manage_guests_drpdn'>
@@ -420,14 +421,14 @@ class Navigation extends Component {
               <PerfectScrollbar>
                 <Dropdown.Item
                   as={MenuLink}
-                  to='/manage-guests?type=guests'
+                  to='/manage-guests/guests'
                   dataTest='navigation_manage_guests_guests_drpdn'>
                   {formatMessage({ id: 'navigation.guests', defaultMessage: 'Guests' })}
                 </Dropdown.Item>
                 {false && (
                   <Dropdown.Item
                     as={MenuLink}
-                    to='/manage-guests?type=chat'
+                    to='/manage-guests/chat'
                     dataTest='navigation_manage_guests_chat_drpdn'>
                     {formatMessage({ id: 'navigation.chat', defaultMessage: 'Chat' })}
                   </Dropdown.Item>
@@ -443,7 +444,7 @@ class Navigation extends Component {
             text={formatMessage({ id: 'navigation.myAccount', defaultMessage: 'My Account' })}
             className={settings ? 'opened' : null}
             opened={settings.toString()}
-            onClick={() => this.toggleOpened('settings', '/settings?type=company-details')}
+            onClick={() => this.toggleOpened('settings', '/settings/company-details')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'settings'}
             data-test='navigation_menu_settings_drpdn'>
@@ -453,14 +454,14 @@ class Navigation extends Component {
                   <>
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/settings?type=company-details'
+                      to='/settings/company-details'
                       tab='company-details'
                       dataTest='navigation_settings_company_details_drpdn'>
                       {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Details' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/settings?type=system-settings'
+                      to='/settings/system-settings'
                       tab='system-settings'
                       dataTest='navigation_settings_system_settings_drpdn'>
                       {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Settings' })}
@@ -470,7 +471,7 @@ class Navigation extends Component {
                 {isCompanyAdmin || isUserAdmin || isClientCompanyAdmin ? (
                   <Dropdown.Item
                     as={MenuLink}
-                    to='/settings?type=users'
+                    to='/settings/users'
                     tab='users'
                     dataTest='navigation_settings_users_drpdn'>
                     {formatMessage({ id: 'navigation.users', defaultMessage: 'Users' })}
@@ -480,7 +481,7 @@ class Navigation extends Component {
                   <>
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/settings?type=locations'
+                      to='/settings/locations'
                       tab='locations'
                       dataTest='navigation_settings_locations_drpdn'>
                       {formatMessage({ id: 'navigation.locations', defaultMessage: 'Locations' })}
@@ -492,7 +493,7 @@ class Navigation extends Component {
                     {!isClientCompanyAdmin && (
                       <Dropdown.Item
                         as={MenuLink}
-                        to='/settings?type=global-broadcast'
+                        to='/settings/global-broadcast'
                         tab='global-broadcast'
                         dataTest='navigation_settings_global_broadcast_drpdn'>
                         {formatMessage({ id: 'navigation.globalPriceBook', defaultMessage: 'Global Price Book' })}
@@ -500,21 +501,21 @@ class Navigation extends Component {
                     )}
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/settings?type=bank-accounts'
+                      to='/settings/bank-accounts'
                       tab='bank-accounts'
                       dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/settings?type=logistics'
+                      to='/settings/logistics'
                       tab='logistics'
                       dataTest='navigation_settings_logistics_drpdn'>
                       {formatMessage({ id: 'navigation.logistics', defaultMessage: 'Logistics' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/settings?type=documents'
+                      to='/settings/documents'
                       tab='documents'
                       dataTest='navigation_settings_documents_drpdn'>
                       {formatMessage({ id: 'navigation.documents', defaultMessage: 'Documents' })}
