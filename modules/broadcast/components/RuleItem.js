@@ -108,7 +108,8 @@ const RuleItem = props => {
           )}
         </Rule.RowContent>
 
-        <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : { flex: '0 0 88px' }}>
+        <Rule.Toggle
+          style={asSidebar ? { flex: '0 0 62px', maxWidth: '60px' } : { flex: '0 0 88px', maxWidth: '60px' }}>
           <Checkbox
             className={rule.priceOverride && nodeBroadcast === 1 && 'independent'}
             data-test='broadcast_rule_toggle_chckb'

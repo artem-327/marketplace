@@ -49,10 +49,13 @@ const UnpaddedRow = {
   `
 }
 
-const templateValidation = () =>
-  Yup.object().shape({
-    name: Yup.string().required(errorMessages.requiredMessage)
-  })
+const CustomGridColumn = styled(GridColumn)`
+  padding-left: 0px !important;
+`
+
+const CustomButton = styled(Button)`
+  min-width: auto !important;
+`
 
 class Broadcast extends Component {
   state = {
@@ -594,6 +597,7 @@ class Broadcast extends Component {
       <Form.Field>
         <label>&nbsp;</label>
         <Button
+          style={{ padding: '5px !important' }}
           onClick={e => this.handleChange(this.getFilteredTree().getPath()[0], 'broadcast', e)}
           fluid
           basic
@@ -780,7 +784,6 @@ class Broadcast extends Component {
                 <Divider />
                 <Formik
                   initialValues={templateInitialValues}
-                  validationSchema={templateValidation()}
                   validateOnChange={true}
                   enableReinitialize
                   onSubmit={async (values, { setSubmitting, setFieldValue }) => {
@@ -828,7 +831,7 @@ class Broadcast extends Component {
 
                           {asSidebar ? (
                             <GridRow>
-                              <GridColumn computer={11}>
+                              <GridColumn computer={10}>
                                 <FormikDropdown
                                   name='templates'
                                   data-test='broadcast_modal_template_drpdn_addtn'
@@ -893,11 +896,11 @@ class Broadcast extends Component {
                                   }}
                                 />
                               </GridColumn>
-                              <GridColumn computer={5}>
+                              <GridColumn computer={6}>
                                 <Button
                                   data-test='broadcast_modal_delete_btn'
                                   onClick={() => this.handleTemplateDelete(props.setFieldValue)}
-                                  disabled={!this.state.selectedTemplate}
+                                  disabled={!this.state.selectedTemplate.id}
                                   loading={this.props.templateDeleting}
                                   type='button'
                                   basic
@@ -912,7 +915,7 @@ class Broadcast extends Component {
                             </GridRow>
                           ) : (
                             <GridRow>
-                              <GridColumn computer={11}>
+                              <GridColumn computer={10}>
                                 <Dropdown
                                   selectOnBlur={false}
                                   data-test='broadcast_modal_template_drpdn'
@@ -936,11 +939,11 @@ class Broadcast extends Component {
                                   }))}
                                 />
                               </GridColumn>
-                              <GridColumn computer={5}>
-                                <Button
+                              <CustomGridColumn computer={6}>
+                                <CustomButton
                                   data-test='broadcast_modal_delete_btn'
                                   onClick={() => this.handleTemplateDelete(props.setFieldValue)}
-                                  disabled={!this.state.selectedTemplate}
+                                  disabled={!this.state.selectedTemplate.id}
                                   loading={this.props.templateDeleting}
                                   type='button'
                                   basic
@@ -950,8 +953,8 @@ class Broadcast extends Component {
                                     id: 'global.delete',
                                     defaultMessage: 'Delete'
                                   })}
-                                </Button>
-                              </GridColumn>
+                                </CustomButton>
+                              </CustomGridColumn>
                             </GridRow>
                           )}
 
@@ -965,7 +968,7 @@ class Broadcast extends Component {
                                   }
                                 : null
                             }>
-                            <GridColumn computer={11}>
+                            <GridColumn computer={10}>
                               <FormikInput
                                 inputProps={{
                                   fluid: true,
@@ -979,20 +982,22 @@ class Broadcast extends Component {
                               />
                             </GridColumn>
 
-                            <GridColumn computer={5}>
-                              <Button
+                            <CustomGridColumn computer={6}>
+                              <CustomButton
                                 onClick={this.submitForm}
                                 type='button'
                                 loading={this.props.templateSaving}
                                 fluid
+                                basic
                                 positive
+                                disabled={!props.values.name}
                                 data-test='broadcast_modal_submit_btn'>
                                 {formatMessage({
                                   id: 'global.save',
                                   defaultMessage: 'Save'
                                 })}
-                              </Button>
-                            </GridColumn>
+                              </CustomButton>
+                            </CustomGridColumn>
                           </GridRow>
                         </Grid>
                       </Form>
@@ -1004,21 +1009,22 @@ class Broadcast extends Component {
               width={asSidebar ? 16 : 10}
               stretched
               style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
-              <Rule.Root style={asSidebar ? null : { overflowY: 'scroll', flexBasis: '300px' }}>
+              <Rule.Root style={asSidebar ? null : { overflowY: 'scroll', flexBasis: '344px' }}>
                 <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
                   <Rule.RowContent>
                     <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select'>
                       {text => text}
                     </FormattedMessage>
                   </Rule.RowContent>
-                  <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : { flex: '0 0 88px' }}>
+                  <Rule.Toggle
+                    style={asSidebar ? { flex: '0 0 62px', maxWidth: '60px' } : { flex: '0 0 88px', maxWidth: '60px' }}>
                     <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                   </Rule.Toggle>
 
-                  <Rule.Toggle>
+                  <Rule.Toggle style={{ maxWidth: '110px' }}>
                     <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
                   </Rule.Toggle>
-                  <Rule.Toggle>
+                  <Rule.Toggle style={{ maxWidth: '60px' }}>
                     {!hideFobPrice && <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />}
                   </Rule.Toggle>
                 </Rule.Header>

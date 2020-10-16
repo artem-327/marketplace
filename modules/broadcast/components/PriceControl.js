@@ -202,7 +202,7 @@ export default class PriceControl extends Component {
 }
 
 const PriceInput = styled(Input)`
-  width: 138px;
+  width: 110px;
   margin-right: 10px;
   border-right: 1px solid #dee2e6;
   padding: 8px;
@@ -211,6 +211,7 @@ const PriceInput = styled(Input)`
 const ControlBox = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 60px;
 
   .ui.radio.checkbox input:focus:checked ~ label:after,
   .ui.radio.checkbox input:checked ~ label:after {
@@ -232,4 +233,5 @@ const Box = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding-right: 10px;
+  max-width: 170px;
 `
