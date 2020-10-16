@@ -13,7 +13,6 @@ import {
 
 import { Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { getSafe } from '~/utils/functions'
@@ -297,10 +296,6 @@ const mapStateToProps = state => {
     countries: state.settings.countries,
     reloadFilter: {
       props: {
-        currentTab:
-          Router && Router.router && Router.router.query && Router.router.query.type
-            ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-            : state.settings.tabsNames[0],
         deliveryAddressesFilter: state.settings.deliveryAddressesFilter
       },
       value: state.settings.filterValue

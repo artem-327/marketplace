@@ -51,11 +51,9 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = ({ productsAdmin }, props) => {
-  const currentTab = productsAdmin.currentTab.name === props.tabName
   return {
-    visible: currentTab && (!!productsAdmin.currentAddForm || !!productsAdmin.currentEditForm),
-    addForm: currentTab && !!productsAdmin.currentAddForm,
-    editForm: currentTab && !!productsAdmin.currentEditForm,
+    addForm: productsAdmin.currentAddForm,
+    editForm: productsAdmin.currentEditForm,
     popupValues: productsAdmin.popupValues,
     editTab: productsAdmin.editEchoProductEditTab,
     editInitTrig: productsAdmin.editEchoProductInitTrig,

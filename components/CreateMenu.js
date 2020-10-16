@@ -114,7 +114,7 @@ class CreateMenu extends Component {
 
           <Dropdown.Item
             onClick={async () => {
-              Router.push('/settings?type=users')
+              Router.push('/settings/users')
               await this.props.settingsTabChanged({name: "Users", id: 1, type: "users"}, null)
               this.props.openSettingsAddForm()
             }}
@@ -136,7 +136,7 @@ class CreateMenu extends Component {
 
           <Dropdown.Item
             onClick={async () => {
-              Router.push('/settings?type=locations')
+              Router.push('/settings/locations')
               await this.props.settingsTabChanged({name: "Locations", id: 2, type: "locations"}, null)
               await this.props.handleLocationsTab('pick-up-locations')
               this.props.openSettingsAddForm()

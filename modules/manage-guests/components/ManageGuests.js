@@ -69,11 +69,6 @@ class ManageGuests extends Component {
     if (isOpenPopup) closePopup()
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { isOpenPopup, closePopup, currentTab } = this.props
-    if (currentTab !== prevProps.currentTab && isOpenPopup) closePopup()
-  }
-
   renderContent = () => {
     const { currentTab, isOpenPopup } = this.props
 
@@ -148,7 +143,6 @@ class ManageGuests extends Component {
 const mapStateToProps = ({ manageGuests, auth }, { router }) => {
   return {
     ...manageGuests,
-    currentTab: getSafe(() => router.query.type, ''),
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
   }
 }

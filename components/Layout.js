@@ -75,8 +75,8 @@ const clientCompanyRoutes = {
   restrictedRoutes: [
     '/inventory',
     '/orders?type=sales',
-    '/settings?type=products',
-    '/settings?type=global-broadcast',
+    '/inventory/my-products',
+    '/settings/global-broadcast',
     '/wanted-board/listings',
     '/wanted-board/bids-sent'
   ],
