@@ -280,6 +280,7 @@ class Layout extends Component {
       router: { pathname },
       title = 'Echo exchange',
       auth,
+      identity,
       takeOverCompanyFinish,
       triggerSystemSettingsModal,
       profile,
@@ -299,6 +300,16 @@ class Layout extends Component {
       isOrderOperator,
       renderCopyright
     } = this.props
+
+    const {
+      isClientCompanyManager,
+      isCompanyAdmin,
+      isMerchant,
+      isProductCatalogAdmin,
+      isProductOfferManager,
+      isUserAdmin,
+    } = identity
+
     let icon = Icon && <Icon name='user' />
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
     if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
@@ -437,9 +448,16 @@ class Layout extends Component {
                     className='item-cart'>
                     <HoldIcon />
                   </Menu.Item>
-                  <Menu.Item>
-                    <CreateMenu />
-                  </Menu.Item>
+                  {(isClientCompanyManager ||
+                    isCompanyAdmin ||
+                    isMerchant ||
+                    isProductCatalogAdmin ||
+                    isProductOfferManager ||
+                    isUserAdmin) && (
+                      <Menu.Item>
+                        <CreateMenu />
+                      </Menu.Item>
+                  )}
                 </>
               )}
             </Menu.Menu>
@@ -508,6 +526,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    identity: getSafe(() => state.auth.identity, {}),
     profile: state.profile,
     collapsedMenu: state.layout.collapsedMenu,
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),

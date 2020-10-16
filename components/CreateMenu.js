@@ -6,6 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Dropdown } from 'semantic-ui-react'
 import { Plus } from 'react-feather'
 import { AddBox, Widgets, Inbox, Person, FolderShared, Store } from '@material-ui/icons'
+import Router from 'next/router'
 
 import {
   openPopup as openProductAddForm,
@@ -66,8 +67,29 @@ export const CreateDropdown = styled(Dropdown)`
 `
 
 class CreateMenu extends Component {
-
   render() {
+
+    const {
+      openProductAddForm,
+      openListingAddForm,
+      openWantedAddForm,
+      settingsTabChanged,
+      openSettingsAddForm,
+      openGuestAddForm,
+      guestInitState,
+      handleLocationsTab,
+      identity
+    } = this.props
+
+    const {
+      isClientCompanyAdmin,
+      isClientCompanyManager,
+      isCompanyAdmin,
+      isMerchant,
+      isProductCatalogAdmin,
+      isProductOfferManager,
+      isUserAdmin,
+    } = identity
 
     return (
       <CreateDropdown
@@ -81,63 +103,81 @@ class CreateMenu extends Component {
         }>
         <Dropdown.Menu data-test='navigation_menu_create_drpdn'>
 
-          <Dropdown.Item
-            onClick={() => {
-              this.props.openProductAddForm()
-            }}
-          >
-            <AddBox className={'menu-icon'} />
-            <FormattedMessage id='createMenu.newProduct' defaultMessage='New Product' />
-          </Dropdown.Item>
+          {(isCompanyAdmin || isProductCatalogAdmin) && (
+            <Dropdown.Item
+              onClick={() => {
+                Router.push('/inventory/my-products')
+                openProductAddForm()
+              }}
+            >
+              <AddBox className={'menu-icon'} />
+              <FormattedMessage id='createMenu.newProduct' defaultMessage='New Product' />
+            </Dropdown.Item>
+          )}
 
-          <Dropdown.Item
-            onClick={() => {
-              this.props.openListingAddForm(null, true, 0)
-            }}
-          >
-            <Widgets className={'menu-icon'} />
-            <FormattedMessage id='createMenu.newListing' defaultMessage='New Listing' />
-          </Dropdown.Item>
+          {(isCompanyAdmin || isMerchant || isProductOfferManager) && (
+            <Dropdown.Item
+              onClick={() => {
+                Router.push('/inventory/my-listings')
+                openListingAddForm(null, true, 0)
+              }}
+            >
+              <Widgets className={'menu-icon'} />
+              <FormattedMessage id='createMenu.newListing' defaultMessage='New Listing' />
+            </Dropdown.Item>
+          )}
 
-          <Dropdown.Item
-            onClick={() => {
-              this.props.openWantedAddForm()
-            }}
-          >
-            <Inbox className={'menu-icon'} />
-            <FormattedMessage id='createMenu.newWanted' defaultMessage='New Wanted' />
-          </Dropdown.Item>
+          {(isCompanyAdmin || isMerchant) && (
+            <Dropdown.Item
+              onClick={() => {
+                Router.push('/wanted-board/listings')
+                openWantedAddForm()
+              }}
+            >
+              <Inbox className={'menu-icon'} />
+              <FormattedMessage id='createMenu.newWanted' defaultMessage='New Wanted' />
+            </Dropdown.Item>
+          )}
 
-          <Dropdown.Item
-            onClick={async () => {
-              await this.props.settingsTabChanged({name: "Users", id: 1, type: "users"}, null)
-              this.props.openSettingsAddForm()
-            }}
-          >
-            <Person className={'menu-icon'} />
-            <FormattedMessage id='createMenu.newUser' defaultMessage='New User' />
-          </Dropdown.Item>
+          {(isCompanyAdmin || isUserAdmin) && (
+            <Dropdown.Item
+              onClick={async () => {
+                Router.push('/settings?type=users')
+                await settingsTabChanged({name: "Users", id: 1, type: "users"}, null)
+                openSettingsAddForm()
+              }}
+            >
+              <Person className={'menu-icon'} />
+              <FormattedMessage id='createMenu.newUser' defaultMessage='New User' />
+            </Dropdown.Item>
+          )}
 
-          <Dropdown.Item
-            onClick={async () => {
-              await this.props.guestInitState()
-              this.props.openGuestAddForm()
-            }}
-          >
-            <FolderShared className={'menu-icon'} />
-            <FormattedMessage id='createMenu.newGuest' defaultMessage='New Guest' />
-          </Dropdown.Item>
+          {(isCompanyAdmin || isClientCompanyManager) && (
+            <Dropdown.Item
+              onClick={async () => {
+                Router.push('/manage-guests?type=guests')
+                await guestInitState()
+                openGuestAddForm()
+              }}
+            >
+              <FolderShared className={'menu-icon'} />
+              <FormattedMessage id='createMenu.newGuest' defaultMessage='New Guest' />
+            </Dropdown.Item>
+          )}
 
-          <Dropdown.Item
-            onClick={async () => {
-              await this.props.settingsTabChanged({name: "Locations", id: 2, type: "locations"}, null)
-              await this.props.handleLocationsTab('pick-up-locations')
-              this.props.openSettingsAddForm()
-            }}
-          >
-            <Store className={'menu-icon'} />
-            <FormattedMessage id='createMenu.newWarehouse' defaultMessage='New Warehouse' />
-          </Dropdown.Item>
+          {isCompanyAdmin && (
+            <Dropdown.Item
+              onClick={async () => {
+                Router.push('/settings?type=locations')
+                await settingsTabChanged({name: "Locations", id: 2, type: "locations"}, null)
+                await handleLocationsTab('pick-up-locations')
+                openSettingsAddForm()
+              }}
+            >
+              <Store className={'menu-icon'} />
+              <FormattedMessage id='createMenu.newWarehouse' defaultMessage='New Warehouse' />
+            </Dropdown.Item>
+          )}
 
         </Dropdown.Menu>
       </CreateDropdown>
@@ -147,6 +187,7 @@ class CreateMenu extends Component {
 
 const stateToProps = state => {
   return {
+    identity: getSafe(() => state.auth.identity, {})
   }
 }
 
