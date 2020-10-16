@@ -142,7 +142,7 @@ class CreateMenu extends Component {
           {(isCompanyAdmin || isUserAdmin) && (
             <Dropdown.Item
               onClick={async () => {
-                Router.push('/settings?type=users')
+                Router.push('/settings/users')
                 await settingsTabChanged({name: "Users", id: 1, type: "users"}, null)
                 openSettingsAddForm()
               }}
@@ -155,7 +155,7 @@ class CreateMenu extends Component {
           {(isCompanyAdmin || isClientCompanyManager) && (
             <Dropdown.Item
               onClick={async () => {
-                Router.push('/manage-guests?type=guests')
+                Router.push('/manage-guests/guests')
                 await guestInitState()
                 openGuestAddForm()
               }}
@@ -168,7 +168,7 @@ class CreateMenu extends Component {
           {isCompanyAdmin && (
             <Dropdown.Item
               onClick={async () => {
-                Router.push('/settings?type=locations')
+                Router.push('/settings/locations')
                 await settingsTabChanged({name: "Locations", id: 2, type: "locations"}, null)
                 await handleLocationsTab('pick-up-locations')
                 openSettingsAddForm()
