@@ -126,7 +126,7 @@ class Settings extends Component {
       tabsNamesMap.set(tabsNames[i].type, tabsNames[i])
     }
 
-    if  (!(isCompanyAdmin || isClientCompanyAdmin)) {
+    if (!(isCompanyAdmin || isClientCompanyAdmin)) {
       if (isUserAdmin) {
         if (
           isProductCatalogAdmin &&
@@ -424,7 +424,7 @@ class Settings extends Component {
         !this.state.wrongUrl && (
           <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
             <Container fluid className='flex stretched'>
-              {!tutorialCompleted && (
+              {false && !tutorialCompleted && (
                 <div style={{ margin: '5px -2px -15px -2px' }}>
                   <Tutorial />
                 </div>

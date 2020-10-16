@@ -279,7 +279,7 @@ class Holds extends Component {
 
     return (
       <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
-        {!tutorialCompleted && <Tutorial marginHolds />}
+        {false && !tutorialCompleted && <Tutorial marginHolds />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>

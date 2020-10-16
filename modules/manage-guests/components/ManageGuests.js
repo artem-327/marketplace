@@ -121,7 +121,7 @@ class ManageGuests extends Component {
     } else {
       return (
         <>
-          {!tutorialCompleted && <Tutorial />}
+          {false && !tutorialCompleted && <Tutorial />}
           <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
             <StyledContainer fluid className='flex stretched scrolling'>
               <Container fluid style={{ padding: '20px 30px' }}>

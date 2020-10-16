@@ -457,15 +457,13 @@ Settings.defaultProps = {
   scrolling: true
 }
 
-export default securePage(
-  connect(
-    ({ auth, settings }) => ({
-      open: settings.systemSettingsModalOpen,
-      accessLevel: {
-        isAdmin: getSafe(() => auth.identity.isAdmin, null),
-        isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, null)
-      }
-    }),
-    { triggerSystemSettingsModal, getCurrentUser, getIdentity }
-  )(injectIntl(Settings))
-)
+export default connect(
+  ({ auth, settings }) => ({
+    open: settings.systemSettingsModalOpen,
+    accessLevel: {
+      isAdmin: getSafe(() => auth.identity.isAdmin, null),
+      isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, null)
+    }
+  }),
+  { triggerSystemSettingsModal, getCurrentUser, getIdentity }
+)(injectIntl(Settings))

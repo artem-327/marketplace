@@ -68,7 +68,6 @@ const securePageHoc = Page =>
       return (
         <SecureContext.Provider value={{ auth }}>
           <Page {...this.props} />
-          <Timeout />
         </SecureContext.Provider>
       )
     }

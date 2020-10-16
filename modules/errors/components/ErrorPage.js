@@ -78,7 +78,8 @@ const ButtonContent = styled.div`
 class ErrorPage extends Component {
   state = {
     errorSvg: '',
-    errorType: ''
+    errorType: '',
+    errorStatus: ''
   }
 
   componentDidMount() {
@@ -87,6 +88,10 @@ class ErrorPage extends Component {
     const errorStatus = typeof window !== 'undefined' ? window.localStorage.getItem('errorStatus') : null
 
     switch (errorStatus) {
+      case ERROR_STATUSES.INTERNATL_SERVER_ERROR: //500
+        errorSvg = NotFoundSvg
+        errorType = 'serverError'
+        break
       case ERROR_STATUSES.FORBIDDEN: //403
         errorSvg = ForbiddenSvg
         errorType = 'forbidden'
@@ -98,7 +103,7 @@ class ErrorPage extends Component {
       default:
         break
     }
-    this.setState({ errorSvg, errorType })
+    this.setState({ errorSvg, errorType, errorStatus })
   }
 
   componentWillUnmount() {
@@ -106,7 +111,8 @@ class ErrorPage extends Component {
   }
 
   render() {
-    const { errorSvg, errorType } = this.state
+    const { errorSvg, errorType, errorStatus } = this.state
+    const isInternalServerError = errorStatus === ERROR_STATUSES.INTERNATL_SERVER_ERROR
 
     return (
       <PageError>
@@ -123,12 +129,16 @@ class ErrorPage extends Component {
           />
         </Content>
         <ButtonDiv>
-          <CustomButton type='button' onClick={() => Router.back()}>
+          <CustomButton
+            type='button'
+            onClick={() => (isInternalServerError ? Router.push('/auth/logout?auto=true') : Router.back())}>
             <div>
               <Layers size={22} />
             </div>
             <ButtonContent>
-              <FormattedMessage id='error.bringMeBack' defaultMessage='Bring me back to last page'>
+              <FormattedMessage
+                id={isInternalServerError ? 'error.logout' : 'error.bringMeBack'}
+                defaultMessage='Bring me back to last page'>
                 {text => text}
               </FormattedMessage>
             </ButtonContent>
