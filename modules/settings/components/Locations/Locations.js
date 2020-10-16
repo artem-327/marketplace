@@ -178,7 +178,7 @@ class Locations extends Component {
       <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
           <TopMenu />
-          {!tutorialCompleted && (
+          {false && !tutorialCompleted && (
             <div style={{ margin: '5px -2px -15px -2px' }}>
               <Tutorial />
             </div>

@@ -900,7 +900,7 @@ class MyListings extends Component {
           </Modal.Actions>
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
-        {!tutorialCompleted && <Tutorial />}
+        {false && !tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '20px 25px 10px' }}>
           <CustomRowDiv>
             <div>
@@ -1017,7 +1017,8 @@ class MyListings extends Component {
                 })
                 .value()
             }
-            renderGroupLabel={({ row: { value }, groupLength }) => null
+            renderGroupLabel={
+              ({ row: { value }, groupLength }) => null
               /* #35127
               {
                 const [name, number, id, productGroup, tagsNames] = value.split('_')
