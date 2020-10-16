@@ -86,7 +86,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
           <LabelCheckbox>
             <FormattedMessage
               id='velloci.termsAndConditions.privacyPolicy'
-              defaultMessage="I agree that I have read, understood and consent to Velloci's">
+              defaultMessage="I agree that I have read, understood and consent to the ">
               {text => (
                 <>
                   {text}
@@ -117,7 +117,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
           <LabelCheckbox>
             <FormattedMessage
               id='velloci.termsAndConditions.depositAccountAgreement'
-              defaultMessage="I agree that I have read, understood and consent to Banks's ">
+              defaultMessage="I agree that I have read, understood and consent to the bank's ">
               {text => (
                 <>
                   {text}
