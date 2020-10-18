@@ -79,7 +79,7 @@ export default {
   getCountry: () => api.get('/prodex/api/countries').then(response => response.data),
   getCurrencies: () => api.get('/prodex/api/currencies').then(response => response.data),
   getStoredCSV: body => {
-    return api.get(`/prodex/api/imports/read-stored-csv?temporaryFileId=${body}`).then(response => response.data)
+    return api.get(`/prodex/api/imports/read-stored-spreadsheet?temporaryFileId=${body}`).then(response => response.data)
   },
 
   loadFile: attachment => {
@@ -104,18 +104,18 @@ export default {
   postNewDwollaAccount: body => api.post('/prodex/api/payments/dwolla/register', body),
   postImportProductCSV: (body, id) => {
     return api
-      .post(`/prodex/api/imports/company-products/csv-import?temporaryFileId=${id}`, body)
+      .post(`/prodex/api/imports/company-products/spreadsheet-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
       .catch(error => console.error(error))
   },
   postImportCompanyGenericProductCSV: (body, id) => {
     return api
-      .post(`/prodex/api/imports/company-generic-products/csv-import?temporaryFileId=${id}`, body)
+      .post(`/prodex/api/imports/company-generic-products/spreadsheet-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
   postImportProductOfferCSV: (body, id) => {
     return api
-      .post(`/prodex/api/imports/product-offers/csv-import?temporaryFileId=${id}`, body)
+      .post(`/prodex/api/imports/product-offers/spreadsheet-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
   uploadCSVFile: file => {
@@ -140,7 +140,7 @@ export default {
 
   postImportCompaniesCSV: (body, id) => {
     return api
-      .post(`/prodex/api/imports/companies/csv-import?temporaryFileId=${id}`, body)
+      .post(`/prodex/api/imports/companies/spreadsheet-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
   getCSVMapCompanies: () => api.get('/prodex/api/imports/companies/import-maps').then(response => response.data),
