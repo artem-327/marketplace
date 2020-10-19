@@ -317,7 +317,7 @@ class Listings extends Component {
 
     return (
       <>
-        {!tutorialCompleted && <Tutorial marginWantedBoard />}
+        {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>

@@ -69,11 +69,6 @@ class ManageGuests extends Component {
     if (isOpenPopup) closePopup()
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { isOpenPopup, closePopup, currentTab } = this.props
-    if (currentTab !== prevProps.currentTab && isOpenPopup) closePopup()
-  }
-
   renderContent = () => {
     const { currentTab, isOpenPopup } = this.props
 
@@ -126,7 +121,7 @@ class ManageGuests extends Component {
     } else {
       return (
         <>
-          {!tutorialCompleted && <Tutorial />}
+          {false && !tutorialCompleted && <Tutorial />}
           <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
             <StyledContainer fluid className='flex stretched scrolling'>
               <Container fluid style={{ padding: '20px 30px' }}>
@@ -148,7 +143,6 @@ class ManageGuests extends Component {
 const mapStateToProps = ({ manageGuests, auth }, { router }) => {
   return {
     ...manageGuests,
-    currentTab: getSafe(() => router.query.type, ''),
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
   }
 }

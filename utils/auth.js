@@ -49,7 +49,6 @@ export async function authorize(username, password) {
 export async function refreshToken() {
   const auth = Cookie.getJSON('auth')
   if (!auth) return
-
   // if (auth.expires - 60000 > new Date().getTime()) return
 
   const { data } = await api.post(

@@ -277,7 +277,7 @@ class MyProducts extends Component {
 
     return (
       <>
-        {!tutorialCompleted && <Tutorial />}
+        {false && !tutorialCompleted && <Tutorial />}
 
         <Container fluid style={{ padding: '0px 30px' }} className='flex stretched'>
           <div style={{ padding: '10px 0' }}>
@@ -413,10 +413,7 @@ const getProductStatus = product => {
 
     default:
       popupText = (
-        <FormattedMessage
-          id='global.productOk'
-          defaultMessage='This product is being broadcasted to the marketplace'
-        />
+        <FormattedMessage id='global.productOk' defaultMessage='This product is being broadcasted to the marketplace' />
       )
       dispIcon = <Circle />
   }

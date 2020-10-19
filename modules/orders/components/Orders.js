@@ -1062,12 +1062,7 @@ class Orders extends Component {
   }
 
   render() {
-    const {
-      isFetching,
-      queryType,
-      datagrid,
-      tutorialCompleted
-    } = this.props
+    const { isFetching, queryType, datagrid, tutorialCompleted } = this.props
 
     const { relatedPopupParams } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
@@ -1145,7 +1140,7 @@ class Orders extends Component {
           />
         )}
 
-        {!tutorialCompleted && <Tutorial marginOrders />}
+        {false && !tutorialCompleted && <Tutorial marginOrders />}
         <Container fluid style={{ padding: '20px 30px 10px 30px' }}>
           <TablesHandlers />
         </Container>

@@ -679,7 +679,7 @@ class BidsReceived extends Component {
 
     return (
       <>
-        {!tutorialCompleted && <Tutorial marginWantedBoard />}
+        {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>

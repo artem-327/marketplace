@@ -196,7 +196,7 @@ class BidsSent extends Component {
 
     return (
       <>
-        {!tutorialCompleted && <Tutorial marginWantedBoard />}
+        {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>

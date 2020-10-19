@@ -140,7 +140,7 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const { disabled, offer, item, hideFobPrice, filter } = this.props
+    const { disabled, offer, item, hideFobPrice, filter, asSidebar } = this.props
     const {
       model: { rule }
     } = item
@@ -158,8 +158,9 @@ export default class PriceControl extends Component {
         : ''
 
     return (
-      <Box>
+      <Box asSidebar={asSidebar}>
         <PriceInput
+          asSidebar={asSidebar}
           className='price-input'
           disabled={disabled}
           name='value'
@@ -174,7 +175,7 @@ export default class PriceControl extends Component {
           size='small'
           data-test='broadcast_price_control_price_inp'
         />
-        <ControlBox>
+        <ControlBox asSidebar={asSidebar}>
           <Radio
             disabled={disabled}
             label='%'
@@ -191,7 +192,7 @@ export default class PriceControl extends Component {
           />
         </ControlBox>
         {!hideFobPrice && (
-          <ControlBox>
+          <ControlBox asSidebar={asSidebar}>
             <FobPrice disabled={disabled}>{prices.lowStr} -</FobPrice>
             <FobPrice disabled={disabled}>{prices.highStr}</FobPrice>
           </ControlBox>
@@ -202,7 +203,7 @@ export default class PriceControl extends Component {
 }
 
 const PriceInput = styled(Input)`
-  width: 138px;
+  width: ${props => (props.asSidebar ? '138px' : '110px')};
   margin-right: 10px;
   border-right: 1px solid #dee2e6;
   padding: 8px;
@@ -211,6 +212,7 @@ const PriceInput = styled(Input)`
 const ControlBox = styled.div`
   display: flex;
   flex-direction: column;
+  ${props => !props.asSidebar && 'max-width: 60px;'}
 
   .ui.radio.checkbox input:focus:checked ~ label:after,
   .ui.radio.checkbox input:checked ~ label:after {
@@ -232,4 +234,5 @@ const Box = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding-right: 10px;
+  ${props => !props.asSidebar && 'max-width: 170px;'}
 `

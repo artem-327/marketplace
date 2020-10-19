@@ -495,7 +495,7 @@ class Listings extends Component {
 
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
-        {!tutorialCompleted && <Tutorial marginMarketplace />}
+        {false && !tutorialCompleted && <Tutorial marginMarketplace />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
@@ -550,7 +550,8 @@ class Listings extends Component {
                 }))
                 .value()
             }
-            renderGroupLabel={({ row: { value }, groupLength }) => null
+            renderGroupLabel={
+              ({ row: { value }, groupLength }) => null
               /* #35127
               {
                 const [name, number, id, tagsNames] = value.split('_')
