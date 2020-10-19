@@ -162,7 +162,6 @@ class BidsSent extends Component {
         disabled: row => this.props.editedId === row.id,
         callback: async row => {
           await this.props.openSubmitOffer(row, true)
-          datagrid.loadData()
         },
         hidden: row =>
           row.cfHistoryLastStatus === 'REJECTED' ||
@@ -235,11 +234,13 @@ class BidsSent extends Component {
   }
 
   render() {
-    const { editWindowOpen, openedSubmitOfferPopup, counterRequestedItem, popupValues } = this.props
+    const { editWindowOpen, openedSubmitOfferPopup, counterRequestedItem, popupValues, isSecondPage } = this.props
 
     return (
       <>
-        {openedSubmitOfferPopup && <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} />}
+        {openedSubmitOfferPopup && (
+          <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} isSecondPage={isSecondPage} />
+        )}
 
         <Container fluid style={{ padding: '10px 30px 0 30px' }} className='flex stretched'>
           {this.renderContent()}

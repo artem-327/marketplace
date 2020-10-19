@@ -485,7 +485,7 @@ class SubmitOfferPopup extends React.Component {
     })
 
   async componentDidMount() {
-    const { popupValues } = this.props
+    const { popupValues, isSecondPage } = this.props
 
     if (popupValues) this.getInitialValues()
 
@@ -493,7 +493,7 @@ class SubmitOfferPopup extends React.Component {
       if (getSafe(() => popupValues.purchaseRequest.id, '') && getSafe(() => popupValues.productOffer.id, '')) {
         await this.props.matchingProductOfferInfo(popupValues.purchaseRequest.id, popupValues.productOffer.id)
       }
-      if (!this.props.datagrid.loading) this.handleDatagridResult()
+      if (!this.props.datagrid.loading && !isSecondPage) this.handleDatagridResult()
     } catch (error) {
       console.error(error)
     }
@@ -505,7 +505,7 @@ class SubmitOfferPopup extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.datagrid.loading && !this.props.datagrid.loading) {
+    if (prevProps.datagrid.loading && !this.props.datagrid.loading && !this.props.isSecondPage) {
       this.handleDatagridResult()
     }
   }
@@ -659,7 +659,10 @@ class SubmitOfferPopup extends React.Component {
         .catch(err => console.log('catch', err))
     }
     if (name === 'fulfillmentType' && value === 'COMPLETE_IMMEDIATE') {
-      this.setFieldValue('items[0].pkgAmount', this.state.pkgAvailable)
+      this.setFieldValue(
+        'items[0].pkgAmount',
+        this.state.pkgAvailable || getSafe(() => this.props.matchingOfferInfo.automaticPackageAmount, '')
+      )
     }
     if (
       this.values.fulfillmentType === 'COMPLETE_SCHEDULE' &&
