@@ -110,7 +110,7 @@ export function login(username, password) {
           !identity.company.reviewRequested &&
           !identity.lastLoginAt
         ) {
-          urlPage = '/settings'
+          urlPage = '/settings/company-details'
         }
         if (isOrderOperator || identity.roles.find(role => role.name === 'Echo Operator')) {
           urlPage = '/operations'

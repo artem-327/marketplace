@@ -177,7 +177,7 @@ class ConfirmationPage extends Component {
           try {
             await reviewCompany(payload)
             actions.setSubmitting(false)
-            Router.push('/settings')
+            Router.push('/settings/company-details')
           } catch (err) {
             console.error(err)
           } finally {
