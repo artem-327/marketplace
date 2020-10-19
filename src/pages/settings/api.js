@@ -16,7 +16,7 @@ export default {
   getCountry: () => api.get('/prodex/api/countries').then(response => response.data),
   getCurrencies: () => api.get('/prodex/api/currencies').then(response => response.data),
   getStoredCSV: body => {
-    return api.get(`/prodex/api/imports/read-stored-csv?temporaryFileId=${body}`).then(response => response.data)
+    return api.get(`/prodex/api/imports/read-stored-spreadsheet?temporaryFileId=${body}`).then(response => response.data)
   },
   getCSVMapProductOffer: () => {
     return api.get('/prodex/api/imports/product-offer-maps').then(response => response.data)
