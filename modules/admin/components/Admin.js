@@ -46,16 +46,16 @@ const AdminSegment = styled(Segment)`
 `
 
 const tables = {
-  'Units of Measure': <UnitOfMeasureTable />,
-  'Packaging Types': <UnitOfPackagingTable />,
-  Manufacturers: <DataTable />,
-  Grades: <DataTable />,
-  Forms: <DataTable />,
-  Conditions: <DataTable />,
-  'NMFC Numbers': <NmfcTable />,
-  Associations: <DataTable />,
-  Logistics: <LogisticsTable />,
-  'Admin Settings': (
+  'units-of-measure': <UnitOfMeasureTable />,
+  'packaging-types': <UnitOfPackagingTable />,
+  manufacturers: <DataTable currentTab={'manufacturers'} />,
+  grades: <DataTable currentTab={'grades'} />,
+  forms: <DataTable currentTab={'forms'} />,
+  conditions: <DataTable currentTab={'conditions'} />,
+  'nmfc-numbers': <NmfcTable />,
+  associations: <DataTable currentTab={'associations'} />,
+  logistics: <LogisticsTable />,
+  'admin-settings': (
     <FixyWrapper>
       <AdminSegment basic padded='very'>
         <Settings inputsInGroup={3} asModal={false} role='admin' />
@@ -65,12 +65,12 @@ const tables = {
 }
 
 const datagridConfig = {
-  Conditions: {
+  conditions: {
     url: '/prodex/api/product-conditions/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v.searchInput}%`] }] : []
   },
-  'NMFC Numbers': {
+  'nmfc-numbers': {
     url: '/prodex/api/nmfc-numbers/datagrid',
     searchToFilter: v => {
       let filters = []
@@ -82,37 +82,37 @@ const datagridConfig = {
       return filters
     }
   },
-  Associations: {
-    url: 'prodex/api/associations/datagrid',
+  associations: {
+    url: '/prodex/api/associations/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v.searchInput}%`] }] : []
   },
-  Forms: {
+  forms: {
     url: '/prodex/api/product-forms/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v.searchInput}%`] }] : []
   },
-  Grades: {
+  grades: {
     url: '/prodex/api/product-grades/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v.searchInput}%`] }] : []
   },
-  Manufacturers: {
+  manufacturers: {
     url: '/prodex/api/manufacturers/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v.searchInput}%`] }] : []
   },
-  'Packaging Types': {
+  'packaging-types': {
     url: '/prodex/api/packaging-types/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v.searchInput}%`] }] : []
   },
-  'Units of Measure': {
+  'units-of-measure': {
     url: '/prodex/api/units/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
   },
-  'Logistics': {
+  'logistics': {
     url: '/prodex/api/logistics-providers/stored/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
@@ -120,27 +120,27 @@ const datagridConfig = {
 }
 
 const editForms = {
-  'Units of Measure': <EditUnitOfMeasurePopup />,
-  'Packaging Types': <EditUnitOfPackagingPopup />,
-  Manufacturers: <EditPopup1Parameter />,
-  Grades: <EditPopup1Parameter />,
-  Forms: <EditPopup1Parameter />,
-  Conditions: <EditPopup1Parameter />,
-  'NMFC Numbers': <NmfcPopup />,
-  Associations: <EditPopup1Parameter />,
-  Logistics: <AddEditLogisticProvider />,
+  'units-of-measure': <EditUnitOfMeasurePopup />,
+  'packaging-types': <EditUnitOfPackagingPopup />,
+  manufacturers: <EditPopup1Parameter currentTab={'manufacturers'} />,
+  grades: <EditPopup1Parameter currentTab={'grades'} />,
+  forms: <EditPopup1Parameter currentTab={'forms'} />,
+  conditions: <EditPopup1Parameter currentTab={'conditions'} />,
+  'nmfc-numbers': <NmfcPopup />,
+  associations: <EditPopup1Parameter currentTab={'associations'} />,
+  logistics: <AddEditLogisticProvider />,
 }
 
 const addForms = {
-  'Units of Measure': <AddNewUnitOfMeasurePopup />,
-  'Packaging Types': <AddNewUnitOfPackagingPopup />,
-  Manufacturers: <AddNewPopup1Parameter />,
-  Grades: <AddNewPopup1Parameter />,
-  Forms: <AddNewPopup1Parameter />,
-  Conditions: <AddNewPopup1Parameter />,
-  'NMFC Numbers': <NmfcPopup />,
-  Associations: <AddNewPopup1Parameter />,
-  Logistics: <AddEditLogisticProvider />,
+  'units-of-measure': <AddNewUnitOfMeasurePopup />,
+  'packaging-types': <AddNewUnitOfPackagingPopup />,
+  manufacturers: <AddNewPopup1Parameter currentTab={'manufacturers'} />,
+  grades: <AddNewPopup1Parameter currentTab={'grades'} />,
+  forms: <AddNewPopup1Parameter currentTab={'forms'} />,
+  conditions: <AddNewPopup1Parameter currentTab={'conditions'} />,
+  'nmfc-numbers': <NmfcPopup />,
+  associations: <AddNewPopup1Parameter currentTab={'associations'} />,
+  logistics: <AddEditLogisticProvider />,
 }
 
 const addDwollaForms = {
@@ -157,10 +157,10 @@ class Admin extends Component {
     const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = this.props
     return (
       <>
-        {currentAddForm && addForms[currentTab.name]}
-        {currentEditForm && editForms[currentTab.name]}
-        {currentAddDwolla && addDwollaForms[currentTab.name] && Router.push('/dwolla-register/')}
-        {tables[currentTab.name] || <p>This page is still under construction</p>}
+        {currentAddForm && addForms[currentTab]}
+        {currentEditForm && editForms[currentTab]}
+        {currentAddDwolla && addDwollaForms[currentTab] && Router.push('/dwolla-register/')}
+        {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )
   }
@@ -168,7 +168,7 @@ class Admin extends Component {
   getApiConfig = () => {
     const { currentTab } = this.props
 
-    return datagridConfig[currentTab.name]
+    return datagridConfig[currentTab]
   }
 
   render() {
@@ -180,9 +180,9 @@ class Admin extends Component {
       <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
           <>
-            {!currentTab.hideHandler && (
+            {currentTab !== 'admin-settings' && (
               <div style={{ padding: '20px 30px' }}>
-                <TablesHandlers />
+                <TablesHandlers currentTab={currentTab} />
               </div>
             )}
             <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>

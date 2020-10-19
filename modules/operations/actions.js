@@ -2,8 +2,6 @@ import * as AT from './action-types'
 import api from './api'
 import { Datagrid } from '~/modules/datagrid'
 
-export const tabChanged = tab => ({ type: AT.OPERATIONS_TAB_CHANGED, payload: tab })
-
 export function openPopup(rows = null) {
   return {
     type: AT.OPERATIONS_OPEN_POPUP,
@@ -73,14 +71,6 @@ export function createTag(name) {
       await api.createTag(name)
       Datagrid.loadData()
     }
-  }
-}
-
-export function handleActiveTab(tab, currentTab) {
-  if (tab.type !== currentTab.type && Datagrid) Datagrid.clear()
-  return {
-    type: AT.OPERATIONS_HANDLE_ACTIVE_TAB,
-    payload: { tab }
   }
 }
 

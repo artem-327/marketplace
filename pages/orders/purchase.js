@@ -13,12 +13,8 @@ class Orders extends Component {
     const { intl: { formatMessage } } = this.props
 
     return (
-      <Layout title={
-        getSafe(() => Router.router.query.type, 'sales') === 'sales'
-          ? formatMessage({ id: 'global.salesOrders', defaultMessage: 'Sales Orders' })
-          : formatMessage({ id: 'global.purchaseOrders', defaultMessage: 'Purchase Orders' })
-      }>
-        <OrdersWithRouter />
+      <Layout title={formatMessage({ id: 'global.purchaseOrders', defaultMessage: 'Purchase Orders' })}>
+        <OrdersWithRouter currentTab={'purchase'} />
       </Layout>
     )
   }

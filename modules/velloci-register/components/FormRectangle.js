@@ -168,7 +168,7 @@ function FormRectangle({
             </FormattedMessage>
           </ButtonBack>
         ) : null}
-        {activeStep === 3 ? (
+        {false && activeStep === 3 ? (
           <ButtonBack type='button' onClick={() => console.log('email')} basic>
             <FormattedMessage id='global.email' defaultMessage='Email'>
               {text => text}

@@ -73,13 +73,12 @@ const mapDispatchToProps = {
   deleteConfirmation
 }
 
-const mapStateToProps = (state, { datagrid }) => {
-  let cfg = state.admin.config[state.admin.currentTab.name]
+const mapStateToProps = (state, { datagrid, currentTab }) => {
+  let cfg = state.admin.config[currentTab]
   return {
     config: cfg,
     rows: datagrid.rows,
     filterValue: state.admin.filterValue,
-    currentTab: state.admin.currentTab,
     loading: state.admin.loading,
     confirmMessage: state.admin.confirmMessage,
     deleteRowById: state.admin.deleteRowById

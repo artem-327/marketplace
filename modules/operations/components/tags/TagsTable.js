@@ -93,7 +93,6 @@ const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows,
     filterValue: state.operations.filterValue,
-    currentTab: state.operations.currentTab,
     loading: state.operations.loading
   }
 }
