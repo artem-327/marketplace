@@ -5,7 +5,6 @@ import { Input } from 'formik-semantic-ui-fixed-validation'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
-import { withRouter } from 'next/router'
 import { DateInput } from '~/components/custom-formik'
 import * as Actions from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
@@ -438,17 +437,13 @@ class TablesHandlers extends Component {
   }
 }
 
-const mapStateToProps = (state, { router }) => {
-  const query = router ? router.query : { type: 'sales' }
-  const { type } = query
-
+const mapStateToProps = state => {
   return {
     ...state,
-    currentTab: type,
     tableHandlersFilters: state.orders.tableHandlersFilters
   }
 }
 
 export default withDatagrid(
-  withDatagrid(withToastManager(withRouter(connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers)))))
+  withDatagrid(withToastManager(connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers))))
 )

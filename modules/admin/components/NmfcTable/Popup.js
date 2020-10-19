@@ -117,7 +117,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = ({ admin }) => {
-  let config = admin.config[admin.currentTab.name]
+  let config = admin.config['nmfc-numbers']
 
   return {
     config,

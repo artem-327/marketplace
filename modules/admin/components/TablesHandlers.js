@@ -126,7 +126,6 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.admin.currentTab.name,
     tableHandlersFilters: state.admin.tableHandlersFilters,
     casListDataRequest: state.admin.casListDataRequest,
     companyListDataRequest: state.admin.companyListDataRequest

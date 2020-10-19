@@ -10,7 +10,7 @@ class Index extends Component {
     let { isAdmin } = this.props
 
     if (isAdmin === null) await this.props.getIdentity()
-    if (isAdmin) Router.push('/admin')
+    if (isAdmin) Router.push('/admin/units-of-measure')
     else Router.push('/inventory/my-listings')
   }
   render() {

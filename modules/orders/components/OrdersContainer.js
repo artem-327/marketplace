@@ -33,18 +33,15 @@ const filterAttachments = (a, type) => {
   return filtered ? [filtered] : []
 }
 
-function mapStateToProps(state, { router, datagrid }) {
+function mapStateToProps(state, { router, datagrid, currentTab }) {
   const { orders } = state
-  const query = router ? router.query : { type: 'sales' }
 
-  if (query.type !== orders.dataType) {
+  if (currentTab !== orders.dataType) {
     orders.data = []
   }
-  const { type } = query
 
   return {
-    endpointType: type === 'sales' ? 'sale' : type,
-    queryType: type,
+    endpointType: currentTab === 'sales' ? 'sale' : currentTab,
     ...orders,
     isOpen: state.isOpen,
     filterData: state.forms.filter,
@@ -56,7 +53,7 @@ function mapStateToProps(state, { router, datagrid }) {
       treeRoot: true,
       globalStatus: r.cfGlobalStatus,
       date: r.orderDate && moment(r.orderDate).format(getLocaleDateFormat()),
-      customerName: type === 'sales' ? r.buyerCompanyName : r.sellerCompanyName,
+      customerName: currentTab === 'sales' ? r.buyerCompanyName : r.sellerCompanyName,
       orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
       shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),

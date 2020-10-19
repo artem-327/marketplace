@@ -17,7 +17,7 @@ const formValidation = Yup.object().shape({
 
 class EditPopup1Parameter extends React.Component {
   render() {
-    const { closeEditPopup, currentTab, config, popupValues, putEditedDataRequest } = this.props
+    const { closeEditPopup, config, popupValues, putEditedDataRequest } = this.props
 
     const { id, editable = true } = popupValues
 
@@ -86,11 +86,10 @@ const mapDispatchToProps = {
   putEditedDataRequest
 }
 
-const mapStateToProps = state => {
-  let cfg = state.admin.config[state.admin.currentTab.name]
+const mapStateToProps = (state, { currentTab }) => {
+  let cfg = state.admin.config[currentTab]
   return {
     config: cfg,
-    currentTab: state.admin.currentTab,
     popupValues: state.admin.popupValues
   }
 }

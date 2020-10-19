@@ -118,15 +118,6 @@ export function putEditedDataRequest(config, id, values) {
   }
 }
 
-export function handleActiveTab(tab, currentTab) {
-  if (tab !== currentTab && Datagrid) Datagrid.clear()
-
-  return {
-    type: AT.ADMIN_HANDLE_ACTIVE_TAB,
-    payload: { tab }
-  }
-}
-
 export function handleFiltersValue(props, value) {
   return async dispatch => {
     // save filter value
@@ -151,7 +142,7 @@ export function handleFiltersValue(props, value) {
           // }
         }
         break
-      case 'Manufacturers':
+      case 'manufacturers':
         {
           await dispatch({
             type: AT.ADMIN_GET_MANUFACTURERS_BY_STRING,

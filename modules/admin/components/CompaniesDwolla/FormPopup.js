@@ -322,7 +322,6 @@ const mapStateToProps = ({ admin, zip, auth }) => {
   return {
     ...admin,
     zip,
-    config: admin.config[admin.currentTab],
     auth
   }
 }

@@ -6,7 +6,6 @@ import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { withAuth } from '~/hocs'
 import { injectIntl } from 'react-intl'
 import { connect } from 'react-redux'
-// import Settings from '~/components/settings'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { getSafe } from '~/utils/functions'
 import {
@@ -24,9 +23,9 @@ import {
   Disc,
   Coffee
 } from 'react-feather'
-import Tabs from '~/modules/admin/components/Tabs'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import TabsOperations from '~/modules/operations/components/Tabs'
+import { defaultTabs as operationsDefaultTabs, orderOperatorTabs} from '~/modules/operations/constants'
+import { defaultTabs as adminDefaultTabs } from '~/modules/admin/config'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -55,10 +54,25 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/settings/logistics', false) ||
       getSafe(() => Router.router.pathname === '/settings/documents', false),
     orders:
-      getSafe(() => Router.router.pathname === '/orders', false) ||
+      getSafe(() => Router.router.pathname === '/orders/sales', false) ||
+      getSafe(() => Router.router.pathname === '/orders/purchase', false) ||
       getSafe(() => Router.router.pathname === '/orders/detail', false),
-    admin: getSafe(() => Router.router.pathname === '/admin', false),
-    operations: getSafe(() => Router.router.pathname === '/operations', false),
+    admin: getSafe(() => Router.router.pathname === '/admin/units-of-measure', false) ||
+      getSafe(() => Router.router.pathname === '/admin/packaging-types', false) ||
+      getSafe(() => Router.router.pathname === '/admin/manufacturers', false) ||
+      getSafe(() => Router.router.pathname === '/admin/grades', false) ||
+      getSafe(() => Router.router.pathname === '/admin/forms', false) ||
+      getSafe(() => Router.router.pathname === '/admin/conditions', false) ||
+      getSafe(() => Router.router.pathname === '/admin/nmfc-numbers', false) ||
+      getSafe(() => Router.router.pathname === '/admin/associations', false) ||
+      getSafe(() => Router.router.pathname === '/admin/logistics', false) ||
+      getSafe(() => Router.router.pathname === '/admin/admin-settings', false),
+    operations: getSafe(() => Router.router.pathname === '/operations/shipping-quotes', false) ||
+      getSafe(() => Router.router.pathname === '/operations/tags', false) ||
+      getSafe(() => Router.router.pathname === '/operations/company-product-catalog', false) ||
+      getSafe(() => Router.router.pathname === '/operations/company-inventory', false) ||
+      getSafe(() => Router.router.pathname === '/operations/orders', false) ||
+      getSafe(() => Router.router.pathname === '/operations/company-generic-products', false),
     products:
       getSafe(() => Router.router.pathname === '/products/cas-products', false) ||
       getSafe(() => Router.router.pathname === '/products/product-catalog', false) ||
@@ -96,30 +110,7 @@ class Navigation extends Component {
     e.preventDefault()
     e.stopPropagation()
 
-    const {
-      router,
-      router: { pathname, asPath },
-      tabChanged,
-      tabsNames,
-      currentSettingsTab
-    } = this.props
-    /* // ! ! if (pathname === to) {
-      switch (asPath) {
-        case '/inventory/my':
-          this.setState(prevState => ({ // ! !
-            settings: false,
-            orders: false
-          }))
-          break
-        case '/marketplace/listings':
-          this.setState(prevState => ({
-            settings: false,
-            orders: false
-          }))
-          break
-      }
-    }*/
-    router.push(to)
+    this.props.router.push(to)
   }
 
   createRef = (dropdownItem, refId) => {
@@ -148,12 +139,15 @@ class Navigation extends Component {
 
   toggleOpened = (type, defaultLink) => {
     const { currentType } = this.state
+    const { isAdmin, isOrderOperator} = this.props
     const typeState = this.state[type]
     if (type === 'admin') {
-      Router.push('/admin')
+      Router.push('/admin/units-of-measure')
     }
     if (type === 'operations') {
-      Router.push('/operations')
+      (!isAdmin && isOrderOperator)
+        ? Router.push('/operations/orders')
+        : Router.push('/operations/shipping-quotes')
     }
     if (type === 'products') {
       Router.push('/products/cas-products')
@@ -283,6 +277,8 @@ class Navigation extends Component {
       company: null
     })
 
+    const operationsTabs = (!isAdmin && isOrderOperator) ? orderOperatorTabs : operationsDefaultTabs
+
     const { isClientCompany } = getSafe(() => company, { isClientCompany: false })
     return (!isAdmin && !isEchoOperator && !isOrderOperator) || takeover ? (
       <div className='flex-wrapper'>
@@ -386,20 +382,20 @@ class Navigation extends Component {
           text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
           className={orders ? 'opened' : null}
           opened={orders.toString()}
-          onClick={() => this.toggleOpened('orders', '/orders?type=sales')}
+          onClick={() => this.toggleOpened('orders', '/orders/sales')}
           refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
           refId={'orders'}
           data-test='navigation_orders_drpdn'>
           <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
             <PerfectScrollbar>
               {!isClientCompany && (
-                <Dropdown.Item as={MenuLink} to='/orders?type=sales' dataTest='navigation_orders_sales_orders_drpdn'>
+                <Dropdown.Item as={MenuLink} to='/orders/sales' dataTest='navigation_orders_sales_orders_drpdn'>
                   {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
                 </Dropdown.Item>
               )}
               <Dropdown.Item
                 as={MenuLink}
-                to='/orders?type=purchase'
+                to='/orders/purchase'
                 dataTest='navigation_orders_purchase_orders_drpdn'>
                 {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
               </Dropdown.Item>
@@ -608,10 +604,23 @@ class Navigation extends Component {
               text={formatMessage({ id: 'navigation.adminSettings', defaultMessage: 'Admin Settings' })}
               className={admin ? 'opened' : null}
               opened={admin.toString()}
-              onClick={() => this.toggleOpened('admin')}
+              onClick={() => this.toggleOpened('admin', '/admin/units-of-measure')}
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-              refId={'admin'}>
-              <Tabs />
+              refId={'admin'}
+              data-test='navigation_menu_admin_settings_drpdn'>
+              <Dropdown.Menu data-test='navigation_menu_admin_settings_menu'>
+                <PerfectScrollbar>
+                  {adminDefaultTabs.map((tab, i) => (
+                    <Dropdown.Item
+                      key={tab.id}
+                      as={MenuLink}
+                      to={`/admin/${tab.type}`}
+                      dataTest={`navigation_admin_settings_${tab.type}_drpdn`}>
+                      {formatMessage({ id: `navigation.admin.${tab.type}`, defaultMessage: `${tab.name}` })}
+                    </Dropdown.Item>
+                  ))}
+                </PerfectScrollbar>
+              </Dropdown.Menu>
             </DropdownItem>
           </>
         )}
@@ -622,10 +631,27 @@ class Navigation extends Component {
               text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
               className={operations ? 'opened' : null}
               opened={operations.toString()}
-              onClick={() => this.toggleOpened('operations')}
+              onClick={() =>
+                this.toggleOpened(
+                  'operations',
+                  (!isAdmin && isOrderOperator) ? '/operations/orders' : '/operations/shipping-quotes')
+              }
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-              refId={'operations'}>
-              <TabsOperations />
+              refId={'operations'}
+              data-test='navigation_menu_operations_drpdn'>
+              <Dropdown.Menu data-test='navigation_menu_operations_menu'>
+                <PerfectScrollbar>
+                  {operationsTabs.map((tab, i) => (
+                    <Dropdown.Item
+                      key={tab.id}
+                      as={MenuLink}
+                      to={`/operations/${tab.type}`}
+                      dataTest={`navigation_operations_${tab.type}_drpdn`}>
+                      {formatMessage({ id: `navigation.operations.${tab.type}`, defaultMessage: `${tab.name}` })}
+                    </Dropdown.Item>
+                  ))}
+                </PerfectScrollbar>
+              </Dropdown.Menu>
             </DropdownItem>
           </>
         )}
@@ -646,7 +672,6 @@ export default withAuth(
         navigationPS: navigationPS,
         auth: store.auth,
         tabsNames: store.settings.tabsNames,
-        currentSettingsTab: store.settings.currentTab,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isOrderOperator: getSafe(() => store.auth.identity.isOrderOperator, false),
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),

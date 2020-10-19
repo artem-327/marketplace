@@ -726,7 +726,12 @@ class DwollaRegister extends Component {
                     <GridRow>
                       <GridColumn>
                         <RightAlignedDiv>
-                          <Button onClick={() => (isAdmin ? Router.push('/admin') : Router.push('/settings'))} primary>
+                          <Button
+                            onClick={() => (isAdmin
+                              ? Router.push('/admin/units-of-measure')
+                              : Router.push('/settings/company-details'))
+                            }
+                            primary>
                             <FormattedMessage id='global.complete' defaultMessage='Complete'>
                               {text => text}
                             </FormattedMessage>
