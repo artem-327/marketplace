@@ -74,7 +74,7 @@ const ReturnToAdmin = styled(LogOut)`
 const clientCompanyRoutes = {
   restrictedRoutes: [
     '/inventory',
-    '/orders?type=sales',
+    '/orders/sales',
     '/inventory/my-products',
     '/settings/global-broadcast',
     '/wanted-board/listings',

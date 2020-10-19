@@ -171,7 +171,7 @@ class TablesHandlers extends Component {
           ...filterValue,
           status: status ? status : filterValue.status
         }
-        this.setState({ orders: filterValue }) // ! ! Otestovat
+        this.setState({ orders: filterValue })
       }
       this.handleFiltersValue(filterValue)
     }
@@ -549,7 +549,6 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: getSafe(() => state.operations.currentTab.type, ''),
     tableHandlersFilters: state.operations.tableHandlersFilters,
     searchedCompanies: state.operations.searchedCompanies.map(d => ({
       key: d.id,

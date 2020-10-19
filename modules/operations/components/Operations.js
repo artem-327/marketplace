@@ -26,13 +26,6 @@ const CustomGridColumn = styled(GridColumn)`
 `
 
 class Operations extends Component {
-  componentDidMount() {
-    const { handleActiveTab, auth, currentTab } = this.props
-    if (getSafe(() => auth.identity.isOrderOperator, false)) {
-      handleActiveTab(orderOperatorTabs[0], currentTab)
-    }
-  }
-
   componentWillUnmount() {
     const { isOpenPopup, closePopup } = this.props
     if (isOpenPopup) closePopup()
@@ -57,8 +50,8 @@ class Operations extends Component {
 
     return (
       <>
-        {isOpenPopup && popupForm[currentTab.type]}
-        {tables[currentTab.type] || <p>This page is still under construction</p>}
+        {isOpenPopup && popupForm[currentTab]}
+        {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )
   }
@@ -80,7 +73,7 @@ class Operations extends Component {
             : []
       },
       tags: {
-        url: 'prodex/api/tags/datagrid',
+        url: '/prodex/api/tags/datagrid',
         searchToFilter: v =>
           v && v.searchInput ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.searchInput}%`] }] : []
       },
@@ -146,7 +139,7 @@ class Operations extends Component {
             : []
       },
       orders: {
-        url: 'prodex/api/purchase-orders/datagrid',
+        url: '/prodex/api/purchase-orders/datagrid',
         searchToFilter: v => {
           let filter = { or: [], and: [] }
 
@@ -209,8 +202,7 @@ class Operations extends Component {
             : []
       }
     }
-
-    return datagridApiMap[currentTab.type]
+    return datagridApiMap[currentTab]
   }
 
   render() {

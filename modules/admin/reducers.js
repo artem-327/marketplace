@@ -26,19 +26,6 @@ export const initialState = {
   singleCompany: [],
   primaryBranchProvinces: [],
   mailingBranchProvinces: [],
-  tabsNames: [
-    { name: 'Units of Measure', id: 1 },
-    { name: 'Packaging Types', id: 2 },
-    { name: 'Manufacturers', id: 3 },
-    { name: 'Grades', id: 4 },
-    { name: 'Forms', id: 5 },
-    { name: 'Conditions', id: 6 },
-    { name: 'NMFC Numbers', id: 14 },
-    { name: 'Associations', id: 15 },
-    { name: 'Logistics', id: 16 },
-    { name: 'Admin Settings', id: 11, hideHandler: true }
-  ],
-  currentTab: { name: 'Units of Measure', id: 1 },
   casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'CasProduct.chemicalName' },
   currentEditForm: null,
   currentEdit2Form: null,
@@ -94,15 +81,13 @@ export default function reducer(state = initialState, action) {
         editTrig: !state.editTrig,
         popupValues: payload.data,
 
-        //[payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
-
         ...(payload.data
           ? {
               currentAddForm: null,
-              currentEditForm: state.currentTab
+              currentEditForm: true
             }
           : {
-              currentAddForm: state.currentTab,
+              currentAddForm: true,
               currentEditForm: null
             }),
         currentEdit2Form: null,
@@ -162,7 +147,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_OPEN_ADD_POPUP: {
       return {
         ...state,
-        currentAddForm: state.currentTab,
+        currentAddForm: true,
         currentEditForm: null,
         currentEdit2Form: null,
         currentAddDwolla: null,
@@ -182,7 +167,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_OPEN_EDIT_POPUP: {
       return {
         ...state,
-        currentEditForm: state.currentTab,
+        currentEditForm: true,
         currentAddForm: null,
         currentEdit2Form: null,
         currentAddDwolla: null,
@@ -194,7 +179,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_OPEN_EDIT_2_POPUP: {
       return {
         ...state,
-        currentEdit2Form: state.currentTab,
+        currentEdit2Form: true,
         currentAddForm: null,
         currentEditForm: null,
         currentAddDwolla: null,
@@ -272,18 +257,6 @@ export default function reducer(state = initialState, action) {
           value: d.id,
           key: d.id
         }))
-      }
-    }
-
-    case AT.ADMIN_HANDLE_ACTIVE_TAB: {
-      return {
-        ...state,
-        currentTab: action.payload.tab,
-        currentAddForm: state.currentTab !== action.payload.tab ? null : state.currentAddForm,
-        currentEditForm: state.currentTab !== action.payload.tab ? null : state.currentEditForm,
-        currentEdit2Form: state.currentTab !== action.payload.tab ? null : state.currentEdit2Form,
-        currentAddDwolla: state.currentTab !== action.payload.tab ? null : state.currentAddDwolla,
-        filterCasIds: []
       }
     }
 

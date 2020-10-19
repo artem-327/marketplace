@@ -2,8 +2,21 @@ import { FormattedMessage } from 'react-intl'
 import { companyDatagridColumns } from '~/constants/index'
 import React from 'react'
 
+export const defaultTabs = [
+  { name: 'Units of Measure', id: 1, type: 'units-of-measure' },
+  { name: 'Packaging Types', id: 2, type: 'packaging-types' },
+  { name: 'Manufacturers', id: 3, type: 'manufacturers' },
+  { name: 'Grades', id: 4, type: 'grades' },
+  { name: 'Forms', id: 5, type: 'forms' },
+  { name: 'Conditions', id: 6, type: 'conditions' },
+  { name: 'NMFC Numbers', id: 14, type: 'nmfc-numbers' },
+  { name: 'Associations', id: 15, type: 'associations' },
+  { name: 'Logistics', id: 16, type: 'logistics' },
+  { name: 'Admin Settings', id: 11, type: 'admin-settings' }
+]
+
 export const config = {
-  'Units of Measure': {
+  'units-of-measure': {
     tableName: 'admin_units_of_measure',
     addEditText: <FormattedMessage id='admin.unitOfMeasure'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfMeasurement',
@@ -108,7 +121,7 @@ export const config = {
     }
   },
 
-  'Packaging Types': {
+  'packaging-types': {
     tableName: 'admin_packaging_types',
     addEditText: <FormattedMessage id='admin.unitOfPackaging'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfPackaging',
@@ -250,7 +263,7 @@ export const config = {
     }
   },
 
-  Manufacturers: {
+  manufacturers: {
     tableName: 'admin_manufacturers',
     addEditText: <FormattedMessage id='admin.manufacturer'>{text => text}</FormattedMessage>,
     formattedMessageName: 'manufacturer',
@@ -321,7 +334,7 @@ export const config = {
     }
   },
 
-  Grades: {
+  grades: {
     tableName: 'admin_grades',
     addEditText: (
       <FormattedMessage id='admin.grade' defaultMessage='Grade'>
@@ -377,7 +390,7 @@ export const config = {
     }
   },
 
-  Forms: {
+  forms: {
     tableName: 'admin_forms',
     addEditText: (
       <FormattedMessage id='admin.form' defaultMessage='Form'>
@@ -433,7 +446,7 @@ export const config = {
     }
   },
 
-  Conditions: {
+  conditions: {
     tableName: 'admin_conditions',
     addEditText: (
       <FormattedMessage id='admin.condition' defaultMessage='Condition'>
@@ -489,7 +502,7 @@ export const config = {
     }
   },
 
-  'NMFC Numbers': {
+  'nmfc-numbers': {
     tableName: 'admin_nmfc_numbers',
     addEditText: (
       <FormattedMessage id='admin.nmfcNumber' defaultMessage='NMFC Number'>
@@ -534,7 +547,7 @@ export const config = {
     ]
   },
 
-  Associations: {
+  associations: {
     tableName: 'admin_associations',
     addEditText: (
       <FormattedMessage id='admin.associations' defaultMessage='Associations'>
@@ -593,7 +606,7 @@ export const config = {
     }
   },
 
-  Logistics: {
+  logistics: {
     tableName: 'admin_logistics',
     addEditText: (
       <FormattedMessage id='global.logistics' defaultMessage='Logistics'>
@@ -603,7 +616,7 @@ export const config = {
     searchText: 'admin.searchLogisticsProvider',
   },
 
-  'Admin Settings': {
+  'admin-settings': {
     hideHandler: true
   }
 }
