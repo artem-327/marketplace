@@ -41,7 +41,6 @@ const CustomSegment = styled(Segment)`
 
 const initialFormValues = {
   name: '',
-  enabled: false,
   phone: '',
   purchaseHazmatEligible: false,
   businessType: {
@@ -145,7 +144,6 @@ class AddEditGuestCompanySidebar extends React.Component {
                 cin: getSafe(() => values.cin, ''),
                 dba: getSafe(() => values.dba, ''),
                 dunsNumber: getSafe(() => values.dunsNumber, ''),
-                enabled: getSafe(() => values.enabled, false),
                 name: getSafe(() => values.name, ''),
                 phone: getSafe(() => values.phone, ''),
                 tin: getSafe(() => values.tin, ''),
@@ -357,13 +355,6 @@ class AddEditGuestCompanySidebar extends React.Component {
                       prefix='primaryBranch.deliveryAddress'
                       required={true}
                     />
-                    <FormGroup widths='equal'>
-                      <Checkbox
-                        label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
-                        name='enabled'
-                        data-test='company_form_enabled_chckb'
-                      />
-                    </FormGroup>
                   </>
                 </FlexContent>
                 <BottomButtons>

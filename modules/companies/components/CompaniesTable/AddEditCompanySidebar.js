@@ -363,6 +363,7 @@ class AddEditCompanySidebar extends React.Component {
                 if (country) payload[branch].deliveryAddress.address.country = country
               })
 
+              delete payload.enabled
               if (!payload.businessType) delete payload.businessType
               if (this.state.companyLogo) {
                 let reader = new FileReader()
@@ -424,6 +425,7 @@ class AddEditCompanySidebar extends React.Component {
                       isSubmitting={isSubmitting}
                       companyId={popupValues ? popupValues.id : null}
                       hasLogo={popupValues ? popupValues.hasLogo : false}
+                      enableCheckbox={!!popupValues}
                     />
                     {!popupValues && (
                       <>
