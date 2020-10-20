@@ -394,6 +394,7 @@ class CompanyForm extends Component {
       errors,
       touched,
       isSubmitting,
+      enableCheckbox,
       associations
     } = this.props
     const { formatMessage } = intl
@@ -539,11 +540,13 @@ class CompanyForm extends Component {
         </FormGroup>
 
         <FormGroup widths='equal'>
-          <Checkbox
-            label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
-            name='enabled'
-            data-test='company_form_enabled_chckb'
-          />
+          {enableCheckbox && (
+            <Checkbox
+              label={formatMessage({ id: 'global.enabled', defaultMessage: 'Enabled' })}
+              name='enabled'
+              data-test='company_form_enabled_chckb'
+            />
+          )}
           {!this.props.isClientCompany && (
             <Checkbox
               label={formatMessage({

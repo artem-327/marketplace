@@ -52,8 +52,8 @@ export function closePopup() {
 
 export function updateCompany(id, formData) {
   return async dispatch => {
-    await dispatch(udpateEnabled(id, formData.enabled))
-    delete formData.enabled
+    //await dispatch(udpateEnabled(id, formData.enabled))
+    //delete formData.enabled
     let response = await api.updateCompany(id, formData)
     dispatch({
       type: AT.COMPANIES_UPDATE_COMPANY,
@@ -73,8 +73,8 @@ export function updateCompany(id, formData) {
 
 export function createCompany(formData) {
   return async dispatch => {
-    const enabled = formData.enabled
-    delete formData.enabled
+    //const enabled = formData.enabled
+    //delete formData.enabled
     let response = await api.createCompany(formData)
     await dispatch({
       type: AT.COMPANIES_CREATE_COMPANY,
@@ -85,7 +85,7 @@ export function createCompany(formData) {
       Datagrid.clear()
       Datagrid.loadData()
       */
-    await dispatch(udpateEnabled(response.id, enabled))
+    //await dispatch(udpateEnabled(response.id, enabled))
     dispatch(closePopup())
     return response
   }
