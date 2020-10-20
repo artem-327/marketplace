@@ -11,6 +11,7 @@ import { closeImportPopup } from '~/modules/settings/actions'
 
 const StyledButton = styled(Button)`
   width: 200px;
+  padding: auto !important;
 `
 
 class ConfirmationPage extends Component {

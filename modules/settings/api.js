@@ -120,7 +120,7 @@ export default {
   },
   uploadCSVFile: file => {
     const formData = new FormData()
-    formData.append('file', new Blob([file], { type: 'text/csv' }), file.name)
+    formData.append('file', new Blob([file], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), file.name)
 
     return api.post('/prodex/api/imports/temporary-files', formData).then(response => response.data)
   },
