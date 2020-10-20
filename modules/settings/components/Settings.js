@@ -31,7 +31,6 @@ import ClientCompanyPopup from './ClientCompany/Popup'
 import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
-import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
@@ -311,7 +310,6 @@ class Settings extends Component {
     const tables = {
       'company-details': this.companyDetails(),
       users: <UsersTable />,
-      'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'guest-companies': <ClientCompanyTable />,
@@ -328,7 +326,6 @@ class Settings extends Component {
 
     const popupForm = {
       users: <UsersSidebar />,
-      'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsSidebar />,
       'credit-cards': <CreditCardsPopup />,
       'guest-companies': <ClientCompanyPopup />,

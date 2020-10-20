@@ -49,7 +49,6 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/settings/system-settings', false) ||
       getSafe(() => Router.router.pathname === '/settings/users', false) ||
       getSafe(() => Router.router.pathname === '/settings/locations', false) ||
-      getSafe(() => Router.router.pathname === '/settings/global-broadcast', false) ||
       getSafe(() => Router.router.pathname === '/settings/bank-accounts', false) ||
       getSafe(() => Router.router.pathname === '/settings/logistics', false) ||
       getSafe(() => Router.router.pathname === '/settings/documents', false),
@@ -87,8 +86,9 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/wanted-board/bids-sent', false) ||
       getSafe(() => Router.router.pathname === '/wanted-board/bids-received', false),
     inventory:
+      getSafe(() => Router.router.pathname === '/inventory/my-listings', false) ||
       getSafe(() => Router.router.pathname === '/inventory/my-products', false) ||
-      getSafe(() => Router.router.pathname === '/inventory/my-listings', false),
+      getSafe(() => Router.router.pathname === '/inventory/global-price-book', false),
     marketplace:
       getSafe(() => Router.router.pathname === '/marketplace/listings', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/holds', false)
@@ -294,7 +294,7 @@ class Navigation extends Component {
             text={formatMessage({ id: 'navigation.inventory', defaultMessage: 'Inventory' })}
             className={inventory ? 'opened' : null}
             opened={inventory}
-            onClick={() => this.toggleOpened('inventory', '/inventory/my-products')}
+            onClick={() => this.toggleOpened('inventory', '/inventory/my-listings')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'inventory'}
             data-test='navigation_menu_inventory_drpdn'>
@@ -302,16 +302,24 @@ class Navigation extends Component {
               <PerfectScrollbar>
                 <Dropdown.Item
                   as={MenuLink}
-                  to='/inventory/my-products'
-                  dataTest='navigation_menu_inventory_my_products_drpdn'>
-                  {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  as={MenuLink}
                   to='/inventory/my-listings'
                   dataTest='navigation_menu_inventory_my_listings_drpdn'>
                   {formatMessage({ id: 'navigation.inventoryMyListings', defaultMessage: 'My Listings' })}
                 </Dropdown.Item>
+                <Dropdown.Item
+                  as={MenuLink}
+                  to='/inventory/my-products'
+                  dataTest='navigation_menu_inventory_my_products_drpdn'>
+                  {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
+                </Dropdown.Item>
+                {!isClientCompanyAdmin && (
+                  <Dropdown.Item
+                    as={MenuLink}
+                    to='/inventory/global-price-book'
+                    dataTest='navigation_menu_inventory_global_price_book_drpdn'>
+                    {formatMessage({ id: 'navigation.inventoryGlobalPriceBook', defaultMessage: 'Global Price Book' })}
+                  </Dropdown.Item>
+                )}
               </PerfectScrollbar>
             </Dropdown.Menu>
           </DropdownItem>
@@ -486,15 +494,6 @@ class Navigation extends Component {
                 ) : null}
                 {(isCompanyAdmin && !isClientCompany) || isClientCompanyAdmin ? (
                   <>
-                    {!isClientCompanyAdmin && (
-                      <Dropdown.Item
-                        as={MenuLink}
-                        to='/settings/global-broadcast'
-                        tab='global-broadcast'
-                        dataTest='navigation_settings_global_broadcast_drpdn'>
-                        {formatMessage({ id: 'navigation.globalPriceBook', defaultMessage: 'Global Price Book' })}
-                      </Dropdown.Item>
-                    )}
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings/bank-accounts'
