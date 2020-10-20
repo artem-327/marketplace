@@ -410,7 +410,8 @@ class SubmitOfferPopup extends React.Component {
     select: '',
     nextSubmit: false,
     inputRows: 0,
-    pkgAvailable: ''
+    pkgAvailable: '',
+    selectedRow: { id: '' }
   }
 
   validationSchema = () =>
@@ -557,6 +558,13 @@ class SubmitOfferPopup extends React.Component {
 
   submitOffer = async ({ lotExpirationDate, fulfillmentType, items }, validateForm) => {
     if (!this.state.nextSubmit) {
+      try {
+        if (getSafe(() => this.props.popupValues.id, '') && getSafe(() => this.state.selectedRow.id, '')) {
+          await this.props.matchingProductOfferInfo(this.props.popupValues.id, this.state.selectedRow.id)
+        }
+      } catch (error) {
+        console.error(error)
+      }
       this.setState({ nextSubmit: true })
       return
     }
@@ -585,7 +593,12 @@ class SubmitOfferPopup extends React.Component {
           return {
             pkgAmount: Number(item.pkgAmount),
             pricePerUOM: Number(item.pricePerUOM),
-            fulfilledAt: item.fulfilledAt.format()
+            fulfilledAt:
+              item.fulfilledAt && typeof item.fulfilledAt === 'object'
+                ? item.fulfilledAt.format()
+                : item.fulfilledAt && typeof item.fulfilledAt === 'string'
+                ? moment(getStringISODate(item.fulfilledAt)).format()
+                : ''
           }
       }
     })
@@ -597,7 +610,7 @@ class SubmitOfferPopup extends React.Component {
     const body = {
       expiresAt,
       fulfillmentType,
-      items: editedItems,
+      items: fulfillmentType === 'COMPLETE_SCHEDULE' ? editedItems : editedItems[0],
       productOffer,
       purchaseRequest: popupValues.id
     }
@@ -635,6 +648,7 @@ class SubmitOfferPopup extends React.Component {
                 this.setFieldValue('items[0].pkgAmount', row.pkgAvailable)
                 this.setState({ pkgAvailable: row.pkgAvailable })
                 this.setFieldValue('productName', row.companyProduct.intProductName)
+                this.setState({ selectedRow: row })
               }}
               // inputProps={{  }}
             />
@@ -675,20 +689,15 @@ class SubmitOfferPopup extends React.Component {
     if (name === 'fulfillmentType' && value === 'COMPLETE_IMMEDIATE') {
       this.setFieldValue(
         'items[0].pkgAmount',
-        this.state.pkgAvailable || getSafe(() => this.props.matchingOfferInfo.automaticPackageAmount, '')
+        getSafe(() => this.props.matchingOfferInfo.automaticPackageAmount, '') || this.state.pkgAvailable
       )
-    } else if (name === 'fulfillmentType' && value === 'COMPLETE_SCHEDULE') {
+    } else if (name === 'fulfillmentType' && value === 'COMPLETE_SCHEDULE' && this.props.isSecondPage) {
       const initialVal = this.state.initialValues
+      initialVal.fulfillmentType = 'COMPLETE_SCHEDULE'
 
-      if (initialVal.fulfillmentType) {
-        initialVal.fulfillmentType = 'COMPLETE_SCHEDULE'
-      }
       this.setValues(initialVal)
     }
-    if (
-      this.values.fulfillmentType === 'COMPLETE_SCHEDULE' &&
-      (name.includes('pkgAmount') || name.includes('pricePerUOM'))
-    ) {
+    if (this.values.fulfillmentType === 'COMPLETE_SCHEDULE') {
       let total = 0
       if (name.includes('pkgAmount')) {
         total = Number(value) * Number(this.values.items[index].pricePerUOM)
@@ -928,18 +937,27 @@ class SubmitOfferPopup extends React.Component {
     const i =
       newestDate && getSafe(() => arrayTimestamps.length, '') ? arrayTimestamps.findIndex(el => el === newestDate) : 0
 
-    let items = popupValues.histories[i].items.map(item => ({
-      fulfilledAt: getSafe(() => item.fulfilledAt, '') ? moment(item.fulfilledAt) : '',
-      pkgAmount: this.getPkgAmount(item.pkgAmount),
-      pricePerUOM: getSafe(() => item.pricePerUOM, ''),
-      total:
-        getSafe(() => item.pkgAmount, '') && getSafe(() => item.pricePerUOM, '')
-          ? item.pkgAmount * item.pricePerUOM
-          : getSafe(() => popupValues.cfHistoryLastAveragePricePerUOM, '') &&
-            getSafe(() => popupValues.cfHistoryLastPkgAmount, '')
-          ? popupValues.cfHistoryLastAveragePricePerUOM * popupValues.cfHistoryLastPkgAmount
-          : ''
-    }))
+    let items = getSafe(() => popupValues.histories[i].items, '')
+      ? popupValues.histories[i].items.map(item => ({
+          fulfilledAt: getSafe(() => item.fulfilledAt, '') ? moment(item.fulfilledAt) : '',
+          pkgAmount: this.getPkgAmount(item.pkgAmount),
+          pricePerUOM: getSafe(() => item.pricePerUOM, ''),
+          total:
+            getSafe(() => item.pkgAmount, '') && getSafe(() => item.pricePerUOM, '')
+              ? item.pkgAmount * item.pricePerUOM
+              : getSafe(() => popupValues.cfHistoryLastAveragePricePerUOM, '') &&
+                getSafe(() => popupValues.cfHistoryLastPkgAmount, '')
+              ? popupValues.cfHistoryLastAveragePricePerUOM * popupValues.cfHistoryLastPkgAmount
+              : ''
+        }))
+      : [
+          {
+            fulfilledAt: '',
+            pkgAmount: '',
+            pricePerUOM: '',
+            total: ''
+          }
+        ]
 
     let initialValues = {
       expirationDate: getSafe(() => popupValues.expiresAt, ''),
@@ -958,7 +976,8 @@ class SubmitOfferPopup extends React.Component {
       datagrid,
       closePopup,
       purchaseRequestPending,
-      options
+      options,
+      updatingDatagrid
     } = this.props
     const { columns, initialValues } = this.state
     const rows = this.getRows()
@@ -1212,7 +1231,7 @@ class SubmitOfferPopup extends React.Component {
                               </FormattedMessage>
                             </Button>
                             <SubmitButton
-                              loading={purchaseRequestPending}
+                              loading={purchaseRequestPending || updatingDatagrid}
                               primary
                               type='submit'
                               onClick={this.submitForm}
