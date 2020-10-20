@@ -324,6 +324,15 @@ const DivRadio = styled.div`
   }
 `
 
+const DivExpirationDate = styled.div`
+  float: right;
+  .input {
+    input {
+      background-color: #fdfdfd !important;
+    }
+  }
+`
+
 class SubmitOfferPopup extends React.Component {
   state = {
     columns: [
@@ -427,11 +436,15 @@ class SubmitOfferPopup extends React.Component {
         ...fulfillmentType,
         items: Yup.array().of(
           Yup.lazy(v => {
-            let pkgAmount = {
-              pkgAmount: Yup.number()
-                .positive(errorMessages.positive)
-                .typeError(errorMessages.requiredMessage)
-                .required(errorMessages.requiredMessage)
+            const { popupValues } = this.props
+            let pkgAmount = ''
+            if (!popupValues.purchaseRequest && values.fulfillmentType !== 'COMPLETE_IMMEDIATE') {
+              pkgAmount = {
+                pkgAmount: Yup.number()
+                  .positive(errorMessages.positive)
+                  .typeError(errorMessages.requiredMessage)
+                  .required(errorMessages.requiredMessage)
+              }
             }
 
             if (getSafe(() => matchingOfferInfo.maximumPackageAmount, 0) < sumPkgAmount) {
@@ -572,7 +585,7 @@ class SubmitOfferPopup extends React.Component {
           return {
             pkgAmount: Number(item.pkgAmount),
             pricePerUOM: Number(item.pricePerUOM),
-            fulfilledAt: moment(getStringISODate(item.fulfilledAt)).format()
+            fulfilledAt: item.fulfilledAt.format()
           }
       }
     })
@@ -600,6 +613,7 @@ class SubmitOfferPopup extends React.Component {
     } catch (error) {
       console.error(error)
     } finally {
+      this.props.datagrid.loadData()
       closePopup()
     }
   }
@@ -663,6 +677,13 @@ class SubmitOfferPopup extends React.Component {
         'items[0].pkgAmount',
         this.state.pkgAvailable || getSafe(() => this.props.matchingOfferInfo.automaticPackageAmount, '')
       )
+    } else if (name === 'fulfillmentType' && value === 'COMPLETE_SCHEDULE') {
+      const initialVal = this.state.initialValues
+
+      if (initialVal.fulfillmentType) {
+        initialVal.fulfillmentType = 'COMPLETE_SCHEDULE'
+      }
+      this.setValues(initialVal)
     }
     if (
       this.values.fulfillmentType === 'COMPLETE_SCHEDULE' &&
@@ -728,20 +749,24 @@ class SubmitOfferPopup extends React.Component {
   }
 
   renderDateInput = fulfillmentType => {
+    const placeholder = fulfillmentType === 'COMPLETE_SCHEDULE' ? 'Expiration Date' : ''
     return (
       <>
-        <DivLabel>
-          <FormattedMessage id='submitOffer.expirationDate' defaultMessage='Expiration Date'>
-            {text => text}
-          </FormattedMessage>
-        </DivLabel>
+        {fulfillmentType !== 'COMPLETE_SCHEDULE' ? (
+          <DivLabel>
+            <FormattedMessage id='submitOffer.expirationDate' defaultMessage='Expiration Date'>
+              {text => text}
+            </FormattedMessage>
+          </DivLabel>
+        ) : null}
         <DateInput
           name='lotExpirationDate'
           inputProps={{
             onChange: (e, { name, value }) => this.handleChange(e, { name, value: getStringISODate(value) }),
             //minDate: moment(), TypeError: Cannot read property 'position' of undefined
             clearable: true,
-            fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'
+            fluid: this.state.nextSubmit && fulfillmentType !== 'COMPLETE_SCHEDULE',
+            placeholder: placeholder
           }}
         />
       </>
@@ -779,7 +804,10 @@ class SubmitOfferPopup extends React.Component {
             <FormattedMessage id='submitOffer.pkgAmount' defaultMessage='PKG Amount'>
               {text => text}
             </FormattedMessage>
-            <Required />
+            {this.props.popupValues.purchaseRequest ||
+            (!this.props.popupValues.purchaseRequest && fulfillmentType !== 'COMPLETE_IMMEDIATE') ? (
+              <Required />
+            ) : null}
           </>
         )}
         <Input
@@ -842,7 +870,7 @@ class SubmitOfferPopup extends React.Component {
                     <TableCell>{this.renderPriceInput(fulfillmentType, index)}</TableCell>
                     <TableCell>{this.renderTotal(index)}</TableCell>
                     <TableCell verticalAlign='middle' textAlign='center'>
-                      {items.length > 1 && (
+                      {items.length > 1 ? (
                         <DivIconTrash
                           onClick={async e => {
                             if (
@@ -857,6 +885,8 @@ class SubmitOfferPopup extends React.Component {
                           }}>
                           <IconTrash />
                         </DivIconTrash>
+                      ) : (
+                        <DivIconTrash></DivIconTrash>
                       )}
                     </TableCell>
                   </Table.Row>
@@ -868,7 +898,7 @@ class SubmitOfferPopup extends React.Component {
     )
   }
 
-  getPkgAmount = item => {
+  getPkgAmount = pkgAmount => {
     const { matchingOfferInfo, popupValues } = this.props
     let result = ''
     if (
@@ -876,12 +906,14 @@ class SubmitOfferPopup extends React.Component {
       getSafe(() => matchingOfferInfo.automaticPackageAmount, '')
     ) {
       result = matchingOfferInfo.automaticPackageAmount
-    } else if (getSafe(() => item.pkgAmount, '')) {
-      result = item.pkgAmount
+      return result
+    } else if (pkgAmount) {
+      result = pkgAmount
+      return result
     } else if (getSafe(() => popupValues.cfHistoryLastPkgAmount, '')) {
       result = popupValues.cfHistoryLastPkgAmount
+      return result
     }
-    return result
   }
 
   getInitialValues = () => {
@@ -942,13 +974,14 @@ class SubmitOfferPopup extends React.Component {
           validateOnChange
           enableReinitialize
           initialValues={initialValues}
-          render={({ setFieldValue, values, submitForm, errors, setErrors, validateForm }) => {
+          render={({ setFieldValue, values, submitForm, errors, setErrors, validateForm, setValues }) => {
             this.setFieldValue = setFieldValue
             this.submitForm = submitForm
             this.values = values
             this.errors = errors
             this.setErrors = setErrors
             this.validateForm = validateForm
+            this.setValues = setValues
 
             return (
               <>
@@ -1130,8 +1163,14 @@ class SubmitOfferPopup extends React.Component {
                                         {this.renderTableInputs(values.fulfillmentType, values.items, arrayHelpers)}
                                       </Grid.Column>
                                     </GridRowInputs>
-                                    <GridRowPlusIcon>
-                                      <GridColumn>
+                                    <GridRowPlusIcon columns={3}>
+                                      <GridColumn width={11}></GridColumn>
+                                      <GridColumn width={4}>
+                                        <DivExpirationDate>
+                                          {this.renderDateInput(values.fulfillmentType)}
+                                        </DivExpirationDate>
+                                      </GridColumn>
+                                      <GridColumn width={1}>
                                         <DivAddInputTds
                                           onClick={e => {
                                             arrayHelpers.push({ fulfilledAt: '', pkgAmount: '', pricePerUOM: '' })

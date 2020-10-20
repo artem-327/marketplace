@@ -571,7 +571,6 @@ class BidsReceived extends Component {
         disabled: row => editedId === row.id,
         callback: async row => {
           await this.props.openSubmitOffer(row, true)
-          datagrid.loadData()
         },
         hidden: row =>
           row.treeRoot ||
@@ -672,7 +671,8 @@ class BidsReceived extends Component {
       popupValues,
       counterRequestedItem,
       updatingDatagrid,
-      tutorialCompleted
+      tutorialCompleted,
+      isSecondPage
     } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
@@ -680,7 +680,9 @@ class BidsReceived extends Component {
     return (
       <>
         {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
-        {openedSubmitOfferPopup && <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} />}
+        {openedSubmitOfferPopup && (
+          <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} isSecondPage={isSecondPage} />
+        )}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>

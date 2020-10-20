@@ -162,6 +162,7 @@ class BidsSent extends Component {
         disabled: row => this.props.editedId === row.id,
         callback: async row => {
           await this.props.openSubmitOffer(row, true)
+          datagrid.loadData()
         },
         hidden: row =>
           row.cfHistoryLastStatus === 'REJECTED' ||

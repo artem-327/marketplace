@@ -56,7 +56,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         openedSubmitOfferPopup: true,
         popupValues: payload.row,
-        isSecondPage: payload.isSecondPage
+        isSecondPage: payload.isSecondPage // That means if Submit Offet popup is opened from Bids Sent or Bids Received
       }
     }
     case AT.WB_FALSE_SECOND_PAGE: {
@@ -69,7 +69,8 @@ export default function reducer(state = initialState, action) {
     case AT.WB_CLOSE_POPUP: {
       return {
         ...state,
-        openedSubmitOfferPopup: false
+        openedSubmitOfferPopup: false,
+        matchingOfferInfo: null
       }
     }
 
