@@ -98,7 +98,7 @@ class BidsSent extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersBidsSent', this.state.filterValue)
-    if (this.props.editWindowOpen) this.props.closeDetailSidebar()
+    if (this.props.editWindowOpen && this.props.activeTab === 'bids-sent') this.props.closeDetailSidebar()
   }
 
   handleFilterChangeInputSearch = (e, data) => {
@@ -126,7 +126,7 @@ class BidsSent extends Component {
           defaultMessage: 'Edit'
         }),
         hidden: row => row.hiddenActions,
-        callback: row => myOffersSidebarTrigger(row)
+        callback: row => myOffersSidebarTrigger(row, 'bids-sent')
       },
       {
         text: formatMessage({

@@ -19,15 +19,18 @@ export const sidebarDetailTrigger = (row = null, activeTab = '') => {
         response = await api.getPurchaseRequest(row.id)
       }
 
-      return { row: activeTab === 'bids-received' && row ? { ...response, rawData: response } : row }
+      return {
+        row: activeTab === 'bids-received' && row ? { ...response, rawData: response } : row,
+        activeTab
+      }
     }
   }
 }
 
-export const myOffersSidebarTrigger = (row = null) => {
+export const myOffersSidebarTrigger = (row = null, activeTab = '') => {
   return {
     type: AT.WB_SIDEBAR_MO_DETAIL_TRIGGER,
-    payload: row
+    payload: { row, activeTab }
   }
 }
 
