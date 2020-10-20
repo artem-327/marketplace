@@ -126,7 +126,7 @@ class CreateMenu extends Component {
             <Dropdown.Item
               onClick={() => {
                 Router.push('/wanted-board/listings')
-                openWantedAddForm()
+                openWantedAddForm(null, 'listings')
               }}>
               <Inbox className={'menu-icon'} />
               <FormattedMessage id='createMenu.newWanted' defaultMessage='New Wanted' />

@@ -43,7 +43,8 @@ export const initialState = {
   tableHandlersFiltersBidsSent: null,
   openSidebar: false,
   isSecondPage: false,
-  matchingOfferInfo: null
+  matchingOfferInfo: null,
+  activeTab: ''
 }
 
 export default function reducer(state = initialState, action) {
@@ -85,6 +86,7 @@ export default function reducer(state = initialState, action) {
         editWindowOpen: null,
         editedId: null,
         openSidebar: false,
+        activeTab: '',
         sidebarValues: null
       }
     }
@@ -138,6 +140,8 @@ export default function reducer(state = initialState, action) {
       const row = payload.row ? payload.row.rawData : null
       return {
         ...state,
+        activeTab: payload.activeTab,
+        openSidebar: true,
         loading: false,
         editInitTrig: !state.editInitTrig,
         editWindowOpen: 'bids-received',
@@ -195,11 +199,12 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.WB_SIDEBAR_MO_DETAIL_TRIGGER: {
-      const row = payload ? payload.rawData : null
+      const row = payload.row ? payload.row.rawData : null
       const manufacturer = getSafe(() => row.productOffer.companyProduct.companyGenericProduct.manufacturer, null)
       const product = getSafe(() => row.productOffer.companyProduct.companyGenericProduct, null)
       return {
         ...state,
+        activeTab: payload.activeTab,
         editInitTrig: !state.editInitTrig,
         editWindowOpen: 'bids-sent',
         sidebarValues: row,
