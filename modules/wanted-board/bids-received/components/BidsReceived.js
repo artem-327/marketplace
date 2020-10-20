@@ -403,7 +403,7 @@ class BidsReceived extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersBidsReceived', this.state.filterValue)
-    if (this.props.editWindowOpen) this.props.closeDetailSidebar()
+    if (this.props.openSidebar && this.props.activeTab === 'bids-received') this.props.closeDetailSidebar()
   }
 
   componentDidUpdate(prevProps, prevState) {
