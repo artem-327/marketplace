@@ -661,7 +661,7 @@ class Broadcast extends Component {
     let totalBranches = treeData.all(n => !n.hasChildren() && n.model.type === 'branch').length
 
     let broadcastingCompanies = _.uniqBy(
-      treeData.all(n => getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 && n.model.type === 'company'),
+      treeData.all(n => getSafe(() => n.model.broadcast, '') === 1 && n.model.type === 'company'),
       n => n.model.id
     ).length
     let broadcastingBranches = treeData.all(
