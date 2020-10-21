@@ -53,12 +53,41 @@ const StatusLabel = (status, type) => {
   return <LabelStatus backgroundColor={backgroundColor}>{text}</LabelStatus>
 }
 
+const StatusType = fulfillmentType => {
+  if (!fulfillmentType) return ''
+
+  let text = <FormattedMessage id='wantedBoard.partial' defaultMessage='Partial' />
+  let backgroundColor = '#2599d5'
+  if (fulfillmentType === 'COMPLETE_IMMEDIATE') {
+    text = <FormattedMessage id='wantedBoard.completeImmediate' defaultMessage='Complete immediate' />
+  } else if (fulfillmentType === 'COMPLETE_SCHEDULE') {
+    text = <FormattedMessage id='wantedBoard.completeSchedule' defaultMessage='Complete schedule' />
+  }
+
+  return <LabelStatus backgroundColor={backgroundColor}>{text}</LabelStatus>
+}
+
+const getNewestFulfillmentFromHistory = histories => {
+  if (!histories || !histories.length) return
+
+  const arrayTimestamps = histories.map(historie => (historie.updatedAt ? Date.parse(historie.updatedAt) : ''))
+
+  const newestDate = getSafe(() => arrayTimestamps.length, '') ? Math.max.apply(Math, arrayTimestamps) : ''
+
+  const i =
+    newestDate && getSafe(() => arrayTimestamps.length, '') ? arrayTimestamps.findIndex(el => el === newestDate) : 0
+
+  return getSafe(() => histories[i].fulfillmentType, '')
+}
+
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     editedId: store.wantedBoard.editWindowOpen === 'bids-sent' ? store.wantedBoard.editedId : null,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     rows: datagrid.rows.map(po => {
+      const fulfillmentType = getNewestFulfillmentFromHistory(po.histories)
+
       const condition = getSafe(() => po.productOffer.conforming, null)
       return {
         id: po.id,
@@ -87,7 +116,8 @@ function mapStateToProps(store, { datagrid }) {
         status: StatusLabel(
           getSafe(() => po.cfHistoryLastStatus, ''),
           getSafe(() => po.cfHistoryLastType, '')
-        )
+        ),
+        type: StatusType(fulfillmentType)
       }
     })
   }
