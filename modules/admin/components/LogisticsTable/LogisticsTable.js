@@ -149,7 +149,6 @@ const mapStateToProps = (state, { datagrid }) => {
     }),
     editId: state.admin.popupValues && state.admin.popupValues.id,
     filterValue: state.admin.filterValue,
-    currentTab: state.admin.currentTab,
     loading: state.admin.loading,
   }
 }

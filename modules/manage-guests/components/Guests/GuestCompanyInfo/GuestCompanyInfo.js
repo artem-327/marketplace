@@ -152,7 +152,6 @@ class GuestCompanyInfo extends React.Component {
                     touched={touched}
                     isSubmitting={isSubmitting}
                     enableAssociations
-                    enableCheckbox
                     companyId={values.id}
                     hasLogo={values.hasLogo}
                   />

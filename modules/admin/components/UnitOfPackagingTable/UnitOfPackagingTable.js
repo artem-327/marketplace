@@ -107,7 +107,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
-  let cfg = state.admin.config[state.admin.currentTab.name]
+  let cfg = state.admin.config['packaging-types']
   return {
     config: cfg,
     rows: datagrid.rows.map(d => {
@@ -125,7 +125,6 @@ const mapStateToProps = (state, { datagrid }) => {
       }
     }),
     filterValue: state.admin.filterValue,
-    currentTab: state.admin.currentTab,
     loading: state.admin.loading,
     confirmMessage: state.admin.confirmMessage,
     deleteRowById: state.admin.deleteRowById

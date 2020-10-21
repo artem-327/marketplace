@@ -286,7 +286,7 @@ class PurchaseOrder extends Component {
 
     try {
       await this.props.postPurchaseOrder(data)
-      Router.push('/orders?type=purchase')
+      Router.push('/orders/purchase')
     } catch (e) {
       console.error(e)
     }

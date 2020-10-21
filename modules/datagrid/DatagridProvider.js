@@ -307,7 +307,10 @@ class DatagridProvider extends Component {
       if (savedFilters[key].orFilters) orFilters = orFilters.concat(savedFilters[key].orFilters)
     })
 
-    const allFilters = { filters, orFilters }
+    const allFilters = {
+      filters: this.joinFilterArrays(filters),
+      orFilters: this.joinFilterArrays(orFilters)
+    }
 
     this.setState(
       s => ({
@@ -321,6 +324,44 @@ class DatagridProvider extends Component {
       }),
       () => reload && this.loadData()
     )
+  }
+
+  joinFilterArrays = filter => {
+    let filterObject = {}
+    let newFilter = []
+
+    filter.forEach(filt => {
+      if (filt.operator) {
+        if (filterObject[filt.operator]) {
+          const index = filterObject[filt.operator].findIndex(el => el.path === filt.path)
+          if (index >= 0) {
+            filterObject[filt.operator][index].values = filterObject[filt.operator][index].values.concat(filt.values)
+          } else {
+            filterObject[filt.operator].push({
+              path: filt.path,
+              values: filt.values
+            })
+          }
+
+        } else {
+          filterObject[filt.operator] = [{
+            path: filt.path,
+            values: filt.values
+          }]
+        }
+      }
+    })
+
+    Object.keys(filterObject).forEach(key => {
+      filterObject[key].forEach((filt, index) => {
+        newFilter.push({
+          operator: key,
+          path: filterObject[key][index].path,
+          values: [...new Set(filterObject[key][index].values)]
+        })
+      })
+    })
+    return newFilter
   }
 
   setQuery = (query, reload = true) => {

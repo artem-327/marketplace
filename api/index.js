@@ -61,9 +61,13 @@ axios.interceptors.response.use(
     if (status === 401) {
       if (!isAlreadyFetchingAccessToken) {
         isAlreadyFetchingAccessToken = true
-        const data = await refreshToken()
-        isAlreadyFetchingAccessToken = false
-        onAccessTokenFetched(data.access_token)
+        try {
+          let data = await refreshToken()
+          isAlreadyFetchingAccessToken = false
+          data && onAccessTokenFetched(data.access_token)
+        } catch (err) {
+          Router.push('/auth/logout')
+        }
       }
 
       const retryOriginalRequest = new Promise(resolve => {
@@ -75,21 +79,17 @@ axios.interceptors.response.use(
       return retryOriginalRequest
     }
 
-    switch (status) {
-      case 500:
-        hasWindow && window.localStorage.setItem('errorStatus', '500')
-        Router.push('/errors')
-        break
-      case 504:
-        hasWindow && window.localStorage.setItem('errorStatus', '504')
-        Router.push('/errors')
-        break
-      case 403:
-        hasWindow && window.localStorage.setItem('errorStatus', '403')
-        Router.push('/errors')
-        break
-      default:
-        break
+    if (status === 500) {
+      hasWindow && window.localStorage.setItem('errorStatus', '500')
+      Router.push('/errors')
+    }
+    if (status === 504) {
+      hasWindow && window.localStorage.setItem('errorStatus', '504')
+      Router.push('/errors')
+    }
+    if (status === 403) {
+      hasWindow && window.localStorage.setItem('errorStatus', '403')
+      Router.push('/errors')
     }
 
     try {

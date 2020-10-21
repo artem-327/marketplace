@@ -177,7 +177,7 @@ class ConfirmationPage extends Component {
           try {
             await reviewCompany(payload)
             actions.setSubmitting(false)
-            Router.push('/settings')
+            Router.push('/settings/company-details')
           } catch (err) {
             console.error(err)
           } finally {
@@ -373,7 +373,7 @@ class ConfirmationPage extends Component {
                       <Button
                         style={{ marginRight: '1em' }}
                         onClick={() => {
-                          isAdmin ? Router.push('/admin') : Router.push('/inventory/my-listings')
+                          isAdmin ? Router.push('/admin/units-of-measure') : Router.push('/inventory/my-listings')
                         }}
                         data-test='auth_confirm_cancel_btn'>
                         <FormattedMessage id='laststep.cancel' defaultMessage='Cancel'>

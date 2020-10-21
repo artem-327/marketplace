@@ -150,10 +150,6 @@ class DetailSidebar extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.props.closeDetailSidebar()
-  }
-
   fetchIfNoData = (name, fn) => {
     if (this.props[name].length === 0) fn()
   }

@@ -882,7 +882,7 @@ class Detail extends Component {
         <div className='scroll-area'>
           <TopRow>
             <a
-              onClick={() => router.push(`/orders?type=${ordersType.toLowerCase()}`)}
+              onClick={() => router.push(`/orders/${ordersType.toLowerCase()}`)}
               style={{ cursor: 'pointer' }}
               data-test='orders_detail_back_btn'>
               <ArrowLeft />

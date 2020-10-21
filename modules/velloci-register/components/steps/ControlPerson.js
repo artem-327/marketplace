@@ -60,19 +60,6 @@ const SpanEstablishedLabel = styled.span`
 `
 
 function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naicsCodes }) {
-  let naicsOptions = []
-  if (naicsCodes && naicsCodes.data) {
-    Object.keys(naicsCodes.data).forEach(key => {
-      naicsCodes.data[key].forEach(obj => {
-        naicsOptions.push({
-          key: obj.code,
-          text: obj.subcategory,
-          value: obj.code
-        })
-      })
-    })
-  }
-
   return (
     <GridControlPerson>
       <GridRow>
@@ -242,7 +229,7 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
               <GridRowBusinessType columns={2}>
                 <Grid.Column width={8}>
                   <Dropdown
-                    options={naicsOptions}
+                    options={naicsCodes.data}
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
                     }}

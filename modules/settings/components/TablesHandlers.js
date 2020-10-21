@@ -166,12 +166,6 @@ const textsTable = {
     BtnImportText: 'settings.tables.products.buttonImport',
     SearchText: 'settings.tables.products.search'
   },
-  'global-broadcast': {
-    BtnAddText: 'settings.tables.globalBroadcast.buttonAdd',
-    SearchText: 'settings.tables.globalBroadcast.search',
-    hideSearch: true,
-    hideButtons: true
-  },
   'credit-cards': {
     BtnAddText: 'settings.tables.creditCards.buttonAdd',
     SearchText: 'settings.tables.creditCards.search'
@@ -390,8 +384,7 @@ class TablesHandlers extends Component {
 
     return (
       <>
-        {currentTab !== 'global-broadcast' &&
-          currentTab !== 'documents' &&
+        { currentTab !== 'documents' &&
           currentTab !== 'logistics' &&
           currentTab !== 'bank-accounts' && (
             <div>
@@ -630,20 +623,7 @@ class TablesHandlers extends Component {
               </div>
             </>
           )}
-          {/*{currentTab === 'global-broadcast' && (
-            <GridColumn floated='right' widescreen={2} computer={2} tablet={3}>
-              <Button
-                fluid
-                primary
-                onClick={() => this.saveRulesBroadcast(treeData.model, toastManager)}
-                data-test='settings_open_import_popup_btn'>
-                <FormattedMessage id='global.save' defaultMessage='Save'>
-                  {text => text}
-                </FormattedMessage>
-              </Button>
-            </GridColumn>
-          )}*/}
-          {currentTab !== 'global-broadcast' && <ColumnSettingButton divide={true} />}
+          <ColumnSettingButton divide={true} />
         </div>
       </>
     )

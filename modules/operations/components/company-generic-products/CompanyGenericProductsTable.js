@@ -480,8 +480,7 @@ const mapStateToProps = (state, { datagrid }) => {
           ? requestedByCompany
           : 'N/A'
       }
-    }),
-    currentTab: state.operations.currentTab
+    })
   }
 }
 

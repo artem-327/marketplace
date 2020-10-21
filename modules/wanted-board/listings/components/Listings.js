@@ -248,7 +248,7 @@ class Listings extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersListings', this.state.filterValues)
-    if (this.props.editWindowOpen) this.props.closeDetailSidebar()
+    if (this.props.openSidebar && this.props.activeTab === 'listings') this.props.closeDetailSidebar()
   }
 
   handleFiltersValue = debounce(filter => {
@@ -359,7 +359,7 @@ class Listings extends Component {
                 <Button
                   className='secondary'
                   primary
-                  onClick={() => sidebarDetailTrigger(null, 'wanted-board')}
+                  onClick={() => sidebarDetailTrigger(null, 'listings')}
                   data-test='wanted_board_open_popup_btn'>
                   <PlusCircle />
                   <FormattedMessage id='wantedBoard.requestProduct' defaultMessage='Request Product'>

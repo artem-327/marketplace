@@ -9,6 +9,6 @@ import { deleteNmfcNumber, openEditPopup } from '~/modules/admin/actions'
 
 const mapDispatchToProps = { deleteNmfcNumber, openEditPopup }
 
-const mapStateToProps = ({ admin }) => ({ admin, config: admin.config[admin.currentTab.name] })
+const mapStateToProps = ({ admin }) => ({ admin, config: admin.config['nmfc-numbers'] })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withDatagrid(withToastManager(injectIntl(Table))))
