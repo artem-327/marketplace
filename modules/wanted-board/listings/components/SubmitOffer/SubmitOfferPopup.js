@@ -610,7 +610,7 @@ class SubmitOfferPopup extends React.Component {
     const body = {
       expiresAt,
       fulfillmentType,
-      items: fulfillmentType === 'COMPLETE_SCHEDULE' ? editedItems : editedItems[0],
+      items: fulfillmentType === 'COMPLETE_SCHEDULE' ? editedItems : [editedItems[0]],
       productOffer,
       purchaseRequest: popupValues.id
     }
@@ -960,11 +960,12 @@ class SubmitOfferPopup extends React.Component {
         ]
 
     let initialValues = {
-      expirationDate: getSafe(() => popupValues.expiresAt, ''),
+      lotExpirationDate: getSafe(() => popupValues.expiresAt, '') ? moment(popupValues.expiresAt) : '',
       productName: getSafe(() => popupValues.productOffer.companyProduct.companyGenericProduct.name, ''),
       fulfillmentType: getSafe(() => popupValues.cfHistoryLastFulfillmentType, ''),
       items
     }
+
     this.setState({ initialValues })
   }
 
