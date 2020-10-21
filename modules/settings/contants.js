@@ -2,7 +2,6 @@ export const defaultTabs = [
   { name: 'Company Settings', id: 14, type: 'system-settings', hideHandler: true },
   { name: 'Users', id: 1, type: 'users' },
   { name: 'Locations', id: 2, type: 'locations' },
-  { name: 'Global Price Book', id: 5, type: 'global-broadcast', hideSearch: true, hideButtons: true },
   { name: 'Guest Companies', id: 6, type: 'guest-companies' },
   //{ name: 'Credit Cards', id: 7, type: 'credit-cards' },
   { name: 'Bank Accounts', id: 8, type: 'bank-accounts' },
