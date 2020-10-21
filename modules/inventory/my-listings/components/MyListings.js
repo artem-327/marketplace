@@ -113,6 +113,7 @@ const SpanText = styled.span`
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
   overflow: hidden !important;
+  font-weight: 500;
 `
 
 const DivIcons = styled.div`

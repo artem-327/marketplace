@@ -269,7 +269,17 @@ const TreeTableCells = (props, rowChildActions) => {
   return <Table.Cell {...newProps} className={props.column.actions ? 'actions' : ''} />
 }
 
-const TableCells = props => <Table.Cell {...props} className={props.column.actions ? 'actions' : ''} />
+const TableCells = props => {
+  return (
+    <Table.Cell {...props} className={props.column.actions ? 'actions' : ''}>
+      {props.children ? props.children : (
+        <span class='cell-wrapper'>
+          {props.value}
+        </span>
+      )}
+    </Table.Cell>
+  )
+}
 const NoDataTableCells = props => {
   const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
   const modifiedProps = {

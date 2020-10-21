@@ -79,7 +79,7 @@ export function rowActionsCellFormatter({ column: { actions, name }, row, groupL
   if (row.groupedBy && row.key) {
     const nameGroup = row.key.split('_')[0]
     trigger = (
-      <span style={{ fontWeight: '600', color: '#2599d5' }}>
+      <span style={{ fontWeight: '400', color: '#20273a' }}>
         {nameGroup ? nameGroup : 'Unmapped'} <span style={{ color: '#848893' }}>({groupLength})</span>
       </span>
     )
