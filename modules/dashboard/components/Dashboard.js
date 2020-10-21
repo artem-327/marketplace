@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { Menu, Grid, Tab, Popup, Input, Dropdown } from 'semantic-ui-react'
-import { Briefcase, Package, DollarSign, User } from 'react-feather'
+import { Briefcase, Package, DollarSign, User, Layers } from 'react-feather'
 //components
 import { getSafe } from '~/utils/functions'
 import PieGraph from './PieGraph'
@@ -948,18 +948,26 @@ class Dashboard extends Component {
               <>
                 <SummaryRectangle
                   onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-listings'}
-                  icon={<DollarSign />}
+                  icon={isAdmin && !takeover ? <DollarSign /> : <Layers />}
                   data={productOffersValue && Math.round(productOffersValue)}
-                  title={'Total Products Value'}
-                  titleId={'dashboard.totalValueWithoutMilion.title'}
+                  title={isAdmin && !takeover ? 'Total Inventory Count' : 'Total Inventory Count'}
+                  titleId={
+                    isAdmin && !takeover
+                      ? 'dashboard.totalValueWithoutMilion.title'
+                      : 'dashboard.totalInventoryCount.title'
+                  }
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
                 />
                 <SummaryRectangle
                   onClickUrl={isAdmin && !takeover ? '' : '/marketplace/listings'}
                   icon={<DollarSign />}
                   data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
-                  title={'Total Broadcasted Value'}
-                  titleId={'dashboard.totalBroadcastedValueWithoutMilion.title'}
+                  title={isAdmin && !takeover ? 'Total Broadcasted Value' : 'Total Sales'}
+                  titleId={
+                    isAdmin && !takeover
+                      ? 'dashboard.totalBroadcastedValueWithoutMilion.title'
+                      : 'dashboard.totalSales.title'
+                  }
                   styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
                   isLastSummary
                 />

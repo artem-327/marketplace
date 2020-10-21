@@ -14,6 +14,7 @@ import { debounce } from 'lodash'
 
 import { CustomRowDiv } from '../../constants/layout'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
+import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
 
 class BidsSent extends Component {
   constructor(props) {
@@ -68,7 +69,7 @@ class BidsSent extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 135
+          width: 200
         }
       ],
       selectedRows: [],
@@ -122,18 +123,13 @@ class BidsSent extends Component {
     return [
       {
         text: formatMessage({
-          id: 'global.edit',
-          defaultMessage: 'Edit'
-        }),
-        hidden: row => row.hiddenActions,
-        callback: row => myOffersSidebarTrigger(row, 'bids-sent')
-      },
-      {
-        text: formatMessage({
           id: 'global.delete',
           defaultMessage: 'Delete'
         }),
-        hidden: row => row.hiddenActions,
+        hidden: row =>
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER',
         disabled: row => this.props.editedId === row.id,
         callback: row => {
           confirm(
@@ -157,6 +153,38 @@ class BidsSent extends Component {
             }
           })
         }
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.counter',
+          defaultMessage: 'Counter'
+        }),
+        disabled: row => this.props.editedId === row.id,
+        callback: async row => {
+          await this.props.openSubmitOffer(row, true)
+          datagrid.loadData()
+        },
+        hidden: row =>
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'NORMAL') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.readyPurchase',
+          defaultMessage: 'Ready for purchase'
+        }),
+        disabled: row => this.props.editedId === row.id,
+        callback: async row => {
+          await this.props.acceptRequestedItem(row.id)
+          datagrid.loadData()
+        },
+        hidden: row =>
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'NORMAL') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       }
     ]
   }
@@ -207,10 +235,14 @@ class BidsSent extends Component {
   }
 
   render() {
-    const { editWindowOpen } = this.props
+    const { editWindowOpen, openedSubmitOfferPopup, counterRequestedItem, popupValues, isSecondPage } = this.props
 
     return (
       <>
+        {openedSubmitOfferPopup && (
+          <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} isSecondPage={isSecondPage} />
+        )}
+
         <Container fluid style={{ padding: '10px 30px 0 30px' }} className='flex stretched'>
           {this.renderContent()}
         </Container>

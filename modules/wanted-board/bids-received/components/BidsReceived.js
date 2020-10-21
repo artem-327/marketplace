@@ -19,6 +19,7 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import styled from 'styled-components'
+import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
 
 const CountedName = styled.div`
   display: flex;
@@ -79,6 +80,15 @@ class BidsReceived extends Component {
           actions: this.getActions()
           //align: 'right',
           //sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
+          name: 'status',
+          title: (
+            <FormattedMessage id='wantedBoard.status' defaultMessage='Status'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200
         },
         {
           name: 'orderQuantity',
@@ -511,7 +521,11 @@ class BidsReceived extends Component {
             }
           })
         },
-        hidden: row => row.treeRoot
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       },
       {
         text: formatMessage({
@@ -527,7 +541,43 @@ class BidsReceived extends Component {
             console.error(e)
           }
         },
-        hidden: row => row.treeRoot
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER')
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.accept',
+          defaultMessage: 'Accept'
+        }),
+        disabled: row => editedId === row.id,
+        callback: async row => {
+          await this.props.acceptRequestedItem(row.id.split('_')[1])
+          datagrid.loadData()
+        },
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.counter',
+          defaultMessage: 'Counter'
+        }),
+        disabled: row => editedId === row.id,
+        callback: async row => {
+          await this.props.openSubmitOffer(row, true)
+        },
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       }
     ]
   }
@@ -617,8 +667,12 @@ class BidsReceived extends Component {
       editedId,
       sidebarDetailTrigger,
       type,
+      openedSubmitOfferPopup,
+      popupValues,
+      counterRequestedItem,
       updatingDatagrid,
-      tutorialCompleted
+      tutorialCompleted,
+      isSecondPage
     } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
@@ -626,6 +680,9 @@ class BidsReceived extends Component {
     return (
       <>
         {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
+        {openedSubmitOfferPopup && (
+          <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} isSecondPage={isSecondPage} />
+        )}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
@@ -689,7 +746,7 @@ class BidsReceived extends Component {
             </div>
           </CustomRowDiv>
         </div>
-        <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
+        <div className='flex stretched wanted-wrapper' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
             key={type}
             tableName={`bids_received_${type}_grid`}
