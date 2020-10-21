@@ -470,7 +470,7 @@ class Broadcast extends Component {
       node.walk(n => {
         if (!getSafe(() => n.model.rule.hidden, n.model.hidden)) {
           n.model.rule[propertyName] = newValue
-          if (getSafe(() => n.model.rule.elements.length, 0) > 0 && this.props.filter.category !== 'branch') {
+          if (getSafe(() => n.model.rule.elements.length, 0) > 0) {
             this.changeInModel(n.model.rule.elements, { propertyName, value: newValue })
           }
         }
