@@ -2101,7 +2101,7 @@ i.file {
     NEW INVENTORY/MARKETPLACE DESIGN
    ------------------------------------------------------- */
 
-.inventory-wrapper,
+.listings-wrapper,
 .marketplace-wrapper {
 
   .table-responsive {
@@ -2155,6 +2155,10 @@ i.file {
             font-weight: 400;
             color: #20273a;
             line-height: 20px;
+
+            &.actions {
+              padding-right: 0 !important;
+            }
 
             .cell-wrapper {
               overflow: hidden;
@@ -2325,158 +2329,5 @@ i.file {
         }
       }
     }
-
-    /*table {
-      border-spacing: 0 14px;
-
-      thead tr th:not(.p-0),
-      tbody tr td:not(.p-0) {
-        position: relative;
-        height: 20px;
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-
-      tbody {
-
-        tr {
-
-          td {
-            padding: 3px 10px !important;
-          }
-
-          td:not(.p-0):nth-child(n+2):nth-last-child(n+2) {
-            background: #fff;
-            box-shadow: 0 6px 0 0 #fff, 0 -8px 0 0 #fff;
-          }
-
-          &:not(.group-row) td:not(.p-0):before {
-            content: "";
-            position: absolute;
-            top: -6px;
-            left: 0;
-            right: 0;
-            border-top: 1px solid #dee2e6;
-          }
-
-          &.group-row td:not(.p-0):nth-child(n+2):nth-last-child(n+2) {
-            height: 35px;
-            padding-top: 5px !important;
-            padding-bottom: 1px !important;
-            background: #fff;
-            box-shadow: 0 6px 0 0 #fff;
-            line-height: 30px;
-
-            &:nth-child(n):after {
-              content: "";
-              position: absolute;
-              top: -1px;
-              left: 0;
-              right: 0;
-              display: block;
-              height: 10px;
-              border-width: 1px 0 0;
-              border-style: solid;
-              border-color: #dee2e6;
-              background-color: #fff;
-            }
-          }
-
-          &:not(.group-row) {
-
-            td:nth-last-child(2) {
-              border-right: 0 none;
-            }
-          }
-
-          &.group-row {
-
-            td {
-
-              &:nth-child(2):after {
-                left: -1px;
-                border-width: 1px 0 0 1px;
-                border-top-left-radius: 3px;
-              }
-
-              &:nth-last-child(2):after {
-                right: -1px;
-                border-width: 1px 1px 0 0;
-                border-top-right-radius: 3px;
-              }
-
-              &:nth-child(2) {
-                border-left: 1px solid #dee2e6;
-              }
-
-              &:nth-last-child(2) {
-                border-right: 1px solid #dee2e6;
-              }
-            }
-          }
-
-          td:not(.p-0) {
-            overflow: visible;
-            border: 0 none;
-
-            &:nth-child(2):after {
-              content: "";
-              position: absolute;
-              top: -8px;
-              left: 0;
-              bottom: -6px;
-              display: block;
-              border-left: 1px solid #dee2e6;
-            }
-
-            &:nth-last-child(2):after {
-              content: "";
-              position: absolute;
-              top: -8px;
-              right: 0;
-              bottom: -6px;
-              display: block;
-              border-right: 1px solid #dee2e6;
-            }
-          }
-
-          &.group-row + tr td:not(.p-0):after {
-            top: -14px;
-          }
-
-          + tr.group-row {
-
-            td:not(.p-0):before {
-              content: "";
-              position: absolute;
-              top: -14px;
-              left: 0;
-              right: 0;
-              display: block;
-              height: 3px;
-              border-width: 0 0 1px;
-              border-style: solid;
-              border-color: #dee2e6;
-              background: #fff;
-              box-shadow: 0 3px 0 0 #f5f7fa;
-            }
-
-            td:not(.p-0):nth-child(2):before {
-              left: -1px;
-              border-width: 0 0 1px 1px;
-              border-bottom-left-radius: 3px;
-              box-shadow: -1px 3px 0 0 #f5f7fa, 0 3px 0 0 #f5f7fa;
-            }
-
-            td:not(.p-0):nth-last-child(2):before {
-              right: -1px;
-              border-width: 0 1px 1px 0;
-              border-bottom-right-radius: 3px;
-              box-shadow: 1px 3px 0 0 #f5f7fa, 0 3px 0 0 #f5f7fa;
-            }
-          }
-        }
-      }
-    }*/
   }
 }
