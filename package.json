@@ -108,7 +108,7 @@
     "dev": "node --max_old_space_size=4096 server.js",
     "build": "next build",
     "start-s": "next start",
-    "start": "NODE_ENV=production node server.js",
+    "start": "NODE_ENV=production node --max_old_space_size=4096 server.js",
     "semantic:build": "cd semantic && gulp build",
     "semantic": "cd semantic && gulp watch"
   },

@@ -12,11 +12,16 @@ export const SubmitOffer = props => {
           ]
         : []
   }
-  return (
-    <>
-      <DatagridProvider apiConfig={urlApiConfig}>
-        <SubmitOfferPopup {...props} />
-      </DatagridProvider>
-    </>
-  )
+
+  if (props.isSecondPage) {
+    return <SubmitOfferPopup {...props} />
+  } else {
+    return (
+      <>
+        <DatagridProvider apiConfig={urlApiConfig}>
+          <SubmitOfferPopup {...props} />
+        </DatagridProvider>
+      </>
+    )
+  }
 }
