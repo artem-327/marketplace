@@ -649,7 +649,8 @@ class Broadcast extends Component {
       openModalCompanyInfo,
       getCompanyInfo,
       dataCompanyInfo,
-      isLoadingModalCompanyInfo
+      isLoadingModalCompanyInfo,
+      templateSaving
     } = this.props
 
     const { templateInitialValues } = this.state
@@ -886,6 +887,7 @@ class Broadcast extends Component {
                                       defaultMessage: 'Add '
                                     }),
                                     search: true,
+                                    loading: templateSaving,
                                     selection: true,
                                     selectOnBlur: false,
                                     noResultsMessage: formatMessage(
