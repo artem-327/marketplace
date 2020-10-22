@@ -4,14 +4,16 @@ import { DatagridProvider } from '~/modules/datagrid'
 export const BidsSent = props => {
   const urlApiConfig = {
     url: '/prodex/api/purchase-request-offers/own/datagrid',
-    searchToFilter: v => (v && v.searchInput
-        ? [{
-          operator: 'LIKE',
-          path: 'PurchaseRequestOffer.productOffer.companyProduct.companyGenericProduct.name',
-          values: [`%${v.searchInput}%`]
-        }]
+    searchToFilter: v =>
+      v && v.searchInput
+        ? [
+            {
+              operator: 'LIKE',
+              path: 'PurchaseRequestOffer.productOffer.companyProduct.companyGenericProduct.name',
+              values: [`%${v.searchInput}%`]
+            }
+          ]
         : []
-    )
   }
   return (
     <>
