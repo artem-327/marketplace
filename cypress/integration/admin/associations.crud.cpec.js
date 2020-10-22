@@ -17,7 +17,7 @@ context("Associations CRUD", () => {
 
         cy.get('.flex-wrapper > :nth-child(6)').click()
         cy.waitForUI()
-        cy.get('[data-test=tabs_menu_item_associations]').click()
+        cy.get('[data-test=navigation_admin_settings_associations_drpdn]').click()
 
         cy.wait("@groupsLoading")
         cy.waitForUI()

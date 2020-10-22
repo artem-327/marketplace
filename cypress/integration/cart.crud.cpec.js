@@ -102,7 +102,7 @@ context("Shopping cart CRUD", () => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 cy.deleteWholeCart(token)
                 //TODO Automatic searching inside marketplace body
-                let warehouseFilter = [{ "operator": "EQUALS", "path": "ProductOffer.warehouse.id", "values": [3] }]
+                let warehouseFilter = [{ "operator": "EQUALS", "path": "ProductOffer.warehouse.id", "values": [35] }]
 
                 cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
                     let marketPlaceIdNum1 = sameWarehouseOffer[ 0 ].id
@@ -134,7 +134,11 @@ context("Shopping cart CRUD", () => {
                     cy.wait("@marketplaceLoading", { timeout: 30000 })
 
                     cy.waitForUI()
-                    cy.selectFromDropdown('div.selection', sameWarehouseOffer[ 2 ].companyProduct.intProductName)
+
+                    cy.get('div.selection')
+                        .children("input")
+                        .type(sameWarehouseOffer[ 2 ].companyProduct.intProductName, {force:true})
+                        .should("have.value",sameWarehouseOffer[ 2 ].companyProduct.intProductName)
                     //Open desired tab
                     if(sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.productGroup == undefined){
                         //cy.contains("Unmapped").click()

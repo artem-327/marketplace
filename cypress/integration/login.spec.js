@@ -77,8 +77,6 @@ context("Login and logout", () => {
         cy.get(".user-menu-wrapper").click()
         cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
         cy.url().should("include", "/login")
-        cy.visit("admin")
-        cy.url().should("include", "/login")
     })
 
     it('Normal user login and logout', () => {
@@ -197,9 +195,9 @@ context("Login and logout", () => {
         cy.wait('@login', {timeout: 30000})
 
         cy.waitForUI()
-        cy.get(".user-menu-wrapper").click()
-        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
-        cy.url().should("include", "/login")
+        cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
+
+        cy.get('[data-test=navigation_menu_inventory_my_products_drpdn]').click()
     })
 
     it('Product Offer Manager login and logout', () => {

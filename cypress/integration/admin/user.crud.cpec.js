@@ -21,7 +21,7 @@ context("Prodex Admin User CRUD", () => {
         cy.wait("@dashboardload")
         cy.get('.flex-wrapper > :nth-child(2)').click()
         cy.waitForUI()
-        cy.get("[data-test=tabs_menu_item_users]").click()
+        cy.get('[data-test=navigation_companies_users_drpdn]').click()
         cy.wait("@usersLogin", {timeout: 100000})
     })
 

@@ -16,7 +16,7 @@ context("Company Product Catalog CRUD", () => {
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
 
-        cy.contains("Product Catalog").click()
+        cy.get('[data-test=navigation_menu_inventory_my_products_drpdn]').click()
 
         cy.wait("@productLoading")
         cy.waitForUI()

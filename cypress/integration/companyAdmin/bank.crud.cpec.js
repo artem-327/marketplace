@@ -15,6 +15,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.openSettings()
         cy.wait("@settingsLoading",{timeout: 100000})
+        cy.waitForUI()
         cy.contains("Bank Accounts").click()
 
         cy.wait("@accountsLoading",{timeout: 100000})
@@ -54,7 +55,7 @@ context("Prodex Bank Account CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get("[data-test='table_row_action']").within(() => {
+        cy.get("[data-test='table_row_action']").eq(0).within(() => {
             cy.get("div[role='listbox']").click()
         })
 
@@ -67,7 +68,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.get("input[type=text]").type("David Tester")
         cy.waitForUI()
 
-        cy.get("[data-test='table_row_action']").within(() => {
+        cy.get("[data-test='table_row_action']").eq(0).within(() => {
             cy.get("div[role='listbox']").click()
         })
         cy.contains("Finalize Verification").click()
@@ -97,7 +98,7 @@ context("Prodex Bank Account CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get("[data-test='table_row_action']").within(() => {
+        cy.get("[data-test='table_row_action']").eq(0).within(() => {
             cy.get("div[role='listbox']").click()
         })
 

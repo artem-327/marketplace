@@ -13,7 +13,7 @@ context("Prodex Global Price", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
-        cy.openSettings()
+        cy.get('[data-test=navigation_menu_inventory_global_price_book_drpdn]').click()
     })
 
     after(function () {

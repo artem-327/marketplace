@@ -17,7 +17,7 @@ context("Product Group CRUD", () => {
         cy.get('.flex-wrapper > :nth-child(3)').click()
         cy.waitForUI()
         cy.waitForUI()
-        cy.get('[data-test=tabs_menu_item_product-groups]').click()
+        cy.get('[data-test=navigation_products_product-groups_drpdn]').click()
 
         cy.wait("@groupsLoading")
         cy.waitForUI()
