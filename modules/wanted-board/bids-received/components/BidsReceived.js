@@ -91,6 +91,15 @@ class BidsReceived extends Component {
           width: 200
         },
         {
+          name: 'type',
+          title: (
+            <FormattedMessage id='wantedBoard.type' defaultMessage='Type'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        {
           name: 'orderQuantity',
           title: (
             <FormattedMessage id='wantedBoard.orderQuantity' defaultMessage='Order Quantity'>
