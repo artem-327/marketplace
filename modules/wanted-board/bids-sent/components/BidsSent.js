@@ -70,6 +70,15 @@ class BidsSent extends Component {
             </FormattedMessage>
           ),
           width: 200
+        },
+        {
+          name: 'type',
+          title: (
+            <FormattedMessage id='wantedBoard.type' defaultMessage='Type'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
         }
       ],
       selectedRows: [],
