@@ -5,7 +5,8 @@ export const initialState = {
   markSeenSending: false,
   loadingCategories: false,
   categories: [],
-  tableHandlersFilters: null
+  tableHandlersFilters: null,
+  countUnseen: 0,
 }
 
 export default function reducers(state = initialState, action) {
@@ -47,6 +48,13 @@ export default function reducers(state = initialState, action) {
         ...state,
         loadingCategories: false,
         categories: payload
+      }
+    }
+
+    case AT.ALERTS_GET_COUNT_UNSEEN_FULFILLED: {
+      return {
+        ...state,
+        countUnseen: payload
       }
     }
 

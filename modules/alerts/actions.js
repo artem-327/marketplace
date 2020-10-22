@@ -22,6 +22,11 @@ export const getCategories = () => ({
   payload: api.getCategories()
 })
 
+export const getCountUnseen = () => ({
+  type: AT.ALERTS_GET_COUNT_UNSEEN,
+  payload: api.getCountUnseen()
+})
+
 export function handleVariableSave(variable, value) {
   return {
     type: AT.ALERTS_HANDLE_VARIABLE_CHANGE,

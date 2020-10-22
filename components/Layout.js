@@ -29,6 +29,8 @@ import LogoSmall from '~/assets/images/nav/logo4x.png'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
+import NotificationsIcon from './NotificationsIcon'
+
 import CreateMenu from './CreateMenu'
 import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
@@ -436,6 +438,12 @@ class Layout extends Component {
               </Dropdown>
               {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && !isOrderOperator && (
                 <>
+                  <Menu.Item
+                    onClick={() => Router.push('/alerts')}
+                    data-test='navigation_notifications'
+                    className='item-cart'>
+                    <NotificationsIcon />
+                  </Menu.Item>
                   <Menu.Item
                     onClick={() => Router.push('/cart')}
                     data-test='navigation_menu_cart'
