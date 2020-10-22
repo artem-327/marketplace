@@ -54,15 +54,15 @@ const Cell = ({
         </td>
       )}
       {hideActions ? (
-        <td className={'dx-g-bs4-cursor-pointer'} onClick={handleClick}>
+        <td className={'dx-g-bs4-cursor-pointer'} colSpan={2} onClick={handleClick}>
           {actionsDropdown}
         </td>
       ) : (
-        <td className={'actions'}>{actionsDropdown}</td>
+        <td className={'actions'} colSpan={2}>{actionsDropdown}</td>
       )}
       <td
         key={row.key}
-        colSpan={colSpan - (rowSelection && !hideCheckboxes ? 4 : 3)}
+        colSpan={colSpan - (rowSelection && !hideCheckboxes ? 5 : 4)}
         className={cn('dx-g-bs4-cursor-pointer', className)}
         onClick={handleClick}
         {...restProps}>
