@@ -29,11 +29,6 @@ class FormikInput extends Component {
         name={name}
         validate={validate}
         render={({ field, form }) => {
-          //automatic adjust date in input based on format date
-          const years = moment(field.value, getLocaleDateFormat()).year()
-          const canAutomaticallyAdjustDateFormat =
-            years > 1000 && field.value.length >= 8 && moment(field.value, getLocaleDateFormat()).isValid()
-
           const error = getFieldError(field, form)
           return (
             <Form.Field error={!!error} {...fieldProps}>
@@ -43,16 +38,19 @@ class FormikInput extends Component {
               <DateInput
                 {...safeInputProps}
                 name={name}
-                value={
-                  canAutomaticallyAdjustDateFormat
-                    ? moment(field.value, getLocaleDateFormat()).format(getLocaleDateFormat())
-                    : field.value
-                }
+                value={field.value}
                 clearable
                 onChange={(e, { name, value }) => {
-                  setFieldValue(form, name, value, true)
+                  //automatic adjust date in input based on format date
+                  const years = moment(value, getLocaleDateFormat()).year()
+                  const canAutomaticallyAdjustDateFormat =
+                    years > 1000 && value.length >= 8 && moment(field.value, getLocaleDateFormat()).isValid()
+                  const val = canAutomaticallyAdjustDateFormat
+                    ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
+                    : value
+                  setFieldValue(form, name, val, true)
                   Promise.resolve().then(() => {
-                    onChange && onChange(e, { name, value })
+                    onChange && onChange(e, { name, value: val })
                   })
                 }}
                 placeholder={placeholder || getLocaleDateFormat()}
