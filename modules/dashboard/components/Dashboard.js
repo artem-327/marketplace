@@ -7,6 +7,7 @@ import { Briefcase, Package, DollarSign, User, Layers } from 'react-feather'
 import { getSafe } from '~/utils/functions'
 import PieGraph from './PieGraph'
 import LineGraph from './LineGraph'
+import BarGraph from './BarGraph'
 import SummaryRectangle from './SummaryRectangle'
 //styled
 import styled from 'styled-components'
@@ -440,7 +441,8 @@ class Dashboard extends Component {
     dateTo: null,
     dateToEdited: null,
     selectedDate: null,
-    statsType: null
+    statsType: null,
+    dateRangeSelected: 0
   }
 
   componentDidMount() {
@@ -512,6 +514,50 @@ class Dashboard extends Component {
     })
   }
 
+  setDateRange = value => {
+    let dateFrom,
+      dateTo = null
+
+    switch (value) {
+      case 0: // Max
+        dateFrom = moment('01/01/2020', 'DD/MM/YYYY')
+        dateTo = moment()
+        break
+
+      case 1: // 1 year
+        dateFrom = moment().subtract(1, 'years')
+        dateTo = moment()
+        break
+
+      case 2: // YTD
+        dateFrom = moment().startOf('year')
+        dateTo = moment()
+        break
+
+      case 3: // 6 months
+        dateFrom = moment().subtract(6, 'months')
+        dateTo = moment()
+        break
+
+      case 4: // 3 months
+        dateFrom = moment().subtract(3, 'months')
+        dateTo = moment()
+        break
+
+      case 5: // 1 month
+      default:
+        dateFrom = moment().subtract(1, 'months')
+        dateTo = moment()
+        break
+    }
+
+    this.props.getDailyStatistics(
+      moment(dateFrom).format('YYYY-MM-DD') + 'T00:00:00Z',
+      moment(dateTo).add(1, 'days').format('YYYY-MM-DD') + 'T00:00:00Z'
+    )
+    this.setState({ dateRangeSelected: value })
+  }
+
   render() {
     const {
       companiesCount,
@@ -562,6 +608,33 @@ class Dashboard extends Component {
       ]
     }
 
+    const dateRangeOptions = [
+      {
+        value: 0,
+        text: formatMessage({ id: 'dashboard.dateFilter.max', defaultMessage: 'Max' })
+      },
+      {
+        value: 1,
+        text: formatMessage({ id: 'dashboard.dateFilter.1year', defaultMessage: '1 year' })
+      },
+      {
+        value: 2,
+        text: formatMessage({ id: 'dashboard.dateFilter.ytd', defaultMessage: 'YTD' })
+      },
+      {
+        value: 3,
+        text: formatMessage({ id: 'dashboard.dateFilter.6months', defaultMessage: '6 months' })
+      },
+      {
+        value: 4,
+        text: formatMessage({ id: 'dashboard.dateFilter.3months', defaultMessage: '3 months' })
+      },
+      {
+        value: 5,
+        text: formatMessage({ id: 'dashboard.dateFilter.1month', defaultMessage: '1 month' })
+      },
+    ]
+
     let stats = []
     if (dailyStats && dailyStats.length) {
       stats = dailyStats.map(day => {
@@ -585,8 +658,11 @@ class Dashboard extends Component {
       dateTo,
       dateToEdited,
       selectedDate,
-      statsType
+      statsType,
+      dateRangeSelected
     } = this.state
+
+    console.log('!!!!!!!!!! render state', this.state)
 
     const adminMenuTabs = [
       {
@@ -597,7 +673,7 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='sales' attached={false}>
-            <LineGraph
+            <BarGraph
               data={totalSumOfSalesMonthly}
               title='Total Sum Of Sales Monthly'
               titleId='dasboard.sales.graph.title'
@@ -648,6 +724,20 @@ class Dashboard extends Component {
               />
             ) : null}
           </>
+        )
+      },
+      {
+        menuItem: (
+          <Dropdown
+            key='statsType'
+            style={{ marginLeft: 'auto', minWidth: '150px' }}
+            item
+            pointing='top right'
+            options={dateRangeOptions}
+            onChange={(e, { value }) => this.setDateRange(value)}
+            value={dateRangeSelected}
+            data-test='dashboard_stats_drpdn'
+          />
         )
       }
     ]
@@ -756,7 +846,7 @@ class Dashboard extends Component {
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
         <Grid.Row>
           <Grid.Column width={16}>
-            {isAdmin && !takeover && (
+            {false && isAdmin && !takeover && /* currently not used */(
               <Popup
                 on='click'
                 trigger={
