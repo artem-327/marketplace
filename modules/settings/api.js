@@ -120,7 +120,6 @@ export default {
   },
   uploadCSVFile: (file, type) => {
     const formData = new FormData()
-    console.log('!!!!!!!!!! api file.type', file.type)
     formData.append('file', new Blob([file], { type }), file.name)
     return api.post('/prodex/api/imports/temporary-files', formData).then(response => response.data)
   },

@@ -83,8 +83,9 @@ class UploadCSV extends Component {
 
   onDrop = acceptedFiles => {
     if (acceptedFiles.length !== 0) {
-      console.log('!!!!!!!!!! UploadCSV onDrop acceptedFiles', acceptedFiles)
-      this.props.uploadCSVFile(acceptedFiles[0], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+      let type = acceptedFiles[0].type
+      if (acceptedFiles[0].name.endsWith('.csv')) type = '.csv'
+      this.props.uploadCSVFile(acceptedFiles[0], type)
       this.setState({ uploadedFile: acceptedFiles[0], hasError: false })
     } else {
       this.setState({ uploadedFile: null, hasError: true })
