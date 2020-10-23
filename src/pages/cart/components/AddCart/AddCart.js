@@ -782,7 +782,17 @@ class AddCart extends Component {
                     {text => text}
                   </FormattedMessage>
                 </Button>
-                {!isEdit ? (
+                {!isEdit && isHoldRequest ? (
+                  <Button
+                    disabled={!canProceed}
+                    primary
+                    onClick={this.createOrder}
+                    data-test='add_cart_create_request_hold_btn'>
+                    <FormattedMessage id='global.requestHold' defaultMessage='Request Hold'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                ) : !isEdit ? (
                   <Button
                     disabled={!canProceed}
                     primary
