@@ -54,7 +54,7 @@ export default class TimeoutWarning extends Component {
     this.setState({ loading: true })
     await refreshToken()
 
-    clearInterval(this.checkTimeInterval)
+    this.checkTimeInterval && clearInterval(this.checkTimeInterval)
     this.setState({
       remainingTime: WARNING_OFFSET,
       warningOpen: false
@@ -69,7 +69,6 @@ export default class TimeoutWarning extends Component {
     let ttl = window.localStorage.getItem('ttl')
     let date = new Date(parseInt(ttl, 10))
     const timeout = moment(date).diff(moment())
-
     this.setState({ timeout })
     this.timeoutInterval = setTimeout(this.handleIdle, timeout - WARNING_OFFSET)
   }
@@ -80,7 +79,6 @@ export default class TimeoutWarning extends Component {
 
   render() {
     const { warningOpen, timeout } = this.state
-
     if (!timeout) return null
 
     return (

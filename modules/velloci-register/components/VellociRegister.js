@@ -21,14 +21,7 @@ import FormationDocument from './steps/FormationDocument'
 import OwnerInformation from './steps/OwnerInformation'
 import PersonalInformation from './steps/PersonalInformation'
 import TermsAndConditions from './steps/TermsAndConditions'
-import {
-  titleIds,
-  subtitleIds,
-  titleForms,
-  initialValues,
-  initialValuesTest,
-  verifyPersonalInformation
-} from '../constants'
+import { titleIds, subtitleIds, titleForms, verifyPersonalInformation } from '../constants'
 import ErrorFocus from '~/components/error-focus'
 import { PHONE_REGEXP } from '~/src/utils/constants'
 import { getStringISODate } from '~/components/date-format'
@@ -36,7 +29,7 @@ import { getSafe } from '~/utils/functions'
 import Router from 'next/router'
 
 class VellociRegister extends Component {
-  componentDidMount = () => {
+  componentDidMount() {
     const {
       entityTypes,
       getEntityTypes,
@@ -166,16 +159,16 @@ class VellociRegister extends Component {
       if (typeof window !== 'undefined') {
         const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
         if (searchParams.has('companyId')) {
-          companyId = { companyId: Number(searchParams.get('companyId')) }
+          companyId = Number(searchParams.get('companyId'))
         }
       }
 
       await postRegisterVelloci(body, companyId, files)
       if (companyId) {
-        Router.push('/companies')
+        Router.push('/companies/companies')
       } else {
         await getIdentity()
-        Router.push('/settings?type=bank-accounts')
+        Router.push('/settings/bank-accounts')
       }
     } catch (error) {
       console.error(error)
@@ -348,7 +341,14 @@ class VellociRegister extends Component {
   }
 
   render() {
-    const { prevStep, activeStep, countBeneficialOwners, numberBeneficialOwners, isLoadingSubmitButton } = this.props
+    const {
+      prevStep,
+      activeStep,
+      countBeneficialOwners,
+      numberBeneficialOwners,
+      isLoadingSubmitButton,
+      initialValues
+    } = this.props
     return (
       <Grid>
         <GridColumn>

@@ -32,7 +32,7 @@ const formValidation = Yup.object().shape({
 
 class AddNewUnitOfPackagingPopup extends React.Component {
   render() {
-    const { closeAddPopup, currentTab, config, postNewRequest, measureOptions } = this.props
+    const { closeAddPopup, config, postNewRequest, measureOptions } = this.props
 
     return (
       <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
@@ -169,10 +169,9 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  let cfg = state.admin.config[state.admin.currentTab.name]
+  let cfg = state.admin.config['packaging-types']
   return {
     config: cfg,
-    currentTab: state.admin.currentTab,
     measureOptions: state.admin.measureTypes.map(d => {
       return {
         id: d.id,

@@ -1,13 +1,13 @@
 import Cookie from 'js-cookie'
 import api from '~/api'
 
-export const setAuth = auth => {
+export const setAuth = async auth => {
   let now = new Date()
   now.setTime(now.getTime() + auth.expires_in * 1000)
 
-  window.localStorage.setItem('ttl', now.getTime())
+  await window.localStorage.setItem('ttl', now.getTime())
 
-  Cookie.set('auth', { ...auth, expires_in: now.getTime() })
+  await Cookie.set('auth', { ...auth, expires_in: now.getTime() })
 }
 
 export const unsetAuth = () => {
@@ -49,7 +49,6 @@ export async function authorize(username, password) {
 export async function refreshToken() {
   const auth = Cookie.getJSON('auth')
   if (!auth) return
-
   // if (auth.expires - 60000 > new Date().getTime()) return
 
   const { data } = await api.post(
@@ -63,7 +62,7 @@ export async function refreshToken() {
     }
   )
 
-  setAuth(data)
+  await setAuth(data)
 
   return data
 }

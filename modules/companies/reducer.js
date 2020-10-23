@@ -4,7 +4,6 @@ import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
   tabsNames: defaultTabs,
-  currentTab: defaultTabs[0],
   editTrig: false,
   editedId: null,
   popupValues: null,
@@ -38,17 +37,6 @@ export default function reducer(state = initialState, action) {
   const { payload } = action
 
   switch (action.type) {
-
-    case AT.COMPANIES_HANDLE_ACTIVE_TAB: {
-      return {
-        ...state,
-        currentTab: payload.tab,
-        popupValues: state.currentTab !== payload.tab ? null : state.popupValues,
-        loading: state.currentTab !== payload.tab ? false : state.loading,
-        isOpenSidebar: state.currentTab !== payload.tab ? false : state.isOpenSidebar,
-        editedId: state.currentTab !== payload.tab ? null : state.editedId,
-      }
-    }
 
     case AT.COMPANIES_OPEN_POPUP: {
       return {

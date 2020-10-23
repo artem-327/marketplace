@@ -22,13 +22,11 @@ import {
   deleteBankAccount,
   dwollaInitiateVerification,
   dwollaFinalizeVerification,
-  dwollaFinalizeVerificationConfirmOpen,
   getCurrentUser,
   dwollaSetPreferred,
   getVellociAccBalance,
   reloadBankAccounts
 } from '../../actions'
-import Router from 'next/router'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -371,14 +369,27 @@ class BankAccountsTable extends Component {
               },
               { item: row.rawData.name }
             )
-          ).then(() => deleteBankAccount(row.id, paymentProcessor))
+          ).then(async () => {
+            try {
+              await deleteBankAccount(row.id, paymentProcessor)
+              this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
+            } catch (e) {
+              console.error(e)
+            }
+          })
       },
       {
         text: formatMessage({
           id: 'settings.initiateVerification',
           defaultMessage: 'Initiate Verification'
         }),
-        callback: row => dwollaInitiateVerification(row.id),
+        callback: async row => {
+          try {
+            await dwollaInitiateVerification(row.id)
+          } catch (e) {
+            console.error(e)
+          }
+        },
         hidden: row => row.status !== 'unverified' || method !== 'dwolla'
       },
       {
@@ -387,7 +398,13 @@ class BankAccountsTable extends Component {
           defaultMessage: 'Finalize Verification'
         }),
         callback: row => {
-          finalizeConfirm().then(v => dwollaFinalizeVerification(row.id, v.amount1, v.amount2))
+          finalizeConfirm().then(async v => {
+            try {
+              await dwollaFinalizeVerification(row.id, v.amount1, v.amount2)
+            } catch (e) {
+              console.error(e)
+            }
+          })
         },
         hidden: row => row.status !== 'verification_in_process' || method !== 'dwolla'
       },
@@ -396,7 +413,13 @@ class BankAccountsTable extends Component {
           id: 'settings.setAsPreferredBankAccount',
           defaultMessage: 'Set as Preferred Bank Account'
         }),
-        callback: row => dwollaSetPreferred(row.id),
+        callback: async row => {
+          try {
+            await dwollaSetPreferred(row.id)
+          } catch (e) {
+            console.error(e)
+          }
+        },
         hidden: row => !(row.status === 'verified' || row.status === 'active') || row.id === preferredBankAccountId
       }
     ]
@@ -541,7 +564,6 @@ const mapDispatchToProps = {
   deleteBankAccount,
   dwollaInitiateVerification,
   dwollaFinalizeVerification,
-  dwollaFinalizeVerificationConfirmOpen,
   getCurrentUser,
   dwollaSetPreferred,
   getIdentity,
@@ -657,10 +679,6 @@ const mapStateToProps = state => {
     filterValue: state.settings['bank-accountsFilter'],
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0],
     company: company,
     currentUser: state.settings.currentUser,
     tabClicked: state.settings.tabClicked,

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import cn from 'classnames'
 import moment from 'moment/moment'
 import { debounce } from 'lodash'
-import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle, Sliders } from 'react-feather'
+import { Clock, FileText, CornerLeftUp, CornerLeftDown, MoreVertical, PlusCircle, Sliders } from 'react-feather'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
@@ -28,7 +28,6 @@ const defaultHiddenColumns = [
   'productNumber',
   'warehouse',
   'cost',
-  'broadcast',
   'minOrderQuantity',
   'splits',
   'condition',
@@ -114,6 +113,8 @@ const SpanText = styled.span`
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
   overflow: hidden !important;
+  font-weight: 500;
+  cursor: pointer;
 `
 
 const DivIcons = styled.div`
@@ -124,11 +125,39 @@ const DivIcons = styled.div`
   margin-left: 10px !important;
 `
 
+const FobPrice = styled.div`
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  cursor: pointer;
+  
+  &:hover {
+    text-decoration-style: solid;
+  }
+`
+
+const RowDropDownIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 2px -4px;
+  
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #848893 !important;
+  }
+`
+
 class MyListings extends Component {
   constructor(props) {
     super(props)
     this.state = {
       columns: [
+        {
+          name: 'actCol',
+          title: ' ',
+          width: 30,
+          actions: this.getActions()
+        },
         {
           name: 'productName',
           title: (
@@ -137,8 +166,7 @@ class MyListings extends Component {
             </FormattedMessage>
           ),
           width: 250,
-          sortPath: 'ProductOffer.companyProduct.intProductName',
-          actions: this.getActions()
+          sortPath: 'ProductOffer.companyProduct.intProductName'
         },
         {
           name: 'fobPrice',
@@ -232,7 +260,7 @@ class MyListings extends Component {
             </FormattedMessage>
           ),
           width: 100,
-          align: 'right',
+          align: 'left',
           sortPath: 'ProductOffer.broadcasted'
         },
         {
@@ -571,7 +599,7 @@ class MyListings extends Component {
   }
 
   getRows = rows => {
-    const { datagrid, pricingEditOpenId, setPricingEditOpenId, toastManager } = this.props
+    const { datagrid, pricingEditOpenId, setPricingEditOpenId, sidebarDetailTrigger, toastManager } = this.props
     let title = ''
 
     return rows.map((r, rIndex) => {
@@ -670,9 +698,14 @@ class MyListings extends Component {
 
       return {
         ...r,
+        actCol: (
+          <RowDropDownIcon>
+            <MoreVertical />
+          </RowDropDownIcon>
+        ),
         productName: (
           <DivRow>
-            <SpanText>{r.productName}</SpanText>
+            <SpanText onClick={() => this.tableRowClickedProductOffer(r, true, 0, sidebarDetailTrigger)}>{r.productName}</SpanText>
             <DivIcons>
               {r.expired ? (
                 <Popup
@@ -713,14 +746,14 @@ class MyListings extends Component {
           <StyledPopup
             content={<QuickEditPricingPopup rawData={r.rawData} />}
             on='click'
-            trigger={<div style={{ cursor: 'pointer' }}>{r.fobPrice}</div>}
+            trigger={<FobPrice>{r.fobPrice}</FobPrice>}
             open={pricingEditOpenId === r.rawData.id}
             onOpen={() => setPricingEditOpenId(r.rawData.id)}
             onClose={() => setPricingEditOpenId(null)}
           />
         ),
         broadcast: (
-          <div style={{ float: 'right' }}>
+          <div style={{ float: 'left' }}>
             <Popup
               id={r.id}
               position={rIndex === 0 ? 'bottom right' : 'top right'}
@@ -865,6 +898,7 @@ class MyListings extends Component {
       isExportInventoryOpen,
       setExportSidebarOpenState,
       myListingsFilters,
+      updatingDatagrid,
       activeInventoryFilter
     } = this.props
     const { columns, clientMessage, request, openFilterPopup } = this.state
@@ -900,7 +934,7 @@ class MyListings extends Component {
           </Modal.Actions>
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
-        {!tutorialCompleted && <Tutorial />}
+        {false && !tutorialCompleted && <Tutorial />}
         <Container fluid style={{ padding: '20px 25px 10px' }}>
           <CustomRowDiv>
             <div>
@@ -980,7 +1014,7 @@ class MyListings extends Component {
                   onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
                   data-test='my_inventory_add_btn'>
                   <PlusCircle />
-                  <FormattedMessage id='global.addInventory' defaultMessage='Add Inventory'>
+                  <FormattedMessage id='global.addListing' defaultMessage='Add Listing'>
                     {text => text}
                   </FormattedMessage>
                 </Button>
@@ -990,7 +1024,7 @@ class MyListings extends Component {
           </CustomRowDiv>
         </Container>
 
-        <div className='flex stretched inventory-wrapper' style={{ padding: '10px 30px' }}>
+        <div className='flex stretched inventory-wrapper listings-wrapper' style={{ padding: '10px 30px' }}>
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
@@ -999,6 +1033,7 @@ class MyListings extends Component {
             rows={this.getRows(rows)}
             selectByRowClick
             hideCheckboxes
+            loading={datagrid.loading || updatingDatagrid}
             groupBy={['echoCode']}
             getChildGroups={rows =>
               _(rows)
@@ -1016,19 +1051,24 @@ class MyListings extends Component {
                 })
                 .value()
             }
-            renderGroupLabel={({ row: { value }, groupLength }) => {
-              const [name, number, id, productGroup, tagsNames] = value.split('_')
-              const tagNames = tagsNames ? tagsNames.split(',') : []
-              return (
-                <span>
-                  <span className='flex row right'>
-                    <span>
-                      {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+            renderGroupLabel={
+              ({ row: { value }, groupLength }) => null
+              /* #35127
+              {
+                const [name, number, id, productGroup, tagsNames] = value.split('_')
+                const tagNames = tagsNames ? tagsNames.split(',') : []
+                return (
+                  <span>
+                    <span className='flex row right'>
+                      <span>
+                        {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+                      </span>
                     </span>
                   </span>
-                </span>
-              )
-            }}
+                )
+              }
+              */
+            }
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             groupActions={row => {
               let values = row.key.split('_')
@@ -1054,7 +1094,7 @@ class MyListings extends Component {
             }
           }}*/
             editingRowId={editedId}
-            columnActions='productName'
+            columnActions='actCol'
           />
         </div>
         {sidebarDetailOpen && <DetailSidebar />}

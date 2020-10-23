@@ -39,7 +39,7 @@ class CreditCardsPopup extends React.Component {
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false}>
         <Modal.Header>
-          {`${title} `} {currentTab.name}
+          {`${title} `} {currentTab}
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -88,11 +88,7 @@ const mapDispatchToProps = {
 }
 const mapStateToProps = state => {
   return {
-    popupValues: state.settings.popupValues,
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0]
+    popupValues: state.settings.popupValues
   }
 }
 

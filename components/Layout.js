@@ -29,6 +29,9 @@ import LogoSmall from '~/assets/images/nav/logo4x.png'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
+import NotificationsIcon from './NotificationsIcon'
+
+import CreateMenu from './CreateMenu'
 import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
 import Settings from '~/components/settings'
@@ -73,13 +76,13 @@ const ReturnToAdmin = styled(LogOut)`
 const clientCompanyRoutes = {
   restrictedRoutes: [
     '/inventory',
-    '/orders?type=sales',
-    '/settings?type=products',
-    '/settings?type=global-broadcast',
+    '/orders/sales',
+    '/inventory/my-products',
+    '/settings/global-broadcast',
     '/wanted-board/listings',
     '/wanted-board/bids-sent'
   ],
-  redirectTo: '/marketplace/all'
+  redirectTo: '/marketplace/listings'
 }
 
 class Layout extends Component {
@@ -279,6 +282,7 @@ class Layout extends Component {
       router: { pathname },
       title = 'Echo exchange',
       auth,
+      identity,
       takeOverCompanyFinish,
       triggerSystemSettingsModal,
       profile,
@@ -298,6 +302,16 @@ class Layout extends Component {
       isOrderOperator,
       renderCopyright
     } = this.props
+
+    const {
+      isClientCompanyManager,
+      isCompanyAdmin,
+      isMerchant,
+      isProductCatalogAdmin,
+      isProductOfferManager,
+      isUserAdmin,
+    } = identity
+
     let icon = Icon && <Icon name='user' />
     let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
     if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
@@ -355,24 +369,8 @@ class Layout extends Component {
           <TopMenuContainer>
             <MainTitle as='h1'>{title}</MainTitle>
 
-            <Menu.Menu position='right' className='black'>
-              {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && !isOrderOperator && (
-                <>
-                  <Menu.Item
-                    onClick={() => Router.push('/marketplace/holds')}
-                    data-test='navigation_marketplace'
-                    className='item-cart'>
-                    <HoldIcon />
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => Router.push('/cart')}
-                    data-test='navigation_menu_cart'
-                    className='item-cart'>
-                    <MiniCart />
-                  </Menu.Item>
-                </>
-              )}
-              <Dropdown className='user-menu-wrapper' item icon={icon}>
+            <Menu.Menu position='right' className='black' style={{ flexFlow: 'row-reverse nowrap' }}>
+              <Dropdown key='user-menu' className='user-menu-wrapper' item icon={icon} direction='left'>
                 <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
                   <Dropdown.Item>
                     <Dropdown.Header>{getSafe(() => auth.identity.name, '')}</Dropdown.Header>
@@ -388,15 +386,14 @@ class Layout extends Component {
                     })}
                   </Dropdown.Item>
                   {/* <Dropdown.Item
-                    as={Menu.Item}
-                    onClick={() => chatWidgetToggle()}
-                    data-test='navigation_menu_user_support_chat_drpdn'>
-                    {formatMessage({
-                      id: 'global.supportChat',
-                      defaultMessage: 'Support Chat'
-                    })}
-                  </Dropdown.Item> */}
-
+        as={Menu.Item}
+        onClick={() => chatWidgetToggle()}
+        data-test='navigation_menu_user_support_chat_drpdn'>
+        {formatMessage({
+          id: 'global.supportChat',
+          defaultMessage: 'Support Chat'
+        })}
+      </Dropdown.Item> */}
                   {getSafe(() => auth.identity.isAdmin, false) && takeover && (
                     <Dropdown.Item
                       as={Menu.Item}
@@ -439,6 +436,38 @@ class Layout extends Component {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
+              {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && !isOrderOperator && (
+                <>
+                  <Menu.Item
+                    onClick={() => Router.push('/alerts')}
+                    data-test='navigation_notifications'
+                    className='item-cart'>
+                    <NotificationsIcon />
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => Router.push('/cart')}
+                    data-test='navigation_menu_cart'
+                    className='item-cart'>
+                    <MiniCart />
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => Router.push('/marketplace/holds')}
+                    data-test='navigation_marketplace'
+                    className='item-cart'>
+                    <HoldIcon />
+                  </Menu.Item>
+                  {(isClientCompanyManager ||
+                    isCompanyAdmin ||
+                    isMerchant ||
+                    isProductCatalogAdmin ||
+                    isProductOfferManager ||
+                    isUserAdmin) && (
+                      <Menu.Item>
+                        <CreateMenu />
+                      </Menu.Item>
+                  )}
+                </>
+              )}
             </Menu.Menu>
           </TopMenuContainer>
         </TopMenu>
@@ -505,6 +534,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    identity: getSafe(() => state.auth.identity, {}),
     profile: state.profile,
     collapsedMenu: state.layout.collapsedMenu,
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),

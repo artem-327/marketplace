@@ -162,9 +162,34 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_NAICS_CODES_FULFILLED: {
+      let naicsOptions = []
+      let firstChemical = []
+      if (payload) {
+        Object.keys(payload).forEach(key => {
+          payload[key].forEach(obj => {
+            if (obj.code === 325 || obj.code === 4246) {
+              firstChemical.push({
+                key: obj.code,
+                text: obj.subcategory,
+                value: obj.code
+              })
+            } else {
+              naicsOptions.push({
+                key: obj.code,
+                text: obj.subcategory,
+                value: obj.code
+              })
+            }
+          })
+        })
+      }
+      if (naicsOptions.length && firstChemical.length) {
+        naicsOptions.unshift(...firstChemical)
+      }
+
       return {
         ...state,
-        naicsCodes: { data: payload, loading: false }
+        naicsCodes: { data: naicsOptions, loading: false }
       }
     }
 

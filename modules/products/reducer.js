@@ -6,7 +6,6 @@ export const initialState = {
   editTrig: false,
   popupValues: null,
   tabsNames: defaultTabs,
-  currentTab: defaultTabs[0],
   loading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
@@ -49,17 +48,6 @@ export default function reducers(state = initialState, action) {
   const { payload } = action
 
   switch (action.type) {
-    case AT.PRODUCTS_HANDLE_ACTIVE_TAB: {
-      return {
-        ...state,
-        currentTab: payload.tab,
-        popupValues: state.currentTab !== payload.tab ? null : state.popupValues,
-        loading: state.currentTab !== payload.tab ? false : state.loading,
-        currentAddForm: state.currentTab !== payload.tab ? null : state.currentAddForm,
-        currentEditForm: state.currentTab !== payload.tab ? null : state.currentEditForm,
-        currentEdit2Form: state.currentTab !== payload.tab ? null : state.currentEdit2Form
-      }
-    }
     case AT.PRODUCTS_OPEN_POPUP: {
       return {
         ...state,
@@ -70,10 +58,10 @@ export default function reducers(state = initialState, action) {
         ...(payload.data
           ? {
               currentAddForm: null,
-              currentEditForm: state.currentTab
+              currentEditForm: true
             }
           : {
-              currentAddForm: state.currentTab,
+              currentAddForm: true,
               currentEditForm: null
             }),
         currentEdit2Form: null
@@ -82,7 +70,7 @@ export default function reducers(state = initialState, action) {
     case AT.PRODUCTS_OPEN_EDIT_2_POPUP: {
       return {
         ...state,
-        currentEdit2Form: state.currentTab,
+        currentEdit2Form: true,
         currentAddForm: null,
         currentEditForm: null,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
@@ -214,10 +202,10 @@ export default function reducers(state = initialState, action) {
         ...(payload.data
           ? {
               currentAddForm: null,
-              currentEditForm: state.currentTab
+              currentEditForm: true
             }
           : {
-              currentAddForm: state.currentTab,
+              currentAddForm: true,
               currentEditForm: null
             }),
         currentEdit2Form: null

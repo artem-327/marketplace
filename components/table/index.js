@@ -269,7 +269,17 @@ const TreeTableCells = (props, rowChildActions) => {
   return <Table.Cell {...newProps} className={props.column.actions ? 'actions' : ''} />
 }
 
-const TableCells = props => <Table.Cell {...props} className={props.column.actions ? 'actions' : ''} />
+const TableCells = props => {
+  return (
+    <Table.Cell {...props} className={props.column.actions ? 'actions' : ''}>
+      {props.children ? props.children : (
+        <span class='cell-wrapper'>
+          {props.value}
+        </span>
+      )}
+    </Table.Cell>
+  )
+}
 const NoDataTableCells = props => {
   const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
   const modifiedProps = {
@@ -291,7 +301,7 @@ const SortLabel = ({ column, onSort, children, direction }) => (
   <span onClick={onSort} data-test={`table_sort_action_${column.name}`} className={column.sortPath ? 'sortable' : ''}>
     {children}
     {direction && <Icon className='thick' name={direction === 'asc' ? 'sort up' : 'sort down'} />}
-    {!direction && column.sortPath && <Icon className='thick' name={'sort up inactive'} />}
+    {!direction && column.sortPath && <Icon className='thick' name={'sort up'} />}
   </span>
 )
 

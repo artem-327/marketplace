@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
-import { AlertTriangle, Clock, Sliders } from 'react-feather'
+import {AlertTriangle, Clock, MoreVertical, Sliders} from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number, boolean } from 'prop-types'
@@ -104,6 +104,8 @@ const SpanText = styled.span`
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
   overflow: hidden !important;
+  font-weight: 500;
+  cursor: pointer;
 `
 
 const DivIcons = styled.div`
@@ -125,6 +127,18 @@ const DivSetting = styled.div`
   background-color: #ffffff;
 `
 
+const RowDropDownIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 2px -4px;
+  
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #848893 !important;
+  }
+`
+
 class Listings extends Component {
   constructor(props) {
     super(props)
@@ -135,6 +149,12 @@ class Listings extends Component {
         { name: 'productNumber', disabled: true },
         // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
         {
+          name: 'actCol',
+          title: ' ',
+          width: 40,
+          actions: this.getRowActions()
+        },
+        {
           name: 'intProductName',
           title: (
             <FormattedMessage id='global.productName' defaultMessage='Product Name'>
@@ -142,8 +162,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 180,
-          sortPath: 'ProductOffer.companyProduct.intProductName',
-          actions: this.getRowActions()
+          sortPath: 'ProductOffer.companyProduct.intProductName'
         },
         {
           name: 'fobPrice',
@@ -367,9 +386,14 @@ class Listings extends Component {
     return rows.map(r => ({
       ...r,
       clsName: r.condition ? 'non-conforming' : '',
+      actCol: (
+        <RowDropDownIcon>
+          <MoreVertical />
+        </RowDropDownIcon>
+      ),
       intProductName: (
         <DivRow>
-          <SpanText>{r.intProductName}</SpanText>
+          <SpanText onClick={() => this.tableRowClicked(r.id)}>{r.intProductName}</SpanText>
           <DivIcons>
             {r.expired ? (
               <Popup
@@ -495,7 +519,7 @@ class Listings extends Component {
 
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
-        {!tutorialCompleted && <Tutorial marginMarketplace />}
+        {false && !tutorialCompleted && <Tutorial marginMarketplace />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
@@ -550,20 +574,25 @@ class Listings extends Component {
                 }))
                 .value()
             }
-            renderGroupLabel={({ row: { value }, groupLength }) => {
-              const [name, number, id, tagsNames] = value.split('_')
-              // const numberArray = number.split(' & ')
-              const tagNames = tagsNames ? tagsNames.split(',') : []
-              return (
-                <span>
-                  <span className='flex row right'>
-                    <span>
-                      {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+            renderGroupLabel={
+              ({ row: { value }, groupLength }) => null
+              /* #35127
+              {
+                const [name, number, id, tagsNames] = value.split('_')
+                // const numberArray = number.split(' & ')
+                const tagNames = tagsNames ? tagsNames.split(',') : []
+                return (
+                  <span>
+                    <span className='flex row right'>
+                      <span>
+                        {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
+                      </span>
                     </span>
                   </span>
-                </span>
-              )
-            }}
+                )
+              }
+              */
+            }
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
@@ -571,7 +600,7 @@ class Listings extends Component {
               }
             }}
             data-test='marketplace_listings_row_action'
-            columnActions={'intProductName'}
+            columnActions={'actCol'}
           />
         </div>
         <AddCart openInfo={openInfo} />

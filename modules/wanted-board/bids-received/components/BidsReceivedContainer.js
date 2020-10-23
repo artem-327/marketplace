@@ -25,6 +25,67 @@ const StyledArrayToFirstItem = styled(ArrayToFirstItem)`
     background-color: rgba(27, 52, 84, 0.15);
   }
 `
+const LabelStatus = styled.div`
+  font-size: 12px;
+  padding: 5px 5px 5px 10px;
+  background-color: ${props => (props.backgroundColor ? props.backgroundColor : '#2599d5')};
+  height: 22px;
+  border-radius: 11px;
+  color: #ffffff;
+  text-align: center;
+  width: fit-content;
+  padding: 1px 10px;
+`
+
+const StatusLabel = (status, type) => {
+  if (!status || !type) return ''
+
+  let text, backgroundColor
+  if (status === 'NEW' && type === 'NORMAL') {
+    text = <FormattedMessage id='wantedBoard.pendingOffer' defaultMessage='Pending Offer' />
+    backgroundColor = '#2599d5'
+  } else if ((status === 'REJECTED' && type === 'NORMAL') || (status === 'REJECTED' && type === 'COUNTER')) {
+    text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
+    backgroundColor = '#f16844'
+  } else if (status === 'NEW' && type === 'COUNTER') {
+    text = <FormattedMessage id='wantedBoard.pendingCounterOffer' defaultMessage='Pending Counter Offer' />
+    backgroundColor = '#2599d5'
+  } else if (
+    (status === 'ACCEPTED_BY_BUYER' && type === 'NORMAL') ||
+    (status === 'ACCEPTED_BY_SELLER' && type === 'COUNTER')
+  ) {
+    text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
+    backgroundColor = '#84c225'
+  }
+  return <LabelStatus backgroundColor={backgroundColor}>{text}</LabelStatus>
+}
+
+const StatusType = fulfillmentType => {
+  if (!fulfillmentType) return ''
+
+  let text = <FormattedMessage id='wantedBoard.partial' defaultMessage='Partial' />
+  let backgroundColor = '#2599d5'
+  if (fulfillmentType === 'COMPLETE_IMMEDIATE') {
+    text = <FormattedMessage id='wantedBoard.completeImmediate' defaultMessage='Complete immediate' />
+  } else if (fulfillmentType === 'COMPLETE_SCHEDULE') {
+    text = <FormattedMessage id='wantedBoard.completeSchedule' defaultMessage='Complete schedule' />
+  }
+
+  return <LabelStatus backgroundColor={backgroundColor}>{text}</LabelStatus>
+}
+
+const getNewestFulfillmentFromHistory = histories => {
+  if (!histories || !histories.length) return
+
+  const arrayTimestamps = histories.map(historie => (historie.updatedAt ? Date.parse(historie.updatedAt) : ''))
+
+  const newestDate = getSafe(() => arrayTimestamps.length, '') ? Math.max.apply(Math, arrayTimestamps) : ''
+
+  const i =
+    newestDate && getSafe(() => arrayTimestamps.length, '') ? arrayTimestamps.findIndex(el => el === newestDate) : 0
+
+  return getSafe(() => histories[i].fulfillmentType, '')
+}
 
 function mapStateToProps(store, { datagrid }) {
   const casNumberAndName = casProduct => {
@@ -46,48 +107,54 @@ function mapStateToProps(store, { datagrid }) {
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
       const product = getSafe(() => row.element.productGroup.name, null)
       const casNumber = casNumberAndName(getSafe(() => row.element.casProduct, null))
-      const purchaseRequestOffers = row.purchaseRequestOffers
-        .map(pro => {
-          const condition = getSafe(() => pro.productOffer.conforming, null)
-          return {
-            id: row.id + '_' + pro.id,
-            clsName: 'tree-table nested-row',
-            rawData: pro,
-            product: getSafe(() => pro.productOffer.companyProduct.productGroup.name, '...'),
-            casNumber: getSafe(
-              () => pro.productOffer.companyProduct.productGroup.elements[0].casProduct.casNumber,
-              '...'
+      const purchaseRequestOffers = row.purchaseRequestOffers.map(pro => {
+        const condition = getSafe(() => pro.productOffer.conforming, null)
+        const fulfillmentType = getNewestFulfillmentFromHistory(pro.histories)
+        return {
+          id: row.id + '_' + pro.id,
+          clsName: 'tree-table nested-row',
+          rawData: pro,
+          product: getSafe(() => productName, '...'),
+          casNumber: getSafe(
+            () => pro.productOffer.companyProduct.productGroup.elements[0].casProduct.casNumber,
+            '...'
+          ),
+          orderQuantity: '',
+          orderFrequency: '',
+          neededBy: '',
+          dealExpired: '',
+          manufacturer: getSafe(() => pro.productOffer.companyProduct.companyGenericProduct.manufacturer.name, ''),
+          condition:
+            condition === null ? (
+              <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
+            ) : condition ? (
+              <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+            ) : (
+              <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
             ),
-            orderQuantity: '',
-            orderFrequency: '',
-            neededBy: '',
-            dealExpired: '',
-            manufacturer: getSafe(() => pro.productOffer.companyProduct.companyGenericProduct.manufacturer.name, ''),
-            condition:
-              condition === null ? (
-                <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-              ) : condition ? (
-                <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
-              ) : (
-                <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
-              ),
-            deliveryLocation: '',
-            packaging: getSafe(() => pro.productOffer.companyProduct.packagingType.name, ''),
-            measurement: getSafe(() => pro.productOffer.companyProduct.packagingUnit.nameAbbreviation, ''),
-            deliveryPriceMax: 'N/A',
-            fobQuote: (
-              <FormattedNumber
-                minimumFractionDigits={2}
-                maximumFractionDigits={2}
-                style='currency'
-                currency={currency}
-                value={pro.pricePerUOM}
-              />
-            ),
-            deliveredQuote: 'N/A'
-          }
-        })
-        .filter(el => el.rawData.status === 'NEW')
+          deliveryLocation: '',
+          packaging: getSafe(() => pro.productOffer.companyProduct.packagingType.name, ''),
+          measurement: getSafe(() => pro.productOffer.companyProduct.packagingUnit.nameAbbreviation, ''),
+          deliveryPriceMax: 'N/A',
+          fobQuote: (
+            <FormattedNumber
+              minimumFractionDigits={2}
+              maximumFractionDigits={2}
+              style='currency'
+              currency={currency}
+              value={pro.cfHistoryLastAveragePricePerUOM}
+            />
+          ),
+          deliveredQuote: 'N/A',
+          cfHistoryLastStatus: getSafe(() => pro.cfHistoryLastStatus, ''),
+          cfHistoryLastType: getSafe(() => pro.cfHistoryLastType, ''),
+          status: StatusLabel(
+            getSafe(() => pro.cfHistoryLastStatus, ''),
+            getSafe(() => pro.cfHistoryLastType, '')
+          ),
+          type: StatusType(fulfillmentType)
+        }
+      })
       const offersLength = purchaseRequestOffers.length
       return {
         id: row.id,

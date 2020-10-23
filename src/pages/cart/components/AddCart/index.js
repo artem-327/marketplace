@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import AddCart from './AddCart'
-import { postNewOrder, postOrderEdit, sidebarChanged } from '../../../../modules/cart'
+import { sidebarChanged } from '../../../../modules/cart'
 import { getProductOffer, addCartItem, updateCartItem } from '~/modules/purchase-order/actions'
 import { removePopup } from '../../../../modules/popup'
 import { getPricing, getLocationString } from '../../../../utils/functions'
@@ -31,8 +31,6 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
       getProductOffer,
-      postOrderEdit,
-      postNewOrder,
       removePopup,
       sidebarChanged,
       updateCartItem,

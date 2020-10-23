@@ -31,11 +31,10 @@ import ClientCompanyPopup from './ClientCompany/Popup'
 import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
-import PriceBook from './PriceBook'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo, renderCopyright, closePopup, closeSidebar } from '../actions'
+import { addTab, tabChanged, resetSettings, renderCopyright, closePopup, closeSidebar } from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -109,9 +108,6 @@ class Settings extends Component {
     wrongUrl: true
   }
 
-  componentWillMount() {
-    this.props.resetSettings()
-  }
   // marked tab based on role of user or if tab changed.
   changeRoute = queryTab => {
     const {
@@ -129,26 +125,20 @@ class Settings extends Component {
       tabsNamesMap.set(tabsNames[i].type, tabsNames[i])
     }
 
-    if (isCompanyAdmin || isClientCompanyAdmin) {
-      tabChanged(queryTab)
-    } else {
+    if (!(isCompanyAdmin || isClientCompanyAdmin)) {
       if (isUserAdmin) {
         if (
           isProductCatalogAdmin &&
           (getSafe(() => queryTab.type, '') === 'products' || getSafe(() => queryTab.type, '') === 'system-settings')
         ) {
-          Router.push('/settings?type=products')
-          tabChanged(tabsNamesMap.get('products'))
+          Router.push('/settings/products')
         } else {
-          Router.push('/settings?type=users')
-          tabChanged(tabsNamesMap.get('users'))
+          Router.push('/settings/users')
         }
       } else if (isProductCatalogAdmin) {
-        Router.push('/settings?type=products')
-        tabChanged(tabsNamesMap.get('products'))
-      } else if (queryTab.type !== currentTab.type) {
-        Router.push(`/settings?type=${currentTab.type}`)
-        tabChanged(queryTab)
+        Router.push('/settings/products')
+      } else if (queryTab.type !== currentTab) {
+        Router.push(`/settings/${currentTab}`)
       }
     }
   }
@@ -194,7 +184,16 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    const { isCompanyAdmin, addTab, tabsNames, getIdentity, isClientCompanyAdmin, renderCopyright } = this.props
+    const {
+      isCompanyAdmin,
+      addTab,
+      tabsNames,
+      getIdentity,
+      isClientCompanyAdmin,
+      renderCopyright,
+      currentTab
+    } = this.props
+
     try {
       await getIdentity()
     } catch (error) {
@@ -204,7 +203,7 @@ class Settings extends Component {
     if (isCompanyAdmin || isClientCompanyAdmin) addTab(companyDetailsTab)
 
     let queryTab =
-      (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) ||
+      tabsNames.find(tab => tab.type === currentTab) ||
       (isCompanyAdmin || isClientCompanyAdmin
         ? companyDetailsTab
         : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
@@ -311,7 +310,6 @@ class Settings extends Component {
     const tables = {
       'company-details': this.companyDetails(),
       users: <UsersTable />,
-      'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'guest-companies': <ClientCompanyTable />,
@@ -328,7 +326,6 @@ class Settings extends Component {
 
     const popupForm = {
       users: <UsersSidebar />,
-      'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsSidebar />,
       'credit-cards': <CreditCardsPopup />,
       'guest-companies': <ClientCompanyPopup />,
@@ -346,10 +343,10 @@ class Settings extends Component {
 
     return (
       <>
-        {(isOpenPopup || isOpenSidebar) && popupForm[currentTab.type]}
-        {isOpenUploadDocumentsPopup && uploadDocForms[currentTab.type]}
-        {/* {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')} */}
-        {tables[currentTab.type] || <p>This page is still under construction</p>}
+        {(isOpenPopup || isOpenSidebar) && popupForm[currentTab]}
+        {isOpenUploadDocumentsPopup && uploadDocForms[currentTab]}
+        {/* {isDwollaOpenPopup && addDwollaForms[currentTab] && Router.push('/dwolla-register')} */}
+        {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )
   }
@@ -411,20 +408,20 @@ class Settings extends Component {
       }
     }
 
-    return datagridApiMap[currentTab.type]
+    return datagridApiMap[currentTab]
   }
 
   render() {
     const { currentTab, tutorialCompleted } = this.props
 
-    if (currentTab && currentTab.type === 'locations') {
+    if (currentTab === 'locations') {
       return <Locations />
     } else {
       return (
         !this.state.wrongUrl && (
           <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
             <Container fluid className='flex stretched'>
-              {!tutorialCompleted && (
+              {false && !tutorialCompleted && (
                 <div style={{ margin: '5px -2px -15px -2px' }}>
                   <Tutorial />
                 </div>
@@ -450,7 +447,6 @@ const mapStateToProps = ({ settings, auth }) => {
     ...settings,
     isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
     company: auth.identity ? auth.identity.company : null,
-    currentTab: settings.currentTab,
     isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
@@ -466,7 +462,6 @@ export default connect(mapStateToProps, {
   updateCompany,
   tabChanged,
   resetSettings,
-  loadLogo,
   postCompanyLogo,
   deleteCompanyLogo,
   getIdentity,

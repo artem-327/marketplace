@@ -24,7 +24,7 @@ const formValidation = Yup.object().shape({
 
 class EditUnitOfMeasurePopup extends React.Component {
   render() {
-    const { closeEditPopup, currentTab, config, popupValues, putEditedDataRequest, measureOptions } = this.props
+    const { closeEditPopup, config, popupValues, putEditedDataRequest, measureOptions } = this.props
 
     const { id } = popupValues
 
@@ -131,10 +131,9 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  let cfg = state.admin.config[state.admin.currentTab.name]
+  let cfg = state.admin.config['units-of-measure']
   return {
     config: cfg,
-    currentTab: state.admin.currentTab,
     popupValues: state.admin.popupValues,
     measureOptions: state.admin.measureTypes.map(d => {
       return {

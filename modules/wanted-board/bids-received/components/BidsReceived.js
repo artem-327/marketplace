@@ -19,12 +19,13 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import styled from 'styled-components'
+import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
 
 const CountedName = styled.div`
   display: flex;
-  alignItems: center;
-  flexDirection: row;
-  
+  alignitems: center;
+  flexdirection: row;
+
   > .ui.label {
     margin: 0;
     font-weight: normal;
@@ -79,6 +80,24 @@ class BidsReceived extends Component {
           actions: this.getActions()
           //align: 'right',
           //sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
+          name: 'status',
+          title: (
+            <FormattedMessage id='wantedBoard.status' defaultMessage='Status'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 200
+        },
+        {
+          name: 'type',
+          title: (
+            <FormattedMessage id='wantedBoard.type' defaultMessage='Type'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
         },
         {
           name: 'orderQuantity',
@@ -403,7 +422,7 @@ class BidsReceived extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersBidsReceived', this.state.filterValue)
-    if (this.props.editWindowOpen) this.props.closeDetailSidebar()
+    if (this.props.openSidebar && this.props.activeTab === 'bids-received') this.props.closeDetailSidebar()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -506,10 +525,16 @@ class BidsReceived extends Component {
             try {
               await this.props.rejectRequestedItem(row.id.split('_')[1])
               datagrid.loadData()
-            } catch (e) {}
+            } catch (e) {
+              console.error(e)
+            }
           })
         },
-        hidden: row => row.treeRoot
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       },
       {
         text: formatMessage({
@@ -518,10 +543,50 @@ class BidsReceived extends Component {
         }),
         disabled: row => editedId === row.id,
         callback: async row => {
-          await this.props.purchaseRequestedItem(row.id.split('_')[1])
+          try {
+            await this.props.purchaseRequestedItem(row.id.split('_')[1])
+            datagrid.loadData()
+          } catch (e) {
+            console.error(e)
+          }
+        },
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER')
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.accept',
+          defaultMessage: 'Accept'
+        }),
+        disabled: row => editedId === row.id,
+        callback: async row => {
+          await this.props.acceptRequestedItem(row.id.split('_')[1])
           datagrid.loadData()
         },
-        hidden: row => row.treeRoot
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
+      },
+      {
+        text: formatMessage({
+          id: 'wantedBoard.counter',
+          defaultMessage: 'Counter'
+        }),
+        disabled: row => editedId === row.id,
+        callback: async row => {
+          await this.props.openSubmitOffer(row, true)
+        },
+        hidden: row =>
+          row.treeRoot ||
+          row.cfHistoryLastStatus === 'REJECTED' ||
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER') ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
       }
     ]
   }
@@ -535,9 +600,9 @@ class BidsReceived extends Component {
           <CountedName>
             <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
             <div style={{ width: '30px', height: '20px', padding: '5px' }}>
-            {offersLength
-              ? (this.state.expandedRowIds.some(el => el === row.id)
-                ? (<ChevronDown
+              {offersLength ? (
+                this.state.expandedRowIds.some(el => el === row.id) ? (
+                  <ChevronDown
                     size={20}
                     style={{ color: '#2599d5', cursor: 'pointer' }}
                     onClick={e => {
@@ -545,8 +610,9 @@ class BidsReceived extends Component {
                       const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
                       this.setState({ expandedRowIds })
                     }}
-                  />)
-                : (<ChevronRight
+                  />
+                ) : (
+                  <ChevronRight
                     size={20}
                     style={{ color: '#2599d5', cursor: 'pointer' }}
                     onClick={e => {
@@ -555,9 +621,11 @@ class BidsReceived extends Component {
                       expandedRowIds.push(row.id)
                       this.setState({ expandedRowIds })
                     }}
-                  />)
-              ) : <div style={{ padding: '0 10px' }} />
-            }
+                  />
+                )
+              ) : (
+                <div style={{ padding: '0 10px' }} />
+              )}
             </div>
             {row.product}
           </CountedName>
@@ -566,29 +634,32 @@ class BidsReceived extends Component {
           <CountedName>
             <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
             <div style={{ width: '30px', height: '20px', paddingLeft: '5px', paddingTop: '5px' }}>
-              {offersLength
-                ? (this.state.expandedRowIds.some(el => el === row.id)
-                    ? (<ChevronDown
-                      size={20}
-                      style={{ color: '#2599d5', cursor: 'pointer' }}
-                      onClick={e => {
-                        e.stopPropagation()
-                        const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
-                        this.setState({ expandedRowIds })
-                      }}
-                    />)
-                    : (<ChevronRight
-                      size={20}
-                      style={{ color: '#2599d5', cursor: 'pointer' }}
-                      onClick={e => {
-                        e.stopPropagation()
-                        let expandedRowIds = this.state.expandedRowIds.slice()
-                        expandedRowIds.push(row.id)
-                        this.setState({ expandedRowIds })
-                      }}
-                    />)
-                ) : <div style={{ padding: '0 10px' }} />
-              }
+              {offersLength ? (
+                this.state.expandedRowIds.some(el => el === row.id) ? (
+                  <ChevronDown
+                    size={20}
+                    style={{ color: '#2599d5', cursor: 'pointer' }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
+                      this.setState({ expandedRowIds })
+                    }}
+                  />
+                ) : (
+                  <ChevronRight
+                    size={20}
+                    style={{ color: '#2599d5', cursor: 'pointer' }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      let expandedRowIds = this.state.expandedRowIds.slice()
+                      expandedRowIds.push(row.id)
+                      this.setState({ expandedRowIds })
+                    }}
+                  />
+                )
+              ) : (
+                <div style={{ padding: '0 10px' }} />
+              )}
             </div>
             {row.casNumber}
           </CountedName>
@@ -598,13 +669,29 @@ class BidsReceived extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, editedId, sidebarDetailTrigger, type, tutorialCompleted } = this.props
+    const {
+      datagrid,
+      intl,
+      rows,
+      editedId,
+      sidebarDetailTrigger,
+      type,
+      openedSubmitOfferPopup,
+      popupValues,
+      counterRequestedItem,
+      updatingDatagrid,
+      tutorialCompleted,
+      isSecondPage
+    } = this.props
     const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
     let { formatMessage } = intl
 
     return (
       <>
-        {!tutorialCompleted && <Tutorial marginWantedBoard />}
+        {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
+        {openedSubmitOfferPopup && (
+          <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} isSecondPage={isSecondPage} />
+        )}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
@@ -668,11 +755,12 @@ class BidsReceived extends Component {
             </div>
           </CustomRowDiv>
         </div>
-        <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
+        <div className='flex stretched wanted-wrapper' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
             key={type}
             tableName={`bids_received_${type}_grid`}
             {...datagrid.tableProps}
+            loading={datagrid.loading || updatingDatagrid}
             rows={this.getRows(rows)}
             columns={type === 'product' ? columnsProduct : columnsChemical}
             rowSelection={false}

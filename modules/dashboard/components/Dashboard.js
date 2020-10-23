@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { Menu, Grid, Tab, Popup, Input, Dropdown } from 'semantic-ui-react'
-import { Briefcase, Package, DollarSign, User } from 'react-feather'
+import { Briefcase, Package, DollarSign, User, Layers } from 'react-feather'
 //components
 import { getSafe } from '~/utils/functions'
 import PieGraph from './PieGraph'
@@ -916,6 +916,7 @@ class Dashboard extends Component {
             {!isClientCompany && (
               <>
                 <SummaryRectangle
+                  onClickUrl={isAdmin && !takeover ? '/companies/companies' : '/manage-guests/guests'}
                   icon={<Briefcase />}
                   data={companiesCount}
                   title={isAdmin && !takeover ? 'Total Companies' : 'Total Guest Companies'}
@@ -924,18 +925,18 @@ class Dashboard extends Component {
                   }
                 />
                 <SummaryRectangle
+                  onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-products'}
                   icon={<Package />}
                   data={companyProductsCount}
-                  title={isAdmin && !takeover ? 'Total Products' : 'Total Guest Products'}
-                  titleId={
-                    isAdmin && !takeover ? 'dashboard.totalProducts.title' : 'dashboard.totalGuestProducts.title'
-                  }
+                  title='Total Products'
+                  titleId='dashboard.totalProducts.title'
                   styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
                 />
               </>
             )}
 
             <SummaryRectangle
+              onClickUrl={'/settings/users'}
               icon={<User />}
               data={usersCount}
               title='Total Users Count'
@@ -946,17 +947,27 @@ class Dashboard extends Component {
             {!isClientCompany && (
               <>
                 <SummaryRectangle
-                  icon={<DollarSign />}
+                  onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-listings'}
+                  icon={isAdmin && !takeover ? <DollarSign /> : <Layers />}
                   data={productOffersValue && Math.round(productOffersValue)}
-                  title={'Total Products Value'}
-                  titleId={'dashboard.totalValueWithoutMilion.title'}
+                  title={isAdmin && !takeover ? 'Total Inventory Count' : 'Total Inventory Count'}
+                  titleId={
+                    isAdmin && !takeover
+                      ? 'dashboard.totalValueWithoutMilion.title'
+                      : 'dashboard.totalInventoryCount.title'
+                  }
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
                 />
                 <SummaryRectangle
+                  onClickUrl={isAdmin && !takeover ? '' : '/marketplace/listings'}
                   icon={<DollarSign />}
                   data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
-                  title={'Total Broadcasted Value'}
-                  titleId={'dashboard.totalBroadcastedValueWithoutMilion.title'}
+                  title={isAdmin && !takeover ? 'Total Broadcasted Value' : 'Total Sales'}
+                  titleId={
+                    isAdmin && !takeover
+                      ? 'dashboard.totalBroadcastedValueWithoutMilion.title'
+                      : 'dashboard.totalSales.title'
+                  }
                   styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
                   isLastSummary
                 />
@@ -1002,7 +1013,7 @@ class Dashboard extends Component {
                 <PieGraph
                   innerRadius='30%'
                   data={top10CompanyProductsByQuantitySales}
-                  title='PRODUCTS BY QUANTITY'
+                  title='PRODUCTS SOLD BY QUANTITY'
                   titleId='dasboard.productsQuantity.title'
                 />
               </Grid.Column>
@@ -1013,7 +1024,7 @@ class Dashboard extends Component {
                   innerRadius='30%'
                   isCurrency={true}
                   data={top10CompanyProductsByValueSales}
-                  title='PRODUCTS BY VALUE'
+                  title='PRODUCTS SOLD BY VALUE'
                   titleId='dasboard.productsValue.title'
                 />
               </Grid.Column>

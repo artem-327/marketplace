@@ -19,15 +19,18 @@ export const sidebarDetailTrigger = (row = null, activeTab = '') => {
         response = await api.getPurchaseRequest(row.id)
       }
 
-      return { row: activeTab === 'bids-received' && row ? { ...response, rawData: response } : row }
+      return {
+        row: activeTab === 'bids-received' && row ? { ...response, rawData: response } : row,
+        activeTab
+      }
     }
   }
 }
 
-export const myOffersSidebarTrigger = (row = null) => {
+export const myOffersSidebarTrigger = (row = null, activeTab = '') => {
   return {
     type: AT.WB_SIDEBAR_MO_DETAIL_TRIGGER,
-    payload: row
+    payload: { row, activeTab }
   }
 }
 
@@ -45,10 +48,10 @@ export const deleteMyOfferItem = id => {
   }
 }
 
-export const openSubmitOffer = row => {
+export const openSubmitOffer = (row, isSecondPage = false) => {
   return {
     type: AT.WB_OPEN_SUBMIT_OFFER,
-    payload: row
+    payload: { row, isSecondPage }
   }
 }
 export const closePopup = () => {
@@ -189,3 +192,22 @@ export function handleVariableSave(variable, value) {
     payload: { variable, value }
   }
 }
+
+export const acceptRequestedItem = id => ({
+  type: AT.WB_ACCEPT_REQUESTED_ITEM,
+  payload: api.acceptRequestedItem(id)
+})
+
+export const counterRequestedItem = (id, body) => ({
+  type: AT.WB_COUNTER_REQUESTED_ITEM,
+  payload: api.counterRequestedItem(id, body)
+})
+
+export const falseIsSecondPage = () => ({
+  type: AT.WB_FALSE_SECOND_PAGE
+})
+
+export const matchingProductOfferInfo = (id, productOfferId) => ({
+  type: AT.WB_MATCHING_PRODUCT_OFFER_INFO,
+  payload: api.matchingProductOfferInfo(id, productOfferId)
+})

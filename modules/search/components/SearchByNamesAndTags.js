@@ -14,7 +14,7 @@ import { searchTags, searchProductOffersInventory, clearProductOffers } from '..
 import styled from 'styled-components'
 
 const DivRectangleTag = styled.div`
-  height: 20px;
+  //height: 20px;
   border-radius: 2px;
   background-color: #edeef2;
   padding: 4px;
@@ -36,6 +36,15 @@ const DivTags = styled.div`
   padding: 2px 12px;
 `
 
+const StyledDropdown = styled(Dropdown)`
+  z-index: 501 !important;
+  height: auto !important;
+  min-height: 40px !important;
+  input.search {
+    height: auto !important;
+  }
+`
+
 class SearchByNamesAndTags extends Component {
   constructor(props) {
     super(props)
@@ -44,15 +53,19 @@ class SearchByNamesAndTags extends Component {
       filterName: '',
       filterTags: [],
       filterTagsValues: [],
-      active: null
+      active: [],
+      usedOptions: [],
+      searchQuery: ''
     }
   }
 
   componentDidMount() {
     const { initFilterState } = this.props
     if (initFilterState) {
-      this.setState(initFilterState.state)
-      if (this.props.filterApply) this.handleFiltersValue(initFilterState.filters)
+      this.setState({
+        active: initFilterState.active,
+        usedOptions: initFilterState.usedOptions
+      })
     }
   }
 
@@ -60,11 +73,12 @@ class SearchByNamesAndTags extends Component {
     this.props.clearProductOffers()
   }
 
-  handleFiltersValue = debounce(filters => {
-    if (Datagrid.isReady()) Datagrid.setSearch(filters, true, 'searchByNamesAndTags')
-  }, 250)
+  handleSearchChange = (e, data) => {
+    this.setState({ searchQuery: data.searchQuery })
+    this.handleSearchQuery(e, data)
+  }
 
-  handleSearchChange = debounce((e, { searchQuery }) => {
+  handleSearchQuery = debounce((e, { searchQuery }) => {
     e && e.persist()
     try {
       this.props.searchProductOffersInventory(searchQuery, this.props.isMarketplace)
@@ -74,103 +88,101 @@ class SearchByNamesAndTags extends Component {
     }
     if (searchQuery.trim() === '') {
       this.refDropdownMenu.current.close()
-      const filters = {
-        filterName: '',
-        filterTags: []
-      }
-      if (this.props.filterApply) this.handleFiltersValue(filters)
-      this.props.onChange({
-        state: {
-          filterName: '',
-          filterTags: [],
-          filterTagsValues: []
-        },
-        filters
-      })
     }
   }, 150)
 
-  handleInputFilterChange = (e, { value }) => {
-    const filterTagsValues = this.state.filterTags.length > 0 ? this.state.filterTags.map(option => option.key) : []
-    this.setState({ filterName: value, filterTagsValues })
-    const filters = {
-      filterName: value,
-      filterTags: filterTagsValues
-    }
-    if (this.props.filterApply) this.handleFiltersValue(filters)
-    this.props.onChange({
-      state: {
-        ...this.state,
-        filterName: value,
-        filterTagsValues
-      },
-      filters
-    })
-  }
-
-  handleChange = (value, options) => {
-    const selectedTags = options.length > 0 ? options.filter(el => value.some(v => el.value === v)) : []
-    const filterTagsValues = selectedTags.length > 0 ? selectedTags.map(option => option.key) : []
-    this.setState({ filterTags: selectedTags, filterTagsValues })
-    const filters = {
-      filterName: this.state.filterName,
-      filterTags: selectedTags.length > 0 ? selectedTags.map(option => option.key) : []
-    }
-    if (this.props.filterApply) this.handleFiltersValue(filters)
-    this.props.onChange({
-      state: {
-        ...this.state,
-        filterTags: selectedTags,
-        filterTagsValues
-      },
-      filters
-    })
-  }
-
-  handleClick = (e, data) => {
+  handleClick = (e, data, typeTag = false) => {
+    const { productOffers, tags } = this.props
     if (!data) return
     e && e.persist()
-    this.refDropdownMenu.current.close()
-    this.refDropdownMenu.current.state.searchQuery = data.text
-    this.refDropdownMenu.current.props.onSearchChange(null, { searchQuery: data.text })
-    const filters = {
-      filterName: data.tagId ? '' : data.text,
-      filterTags: data.tagId ? [data.tagId] : []
+    //this.refDropdownMenu.current.close()
+    //this.refDropdownMenu.current.state.searchQuery = data.text
+    //this.refDropdownMenu.current.props.onSearchChange(null, { searchQuery: data.text })
+
+    let active = this.state.active.slice()
+    active.push(data.value)
+
+    let usedOptions = this.state.usedOptions.slice()
+    if (typeTag) {
+      const option = tags.find(option => option.value === data.value)
+      if (option) usedOptions.push(option)
+    } else {
+      const option = productOffers.find(option => option.value === data.value)
+      if (option) usedOptions.push(option)
     }
-    if (this.props.filterApply) this.handleFiltersValue(filters)
-    this.props.onChange({
-      state: {
-        filterName: data.tagId ? '' : data.text,
-        filterTags: data.tagId ? [data.tagId] : [],
-        filterTagsValues: data.tagId ? [data.tagId] : []
-      },
-      filters
+
+    let filterName = [], filterTags = []
+    active.forEach(val => {
+      if (val.charAt(0) === 'p') filterName.push(val.substring(2))
+      if (val.charAt(0) === 't') filterTags.push(parseInt(val.substring(2)))
     })
-    this.setState({ active: data.value })
+
+    const filters = { filterName, filterTags }
+
+    this.props.onChange({
+      filters,
+      active,
+      usedOptions
+    })
+    this.setState({ active, usedOptions })
+  }
+
+  handleDeleteClick = (e, data) => {
+    const { usedOptions } = this.state
+    let newUsedOptions = []
+
+    usedOptions.forEach(el => {
+      if (data.value.some(val => val === el.value)) newUsedOptions.push(el)
+    })
+
+    let filterName = [], filterTags = []
+    data.value.forEach(val => {
+      if (val.charAt(0) === 'p') filterName.push(val.substring(2))
+      if (val.charAt(0) === 't') filterTags.push(parseInt(val.substring(2)))
+    })
+
+    const filters = { filterName, filterTags }
+
+    this.props.onChange({
+      filters,
+      active: data.value,
+      usedOptions: newUsedOptions
+    })
+
+    this.setState({ active: data.value, usedOptions: newUsedOptions })
   }
 
   render() {
     const {
-      tags: searchedTags,
-      productOffers: searchedProductOffers,
+      tags,
+      productOffers,
       loading,
       intl: { formatMessage }
     } = this.props
-    const { filterName, filterTags, filterTagsValues, active } = this.state
+    const { active, usedOptions, searchQuery } = this.state
 
-    const allTagsOptions = uniqueArrayByKey(searchedTags.concat(filterTags), 'key')
+    const searchedTags = tags.slice().filter(el =>
+      !active.length || !active.some(opt => opt === el.value))
+
+    const searchedProductOffers =  productOffers.slice().filter(el =>
+      !active.length || !active.some(opt => opt === el.value))
+
+    const allOptions = uniqueArrayByKey((productOffers.concat(tags)).concat(usedOptions), 'key')
 
     return (
       <Fragment>
         <Grid.Column width={4} style={{ paddingTop: '9px' }}>
-          <Dropdown
-            style={{ zIndex: '501' }}
+          <StyledDropdown
             fluid
             name='tags'
             loading={loading}
             search
             icon='search'
             selection
+            options={allOptions}
+            value={active}
+            multiple
+            searchQuery={searchQuery}
             clearable
             ref={this.refDropdownMenu}
             placeholder={formatMessage({
@@ -181,6 +193,7 @@ class SearchByNamesAndTags extends Component {
               id: 'global.startTypingToSearch',
               defaultMessage: 'Start typing to begin search'
             })}
+            onChange={(e, data) => this.handleDeleteClick(e, data)}
             onSearchChange={this.handleSearchChange}>
             <Dropdown.Menu>
               <Dimmer inverted active={loading}>
@@ -193,7 +206,7 @@ class SearchByNamesAndTags extends Component {
                         key={option.key}
                         text={option.text}
                         value={option.value}
-                        active={active === option.value}
+                        active={active.some(val => val === option.value)}
                         onClick={(e, data) => this.handleClick(e, data)}
                       />
                     ) : null
@@ -206,14 +219,14 @@ class SearchByNamesAndTags extends Component {
                   {searchedTags.map(tag => (
                     <DivRectangleTag
                       key={tag.value}
-                      onClick={e => this.handleClick(e, { tagId: tag.value, text: tag.text })}>
+                      onClick={e => this.handleClick(e, { value: tag.value, text: tag.text }, true)}>
                       {tag.text}
                     </DivRectangleTag>
                   ))}
                 </DivItem>
               </DivTags>
             </Dropdown.Menu>
-          </Dropdown>
+          </StyledDropdown>
         </Grid.Column>
       </Fragment>
     )
@@ -243,13 +256,13 @@ SearchByNamesAndTags.defaultProps = {
 }
 
 const mapStateToProps = state => ({
-  loading: state.search.loading,
+  loading: state.search.loadingNames || state.search.loadingTags,
   tags: getSafe(() => state.search.tags.length, '')
     ? state.search.tags.map(tag => {
         return {
-          key: tag.id,
+          key: `t_${tag.id}`,
           text: tag.name,
-          value: tag.id
+          value: `t_${tag.id}`
         }
       })
     : [],
@@ -257,11 +270,13 @@ const mapStateToProps = state => ({
     ? uniqueArrayByKey(
         state.search.productOffers.map(offer => offer.companyProduct),
         'id'
-      ).map(product => ({
-        key: product.id,
-        text: getSafe(() => product.intProductName, ''),
-        value: product.id
-      }))
+      ).map(product => {
+        return {
+          key: `p_${product.id}`,
+          text: getSafe(() => product.intProductName, ''),
+          value: `p_${getSafe(() => product.intProductName, '')}`
+        }
+      })
     : []
 })
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Form, FormGroup, Divider, Accordion, Icon, Header, Loader, Dimmer } from 'semantic-ui-react'
+import { Form, FormGroup, Divider, Accordion, Icon, Header, Loader, Dimmer, Segment } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import {
   closePopup,
@@ -48,6 +48,10 @@ const AccordionHeader = styled(Header)`
   > i {
     font-weight: bolder;
   }
+`
+
+const CustomSegment = styled(Segment)`
+  background-color: #f8f9fb !important;
 `
 
 const initialFormValues = {
@@ -145,11 +149,15 @@ class AddEditCompanySidebar extends React.Component {
                   .email(errorMessages.invalidEmail)
                   .required(errorMessages.invalidEmail),
                 contactName: Yup.string().trim().min(2, minLength).required(minLength),
-                contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
+                contactPhone: phoneValidation(),
                 address: addressValidationSchema()
               })
             })
-          return Yup.mixed().notRequired()
+          return Yup.object().shape({
+            deliveryAddress: Yup.object().shape({
+              contactPhone: phoneValidation()
+            })
+          })
         }),
 
         primaryBranch: Yup.object().shape({
@@ -355,6 +363,7 @@ class AddEditCompanySidebar extends React.Component {
                 if (country) payload[branch].deliveryAddress.address.country = country
               })
 
+              delete payload.enabled
               if (!payload.businessType) delete payload.businessType
               if (this.state.companyLogo) {
                 let reader = new FileReader()
@@ -416,6 +425,7 @@ class AddEditCompanySidebar extends React.Component {
                       isSubmitting={isSubmitting}
                       companyId={popupValues ? popupValues.id : null}
                       hasLogo={popupValues ? popupValues.hasLogo : false}
+                      enableCheckbox={!!popupValues}
                     />
                     {!popupValues && (
                       <>
@@ -434,42 +444,45 @@ class AddEditCompanySidebar extends React.Component {
                           </AccordionHeader>
                         </Accordion.Title>
                         <Accordion.Content active={accordionActive.companyAdmin}>
-                          <FormGroup widths='equal' data-test='admin_popup_company_primaryUserNameEmail_inp'>
-                            <Input
-                              label={
-                                <>
-                                  <FormattedMessage id='global.name' defaultMessage='Name' />
-                                  <Required />
-                                </>
-                              }
-                              name='primaryUser.name'
-                            />
-                            <Input
-                              label={
-                                <>
-                                  <FormattedMessage id='global.email' defaultMessage='Email' />
-                                  <Required />
-                                </>
-                              }
-                              name='primaryUser.email'
-                            />
-                          </FormGroup>
-                          <FormGroup widths='equal' data-test='admin_popup_company_primaryUserTitlePhone_inp'>
-                            <Input
-                              label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />}
-                              name='primaryUser.jobTitle'
-                            />
-                            <PhoneNumber
-                              label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
-                              name='primaryUser.phone'
-                              values={values}
-                              setFieldValue={setFieldValue}
-                              setFieldTouched={setFieldTouched}
-                              errors={errors}
-                              touched={touched}
-                              isSubmitting={isSubmitting}
-                            />
-                          </FormGroup>
+                          <CustomSegment>
+                            <FormGroup widths='equal' data-test='admin_popup_company_primaryUserNameEmail_inp'>
+                              <Input
+                                label={
+                                  <>
+                                    <FormattedMessage id='global.name' defaultMessage='Name' />
+                                    <Required />
+                                  </>
+                                }
+                                name='primaryUser.name'
+                              />
+                              <Input
+                                label={
+                                  <>
+                                    <FormattedMessage id='global.email' defaultMessage='Email' />
+                                    <Required />
+                                  </>
+                                }
+                                name='primaryUser.email'
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal' data-test='admin_popup_company_primaryUserTitlePhone_inp'>
+                              <Input
+                                label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />}
+                                name='primaryUser.jobTitle'
+                              />
+                              <PhoneNumber
+                                label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                                name='primaryUser.phone'
+                                values={values}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                errors={errors}
+                                touched={touched}
+                                isSubmitting={isSubmitting}
+                                clearable
+                              />
+                            </FormGroup>
+                          </CustomSegment>
                         </Accordion.Content>
                         {/* {AddressSuggestPrimaryBranchInput}
                         {AddressSuggestMailingBranchInput} */}
@@ -491,56 +504,58 @@ class AddEditCompanySidebar extends React.Component {
                           </AccordionHeader>
                         </Accordion.Title>
                         <Accordion.Content active={accordionActive.billingAddress}>
-                          <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchName_inp'>
-                            <Input
-                              label={
-                                <>
-                                  <FormattedMessage id='global.name' defaultMessage='Name' />
-                                  <Required />
-                                </>
-                              }
-                              name='primaryBranch.deliveryAddress.addressName'
-                            />
-                          </FormGroup>
-                          <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp'>
-                            <Input
-                              inputProps={{ fluid: true }}
-                              label={
-                                <>
-                                  <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />
-                                  <Required />
-                                </>
-                              }
-                              name='primaryBranch.deliveryAddress.contactName'
-                            />
-                            <PhoneNumber
-                              label={
-                                <>
-                                  <FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />
-                                  <Required />
-                                </>
-                              }
-                              name='primaryBranch.deliveryAddress.contactPhone'
-                              values={values}
-                              setFieldValue={setFieldValue}
-                              setFieldTouched={setFieldTouched}
-                              errors={errors}
-                              touched={touched}
-                              isSubmitting={isSubmitting}
-                            />
-                          </FormGroup>
-                          <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp'>
-                            <Input
-                              inputProps={{ fluid: true }}
-                              label={
-                                <>
-                                  <FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />
-                                  <Required />
-                                </>
-                              }
-                              name='primaryBranch.deliveryAddress.contactEmail'
-                            />
-                          </FormGroup>
+                          <CustomSegment>
+                            <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchName_inp'>
+                              <Input
+                                label={
+                                  <>
+                                    <FormattedMessage id='global.name' defaultMessage='Name' />
+                                    <Required />
+                                  </>
+                                }
+                                name='primaryBranch.deliveryAddress.addressName'
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp'>
+                              <Input
+                                inputProps={{ fluid: true }}
+                                label={
+                                  <>
+                                    <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />
+                                    <Required />
+                                  </>
+                                }
+                                name='primaryBranch.deliveryAddress.contactName'
+                              />
+                              <PhoneNumber
+                                label={
+                                  <>
+                                    <FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />
+                                    <Required />
+                                  </>
+                                }
+                                name='primaryBranch.deliveryAddress.contactPhone'
+                                values={values}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                errors={errors}
+                                touched={touched}
+                                isSubmitting={isSubmitting}
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp'>
+                              <Input
+                                inputProps={{ fluid: true }}
+                                label={
+                                  <>
+                                    <FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />
+                                    <Required />
+                                  </>
+                                }
+                                name='primaryBranch.deliveryAddress.contactEmail'
+                              />
+                            </FormGroup>
+                          </CustomSegment>
                           <AddressForm
                             values={values}
                             setFieldValue={setFieldValue}
@@ -574,51 +589,54 @@ class AddEditCompanySidebar extends React.Component {
                           </AccordionHeader>
                         </Accordion.Title>
                         <Accordion.Content active={accordionActive.mailingAddress}>
-                          <FormGroup widths='equal' data-test='admin_popup_company_mailingBranchNameEmailPhone_inp'>
-                            <Input
-                              label={<FormattedMessage id='global.name' defaultMessage='Name' />}
-                              name='mailingBranch.deliveryAddress.addressName'
-                            />
-                          </FormGroup>
-                          <FormGroup widths='equal'>
-                            <Input
-                              inputProps={{ fluid: true }}
-                              label={
-                                <>
-                                  <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />
-                                  {mailingBranchRequired && <Required />}
-                                </>
-                              }
-                              name='mailingBranch.deliveryAddress.contactName'
-                            />
-                            <PhoneNumber
-                              label={
-                                <>
-                                  <FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />
-                                  {mailingBranchRequired && <Required />}
-                                </>
-                              }
-                              name='mailingBranch.deliveryAddress.contactPhone'
-                              values={values}
-                              setFieldValue={setFieldValue}
-                              setFieldTouched={setFieldTouched}
-                              errors={errors}
-                              touched={touched}
-                              isSubmitting={isSubmitting}
-                            />
-                          </FormGroup>
-                          <FormGroup widths='equal'>
-                            <Input
-                              inputProps={{ fluid: true }}
-                              label={
-                                <>
-                                  <FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />
-                                  {mailingBranchRequired && <Required />}
-                                </>
-                              }
-                              name='mailingBranch.deliveryAddress.contactEmail'
-                            />
-                          </FormGroup>
+                          <CustomSegment>
+                            <FormGroup widths='equal' data-test='admin_popup_company_mailingBranchNameEmailPhone_inp'>
+                              <Input
+                                label={<FormattedMessage id='global.name' defaultMessage='Name' />}
+                                name='mailingBranch.deliveryAddress.addressName'
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal'>
+                              <Input
+                                inputProps={{ fluid: true }}
+                                label={
+                                  <>
+                                    <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />
+                                    {mailingBranchRequired && <Required />}
+                                  </>
+                                }
+                                name='mailingBranch.deliveryAddress.contactName'
+                              />
+                              <PhoneNumber
+                                label={
+                                  <>
+                                    <FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />
+                                    {mailingBranchRequired && <Required />}
+                                  </>
+                                }
+                                name='mailingBranch.deliveryAddress.contactPhone'
+                                values={values}
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                errors={errors}
+                                touched={touched}
+                                isSubmitting={isSubmitting}
+                                clearable={!mailingBranchRequired}
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal'>
+                              <Input
+                                inputProps={{ fluid: true }}
+                                label={
+                                  <>
+                                    <FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />
+                                    {mailingBranchRequired && <Required />}
+                                  </>
+                                }
+                                name='mailingBranch.deliveryAddress.contactEmail'
+                              />
+                            </FormGroup>
+                          </CustomSegment>
                           <AddressForm
                             values={values}
                             setFieldValue={setFieldValue}
@@ -659,7 +677,8 @@ class AddEditCompanySidebar extends React.Component {
               <ErrorFocus />
             </Form>
           )
-        }}></Formik>
+        }}>
+      </Formik>
     )
   }
 }

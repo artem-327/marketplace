@@ -9,7 +9,7 @@ import TreeModel from 'tree-model'
 import { withToastManager } from 'react-toast-notifications'
 
 import * as Actions from '../actions'
-import { openGlobalBroadcast, saveRules, initGlobalBroadcast } from '~/modules/broadcast/actions'
+import { saveRules, initGlobalBroadcast } from '~/modules/broadcast/actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig, vellociAccountsConfig } from './BankAccountsTable/BankAccountsTable'
@@ -166,10 +166,6 @@ const textsTable = {
     BtnImportText: 'settings.tables.products.buttonImport',
     SearchText: 'settings.tables.products.search'
   },
-  'global-broadcast': {
-    BtnAddText: 'settings.tables.globalBroadcast.buttonAdd',
-    SearchText: 'settings.tables.globalBroadcast.search'
-  },
   'credit-cards': {
     BtnAddText: 'settings.tables.creditCards.buttonAdd',
     SearchText: 'settings.tables.creditCards.search'
@@ -193,6 +189,12 @@ const textsTable = {
   documents: {
     BtnAddText: 'settings.tables.documents.buttonAdd',
     SearchText: 'settings.tables.documents.search'
+  },
+  'system-settings': {
+    hideHandler: true
+  },
+  'company-details': {
+    hideHandler: true
   }
 }
 
@@ -245,7 +247,7 @@ class TablesHandlers extends Component {
 
     try {
       //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA' && accountStatus) {
+      if (currentTab === 'bank-accounts' && paymentProcessor === 'DWOLLA' && accountStatus) {
         await getDwollaBeneficiaryOwners()
       }
       if (paymentProcessor === 'VELLOCI') {
@@ -283,13 +285,13 @@ class TablesHandlers extends Component {
     })
     if (tableHandlersFilters) {
       this.setState(tableHandlersFilters)
-      const filter = tableHandlersFilters[currentTab.type]
+      const filter = tableHandlersFilters[currentTab]
       if (filter) {
         this.props.datagrid.clear()
         this.handleFiltersValue(filter)
       }
     } else {
-      const filter = this.state[currentTab.type]
+      const filter = this.state[currentTab]
       if (filter) {
         this.props.datagrid.clear()
         this.handleFiltersValue(filter)
@@ -299,25 +301,6 @@ class TablesHandlers extends Component {
 
   componentWillUnmount() {
     this.props.handleVariableSave('tableHandlersFiltersSettings', this.state)
-  }
-
-  componentDidUpdate = async (prevProps, prevState, snapshot) => {
-    if (prevProps.currentTab !== this.props.currentTab) {
-      const { currentTab, paymentProcessor } = this.props
-      //check dwolla if exist some document which has to be verified
-      if (currentTab.type === 'bank-accounts' && paymentProcessor === 'DWOLLA') {
-        try {
-          await this.props.getDwollaBeneficiaryOwners()
-        } catch (error) {
-          console.error(error)
-        }
-      }
-      const filter = this.state[currentTab.type]
-      if (filter) {
-        this.props.datagrid.clear()
-        this.handleFiltersValue(filter)
-      }
-    }
   }
 
   handleFiltersValue = filter => {
@@ -330,10 +313,10 @@ class TablesHandlers extends Component {
     if (currentTab === '') return
 
     const filter = {
-      ...this.state[currentTab.type],
+      ...this.state[currentTab],
       [data.name]: data.value
     }
-    this.setState({ [currentTab.type]: filter })
+    this.setState({ [currentTab]: filter })
     this.handleFiltersValue(filter)
   }
 
@@ -344,10 +327,10 @@ class TablesHandlers extends Component {
     this.props.handleProductCatalogUnmappedValue(data.value)
 
     const filter = {
-      ...this.state[currentTab.type],
+      ...this.state[currentTab],
       [data.name]: data.value
     }
-    this.setState({ [currentTab.type]: filter })
+    this.setState({ [currentTab]: filter })
     this.handleFiltersValue(filter)
   }
 
@@ -385,7 +368,6 @@ class TablesHandlers extends Component {
       // handleProductCatalogUnmappedValue,
       openDwollaPopup,
       dwollaAccBalance,
-      // openGlobalBroadcast,
       bankAccounts,
       treeData,
       toastManager,
@@ -397,15 +379,14 @@ class TablesHandlers extends Component {
       intl: { formatMessage }
     } = this.props
 
-    const filterValue = this.state[currentTab.type]
-    const bankAccTab = currentTab.type === 'bank-accounts'
+    const filterValue = this.state[currentTab]
+    const bankAccTab = currentTab === 'bank-accounts'
 
     return (
       <>
-        {currentTab.type !== 'global-broadcast' &&
-          currentTab.type !== 'documents' &&
-          currentTab.type !== 'logistics' &&
-          currentTab.type !== 'bank-accounts' && (
+        { currentTab !== 'documents' &&
+          currentTab !== 'logistics' &&
+          currentTab !== 'bank-accounts' && (
             <div>
               <div className='column'>
                 <Input
@@ -414,7 +395,7 @@ class TablesHandlers extends Component {
                   name='searchInput'
                   value={filterValue ? filterValue.searchInput : ''}
                   placeholder={formatMessage({
-                    id: textsTable[currentTab.type].SearchText,
+                    id: textsTable[currentTab].SearchText,
                     defaultMessage: 'Select Credit Card'
                   })}
                   onChange={this.handleFilterChangeInputSearch}
@@ -423,16 +404,16 @@ class TablesHandlers extends Component {
             </div>
           )}
 
-        {(currentTab.type === 'logistics' || currentTab.type === 'bank-accounts') && (
+        {(currentTab === 'logistics' || currentTab === 'bank-accounts') && (
           <div>
             <div className='column'>
               <Input
                 style={{ width: '370px' }}
                 icon='search'
-                name={`${currentTab.type}Filter`}
-                value={this.props[`${currentTab.type}Filter`]}
+                name={`${currentTab}Filter`}
+                value={this.props[`${currentTab}Filter`]}
                 placeholder={formatMessage({
-                  id: textsTable[currentTab.type].SearchText,
+                  id: textsTable[currentTab].SearchText,
                   defaultMessage: 'Select Credit Card'
                 })}
                 onChange={(e, data) => this.props.handleVariableSave(data.name, data.value)}
@@ -441,7 +422,7 @@ class TablesHandlers extends Component {
           </div>
         )}
 
-        {currentTab.type === 'documents' && (
+        {currentTab === 'documents' && (
           <div>
             <div className='column'>
               <Input
@@ -450,7 +431,7 @@ class TablesHandlers extends Component {
                 name='searchInput'
                 value={filterValue.searchInput}
                 placeholder={formatMessage({
-                  id: textsTable[currentTab.type].SearchText,
+                  id: textsTable[currentTab].SearchText,
                   defaultMessage: 'Select Credit Card'
                 })}
                 onChange={this.handleFilterChangeInputSearch}
@@ -474,7 +455,7 @@ class TablesHandlers extends Component {
         )}
 
         <div>
-          {currentTab.type === 'products' && (
+          {currentTab === 'products' && (
             <div className='column'>
               <Dropdown
                 style={{ width: '200px' }}
@@ -591,13 +572,13 @@ class TablesHandlers extends Component {
               </div>
             </>
           )}
-          {!currentTab.hideButtons && (
+          {!(textsTable[currentTab] && textsTable[currentTab].hideButtons) && (
             <>
-              {currentTab.type === 'products' && (
+              {currentTab === 'products' && (
                 <div className='column'>
                   <Button fluid onClick={() => openImportPopup()} data-test='settings_open_import_popup_btn'>
                     <CornerLeftDown />
-                    <FormattedMessage id={textsTable[currentTab.type].BtnImportText}>{text => text}</FormattedMessage>
+                    <FormattedMessage id={textsTable[currentTab].BtnImportText}>{text => text}</FormattedMessage>
                   </Button>
                 </div>
               )}
@@ -624,7 +605,7 @@ class TablesHandlers extends Component {
                           onEvent={this.onEvent}>
                           <PlusCircle />
                           <div style={{ marginLeft: '10px' }}>
-                            <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>
+                            <FormattedMessage id={textsTable[currentTab].BtnAddText}>
                               {text => text}
                             </FormattedMessage>
                           </div>
@@ -636,35 +617,25 @@ class TablesHandlers extends Component {
                 {(bankAccTab && bankAccounts.addButton && paymentProcessor !== 'VELLOCI') || !bankAccTab ? (
                   <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
                     <PlusCircle />
-                    <FormattedMessage id={textsTable[currentTab.type].BtnAddText}>{text => text}</FormattedMessage>
+                    <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
                 ) : null}
               </div>
             </>
           )}
-          {/*{currentTab.type === 'global-broadcast' && (
-            <GridColumn floated='right' widescreen={2} computer={2} tablet={3}>
-              <Button
-                fluid
-                primary
-                onClick={() => this.saveRulesBroadcast(treeData.model, toastManager)}
-                data-test='settings_open_import_popup_btn'>
-                <FormattedMessage id='global.save' defaultMessage='Save'>
-                  {text => text}
-                </FormattedMessage>
-              </Button>
-            </GridColumn>
-          )}*/}
-          {currentTab.type !== 'global-broadcast' && <ColumnSettingButton divide={true} />}
+          <ColumnSettingButton divide={true} />
         </div>
       </>
     )
   }
 
   render() {
+    const { currentTab } = this.props
     return (
       <PositionHeaderSettings>
-        <CustomRowDiv>{!this.props.currentTab.hideHandler && this.renderHandler()}</CustomRowDiv>
+        <CustomRowDiv>
+          {!(textsTable[currentTab] && textsTable[currentTab].hideHandler) && this.renderHandler()}
+        </CustomRowDiv>
       </PositionHeaderSettings>
     )
   }
@@ -700,7 +671,6 @@ const mapStateToProps = state => {
     'bank-accountsFilter': state.settings['bank-accountsFilter'],
     documentTypes: state.settings.documentTypes,
     bankAccounts: bankAccountsConfig[accountStatus],
-    currentTab: state.settings.currentTab,
     tableHandlersFilters: state.settings.tableHandlersFiltersSettings,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,
@@ -720,9 +690,5 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(
-  withToastManager(
-    connect(mapStateToProps, { ...Actions, openGlobalBroadcast, saveRules, initGlobalBroadcast })(
-      injectIntl(TablesHandlers)
-    )
-  )
+  withToastManager(connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast })(injectIntl(TablesHandlers)))
 )

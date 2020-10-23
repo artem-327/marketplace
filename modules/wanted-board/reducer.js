@@ -9,6 +9,7 @@ export const initialState = {
   sidebarValues: null,
   editInitTrig: false,
   loading: false,
+  updatingDatagrid: false,
   purchaseRequestPending: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
@@ -40,7 +41,10 @@ export const initialState = {
   tableHandlersFiltersListings: null,
   tableHandlersFiltersBidsReceived: null,
   tableHandlersFiltersBidsSent: null,
-  openSidebar: false
+  openSidebar: false,
+  isSecondPage: false,
+  matchingOfferInfo: null,
+  activeTab: ''
 }
 
 export default function reducer(state = initialState, action) {
@@ -51,14 +55,22 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         openedSubmitOfferPopup: true,
-        popupValues: payload
+        popupValues: payload.row,
+        isSecondPage: payload.isSecondPage // That means if Submit Offet popup is opened from Bids Sent or Bids Received
+      }
+    }
+    case AT.WB_FALSE_SECOND_PAGE: {
+      return {
+        ...state,
+        isSecondPage: false
       }
     }
 
     case AT.WB_CLOSE_POPUP: {
       return {
         ...state,
-        openedSubmitOfferPopup: false
+        openedSubmitOfferPopup: false,
+        matchingOfferInfo: null
       }
     }
 
@@ -75,6 +87,7 @@ export default function reducer(state = initialState, action) {
         editWindowOpen: null,
         editedId: null,
         openSidebar: false,
+        activeTab: '',
         sidebarValues: null
       }
     }
@@ -98,7 +111,7 @@ export default function reducer(state = initialState, action) {
         filterValue: action.payload
       }
     }
-
+    case AT.WB_COUNTER_REQUESTED_ITEM_PENDING:
     case AT.WB_SUBMIT_OFFER_PENDING: {
       return {
         ...state,
@@ -106,6 +119,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_COUNTER_REQUESTED_ITEM_FULFILLED:
+    case AT.WB_COUNTER_REQUESTED_ITEM_REJECTED:
     case AT.WB_SUBMIT_OFFER_REJECTED:
     case AT.WB_SUBMIT_OFFER_FULFILLED: {
       return {
@@ -126,6 +141,8 @@ export default function reducer(state = initialState, action) {
       const row = payload.row ? payload.row.rawData : null
       return {
         ...state,
+        activeTab: payload.activeTab,
+        openSidebar: true,
         loading: false,
         editInitTrig: !state.editInitTrig,
         editWindowOpen: 'bids-received',
@@ -183,11 +200,12 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.WB_SIDEBAR_MO_DETAIL_TRIGGER: {
-      const row = payload ? payload.rawData : null
+      const row = payload.row ? payload.row.rawData : null
       const manufacturer = getSafe(() => row.productOffer.companyProduct.companyGenericProduct.manufacturer, null)
       const product = getSafe(() => row.productOffer.companyProduct.companyGenericProduct, null)
       return {
         ...state,
+        activeTab: payload.activeTab,
         editInitTrig: !state.editInitTrig,
         editWindowOpen: 'bids-sent',
         sidebarValues: row,
@@ -449,27 +467,44 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.WB_MATCHING_PRODUCT_OFFER_INFO_PENDING:
+    case AT.WB_DELETE_MY_OFFER_ITEM_PENDING:
     case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_PENDING:
+    case AT.WB_ACCEPT_REQUESTED_ITEM_PENDING:
     case AT.WB_PURCHASE_REQUESTED_ITEM_PENDING:
-    case AT.WB_REJECT_REQUESTED_ITEM_PENDING:
+    case AT.WB_REJECT_REQUESTED_ITEM_PENDING: {
+      return { ...state, updatingDatagrid: true }
+    }
+
+    case AT.WB_ACCEPT_REQUESTED_ITEM_REJECTED:
+    case AT.WB_MATCHING_PRODUCT_OFFER_INFO_REJECTED:
+    case AT.WB_DELETE_MY_OFFER_ITEM_REJECTED:
+    case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_REJECTED:
+    case AT.WB_PURCHASE_REQUESTED_ITEM_REJECTED:
+    case AT.WB_REJECT_REQUESTED_ITEM_REJECTED: {
+      return { ...state, updatingDatagrid: false }
+    }
+
+    case AT.WB_ACCEPT_REQUESTED_ITEM_FULFILLED:
+    case AT.WB_DELETE_MY_OFFER_ITEM_FULFILLED:
+    case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_FULFILLED:
+    case AT.WB_PURCHASE_REQUESTED_ITEM_FULFILLED:
+    case AT.WB_REJECT_REQUESTED_ITEM_FULFILLED: {
+      return { ...state, updatingDatagrid: false }
+    }
+
     case AT.WB_EDIT_PURCHASE_REQUEST_PENDING:
     case AT.WB_ADD_PURCHASE_REQUEST_PENDING:
     case AT.WB_EDIT_MY_PURCHASE_OFFER_PENDING: {
       return { ...state, loading: true }
     }
 
-    case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_REJECTED:
-    case AT.WB_PURCHASE_REQUESTED_ITEM_REJECTED:
-    case AT.WB_REJECT_REQUESTED_ITEM_REJECTED:
     case AT.WB_EDIT_PURCHASE_REQUEST_REJECTED:
     case AT.WB_ADD_PURCHASE_REQUEST_REJECTED:
     case AT.WB_EDIT_MY_PURCHASE_OFFER_REJECTED: {
       return { ...state, loading: false }
     }
 
-    case AT.WB_DELETE_PURCHASE_REQUEST_ITEM_FULFILLED:
-    case AT.WB_PURCHASE_REQUESTED_ITEM_FULFILLED:
-    case AT.WB_REJECT_REQUESTED_ITEM_FULFILLED:
     case AT.WB_EDIT_PURCHASE_REQUEST_FULFILLED:
     case AT.WB_ADD_PURCHASE_REQUEST_FULFILLED:
     case AT.WB_EDIT_MY_PURCHASE_OFFER_FULFILLED: {
@@ -480,6 +515,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         [payload.variable]: payload.value
+      }
+    }
+
+    case AT.WB_MATCHING_PRODUCT_OFFER_INFO_FULFILLED: {
+      return {
+        ...state,
+        matchingOfferInfo: payload,
+        updatingDatagrid: false
       }
     }
 

@@ -59,11 +59,11 @@ class Products extends Component {
 
     return (
       <>
-        {currentAddForm && addForms[currentTab.type]}
-        {currentEditForm && editForms[currentTab.type]}
-        {isOpenImportPopup && importForm[currentTab.type]}
-        {currentEdit2Form && edit2Forms[currentTab.type]}
-        {tables[currentTab.type] || <p>This page is still under construction</p>}
+        {currentAddForm && addForms[currentTab]}
+        {currentEditForm && editForms[currentTab]}
+        {isOpenImportPopup && importForm[currentTab]}
+        {currentEdit2Form && edit2Forms[currentTab]}
+        {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )
   }
@@ -108,16 +108,19 @@ class Products extends Component {
       }
     }
 
-    return datagridApiMap[currentTab.type]
+    return datagridApiMap[currentTab]
   }
 
   render() {
-    const { currentTab } = this.props
+    const { currentTab, currentAddForm, currentEditForm } = this.props
+
+    const sidebars = {
+      'product-catalog': <AddEditEchoProduct />
+    }
 
     //! ! Temporary commented
     //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
     //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
@@ -131,7 +134,7 @@ class Products extends Component {
             </div>
           </>
         </Container>
-        <AddEditEchoProduct tabName={'Product Catalog'} />
+        {(currentAddForm || currentEditForm) && sidebars[currentTab]}
       </DatagridProvider>
     )
   }
@@ -140,7 +143,6 @@ class Products extends Component {
 const mapStateToProps = state => {
   return {
     ...state.productsAdmin,
-    currentTab: state.productsAdmin.currentTab,
     auth: state.auth,
     isOpenImportPopup: state.settings.isOpenImportPopup,
     currentEdit2Form: state.productsAdmin.currentEdit2Form,

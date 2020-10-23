@@ -261,10 +261,6 @@ class DetailSidebar extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this.props.closeDetailSidebar()
-  }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.editInitTrig !== this.props.editInitTrig) {
       const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = this.formikProps

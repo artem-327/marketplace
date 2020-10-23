@@ -443,8 +443,8 @@ class Orders extends Component {
   }
 
   getRows = () => {
-    const { queryType } = this.props
-    let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
+    const { currentTab } = this.props
+    let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
 
     return this.props.rows.map(row => ({
       ...row,
@@ -932,12 +932,12 @@ class Orders extends Component {
 
   getActionsOrdersList = () => {
     const {
-      queryType,
+      currentTab,
       router,
       intl: { formatMessage }
     } = this.props
 
-    let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
+    let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
 
     return [
       {
@@ -1062,15 +1062,10 @@ class Orders extends Component {
   }
 
   render() {
-    const {
-      isFetching,
-      queryType,
-      datagrid,
-      tutorialCompleted
-    } = this.props
+    const { isFetching, currentTab, datagrid, tutorialCompleted } = this.props
 
     const { relatedPopupParams } = this.state
-    let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
+    let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
 
     return (
       <div id='page' className='flex stretched scrolling'>
@@ -1145,16 +1140,16 @@ class Orders extends Component {
           />
         )}
 
-        {!tutorialCompleted && <Tutorial marginOrders />}
+        {false && !tutorialCompleted && <Tutorial marginOrders />}
         <Container fluid style={{ padding: '20px 30px 10px 30px' }}>
-          <TablesHandlers />
+          <TablesHandlers currentTab={currentTab} />
         </Container>
         <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
           {isFetching ? (
             <Spinner />
           ) : (
             <ProdexGrid
-              tableName={`orders_grid_${queryType}`}
+              tableName={`orders_grid_${currentTab}`}
               columns={this.getColumns()}
               {...datagrid.tableProps}
               loading={datagrid.loading}

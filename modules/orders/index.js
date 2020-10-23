@@ -2,18 +2,16 @@ import OrdersContainer from './components/OrdersContainer'
 import { DatagridProvider } from '~/modules/datagrid'
 import Router from 'next/router'
 
-const OrdersModule = () => (
+const OrdersModule = (props) => (
   <>
     <DatagridProvider
       skipInitLoad
       preserveFilters={true}
       apiConfig={{
         url: `/prodex/api/${
-          Router && Router.router && Router.router.query
-            ? Router.query.type === 'sales'
-              ? 'sale'
-              : 'purchase'
-            : 'sale'
+           props.currentTab === 'sales'
+            ? 'sale'
+            : 'purchase'
         }-orders/datagrid/`,
         searchToFilter: v => {
           let filter = { or: [], and: [] }
@@ -51,7 +49,7 @@ const OrdersModule = () => (
           return filter
         }
       }}>
-      <OrdersContainer />
+      <OrdersContainer currentTab={props.currentTab}/>
     </DatagridProvider>
   </>
 )

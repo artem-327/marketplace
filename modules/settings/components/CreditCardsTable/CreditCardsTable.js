@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { Confirm } from 'semantic-ui-react'
-import { getCreditCardsDataRequest, handleOpenConfirmPopup, closeConfirmPopup, deleteConfirmation } from '../../actions'
+import { getCreditCardsDataRequest, handleOpenConfirmPopup, closeConfirmPopup } from '../../actions'
 import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -28,9 +28,7 @@ class ProductCatalogTable extends Component {
       confirmMessage,
       handleOpenConfirmPopup,
       closeConfirmPopup,
-      deleteConfirmation,
       deleteRowById,
-      currentTab,
       loading,
       intl: { formatMessage }
     } = this.props
@@ -47,7 +45,7 @@ class ProductCatalogTable extends Component {
           })}
           open={confirmMessage}
           onCancel={closeConfirmPopup}
-          onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
+          onConfirm={() => console.log('Delete Confirmation Credit Card')} //This function  deleteConfirmation(deleteRowById, currentTab) was commented in actions.js
         />
         <ProdexTable
           tableName='settings_credit_cards'
@@ -70,8 +68,7 @@ class ProductCatalogTable extends Component {
 const mapDispatchToProps = {
   getCreditCardsDataRequest,
   handleOpenConfirmPopup,
-  closeConfirmPopup,
-  deleteConfirmation
+  closeConfirmPopup
 }
 
 const mapStateToProps = state => {
@@ -80,11 +77,7 @@ const mapStateToProps = state => {
     loading: state.settings.loading,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
-    deleteRowById: state.settings.deleteRowById,
-    currentTab:
-      Router && Router.router && Router.router.query && Router.router.query.type
-        ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-        : state.settings.tabsNames[0]
+    deleteRowById: state.settings.deleteRowById
   }
 }
 

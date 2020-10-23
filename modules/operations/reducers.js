@@ -1,10 +1,8 @@
 import * as AT from './action-types'
-import { defaultTabs } from './constants'
 
 export const initialState = {
   popupValues: null,
   isOpenPopup: false,
-  currentTab: defaultTabs[0],
   loading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
@@ -36,13 +34,6 @@ export default function reducers(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null
-      }
-    }
-
-    case AT.OPERATIONS_TAB_CHANGED: {
-      return {
-        ...state,
-        currentTab: payload
       }
     }
 
@@ -88,17 +79,6 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         loading: false
-      }
-    }
-
-    case AT.OPERATIONS_HANDLE_ACTIVE_TAB: {
-      return {
-        ...state,
-        currentTab: payload.tab,
-        popupValues: state.currentTab !== payload.tab ? null : state.popupValues,
-        isOpenPopup: state.currentTab !== payload.tab ? false : state.isOpenPopup,
-        loading: state.currentTab !== payload.tab ? false : state.loading,
-        orderDetailData: state.currentTab !== payload.tab ? null : state.orderDetailData
       }
     }
 

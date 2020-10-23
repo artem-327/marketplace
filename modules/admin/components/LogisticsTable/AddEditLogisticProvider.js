@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages, multipleEmails } from '~/constants/yupValidation'
 
 import { Modal, FormGroup, FormField, Grid, GridRow, GridColumn, Popup, Icon } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
@@ -50,12 +50,12 @@ class AddEditLogisticProvider extends React.Component {
   getValidationSchema = popupValues => {
     if (popupValues) {
       return Yup.object().shape({
-        email: Yup.string().trim()
+        email: multipleEmails()
       })
     } else {
       return Yup.object().shape({
         providerIdentifier: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-        email: Yup.string().trim()
+        email: multipleEmails()
       })
     }
   }

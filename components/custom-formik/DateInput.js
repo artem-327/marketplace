@@ -21,7 +21,7 @@ class FormikInput extends Component {
 
   render() {
     const { name, label, validate, inputProps = {}, fieldProps = {}, inputRef, fast } = this.props
-    const { onChange, ...safeInputProps } = inputProps
+    const { onChange, placeholder, ...safeInputProps } = inputProps
     const DesiredField = fast === true ? FastField : Field
 
     return (
@@ -55,7 +55,7 @@ class FormikInput extends Component {
                     onChange && onChange(e, { name, value })
                   })
                 }}
-                placeholder={getLocaleDateFormat()}
+                placeholder={placeholder || getLocaleDateFormat()}
                 data-test={`FormikInput_${this.id}_DateInput`}
                 closable
                 id={this.id}

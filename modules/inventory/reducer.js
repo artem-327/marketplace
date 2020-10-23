@@ -21,6 +21,7 @@ export const initialState = {
   searchedProductsLoading: false,
   warehousesList: [],
   loading: false,
+  updatingDatagrid: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
   documentTypesFetching: false,
@@ -83,6 +84,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.INVENTORY_REMOVE_ATTACHMENT_LINK_REJECTED:
     case AT.INVENTORY_REMOVE_ATTACHMENT_LINK_FULFILLED: {
       return {
         ...state,
@@ -351,18 +353,28 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.INVENTORY_REMOVE_ATTACHMENT_PENDING:
     case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {
       return {
         ...state,
-        loading: true
+        updatingDatagrid: true
       }
     }
 
     case AT.INVENTORY_DELETE_PRODUCT_OFFER_FULFILLED: {
       return {
         ...state,
-        loading: false,
+        updatingDatagrid: false,
         myProductOffers: state.myProductOffers.filter(p => p.id !== action.payload)
+      }
+    }
+
+    case AT.INVENTORY_REMOVE_ATTACHMENT_REJECTED:
+    case AT.INVENTORY_REMOVE_ATTACHMENT_FULFILLED:
+    case AT.INVENTORY_DELETE_PRODUCT_OFFER_REJECTED: {
+      return {
+        ...state,
+        updatingDatagrid: false
       }
     }
 

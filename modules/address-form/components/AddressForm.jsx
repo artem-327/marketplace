@@ -230,7 +230,6 @@ class AddressForm extends Component {
             <Input
               inputProps={{
                 onFocus: e => (e.target.autocomplete = null),
-                icon: 'dropdown',
                 list: datalistName,
                 onChange: this.handleChange,
                 fluid: true,

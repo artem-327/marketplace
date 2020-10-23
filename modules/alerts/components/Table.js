@@ -125,7 +125,7 @@ class Table extends Component {
   }
 
   handleClickOnUnread = async row => {
-    const { datagrid, getCategories, markSeen } = this.props
+    const { datagrid, getCategories, markSeen, getCountUnseen } = this.props
     try {
       await markSeen(row.id)
       datagrid.updateRow(row.id, () => ({
@@ -133,6 +133,7 @@ class Table extends Component {
         read: true,
         readAt: moment().format()
       }))
+      getCountUnseen()
       getCategories()
     } catch (e) {
       console.log(e)
@@ -140,7 +141,7 @@ class Table extends Component {
   }
 
   handleClickOnRead = async row => {
-    const { datagrid, getCategories, markUnseen } = this.props
+    const { datagrid, getCategories, markUnseen, getCountUnseen } = this.props
     try {
       await markUnseen(row.id)
       datagrid.updateRow(row.id, () => ({
@@ -148,6 +149,7 @@ class Table extends Component {
         read: false,
         readAt: null
       }))
+      getCountUnseen()
       getCategories()
     } catch (e) {
       console.log(e)

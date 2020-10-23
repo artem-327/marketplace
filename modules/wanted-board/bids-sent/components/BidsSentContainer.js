@@ -16,41 +16,68 @@ import styled from 'styled-components'
 import BidsSent from './BidsSent'
 import { Label } from 'semantic-ui-react'
 
-const StyledStatusLabel = styled(Label)`
-  font-size: 12px !important;
-  height: 22px !important;
-  font-weight: normal !important;
-  font-stretch: normal;
-  font-style: normal;
-  //line-height: 1.33 !important;
-  color: #ffffff !important;
-  border-radius: 11px !important;
-
-  padding: 0.3333em 1.16667em 0.16667em 1.16667em !important;
-
-  &.REJECTED {
-    background-color: #f16844 !important;
-  }
-  &.PURCHASED,
-  &.ACCEPTED {
-    background-color: #84c225 !important;
-  }
+const LabelStatus = styled.div`
+  font-size: 12px;
+  padding: 5px 5px 5px 10px;
+  background-color: ${props => (props.backgroundColor ? props.backgroundColor : '#2599d5')};
+  height: 22px;
+  border-radius: 11px;
+  color: #ffffff;
+  text-align: center;
+  width: fit-content;
+  padding: 1px 10px;
 `
 
-const StatusLabel = val => {
-  let text
-  switch (val) {
-    case 'ACCEPTED':
-    case 'PURCHASED':
-      text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
-      break
-    case 'REJECTED':
-      text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
-      break
-    default:
-      return null
+const StatusLabel = (status, type) => {
+  if (!status) return ''
+
+  let text, backgroundColor
+  if (status === 'NEW' && type === 'NORMAL') {
+    text = <FormattedMessage id='wantedBoard.pendingOffer' defaultMessage='Pending Offer' />
+    backgroundColor = '#2599d5'
+  } else if ((status === 'REJECTED' && type === 'NORMAL') || (status === 'REJECTED' && type === 'COUNTER')) {
+    text = <FormattedMessage id='wantedBoard.rejected' defaultMessage='Rejected' />
+    backgroundColor = '#f16844'
+  } else if (status === 'NEW' && type === 'COUNTER') {
+    text = <FormattedMessage id='wantedBoard.pendingCounterOffer' defaultMessage='Pending Counter Offer' />
+    backgroundColor = '#2599d5'
+  } else if (
+    (status === 'ACCEPTED_BY_BUYER' && type === 'NORMAL') ||
+    (status === 'ACCEPTED_BY_SELLER' && type === 'COUNTER') ||
+    (status === '32' && type === 'COUNTER')
+  ) {
+    text = <FormattedMessage id='wantedBoard.accepted' defaultMessage='Accepted' />
+    backgroundColor = '#84c225'
   }
-  return <StyledStatusLabel className={val}>{text}</StyledStatusLabel>
+
+  return <LabelStatus backgroundColor={backgroundColor}>{text}</LabelStatus>
+}
+
+const StatusType = fulfillmentType => {
+  if (!fulfillmentType) return ''
+
+  let text = <FormattedMessage id='wantedBoard.partial' defaultMessage='Partial' />
+  let backgroundColor = '#2599d5'
+  if (fulfillmentType === 'COMPLETE_IMMEDIATE') {
+    text = <FormattedMessage id='wantedBoard.completeImmediate' defaultMessage='Complete immediate' />
+  } else if (fulfillmentType === 'COMPLETE_SCHEDULE') {
+    text = <FormattedMessage id='wantedBoard.completeSchedule' defaultMessage='Complete schedule' />
+  }
+
+  return <LabelStatus backgroundColor={backgroundColor}>{text}</LabelStatus>
+}
+
+const getNewestFulfillmentFromHistory = histories => {
+  if (!histories || !histories.length) return
+
+  const arrayTimestamps = histories.map(historie => (historie.updatedAt ? Date.parse(historie.updatedAt) : ''))
+
+  const newestDate = getSafe(() => arrayTimestamps.length, '') ? Math.max.apply(Math, arrayTimestamps) : ''
+
+  const i =
+    newestDate && getSafe(() => arrayTimestamps.length, '') ? arrayTimestamps.findIndex(el => el === newestDate) : 0
+
+  return getSafe(() => histories[i].fulfillmentType, '')
 }
 
 function mapStateToProps(store, { datagrid }) {
@@ -59,6 +86,8 @@ function mapStateToProps(store, { datagrid }) {
     editedId: store.wantedBoard.editWindowOpen === 'bids-sent' ? store.wantedBoard.editedId : null,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     rows: datagrid.rows.map(po => {
+      const fulfillmentType = getNewestFulfillmentFromHistory(po.histories)
+
       const condition = getSafe(() => po.productOffer.conforming, null)
       return {
         id: po.id,
@@ -70,7 +99,7 @@ function mapStateToProps(store, { datagrid }) {
             maximumFractionDigits={2}
             style='currency'
             currency={currency}
-            value={po.pricePerUOM}
+            value={po.cfHistoryLastAveragePricePerUOM}
           />
         ),
         manufacturer: getSafe(() => po.productOffer.companyProduct.companyGenericProduct.manufacturer.name, ''),
@@ -82,8 +111,13 @@ function mapStateToProps(store, { datagrid }) {
           ) : (
             <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
           ),
-        status: StatusLabel(po.status),
-        hiddenActions: po.status === 'PURCHASED' || po.status === 'REJECTED' || po.status === 'ACCEPTED'
+        cfHistoryLastStatus: getSafe(() => po.cfHistoryLastStatus, ''),
+        cfHistoryLastType: getSafe(() => po.cfHistoryLastType, ''),
+        status: StatusLabel(
+          getSafe(() => po.cfHistoryLastStatus, ''),
+          getSafe(() => po.cfHistoryLastType, '')
+        ),
+        type: StatusType(fulfillmentType)
       }
     })
   }

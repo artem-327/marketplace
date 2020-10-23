@@ -17,6 +17,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
 import api from '~/modules/settings/api'
 import { getIdentity } from '~/modules/auth/actions'
+import securePage from '~/hocs/securePage'
 
 const FixyWrapper = styled.div`
   position: relative;
@@ -35,7 +36,7 @@ const ButtonsWrapper = styled(Grid)`
   border-top: 1px solid #dee2e6;
   padding: 0 42px !important;
   background: #fff;
-  
+
   .scrollable > & {
     flex-grow: 0;
     flex-shrink: 0;
@@ -43,7 +44,7 @@ const ButtonsWrapper = styled(Grid)`
     width: 100%;
     margin: 0 !important;
     background: transparent;
-    
+
     > .column {
       padding-right: 0 !important;
     }
@@ -56,7 +57,6 @@ const PopupTriggerWrapper = styled.div`
 `
 
 const FormSpaced = styled(Form)`
-
   &.scrollable {
     display: flex !important;
     flex-flow: column;
@@ -68,7 +68,7 @@ const FormSpaced = styled(Form)`
 
 const StyledSegment = styled(Segment)`
   margin-bottom: 45px !important;
-  
+
   .scrollable > & {
     flex-grow: 1;
     flex-shrink: 1;
@@ -93,7 +93,6 @@ const CustomGridColumn = styled(GridColumn)`
   padding-bottom: 2px !important;
 `
 const PScroll = styled(PerfectScrollbar)`
-
   .ps__rail-x,
   .ps__rail-y {
     display: none;
@@ -112,13 +111,13 @@ const PScroll = styled(PerfectScrollbar)`
     .ps__rail-y {
       display: block;
     }
-    
+
     .ps__rail-y {
       position: absolute;
       left: auto !important;
       right: 0 !important;
       width: 10px;
-      
+
       .ps__thumb-y {
         position: absolute;
         width: 6px;
@@ -285,73 +284,73 @@ class Settings extends Component {
                         </Header>
                         <StyledSegment>
                           <PScroll>
-                          <>
-                            {group.settings.map(el => {
-                              return (
-                                <>
-                                  <Grid>
-                                    <BottomMargedRow>
-                                      <CustomGridColumn width={10}>
-                                        <Header as='h3'>
-                                          <>
-                                            {el.name}
-                                            <Popup
-                                              trigger={<Icon color='blue' name='info circle' />}
-                                              content={el.description}
-                                            />
-                                          </>
-                                        </Header>
-                                      </CustomGridColumn>
+                            <>
+                              {group.settings.map(el => {
+                                return (
+                                  <>
+                                    <Grid>
+                                      <BottomMargedRow>
+                                        <CustomGridColumn width={10}>
+                                          <Header as='h3'>
+                                            <>
+                                              {el.name}
+                                              <Popup
+                                                trigger={<Icon color='blue' name='info circle' />}
+                                                content={el.description}
+                                              />
+                                            </>
+                                          </Header>
+                                        </CustomGridColumn>
 
-                                      <CustomPaddedColumn width={5} floated='right' textAlign='right'>
-                                        {this.props.role !== 'admin' && (
-                                          <>
-                                            <Checkbox
-                                              inputProps={{
-                                                disabled: !el.changeable,
-                                                onChange: e => e.stopPropagation(),
-                                                onClick: e => e.stopPropagation()
-                                              }}
-                                              label={formatMessage({
-                                                id: 'global.override',
-                                                defaultMessage: 'Override'
-                                              })}
-                                              name={`${role}.${group.code}.${el.code}.edit`}
-                                            />
-                                          </>
-                                        )}
-                                      </CustomPaddedColumn>
-                                    </BottomMargedRow>
-                                  </Grid>
+                                        <CustomPaddedColumn width={5} floated='right' textAlign='right'>
+                                          {this.props.role !== 'admin' && (
+                                            <>
+                                              <Checkbox
+                                                inputProps={{
+                                                  disabled: !el.changeable,
+                                                  onChange: e => e.stopPropagation(),
+                                                  onClick: e => e.stopPropagation()
+                                                }}
+                                                label={formatMessage({
+                                                  id: 'global.override',
+                                                  defaultMessage: 'Override'
+                                                })}
+                                                name={`${role}.${group.code}.${el.code}.edit`}
+                                              />
+                                            </>
+                                          )}
+                                        </CustomPaddedColumn>
+                                      </BottomMargedRow>
+                                    </Grid>
 
-                                  {React.cloneElement(
-                                    typeToComponent(el.type, {
-                                      props: {
-                                        ...getSafe(() => JSON.parse(el.frontendConfig).props),
-                                        options: getSafe(() => el.possibleValues, []).map((opt, i) => ({
-                                          key: i,
-                                          value: opt.value,
-                                          text: opt.displayName
-                                        }))
-                                      },
-                                      inputProps: {
-                                        disabled:
-                                          !el.changeable ||
-                                          (getSafe(() => !values[role][group.code][el.code].edit, false) &&
-                                            (role !== 'admin')),
-                                        ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
+                                    {React.cloneElement(
+                                      typeToComponent(el.type, {
+                                        props: {
+                                          ...getSafe(() => JSON.parse(el.frontendConfig).props),
+                                          options: getSafe(() => el.possibleValues, []).map((opt, i) => ({
+                                            key: i,
+                                            value: opt.value,
+                                            text: opt.displayName
+                                          }))
+                                        },
+                                        inputProps: {
+                                          disabled:
+                                            !el.changeable ||
+                                            (getSafe(() => !values[role][group.code][el.code].edit, false) &&
+                                              role !== 'admin'),
+                                          ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
+                                        }
+                                      }),
+                                      {
+                                        name: `${role}.${group.code}.${el.code}.value.${
+                                          el.type === 'BOOL' ? 'actual' : 'visible'
+                                        }`
                                       }
-                                    }),
-                                    {
-                                      name: `${role}.${group.code}.${el.code}.value.${
-                                        el.type === 'BOOL' ? 'actual' : 'visible'
-                                      }`
-                                    }
-                                  )}
-                                </>
-                              )
-                            })}
-                          </>
+                                    )}
+                                  </>
+                                )
+                              })}
+                            </>
                           </PScroll>
                         </StyledSegment>
                       </>
