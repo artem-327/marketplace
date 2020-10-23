@@ -1832,19 +1832,20 @@ class AddCart extends Component {
         onHide={e => {
           try {
             if (
-              (e &&
-                !(e.path[0] instanceof HTMLTableCellElement) &&
-                !(e.path[1] instanceof HTMLTableCellElement) &&
-                e.target &&
-                e.target.className &&
-                typeof e.target.className.includes !== 'undefined' &&
-                e.target.className.includes('js-focus-visible')) ||
-              (e &&
-                e.target &&
-                e.target.className &&
-                typeof e.target.className.includes !== 'undefined' &&
-                !(e.target.className.includes('item') || e.target.className.includes('text'))) ||
-              !(e.target.nodeName === 'svg' || e.target.nodeName === 'circle' || e.target.nodeName === 'SPAN')
+              (!(getSafe(() => e.path[0], '') instanceof HTMLTableCellElement) &&
+                !(getSafe(() => e.path[1], '') instanceof HTMLTableCellElement) &&
+                typeof getSafe(() => e.target.className.includes, '') !== 'undefined' &&
+                getSafe(() => e.target.className, '').includes('js-focus-visible')) ||
+              (typeof getSafe(() => e.target.className.includes, '') !== 'undefined' &&
+                !(
+                  getSafe(() => e.target.className, '').includes('item') ||
+                  getSafe(() => e.target.className, '').includes('text')
+                )) ||
+              !(
+                getSafe(() => e.target.nodeName, '') === 'svg' ||
+                getSafe(() => e.target.nodeName, '') === 'circle' ||
+                getSafe(() => e.target.nodeName, '') === 'SPAN'
+              )
             ) {
               sidebarChanged({ isOpen: false, isHoldRequest: false })
             }
