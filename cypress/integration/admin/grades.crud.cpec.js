@@ -2,6 +2,7 @@ context("Grades CRUD", () => {
 
     let gradeId = null
     let filter = [{"operator": "LIKE", "path": "ProductGrade.name", "values": ["%Test%"]}]
+    let filterEdited = [{"operator": "LIKE", "path": "ProductGrade.name", "values": ["%Graceful%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -25,6 +26,10 @@ context("Grades CRUD", () => {
     it("Creates a grade", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'product-grades', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'product-grades', itemId)
+            })
+            cy.getFirstEntityWithFilter(token, 'product-grades', filterEdited).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'product-grades', itemId)
             })

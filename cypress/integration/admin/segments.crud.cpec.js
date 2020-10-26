@@ -2,6 +2,7 @@ context("Market Segments CRUD", () => {
 
     let documentId = null
     let filter = [{"operator": "LIKE", "path": "MarketSegment.name", "values": ["%Test%"]}]
+    let filterEdited = [{"operator": "LIKE", "path": "MarketSegment.name", "values": ["%Great segment%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -23,6 +24,10 @@ context("Market Segments CRUD", () => {
     it("Creates a market segment", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'market-segments', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'market-segments/id', itemId)
+            })
+            cy.getFirstEntityWithFilter(token, 'market-segments', filterEdited).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'market-segments/id', itemId)
             })

@@ -8,7 +8,7 @@ before_script:
 test:
   script:
     - cd ..
-    - docker run -v $PWD:/test -w /test -u appuser cypress/artio
+    - docker run -v $PWD:/test -w /test -u appuser cypress/artio -ipc=host -shm-size=1024M
   artifacts:
     when: always
     paths:

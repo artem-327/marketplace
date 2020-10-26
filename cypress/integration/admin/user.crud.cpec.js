@@ -47,7 +47,7 @@ context("Prodex Admin User CRUD", () => {
             cy.get("div[role='option']").eq(0).click()
         })
 
-        cy.get('.grid > :nth-child(7)').within(() => {
+        cy.get(':nth-child(3) > .grid > :nth-child(2)').within(() => {
             cy.contains("Merchant").click()
         })
 
@@ -104,7 +104,7 @@ context("Prodex Admin User CRUD", () => {
         cy.waitForUI()
         cy.openElement(userID, 0)
 
-        cy.get('.grid > :nth-child(7)').within(() => {
+        cy.get(':nth-child(3) > .grid > :nth-child(2)').within(() => {
             cy.contains("Merchant").click()
             cy.contains("Order View").click()
         })
@@ -115,7 +115,7 @@ context("Prodex Admin User CRUD", () => {
 
         cy.openElement(userID, 0)
 
-        cy.get('.grid > :nth-child(7)').within(() => {
+        cy.get(':nth-child(3) > .grid > :nth-child(2)').within(() => {
             cy.get(':nth-child(1) > :nth-child(2) > [data-test=settings_users_popup_FormikField_change]').should("not.selected")
             cy.get(':nth-child(2) > :nth-child(1) > [data-test=settings_users_popup_FormikField_change]').should("not.selected")
         })

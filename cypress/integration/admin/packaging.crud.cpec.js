@@ -2,6 +2,7 @@ context("Units of packaging CRUD", () => {
 
     let packageId = null
     let filter = [{"operator": "LIKE", "path": "PackagingType.name", "values": ["%Test%"]}]
+    let filterEdited = [{"operator": "LIKE", "path": "PackagingType.name", "values": ["%Best package%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -24,6 +25,10 @@ context("Units of packaging CRUD", () => {
     it("Creates a package unit", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'packaging-types', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'packaging-types', itemId)
+            })
+            cy.getFirstEntityWithFilter(token, 'packaging-types', filterEdited).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'packaging-types', itemId)
             })
