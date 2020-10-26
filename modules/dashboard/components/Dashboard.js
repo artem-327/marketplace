@@ -925,7 +925,7 @@ class Dashboard extends Component {
                   }
                 />
                 <SummaryRectangle
-                  onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-products'}
+                  onClickUrl={isAdmin && !takeover ? '/operations/company-product-catalog' : '/inventory/my-products'}
                   icon={<Package />}
                   data={companyProductsCount}
                   title='Total Products'
@@ -936,7 +936,7 @@ class Dashboard extends Component {
             )}
 
             <SummaryRectangle
-              onClickUrl={'/settings/users'}
+              onClickUrl={isAdmin && !takeover ? '/companies/users' : '/settings/users'}
               icon={<User />}
               data={usersCount}
               title='Total Users Count'
