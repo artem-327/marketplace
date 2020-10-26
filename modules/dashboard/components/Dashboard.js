@@ -25,7 +25,7 @@ const UpperCaseText = styled.div`
 `
 
 const DivContainerGraph = styled.div`
-  width: 100%;
+  //width: 100%;
   height: 580px;
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
@@ -421,8 +421,8 @@ const StyledCalendar = styled(Calendar)`
 const StatsTypeSelect = styled(Dropdown)`
   > .menu {
     > .item {
-      margin-left: 0 !important;
-      margin-right: 0 !important;
+      //margin-left: 0 !important;
+      //margin-right: 0 !important;
 
       &,
       &.active {
@@ -430,6 +430,12 @@ const StatsTypeSelect = styled(Dropdown)`
       }
     }
   }
+`
+
+const RightChartControl = styled.div`
+  display: flex;
+  //width: 100%;
+  float: right;
 `
 
 class Dashboard extends Component {
@@ -708,7 +714,7 @@ class Dashboard extends Component {
       },
       {
         menuItem: (
-          <>
+          <RightChartControl>
             {activeTab === 1 ? (
               <StatsTypeSelect
                 key='statsType'
@@ -723,21 +729,17 @@ class Dashboard extends Component {
                 data-test='dashboard_stats_drpdn'
               />
             ) : null}
-          </>
-        )
-      },
-      {
-        menuItem: (
-          <Dropdown
-            key='statsType'
-            style={{ marginLeft: 'auto', minWidth: '150px' }}
-            item
-            pointing='top right'
-            options={dateRangeOptions}
-            onChange={(e, { value }) => this.setDateRange(value)}
-            value={dateRangeSelected}
-            data-test='dashboard_stats_drpdn'
-          />
+            <StatsTypeSelect
+              key='dateRangeSelect'
+              style={{ minWidth: '150px' }}
+              item
+              pointing='top right'
+              options={dateRangeOptions}
+              onChange={(e, { value }) => this.setDateRange(value)}
+              value={dateRangeSelected}
+              data-test='dashboard_date_range_select_drpdn'
+            />
+          </RightChartControl>
         )
       }
     ]
@@ -785,7 +787,7 @@ class Dashboard extends Component {
       },
       {
         menuItem: (
-          <>
+          <RightChartControl>
             {activeTab === 2 ? (
               <StatsTypeSelect
                 key='statsType'
@@ -800,7 +802,17 @@ class Dashboard extends Component {
                 data-test='dashboard_stats_drpdn'
               />
             ) : null}
-          </>
+            <StatsTypeSelect
+              key='dateRangeSelect'
+              style={{ minWidth: '150px' }}
+              item
+              pointing='top right'
+              options={dateRangeOptions}
+              onChange={(e, { value }) => this.setDateRange(value)}
+              value={dateRangeSelected}
+              data-test='dashboard_date_range_select_drpdn'
+            />
+          </RightChartControl>
         )
       }
     ]
@@ -846,7 +858,7 @@ class Dashboard extends Component {
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
         <Grid.Row>
           <Grid.Column width={16}>
-            {false && isAdmin && !takeover && /* currently not used */(
+            {false && isAdmin && !takeover && /* #35120 - currently not used */(
               <Popup
                 on='click'
                 trigger={
@@ -989,81 +1001,185 @@ class Dashboard extends Component {
             )}
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={10}>
-            <DivContainerGraph>
-              <Tab
-                style={{ padding: '0 20px 0 20px' }}
-                className='inventory-sidebar tab-menu flex stretched'
-                menu={{ secondary: true, pointing: true }}
-                activeIndex={this.state.activeTab}
-                panes={panes}
-              />
-            </DivContainerGraph>
-          </Grid.Column>
 
-          <Grid.Column width={5}>
-            {!isClientCompany && (
-              <>
+        {isClientCompany && (
+          <Grid.Row>
+            <Grid.Column width={5}>
+              <SummaryRectangle
+                onClickUrl={'/settings/users'}
+                icon={<User />}
+                data={usersCount}
+                title='Total Users Count'
+                titleId='dashboard.totalUsersCount.title'
+                styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+        )}
+
+        {isAdmin && !takeover && (
+          <>
+            <Grid.Row>
+              <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={isAdmin && !takeover ? '/companies/companies' : '/manage-guests/guests'}
+                  onClickUrl={'/companies/companies'}
                   icon={<Briefcase />}
                   data={companiesCount}
-                  title={isAdmin && !takeover ? 'Total Companies' : 'Total Guest Companies'}
-                  titleId={
-                    isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalGuestCompanies.title'
-                  }
+                  title={'Total Companies'}
+                  titleId={'dashboard.totalCompanies.title'}
                 />
+              </Grid.Column>
+              <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-products'}
+                  onClickUrl={'/operations/company-product-catalog'}
                   icon={<Package />}
                   data={companyProductsCount}
                   title='Total Products'
                   titleId='dashboard.totalProducts.title'
                   styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
                 />
-              </>
-            )}
-
-            <SummaryRectangle
-              onClickUrl={'/settings/users'}
-              icon={<User />}
-              data={usersCount}
-              title='Total Users Count'
-              titleId='dashboard.totalUsersCount.title'
-              styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
-            />
-
-            {!isClientCompany && (
-              <>
+              </Grid.Column>
+              <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-listings'}
-                  icon={isAdmin && !takeover ? <DollarSign /> : <Layers />}
+                  icon={<DollarSign />}
                   data={productOffersValue && Math.round(productOffersValue)}
-                  title={isAdmin && !takeover ? 'Total Inventory Count' : 'Total Inventory Count'}
-                  titleId={
-                    isAdmin && !takeover
-                      ? 'dashboard.totalValueWithoutMilion.title'
-                      : 'dashboard.totalInventoryCount.title'
-                  }
+                  title={'Total Inventory Count'}
+                  titleId={'dashboard.totalValueWithoutMilion.title'}
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
                 />
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={isAdmin && !takeover ? '' : '/marketplace/listings'}
+                  onClickUrl={'/companies/users'}
+                  icon={<User />}
+                  data={usersCount}
+                  title='Total Users Count'
+                  titleId='dashboard.totalUsersCount.title'
+                  styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
+
+              </Grid.Column>
+              <Grid.Column width={5}>
+                <SummaryRectangle
                   icon={<DollarSign />}
                   data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
-                  title={isAdmin && !takeover ? 'Total Broadcasted Value' : 'Total Sales'}
-                  titleId={
-                    isAdmin && !takeover
-                      ? 'dashboard.totalBroadcastedValueWithoutMilion.title'
-                      : 'dashboard.totalSales.title'
-                  }
+                  title={'Total Broadcasted Value'}
+                  titleId={'dashboard.totalBroadcastedValueWithoutMilion.title'}
                   styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
                   isLastSummary
                 />
+              </Grid.Column>
+            </Grid.Row>
+          </>
+        )}
+
+        {!isAdmin && !isClientCompany && (
+          <>
+            <Grid.Row>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/manage-guests/guests'}
+                  icon={<Briefcase />}
+                  data={companiesCount}
+                  title={'Total Guest Companies'}
+                  titleId={'dashboard.totalGuestCompanies.title'}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/inventory/my-products'}
+                  icon={<Package />}
+                  data={companyProductsCount}
+                  title='Total Products'
+                  titleId='dashboard.totalProducts.title'
+                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/inventory/my-listings'}
+                  icon={<Layers />}
+                  data={productOffersValue && Math.round(productOffersValue)}
+                  title={'Total Inventory Count'}
+                  titleId={'dashboard.totalInventoryCount.title'}
+                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
+                />
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/settings/users'}
+                  icon={<User />}
+                  data={usersCount}
+                  title='Total Users Count'
+                  titleId='dashboard.totalUsersCount.title'
+                  styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
+
+              </Grid.Column>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/marketplace/listings'}
+                  icon={<DollarSign />}
+                  data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
+                  title={'Total Sales'}
+                  titleId={'dashboard.totalSales.title'}
+                  styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
+                  isLastSummary
+                />
+              </Grid.Column>
+            </Grid.Row>
+          </>
+        )}
+
+        <Grid.Row>
+          {isAdmin && !takeover
+            ? (
+              <>
+                <Grid.Column width={10}>
+                  <DivContainerGraph>
+                    <Tab
+                      style={{ padding: '0 20px 0 20px' }}
+                      className='inventory-sidebar tab-menu flex stretched'
+                      menu={{ secondary: true, pointing: true }}
+                      activeIndex={this.state.activeTab}
+                      panes={panes}
+                    />
+                  </DivContainerGraph>
+                </Grid.Column>
+                <Grid.Column width={5}>
+                  <PieGraph
+                    innerRadius='30%'
+                    isCurrency={true}
+                    data={top10ProductGroups}
+                    title='POPULAR PRODUCTS'
+                    titleId='dasboard.productsPopular.title'
+                  />
+                </Grid.Column>
               </>
-            )}
-          </Grid.Column>
+            ) : (
+            <Grid.Column width={15}>
+              <DivContainerGraph>
+                <Tab
+                  style={{ padding: '0 20px 0 20px' }}
+                  className='inventory-sidebar tab-menu flex stretched'
+                  menu={{ secondary: true, pointing: true }}
+                  activeIndex={this.state.activeTab}
+                  panes={panes}
+                />
+              </DivContainerGraph>
+            </Grid.Column>
+            )
+          }
         </Grid.Row>
         {isAdmin && !takeover ? (
           <Grid.Row>
@@ -1129,19 +1245,6 @@ class Dashboard extends Component {
                 />
               </Grid.Column>
             ) : null}
-          </Grid.Row>
-        ) : null}
-        {isAdmin && !takeover ? (
-          <Grid.Row>
-            <Grid.Column width={5}>
-              <PieGraph
-                innerRadius='30%'
-                isCurrency={true}
-                data={top10ProductGroups}
-                title='POPULAR PRODUCTS'
-                titleId='dasboard.productsPopular.title'
-              />
-            </Grid.Column>
           </Grid.Row>
         ) : null}
       </CustomGrid>
