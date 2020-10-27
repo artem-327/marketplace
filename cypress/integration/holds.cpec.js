@@ -1,6 +1,6 @@
 context("Holds tests", () => {
 
-    let warehouseFilter = [{"operator": "EQUALS", "path": "ProductOffer.warehouse.id", "values": [3]}]
+    let warehouseFilter = [{"operator": "EQUALS", "path": "ProductOffer.warehouse.id", "values": [9]}]
     let warehouseOffer = null
     let holdId = null
     const userJSON1 = require('../fixtures/user.json')
@@ -68,8 +68,11 @@ context("Holds tests", () => {
     })
 
     it("Approve hold", () => {
+        cy.waitForUI()
         cy.get(".user-menu-wrapper").click()
         cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
+        cy.waitForUI()
 
         cy.FElogin(userJSON2.email, userJSON2.password)
 
@@ -99,7 +102,7 @@ context("Holds tests", () => {
 })
 
     it("Order a placed hold", () => {
-        cy.contains("HOLDS").click()
+        cy.visit("/marketplace/holds")
         cy.wait("@holdLoading", {timeout: 30000})
 
         cy.openElement(holdId,1)

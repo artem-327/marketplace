@@ -13,7 +13,6 @@ context("Prodex Global Price", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", {timeout: 100000})
-        cy.get('[data-test=navigation_menu_inventory_global_price_book_drpdn]').click()
     })
 
     after(function () {
@@ -27,7 +26,7 @@ context("Prodex Global Price", () => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
-        cy.contains("Global Price Book").click()
+        cy.get('[data-test=navigation_menu_inventory_global_price_book_drpdn]').click()
 
         cy.wait("@rulesLoading")
         cy.waitForUI()
@@ -50,7 +49,7 @@ context("Prodex Global Price", () => {
             cy.turnOnGlobalBroadcasting(token)
         })
 
-        cy.contains("Global Price Book").click()
+        cy.get('[data-test=navigation_menu_inventory_global_price_book_drpdn]').click()
 
         cy.wait("@rulesLoading")
         cy.waitForUI()
@@ -73,7 +72,7 @@ context("Prodex Global Price", () => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
-        cy.contains("Global Price Book").click()
+        cy.get('[data-test=navigation_menu_inventory_global_price_book_drpdn]').click()
 
         cy.wait("@rulesLoading")
         cy.waitForUI()
@@ -110,7 +109,7 @@ context("Prodex Global Price", () => {
             cy.turnOffGlobalBroadcasting(token)
         })
 
-        cy.contains("Global Price Book").click()
+        cy.get('[data-test=navigation_menu_inventory_global_price_book_drpdn]').click()
 
         cy.wait("@rulesLoading")
         cy.waitForUI()

@@ -103,7 +103,6 @@ context("Permissions tests",() => {
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
-        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
         cy.wait('@loading')
         cy.contains("No records found.")
 
@@ -140,7 +139,7 @@ context("Permissions tests",() => {
         cy.get("[data-test='navigation_menu_settings_drpdn']").click()
         cy.get("[data-test='navigation_settings_warehouses_drpdn']").should('not.exist')
 
-        cy.get("[data-test='navigation_settings_users_drpdn']").click()
+        //cy.get("[data-test='navigation_settings_users_drpdn']").click()
         cy.waitForUI()
         cy.wait('@loading')
         cy.get(':nth-child(1) > .actions').should('be.visible')

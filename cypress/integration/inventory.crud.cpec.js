@@ -1,5 +1,6 @@
 context("Inventory CRUD", () => {
     let filter = null
+    let filterQuantity = null
     let productName = null
     const userJSON = require('../fixtures/user.json')
 
@@ -13,6 +14,7 @@ context("Inventory CRUD", () => {
 
                 productName = helper
                 filter = [{ "operator": "EQUALS", "path": "ProductOffer.companyProduct.id", "values": [idHelper] }]
+                filterQuantity = [{ "operator": "EQUALS", "path": "ProductOffer.companyProduct.id", "values": [idHelper] }, { "operator": "GREATER_THAN_OR_EQUAL_TO", "path": "ProductOffer.quantity", "values": ["10"] }]
             })
         })
     })
@@ -30,6 +32,19 @@ context("Inventory CRUD", () => {
         cy.visit("/inventory/my-listings")
         cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.url().should("include", "inventory")
+    })
+
+    after(function () {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'product-offers', itemId)
+            })
+            cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'product-offers', itemId)
+            })
+        })
     })
 
     it("Create item", () => {

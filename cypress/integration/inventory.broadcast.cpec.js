@@ -70,7 +70,9 @@ context("Inventory Broadcasting", () => {
 
         //Assert saved
         cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click()
+        cy.waitForUI()
         cy.get("[data-test=action_" + offerId + "_0]").click()
+        cy.waitForUI()
         cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "No")
     })
 

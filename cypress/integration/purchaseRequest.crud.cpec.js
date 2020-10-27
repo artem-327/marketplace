@@ -9,7 +9,7 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("POST", "/prodex/api/purchase-requests").as("createRequest")
-        cy.route("POST", "/prodex/api/purchase-requests/other/datagrid?type=product").as("wantedBoardLoading")
+        cy.route("POST", "/prodex/api/purchase-requests/other/datagrid?**").as("wantedBoardLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
 
@@ -19,8 +19,16 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.url().should("include", "inventory")
 
         cy.contains("Wanted Board").click()
-        cy.get('[data-test=navigation_wanted_board_listings_drpdn]').click()
         cy.wait("@wantedBoardLoading", { timeout: 30000 })
+    })
+
+    after(function () {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.getFirstEntityWithFilter(token, 'purchase-requests/own', purchaseRequestFilter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'purchase-requests/id', itemId)
+            })
+        })
     })
 
     it("Create new Purchase Request", () => {
@@ -41,7 +49,7 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.get('[data-test=navigation_wanted_board_bids_received_drpdn]').click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstPurchaseRequestWithFilter(token, purchaseRequestFilter).then(itemId => {
+            cy.getFirstEntityWithFilter(token, 'purchase-requests/own', purchaseRequestFilter).then(itemId => {
                 cy.openElement(itemId, 0)
             })
         })
@@ -54,7 +62,7 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.contains("Success")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstPurchaseRequestWithFilter(token, purchaseRequestFilter).then(itemId => {
+            cy.getFirstEntityWithFilter(token, 'purchase-requests/own', purchaseRequestFilter).then(itemId => {
                 cy.openElement(itemId, 0)
             })
         })
@@ -65,7 +73,7 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.get('[data-test=navigation_wanted_board_bids_received_drpdn]').click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstPurchaseRequestWithFilter(token, purchaseRequestFilter).then(itemId => {
+            cy.getFirstEntityWithFilter(token, 'purchase-requests/own', purchaseRequestFilter).then(itemId => {
                 cy.openElement(itemId, 1)
             })
         })
