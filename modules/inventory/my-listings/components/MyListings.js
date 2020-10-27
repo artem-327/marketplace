@@ -26,7 +26,7 @@ import { InventoryFilter } from '~/modules/filter'
 
 const defaultHiddenColumns = [
   'productNumber',
-  'warehouse',
+  'manufacturer',
   'cost',
   'minOrderQuantity',
   'splits',
@@ -153,6 +153,17 @@ class MyListings extends Component {
     this.state = {
       columns: [
         {
+          name: 'broadcast',
+          title: (
+            <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          align: 'left',
+          sortPath: 'ProductOffer.broadcasted'
+        },
+        {
           name: 'actCol',
           title: ' ',
           width: 30,
@@ -252,17 +263,6 @@ class MyListings extends Component {
           width: 220
         },
         // { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #'>{(text) => text}</FormattedMessage>, width: 70 },
-        {
-          name: 'broadcast',
-          title: (
-            <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 100,
-          align: 'left',
-          sortPath: 'ProductOffer.broadcasted'
-        },
         {
           name: 'minOrderQuantity',
           title: (
