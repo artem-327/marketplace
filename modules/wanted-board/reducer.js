@@ -62,7 +62,8 @@ export default function reducer(state = initialState, action) {
     case AT.WB_FALSE_SECOND_PAGE: {
       return {
         ...state,
-        isSecondPage: false
+        isSecondPage: false,
+        matchingOfferInfo: null
       }
     }
 

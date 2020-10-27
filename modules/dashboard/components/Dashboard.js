@@ -925,7 +925,7 @@ class Dashboard extends Component {
                   }
                 />
                 <SummaryRectangle
-                  onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-products'}
+                  onClickUrl={isAdmin && !takeover ? '/operations/company-product-catalog' : '/inventory/my-products'}
                   icon={<Package />}
                   data={companyProductsCount}
                   title='Total Products'
@@ -936,7 +936,7 @@ class Dashboard extends Component {
             )}
 
             <SummaryRectangle
-              onClickUrl={'/settings/users'}
+              onClickUrl={isAdmin && !takeover ? '/companies/users' : '/settings/users'}
               icon={<User />}
               data={usersCount}
               title='Total Users Count'
@@ -1013,7 +1013,7 @@ class Dashboard extends Component {
                 <PieGraph
                   innerRadius='30%'
                   data={top10CompanyProductsByQuantitySales}
-                  title='PRODUCTS BY QUANTITY'
+                  title='PRODUCTS SOLD BY QUANTITY'
                   titleId='dasboard.productsQuantity.title'
                 />
               </Grid.Column>
@@ -1024,7 +1024,7 @@ class Dashboard extends Component {
                   innerRadius='30%'
                   isCurrency={true}
                   data={top10CompanyProductsByValueSales}
-                  title='PRODUCTS BY VALUE'
+                  title='PRODUCTS SOLD BY VALUE'
                   titleId='dasboard.productsValue.title'
                 />
               </Grid.Column>

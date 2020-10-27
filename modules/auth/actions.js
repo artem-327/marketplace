@@ -113,7 +113,7 @@ export function login(username, password) {
           urlPage = '/settings/company-details'
         }
         if (isOrderOperator || identity.roles.find(role => role.name === 'Echo Operator')) {
-          urlPage = '/operations'
+          urlPage = '/operations/orders'
         }
         if (
           !(
