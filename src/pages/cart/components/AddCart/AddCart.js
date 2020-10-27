@@ -279,14 +279,14 @@ class AddCart extends Component {
     }
   }
 
-  createOrder = async () => {
+  createOrder = async (holdButton) => {
     if (checkToken(this.props)) return
     const { addCartItem, createHold } = this.props
     let { sidebar } = this.props
     let { pkgAmount, id, isHoldRequest } = sidebar
 
     try {
-      if (isHoldRequest) {
+      if (isHoldRequest || holdButton) {
         const params = {
           expirationHours: this.state.expirationHours,
           pkgAmount,
@@ -784,11 +784,22 @@ class AddCart extends Component {
                     {text => text}
                   </FormattedMessage>
                 </Button>
+                {!isHoldRequest && (
+                  <Button
+                    disabled={!canProceed}
+                    primary
+                    onClick={() => this.props.sidebarChanged({isOpen: true, isHoldRequest: true})}
+                    data-test='add_cart_create_order_btn'>
+                    <FormattedMessage id='hold.hold' defaultMessage='Hold'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button>
+                )}
                 {!isEdit ? (
                   <Button
                     disabled={!canProceed}
                     primary
-                    onClick={this.createOrder}
+                    onClick={() => this.createOrder(false)}
                     data-test='add_cart_create_order_btn'>
                     <FormattedMessage id='global.continue' defaultMessage='Continue'>
                       {text => text}
