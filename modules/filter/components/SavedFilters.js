@@ -28,10 +28,14 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { savedFilterValidation } from '../constants/validation'
 import { groupFilters } from '../constants/filter'
 import Tooltip from '~/components/tooltip'
+import ErrorFocus from '~/components/error-focus'
 
 const StyledDimmer = styled(Dimmer)`
-  background: rgb(237, 238, 242) !important;
   margin: 1rem 0;
+
+  &.dimmer {
+    background: none !important;
+  }
 `
 
 const StyledGrid = styled(Grid)`
