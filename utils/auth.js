@@ -1,5 +1,6 @@
 import Cookie from 'js-cookie'
 import api from '~/api'
+import Router from 'next/router'
 
 export const setAuth = async auth => {
   let now = new Date()
@@ -14,7 +15,7 @@ export const unsetAuth = () => {
   Cookie.remove('auth')
 
   // to support logging out from all windows
-  window.localStorage.setItem('logout', Date.now())
+  //window.localStorage.setItem('logout', Date.now())
   window.localStorage.removeItem('state')
 }
 
@@ -50,19 +51,23 @@ export async function refreshToken() {
   const auth = Cookie.getJSON('auth')
   if (!auth) return
   // if (auth.expires - 60000 > new Date().getTime()) return
-
-  const { data } = await api.post(
-    '/prodex/oauth/token',
-    `grant_type=refresh_token&refresh_token=${auth.refresh_token}`,
-    {
-      headers: {
-        Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs',
-        'Content-Type': 'application/x-www-form-urlencoded'
+  try {
+    const { data } = await api.post(
+      '/prodex/oauth/token',
+      `grant_type=refresh_token&refresh_token=${auth.refresh_token}`,
+      {
+        headers: {
+          Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       }
-    }
-  )
+    )
 
-  await setAuth(data)
+    await setAuth(data)
 
-  return data
+    return data
+  } catch (error) {
+    Router.push('/auth/logout')
+    return ''
+  }
 }

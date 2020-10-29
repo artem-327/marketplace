@@ -46,7 +46,9 @@ customAxios.interceptors.response.use(
       response: { status, config }
     } = error
 
-    if (status === 401) {
+    const hasWindow = typeof window !== 'undefined'
+
+    if (status === 401 || status === 403) {
       return resetTokenAndReattemptRequest(error)
     }
 
@@ -69,7 +71,6 @@ customAxios.interceptors.response.use(
       console.error(error)
     }
 
-    const hasWindow = typeof window !== 'undefined'
     // const errData = error && error.response && error.response.data
     if (
       getSafe(() => error.request.responseType, '') === 'blob' &&
