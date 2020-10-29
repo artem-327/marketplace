@@ -42,12 +42,13 @@ class FormikInput extends Component {
                 clearable
                 onChange={(e, { name, value }) => {
                   //automatic adjust date in input based on format date
-                  const years = moment(value, getLocaleDateFormat()).year()
                   const canAutomaticallyAdjustDateFormat =
-                    years > 1000 && value.length >= 8 && moment(field.value, getLocaleDateFormat()).isValid()
-                  const val = canAutomaticallyAdjustDateFormat
-                    ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
-                    : value
+                    value.length >= 8 && moment(value, getLocaleDateFormat()).isValid()
+                  const years = canAutomaticallyAdjustDateFormat ? moment(value, getLocaleDateFormat()).year() : ''
+                  const val =
+                    canAutomaticallyAdjustDateFormat && years > 1900
+                      ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
+                      : value
                   setFieldValue(form, name, val, true)
                   Promise.resolve().then(() => {
                     onChange && onChange(e, { name, value: val })
