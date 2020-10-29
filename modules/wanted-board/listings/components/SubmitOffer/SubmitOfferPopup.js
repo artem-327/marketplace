@@ -447,10 +447,7 @@ class SubmitOfferPopup extends React.Component {
               }
             }
 
-            if (
-              getSafe(() => matchingOfferInfo.minimumPackageAmount, 0) < sumPkgAmount &&
-              values.fulfillmentType === 'PARTIAL'
-            ) {
+            if (values.fulfillmentType === 'PARTIAL') {
               pkgAmount = {
                 pkgAmount: Yup.number()
                   .positive(errorMessages.positive)
@@ -459,7 +456,7 @@ class SubmitOfferPopup extends React.Component {
                   .test(
                     'is_over_max',
                     errorMessages.maximum(matchingOfferInfo.minimumPackageAmount),
-                    () => sumPkgAmount < matchingOfferInfo.minimumPackageAmount
+                    () => sumPkgAmount <= matchingOfferInfo.minimumPackageAmount
                   )
               }
             } else if (getSafe(() => matchingOfferInfo.maximumPackageAmount, 0) < sumPkgAmount) {
