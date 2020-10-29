@@ -2136,6 +2136,40 @@ i.file {
 
             &:nth-last-child(2) {
               border: 0 none !important;
+
+              .flex-row.justify-content-end {
+                padding-right: 10px !important;
+              }
+            }
+
+            .flex-row {
+
+              > span {
+                display: flex;
+                flex-flow: row nowrap;
+                width: 100% !important;
+
+                > [class*="header-title"] {
+                  flex-grow: 0;
+                  flex-shrink: 1;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+
+                > i {
+                  flex-grow: 0;
+                  flex-shrink: 0;
+                  margin-right: 0;
+                }
+              }
+
+              &.justify-content-end > span {
+                justify-content: flex-end;
+              }
+
+              &.justify-content-center > span {
+                justify-content: center;
+              }
             }
           }
         }
