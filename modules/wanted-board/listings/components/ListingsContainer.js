@@ -14,34 +14,29 @@ import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import Listings from './Listings'
+import { getProductName } from '../../constants/constants'
+
 
 function mapStateToProps(store, { datagrid }) {
-  const casNumberAndName = casProduct => {
-    if (!casProduct || !getSafe(() => casProduct.casNumber, false) || !getSafe(() => casProduct.casIndexName, false))
-      return 'N/A'
-    else return `${casProduct.casNumber} ${casProduct.casIndexName}`
-  }
   return {
     ...store.wantedBoard,
-    type: store.wantedBoard.wantedBoardType,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     openSidebar: getSafe(() => store.wantedBoard.openSidebar, false),
     rows: datagrid.rows.map(row => {
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
-      return {
-        id: row.id,
-        rawData: row,
-        product: getSafe(
-          () => row.element.productGroup.name,
-          <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
-        ),
-        casNumber: casNumberAndName(getSafe(() => row.element.casProduct, '')),
-        assay: (
+      const assay = getSafe(() => row.element.assayMin, null) || getSafe(() => row.element.assayMax, null)
+        ? (
           <FormattedAssay
             min={getSafe(() => row.element.assayMin, null)}
             max={getSafe(() => row.element.assayMax, null)}
-          />
-        ),
+          />)
+        : (<FormattedMessage id='wantedBoard.any' defaultMessage='Any' />)
+
+      return {
+        id: row.id,
+        rawData: row,
+        product: getProductName(row.element),
+        assay,
         packaging:
           row.packagingTypes && row.packagingTypes.length ? (
             <ArrayToFirstItem values={row.packagingTypes.map(d => d.name)} />

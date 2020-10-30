@@ -36,8 +36,6 @@ export const initialState = {
   searchedCasNumbersLoading: false,
   openedSubmitOfferPopup: false,
   popupValues: null,
-  wantedBoardType: 'product',
-  myRequestedItemsType: 'product',
   tableHandlersFiltersListings: null,
   tableHandlersFiltersBidsReceived: null,
   tableHandlersFiltersBidsSent: null,
@@ -90,19 +88,6 @@ export default function reducer(state = initialState, action) {
         openSidebar: false,
         activeTab: '',
         sidebarValues: null
-      }
-    }
-
-    case AT.WB_SET_WANTED_BOARD_TYPE: {
-      return {
-        ...state,
-        wantedBoardType: payload
-      }
-    }
-    case AT.WB_SET_MY_REQUESTED_ITEM_TYPE: {
-      return {
-        ...state,
-        myRequestedItemsType: payload
       }
     }
 

@@ -12,7 +12,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { SubmitOffer } from './SubmitOffer/index'
 import { PlusCircle } from 'react-feather'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
+import { CustomRowDiv } from '../../constants/layout'
 import { getSafe } from '~/utils/functions'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
@@ -21,7 +21,7 @@ class Listings extends Component {
     super(props)
 
     this.state = {
-      columnsProduct: [
+      columns: [
         {
           name: 'product',
           title: (
@@ -33,116 +33,6 @@ class Listings extends Component {
           actions: this.getActions()
           //align: 'right',
           //sortPath: 'ProductOffer.pkgAvailable'
-        },
-        {
-          name: 'casNumber',
-          title: (
-            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 225,
-          disabled: true
-        },
-        {
-          name: 'assay',
-          title: (
-            <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 130,
-          disabled: true
-        },
-        {
-          name: 'packaging',
-          title: (
-            <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150
-        },
-        /*
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 420
-      },
-      */
-        {
-          name: 'form',
-          title: (
-            <FormattedMessage id='wantedBoard.form' defaultMessage='Form'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'fobPrice',
-          title: (
-            <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150
-        },
-        {
-          name: 'quantity',
-          title: (
-            <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 180
-        },
-        {
-          name: 'neededBy',
-          title: (
-            <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'createdAt',
-          title: (
-            <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120,
-          sortPath: 'PurchaseRequest.createdAt'
-        }
-      ],
-      columnsChemical: [
-        {
-          name: 'product',
-          title: (
-            <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 290,
-          disabled: true
-          //align: 'right',
-          //sortPath: 'ProductOffer.pkgAvailable'
-        },
-        {
-          name: 'casNumber',
-          title: (
-            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 225,
-          actions: this.getActions()
         },
         {
           name: 'assay',
@@ -217,8 +107,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 120,
-          sortPath: 'PurchaseRequest.createdAt',
-          disabled: true
+          sortPath: 'PurchaseRequest.createdAt'
         }
       ],
       selectedRows: [],
@@ -255,16 +144,6 @@ class Listings extends Component {
     const { datagrid } = this.props
     datagrid && datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
-
-  handleProductChemicalSwitch = data => {
-    const { datagrid } = this.props
-    this.props.setWantedBoardType(data)
-    datagrid.clear()
-    const filter = {
-      ...this.state.filterValues
-    }
-    this.handleFiltersValue(filter)
-  }
 
   handleFilterChangeInputSearch = (e, data) => {
     if (!data) return
@@ -308,11 +187,10 @@ class Listings extends Component {
       editedId,
       sidebarDetailTrigger,
       openedSubmitOfferPopup,
-      type,
       popupValues,
       tutorialCompleted
     } = this.props
-    const { columnsProduct, columnsChemical, filterValues } = this.state
+    const { columns, filterValues } = this.state
     let { formatMessage } = intl
 
     return (
@@ -336,26 +214,6 @@ class Listings extends Component {
             </div>
             <div>
               <div className='column'>
-                <ProductChemicalSwitch className={type}>
-                  <Button
-                    attached='left'
-                    onClick={() => this.handleProductChemicalSwitch('product')}
-                    data-test='wanted_board_product_switch_btn'>
-                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                  <Button
-                    attached='right'
-                    onClick={() => this.handleProductChemicalSwitch('chemical')}
-                    data-test='wanted_board_chemical_switch_btn'>
-                    <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </ProductChemicalSwitch>
-              </div>
-              <div className='column'>
                 <Button
                   className='secondary'
                   primary
@@ -373,14 +231,13 @@ class Listings extends Component {
         </div>
         <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
-            key={type}
-            tableName={`wanted_board_${type}_grid`}
+            tableName={'wanted_board_listings_grid'}
             {...datagrid.tableProps}
             rows={rows}
-            columns={type === 'product' ? columnsProduct : columnsChemical}
+            columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
-            columnActions={type === 'product' ? 'product' : 'casNumber'}
+            columnActions={'product'}
           />
         </div>
       </>

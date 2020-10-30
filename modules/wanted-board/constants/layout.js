@@ -86,47 +86,6 @@ export const ControlPanel = styled.div`
   }
 `
 
-export const ProductChemicalSwitch = styled.div`
-  margin-right: 15px;
-  display: inline-block;
-  &.product {
-    .ui.button {
-      width: 110px;
-      padding-left: 1.071428571em;
-      padding-right: 1.071428571em;
-      text-align: center;
-    }
-    .ui.left.button {
-      border: solid 1px #dee2e6;
-      background-color: #edeef2;
-      color: #20273a;
-    }
-    .ui.right.button {
-      border: solid 1px #dee2e6;
-      background-color: #ffffff;
-      color: #848893;
-    }
-  }
-  &.chemical {
-    .ui.button {
-      width: 110px;
-      padding-left: 1.071428571em;
-      padding-right: 1.071428571em;
-      text-align: center;
-    }
-    .ui.left.button {
-      border: solid 1px #dee2e6;
-      background-color: #ffffff;
-      color: #848893;
-    }
-    .ui.right.button {
-      border: solid 1px #dee2e6;
-      background-color: #edeef2;
-      color: #20273a;
-    }
-  }
-`
-
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;

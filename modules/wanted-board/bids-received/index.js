@@ -2,15 +2,14 @@ import BidsReceivedContainer from './components/BidsReceivedContainer'
 import { DatagridProvider } from '~/modules/datagrid'
 
 export const BidsReceived = props => {
-  const type = props && props.type && props.type.toUpperCase()
   const apiConfig = {
-    url: `/prodex/api/purchase-requests/own/datagrid?type=${type}`,
+    url: '/prodex/api/purchase-requests/own/datagrid',
     searchToFilter: v =>
       v && v.searchInput
         ? {
-            url: `/prodex/api/purchase-requests/own/datagrid?type=${type}&pattern=${encodeURIComponent(v.searchInput)}`
+            url: `/prodex/api/purchase-requests/own/datagrid?pattern=${encodeURIComponent(v.searchInput)}`
           }
-        : { url: `/prodex/api/purchase-requests/own/datagrid?type=${type}` }
+        : { url: '/prodex/api/purchase-requests/own/datagrid' }
   }
   return (
     <>

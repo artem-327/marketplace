@@ -28,7 +28,6 @@ import { currency } from '~/constants/index'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { PlusCircle, ArrowLeft, DownloadCloud } from 'react-feather'
 import { StyledSwitch } from '../../constants'
-import { ProductChemicalSwitch } from '../../../wanted-board/constants/layout'
 
 const PositionHeaderSettings = styled.div`
   position: relative;

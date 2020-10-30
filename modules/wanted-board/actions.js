@@ -166,16 +166,6 @@ export function handleFiltersValue(value) {
   }
 }
 
-export const setWantedBoardType = type => ({
-  type: AT.WB_SET_WANTED_BOARD_TYPE,
-  payload: type
-})
-
-export const setMyRequestedItemsType = type => ({
-  type: AT.WB_SET_MY_REQUESTED_ITEM_TYPE,
-  payload: type
-})
-
 export const editMyPurchaseOffer = (id, body) => ({
   type: AT.WB_EDIT_MY_PURCHASE_OFFER,
   payload: api.editMyPurchaseOffer(id, body)

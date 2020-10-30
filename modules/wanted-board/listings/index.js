@@ -2,10 +2,9 @@ import ListingsContainer from './components/ListingsContainer'
 import { DatagridProvider } from '~/modules/datagrid'
 
 export const Listings = props => {
-  const type = props && props.type && props.type.toUpperCase()
 
   const urlApiConfig = {
-    url: `/prodex/api/purchase-requests/other/datagrid?type=${type}`,
+    url: '/prodex/api/purchase-requests/other/datagrid',
     searchToFilter: v => {
       let filters = { or: [], and: [], url: '' }
       if (v && v.filterTags && v.filterTags.length > 0) {
@@ -18,7 +17,7 @@ export const Listings = props => {
         })
       }
       if (v && v.filterName) {
-        filters.url = `/prodex/api/purchase-requests/other/datagrid?type=${type}&pattern=${encodeURIComponent(
+        filters.url = `/prodex/api/purchase-requests/other/datagrid?pattern=${encodeURIComponent(
           v.filterName
         )}`
       }

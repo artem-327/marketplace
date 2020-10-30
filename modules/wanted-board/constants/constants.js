@@ -1,6 +1,26 @@
 import { FormattedMessage } from "react-intl"
 import React from "react"
+import { getSafe } from '~/utils/functions'
 
+export const getProductName = element => {
+  const productName = getSafe(() => element.productGroup.name, '')
+  const casProductNumber = getSafe(() => element.casProduct.casNumber, '')
+  const casProductName = getSafe(() => element.casProduct.casIndexName, '')
+  const casProduct = `${casProductNumber ? casProductNumber + ' ' : ''}${casProductName}`
+
+  return productName && casProduct
+    ? (
+      <>
+        {`${productName} `}
+        <FormattedMessage id='global.or' defaultMessage='or' />
+        {` ${casProduct}`}
+      </>)
+    : (productName ? productName : (
+      casProduct
+        ? casProduct
+        : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
+    ))
+}
 
 export const listFrequency = [
   {
