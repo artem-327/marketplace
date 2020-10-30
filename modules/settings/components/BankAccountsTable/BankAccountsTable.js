@@ -355,7 +355,7 @@ class BankAccountsTable extends Component {
           id: 'global.delete',
           defaultMessage: 'Delete'
         }),
-        callback: row => {
+        callback: row =>
           confirm(
             formatMessage({
               id: 'confirm.deleteBankAccount',
@@ -376,7 +376,6 @@ class BankAccountsTable extends Component {
               console.error(e)
             }
           })
-        }
       },
       {
         text: formatMessage({
