@@ -130,7 +130,7 @@ function prepareDetail(data, type) {
     proNumber: 'N/A', // ! ! TBD
     quantityOrdered: orderItems.map(d =>
       d.packagingSize && d.packagingUnit
-        ? `${d.pkgAmount * d.packagingSize} ${d.packagingUnit.nameAbbreviation}`
+        ? `${Number.parseFloat(d.pkgAmount * d.packagingSize).toFixed(2)} ${d.packagingUnit.nameAbbreviation}`
         : 'N/A'
     ),
     refundDate: typeof data.refundDate !== 'undefined' ? moment(data.refundDate).toDate().toLocaleString() : null,
