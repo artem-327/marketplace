@@ -279,7 +279,7 @@ class AddCart extends Component {
     }
   }
 
-  createOrder = async (holdButton) => {
+  createOrder = async holdButton => {
     if (checkToken(this.props)) return
     const { addCartItem, createHold } = this.props
     let { sidebar } = this.props
@@ -435,7 +435,7 @@ class AddCart extends Component {
                 <Header>
                   <FormattedMessage id='cart.InfoHeader' defaultMessage='1. Product Information' />
 
-                  {false &&(
+                  {false && (
                     <CustomSpanShowMore
                       positive={this.state.showMore}
                       onClick={() => {
@@ -784,18 +784,17 @@ class AddCart extends Component {
                     {text => text}
                   </FormattedMessage>
                 </Button>
-                {!isHoldRequest && (
+                {isHoldRequest ? (
                   <Button
                     disabled={!canProceed}
                     primary
-                    onClick={() => this.props.sidebarChanged({isOpen: true, isHoldRequest: true})}
-                    data-test='add_cart_create_order_btn'>
-                    <FormattedMessage id='hold.hold' defaultMessage='Hold'>
+                    onClick={this.createOrder}
+                    data-test='add_cart_create_request_hold_btn'>
+                    <FormattedMessage id='global.requestHold' defaultMessage='Request Hold'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
-                )}
-                {!isEdit ? (
+                ) : !isEdit ? (
                   <Button
                     disabled={!canProceed}
                     primary
@@ -1835,19 +1834,20 @@ class AddCart extends Component {
         onHide={e => {
           try {
             if (
-              (e &&
-                !(e.path[0] instanceof HTMLTableCellElement) &&
-                !(e.path[1] instanceof HTMLTableCellElement) &&
-                e.target &&
-                e.target.className &&
-                typeof e.target.className.includes !== 'undefined' &&
-                e.target.className.includes('js-focus-visible')) ||
-              (e &&
-                e.target &&
-                e.target.className &&
-                typeof e.target.className.includes !== 'undefined' &&
-                !(e.target.className.includes('item') || e.target.className.includes('text'))) ||
-              !(e.target.nodeName === 'svg' || e.target.nodeName === 'circle' || e.target.nodeName === 'SPAN')
+              (!(getSafe(() => e.path[0], '') instanceof HTMLTableCellElement) &&
+                !(getSafe(() => e.path[1], '') instanceof HTMLTableCellElement) &&
+                typeof getSafe(() => e.target.className.includes, '') !== 'undefined' &&
+                getSafe(() => e.target.className, '').includes('js-focus-visible')) ||
+              (typeof getSafe(() => e.target.className.includes, '') !== 'undefined' &&
+                !(
+                  getSafe(() => e.target.className, '').includes('item') ||
+                  getSafe(() => e.target.className, '').includes('text')
+                )) ||
+              !(
+                getSafe(() => e.target.nodeName, '') === 'svg' ||
+                getSafe(() => e.target.nodeName, '') === 'circle' ||
+                getSafe(() => e.target.nodeName, '') === 'SPAN'
+              )
             ) {
               sidebarChanged({ isOpen: false, isHoldRequest: false })
             }
