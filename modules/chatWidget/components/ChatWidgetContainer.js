@@ -20,9 +20,8 @@ function mapStateToProps(state) {
 
     if (
       adminTab === 'Product Catalog' ||
-      ((getSafe(() => state.productsAdmin.currentEditForm, false) ||
-        getSafe(() => state.productsAdmin.currentAddForm, false)) &&
-        getSafe(() => state.productsAdmin.currentTab.name, false) === 'Product Catalog') ||
+      getSafe(() => state.productsAdmin.currentEditForm, false) ||
+      getSafe(() => state.productsAdmin.currentAddForm, false) ||
       getSafe(() => state.cart.isOpenSidebar, false)
     )
       return 500
@@ -38,8 +37,7 @@ function mapStateToProps(state) {
       getSafe(() => state.simpleAdd.isOpenPopup, false) ||
       getSafe(() => state.companyProductInfo.isOpen, false) ||
       getSafe(() => state.companiesAdmin.isOpenSidebar, false) ||
-      (getSafe(() => state.settings.isOpenPopup, false) &&
-        (settingsTab === 'users' || settingsTab === 'documents')) ||
+      (getSafe(() => state.settings.isOpenPopup, false) && (settingsTab === 'users' || settingsTab === 'documents')) ||
       adminTab === 'Users' ||
       adminTab === 'Companies' ||
       getSafe(() => state.manageGuests.isOpenPopup, false)

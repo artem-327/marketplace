@@ -279,14 +279,14 @@ class AddCart extends Component {
     }
   }
 
-  createOrder = async () => {
+  createOrder = async holdButton => {
     if (checkToken(this.props)) return
     const { addCartItem, createHold } = this.props
     let { sidebar } = this.props
     let { pkgAmount, id, isHoldRequest } = sidebar
 
     try {
-      if (isHoldRequest) {
+      if (isHoldRequest || holdButton) {
         const params = {
           expirationHours: this.state.expirationHours,
           pkgAmount,
@@ -430,63 +430,23 @@ class AddCart extends Component {
       <>
         <FlexContent basic>
           <Grid verticalAlign='top'>
-            <GridRow columns={1} style={{ padding: '30px 0 0 3px' }}>
-              <GridColumn style={{ padding: '0 30px' }}>
-                <Rectangle style={{ margin: '0', whiteSpace: 'normal' }}>
-                  <CustomDivTitle>
-                    <InfoIcon size={24} />
-                    <CustomDivInTitle>
-                      <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
-                    </CustomDivInTitle>
-                  </CustomDivTitle>
-                  <CustomDivContent>
-                    {paymentTerms === 'REGULAR' ? (
-                      <FormattedMessage
-                        id='buy.payment.netX.content'
-                        defaultMessage={`The payment terms of this product are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
-                        values={{
-                          value: <b>Net {paymentNetDays}</b>,
-                          days: <b>{paymentNetDays} days</b>
-                        }}
-                      />
-                    ) : paymentTerms === 'HALF_UPFRONT' ? (
-                      <FormattedMessage
-                        id='buy.payment.terms50.content'
-                        defaultMessage={`This product has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
-                        values={{
-                          value: <b>50/50</b>,
-                          percentage: <b>50%</b>,
-                          shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
-                        }}
-                      />
-                    ) : (
-                      <FormattedMessage
-                        id='buy.payment.terms100.content'
-                        defaultMessage={`This product has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
-                        values={{
-                          percentage: <b>100%</b>
-                        }}
-                      />
-                    )}
-                  </CustomDivContent>
-                </Rectangle>
-              </GridColumn>
-            </GridRow>
-            <GridRow className='action' columns={1}>
+            <GridRow className='action' columns={1} style={{ marginTop: '30px' }}>
               <GridColumn>
                 <Header>
                   <FormattedMessage id='cart.InfoHeader' defaultMessage='1. Product Information' />
 
-                  <CustomSpanShowMore
-                    positive={this.state.showMore}
-                    onClick={() => {
-                      this.setState(prevState => ({ showMore: !prevState.showMore }))
-                    }}
-                    data-test='cart_show_less_or_more'>
-                    <FormattedMessage id={`global.show${this.state.showMore ? 'Less' : 'More'}`}>
-                      {text => text}
-                    </FormattedMessage>
-                  </CustomSpanShowMore>
+                  {false && (
+                    <CustomSpanShowMore
+                      positive={this.state.showMore}
+                      onClick={() => {
+                        this.setState(prevState => ({ showMore: !prevState.showMore }))
+                      }}
+                      data-test='cart_show_less_or_more'>
+                      <FormattedMessage id={`global.show${this.state.showMore ? 'Less' : 'More'}`}>
+                        {text => text}
+                      </FormattedMessage>
+                    </CustomSpanShowMore>
+                  )}
                 </Header>
               </GridColumn>
             </GridRow>
@@ -540,7 +500,7 @@ class AddCart extends Component {
               </GridColumn>
               <GridColumn computer={10}>{offer.locationStr}</GridColumn>
             </GridRow>
-            {this.state.showMore && (
+            {(true || this.state.showMore) && (
               <>
                 <GridRow>
                   <GridColumn computer={6}>
@@ -764,6 +724,48 @@ class AddCart extends Component {
                 )}
               </GridColumn>
             </GridRow>
+            <GridRow columns={1} style={{ padding: '30px 0 0 3px', marginTop: '30px' }}>
+              <GridColumn style={{ padding: '0 30px' }}>
+                <Rectangle style={{ margin: '0', whiteSpace: 'normal' }}>
+                  <CustomDivTitle>
+                    <InfoIcon size={24} />
+                    <CustomDivInTitle>
+                      <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
+                    </CustomDivInTitle>
+                  </CustomDivTitle>
+                  <CustomDivContent>
+                    {paymentTerms === 'REGULAR' ? (
+                      <FormattedMessage
+                        id='buy.payment.netX.content'
+                        defaultMessage={`The payment terms of this product are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
+                        values={{
+                          value: <b>Net {paymentNetDays}</b>,
+                          days: <b>{paymentNetDays} days</b>
+                        }}
+                      />
+                    ) : paymentTerms === 'HALF_UPFRONT' ? (
+                      <FormattedMessage
+                        id='buy.payment.terms50.content'
+                        defaultMessage={`This product has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
+                        values={{
+                          value: <b>50/50</b>,
+                          percentage: <b>50%</b>,
+                          shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
+                        }}
+                      />
+                    ) : (
+                      <FormattedMessage
+                        id='buy.payment.terms100.content'
+                        defaultMessage={`This product has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
+                        values={{
+                          percentage: <b>100%</b>
+                        }}
+                      />
+                    )}
+                  </CustomDivContent>
+                </Rectangle>
+              </GridColumn>
+            </GridRow>
           </Grid>
         </FlexContent>
 
@@ -796,7 +798,7 @@ class AddCart extends Component {
                   <Button
                     disabled={!canProceed}
                     primary
-                    onClick={this.createOrder}
+                    onClick={() => this.createOrder(false)}
                     data-test='add_cart_create_order_btn'>
                     <FormattedMessage id='global.continue' defaultMessage='Continue'>
                       {text => text}

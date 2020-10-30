@@ -355,7 +355,6 @@ class BankAccountsTable extends Component {
           id: 'global.delete',
           defaultMessage: 'Delete'
         }),
-        hidden: () => method !== 'dwolla',
         callback: row =>
           confirm(
             formatMessage({

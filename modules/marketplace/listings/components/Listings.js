@@ -463,7 +463,6 @@ class Listings extends Component {
 
   getRowActions = () => {
     const {
-      openPopup,
       isMerchant,
       isCompanyAdmin,
       intl: { formatMessage }
@@ -474,7 +473,7 @@ class Listings extends Component {
         id: 'marketplace.info',
         defaultMessage: 'Info'
       }),
-      callback: row => openPopup(row)
+      callback: row => this.tableRowClicked(row.id, false, true)
     }
     const buttonRequestHold = {
       text: formatMessage({
@@ -505,7 +504,6 @@ class Listings extends Component {
     const {
       datagrid,
       intl,
-      openPopup,
       isMerchant,
       tutorialCompleted,
       isCompanyAdmin,
