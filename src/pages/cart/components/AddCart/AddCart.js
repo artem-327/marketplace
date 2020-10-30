@@ -784,7 +784,7 @@ class AddCart extends Component {
                     {text => text}
                   </FormattedMessage>
                 </Button>
-                {!isEdit && isHoldRequest ? (
+                {isHoldRequest ? (
                   <Button
                     disabled={!canProceed}
                     primary
