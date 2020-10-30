@@ -72,6 +72,9 @@ const DivTextLegend = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const DivNumberLegend = styled.div`
@@ -104,6 +107,15 @@ const DivAfterNumberLegend = styled.div`
   font-size: 14px;
   line-height: 2.14;
   color: #848893;
+`
+
+const DivTitle = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &:hover {
+    overflow: visible;
+  }
 `
 
 const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }) => {
@@ -143,7 +155,7 @@ const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }
                 </DivOvalLegend>
 
                 <DivTextLegend>
-                  <div>{atr.name.toUpperCase()}</div>
+                  <DivTitle>{atr.name.toUpperCase()}</DivTitle>
                   <DivValueLegend>
                     <DivNumberLegend>
                       {isCurrency ? (
