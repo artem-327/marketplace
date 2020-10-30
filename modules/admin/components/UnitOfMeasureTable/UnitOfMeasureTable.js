@@ -65,7 +65,11 @@ class UnitOfMeasureTable extends Component {
 
     const { formatMessage } = intl
     return [
-      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        hidden: row => row.system,
+        callback: row => openEditPopup(row)
+      },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
         callback: row =>
@@ -132,7 +136,8 @@ const mapStateToProps = (state, { datagrid }) => {
         nameAbbreviation: d.nameAbbreviation,
         measureType: d.measureType.name,
         measureTypeId: d.measureType.id,
-        ratioToBaseSiUnit: d.ratioToBaseSiUnit
+        ratioToBaseSiUnit: d.ratioToBaseSiUnit,
+        system: d.system
       }
     }),
     filterValue: state.admin.filterValue,
