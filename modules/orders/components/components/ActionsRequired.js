@@ -10,18 +10,13 @@ import { withToastManager } from 'react-toast-notifications'
 import { AlertCircle, AlertTriangle, CheckCircle, Info } from 'react-feather'
 import styled from 'styled-components'
 
-const ButtonsColumn = styled(Grid.Column)`
-  > *:first-child {
-    margin-right: -15px !important;
-  }
-`
-
 const ARButton = styled(Button)`
   float: right;
   width: auto !important;
   height: 40px;
   margin-left: 10px !important;
   margin-right: 0 !important;
+  margin-top: 10px !important;
   padding: 10px 26px !important;
   font-size: 14px !important;
   font-weight: 500 !important;
@@ -190,7 +185,7 @@ class ActionsRequired extends React.Component {
             </Header>
             <FormattedMessage id={description} />
           </Grid.Column>
-          <ButtonsColumn>
+          <Grid.Column>
             {buttons &&
               buttons.map(button => {
                 if (!button) return
@@ -202,7 +197,13 @@ class ActionsRequired extends React.Component {
                     fluid
                     size='large'
                     color={color ? color : null}
-                    className={(button.buttonType !== 'primary' && button.buttonType !== 'basic' && button.buttonType !== 'secondary' ? button.buttonType + ' ' : '') + getSafe(() => button.className, '')}
+                    className={
+                      (button.buttonType !== 'primary' &&
+                      button.buttonType !== 'basic' &&
+                      button.buttonType !== 'secondary'
+                        ? button.buttonType + ' '
+                        : '') + getSafe(() => button.className, '')
+                    }
                     onClick={() => button.onClick()}
                     disabled={typeof button.disabled !== 'undefined' ? button.disabled : false}
                     loading={typeof button.loading !== 'undefined' ? button.loading : false}
@@ -211,7 +212,7 @@ class ActionsRequired extends React.Component {
                   </ARButton>
                 )
               })}
-          </ButtonsColumn>
+          </Grid.Column>
         </Grid>
       </Segment>
     )
@@ -411,6 +412,7 @@ class ActionsRequired extends React.Component {
               : null}
             {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 0 // Confirmed && Pending
               ? this.renderSegment(null, 10, null, 'order.delivered.description', [
+                  requestCreditButton,
                   {
                     buttonType: 'primary',
                     onClick: this.acceptDelivery,
@@ -418,7 +420,6 @@ class ActionsRequired extends React.Component {
                     text: 'global.accept',
                     loading: isSending && !openedPopup
                   },
-                  requestCreditButton,
                   {
                     buttonType: 'danger',
                     className: 'outline',
