@@ -355,7 +355,7 @@ class BankAccountsTable extends Component {
           id: 'global.delete',
           defaultMessage: 'Delete'
         }),
-        callback: row =>
+        callback: row => {
           confirm(
             formatMessage({
               id: 'confirm.deleteBankAccount',
@@ -364,9 +364,9 @@ class BankAccountsTable extends Component {
             formatMessage(
               {
                 id: 'confirm.deleteItem',
-                defaultMessage: `Do you really want to delete ${row.rawData.name}?`
+                defaultMessage: `Do you really want to delete ${row.displayName}?`
               },
-              { item: row.rawData.name }
+              { item: row.displayName }
             )
           ).then(async () => {
             try {
@@ -376,6 +376,7 @@ class BankAccountsTable extends Component {
               console.error(e)
             }
           })
+        }
       },
       {
         text: formatMessage({
@@ -657,7 +658,8 @@ const mapStateToProps = state => {
               : r.bankAccountType
               ? r.bankAccountType
               : '',
-            bankName: r.institution_name || r.bankName
+            bankName: r.institution_name || r.bankName,
+            displayName: r.name
           }
         : {
             id: r.account_public_id || r.id,
@@ -671,7 +673,8 @@ const mapStateToProps = state => {
               : '',
             bankName: r.institution_name || r.bankName,
             statusLabel: displayStatus(r, preferredBankAccountId),
-            accountName: r.name || r.display_name || r.bankName // this is for search
+            accountName: r.name || r.display_name || r.bankName, // this is for search
+            displayName: r.display_name
           })
     })),
     preferredBankAccountId,
