@@ -447,10 +447,7 @@ class SubmitOfferPopup extends React.Component {
               }
             }
 
-            if (
-              getSafe(() => matchingOfferInfo.minimumPackageAmount, 0) < sumPkgAmount &&
-              values.fulfillmentType === 'PARTIAL'
-            ) {
+            if (values.fulfillmentType === 'PARTIAL') {
               pkgAmount = {
                 pkgAmount: Yup.number()
                   .positive(errorMessages.positive)
@@ -459,7 +456,7 @@ class SubmitOfferPopup extends React.Component {
                   .test(
                     'is_over_max',
                     errorMessages.maximum(matchingOfferInfo.minimumPackageAmount),
-                    () => sumPkgAmount < matchingOfferInfo.minimumPackageAmount
+                    () => sumPkgAmount <= matchingOfferInfo.minimumPackageAmount
                   )
               }
             } else if (getSafe(() => matchingOfferInfo.maximumPackageAmount, 0) < sumPkgAmount) {
@@ -729,6 +726,8 @@ class SubmitOfferPopup extends React.Component {
         total = Number(value) * Number(this.values.items[index].pricePerUOM)
       } else if (name.includes('pricePerUOM')) {
         total = Number(value) * Number(this.values.items[index].pkgAmount)
+      } else {
+        total = Number(this.values.items[index].pkgAmount) * Number(this.values.items[index].pricePerUOM)
       }
       this.setFieldValue(`items[${index}].total`, total)
     }
@@ -822,6 +821,7 @@ class SubmitOfferPopup extends React.Component {
         <DateInput
           name={`items[${index}].fulfilledAt`}
           inputProps={{
+            minDate: moment().add(1, 'days'),
             onChange: (e, { name, value }) => this.handleChange(e, { name, value: getStringISODate(value) }),
             clearable: true,
             fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'

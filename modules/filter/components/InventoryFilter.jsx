@@ -3,10 +3,11 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
-import { getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { removeEmpty } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
+import ErrorFocus from '~/components/error-focus'
 
 import {
   Button,
@@ -999,7 +1000,8 @@ class InventoryFilter extends Component {
       isFilterSaving,
       intl: { formatMessage },
       filterState,
-      onClose
+      onClose,
+      toastManager
     } = this.props
 
     const { savedFiltersActive, openedSaveFilter } = this.state
@@ -1150,7 +1152,36 @@ class InventoryFilter extends Component {
                           size='large'
                           className='secondary outline'
                           loading={isFilterSaving}
-                          onClick={async () => this.toggleSaveFilter()}
+                          onClick={async () => {
+                            const {validateForm, submitForm, values} = props
+
+                            validateForm().then(err => {
+                              const errors = Object.keys(err)
+                              if (errors.length && errors[0] !== 'isCanceled') {
+                                // Errors found
+                                submitForm() // to show errors
+                              } else {
+                                // No errors found
+                                const requestData = this.generateRequestData(values)
+                                if (requestData.filters.length) {
+                                  this.toggleSaveFilter()
+                                } else {
+                                  toastManager.add(
+                                    generateToastMarkup(
+                                      <FormattedMessage id='filter.saveEmptyFilterHeader' defaultMessage='Empty Filter' />,
+                                      <FormattedMessage
+                                        id='filter.saveEmptyFilter'
+                                        defaultMessage='There are no any filters configured'
+                                      />
+                                    ),
+                                    {
+                                      appearance: 'warning'
+                                    }
+                                  )
+                                }
+                              }
+                            })
+                          }}
                           data-test='filter_save_new'>
                           {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
                         </Button>
@@ -1183,6 +1214,7 @@ class InventoryFilter extends Component {
                   )
                 )}
               </BottomButtons>
+              <ErrorFocus />
             </Modal>
           )
         }}
