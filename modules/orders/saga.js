@@ -89,7 +89,7 @@ function* getOrder(action) {
     detail.detailType = action.payload.endpointType
     yield put({ type: AT.ORDERS_DETAIL_FETCH_SUCCESS, payload: detail })
   } catch (error) {
-    yield put({ type: AT.ORDERS_DETAIL_FETCH_FAILURE })
+    yield put({ type: AT.ORDERS_DETAIL_FETCH_FAILURE, payload: action.payload.endpointType })
   }
 }
 
@@ -119,7 +119,7 @@ function* reject(action) {
   }
 }
 
-export default function*() {
+export default function* () {
   yield takeLatest(AT.ORDERS_FETCH, getOrders) // Not used in Orders menu any more
   yield takeEvery(AT.ORDERS_DETAIL_FETCH, getOrder)
   yield takeEvery(AT.ORDER_CONFIRM_FETCH, confirm)
