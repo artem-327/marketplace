@@ -100,7 +100,7 @@ class CreateMenu extends Component {
           </span>
         }>
         <Dropdown.Menu data-test='navigation_menu_create_drpdn'>
-          {(isCompanyAdmin || isProductCatalogAdmin) && (
+          {!isClientCompanyAdmin && (isCompanyAdmin || isProductCatalogAdmin) && (
             <Dropdown.Item
               onClick={() => {
                 Router.push('/inventory/my-products')
@@ -111,7 +111,7 @@ class CreateMenu extends Component {
             </Dropdown.Item>
           )}
 
-          {(isCompanyAdmin || isMerchant || isProductOfferManager) && (
+          {!isClientCompanyAdmin && (isCompanyAdmin || isMerchant || isProductOfferManager) && (
             <Dropdown.Item
               onClick={() => {
                 Router.push('/inventory/my-listings')
