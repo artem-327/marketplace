@@ -15,11 +15,11 @@ import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
-
 import { CustomRowDiv } from '../../constants/layout'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import styled from 'styled-components'
 import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
+import SearchInput from '../../components/SearchInput'
 
 const CountedName = styled.div`
   display: flex;
@@ -215,8 +215,8 @@ class BidsReceived extends Component {
       selectedRows: [],
       pageNumber: 0,
       open: false,
-      filterValue: {
-        searchInput: ''
+      filterValues: {
+        searchByNamesAndCas: null
       },
       expandedRowIds: []
     }
@@ -244,32 +244,45 @@ class BidsReceived extends Component {
         }
       }
     }
+
     if (tableHandlersFiltersBidsReceived) {
-      this.setState({ filterValue: tableHandlersFiltersBidsReceived })
-      this.handleFiltersValue(tableHandlersFiltersBidsReceived)
+      this.setState({ filterValues: tableHandlersFiltersBidsReceived }, () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
+        }
+        this.handleFiltersValue(filter)
+      })
     } else {
-      this.handleFiltersValue(this.state.filterValue)
+      this.handleFiltersValue(this.state.filterValues)
     }
   }
 
   componentWillUnmount() {
-    this.props.handleVariableSave('tableHandlersFiltersBidsReceived', this.state.filterValue)
+    this.props.handleVariableSave('tableHandlersFiltersBidsReceived', this.state.filterValues)
     if (this.props.openSidebar && this.props.activeTab === 'bids-received') this.props.closeDetailSidebar()
   }
 
-  handleFilterChangeInputSearch = (e, data) => {
-    this.setState({
-      filterValue: {
-        ...this.state.filterValue,
-        [data.name]: data.value
+  SearchByNamesAndCasChanged = data => {
+    this.setState(
+      {
+        filterValues: {
+          ...this.state.filterValues,
+          searchByNamesAndCas: data
+        }
+      },
+      () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
+        }
+        this.handleFiltersValue(filter)
       }
-    })
-
-    const filter = {
-      ...this.state.filterValue,
-      [data.name]: data.value
-    }
-    this.handleFiltersValue(filter)
+    )
   }
 
   getActions = () => {
@@ -488,9 +501,10 @@ class BidsReceived extends Component {
       counterRequestedItem,
       updatingDatagrid,
       tutorialCompleted,
-      isSecondPage
+      isSecondPage,
+      tableHandlersFiltersBidsReceived
     } = this.props
-    const { columns, selectedRows, filterValue } = this.state
+    const { columns, selectedRows, filterValues } = this.state
     let { formatMessage } = intl
 
     return (
@@ -502,17 +516,11 @@ class BidsReceived extends Component {
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
-              <div className='column'>
-                <Input
-                  style={{ width: 340 }}
-                  name='searchInput'
-                  icon='search'
-                  value={filterValue.searchInput}
-                  placeholder={formatMessage({
-                    id: 'wantedBoard.searchByProductName',
-                    defaultMessage: 'Search by product name'
-                  })}
-                  onChange={this.handleFilterChangeInputSearch}
+              <div className='column' style={{ width: '340px'}}>
+                <SearchInput
+                  onChange={this.SearchByNamesAndCasChanged}
+                  initFilterState={getSafe(() => tableHandlersFiltersBidsReceived.searchByNamesAndCas, null)}
+                  filterApply={false}
                 />
               </div>
             </div>

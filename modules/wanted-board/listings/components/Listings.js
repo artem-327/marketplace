@@ -10,11 +10,22 @@ import { groupActionsMarketplace } from '~/modules/company-product-info/constant
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { SubmitOffer } from './SubmitOffer/index'
-import { PlusCircle } from 'react-feather'
+import { PlusCircle, Sliders } from 'react-feather'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { CustomRowDiv } from '../../constants/layout'
 import { getSafe } from '~/utils/functions'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
+import SearchInput from '../../components/SearchInput'
+import styled from 'styled-components'
+import FilterTags from '~/modules/filter/components/FitlerTags'
+import { WantedBoardFilter } from '~/modules/filter'
+
+const FiltersRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: -5px;
+`
 
 class Listings extends Component {
   constructor(props) {
@@ -115,23 +126,32 @@ class Listings extends Component {
       open: false,
       popupValues: null,
       filterValues: {
-        searchInput: ''
-      }
+        searchByNamesAndCas: null
+      },
+      openFilterPopup: false
     }
   }
 
   componentDidMount() {
-    const { tableHandlersFiltersListings } = this.props
+    const { tableHandlersFiltersListings, advancedFilters, applyDatagridFilter, datagrid } = this.props
 
     if (tableHandlersFiltersListings) {
       this.setState({ filterValues: tableHandlersFiltersListings }, () => {
         const filter = {
-          ...this.state.filterValues
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
         }
-        this.handleFiltersValue(filter)
+        datagrid.setSearch(filter, !advancedFilters.filters, 'pageFilters')
       })
     } else {
-      this.handleFiltersValue(this.state.filterValues)
+      datagrid.setSearch(this.state.filterValues, !advancedFilters.filters, 'pageFilters')
+    }
+
+    if (advancedFilters.filters) {
+      let datagridFilter = this.toDatagridFilter(advancedFilters)
+      applyDatagridFilter(datagridFilter, true)
     }
   }
 
@@ -140,23 +160,50 @@ class Listings extends Component {
     if (this.props.openSidebar && this.props.activeTab === 'listings') this.props.closeDetailSidebar()
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
+    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'wantedBoardListings')
+    }
+  }
+
   handleFiltersValue = debounce(filter => {
     const { datagrid } = this.props
     datagrid && datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  handleFilterChangeInputSearch = (e, data) => {
-    if (!data) return
-    e && e.stopPropagation()
-    this.setState({
-      filterValues: {
-        searchInput: data.value
+  SearchByNamesAndCasChanged = data => {
+    this.setState(
+      {
+        filterValues: {
+          ...this.state.filterValues,
+          searchByNamesAndCas: data
+        }
+      },
+      () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
+        }
+        this.handleFiltersValue(filter)
       }
-    })
-    const filter = {
-      filterName: data.value
+    )
+  }
+
+  toDatagridFilter = savedFilter => {
+    let { filters, ...rest } = savedFilter
+
+    return {
+      filters: filters.map(filter => ({
+        operator: filter.operator,
+        path: filter.path,
+        values: filter.values.map(val => val.value)
+      })),
+      pageNumber: 0,
+      pageSize: 50
     }
-    this.handleFiltersValue(filter)
   }
 
   getActions = () => {
@@ -188,9 +235,10 @@ class Listings extends Component {
       sidebarDetailTrigger,
       openedSubmitOfferPopup,
       popupValues,
-      tutorialCompleted
+      tutorialCompleted,
+      tableHandlersFiltersListings
     } = this.props
-    const { columns, filterValues } = this.state
+    const { columns, filterValues, openFilterPopup } = this.state
     let { formatMessage } = intl
 
     return (
@@ -199,18 +247,31 @@ class Listings extends Component {
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
-            <div className='column'>
-              <Input
-                style={{ width: 340 }}
-                name='searchInput'
-                icon='search'
-                value={filterValues.searchInput}
-                placeholder={formatMessage({
-                  id: 'wantedBoard.searchByProductName',
-                  defaultMessage: 'Search by product name'
-                })}
-                onChange={this.handleFilterChangeInputSearch}
-              />
+            <div>
+              <div className='column' style={{ width: '340px'}}>
+                <SearchInput
+                  onChange={this.SearchByNamesAndCasChanged}
+                  initFilterState={getSafe(() => tableHandlersFiltersListings.searchByNamesAndCas, null)}
+                  filterApply={false}
+                />
+              </div>
+              <div className='column'>
+                <Button
+                  className='light'
+                  size='large'
+                  primary
+                  onClick={() => this.setState({ openFilterPopup: true })}
+                  data-test='wanted_board_advanced_filters_btn'>
+                  <Sliders />
+                  {formatMessage({
+                    id: 'myInventory.advancedFilters',
+                    defaultMessage: 'Advanced Filters'
+                  })}
+                </Button>
+              </div>
+              <FiltersRow>
+                <FilterTags filterType='wantedBoardListings' datagrid={datagrid} />
+              </FiltersRow>
             </div>
             <div>
               <div className='column'>
@@ -240,6 +301,7 @@ class Listings extends Component {
             columnActions={'product'}
           />
         </div>
+        {openFilterPopup && <WantedBoardFilter onClose={() => this.setState({ openFilterPopup: false })} />}
       </>
     )
   }

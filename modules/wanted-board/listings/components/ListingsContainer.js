@@ -20,6 +20,7 @@ import { getProductName } from '../../constants/constants'
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
+    advancedFilters: store.filter.wantedBoardListings.appliedFilter,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     openSidebar: getSafe(() => store.wantedBoard.openSidebar, false),
     rows: datagrid.rows.map(row => {

@@ -137,6 +137,16 @@ export const searchCasNumber = (text, limit = 10) => ({
   payload: api.searchCasNumber(text, limit)
 })
 
+export const componentSearchProduct = (text) => ({
+  type: AT.WB_COMPONENT_SEARCH_PRODUCT,
+  payload: api.getAutocompleteData(`/prodex/api/product-groups/search?pattern=${text}`)
+})
+
+export const componentSearchCas = (text, limit = 5) => ({
+  type: AT.WB_COMPONENT_SEARCH_CAS,
+  payload: api.searchCasNumber(text, limit)
+})
+
 export const getCountries = () => ({
   type: AT.WB_GET_COUNTRIES,
   payload: api.getCountries()
@@ -201,3 +211,10 @@ export const matchingProductOfferInfo = (id, productOfferId) => ({
   type: AT.WB_MATCHING_PRODUCT_OFFER_INFO,
   payload: api.matchingProductOfferInfo(id, productOfferId)
 })
+
+export function applyDatagridFilter(filter, reload = true) {
+  return {
+    type: AT.WB_APPLY_DATAGRID_FILTER,
+    payload: { filter, reload }
+  }
+}

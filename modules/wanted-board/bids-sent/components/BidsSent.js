@@ -11,10 +11,11 @@ import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
-
+import { getSafe } from '~/utils/functions'
 import { CustomRowDiv } from '../../constants/layout'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
+import SearchInput from '../../components/SearchInput'
 
 class BidsSent extends Component {
   constructor(props) {
@@ -84,8 +85,8 @@ class BidsSent extends Component {
       selectedRows: [],
       pageNumber: 0,
       open: false,
-      filterValue: {
-        searchInput: ''
+      filterValues: {
+        searchByNamesAndCas: null
       }
     }
   }
@@ -99,31 +100,43 @@ class BidsSent extends Component {
     const { tableHandlersFiltersBidsSent } = this.props
 
     if (tableHandlersFiltersBidsSent) {
-      this.setState({ filterValue: tableHandlersFiltersBidsSent })
-      this.handleFiltersValue(tableHandlersFiltersBidsSent)
+      this.setState({ filterValues: tableHandlersFiltersBidsSent }, () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
+        }
+        this.handleFiltersValue(filter)
+      })
     } else {
-      this.handleFiltersValue(this.state.filterValue)
+      this.handleFiltersValue(this.state.filterValues)
     }
   }
 
   componentWillUnmount() {
-    this.props.handleVariableSave('tableHandlersFiltersBidsSent', this.state.filterValue)
+    this.props.handleVariableSave('tableHandlersFiltersBidsSent', this.state.filterValues)
     if (this.props.editWindowOpen && this.props.activeTab === 'bids-sent') this.props.closeDetailSidebar()
   }
 
-  handleFilterChangeInputSearch = (e, data) => {
-    this.setState({
-      filterValue: {
-        ...this.state.filterValue,
-        [data.name]: data.value
+  SearchByNamesAndCasChanged = data => {
+    this.setState(
+      {
+        filterValues: {
+          ...this.state.filterValues,
+          searchByNamesAndCas: data
+        }
+      },
+      () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
+        }
+        this.handleFiltersValue(filter)
       }
-    })
-
-    const filter = {
-      ...this.state.filterValue,
-      [data.name]: data.value
-    }
-    this.handleFiltersValue(filter)
+    )
   }
 
   getActions = () => {
@@ -199,8 +212,17 @@ class BidsSent extends Component {
   }
 
   renderContent = () => {
-    const { datagrid, intl, rows, editedId, myOffersSidebarTrigger, updatingDatagrid, tutorialCompleted } = this.props
-    const { columns, selectedRows, filterValue } = this.state
+    const {
+      datagrid,
+      intl,
+      rows,
+      editedId,
+      myOffersSidebarTrigger,
+      updatingDatagrid,
+      tutorialCompleted,
+      tableHandlersFiltersBidsSent
+    } = this.props
+    const { columns, selectedRows, filterValues } = this.state
     let { formatMessage } = intl
 
     return (
@@ -209,17 +231,11 @@ class BidsSent extends Component {
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
-              <div className='column'>
-                <Input
-                  style={{ width: 340 }}
-                  name='searchInput'
-                  icon='search'
-                  value={filterValue.searchInput}
-                  placeholder={formatMessage({
-                    id: 'wantedBoard.searchByProductName',
-                    defaultMessage: 'Search by product name'
-                  })}
-                  onChange={this.handleFilterChangeInputSearch}
+              <div className='column' style={{ width: '340px'}}>
+                <SearchInput
+                  onChange={this.SearchByNamesAndCasChanged}
+                  initFilterState={getSafe(() => tableHandlersFiltersBidsSent.searchByNamesAndCas, null)}
+                  filterApply={false}
                 />
               </div>
             </div>

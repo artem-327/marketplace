@@ -7,19 +7,23 @@ export const Listings = props => {
     url: '/prodex/api/purchase-requests/other/datagrid',
     searchToFilter: v => {
       let filters = { or: [], and: [], url: '' }
-      if (v && v.filterTags && v.filterTags.length > 0) {
-        filters.and = v.filterTags.map(idTag => {
+      if (v && v.filterProductName && v.filterProductName.length > 0) {
+        filters.or = v.filterProductName.map(id => {
           return {
             operator: 'EQUALS',
-            path: 'PurchaseRequest.elements.productGroup.tags.id',
-            values: [idTag]
+            path: 'PurchaseRequest.elements.productGroup.id',
+            values: [id]
           }
         })
       }
-      if (v && v.filterName) {
-        filters.url = `/prodex/api/purchase-requests/other/datagrid?pattern=${encodeURIComponent(
-          v.filterName
-        )}`
+      if (v && v.filterCasProduct && v.filterCasProduct.length > 0) {
+        filters.or = filters.or.concat(v.filterCasProduct.map(id => {
+          return {
+            operator: 'EQUALS',
+            path: 'PurchaseRequest.elements.casProduct.id',
+            values: [id]
+          }
+        }))
       }
       return filters
     }

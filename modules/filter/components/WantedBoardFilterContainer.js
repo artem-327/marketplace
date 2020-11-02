@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import WantedBoardFilter from './WantedBoardFilter'
 import * as Actions from '../actions'
 import { currency } from '~/constants/index'
-import { getAutocompleteData, applyDatagridFilter } from '~/modules/inventory/actions'
+import { getAutocompleteData, applyDatagridFilter } from '~/modules/wanted-board/actions'
 
 import { getSafe } from '~/utils/functions'
 
 function mapStateToProps(store) {
   return {
     ...store.filter,
-    ...store.filter.wantedBoard,
+    ...store.filter.wantedBoardListings,
     preferredCurrency: getSafe(() => store.auth.identity.preferredCurrency.code, currency),
     autocompleteDataLoading: store.simpleAdd.autocompleteDataLoading,
     autocompleteData: store.simpleAdd.autocompleteData,
