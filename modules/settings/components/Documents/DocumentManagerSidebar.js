@@ -521,11 +521,8 @@ DocumentManagerSidebar.defaultProps = {
 }
 
 const mapStateToProps = ({ simpleAdd, settings }) => {
-  const currentTab =
-    Router && Router.router && Router.router.pathname
-      ? Router.router.pathname
-      : ''
-  const documentTab = currentTab && currentTab.type === '/settings/documents'
+  const currentTab = Router && Router.router && Router.router.pathname ? Router.router.pathname : ''
+  const documentTab = currentTab === '/settings/documents'
 
   return {
     popupValues: documentTab ? settings.popupValues : null,
