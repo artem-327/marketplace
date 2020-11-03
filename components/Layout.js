@@ -23,7 +23,7 @@ import {
 import { Container, Menu, Dropdown, Icon, Image, FormField, Popup } from 'semantic-ui-react'
 import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
-import Logo from '~/assets/images/nav/logo-echosystem.png'
+import Logo from '~/assets/images/nav/logo-echo.svg'
 import LogoSmall from '~/assets/images/nav/logo4x.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
@@ -353,15 +353,19 @@ class Layout extends Component {
 
               <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
             </PerfectScrollbar>
-            <Container className='bottom'>
-              <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
-                <Sidebar />
-                {formatMessage({
-                  id: 'global.collapseMenu',
-                  defaultMessage: 'Collapse Menu'
-                })}
-              </Menu.Item>
-            </Container>
+            {false
+              ? (
+                <Container className='bottom'>
+                  <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
+                    <Sidebar />
+                    {formatMessage({
+                      id: 'global.collapseMenu',
+                      defaultMessage: 'Collapse Menu'
+                    })}
+                  </Menu.Item>
+                </Container>
+              )
+              : null }
           </LeftMenuContainer>
         </LeftMenu>
 

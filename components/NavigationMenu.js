@@ -4,7 +4,7 @@ import Router, { withRouter } from 'next/router'
 
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { withAuth } from '~/hocs'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { getSafe } from '~/utils/functions'
@@ -21,7 +21,9 @@ import {
   Package,
   Archive,
   Disc,
-  Coffee
+  Coffee,
+  ChevronDown,
+  ChevronUp
 } from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { defaultTabs as operationsDefaultTabs, orderOperatorTabs} from '~/modules/operations/constants'
@@ -291,7 +293,12 @@ class Navigation extends Component {
         {!isClientCompany && (
           <DropdownItem
             icon={<Layers size={22} />}
-            text={formatMessage({ id: 'navigation.inventory', defaultMessage: 'Inventory' })}
+            text={(
+              <>
+                <FormattedMessage id='navigation.inventory' defaultMessage='Inventory' />
+                {inventory ? <ChevronUp /> : <ChevronDown />}
+              </>
+            )}
             className={inventory ? 'opened' : null}
             opened={inventory}
             onClick={() => this.toggleOpened('inventory', '/inventory/my-listings')}
@@ -327,7 +334,12 @@ class Navigation extends Component {
 
         <DropdownItem
           icon={<ShoppingBag size={22} />}
-          text={formatMessage({ id: 'navigation.marketplace', defaultMessage: 'Marketplace' })}
+          text={(
+            <>
+              <FormattedMessage id='navigation.marketplace' defaultMessage='Marketplace' />
+              {marketplace ? <ChevronUp /> : <ChevronDown />}
+            </>
+          )}
           className={marketplace ? 'opened' : null}
           opened={marketplace}
           onClick={() => this.toggleOpened('marketplace', '/marketplace/listings')}
@@ -351,7 +363,12 @@ class Navigation extends Component {
 
         <DropdownItem
           icon={<Grid size={22} />}
-          text={formatMessage({ id: 'navigation.wantedBoard', defaultMessage: 'Wanted Board' })}
+          text={(
+            <>
+              <FormattedMessage id='navigation.wantedBoard' defaultMessage='Wanted Board' />
+              {wantedBoard ? <ChevronUp /> : <ChevronDown />}
+            </>
+          )}
           className={wantedBoard ? 'opened' : null}
           opened={wantedBoard}
           onClick={() => this.toggleOpened('wantedBoard', '/wanted-board/listings')}
@@ -387,7 +404,12 @@ class Navigation extends Component {
         </DropdownItem>
         <DropdownItem
           icon={<FileText size={22} />}
-          text={formatMessage({ id: 'navigation.orders', defaultMessage: 'Orders' })}
+          text={(
+            <>
+              <FormattedMessage id='navigation.orders' defaultMessage='Orders' />
+              {orders ? <ChevronUp /> : <ChevronDown />}
+            </>
+          )}
           className={orders ? 'opened' : null}
           opened={orders.toString()}
           onClick={() => this.toggleOpened('orders', '/orders/sales')}
@@ -414,7 +436,12 @@ class Navigation extends Component {
         {isCompanyAdmin || isClientCompanyManager ? (
           <DropdownItem
             icon={<Coffee size={22} />}
-            text={formatMessage({ id: 'navigation.manageGuests', defaultMessage: 'Manage Guests' })}
+            text={(
+              <>
+                <FormattedMessage id='navigation.manageGuests' defaultMessage='Manage Guests' />
+                {manageGuests ? <ChevronUp /> : <ChevronDown />}
+              </>
+            )}
             className={manageGuests ? 'opened' : null}
             opened={manageGuests}
             onClick={() => this.toggleOpened('manageGuests', '/manage-guests/guests')}
@@ -445,7 +472,12 @@ class Navigation extends Component {
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin || isClientCompanyAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
-            text={formatMessage({ id: 'navigation.myAccount', defaultMessage: 'My Account' })}
+            text={(
+              <>
+                <FormattedMessage id='navigation.myAccount' defaultMessage='My Account' />
+                {settings ? <ChevronUp /> : <ChevronDown />}
+              </>
+            )}
             className={settings ? 'opened' : null}
             opened={settings.toString()}
             onClick={() => this.toggleOpened('settings', '/settings/company-details')}
@@ -540,7 +572,12 @@ class Navigation extends Component {
             </MenuLink>
             <DropdownItem
               icon={<Briefcase size={22} />}
-              text={formatMessage({ id: 'navigation.companies', defaultMessage: 'Companies' })}
+              text={(
+                <>
+                  <FormattedMessage id='navigation.companies' defaultMessage='Companies' />
+                  {companies ? <ChevronUp /> : <ChevronDown />}
+                </>
+              )}
               className={companies ? 'opened' : null}
               opened={companies}
               onClick={() => this.toggleOpened('companies', '/companies/companies')}
@@ -564,7 +601,12 @@ class Navigation extends Component {
 
             <DropdownItem
               icon={<Package size={22} />}
-              text={formatMessage({ id: 'navigation.products', defaultMessage: 'Products' })}
+              text={(
+                <>
+                  <FormattedMessage id='navigation.products' defaultMessage='Products' />
+                  {products ? <ChevronUp /> : <ChevronDown />}
+                </>
+              )}
               className={products ? 'opened' : null}
               opened={products}
               onClick={() => this.toggleOpened('products', '/products/cas-products')}
@@ -600,7 +642,12 @@ class Navigation extends Component {
 
             <DropdownItem
               icon={<Settings size={22} />}
-              text={formatMessage({ id: 'navigation.adminSettings', defaultMessage: 'Admin Settings' })}
+              text={(
+                <>
+                  <FormattedMessage id='navigation.adminSettings' defaultMessage='Admin Settings' />
+                  {admin ? <ChevronUp /> : <ChevronDown />}
+                </>
+              )}
               className={admin ? 'opened' : null}
               opened={admin.toString()}
               onClick={() => this.toggleOpened('admin', '/admin/units-of-measure')}
@@ -627,7 +674,12 @@ class Navigation extends Component {
           <>
             <DropdownItem
               icon={<Archive size={22} />}
-              text={formatMessage({ id: 'navigation.operations', defaultMessage: 'Operations' })}
+              text={(
+                <>
+                  <FormattedMessage id='navigation.operations' defaultMessage='Operations' />
+                  {operations ? <ChevronUp /> : <ChevronDown />}
+                </>
+              )}
               className={operations ? 'opened' : null}
               opened={operations.toString()}
               onClick={() =>
