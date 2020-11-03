@@ -950,7 +950,7 @@ export const LeftMenu = styled(Menu)`
 
       .scrollbar-container > .flex-wrapper > .item.dropdown.upward.opened > .menu,
       .scrollbar-container > .flex-wrapper > .item.dropdown:not(.upward).opened > .menu {
-        max-height: calc(100% - 26px) !important;
+        max-height: calc(100% + 20px) !important;
         margin-bottom: -12px !important;
       }
     }
