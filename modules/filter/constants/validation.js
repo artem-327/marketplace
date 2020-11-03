@@ -6,6 +6,7 @@ import { errorMessages as errorMessagesGlobal, phoneValidation } from '~/constan
 export const initialValues = {
   search: [],
   searchProductGroup: [],
+  searchCasProduct: [],
   quantityFrom: '',
   quantityTo: '',
   priceFrom: '',
@@ -14,11 +15,16 @@ export const initialValues = {
   assayTo: '',
   name: '',
   expiration: dateDropdownOptions[0].value,
+  neededAt: dateDropdownOptions[0].value,
   mfg: dateDropdownOptions[0].value,
   expirationTo: '',
   expirationFrom: '',
+  neededAtTo: '',
+  neededAtFrom: '',
   mfgTo: '',
   mfgFrom: '',
+  maximumPricePerUOM: '',
+  conforming: '',
   packagingTypes: [],
   productConditions: [],
   productGrades: [],
@@ -110,10 +116,20 @@ export const validationSchema = openedSaveFilter =>
         }
       ),
 
+      maximumPricePerUOM: Yup.number('number')
+        .moreThan(0, errorMessages.greaterThan(0))
+        .notRequired(),
+
       expirationFrom: Yup.number('number')
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
       expirationTo: Yup.number('number')
+        .moreThan(0, errorMessages.greaterThan(0))
+        .notRequired(),
+      neededAtFrom: Yup.number('number')
+        .moreThan(0, errorMessages.greaterThan(0))
+        .notRequired(),
+      neededAtTo: Yup.number('number')
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
       mfgFrom: Yup.number('number')

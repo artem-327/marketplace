@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { Container, Input, Button, Label } from 'semantic-ui-react'
+import { Container, Input, Button, Label, Dropdown } from 'semantic-ui-react'
 import { PlusCircle, ChevronDown, ChevronRight } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -15,11 +15,21 @@ import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
-
-import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
+import { CustomRowDiv } from '../../constants/layout'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import styled from 'styled-components'
 import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
+import SearchInput from '../../components/SearchInput'
+import { statusFilterList } from '../../constants/constants'
+
+const StyledDropdown = styled(Dropdown)`
+  z-index: 501 !important;
+  height: auto !important;
+  min-height: 40px !important;
+  input.search {
+    height: auto !important;
+  }
+`
 
 const CountedName = styled.div`
   display: flex;
@@ -46,19 +56,9 @@ class BidsReceived extends Component {
     super(props)
 
     this.state = {
-      columnsProduct: [
+      columns: [
         //{ name: 'productName', disabled: true },
         //{ name: 'productNumber', disabled: true },
-        {
-          name: 'casNumber',
-          title: (
-            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 225,
-          disabled: true
-        },
         {
           name: 'assay',
           title: (
@@ -186,7 +186,7 @@ class BidsReceived extends Component {
         {
           name: 'measurement',
           title: (
-            <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
+            <FormattedMessage id='wantedBoard.weightUnit' defaultMessage='Weight Unit'>
               {text => text}
             </FormattedMessage>
           ),
@@ -222,169 +222,12 @@ class BidsReceived extends Component {
           width: 145
         }
       ],
-      columnsChemical: [
-        //{ name: 'productName', disabled: true },
-        //{ name: 'productNumber', disabled: true },
-        {
-          name: 'product',
-          title: (
-            <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 304,
-          disabled: true
-        },
-        {
-          name: 'casNumber',
-          title: (
-            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 225,
-          actions: this.getActions()
-          //align: 'right',
-          //sortPath: 'ProductOffer.pkgAvailable'
-        },
-        {
-          name: 'assay',
-          title: (
-            <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 80
-        },
-        {
-          name: 'orderQuantity',
-          title: (
-            <FormattedMessage id='wantedBoard.orderQuantity' defaultMessage='Order Quantity'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 145
-        },
-        {
-          name: 'orderFrequency',
-          title: (
-            <FormattedMessage id='wantedBoard.orderFrequency' defaultMessage='orderFrequency'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160
-        },
-        {
-          name: 'neededBy',
-          title: (
-            <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 110
-        },
-        {
-          name: 'dealExpired',
-          title: (
-            <FormattedMessage id='wantedBoard.dealExpired' defaultMessage='Deal Expired'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 130
-        },
-        /*
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 130
-      },
-      */
-        {
-          name: 'condition',
-          title: (
-            <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'deliveryLocation',
-          title: (
-            <FormattedMessage id='wantedBoard.deliveryLoc' defaultMessage='Delivery Loc'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'packaging',
-          title: (
-            <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 110
-        },
-        {
-          name: 'deliveryPriceMax',
-          title: (
-            <FormattedMessage id='wantedBoard.deliveryPriceMax' defaultMessage='Delivery Price Max'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          align: 'right',
-          width: 170
-        },
-        {
-          name: 'measurement',
-          title: (
-            <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 135
-        },
-        {
-          name: 'fobQuote',
-          title: (
-            <FormattedMessage id='wantedBoard.fobQuote' defaultMessage='FOB Quote'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          align: 'right',
-          width: 110
-        },
-        {
-          name: 'deliveredQuote',
-          title: (
-            <FormattedMessage id='wantedBoard.deliveredQuote' defaultMessage='Delivered Quote'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          align: 'right',
-          width: 145
-        },
-        {
-          name: 'ownerBranch',
-          title: (
-            <FormattedMessage id='wantedBoard.requestedBy' defaultMessage='Requested By'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 145
-        }
-      ],
-
       selectedRows: [],
       pageNumber: 0,
       open: false,
-      filterValue: {
-        searchInput: ''
+      filterValues: {
+        searchByNamesAndCas: null,
+        statusFilter: 0
       },
       expandedRowIds: []
     }
@@ -412,56 +255,49 @@ class BidsReceived extends Component {
         }
       }
     }
+
     if (tableHandlersFiltersBidsReceived) {
-      this.setState({ filterValue: tableHandlersFiltersBidsReceived })
-      this.handleFiltersValue(tableHandlersFiltersBidsReceived)
+      this.setState({ filterValues: tableHandlersFiltersBidsReceived }, () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
+        }
+        this.handleFiltersValue(filter)
+      })
     } else {
-      this.handleFiltersValue(this.state.filterValue)
+      this.handleFiltersValue(this.state.filterValues)
     }
   }
 
   componentWillUnmount() {
-    this.props.handleVariableSave('tableHandlersFiltersBidsReceived', this.state.filterValue)
+    this.props.handleVariableSave('tableHandlersFiltersBidsReceived', this.state.filterValues)
     if (this.props.openSidebar && this.props.activeTab === 'bids-received') this.props.closeDetailSidebar()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.openSidebar === true &&
-      this.props.type === 'product' &&
-      getSafe(() => this.props.sidebarValues.element.casProduct.id, false) &&
-      getSafe(() => prevProps.sidebarValues.element.casProduct.id, false) !==
-        getSafe(() => this.props.sidebarValues.element.casProduct.id, false)
-    ) {
-      this.handleProductChemicalSwitch('chemical')
-    }
-  }
-
-  handleFilterChangeInputSearch = (e, data) => {
-    this.setState({
-      filterValue: {
-        ...this.state.filterValue,
-        [data.name]: data.value
+  SearchByNamesAndCasChanged = data => {
+    this.setState(
+      {
+        filterValues: {
+          ...this.state.filterValues,
+          searchByNamesAndCas: data
+        }
+      },
+      () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
+        }
+        this.handleFiltersValue(filter)
       }
-    })
-
-    const filter = {
-      ...this.state.filterValue,
-      [data.name]: data.value
-    }
-    this.handleFiltersValue(filter)
+    )
   }
 
-  handleProductChemicalSwitch = data => {
-    const { datagrid } = this.props
-    this.props.setMyRequestedItemsType(data)
-    datagrid.clear()
-    const filter = {
-      ...this.state.filterValue,
-      [data.name]: data.value
-    }
-    this.props.closeDetailSidebar()
-    this.handleFiltersValue(filter)
+  handleStatusFilterChange = value => {
+    this.setState({ filterValues: { ...this.state.filterValues, statusFilter: value } })
   }
 
   getActions = () => {
@@ -593,9 +429,43 @@ class BidsReceived extends Component {
 
   getRows = rows => {
     return rows.map(row => {
-      const offersLength = row.purchaseRequestOffers.length
+      let filteredPurchaseRequestOffers = []
+
+      switch (this.state.filterValues.statusFilter) {
+        case 1: {
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
+            el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'NORMAL'
+          )
+          break
+        }
+        case 2: {
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
+            (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'NORMAL')
+            || (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'COUNTER')
+          )
+          break
+        }
+        case 3: {
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
+            el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'COUNTER'
+          )
+          break
+        }
+        case 4: {
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
+            (el.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' && el.cfHistoryLastType === 'NORMAL')
+            || (el.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER' && el.cfHistoryLastType === 'COUNTER')
+            || (el.cfHistoryLastStatus === '32' && el.cfHistoryLastType === 'COUNTER')
+          )
+          break
+        }
+        default: filteredPurchaseRequestOffers = row.purchaseRequestOffers
+      }
+
+      const offersLength = filteredPurchaseRequestOffers.length
       return {
         ...row,
+        purchaseRequestOffers: filteredPurchaseRequestOffers,
         product: (
           <CountedName>
             <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
@@ -675,15 +545,15 @@ class BidsReceived extends Component {
       rows,
       editedId,
       sidebarDetailTrigger,
-      type,
       openedSubmitOfferPopup,
       popupValues,
       counterRequestedItem,
       updatingDatagrid,
       tutorialCompleted,
-      isSecondPage
+      isSecondPage,
+      tableHandlersFiltersBidsReceived
     } = this.props
-    const { columnsProduct, columnsChemical, selectedRows, filterValue } = this.state
+    const { columns, selectedRows, filterValues } = this.state
     let { formatMessage } = intl
 
     return (
@@ -695,48 +565,26 @@ class BidsReceived extends Component {
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
-              <div className='column'>
-                <Input
-                  style={{ width: 340 }}
-                  name='searchInput'
-                  icon='search'
-                  value={filterValue.searchInput}
-                  placeholder={formatMessage({
-                    id: 'wantedBoard.searchByProductName',
-                    defaultMessage: 'Search by product name'
-                  })}
-                  onChange={this.handleFilterChangeInputSearch}
+              <div className='column' style={{ width: '340px'}}>
+                <StyledDropdown
+                  options={statusFilterList}
+                  value={this.state.filterValues.statusFilter}
+                  selection
+                  name='statusFilter'
+                  onChange={(event, { value }) => this.handleStatusFilterChange(value)}
+                  fluid
+                />
+              </div>
+              <div className='column' style={{ width: '340px'}}>
+                <SearchInput
+                  onChange={this.SearchByNamesAndCasChanged}
+                  initFilterState={getSafe(() => tableHandlersFiltersBidsReceived.searchByNamesAndCas, null)}
+                  filterApply={false}
                 />
               </div>
             </div>
 
             <div>
-              <div className='column'>
-                <ProductChemicalSwitch className={type}>
-                  <Button
-                    attached='left'
-                    onClick={() => {
-                      this.setState({ expandedRowIds: [] })
-                      this.handleProductChemicalSwitch('product')
-                    }}
-                    data-test='bids_received_product_switch_btn'>
-                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                  <Button
-                    attached='right'
-                    onClick={() => {
-                      this.setState({ expandedRowIds: [] })
-                      this.handleProductChemicalSwitch('chemical')
-                    }}
-                    data-test='bids_received_chemical_switch_btn'>
-                    <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </ProductChemicalSwitch>
-              </div>
               <div className='column'>
                 <Button
                   className='secondary'
@@ -757,16 +605,15 @@ class BidsReceived extends Component {
         </div>
         <div className='flex stretched wanted-wrapper' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
-            key={type}
-            tableName={`bids_received_${type}_grid`}
+            tableName={'bids_received_grid'}
             {...datagrid.tableProps}
             loading={datagrid.loading || updatingDatagrid}
             rows={this.getRows(rows)}
-            columns={type === 'product' ? columnsProduct : columnsChemical}
+            columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
             treeDataType={true}
-            tableTreeColumn={type === 'product' ? 'product' : 'casNumber'}
+            tableTreeColumn={'product'}
             getChildRows={(row, rootRows) => {
               return row ? row.purchaseRequestOffers : rootRows
             }}
@@ -784,7 +631,7 @@ class BidsReceived extends Component {
             }}
             expandedRowIds={this.state.expandedRowIds}
             onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-            columnActions={type === 'product' ? 'product' : 'casNumber'}
+            columnActions={'product'}
           />
         </div>
       </>

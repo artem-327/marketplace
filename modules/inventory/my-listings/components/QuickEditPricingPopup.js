@@ -11,17 +11,12 @@ import styled from 'styled-components'
 import { getSafe, removeEmpty } from '~/utils/functions'
 import { withDatagrid } from '~/modules/datagrid'
 
-import {
-  Grid,
-  GridRow,
-  GridColumn,
-  Icon,
-} from 'semantic-ui-react'
+import { Grid, GridRow, GridColumn, Icon } from 'semantic-ui-react'
 
 const StyledForm = styled(Form)`
   .high-segment {
     padding: 16px 30px;
-    
+
     text-transform: uppercase;
     font-size: 14px;
     font-weight: bold;
@@ -34,18 +29,18 @@ const StyledForm = styled(Form)`
   .content {
     max-height: 60vh;
     overflow-y: auto;
-  } 
+  }
 
   .ui.grid {
     margin: 30px 0 30px 25px;
     padding: 0;
-    
+
     .row {
-      padding: 5px 0;    
+      padding: 5px 0;
       &.header {
         padding: 2px 0;
       }
-      
+
       .column {
         padding: 0 5px;
         .field {
@@ -62,25 +57,25 @@ const StyledForm = styled(Form)`
           }
         }
 
-        .right-labeled {         
+        .right-labeled {
           position: relative;
           > div.label {
             position: absolute !important;
             height: 28px !important;
             max-height: 28px !important;
-            min-width: 28px;            
+            min-width: 28px;
             top: 6px;
             right: 6px;
             border-radius: 2px;
-            text-align: center;    
-            padding: 4px 6px 6px 6px;    
+            text-align: center;
+            padding: 4px 6px 6px 6px;
           }
-          
+
           &.price > div.label {
             color: #84c225;
             background-color: rgba(132, 194, 37, 0.15);
           }
-          
+
           &.quantity > div.label {
             color: #848893;
             background-color: #edeef2;
@@ -101,7 +96,7 @@ const StyledForm = styled(Form)`
       .column:nth-child(4) {
         width: 50px;
       }
-      
+
       .ui.button {
         min-width: 40px;
         height: 40px;
@@ -111,21 +106,21 @@ const StyledForm = styled(Form)`
       .ui.button.delete {
         padding: 0;
         border: solid 1px #f16844;
-        background-color: #fff0ed; 
+        background-color: #fff0ed;
         color: #f16844;
         line-height: 1.11;
         font-size: 18px;
-       
-        .icon {          
+
+        .icon {
           margin: 0 10px;
           width: 18px;
-          height: 20px;         
+          height: 20px;
           color: #f16844;
           line-height: 1.11;
           font-size: 18px;
         }
       }
-      
+
       .ui.button.add {
         padding-left: 17px;
         padding-right: 17px;
@@ -139,7 +134,7 @@ const StyledForm = styled(Form)`
       }
     }
   }
-  
+
   .bottom-buttons {
     position: relative;
     overflow: visible;
@@ -147,7 +142,7 @@ const StyledForm = styled(Form)`
     box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
     padding: 10px 5px;
     text-align: right;
-  
+
     .ui.button {
       font-size: 1em;
       margin: 0 0.357142857em;
@@ -156,22 +151,22 @@ const StyledForm = styled(Form)`
       border: solid 1px #dee2e6;
       min-width: 80px;
     }
-  
+
     .ui.primary.button {
       color: #ffffff;
       background-color: #2599d5;
       border: none;
     }
-    
+
     .ui.modal & {
       border-top: 1px solid #dee2e6;
       box-shadow: 0 0 0 0 transparent;
-    }  
+    }
   }
 `
 
-val.addMethod(val.object, 'uniqueProperty', function(propertyName, message) {
-  return this.test('unique', message, function(value) {
+val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
+  return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
       return true
     }
@@ -193,69 +188,62 @@ val.addMethod(val.object, 'uniqueProperty', function(propertyName, message) {
   })
 })
 
-const validationSchema = (min) => val.object().shape({
-  pricingTiers: val.array().of(
-    val
-      .object()
-      .uniqueProperty('quantityFrom', 'Quantity has to be unique')
-      .shape({
-        quantityFrom: val
-          .number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          //.moreThan(min, errorMessages.greaterThan(min))
-          .min(min, errorMessages.minimum(min)),
-        pricePerUOM: val
-          .number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .moreThan(0, errorMessages.greaterThan(0))
-          .test('maxdec', errorMessages.maxDecimals(3), val => {
-            return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-          })
-      })
-  )
-})
+const validationSchema = min =>
+  val.object().shape({
+    pricingTiers: val.array().of(
+      val
+        .object()
+        .uniqueProperty('quantityFrom', 'Quantity has to be unique')
+        .shape({
+          quantityFrom: val
+            .number()
+            .typeError(errorMessages.mustBeNumber)
+            .required(errorMessages.requiredMessage)
+            //.moreThan(min, errorMessages.greaterThan(min))
+            .min(min, errorMessages.minimum(min)),
+          pricePerUOM: val
+            .number()
+            .typeError(errorMessages.mustBeNumber)
+            .required(errorMessages.requiredMessage)
+            .moreThan(0, errorMessages.greaterThan(0))
+            .test('maxdec', errorMessages.maxDecimals(3), val => {
+              return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+            })
+        })
+    )
+  })
 
 class QuickEditPricingPopup extends React.Component {
-  renderPricingTiers = () => {
+  renderPricingTiers = (values, setFieldValue) => {
     const {
       intl: { formatMessage }
     } = this.props
 
-    let {
-      values,
-      touched,
-      setTouched,
-      setFieldTouched,
-      setFieldValue,
-      validateForm,
-      submitForm,
-      setSubmitting,
-      resetForm
-    } = this.formikProps
-
-    const options = [{
-      key: values.companyProduct.packagingUnit.id,
-      text: values.companyProduct.packagingUnit.name,
-      value: values.companyProduct.packagingUnit.name
-    }]
+    const options = [
+      {
+        key: values.companyProduct.packagingUnit.id,
+        text: values.companyProduct.packagingUnit.name,
+        value: values.companyProduct.packagingUnit.name
+      }
+    ]
     let tiers = []
 
     for (let i = 0; i < values.pricingTiers.length; i++) {
       tiers.push(
-        <GridRow>
+        <GridRow key={i}>
           <GridColumn>
             <div className='quantity right-labeled'>
               <Input
                 name={`pricingTiers[${i}].quantityFrom`}
                 inputProps={{
-                  placeholder: '0'
+                  placeholder: '0',
+                  onChange: (e, { name, value }) => {
+                    e.persist()
+                    this.props.handlechange({ quantityFrom: value, pricePerUOM: values.pricingTiers[i].pricePerUOM }, i)
+                  }
                 }}
               />
-              <div className='label'>
-                {formatMessage({ id: 'myInventory.andAbove', defaultMessage: 'and above' })}
-              </div>
+              <div className='label'>{formatMessage({ id: 'myInventory.andAbove', defaultMessage: 'and above' })}</div>
             </div>
           </GridColumn>
 
@@ -273,7 +261,14 @@ class QuickEditPricingPopup extends React.Component {
               <Input
                 name={`pricingTiers[${i}].pricePerUOM`}
                 inputProps={{
-                  placeholder: '0.00'
+                  placeholder: '0.00',
+                  onChange: (e, { name, value }) => {
+                    e.persist()
+                    this.props.handlechange(
+                      { quantityFrom: values.pricingTiers[i].quantityFrom, pricePerUOM: value },
+                      i
+                    )
+                  }
                 }}
               />
               <div className='label'>{currencySymbol}</div>
@@ -281,20 +276,18 @@ class QuickEditPricingPopup extends React.Component {
           </GridColumn>
 
           <GridColumn>
-            {
-              i > 0
-                ? (<Button
-                    className='delete'
-                    onClick={() => {
-                      let pricingTiers = values.pricingTiers.slice()
-                      pricingTiers.splice(i, 1)
-                      setFieldValue('pricingTiers', pricingTiers)
-                    }}
-                  >
-                    <Icon name='trash alternate outline' />
-                  </Button>
-                ) : null
-            }
+            {i > 0 ? (
+              <Button
+                className='delete'
+                onClick={() => {
+                  let pricingTiers = values.pricingTiers.slice()
+                  pricingTiers.splice(i, 1)
+                  setFieldValue('pricingTiers', pricingTiers)
+                  this.props.handlechange(pricingTiers)
+                }}>
+                <Icon name='trash alternate outline' />
+              </Button>
+            ) : null}
           </GridColumn>
         </GridRow>
       )
@@ -311,8 +304,8 @@ class QuickEditPricingPopup extends React.Component {
               let pricingTiers = values.pricingTiers.slice()
               pricingTiers.push({ quantityFrom: '', pricePerUOM: '' })
               setFieldValue('pricingTiers', pricingTiers)
-            }}
-          >
+              this.props.handlechange(pricingTiers)
+            }}>
             {formatMessage({ id: 'global.add', defaultMessage: 'Add' })}
           </Button>
         </GridColumn>
@@ -323,16 +316,10 @@ class QuickEditPricingPopup extends React.Component {
     return (
       <>
         <GridRow className='header'>
-          <GridColumn>
-            {formatMessage({ id: 'global.quantity', defaultMessage: 'Quantity' })}
-          </GridColumn>
-          <GridColumn>
-          </GridColumn>
-          <GridColumn>
-            {formatMessage({ id: 'global.price', defaultMessage: 'Price' })}
-          </GridColumn>
-          <GridColumn>
-          </GridColumn>
+          <GridColumn>{formatMessage({ id: 'global.quantity', defaultMessage: 'Quantity' })}</GridColumn>
+          <GridColumn></GridColumn>
+          <GridColumn>{formatMessage({ id: 'global.price', defaultMessage: 'Price' })}</GridColumn>
+          <GridColumn></GridColumn>
         </GridRow>
         {tiers}
       </>
@@ -340,17 +327,9 @@ class QuickEditPricingPopup extends React.Component {
   }
 
   submitForm = async () => {
-    const {
-      closePricingEditPopup,
-      rawData,
-      datagrid,
-      addProductOffer
-    } = this.props
+    const { closePricingEditPopup, rawData, datagrid, addProductOffer } = this.props
 
-    let {
-      values,
-      setSubmitting,
-    } = this.formikProps
+    let { values, setSubmitting } = this.formikProps
 
     let sendSuccess = false
     let isGrouped = getSafe(() => rawData.grouped, false)
@@ -368,20 +347,16 @@ class QuickEditPricingPopup extends React.Component {
       conforming: rawData.conforming,
       costPerUOM: rawData.costPerUOM,
       costRecords: rawData.costRecords
-        ? rawData.costRecords.map(d =>
-          ({
+        ? rawData.costRecords.map(d => ({
             attachment: d.attachment,
             description: d.description,
             // ! ! lotNumber ! ! ??
             value: d.value
-          })
-        )
+          }))
         : null,
       externalNotes: rawData.externalNotes,
       productForm: getSafe(() => rawData.form.id, null),
-      productGrades: rawData.grades
-        ? rawData.grades.map(d => ({ id: d.id }))
-        : null,
+      productGrades: rawData.grades ? rawData.grades.map(d => ({ id: d.id })) : null,
       inStock: rawData.inStock,
       internalNotes: rawData.internalNotes,
       leadTime: rawData.leadTime,
@@ -394,8 +369,7 @@ class QuickEditPricingPopup extends React.Component {
       pricingTiers: values.pricingTiers.map(d => ({
         quantityFrom: Number(d.quantityFrom),
         price: Number(d.pricePerUOM)
-      }))
-      ,
+      })),
       splits: rawData.splitPkg,
       expirationDate: rawData.validityDate,
       warehouse: getSafe(() => rawData.warehouse.id, null)
@@ -427,14 +401,10 @@ class QuickEditPricingPopup extends React.Component {
       <StyledForm
         initialValues={this.props.rawData}
         validationSchema={validationSchema(rawData.minPkg)}
-
         onSubmit={async () => {
           await this.submitForm()
-        }}
-      >
-        {formikProps => {
-          this.formikProps = formikProps
-
+        }}>
+        {({ values, setFieldValue }) => {
           return (
             <>
               <div className='high-segment'>
@@ -442,9 +412,7 @@ class QuickEditPricingPopup extends React.Component {
               </div>
 
               <div className='content'>
-                <Grid>
-                  {this.renderPricingTiers()}
-                </Grid>
+                <Grid>{this.renderPricingTiers(values, setFieldValue)}</Grid>
               </div>
 
               <div className='bottom-buttons'>
@@ -452,16 +420,14 @@ class QuickEditPricingPopup extends React.Component {
                   size='large'
                   inputProps={{ type: 'button' }}
                   onClick={closePricingEditPopup}
-                  data-test='inventory_quick_edit_pricing_popup_cancel_btn'
-                >
+                  data-test='inventory_quick_edit_pricing_popup_cancel_btn'>
                   {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
                 </Button>
                 <Button.Submit
                   primary
                   size='large'
                   type='button'
-                  data-test='inventory_quick_edit_pricing_popup_save_btn'
-                >
+                  data-test='inventory_quick_edit_pricing_popup_save_btn'>
                   {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                 </Button.Submit>
               </div>
@@ -474,8 +440,7 @@ class QuickEditPricingPopup extends React.Component {
 }
 
 const mapStateToProps = state => {
-  return {
-  }
+  return {}
 }
 
 export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(QuickEditPricingPopup)))

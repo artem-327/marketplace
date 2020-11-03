@@ -26,7 +26,7 @@ import {
   ChevronUp
 } from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { defaultTabs as operationsDefaultTabs, orderOperatorTabs} from '~/modules/operations/constants'
+import { defaultTabs as operationsDefaultTabs, orderOperatorTabs } from '~/modules/operations/constants'
 import { defaultTabs as adminDefaultTabs } from '~/modules/admin/config'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
@@ -47,7 +47,8 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     currentType: '',
-    settings: getSafe(() => Router.router.pathname === '/settings/company-details', false) ||
+    settings:
+      getSafe(() => Router.router.pathname === '/settings/company-details', false) ||
       getSafe(() => Router.router.pathname === '/settings/system-settings', false) ||
       getSafe(() => Router.router.pathname === '/settings/users', false) ||
       getSafe(() => Router.router.pathname === '/settings/locations', false) ||
@@ -58,7 +59,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/orders/sales', false) ||
       getSafe(() => Router.router.pathname === '/orders/purchase', false) ||
       getSafe(() => Router.router.pathname === '/orders/detail', false),
-    admin: getSafe(() => Router.router.pathname === '/admin/units-of-measure', false) ||
+    admin:
+      getSafe(() => Router.router.pathname === '/admin/units-of-measure', false) ||
       getSafe(() => Router.router.pathname === '/admin/packaging-types', false) ||
       getSafe(() => Router.router.pathname === '/admin/manufacturers', false) ||
       getSafe(() => Router.router.pathname === '/admin/grades', false) ||
@@ -68,7 +70,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/admin/associations', false) ||
       getSafe(() => Router.router.pathname === '/admin/logistics', false) ||
       getSafe(() => Router.router.pathname === '/admin/admin-settings', false),
-    operations: getSafe(() => Router.router.pathname === '/operations/shipping-quotes', false) ||
+    operations:
+      getSafe(() => Router.router.pathname === '/operations/shipping-quotes', false) ||
       getSafe(() => Router.router.pathname === '/operations/tags', false) ||
       getSafe(() => Router.router.pathname === '/operations/company-product-catalog', false) ||
       getSafe(() => Router.router.pathname === '/operations/company-inventory', false) ||
@@ -81,7 +84,8 @@ class Navigation extends Component {
     companies:
       getSafe(() => Router.router.pathname === '/companies/companies', false) ||
       getSafe(() => Router.router.pathname === '/companies/users', false),
-    manageGuests: getSafe(() => Router.router.pathname === '/manage-guests/guests', false) ||
+    manageGuests:
+      getSafe(() => Router.router.pathname === '/manage-guests/guests', false) ||
       getSafe(() => Router.router.pathname === '/manage-guests/chat', false),
     wantedBoard:
       getSafe(() => Router.router.pathname === '/wanted-board/listings', false) ||
@@ -141,15 +145,13 @@ class Navigation extends Component {
 
   toggleOpened = (type, defaultLink) => {
     const { currentType } = this.state
-    const { isAdmin, isOrderOperator} = this.props
+    const { isAdmin, isOrderOperator } = this.props
     const typeState = this.state[type]
     if (type === 'admin') {
       Router.push('/admin/units-of-measure')
     }
     if (type === 'operations') {
-      (!isAdmin && isOrderOperator)
-        ? Router.push('/operations/orders')
-        : Router.push('/operations/shipping-quotes')
+      !isAdmin && isOrderOperator ? Router.push('/operations/orders') : Router.push('/operations/shipping-quotes')
     }
     if (type === 'products') {
       Router.push('/products/cas-products')
@@ -279,7 +281,7 @@ class Navigation extends Component {
       company: null
     })
 
-    const operationsTabs = (!isAdmin && isOrderOperator) ? orderOperatorTabs : operationsDefaultTabs
+    const operationsTabs = !isAdmin && isOrderOperator ? orderOperatorTabs : operationsDefaultTabs
 
     const { isClientCompany } = getSafe(() => company, { isClientCompany: false })
     return (!isAdmin && !isEchoOperator && !isOrderOperator) || takeover ? (
@@ -293,12 +295,12 @@ class Navigation extends Component {
         {!isClientCompany && (
           <DropdownItem
             icon={<Layers size={22} />}
-            text={(
+            text={
               <>
                 <FormattedMessage id='navigation.inventory' defaultMessage='Inventory' />
                 {inventory ? <ChevronUp /> : <ChevronDown />}
               </>
-            )}
+            }
             className={inventory ? 'opened' : null}
             opened={inventory}
             onClick={() => this.toggleOpened('inventory', '/inventory/my-listings')}
@@ -334,12 +336,12 @@ class Navigation extends Component {
 
         <DropdownItem
           icon={<ShoppingBag size={22} />}
-          text={(
+          text={
             <>
               <FormattedMessage id='navigation.marketplace' defaultMessage='Marketplace' />
               {marketplace ? <ChevronUp /> : <ChevronDown />}
             </>
-          )}
+          }
           className={marketplace ? 'opened' : null}
           opened={marketplace}
           onClick={() => this.toggleOpened('marketplace', '/marketplace/listings')}
@@ -363,15 +365,20 @@ class Navigation extends Component {
 
         <DropdownItem
           icon={<Grid size={22} />}
-          text={(
+          text={
             <>
               <FormattedMessage id='navigation.wantedBoard' defaultMessage='Wanted Board' />
               {wantedBoard ? <ChevronUp /> : <ChevronDown />}
             </>
-          )}
+          }
           className={wantedBoard ? 'opened' : null}
           opened={wantedBoard}
-          onClick={() => this.toggleOpened('wantedBoard', '/wanted-board/listings')}
+          onClick={() =>
+            this.toggleOpened(
+              'wantedBoard',
+              !isClientCompany ? '/wanted-board/listings' : '/wanted-board/bids-received'
+            )
+          }
           refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
           refId={'wantedBoard'}
           data-test='navigation_menu_wanted_board_drpdn'>
@@ -404,15 +411,15 @@ class Navigation extends Component {
         </DropdownItem>
         <DropdownItem
           icon={<FileText size={22} />}
-          text={(
+          text={
             <>
               <FormattedMessage id='navigation.orders' defaultMessage='Orders' />
               {orders ? <ChevronUp /> : <ChevronDown />}
             </>
-          )}
+          }
           className={orders ? 'opened' : null}
           opened={orders.toString()}
-          onClick={() => this.toggleOpened('orders', '/orders/sales')}
+          onClick={() => this.toggleOpened('orders', !isClientCompany ? '/orders/sales' : '/orders/purchase')}
           refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
           refId={'orders'}
           data-test='navigation_orders_drpdn'>
@@ -423,10 +430,7 @@ class Navigation extends Component {
                   {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
                 </Dropdown.Item>
               )}
-              <Dropdown.Item
-                as={MenuLink}
-                to='/orders/purchase'
-                dataTest='navigation_orders_purchase_orders_drpdn'>
+              <Dropdown.Item as={MenuLink} to='/orders/purchase' dataTest='navigation_orders_purchase_orders_drpdn'>
                 {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
               </Dropdown.Item>
             </PerfectScrollbar>
@@ -436,12 +440,12 @@ class Navigation extends Component {
         {isCompanyAdmin || isClientCompanyManager ? (
           <DropdownItem
             icon={<Coffee size={22} />}
-            text={(
+            text={
               <>
                 <FormattedMessage id='navigation.manageGuests' defaultMessage='Manage Guests' />
                 {manageGuests ? <ChevronUp /> : <ChevronDown />}
               </>
-            )}
+            }
             className={manageGuests ? 'opened' : null}
             opened={manageGuests}
             onClick={() => this.toggleOpened('manageGuests', '/manage-guests/guests')}
@@ -457,10 +461,7 @@ class Navigation extends Component {
                   {formatMessage({ id: 'navigation.guests', defaultMessage: 'Guests' })}
                 </Dropdown.Item>
                 {false && (
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/manage-guests/chat'
-                    dataTest='navigation_manage_guests_chat_drpdn'>
+                  <Dropdown.Item as={MenuLink} to='/manage-guests/chat' dataTest='navigation_manage_guests_chat_drpdn'>
                     {formatMessage({ id: 'navigation.chat', defaultMessage: 'Chat' })}
                   </Dropdown.Item>
                 )}
@@ -472,12 +473,12 @@ class Navigation extends Component {
         {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin || isClientCompanyAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
-            text={(
+            text={
               <>
                 <FormattedMessage id='navigation.myAccount' defaultMessage='My Account' />
                 {settings ? <ChevronUp /> : <ChevronDown />}
               </>
-            )}
+            }
             className={settings ? 'opened' : null}
             opened={settings.toString()}
             onClick={() => this.toggleOpened('settings', '/settings/company-details')}
@@ -572,12 +573,12 @@ class Navigation extends Component {
             </MenuLink>
             <DropdownItem
               icon={<Briefcase size={22} />}
-              text={(
+              text={
                 <>
                   <FormattedMessage id='navigation.companies' defaultMessage='Companies' />
                   {companies ? <ChevronUp /> : <ChevronDown />}
                 </>
-              )}
+              }
               className={companies ? 'opened' : null}
               opened={companies}
               onClick={() => this.toggleOpened('companies', '/companies/companies')}
@@ -601,12 +602,12 @@ class Navigation extends Component {
 
             <DropdownItem
               icon={<Package size={22} />}
-              text={(
+              text={
                 <>
                   <FormattedMessage id='navigation.products' defaultMessage='Products' />
                   {products ? <ChevronUp /> : <ChevronDown />}
                 </>
-              )}
+              }
               className={products ? 'opened' : null}
               opened={products}
               onClick={() => this.toggleOpened('products', '/products/cas-products')}
@@ -642,12 +643,12 @@ class Navigation extends Component {
 
             <DropdownItem
               icon={<Settings size={22} />}
-              text={(
+              text={
                 <>
                   <FormattedMessage id='navigation.adminSettings' defaultMessage='Admin Settings' />
                   {admin ? <ChevronUp /> : <ChevronDown />}
                 </>
-              )}
+              }
               className={admin ? 'opened' : null}
               opened={admin.toString()}
               onClick={() => this.toggleOpened('admin', '/admin/units-of-measure')}
@@ -674,18 +675,19 @@ class Navigation extends Component {
           <>
             <DropdownItem
               icon={<Archive size={22} />}
-              text={(
+              text={
                 <>
                   <FormattedMessage id='navigation.operations' defaultMessage='Operations' />
                   {operations ? <ChevronUp /> : <ChevronDown />}
                 </>
-              )}
+              }
               className={operations ? 'opened' : null}
               opened={operations.toString()}
               onClick={() =>
                 this.toggleOpened(
                   'operations',
-                  (!isAdmin && isOrderOperator) ? '/operations/orders' : '/operations/shipping-quotes')
+                  !isAdmin && isOrderOperator ? '/operations/orders' : '/operations/shipping-quotes'
+                )
               }
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
               refId={'operations'}

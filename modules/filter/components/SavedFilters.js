@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { func, array, bool, object } from 'prop-types'
+import { func, array, bool, object, string } from 'prop-types'
 import { Accordion, Segment, Grid, GridRow, GridColumn, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Button } from 'formik-semantic-ui-fixed-validation'
 import { withToastManager } from 'react-toast-notifications'
@@ -86,7 +86,7 @@ class SavedFilters extends Component {
 
   getTitle = (filter, i) => {
     let { id, name } = filter
-    let filterDescription = groupFilters(filter.filters, this.props.params)
+    let filterDescription = groupFilters(filter.filters, this.props.params, this.props.filterType)
     return (
       <SavedFilterTitle>
         <SavedFilterRow>
@@ -299,13 +299,15 @@ SavedFilters.propTypes = {
   savedFilters: array,
   savedFiltersLoading: bool,
   deleteFilter: func,
-  params: object
+  params: object,
+  filterType: string
 }
 
 SavedFilters.defaultProps = {
   savedFilters: [],
   savedFiltersLoading: false,
-  params: {}
+  params: {},
+  filterType: 'inventory'
 }
 
 export default injectIntl(withToastManager(SavedFilters))

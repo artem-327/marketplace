@@ -403,7 +403,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
+                            <FormattedMessage id='wantedBoard.weightUnit' defaultMessage='Weight Unit'>
                               {text => text}
                             </FormattedMessage>
                           }

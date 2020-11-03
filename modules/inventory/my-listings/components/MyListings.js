@@ -129,7 +129,7 @@ const FobPrice = styled.div`
   text-decoration: underline;
   text-decoration-style: dotted;
   cursor: pointer;
-  
+
   &:hover {
     text-decoration-style: solid;
   }
@@ -139,7 +139,7 @@ const RowDropDownIcon = styled.div`
   width: 16px;
   height: 16px;
   margin: 2px 0 2px -4px;
-  
+
   svg {
     width: 16px !important;
     height: 16px !important;
@@ -379,7 +379,8 @@ class MyListings extends Component {
       request: null,
       filterValues: {
         SearchByNamesAndTags: null
-      }
+      },
+      rows: []
     }
   }
 
@@ -449,6 +450,12 @@ class MyListings extends Component {
     const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
       datagrid.setFilter(datagridFilter, datagridFilterReload, 'inventory')
+    }
+    if (
+      (!prevState.rows.length && !this.state.rows.length && !prevProps.rows.length && this.props.rows.length) ||
+      prevProps.pricingEditOpenId !== this.props.pricingEditOpenId
+    ) {
+      this.getRows(this.props.rows)
     }
   }
 
@@ -602,7 +609,7 @@ class MyListings extends Component {
     const { datagrid, pricingEditOpenId, setPricingEditOpenId, sidebarDetailTrigger, toastManager } = this.props
     let title = ''
 
-    return rows.map((r, rIndex) => {
+    let result = rows.map((r, rIndex) => {
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
       if (r.groupId) {
@@ -705,7 +712,9 @@ class MyListings extends Component {
         ),
         productName: (
           <DivRow>
-            <SpanText onClick={() => this.tableRowClickedProductOffer(r, true, 0, sidebarDetailTrigger)}>{r.productName}</SpanText>
+            <SpanText onClick={() => this.tableRowClickedProductOffer(r, true, 0, sidebarDetailTrigger)}>
+              {r.productName}
+            </SpanText>
             <DivIcons>
               {r.expired ? (
                 <Popup
@@ -744,7 +753,12 @@ class MyListings extends Component {
         ),
         fobPrice: (
           <StyledPopup
-            content={<QuickEditPricingPopup rawData={r.rawData} />}
+            content={
+              <QuickEditPricingPopup
+                handlechange={(values, index) => this.handleChangePriceTiers(values, rIndex, index)}
+                rawData={getSafe(() => this.state.rows[rIndex].rawData, '') || r.rawData}
+              />
+            }
             on='click'
             trigger={<FobPrice>{r.fobPrice}</FobPrice>}
             open={pricingEditOpenId === r.rawData.id}
@@ -796,6 +810,21 @@ class MyListings extends Component {
         )
       }
     })
+    this.setState({ rows: result })
+  }
+
+  handleChangePriceTiers = (values, rIndex, pIndex) => {
+    let newRows = this.state.rows
+
+    if (pIndex) {
+      //pIndex means pricingTiers index and that row was changed. values are {}
+      newRows[rIndex].rawData.pricingTiers[pIndex] = values
+    } else {
+      // it was added or removed row pricingTiers. values are []
+      newRows[rIndex].rawData.pricingTiers = values
+    }
+
+    this.setState({ rows: newRows })
   }
 
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
@@ -885,7 +914,6 @@ class MyListings extends Component {
       openBroadcast,
       sidebarDetailOpen,
       intl: { formatMessage },
-      rows,
       datagrid,
       openImportPopup,
       isOpenImportPopup,
@@ -901,7 +929,7 @@ class MyListings extends Component {
       updatingDatagrid,
       activeInventoryFilter
     } = this.props
-    const { columns, clientMessage, request, openFilterPopup } = this.state
+    const { columns, clientMessage, request, openFilterPopup, rows } = this.state
 
     return (
       <>
@@ -1030,7 +1058,7 @@ class MyListings extends Component {
             {...datagrid.tableProps}
             tableName='my_inventory_grid'
             columns={columns}
-            rows={this.getRows(rows)}
+            rows={rows}
             selectByRowClick
             hideCheckboxes
             loading={datagrid.loading || updatingDatagrid}
