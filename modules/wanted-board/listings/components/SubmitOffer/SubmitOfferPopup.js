@@ -1117,7 +1117,7 @@ class SubmitOfferPopup extends React.Component {
                                 <List.Item>
                                   <List.Content>
                                     <List.Header as='label'>
-                                      <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By' />
+                                      <FormattedMessage id='wantedBoard.dateNeededBy' defaultMessage='Date Needed By' />
                                     </List.Header>
                                     <List.Description as='span'>
                                       {popupValues.neededAt ? (

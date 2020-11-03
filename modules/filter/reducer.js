@@ -82,7 +82,7 @@ export const initialState = {
     provinces: [],
     provincesLoading: false
   },
-  wantedBoard: {
+  wantedBoardListings: {
     isFilterSaving: false,
     isFilterApplying: false,
     autocompleteWarehouse: [],

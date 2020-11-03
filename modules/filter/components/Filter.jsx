@@ -141,6 +141,7 @@ class Filter extends Component {
         inputs[key] !== '' &&
         (Object.keys(inputs[key]).length > 0 || typeof inputs[key] === 'boolean' || typeof inputs[key] === 'number') &&
         key !== 'expiration' &&
+        key !== 'neededAt' &&
         key !== 'mfg'
       ) {
         if (datagridValues[key] && !!datagridValues[key].nested) {
@@ -977,7 +978,8 @@ class Filter extends Component {
       intl: { formatMessage },
       filterState,
       onClose,
-      toastManager
+      toastManager,
+      filterType
     } = this.props
 
     const { savedFiltersActive, openedSaveFilter } = this.state
@@ -1036,6 +1038,7 @@ class Filter extends Component {
                             deleteFilter={this.props.deleteFilter}
                             updateFilterNotifications={this.props.updateFilterNotifications}
                             savedFilterUpdating={this.props.savedFilterUpdating}
+                            filterType={filterType}
                           />
                         </PerfectScrollbar>
                       )}
