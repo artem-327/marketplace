@@ -821,7 +821,7 @@ class SubmitOfferPopup extends React.Component {
         <DateInput
           name={`items[${index}].fulfilledAt`}
           inputProps={{
-            minDate: moment().add(1, 'days'),
+            //minDate: moment().add(1, 'days'), TypeError: Cannot read property 'position' of undefined
             onChange: (e, { name, value }) => this.handleChange(e, { name, value: getStringISODate(value) }),
             clearable: true,
             fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'
