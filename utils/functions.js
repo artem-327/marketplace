@@ -132,7 +132,7 @@ export const getIntOrNull = value => {
 export const getPrice = (quantity, pricingTiers) => {
   if (pricingTiers) {
     if (pricingTiers.length === 1) {
-      return parseInt(pricingTiers[0].pricePerUOM, 10)
+      return parseFloat(pricingTiers[0].pricePerUOM)
     } else {
       let sortedTiers = pricingTiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
       let index = 0
@@ -141,7 +141,7 @@ export const getPrice = (quantity, pricingTiers) => {
           index = i
         } else break
       }
-      return parseInt(sortedTiers[index].pricePerUOM, 10)
+      return parseFloat(sortedTiers[index].pricePerUOM)
     }
   }
   return 0
