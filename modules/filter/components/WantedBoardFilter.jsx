@@ -675,11 +675,11 @@ class WantedBoardFilter extends Component {
       fluid: true,
       options: options,
       loading: autocompleteDataLoading,
-      name: 'search',
-      placeholder: formatMessage({ id: 'filter.searchProductsInventory', defaultMessage: 'Chemical, CAS, Trade' }),
+      name: 'searchProductGroup',
+      placeholder: formatMessage({ id: 'filter.searchProductGroup', defaultMessage: 'Search Product Group' }),
       noResultsMessage,
       onSearchChange: (_, data) => this.handleSearch(data),
-      value: values.search,
+      value: values.searchProductGroup,
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : [])
     }
 
@@ -754,7 +754,7 @@ class WantedBoardFilter extends Component {
         <GridRow>
           <GridColumn width={8}>
             <FormField>
-              <FormattedMessage id='filter.chemicalProductName' defaultMessage='Chemical / Product Name'>
+              <FormattedMessage id='filter.productName' defaultMessage='Product Name'>
                 {text => text}
               </FormattedMessage>
               <BottomMargedDropdown {...dropdownProps} />
@@ -935,7 +935,8 @@ class WantedBoardFilter extends Component {
       intl: { formatMessage },
       filterState,
       onClose,
-      toastManager
+      toastManager,
+      filterType
     } = this.props
 
     const { savedFiltersActive, openedSaveFilter } = this.state
@@ -994,6 +995,7 @@ class WantedBoardFilter extends Component {
                             deleteFilter={this.props.deleteFilter}
                             updateFilterNotifications={this.props.updateFilterNotifications}
                             savedFilterUpdating={this.props.savedFilterUpdating}
+                            filterType={filterType}
                           />
                         </PerfectScrollbar>
                       )}

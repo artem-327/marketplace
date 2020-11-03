@@ -1001,7 +1001,8 @@ class InventoryFilter extends Component {
       intl: { formatMessage },
       filterState,
       onClose,
-      toastManager
+      toastManager,
+      filterType
     } = this.props
 
     const { savedFiltersActive, openedSaveFilter } = this.state
@@ -1060,6 +1061,7 @@ class InventoryFilter extends Component {
                             deleteFilter={this.props.deleteFilter}
                             updateFilterNotifications={this.props.updateFilterNotifications}
                             savedFilterUpdating={this.props.savedFilterUpdating}
+                            filterType={filterType}
                           />
                         </PerfectScrollbar>
                       )}

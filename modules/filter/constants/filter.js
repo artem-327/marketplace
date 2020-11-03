@@ -57,6 +57,20 @@ export const paths = {
   },
   casProduct: {
     id: 'CasProduct.id'
+  },
+  wantedBoard: {
+    productId: 'PurchaseRequest.elements.productGroup.id',
+    casIndexId: 'PurchaseRequest.elements.casProduct.id',
+    expiration: 'PurchaseRequest.expiresAt',
+    neededAt: 'PurchaseRequest.neededAt',
+    quantity: 'PurchaseRequest.quantity',
+    maximumPricePerUOM: 'PurchaseRequest.maximumPricePerUOM',
+    packaging: 'PurchaseRequest.packagingTypes.id',
+    grade: 'PurchaseRequest.grades.id',
+    conforming: 'PurchaseRequest.conditionConforming',
+    form: 'PurchaseRequest.forms.id',
+    assayFrom: 'PurchaseRequest.elements.assayMin',
+    assayTo: 'PurchaseRequest.elements.assayMax',
   }
 }
 
@@ -207,11 +221,11 @@ export const datagridValues = {
   },
 
   searchProductGroup: {
-    paths: [paths.productOffers.marketplaceProductId],
+    paths: [paths.productOffers.marketplaceProductId, paths.wantedBoard.productId],
     description: 'Product Group',
     operator: operators.EQUALS,
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       let modifiedValues = values.map(val => {
         let parsed = JSON.parse(val)
 
@@ -225,7 +239,7 @@ export const datagridValues = {
 
       return {
         operator: this.operator,
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: modifiedValues
       }
     },
@@ -272,15 +286,38 @@ export const datagridValues = {
     toFormik: ({ values }) => values.includes('Incomplete')
   },
 
-  quantityFrom: {
-    paths: [paths.productOffers.quantity],
-    description: 'Quantity From',
-    operator: operators.GREATER_THAN_OR_EQUAL_TO,
+  conforming: {
+    paths: [paths.wantedBoard.conforming],
+    description: 'Condition',
+    operator: operators.LIKE,
 
     toFilter: function (values) {
+      let returnValues = null
+
+      if (values === '') return null
+      if (values) returnValues = [true]
+      else returnValues = [false]
+
       return {
         operator: this.operator,
         path: this.paths[0],
+        values: returnValues.map(val => ({ value: val, description: val }))
+      }
+    },
+    tagDescription: values => values.map(val => val.description).toString(),
+    valuesDescription: values => values.map(val => val.description).toString(),
+    toFormik: ({ values }) => values.includes('true')
+  },
+
+  quantityFrom: {
+    paths: [paths.productOffers.quantity, paths.wantedBoard.quantity],
+    description: 'Quantity From',
+    operator: operators.GREATER_THAN_OR_EQUAL_TO,
+
+    toFilter: function (values, filterType) {
+      return {
+        operator: this.operator,
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: [{ value: values, description: values }]
       }
     },
@@ -297,14 +334,14 @@ export const datagridValues = {
   },
 
   quantityTo: {
-    paths: [paths.productOffers.quantity],
+    paths: [paths.productOffers.quantity, paths.wantedBoard.quantity],
     description: 'Quantity To',
     operator: operators.LESS_THAN_OR_EQUAL_TO,
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       return {
         operator: this.operator,
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: [{ value: values, description: values }]
       }
     },
@@ -371,11 +408,11 @@ export const datagridValues = {
     }
   },
   packagingTypes: {
-    paths: [paths.productOffers.packagingTypes],
+    paths: [paths.productOffers.packagingTypes, paths.wantedBoard.packaging],
     description: 'Packaging Types',
     operator: operators.EQUALS,
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       let modifiedValues = values.map(val => {
         let parsed = JSON.parse(val)
 
@@ -389,7 +426,7 @@ export const datagridValues = {
 
       return {
         operator: this.operator,
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: modifiedValues
       }
     },
@@ -450,11 +487,11 @@ export const datagridValues = {
     }
   },
   productGrades: {
-    paths: [paths.productOffers.productGrades],
+    paths: [paths.productOffers.productGrades, paths.wantedBoard.grade],
     description: 'Product Grades',
     operator: operators.EQUALS,
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       let modifiedValues = values.map(val => {
         let parsed = JSON.parse(val)
 
@@ -468,7 +505,7 @@ export const datagridValues = {
 
       return {
         operator: this.operator,
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: modifiedValues
       }
     },
@@ -490,10 +527,10 @@ export const datagridValues = {
   },
   productForms: {
     operator: operators.EQUALS,
-    paths: [paths.productOffers.productForms],
+    paths: [paths.productOffers.productForms, paths.wantedBoard.form],
     description: 'Product Forms',
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       let modifiedValues = values.map(val => {
         let parsed = JSON.parse(val)
 
@@ -507,7 +544,7 @@ export const datagridValues = {
 
       return {
         operator: this.operator,
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: modifiedValues
       }
     },
@@ -530,14 +567,14 @@ export const datagridValues = {
 
   expirationFrom: {
     operator: operators.GREATER_THAN,
-    paths: [paths.productOffers.expirationDate],
+    paths: [paths.productOffers.expirationDate, paths.wantedBoard.expiration],
     description: 'Expiration From',
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       let date = moment().add(values, 'days')
       return {
         operator: this.operator,
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
@@ -555,14 +592,14 @@ export const datagridValues = {
   },
   expirationTo: {
     operator: operators.LESS_THAN,
-    paths: [paths.productOffers.expirationDate],
+    paths: [paths.productOffers.expirationDate, paths.wantedBoard.expiration],
     description: 'Expiration To',
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       let date = moment().add(values, 'days')
       return {
         operator: this.operator,
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: [{ value: date.format(), description: date.format(dateFormat) }]
       }
     },
@@ -633,13 +670,13 @@ export const datagridValues = {
 
   assayFrom: {
     operator: operators.GREATER_THAN_OR_EQUAL_TO,
-    paths: [paths.productOffers.assayFrom],
+    paths: [paths.productOffers.assayFrom, paths.wantedBoard.assayFrom],
     description: 'Assay Min.',
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       return {
         operator: this.operator,
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: [{ value: values, description: values }]
       }
     },
@@ -656,13 +693,13 @@ export const datagridValues = {
   },
   assayTo: {
     operator: operators.LESS_THAN_OR_EQUAL_TO,
-    paths: [paths.productOffers.assayTo],
+    paths: [paths.productOffers.assayTo, paths.wantedBoard.assayTo],
     description: 'Assay Max.',
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       return {
         operator: this.operator,
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: [{ value: values, description: values }]
       }
     },
@@ -883,10 +920,10 @@ export const datagridValues = {
   },
 
   expiration: {
-    paths: [paths.productOffers.expiration],
+    paths: [paths.productOffers.expiration, paths.wantedBoard.expiration],
     description: 'Expiration',
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType) {
       const data = [
         {
           value: values
@@ -894,7 +931,7 @@ export const datagridValues = {
       ]
 
       return {
-        path: this.paths[0],
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
         values: data
       }
     },
@@ -1068,16 +1105,19 @@ export const datagridValues = {
 //   return values
 // }
 
-export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
+export const groupFilters = (appliedFilters, { currencyCode } = '$', filterType) => {
+
+  console.log('!!!!!!!!!! groupFilters filterType', filterType)
+
   let groups = [
     {
       description: 'Quantity',
       from: {
-        path: paths.productOffers.quantity,
+        path: filterType === 'wantedBoardListings' ? paths.wantedBoard.quantity : paths.productOffers.quantity,
         operator: operators.GREATER_THAN_OR_EQUAL_TO
       },
       to: {
-        path: paths.productOffers.quantity,
+        path: filterType === 'wantedBoardListings' ? paths.wantedBoard.quantity : paths.productOffers.quantity,
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
       tagDescription: (from, to) => {
@@ -1135,11 +1175,11 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
     {
       description: 'Assay',
       from: {
-        path: paths.productOffers.assayFrom,
+        path: filterType === 'wantedBoardListings' ? paths.wantedBoard.assayFrom : paths.productOffers.assayFrom,
         operator: operators.GREATER_THAN_OR_EQUAL_TO
       },
       to: {
-        path: paths.productOffers.assayTo,
+        path: filterType === 'wantedBoardListings' ? paths.wantedBoard.assayTo : paths.productOffers.assayTo,
         operator: operators.LESS_THAN_OR_EQUAL_TO
       },
       tagDescription: (from, to) => {
