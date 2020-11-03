@@ -855,13 +855,13 @@ class WantedBoardFilter extends Component {
                       data-test='filter_advanced_filter'>
                       {formatMessage({ id: 'filter.advancedFilter', defaultMessage: 'Advanced Filter' })}
                     </Menu.Item>
-                    <Menu.Item
+                    {false && (<Menu.Item
                       key={'savedFilters'}
                       onClick={() => this.toggleFilter(true)}
                       active={savedFiltersActive}
                       data-test='filter_saved_filters'>
                       {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
-                    </Menu.Item>
+                    </Menu.Item>)}
                   </CustomMenu>
 
                   <StyledModalContent>
