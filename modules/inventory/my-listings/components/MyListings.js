@@ -753,7 +753,12 @@ class MyListings extends Component {
         ),
         fobPrice: (
           <StyledPopup
-            content={<QuickEditPricingPopup rawData={r.rawData} />}
+            content={
+              <QuickEditPricingPopup
+                handlechange={(values, index) => this.handleChangePriceTiers(values, rIndex, index)}
+                rawData={getSafe(() => this.state.rows[rIndex].rawData, '') || r.rawData}
+              />
+            }
             on='click'
             trigger={<FobPrice>{r.fobPrice}</FobPrice>}
             open={pricingEditOpenId === r.rawData.id}
@@ -806,6 +811,20 @@ class MyListings extends Component {
       }
     })
     this.setState({ rows: result })
+  }
+
+  handleChangePriceTiers = (values, rIndex, pIndex) => {
+    let newRows = this.state.rows
+
+    if (pIndex) {
+      //pIndex means pricingTiers index and that row was changed. values are {}
+      newRows[rIndex].rawData.pricingTiers[pIndex] = values
+    } else {
+      // it was added or removed row pricingTiers. values are []
+      newRows[rIndex].rawData.pricingTiers = values
+    }
+
+    this.setState({ rows: newRows })
   }
 
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
