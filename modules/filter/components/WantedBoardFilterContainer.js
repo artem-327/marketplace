@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import WantedBoardFilter from './WantedBoardFilter'
 import * as Actions from '../actions'
 import { currency } from '~/constants/index'
-import { getAutocompleteData, applyDatagridFilter } from '~/modules/wanted-board/actions'
+import { getAutocompleteData, applyDatagridFilter, searchCasNumber } from '~/modules/wanted-board/actions'
 
 import { getSafe } from '~/utils/functions'
 
@@ -12,14 +12,29 @@ function mapStateToProps(store) {
     ...store.filter,
     ...store.filter.wantedBoardListings,
     preferredCurrency: getSafe(() => store.auth.identity.preferredCurrency.code, currency),
-    autocompleteDataLoading: store.simpleAdd.autocompleteDataLoading,
-    autocompleteData: store.simpleAdd.autocompleteData,
+    autocompleteDataLoading: store.wantedBoard.autocompleteDataLoading,
+    autocompleteData: store.wantedBoard.autocompleteData.map(el => ({
+      ...el,
+      value: JSON.stringify({
+        id: el.key,
+        name: el.text
+      })
+    })),
+    searchedCasNumbersLoading: store.wantedBoard.searchedCasNumbersLoading,
+    searchedCasNumbers: store.wantedBoard.searchedCasNumbers.map(el => ({
+      ...el,
+      value: JSON.stringify({
+        id: el.key,
+        name: el.text
+      })
+    }))
   }
 }
 
 const mapDispatchToProps = {
   getAutocompleteData,
   applyDatagridFilter,
+  searchCasNumber,
   ...Actions
 }
 

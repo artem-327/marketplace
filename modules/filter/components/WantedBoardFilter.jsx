@@ -51,34 +51,16 @@ import {
   StyledModalHeader
 } from '../constants/layout'
 
-const optionsYesNo = [
-  {
-    id: 0,
-    text: 'Select Option',
-    value: ''
-  },
-  {
-    id: 1,
-    text: 'Yes',
-    value: true
-  },
-  {
-    id: 2,
-    text: 'No',
-    value: false
-  }
-]
-
 class WantedBoardFilter extends Component {
   state = {
     savedFiltersActive: false,
     openedSaveFilter: false,
     dateDropdown: {
       expiration: dateDropdownOptions[0].value,
+      neededAt: dateDropdownOptions[0].value,
       mfg: dateDropdownOptions[0].value
     },
     searchQuery: '',
-    searchWarehouseQuery: '',
     isTyping: false,
     searchManufacturerQuery: '',
     searchOriginQuery: '',
@@ -86,36 +68,16 @@ class WantedBoardFilter extends Component {
 
   componentDidMount() {
     const {
-      fetchProductConditions,
       fetchProductForms,
       fetchPackagingTypes,
       fetchProductGrade,
       setParams,
-      autocompleteManufacturer,
-      autocompleteOrigin,
-      filterState,
-      appliedFilter,
-      onApply,
-      applyDatagridFilter
+      filterState
     } = this.props
 
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
-    if (typeof this.props.searchWarehouseUrl !== 'undefined')
-      this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
-
-    //It is nessery to get all manufacturer to options in dropdown if user select saved filter and want to see parametr in dropdown
-    //In the future if will be a lot of manufacturer we can added search to the dropdown and here we can specify pattern to the searchManufacturerUrl
-    //if (!autocompleteManufacturer || !autocompleteManufacturer.length)
-    //  this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(''))
-
-    //if (!autocompleteOrigin || !autocompleteOrigin.length) {
-    //  this.props.getAutocompleteOrigin(this.props.getOriginUrl)
-    //}
-    //this.handleGetSavedFilters()
-
     Promise.all([
-      this.fetchIfNoData(fetchProductConditions, 'productConditions'),
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchProductGrade, 'productGrades'),
@@ -162,6 +124,7 @@ class WantedBoardFilter extends Component {
         inputs[key] !== '' &&
         (Object.keys(inputs[key]).length > 0 || typeof inputs[key] === 'boolean' || typeof inputs[key] === 'number') &&
         key !== 'expiration' &&
+        key !== 'neededAt' &&
         key !== 'mfg'
       ) {
         if (datagridValues[key] && !!datagridValues[key].nested) {
@@ -334,14 +297,14 @@ class WantedBoardFilter extends Component {
           datagrid.paths.includes(filters[i].path) &&
           filters[i].operator === datagrid.operator
         ) {
-          if (filters[i].path === 'ProductOffer.lotExpirationDate') {
+          if (filters[i].path === 'PurchaseRequest.expiresAt') {
             formikValues['expiration'] = datagridValues['expiration'].toFormik(filters[i].operator)
           }
-          if (filters[i].path === 'ProductOffer.lotManufacturedDate') {
-            formikValues['mfg'] = datagridValues['mfg'].toFormik(filters[i].operator)
+          if (filters[i].path === 'PurchaseRequest.neededAt') {
+            formikValues['neededAt'] = datagridValues['neededAt'].toFormik(filters[i].operator)
           }
-          if (filters[i].path === 'ProductOffer.companyProduct.id') {
-            this.searchProductOffer(filters[i].values)
+          if (filters[i].path === 'urchaseRequest.elements.productGroup.id') {
+            this.searchProductGroup(filters[i].values)
           }
           formikValues[key] = datagrid.toFormik(filters[i], this.props)
         }
@@ -381,19 +344,20 @@ class WantedBoardFilter extends Component {
 
   handleSearch = debounce(({ searchQuery }) => {
     if (searchQuery.length > 1) {
-      let params = { searchUrl: this.props.searchUrl(searchQuery), searchQuery }
+      let params = {
+        searchUrl: `/prodex/api/product-groups/search?pattern=${searchQuery}`
+      }
       this.props.getAutocompleteData(params)
     }
   }, 250)
 
-  handleSearchWarehouse = debounce(({ searchQuery, name }) => {
+  handleSearchCasProduct = debounce(({ searchQuery }) => {
     if (searchQuery.length > 1) {
-      this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(searchQuery))
-      this.setState({ searchWarehouseQuery: searchQuery })
+      this.props.searchCasNumber(searchQuery)
     }
   }, 250)
 
-  searchProductOffer = async filters => {
+  searchProductGroup = async filters => {
     let searchQuery = ''
     if (filters.length > 1) {
       for (let i = 0; i < filters.length; i++) {
@@ -402,7 +366,9 @@ class WantedBoardFilter extends Component {
           null
         )
         if (searchQuery && searchQuery.name) {
-          let params = { searchUrl: this.props.searchUrl(searchQuery.name), searchQuery: searchQuery.name }
+          let params = {
+            searchUrl: `/prodex/api/product-groups/search?pattern=${searchQuery.name}`
+          }
           try {
             await this.props.getAutocompleteData(params)
           } catch (err) {
@@ -592,24 +558,17 @@ class WantedBoardFilter extends Component {
     )
   }
 
-  // {"id":"431210","name":"1,2-dibromo-3,3,3-trifluoropropane","casNumber":"431-21-0"}
-  //  {"id":"431210","name":"1,2-dibromo-3,3,3-trifluoropropane","casNumberCombined":"431-21-0"}
-
   getOptions = options => {
     return options.map(option => {
-      let parsed = option.value ? JSON.parse(option.value) : JSON.parse(option)
+      let parsed = JSON.parse(option.value)
       return {
-        key: option.key || parsed.id,
-        text: option.text || parsed.name + ` ${parsed.casNumber}`,
-        value: option.value || option,
+        key: option.key,
+        text: option.text,
+        value: option.value,
         content: (
           <StyledGrid>
             <GridRow>
-              <GridColumn computer={8}>{parsed.name}</GridColumn>
-
-              <SmallerTextColumn computer={8} textAlign='right'>
-                {parsed.casNumber}
-              </SmallerTextColumn>
+              <GridColumn computer={16}>{parsed.name}</GridColumn>
             </GridRow>
           </StyledGrid>
         )
@@ -619,19 +578,14 @@ class WantedBoardFilter extends Component {
 
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError, setFieldTouched }) => {
     let {
-      productConditions,
       productForms,
       packagingTypes,
       productGrades,
       intl,
       autocompleteData,
       autocompleteDataLoading,
-      autocompleteWarehouse,
-      autocompleteWarehouseLoading,
-      autocompleteManufacturer,
-      autocompleteManufacturerLoading,
-      autocompleteOrigin,
-      autocompleteOriginLoading
+      searchedCasNumbers,
+      searchedCasNumbersLoading
     } = this.props
 
     const { formatMessage } = intl
@@ -641,12 +595,6 @@ class WantedBoardFilter extends Component {
       values,
       formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
       'packagingTypes'
-    )
-    let productConditionDropdown = this.generateDropdown(
-      productConditions,
-      values,
-      formatMessage({ id: 'filter.selectCondition', defaultMessage: 'Select Condition (Multiple Select)' }),
-      'productConditions'
     )
     let productGradeDropdown = this.generateDropdown(
       productGrades,
@@ -683,69 +631,23 @@ class WantedBoardFilter extends Component {
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : [])
     }
 
-    let noWarehouseResultsMessage = null
-
-    if (this.state.searchWarehouseQuery.length <= 1)
-      noWarehouseResultsMessage = (
-        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
-      )
-    if (autocompleteWarehouseLoading)
-      noWarehouseResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
-
-    let dropdownWarehouseProps = {
-      search: true,
+    let dropdownCasProductProps = {
+      search: _ => searchedCasNumbers,
       selection: true,
-      multiple: false,
+      multiple: true,
       fluid: true,
-      clearable: true,
-      options: autocompleteWarehouse.map(warehouse => {
-        if (warehouse.text) {
-          var { text } = warehouse
-        } else {
-          var text = warehouse.deliveryAddress
-            ? `${warehouse.deliveryAddress.address.streetAddress}, ${warehouse.deliveryAddress.address.city}, ${
-              warehouse.deliveryAddress.address.zip.zip
-              }${
-              warehouse.deliveryAddress.address.province ? `, ${warehouse.deliveryAddress.address.province.name}` : ''
-              }, ${warehouse.deliveryAddress.address.country.name}`
-            : ''
-        }
-
-        return {
-          key: warehouse.id,
-          text: text,
-          value: JSON.stringify({ id: warehouse.id, name: warehouse.name, text: text })
-        }
-      }),
-      loading: autocompleteWarehouseLoading,
-      name: 'warehouse',
-      placeholder: <FormattedMessage id='filter.searchWarehouse' defaultMessage='Search Warehouse' />,
-      noWarehouseResultsMessage: noWarehouseResultsMessage,
-      onSearchChange: (_, data) => {
-        this.handleSearchWarehouse(data)
-      },
-      value: values.warehouse,
-      onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null)
+      options: searchedCasNumbers,
+      loading: searchedCasNumbersLoading,
+      name: 'searchCasProduct',
+      placeholder: formatMessage({ id: 'filter.searchCasProduct', defaultMessage: 'Search CAS Product' }),
+      noResultsMessage,
+      onSearchChange: (_, data) => this.handleSearchCasProduct(data),
+      value: values.searchCasProduct,
+      onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : [])
     }
 
-    let noManufacturerResultsMessage = null
-    if (this.state.searchManufacturerQuery.length <= 1)
-      noManufacturerResultsMessage = (
-        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
-      )
-    if (autocompleteManufacturerLoading)
-      noManufacturerResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
-
-    let noOriginResultsMessage = null
-    if (this.state.searchOriginQuery.length <= 1)
-      noOriginResultsMessage = (
-        <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search' />
-      )
-    if (autocompleteOriginLoading)
-      noOriginResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
-
     if (!autocompleteDataLoading) dropdownProps.icon = null
-    //if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
+    if (!searchedCasNumbersLoading) dropdownCasProductProps.icon = null
 
     let currencySymbol = getSafe(() => this.props.preferredCurrency.symbol, '$')
 
@@ -762,10 +664,10 @@ class WantedBoardFilter extends Component {
           </GridColumn>
           <GridColumn width={8}>
             <FormField>
-              <FormattedMessage id='filter.warehouse' defaultMessage='Warehouse'>
+              <FormattedMessage id='filter.casProduct' defaultMessage='CAS Product'>
                 {text => text}
               </FormattedMessage>
-              <BottomMargedDropdown {...dropdownWarehouseProps} />
+              <BottomMargedDropdown {...dropdownCasProductProps} />
             </FormField>
           </GridColumn>
         </GridRow>
@@ -776,8 +678,8 @@ class WantedBoardFilter extends Component {
             {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
           </GridColumn>
           <GridColumn width={8}>
-            <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />
-            {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
+            <FormattedMessage id='filter.dateNeededBy' defaultMessage='Date Needed By' />
+            {this.dateField('neededAt', { values, setFieldValue, handleChange, min: 0 })}
           </GridColumn>
         </GridRow>
 
@@ -806,31 +708,15 @@ class WantedBoardFilter extends Component {
             </SmallGrid>
           </GridColumn>
           <GridColumn width={8}>
-            <FormattedMessage id='filter.price' />
+            <FormattedMessage id='filter.maximumPricePerUOM' />
             <SmallGrid>
               <GridRow>
-                <GridColumn width={8} data-test='filter_price_inp'>
+                <GridColumn width={16} data-test='filter_price_inp'>
                   {this.inputWrapper(
-                    'priceFrom',
+                    'maximumPricePerUOM',
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
-                      labelPosition: 'left',
-                      fluid: true
-                    },
-                    currencySymbol,
-                    'green'
-                  )}
-                </GridColumn>
-                <GridColumn className='price-input' width={8}>
-                  {this.inputWrapper(
-                    'priceTo',
-                    {
-                      type: 'number',
-                      placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
                     currencySymbol,
@@ -856,7 +742,30 @@ class WantedBoardFilter extends Component {
         <GridRow>
           <GridColumn width={8}>
             <FormattedMessage id='filter.condition' defaultMessage='Condition' />
-            {productConditionDropdown}
+            <Dropdown
+              name='conforming'
+              options={[
+                {
+                  key: 1,
+                  text: formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' }),
+                  value:
+                    `{"value":"TRUE","name":"${formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' })}"}`
+                },
+                {
+                  key: 2,
+                  text: formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' }),
+                  value:
+                    `{"value":"FALSE","name":"${formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' })}"}`
+                },
+              ]}
+              selection
+              inputProps={{
+                fluid: true,
+                clearable: true,
+                upward: true,
+                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
+              }}
+            />
           </GridColumn>
           <GridColumn width={8}>
             <FormattedMessage id='filter.form' defaultMessage='Form' />
@@ -897,31 +806,6 @@ class WantedBoardFilter extends Component {
                 </GridColumn>
               </GridRow>
             </SmallGrid>
-          </GridColumn>
-          <GridColumn width={4}>
-            <FormattedMessage id='filter.incomplete' defaultMessage='Incomplete' />
-            <Dropdown
-              name='incomplete'
-              options={[
-                {
-                  key: 1,
-                  text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
-                  value: true
-                },
-                {
-                  id: 2,
-                  text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
-                  value: false
-                },
-              ]}
-              selection
-              inputProps={{
-                fluid: true,
-                clearable: true,
-                upward: true,
-                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
-              }}
-            />
           </GridColumn>
         </GridRow>
       </PopupGrid>
@@ -1169,14 +1053,10 @@ WantedBoardFilter.propTypes = {
   filters: array,
   getAutocompleteData: func,
   autocompleteData: array,
-  getAutocompleteWarehouse: func,
-  autocompleteWarehouse: array,
   savedFilters: array,
   getSavedFilters: func,
   savedFiltersLoading: bool,
   savedUrl: string,
-  searchUrl: func,
-  searchWarehouseUrl: func,
   filterType: string,
   autocompleteManufacturer: array,
   getAutocompleteManufacturer: func,
@@ -1195,15 +1075,13 @@ WantedBoardFilter.defaultProps = {
   animation: 'overlay',
   filters: [],
   autocompleteData: [],
-  autocompleteWarehouse: [],
   savedFilters: [],
   savedFiltersLoading: false,
   filterType: filterTypes.WANTED_BOARD,
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
   getOriginUrl: '/prodex/api/countries',
-  savedUrl: '/prodex/api/product-offers/own/datagrid/saved-filters',
-  searchUrl: text => '/prodex/api/purchase-requests/other/datagrid',
+  savedUrl: '/prodex/api/purchase-requests/other/datagrid/saved-filters',
   searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${text}`,
   onApply: filter => {},
   onClear: () => {},

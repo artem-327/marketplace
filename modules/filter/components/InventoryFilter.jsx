@@ -166,6 +166,7 @@ class InventoryFilter extends Component {
         inputs[key] !== '' &&
         (Object.keys(inputs[key]).length > 0 || typeof inputs[key] === 'boolean' || typeof inputs[key] === 'number') &&
         key !== 'expiration' &&
+        key !== 'neededAt' &&
         key !== 'mfg'
       ) {
         if (datagridValues[key] && !!datagridValues[key].nested) {

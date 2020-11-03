@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { Container, Input, Button, Label } from 'semantic-ui-react'
+import { Container, Input, Button, Label, Dropdown } from 'semantic-ui-react'
 import { PlusCircle, ChevronDown, ChevronRight } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -20,6 +20,16 @@ import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import styled from 'styled-components'
 import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
 import SearchInput from '../../components/SearchInput'
+import { statusFilterList } from '../../constants/constants'
+
+const StyledDropdown = styled(Dropdown)`
+  z-index: 501 !important;
+  height: auto !important;
+  min-height: 40px !important;
+  input.search {
+    height: auto !important;
+  }
+`
 
 const CountedName = styled.div`
   display: flex;
@@ -216,7 +226,8 @@ class BidsReceived extends Component {
       pageNumber: 0,
       open: false,
       filterValues: {
-        searchByNamesAndCas: null
+        searchByNamesAndCas: null,
+        statusFilter: 0
       },
       expandedRowIds: []
     }
@@ -283,6 +294,10 @@ class BidsReceived extends Component {
         this.handleFiltersValue(filter)
       }
     )
+  }
+
+  handleStatusFilterChange = value => {
+    this.setState({ filterValues: { ...this.state.filterValues, statusFilter: value } })
   }
 
   getActions = () => {
@@ -414,9 +429,43 @@ class BidsReceived extends Component {
 
   getRows = rows => {
     return rows.map(row => {
-      const offersLength = row.purchaseRequestOffers.length
+      let filteredPurchaseRequestOffers = []
+
+      switch (this.state.filterValues.statusFilter) {
+        case 1: {
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
+            el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'NORMAL'
+          )
+          break
+        }
+        case 2: {
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
+            (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'NORMAL')
+            || (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'COUNTER')
+          )
+          break
+        }
+        case 3: {
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
+            el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'COUNTER'
+          )
+          break
+        }
+        case 4: {
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
+            (el.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' && el.cfHistoryLastType === 'NORMAL')
+            || (el.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER' && el.cfHistoryLastType === 'COUNTER')
+            || (el.cfHistoryLastStatus === '32' && el.cfHistoryLastType === 'COUNTER')
+          )
+          break
+        }
+        default: filteredPurchaseRequestOffers = row.purchaseRequestOffers
+      }
+
+      const offersLength = filteredPurchaseRequestOffers.length
       return {
         ...row,
+        purchaseRequestOffers: filteredPurchaseRequestOffers,
         product: (
           <CountedName>
             <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
@@ -516,6 +565,16 @@ class BidsReceived extends Component {
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
+              <div className='column' style={{ width: '340px'}}>
+                <StyledDropdown
+                  options={statusFilterList}
+                  value={this.state.filterValues.statusFilter}
+                  selection
+                  name='statusFilter'
+                  onChange={(event, { value }) => this.handleStatusFilterChange(value)}
+                  fluid
+                />
+              </div>
               <div className='column' style={{ width: '340px'}}>
                 <SearchInput
                   onChange={this.SearchByNamesAndCasChanged}

@@ -263,6 +263,49 @@ export const datagridValues = {
     }
   },
 
+  searchCasProduct: {
+    paths: [paths.wantedBoard.casIndexId],
+    description: 'CAS Product',
+    operator: operators.EQUALS,
+
+    toFilter: function (values) {
+      let modifiedValues = values.map(val => {
+        let parsed = JSON.parse(val)
+
+        return {
+          value: parsed.id,
+          description: JSON.stringify({
+            name: parsed.name
+          })
+        }
+      })
+
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: modifiedValues
+      }
+    },
+
+    valuesDescription: function (values, params) {
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return parsed.name
+      })
+    },
+
+    tagDescription: function (values) {
+      return this.valuesDescription(values)
+    },
+
+    toFormik: function ({ values }) {
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return JSON.stringify({ id: parseInt(val.value), name: parsed.name })
+      })
+    }
+  },
+
   incomplete: {
     paths: [paths.productOffers.cfStatus],
     description: 'Status',
@@ -292,44 +335,38 @@ export const datagridValues = {
     operator: operators.LIKE,
 
     toFilter: function (values) {
-      let returnValues = null
+      let parsed = JSON.parse(values)
 
-      if (values === '') return null
-      if (values) returnValues = [true]
-      else returnValues = [false]
+      const modifiedValues = {
+        value: parsed.value,
+        description: JSON.stringify({
+          name: parsed.name
+        })
+      }
 
       return {
         operator: this.operator,
         path: this.paths[0],
-        values: returnValues.map(val => ({ value: val, description: val }))
-      }
-    },
-    tagDescription: values => values.map(val => val.description).toString(),
-    valuesDescription: values => values.map(val => val.description).toString(),
-    toFormik: ({ values }) => values.includes('true')
-  },
-
-  quantityFrom: {
-    paths: [paths.productOffers.quantity, paths.wantedBoard.quantity],
-    description: 'Quantity From',
-    operator: operators.GREATER_THAN_OR_EQUAL_TO,
-
-    toFilter: function (values, filterType) {
-      return {
-        operator: this.operator,
-        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
-        values: [{ value: values, description: values }]
+        values: [modifiedValues]
       }
     },
 
-    tagDescription: values => `>= ${values[0].description} pckgs`,
+    valuesDescription: function (values, params) {
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return parsed.name
+      })
+    },
 
-    valuesDescription: function (values) {
-      return values.map(val => val.description)
+    tagDescription: function (values) {
+      return this.valuesDescription(values)
     },
 
     toFormik: function ({ values }) {
-      return values[0].value.toString()
+      return values.map(val => {
+        let parsed = JSON.parse(val.description)
+        return JSON.stringify({ id: val.value, name: parsed.name })
+      })
     }
   },
 
@@ -407,6 +444,33 @@ export const datagridValues = {
       return values[0].value.toString()
     }
   },
+
+  maximumPricePerUOM: {
+    paths: [paths.wantedBoard.maximumPricePerUOM],
+    description: 'Maximum Price per UOM',
+    operator: operators.EQUALS,
+
+    toFilter: function (values) {
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: [{ value: values, description: values }]
+      }
+    },
+
+    tagDescription: (values, { currencyCode } = '$') => (
+      <label>{<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}</label>
+    ),
+
+    valuesDescription: function (values) {
+      return values.map(val => val.description)
+    },
+
+    toFormik: function ({ values }) {
+      return values[0].value.toString()
+    }
+  },
+
   packagingTypes: {
     paths: [paths.productOffers.packagingTypes, paths.wantedBoard.packaging],
     description: 'Packaging Types',
@@ -482,7 +546,6 @@ export const datagridValues = {
     },
 
     toFormik: function ({ values }, { productConditions }) {
-      //return[]  // ! ! debug
       return toFormikArray(values, productConditions)
     }
   },
@@ -605,6 +668,57 @@ export const datagridValues = {
     },
 
     tagDescription: values => `Expires < ${values[0].description}`,
+
+    valuesDescription: function (values) {
+      return values.map(val => val.description)
+    },
+
+    toFormik: function ({ values }) {
+      const days = moment().diff(values[0].value, 'days') * -1 + 1
+      return days
+    }
+  },
+
+  neededAtFrom: {
+    operator: operators.GREATER_THAN,
+    paths: [paths.wantedBoard.neededAt],
+    description: 'Date Needed From',
+
+    toFilter: function (values) {
+      let date = moment().add(values, 'days')
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
+      }
+    },
+
+    tagDescription: values => `Needed By > ${values[0].description}`,
+
+    valuesDescription: function (values) {
+      return values.map(val => val.description)
+    },
+
+    toFormik: function ({ values }) {
+      const days = moment().diff(values[0].value, 'days') * -1 + 1
+      return days
+    }
+  },
+  neededAtTo: {
+    operator: operators.LESS_THAN,
+    paths: [paths.wantedBoard.neededAt],
+    description: 'Date Needed To',
+
+    toFilter: function (values, filterType) {
+      let date = moment().add(values, 'days')
+      return {
+        operator: this.operator,
+        path: this.paths[0],
+        values: [{ value: date.format(), description: date.format(dateFormat) }]
+      }
+    },
+
+    tagDescription: values => `Needed By < ${values[0].description}`,
 
     valuesDescription: function (values) {
       return values.map(val => val.description)
@@ -946,6 +1060,33 @@ export const datagridValues = {
     }
   },
 
+  neededAt: {
+    paths: [paths.wantedBoard.neededAt],
+    description: 'Expiration',
+
+    toFilter: function (values) {
+      const data = [
+        {
+          value: values
+        }
+      ]
+
+      return {
+        path: this.paths[0],
+        values: data
+      }
+    },
+    toFormik: function (operator) {
+      let result
+      if (operator === 'LESS_THAN') {
+        result = 'To'
+      } else if (operator === 'GREATER_THAN') {
+        result = 'From'
+      }
+      return result
+    }
+  },
+
   mfg: {
     paths: [paths.productOffers.mfg],
     description: 'Mfg',
@@ -1106,8 +1247,6 @@ export const datagridValues = {
 // }
 
 export const groupFilters = (appliedFilters, { currencyCode } = '$', filterType) => {
-
-  console.log('!!!!!!!!!! groupFilters filterType', filterType)
 
   let groups = [
     {
@@ -1298,7 +1437,8 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$', filterType)
       results.push({
         description: filter && filter.description,
         valuesDescription: filter && filter.valuesDescription && filter.valuesDescription.toString(),
-        tagDescription: filter && filter.tagDescription && filter.tagDescription.toString(),
+        tagDescription: filter && filter.tagDescription && Array.isArray(filter.tagDescription)
+          ? filter.tagDescription.toString() : filter.tagDescription,
         indexes: [i]
       })
     }
