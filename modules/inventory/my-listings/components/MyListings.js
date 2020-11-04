@@ -388,7 +388,8 @@ class MyListings extends Component {
       filterValues: {
         SearchByNamesAndTags: null
       },
-      rows: []
+      rows: [],
+      updatedRow: false
     }
   }
 
@@ -460,10 +461,18 @@ class MyListings extends Component {
       datagrid.setFilter(datagridFilter, datagridFilterReload, 'inventory')
     }
     if (
-      (!prevState.rows.length && !this.state.rows.length && !prevProps.rows.length && this.props.rows.length) ||
-      prevProps.pricingEditOpenId !== this.props.pricingEditOpenId
+      (!getSafe(() => prevState.rows.length, '') &&
+        !getSafe(() => this.state.rows.length, '') &&
+        !getSafe(() => prevProps.rows.length, '') &&
+        getSafe(() => this.props.rows.length, '')) ||
+      getSafe(() => prevProps.rows[0].id, '') !== getSafe(() => this.props.rows[0].id, '') ||
+      getSafe(() => prevProps.pricingEditOpenId, '') !== getSafe(() => this.props.pricingEditOpenId, '') ||
+      (getSafe(() => this.state.updatedRow, '') && !getSafe(() => prevState.updateRow, ''))
     ) {
       this.getRows(this.props.rows)
+      if (this.state.updatedRow && !prevState.updateRow) {
+        this.setState({ updatedRow: false })
+      }
     }
   }
 
@@ -802,10 +811,12 @@ class MyListings extends Component {
                     e.preventDefault()
                     try {
                       this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
-                      datagrid.updateRow(r.id, () => ({
+                      this.props.datagrid.updateRow(r.id, () => ({
                         ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                       }))
+                      // Its necessary to render and see changes in MyListing when datagrid updated row
+                      this.setState({ updatedRow: true })
                     } catch (error) {
                       console.error(error)
                     }
