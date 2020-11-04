@@ -33,6 +33,14 @@ const StyledStatusLabel = styled(Label)`
   }
 `
 
+const StyledNotification = styled.div`
+  cursor: pointer;
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+`
+
 class Table extends Component {
   state = {
     columns: [
@@ -101,14 +109,13 @@ class Table extends Component {
 
   notificationText = row => {
     return (
-      <div
-        style={{ cursor: 'pointer' }}
+      <StyledNotification
         onClick={() => {
           if (row.read) this.handleClickOnRead(row)
           else this.handleClickOnUnread(row)
         }}>
         {ReactHtmlParser(row.text)}
-      </div>
+      </StyledNotification>
     )
   }
 

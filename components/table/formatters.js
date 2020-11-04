@@ -7,6 +7,11 @@ import styled from 'styled-components'
 const DropdownActions = styled(Dropdown)`
   display: block !important;
   height: 100% !important;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
 `
 
 const DivName = styled.div`

@@ -106,6 +106,11 @@ const SpanText = styled.span`
   overflow: hidden !important;
   font-weight: 500;
   cursor: pointer;
+  
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
 `
 
 const DivIcons = styled.div`
