@@ -805,7 +805,13 @@ class Detail extends Component {
         })
       }
       this.setState({ openDocumentsAttachments: newAttachments })
-      setTimeout(() => this.props.getSaleOrder(this.props.order.id), 250)
+      setTimeout(async () => {
+        if (getSafe(() => this.props.router.query.type, false) === 'sales') {
+          await getSaleOrder(this.props.order.id)
+        } else {
+          await getPurchaseOrder(this.props.order.id)
+        }
+      }, 250)
     } catch (error) {
       console.error(error)
     } finally {
