@@ -36,6 +36,9 @@ export default class PriceControl extends Component {
     }
 
     let { item } = this.props
+    console.log('PriceControl===item====================================')
+    console.log(item)
+    console.log('====================================')
 
     let {
       model: { rule }
@@ -71,9 +74,9 @@ export default class PriceControl extends Component {
         // zapíše se hodnota do proměnné pro multiplier i pro addition
         // záleží který typ je vybrán
         // parseFloat se mi nezdá že by mělo 2 parametry (smazat 10)
-        values = { priceAddition: value ? parseFloat(value, 10) : 0, priceMultiplier: 0 }
+        values = { priceAddition: value ? parseFloat(value) : 0, priceMultiplier: 0 }
       } else {
-        values = { priceMultiplier: value ? parseFloat(value, 10) : 0, priceAddition: 0 }
+        values = { priceMultiplier: value ? parseFloat(value) : 0, priceAddition: 0 }
       }
     }
     console.log('PriceControl===values====================================')
@@ -98,12 +101,17 @@ export default class PriceControl extends Component {
         if (getSafe(() => el.elements.length, 0) > 0) {
           el.elements.forEach(e => {
             if (!e.priceOverride) asignValues(values, e)
+            if (getSafe(() => e.elements.length, 0) > 0) {
+              e.elements.forEach(ele => {
+                if (!ele.priceOverride) asignValues(values, ele)
+              })
+            }
           })
         }
       })
     }
     // tohle tu myslím nemusí vůbec být, protože měníme celou dobu samotný item
-    let copy = _.cloneDeep(item)
+    //let copy = _.cloneDeep(item)
 
     // to by mělo být pravděpodobně použito výše
     // changeInModel(copy.model.rule.elements, values)

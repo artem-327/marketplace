@@ -106,7 +106,7 @@ class Broadcast extends Component {
         let parent = nodePath[nodePath.length - 2]
         if (
           !n.model.rule.priceOverride &&
-          (!getSafe(() => parent.model.rule.priceOverride, 0) || node.model.rule.id === parent.model.rule.id)
+          (!getSafe(() => parent.model.rule.priceOverride, 0) || n.model.rule.id === parent.model.rule.id)
         ) {
           n.model.rule.priceAddition = node.model.rule.priceAddition
           n.model.rule.priceMultiplier = node.model.rule.priceMultiplier
@@ -121,7 +121,7 @@ class Broadcast extends Component {
     // pravděpodobně slouží jen jako bolean
     for (let i = 0; i < path.length - 1; i++) {
       let { priceAddition, priceMultiplier } = path[i].model.rule
-      if (priceAddition || priceMultiplier) node.model.rule.priceOverride = 1
+      if (priceAddition || priceMultiplier) path[i].model.rule.priceOverride = 1
     }
     // dám statu vědět, že se změnil strom a není ještě uložený
     // slouží k vyvolání popup když uživatel chce odejít ze stránky a nemá ještě uloženo
@@ -263,6 +263,9 @@ class Broadcast extends Component {
       filter,
       intl: { formatMessage }
     } = this.props
+    console.log('getFilteredTree===treeData=================================')
+    console.log(treeData)
+    console.log('====================================')
 
     const fs = filter.search.toLowerCase()
 
@@ -366,7 +369,7 @@ class Broadcast extends Component {
       tree.walk(n => (n.model.expanded = true))
     }
 
-    console.log('Broadcast===getFilteredTree===tree=================================')
+    console.log('Broadcast===getFilteredTree===tree===updated==============================')
     console.log(tree)
     console.log('====================================')
 
@@ -539,7 +542,7 @@ class Broadcast extends Component {
     this.updateInTreeData(node)
     this.formChanged()
   }
-
+  // zkontrolovat override, možná přidat podmínku k override
   changeInModel = (elementsParam, data) => {
     const { propertyName, value } = data
     if (getSafe(() => elementsParam.length, false)) {
