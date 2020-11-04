@@ -115,6 +115,11 @@ const SpanText = styled.span`
   overflow: hidden !important;
   font-weight: 500;
   cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
 `
 
 const DivIcons = styled.div`
@@ -131,7 +136,10 @@ const FobPrice = styled.div`
   cursor: pointer;
 
   &:hover {
-    text-decoration-style: solid;
+    //text-decoration-style: solid;
+    text-decoration: none;
+    font-weight: bold;
+    color: #2599d5;
   }
 `
 
