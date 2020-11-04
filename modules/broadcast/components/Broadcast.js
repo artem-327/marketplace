@@ -128,7 +128,7 @@ class Broadcast extends Component {
     this.setState({ change: true, saved: false })
     // propíšou se změny z node do originál treeModelu, který se může poslat na BE
     this.updateInTreeData(node)
-    //odkazuje na funkci this.props.changedForm() což neexistuje v Broadcastu
+    //odkazuje na funkci v DetailSidebar a dává vědět, že byl formulář změněn
     this.formChanged()
   }
 
@@ -365,6 +365,10 @@ class Broadcast extends Component {
     if (fs.length > 0) {
       tree.walk(n => (n.model.expanded = true))
     }
+
+    console.log('Broadcast===getFilteredTree===tree=================================')
+    console.log(tree)
+    console.log('====================================')
 
     return tree
   }
