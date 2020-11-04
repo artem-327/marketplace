@@ -992,8 +992,8 @@ class MyListings extends Component {
                   data-test='my_inventory_advanced_filters_btn'>
                   <Sliders />
                   {formatMessage({
-                    id: 'myInventory.advancedFilters',
-                    defaultMessage: 'Advanced Filters'
+                    id: 'global.filters',
+                    defaultMessage: 'Filters'
                   })}
                 </Button>
               </div>
