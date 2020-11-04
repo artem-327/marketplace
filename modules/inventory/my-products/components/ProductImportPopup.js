@@ -158,7 +158,7 @@ class ProductImportPopup extends Component {
           <Checkbox
             label={formatMessage({
               id: 'import.CSVwithoutHeader',
-              defaultMessage: 'CSV without header (Column Name)?'
+              defaultMessage: 'File without header (Column Name)?'
             })}
             name='csvWithoutHeader'
             inputProps={{ 'data-test': 'import_checkbox_csv_without_header' }}

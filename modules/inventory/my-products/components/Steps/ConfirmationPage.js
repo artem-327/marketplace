@@ -10,7 +10,7 @@ import Router from 'next/dist/client/router'
 import { closeImportPopup } from '~/modules/settings/actions'
 
 const StyledButton = styled(Button)`
-  width: 200px;
+  min-width: 200px !important;
 `
 
 class ConfirmationPage extends Component {

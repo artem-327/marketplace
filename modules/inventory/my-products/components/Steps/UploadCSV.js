@@ -53,7 +53,7 @@ class UploadCSV extends Component {
           <Form>
             <StyledDropzone
               onDrop={this.onDrop}
-              accept={['.csv' /*, '.xlsx' */]}
+              accept={['.csv' , '.xlsx' ]}
               multiple={false}
               uploaded={uploadedFile}
               error={hasError ? 'true' : undefined}>
@@ -62,7 +62,7 @@ class UploadCSV extends Component {
                   <Icon name='file' className='csv' />
                   <FormattedMessage
                     id='settings.dragAndDrop'
-                    defaultMessage='Drag and drop or browse computer to upload your .csv file'
+                    defaultMessage='Drag and drop or browse computer to upload your file'
                   />
                 </Header>
                 <Segment.Inline>
@@ -83,7 +83,9 @@ class UploadCSV extends Component {
 
   onDrop = acceptedFiles => {
     if (acceptedFiles.length !== 0) {
-      this.props.uploadCSVFile(acceptedFiles[0])
+      let type = acceptedFiles[0].type
+      if (acceptedFiles[0].name.endsWith('.csv')) type = '.csv'
+      this.props.uploadCSVFile(acceptedFiles[0], type)
       this.setState({ uploadedFile: acceptedFiles[0], hasError: false })
     } else {
       this.setState({ uploadedFile: null, hasError: true })

@@ -693,10 +693,10 @@ export function deleteCreditCard(cardId) {
 //   }
 // }
 
-export function uploadCSVFile(payload) {
+export function uploadCSVFile(payload, type = '.csv') {
   return {
     type: AT.POST_UPLOAD_CSV_FILE,
-    payload: api.uploadCSVFile(payload)
+    payload: api.uploadCSVFile(payload, type)
   }
 }
 

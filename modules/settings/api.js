@@ -118,10 +118,9 @@ export default {
       .post(`/prodex/api/imports/product-offers/spreadsheet-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
-  uploadCSVFile: file => {
+  uploadCSVFile: (file, type) => {
     const formData = new FormData()
-    formData.append('file', new Blob([file], { type: 'text/csv' }), file.name)
-
+    formData.append('file', new Blob([file], { type }), file.name)
     return api.post('/prodex/api/imports/temporary-files', formData).then(response => response.data)
   },
   getCSVMapCompanyGenericProduct: () =>
