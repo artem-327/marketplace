@@ -78,6 +78,11 @@ export default class PriceControl extends Component {
         if (getSafe(() => el.elements.length, 0) > 0) {
           el.elements.forEach(e => {
             if (!e.priceOverride) asignValues(values, e)
+            if (getSafe(() => e.elements.length, 0) > 0) {
+              e.elements.forEach(ele => {
+                if (!ele.priceOverride) asignValues(values, ele)
+              })
+            }
           })
         }
       })
