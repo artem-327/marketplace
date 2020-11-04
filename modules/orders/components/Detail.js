@@ -795,6 +795,8 @@ class Detail extends Component {
 
   linkAttachment = async (files, orderItemId) => {
     const { openDocumentsAttachments } = this.state
+    const { order, getSaleOrder, getPurchaseOrder } = this.props
+
     const docArray = uniqueArrayByKey(files, 'id')
     let newAttachments = openDocumentsAttachments
     try {
@@ -807,9 +809,9 @@ class Detail extends Component {
       this.setState({ openDocumentsAttachments: newAttachments })
       setTimeout(async () => {
         if (getSafe(() => this.props.router.query.type, false) === 'sales') {
-          await getSaleOrder(this.props.order.id)
+          await getSaleOrder(order.id)
         } else {
-          await getPurchaseOrder(this.props.order.id)
+          await getPurchaseOrder(order.id)
         }
       }, 250)
     } catch (error) {
