@@ -91,11 +91,19 @@ class Broadcast extends Component {
   }
 
   handlePriceChange = node => {
+    console.log('handlePriceChange===node=================================')
+    console.log(node)
+    console.log('====================================')
+    // pokud má node nějaké potomky, tak projíždí každý z nich
+    // vytahuje si path (uzel, začátek) z každé úrovně a snaží se vybrat rodiče
+    // poté ověřuje jestli je v daném node priceOverride (attribut byl přidán u předchozí změny, viz níže)
+    // pokud není a rovná se node.model.rule.id (pravděpodobně chyba a má být n.model.rule.id)
+    // s parent.model.rule.id tak zapiš do n.model.rule hodnoty z
+    // node.model.rule.priceAddition (pravděpodobně chyba a má být parent.model.rule.priceAddition)
     if (node.hasChildren()) {
       node.walk(n => {
         let nodePath = n.getPath()
         let parent = nodePath[nodePath.length - 2]
-
         if (
           !n.model.rule.priceOverride &&
           (!getSafe(() => parent.model.rule.priceOverride, 0) || node.model.rule.id === parent.model.rule.id)
@@ -106,15 +114,21 @@ class Broadcast extends Component {
       })
     }
 
+    // vytáhnou se všechny uzly (začátek) z každé úrovně
     let path = node.getPath()
-
+    // projedou se uzly (začátek) z každé úrovně a ověří jestli tam existuje priceAddition || priceMultiplier
+    // a pokud ano tak označí node.model.rule.priceOverride = 1 (předpokládám chyba a mělo by být  path[i].model.rule.priceOverride)
+    // pravděpodobně slouží jen jako bolean
     for (let i = 0; i < path.length - 1; i++) {
       let { priceAddition, priceMultiplier } = path[i].model.rule
       if (priceAddition || priceMultiplier) node.model.rule.priceOverride = 1
     }
-
+    // dám statu vědět, že se změnil strom a není ještě uložený
+    // slouží k vyvolání popup když uživatel chce odejít ze stránky a nemá ještě uloženo
     this.setState({ change: true, saved: false })
+    // propíšou se změny z node do originál treeModelu, který se může poslat na BE
     this.updateInTreeData(node)
+    //odkazuje na funkci this.props.changedForm() což neexistuje v Broadcastu
     this.formChanged()
   }
 
@@ -163,11 +177,22 @@ class Broadcast extends Component {
       })
     }
   }
-
+  // tyto tři akce vždy na konci svého procesu volají funkci updateInTreeData ke změně original dat (treeModel)
+  // handleChange (toggle)
+  // handleRowClick (rozkliknou se další podřádky)
+  // handlePriceChange (změna hodnoty v inputu)
   updateInTreeData = node => {
+    console.log('updateInTreeData===node=================================')
+    console.log(node)
+    console.log('====================================')
+    // vytáhne se original data z BE v treeModelu a dá do copy
     let copy = this.props.treeData
+    console.log('updateInTreeData===copy=================================')
+    console.log(copy)
+    console.log('====================================')
+    // vytáhne se filter, který se ale nikde nepoužije v této funkci
     const { filter } = this.props
-
+    // ověří se jestli daný node je kořen (nejvyšší úroveň)
     if (!node.isRoot()) {
       let found = copy.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)
       let index = found.getIndex()
@@ -187,8 +212,11 @@ class Broadcast extends Component {
         model: { ...copy.model, rule: { ...copy.model.rule, ...this.treeToModel(copy) } }
       })
     } else {
+      // zde změní broadcast (toggle) na vypnutý (0, null, undefined), zapnutý zelený (1), zapnutý modrý (2)
+      // na základě změny (v inputu ceny, přepnutí mezi procenty a hodnotou, přepnutí broadcast toggle)
       normalizeTree(node)
       let cnt = 1
+      // pokud má node potomky projede všechny nody a pokud node není kořen
       if (node.hasChildren()) {
         node.all().forEach(n => {
           if (!n.isRoot()) {
@@ -199,17 +227,22 @@ class Broadcast extends Component {
             let parent = path[path.length - 2]
 
             if (found && index) {
-              // Remove node
+              // Odhodí podstrom od tohoto uzlu. Vrátí samotný uzel, který je nyní kořenovým uzlem.
               found.drop()
-              // Set proper values
+              // Do kořenového uzlu přdá nebo upraví model tím že tam nahraje data z node.model.rule
               found.model = n.model.rule
-              // Add back removed node (with updated data)
+              // do parentu přidá změněný found uzel jako podřízený v daném indexu.
               parent.addChildAtIndex(found, index)
             }
           }
         })
       }
 
+      console.log('updateInTreeData===copy===updated==============================')
+      console.log(copy)
+      console.log('====================================')
+      // pomocí redux akce se změny provedené v treeModelu (copy) zapíšou do props data
+      // btw je to duplikace kodu s if větví a může se to vytáhnout mimo podmínku if else
       this.props.treeDataChanged({
         ...copy,
         model: {
@@ -1204,6 +1237,7 @@ export default injectIntl(
   withToastManager(
     connect(
       ({ broadcast }) => {
+        // vytáhnou se data a vytvoří treeModel kde název children je 'elements'
         const treeData = broadcast.data
           ? new TreeModel({ childrenPropertyName: 'elements' }).parse(broadcast.data)
           : new TreeModel().parse({ model: { rule: {} } })

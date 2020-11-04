@@ -25,6 +25,7 @@ export default class PriceControl extends Component {
   handleChange = (e, { name, value }) => {
     e.preventDefault()
     e.stopPropagation()
+    //funkce u Broadcast.js
     const { changeInModel } = this.props
 
     // helper
@@ -39,39 +40,58 @@ export default class PriceControl extends Component {
     let {
       model: { rule }
     } = item
-
+    // type jsou type (procenta "multiplier" nebo cash "addition", toggle) nebo value (to je input hodnota)
     let type = name === 'type' ? value : this.state.type
+    // z rule se vytáhne hodnota z procent (multiplier) nebo cash ( priceAddition)
     let val = rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
-
+    // hodnota pro validaci, vypočítá se jaké minimum je přípustné zadat
     let minimum = name === 'type' ? this.calculateMinimum(value) : this.calculateMinimum(type)
+
+    console.log('PriceControl===name, type, val, minimum====================================')
     console.log({ name, type, val, minimum })
+    console.log('====================================')
+    // pokud došlo ke změně ve statu type tak uložit do statu (vyvolá znovu render)
     if (this.state.type !== type) this.setState({ type })
 
     let values = {}
+    // validace a auto korekce hodnoty
     if (name === 'value' && value < minimum) value = minimum
     if (name === 'type' && val < minimum) value = minimum
 
     if (name === 'type') {
+      // pokud není změna v type, tak se nepokračuje
       if (type === 'multiplier' && rule.priceMultiplier) return
+      // prohodí se hodnoty pokud je změna v type (multiplier, addition)
       values = {
         priceAddition: rule.priceMultiplier,
         priceMultiplier: rule.priceAddition
       }
     } else {
       if (type === 'addition') {
+        // zapíše se hodnota do proměnné pro multiplier i pro addition
+        // záleží který typ je vybrán
+        // parseFloat se mi nezdá že by mělo 2 parametry (smazat 10)
         values = { priceAddition: value ? parseFloat(value, 10) : 0, priceMultiplier: 0 }
       } else {
         values = { priceMultiplier: value ? parseFloat(value, 10) : 0, priceAddition: 0 }
       }
     }
+    console.log('PriceControl===values====================================')
     console.log({ values })
-
+    console.log('====================================')
+    // zapíšou se hodnoty do item (rule)
     asignValues(values, rule)
-
+    // zkontroluje jestli má item potomky a projde všechny
+    // pokud nemají atribut priceOverride, tak všem zapíše dané hodnoty z values
     if (item.hasChildren()) {
       item.walk(n => {
         if (!n.model.rule.priceOverride) asignValues(values, n.model.rule)
       })
+      // projde pole všech children (elements), ale jen 2 úrovně a dosadí values (priceAddition, priceMultiplier) do daného elementu
+      // nejsme si jist čemu ten hack má pomoct a myslím si že částečně nahradil changeInModel()
+      // changeInModel funkce se volá sama opakovaně na základě toho jestli tam ještě existují
+      // další children (elements) a proto tenhle blok kodu mi nedává nějak smysl a spíše bych tu použil
+      // changeInModel(item.model.rule.elements, values)
       // Same hack as in RuleItem.handleChange
       item.model.rule.elements.forEach(el => {
         if (!el.priceOverride) asignValues(values, el)
@@ -82,10 +102,18 @@ export default class PriceControl extends Component {
         }
       })
     }
+    // tohle tu myslím nemusí vůbec být, protože měníme celou dobu samotný item
     let copy = _.cloneDeep(item)
+
+    // to by mělo být pravděpodobně použito výše
     // changeInModel(copy.model.rule.elements, values)
-    console.log({ copy })
+
+    console.log('PriceControl===item===updated=================================')
+    console.log(item)
+    console.log('====================================')
+    // zde jde upravený node do Broadcast.js do funkce handlePriceChange
     this.props.onChange(item)
+    // proč se vrací false?
     return false
   }
 
