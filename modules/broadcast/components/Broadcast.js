@@ -343,6 +343,9 @@ class Broadcast extends Component {
 
     const extractFromRule = rule => {
       const propertiesOfInterest = [
+        'anonymous',
+        'elements',
+        'clientCompany',
         'broadcast',
         'expanded',
         'id',
