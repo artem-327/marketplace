@@ -370,6 +370,30 @@ export const datagridValues = {
     }
   },
 
+  quantityFrom: {
+    paths: [paths.productOffers.quantity, paths.wantedBoard.quantity],
+    description: 'Quantity From',
+    operator: operators.GREATER_THAN_OR_EQUAL_TO,
+
+    toFilter: function (values, filterType) {
+      return {
+        operator: this.operator,
+        path: filterType === 'wantedBoardListings' ? this.paths[1] : this.paths[0],
+        values: [{ value: values, description: values }]
+      }
+    },
+
+    tagDescription: values => `>= ${values[0].description} pckgs`,
+
+    valuesDescription: function (values) {
+      return values.map(val => val.description)
+    },
+
+    toFormik: function ({ values }) {
+      return values[0].value.toString()
+    }
+  },
+
   quantityTo: {
     paths: [paths.productOffers.quantity, paths.wantedBoard.quantity],
     description: 'Quantity To',
