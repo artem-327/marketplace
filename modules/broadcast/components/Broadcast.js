@@ -61,7 +61,7 @@ const FormFieldBroadcastAllButton = styled(Form.Field)`
   .ui.button.outline {
     padding: 7px !important;
     height: auto !important;
-    min-height: 40px; 
+    min-height: 40px;
   }
 `
 
@@ -92,21 +92,6 @@ class Broadcast extends Component {
   }
 
   handlePriceChange = node => {
-    if (node.hasChildren()) {
-      node.walk(n => {
-        let nodePath = n.getPath()
-        let parent = nodePath[nodePath.length - 2]
-
-        if (
-          !n.model.rule.priceOverride &&
-          (!getSafe(() => parent.model.rule.priceOverride, 0) || node.model.rule.id === parent.model.rule.id)
-        ) {
-          n.model.rule.priceAddition = node.model.rule.priceAddition
-          n.model.rule.priceMultiplier = node.model.rule.priceMultiplier
-        }
-      })
-    }
-
     let path = node.getPath()
 
     for (let i = 0; i < path.length - 1; i++) {
@@ -930,7 +915,7 @@ class Broadcast extends Component {
                             <GridRow>
                               <GridColumn computer={10} style={{ paddingRight: '0px', minWidth: '100px' }}>
                                 <Dropdown
-                                  style={{ minWidth: '100px'}}
+                                  style={{ minWidth: '100px' }}
                                   selectOnBlur={false}
                                   data-test='broadcast_modal_template_drpdn'
                                   fluid
@@ -1049,6 +1034,7 @@ class Broadcast extends Component {
                     changeInModel={this.changeInModel}
                     loadingChanged={this.props.loadingChanged}
                     filter={filter}
+                    associationFilter={this.state.associationFilter}
                     hideFobPrice={hideFobPrice}
                     item={this.getFilteredTree()}
                     mode={mode}

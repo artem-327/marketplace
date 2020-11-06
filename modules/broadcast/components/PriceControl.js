@@ -25,13 +25,24 @@ export default class PriceControl extends Component {
   handleChange = (e, { name, value }) => {
     e.preventDefault()
     e.stopPropagation()
-    const { changeInModel } = this.props
+    const { associationFilter, filter } = this.props
 
-    // helper
+    // helper writes values
     const asignValues = (values, rule) => {
       Object.keys(values).forEach(key => {
         rule[key] = values[key]
       })
+    }
+    // helper loop through elements
+    const changeInElements = (elementsParam, values, id) => {
+      if (getSafe(() => elementsParam.length, false)) {
+        elementsParam.forEach(element => {
+          if (!element.hidden) {
+            if (!element.priceOverride && (element.id === id || !id)) asignValues(values, element)
+          }
+          if (getSafe(() => element.elements.length, '') > 0) changeInElements(element.elements, values)
+        })
+      }
     }
 
     let { item } = this.props
@@ -44,7 +55,6 @@ export default class PriceControl extends Component {
     let val = rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
 
     let minimum = name === 'type' ? this.calculateMinimum(value) : this.calculateMinimum(type)
-    console.log({ name, type, val, minimum })
     if (this.state.type !== type) this.setState({ type })
 
     let values = {}
@@ -64,32 +74,53 @@ export default class PriceControl extends Component {
         values = { priceMultiplier: value ? parseFloat(value, 10) : 0, priceAddition: 0 }
       }
     }
-    console.log({ values })
 
     asignValues(values, rule)
+    let idCompanies = []
 
     if (item.hasChildren()) {
-      item.walk(n => {
-        if (!n.model.rule.priceOverride) asignValues(values, n.model.rule)
-      })
-      // Same hack as in RuleItem.handleChange
-      item.model.rule.elements.forEach(el => {
-        if (!el.priceOverride) asignValues(values, el)
-        if (getSafe(() => el.elements.length, 0) > 0) {
-          el.elements.forEach(e => {
-            if (!e.priceOverride) asignValues(values, e)
-            if (getSafe(() => e.elements.length, 0) > 0) {
-              e.elements.forEach(ele => {
-                if (!ele.priceOverride) asignValues(values, ele)
-              })
+      if ((item.isRoot() && associationFilter === 'ALL' && !filter.search) || !item.isRoot()) {
+        // it writes value to the model
+        // its not sufficient for display all values in all levels in FE inputs
+        item.walk(n => {
+          if (!n.model.rule.priceOverride && !n.model.rule.hidden) asignValues(values, n.model.rule)
+        })
+        // it writes value to the elements
+        // maybe model is for send to BE and elements are for display in FE ???
+        changeInElements(item.model.rule.elements, values)
+      } else if (item.isRoot() && (associationFilter !== 'ALL' || filter.search)) {
+        //write changes to the filtered model
+        item.walk(n => {
+          if (filter.category === 'branch') {
+            if (!n.model.rule.priceOverride && n.model.rule.type === 'branch' && !n.model.rule.hidden) {
+              // it writes value to the filtered model (branches)
+              // its sufficient for display value in inputs too
+              asignValues(values, n.model.rule)
+              if (
+                !n.parent.model.rule.priceOverride &&
+                n.parent.model.rule.type === 'company' &&
+                !n.parent.model.rule.hidden
+              ) {
+                // it writes value to the parent (company) to the model
+                // but for some reasons its not sufficient for display value in inputs
+                asignValues(values, n.parent.model.rule)
+                // here are collected ids of filtered companies
+                idCompanies.push(n.parent.model.rule.id)
+              }
             }
+          }
+        })
+        // Value for company will be displayed in company input when we write value to the elements
+        // Maybe model is for send to BE and elements are for display in FE ???
+        if (idCompanies.length) {
+          idCompanies = _.uniqBy(idCompanies)
+          //write changes to the correct elements (parent = company of branche)
+          idCompanies.forEach(id => {
+            changeInElements(item.model.rule.elements, values, id)
           })
         }
-      })
+      }
     }
-    let copy = _.cloneDeep(item)
-    // changeInModel(copy.model.rule.elements, values)
-    console.log({ copy })
     this.props.onChange(item)
     return false
   }
