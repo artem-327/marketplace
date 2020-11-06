@@ -40,7 +40,7 @@ export default class PriceControl extends Component {
           if (!element.hidden) {
             if (!element.priceOverride && (element.id === id || !id)) asignValues(values, element)
           }
-          if (getSafe(() => element.elements.length, '') > 0) changeInElements(element.elements, values)
+          if (getSafe(() => element.elements.length, '') > 0) changeInElements(element.elements, values, id)
         })
       }
     }
@@ -86,7 +86,6 @@ export default class PriceControl extends Component {
           if (!n.model.rule.priceOverride && !n.model.rule.hidden) asignValues(values, n.model.rule)
         })
         // it writes value to the elements
-        // maybe model is for send to BE and elements are for display in FE ???
         changeInElements(item.model.rule.elements, values)
       } else if (item.isRoot() && (associationFilter !== 'ALL' || filter.search)) {
         //write changes to the filtered model
@@ -94,7 +93,7 @@ export default class PriceControl extends Component {
           if (filter.category === 'branch') {
             if (!n.model.rule.priceOverride && n.model.rule.type === 'branch' && !n.model.rule.hidden) {
               // it writes value to the filtered model (branches)
-              // its sufficient for display value in inputs too
+              // its sufficient for display value in inputs of branches
               asignValues(values, n.model.rule)
               if (
                 !n.parent.model.rule.priceOverride &&
@@ -111,7 +110,6 @@ export default class PriceControl extends Component {
           }
         })
         // Value for company will be displayed in company input when we write value to the elements
-        // Maybe model is for send to BE and elements are for display in FE ???
         if (idCompanies.length) {
           idCompanies = _.uniqBy(idCompanies)
           //write changes to the correct elements (parent = company of branche)
