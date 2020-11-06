@@ -140,6 +140,10 @@ const StretchedGrid = styled(Grid)`
   }
   
   .upper-grid .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
     .column {
       padding-top: 0;
       padding-bottom: 0;
