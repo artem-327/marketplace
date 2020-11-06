@@ -49,18 +49,19 @@ const UnpaddedRow = {
   `
 }
 
-const CustomGridColumn = styled(GridColumn)`
-  padding-left: 0px !important;
-`
-
 const CustomButton = styled(Button)`
-  min-width: auto !important;
+  &.ui.button.basic {
+    min-width: min-content !important;
+    padding: 7px !important;
+  }
 `
 
 const FormFieldBroadcastAllButton = styled(Form.Field)`
   .ui.button.basic,
   .ui.button.outline {
     padding: 7px !important;
+    height: auto !important;
+    min-height: 40px; 
   }
 `
 
@@ -927,8 +928,9 @@ class Broadcast extends Component {
                             </GridRow>
                           ) : (
                             <GridRow>
-                              <GridColumn computer={10}>
+                              <GridColumn computer={10} style={{ paddingRight: '0px', minWidth: '100px' }}>
                                 <Dropdown
+                                  style={{ minWidth: '100px'}}
                                   selectOnBlur={false}
                                   data-test='broadcast_modal_template_drpdn'
                                   fluid
@@ -951,7 +953,7 @@ class Broadcast extends Component {
                                   }))}
                                 />
                               </GridColumn>
-                              <CustomGridColumn computer={6}>
+                              <GridColumn computer={6}>
                                 <CustomButton
                                   data-test='broadcast_modal_delete_btn'
                                   onClick={() => this.handleTemplateDelete(props.setFieldValue)}
@@ -966,7 +968,7 @@ class Broadcast extends Component {
                                     defaultMessage: 'Delete'
                                   })}
                                 </CustomButton>
-                              </CustomGridColumn>
+                              </GridColumn>
                             </GridRow>
                           )}
 
@@ -980,7 +982,7 @@ class Broadcast extends Component {
                                   }
                                 : null
                             }>
-                            <GridColumn computer={10}>
+                            <GridColumn computer={10} style={{ paddingRight: '0px', minWidth: '100px' }}>
                               <FormikInput
                                 inputProps={{
                                   fluid: true,
@@ -994,7 +996,7 @@ class Broadcast extends Component {
                               />
                             </GridColumn>
 
-                            <CustomGridColumn computer={6}>
+                            <GridColumn computer={6}>
                               <CustomButton
                                 onClick={this.submitForm}
                                 type='button'
@@ -1009,7 +1011,7 @@ class Broadcast extends Component {
                                   defaultMessage: 'Save'
                                 })}
                               </CustomButton>
-                            </CustomGridColumn>
+                            </GridColumn>
                           </GridRow>
                         </Grid>
                       </Form>
