@@ -797,7 +797,6 @@ class AddCart extends Component {
                 ) : !isEdit ? (
                   <>
                     <Button
-                      disabled={!canProceed}
                       primary
                       onClick={() => this.props.sidebarChanged({isOpen: true, isHoldRequest: true})}
                       data-test='add_cart_create_order_btn'>
