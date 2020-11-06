@@ -2128,7 +2128,7 @@
   "settings.tables.warehouses.search": "Search Pick-Up Location",
   "settings.tables.products.buttonAdd": "Add Product",
   "settings.tables.products.buttonImport": "Import",
-  "settings.tables.products.search": "Search product by name, number",
+  "settings.tables.products.search": "Search product by name, code",
   "settings.tables.products.unmappedOnly": "Unmapped only",
   "settings.tables.globalBroadcast.buttonAdd": "Add Global Price Book",
   "settings.tables.globalBroadcast.search": "Search global broadcast by name ",

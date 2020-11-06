@@ -39,9 +39,9 @@ export async function getDataRequest(config, values) {
 
 export async function postNewRequest(config, values) {
   if (getSafe(() => config.api.post.typeQuery, false)) {
-    return await api.post(`${config.api.post.apiCall}${generateQueryString(values)}`).data
+    return await api.post(`${config.api.post.apiCall}${generateQueryString(values)}`).then(response => response.data)
   } else {
-    return await api.post(config.api.post.apiCall, values).data
+    return await api.post(config.api.post.apiCall, values).then(response => response.data)
   }
 }
 

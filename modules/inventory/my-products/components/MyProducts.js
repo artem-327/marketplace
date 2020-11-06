@@ -291,7 +291,7 @@ class MyProducts extends Component {
                     value={filterValue ? filterValue.searchInput : ''}
                     placeholder={formatMessage({
                       id: 'settings.tables.products.search',
-                      defaultMessage: 'Search product by name, number ...'
+                      defaultMessage: 'Search product by name, code'
                     })}
                     onChange={this.handleFilterChangeInputSearch}
                   />
