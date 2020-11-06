@@ -239,16 +239,20 @@ class AddCart extends Component {
   componentDidMount() {
     // this.props.getProductOffer(this.props.id, this.props.isEdit)
     // if (this.props.isEdit) this.props.getOrderDetail(this.props.orderId)
-    this.setState({ offer: this.formatData() }) // Buy tab
+    this.setState({ offer: this.formatData(), activeTab: this.props.openInfo ? 1 : 0 }) // Buy tab
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (getSafe(() => this.props.openInfo, '') !== getSafe(() => prevProps.openInfo, '')) {
       this.setState({ activeTab: this.props.openInfo ? 1 : 0 }) // Buy or Info tab
     }
-    if (this.props.offer !== prevProps.offer) {
-      this.setState({ offer: this.formatData() })
+    if (this.props.offer.id !== prevProps.offer.id) {
+      this.setState({ offer: this.formatData(), activeTab: this.props.openInfo ? 1 : 0 })
     }
+  }
+
+  componentWillUnmount() {
+    this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
   }
 
   formatData = () => {
@@ -1832,6 +1836,7 @@ class AddCart extends Component {
     return (
       <Sidebar
         onHide={e => {
+          /* #35203 - closes sidebar accidentaly when clicking on another product offer/Info tab
           try {
             if (
               (!(getSafe(() => e.path[0], '') instanceof HTMLTableCellElement) &&
@@ -1854,6 +1859,7 @@ class AddCart extends Component {
           } catch (e) {
             console.error(e)
           }
+          */
         }}
         width='very wide'
         className='cart-sidebar flex'
