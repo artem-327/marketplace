@@ -1836,12 +1836,11 @@ class AddCart extends Component {
     return (
       <Sidebar
         onHide={e => {
-          // #35203 - closes sidebar accidentaly when clicking on another product offer/Info tab
           try {
             if (
               (!(getSafe(() => e.path[0], '') instanceof HTMLTableCellElement) &&
                 !(getSafe(() => e.path[1], '') instanceof HTMLTableCellElement) &&
-                !(getSafe(() => e.path[4], '') instanceof HTMLTableCellElement) &&
+                !(getSafe(() => e.path[5], '') instanceof HTMLTableCellElement) &&
                 typeof getSafe(() => e.target.className.includes, '') !== 'undefined' &&
                 getSafe(() => e.target.className, '').includes('js-focus-visible')) ||
               (typeof getSafe(() => e.target.className.includes, '') !== 'undefined' &&
