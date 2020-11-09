@@ -330,6 +330,7 @@ class Broadcast extends Component {
     const extractFromRule = rule => {
       const propertiesOfInterest = [
         'anonymous',
+        'associations',
         'elements',
         'clientCompany',
         'broadcast',
