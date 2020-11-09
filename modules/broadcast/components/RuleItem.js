@@ -59,7 +59,7 @@ const RuleItem = props => {
     .filter(n => n.model.rule.broadcast === 1)
   const parentBroadcasted = broadcastedParents.reverse()[0]
   let nodeBroadcast = rule.broadcast
-  const hasNonHiddenChild = item.first(n => !n.model.rule.hidden && n.model.rule.id !== item.model.rule.id)
+  const hasNonHiddenChild = item.first(n => !n.model.rule.hidden)
 
   const displayArrow = item.children.length > 0 && rule.type !== 'root' && hasNonHiddenChild
 
