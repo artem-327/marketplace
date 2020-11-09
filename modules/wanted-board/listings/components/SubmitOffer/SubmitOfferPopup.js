@@ -424,14 +424,15 @@ class SubmitOfferPopup extends React.Component {
       let fulfillmentType = ''
       if (this.state.nextSubmit)
         fulfillmentType = { fulfillmentType: Yup.string().required(errorMessages.requiredMessage) }
+
       return Yup.object().shape({
         ...(values.lotExpirationDate && {
-          lotExpirationDate: dateValidation(false).concat(
-            Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
-              const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-              return enteredDate >= moment().endOf('day').format()
+          lotExpirationDate: Yup.string()
+            .test('minDate', errorMessages.dateNotInPast, function (date) {
+              const enteredDate = moment(getStringISODate(date)).endOf('day')
+              return enteredDate >= moment().endOf('day')
             })
-          )
+            .concat(dateValidation(false))
         }),
         ...fulfillmentType,
         items: Yup.array().of(
@@ -486,14 +487,15 @@ class SubmitOfferPopup extends React.Component {
             }
 
             let fulfilledAt = ''
+
             if (values.fulfillmentType === 'COMPLETE_SCHEDULE')
               fulfilledAt = {
-                fulfilledAt: dateValidation(this.state.nextSubmit ? true : false).concat(
-                  Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
-                    const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-                    return enteredDate >= moment().endOf('day').format()
+                fulfilledAt: Yup.string()
+                  .test('minDate', errorMessages.dateNotInPast, function (date) {
+                    const enteredDate = moment(getStringISODate(date)).endOf('day')
+                    return enteredDate >= moment().endOf('day')
                   })
-                )
+                  .concat(dateValidation(this.state.nextSubmit ? true : false))
               }
 
             return Yup.object().shape({
@@ -963,7 +965,9 @@ class SubmitOfferPopup extends React.Component {
 
     let items = getSafe(() => popupValues.histories[i].items, '')
       ? popupValues.histories[i].items.map(item => ({
-          fulfilledAt: getSafe(() => item.fulfilledAt, '') ? moment(item.fulfilledAt) : '',
+          fulfilledAt: getSafe(() => item.fulfilledAt, '')
+            ? moment(item.fulfilledAt).format(getLocaleDateFormat())
+            : '',
           pkgAmount: this.getPkgAmount(item.pkgAmount),
           pricePerUOM: getSafe(() => item.pricePerUOM, ''),
           total:
