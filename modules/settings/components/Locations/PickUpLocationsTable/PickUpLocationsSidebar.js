@@ -507,6 +507,7 @@ class PickUpLocationsSidebar extends React.Component {
       closeSidebar,
       popupValues,
       isOpenSidebar,
+      openGlobalAddForm,
       loading,
       intl: { formatMessage }
     } = this.props
@@ -527,14 +528,15 @@ class PickUpLocationsSidebar extends React.Component {
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={closeSidebar}
+        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closeSidebar()}
         onSubmit={this.submitHandler}
         loading={loading}>
         {formikProps => (
           <>
             <CustomForm autoComplete='off'>
               <FlexSidebar
-                visible={isOpenSidebar}
+                className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
+                visible={true}
                 width='very wide'
                 style={{ width: '630px' }}
                 direction='right'
@@ -563,7 +565,7 @@ class PickUpLocationsSidebar extends React.Component {
                 <CustomDiv>
                   <Button.Reset
                     style={{ margin: '0 5px' }}
-                    onClick={closeSidebar}
+                    onClick={() => openGlobalAddForm ? openGlobalAddForm('') : closeSidebar()}
                     data-test='settings_warehouse_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}

@@ -90,13 +90,17 @@ export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  top: 80px !important;
   padding-bottom: 80px;
+  top: 80px !important;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 1000 !important;
   text-align: left;
   font-size: 14px;
 
+  &.full-screen-sidebar {
+    top: 0 !important;
+  }
+  
   .ui.grid {
     margin: 1.607142857em 1.428571429em;
     .row {

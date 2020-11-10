@@ -52,7 +52,7 @@ import { AgreementModal } from '~/components/modals'
 import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
 import { chatWidgetToggle } from '~/modules/chatWidget/actions'
-import { toggleMenu } from '~/modules/layout/actions'
+import { toggleMenu, openGlobalAddForm } from '~/modules/layout/actions'
 import { getCompanyLogo } from '~/modules/company-form/actions'
 import { withToastManager } from 'react-toast-notifications'
 
@@ -61,6 +61,13 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import ErrorComponent from '~/components/error'
 import moment from 'moment'
+
+import ListingSidebar from '~/modules/inventory/my-listings/components/DetailSidebar'
+import ProductSidebar from '~/modules/inventory/my-products/components/ProductSidebar'
+import WantedSidebar from '~/modules/wanted-board/listings/components/DetailSidebar'
+import UserSidebar from '~/modules/settings/components/UserTable/UsersSidebar'
+import GuestSidebar from '~/modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
+import WarehouseSidebar from '~/modules/settings/components/Locations/PickUpLocationsTable/PickUpLocationsSidebar'
 
 export const IconMinimize2 = styled(Minimize2)`
   text-align: center;
@@ -300,7 +307,9 @@ class Layout extends Component {
       companyName,
       isEchoOperator,
       isOrderOperator,
-      renderCopyright
+      renderCopyright,
+      openGlobalAddForm,
+      openGlobalAddFormName
     } = this.props
 
     const {
@@ -519,6 +528,12 @@ class Layout extends Component {
             </Rectangle>
           </CustomDiv>
         ) : null}
+        {openGlobalAddFormName === 'inventory-my-products' && (<ProductSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+        {openGlobalAddFormName === 'inventory-my-listings' && (<ListingSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+        {openGlobalAddFormName === 'wanted-board-listings' && (<WantedSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+        {openGlobalAddFormName === 'my-account-users' && (<UserSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+        {openGlobalAddFormName === 'manage-guests-guests' && (<GuestSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+        {openGlobalAddFormName === 'my-account-locations' && (<WarehouseSidebar openGlobalAddForm={openGlobalAddForm}/>)}
       </MainContainer>
     )
   }
@@ -532,7 +547,8 @@ const mapDispatchToProps = {
   agreeWithTOS,
   getCountryCodes,
   toggleMenu,
-  getCompanyLogo
+  getCompanyLogo,
+  openGlobalAddForm
 }
 
 const mapStateToProps = state => {
@@ -541,6 +557,7 @@ const mapStateToProps = state => {
     identity: getSafe(() => state.auth.identity, {}),
     profile: state.profile,
     collapsedMenu: state.layout.collapsedMenu,
+    openGlobalAddFormName: state.layout.openGlobalAddFormName,
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover:

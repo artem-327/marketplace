@@ -372,7 +372,14 @@ class ProductSidebar extends React.Component {
   }
 
   handlerSubmit = async (values, actions) => {
-    const { popupValues, handleSubmitProductEditPopup, handleSubmitProductAddPopup, datagrid, closePopup } = this.props
+    const {
+      popupValues,
+      handleSubmitProductEditPopup,
+      handleSubmitProductAddPopup,
+      datagrid,
+      closePopup,
+      openGlobalAddForm
+    } = this.props
     delete values.casProducts
 
     const packagingDimensions = !getSafe(() => values.palletSaleOnly, false)
@@ -427,9 +434,12 @@ class ProductSidebar extends React.Component {
       } else {
         await handleSubmitProductAddPopup(formValues, this.state.attachments)
       }
-      let status = popupValues ? 'productUpdated' : 'productCreated'
-      datagrid.loadData()
-      closePopup()
+      if (!!openGlobalAddForm) {
+        openGlobalAddForm('')
+      } else {
+        datagrid.loadData()
+        closePopup()
+      }
     } catch (e) {
       console.error(e)
     } finally {
@@ -596,6 +606,7 @@ class ProductSidebar extends React.Component {
   render() {
     const {
       closePopup,
+      openGlobalAddForm,
       productsUnitsType,
       popupValues,
       freightClasses,
@@ -627,7 +638,7 @@ class ProductSidebar extends React.Component {
         initialValues={this.getInitialFormValues()}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={closePopup}
+        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
         onSubmit={this.handlerSubmit}
         loading={loading}>
         {formikProps => {
@@ -641,6 +652,7 @@ class ProductSidebar extends React.Component {
             <>
               <CustomForm autoComplete='off'>
                 <FlexSidebar
+                  className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
                   visible={true}
                   width='very wide'
                   style={{ width: '640px' }}
@@ -1257,7 +1269,9 @@ class ProductSidebar extends React.Component {
                   </FlexContent>
 
                   <BottomButtons>
-                    <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
+                    <Button.Reset
+                      onClick={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
+                      data-test='settings_product_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                         {text => text}
                       </FormattedMessage>

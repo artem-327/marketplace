@@ -120,7 +120,15 @@ class AddEditGuestCompanySidebar extends React.Component {
     })
 
   render() {
-    const { closePopup, popupValues, updateClientCompany, createClientCompany, intl, datagrid } = this.props
+    const {
+      closePopup,
+      popupValues,
+      updateClientCompany,
+      createClientCompany,
+      intl,
+      datagrid,
+      openGlobalAddForm
+    } = this.props
 
     const { formatMessage } = intl
 
@@ -152,7 +160,7 @@ class AddEditGuestCompanySidebar extends React.Component {
               }
 
               const data = await updateClientCompany(popupValues.id, newValues)
-              datagrid.updateRow(data.id, () => ({ ...data }))
+              !openGlobalAddForm && datagrid.updateRow(data.id, () => ({ ...data }))
             } else {
               if (
                 !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
@@ -184,8 +192,8 @@ class AddEditGuestCompanySidebar extends React.Component {
 
               removeEmpty(payload)
               await createClientCompany(payload)
-              datagrid.loadData()
-              closePopup()
+              !openGlobalAddForm && datagrid.loadData()
+              openGlobalAddForm ? openGlobalAddForm('') : closePopup()
             }
           } catch (err) {
             console.error(err)
@@ -193,12 +201,13 @@ class AddEditGuestCompanySidebar extends React.Component {
             actions.setSubmitting(false)
           }
         }}
-        onReset={closePopup}
+        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
         render={props => {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           return (
             <CustomForm autoComplete='off'>
               <FlexSidebar
+                className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
                 visible={true}
                 width='very wide'
                 style={{ width: '630px' }}

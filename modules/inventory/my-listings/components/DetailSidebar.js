@@ -651,7 +651,7 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
-    const { addProductOffer, datagrid } = this.props
+    const { addProductOffer, datagrid, openGlobalAddForm } = this.props
     const { sidebarValues, attachmentFiles } = this.state
     let isEdit = getSafe(() => sidebarValues.id, null)
     let isGrouped = getSafe(() => sidebarValues.grouped, false)
@@ -708,9 +708,9 @@ class DetailSidebar extends Component {
       try {
         data = await addProductOffer(props, isEdit, false, isGrouped, attachmentFiles)
         if (isEdit) {
-          datagrid.updateRow(data.id, () => data)
+          !openGlobalAddForm && datagrid.updateRow(data.id, () => data)
         } else {
-          datagrid.loadData()
+          !openGlobalAddForm && datagrid.loadData()
         }
 
         this.setState({
@@ -736,7 +736,7 @@ class DetailSidebar extends Component {
           )
             .then(async () => {
               let po = await addProductOffer(props, entityId, false, isGrouped, attachmentFiles)
-              datagrid.updateRow(entityId, () => po.value)
+              !openGlobalAddForm && datagrid.updateRow(entityId, () => po.value)
               this.setState({
                 sidebarValues: po.value,
                 initValues: { ...initValues, ...this.getEditValues(po.value) },
@@ -1062,7 +1062,8 @@ class DetailSidebar extends Component {
       addAttachment,
       removeAttachmentLinkProductOffer,
       removeAttachment,
-      currencySymbol
+      currencySymbol,
+      openGlobalAddForm
     } = this.props
 
     const leftWidth = 6
@@ -1123,6 +1124,7 @@ class DetailSidebar extends Component {
           return (
             <Form onChange={this.onChange}>
               <FlexSidebar
+                className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
                 visible={true}
                 width='very wide'
                 style={{ width: '630px' }}
@@ -2157,7 +2159,8 @@ class DetailSidebar extends Component {
                       size='large'
                       inputProps={{ type: 'button' }}
                       onClick={() => {
-                        this.setState({ edited: false }, () => this.props.closeSidebarDetail())
+                        this.setState({ edited: false }, () =>
+                          openGlobalAddForm ? openGlobalAddForm('') : this.props.closeSidebarDetail())
                       }}
                       data-test='sidebar_inventory_cancel'>
                       {Object.keys(touched).length || this.state.changedForm

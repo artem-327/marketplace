@@ -45,6 +45,10 @@ const FlexSidebar = styled(Sidebar)`
   z-index: 1000 !important;
   text-align: left;
   font-size: 14px;
+
+  &.full-screen-sidebar {
+    top: 0 !important;
+  }
 `
 
 const HighSegment = styled.div`
@@ -317,7 +321,8 @@ class UsersSidebar extends React.Component {
       closeSidebar,
       datagrid,
       currentUserId,
-      getIdentity
+      getIdentity,
+      openGlobalAddForm
     } = this.props
     const { popupValues } = this.state
     let sendSuccess = false
@@ -342,15 +347,15 @@ class UsersSidebar extends React.Component {
     try {
       if (popupValues) {
         const { value } = await handlerSubmitUserEditPopup(popupValues.id, data)
-        datagrid.updateRow(popupValues.id, () => value)
+        !openGlobalAddForm && datagrid.updateRow(popupValues.id, () => value)
         sendSuccess = true
         if (currentUserId === popupValues.id) getIdentity()
       } else {
         await postNewUserRequest(data)
-        datagrid.loadData()
+        !openGlobalAddForm && datagrid.loadData()
         sendSuccess = true
       }
-      if (closeOnSubmit) closeSidebar()
+      if (closeOnSubmit) openGlobalAddForm ? openGlobalAddForm('') : closeSidebar()
     } catch {}
     actions.setSubmitting(false)
     return sendSuccess
@@ -459,7 +464,8 @@ class UsersSidebar extends React.Component {
       searchedSellMarketSegments,
       searchedBuyMarketSegmentsLoading,
       searchedBuyMarketSegments,
-      isCompanyAdmin
+      isCompanyAdmin,
+      openGlobalAddForm
     } = this.props
 
     const { branches, popupValues, selectedSellMarketSegmentsOptions, selectedBuyMarketSegmentsOptions } = this.state
@@ -488,6 +494,7 @@ class UsersSidebar extends React.Component {
 
           return (
             <FlexSidebar
+              className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
               visible={true}
               width='very wide'
               style={{ width: '630px' }}
@@ -709,7 +716,10 @@ class UsersSidebar extends React.Component {
 
               <BottomButtons>
                 <div style={{ textAlign: 'right' }}>
-                  <Button className='light' onClick={closeSidebar} data-test='settings_users_popup_reset_btn'>
+                  <Button
+                    className='light'
+                    onClick={() => openGlobalAddForm ? openGlobalAddForm('') : closeSidebar()}
+                    data-test='settings_users_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>

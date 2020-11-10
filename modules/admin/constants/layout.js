@@ -15,6 +15,10 @@ export const FlexSidebar = styled(Sidebar)`
   z-index: 1000 !important;
   text-align: left;
   font-size: 14px;
+  
+  &.full-screen-sidebar {
+    top: 0 !important;
+  }
 
   .field {
     font-size: 1em !important;

@@ -279,7 +279,7 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched) => {
-    const { addPurchaseRequest, editPurchaseRequest, datagrid } = this.props
+    const { addPurchaseRequest, editPurchaseRequest, openGlobalAddForm } = this.props
     const { sidebarValues } = this.props
 
     let neededAt = null,
@@ -312,7 +312,7 @@ class DetailSidebar extends Component {
     try {
       const response = await addPurchaseRequest(body)
       //datagrid.loadData() // Not needed here - endpoint affects datagrid in another tab
-      this.props.closeDetailSidebar()
+      openGlobalAddForm ? openGlobalAddForm('') : this.props.closeDetailSidebar()
     } catch (e) {}
     setSubmitting(false)
   }
@@ -394,6 +394,7 @@ class DetailSidebar extends Component {
       toastManager,
       removeAttachment,
       currencySymbol,
+      openGlobalAddForm
     } = this.props
 
     const { hasProvinces } = this.state
@@ -426,6 +427,7 @@ class DetailSidebar extends Component {
           return (
             <Form>
               <FlexSidebar
+                className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
                 visible={true}
                 width='very wide'
                 style={{ width: '430px' }}
@@ -990,7 +992,7 @@ class DetailSidebar extends Component {
                   <div>
                     <Button
                       size='large'
-                      onClick={() => this.props.closeDetailSidebar()}
+                      onClick={() => openGlobalAddForm ? openGlobalAddForm('') : this.props.closeDetailSidebar()}
                       data-test='wanted_board_sidebar_cancel_btn'>
                       {Object.keys(touched).length || this.state.changedForm
                         ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })

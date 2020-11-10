@@ -7,6 +7,7 @@ import { Dropdown } from 'semantic-ui-react'
 import { Plus } from 'react-feather'
 import { AddBox, Widgets, Inbox, Person, FolderShared, Store } from '@material-ui/icons'
 import Router from 'next/router'
+import { openGlobalAddForm } from '~/modules/layout/actions'
 
 import {
   openPopup as openProductAddForm,
@@ -76,7 +77,9 @@ class CreateMenu extends Component {
       openGuestAddForm,
       guestInitState,
       handleLocationsTab,
-      identity
+      identity,
+      openGlobalAddForm,
+      openGlobalAddFormName
     } = this.props
 
     const {
@@ -93,6 +96,7 @@ class CreateMenu extends Component {
       <CreateDropdown
         className='ui dropdown-menu pointing'
         icon={null}
+        disabled={openGlobalAddFormName !== ''}
         text={
           <span style={{ display: 'flex', alignItems: 'center' }}>
             <IconPlus size={18} />
@@ -103,8 +107,11 @@ class CreateMenu extends Component {
           {!isClientCompanyAdmin && (isCompanyAdmin || isProductCatalogAdmin) && (
             <Dropdown.Item
               onClick={() => {
+                openGlobalAddForm('inventory-my-products')
+                /* ! !
                 Router.push('/inventory/my-products')
                 openProductAddForm()
+                */
               }}>
               <AddBox className={'menu-icon'} />
               <FormattedMessage id='createMenu.newProduct' defaultMessage='New Product' />
@@ -114,8 +121,11 @@ class CreateMenu extends Component {
           {!isClientCompanyAdmin && (isCompanyAdmin || isMerchant || isProductOfferManager) && (
             <Dropdown.Item
               onClick={() => {
+                openGlobalAddForm('inventory-my-listings')
+                /* ! !
                 Router.push('/inventory/my-listings')
                 openListingAddForm(null, true, 0)
+                */
               }}>
               <Widgets className={'menu-icon'} />
               <FormattedMessage id='createMenu.newListing' defaultMessage='New Listing' />
@@ -125,8 +135,11 @@ class CreateMenu extends Component {
           {(isCompanyAdmin || isMerchant) && (
             <Dropdown.Item
               onClick={() => {
+                openGlobalAddForm('wanted-board-listings')
+                /* ! !
                 Router.push('/wanted-board/listings')
                 openWantedAddForm(null, 'listings')
+                */
               }}>
               <Inbox className={'menu-icon'} />
               <FormattedMessage id='createMenu.newWanted' defaultMessage='New Wanted' />
@@ -136,9 +149,12 @@ class CreateMenu extends Component {
           {(isCompanyAdmin || isUserAdmin) && (
             <Dropdown.Item
               onClick={async () => {
+                openGlobalAddForm('my-account-users')
+                /* ! !
                 Router.push('/settings/users')
                 await settingsTabChanged({ name: 'Users', id: 1, type: 'users' }, null)
                 openSettingsAddForm()
+                */
               }}>
               <Person className={'menu-icon'} />
               <FormattedMessage id='createMenu.newUser' defaultMessage='New User' />
@@ -148,9 +164,12 @@ class CreateMenu extends Component {
           {(isCompanyAdmin || isClientCompanyManager) && (
             <Dropdown.Item
               onClick={async () => {
+                openGlobalAddForm('manage-guests-guests')
+                /* ! !
                 Router.push('/manage-guests/guests')
                 await guestInitState()
                 openGuestAddForm()
+                */
               }}>
               <FolderShared className={'menu-icon'} />
               <FormattedMessage id='createMenu.newGuest' defaultMessage='New Guest' />
@@ -160,10 +179,13 @@ class CreateMenu extends Component {
           {isCompanyAdmin && (
             <Dropdown.Item
               onClick={async () => {
+                openGlobalAddForm('my-account-locations')
+                /* ! !
                 Router.push('/settings/locations')
                 await settingsTabChanged({ name: 'Locations', id: 2, type: 'locations' }, null)
                 await handleLocationsTab('pick-up-locations')
                 openSettingsAddForm()
+                */
               }}>
               <Store className={'menu-icon'} />
               <FormattedMessage id='createMenu.newWarehouse' defaultMessage='New Warehouse' />
@@ -177,7 +199,9 @@ class CreateMenu extends Component {
 
 const stateToProps = state => {
   return {
+    openGlobalAddFormName: state.layout.openGlobalAddFormName,
     identity: getSafe(() => state.auth.identity, {})
+
   }
 }
 
@@ -190,6 +214,7 @@ export default injectIntl(
     openSettingsAddForm,
     openGuestAddForm,
     guestInitState,
-    handleLocationsTab
+    handleLocationsTab,
+    openGlobalAddForm
   })(CreateMenu)
 )
