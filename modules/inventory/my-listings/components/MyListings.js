@@ -143,7 +143,21 @@ const FobPrice = styled.div`
   }
 `
 
-const RowDropDownIcon = styled.div`
+const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+  
+  .dropdown.icon {
+    display: none;
+  }
+`
+
+const RowDropdownIcon = styled.div`
   width: 16px;
   height: 16px;
   margin: 2px 0 2px -4px;
@@ -155,11 +169,22 @@ const RowDropDownIcon = styled.div`
   }
 `
 
+const BroadcastDiv = styled.div`
+  margin: 0 12px 0 8px;
+`
+
 class MyListings extends Component {
   constructor(props) {
     super(props)
     this.state = {
       columns: [
+        /*{
+          name: 'actCol',
+          title: ' ',
+          width: 30,
+          actions: this.getActions(),
+          disabled: true
+        },
         {
           name: 'broadcast',
           title: (
@@ -169,14 +194,9 @@ class MyListings extends Component {
           ),
           width: 100,
           align: 'left',
-          sortPath: 'ProductOffer.broadcasted'
-        },
-        {
-          name: 'actCol',
-          title: ' ',
-          width: 30,
-          actions: this.getActions()
-        },
+          sortPath: 'ProductOffer.broadcasted',
+          disabled: true
+        },*/
         {
           name: 'productName',
           title: (
@@ -185,7 +205,8 @@ class MyListings extends Component {
             </FormattedMessage>
           ),
           width: 250,
-          sortPath: 'ProductOffer.companyProduct.intProductName'
+          sortPath: 'ProductOffer.companyProduct.intProductName',
+          allowReordering: false
         },
         {
           name: 'fobPrice',
@@ -495,7 +516,7 @@ class MyListings extends Component {
     datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  getActions = () => {
+  getActionsByRow = (row) => {
     const {
       intl: { formatMessage },
       sidebarDetailTrigger,
@@ -512,7 +533,7 @@ class MyListings extends Component {
           id: 'global.edit',
           defaultMessage: 'Edit'
         }),
-        callback: row => this.tableRowClickedProductOffer(row, true, 0, sidebarDetailTrigger)
+        callback: () => this.tableRowClickedProductOffer(row, true, 0, sidebarDetailTrigger)
       },
       //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
       {
@@ -520,40 +541,40 @@ class MyListings extends Component {
           id: 'global.tds',
           defaultMessage: 'TDS'
         }),
-        disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
+        disabled: () => row.groupId,
+        callback: () => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'global.documents',
           defaultMessage: 'Documents'
         }),
-        disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
+        disabled: () => row.groupId,
+        callback: () => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'inventory.broadcast',
           defaultMessage: 'Price Book'
         }),
-        disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+        disabled: () => row.groupId,
+        callback: () => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'inventory.priceTiers',
           defaultMessage: 'Price Tiers'
         }),
-        disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
+        disabled: () => row.groupId,
+        callback: () => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'global.delete',
           defaultMessage: 'Delete'
         }),
-        disabled: row => this.props.editedId === row.id,
-        callback: row => {
+        disabled: () => this.props.editedId === row.id,
+        callback: () => {
           confirm(
             formatMessage({
               id: 'confirm.deleteOfferHeader',
@@ -581,7 +602,7 @@ class MyListings extends Component {
           id: 'inventory.groupOffer',
           defaultMessage: 'Join/Create Virtual Group'
         }),
-        callback: row =>
+        callback: () =>
           this.groupOffer(
             {
               overrideBroadcastRules: false,
@@ -589,15 +610,15 @@ class MyListings extends Component {
             },
             row.rawData
           ),
-        disabled: row => !!row.parentOffer
+        disabled: () => !!row.parentOffer
       },
       {
         text: formatMessage({
           id: 'inventory.detachOffer',
           defaultMessage: 'Detach from Virtual Group'
         }),
-        callback: row => this.detachOffer([row.id], row.rawData),
-        disabled: row => !row.parentOffer
+        callback: () => this.detachOffer([row.id], row.rawData),
+        disabled: () => !row.parentOffer
       }
     ]
   }
@@ -619,6 +640,21 @@ class MyListings extends Component {
         }
         this.handleFiltersValue(filter)
       }
+    )
+  }
+
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
     )
   }
 
@@ -722,13 +758,60 @@ class MyListings extends Component {
 
       return {
         ...r,
-        actCol: (
-          <RowDropDownIcon>
-            <MoreVertical />
-          </RowDropDownIcon>
-        ),
         productName: (
           <DivRow>
+            <RowDropdown trigger={(
+                        <RowDropdownIcon>
+                          <MoreVertical />
+                        </RowDropdownIcon>
+                      )}
+                         >
+              <Dropdown.Menu>
+                {this.getActionItems(this.getActionsByRow(r), r)}
+              </Dropdown.Menu>
+            </RowDropdown>
+            <BroadcastDiv>
+              <Popup
+                id={r.id}
+                position={rIndex === 0 ? 'bottom right' : 'top right'}
+                trigger={
+                  <Checkbox
+                    data-test='my_inventory_broadcast_chckb'
+                    toggle
+                    defaultChecked={r.cfStatus.toLowerCase() === 'broadcasting' && isOfferValid}
+                    className={cn({
+                      error:
+                        r.cfStatus.toLowerCase() === 'incomplete' ||
+                        r.cfStatus.toLowerCase() === 'unmapped' ||
+                        r.cfStatus.toLowerCase() === 'unpublished'
+                    })}
+                    disabled={
+                      r.cfStatus.toLowerCase() === 'incomplete' ||
+                      r.cfStatus.toLowerCase() === 'unmapped' ||
+                      r.cfStatus.toLowerCase() === 'unpublished' ||
+                      r.cfStatus.toLowerCase() === 'n/a' ||
+                      !isOfferValid ||
+                      !!r.groupId
+                    }
+                    onChange={(e, data) => {
+                      e.preventDefault()
+                      try {
+                        this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
+                        this.props.datagrid.updateRow(r.id, () => ({
+                          ...r.rawData,
+                          cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
+                        }))
+                        // Its necessary to render and see changes in MyListing when datagrid updated row
+                        this.setState({ updatedRow: true })
+                      } catch (error) {
+                        console.error(error)
+                      }
+                    }}
+                  />
+                }
+                content={title}
+              />
+            </BroadcastDiv>
             <SpanText onClick={() => this.tableRowClickedProductOffer(r, true, 0, sidebarDetailTrigger)}>
               {r.productName}
             </SpanText>
