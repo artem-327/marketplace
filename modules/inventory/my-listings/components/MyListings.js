@@ -851,20 +851,21 @@ class MyListings extends Component {
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
         ),
-        fobPrice: (
-          <StyledPopup
-            content={
-              <QuickEditPricingPopup
-                handlechange={(values, index) => this.handleChangePriceTiers(values, rIndex, index)}
-                rawData={getSafe(() => this.state.rows[rIndex].rawData, '') || r.rawData}
-              />
-            }
-            on='click'
-            trigger={<FobPrice>{r.fobPrice}</FobPrice>}
-            open={pricingEditOpenId === r.rawData.id}
-            onOpen={() => setPricingEditOpenId(r.rawData.id)}
-            onClose={() => setPricingEditOpenId(null)}
-          />
+        fobPrice: r.grouped
+          ? r.fobPrice
+          : (
+            <StyledPopup
+              content={
+                <QuickEditPricingPopup
+                  handlechange={(values, index) => this.handleChangePriceTiers(values, rIndex, index)}
+                  rawData={getSafe(() => this.state.rows[rIndex].rawData, '') || r.rawData}
+                />
+              }
+              on='click'
+              trigger={<FobPrice>{r.fobPrice}</FobPrice>}
+              open={pricingEditOpenId === r.rawData.id}
+              onOpen={() => setPricingEditOpenId(r.rawData.id)}
+            />
         ),
         broadcast: (
           <div style={{ float: 'left' }}>
@@ -916,6 +917,7 @@ class MyListings extends Component {
   }
 
   handleChangePriceTiers = (values, rIndex, pIndex) => {
+
     let newRows = this.state.rows
 
     if (pIndex) {
@@ -992,9 +994,17 @@ class MyListings extends Component {
   }
 
   groupOffer = async (request, row) => {
-    const { groupOffers } = this.props
+    const { groupOffers, datagrid } = this.props
     try {
       const response = await groupOffers(request)
+
+      datagrid.updateRow(row.id, () => ({
+        ...row,
+        grouped: true,
+        parentOffer: getSafe(() => response.value.productOfferStatuses[0].virtualOfferId, null)
+      }))
+      this.setState({ updatedRow: true })
+
       this.showMessage(response, request, row)
     } catch (error) {
       console.error(error)
@@ -1002,9 +1012,13 @@ class MyListings extends Component {
   }
 
   detachOffer = async (productOfferIds, row) => {
-    const { detachOffers } = this.props
+    const { detachOffers, datagrid } = this.props
     try {
       const response = await detachOffers(productOfferIds)
+
+      datagrid.updateRow(row.id, () => ({ ...row, grouped: false, parentOffer: null }))
+      this.setState({ updatedRow: true })
+
       this.showMessage(response, null, row)
     } catch (error) {
       console.error(error)
