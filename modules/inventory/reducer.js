@@ -563,14 +563,14 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_GROUP_OFFERS_PENDING: {
       return {
         ...state,
-        loading: true
+        updatingDatagrid: true
       }
     }
 
     case AT.INVENTORY_GROUP_OFFERS_FULFILLED: {
       return {
         ...state,
-        loading: false,
+        updatingDatagrid: false,
         productOfferStatuses: payload && payload.productOfferStatuses
       }
     }
@@ -578,7 +578,7 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_GROUP_OFFERS_REJECT: {
       return {
         ...state,
-        loading: false
+        updatingDatagrid: false
       }
     }
 
@@ -586,14 +586,14 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_DETACH_OFFERS_PENDING: {
       return {
         ...state,
-        loading: true
+        updatingDatagrid: true
       }
     }
 
     case AT.INVENTORY_DETACH_OFFERS_FULFILLED: {
       return {
         ...state,
-        loading: false,
+        updatingDatagrid: false,
         productOfferStatuses: payload && payload.productOfferStatuses
       }
     }
@@ -601,7 +601,7 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_DETACH_OFFERS_REJECT: {
       return {
         ...state,
-        loading: false
+        updatingDatagrid: false
       }
     }
     case AT.INVENTORY_APPLY_FILTER: {
