@@ -214,6 +214,9 @@ const validationSchema = min =>
   })
 
 class QuickEditPricingPopup extends React.Component {
+  componentDidMount() {
+    if (this.props.focusInput && typeof this[this.props.focusInput] !== 'undefined') this[this.props.focusInput].focus()
+  }
   renderPricingTiers = (values, setFieldValue) => {
     const {
       intl: { formatMessage }
@@ -236,10 +239,17 @@ class QuickEditPricingPopup extends React.Component {
               <Input
                 name={`pricingTiers[${i}].quantityFrom`}
                 inputProps={{
+                  ref: input => {
+                    this[`pricingTiers[${i}].quantityFrom`] = input
+                  },
                   placeholder: '0',
                   onChange: (e, { name, value }) => {
                     e.persist()
-                    this.props.handlechange({ quantityFrom: value, pricePerUOM: values.pricingTiers[i].pricePerUOM }, i)
+                    this.props.handlechange(
+                      { quantityFrom: value, pricePerUOM: values.pricingTiers[i].pricePerUOM },
+                      i,
+                      `pricingTiers[${i}].quantityFrom`
+                    )
                   }
                 }}
               />
@@ -261,12 +271,16 @@ class QuickEditPricingPopup extends React.Component {
               <Input
                 name={`pricingTiers[${i}].pricePerUOM`}
                 inputProps={{
+                  ref: input => {
+                    this[`pricingTiers[${i}].pricePerUOM`] = input
+                  },
                   placeholder: '0.00',
                   onChange: (e, { name, value }) => {
                     e.persist()
                     this.props.handlechange(
                       { quantityFrom: values.pricingTiers[i].quantityFrom, pricePerUOM: value },
-                      i
+                      i,
+                      `pricingTiers[${i}].pricePerUOM`
                     )
                   }
                 }}
@@ -405,7 +419,6 @@ class QuickEditPricingPopup extends React.Component {
           await this.submitForm()
         }}>
         {formikProps => {
-
           this.formikProps = formikProps
           const { values, setFieldValue } = formikProps
 
