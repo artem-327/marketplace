@@ -90,7 +90,7 @@ function mapStateToProps(store) {
     productOffersValue:
       isAdmin && !takeover
         ? getSafe(() => data.totalProductOffersValue, 0)
-        : getSafe(() => data.companyProductOffersCount, 0),
+        : getSafe(() => data.companyProductOffersValue, 0),
     usersCount:
       isAdmin && !takeover ? getSafe(() => data.totalUsersCount, 0) : getSafe(() => data.companyUsersCount, 0),
     loading: getSafe(() => data.loading, ''),
