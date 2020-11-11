@@ -11,7 +11,7 @@ class MyRequestedItemsPage extends Component {
     } = this.props
 
     return (
-      <Layout title={formatMessage({ id: 'title.wantedBoardBidsReceived', defaultMessage: 'Bids Received' })}>
+      <Layout title={formatMessage({ id: 'title.wantedBoardBidsReceived', defaultMessage: 'My Requests' })}>
         <BidsReceived />
       </Layout>
     )
