@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
+import {Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input, Dropdown} from 'semantic-ui-react'
 import {AlertTriangle, Clock, MoreVertical, Sliders} from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -132,7 +132,22 @@ const DivSetting = styled.div`
   background-color: #ffffff;
 `
 
-const RowDropDownIcon = styled.div`
+const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+  margin-right: 8px;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+  
+  .dropdown.icon {
+    display: none;
+  }
+`
+
+const RowDropdownIcon = styled.div`
   width: 16px;
   height: 16px;
   margin: 2px 0 2px -4px;
@@ -154,12 +169,6 @@ class Listings extends Component {
         { name: 'productNumber', disabled: true },
         // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
         {
-          name: 'actCol',
-          title: ' ',
-          width: 40,
-          actions: this.getRowActions()
-        },
-        {
           name: 'intProductName',
           title: (
             <FormattedMessage id='global.productName' defaultMessage='Product Name'>
@@ -167,7 +176,8 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 180,
-          sortPath: 'ProductOffer.companyProduct.intProductName'
+          sortPath: 'ProductOffer.companyProduct.intProductName',
+          allowReordering: false
         },
         {
           name: 'fobPrice',
@@ -382,6 +392,21 @@ class Listings extends Component {
     )
   }
 
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
   getRows = () => {
     const {
       rows,
@@ -391,13 +416,18 @@ class Listings extends Component {
     return rows.map(r => ({
       ...r,
       clsName: r.condition ? 'non-conforming' : '',
-      actCol: (
-        <RowDropDownIcon>
-          <MoreVertical />
-        </RowDropDownIcon>
-      ),
       intProductName: (
         <DivRow>
+          <RowDropdown trigger={(
+            <RowDropdownIcon>
+              <MoreVertical />
+            </RowDropdownIcon>
+          )}
+          >
+            <Dropdown.Menu>
+              {this.getActionItems(this.getRowActions(r), r)}
+            </Dropdown.Menu>
+          </RowDropdown>
           <SpanText onClick={() => this.tableRowClicked(r.id)}>{r.intProductName}</SpanText>
           <DivIcons>
             {r.expired ? (
@@ -466,7 +496,7 @@ class Listings extends Component {
     sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
-  getRowActions = () => {
+  getRowActions = (row) => {
     const {
       isMerchant,
       isCompanyAdmin,
@@ -478,21 +508,21 @@ class Listings extends Component {
         id: 'marketplace.info',
         defaultMessage: 'Info'
       }),
-      callback: row => this.tableRowClicked(row.id, false, true)
+      callback: () => this.tableRowClicked(row.id, false, true)
     }
     const buttonRequestHold = {
       text: formatMessage({
         id: 'hold.requestHold',
         defaultMessage: 'Request Hold'
       }),
-      callback: row => this.tableRowClicked(row.id, true)
+      callback: () => this.tableRowClicked(row.id, true)
     }
     const buttonBuy = {
       text: formatMessage({
         id: 'marketplace.buy',
         defaultMessage: 'Buy Product Offer'
       }),
-      callback: row => this.tableRowClicked(row.id)
+      callback: () => this.tableRowClicked(row.id)
     }
     if (isMerchant || isCompanyAdmin) {
       rowActions.push(buttonInfo)
@@ -603,7 +633,6 @@ class Listings extends Component {
               }
             }}
             data-test='marketplace_listings_row_action'
-            columnActions={'actCol'}
           />
         </div>
         <AddCart openInfo={openInfo} />
