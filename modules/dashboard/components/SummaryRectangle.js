@@ -112,7 +112,9 @@ const SummaryRectangle = ({
   average,
   styleCircle,
   isLastSummary,
-  onClickUrl
+  onClickUrl,
+  style,
+  currency
 }) => {
   return (
     <RectangleSummary
@@ -128,7 +130,12 @@ const SummaryRectangle = ({
         </DivIcon>
         <DivSummary>
           <DivNumbers>
-            <FormattedNumber minimumFractionDigits={0} value={getSafe(() => data, 0)} />
+            <FormattedNumber
+              minimumFractionDigits={0}
+              value={getSafe(() => data, 0)}
+              {...(style && { style: style })}
+              {...(currency && { currency: currency })}
+            />
           </DivNumbers>
           <DivTotalText>
             <FormattedMessage id={titleId} defaultMessage={title} />
@@ -163,6 +170,8 @@ SummaryRectangle.propTypes = {
   styleCircle: PropTypes.object,
   isLastSummary: PropTypes.bool,
   onClickUrl: PropTypes.string,
+  style: PropTypes.string,
+  currency: PropTypes.string
 }
 
 SummaryRectangle.defaultProps = {
