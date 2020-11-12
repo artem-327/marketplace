@@ -442,7 +442,7 @@ class Navigation extends Component {
             icon={<Coffee size={22} />}
             text={
               <>
-                <FormattedMessage id='navigation.manageGuests' defaultMessage='Manage Guests' />
+                <FormattedMessage id='navigation.manageGuests' defaultMessage='Guests' />
                 {manageGuests ? <ChevronUp /> : <ChevronDown />}
               </>
             }
