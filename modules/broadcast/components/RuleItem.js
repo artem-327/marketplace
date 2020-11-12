@@ -22,8 +22,8 @@ const RuleItem = props => {
     openModalCompanyInfo,
     getCompanyInfo,
     changeInModel,
-    associationFilter
-    // tree,
+    associationFilter,
+    treeData
   } = props
   // let item = _.cloneDeep(props.item)
   let { item } = props
@@ -59,7 +59,7 @@ const RuleItem = props => {
     .filter(n => n.model.rule.broadcast === 1)
   const parentBroadcasted = broadcastedParents.reverse()[0]
   let nodeBroadcast = rule.broadcast
-  const hasNonHiddenChild = item.first(n => !n.model.rule.hidden && n.model.rule.id !== item.model.rule.id)
+  const hasNonHiddenChild = item.first(n => !n.model.rule.hidden)
 
   const displayArrow = item.children.length > 0 && rule.type !== 'root' && hasNonHiddenChild
 
@@ -134,6 +134,7 @@ const RuleItem = props => {
           asSidebar={asSidebar}
           filter={filter}
           associationFilter={associationFilter}
+          treeData={treeData}
         />
       </Rule.Row>
 
@@ -155,6 +156,7 @@ const RuleItem = props => {
             asSidebar={asSidebar}
             openModalCompanyInfo={openModalCompanyInfo}
             getCompanyInfo={getCompanyInfo}
+            treeData={treeData}
           />
         ))}
     </>

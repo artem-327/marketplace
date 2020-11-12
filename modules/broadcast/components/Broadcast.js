@@ -91,7 +91,7 @@ class Broadcast extends Component {
     if (this.props.changedForm) this.props.changedForm()
   }
 
-  handlePriceChange = node => {
+  handlePriceChange = (node, foundAllNodes) => {
     let path = node.getPath()
 
     for (let i = 0; i < path.length - 1; i++) {
@@ -100,7 +100,7 @@ class Broadcast extends Component {
     }
 
     this.setState({ change: true, saved: false })
-    this.updateInTreeData(node)
+    this.updateInTreeData(node, foundAllNodes)
     this.formChanged()
   }
 
@@ -150,27 +150,39 @@ class Broadcast extends Component {
     }
   }
 
-  updateInTreeData = node => {
+  updateInTreeData = (node, foundAllNodes) => {
     let copy = this.props.treeData
     const { filter } = this.props
 
     if (!node.isRoot()) {
-      let found = copy.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)
-      let index = found.getIndex()
-      let path = found.getPath()
-      let parent = path[path.length - 2]
-
-      // Remove node
-      found.drop()
-      // Set proper values
-      found.model = node.model.rule
-      // Add back removed node (with updated data)
-      parent.addChildAtIndex(found, index)
       normalizeTree(node)
+      let foundAll = copy.all(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type)
+      foundAll.forEach(found => {
+        let index = found.getIndex()
+        let path = found.getPath()
+        let parent = path[path.length - 2]
+        let parentNode = getSafe(() => foundAllNodes.length, '')
+          ? foundAllNodes.find(nod => found.parent.model.id === nod.parent.model.id)
+          : ''
+        let rule = getSafe(() => parentNode.model.rule, '')
+
+        // Remove node
+        found.drop()
+        // Set proper values
+        found.model = rule || node.model.rule
+        // Add back removed node (with updated data)
+        parent.addChildAtIndex(found, index)
+      })
 
       this.props.treeDataChanged({
         ...copy,
-        model: { ...copy.model, rule: { ...copy.model.rule, ...this.treeToModel(copy) } }
+        model: {
+          ...copy.model,
+          rule: {
+            ...copy.model.rule,
+            ...this.treeToModel(copy)
+          }
+        }
       })
     } else {
       normalizeTree(node)
@@ -300,7 +312,7 @@ class Broadcast extends Component {
               .all(n => n.model.type === 'branch' && n.parent.model.id === n1.model.id)
               .map(n2 => ({
                 name: n2.model.name,
-                rule: n2.model,
+                rule: { ...n2.model },
                 // rule: { ...n2.model, broadcast: getBroadcast(n2) },
                 depth: 3,
                 children: []
@@ -310,6 +322,16 @@ class Broadcast extends Component {
     }
 
     let preset = presets[filterCategory]
+    // if (filterCategory === 'branch') {
+    //   // add all branches to elements
+    //   preset = {
+    //     ...presets[filterCategory],
+    //     children: presets[filterCategory].children.map(child => ({
+    //       ...child,
+    //       rule: { ...child.rule, elements: child.children.map(ch => ch.rule) }
+    //     }))
+    //   }
+    // }
 
     let tree = new TreeModel().parse(preset)
 
@@ -378,7 +400,7 @@ class Broadcast extends Component {
 
     this.setHidden(_element => true, false)
     tree.walk(n => {
-      if (n.model.rule.hidden) {
+      if (getSafe(() => n.model.rule.hidden, '')) {
         n.model.rule.hidden = false
         if (n.model.rule.type === 'branch') {
           let company = this.findCompany(n)
@@ -436,7 +458,7 @@ class Broadcast extends Component {
   handleChange = (node, propertyName, e) => {
     e.preventDefault()
     e.stopPropagation()
-
+    let copyTreeData = this.props.treeData
     let { rule } = node.model
 
     const value = rule[propertyName]
@@ -456,6 +478,7 @@ class Broadcast extends Component {
 
     rule[propertyName] = newValue
 
+    let foundAllNodes = ''
     if (node.hasChildren()) {
       node.walk(n => {
         if (!getSafe(() => n.model.rule.hidden, n.model.hidden)) {
@@ -465,31 +488,29 @@ class Broadcast extends Component {
           }
         }
       })
+      //find all parents (state) of branches when change company
+      if (
+        rule.type !== 'root' &&
+        this.props.filter.category === 'branch' &&
+        node.model.children.length > node.model.rule.elements.length
+      ) {
+        foundAllNodes = copyTreeData.all(
+          n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type
+        )
+        foundAllNodes.forEach(nod => {
+          nod.walk(no => {
+            if (!getSafe(() => no.model.rule, '')) {
+              no.model.rule = { ...no.model, [propertyName]: newValue }
+              if (getSafe(() => no.model.rule.elements.length, 0) > 0) {
+                this.changeInModel(no.model.rule.elements, { propertyName, value: newValue })
+              }
+            }
+          })
+        })
+      }
     }
-    // const { treeData } = this.props
-    // const findInData = node =>
-    //   getSafe(
-    //     () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
-    //     null
-    //   )
 
-    // let path = getSafe(() => findInData(node).getPath(), [])
-    // for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
-
-    // Hotfix - Changes were not applied to data structure when clicking on nodes with childs with 'By Company' filter applied
-    // This fixes it, but causes a delay when clicking on root as it iterates through every node and it's path in data structure
-
-    // if (this.props.filter.category === 'branch') {
-    //   if (node.isRoot()) {
-    //     node.walk(n => {
-    //       if (n.model.rule.type === 'branch' && !n.model.rule.hidden) {
-    //         n.model.rule[propertyName] = newValue
-    //       }
-    //     })
-    //   }
-    // }
-
-    this.updateInTreeData(node)
+    this.updateInTreeData(node, foundAllNodes)
     this.formChanged()
   }
 
@@ -1047,6 +1068,7 @@ class Broadcast extends Component {
                     asSidebar={asSidebar}
                     openModalCompanyInfo={openModalCompanyInfo}
                     getCompanyInfo={getCompanyInfo}
+                    treeData={treeData}
                   />
                 </Rule.Content>
               </Rule.Root>
