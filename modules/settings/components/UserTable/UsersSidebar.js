@@ -1,6 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { closeSidebar, postNewUserRequest, handlerSubmitUserEditPopup, getCompanyDetails } from '../../actions'
+import {
+  closeSidebar,
+  postNewUserRequest,
+  handlerSubmitUserEditPopup,
+  getCompanyDetails,
+  getUsersDataRequest
+} from '../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../companies/actions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -48,6 +54,7 @@ const FlexSidebar = styled(Sidebar)`
 
   &.full-screen-sidebar {
     top: 0 !important;
+    padding-bottom: 0px;
   }
 `
 
@@ -197,7 +204,7 @@ class UsersSidebar extends React.Component {
     })
 
   componentDidMount = async () => {
-    const { companyId, popupValues, isCompanyAdmin } = this.props
+    const { companyId, popupValues, isCompanyAdmin, openGlobalAddForm, getUsersDataRequest } = this.props
     if (companyId !== null) {
       const { value } = await this.props.getCompanyDetails(companyId)
       let branches = uniqueArrayByKey(
@@ -220,6 +227,8 @@ class UsersSidebar extends React.Component {
       this.props.searchSellMarketSegments('')
       this.props.searchBuyMarketSegments('')
     }
+
+    if (!!openGlobalAddForm) getUsersDataRequest()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -747,7 +756,8 @@ const mapDispatchToProps = {
   getCompanyDetails,
   searchSellMarketSegments,
   searchBuyMarketSegments,
-  getIdentity
+  getIdentity,
+  getUsersDataRequest
 }
 
 const mapStateToProps = state => {

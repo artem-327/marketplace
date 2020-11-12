@@ -18,6 +18,7 @@ import {
   CustomDiv,
   Rectangle,
   DivInRectangle,
+  GlobalSidebars,
   CustomSpanReturn
 } from '~/components/constants/layout'
 import { Container, Menu, Dropdown, Icon, Image, FormField, Popup } from 'semantic-ui-react'
@@ -528,12 +529,14 @@ class Layout extends Component {
             </Rectangle>
           </CustomDiv>
         ) : null}
-        {openGlobalAddFormName === 'inventory-my-products' && (<ProductSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-        {openGlobalAddFormName === 'inventory-my-listings' && (<ListingSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-        {openGlobalAddFormName === 'wanted-board-listings' && (<WantedSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-        {openGlobalAddFormName === 'my-account-users' && (<UserSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-        {openGlobalAddFormName === 'manage-guests-guests' && (<GuestSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-        {openGlobalAddFormName === 'my-account-locations' && (<WarehouseSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+        <GlobalSidebars>
+          {openGlobalAddFormName === 'inventory-my-products' && (<ProductSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+          {openGlobalAddFormName === 'inventory-my-listings' && (<ListingSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+          {openGlobalAddFormName === 'wanted-board-listings' && (<WantedSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+          {openGlobalAddFormName === 'my-account-users' && (<UserSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+          {openGlobalAddFormName === 'manage-guests-guests' && (<GuestSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+          {openGlobalAddFormName === 'my-account-locations' && (<WarehouseSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+        </GlobalSidebars>
       </MainContainer>
     )
   }

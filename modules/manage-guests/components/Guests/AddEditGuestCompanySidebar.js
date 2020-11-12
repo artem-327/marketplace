@@ -217,7 +217,7 @@ class AddEditGuestCompanySidebar extends React.Component {
                   <Loader />
                 </Dimmer>
                 <HighSegment basic>
-                  <FormattedMessage id='manageGuests.addCompany' defaultMessage='Add Company' />
+                  <FormattedMessage id='manageGuests.addCompany' defaultMessage='Add Guest' />
                 </HighSegment>
                 <FlexContent>
                   <>

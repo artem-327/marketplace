@@ -1127,3 +1127,7 @@ export const CustomSpanReturn = styled.span`
   color: #4183c4;
   cursor: pointer;
 `
+
+export const GlobalSidebars = styled.div`
+  //padding-bottom: 0 !important;
+`

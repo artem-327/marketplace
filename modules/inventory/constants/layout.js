@@ -22,6 +22,7 @@ export const FlexSidebar = styled(Sidebar)`
   
   &.full-screen-sidebar {
     top: 0 !important;
+    padding-bottom: 0px;
   }
   
   .field {
