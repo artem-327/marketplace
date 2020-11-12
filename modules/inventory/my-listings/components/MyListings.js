@@ -151,7 +151,7 @@ const RowDropdown = styled(Dropdown)`
     font-weight: bold;
     color: #2599d5;
   }
-  
+
   .dropdown.icon {
     display: none;
   }
@@ -661,7 +661,14 @@ class MyListings extends Component {
   }
 
   getRows = rows => {
-    const { datagrid, pricingEditOpenId, setPricingEditOpenId, sidebarDetailTrigger, toastManager } = this.props
+    const {
+      datagrid,
+      pricingEditOpenId,
+      setPricingEditOpenId,
+      sidebarDetailTrigger,
+      toastManager,
+      closePricingEditPopup
+    } = this.props
     let title = ''
 
     let result = rows.map((r, rIndex) => {
@@ -868,7 +875,10 @@ class MyListings extends Component {
             trigger={<FobPrice>{r.fobPrice}</FobPrice>}
             open={pricingEditOpenId === r.rawData.id}
             onOpen={() => setPricingEditOpenId(r.rawData.id)}
-            onClose={() => this.setState({ focusInput: '' })}
+            onClose={() => {
+              closePricingEditPopup()
+              this.setState({ focusInput: '' })
+            }}
           />
         ),
         broadcast: (
