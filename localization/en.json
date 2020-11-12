@@ -1283,6 +1283,7 @@
   "filter.selectForm": "Select Form (Multiple Select)",
   "filter.saveEmptyFilterHeader": "Empty Filter",
   "filter.saveEmptyFilter": "There are no any filters configured",
+  "filter.invalidFilter": "This filter is outdated. Please update this filter.",
   "dataTable.ProductName": "Product Name",
   "dataTable.ProductNumber": "Product Number",
   "dataTable.Available": "Available PKGs",
