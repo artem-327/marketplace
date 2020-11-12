@@ -2372,3 +2372,32 @@ i.file {
     }
   }
 }
+
+.products-wrapper {
+  padding-bottom: 10px;
+
+  .table-responsive {
+    overflow: visible;
+
+    table.table {
+
+      tbody {
+
+        tr {
+
+          td {
+            position: relative;
+            overflow: visible;
+
+            .cell-wrapper {
+              overflow: hidden;
+              display: block;
+              width: 100%;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+    }
+  }
+}

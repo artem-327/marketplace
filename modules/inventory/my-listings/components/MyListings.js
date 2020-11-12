@@ -177,6 +177,12 @@ class MyListings extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      fixed: [
+        {
+          name: 'productName',
+          position: 3
+        }
+      ],
       columns: [
         /*{
           name: 'actCol',
@@ -1045,7 +1051,7 @@ class MyListings extends Component {
       updatingDatagrid,
       activeInventoryFilter
     } = this.props
-    const { columns, clientMessage, request, openFilterPopup, rows } = this.state
+    const { columns, fixed, clientMessage, request, openFilterPopup, rows } = this.state
 
     return (
       <>
@@ -1174,6 +1180,7 @@ class MyListings extends Component {
             {...datagrid.tableProps}
             tableName='my_inventory_grid'
             columns={columns}
+            fixed={fixed}
             rows={rows}
             selectByRowClick
             hideCheckboxes
