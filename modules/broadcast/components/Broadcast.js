@@ -91,7 +91,7 @@ class Broadcast extends Component {
     if (this.props.changedForm) this.props.changedForm()
   }
 
-  handlePriceChange = node => {
+  handlePriceChange = (node, foundAllNodes) => {
     let path = node.getPath()
 
     for (let i = 0; i < path.length - 1; i++) {
@@ -100,7 +100,7 @@ class Broadcast extends Component {
     }
 
     this.setState({ change: true, saved: false })
-    this.updateInTreeData(node)
+    this.updateInTreeData(node, foundAllNodes)
     this.formChanged()
   }
 
@@ -161,18 +161,15 @@ class Broadcast extends Component {
         let index = found.getIndex()
         let path = found.getPath()
         let parent = path[path.length - 2]
+        let parentNode = getSafe(() => foundAllNodes.length, '')
+          ? foundAllNodes.find(nod => found.parent.model.id === nod.parent.model.id)
+          : ''
+        let rule = getSafe(() => parentNode.model.rule, '')
 
         // Remove node
         found.drop()
         // Set proper values
-        // let foundRule = ''
-        // foundAllNodes.forEach(nod => {
-        //   if (getSafe(() => nod.parent.model.id, '') === parent.model.id) {
-        //     foundRule = nod.model.rule
-        //     return
-        //   }
-        // })
-        found.model = node.model.rule
+        found.model = rule || node.model.rule
         // Add back removed node (with updated data)
         parent.addChildAtIndex(found, index)
       })
@@ -481,8 +478,6 @@ class Broadcast extends Component {
 
     rule[propertyName] = newValue
 
-    // potřebuji dostat všechny rules s id parentu (state)
-    //zkusit posílat jen array, žádný node
     let foundAllNodes = ''
     if (node.hasChildren()) {
       node.walk(n => {
@@ -493,7 +488,7 @@ class Broadcast extends Component {
           }
         }
       })
-
+      //find all parents (state) of branches when change company
       if (
         rule.type !== 'root' &&
         this.props.filter.category === 'branch' &&
@@ -514,29 +509,6 @@ class Broadcast extends Component {
         })
       }
     }
-
-    // const { treeData } = this.props
-    // const findInData = node =>
-    //   getSafe(
-    //     () => treeData.first(n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type),
-    //     null
-    //   )
-
-    // let path = getSafe(() => findInData(node).getPath(), [])
-    // for (let i = path.length - 2; i >= 0; i--) setBroadcast(path[i])
-
-    // Hotfix - Changes were not applied to data structure when clicking on nodes with childs with 'By Company' filter applied
-    // This fixes it, but causes a delay when clicking on root as it iterates through every node and it's path in data structure
-
-    // if (this.props.filter.category === 'branch') {
-    //   if (node.isRoot()) {
-    //     node.walk(n => {
-    //       if (n.model.rule.type === 'branch' && !n.model.rule.hidden) {
-    //         n.model.rule[propertyName] = newValue
-    //       }
-    //     })
-    //   }
-    // }
 
     this.updateInTreeData(node, foundAllNodes)
     this.formChanged()
@@ -1096,6 +1068,7 @@ class Broadcast extends Component {
                     asSidebar={asSidebar}
                     openModalCompanyInfo={openModalCompanyInfo}
                     getCompanyInfo={getCompanyInfo}
+                    treeData={treeData}
                   />
                 </Rule.Content>
               </Rule.Root>

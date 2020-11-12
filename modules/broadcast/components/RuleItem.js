@@ -22,8 +22,8 @@ const RuleItem = props => {
     openModalCompanyInfo,
     getCompanyInfo,
     changeInModel,
-    associationFilter
-    // tree,
+    associationFilter,
+    treeData
   } = props
   // let item = _.cloneDeep(props.item)
   let { item } = props
@@ -134,6 +134,7 @@ const RuleItem = props => {
           asSidebar={asSidebar}
           filter={filter}
           associationFilter={associationFilter}
+          treeData={treeData}
         />
       </Rule.Row>
 
@@ -155,6 +156,7 @@ const RuleItem = props => {
             asSidebar={asSidebar}
             openModalCompanyInfo={openModalCompanyInfo}
             getCompanyInfo={getCompanyInfo}
+            treeData={treeData}
           />
         ))}
     </>
