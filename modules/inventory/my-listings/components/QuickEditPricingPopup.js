@@ -404,7 +404,11 @@ class QuickEditPricingPopup extends React.Component {
         onSubmit={async () => {
           await this.submitForm()
         }}>
-        {({ values, setFieldValue }) => {
+        {formikProps => {
+
+          this.formikProps = formikProps
+          const { values, setFieldValue } = formikProps
+
           return (
             <>
               <div className='high-segment'>
