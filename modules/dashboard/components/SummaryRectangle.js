@@ -16,6 +16,10 @@ const RectangleSummary = styled.div`
   border: solid 1px #dee2e6;
   background-color: #ffffff;
   margin-bottom: 16px;
+  
+  &[style*="pointer"]:hover [class*="DivNumbers"] {
+    color: #2599d5;
+  }
 `
 
 const RectangleSummaryHeader = styled.div`
