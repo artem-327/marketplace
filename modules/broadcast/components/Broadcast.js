@@ -494,7 +494,11 @@ class Broadcast extends Component {
         }
       })
 
-      if (node.model.children.length > node.model.rule.elements.length) {
+      if (
+        rule.type !== 'root' &&
+        this.props.filter.category === 'branch' &&
+        node.model.children.length > node.model.rule.elements.length
+      ) {
         foundAllNodes = copyTreeData.all(
           n => n.model.id === node.model.rule.id && n.model.type === node.model.rule.type
         )
