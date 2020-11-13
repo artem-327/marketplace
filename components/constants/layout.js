@@ -1129,5 +1129,4 @@ export const CustomSpanReturn = styled.span`
 `
 
 export const GlobalSidebars = styled.div`
-  //padding-bottom: 0 !important;
 `
