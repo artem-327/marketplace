@@ -396,7 +396,7 @@ class Navigation extends Component {
                     as={MenuLink}
                     to='/wanted-board/bids-sent'
                     dataTest='navigation_wanted_board_bids_sent_drpdn'>
-                    {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
+                    {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'My Offers' })}
                   </Dropdown.Item>
                 </>
               )}
@@ -404,7 +404,7 @@ class Navigation extends Component {
                 as={MenuLink}
                 to='/wanted-board/bids-received'
                 dataTest='navigation_wanted_board_bids_received_drpdn'>
-                {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'Bids Received' })}
+                {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'My Requests' })}
               </Dropdown.Item>
             </PerfectScrollbar>
           </Dropdown.Menu>

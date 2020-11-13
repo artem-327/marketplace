@@ -386,6 +386,12 @@ class _Table extends Component {
         allowReordering: pt.bool
       })
     ),
+    fixed: pt.arrayOf(
+      pt.shape({
+        name: pt.string.isRequired,
+        position: pt.number.isRequired
+      })
+    ),
     rows: pt.arrayOf(pt.any),
     columnReordering: pt.bool,
     rowSelection: pt.bool,
@@ -848,7 +854,15 @@ class _Table extends Component {
   }
 
   handleColumnsSettings = data => {
-    const { tableName } = this.props
+    const { columnsSettings: { order } } = this.state
+    const { tableName, fixed } = this.props
+    if (data.order && (typeof fixed !== 'undefined')) {
+      fixed.forEach(fixedCol => {
+        if (data.order.indexOf(fixedCol.name) !== fixedCol.position) {
+          data.order = order
+        }
+      })
+    }
     const newData = data.widths
       ? { ...data, widths: this.compareMaxWidths(data.widths, this.state.columnsSettings.widths) }
       : { ...data }
