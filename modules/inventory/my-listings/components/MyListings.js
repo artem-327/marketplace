@@ -151,7 +151,7 @@ const RowDropdown = styled(Dropdown)`
     font-weight: bold;
     color: #2599d5;
   }
-  
+
   .dropdown.icon {
     display: none;
   }
@@ -416,7 +416,8 @@ class MyListings extends Component {
         SearchByNamesAndTags: null
       },
       rows: [],
-      updatedRow: false
+      updatedRow: false,
+      focusInput: ''
     }
   }
 
@@ -494,7 +495,8 @@ class MyListings extends Component {
         getSafe(() => this.props.rows.length, '')) ||
       getSafe(() => prevProps.rows[0].id, '') !== getSafe(() => this.props.rows[0].id, '') ||
       getSafe(() => prevProps.pricingEditOpenId, '') !== getSafe(() => this.props.pricingEditOpenId, '') ||
-      (getSafe(() => this.state.updatedRow, '') && !getSafe(() => prevState.updateRow, ''))
+      (getSafe(() => this.state.updatedRow, '') && !getSafe(() => prevState.updateRow, '')) ||
+      getSafe(() => this.state.focusInput, '') !== getSafe(() => prevState.focusInput, '')
     ) {
       this.getRows(this.props.rows)
       if (this.state.updatedRow && !prevState.updateRow) {
@@ -522,7 +524,7 @@ class MyListings extends Component {
     datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  getActionsByRow = (row) => {
+  getActionsByRow = row => {
     const {
       intl: { formatMessage },
       sidebarDetailTrigger,
@@ -665,7 +667,14 @@ class MyListings extends Component {
   }
 
   getRows = rows => {
-    const { datagrid, pricingEditOpenId, setPricingEditOpenId, sidebarDetailTrigger, toastManager } = this.props
+    const {
+      datagrid,
+      pricingEditOpenId,
+      setPricingEditOpenId,
+      sidebarDetailTrigger,
+      toastManager,
+      closePricingEditPopup
+    } = this.props
     let title = ''
 
     let result = rows.map((r, rIndex) => {
@@ -766,15 +775,13 @@ class MyListings extends Component {
         ...r,
         productName: (
           <DivRow>
-            <RowDropdown trigger={(
-                        <RowDropdownIcon>
-                          <MoreVertical />
-                        </RowDropdownIcon>
-                      )}
-                         >
-              <Dropdown.Menu>
-                {this.getActionItems(this.getActionsByRow(r), r)}
-              </Dropdown.Menu>
+            <RowDropdown
+              trigger={
+                <RowDropdownIcon>
+                  <MoreVertical />
+                </RowDropdownIcon>
+              }>
+              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(r), r)}</Dropdown.Menu>
             </RowDropdown>
             <BroadcastDiv>
               <Popup
@@ -857,21 +864,24 @@ class MyListings extends Component {
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
         ),
-        fobPrice: r.grouped
-          ? r.fobPrice
-          : (
-            <StyledPopup
-              content={
-                <QuickEditPricingPopup
-                  handlechange={(values, index) => this.handleChangePriceTiers(values, rIndex, index)}
-                  rawData={getSafe(() => this.state.rows[rIndex].rawData, '') || r.rawData}
-                />
-              }
-              on='click'
-              trigger={<FobPrice>{r.fobPrice}</FobPrice>}
-              open={pricingEditOpenId === r.rawData.id}
-              onOpen={() => setPricingEditOpenId(r.rawData.id)}
-            />
+        fobPrice: r.grouped ? (
+          r.fobPrice
+        ) : (
+          <StyledPopup
+            content={
+              <QuickEditPricingPopup
+                handlechange={(values, index, focusInput) =>
+                  this.handleChangePriceTiers(values, rIndex, index, focusInput)
+                }
+                rawData={getSafe(() => this.state.rows[rIndex].rawData, '') || r.rawData}
+                focusInput={this.state.focusInput}
+              />
+            }
+            on='click'
+            trigger={<FobPrice>{r.fobPrice}</FobPrice>}
+            open={pricingEditOpenId === r.rawData.id}
+            onOpen={() => setPricingEditOpenId(r.rawData.id)}
+          />
         ),
         broadcast: (
           <div style={{ float: 'left' }}>
@@ -922,11 +932,10 @@ class MyListings extends Component {
     this.setState({ rows: result })
   }
 
-  handleChangePriceTiers = (values, rIndex, pIndex) => {
-
+  handleChangePriceTiers = (values, rIndex, pIndex, focusInput) => {
     let newRows = this.state.rows
 
-    if (pIndex) {
+    if (pIndex || pIndex === 0) {
       //pIndex means pricingTiers index and that row was changed. values are {}
       newRows[rIndex].rawData.pricingTiers[pIndex] = values
     } else {
@@ -934,7 +943,7 @@ class MyListings extends Component {
       newRows[rIndex].rawData.pricingTiers = values
     }
 
-    this.setState({ rows: newRows })
+    this.setState({ rows: newRows, focusInput: (pIndex || pIndex === 0) && focusInput ? focusInput : '' })
   }
 
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
