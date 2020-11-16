@@ -26,7 +26,7 @@ import { Input as FormikInput, Dropdown as FormikDropdown } from 'formik-semanti
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 import TreeModel from 'tree-model'
-import { Rule, BottomUnpaddedRow, RightAlignedDiv, StretchedGrid } from './Broadcast.style'
+import { Rule, BottomUnpaddedRow, RightAlignedDiv, StretchedGrid, GridRowSearch } from './Broadcast.style'
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
@@ -588,20 +588,11 @@ class Broadcast extends Component {
       { appearance: 'success' }
     )
   }
+  getAssociationsDropdown = () => {
+    const { associationsFetching, associations } = this.props
 
-  getAssociationFilter = () => {
-    const {
-      associationsFetching,
-      associations,
-      asSidebar,
-      intl: { formatMessage }
-    } = this.props
-
-    const associationsDropdown = (
+    return (
       <Form.Field>
-        <label>
-          <FormattedMessage id='global.associations' defaultMessage='Associations' />
-        </label>
         <Dropdown
           fluid
           value={this.state.associationFilter}
@@ -612,6 +603,14 @@ class Broadcast extends Component {
         />
       </Form.Field>
     )
+  }
+
+  getAssociationFilter = () => {
+    const {
+      asSidebar,
+      intl: { formatMessage }
+    } = this.props
+
     const broadcastButton = (
       <FormFieldBroadcastAllButton>
         <label>&nbsp;</label>
@@ -627,14 +626,14 @@ class Broadcast extends Component {
     if (asSidebar) {
       return (
         <UnpaddedRow.Top verticalAlign='middle'>
-          <GridColumn computer={8}>{associationsDropdown}</GridColumn>
+          <GridColumn computer={8}>{this.getAssociationsDropdown()}</GridColumn>
           <GridColumn computer={8}>{broadcastButton}</GridColumn>
         </UnpaddedRow.Top>
       )
     }
     return (
       <Form.Group widths='equal'>
-        {associationsDropdown}
+        {this.getAssociationsDropdown()}
         {broadcastButton}
       </Form.Group>
     )
@@ -682,367 +681,325 @@ class Broadcast extends Component {
 
     return (
       <>
-        <CompanyInfo
-          isLoadingModalCompanyInfo={isLoadingModalCompanyInfo}
-          dataCompanyInfo={dataCompanyInfo}
-          isOpenModalCompanyInfo={isOpenModalCompanyInfo}
-          closeModalCompanyInfo={closeModalCompanyInfo}
-        />
-        <StretchedGrid
-          className={asSidebar ? 'flex stretched' : ''}
-          {...additionalGridProps}
-          style={asSidebar ? { height: 'auto' } : null}>
-          <Grid.Row divided className='flex stretched'>
-            <Grid.Column width={asSidebar ? 16 : 6}>
-              <div>
-                <Message info size='large' style={{ padding: '6px 15px' }}>
-                  <Popup
-                    trigger={<Icon name='info circle' />}
-                    content={
-                      <FormattedMessage
-                        id='broadcast.broadcastingTooltip'
-                        defaultMessage='Shows number of company branches out of the total company branches you will Broadcast to, once you turn Broadcasting on.'
+        <Form>
+          {asSidebar ? (
+            <>
+              <CompanyInfo
+                isLoadingModalCompanyInfo={isLoadingModalCompanyInfo}
+                dataCompanyInfo={dataCompanyInfo}
+                isOpenModalCompanyInfo={isOpenModalCompanyInfo}
+                closeModalCompanyInfo={closeModalCompanyInfo}
+              />
+              <Grid>
+                <GridRow>
+                  <GridColumn>
+                    <Message info size='large' style={{ padding: '6px 15px' }}>
+                      <Popup
+                        trigger={<Icon name='info circle' />}
+                        content={
+                          <FormattedMessage
+                            id='broadcast.broadcastingTooltip'
+                            defaultMessage='Shows number of company branches out of the total company branches you will Broadcast to, once you turn Broadcasting on.'
+                          />
+                        }
                       />
-                    }
-                  />
-                  <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Visible to' />{' '}
-                  <strong>
-                    {broadcastingBranches}/{totalBranches}
-                  </strong>
-                  <FormattedMessage id='broadcast.broadcastingBranches' defaultMessage=' branches of ' />
-                  <strong>
-                    {broadcastingCompanies}/{totalCompanies}
-                  </strong>
-                  <FormattedMessage id='broadcast.broadcastingCompanies' defaultMessage=' companies' />
-                </Message>
-                <Form>
-                  {asSidebar ? (
-                    <Grid>
-                      <UnpaddedRow.Bottom>
-                        <GridColumn mobile={8}>
-                          <Form.Field>
-                            <label>
-                              <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
-                            </label>
-                            <Dropdown
-                              data-test='broadcast_modal_category_drpdn'
-                              selection
-                              name='category'
-                              value={filter.category}
-                              onChange={this.handleFilterChange}
-                              options={[
-                                {
-                                  key: 'region',
-                                  text: 'By Region',
-                                  value: 'region'
-                                },
-                                {
-                                  key: 'branch',
-                                  text: 'By Company',
-                                  value: 'branch'
-                                }
-                              ]}
-                            />
-                          </Form.Field>
-                        </GridColumn>
-                        <GridColumn mobile={8}>
-                          <Form.Field data-test='broadcast_modal_search_inp'>
-                            <label>
-                              <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
-                            </label>
-                            <Input
-                              name='search'
-                              icon='search'
-                              iconPosition='left'
-                              value={this.state.filterSearch}
-                              onChange={this.handleSearchChange}
-                            />
-                          </Form.Field>
-                        </GridColumn>
-                      </UnpaddedRow.Bottom>
-                      {this.getAssociationFilter()}
-                    </Grid>
-                  ) : (
-                    <>
-                      <Form.Field>
-                        <label>
-                          <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
-                        </label>
-                        <Dropdown
-                          data-test='broadcast_modal_category_drpdn'
-                          selection
-                          name='category'
-                          value={filter.category}
-                          onChange={this.handleFilterChange}
-                          options={[
-                            { key: 'region', text: 'By Region', value: 'region' },
-                            { key: 'branch', text: 'By Company', value: 'branch' }
-                          ]}
-                        />
-                      </Form.Field>
-                      <Form.Field data-test='broadcast_modal_search_inp'>
-                        <label>
-                          <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
-                        </label>
-                        <Input
-                          name='search'
-                          icon='search'
-                          iconPosition='right'
-                          value={this.state.filterSearch}
-                          onChange={this.handleSearchChange}
-                          placeholder={formatMessage({
-                            id: 'broadcast.keyword',
-                            defaultMessage: 'Keyword'
-                          })}
-                        />
-                      </Form.Field>
-                      {this.getAssociationFilter()}
-                    </>
-                  )}
-                </Form>
-                <Divider />
-                <Formik
-                  initialValues={templateInitialValues}
-                  validateOnChange={true}
-                  enableReinitialize
-                  onSubmit={async (values, { setSubmitting, setFieldValue }) => {
-                    let payload = {
-                      mappedBroadcastRules: {
-                        ...this.treeToModel(undefined, undefined, true)
-                      },
-                      name: values.name
-                    }
+                      <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Visible to' />{' '}
+                      <strong>
+                        {broadcastingBranches}/{totalBranches}
+                      </strong>
+                      <FormattedMessage id='broadcast.broadcastingBranches' defaultMessage=' branches of ' />
+                      <strong>
+                        {broadcastingCompanies}/{totalCompanies}
+                      </strong>
+                      <FormattedMessage id='broadcast.broadcastingCompanies' defaultMessage=' companies' />
+                    </Message>
+                  </GridColumn>
+                </GridRow>
+                <UnpaddedRow.Bottom>
+                  <GridColumn mobile={8}>
+                    <Form.Field>
+                      <label>
+                        <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
+                      </label>
+                      <Dropdown
+                        data-test='broadcast_modal_category_drpdn'
+                        selection
+                        name='category'
+                        value={filter.category}
+                        onChange={this.handleFilterChange}
+                        options={[
+                          {
+                            key: 'region',
+                            text: 'By Region',
+                            value: 'region'
+                          },
+                          {
+                            key: 'branch',
+                            text: 'By Company',
+                            value: 'branch'
+                          }
+                        ]}
+                      />
+                    </Form.Field>
+                  </GridColumn>
+                  <GridColumn mobile={8}>
+                    <Form.Field data-test='broadcast_modal_search_inp'>
+                      <label>
+                        <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
+                      </label>
+                      <Input
+                        name='search'
+                        icon='search'
+                        iconPosition='left'
+                        value={this.state.filterSearch}
+                        onChange={this.handleSearchChange}
+                      />
+                    </Form.Field>
+                  </GridColumn>
+                </UnpaddedRow.Bottom>
+                {this.getAssociationFilter()}
+              </Grid>
+            </>
+          ) : (
+            <Grid>
+              <GridRowSearch>
+                <GridColumn>
+                  <Form.Field data-test='broadcast_modal_search_inp'>
+                    <Input
+                      name='search'
+                      icon='search'
+                      iconPosition='right'
+                      value={this.state.filterSearch}
+                      onChange={this.handleSearchChange}
+                      placeholder={formatMessage({
+                        id: 'broadcast.keyword',
+                        defaultMessage: 'Keyword'
+                      })}
+                    />
+                  </Form.Field>
+                </GridColumn>
+              </GridRowSearch>
+            </Grid>
+          )}
+        </Form>
+        <Formik
+          initialValues={templateInitialValues}
+          validateOnChange={true}
+          enableReinitialize
+          onSubmit={async (values, { setSubmitting, setFieldValue }) => {
+            let payload = {
+              mappedBroadcastRules: {
+                ...this.treeToModel(undefined, undefined, true)
+              },
+              name: values.name
+            }
 
-                    if (templates.some(el => el.name === values.name)) {
-                      let { name, id } = this.state.selectedTemplate
+            if (templates.some(el => el.name === values.name)) {
+              let { name, id } = this.state.selectedTemplate
 
-                      await confirm(
-                        formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
-                        formatMessage({
-                          id: 'broadcast.overwriteTemplate.content'
-                        })
-                      )
+              await confirm(
+                formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
+                formatMessage({
+                  id: 'broadcast.overwriteTemplate.content'
+                })
+              )
 
-                      await updateTemplate(id, payload)
-                    } else {
-                      let { value } = await saveTemplate(payload)
-                      this.setState({ selectedTemplate: value })
-                      setFieldValue('templates', value.id)
-                    }
+              await updateTemplate(id, payload)
+            } else {
+              let { value } = await saveTemplate(payload)
+              this.setState({ selectedTemplate: value })
+              setFieldValue('templates', value.id)
+            }
 
-                    let status = values.name === name ? 'Updated' : 'Saved'
-                    setSubmitting(false)
-                  }}
-                  render={props => {
-                    this.submitForm = props.submitForm
-                    this.setFieldValue = props.setFieldValue
+            let status = values.name === name ? 'Updated' : 'Saved'
+            setSubmitting(false)
+          }}
+          render={props => {
+            this.submitForm = props.submitForm
+            this.setFieldValue = props.setFieldValue
 
-                    return (
-                      <Form onSubmit={props.handleSubmit}>
-                        <Grid className='upper-grid'>
-                          <BottomUnpaddedRow>
-                            <GridColumn computer={16}>
-                              <Header as='h4'>
-                                <FormattedMessage id='broadcast.templates' defaultMessage='Templates' />
-                              </Header>
-                            </GridColumn>
-                          </BottomUnpaddedRow>
+            return (
+              <Form onSubmit={props.handleSubmit}>
+                {asSidebar ? (
+                  <Grid className='upper-grid'>
+                    <BottomUnpaddedRow>
+                      <GridColumn computer={16}>
+                        <Header as='h4'>
+                          <FormattedMessage id='broadcast.templates' defaultMessage='Templates' />
+                        </Header>
+                      </GridColumn>
+                    </BottomUnpaddedRow>
 
-                          {asSidebar ? (
-                            <GridRow>
-                              <GridColumn computer={10}>
-                                <FormikDropdown
-                                  name='templates'
-                                  data-test='broadcast_modal_template_drpdn_addtn'
-                                  options={templates.map(template => ({
-                                    key: template.id,
-                                    text: template.name,
-                                    value: template.id
-                                  }))}
-                                  inputProps={{
-                                    style: { width: '100%' },
-                                    onChange: async (e, data) => {
-                                      const dataName = getSafe(
-                                        () => templates.find(el => el.id === data.value).name,
-                                        null
-                                      )
-                                      if (dataName) {
-                                        this.onTemplateSelected(
-                                          e,
-                                          {
-                                            options: templates.map(template => ({
-                                              key: template.id,
-                                              text: template.name,
-                                              value: template.id
-                                            })),
-                                            value: data.value
-                                          },
-                                          props.setFieldValue
-                                        )
-                                        this.setState({
-                                          selectedTemplate: {
-                                            id: data.value,
-                                            name: dataName
-                                          }
-                                        })
-                                        this.formChanged()
-                                      } else {
-                                        props.setFieldValue('name', data.value)
-                                        await this.submitForm()
-                                        this.formChanged()
-                                      }
-                                    },
-                                    allowAdditions: true,
-                                    additionLabel: formatMessage({
-                                      id: 'global.dropdown.add',
-                                      defaultMessage: 'Add '
-                                    }),
-                                    search: true,
-                                    loading: templateSaving,
-                                    selection: true,
-                                    selectOnBlur: false,
-                                    noResultsMessage: formatMessage(
-                                      {
-                                        id: 'global.dropdown.startTyping',
-                                        defaultMessage: 'Start typing to add {typeName}.'
-                                      },
-                                      {
-                                        typeName: formatMessage({
-                                          id: 'global.aCode',
-                                          defaultMessage: 'a code'
-                                        })
-                                      }
-                                    )
-                                  }}
-                                />
-                              </GridColumn>
-                              <GridColumn computer={6}>
-                                <CustomButton
-                                  data-test='broadcast_modal_delete_btn'
-                                  onClick={() => this.handleTemplateDelete(props.setFieldValue)}
-                                  disabled={!this.state.selectedTemplate.id}
-                                  loading={this.props.templateDeleting}
-                                  type='button'
-                                  basic
-                                  fluid
-                                  negative>
-                                  {formatMessage({
-                                    id: 'global.delete',
-                                    defaultMessage: 'Delete'
-                                  })}
-                                </CustomButton>
-                              </GridColumn>
-                            </GridRow>
-                          ) : (
-                            <GridRow>
-                              <GridColumn computer={10} style={{ paddingRight: '0px', minWidth: '100px' }}>
-                                <Dropdown
-                                  style={{ minWidth: '100px' }}
-                                  selectOnBlur={false}
-                                  data-test='broadcast_modal_template_drpdn'
-                                  fluid
-                                  selection
-                                  value={this.state.selectedTemplate.id}
-                                  onChange={(e, data) => {
-                                    this.onTemplateSelected(e, data, props.setFieldValue)
-                                    this.setState({
-                                      selectedTemplate: {
-                                        id: data.value,
-                                        name: data.options.find(el => el.value === data.value).text
-                                      }
-                                    })
-                                    this.formChanged()
-                                  }}
-                                  options={templates.map(template => ({
-                                    key: template.id,
-                                    text: template.name,
-                                    value: template.id
-                                  }))}
-                                />
-                              </GridColumn>
-                              <GridColumn computer={6}>
-                                <CustomButton
-                                  data-test='broadcast_modal_delete_btn'
-                                  onClick={() => this.handleTemplateDelete(props.setFieldValue)}
-                                  disabled={!this.state.selectedTemplate.id}
-                                  loading={this.props.templateDeleting}
-                                  type='button'
-                                  basic
-                                  fluid
-                                  negative>
-                                  {formatMessage({
-                                    id: 'global.delete',
-                                    defaultMessage: 'Delete'
-                                  })}
-                                </CustomButton>
-                              </GridColumn>
-                            </GridRow>
-                          )}
-
-                          <GridRow
-                            style={
-                              asSidebar
-                                ? {
-                                    position: 'absolute',
-                                    top: '-20000px',
-                                    left: '-20000px'
+                    <GridRow>
+                      <GridColumn computer={10}>
+                        <FormikDropdown
+                          name='templates'
+                          data-test='broadcast_modal_template_drpdn_addtn'
+                          options={templates.map(template => ({
+                            key: template.id,
+                            text: template.name,
+                            value: template.id
+                          }))}
+                          inputProps={{
+                            style: { width: '100%' },
+                            onChange: async (e, data) => {
+                              const dataName = getSafe(() => templates.find(el => el.id === data.value).name, null)
+                              if (dataName) {
+                                this.onTemplateSelected(
+                                  e,
+                                  {
+                                    options: templates.map(template => ({
+                                      key: template.id,
+                                      text: template.name,
+                                      value: template.id
+                                    })),
+                                    value: data.value
+                                  },
+                                  props.setFieldValue
+                                )
+                                this.setState({
+                                  selectedTemplate: {
+                                    id: data.value,
+                                    name: dataName
                                   }
-                                : null
-                            }>
-                            <GridColumn computer={10} style={{ paddingRight: '0px', minWidth: '100px' }}>
-                              <FormikInput
-                                inputProps={{
-                                  fluid: true,
-                                  placeholder: formatMessage({
-                                    id: 'broadcast.templateName',
-                                    defaultMessage: 'Template Name'
-                                  }),
-                                  'data-test': 'broadcast_modal_templateName_inp'
-                                }}
-                                name='name'
-                              />
-                            </GridColumn>
+                                })
+                                this.formChanged()
+                              } else {
+                                props.setFieldValue('name', data.value)
+                                await this.submitForm()
+                                this.formChanged()
+                              }
+                            },
+                            allowAdditions: true,
+                            additionLabel: formatMessage({
+                              id: 'global.dropdown.add',
+                              defaultMessage: 'Add '
+                            }),
+                            search: true,
+                            loading: templateSaving,
+                            selection: true,
+                            selectOnBlur: false,
+                            noResultsMessage: formatMessage(
+                              {
+                                id: 'global.dropdown.startTyping',
+                                defaultMessage: 'Start typing to add {typeName}.'
+                              },
+                              {
+                                typeName: formatMessage({
+                                  id: 'global.aCode',
+                                  defaultMessage: 'a code'
+                                })
+                              }
+                            )
+                          }}
+                        />
+                      </GridColumn>
+                      <GridColumn computer={6}>
+                        <CustomButton
+                          data-test='broadcast_modal_delete_btn'
+                          onClick={() => this.handleTemplateDelete(props.setFieldValue)}
+                          disabled={!this.state.selectedTemplate.id}
+                          loading={this.props.templateDeleting}
+                          type='button'
+                          basic
+                          fluid
+                          negative>
+                          {formatMessage({
+                            id: 'global.delete',
+                            defaultMessage: 'Delete'
+                          })}
+                        </CustomButton>
+                      </GridColumn>
+                    </GridRow>
 
-                            <GridColumn computer={6}>
-                              <CustomButton
-                                onClick={this.submitForm}
-                                type='button'
-                                loading={this.props.templateSaving}
-                                fluid
-                                basic
-                                positive
-                                disabled={!props.values.name}
-                                data-test='broadcast_modal_submit_btn'>
-                                {formatMessage({
-                                  id: 'global.save',
-                                  defaultMessage: 'Save'
-                                })}
-                              </CustomButton>
-                            </GridColumn>
-                          </GridRow>
-                        </Grid>
-                      </Form>
-                    )
-                  }}></Formik>
-              </div>
-            </Grid.Column>
+                    <GridRow
+                      style={
+                        asSidebar
+                          ? {
+                              position: 'absolute',
+                              top: '-20000px',
+                              left: '-20000px'
+                            }
+                          : null
+                      }>
+                      <GridColumn computer={10} style={{ paddingRight: '0px', minWidth: '100px' }}>
+                        <FormikInput
+                          inputProps={{
+                            fluid: true,
+                            placeholder: formatMessage({
+                              id: 'broadcast.templateName',
+                              defaultMessage: 'Template Name'
+                            }),
+                            'data-test': 'broadcast_modal_templateName_inp'
+                          }}
+                          name='name'
+                        />
+                      </GridColumn>
+
+                      <GridColumn computer={6}>
+                        <CustomButton
+                          onClick={this.submitForm}
+                          type='button'
+                          loading={this.props.templateSaving}
+                          fluid
+                          basic
+                          positive
+                          disabled={!props.values.name}
+                          data-test='broadcast_modal_submit_btn'>
+                          {formatMessage({
+                            id: 'global.save',
+                            defaultMessage: 'Save'
+                          })}
+                        </CustomButton>
+                      </GridColumn>
+                    </GridRow>
+                  </Grid>
+                ) : null}
+              </Form>
+            )
+          }}></Formik>
+
+        <StretchedGrid className='flex stretched' {...additionalGridProps}>
+          <Grid.Row>
             <Grid.Column
-              width={asSidebar ? 16 : 10}
+              width={16}
               stretched
               style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
               <Rule.Root
-                style={
-                  asSidebar ? { flexBasis: '298px' } : { overflowY: 'scroll', flexBasis: '128px', marginTop: '0px' }
-                }>
+                style={asSidebar ? { flexBasis: '298px' } : { overflowY: 'scroll', flexBasis: '198px', margin: '0px' }}>
                 <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
-                  <Rule.RowContent>
-                    <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Rule.RowContent>
-                  <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : { flex: '0 0 88px', maxWidth: '60px' }}>
-                    <FormattedMessage id='broadcast.include' defaultMessage='Include' />
+                  <Rule.Toggle
+                    style={
+                      asSidebar
+                        ? { flex: '0 0 62px' }
+                        : { flex: '0 0 88px', maxWidth: '60px', borderRight: 'none !important' }
+                    }>
+                    <FormattedMessage id='broadcast.select' defaultMessage='Select' />
                   </Rule.Toggle>
+                  <Rule.RowContent>
+                    <Form.Field>
+                      <Dropdown
+                        data-test='broadcast_modal_category_drpdn'
+                        selection
+                        name='category'
+                        value={filter.category}
+                        onChange={this.handleFilterChange}
+                        options={[
+                          {
+                            key: 'region',
+                            text: 'By Region',
+                            value: 'region'
+                          },
+                          {
+                            key: 'branch',
+                            text: 'By Company',
+                            value: 'branch'
+                          }
+                        ]}
+                      />
+                    </Form.Field>
+                    {this.getAssociationsDropdown()}
+                  </Rule.RowContent>
 
                   <Rule.Toggle style={!asSidebar ? { maxWidth: '110px' } : {}}>
                     <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />

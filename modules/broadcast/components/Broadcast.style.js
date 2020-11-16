@@ -21,7 +21,7 @@ const Row = styled.div`
   flex: 0 0 auto;
   line-height: 45px;
   border-bottom: 1px solid #e7e7e7;
-  padding-left: ${({ depth }) => depth * 15 - 15}px;
+
   background-color: ${({ type }) => COLORS[type]};
   font-weight: ${({ type }) => FONT_WEIGHT[type]};
   cursor: pointer;
@@ -30,12 +30,11 @@ const Row = styled.div`
   &:hover {
     background-color: #eee;
   }
-  
+
   > div {
-    border-left: solid 1px #dee2e6; 
   }
   > div:first-child {
-    border-left: none; 
+    border-left: none;
   }
 `
 
@@ -44,7 +43,7 @@ const Root = styled.div`
   flex: 1 0 auto;
   flex-direction: column;
   margin: 1.428571429em 0.714285714em;
-  
+
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   border: solid 1px #dee2e6;
@@ -57,13 +56,12 @@ const Header = styled(Row)`
   display: flex;
   color: #848893;
   font-weight: bold;
-  
+
   > div {
-    border-left: solid 1px #dee2e6; 
   }
-  > div:first-child {
+  > div:nth-child(2) {
     border-left: none;
-    padding-left: 10px; 
+    padding-left: 10px;
   }
   > div:last-child {
     padding-right: 10px;
@@ -88,6 +86,7 @@ const RowContent = styled.div`
   .icon.chevron {
     color: #2599d5;
   }
+  padding-left: ${({ depth }) => depth * 15 - 15}px;
 `
 
 const Toggle = styled.div`
@@ -106,7 +105,7 @@ const Checkbox = styled.div`
 
 const BottomUnpaddedRow = styled(GridRow)`
   padding-bottom: 0px !important;
-  .column {  
+  .column {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     color: #404040 !important;
@@ -119,14 +118,14 @@ const RightAlignedDiv = styled.div`
 `
 
 const StretchedGrid = styled(Grid)`
-  height: 100% !important;
+  height: 90% !important;
 
   .ui.info.message {
     border: solid 1px #2599d5;
     background-color: #ffffff;
     color: #848893;
     box-shadow: none;
-    i.info.circle.icon {    
+    i.info.circle.icon {
       color: #2599d5;
     }
     strong {
@@ -134,11 +133,11 @@ const StretchedGrid = styled(Grid)`
       color: #20273a;
     }
   }
-  
+
   .ui.divider {
     margin: 1.357142857em 0 1.071428571em 0;
   }
-  
+
   .upper-grid .row {
     display: flex;
     flex-direction: row;
@@ -148,24 +147,28 @@ const StretchedGrid = styled(Grid)`
       padding-top: 0;
       padding-bottom: 0;
     }
-    
+
     .ui.button {
       height: 40px;
       border-radius: 3px;
       border: solid 1px #f16844;
     }
-    
+
     .ui.button.negative {
       color: #f16844;
       background-color: #fff0ed;
     }
-    
+
     .ui.button.positive {
       border: solid 1px #84c225;
       background-color: #e5efd8;
       color: #84c225;
-    } 
-  } 
+    }
+  }
+`
+
+const GridRowSearch = styled(GridRow)`
+  padding-bottom: 0 !important;
 `
 
 export const Rule = {
@@ -178,4 +181,4 @@ export const Rule = {
   Toggle
 }
 
-export { BottomUnpaddedRow, RightAlignedDiv, StretchedGrid }
+export { BottomUnpaddedRow, RightAlignedDiv, StretchedGrid, GridRowSearch }
