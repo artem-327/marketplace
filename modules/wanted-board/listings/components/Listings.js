@@ -243,12 +243,12 @@ class Listings extends Component {
 
     return (
       <>
-        {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
+        {<Tutorial marginWantedBoard isTutorial={false} isBusinessVerification={true} />}
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
-              <div className='column' style={{ width: '340px'}}>
+              <div className='column' style={{ width: '340px' }}>
                 <SearchInput
                   onChange={this.SearchByNamesAndCasChanged}
                   initFilterState={getSafe(() => tableHandlersFiltersListings.searchByNamesAndCas, null)}

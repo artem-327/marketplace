@@ -421,11 +421,11 @@ class Settings extends Component {
         !this.state.wrongUrl && (
           <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
             <Container fluid className='flex stretched'>
-              {false && !tutorialCompleted && (
+              {
                 <div style={{ margin: '5px -2px -15px -2px' }}>
-                  <Tutorial />
+                  <Tutorial isTutorial={false} isBusinessVerification={true} />
                 </div>
-              )}
+              }
               <Container fluid style={{ padding: '20px 30px' }}>
                 <TablesHandlers currentTab={currentTab} />
               </Container>
