@@ -1,4 +1,5 @@
 export const titleIds = [
+  'velloci.companyVerification',
   'velloci.controlPerson',
   'velloci.businessInfo',
   'velloci.companyFormationDocument',
@@ -8,6 +9,7 @@ export const titleIds = [
 ]
 
 export const titleForms = [
+  'companyVerification',
   'controlPerson',
   'businessInfo',
   'companyFormationDocument',
@@ -19,10 +21,11 @@ export const titleForms = [
 export const subtitleIds = ['', 'velloci.businessInfo.subtitle', '', 'velloci.ownerInformation.subtitle', '', '']
 
 export const setupPages = [
-  { title: 'velloci.setupIndicator.bussinesVerification', content: 'velloci.setupIndicator.enity' },
-  { title: 'velloci.setupIndicator.bussinesVerification', content: 'velloci.setupIndicator.moreBeneficialOwners' },
-  { title: 'velloci.setupIndicator.bussinesVerification', content: 'velloci.setupIndicator.enity' },
-  { title: 'velloci.setupIndicator.bussinesVerification', content: 'velloci.setupIndicator.enity' },
+  { title: 'velloci.setupIndicator.bussinesVerification', content: 'velloci.setupIndicator.mainSections' },
+  { title: 'velloci.setupIndicator.bussinesVerificationKYB', content: 'velloci.setupIndicator.enity' },
+  { title: 'velloci.setupIndicator.bussinesVerificationKYB', content: 'velloci.setupIndicator.moreBeneficialOwners' },
+  { title: 'velloci.setupIndicator.bussinesVerificationKYB', content: 'velloci.setupIndicator.enity' },
+  { title: 'velloci.setupIndicator.bussinesVerificationKYB', content: 'velloci.setupIndicator.enity' },
   { title: 'velloci.setupIndicator.personalIdentify', content: 'velloci.setupIndicator.individualOwners' },
   { title: 'velloci.setupIndicator.personalIdentify', content: 'velloci.setupIndicator.individualOwners' }
 ]

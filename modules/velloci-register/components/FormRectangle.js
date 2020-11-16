@@ -78,7 +78,7 @@ function FormRectangle({
 }) {
   const { values } = formikProps
   return (
-    <DivRectangleForm height={activeStep === 3 || activeStep === 4 ? '1000px' : activeStep === 5 ? '400px' : '860px'}>
+    <DivRectangleForm height={activeStep === 4 || activeStep === 5 ? '1000px' : activeStep === 6 ? '400px' : '860px'}>
       <DivTitleRectangleForm>
         <DivTitleText>
           <FormattedMessage id={title} defaultMessage='Title'>
@@ -102,7 +102,7 @@ function FormRectangle({
         ) : null}
       </DivTitleRectangleForm>
       {children}
-      {activeStep === 4 && (
+      {activeStep === 5 && (
         <RightAlignedDiv>
           {numberBeneficialOwners > 0 && (
             <Popup
@@ -156,8 +156,8 @@ function FormRectangle({
           onClick={() => submitForm(formikProps)}
           primary>
           <FormattedMessage
-            id={activeStep === 5 ? 'velloci.submitApplication' : 'global.next'}
-            defaultMessage={activeStep === 5 ? 'Submit Application' : 'Next'}>
+            id={activeStep === 6 ? 'velloci.submitApplication' : 'global.next'}
+            defaultMessage={activeStep === 6 ? 'Submit Application' : 'Next'}>
             {text => text}
           </FormattedMessage>
         </ButtonSubmit>
@@ -168,7 +168,7 @@ function FormRectangle({
             </FormattedMessage>
           </ButtonBack>
         ) : null}
-        {false && activeStep === 3 ? (
+        {false && activeStep === 4 ? (
           <ButtonBack type='button' onClick={() => console.log('email')} basic>
             <FormattedMessage id='global.email' defaultMessage='Email'>
               {text => text}
