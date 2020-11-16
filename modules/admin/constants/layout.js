@@ -121,7 +121,28 @@ export const HighSegment = styled.div`
   font-weight: 500;
   color: #20273a;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
-  background-color: #ffffff;
+  background-color: #ffffff;  
+  text-transform: uppercase;  
+  display: flex;
+  flex-direction: row;
+
+  svg {
+    font-size: 18px;
+    vertical-align: middle;
+  }
+  
+  svg.title-icon {
+    margin-left: 15px;
+    color: #cecfd4;
+  }
+  
+  svg.close-icon {
+    right: 0;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
 `
 
 export const FlexContent = styled.div`

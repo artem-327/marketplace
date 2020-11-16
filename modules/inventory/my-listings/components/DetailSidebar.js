@@ -29,7 +29,7 @@ import {
   Button as ButtonSemantic
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
-import { Trash, PlusCircle } from 'react-feather'
+import { Trash, PlusCircle, X as XIcon } from 'react-feather'
 
 import {
   sidebarDetailTrigger,
@@ -2151,9 +2151,14 @@ class DetailSidebar extends Component {
                         ]}
                       />
                     </FlexTabs>
+                    {openGlobalAddForm && (
+                      <div style={{ position: 'absolute', right: '20px', top: '17px' }}>
+                        <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                      </div>
+                    )}
                   </HighSegment>
                 </FlexContent>
-                <BottomButtons>
+                <BottomButtons className='bottom-buttons'>
                   <div>
                     <Button
                       size='large'
