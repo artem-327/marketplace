@@ -19,6 +19,12 @@ export const FlexSidebar = styled(Sidebar)`
   z-index: 1000 !important;
   text-align: left;
   font-size: 14px;
+  
+  &.full-screen-sidebar {
+    top: 0 !important;
+    padding-bottom: 0px;
+  }
+  
   .field {
     font-size: 1em !important;
     line-height: 1.29 !important;
@@ -152,16 +158,63 @@ export const BottomButtons = styled.div`
   box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
   padding: 0.714285714em 1.785714286em;
   text-align: right;
+
   .ui.button {
     font-size: 1em;
     margin: 0 0.357142857em;
     padding: 9px 18px 9px;
+    
+    border: solid 1px #dee2e6;
+    background-color: #ffffff;
+    color: #20273a;
+    
+    &:hover {
+      background-color: #f8f9fb;
+    }
+    
+    &.disabled {
+      background-color: #ffffff;
+      color: #cecfd4;
+    }
+    
+    &.large.primary {
+      border: none;    
+      background-color: #2599d5;
+      color: #ffffff;
+      
+      &:hover {
+        background-color: #188ec9;
+      }
+      
+      &.disabled {
+        background-color: #bde0f2;
+        color: #ffffff;
+      }
+    }
   }
 `
 
 export const HighSegment = styled(Segment)`
   height: 100%;
   padding: 0 !important;
+  
+  svg {
+    font-size: 18px;
+    vertical-align: middle;
+  }
+  
+  svg.title-icon {
+    margin-left: 15px;
+    color: #cecfd4;
+  }
+  
+  svg.close-icon {
+    right: 0;
+    position: absolute;    
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
 `
 export const DivIcon = styled.div`
   display: block;
