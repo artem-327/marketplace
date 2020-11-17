@@ -1140,7 +1140,7 @@ class Orders extends Component {
           />
         )}
 
-        {false && !tutorialCompleted && <Tutorial marginOrders />}
+        {<Tutorial marginOrders isTutorial={false} isBusinessVerification={true} />}
         <Container fluid style={{ padding: '20px 30px 10px 30px' }}>
           <TablesHandlers currentTab={currentTab} />
         </Container>
