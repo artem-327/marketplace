@@ -9,7 +9,7 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("POST", "/prodex/api/purchase-requests").as("createRequest")
-        cy.route("POST", "/prodex/api/purchase-requests/other/datagrid?**").as("wantedBoardLoading")
+        cy.route("POST", "/prodex/api/purchase-requests/other/datagrid**").as("wantedBoardLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
 
@@ -89,7 +89,7 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.get('[data-test=wanted_board_sidebar_save_btn]').click({force: true})
 
         cy.get(".error")
-            .should("have.length", 2)
+            .should("have.length", 3)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

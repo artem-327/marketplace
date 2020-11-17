@@ -2,12 +2,13 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
 
     let productName = "Rukavice"
     let purchaseRequestId = null
-    const userJSON = require('../fixtures/user.json')
-    const user2JSON = require('../fixtures/user2.json')
-    let purchaseRequestFilter = [{"operator": "EQUALS", "path": "PurchaseRequestOffer.productOffer.companyProduct.companyGenericProduct.productGroup.name", "values": [productName]}]
+    const sellerJSON = require('../fixtures/user.json')
+    const buyerJSON = require('../fixtures/user2.json')
+    let purchaseRequestOfferFilter = [{"operator": "EQUALS", "path": "PurchaseRequestOffer.productOffer.companyProduct.companyGenericProduct.productGroup.name", "values": [productName]}]
+    let purchaseRequestFilter = [{"operator": "EQUALS", "path": "PurchaseRequest.offers.productOffer.companyProduct.companyGenericProduct.productGroup.name", "values": [productName]}]
 
     before(function () {
-        cy.getUserToken(user2JSON.email, user2JSON.password).then(token => {
+        cy.getUserToken(buyerJSON.email, buyerJSON.password).then(token => {
             cy.createPurchaseRequest(token).then(inventoryBody => {
 
                 let helper = inventoryBody
@@ -17,7 +18,7 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
     })
 
     after(function () {
-        cy.getUserToken(user2JSON.email, user2JSON.password).then(token => {
+        cy.getUserToken(buyerJSON.email, buyerJSON.password).then(token => {
             cy.getFirstPurchaseRequestWithFilter(token).then(inventoryBody => {
                 cy.deleteEntity(token,'purchase-requests/id',inventoryBody)
             })
@@ -25,14 +26,15 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.viewport(3000, 2000)
+        cy.viewport(3000, 2500)
         cy.server()
         cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.route("POST", "/prodex/api/purchase-request-offers").as("createOffer")
         cy.route("POST", "/prodex/api/purchase-requests/other/datagrid**").as("wantedBoardLoading")
+        cy.route("POST", "/prodex/api/purchase-requests/own/datagrid**").as("wantedBoardReceivedLoading")
         cy.route("POST", "/prodex/api/purchase-requests/id/**").as("matchingLoading")
 
-        cy.FElogin(userJSON.email, userJSON.password)
+        cy.FElogin(sellerJSON.email, sellerJSON.password)
 
         cy.waitForUI()
         cy.visit("/inventory/my-listings")
@@ -62,38 +64,55 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
 
         cy.wait("@createOffer", { timeout: 100000 })
     })
-/*
-    it("Update purchase request Offer", () => {
+
+    it("Buyer counter purchase request Offer", () => {
+        cy.waitForUI()
+        cy.get(".user-menu-wrapper").click()
+        cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()
+        cy.url().should("include", "/login")
+        cy.waitForUI()
+
+        cy.FElogin(buyerJSON.email, buyerJSON.password)
+
+        cy.waitForUI()
+        cy.visit("/wanted-board/bids-received")
+        cy.wait("@wantedBoardReceivedLoading", { timeout: 100000 })
+
+        cy.get("[data-test=action_" + purchaseRequestId + "_0]").parent().parent().parent().parent().parent().parent().click()
+
+        cy.getUserToken(buyerJSON.email, buyerJSON.password).then(token => {
+            cy.getPurchaseRequestFirstOfferId(token, purchaseRequestId).then(offerId => {
+                cy.get("[data-test=action_" + purchaseRequestId + "_" +  offerId + "_5]").parent().parent().click()
+                cy.get("[data-test=action_" + purchaseRequestId + "_" +  offerId + "_5").click()
+            })
+        })
+
+        cy.get("#field_dropdown_fulfillmentType").click()
+        cy.contains("Complete fulfillment of the request immediately").click()
+        cy.get('.floated > .primary').click()
+    })
+
+
+    it("Seller counter purchase request Offer", () => {
         cy.get('[data-test=navigation_wanted_board_bids_sent_drpdn]').click()
 
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstEntityWithFilter(token, "purchase-request-offers/own" ,purchaseRequestFilter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "_0]").parent().parent().click()
-                cy.get("[data-test=action_" + itemId + "_0]").click()
+        cy.getUserToken(sellerJSON.email, sellerJSON.password).then(token => {
+            cy.getFirstEntityWithFilter(token, "purchase-request-offers/own" ,purchaseRequestOfferFilter).then(itemId => {
+                cy.get("[data-test=action_" + itemId + "_1]").parent().parent().click()
+                cy.get("[data-test=action_" + itemId + "_1]").click()
             })
         })
 
-        cy.waitForUI()
-        cy.setNumberInput("#field_input_pricePerUOM", "100")
-
-        //Save button
-        cy.get('.primary').click({force: true})
-        cy.contains("Success")
-        cy.waitForUI()
-
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstEntityWithFilter(token, "purchase-request-offers/own", purchaseRequestFilter).then(itemId => {
-                cy.openElement(itemId, 0)
-            })
-        })
-        cy.contains("100")
+        cy.get("#field_dropdown_fulfillmentType").click()
+        cy.contains("Complete fulfillment of the request immediately").click()
+        cy.get('.floated > .primary').click()
     })
-*/
+
     it("Delete Purchase Request Offer", () => {
         cy.get('[data-test=navigation_wanted_board_bids_sent_drpdn]').click()
 
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstEntityWithFilter(token, "purchase-request-offers/own", purchaseRequestFilter).then(itemId => {
+        cy.getUserToken(sellerJSON.email, sellerJSON.password).then(token => {
+            cy.getFirstEntityWithFilter(token, "purchase-request-offers/own", purchaseRequestOfferFilter).then(itemId => {
                 cy.openElement(itemId, 0)
             })
         })

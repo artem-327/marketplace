@@ -627,3 +627,16 @@ Cypress.Commands.add("createPurchaseRequest", (token) => {
         return response.body.id
     })
 })
+
+Cypress.Commands.add("getPurchaseRequestFirstOfferId", (token, purchaseRequestId) => {
+    cy.request({
+        method: 'GET',
+        url: '/prodex/api/purchase-requests/id/' + purchaseRequestId,
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body.purchaseRequestOffers[0].id
+    })
+})

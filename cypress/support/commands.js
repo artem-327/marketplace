@@ -109,3 +109,5 @@ Cypress.Commands.add('getRefreshToken', (username, password) =>{
         return response.body.refresh_token
     })
 })
+
+function filterById(jsonObject, id) {return jsonObject.filter(function(jsonObject) {return (jsonObject['id'] == id)})[0]}

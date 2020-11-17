@@ -5,7 +5,7 @@ context("Shopping cart CRUD", () => {
     const userJSON = require('../fixtures/user.json')
 
     beforeEach(function () {
-        cy.viewport(2750, 3000)
+        cy.viewport(2500, 3500)
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')

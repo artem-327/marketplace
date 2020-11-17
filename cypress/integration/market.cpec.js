@@ -40,7 +40,7 @@ context("Market place tests",() => {
         cy.contains("Apply").click()
 
         cy.waitForUI()
-        cy.get('.actions').should("be.visible")
+        cy.get('[data-test=table_row_action]').should("be.visible")
 
         cy.get("[data-test='my_inventory_advanced_filters_btn']").click()
         cy.get("#field_input_quantityTo").type(searchedValue + 5)

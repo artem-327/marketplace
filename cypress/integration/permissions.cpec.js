@@ -86,7 +86,7 @@ context("Permissions tests",() => {
 
         cy.wait('@loading', {timeout: 30000})
         cy.url().should("include", "inventory")
-        cy.get(':nth-child(2) > .actions').should('be.visible')
+        cy.get('.group-row').should('be.visible')
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
         cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
