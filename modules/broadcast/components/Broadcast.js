@@ -26,7 +26,18 @@ import { Input as FormikInput, Dropdown as FormikDropdown } from 'formik-semanti
 import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 import TreeModel from 'tree-model'
-import { Rule, BottomUnpaddedRow, RightAlignedDiv, StretchedGrid, GridRowSearch } from './Broadcast.style'
+import {
+  Rule,
+  BottomUnpaddedRow,
+  RightAlignedDiv,
+  StretchedGrid,
+  GridRowSearch,
+  FieldInHeaderTable,
+  DropdownInHeaderTable,
+  InputSearch,
+  GridRowTable,
+  ButtonSave
+} from './Broadcast.style'
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
@@ -337,6 +348,7 @@ class Broadcast extends Component {
 
     this.applyAssociationFilter(tree)
     // expand when search is active
+
     if (fs.length > 0) {
       tree.walk(n => (n.model.expanded = true))
     }
@@ -397,6 +409,7 @@ class Broadcast extends Component {
 
   applyAssociationFilter = tree => {
     const { associationFilter } = this.state
+    const { filter } = this.props
 
     this.setHidden(_element => true, false)
     tree.walk(n => {
@@ -412,7 +425,7 @@ class Broadcast extends Component {
       }
     })
 
-    if (associationFilter === 'ALL') return tree
+    if (associationFilter === 'ALL' && filter.broadcast === 'all') return tree
 
     let companiesToHide = []
     let nodesToHide = tree.all(n => {
@@ -420,9 +433,13 @@ class Broadcast extends Component {
         let company = this.findCompany(n)
 
         if (
-          (!getSafe(() => company.model.associations, []).includes(associationFilter) &&
+          (associationFilter !== 'ALL' &&
+            !getSafe(() => company.model.associations, []).includes(associationFilter) &&
             associationFilter !== 'Guest Company') ||
-          (associationFilter === 'Guest Company' && company.model.elements[0].clientCompany === false)
+          (associationFilter === 'Guest Company' && company.model.elements[0].clientCompany === false) ||
+          (filter.broadcast !== 'all' &&
+            ((filter.broadcast === 'on' && getSafe(() => company.model.broadcast, '') === 0) ||
+              (filter.broadcast === 'off' && getSafe(() => company.model.broadcast, '') > 0)))
         ) {
           if (companiesToHide.indexOf(company.model.id) === -1) companiesToHide.push(company)
           return true
@@ -519,7 +536,11 @@ class Broadcast extends Component {
     if (getSafe(() => elementsParam.length, false)) {
       elementsParam.forEach(element => {
         if (!element.hidden) {
-          element[propertyName] = value
+          if (propertyName.length) {
+            propertyName.forEach(name => (element[name] = value))
+          } else {
+            element[propertyName] = value
+          }
         }
         if (getSafe(() => element.elements.length, '') > 0) this.changeInModel(element.elements, data)
       })
@@ -592,8 +613,8 @@ class Broadcast extends Component {
     const { associationsFetching, associations } = this.props
 
     return (
-      <Form.Field>
-        <Dropdown
+      <FieldInHeaderTable>
+        <DropdownInHeaderTable
           fluid
           value={this.state.associationFilter}
           selection
@@ -601,7 +622,7 @@ class Broadcast extends Component {
           options={['ALL', 'Guest Company'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
-      </Form.Field>
+      </FieldInHeaderTable>
     )
   }
 
@@ -765,20 +786,47 @@ class Broadcast extends Component {
               <GridRowSearch>
                 <GridColumn>
                   <Form.Field data-test='broadcast_modal_search_inp'>
-                    <Input
+                    <InputSearch
                       name='search'
                       icon='search'
                       iconPosition='right'
                       value={this.state.filterSearch}
                       onChange={this.handleSearchChange}
                       placeholder={formatMessage({
-                        id: 'broadcast.keyword',
-                        defaultMessage: 'Keyword'
+                        id: 'broadcast.search',
+                        defaultMessage: 'Search by Company Name, Branch, State, or Country'
                       })}
                     />
                   </Form.Field>
                 </GridColumn>
               </GridRowSearch>
+              {false && (
+                <GridRow textAlign='left'>
+                  <GridColumn width={8}>
+                    <Message info size='large' style={{ padding: '6px 15px' }}>
+                      <Popup
+                        trigger={<Icon name='info circle' />}
+                        content={
+                          <FormattedMessage
+                            id='broadcast.broadcastingTooltip'
+                            defaultMessage='Shows number of company branches out of the total company branches you will Broadcast to, once you turn Broadcasting on.'
+                          />
+                        }
+                      />
+                      <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Visible to' />{' '}
+                      <strong>
+                        {broadcastingBranches}/{totalBranches}
+                      </strong>
+                      <FormattedMessage id='broadcast.broadcastingBranches' defaultMessage=' branches of ' />
+                      <strong>
+                        {broadcastingCompanies}/{totalCompanies}
+                      </strong>
+                      <FormattedMessage id='broadcast.broadcastingCompanies' defaultMessage=' companies' />
+                    </Message>
+                  </GridColumn>
+                  <GridColumn width={8}></GridColumn>
+                </GridRow>
+              )}
             </Grid>
           )}
         </Form>
@@ -960,7 +1008,7 @@ class Broadcast extends Component {
           }}></Formik>
 
         <StretchedGrid className='flex stretched' {...additionalGridProps}>
-          <Grid.Row>
+          <GridRowTable>
             <Grid.Column
               width={16}
               stretched
@@ -977,9 +1025,10 @@ class Broadcast extends Component {
                     <FormattedMessage id='broadcast.select' defaultMessage='Select' />
                   </Rule.Toggle>
                   <Rule.RowContent>
-                    <Form.Field>
-                      <Dropdown
-                        data-test='broadcast_modal_category_drpdn'
+                    <FieldInHeaderTable>
+                      <DropdownInHeaderTable
+                        fluid
+                        data-test='broadcast_global_category_drpdn'
                         selection
                         name='category'
                         value={filter.category}
@@ -997,8 +1046,35 @@ class Broadcast extends Component {
                           }
                         ]}
                       />
-                    </Form.Field>
+                    </FieldInHeaderTable>
                     {this.getAssociationsDropdown()}
+                    <FieldInHeaderTable>
+                      <DropdownInHeaderTable
+                        fluid
+                        data-test='broadcast_global_broadcast_drpdn'
+                        selection
+                        name='broadcast'
+                        value={filter.broadcast}
+                        onChange={this.handleFilterChange}
+                        options={[
+                          {
+                            key: 'all',
+                            text: 'Broadcast - All',
+                            value: 'all'
+                          },
+                          {
+                            key: 'on',
+                            text: 'Broadcast - On',
+                            value: 'on'
+                          },
+                          {
+                            key: 'off',
+                            text: 'Broadcast - Off',
+                            value: 'off'
+                          }
+                        ]}
+                      />
+                    </FieldInHeaderTable>
                   </Rule.RowContent>
 
                   <Rule.Toggle style={!asSidebar ? { maxWidth: '110px' } : {}}>
@@ -1031,7 +1107,7 @@ class Broadcast extends Component {
               </Rule.Root>
               {!asModal && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>}
             </Grid.Column>
-          </Grid.Row>
+          </GridRowTable>
         </StretchedGrid>
       </>
     )
@@ -1053,12 +1129,59 @@ class Broadcast extends Component {
           </Button>
         )}
         {!asSidebar && (
-          <Button primary onClick={() => this.saveBroadcastRules()} data-test='broadcast_modal_save_btn'>
-            {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-          </Button>
+          <>
+            <Button basic onClick={() => this.resetBroadcastRules()} data-test='broadcast_global_reset_btn'>
+              {formatMessage({ id: 'global.reset', defaultMessage: 'Reset' })}
+            </Button>
+            <ButtonSave primary onClick={() => this.saveBroadcastRules()} data-test='broadcast_global_save_btn'>
+              {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+            </ButtonSave>
+          </>
         )}
       </>
     )
+  }
+
+  resetAllFilters = async () => {
+    this.setState({ filterSearch: '', associationFilter: 'ALL', selectedTemplate: { name: null, id: null } })
+    this.props.updateFilter({
+      search: '',
+      category: 'region',
+      broadcast: 'all'
+    })
+  }
+
+  resetBroadcastRules = async () => {
+    this.resetAllFilters()
+
+    const { treeData } = this.props
+
+    treeData.walk(no => {
+      if (!getSafe(no.model.rule, '')) {
+        no.model.rule = { ...no.model, priceAddition: 0, priceMultiplier: 0, broadcast: 0 }
+      }
+
+      if (getSafe(() => n.model.rule.hidden, '')) {
+        n.model.rule.hidden = false
+        if (n.model.rule.type === 'branch') {
+          let company = this.findCompany(n)
+          company.model.hidden = false
+          if (company.model.elements) {
+            company.model.elements.forEach(c => (c.hidden = false))
+          }
+        }
+      }
+      if (getSafe(() => no.model.rule.elements.length, 0) > 0) {
+        this.changeInModel(no.model.rule.elements, {
+          propertyName: ['priceAddition', 'priceMultiplier', 'broadcast'],
+          value: 0
+        })
+      }
+    })
+
+    this.updateInTreeData(treeData)
+
+    this.formChanged()
   }
 
   saveBroadcastRules = async () => {

@@ -265,6 +265,9 @@ const PriceInput = styled(Input)`
   width: ${props => (props.asSidebar ? '138px' : '110px')};
   margin-right: 10px;
   padding: 8px;
+  input {
+    background: #fdfdfd !important;
+  }
 `
 
 const ControlBox = styled.div`

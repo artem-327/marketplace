@@ -1,4 +1,4 @@
-import { Grid, GridRow } from 'semantic-ui-react'
+import { Grid, GridRow, Form, Dropdown, Input, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const COLORS = {
@@ -95,6 +95,8 @@ const Toggle = styled.div`
   flex-flow: column;
   justify-content: center;
   align-items: center;
+  color: #20273a;
+  font-weight: 500;
 `
 const Checkbox = styled.div`
   flex: 0 0 138px;
@@ -168,7 +170,37 @@ const StretchedGrid = styled(Grid)`
 `
 
 const GridRowSearch = styled(GridRow)`
-  padding-bottom: 0 !important;
+  padding: 0 !important;
+`
+
+const FieldInHeaderTable = styled(Form.Field)`
+  margin-right: 5px !important;
+  max-width: 250px !important;
+`
+
+const DropdownInHeaderTable = styled(Dropdown)`
+  background: #fdfdfd !important;
+  min-width: 150px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #20273a !important;
+`
+
+const InputSearch = styled(Input)`
+  input {
+    background: #fdfdfd !important;
+    border: solid 1px #dee2e6 !important;
+  }
+`
+
+const GridRowTable = styled(Grid.Row)`
+  padding-top: 7px !important;
+`
+
+const ButtonSave = styled(Button)`
+  background-color: #2599d5 !important;
+  color: #ffffff !important;
+  margin-left: 8px !important;
 `
 
 export const Rule = {
@@ -181,4 +213,14 @@ export const Rule = {
   Toggle
 }
 
-export { BottomUnpaddedRow, RightAlignedDiv, StretchedGrid, GridRowSearch }
+export {
+  BottomUnpaddedRow,
+  RightAlignedDiv,
+  StretchedGrid,
+  GridRowSearch,
+  FieldInHeaderTable,
+  DropdownInHeaderTable,
+  InputSearch,
+  GridRowTable,
+  ButtonSave
+}
