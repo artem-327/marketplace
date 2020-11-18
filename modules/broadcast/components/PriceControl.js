@@ -25,7 +25,7 @@ export default class PriceControl extends Component {
   handleChange = (e, { name, value }) => {
     e.preventDefault()
     e.stopPropagation()
-    const { associationFilter, filter } = this.props
+    const { associationFilter, filter, treeData, changeInModel } = this.props
 
     // helper writes values
     const asignValues = (values, rule) => {
@@ -77,7 +77,7 @@ export default class PriceControl extends Component {
 
     asignValues(values, rule)
     let idCompanies = []
-
+    let foundAllNodes = []
     if (item.hasChildren()) {
       if ((item.isRoot() && associationFilter === 'ALL' && !filter.search) || !item.isRoot()) {
         // it writes value to the model
@@ -85,6 +85,30 @@ export default class PriceControl extends Component {
         item.walk(n => {
           if (!n.model.rule.priceOverride && !n.model.rule.hidden) asignValues(values, n.model.rule)
         })
+
+        //find all parents (state) of branches when change whole company
+        let copyTreeData = treeData
+        if (
+          rule.type !== 'root' &&
+          this.props.filter.category === 'branch' &&
+          item.model.children.length > item.model.rule.elements.length
+        ) {
+          foundAllNodes = copyTreeData.all(
+            n => n.model.id === item.model.rule.id && n.model.type === item.model.rule.type
+          )
+          foundAllNodes.forEach(nod => {
+            nod.walk(no => {
+              if (!getSafe(() => no.model.rule, '') && !no.model.priceOverride && !no.model.hidden) {
+                no.model.rule = { ...no.model, ...asignValues(values, no.model) }
+                if (getSafe(() => no.model.rule.elements.length, 0) > 0) {
+                  Object.keys(values).forEach(key => {
+                    changeInModel(no.model.rule.elements, { key, value: values[key] })
+                  })
+                }
+              }
+            })
+          })
+        }
         // it writes value to the elements
         changeInElements(item.model.rule.elements, values)
       } else if (item.isRoot() && (associationFilter !== 'ALL' || filter.search)) {
@@ -119,7 +143,7 @@ export default class PriceControl extends Component {
         }
       }
     }
-    this.props.onChange(item)
+    this.props.onChange(item, foundAllNodes)
     return false
   }
 
@@ -174,7 +198,7 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const { disabled, offer, item, hideFobPrice, filter, asSidebar } = this.props
+    const { disabled, offer, item, hideFobPrice, filter, asSidebar, treeData } = this.props
     const {
       model: { rule }
     } = item
@@ -208,6 +232,7 @@ export default class PriceControl extends Component {
           onChange={this.handleChange}
           size='small'
           data-test='broadcast_price_control_price_inp'
+          treeData={treeData}
         />
         <ControlBox asSidebar={asSidebar}>
           <Radio

@@ -26,8 +26,6 @@ export const getShippingQuotes = (countryId, zip) => ({
 
 export const getCart = () => ({ type: AT.CART_FETCH, payload: api.getCart() })
 
-export const getCartCountItems = () => ({ type: AT.CART_GET_COUNT_ITEMS, payload: api.getCartCountItems() })
-
 export const sidebarChanged = payload => ({ type: AT.SIDEBAR_CHANGED, payload })
 
 export const getBranches = () => ({ type: AT.BRANCHES_FETCH, payload: api.getBranches() })

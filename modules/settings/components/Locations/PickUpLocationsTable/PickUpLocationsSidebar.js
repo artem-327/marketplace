@@ -33,27 +33,11 @@ import { Required } from '~/components/constants/layout'
 import { removeEmpty } from '~/utils/functions'
 import { TimeInput } from '~/components/custom-formik/'
 import ErrorFocus from '~/components/error-focus'
-import { Store } from '@material-ui/icons'
-import { X as XIcon } from 'react-feather'
 
 const CustomButtonSubmit = styled(Button.Submit)`
-  &.ui.primary.button {
-    font-size: 1em;
-    margin: 0 0.357142857em;
-    padding: 9px 18px 9px;
-    border: none;    
-    background-color: #2599d5;
-    color: #ffffff;
-    
-    &:hover {
-      background-color: #188ec9;
-    }
-    
-    &.disabled {
-      background-color: #bde0f2;
-      color: #ffffff;
-    }
-  }
+  background-color: #2599d5 !important;
+  color: #fff !important;
+  margin: 0 5px !important;
 `
 
 const CustomSegment = styled(Segment)`
@@ -99,35 +83,6 @@ const CustomDiv = styled.div`
 const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
   z-index: 1;
-  
-  &.add-form {
-    padding: 1.071428571em 2.142857143em !important;
-    font-size: 14px;
-    font-weight: 500;
-    color: #20273a;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
-    background-color: #ffffff !important;
-    display: flex !important;
-    flex-direction: row !important;
-  }
-
-  svg {
-    font-size: 18px;
-    vertical-align: middle;
-  }
-  
-  svg.title-icon {
-    margin-left: 15px;
-    color: #cecfd4;
-  }
-  
-  svg.close-icon {
-    right: 0;
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-  }
 `
 
 const Rectangle = styled.div`
@@ -552,7 +507,6 @@ class PickUpLocationsSidebar extends React.Component {
       closeSidebar,
       popupValues,
       isOpenSidebar,
-      openGlobalAddForm,
       loading,
       intl: { formatMessage }
     } = this.props
@@ -573,15 +527,14 @@ class PickUpLocationsSidebar extends React.Component {
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closeSidebar()}
+        onReset={closeSidebar}
         onSubmit={this.submitHandler}
         loading={loading}>
         {formikProps => (
           <>
             <CustomForm autoComplete='off'>
               <FlexSidebar
-                className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
-                visible={true}
+                visible={isOpenSidebar}
                 width='very wide'
                 style={{ width: '630px' }}
                 direction='right'
@@ -590,50 +543,32 @@ class PickUpLocationsSidebar extends React.Component {
                   <Dimmer inverted active={loading || this.state.loadSidebar}>
                     <Loader />
                   </Dimmer>
-                  <CustomHighSegment basic className={openGlobalAddForm ? 'add-form' : ''}>
-                    {openGlobalAddForm
-                      ? (
-                        <>
-                          <div>
-                            <span>
-                              <FormattedMessage id='createMenu.addWarehouse' defaultMessage='Add Warehouse' />
-                            </span>
-                            <Store className='title-icon' />
-                          </div>
-                          <div style={{ position: 'absolute', right: '20px' }}>
-                            <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
-                          </div>
-                        </>
-                      ) : (
-                        <CustomMenu pointing secondary>
-                          {tabs.map((tab, i) => (
-                            <Menu.Item
-                              key={tab.key}
-                              onClick={() => this.tabChanged(i)}
-                              active={editTab === i}
-                              disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
-                              {formatMessage(tab.text)}
-                            </Menu.Item>
-                          ))}
-                        </CustomMenu>
-                      )
-                    }
+                  <CustomHighSegment basic>
+                    <CustomMenu pointing secondary>
+                      {tabs.map((tab, i) => (
+                        <Menu.Item
+                          key={tab.key}
+                          onClick={() => this.tabChanged(i)}
+                          active={editTab === i}
+                          disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
+                          {formatMessage(tab.text)}
+                        </Menu.Item>
+                      ))}
+                    </CustomMenu>
                   </CustomHighSegment>
                 </div>
                 <FlexContent style={{ padding: '16px' }}>
                   <CustomSegmentContent basic>{this.getContent(formikProps)}</CustomSegmentContent>
                 </FlexContent>
-                <CustomDiv className='bottom-buttons'>
-                  {!openGlobalAddForm && (
-                    <Button.Reset
-                      style={{ margin: '0 5px' }}
-                      onClick={closeSidebar}
-                      data-test='settings_warehouse_popup_reset_btn'>
-                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button.Reset>
-                  )}
+                <CustomDiv>
+                  <Button.Reset
+                    style={{ margin: '0 5px' }}
+                    onClick={closeSidebar}
+                    data-test='settings_warehouse_popup_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button.Reset>
                   <CustomButtonSubmit
                     onClick={() => {
                       formikProps.validateForm().then(err => {

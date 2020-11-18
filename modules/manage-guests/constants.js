@@ -72,57 +72,6 @@ export const BottomButtons = styled.div`
     display: inline-block;
     margin: 0 5px;
     align-items: center;
-    height: 40px;
-    border-radius: 3px;
-    font-weight: 500;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-    border: solid 1px #dee2e6;
-    background-color: #ffffff;
-    color: #848893;   
-    &:hover {
-      background-color: #f8f9fb;
-      color: #20273a;
-    }
-    &:active {
-      background-color: #edeef2;
-      color: #20273a;
-    }
-  
-    svg {
-        width: 18px;
-        height: 20px;
-        margin-right: 10px;
-        vertical-align: top;
-        color: inherit;
-    }
-      
-    &.light {
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-      border: solid 1px #dee2e6;
-      background-color: #ffffff;
-      color: #848893;    
-      &:hover {
-        background-color: #f8f9fb;
-        color: #20273a;
-      }
-      &:active {
-        background-color: #edeef2;
-        color: #20273a;
-      }
-    }
-    
-    &.primary {
-      box-shadow: none;
-      border: none;
-      color: #ffffff;
-      background-color: #2599d5;
-      &:hover {
-        background-color: #188ec9;
-      }
-      &:active {
-        background-color: #0d82bc;
-      }
-    }
   }
 `
 

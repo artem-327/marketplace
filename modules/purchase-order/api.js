@@ -1,7 +1,6 @@
 import api from '~/api'
 
 export const getCart = () => api.get('/prodex/api/cart').then(response => response.data)
-export const getCartCountItems = () => api.get('/prodex/api/cart/count-items').then(response => response.data)
 export const deleteCart = () => api.delete(`/prodex/api/cart`)
 export const addCartItem = ({ productOffer, pkgAmount }) =>
   api.post('/prodex/api/cart/items', { productOffer, pkgAmount }).then(response => response.data)

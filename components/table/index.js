@@ -177,6 +177,9 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
   const modalWidth = GridColumns === 1 ? 300 : 500
   const columnWidth = GridColumns === 1 ? 16 : 8
 
+  // columns with disabled reordering functionality can not be hidden as well
+  columns = columns.filter(c => c.allowReordering !== false)
+
   const column1 = columns.slice()
   const column2 = GridColumns === 1 ? column1 : column1.splice(Math.ceil(column1.length / 2))
 
@@ -269,13 +272,21 @@ const TreeTableCells = (props, rowChildActions) => {
   return <Table.Cell {...newProps} className={props.column.actions ? 'actions' : ''} />
 }
 
+const HeaderCell = props => {
+  const draggingEnabled = props.column.allowReordering !== false
+
+  return <TableHeaderRow.Cell {...props} draggingEnabled={draggingEnabled} />;
+}
+
 const TableCells = props => {
   return (
     <Table.Cell {...props} className={props.column.actions ? 'actions' : ''}>
       {props.children ? props.children : (
+        typeof (props.value && props.value.type) !== 'object' ? (
         <span class='cell-wrapper'>
           {props.value}
         </span>
+        ) : props.value
       )}
     </Table.Cell>
   )
@@ -371,7 +382,14 @@ class _Table extends Component {
         name: pt.string.isRequired,
         title: pt.string,
         width: pt.number,
-        sortPath: pt.string
+        sortPath: pt.string,
+        allowReordering: pt.bool
+      })
+    ),
+    fixed: pt.arrayOf(
+      pt.shape({
+        name: pt.string.isRequired,
+        position: pt.number.isRequired
       })
     ),
     rows: pt.arrayOf(pt.any),
@@ -697,7 +715,8 @@ class _Table extends Component {
       columnName: c.name,
       width: c.width || 1280 / columns.length,
       align: c.align ? c.align : 'left',
-      maxWidth: c.maxWidth ? c.maxWidth : null
+      maxWidth: c.maxWidth ? c.maxWidth : null,
+      allowReordering: typeof c.allowReordering !== 'undefined' ? c.allowReordering : true
     }))
   }
 
@@ -835,7 +854,15 @@ class _Table extends Component {
   }
 
   handleColumnsSettings = data => {
-    const { tableName } = this.props
+    const { columnsSettings: { order } } = this.state
+    const { tableName, fixed } = this.props
+    if (data.order && (typeof fixed !== 'undefined')) {
+      fixed.forEach(fixedCol => {
+        if (data.order.indexOf(fixedCol.name) !== fixedCol.position) {
+          data.order = order
+        }
+      })
+    }
     const newData = data.widths
       ? { ...data, widths: this.compareMaxWidths(data.widths, this.state.columnsSettings.widths) }
       : { ...data }
@@ -1014,7 +1041,7 @@ class _Table extends Component {
               columnWidths={columnsSettings.widths.map(el => (!el.width ? { ...el, width: 200 } : el))}
             />
             {columnReordering && <DragDropProvider />}
-            {showHeader && <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />}
+            {showHeader && <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} cellComponent={HeaderCell} />}
             <RowActionsFormatterProvider for={[columnActions]} />
 
             {treeDataType && (
