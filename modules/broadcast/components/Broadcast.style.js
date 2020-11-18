@@ -45,8 +45,6 @@ const Root = styled.div`
   margin: 1.428571429em 0.714285714em;
 
   border-radius: 4px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  border: solid 1px #dee2e6;
   background-color: #ffffff;
 `
 const Header = styled(Row)`
@@ -203,6 +201,13 @@ const ButtonSave = styled(Button)`
   margin-left: 8px !important;
 `
 
+const ButtonTemplate = styled(Button)`
+  &.ui.basic.button {
+    background-color: #edeef2 !important;
+    color: #20273a !important;
+  }
+`
+
 export const Rule = {
   Row,
   RowContent,
@@ -222,5 +227,6 @@ export {
   DropdownInHeaderTable,
   InputSearch,
   GridRowTable,
-  ButtonSave
+  ButtonSave,
+  ButtonTemplate
 }
