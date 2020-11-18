@@ -6,19 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Dropdown } from 'semantic-ui-react'
 import { Plus } from 'react-feather'
 import { AddBox, Widgets, Inbox, Person, FolderShared, Store } from '@material-ui/icons'
-import Router from 'next/router'
-
-import {
-  openPopup as openProductAddForm,
-  sidebarDetailTrigger as openListingAddForm
-} from '~/modules/inventory/actions'
-import { sidebarDetailTrigger as openWantedAddForm } from '~/modules/wanted-board/actions'
-import {
-  openSidebar as openSettingsAddForm,
-  handleLocationsTab,
-  tabChanged as settingsTabChanged
-} from '~/modules/settings/actions'
-import { openPopup as openGuestAddForm, closeCompanyEdit as guestInitState } from '~/modules/manage-guests/actions'
+import { openGlobalAddForm } from '~/modules/layout/actions'
 
 export const IconPlus = styled(Plus)`
   text-align: center;
@@ -68,15 +56,9 @@ export const CreateDropdown = styled(Dropdown)`
 class CreateMenu extends Component {
   render() {
     const {
-      openProductAddForm,
-      openListingAddForm,
-      openWantedAddForm,
-      settingsTabChanged,
-      openSettingsAddForm,
-      openGuestAddForm,
-      guestInitState,
-      handleLocationsTab,
-      identity
+      identity,
+      openGlobalAddForm,
+      openGlobalAddFormName
     } = this.props
 
     const {
@@ -93,6 +75,7 @@ class CreateMenu extends Component {
       <CreateDropdown
         className='ui dropdown-menu pointing'
         icon={null}
+        disabled={openGlobalAddFormName !== ''}
         text={
           <span style={{ display: 'flex', alignItems: 'center' }}>
             <IconPlus size={18} />
@@ -103,8 +86,7 @@ class CreateMenu extends Component {
           {!isClientCompanyAdmin && (isCompanyAdmin || isProductCatalogAdmin) && (
             <Dropdown.Item
               onClick={() => {
-                Router.push('/inventory/my-products')
-                openProductAddForm()
+                openGlobalAddForm('inventory-my-products')
               }}>
               <AddBox className={'menu-icon'} />
               <FormattedMessage id='createMenu.newProduct' defaultMessage='New Product' />
@@ -114,8 +96,7 @@ class CreateMenu extends Component {
           {!isClientCompanyAdmin && (isCompanyAdmin || isMerchant || isProductOfferManager) && (
             <Dropdown.Item
               onClick={() => {
-                Router.push('/inventory/my-listings')
-                openListingAddForm(null, true, 0)
+                openGlobalAddForm('inventory-my-listings')
               }}>
               <Widgets className={'menu-icon'} />
               <FormattedMessage id='createMenu.newListing' defaultMessage='New Listing' />
@@ -125,8 +106,7 @@ class CreateMenu extends Component {
           {(isCompanyAdmin || isMerchant) && (
             <Dropdown.Item
               onClick={() => {
-                Router.push('/wanted-board/listings')
-                openWantedAddForm(null, 'listings')
+                openGlobalAddForm('wanted-board-listings')
               }}>
               <Inbox className={'menu-icon'} />
               <FormattedMessage id='createMenu.newWanted' defaultMessage='New Wanted' />
@@ -136,9 +116,7 @@ class CreateMenu extends Component {
           {(isCompanyAdmin || isUserAdmin) && (
             <Dropdown.Item
               onClick={async () => {
-                Router.push('/settings/users')
-                await settingsTabChanged({ name: 'Users', id: 1, type: 'users' }, null)
-                openSettingsAddForm()
+                openGlobalAddForm('my-account-users')
               }}>
               <Person className={'menu-icon'} />
               <FormattedMessage id='createMenu.newUser' defaultMessage='New User' />
@@ -148,9 +126,7 @@ class CreateMenu extends Component {
           {(isCompanyAdmin || isClientCompanyManager) && (
             <Dropdown.Item
               onClick={async () => {
-                Router.push('/manage-guests/guests')
-                await guestInitState()
-                openGuestAddForm()
+                openGlobalAddForm('manage-guests-guests')
               }}>
               <FolderShared className={'menu-icon'} />
               <FormattedMessage id='createMenu.newGuest' defaultMessage='New Guest' />
@@ -160,10 +136,7 @@ class CreateMenu extends Component {
           {isCompanyAdmin && (
             <Dropdown.Item
               onClick={async () => {
-                Router.push('/settings/locations')
-                await settingsTabChanged({ name: 'Locations', id: 2, type: 'locations' }, null)
-                await handleLocationsTab('pick-up-locations')
-                openSettingsAddForm()
+                openGlobalAddForm('my-account-locations')
               }}>
               <Store className={'menu-icon'} />
               <FormattedMessage id='createMenu.newWarehouse' defaultMessage='New Warehouse' />
@@ -177,19 +150,14 @@ class CreateMenu extends Component {
 
 const stateToProps = state => {
   return {
+    openGlobalAddFormName: state.layout.openGlobalAddFormName,
     identity: getSafe(() => state.auth.identity, {})
+
   }
 }
 
 export default injectIntl(
   connect(stateToProps, {
-    openProductAddForm,
-    openListingAddForm,
-    openWantedAddForm,
-    settingsTabChanged,
-    openSettingsAddForm,
-    openGuestAddForm,
-    guestInitState,
-    handleLocationsTab
+    openGlobalAddForm
   })(CreateMenu)
 )

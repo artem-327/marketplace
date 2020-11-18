@@ -31,6 +31,9 @@ import { BottomButtons } from '../../constants'
 
 import ErrorFocus from '~/components/error-focus'
 
+import { FolderShared } from '@material-ui/icons'
+import { X as XIcon } from 'react-feather'
+
 const CustomForm = styled(Form)`
   flex-grow: 0 !important;
 `
@@ -120,7 +123,15 @@ class AddEditGuestCompanySidebar extends React.Component {
     })
 
   render() {
-    const { closePopup, popupValues, updateClientCompany, createClientCompany, intl, datagrid } = this.props
+    const {
+      closePopup,
+      popupValues,
+      updateClientCompany,
+      createClientCompany,
+      intl,
+      datagrid,
+      openGlobalAddForm
+    } = this.props
 
     const { formatMessage } = intl
 
@@ -152,7 +163,7 @@ class AddEditGuestCompanySidebar extends React.Component {
               }
 
               const data = await updateClientCompany(popupValues.id, newValues)
-              datagrid.updateRow(data.id, () => ({ ...data }))
+              !openGlobalAddForm && datagrid.updateRow(data.id, () => ({ ...data }))
             } else {
               if (
                 !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
@@ -184,8 +195,8 @@ class AddEditGuestCompanySidebar extends React.Component {
 
               removeEmpty(payload)
               await createClientCompany(payload)
-              datagrid.loadData()
-              closePopup()
+              !openGlobalAddForm && datagrid.loadData()
+              openGlobalAddForm ? openGlobalAddForm('') : closePopup()
             }
           } catch (err) {
             console.error(err)
@@ -193,12 +204,13 @@ class AddEditGuestCompanySidebar extends React.Component {
             actions.setSubmitting(false)
           }
         }}
-        onReset={closePopup}
+        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
         render={props => {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           return (
             <CustomForm autoComplete='off'>
               <FlexSidebar
+                className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
                 visible={true}
                 width='very wide'
                 style={{ width: '630px' }}
@@ -208,7 +220,23 @@ class AddEditGuestCompanySidebar extends React.Component {
                   <Loader />
                 </Dimmer>
                 <HighSegment basic>
-                  <FormattedMessage id='manageGuests.addCompany' defaultMessage='Add Company' />
+                  {openGlobalAddForm
+                    ? (
+                      <>
+                        <div>
+                            <span>
+                              <FormattedMessage id='createMenu.addGuest' defaultMessage='Add Guest' />
+                            </span>
+                          <FolderShared className='title-icon' />
+                        </div>
+                        <div style={{ position: 'absolute', right: '20px' }}>
+                          <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                        </div>
+                      </>
+                    ) : (
+                      <FormattedMessage id='manageGuests.addCompany' defaultMessage='Add Guest' />
+                    )
+                  }
                 </HighSegment>
                 <FlexContent>
                   <>
@@ -357,13 +385,15 @@ class AddEditGuestCompanySidebar extends React.Component {
                     />
                   </>
                 </FlexContent>
-                <BottomButtons>
+                <BottomButtons className='bottom-buttons'>
                   <div style={{ textAlign: 'right' }}>
-                    <Button.Reset data-test='guests_client_company_cancel_btn' onClick={props.handleReset}>
-                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button.Reset>
+                    {!openGlobalAddForm && (
+                      <Button.Reset data-test='guests_client_company_cancel_btn' onClick={props.handleReset}>
+                        <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button.Reset>
+                    )}
                     <Button.Submit data-test='guests_client_company_save_btn' onClick={props.handleSubmit}>
                       <FormattedMessage id='global.save' defaultMessage='Save'>
                         {text => text}
