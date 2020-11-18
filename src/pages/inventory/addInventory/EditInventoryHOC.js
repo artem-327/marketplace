@@ -7,7 +7,7 @@ import Spinner from '../../../components/Spinner/Spinner'
 
 export function withEdit(ComposedComponent) {
   class requireEdit extends React.Component {
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       this.props.fetchProductOffer(this.props.match.params.id)
     }
 

@@ -25,7 +25,7 @@ export default class AddForm extends Component {
     this.cancelEdit = this.cancelEdit.bind(this)
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.fetchWarehouses()
     this.props.fetchLocations()
   }
@@ -88,7 +88,7 @@ export default class AddForm extends Component {
     document.getElementById('offering-btn').click()
 
     setTimeout(
-      function() {
+      function () {
         this.addProductOffer(inputs)
       }.bind(this),
       2000
@@ -215,7 +215,7 @@ export default class AddForm extends Component {
     document.getElementById('offering-btn').click()
 
     setTimeout(
-      function() {
+      function () {
         this.editProductOffer(inputs)
       }.bind(this),
       2000

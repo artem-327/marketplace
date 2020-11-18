@@ -20,7 +20,7 @@ class ComboBox extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     document.addEventListener('mousedown', this.handleClickOutside, false)
   }
 

@@ -13,7 +13,7 @@ class PopUp extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.isVisible(this.props.components)
   }
 

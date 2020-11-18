@@ -1176,7 +1176,7 @@ class AddInventoryForm extends Component {
     this.modifyCosts(setFieldValue, values)
   }
 
-  componentWillMount = async () => {
+  UNSAFE_componentWillMount = async () => {
     await this.props.resetForm(initValues)
   }
 

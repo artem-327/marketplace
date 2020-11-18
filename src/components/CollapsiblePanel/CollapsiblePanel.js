@@ -9,7 +9,7 @@ export default class CollapsiblePanel extends Component {
     open: true
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (typeof this.props.open !== 'undefined') this.state.open = this.props.open
   }
 

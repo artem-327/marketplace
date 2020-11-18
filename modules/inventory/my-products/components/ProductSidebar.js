@@ -368,7 +368,7 @@ class ProductSidebar extends React.Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.resetComponent()
   }
 

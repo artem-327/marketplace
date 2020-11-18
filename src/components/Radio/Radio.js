@@ -6,7 +6,7 @@ import { Control } from 'react-redux-form'
 class Radio extends Component {
   state = {}
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     let checked = this.props.redux ? this.props.value : this.props.checked
     this.setState({ checked })
   }

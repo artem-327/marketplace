@@ -17,7 +17,7 @@ export function withAuth(ComposedComponent) {
       }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       this.verify(this.props)
     }
 
