@@ -7,7 +7,6 @@ import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 
 function mapStateToProps(state) {
-  const openGlobalAddFormName = getSafe(() => state.layout.openGlobalAddFormName, '')
   const sidebars = () => {
     const adminTab =
       (getSafe(() => state.admin.currentEditForm, false) ||
@@ -16,11 +15,7 @@ function mapStateToProps(state) {
         getSafe(() => state.admin.currentAddDwolla, false)) &&
       getSafe(() => state.admin.currentTab.name, '')
 
-    if (
-      getSafe(() => state.wantedBoard.openSidebar, false) ||
-      getSafe(() => state.wantedBoard.editWindowOpen, false) ||
-      openGlobalAddFormName === 'wanted-board-listings'
-    )
+    if (getSafe(() => state.wantedBoard.openSidebar, false) || getSafe(() => state.wantedBoard.editWindowOpen, false))
       return 430
 
     if (
@@ -45,12 +40,7 @@ function mapStateToProps(state) {
       (getSafe(() => state.settings.isOpenPopup, false) && (settingsTab === 'users' || settingsTab === 'documents')) ||
       adminTab === 'Users' ||
       adminTab === 'Companies' ||
-      getSafe(() => state.manageGuests.isOpenPopup, false) ||
-      openGlobalAddFormName === 'inventory-my-products' ||
-      openGlobalAddFormName === 'inventory-my-listings' ||
-      openGlobalAddFormName === 'my-account-users' ||
-      openGlobalAddFormName === 'manage-guests-guests' ||
-      openGlobalAddFormName === 'my-account-locations'
+      getSafe(() => state.manageGuests.isOpenPopup, false)
     )
       return 630
 
