@@ -1,7 +1,11 @@
 import api from '~/api'
 
 export const getCart = () => api.get('/prodex/api/cart').then(response => response.data)
-export const getCartCountItems = () => api.get('/prodex/api/cart/count-items').then(response => response.data)
+export const getCartCountItems = () =>
+  api
+    .get('/prodex/api/cart/count-items')
+    .then(response => response.data)
+    .catch(err => console.error(err))
 export const deleteCart = () => api.delete(`/prodex/api/cart`)
 export const addCartItem = ({ productOffer, pkgAmount }) =>
   api.post('/prodex/api/cart/items', { productOffer, pkgAmount }).then(response => response.data)
@@ -15,8 +19,10 @@ export const postNewDeliveryAddress = address =>
 export const updateDeliveryAddress = (address, id) =>
   api.put(`/prodex/api/delivery-addresses/id/${id}`, address).then(response => response.data)
 export const getDeliveryAddresses = () => api.get('/prodex/api/delivery-addresses').then(response => response.data)
-export const getDwollaPayments = () => api.get('/prodex/api/payments/bank-accounts/dwolla').then(response => response.data)
-export const getVellociPayments = () => api.get('/prodex/api/payments/bank-accounts/velloci').then(response => response.data)
+export const getDwollaPayments = () =>
+  api.get('/prodex/api/payments/bank-accounts/dwolla').then(response => response.data)
+export const getVellociPayments = () =>
+  api.get('/prodex/api/payments/bank-accounts/velloci').then(response => response.data)
 export const getShippingQuotes = (countryId, zip) =>
   api
     .get(`/prodex/api/shipment/cart?destinationCountryId=${countryId}&destinationZIP=${zip}`)
@@ -42,6 +48,8 @@ export const requestManualShipment = queryString => api.post(`/prodex/api/shipme
 export const getIdentity = () => api.get('/prodex/api/users/me').then(response => response.data)
 
 export const postNewWarehouse = (createWarehouse, payload) =>
-  api.post(`/prodex/api/branches?createWarehouse=${createWarehouse ? 'true' : 'false'}`, payload)
+  api
+    .post(`/prodex/api/branches?createWarehouse=${createWarehouse ? 'true' : 'false'}`, payload)
     .then(response => response.data)
-export const updateWarehouse = (payload, id) => api.put(`/prodex/api/branches/${id}`, payload).then(response => response.data)
+export const updateWarehouse = (payload, id) =>
+  api.put(`/prodex/api/branches/${id}`, payload).then(response => response.data)

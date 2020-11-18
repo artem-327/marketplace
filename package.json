@@ -118,6 +118,7 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "gulp": "^3.0.0",
     "react-intl": "^2.8.0",
     "semantic-ui": "^2.4.2"
