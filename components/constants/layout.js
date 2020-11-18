@@ -1127,24 +1127,3 @@ export const CustomSpanReturn = styled.span`
   color: #4183c4;
   cursor: pointer;
 `
-
-export const GlobalSidebars = styled.div`
-  .bottom-buttons .ui.button,
-  .bottom-buttons .ui.large.button,
-  .bottom-buttons .ui.large.primary.button
-  .bottom-buttons .ui.primary.button {
-    border: solid 1px #dee2e6 !important;
-    background-color: #ffffff !important;
-    color: #20273a !important;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-    
-    &:hover {
-      background-color: #f8f9fb !important
-    }
-    
-    &.disabled {
-      background-color: #ffffff !important;
-      color: #cecfd4 !important;
-    }
-  }
-`

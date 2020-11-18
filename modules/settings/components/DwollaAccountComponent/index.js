@@ -274,7 +274,6 @@ class BankAccountsPopup extends React.Component {
                         <DateInput
                           label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
                           name='dwollaController.dateOfBirth'
-                          inputOnly
                         />
                       </FormGroup>
                       {/* <FormGroup widths='equal' data-test='settings_dwolla_dwollaController_dateOfBirth_inp'>

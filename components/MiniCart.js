@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { getCartCountItems } from '~/modules/purchase-order/actions'
+import { getCart } from '~/modules/purchase-order/actions'
 import { Icon, Label } from 'semantic-ui-react'
 import { ShoppingCart } from 'react-feather'
 import { getSafe } from '~/utils/functions'
@@ -24,7 +24,7 @@ const CircularLabel = styled(Label)`
 
 class MiniCart extends Component {
   componentDidMount() {
-    this.props.getCartCountItems()
+    this.props.getCart()
   }
 
   render() {
@@ -45,8 +45,8 @@ class MiniCart extends Component {
 
 const stateToProps = state => {
   return {
-    cartItems: getSafe(() => state.cart.cartItemsCount, 0)
+    cartItems: getSafe(() => state.cart.cart.cartItems.length, 0)
   }
 }
 
-export default connect(stateToProps, { getCartCountItems })(MiniCart)
+export default connect(stateToProps, { getCart })(MiniCart)
