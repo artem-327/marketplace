@@ -52,7 +52,7 @@ class Alerts extends Component {
   render() {
     return (
       <>
-        {false && !this.props.tutorialCompleted && <Tutorial />}
+        {<Tutorial isTutorial={false} isBusinessVerification={true} />}
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
           <div id='page' className='flex stretched scrolling'>
             <Container fluid>

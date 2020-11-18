@@ -6,14 +6,14 @@ import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 import { getSafe } from '~/utils/functions'
 import { downloadAttachment } from '~/modules/inventory/actions'
-import { Button, Icon } from 'semantic-ui-react'
+import {Button, Dropdown, Icon} from 'semantic-ui-react'
 
 import * as Actions from '../../actions'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { echoRowActions } from './constants'
-import { FileText } from 'react-feather'
+import {FileText, MoreVertical} from 'react-feather'
 import styled from 'styled-components'
 import { Popup } from 'semantic-ui-react'
 
@@ -39,12 +39,74 @@ const Circle = styled.div`
   }
 `
 
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+`
+
+const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+  margin-left: 2px;
+  margin-right: 8px;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+  
+  .dropdown.icon {
+    display: none;
+  }
+`
+
+const RowDropdownIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 2px -4px;
+
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #848893 !important;
+  }
+`
+
+const DivRow = styled.div`
+  display: flex !important;
+`
+
 class ProductCatalogTable extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      fixed: [
+        {
+          name: 'name',
+          position: 0
+        }
+      ],
       columns: [
+        {
+          name: 'name',
+          title: (
+            <FormattedMessage id='global.productName' defaultMessage='Product Name'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150,
+          sortPath: 'CompanyGenericProduct.name',
+          allowReordering: false
+        },
         {
           name: 'publishedStatus',
           title: (
@@ -71,17 +133,6 @@ class ProductCatalogTable extends Component {
           ),
           width: 40,
           align: 'center'
-        },
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='global.productName' defaultMessage='Product Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150,
-          sortPath: 'CompanyGenericProduct.name',
-          actions: this.getActions()
         },
         {
           name: 'code',
@@ -156,7 +207,7 @@ class ProductCatalogTable extends Component {
     }
   }
 
-  getActions = () => {
+  getRowActions = (row) => {
     const {
       datagrid,
       intl: { formatMessage },
@@ -169,15 +220,15 @@ class ProductCatalogTable extends Component {
       ...echoRowActions((row, i) => openEditEchoProduct(row.id, i, true)),
       {
         text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }),
-        callback: row => openEditEchoAltNamesPopup(row)
+        callback: () => openEditEchoAltNamesPopup(row)
       },
       {
         text: formatMessage({
           id: 'admin.deleteCompanyGenericProduct',
           defaultMessage: 'Delete Company Generic Product'
         }),
-        disabled: row => this.props.editedId === row.id,
-        callback: row => {
+        disabled: () => this.props.editedId === row.id,
+        callback: () => {
           confirm(
             formatMessage({
               id: 'confirm.deleteCompanyGenericProduct.title',
@@ -203,13 +254,46 @@ class ProductCatalogTable extends Component {
     ]
   }
 
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
   getRows = rows => {
     const {
+      editEchoProductChangeTab,
       intl: { formatMessage }
     } = this.props
     return rows.map(row => {
       return {
         ...row,
+        name: (
+          <DivRow>
+            <RowDropdown trigger={(
+                          <RowDropdownIcon>
+                            <MoreVertical />
+                          </RowDropdownIcon>
+                        )}
+            >
+              <Dropdown.Menu>
+                {this.getActionItems(this.getRowActions(row), row)}
+              </Dropdown.Menu>
+            </RowDropdown>
+            <SpanText onClick={() => editEchoProductChangeTab(0, true, row.id)}>
+              {row.name}
+            </SpanText>
+          </DivRow>
+        ),
         publishedStatus: row.isPublished ? (
           <Popup
             size='small'
@@ -330,20 +414,22 @@ class ProductCatalogTable extends Component {
   render() {
     const { datagrid, rows, filterValue, editedId } = this.props
 
-    let { columns } = this.state
+    let { columns, fixed } = this.state
 
     return (
       <React.Fragment>
-        <ProdexTable
-          tableName='admin_product-catalog'
-          {...datagrid.tableProps}
-          columns={columns}
-          filterValue={filterValue}
-          loading={datagrid.loading}
-          rows={this.getRows(rows)}
-          columnActions='name'
-          editingRowId={editedId}
-        />
+        <div className='products-wrapper'>
+          <ProdexTable
+            tableName='admin_product-catalog'
+            {...datagrid.tableProps}
+            columns={columns}
+            fixed={fixed}
+            filterValue={filterValue}
+            loading={datagrid.loading}
+            rows={this.getRows(rows)}
+            editingRowId={editedId}
+          />
+        </div>
       </React.Fragment>
     )
   }

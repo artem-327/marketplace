@@ -15,6 +15,12 @@ body {
   font-family: 'HelveticaNeueLTPro';
 }
 
+a:hover {
+  text-decoration: none !important;
+  font-weight: 700 !important;
+  color: #2599d5 !important;
+}
+
 .dashed-underline {
   text-decoration: underline;
   text-decoration-style: dashed;
@@ -46,7 +52,8 @@ a.ui.button {
 
   &:hover {
     background: transparent !important;
-    text-decoration: underline !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
     color: #2185d0 !important;
   }
 }
@@ -2358,6 +2365,35 @@ i.file {
                   display: none !important;
                 }
               }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.products-wrapper {
+  padding-bottom: 10px;
+
+  .table-responsive {
+    overflow: visible;
+
+    table.table {
+
+      tbody {
+
+        tr {
+
+          td {
+            position: relative;
+            overflow: visible;
+
+            .cell-wrapper {
+              overflow: hidden;
+              display: block;
+              width: 100%;
+              text-overflow: ellipsis;
             }
           }
         }

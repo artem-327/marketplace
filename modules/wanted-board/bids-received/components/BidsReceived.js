@@ -433,33 +433,36 @@ class BidsReceived extends Component {
 
       switch (this.state.filterValues.statusFilter) {
         case 1: {
-          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
-            el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'NORMAL'
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(
+            el => el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'NORMAL'
           )
           break
         }
         case 2: {
-          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
-            (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'NORMAL')
-            || (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'COUNTER')
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(
+            el =>
+              (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'NORMAL') ||
+              (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'COUNTER')
           )
           break
         }
         case 3: {
-          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
-            el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'COUNTER'
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(
+            el => el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'COUNTER'
           )
           break
         }
         case 4: {
-          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(el =>
-            (el.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' && el.cfHistoryLastType === 'NORMAL')
-            || (el.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER' && el.cfHistoryLastType === 'COUNTER')
-            || (el.cfHistoryLastStatus === '32' && el.cfHistoryLastType === 'COUNTER')
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers.filter(
+            el =>
+              (el.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' && el.cfHistoryLastType === 'NORMAL') ||
+              (el.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER' && el.cfHistoryLastType === 'COUNTER') ||
+              (el.cfHistoryLastStatus === '32' && el.cfHistoryLastType === 'COUNTER')
           )
           break
         }
-        default: filteredPurchaseRequestOffers = row.purchaseRequestOffers
+        default:
+          filteredPurchaseRequestOffers = row.purchaseRequestOffers
       }
 
       const offersLength = filteredPurchaseRequestOffers.length
@@ -558,14 +561,14 @@ class BidsReceived extends Component {
 
     return (
       <>
-        {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
+        {<Tutorial marginWantedBoard isTutorial={false} isBusinessVerification={true} />}
         {openedSubmitOfferPopup && (
           <SubmitOffer {...popupValues} counterRequestedItem={counterRequestedItem} isSecondPage={isSecondPage} />
         )}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
-              <div className='column' style={{ width: '340px'}}>
+              <div className='column' style={{ width: '340px' }}>
                 <StyledDropdown
                   options={statusFilterList}
                   value={this.state.filterValues.statusFilter}
@@ -575,7 +578,7 @@ class BidsReceived extends Component {
                   fluid
                 />
               </div>
-              <div className='column' style={{ width: '340px'}}>
+              <div className='column' style={{ width: '340px' }}>
                 <SearchInput
                   onChange={this.SearchByNamesAndCasChanged}
                   initFilterState={getSafe(() => tableHandlersFiltersBidsReceived.searchByNamesAndCas, null)}
