@@ -232,29 +232,28 @@ class BidsSent extends Component {
 
     switch (this.state.filterValues.statusFilter) {
       case 1: {
-        return rows.filter(el =>
-          el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'NORMAL'
-        )
+        return rows.filter(el => el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'NORMAL')
       }
       case 2: {
-        return rows.filter(el =>
-          (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'NORMAL')
-          || (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'COUNTER')
+        return rows.filter(
+          el =>
+            (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'NORMAL') ||
+            (el.cfHistoryLastStatus === 'REJECTED' && el.cfHistoryLastType === 'COUNTER')
         )
       }
       case 3: {
-        return rows.filter(el =>
-          el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'COUNTER'
-        )
+        return rows.filter(el => el.cfHistoryLastStatus === 'NEW' && el.cfHistoryLastType === 'COUNTER')
       }
       case 4: {
-        return rows.filter(el =>
-          (el.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' && el.cfHistoryLastType === 'NORMAL')
-          || (el.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER' && el.cfHistoryLastType === 'COUNTER')
-          || (el.cfHistoryLastStatus === '32' && el.cfHistoryLastType === 'COUNTER')
+        return rows.filter(
+          el =>
+            (el.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' && el.cfHistoryLastType === 'NORMAL') ||
+            (el.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER' && el.cfHistoryLastType === 'COUNTER') ||
+            (el.cfHistoryLastStatus === '32' && el.cfHistoryLastType === 'COUNTER')
         )
       }
-      default: return rows
+      default:
+        return rows
     }
   }
 
@@ -273,11 +272,11 @@ class BidsSent extends Component {
 
     return (
       <>
-        {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
+        {<Tutorial marginWantedBoard isTutorial={false} isBusinessVerification={true} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
-              <div className='column' style={{ width: '340px'}}>
+              <div className='column' style={{ width: '340px' }}>
                 <StyledDropdown
                   options={statusFilterList}
                   value={this.state.filterValues.statusFilter}
@@ -287,7 +286,7 @@ class BidsSent extends Component {
                   fluid
                 />
               </div>
-              <div className='column' style={{ width: '340px'}}>
+              <div className='column' style={{ width: '340px' }}>
                 <SearchInput
                   onChange={this.SearchByNamesAndCasChanged}
                   initFilterState={getSafe(() => tableHandlersFiltersBidsSent.searchByNamesAndCas, null)}

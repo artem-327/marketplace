@@ -460,7 +460,10 @@ class SubmitOfferPopup extends React.Component {
                     () => sumPkgAmount <= matchingOfferInfo.minimumPackageAmount
                   )
               }
-            } else if (getSafe(() => matchingOfferInfo.maximumPackageAmount, 0) < sumPkgAmount) {
+            } else if (
+              getSafe(() => matchingOfferInfo.maximumPackageAmount, '') &&
+              getSafe(() => matchingOfferInfo.maximumPackageAmount, 0) < sumPkgAmount
+            ) {
               pkgAmount = {
                 pkgAmount: Yup.number()
                   .positive(errorMessages.positive)
@@ -472,7 +475,10 @@ class SubmitOfferPopup extends React.Component {
                     () => sumPkgAmount < matchingOfferInfo.maximumPackageAmount
                   )
               }
-            } else if (getSafe(() => matchingOfferInfo.minimumPackageAmount, 0) > sumPkgAmount) {
+            } else if (
+              getSafe(() => matchingOfferInfo.minimumPackageAmount, '') &&
+              getSafe(() => matchingOfferInfo.minimumPackageAmount, 0) > sumPkgAmount
+            ) {
               pkgAmount = {
                 pkgAmount: Yup.number()
                   .positive(errorMessages.positive)

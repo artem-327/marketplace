@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import {Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input, Dropdown} from 'semantic-ui-react'
-import {AlertTriangle, Clock, MoreVertical, Sliders} from 'react-feather'
+import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input, Dropdown } from 'semantic-ui-react'
+import { AlertTriangle, Clock, MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number, boolean } from 'prop-types'
@@ -106,7 +106,7 @@ const SpanText = styled.span`
   overflow: hidden !important;
   font-weight: 500;
   cursor: pointer;
-  
+
   &:hover {
     font-weight: bold;
     color: #2599d5;
@@ -141,7 +141,7 @@ const RowDropdown = styled(Dropdown)`
     font-weight: bold;
     color: #2599d5;
   }
-  
+
   .dropdown.icon {
     display: none;
   }
@@ -151,7 +151,7 @@ const RowDropdownIcon = styled.div`
   width: 16px;
   height: 16px;
   margin: 2px 0 2px -4px;
-  
+
   svg {
     width: 16px !important;
     height: 16px !important;
@@ -424,15 +424,13 @@ class Listings extends Component {
       clsName: r.condition ? 'non-conforming' : '',
       intProductName: (
         <DivRow>
-          <RowDropdown trigger={(
-            <RowDropdownIcon>
-              <MoreVertical />
-            </RowDropdownIcon>
-          )}
-          >
-            <Dropdown.Menu>
-              {this.getActionItems(this.getRowActions(r), r)}
-            </Dropdown.Menu>
+          <RowDropdown
+            trigger={
+              <RowDropdownIcon>
+                <MoreVertical />
+              </RowDropdownIcon>
+            }>
+            <Dropdown.Menu>{this.getActionItems(this.getRowActions(r), r)}</Dropdown.Menu>
           </RowDropdown>
           <SpanText onClick={() => this.tableRowClicked(r.id)}>{r.intProductName}</SpanText>
           <DivIcons>
@@ -502,7 +500,7 @@ class Listings extends Component {
     sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
-  getRowActions = (row) => {
+  getRowActions = row => {
     const {
       isMerchant,
       isCompanyAdmin,
@@ -558,7 +556,7 @@ class Listings extends Component {
 
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
-        {false && !tutorialCompleted && <Tutorial marginMarketplace />}
+        {<Tutorial marginMarketplace isTutorial={false} isBusinessVerification={true} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>

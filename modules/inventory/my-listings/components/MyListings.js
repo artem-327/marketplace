@@ -1093,7 +1093,7 @@ class MyListings extends Component {
           </Modal.Actions>
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
-        {false && !tutorialCompleted && <Tutorial />}
+        {<Tutorial isTutorial={false} isBusinessVerification={true} />}
         <Container fluid style={{ padding: '20px 25px 10px' }}>
           <CustomRowDiv>
             <div>
