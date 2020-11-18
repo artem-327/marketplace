@@ -29,6 +29,7 @@ import { savedFilterValidation } from '../constants/validation'
 import { groupFilters } from '../constants/filter'
 import Tooltip from '~/components/tooltip'
 import ErrorFocus from '~/components/error-focus'
+import { AlertTriangle } from 'react-feather'
 
 const StyledDimmer = styled(Dimmer)`
   margin: 1rem 0;
@@ -52,6 +53,16 @@ export const NoSavedFilters = styled.div`
   height: 100%;
 `
 
+const RedTriangle = styled(AlertTriangle)`
+  display: block;
+  width: 20px;
+  height: 19px;
+  margin: 0 auto;
+  vertical-align: middle;
+  font-size: 20px;
+  color: #f16844;
+  line-height: 20px;
+`
 
 class SavedFilters extends Component {
   state = {
@@ -85,24 +96,38 @@ class SavedFilters extends Component {
   }
 
   getTitle = (filter, i) => {
-    let { id, name } = filter
+    let { id, name, invalid } = filter
     let filterDescription = groupFilters(filter.filters, this.props.params, this.props.filterType)
+
     return (
       <SavedFilterTitle>
         <SavedFilterRow>
-          <Tooltip
-            trigger={
-              <div
-                onClick={() => this.handleFilterApply(filter)}
-                data-test={`filter_activateFilter_${i}`}
-                style={{ color: '#20273a', fontWeight: '600' }}
-              >
-                {name}
-              </div>
-            }
-            position='top center'>
-            <FormattedMessage id='filter.activateFilter' />
-          </Tooltip>
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <Tooltip
+              trigger={
+                <div
+                  onClick={() => this.handleFilterApply(filter)}
+                  data-test={`filter_activateFilter_${i}`}
+                  style={{ color: '#20273a', fontWeight: '600' }}
+                >
+                  {name}
+                </div>
+              }
+              position='top center'>
+              <FormattedMessage id='filter.activateFilter' />
+            </Tooltip>
+            {invalid && (
+              <Tooltip
+                trigger={
+                  <div>
+                    <RedTriangle style={{ marginLeft: '7px' }} />
+                  </div>
+                } // <div> has to be there otherwise popup will be not shown
+                position='top center'>
+                <FormattedMessage id='filter.invalidFilter' />
+              </Tooltip>
+            )}
+          </div>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             <Tooltip
               trigger={
