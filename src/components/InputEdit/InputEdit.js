@@ -11,7 +11,7 @@ class InputEdit extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.state.text !== nextProps) this.setState({ text: nextProps.value })
   }
 

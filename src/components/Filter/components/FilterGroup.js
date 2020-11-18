@@ -44,7 +44,7 @@ class FilterGroup extends Component {
     input.search(data)
   })
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.isOpen !== this.state.isOpen) this.setState({ isOpen: nextProps.isOpen })
   }
 

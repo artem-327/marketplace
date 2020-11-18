@@ -17,7 +17,7 @@ class PopUp extends Component {
     this.isVisible(this.props.components)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.isVisible(nextProps.components)
   }
 

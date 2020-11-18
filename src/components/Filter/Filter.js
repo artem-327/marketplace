@@ -566,7 +566,7 @@ class Filter extends Component {
     this.props.deleteSaveFilter(id).then(() => this.props.fetchSavedFilters())
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       isOpen: nextProps.isOpen
     })

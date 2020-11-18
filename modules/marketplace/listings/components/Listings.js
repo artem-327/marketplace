@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
-import {AlertTriangle, Clock, MoreVertical, Sliders} from 'react-feather'
+import { AlertTriangle, Clock, MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number, boolean } from 'prop-types'
@@ -39,7 +39,7 @@ const CapitalizedText = styled.span`
 `
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
-  <Link prefetch href={to}>
+  <Link href={to}>
     <Menu.Item as='a' active={pathname === to}>
       {children}
     </Menu.Item>
@@ -106,7 +106,7 @@ const SpanText = styled.span`
   overflow: hidden !important;
   font-weight: 500;
   cursor: pointer;
-  
+
   &:hover {
     font-weight: bold;
     color: #2599d5;
@@ -136,7 +136,7 @@ const RowDropDownIcon = styled.div`
   width: 16px;
   height: 16px;
   margin: 2px 0 2px -4px;
-  
+
   svg {
     width: 16px !important;
     height: 16px !important;

@@ -261,7 +261,7 @@ class Navigation extends Component {
 
     const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className, dataTest }) => {
       return (
-        <Link prefetch href={to}>
+        <Link href={to}>
           <Menu.Item
             as='a'
             data-test={dataTest}

@@ -15,7 +15,7 @@ class BroadcastTargetGroup extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.filter !== this.state.filter) {
       this.props.updateTargets(this.props.index, [])
       this.setState({

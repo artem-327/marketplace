@@ -11,7 +11,7 @@ class Radio extends Component {
     this.setState({ checked })
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let checked = nextProps.redux ? nextProps.value : nextProps.checked
     this.setState({ checked })
   }

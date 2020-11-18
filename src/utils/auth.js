@@ -21,7 +21,7 @@ export function withAuth(ComposedComponent) {
       this.verify(this.props)
     }
 
-    componentWillUpdate(nextProps) {
+    UNSAFE_componentWillUpdate(nextProps) {
       this.verify(nextProps)
     }
 

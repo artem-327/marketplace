@@ -72,7 +72,7 @@ class DatagridProvider extends Component {
     clearInterval(this.interval)
   }
 
-  // componentWillReceiveProps({apiConfig}) {
+  // UNSAFE_componentWillReceiveProps({apiConfig}) {
   //   if (JSON.stringify(apiConfig) !== JSON.stringify(this.props.apiConfig)) {
   //     this.setState(initialState)
   //     this.loadData()
@@ -342,12 +342,13 @@ class DatagridProvider extends Component {
               values: filt.values
             })
           }
-
         } else {
-          filterObject[filt.operator] = [{
-            path: filt.path,
-            values: filt.values
-          }]
+          filterObject[filt.operator] = [
+            {
+              path: filt.path,
+              values: filt.values
+            }
+          ]
         }
       }
     })

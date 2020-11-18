@@ -11,7 +11,7 @@ class NamesSynonyms extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({ alternativeNames: nextProps.alternativeNames })
     if (nextProps.selectedProduct) {
       this.setState({

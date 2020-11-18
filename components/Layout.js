@@ -201,7 +201,7 @@ class Layout extends Component {
     this.setState({ showCopyright: false, copyrightClassName: '' })
   }
 
-  componentWillUpdate(prevProps) {
+  UNSAFE_componentWillUpdate(prevProps) {
     if (
       prevProps.adminTab !== this.props.adminTab ||
       prevProps.companyTab !== this.props.companyTab ||
@@ -319,7 +319,7 @@ class Layout extends Component {
       isMerchant,
       isProductCatalogAdmin,
       isProductOfferManager,
-      isUserAdmin,
+      isUserAdmin
     } = identity
 
     let icon = Icon && <Icon name='user' />
@@ -363,19 +363,17 @@ class Layout extends Component {
 
               <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
             </PerfectScrollbar>
-            {false
-              ? (
-                <Container className='bottom'>
-                  <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
-                    <Sidebar />
-                    {formatMessage({
-                      id: 'global.collapseMenu',
-                      defaultMessage: 'Collapse Menu'
-                    })}
-                  </Menu.Item>
-                </Container>
-              )
-              : null }
+            {false ? (
+              <Container className='bottom'>
+                <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
+                  <Sidebar />
+                  {formatMessage({
+                    id: 'global.collapseMenu',
+                    defaultMessage: 'Collapse Menu'
+                  })}
+                </Menu.Item>
+              </Container>
+            ) : null}
           </LeftMenuContainer>
         </LeftMenu>
 
@@ -476,9 +474,9 @@ class Layout extends Component {
                     isProductCatalogAdmin ||
                     isProductOfferManager ||
                     isUserAdmin) && (
-                      <Menu.Item>
-                        <CreateMenu />
-                      </Menu.Item>
+                    <Menu.Item>
+                      <CreateMenu />
+                    </Menu.Item>
                   )}
                 </>
               )}
@@ -530,12 +528,18 @@ class Layout extends Component {
           </CustomDiv>
         ) : null}
         <GlobalSidebars>
-          {openGlobalAddFormName === 'inventory-my-products' && (<ProductSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'inventory-my-listings' && (<ListingSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'wanted-board-listings' && (<WantedSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'my-account-users' && (<UserSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'manage-guests-guests' && (<GuestSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'my-account-locations' && (<WarehouseSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+          {openGlobalAddFormName === 'inventory-my-products' && (
+            <ProductSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'inventory-my-listings' && (
+            <ListingSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'my-account-users' && <UserSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'manage-guests-guests' && <GuestSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'my-account-locations' && (
+            <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
         </GlobalSidebars>
       </MainContainer>
     )

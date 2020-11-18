@@ -30,7 +30,7 @@ class MyInventory extends Component {
     this.props.getCompanies()
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setFilter(GROUP_BY_ALL_COMPANIES, nextProps.companies)
   }
 

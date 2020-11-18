@@ -12,7 +12,7 @@ export default class AddGroup extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       open: !nextProps.disable,
       disable: nextProps.disable

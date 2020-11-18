@@ -42,7 +42,7 @@ class RemoteComboBox extends Component {
     document.addEventListener('mousedown', this.handleClickOutside, false)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.currentValue) {
       this.setState({ fulltext: nextProps.currentValue }, () => {})
     }

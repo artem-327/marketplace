@@ -1,4 +1,4 @@
-import Document, { Head, Main, NextScript } from 'next/document'
+import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
 export default class MyDocument extends Document {
@@ -12,11 +12,10 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <html>
+      <Html>
         <Head>
           {this.props.styleTags}
           <meta charSet='utf-8' />
-          <meta name='viewport' content='initial-scale=1.0, width=device-width' />
 
           <link rel='apple-touch-icon' sizes='180x180' href='/static/apple-touch-icon.png' />
           <link rel='icon' type='image/png' sizes='32x32' href='/static/favicon-32x32.png' />
@@ -32,7 +31,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     )
   }
 }

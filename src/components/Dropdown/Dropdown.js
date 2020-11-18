@@ -24,7 +24,7 @@ class Dropdown extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.redux) {
       let cv = nextProps.currentValue ? nextProps.currentValue : ''
       const opnsLength = nextProps.opns ? nextProps.opns.length : 0
