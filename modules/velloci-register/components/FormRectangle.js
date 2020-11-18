@@ -74,7 +74,9 @@ function FormRectangle({
   submitForm,
   countBeneficialOwners,
   numberBeneficialOwners,
-  isLoadingSubmitButton
+  isLoadingSubmitButton,
+  openEmailPopup,
+  registerBeneficialOwner
 }) {
   const { values } = formikProps
   return (
@@ -126,7 +128,7 @@ function FormRectangle({
             />
           )}
 
-          {values.ownerInformation.isOtherBeneficialOwner && (
+          {values.ownerInformation && values.ownerInformation.isOtherBeneficialOwner && (
             <Popup
               trigger={
                 <a href={`#form${numberBeneficialOwners}`}>
@@ -156,20 +158,26 @@ function FormRectangle({
           onClick={() => submitForm(formikProps)}
           primary>
           <FormattedMessage
-            id={activeStep === 6 ? 'velloci.submitApplication' : 'global.next'}
-            defaultMessage={activeStep === 6 ? 'Submit Application' : 'Next'}>
+            id={registerBeneficialOwner
+              ? 'global.send'
+              : (activeStep === 6 ? 'velloci.submitApplication' : 'global.next')
+            }
+            defaultMessage={registerBeneficialOwner
+              ? 'Send'
+              : (activeStep === 6 ? 'Submit Application' : 'Next')
+            }>
             {text => text}
           </FormattedMessage>
         </ButtonSubmit>
-        {activeStep > 0 ? (
+        {!registerBeneficialOwner && activeStep > 0 ? (
           <ButtonBack type='button' onClick={() => prevStep(activeStep - 1)} basic>
             <FormattedMessage id='global.back' defaultMessage='Back'>
               {text => text}
             </FormattedMessage>
           </ButtonBack>
         ) : null}
-        {false && activeStep === 4 ? (
-          <ButtonBack type='button' onClick={() => console.log('email')} basic>
+        {activeStep === 4 ? (
+          <ButtonBack type='button' onClick={openEmailPopup} basic>
             <FormattedMessage id='global.email' defaultMessage='Email'>
               {text => text}
             </FormattedMessage>
@@ -189,7 +197,9 @@ FormRectangle.propTypes = {
   submitForm: PropTypes.func,
   activeStep: PropTypes.number,
   countBeneficialOwners: PropTypes.func,
-  numberBeneficialOwners: PropTypes.number
+  numberBeneficialOwners: PropTypes.number,
+  openEmailPopup: PropTypes.func,
+  registerBeneficialOwner: PropTypes.booleanValue
 }
 
 FormRectangle.defaultProps = {
@@ -200,7 +210,9 @@ FormRectangle.defaultProps = {
   submitForm: () => {},
   activeStep: 0,
   countBeneficialOwners: () => {},
-  numberBeneficialOwners: 0
+  numberBeneficialOwners: 0,
+  openEmailPopup: () => {},
+  registerBeneficialOwner: false
 }
 
 export default FormRectangle

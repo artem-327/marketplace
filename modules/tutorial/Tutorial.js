@@ -421,8 +421,8 @@ const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
 
   let accountStatus = 'none'
-  if (company.dwollaAccountStatus) accountStatus = company.dwollaAccountStatus
-  if (company.vellociAccountStatus) accountStatus = company.vellociAccountStatus
+  if (company && company.dwollaAccountStatus) accountStatus = company.dwollaAccountStatus
+  if (company && company.vellociAccountStatus) accountStatus = company.vellociAccountStatus
 
   return {
     accountStatus,

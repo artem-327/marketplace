@@ -28,6 +28,7 @@ import { PHONE_REGEXP } from '~/src/utils/constants'
 import { getStringISODate } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
 import Router from 'next/router'
+import BeneficialOwnersPopup from './steps/BeneficialOwnersPopup'
 
 class VellociRegister extends Component {
   componentDidMount() {
@@ -351,7 +352,9 @@ class VellociRegister extends Component {
       countBeneficialOwners,
       numberBeneficialOwners,
       isLoadingSubmitButton,
-      initialValues
+      initialValues,
+      openEmailPopup,
+      emailPopup
     } = this.props
     return (
       <Grid>
@@ -378,11 +381,13 @@ class VellociRegister extends Component {
                         activeStep={activeStep}
                         numberBeneficialOwners={numberBeneficialOwners}
                         countBeneficialOwners={countBeneficialOwners}
-                        isLoadingSubmitButton={isLoadingSubmitButton}>
+                        isLoadingSubmitButton={isLoadingSubmitButton}
+                        openEmailPopup={openEmailPopup}>
                         {this.getContent(formikProps)}
                       </FormRectangle>
                     </Grid>
                     <ErrorFocus />
+                    {emailPopup.isOpen && (<BeneficialOwnersPopup />)}
                   </Form>
                 )
               }}

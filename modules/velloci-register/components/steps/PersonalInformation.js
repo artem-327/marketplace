@@ -43,7 +43,7 @@ const GridRowTitle = styled.div`
   font-weight: 500;
 `
 
-function PersonalInformation({ formikProps, intl: { formatMessage }, numberBeneficialOwners, businessRoles }) {
+function PersonalInformation({formikProps, intl: { formatMessage }, numberBeneficialOwners, businessRoles, registerBeneficialOwner }) {
   let forms = []
   for (let i = 0; i <= numberBeneficialOwners; i++) {
     forms.push(
@@ -214,7 +214,7 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
             </AddressForm>
           </GridColumn>
         </GridRow>
-        <GridRow columns={3}>
+        <GridRow columns={registerBeneficialOwner ? 2: 3}>
           <ColumnCustom>
             <Input
               name={`verifyPersonalInformation[${i}].businessTitle`}
@@ -237,42 +237,44 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
               }}
             />
           </ColumnCustom>
-          <ColumnCustom>
-            <Dropdown
-              options={
-                businessRoles && businessRoles.data && businessRoles.data.length
-                  ? businessRoles.data.map(el => ({
-                      key: el,
-                      value: el,
-                      text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
-                    }))
-                  : []
-              }
-              fieldProps={{
-                'data-test': 'settings_velloci_registration_personal_info_business_role_inpt'
-              }}
-              inputProps={{
-                placeholder: formatMessage({
-                  id: 'global.businessName',
-                  defaultMessage: 'Business Name'
-                }),
-                search: true,
-                selection: true,
-                disabled: i > 0,
-                loading: businessRoles && businessRoles.loading
-              }}
-              name={`verifyPersonalInformation[${i}].businessRole`}
-              label={
-                <>
-                  {formatMessage({
-                    id: 'velloci.personalInfo.businessRole',
-                    defaultMessage: 'Business Role'
-                  })}
-                  {<Required />}
-                </>
-              }
-            />
-          </ColumnCustom>
+          {!registerBeneficialOwner && (
+            <ColumnCustom>
+              <Dropdown
+                options={
+                  businessRoles && businessRoles.data && businessRoles.data.length
+                    ? businessRoles.data.map(el => ({
+                        key: el,
+                        value: el,
+                        text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
+                      }))
+                    : []
+                }
+                fieldProps={{
+                  'data-test': 'settings_velloci_registration_personal_info_business_role_inpt'
+                }}
+                inputProps={{
+                  placeholder: formatMessage({
+                    id: 'global.businessName',
+                    defaultMessage: 'Business Name'
+                  }),
+                  search: true,
+                  selection: true,
+                  disabled: i > 0,
+                  loading: businessRoles && businessRoles.loading
+                }}
+                name={`verifyPersonalInformation[${i}].businessRole`}
+                label={
+                  <>
+                    {formatMessage({
+                      id: 'velloci.personalInfo.businessRole',
+                      defaultMessage: 'Business Role'
+                    })}
+                    {<Required />}
+                  </>
+                }
+              />
+            </ColumnCustom>
+          )}
           <ColumnCustom>
             <Input
               name={`verifyPersonalInformation[${i}].socialSecurityNumber`}
@@ -328,13 +330,15 @@ function PersonalInformation({ formikProps, intl: { formatMessage }, numberBenef
 PersonalInformation.propTypes = {
   formikProps: PropTypes.object,
   businessRoles: PropTypes.object,
-  numberBeneficialOwners: PropTypes.number
+  numberBeneficialOwners: PropTypes.number,
+  registerBeneficialOwner: PropTypes.booleanValue
 }
 
 PersonalInformation.defaultProps = {
   formikProps: {},
   businessRoles: {},
-  numberBeneficialOwners: 0
+  numberBeneficialOwners: 0,
+  registerBeneficialOwner: false
 }
 
 export default injectIntl(PersonalInformation)
