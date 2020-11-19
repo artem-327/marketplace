@@ -1,5 +1,6 @@
 import { Grid, GridRow, Form, Dropdown, Input, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
+import { Folder } from 'react-feather'
 
 const COLORS = {
   root: '#edeef2',
@@ -15,6 +16,20 @@ const FONT_WEIGHT = {
   company: 'normal'
 }
 
+const BORDER_RADIUS = {
+  root: '4px',
+  region: '0px',
+  state: '0px',
+  company: '0px'
+}
+
+const BACKGROUND = {
+  root: 'none',
+  region: '#eee',
+  state: '#eee',
+  company: '#eee'
+}
+
 const Row = styled.div`
   position: relative;
   display: flex;
@@ -24,17 +39,19 @@ const Row = styled.div`
 
   background-color: ${({ type }) => COLORS[type]};
   font-weight: ${({ type }) => FONT_WEIGHT[type]};
+
+  ${props =>
+    props.asSidebar
+      ? `border-top-left-radius: ${BORDER_RADIUS[props.type]};
+     border-top-right-radius: ${BORDER_RADIUS[props.type]};
+    `
+      : ''}
+
   cursor: pointer;
   color: #20273a;
 
   &:hover {
-    background-color: #eee;
-  }
-
-  > div {
-  }
-  > div:first-child {
-    border-left: none;
+    background-color: ${({ type }) => BACKGROUND[type]};
   }
 `
 
@@ -42,12 +59,17 @@ const Root = styled.div`
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
-  margin: 1.428571429em 0.714285714em;
-
-  border-radius: 4px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  border: solid 1px #dee2e6;
+  margin: 0em 0.714285714em;
   background-color: #ffffff;
+
+  ${props =>
+    props.asSidebar
+      ? 'flex-basis: 60px'
+      : `overflow-y: scroll;
+          flex-basis: 168px;
+          margin: 0px;
+          border: solid 1px #dee2e6;
+          border-radius: 4px;`}
 `
 const Header = styled(Row)`
   /* font-weight: bold; */
@@ -56,9 +78,7 @@ const Header = styled(Row)`
   display: flex;
   color: #848893;
   font-weight: bold;
-
-  > div {
-  }
+  border-bottom: none;
   > div:nth-child(2) {
     border-left: none;
     padding-left: 10px;
@@ -66,12 +86,18 @@ const Header = styled(Row)`
   > div:last-child {
     padding-right: 10px;
   }
+
+  ${props => (props.asSidebar ? 'justify-content: flex-end;' : '')}
 `
 const Content = styled.div`
   display: flex;
   flex: 1 0 300px;
   flex-direction: column;
   overflow-y: none;
+  ${props =>
+    props.asSidebar
+      ? 'border: solid 1px #dee2e6 !important; border-radius: 4px; flex: 1 0 auto; overflow-y: hidden;'
+      : ''}
 `
 
 const RowContent = styled.div`
@@ -203,6 +229,83 @@ const ButtonSave = styled(Button)`
   margin-left: 8px !important;
 `
 
+const ButtonTemplate = styled(Button)`
+  &.ui.basic.button {
+    background-color: #edeef2 !important;
+    color: #20273a !important;
+    border: none !important;
+  }
+`
+
+const GridRowFiltersModal = styled(Grid.Row)`
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+`
+
+const GridRowTemplateModal = styled(Grid.Row)`
+  padding-bottom: 2px !important;
+  padding-top: 21px !important;
+`
+
+const GridColumnFiltersModal = styled(Grid.Column)`
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  ${props => (props.secondColumn ? 'padding-left: 0px !important; padding-right: 0px !important;' : '')}
+  ${props => (props.firstColumn ? 'padding-right: 5px !important;' : '')}
+  ${props => (props.thirdColumn ? 'padding-left: 5px !important;' : '')}
+`
+
+const IconFolder = styled(Folder)`
+  color: #20273a !important;
+  padding-right: 7px !important;
+`
+
+const DivIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const GridModalTemplate = styled(Grid)`
+  margin-top: 16px !important;
+  margin-right: 16px !important;
+  margin-bottom: 16px !important;
+  margin-left: 16px !important;
+`
+
+const UnpaddedRow = {
+  Bottom: styled(GridRow)`
+    padding-bottom: 0px !important;
+  `,
+  Top: styled(GridRow)`
+    padding-top: 0px !important;
+  `
+}
+
+const CustomButton = styled(Button)`
+  &.ui.button.basic {
+    min-width: min-content !important;
+    padding: 7px !important;
+  }
+`
+
+const CustomButtonDelete = styled(Button)`
+  &.ui.button.basic {
+    min-width: min-content !important;
+    padding: 7px !important;
+    color: #f16844 !important;
+  }
+`
+
+const FormFieldBroadcastAllButton = styled(Form.Field)`
+  .ui.button.basic,
+  .ui.button.outline {
+    padding: 7px !important;
+    height: auto !important;
+    min-height: 40px;
+  }
+`
+
 export const Rule = {
   Row,
   RowContent,
@@ -222,5 +325,16 @@ export {
   DropdownInHeaderTable,
   InputSearch,
   GridRowTable,
-  ButtonSave
+  ButtonSave,
+  ButtonTemplate,
+  GridColumnFiltersModal,
+  GridRowTemplateModal,
+  GridRowFiltersModal,
+  IconFolder,
+  DivIcon,
+  GridModalTemplate,
+  CustomButtonDelete,
+  CustomButton,
+  FormFieldBroadcastAllButton,
+  UnpaddedRow
 }

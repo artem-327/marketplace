@@ -275,18 +275,18 @@ const TreeTableCells = (props, rowChildActions) => {
 const HeaderCell = props => {
   const draggingEnabled = props.column.allowReordering !== false
 
-  return <TableHeaderRow.Cell {...props} draggingEnabled={draggingEnabled} />;
+  return <TableHeaderRow.Cell {...props} draggingEnabled={draggingEnabled} />
 }
 
 const TableCells = props => {
   return (
     <Table.Cell {...props} className={props.column.actions ? 'actions' : ''}>
-      {props.children ? props.children : (
-        typeof (props.value && props.value.type) !== 'object' ? (
-        <span class='cell-wrapper'>
-          {props.value}
-        </span>
-        ) : props.value
+      {props.children ? (
+        props.children
+      ) : typeof (props.value && props.value.type) !== 'object' ? (
+        <span class='cell-wrapper'>{props.value}</span>
+      ) : (
+        props.value
       )}
     </Table.Cell>
   )
@@ -491,8 +491,10 @@ class _Table extends Component {
   componentDidMount() {
     this.loadColumnsSettings()
     let table = this.gridWrapper.querySelector('.table-responsive')
-    table.addEventListener('scroll', this.handleScroll)
-    this.props.displayRowActionsOverBorder && table.setAttribute('style', 'display: table')
+    if (table) {
+      table.addEventListener('scroll', this.handleScroll)
+      this.props.displayRowActionsOverBorder && table.setAttribute('style', 'display: table')
+    }
   }
 
   handleScroll = ({ target }) => {
@@ -854,9 +856,11 @@ class _Table extends Component {
   }
 
   handleColumnsSettings = data => {
-    const { columnsSettings: { order } } = this.state
+    const {
+      columnsSettings: { order }
+    } = this.state
     const { tableName, fixed } = this.props
-    if (data.order && (typeof fixed !== 'undefined')) {
+    if (data.order && typeof fixed !== 'undefined') {
       fixed.forEach(fixedCol => {
         if (data.order.indexOf(fixedCol.name) !== fixedCol.position) {
           data.order = order
@@ -1041,7 +1045,9 @@ class _Table extends Component {
               columnWidths={columnsSettings.widths.map(el => (!el.width ? { ...el, width: 200 } : el))}
             />
             {columnReordering && <DragDropProvider />}
-            {showHeader && <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} cellComponent={HeaderCell} />}
+            {showHeader && (
+              <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} cellComponent={HeaderCell} />
+            )}
             <RowActionsFormatterProvider for={[columnActions]} />
 
             {treeDataType && (
