@@ -262,10 +262,12 @@ export default class PriceControl extends Component {
 }
 
 const PriceInput = styled(Input)`
-  width: ${props => (props.asSidebar ? '138px' : '110px')};
+  width: ${props => (props.asSidebar ? '70px' : '100px')};
   margin-right: 10px;
-  border-right: 1px solid #dee2e6;
   padding: 8px;
+  input {
+    background: #fdfdfd !important;
+  }
 `
 
 const ControlBox = styled.div`
@@ -293,5 +295,5 @@ const Box = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding-right: 10px;
-  ${props => !props.asSidebar && 'max-width: 170px;'}
+  ${props => (!props.asSidebar ? 'max-width: 170px;' : 'max-width: 180px;')}
 `

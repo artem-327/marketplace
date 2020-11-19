@@ -9,6 +9,8 @@ import { Broadcast } from '~/modules/broadcast'
 
 const ScrollableSegment = styled(Segment)`
   overflow-y: auto;
+  border-radius: 4px !important;
+  padding: 30px !important;
 `
 
 class PriceBook extends Component {
@@ -24,7 +26,7 @@ class PriceBook extends Component {
   }
   render() {
     return (
-      <ScrollableSegment padded='very' basic>
+      <ScrollableSegment padded basic>
         <Broadcast hideFobPrice isPrepared={!this.state.loading} asModal={false} />
       </ScrollableSegment>
     )
