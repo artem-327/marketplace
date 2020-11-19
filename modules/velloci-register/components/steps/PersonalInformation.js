@@ -177,6 +177,7 @@ function PersonalInformation({formikProps, intl: { formatMessage }, numberBenefi
                 </>
               }
               name={`verifyPersonalInformation[${i}].dateOfBirth`}
+              inputOnly
             />
           </ColumnCustom>
         </GridRow>
