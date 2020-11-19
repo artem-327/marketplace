@@ -61,16 +61,24 @@ class Operations extends Component {
     const datagridApiMap = {
       'shipping-quotes': {
         url: '/prodex/api/shipment/manual-quotes/datagrid',
-        searchToFilter: v =>
-          v && v.searchInput
-            ? [
-                {
-                  operator: 'LIKE',
-                  path: 'ShippingQuote.carrierName',
-                  values: [`%${v.searchInput}%`]
-                }
-              ]
-            : []
+        searchToFilter: v => {
+          let filter = { or: [], and: [] }
+          if (v && v.searchInput)
+            filter.or = [
+              {
+                operator: 'LIKE',
+                path: 'ShippingQuote.carrierName',
+                values: [`%${v.searchInput}%`]
+              },
+              /* #35358 path TBD
+              {
+                operator: 'LIKE',
+                path: 'ShippingQuote.quoteId',
+                values: [v.searchInput]
+              }*/
+            ]
+          return filter
+        }
       },
       tags: {
         url: '/prodex/api/tags/datagrid',
