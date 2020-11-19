@@ -264,8 +264,10 @@ export default class PriceControl extends Component {
 const PriceInput = styled(Input)`
   width: ${props => (props.asSidebar ? '138px' : '110px')};
   margin-right: 10px;
-  border-right: 1px solid #dee2e6;
   padding: 8px;
+  input {
+    background: #fdfdfd !important;
+  }
 `
 
 const ControlBox = styled.div`
