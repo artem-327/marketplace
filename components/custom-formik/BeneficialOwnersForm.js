@@ -88,6 +88,7 @@ class BeneficialOwnersForm extends Component {
                 </>
               }
               name={`beneficialOwners[${i}].dateOfBirth`}
+              inputOnly
             />
           </FormGroup>
         </>
