@@ -39,8 +39,7 @@ export default class Cart extends Component {
   }
 
   componentDidMount() {
-    // #35306 temporary commented (getCart() is called in top right icon update on page change)
-    // this.props.getCart()
+    this.props.getCart()
   }
 
   handleContinueShopping = () => {
