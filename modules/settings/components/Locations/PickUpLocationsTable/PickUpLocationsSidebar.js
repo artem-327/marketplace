@@ -265,7 +265,7 @@ class PickUpLocationsSidebar extends React.Component {
             type='text'
             label={
               <>
-                <FormattedMessage id='settings.pickUpLocationName' defaultMessage='Pick-Up Location Name' />
+                <FormattedMessage id='settings.pickUpLocationName' defaultMessage='Warehouse Name' />
                 <Required />
               </>
             }
@@ -273,7 +273,7 @@ class PickUpLocationsSidebar extends React.Component {
             inputProps={{
               placeholder: formatMessage({
                 id: 'settings.warehouses.enterWarehouseName',
-                defaultMessage: 'Enter Pick-Up Location Name'
+                defaultMessage: 'Enter Warehouse Name'
               })
             }}
           />

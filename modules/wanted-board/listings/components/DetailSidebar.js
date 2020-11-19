@@ -616,7 +616,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Delivery Location'>
+                            <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Customer Ship To'>
                               {text => text}
                             </FormattedMessage>
                           }
