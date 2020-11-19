@@ -30,7 +30,7 @@ class PickUpLocationsTable extends Component {
         {
           name: 'addressName',
           title: (
-            <FormattedMessage id='settings.pickupLocation' defaultMessage='Pick-Up Location'>
+            <FormattedMessage id='settings.pickupLocation' defaultMessage='Warehouse'>
               {text => text}
             </FormattedMessage>
           ),
