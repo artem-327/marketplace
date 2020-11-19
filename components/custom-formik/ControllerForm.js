@@ -114,6 +114,7 @@ class ControllerForm extends Component {
               </>
             }
             name='dwollaController.dateOfBirth'
+            inputOnly
           />
         </FormGroup>
       </>
