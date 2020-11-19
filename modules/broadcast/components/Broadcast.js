@@ -19,7 +19,8 @@ import {
   Header,
   GridRow,
   GridColumn,
-  Popup
+  Popup,
+  Table
 } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import { Input as FormikInput, Dropdown as FormikDropdown } from 'formik-semantic-ui-fixed-validation'
@@ -37,7 +38,17 @@ import {
   InputSearch,
   GridRowTable,
   ButtonSave,
-  ButtonTemplate
+  ButtonTemplate,
+  GridColumnFiltersModal,
+  GridRowTemplateModal,
+  GridRowFiltersModal,
+  IconFolder,
+  DivIcon,
+  GridModalTemplate,
+  CustomButtonDelete,
+  CustomButton,
+  FormFieldBroadcastAllButton,
+  UnpaddedRow
 } from './Broadcast.style'
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -52,30 +63,6 @@ import { errorMessages } from '~/constants/yupValidation'
 import confirm from '~/src/components/Confirmable/confirm'
 import { normalizeTree, getBroadcast, getNodeStatus } from '~/modules/broadcast/utils'
 import CompanyInfo from './CompanyInfo'
-const UnpaddedRow = {
-  Bottom: styled(GridRow)`
-    padding-bottom: 0px !important;
-  `,
-  Top: styled(GridRow)`
-    padding-top: 0px !important;
-  `
-}
-
-const CustomButton = styled(Button)`
-  &.ui.button.basic {
-    min-width: min-content !important;
-    padding: 7px !important;
-  }
-`
-
-const FormFieldBroadcastAllButton = styled(Form.Field)`
-  .ui.button.basic,
-  .ui.button.outline {
-    padding: 7px !important;
-    height: auto !important;
-    min-height: 40px;
-  }
-`
 
 class Broadcast extends Component {
   state = {
@@ -537,7 +524,7 @@ class Broadcast extends Component {
     if (getSafe(() => elementsParam.length, false)) {
       elementsParam.forEach(element => {
         if (!element.hidden) {
-          if (propertyName.length) {
+          if (Array.isArray(propertyName)) {
             propertyName.forEach(name => (element[name] = value))
           } else {
             element[propertyName] = value
@@ -588,10 +575,10 @@ class Broadcast extends Component {
     }
   }
 
-  handleTemplateDelete = async setFieldValue => {
+  handleTemplateDelete = async (setFieldValue, name, id) => {
     const { deleteTemplate, toastManager, intl } = this.props
     const { formatMessage } = intl
-    let { name, id } = this.state.selectedTemplate
+    //let { name, id } = this.state.selectedTemplate
     await confirm(
       formatMessage({ id: 'confirm.deleteTemplate.title' }),
       formatMessage({ id: 'confirm.deleteTemplate.content' }, { name })
@@ -612,6 +599,9 @@ class Broadcast extends Component {
   }
   getAssociationsDropdown = () => {
     const { associationsFetching, associations } = this.props
+    const options = getSafe(() => associations.length, '')
+      ? associations.map((a, i) => ({ key: i, text: a, value: a }))
+      : []
 
     return (
       <FieldInHeaderTable>
@@ -620,7 +610,10 @@ class Broadcast extends Component {
           value={this.state.associationFilter}
           selection
           loading={associationsFetching}
-          options={['ALL', 'Guest Company'].concat(associations).map((a, i) => ({ key: i, text: a, value: a }))}
+          options={[
+            { key: 'ALL', text: 'Association - All', value: 'ALL' },
+            { key: 'Guest Company', text: 'Guest Company', value: 'Guest Company' }
+          ].concat(options)}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
       </FieldInHeaderTable>
@@ -661,10 +654,98 @@ class Broadcast extends Component {
     )
   }
 
-  openTemplateModal = () => {
-    console.log('openTemplateModal====================================')
-    console.log()
-    console.log('====================================')
+  applyTemplate = async (e, name, id) => {
+    const { templates } = this.props
+    if (name) {
+      this.onTemplateSelected(
+        e,
+        {
+          options: templates.map(template => ({
+            key: template.id,
+            text: template.name,
+            value: template.id
+          })),
+          value: id
+        },
+        this.setFieldValue
+      )
+      this.setState({
+        selectedTemplate: {
+          id: id,
+          name: name
+        }
+      })
+      this.formChanged()
+    } else {
+      this.setFieldValue('name', id)
+      this.submitForm()
+      this.formChanged()
+    }
+  }
+
+  getModalTemplateContent = () => {
+    const { templates, templateSaving, templateDeleting } = this.props
+    return (
+      <GridModalTemplate>
+        <Grid.Row>
+          <Grid.Column>
+            <Table singleLine basic>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell colSpan='3'>
+                    <FormattedMessage id='broadcast.templateName' defaultMessage='Template Name' />
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+
+              <Table.Body>
+                {templateSaving || templateDeleting ? (
+                  <Dimmer active={true} inverted>
+                    <Loader active={true} />
+                  </Dimmer>
+                ) : Array.isArray(templates) && templates.length ? (
+                  templates.map(template => (
+                    <Table.Row>
+                      <Table.Cell width={12}>{template.name}</Table.Cell>
+
+                      <Table.Cell textAlign='right'>
+                        <CustomButton
+                          data-test='broadcast_modal_template_apply_btn'
+                          onClick={e => this.applyTemplate(e, template.name, template.id)}
+                          type='button'
+                          basic
+                          fluid>
+                          <FormattedMessage id='global.apply' defaultMessage='Apply' />
+                        </CustomButton>
+                      </Table.Cell>
+                      <Table.Cell textAlign='right'>
+                        <CustomButtonDelete
+                          data-test='broadcast_modal_template_delete_btn'
+                          onClick={() => this.handleTemplateDelete(this.setFieldValue, template.name, template.id)}
+                          type='button'
+                          basic
+                          fluid>
+                          <FormattedMessage id='global.delete' defaultMessage='Delete' />
+                        </CustomButtonDelete>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
+                ) : (
+                  <Table.Row>
+                    <Table.Cell width={12}>
+                      <FormattedMessage id='global.noRecords' defaultMessage='No records found.' />
+                    </Table.Cell>
+
+                    <Table.Cell></Table.Cell>
+                    <Table.Cell></Table.Cell>
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+          </Grid.Column>
+        </Grid.Row>
+      </GridModalTemplate>
+    )
   }
 
   getContent = () => {
@@ -709,6 +790,10 @@ class Broadcast extends Component {
       n => !n.hasChildren() && n.model.broadcast === 1 && n.model.type === 'branch'
     ).length
 
+    const options = getSafe(() => associations.length, '')
+      ? associations.map((a, i) => ({ key: i, text: a, value: a }))
+      : []
+
     return (
       <>
         <Form>
@@ -721,23 +806,35 @@ class Broadcast extends Component {
                 closeModalCompanyInfo={closeModalCompanyInfo}
               />
               <Grid>
-                <GridRow>
+                <GridRowTemplateModal>
                   <GridColumn>
-                    <ButtonTemplate
-                      data-test='broadcast_modal_template_btn'
-                      onClick={() => this.openTemplateModal()}
-                      type='button'
-                      basic
-                      fluid>
-                      {formatMessage({
-                        id: 'broadcast.select.templates',
-                        defaultMessage: 'Select From Templates'
+                    <Modal
+                      trigger={
+                        <ButtonTemplate data-test='broadcast_modal_template_btn' type='button' basic fluid>
+                          <DivIcon>
+                            <IconFolder />
+                            <div>
+                              <span>
+                                {formatMessage({
+                                  id: 'broadcast.select.templates',
+                                  defaultMessage: 'Select From Templates'
+                                })}
+                              </span>
+                            </div>
+                          </DivIcon>
+                        </ButtonTemplate>
+                      }
+                      header={formatMessage({
+                        id: 'broadcast.select.templates.title',
+                        defaultMessage: 'SELECT FROM TEMPLATES'
                       })}
-                    </ButtonTemplate>
+                      content={this.getModalTemplateContent()}
+                      actions={['Close']}
+                    />
                   </GridColumn>
-                </GridRow>
-                <GridRow>
-                  <GridColumn>
+                </GridRowTemplateModal>
+                <GridRowFiltersModal>
+                  <GridColumnFiltersModal>
                     <Form.Field data-test='broadcast_modal_search_inp'>
                       <InputSearch
                         name='search'
@@ -751,10 +848,10 @@ class Broadcast extends Component {
                         })}
                       />
                     </Form.Field>
-                  </GridColumn>
-                </GridRow>
-                <GridRow columns={3}>
-                  <GridColumn>
+                  </GridColumnFiltersModal>
+                </GridRowFiltersModal>
+                <GridRowFiltersModal columns={3}>
+                  <GridColumnFiltersModal firstColumn>
                     <DropdownInHeaderTable
                       fluid
                       data-test='broadcast_global_category_drpdn'
@@ -775,20 +872,21 @@ class Broadcast extends Component {
                         }
                       ]}
                     />
-                  </GridColumn>
-                  <GridColumn>
+                  </GridColumnFiltersModal>
+                  <GridColumnFiltersModal secondColumn>
                     <DropdownInHeaderTable
                       fluid
                       value={this.state.associationFilter}
                       selection
                       loading={associationsFetching}
-                      options={['ALL', 'Guest Company']
-                        .concat(associations)
-                        .map((a, i) => ({ key: i, text: a, value: a }))}
+                      options={[
+                        { key: 'ALL', text: 'Association - All', value: 'ALL' },
+                        { key: 'Guest Company', text: 'Guest Company', value: 'Guest Company' }
+                      ].concat(options)}
                       onChange={(_e, { value }) => this.setState({ associationFilter: value })}
                     />
-                  </GridColumn>
-                  <GridColumn>
+                  </GridColumnFiltersModal>
+                  <GridColumnFiltersModal thirdColumn>
                     <DropdownInHeaderTable
                       fluid
                       data-test='broadcast_global_broadcast_drpdn'
@@ -814,8 +912,8 @@ class Broadcast extends Component {
                         }
                       ]}
                     />
-                  </GridColumn>
-                </GridRow>
+                  </GridColumnFiltersModal>
+                </GridRowFiltersModal>
                 {false && (
                   <GridRow>
                     <GridColumn>
@@ -1121,9 +1219,8 @@ class Broadcast extends Component {
               width={16}
               stretched
               style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
-              <Rule.Root
-                style={asSidebar ? { flexBasis: '298px' } : { overflowY: 'scroll', flexBasis: '198px', margin: '0px' }}>
-                <Rule.Header style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
+              <Rule.Root asSidebar={asSidebar}>
+                <Rule.Header asSidebar={asSidebar}>
                   <Rule.Toggle
                     style={
                       asSidebar
@@ -1194,7 +1291,7 @@ class Broadcast extends Component {
                   </Rule.Toggle>
                   <Rule.Toggle style={!asSidebar ? { maxWidth: '60px' } : { maxWidth: '50px' }}></Rule.Toggle>
                 </Rule.Header>
-                <Rule.Content style={asSidebar ? { flex: '1 0 auto', overflowY: 'hidden' } : null}>
+                <Rule.Content asSidebar={asSidebar}>
                   <RuleItem
                     changeInModel={this.changeInModel}
                     loadingChanged={this.props.loadingChanged}

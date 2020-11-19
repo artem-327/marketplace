@@ -79,14 +79,17 @@ const RuleItem = props => {
   }
 
   let companyName = findCompany()
+  let styleRow = asSidebar ? { 'justify-content': 'flex-end' } : {}
+  styleRow = item.model.rule.expanded ? { ...styleRow, background: '#eff9ff' } : styleRow
 
   return (
     <>
       <Rule.Row
+        asSidebar={asSidebar}
         type={rule.type}
         onClick={() => rule.type !== 'root' && handleRowClick(item)}
         data-test='broadcast_rule_row_click'
-        style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
+        style={styleRow}>
         <Rule.Toggle
           style={
             asSidebar ? { flex: '0 0 62px' } : { flex: '0 0 88px', maxWidth: '60px', paddingLeft: '0 !important' }
