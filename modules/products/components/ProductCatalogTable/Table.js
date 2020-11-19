@@ -289,7 +289,7 @@ class ProductCatalogTable extends Component {
                 {this.getActionItems(this.getRowActions(row), row)}
               </Dropdown.Menu>
             </RowDropdown>
-            <SpanText onClick={() => editEchoProductChangeTab(0, true, row.id)}>
+            <SpanText onClick={() => editEchoProductChangeTab(0, true, { id: row.id })}>
               {row.name}
             </SpanText>
           </DivRow>
