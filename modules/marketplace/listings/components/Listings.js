@@ -28,7 +28,7 @@ const defaultHiddenColumns = [
   'expiration',
   'condition',
   'form',
-  'location',
+  'manufacturer',
   'association',
   'notes',
   'leadTime'
@@ -98,6 +98,16 @@ const FiltersRow = styled.div`
 
 const DivRow = styled.div`
   display: flex !important;
+  
+  > div {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+  
+  > span {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
 `
 
 const SpanText = styled.span`
@@ -117,6 +127,7 @@ const DivIcons = styled.div`
   position: -webkit-sticky !important;
   position: sticky !important;
   right: 0px !important;
+  float: right;
   display: flex !important;
   margin-left: 10px !important;
 `
@@ -181,31 +192,9 @@ class Listings extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 180,
+          width: 430,
           sortPath: 'ProductOffer.companyProduct.intProductName',
           allowReordering: false
-        },
-        {
-          name: 'fobPrice',
-          title: (
-            <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160,
-          align: 'right',
-          sortPath: 'ProductOffer.cfPricePerUOM'
-        },
-        {
-          name: 'available',
-          title: (
-            <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 140,
-          align: 'right',
-          sortPath: 'ProductOffer.pkgAvailable'
         },
         {
           name: 'packaging',
@@ -217,6 +206,17 @@ class Listings extends Component {
           width: 140
         },
         {
+          name: 'available',
+          title: (
+            <FormattedMessage id='marketplace.available' defaultMessage='Avail PKGs'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140,
+          align: 'right',
+          sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
           name: 'quantity',
           title: (
             <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>
@@ -226,6 +226,26 @@ class Listings extends Component {
           width: 140,
           align: 'right',
           sortPath: 'ProductOffer.quantity'
+        },
+        {
+          name: 'location',
+          title: (
+            <FormattedMessage id='marketplace.location' defaultMessage='Location'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        {
+          name: 'fobPrice',
+          title: (
+            <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160,
+          align: 'right',
+          sortPath: 'ProductOffer.cfPricePerUOM'
         },
         {
           name: 'manufacturer',
@@ -276,15 +296,6 @@ class Listings extends Component {
           ),
           width: 100,
           sortPath: 'ProductOffer.form.name'
-        },
-        {
-          name: 'location',
-          title: (
-            <FormattedMessage id='marketplace.location' defaultMessage='Location'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160
         },
         {
           name: 'association',
@@ -432,7 +443,13 @@ class Listings extends Component {
             }>
             <Dropdown.Menu>{this.getActionItems(this.getRowActions(r), r)}</Dropdown.Menu>
           </RowDropdown>
-          <SpanText onClick={() => this.tableRowClicked(r.id)}>{r.intProductName}</SpanText>
+          <span>
+            <SpanText className='buy-offer' onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              this.tableRowClicked(r.id)
+            }}>{r.intProductName}</SpanText>
+          </span>
           <DivIcons>
             {r.expired ? (
               <Popup
@@ -631,12 +648,12 @@ class Listings extends Component {
               }
               */
             }
-            onRowClick={(e, row) => {
+            /*onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
                 this.tableRowClicked(row.id, false, true)
               }
-            }}
+            }}*/
             data-test='marketplace_listings_row_action'
           />
         </div>

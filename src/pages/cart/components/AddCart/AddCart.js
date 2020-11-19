@@ -1848,6 +1848,7 @@ class AddCart extends Component {
         onHide={e => {
           try {
             if (
+              !(getSafe(() => e.path[0].classList.contains('buy-offer'), false)) &&
               !(getSafe(() => e.path[0], '') instanceof HTMLTableCellElement) &&
               !(getSafe(() => e.path[1], '') instanceof HTMLTableCellElement) &&
               !(getSafe(() => e.path[3], '') instanceof HTMLTableCellElement) &&

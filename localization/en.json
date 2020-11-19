@@ -2212,7 +2212,7 @@
   "logistics.reinvoice": "Re-Invoice",
   "logistics.note": "Note",
   "logistics.emailInfo": "When generated, BOL will be sent to provided email addresses. If kept empty, BOL will not be sent automatically.",
-  "marketplace.available": "Available PKGs",
+  "marketplace.available": "Avail PKGs",
   "marketplace.packaging": "Packaging",
   "marketplace.quantity": "Quantity",
   "marketplace.fobPrice": "FOB Price",
