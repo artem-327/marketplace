@@ -12,6 +12,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { PriceField } from '~/styles/styledComponents'
 import { currency } from '~/constants/index'
+import { FormattedNumber } from 'react-intl'
 
 import {
   Segment,
@@ -80,6 +81,7 @@ import {
   CustomLabel
 } from '../../constants/layout'
 import ErrorFocus from '~/components/error-focus'
+import QuickEditPricingPopup from '~/modules/inventory/my-listings/components/QuickEditPricingPopup'
 
 const tdsArray = [
   { property: 'name', specifications: 'value1' },
@@ -135,6 +137,33 @@ const IconTrash = styled(Trash)`
 
 const DivIconPlusCircle = styled.div`
   margin: 0;
+`
+
+const FobPrice = styled.div`
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  cursor: pointer;
+
+  &:hover {
+    //text-decoration-style: solid;
+    text-decoration: none;
+    font-weight: bold;
+    color: #2599d5;
+  }
+`
+
+const StyledPopup = styled(Popup)`
+  max-width: 90% !important;
+  padding: 0 !important;
+  border-radius: 4px;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+
+  .ui.form {
+    width: 570px;
+    padding: 0;
+  }
 `
 
 const initValues = {
@@ -1233,23 +1262,19 @@ class DetailSidebar extends Component {
                                           options={this.props.autocompleteData.map((el, i) => {
                                             const code = getSafe(() => el.intProductCode, '')
                                             const name = getSafe(() => el.intProductName, '')
-                                            const dispName = code && name
-                                              ? `${name} (${code})`
-                                              : (code ? code : name)
+                                            const dispName = code && name ? `${name} (${code})` : code ? code : name
                                             const packagingSize = getSafe(() => el.packagingSize, '')
                                             const packagingUnit = getSafe(() => el.packagingUnit.nameAbbreviation, '')
                                             const packagingType = getSafe(() => el.packagingType.name, '')
                                             return {
                                               key: i,
-                                              text:
+                                              text: (
                                                 <>
                                                   {`${dispName}: ${packagingSize} ${packagingUnit} `}
-                                                  <span style={{ textTransform: 'capitalize' }}>
-                                                    {packagingType}
-                                                  </span>
-                                                </>,
+                                                  <span style={{ textTransform: 'capitalize' }}>{packagingType}</span>
+                                                </>
+                                              ),
                                               value: el.id
-
                                             }
                                           })}
                                           inputProps={{
