@@ -12,6 +12,9 @@ import styled from 'styled-components'
 import { Label } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 
+import GenericProductRequest from './message-details/GenericProductRequest'
+import ShippingQuoteRequest from './message-details/ShippingQuoteRequest'
+
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
   height: 22px !important;
@@ -86,7 +89,8 @@ class Table extends Component {
         sortPath: 'Message.readAt',
         width: 160
       }
-    ]
+    ],
+    expandedRowIds: []
   }
 
   statusLabel = (row, val) => {
@@ -131,6 +135,21 @@ class Table extends Component {
     })
   }
 
+  getRowDetail = ({ row }) => {
+    const messageType = 'Shipping_Quote_Request'  // Debug Test
+
+    const messageDetailTable = {
+      'Generic_Product_Request': <GenericProductRequest row={row} />,
+      'Shipping_Quote_Request': <ShippingQuoteRequest row={row} />,
+    }
+
+    return (
+      <>
+        {messageDetailTable[messageType] || <p>This page is still under construction</p>}
+      </>
+    )
+  }
+
   handleClickOnUnread = async row => {
     const { datagrid, getCategories, markSeen, getCountUnseen } = this.props
     try {
@@ -167,7 +186,7 @@ class Table extends Component {
     const { intl, datagrid, markSeenSending, menuStatusFilter } = this.props
 
     const { formatMessage } = intl
-    const { columns } = this.state
+    const { columns, expandedRowIds } = this.state
 
     return (
       <React.Fragment>
@@ -177,7 +196,11 @@ class Table extends Component {
             {...datagrid.tableProps}
             loading={datagrid.loading || markSeenSending}
             columns={columns}
+            rowDetailType={true}
             rows={this.getRows()}
+            rowDetail={this.getRowDetail}
+            expandedRowIds={expandedRowIds}
+            onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
           />
         </div>
       </React.Fragment>

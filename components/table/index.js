@@ -24,7 +24,8 @@ import {
   TableColumnVisibility,
   VirtualTableState,
   TreeDataState,
-  CustomTreeData
+  CustomTreeData,
+  RowDetailState
 } from '@devexpress/dx-react-grid'
 import {
   Grid,
@@ -35,7 +36,8 @@ import {
   TableColumnReordering,
   VirtualTable,
   TableColumnResizing,
-  TableTreeColumn
+  TableTreeColumn,
+  TableRowDetail
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
 import { getSafe } from '~/utils/functions'
@@ -393,6 +395,7 @@ class _Table extends Component {
       })
     ),
     rows: pt.arrayOf(pt.any),
+    rowDetail: pt.func,
     columnReordering: pt.bool,
     rowSelection: pt.bool,
     showSelectAll: pt.bool,
@@ -402,6 +405,7 @@ class _Table extends Component {
     virtual: pt.bool,
     sorting: pt.bool,
     treeDataType: pt.bool,
+    rowDetailType: pt.bool,
     groupBy: pt.array,
     defaultSelection: pt.array,
     onSelectionChange: pt.func,
@@ -445,6 +449,8 @@ class _Table extends Component {
     virtual: true,
     sorting: true,
     treeDataType: false,
+    rowDetailType: false,
+    rowDetail: () => {},
     groupBy: [],
     defaultHiddenColumns: [],
     singleSelection: false,
@@ -887,6 +893,7 @@ class _Table extends Component {
   render() {
     const {
       rows,
+      rowDetail,
       columns,
       filterValue,
       columnReordering,
@@ -902,6 +909,7 @@ class _Table extends Component {
       virtual,
       sorting,
       treeDataType,
+      rowDetailType,
       onSortingChange,
       integratedSorting,
       groupBy,
@@ -1018,6 +1026,10 @@ class _Table extends Component {
             )}
             {treeDataType && <CustomTreeData getChildRows={getChildRows} />}
 
+            {rowDetailType && (
+              <RowDetailState expandedRowIds={expandedRowIds} onExpandedRowIdsChange={onExpandedRowIdsChange} />
+            )}
+
             {virtual ? (
               <VirtualTable
                 columnExtensions={this.getColumnsExtension()}
@@ -1057,6 +1069,12 @@ class _Table extends Component {
                 expandButtonComponent={() => {
                   return null
                 }}
+              />
+            )}
+
+            {rowDetailType && (
+              <TableRowDetail
+                contentComponent={rowDetail}
               />
             )}
 
