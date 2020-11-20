@@ -582,16 +582,14 @@ class PurchaseOrder extends Component {
                           </>
                         )}
 
-                      {this.state.selectedAddress && (
-                        <FreightLabel
-                          echoFreight={echoFreight}
-                          setFieldValue={(fieldName, value) => {
-                            shippingQuoteSelected(null)
-                            setFieldValue(fieldName, value)
-                            if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
-                          }}
-                        />
-                      )}
+                      <FreightLabel
+                        echoFreight={echoFreight}
+                        setFieldValue={(fieldName, value) => {
+                          shippingQuoteSelected(null)
+                          setFieldValue(fieldName, value)
+                          if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
+                        }}
+                      />
                     </Grid>
                   </Segment>
                   <Segment>
