@@ -79,7 +79,6 @@ import {
   CustomLabel
 } from '../../constants/layout'
 import ErrorFocus from '~/components/error-focus'
-import QuickEditPricingPopup from '~/modules/inventory/my-listings/components/QuickEditPricingPopup'
 
 const tdsArray = [
   { property: 'name', specifications: 'value1' },
