@@ -171,13 +171,15 @@ class Table extends Component {
 
     return (
       <React.Fragment>
-        <ProdexTable
-          tableName={`operations_tag_${menuStatusFilter}`}
-          {...datagrid.tableProps}
-          loading={datagrid.loading || markSeenSending}
-          columns={columns}
-          rows={this.getRows()}
-        />
+        <div className='flex stretched inventory-wrapper listings-wrapper'>
+          <ProdexTable
+            tableName={`operations_tag_${menuStatusFilter}`}
+            {...datagrid.tableProps}
+            loading={datagrid.loading || markSeenSending}
+            columns={columns}
+            rows={this.getRows()}
+          />
+        </div>
       </React.Fragment>
     )
   }

@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Input } from 'semantic-ui-react'
+import { Button, Input, Dropdown } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 
 import * as Actions from '../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
+import { Drafts, Mail, DeleteForever } from '@material-ui/icons'
 
 const CustomDiv = styled.div`
   display: flex;
@@ -50,6 +51,45 @@ const StyledButtonsGroup = styled(Button.Group)`
     border: solid 1px #dee2e6;
     background-color: #edeef2;
     color: #20273a;
+  }
+`
+
+export const MoreDropdown = styled(Dropdown)`
+  height: 40px;
+  border-radius: 3px;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+
+  padding: 10px 20px;
+
+  &.active {
+    background-color: #edeef2;
+  }
+
+  .item {
+    font-size: 14px;
+    color: #20273a;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 2.57;
+    display: flex !important;
+
+    .menu-icon {
+      width: 18px;
+      height: 20px;
+      color: #cecfd4;
+      margin-right: 11px;
+    }
+    &:hover {
+      background-color: #edeef2;
+
+      .menu-icon {
+        color: #20273a;
+      }
+    }
   }
 `
 
@@ -156,6 +196,31 @@ class TablesHandlers extends Component {
           </div>
         </div>
         <div>
+          <div className='column'>
+            <MoreDropdown
+              className='ui dropdown-menu pointing'
+              icon={null}
+              text={formatMessage({ id: 'alerts.dropdown.more', defaultMessage: 'More ...' })}
+            >
+              <Dropdown.Menu data-test='notifications_menu_more_drpdn'>
+                <Dropdown.Item
+                  onClick={() => {}}>
+                  <Drafts className={'menu-icon'} />
+                  <FormattedMessage id='alerts.dropdown.markAsRead' defaultMessage='Mark as read' />
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {}}>
+                  <Drafts className={'menu-icon'} />
+                  <FormattedMessage id='alerts.dropdown.markAsUnread' defaultMessage='Mark as unread' />
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {}}>
+                  <Drafts className={'menu-icon'} />
+                  <FormattedMessage id='alerts.dropdown.delete' defaultMessage='Delete' />
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </MoreDropdown>
+          </div>
           <div className='column' style={{ marginRight: '9px' }}>
             <StyledButtonsGroup>
               <Button
