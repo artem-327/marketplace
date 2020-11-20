@@ -11,8 +11,6 @@ import styled from 'styled-components'
 import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { PriceField } from '~/styles/styledComponents'
-import { currency } from '~/constants/index'
-import { FormattedNumber } from 'react-intl'
 
 import {
   Segment,
@@ -137,33 +135,6 @@ const IconTrash = styled(Trash)`
 
 const DivIconPlusCircle = styled.div`
   margin: 0;
-`
-
-const FobPrice = styled.div`
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  cursor: pointer;
-
-  &:hover {
-    //text-decoration-style: solid;
-    text-decoration: none;
-    font-weight: bold;
-    color: #2599d5;
-  }
-`
-
-const StyledPopup = styled(Popup)`
-  max-width: 90% !important;
-  padding: 0 !important;
-  border-radius: 4px;
-  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
-  border: solid 1px #dee2e6;
-  background-color: #ffffff;
-
-  .ui.form {
-    width: 570px;
-    padding: 0;
-  }
 `
 
 const initValues = {
