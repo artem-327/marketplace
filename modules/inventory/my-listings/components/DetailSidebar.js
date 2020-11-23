@@ -11,7 +11,6 @@ import styled from 'styled-components'
 import confirm from '~/src/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { PriceField } from '~/styles/styledComponents'
-import { currency } from '~/constants/index'
 
 import {
   Segment,
@@ -1233,23 +1232,19 @@ class DetailSidebar extends Component {
                                           options={this.props.autocompleteData.map((el, i) => {
                                             const code = getSafe(() => el.intProductCode, '')
                                             const name = getSafe(() => el.intProductName, '')
-                                            const dispName = code && name
-                                              ? `${name} (${code})`
-                                              : (code ? code : name)
+                                            const dispName = code && name ? `${name} (${code})` : code ? code : name
                                             const packagingSize = getSafe(() => el.packagingSize, '')
                                             const packagingUnit = getSafe(() => el.packagingUnit.nameAbbreviation, '')
                                             const packagingType = getSafe(() => el.packagingType.name, '')
                                             return {
                                               key: i,
-                                              text:
+                                              text: (
                                                 <>
                                                   {`${dispName}: ${packagingSize} ${packagingUnit} `}
-                                                  <span style={{ textTransform: 'capitalize' }}>
-                                                    {packagingType}
-                                                  </span>
-                                                </>,
+                                                  <span style={{ textTransform: 'capitalize' }}>{packagingType}</span>
+                                                </>
+                                              ),
                                               value: el.id
-
                                             }
                                           })}
                                           inputProps={{

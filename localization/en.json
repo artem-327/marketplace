@@ -2705,7 +2705,7 @@
   "validation.minOneCompany": "At least one company should be selected",
   "dashboard.title": "Analytics Dashboard",
   "dashboard.totalCompanies.title": "Companies",
-  "dashboard.totalGuestCompanies.title": "Guest",
+  "dashboard.totalGuestCompanies.title": "Guests",
   "dashboard.totalProducts.title": "Products",
   "dashboard.totalGuestProducts.title": "Total Products",
   "dashboard.totalValue.title": "Total Products Value",
