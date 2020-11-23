@@ -169,7 +169,6 @@ function PersonalInformation({
               isSubmitting={formikProps.isSubmitting}
               setErrors={formikProps.setErrors}
               placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
-              isInputCountryCode={registerBeneficialOwner}
             />
           </ColumnCustom>
         </GridRow>
@@ -200,6 +199,7 @@ function PersonalInformation({
               values={formikProps.values}
               displayHeader={false}
               required={true}
+              searchEnabled={!registerBeneficialOwner}
               additionalCountryInputProps={{ disabled: true }}
               setFieldValue={formikProps.setFieldValue}>
               <Rectangle style={{ margin: '0px 0px 10px 0px' }}>

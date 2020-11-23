@@ -24,12 +24,14 @@ import ErrorPage from '~/modules/errors'
 
 class RegisterBeneficialOwner extends Component {
   state = {
+    tokenOk: false,
     isLoading: true
   }
   componentDidMount = async () => {
     const { token, checkMagicToken } = this.props
     try {
       await checkMagicToken(token)
+      this.setState({ tokenOk: true, isLoading: false })
     } catch (e) {
       console.error(e)
     } finally {
@@ -126,7 +128,7 @@ class RegisterBeneficialOwner extends Component {
       magicToken: { data }
     } = this.props
 
-    const { isLoading } = this.state
+    const { tokenOk, isLoading } = this.state
 
     if (isLoading) {
       return (
@@ -134,7 +136,7 @@ class RegisterBeneficialOwner extends Component {
           <Loader active={true} />
         </Dimmer>
       )
-    } else if (!isLoading && !data) {
+    } else if (!isLoading && !tokenOk) {
       return <ErrorPage type='forbidden' status='403' />
     } else {
       return (
