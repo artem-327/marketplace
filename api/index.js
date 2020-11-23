@@ -48,7 +48,7 @@ customAxios.interceptors.response.use(
 
     const hasWindow = typeof window !== 'undefined'
 
-    if (status === 401 || status === 403) {
+    if (status === 401) {
       return resetTokenAndReattemptRequest(error)
     }
 
@@ -161,6 +161,7 @@ async function resetTokenAndReattemptRequest(error) {
     }
     return retryOriginalRequest
   } catch (err) {
+    Router.push('/auth/logout')
     return Promise.reject(err)
   }
 }
