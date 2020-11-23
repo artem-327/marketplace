@@ -43,7 +43,13 @@ const GridRowTitle = styled.div`
   font-weight: 500;
 `
 
-function PersonalInformation({formikProps, intl: { formatMessage }, numberBeneficialOwners, businessRoles, registerBeneficialOwner }) {
+function PersonalInformation({
+  formikProps,
+  intl: { formatMessage },
+  numberBeneficialOwners,
+  businessRoles,
+  registerBeneficialOwner
+}) {
   let forms = []
   for (let i = 0; i <= numberBeneficialOwners; i++) {
     forms.push(
@@ -163,6 +169,7 @@ function PersonalInformation({formikProps, intl: { formatMessage }, numberBenefi
               isSubmitting={formikProps.isSubmitting}
               setErrors={formikProps.setErrors}
               placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
+              isInputCountryCode={registerBeneficialOwner}
             />
           </ColumnCustom>
         </GridRow>
@@ -215,7 +222,7 @@ function PersonalInformation({formikProps, intl: { formatMessage }, numberBenefi
             </AddressForm>
           </GridColumn>
         </GridRow>
-        <GridRow columns={registerBeneficialOwner ? 2: 3}>
+        <GridRow columns={registerBeneficialOwner ? 2 : 3}>
           <ColumnCustom>
             <Input
               name={`verifyPersonalInformation[${i}].businessTitle`}

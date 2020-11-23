@@ -387,7 +387,7 @@ class VellociRegister extends Component {
                       </FormRectangle>
                     </Grid>
                     <ErrorFocus />
-                    {emailPopup.isOpen && (<BeneficialOwnersPopup />)}
+                    {emailPopup.isOpen && <BeneficialOwnersPopup />}
                   </Form>
                 )
               }}

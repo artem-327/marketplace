@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Grid, Form } from 'semantic-ui-react'
+import { Grid, Form, Dimmer, Loader } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import moment from 'moment'
+import Router from 'next/router'
 //Components
 import {
   errorMessages,
@@ -11,28 +12,28 @@ import {
   websiteValidationNotRequired,
   dateValidation
 } from '~/constants/yupValidation'
-
 import FormRectangle from './FormRectangle'
 import PersonalInformation from './steps/PersonalInformation'
-import {titleIds, subtitleIds, initialValues, titleForms} from '../constants'
+import { titleIds, subtitleIds, initialValues, titleForms } from '../constants'
 import ErrorFocus from '~/components/error-focus'
 import { PHONE_REGEXP } from '~/src/utils/constants'
 import { getStringISODate } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
 import { removeEmpty } from '~/utils/functions'
+import ErrorPage from '~/modules/errors'
 
 class RegisterBeneficialOwner extends Component {
   state = {
-    tokenOk: false
+    isLoading: true
   }
-
   componentDidMount = async () => {
     const { token, checkMagicToken } = this.props
     try {
-      const response = await checkMagicToken(token)
-      this.setState({ tokenOk: true })
+      await checkMagicToken(token)
     } catch (e) {
       console.error(e)
+    } finally {
+      this.setState({ isLoading: false })
     }
   }
 
@@ -98,7 +99,6 @@ class RegisterBeneficialOwner extends Component {
       removeEmpty(body)
 
       await registerBeneficialOwner(body, token)
-
     } catch (error) {
       console.error(error)
     } finally {
@@ -119,54 +119,59 @@ class RegisterBeneficialOwner extends Component {
 
   render() {
     const {
-      isLoadingSubmitButton
+      isLoadingSubmitButton,
+      magicToken: { loading, data }
     } = this.props
 
-    const { tokenOk } = this.state
+    const { isLoading } = this.state
 
-    return (
-      <>
-        { true || tokenOk ? (
-          <Formik
-            onSubmit={this.handleSubmit}
-            enableReinitialize
-            validateOnChange={true}
-            initialValues={initialValues}
-            validationSchema={this.getValidationSchema()}
-            render={formikProps => {
-              this.formikProps = formikProps
-              return (
-                <Form>
-                  <Grid verticalAlign='middle' centered>
-                    <FormRectangle
+    if (loading || isLoading) {
+      return (
+        <Dimmer active={true} inverted>
+          <Loader active={true} />
+        </Dimmer>
+      )
+    } else if (!loading && !isLoading && !data) {
+      return <ErrorPage type='forbidden' status='403' />
+    } else {
+      return (
+        <Formik
+          onSubmit={this.handleSubmit}
+          enableReinitialize
+          validateOnChange={true}
+          initialValues={initialValues}
+          validationSchema={this.getValidationSchema()}
+          render={formikProps => {
+            this.formikProps = formikProps
+            return (
+              <Form>
+                <Grid verticalAlign='middle' centered>
+                  <FormRectangle
+                    formikProps={formikProps}
+                    title={titleIds[5]}
+                    subtitle={subtitleIds[5]}
+                    prevStep={5}
+                    submitForm={this.submitForm}
+                    activeStep={5}
+                    numberBeneficialOwners={0}
+                    countBeneficialOwners={1}
+                    isLoadingSubmitButton={isLoadingSubmitButton}
+                    registerBeneficialOwner={true}>
+                    <PersonalInformation
                       formikProps={formikProps}
-                      title={titleIds[5]}
-                      subtitle={subtitleIds[5]}
-                      prevStep={5}
-                      submitForm={this.submitForm}
-                      activeStep={5}
+                      businessRoles={[]}
                       numberBeneficialOwners={0}
-                      countBeneficialOwners={1}
-                      isLoadingSubmitButton={isLoadingSubmitButton}
-                      registerBeneficialOwner={true}>
-                      <PersonalInformation
-                        formikProps={formikProps}
-                        businessRoles={[]}
-                        numberBeneficialOwners={0}
-                        registerBeneficialOwner={true}
-                      />
-                    </FormRectangle>
-                  </Grid>
-                  <ErrorFocus />
-                </Form>
-              )
-            }}
-          />
-        ) : (
-          <div>Token is not valid!</div>
-        )}
-      </>
-    )
+                      registerBeneficialOwner={true}
+                    />
+                  </FormRectangle>
+                </Grid>
+                <ErrorFocus />
+              </Form>
+            )
+          }}
+        />
+      )
+    }
   }
 }
 
