@@ -4,12 +4,22 @@ context("Inventory Broadcasting", () => {
 
     before(function () {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getInventoryDatagridBody(token).then(inventoryBody => {
-                //TODO Found out why some assigning doesn't work
-                let idHelper = inventoryBody[0].id
+            cy.getMyProductsBody(token).then(productBody => {
+                let productId = productBody[ 0 ].id
+                cy.getFirstEntityWithFilter(token, 'branches/warehouses', []).then(warehouseId => {
+                    cy.createProductOffer(token, productId, warehouseId).then(offer => {
+                        let idHelper = offer
 
-                offerId = idHelper
+                        offerId = idHelper
+                    })
+                })
             })
+        })
+    })
+
+    after(function () {
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.deleteEntity(token, 'product-offers', offerId)
         })
     })
 
@@ -27,7 +37,7 @@ context("Inventory Broadcasting", () => {
 
         cy.waitForUI()
         cy.visit("/inventory/my-listings")
-        cy.wait("@inventoryLoading", {timeout: 100000})
+        cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.url().should("include", "inventory")
     })
 
@@ -89,7 +99,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
-        cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(8)
@@ -117,7 +127,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
-        cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -143,7 +153,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
-        cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
 
         cy.contains("Canada").click()
 
@@ -181,7 +191,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
-        cy.get("[data-test=broadcast_rule_row_click]", {timeout: 10000}).should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
 
         cy.get("[data-test=broadcast_modal_category_drpdn]").click()
         cy.contains("By Company").click()

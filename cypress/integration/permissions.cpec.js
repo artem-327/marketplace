@@ -102,17 +102,16 @@ context("Permissions tests",() => {
         cy.url().should("include", "inventory")
         cy.contains("No records found.")
 
+        cy.get("[data-test='navigation_menu_inventory_my_products_drpdn']").click()
+        cy.wait('@loading')
+        cy.get("table:nth-child(2) > tbody > tr:nth-child(1)").should('be.visible')
+
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
         cy.wait('@loading')
         cy.contains("No records found.")
 
         cy.waitForUI()
-        cy.get("[data-test='navigation_menu_settings_drpdn']").click()
-        cy.get("[data-test='navigation_settings_warehouses_drpdn']").should('not.exist')
-
-        cy.get("[data-test='navigation_settings_products_drpdn']").click()
-        cy.wait('@loading')
-        cy.get("[data-test='table_row_action']").eq(1).should('be.visible')
+        cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
     })
 
     it("Echo Operator permissions", () =>{

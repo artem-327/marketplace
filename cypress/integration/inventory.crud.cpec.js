@@ -6,11 +6,11 @@ context("Inventory CRUD", () => {
 
     before(function () {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getInventoryDatagridBody(token).then(inventoryBody => {
+            cy.getMyProductsBody(token).then(productBody => {
                 // cy.deleteEntity(token,'product-offers',inventoryBody[0].id)
                 //TODO Found out why some assigning doesn't work
-                let helper = inventoryBody[ 1 ].companyProduct.intProductName
-                let idHelper = inventoryBody[ 1 ].companyProduct.id
+                let helper = productBody[ 0 ].intProductCode
+                let idHelper = productBody[ 0 ].id
 
                 productName = helper
                 filter = [{ "operator": "EQUALS", "path": "ProductOffer.companyProduct.id", "values": [idHelper] }]

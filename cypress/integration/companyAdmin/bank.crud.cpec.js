@@ -1,5 +1,10 @@
 context("Prodex Bank Account CRUD", () => {
     const userJSON = require('../../fixtures/user.json')
+    let accountName = null
+
+    before(function () {
+        accountName = Math.floor(Date.now() / 1000)
+    })
 
     beforeEach(function () {
         cy.server()
@@ -15,6 +20,7 @@ context("Prodex Bank Account CRUD", () => {
         cy.wait("@inventoryLoading", {timeout: 100000})
         cy.openSettings()
         cy.wait("@settingsLoading",{timeout: 100000})
+        cy.waitForUI()
         cy.waitForUI()
         cy.contains("Bank Accounts").click()
 
@@ -41,7 +47,7 @@ context("Prodex Bank Account CRUD", () => {
             cy.get("div[role='option']").eq(0).click()
         })
 
-        cy.enterText("#field_input_name", "David Tester")
+        cy.get("#field_input_name").type(accountName)
         cy.enterText("#field_input_routingNumber", "123103729")
 
         cy.waitForUI()
@@ -51,7 +57,7 @@ context("Prodex Bank Account CRUD", () => {
     })
 
     it("Initiate Verification bank account", () => {
-        cy.get("input[type=text]").type("David Tester")
+        cy.get("input[type=text]").type(accountName)
 
         cy.waitForUI()
 
@@ -65,7 +71,7 @@ context("Prodex Bank Account CRUD", () => {
     })
 
     it("Complete Verification bank account", () => {
-        cy.get("input[type=text]").type("David Tester")
+        cy.get("input[type=text]").type(accountName)
         cy.waitForUI()
 
         cy.get("[data-test='table_row_action']").eq(0).within(() => {
@@ -94,7 +100,7 @@ context("Prodex Bank Account CRUD", () => {
     })
 
     it("Deletes a bank account", () => {
-        cy.searchInList("David Tester")
+        cy.searchInList(accountName)
 
         cy.waitForUI()
 

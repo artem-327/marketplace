@@ -305,6 +305,34 @@ Cypress.Commands.add("getFirstCasProductWithFilter", (token, filter) => {
     })
 })
 
+Cypress.Commands.add("getMyProductsBody", (token) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/company-products/datagrid?type=ALL',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageSize: 50, orFilters: []}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body
+    })
+})
+
+Cypress.Commands.add("createProductOffer", (token, companyProduct, warehouse) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-offers/',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {"broadcasted":false,"companyProduct":companyProduct,"conforming":true,"inStock":false,"leadTime":1,"minPkg":1,"pkgAvailable":10,"pricingTiers":[{"pricePerUOM":2,"quantityFrom":1}],"splitPkg":1,"warehouse":warehouse}
+    }).then((response) => {
+        expect(response.status).to.eq(201)
+        return response.body.id
+    })
+})
+
 Cypress.Commands.add("getFirstEntityWithFilter", (token, entity, filter) => {
     cy.request({
         method: 'POST',

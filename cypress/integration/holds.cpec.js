@@ -10,7 +10,7 @@ context("Holds tests", () => {
         cy.viewport(2750, 3000)
         cy.server()
         cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
+        cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid**').as('marketplaceLoading')
         cy.route("POST", '/prodex/api/holds/my/datagrid/').as('holdLoading')
         cy.route("PATCH", '**/approve').as('holdApprove')
 
@@ -37,26 +37,22 @@ context("Holds tests", () => {
     it("Adds item to hold", () => {
         cy.waitForUI()
         cy.getUserToken(userJSON1.email, userJSON1.password).then(token => {
-            cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
-                let marketPlaceId = sameWarehouseOffer[0].id
+            cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffers => {
+                let marketPlaceId = sameWarehouseOffers[0].id
                 warehouseOffer = marketPlaceId
-                let marketPlaceName = sameWarehouseOffer[0].companyProduct.companyGenericProduct.name
+                let marketPlaceName = sameWarehouseOffers[0].companyProduct.companyGenericProduct.name
 
-                //Open tab
-                if(sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup == undefined){
-                    //cy.contains("Unmapped").click()
-                }else{
-                    marketPlaceName = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup.name
+                cy.get("input[type=text]").type(marketPlaceName, {force: true})
+                cy.get('.active > .menu > .item').eq(0).click()
+                cy.wait('@marketplaceLoading', {timeout: 30000})
 
-                    //cy.contains(marketPlaceName).click()
-                }
                 cy.waitForUI()
                 cy.openElement(marketPlaceId, 2)
                 cy.get("[data-test='add_cart_quantity_inp']").within(() => {
                     cy.get("input").type("1")
                 })
 
-                cy.get("[data-test=add_cart_create_order_btn]").click()
+                cy.get("[data-test=add_cart_create_request_hold_btn]").click()
 
                 cy.url().should("include", "/holds")
                 cy.get("[data-test='table_row_action']").within(() => {
