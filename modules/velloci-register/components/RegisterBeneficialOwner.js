@@ -103,6 +103,7 @@ class RegisterBeneficialOwner extends Component {
       console.error(error)
     } finally {
       this.formikProps.setSubmitting(false)
+      Router.back()
     }
   }
 
@@ -112,6 +113,8 @@ class RegisterBeneficialOwner extends Component {
       .then(errors => {
         if (errors[titleForms[5]]) {
           formikProps.handleSubmit()
+        } else {
+          this.handleSubmit()
         }
       })
       .catch(err => console.log('catch', err))
@@ -120,18 +123,18 @@ class RegisterBeneficialOwner extends Component {
   render() {
     const {
       isLoadingSubmitButton,
-      magicToken: { loading, data }
+      magicToken: { data }
     } = this.props
 
     const { isLoading } = this.state
 
-    if (loading || isLoading) {
+    if (isLoading) {
       return (
         <Dimmer active={true} inverted>
           <Loader active={true} />
         </Dimmer>
       )
-    } else if (!loading && !isLoading && !data) {
+    } else if (!isLoading && !data) {
       return <ErrorPage type='forbidden' status='403' />
     } else {
       return (
