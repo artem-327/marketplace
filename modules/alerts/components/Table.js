@@ -194,7 +194,7 @@ class Table extends Component {
 
     return (
       <React.Fragment>
-        <div className='flex stretched inventory-wrapper listings-wrapper'>
+        <div className='flex stretched notifications-wrapper'>
           <ProdexTable
             tableName={`operations_tag_${menuStatusFilter}`}
             {...datagrid.tableProps}

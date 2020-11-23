@@ -2401,3 +2401,88 @@ i.file {
     }
   }
 }
+
+.notifications-wrapper {
+
+  .table-responsive {
+    table.table {
+      border-spacing: 0;
+      border-collapse: separate;
+
+      thead {
+        tr {
+          th {
+            height: 20px;
+            border: 0 none;
+            padding: 0 10px !important;
+            background: #f8f9fb none;
+            box-shadow: 0 0 0 0 transparent !important;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 700;
+            color: #848893;
+
+            &:after {
+              content: none !important;
+              display: none !important;
+            }
+
+            &:nth-child(2) {
+              padding-left: 0 !important;
+            }
+
+            &:nth-last-child(2) {
+              border: 0 none !important;
+
+              .flex-row.justify-content-end {
+                padding-right: 10px !important;
+              }
+            }
+
+            .flex-row {
+
+              > span {
+                display: flex;
+                flex-flow: row nowrap;
+                width: 100% !important;
+
+                > [class*="header-title"] {
+                  flex-grow: 0;
+                  flex-shrink: 1;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+
+                > i {
+                  flex-grow: 0;
+                  flex-shrink: 0;
+                  margin-right: 0;
+                }
+              }
+
+              &.justify-content-end > span {
+                justify-content: flex-end;
+              }
+
+              &.justify-content-center > span {
+                justify-content: center;
+              }
+            }
+          }
+        }
+
+        tbody {
+          tr {
+            td {
+
+
+            }
+
+
+
+          }
+        }
+      }
+    }
+  }
+}
