@@ -173,7 +173,8 @@ class TablesHandlers extends Component {
   render() {
     const {
       intl: { formatMessage },
-      currentTab
+      currentTab,
+      selectedRows
     } = this.props
 
     const filterValue = this.state[currentTab]
@@ -204,16 +205,19 @@ class TablesHandlers extends Component {
             >
               <Dropdown.Menu data-test='notifications_menu_more_drpdn'>
                 <Dropdown.Item
+                  disabled={!selectedRows.length}
                   onClick={() => {}}>
                   <Drafts className={'menu-icon'} />
                   <FormattedMessage id='alerts.dropdown.markAsRead' defaultMessage='Mark as read' />
                 </Dropdown.Item>
                 <Dropdown.Item
+                  disabled={!selectedRows.length}
                   onClick={() => {}}>
                   <Drafts className={'menu-icon'} />
                   <FormattedMessage id='alerts.dropdown.markAsUnread' defaultMessage='Mark as unread' />
                 </Dropdown.Item>
                 <Dropdown.Item
+                  disabled={!selectedRows.length}
                   onClick={() => {}}>
                   <Drafts className={'menu-icon'} />
                   <FormattedMessage id='alerts.dropdown.delete' defaultMessage='Delete' />

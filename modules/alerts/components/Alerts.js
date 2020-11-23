@@ -9,6 +9,10 @@ import Table from './Table'
 import Tutorial from '~/modules/tutorial/Tutorial'
 
 class Alerts extends Component {
+  state = {
+    selectedRows: []
+  }
+
   getApiConfig = () => ({
     url: '/prodex/api/messaging-center/datagrid',
     searchToFilter: v => {
@@ -60,11 +64,11 @@ class Alerts extends Component {
             </Container>
 
             <Container fluid style={{ padding: '20px 30px' }}>
-              <TablesHandlers />
+              <TablesHandlers selectedRows={this.state.selectedRows} />
             </Container>
 
             <Container fluid style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
-              <Table />
+              <Table onSelectionChange={selectedRows => this.setState({ selectedRows })}/>
             </Container>
           </div>
         </DatagridProvider>

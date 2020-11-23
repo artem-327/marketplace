@@ -30,6 +30,7 @@ const StyledStatusLabel = styled(Label)`
     border: solid 1px #dee2e6;
     background-color: #edeef2;
   }
+
   &.unread {
     color: #ffffff;
     background-color: #2599d5 !important;
@@ -38,6 +39,7 @@ const StyledStatusLabel = styled(Label)`
 
 const StyledNotification = styled.div`
   cursor: pointer;
+
   &:hover {
     font-weight: bold;
     color: #2599d5;
@@ -90,7 +92,8 @@ class Table extends Component {
         width: 160
       }
     ],
-    expandedRowIds: []
+    expandedRowIds: [],
+    selectedRows: []
   }
 
   statusLabel = (row, val) => {
@@ -137,6 +140,7 @@ class Table extends Component {
 
   getRowDetail = ({ row }) => {
     const messageType = 'Shipping_Quote_Request'  // Debug Test
+    //const messageType = 'Generic_Product_Request'  // Debug Test
 
     const messageDetailTable = {
       'Generic_Product_Request': <GenericProductRequest row={row} />,
@@ -201,6 +205,14 @@ class Table extends Component {
             rowDetail={this.getRowDetail}
             expandedRowIds={expandedRowIds}
             onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
+            rowSelection={true}
+            lockSelection={false}
+            showSelectAll={false}
+            showSelectionColumn
+            onSelectionChange={selectedRows => {
+              this.setState({ selectedRows })
+              this.props.onSelectionChange(selectedRows)
+            }}
           />
         </div>
       </React.Fragment>

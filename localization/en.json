@@ -28,6 +28,23 @@
   "alerts.dropdown.markAsRead": "Mark as read",
   "alerts.dropdown.markAsUnread": "Mark as unread",
   "alerts.dropdown.delete": "Delete",
+  "alerts.here": "here",
+  "alerts.genericProduct": "{name} from {company} has requested to upload a new Company Generic Product. Please see the document attached. Once uploaded, click {here} to send a notification to the requester that the upload has been completed.",
+  "alerts.attachments": "Attachments:",
+  "alerts.shippingQuoteRequest": "{name} from {company} has requested a quote for the following order:",
+  "alerts.product": "Product",
+  "alerts.grossWeight": "Gross Weight",
+  "alerts.nmfc": "NMFC",
+  "alerts.freightClass": "Freight Class",
+  "alerts.maxPkgsPallet": "Max PKGS / Pallet",
+  "alerts.hazardous": "Hazardous",
+  "alerts.stackable": "Stackable",
+  "alerts.freezeProtect": "Freeze Protect",
+
+  "alerts.addShippingQuote": "Add Shipping Quote",
+
+
+
   "auth.resetMyPassword": "Password Reset",
   "auth.cancelPasswordReset": "Password Reset Cancel",
   "auth.username": "Username",

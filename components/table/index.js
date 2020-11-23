@@ -634,6 +634,7 @@ class _Table extends Component {
     const {
       onSelectionChange,
       getChildGroups,
+      groupBy,
       rows,
       sameGroupSelectionOnly,
       singleSelection,
@@ -647,18 +648,25 @@ class _Table extends Component {
       return true
     }
 
-    const groups = getChildGroups(rows)
-    const selectionGroups = selection.map(s => groups.find(g => g.childRows.find(child => child.id === s)))
+    if (groupBy.length) {
+      const groups = getChildGroups(rows)
+      const selectionGroups = selection.map(s => groups.find(g => g.childRows.find(child => child.id === s)))
 
-    const sameGroup = selectionGroups.every(sg => sg === selectionGroups[0])
-    const finalSelection = singleSelection ? [lastSelected] : selection
-    if (sameGroup || !sameGroupSelectionOnly) {
-      this.setState({ selection: finalSelection })
-      onSelectionChange(finalSelection)
+      const sameGroup = selectionGroups.every(sg => sg === selectionGroups[0])
+      const finalSelection = singleSelection ? [lastSelected] : selection
+      if (sameGroup || !sameGroupSelectionOnly) {
+        this.setState({selection: finalSelection})
+        onSelectionChange(finalSelection)
 
-      return true
+        return true
+      }
+      return false
     }
-    return false
+
+    const finalSelection = singleSelection ? [lastSelected] : selection
+    this.setState({selection: finalSelection})
+    onSelectionChange(finalSelection)
+    return true
   }
 
   handleGroupSelectionChange = (groupKey, value) => {
