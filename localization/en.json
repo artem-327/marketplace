@@ -62,6 +62,7 @@
   "error.serverError.title": "INTERNAL SERVER ERROR 500",
   "error.bringMeBack": "Bring me back to last page",
   "error.logout": "Logout",
+  "error.accessDenied": "You don't have sufficient role to perform this action.",
   "success.title": "Success!",
   "admin.duplicateName": "Duplicate name!",
   "admin.clickToSave": "Click to save",
