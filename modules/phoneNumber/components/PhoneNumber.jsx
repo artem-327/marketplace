@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { string, object, bool, func } from 'prop-types'
 import { Field } from 'formik'
-import { FormField, Dropdown } from 'semantic-ui-react'
+import { FormField, Dropdown, Input } from 'semantic-ui-react'
 import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
 const InputMask = require('react-input-mask')
@@ -49,6 +49,11 @@ const StyledInputMask = styled(InputMask)`
   .default.text {
     font-weight: normal;
   }
+`
+
+const StyledInput = styled(Input)`
+  max-width: 70px;
+  margin-right: 10px;
 `
 
 function splitPhoneNumber(phone, phoneCountryCodes) {
@@ -174,7 +179,8 @@ export default class PhoneNumber extends Component {
       isSubmitting,
       disabled,
       clearable,
-      placeholder
+      placeholder,
+      isInputCountryCode
     } = this.props
 
     let { phoneCountryCode, phoneNumber } = this.state
@@ -189,10 +195,7 @@ export default class PhoneNumber extends Component {
                 name,
                 formatMessage({ id: 'global.phoneCountryCodeRequired', defaultMessage: 'Phone country code required' })
               )
-            } else if (
-              (phoneCountryCode && !phoneNumber) ||
-              (phoneNumber && phoneNumber.includes('_'))
-            ) {
+            } else if ((phoneCountryCode && !phoneNumber) || (phoneNumber && phoneNumber.includes('_'))) {
               form.setFieldError(
                 name,
                 formatMessage({ id: 'global.phoneNumberIsInvalid', defaultMessage: 'Phone number is invalid' })
@@ -204,16 +207,30 @@ export default class PhoneNumber extends Component {
             <FormField error={!!error}>
               {label && <label>{label}</label>}
               <span style={{ display: 'flex' }} className='phone-number'>
-                <StyledDropdown
-                  className='phone-code'
-                  options={phoneCountryCodes}
-                  onChange={this.handleChangeDropdown}
-                  search
-                  disabled={disabled}
-                  clearable={clearable}
-                  placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
-                  value={phoneCountryCode}
-                />
+                {isInputCountryCode ? (
+                  <>
+                    <StyledInput
+                      className='phone-code'
+                      onChange={this.handleChangeDropdown}
+                      clearable={clearable}
+                      placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
+                      value={phoneCountryCode}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <StyledDropdown
+                      className='phone-code'
+                      options={phoneCountryCodes}
+                      onChange={this.handleChangeDropdown}
+                      search
+                      disabled={disabled}
+                      clearable={clearable}
+                      placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
+                      value={phoneCountryCode}
+                    />{' '}
+                  </>
+                )}
                 <StyledInputMask
                   name={name}
                   className='phone-num'
@@ -251,7 +268,8 @@ PhoneNumber.propTypes = {
   touched: object,
   disabled: bool,
   clearable: bool,
-  placeholder: string
+  placeholder: string,
+  isInputCountryCode: bool
 }
 
 PhoneNumber.defaultProps = {
@@ -267,5 +285,6 @@ PhoneNumber.defaultProps = {
   touched: {},
   disabled: false,
   clearable: false,
-  placeholder: null
+  placeholder: null,
+  isInputCountryCode: false
 }
