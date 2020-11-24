@@ -53,6 +53,7 @@ import {
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
+import Router from 'next/router'
 
 import styled from 'styled-components'
 
@@ -104,7 +105,8 @@ class Broadcast extends Component {
   }
 
   async componentWillUnmount() {
-    if (this.state.change && !this.state.saved) {
+    const isLogout = getSafe(() => Router.router.pathname, '').includes('auth')
+    if (this.state.change && !this.state.saved && !isLogout) {
       await confirm(
         <FormattedMessage id='confirm.broadcast.unsavedChanges.header' defaultMessage='Unsaved changes' />,
         <FormattedMessage
