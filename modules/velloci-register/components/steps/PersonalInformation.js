@@ -310,10 +310,15 @@ function PersonalInformation({
           <ColumnCustom width={6}>
             <Input
               name={`verifyPersonalInformation[${i}].businessOwnershipPercentage`}
-              label={formatMessage({
-                id: 'velloci.personalInfo.businessOwnershipPercentage',
-                defaultMessage: 'Business Ownership Percentage'
-              })}
+              label={
+                <>
+                  {formatMessage({
+                    id: 'velloci.personalInfo.businessOwnershipPercentage',
+                    defaultMessage: 'Business Ownership Percentage'
+                  })}
+                  {<Required />}
+                </>
+              }
               inputProps={{
                 label: '%',
                 labelPosition: 'right',

@@ -252,7 +252,20 @@ class VellociRegister extends Component {
           Yup.lazy(v => {
             //let isAnyValueFilled = deepSearch(v, (val, key) => val !== '' && key !== 'country')
             const businessOwnershipPercentage = values.ownerInformation.isBeneficialOwner
-              ? { businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage) }
+              ? { businessOwnershipPercentage: Yup.string()
+                  .trim()
+                  .required(errorMessages.requiredMessage)
+                  .test('v', errorMessages.minimum(0), function (v) {
+                    if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                    return Number(v) >= 0
+                  })
+                  .test('v', errorMessages.maximum(100), function (v) {
+                    if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                    return Number(v) <= 100
+                  })
+                  .test('v', errorMessages.mustBeNumber, function (v) {
+                    return v === null || v === '' || !isNaN(v)
+                  })}
               : null
             return Yup.object().shape({
               firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),

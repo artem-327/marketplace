@@ -68,7 +68,20 @@ class RegisterBeneficialOwner extends Component {
                 .min(9, errorMessages.minLength(9))
                 .max(9, errorMessages.maxLength(9))
                 .required(errorMessages.requiredMessage),
-              ...businessOwnershipPercentage
+              businessOwnershipPercentage: Yup.string()
+                .trim()
+                .required(errorMessages.requiredMessage)
+                .test('v', errorMessages.minimum(0), function (v) {
+                  if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                  return Number(v) >= 0
+                })
+                .test('v', errorMessages.maximum(100), function (v) {
+                  if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                  return Number(v) <= 100
+                })
+                .test('v', errorMessages.mustBeNumber, function (v) {
+                  return v === null || v === '' || !isNaN(v)
+                })
             })
           })
         )
@@ -99,13 +112,12 @@ class RegisterBeneficialOwner extends Component {
         email: getSafe(() => val.email, '')
       }
       removeEmpty(body)
-
       await registerBeneficialOwner(body, token)
+      Router.push('/auth/login')
     } catch (error) {
       console.error(error)
     } finally {
       this.formikProps.setSubmitting(false)
-      Router.back()
     }
   }
 
@@ -123,11 +135,7 @@ class RegisterBeneficialOwner extends Component {
   }
 
   render() {
-    const {
-      isLoadingSubmitButton,
-      magicToken: { data }
-    } = this.props
-
+    const { isLoadingSubmitButton } = this.props
     const { tokenOk, isLoading } = this.state
 
     if (isLoading) {
