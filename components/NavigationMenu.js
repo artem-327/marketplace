@@ -321,7 +321,7 @@ class Navigation extends Component {
                   dataTest='navigation_menu_inventory_my_products_drpdn'>
                   {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
                 </Dropdown.Item>
-                {!isClientCompanyAdmin && (
+                {isCompanyAdmin && (
                   <Dropdown.Item
                     as={MenuLink}
                     to='/inventory/global-price-book'
