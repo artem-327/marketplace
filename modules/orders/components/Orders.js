@@ -117,6 +117,21 @@ const CustomDivTextAddedMewDocument = styled.div`
   color: #848893;
 `
 
+const CustomContainer = styled(Container)`
+  .table-responsive table.table thead tr th:not(.p-0) {
+    background: none !important;
+  }
+  .table-responsive table.table thead tr th,
+  .table-responsive table.table[class*='table-head'] tr th {
+    border-width: none !important;
+    border-style: none !important;
+    text-transform: uppercase !important;
+    color: #848893 !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+  }
+`
+
 class Orders extends Component {
   constructor(props) {
     super(props)
@@ -1144,7 +1159,7 @@ class Orders extends Component {
         <Container fluid style={{ padding: '20px 30px 10px 30px' }}>
           <TablesHandlers currentTab={currentTab} />
         </Container>
-        <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
+        <CustomContainer fluid style={{ padding: '10px 30px' }} className='flex stretched'>
           {isFetching ? (
             <Spinner />
           ) : (
@@ -1179,7 +1194,7 @@ class Orders extends Component {
               rowChildActions={[]}
             />
           )}
-        </Container>
+        </CustomContainer>
       </div>
     )
   }
