@@ -40,11 +40,7 @@
   "alerts.hazardous": "Hazardous",
   "alerts.stackable": "Stackable",
   "alerts.freezeProtect": "Freeze Protect",
-
   "alerts.addShippingQuote": "Add Shipping Quote",
-
-
-
   "auth.resetMyPassword": "Password Reset",
   "auth.cancelPasswordReset": "Password Reset Cancel",
   "auth.username": "Username",

@@ -33,3 +33,18 @@ export function handleVariableSave(variable, value) {
     payload: { variable, value }
   }
 }
+
+export const markSeenArray = (arr) => ({
+  type: AT.ALERTS_MARK_SEEN_ARRAY,
+  payload: api.markSeenArray(arr)
+})
+
+export const markUnseenArray = (arr) => ({
+  type: AT.ALERTS_MARK_UNSEEN_ARRAY,
+  payload: api.markUnseenArray(arr)
+})
+
+export const deleteArray = (arr) => ({
+  type: AT.ALERTS_DELETE_ARRAY,
+  payload: api.deleteArray(arr)
+})

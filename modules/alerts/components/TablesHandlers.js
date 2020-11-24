@@ -170,6 +170,39 @@ class TablesHandlers extends Component {
     })
   }
 
+  handleMarkAsSeen = async () => {
+    const { datagrid, selectedRows, onMarkUpdate, markSeenArray } = this.props
+    try {
+      await markSeenArray({ messages: selectedRows })
+      if (onMarkUpdate) onMarkUpdate([])
+      datagrid.loadData()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  handleMarkAsUnseen = async () => {
+    const { datagrid, selectedRows, onMarkUpdate, markUnseenArray } = this.props
+    try {
+      await markUnseenArray({ messages: selectedRows })
+      if (onMarkUpdate) onMarkUpdate([])
+      datagrid.loadData()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  handleDelete = async () => {
+    const { datagrid, selectedRows, onMarkUpdate, deleteArray } = this.props
+    try {
+      await deleteArray({ messages: selectedRows })
+      if (onMarkUpdate) onMarkUpdate([])
+      datagrid.loadData()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   render() {
     const {
       intl: { formatMessage },
@@ -206,19 +239,19 @@ class TablesHandlers extends Component {
               <Dropdown.Menu data-test='notifications_menu_more_drpdn'>
                 <Dropdown.Item
                   disabled={!selectedRows.length}
-                  onClick={() => {}}>
+                  onClick={() => this.handleMarkAsSeen()}>
                   <Drafts className={'menu-icon'} />
                   <FormattedMessage id='alerts.dropdown.markAsRead' defaultMessage='Mark as read' />
                 </Dropdown.Item>
                 <Dropdown.Item
                   disabled={!selectedRows.length}
-                  onClick={() => {}}>
+                  onClick={() => this.handleMarkAsUnseen()}>
                   <Drafts className={'menu-icon'} />
                   <FormattedMessage id='alerts.dropdown.markAsUnread' defaultMessage='Mark as unread' />
                 </Dropdown.Item>
                 <Dropdown.Item
                   disabled={!selectedRows.length}
-                  onClick={() => {}}>
+                  onClick={() => this.handleDelete()}>
                   <Drafts className={'menu-icon'} />
                   <FormattedMessage id='alerts.dropdown.delete' defaultMessage='Delete' />
                 </Dropdown.Item>

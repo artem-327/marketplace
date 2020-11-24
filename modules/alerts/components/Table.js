@@ -92,8 +92,7 @@ class Table extends Component {
         width: 160
       }
     ],
-    expandedRowIds: [],
-    selectedRows: []
+    expandedRowIds: []
   }
 
   statusLabel = (row, val) => {
@@ -129,9 +128,11 @@ class Table extends Component {
   getRows = () => {
     return this.props.rows.map(r => {
       const read = r.read ? 'read' : 'unread'
+      const selected = this.props.selectedRows.some(id => id === r.id)
+      const open = this.state.expandedRowIds.some(id => id === r.id)
       return {
         ...r,
-        clsName: read,
+        clsName: read + (selected ? ' selected' : '') + (open ? ' open' : ''),
         notification: this.notificationText(r.rawData),
         readStatus: this.statusLabel(r.rawData, read)
       }
@@ -187,8 +188,7 @@ class Table extends Component {
   }
 
   render() {
-    const { intl, datagrid, markSeenSending, menuStatusFilter } = this.props
-
+    const { intl, datagrid, markSeenSending, menuStatusFilter, selectedRows } = this.props
     const { formatMessage } = intl
     const { columns, expandedRowIds } = this.state
 
@@ -208,9 +208,9 @@ class Table extends Component {
             rowSelection={true}
             lockSelection={false}
             showSelectAll={false}
+            selectedRows={selectedRows}
             showSelectionColumn
             onSelectionChange={selectedRows => {
-              this.setState({ selectedRows })
               this.props.onSelectionChange(selectedRows)
             }}
           />

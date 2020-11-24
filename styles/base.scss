@@ -2406,7 +2406,7 @@ i.file {
 
   .table-responsive {
     table.table {
-      border-spacing: 0;
+      border-spacing: 0 2px;
       border-collapse: separate;
 
       thead {
@@ -2470,16 +2470,108 @@ i.file {
             }
           }
         }
+      }
 
-        tbody {
-          tr {
-            td {
+      tbody {
+        tr {
+          td {
+            border-top: 1px solid #dde2e6;
+            position: relative;
+            overflow: visible;
+            height: 20px;
+            padding: 14px 10px !important;
+            box-shadow: 0 6px 0 0 #f8f9fb;
+            font-size: 14px;
+            font-weight: 400;
+            color: #20273a;
+            line-height: 20px;
 
-
+            &.actions {
+              padding-right: 0 !important;
             }
 
+            .cell-wrapper {
+              overflow: hidden;
+              display: block;
+              width: 100%;
+              text-overflow: ellipsis;
+            }
 
+            &:not(.p-0):before {
+              content: "";
+              position: absolute;
+              top: 100%;
+              left: 0;
+              right: 0;
+              display: block;
+              height: 6px;
+              margin-top: 1px;
+              background: #f8f9fb;
+              box-shadow: 0 0 0 0 transparent;
+            }
 
+            &:nth-child(2) {
+              position: relative;
+              border-bottom-left-radius: 3px;
+              padding-left: 20px !important;
+
+              &:after {
+                content: "";
+                position: absolute;
+                left: -1px;
+                bottom: 100%;
+                display: block;
+                width: 3px;
+                height: 3px;
+                border-width: 0 0 1px 1px;
+                border-style: solid;
+                border-color: #dde2e6;
+                background: #fff;
+              }
+            }
+
+            &:nth-last-child(2) {
+              position: relative;
+              border-bottom-right-radius: 3px;
+              padding-right: 20px !important;
+
+              &:after {
+                content: "";
+                position: absolute;
+                right: -1px;
+                bottom: 100%;
+                display: block;
+                width: 3px;
+                height: 3px;
+                border-width: 0 1px 1px 0;
+                border-style: solid;
+                border-color: #dde2e6;
+                background: #fff;
+              }
+            }
+
+            span[class*="table-header-title"] {
+              display: inline-block;
+              width: calc(100% - 18px);
+              vertical-align: top;
+            }
+
+            &.p-0 + td:nth-child(2) {
+              border-top-left-radius: 3px;
+            }
+
+            &:not(.p-0):first-child {
+              border-top-left-radius: 3px;
+            }
+
+            &:nth-last-child(2) {
+              border-top-right-radius: 3px;
+
+              &:after {
+                content: none !important;
+                display: none !important;
+              }
+            }
           }
         }
       }

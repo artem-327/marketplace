@@ -395,6 +395,7 @@ class _Table extends Component {
       })
     ),
     rows: pt.arrayOf(pt.any),
+    selectedRows: pt.array,
     rowDetail: pt.func,
     columnReordering: pt.bool,
     rowSelection: pt.bool,
@@ -451,6 +452,7 @@ class _Table extends Component {
     treeDataType: false,
     rowDetailType: false,
     rowDetail: () => {},
+    selectedRows: [],
     groupBy: [],
     defaultHiddenColumns: [],
     singleSelection: false,
@@ -605,6 +607,10 @@ class _Table extends Component {
 
     if (prevProps.tableName !== this.props.tableName) {
       this.loadColumnsSettings()
+    }
+
+    if (prevProps.selectedRows !== this.props.selectedRows) {
+      this.setState({ selection: this.props.selectedRows })
     }
   }
 

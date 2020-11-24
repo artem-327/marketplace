@@ -8,6 +8,8 @@ import TablesHandlers from './TablesHandlers'
 import Table from './Table'
 import Tutorial from '~/modules/tutorial/Tutorial'
 
+import { generateQueryString } from '~/utils/functions'
+
 class Alerts extends Component {
   state = {
     selectedRows: []
@@ -64,11 +66,17 @@ class Alerts extends Component {
             </Container>
 
             <Container fluid style={{ padding: '20px 30px' }}>
-              <TablesHandlers selectedRows={this.state.selectedRows} />
+              <TablesHandlers
+                selectedRows={this.state.selectedRows}
+                onMarkUpdate={(selection) => this.setState({ selectedRows: selection })}
+              />
             </Container>
 
             <Container fluid style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
-              <Table onSelectionChange={selectedRows => this.setState({ selectedRows })}/>
+              <Table
+                onSelectionChange={selectedRows => this.setState({ selectedRows })}
+                selectedRows={this.state.selectedRows}
+              />
             </Container>
           </div>
         </DatagridProvider>
