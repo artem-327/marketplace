@@ -4,7 +4,9 @@ import {
 } from 'semantic-ui-react'
 
 export const DetailMessage = styled.div`
-  
+  text-align: left;
+  font-size: 14px;
+  color: #20273a;
 `
 
 export const StyledGrid = styled(Grid)`

@@ -293,6 +293,21 @@ const TableCells = props => {
     </Table.Cell>
   )
 }
+const DetailTableCells = props => {
+  const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
+  const modifiedProps = {
+    ...props,
+    colSpan: props.colSpan - (isEchoCode ? 2 : 1)
+  }
+  return (
+    <>
+      {isEchoCode ? <Table.Cell className='p-0'></Table.Cell> : null}
+      <Table.Cell {...modifiedProps} className='not-found'>
+        {props.rowDetail(props.row)}
+      </Table.Cell>
+    </>
+  )
+}
 const NoDataTableCells = props => {
   const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
   const modifiedProps = {
@@ -436,7 +451,8 @@ class _Table extends Component {
     shrinkGroups: pt.bool,
     columnAction: pt.string,
     toggleColumnSettingModal: pt.func,
-    isOpenColumnSettingModal: pt.bool
+    isOpenColumnSettingModal: pt.bool,
+    estimatedRowHeight: pt.number
   }
 
   static defaultProps = {
@@ -472,7 +488,8 @@ class _Table extends Component {
     shrinkGroups: false,
     columnActions: '',
     toggleColumnSettingModal: () => {},
-    isOpenColumnSettingModal: false
+    isOpenColumnSettingModal: false,
+    estimatedRowHeight: 0
   }
 
   constructor(props) {
@@ -948,6 +965,7 @@ class _Table extends Component {
       columnActions,
       isOpenColumnSettingModal,
       toggleColumnSettingModal,
+      estimatedRowHeight,
       ...restProps
     } = this.props
     const {
@@ -1048,12 +1066,15 @@ class _Table extends Component {
               <VirtualTable
                 columnExtensions={this.getColumnsExtension()}
                 height='auto'
+                estimatedRowHeight={estimatedRowHeight ? estimatedRowHeight : 49}
                 cellComponent={props => {
                   return treeDataType && rowChildActions ? TreeTableCells(props, rowChildActions) : TableCells(props)
                 }}
                 noDataCellComponent={NoDataTableCells}
                 messages={MESSAGES}
-                rowComponent={props => <Row onClick={onRowClick} {...props} />}
+                rowComponent={props => {
+                  return (<Row onClick={onRowClick} {...props} />)
+                }}
               />
             ) : (
               <Table
@@ -1089,6 +1110,7 @@ class _Table extends Component {
             {rowDetailType && (
               <TableRowDetail
                 contentComponent={rowDetail}
+                cellComponent={props => <DetailTableCells rowDetail={rowDetail} {...props} />}
               />
             )}
 

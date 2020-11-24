@@ -213,6 +213,7 @@ class Table extends Component {
             onSelectionChange={selectedRows => {
               this.props.onSelectionChange(selectedRows)
             }}
+            estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
           />
         </div>
       </React.Fragment>

@@ -223,7 +223,7 @@ class ShippingQuoteRequest extends Component {
       <DetailMessage>
         <StyledGrid>
           <GridRow>
-            <GridColumn width={16}>
+            <GridColumn width={16} style={{ color: '#20273a' }}>
               <FormattedMessage
                 id='alerts.shippingQuoteRequest'
                 defaultMessage='{name} from {company} has requested a quote for the following order:'
@@ -358,6 +358,7 @@ class ShippingQuoteRequest extends Component {
                 <GridColumn>
                   <div style={{ float: 'right' }}>
                     <Button
+                      style={{ marginRight: '0'}}
                       onClick={() => console.log('!!!!!!!!!! Add Shipping Quote')}
                     >
                       <FormattedMessage id='alerts.addShippingQuote' defaultMessage='Add Shipping Quote'>
@@ -376,6 +377,7 @@ class ShippingQuoteRequest extends Component {
                       onChange={() => console.log('!!!!!!!!!! Input onChange')}
                     />
                     <Button
+                      style={{ marginRight: '0'}}
                       onClick={() => console.log('!!!!!!!!!! Send')}
                     >
                       <FormattedMessage id='alerts.send' defaultMessage='Send'>
