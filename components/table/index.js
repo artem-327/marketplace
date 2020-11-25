@@ -302,9 +302,7 @@ const DetailTableCells = props => {
   return (
     <>
       {isEchoCode ? <Table.Cell className='p-0'></Table.Cell> : null}
-      <Table.Cell {...modifiedProps} className='not-found'>
-        {props.rowDetail(props.row)}
-      </Table.Cell>
+      <Table.Cell {...modifiedProps} className='not-found'/>
     </>
   )
 }

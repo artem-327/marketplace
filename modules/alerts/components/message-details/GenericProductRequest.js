@@ -43,12 +43,7 @@ export const AttachmentsGrid = styled(Grid)`
 class GenericProductRequest extends Component {
   render() {
     const { row } = this.props
-
-    const attachments = [
-      { name: 'test name 1' },
-      { name: 'test name 2' },
-      { name: 'test name 3' }
-    ]
+    const attachments = getSafe(() => row.info.attachments, [])
 
     return (
       <DetailMessage>
@@ -59,8 +54,8 @@ class GenericProductRequest extends Component {
                 id='alerts.genericProduct'
                 defaultMessage='{name} from {company} has requested to upload a new Company Generic Product. Please see the document attached. Once uploaded, click {here} to send a notification to the requester that the upload has been completed.'
                 values={{
-                  name: (<b>Some Name</b>),
-                  company: (<b>Company name</b>),
+                  name: (<b>{getSafe(() => row.info.requestedBy.name, 'N/A')}</b>),
+                  company: (<b>{getSafe(() => row.info.requestedBy.company.cfDisplayName, 'N/A')}</b>),
                   here: (
                     <span
                       style={{ color: '#2599d5', cursor: 'pointer' }}
@@ -86,7 +81,7 @@ class GenericProductRequest extends Component {
                     <span style={{ marginLeft: '10px'}}>{att.name}</span>
                   </GridColumn>
                   <GridColumn width={3}>
-                    {1225}
+                    {/* file size */}
                   </GridColumn>
                   <GridColumn
                     width={5}
