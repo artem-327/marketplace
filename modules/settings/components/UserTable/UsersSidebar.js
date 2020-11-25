@@ -1,6 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { closeSidebar, postNewUserRequest, handlerSubmitUserEditPopup, getCompanyDetails } from '../../actions'
+import {
+  closeSidebar,
+  postNewUserRequest,
+  handlerSubmitUserEditPopup,
+  getCompanyDetails,
+  getUsersDataRequest
+} from '../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../companies/actions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -34,6 +40,8 @@ import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
 import ErrorFocus from '~/components/error-focus'
+import { Person } from '@material-ui/icons'
+import { X as XIcon } from 'react-feather'
 
 const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -45,6 +53,11 @@ const FlexSidebar = styled(Sidebar)`
   z-index: 1000 !important;
   text-align: left;
   font-size: 14px;
+
+  &.full-screen-sidebar {
+    top: 0 !important;
+    padding-bottom: 0px;
+  }
 `
 
 const HighSegment = styled.div`
@@ -54,7 +67,27 @@ const HighSegment = styled.div`
   color: #20273a;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
   background-color: #ffffff;
-  text-transform: uppercase;
+  text-transform: uppercase;  
+  display: flex;
+  flex-direction: row;
+
+  svg {
+    font-size: 18px;
+    vertical-align: middle;
+  }
+  
+  svg.title-icon {
+    margin-left: 15px;
+    color: #cecfd4;
+  }
+  
+  svg.close-icon {
+    right: 0;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
 `
 
 const FlexContent = styled.div`
@@ -193,7 +226,7 @@ class UsersSidebar extends React.Component {
     })
 
   componentDidMount = async () => {
-    const { companyId, popupValues, isCompanyAdmin } = this.props
+    const { companyId, popupValues, isCompanyAdmin, openGlobalAddForm, getUsersDataRequest } = this.props
     if (companyId !== null) {
       const { value } = await this.props.getCompanyDetails(companyId)
       let branches = uniqueArrayByKey(
@@ -216,6 +249,8 @@ class UsersSidebar extends React.Component {
       this.props.searchSellMarketSegments('')
       this.props.searchBuyMarketSegments('')
     }
+
+    if (!!openGlobalAddForm) getUsersDataRequest()
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -317,7 +352,8 @@ class UsersSidebar extends React.Component {
       closeSidebar,
       datagrid,
       currentUserId,
-      getIdentity
+      getIdentity,
+      openGlobalAddForm
     } = this.props
     const { popupValues } = this.state
     let sendSuccess = false
@@ -342,15 +378,15 @@ class UsersSidebar extends React.Component {
     try {
       if (popupValues) {
         const { value } = await handlerSubmitUserEditPopup(popupValues.id, data)
-        datagrid.updateRow(popupValues.id, () => value)
+        !openGlobalAddForm && datagrid.updateRow(popupValues.id, () => value)
         sendSuccess = true
         if (currentUserId === popupValues.id) getIdentity()
       } else {
         await postNewUserRequest(data)
-        datagrid.loadData()
+        !openGlobalAddForm && datagrid.loadData()
         sendSuccess = true
       }
-      if (closeOnSubmit) closeSidebar()
+      if (closeOnSubmit) openGlobalAddForm ? openGlobalAddForm('') : closeSidebar()
     } catch {}
     actions.setSubmitting(false)
     return sendSuccess
@@ -459,7 +495,8 @@ class UsersSidebar extends React.Component {
       searchedSellMarketSegments,
       searchedBuyMarketSegmentsLoading,
       searchedBuyMarketSegments,
-      isCompanyAdmin
+      isCompanyAdmin,
+      openGlobalAddForm
     } = this.props
 
     const { branches, popupValues, selectedSellMarketSegmentsOptions, selectedBuyMarketSegmentsOptions } = this.state
@@ -488,6 +525,7 @@ class UsersSidebar extends React.Component {
 
           return (
             <FlexSidebar
+              className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
               visible={true}
               width='very wide'
               style={{ width: '630px' }}
@@ -498,9 +536,25 @@ class UsersSidebar extends React.Component {
               </Dimmer>
 
               <HighSegment basic>
-                {popupValues
-                  ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
-                  : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })}
+                {openGlobalAddForm
+                  ? (
+                    <>
+                      <div>
+                            <span>
+                              <FormattedMessage id='createMenu.addUser' defaultMessage='Add User' />
+                            </span>
+                        <Person className='title-icon' />
+                      </div>
+                      <div style={{ position: 'absolute', right: '20px' }}>
+                        <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                      </div>
+                    </>
+                  ) : (
+                    popupValues
+                      ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
+                      : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })
+                  )
+                }
               </HighSegment>
 
               <FlexContent>
@@ -707,13 +761,18 @@ class UsersSidebar extends React.Component {
                 </CustomSegment>
               </FlexContent>
 
-              <BottomButtons>
+              <BottomButtons className='bottom-buttons'>
                 <div style={{ textAlign: 'right' }}>
-                  <Button className='light' onClick={closeSidebar} data-test='settings_users_popup_reset_btn'>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
+                  {!openGlobalAddForm && (
+                    <Button
+                      className='light'
+                      onClick={closeSidebar}
+                      data-test='settings_users_popup_reset_btn'>
+                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  )}
                   <Button.Submit className='secondary' data-test='settings_users_popup_submit_btn'>
                     <FormattedMessage id='global.save' defaultMessage='Save'>
                       {text => text}
@@ -737,7 +796,8 @@ const mapDispatchToProps = {
   getCompanyDetails,
   searchSellMarketSegments,
   searchBuyMarketSegments,
-  getIdentity
+  getIdentity,
+  getUsersDataRequest
 }
 
 const mapStateToProps = state => {

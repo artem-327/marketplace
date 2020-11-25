@@ -65,12 +65,6 @@ customAxios.interceptors.response.use(
       Router.push('/errors')
     }
 
-    try {
-      Message.checkForMessages(error.response)
-    } catch (error) {
-      console.error(error)
-    }
-
     // const errData = error && error.response && error.response.data
     if (
       getSafe(() => error.request.responseType, '') === 'blob' &&
@@ -111,6 +105,12 @@ customAxios.interceptors.response.use(
 
         reader.readAsText(error.response.data)
       })
+    } else {
+      try {
+        Message.checkForMessages(error.response)
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     if (
