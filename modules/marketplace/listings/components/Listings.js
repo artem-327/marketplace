@@ -456,7 +456,7 @@ class Listings extends Component {
                 header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
                 trigger={
                   <div>
-                    <ClockIcon />
+                    <Icon className='fab clock' style={{ color: '#f16844' }} />
                   </div>
                 } // <div> has to be there otherwise popup will be not shown
               />
@@ -472,7 +472,7 @@ class Listings extends Component {
                 }
                 trigger={
                   <div>
-                    <RedTriangle />
+                    <Icon className='fab exclamation triangle' style={{ fontSize: '0.9em', color: '#f16844' }} />
                   </div>
                 } // <div> has to be there otherwise popup will be not shown
               />
