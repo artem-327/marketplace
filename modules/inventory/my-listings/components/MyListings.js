@@ -507,8 +507,12 @@ class MyListings extends Component {
       getSafe(() => prevProps.rows[0].id, '') !== getSafe(() => this.props.rows[0].id, '') ||
       getSafe(() => prevProps.pricingEditOpenId, '') !== getSafe(() => this.props.pricingEditOpenId, '') ||
       (getSafe(() => this.state.updatedRow, '') && !getSafe(() => prevState.updateRow, '')) ||
-      getSafe(() => this.state.focusInput, '') !== getSafe(() => prevState.focusInput, '')
+      getSafe(() => this.state.focusInput, '') !== getSafe(() => prevState.focusInput, '') ||
+      getSafe(() => datagrid.isUpdatedRow, '')
     ) {
+      if (getSafe(() => datagrid.isUpdatedRow, '')) {
+        datagrid.setUpdatedRow(false)
+      }
       this.getRows(this.props.rows)
       if (this.state.updatedRow && !prevState.updateRow) {
         this.setState({ updatedRow: false })

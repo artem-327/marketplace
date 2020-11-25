@@ -1847,13 +1847,14 @@ class AddCart extends Component {
       <Sidebar
         onHide={e => {
           try {
+            let path = e.path || (e.composedPath && e.composedPath())
             if (
-              !(getSafe(() => e.path[0].classList.contains('buy-offer'), false)) &&
-              !(getSafe(() => e.path[0], '') instanceof HTMLTableCellElement) &&
-              !(getSafe(() => e.path[1], '') instanceof HTMLTableCellElement) &&
-              !(getSafe(() => e.path[3], '') instanceof HTMLTableCellElement) &&
-              !(getSafe(() => e.path[4], '') instanceof HTMLTableCellElement) &&
-              !(getSafe(() => e.path[5], '') instanceof HTMLTableCellElement)
+              !(getSafe(() => e.target.classList.contains('buy-offer'), false)) &&
+              !(getSafe(() => path[0], '') instanceof HTMLTableCellElement) &&
+              !(getSafe(() => path[1], '') instanceof HTMLTableCellElement) &&
+              !(getSafe(() => path[3], '') instanceof HTMLTableCellElement) &&
+              !(getSafe(() => path[4], '') instanceof HTMLTableCellElement) &&
+              !(getSafe(() => path[5], '') instanceof HTMLTableCellElement)
             ) {
               sidebarChanged({ isOpen: false, isHoldRequest: false })
             }

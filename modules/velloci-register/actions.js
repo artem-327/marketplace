@@ -28,3 +28,21 @@ export const getPoliticallyExposedPersons = () => ({
 export const getTinTypes = () => ({ type: AT.GET_VELLOCI_TIN_TYPES, payload: api.getTinTypes() })
 export const getBusinessDetails = () => ({ type: AT.GET_VELLOCI_BUSINESS_DETAILS, payload: api.getBusinessDetails() })
 export const loadSubmitButton = isLoading => ({ type: AT.LOAD_SUBMIT_BUTTON, payload: isLoading })
+
+export const openEmailPopup = () => ({ type: AT.VELLOCI_REG_OPEN_EMAIL_POPUP, payload: null })
+export const closeEmailPopup = () => ({ type: AT.VELLOCI_REG_CLOSE_EMAIL_POPUP, payload: null })
+
+export const inviteBeneficialOwners = (body, companyId) => ({
+  type: AT.VELLOCI_INVITE_BENEFICIAL_OWNERS,
+  payload: api.inviteBeneficialOwners(body, companyId)
+})
+
+export const registerBeneficialOwner = (body, token) => ({
+  type: AT.VELLOCI_REGISTER_BENEFICIAL_OWNERS,
+  payload: api.registerBeneficialOwner(body, token)
+})
+
+export const checkMagicToken = token => ({
+  type: AT.VELLOCI_CHECK_MAGIC_TOKEN,
+  payload: api.checkMagicToken(token)
+})

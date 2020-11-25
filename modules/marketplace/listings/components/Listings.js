@@ -68,12 +68,12 @@ const FiltersRow = styled.div`
 
 const DivRow = styled.div`
   display: flex !important;
-  
+
   > div {
     flex-grow: 0;
     flex-shrink: 0;
   }
-  
+
   > span {
     flex-grow: 1;
     flex-shrink: 1;
@@ -413,11 +413,13 @@ class Listings extends Component {
             }>
             <Dropdown.Menu>{this.getActionItems(this.getRowActions(r), r)}</Dropdown.Menu>
           </RowDropdown>
-          <SpanText className='buy-offer' onClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            this.tableRowClicked(r.id)
-          }}>
+          <SpanText
+            className='buy-offer'
+            onClick={e => {
+              e.stopPropagation()
+              e.preventDefault()
+              this.tableRowClicked(r.id)
+            }}>
             {r.intProductName}
           </SpanText>
           <DivIcons>
@@ -430,20 +432,23 @@ class Listings extends Component {
                   color: '#cecfd4',
                   opacity: '0.9'
                 }}
-                header={<div>
-                    {r.expired && (<div>
-                      <FormattedMessage
-                        id='global.expiredProduct.tooltip'
-                        defaultMessage='Expired Product'
-                      />
-                    </div>)}
-                    {r.condition && (<div>
-                      <FormattedMessage
+                header={
+                  <div>
+                    {r.expired && (
+                      <div>
+                        <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
+                      </div>
+                    )}
+                    {r.condition && (
+                      <div>
+                        <FormattedMessage
                           id='global.nonConforming.tooltip'
                           defaultMessage='This is a non-conforming product.'
-                      />
-                    </div>)}
-                </div>}
+                        />
+                      </div>
+                    )}
+                  </div>
+                }
                 trigger={
                   <div>
                     <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />

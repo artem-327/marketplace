@@ -83,25 +83,32 @@ class ErrorPage extends Component {
   }
 
   componentDidMount() {
+    const { type, status } = this.props
+
     let errorSvg = GatewayTimeoutSvg //504
     let errorType = 'gatewayTimeout' //504
-    const errorStatus = typeof window !== 'undefined' ? window.localStorage.getItem('errorStatus') : null
+    let errorStatus = typeof window !== 'undefined' ? window.localStorage.getItem('errorStatus') : null
 
-    switch (errorStatus) {
-      case ERROR_STATUSES.INTERNATL_SERVER_ERROR: //500
-        errorSvg = NotFoundSvg
-        errorType = 'serverError'
-        break
-      case ERROR_STATUSES.FORBIDDEN: //403
-        errorSvg = ForbiddenSvg
-        errorType = 'forbidden'
-        break
-      case ERROR_STATUSES.NOT_FOUND: //404
-        errorSvg = NotFoundSvg
-        errorType = 'notFound'
-        break
-      default:
-        break
+    if (type && status) {
+      errorType = type
+      errorStatus = status
+    } else {
+      switch (errorStatus) {
+        case ERROR_STATUSES.INTERNATL_SERVER_ERROR: //500
+          errorSvg = NotFoundSvg
+          errorType = 'serverError'
+          break
+        case ERROR_STATUSES.FORBIDDEN: //403
+          errorSvg = ForbiddenSvg
+          errorType = 'forbidden'
+          break
+        case ERROR_STATUSES.NOT_FOUND: //404
+          errorSvg = NotFoundSvg
+          errorType = 'notFound'
+          break
+        default:
+          break
+      }
     }
     this.setState({ errorSvg, errorType, errorStatus })
   }

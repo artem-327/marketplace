@@ -34,6 +34,18 @@ export const initialState = {
     data: [],
     loading: false
   },
+  emailPopup: {
+    isOpen: false,
+    isUpdating: false
+  },
+  beneficialOwner: {
+    data: null,
+    isUpdating: false
+  },
+  magicToken: {
+    data: null,
+    loading: false
+  },
   isLoadingSubmitButton: false
 }
 
@@ -303,6 +315,43 @@ export default function reducer(state = initialState, action) {
         ...state,
         isLoadingSubmitButton: payload
       }
+    }
+
+    case AT.VELLOCI_REG_OPEN_EMAIL_POPUP: {
+      return { ...state, emailPopup: { ...state.emailPopup, isOpen: true } }
+    }
+
+    case AT.VELLOCI_REG_CLOSE_EMAIL_POPUP: {
+      return { ...state, emailPopup: { ...state.emailPopup, isOpen: false } }
+    }
+
+    case AT.VELLOCI_INVITE_BENEFICIAL_OWNERS_PENDING: {
+      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: true } }
+    }
+
+    case AT.VELLOCI_INVITE_BENEFICIAL_OWNERS_REJECTED:
+    case AT.VELLOCI_INVITE_BENEFICIAL_OWNERS_FULFILLED: {
+      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: false } }
+    }
+
+    case AT.VELLOCI_REGISTER_BENEFICIAL_OWNERS_PENDING: {
+      return { ...state, beneficialOwner: { ...state.beneficialOwner, isUpdating: true } }
+    }
+    case AT.VELLOCI_REGISTER_BENEFICIAL_OWNERS_REJECTED: {
+      return { ...state, beneficialOwner: { ...state.beneficialOwner, isUpdating: false } }
+    }
+    case AT.VELLOCI_REGISTER_BENEFICIAL_OWNERS_FULFILLED: {
+      return { ...state, beneficialOwner: { ...state.beneficialOwner, isUpdating: false, data: payload } }
+    }
+
+    case AT.VELLOCI_CHECK_MAGIC_TOKEN_PENDING: {
+      return { ...state, magicToken: { ...state.magicToken, loading: true } }
+    }
+    case AT.VELLOCI_CHECK_MAGIC_TOKEN_REJECTED: {
+      return { ...state, magicToken: { ...state.magicToken, loading: false } }
+    }
+    case AT.VELLOCI_CHECK_MAGIC_TOKEN_FULFILLED: {
+      return { ...state, magicToken: { ...state.magicToken, loading: false, data: payload } }
     }
 
     default:
