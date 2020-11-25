@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input, Dropdown } from 'semantic-ui-react'
-import { AlertTriangle, Clock, MoreVertical, Sliders } from 'react-feather'
+import { MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number, boolean } from 'prop-types'
 import Link from 'next/link'
 import styled from 'styled-components'
-
+import { Warning } from '@material-ui/icons'
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
@@ -45,36 +45,6 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
     </Menu.Item>
   </Link>
 ))
-
-const RedTriangle = styled(AlertTriangle)`
-  display: block;
-  width: 20px;
-  height: 19px;
-  margin: 0 auto;
-  vertical-align: top;
-  font-size: 20px;
-  color: #f16844;
-  line-height: 20px;
-
-  &.grey {
-    color: #20273a;
-  }
-`
-
-const ClockIcon = styled(Clock)`
-  display: block;
-  width: 20px;
-  height: 19px;
-  margin: 0 auto;
-  vertical-align: top;
-  font-size: 20px;
-  color: #f16844;
-  line-height: 20px;
-
-  &.grey {
-    color: #20273a;
-  }
-`
 
 const CustomDiv = styled.div`
   white-space: nowrap;
@@ -443,36 +413,40 @@ class Listings extends Component {
             }>
             <Dropdown.Menu>{this.getActionItems(this.getRowActions(r), r)}</Dropdown.Menu>
           </RowDropdown>
-          <span>
-            <SpanText className='buy-offer' onClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
-              this.tableRowClicked(r.id)
-            }}>{r.intProductName}</SpanText>
-          </span>
+          <SpanText className='buy-offer' onClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            this.tableRowClicked(r.id)
+          }}>
+            {r.intProductName}
+          </SpanText>
           <DivIcons>
-            {r.expired ? (
-              <Popup
-                header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
-                trigger={
-                  <div>
-                    <ClockIcon />
-                  </div>
-                } // <div> has to be there otherwise popup will be not shown
-              />
-            ) : null}
-            {r.condition ? (
+            {r.expired || r.condition ? (
               <Popup
                 size='small'
-                header={
-                  <FormattedMessage
-                    id='global.nonConforming.tooltip'
-                    defaultMessage='This is a non-conforming product.'
-                  />
-                }
+                inverted
+                style={{
+                  fontSize: '12px',
+                  color: '#cecfd4',
+                  opacity: '0.9'
+                }}
+                header={<div>
+                    {r.expired && (<div>
+                      <FormattedMessage
+                        id='global.expiredProduct.tooltip'
+                        defaultMessage='Expired Product'
+                      />
+                    </div>)}
+                    {r.condition && (<div>
+                      <FormattedMessage
+                          id='global.nonConforming.tooltip'
+                          defaultMessage='This is a non-conforming product.'
+                      />
+                    </div>)}
+                </div>}
                 trigger={
                   <div>
-                    <RedTriangle />
+                    <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
                   </div>
                 } // <div> has to be there otherwise popup will be not shown
               />
