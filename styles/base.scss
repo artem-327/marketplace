@@ -1,4 +1,5 @@
 @import 'isobs.scss';
+@import url(../src/fonts/Icons.css);
 @import url(../src/fonts/MyFontsWebfontsKit.css);
 
 $grey: #979797 !important;
@@ -13,6 +14,16 @@ $grey: #979797 !important;
 body {
   background: #fff;
   font-family: 'HelveticaNeueLTPro';
+}
+
+i.icon.fas:before {
+  font-family: 'Font Awesome 5 Pro';
+  font-weight: 900;
+}
+
+i.icon.fab:before {
+  font-family: 'Font Awesome 5 Pro';
+  font-weight: 700;
 }
 
 a:hover {
