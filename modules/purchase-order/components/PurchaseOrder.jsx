@@ -304,10 +304,17 @@ class PurchaseOrder extends Component {
     setSubmitting(false)
 
     if (values.address) {
-      //TODO it needs to be check if its "payload" prepare correctly with new BE endpoint
+      let shippingWarehouseId =
+        getSafe(() => this.state.selectedAddress.warehouse, '') && getSafe(() => this.state.selectedAddress.id, '')
+          ? { shippingWarehouseId: this.state.selectedAddress.id }
+          : ''
+      let shippingDeliveryAddressId =
+        !getSafe(() => this.state.selectedAddress.warehouse, '') && getSafe(() => this.state.selectedAddress.id, '')
+          ? { shippingDeliveryAddressId: this.state.selectedAddress.id }
+          : ''
       let payload = {
-        shippingWarehouseId: this.state.selectedAddress.id,
-        shippingDeliveryAddressId: this.state.selectedAddress.address.id
+        ...shippingWarehouseId,
+        ...shippingDeliveryAddressId
       }
       await requestManualShipment(payload)
       toastManager.add(
