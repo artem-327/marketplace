@@ -12,6 +12,7 @@ import styled from 'styled-components'
 import { Label, Popup } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 import { FormattedDateTime } from '~/components/formatted-messages/'
+import { ChevronLeft, ChevronDown } from 'react-feather'
 
 import GenericProductRequest from './message-details/GenericProductRequest'
 import ShippingQuoteRequest from './message-details/ShippingQuoteRequest'
@@ -135,6 +136,28 @@ class Table extends Component {
     )
   }
 
+  toggleDetail = (rowId) => {
+    let { expandedRowIds } = this.state
+    if (expandedRowIds.length) {
+      let found = false
+      let rows = expandedRowIds.reduce((result, id) => {
+        if (id === rowId) {
+          found = true
+          return result
+        } else {
+          result.push(id)
+          return result
+        }
+      }, [])
+      if (!found) {
+        rows.push(rowId)
+      }
+      this.setState({expandedRowIds: rows})
+    } else {
+      this.setState({expandedRowIds: [rowId]})
+    }
+  }
+
   getRows = () => {
     return this.props.rows.map(r => {
       const read = r.read ? 'read' : 'unread'
@@ -145,28 +168,36 @@ class Table extends Component {
         clsName: read + (selected ? ' selected' : '') + (open ? ' open' : ''),
         notification: this.notificationText(r.rawData),
 
-        time: r.createdAt
-          ? (
-            <Popup
-              size='small'
-              inverted
-              style={{
-                fontSize: '12px',
-                color: '#cecfd4',
-                opacity: '0.9'
-              }}
-              header={
-                <div style={{ color: '#cecfd4', fontSize: '12px' }}>
-                  {moment(r.createdAt).toDate().toLocaleString()}
-                </div>
-              }
-              trigger={
-                <div style={{ color: r.read ? '#848893' : '#20273a' }}>
-                  {moment(r.createdAt).fromNow()}
-                </div>
-              }
-            />
-          ) : 'N/A'
+        time: (
+          <>
+            {r.createdAt
+              ? (
+                <Popup
+                  size='small'
+                  inverted
+                  style={{
+                    fontSize: '12px',
+                    color: '#cecfd4',
+                    opacity: '0.9'
+                  }}
+                  header={
+                    <div style={{ color: '#cecfd4', fontSize: '12px' }}>
+                      {moment(r.createdAt).toDate().toLocaleString()}
+                    </div>
+                  }
+                  trigger={
+                    <div style={{ color: r.read ? '#848893' : '#20273a' }}>
+                      {moment(r.createdAt).fromNow()}
+                    </div>
+                  }
+                />
+              ) : 'N/A'}
+            {open
+              ? <ChevronLeft onClick={() => this.toggleDetail(r.id)} />
+              : <ChevronDown onClick={() => this.toggleDetail(r.id)} />
+            }
+          </>
+        )
       }
     })
   }

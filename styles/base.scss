@@ -2484,10 +2484,11 @@ i.file {
         tr {
 
           td {
-            border-top: 1px solid #dde2e6;
             position: relative;
             overflow: visible;
             height: 20px;
+            border-top: 1px solid #dde2e6;
+            border-right: 0 none;
             padding: 13px 10px !important;
             box-shadow: 0 6px 0 0 #f8f9fb;
             font-size: 14px;
@@ -2501,6 +2502,7 @@ i.file {
 
             &:nth-child(1):not(.p-0),
             &.p-0:nth-child(1) + td {
+              border-left: 1px solid #dde2e6;
               border-top-left-radius: 3px;
               border-bottom-left-radius: 3px;
             }
@@ -2551,6 +2553,7 @@ i.file {
 
             &:nth-last-child(2) {
               position: relative;
+              border-right: 1px solid #dde2e6;
               border-bottom-right-radius: 3px;
               padding-right: 20px !important;
 
@@ -2638,6 +2641,7 @@ i.file {
                 border-radius: 3px;
                 border-top-left-radius: 0;
                 border-top-right-radius: 0;
+                white-space: normal !important;
 
                 &:before {
                   content: "";
@@ -2652,6 +2656,26 @@ i.file {
                   border-color: #dde2e6;
                   background: #fff;
                 }
+              }
+
+              td:last-child {
+                border-right: 1px solid #dde2e6;
+              }
+            }
+          }
+
+          &.selected {
+
+            td {
+
+              &:nth-child(n) {
+                border-color: #2599d5;
+                background-color: #e8f7ff;
+              }
+
+              &:first-child {
+                border-left-width: 4px;
+                padding-left: 7px !important;
               }
             }
           }
