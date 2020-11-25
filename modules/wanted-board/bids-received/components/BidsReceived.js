@@ -301,8 +301,9 @@ class BidsReceived extends Component {
   }
 
   getActions = () => {
-    const { intl, sidebarDetailTrigger, datagrid, deletePurchaseRequestItem } = this.props
+    const { intl, sidebarDetailTrigger, datagrid, deletePurchaseRequestItem, isCompanyAdmin, isMerchant } = this.props
     let { formatMessage } = intl
+    let hasPermission = isCompanyAdmin || isMerchant
     return [
       {
         text: formatMessage({
@@ -370,7 +371,8 @@ class BidsReceived extends Component {
           row.treeRoot ||
           row.cfHistoryLastStatus === 'REJECTED' ||
           row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
-          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER' ||
+          !hasPermission
       },
       {
         text: formatMessage({
@@ -389,7 +391,8 @@ class BidsReceived extends Component {
         hidden: row =>
           row.treeRoot ||
           row.cfHistoryLastStatus === 'REJECTED' ||
-          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER')
+          (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER') ||
+          !hasPermission
       },
       {
         text: formatMessage({
@@ -406,7 +409,8 @@ class BidsReceived extends Component {
           row.cfHistoryLastStatus === 'REJECTED' ||
           (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER') ||
           row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
-          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER' ||
+          !hasPermission
       },
       {
         text: formatMessage({
@@ -422,7 +426,8 @@ class BidsReceived extends Component {
           row.cfHistoryLastStatus === 'REJECTED' ||
           (row.cfHistoryLastStatus === 'NEW' && row.cfHistoryLastType === 'COUNTER') ||
           row.cfHistoryLastStatus === 'ACCEPTED_BY_BUYER' ||
-          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER'
+          row.cfHistoryLastStatus === 'ACCEPTED_BY_SELLER' ||
+          !hasPermission
       }
     ]
   }

@@ -163,7 +163,8 @@ class Tutorial extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tutorialTab: ''
+      tutorialTab: '',
+      isLoading: true
     }
   }
 
@@ -197,7 +198,7 @@ class Tutorial extends Component {
     }
 
     if (!tutorialTab) {
-      this.setState({ tutorialTab: this.getNextTab() })
+      this.setState({ tutorialTab: this.getNextTab(), isLoading: false })
     }
   }
 
@@ -322,7 +323,7 @@ class Tutorial extends Component {
   }
 
   render() {
-    const { tutorialTab } = this.state
+    const { tutorialTab, isLoading } = this.state
     const {
       marginMarketplace,
       marginHolds,
@@ -348,66 +349,70 @@ class Tutorial extends Component {
     const theme = {
       margin
     }
-    return !isCompanyAdmin && (isMerchant || isClientCompanyManager || isOrderProcessing) ? null : (
-      <>
-        {tutorialTab && !isBusinessVerification && isTutorial ? (
-          <ThemeProvider theme={theme}>
-            <Rectangle>
-              <div>
-                <Title>
-                  <FormattedMessage id={`tutorial.${tutorialTab}.title`} defaultMessage={'Title'}>
-                    {text => text}
-                  </FormattedMessage>
-                </Title>
-                <Content>
-                  <FormattedMessage id={`tutorial.${tutorialTab}.content`} defaultMessage={'Content'}>
-                    {text => text}
-                  </FormattedMessage>
-                </Content>
+    if ((!isCompanyAdmin && (isMerchant || isClientCompanyManager || isOrderProcessing)) || isLoading) {
+      return null
+    } else if (!isLoading && tutorialTab && !isBusinessVerification && isTutorial) {
+      return (
+        <ThemeProvider theme={theme}>
+          <Rectangle>
+            <div>
+              <Title>
+                <FormattedMessage id={`tutorial.${tutorialTab}.title`} defaultMessage={'Title'}>
+                  {text => text}
+                </FormattedMessage>
+              </Title>
+              <Content>
+                <FormattedMessage id={`tutorial.${tutorialTab}.content`} defaultMessage={'Content'}>
+                  {text => text}
+                </FormattedMessage>
+              </Content>
 
-                <CustomSkipButton type='button' onClick={e => this.handleSetCookies(e, true)}>
-                  <FormattedMessage id='"global.skip"' defaultMessage='Skip' />
-                </CustomSkipButton>
-                <CustomButton type='button' onClick={e => this.handleSetCookies(e, false)}>
-                  <FormattedMessage id={`tutorial.${tutorialTab}.button`} defaultMessage='Button' />
-                </CustomButton>
-              </div>
-              {this.getIcons()}
-            </Rectangle>
-          </ThemeProvider>
-        ) : accountStatus === 'none' && isBusinessVerification && !isTutorial ? (
-          <ThemeProvider theme={theme}>
-            <Rectangle>
-              <div>
-                <Title>
-                  <FormattedMessage id='tutorial.businessVerification.title' defaultMessage='Business Verification'>
-                    {text => text}
-                  </FormattedMessage>
-                </Title>
-                <Content>
+              <CustomSkipButton type='button' onClick={e => this.handleSetCookies(e, true)}>
+                <FormattedMessage id='"global.skip"' defaultMessage='Skip' />
+              </CustomSkipButton>
+              <CustomButton type='button' onClick={e => this.handleSetCookies(e, false)}>
+                <FormattedMessage id={`tutorial.${tutorialTab}.button`} defaultMessage='Button' />
+              </CustomButton>
+            </div>
+            {this.getIcons()}
+          </Rectangle>
+        </ThemeProvider>
+      )
+    } else if (!isLoading && accountStatus === 'none' && isBusinessVerification && !isTutorial) {
+      return (
+        <ThemeProvider theme={theme}>
+          <Rectangle>
+            <div>
+              <Title>
+                <FormattedMessage id='tutorial.businessVerification.title' defaultMessage='Business Verification'>
+                  {text => text}
+                </FormattedMessage>
+              </Title>
+              <Content>
+                <FormattedMessage
+                  id='tutorial.businessVerification.content'
+                  defaultMessage='EchoSystem is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, EchoSystem must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'>
+                  {text => text}
+                </FormattedMessage>
+              </Content>
+              <DivBottomBusinessVerification>
+                <CustomBeginNowButton type='button' onClick={e => Router.push('/velloci-register')}>
+                  <FormattedMessage id='tutorial.businessVerification.beginNow' defaultMessage='Begin now' />
+                </CustomBeginNowButton>
+                <DivEstimated>
                   <FormattedMessage
-                    id='tutorial.businessVerification.content'
-                    defaultMessage='EchoSystem is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, EchoSystem must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'>
-                    {text => text}
-                  </FormattedMessage>
-                </Content>
-                <DivBottomBusinessVerification>
-                  <CustomBeginNowButton type='button' onClick={e => Router.push('/velloci-register')}>
-                    <FormattedMessage id='tutorial.businessVerification.beginNow' defaultMessage='Begin now' />
-                  </CustomBeginNowButton>
-                  <DivEstimated>
-                    <FormattedMessage
-                      id={'tutorial.businessVerification.estimated'}
-                      defaultMessage='Estimated time ~ 10 minutes'
-                    />
-                  </DivEstimated>
-                </DivBottomBusinessVerification>
-              </div>
-            </Rectangle>
-          </ThemeProvider>
-        ) : null}
-      </>
-    )
+                    id={'tutorial.businessVerification.estimated'}
+                    defaultMessage='Estimated time ~ 10 minutes'
+                  />
+                </DivEstimated>
+              </DivBottomBusinessVerification>
+            </div>
+          </Rectangle>
+        </ThemeProvider>
+      )
+    } else {
+      return null
+    }
   }
 }
 
@@ -422,7 +427,7 @@ const mapStateToProps = state => {
 
   let accountStatus = 'none'
   if (company && company.dwollaAccountStatus) accountStatus = company.dwollaAccountStatus
-  if (company && company.vellociAccountStatus) accountStatus = company.vellociAccountStatus
+  else if (company && company.vellociAccountStatus) accountStatus = company.vellociAccountStatus
 
   return {
     accountStatus,
