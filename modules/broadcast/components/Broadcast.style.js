@@ -57,7 +57,7 @@ const Row = styled.div`
 
 const Root = styled.div`
   display: flex;
-  flex: 1 0 auto;
+  flex: 1 1 100px;
   flex-direction: column;
   margin: 0em 0.714285714em;
   background-color: #ffffff;
@@ -141,12 +141,14 @@ const BottomUnpaddedRow = styled(GridRow)`
 `
 
 const RightAlignedDiv = styled.div`
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
   text-align: right;
   margin-top: 20px;
 `
 
 const StretchedGrid = styled(Grid)`
-  height: 90% !important;
+  height: calc(100% - 30px) !important;
 
   .ui.info.message {
     border: solid 1px #2599d5;
@@ -221,6 +223,7 @@ const InputSearch = styled(Input)`
 
 const GridRowTable = styled(Grid.Row)`
   padding-top: 7px !important;
+  padding-bottom: 0 !important;
 `
 
 const ButtonSave = styled(Button)`
