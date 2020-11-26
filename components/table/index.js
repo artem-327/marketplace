@@ -410,6 +410,7 @@ class _Table extends Component {
     rows: pt.arrayOf(pt.any),
     selectedRows: pt.array,
     rowDetail: pt.func,
+    toggleCellComponent: pt.func,
     columnReordering: pt.bool,
     rowSelection: pt.bool,
     showSelectAll: pt.bool,
@@ -466,6 +467,7 @@ class _Table extends Component {
     treeDataType: false,
     rowDetailType: false,
     rowDetail: () => {},
+    toggleCellComponent: () => {},
     selectedRows: [],
     groupBy: [],
     defaultHiddenColumns: [],
@@ -923,6 +925,7 @@ class _Table extends Component {
     const {
       rows,
       rowDetail,
+      toggleCellComponent,
       columns,
       filterValue,
       columnReordering,
@@ -1109,6 +1112,7 @@ class _Table extends Component {
               <TableRowDetail
                 contentComponent={rowDetail}
                 cellComponent={props => <DetailTableCells rowDetail={rowDetail} {...props} />}
+                toggleCellComponent={toggleCellComponent}
               />
             )}
 

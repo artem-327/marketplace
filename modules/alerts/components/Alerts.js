@@ -62,13 +62,13 @@ class Alerts extends Component {
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
           <div id='page' className='flex stretched scrolling'>
             <Container fluid>
-              <HighMenu />
+              <HighMenu onDatagridUpdate={(selection) => this.setState({ selectedRows: selection })} />
             </Container>
 
             <Container fluid style={{ padding: '20px 30px' }}>
               <TablesHandlers
                 selectedRows={this.state.selectedRows}
-                onMarkUpdate={(selection) => this.setState({ selectedRows: selection })}
+                onDatagridUpdate={(selection) => this.setState({ selectedRows: selection })}
               />
             </Container>
 

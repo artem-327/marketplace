@@ -168,13 +168,14 @@ class TablesHandlers extends Component {
       name: 'switchButtonsValue',
       value
     })
+    if (this.props.onDatagridUpdate) this.props.onDatagridUpdate([])
   }
 
   handleMarkAsSeen = async () => {
-    const { datagrid, selectedRows, onMarkUpdate, markSeenArray } = this.props
+    const { datagrid, selectedRows, onDatagridUpdate, markSeenArray } = this.props
     try {
       await markSeenArray({ messages: selectedRows })
-      if (onMarkUpdate) onMarkUpdate([])
+      if (onDatagridUpdate) onDatagridUpdate([])
       datagrid.loadData()
     } catch (err) {
       console.error(err)
@@ -182,10 +183,10 @@ class TablesHandlers extends Component {
   }
 
   handleMarkAsUnseen = async () => {
-    const { datagrid, selectedRows, onMarkUpdate, markUnseenArray } = this.props
+    const { datagrid, selectedRows, onDatagridUpdate, markUnseenArray } = this.props
     try {
       await markUnseenArray({ messages: selectedRows })
-      if (onMarkUpdate) onMarkUpdate([])
+      if (onDatagridUpdate) onDatagridUpdate([])
       datagrid.loadData()
     } catch (err) {
       console.error(err)
@@ -193,10 +194,10 @@ class TablesHandlers extends Component {
   }
 
   handleDelete = async () => {
-    const { datagrid, selectedRows, onMarkUpdate, deleteArray } = this.props
+    const { datagrid, selectedRows, onDatagridUpdate, deleteArray } = this.props
     try {
       await deleteArray({ messages: selectedRows })
-      if (onMarkUpdate) onMarkUpdate([])
+      if (onDatagridUpdate) onDatagridUpdate([])
       datagrid.loadData()
     } catch (err) {
       console.error(err)

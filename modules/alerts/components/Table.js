@@ -9,11 +9,10 @@ import ProdexTable from '~/components/table'
 import * as Actions from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
-import { Label, Popup } from 'semantic-ui-react'
+import { Label, Popup, Checkbox } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 import { FormattedDateTime } from '~/components/formatted-messages/'
-import { ChevronLeft, ChevronDown } from 'react-feather'
-
+import { ChevronUp, ChevronDown } from 'react-feather'
 import GenericProductRequest from './message-details/GenericProductRequest'
 import ShippingQuoteRequest from './message-details/ShippingQuoteRequest'
 
@@ -46,6 +45,18 @@ const StyledNotification = styled.div`
     font-weight: bold;
     color: #2599d5;
   }
+`
+
+const NotificationsCount = styled.div`
+  text-align: center;
+  font-size: 14px;
+  color: #20273a;
+  height: 30px;
+  border-radius: 4px;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  margin-bottom: 25px;
+  padding: 4px;
 `
 
 class Table extends Component {
@@ -101,6 +112,17 @@ class Table extends Component {
         ),
         sortPath: 'Message.createdAt',
         width: 160
+      },
+      {
+        name: 'expand',
+        title: <div></div>,
+        caption: (
+          <FormattedMessage id='alerts.column.expand' defaultMessage='Expand'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        align: 'center',
+        width: 50
       }
     ],
     expandedRowIds: []
@@ -167,37 +189,32 @@ class Table extends Component {
         ...r,
         clsName: read + (selected ? ' selected' : '') + (open ? ' open' : ''),
         notification: this.notificationText(r.rawData),
-
-        time: (
-          <>
-            {r.createdAt
-              ? (
-                <Popup
-                  size='small'
-                  inverted
-                  style={{
-                    fontSize: '12px',
-                    color: '#cecfd4',
-                    opacity: '0.9'
-                  }}
-                  header={
-                    <div style={{ color: '#cecfd4', fontSize: '12px' }}>
-                      {moment(r.createdAt).toDate().toLocaleString()}
-                    </div>
-                  }
-                  trigger={
-                    <div style={{ color: r.read ? '#848893' : '#20273a' }}>
-                      {moment(r.createdAt).fromNow()}
-                    </div>
-                  }
-                />
-              ) : 'N/A'}
-            {open
-              ? <ChevronLeft onClick={() => this.toggleDetail(r.id)} />
-              : <ChevronDown onClick={() => this.toggleDetail(r.id)} />
-            }
-          </>
-        )
+        time:
+          r.createdAt
+            ? (
+              <Popup
+                size='small'
+                inverted
+                style={{
+                  fontSize: '12px',
+                  color: '#cecfd4',
+                  opacity: '0.9'
+                }}
+                header={
+                  <div style={{ color: '#cecfd4', fontSize: '12px' }}>
+                    {moment(r.createdAt).toDate().toLocaleString()}
+                  </div>
+                }
+                trigger={
+                  <div style={{ color: r.read ? '#848893' : '#20273a' }}>
+                    {moment(r.createdAt).fromNow()}
+                  </div>
+                }
+              />
+            ) : 'N/A',
+        expand: open
+          ? <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+          : <ChevronDown size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
       }
     })
   }
@@ -386,6 +403,40 @@ class Table extends Component {
     }
   }
 
+  toggleCellComponent = ({
+    expanded, onToggle,
+    tableColumn, tableRow, row, style,
+    ...restProps
+  }) => {
+    const { selectedRows } = this.props
+    return (
+      <td
+        style={{
+          verticalAlign: 'middle',
+          textAlign: 'center',
+          ...style,
+        }}
+        {...restProps}
+      >
+        <Checkbox
+          defaultChecked={selectedRows.some(s => s === row.id)}
+          onChange={(e, { checked }) => {
+            e.preventDefault()
+            let newSelectedRows = selectedRows.slice()
+            if (checked) {
+              if (!newSelectedRows.includes(row.id)) {
+                newSelectedRows.push(row.id)
+                this.props.onSelectionChange(newSelectedRows)
+              }
+            } else {
+              this.props.onSelectionChange(newSelectedRows.filter(id => id !== row.id))
+            }
+          }}
+        />
+      </td>
+    )
+  }
+
   render() {
     const { intl, datagrid, markSeenSending, menuStatusFilter, selectedRows } = this.props
     const { formatMessage } = intl
@@ -393,6 +444,35 @@ class Table extends Component {
 
     return (
       <React.Fragment>
+
+        {selectedRows.length ? (
+          <NotificationsCount>
+            {selectedRows.length === 1
+              ? (
+                <FormattedMessage
+                  id='alerts.notificationsCount'
+                  defaultMessage='{count} {notification} on this page {is} selected'
+                  values={{
+                    count: (<b>{selectedRows.length}</b>),
+                    notification: (<b><FormattedMessage id='alerts.notification' defaultMessage='notification'/></b>),
+                    is: (<FormattedMessage id='alerts.is' defaultMessage='is'/>)
+                  }}
+                />
+              ): (
+                <FormattedMessage
+                  id='alerts.notificationsCount'
+                  defaultMessage='{count} {notification} on this page {is} selected'
+                  values={{
+                    count: (<b>{selectedRows.length}</b>),
+                    notification: (<b><FormattedMessage id='alerts.notifications' defaultMessage='notifications'/></b>),
+                    is: (<FormattedMessage id='alerts.are' defaultMessage='are'/>)
+                  }}
+                />
+              )
+            }
+          </NotificationsCount>
+        ) : null}
+
         <div className='flex stretched notifications-wrapper'>
           <ProdexTable
             tableName={`operations_tag_${menuStatusFilter}`}
@@ -407,8 +487,8 @@ class Table extends Component {
             rowSelection={true}
             lockSelection={false}
             showSelectAll={false}
+            toggleCellComponent={this.toggleCellComponent}
             selectedRows={selectedRows}
-            showSelectionColumn
             onSelectionChange={selectedRows => {
               this.props.onSelectionChange(selectedRows)
             }}
