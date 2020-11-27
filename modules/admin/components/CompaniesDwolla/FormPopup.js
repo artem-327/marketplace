@@ -254,6 +254,7 @@ class AddNewPopupCasProducts extends React.Component {
                             label={<FormattedMessage id='global.dateOfBirth2' defaultMessage='Birth' />}
                             name='dwollaController.dateOfBirth'
                             inputProps={{ 'data-test': 'admin_popup_company_dwolla_birth_dtin' }}
+                            inputOnly
                           />
                           <Input
                             label={<FormattedMessage id='global.ssn2' defaultMessage='SSN' />}
