@@ -10,7 +10,7 @@ import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import Link from 'next/link'
-import { CheckCircle, ChevronDown, ChevronRight } from 'react-feather'
+import { CheckCircle, ChevronDown, ChevronUp, ChevronRight } from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
 import { AttachmentManager } from '~/modules/attachments'
@@ -18,6 +18,7 @@ import { uniqueArrayByKey } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import TablesHandlers from './TablesHandlers'
 import { debounce } from 'lodash'
+import DetailRow from './components/detail-row'
 
 const StyledModal = styled(Modal)`
   > .header {
@@ -305,15 +306,15 @@ class Orders extends Component {
         actions: this.getActionsOrdersList()
       },
       {
-        name: 'globalStatus',
+        name: 'customerName',
         title: (
-          <FormattedMessage id='order.cfGlobalStatus' defaultMessage='Status'>
+          <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
             {text => text}
           </FormattedMessage>
         ),
         width: 120,
-        sortPath: 'Order.cfGlobalStatus'
-      },
+        sortPath: 'Order.sellerCompanyName'
+      }, // ! ! ? seller vs purchaser
       {
         name: 'date',
         title: (
@@ -325,108 +326,22 @@ class Orders extends Component {
         sortPath: 'Order.createdAt'
       },
       {
-        name: 'customerName',
+        name: 'shippingStatus',
         title: (
-          <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
+          <FormattedMessage id='orders.deliveryStatus' defaultMessage='Delivery Status'>
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
-        sortPath: 'Order.sellerCompanyName'
-      }, // ! ! ? seller vs purchaser
-      {
-        name: 'productName',
-        title: (
-          <FormattedMessage id='order.productName' defaultMessage='Product Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 160
+        width: 120
       },
       {
         name: 'orderStatus',
         title: (
-          <FormattedMessage id='order' defaultMessage='Order'>
+          <FormattedMessage id='orders.orderStatus' defaultMessage='Order Status'>
             {text => text}
           </FormattedMessage>
         ),
         width: 120
-      },
-      {
-        name: 'shippingStatus',
-        title: (
-          <FormattedMessage id='order.shipping' defaultMessage='Shipping'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'reviewStatus',
-        title: (
-          <FormattedMessage id='order.review' defaultMessage='Review'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'creditStatus',
-        title: (
-          <FormattedMessage id='order.credit' defaultMessage='Credit'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'paymentStatus',
-        title: (
-          <FormattedMessage id='order.payment' defaultMessage='Payment'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 120
-      },
-      {
-        name: 'bl',
-        title: (
-          <FormattedMessage id='order.bl' defaultMessage='B/L'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-        align: 'center'
-      },
-      {
-        name: 'sds',
-        title: (
-          <FormattedMessage id='order.sds' defaultMessage='SDS'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-        align: 'center'
-      },
-      {
-        name: 'cofA',
-        title: (
-          <FormattedMessage id='order.cOfa' defaultMessage='C of A'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-        align: 'center'
-      },
-      {
-        name: 'related',
-        title: (
-          <FormattedMessage id='order.related' defaultMessage='Related'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 80,
-        align: 'center'
       },
       {
         name: 'orderTotal',
@@ -438,6 +353,17 @@ class Orders extends Component {
         width: 160,
         align: 'right',
         sortPath: 'Order.cfPriceSubtotal'
+      },
+      {
+        name: 'expand',
+        title: <div></div>,
+        caption: (
+          <FormattedMessage id='alerts.column.expand' defaultMessage='Expand'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        align: 'center',
+        width: 50
       }
     ]
   }
@@ -448,35 +374,7 @@ class Orders extends Component {
 
     return this.props.rows.map(row => ({
       ...row,
-      orderId: (
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {this.state.expandedRowIds.some(el => el === row.id) ? (
-              <ChevronDown
-                size={20}
-                style={{ color: '#2599d5', cursor: 'pointer' }}
-                onClick={e => {
-                  e.stopPropagation()
-                  const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
-                  this.setState({ expandedRowIds })
-                }}
-              />
-            ) : (
-              <ChevronRight
-                size={20}
-                style={{ color: '#2599d5', cursor: 'pointer' }}
-                onClick={e => {
-                  e.stopPropagation()
-                  let expandedRowIds = this.state.expandedRowIds.slice()
-                  expandedRowIds.push(row.id)
-                  this.setState({ expandedRowIds })
-                }}
-              />
-            )}
-          </div>
-          <div>{row.id}</div>
-        </div>
-      ),
+      orderId: <div>{row.id}</div>,
       productName: (
         <ArrayToFirstItem
           values={
@@ -619,7 +517,13 @@ class Orders extends Component {
           </a>
         ),
         orderTotal: ''
-      }))
+      })),
+      expand: this.state.expandedRowIds.some(id => id === row.id) ? (
+        <ChevronUp size={16} style={{ cursor: 'pointer' }} />
+      ) : (
+        <ChevronDown size={16} style={{ cursor: 'pointer' }} />
+      ),
+      clsName: this.state.expandedRowIds.some(id => id === row.id) ? ' open' : ''
     }))
   }
 
@@ -1061,6 +965,14 @@ class Orders extends Component {
     )
   }
 
+  getRowDetail = ({ row }) => {
+    return <DetailRow row={row} />
+  }
+
+  toggleCellComponent = ({ expanded, onToggle, tableColumn, tableRow, row, style, ...restProps }) => {
+    return <></>
+  }
+
   render() {
     const { isFetching, currentTab, datagrid, tutorialCompleted } = this.props
 
@@ -1148,36 +1060,35 @@ class Orders extends Component {
           {isFetching ? (
             <Spinner />
           ) : (
-            <ProdexGrid
-              tableName={`orders_grid_${currentTab}`}
-              columns={this.getColumns()}
-              {...datagrid.tableProps}
-              loading={datagrid.loading}
-              rows={this.getRows()}
-              treeDataType={true}
-              tableTreeColumn={'orderId'}
-              getChildRows={(row, rootRows) => {
-                return row ? row.orderItems : rootRows
-              }}
-              onRowClick={(_, row) => {
-                if (row.root && row.orderItems.length) {
-                  let ids = this.state.expandedRowIds.slice()
-                  if (ids.includes(row.id)) {
-                    //ids.filter(id => id === row.id)
-                    this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
-                  } else {
-                    ids.push(row.id)
-                    this.setState({ expandedRowIds: ids })
+            <div className='flex stretched orders-wrapper'>
+              <ProdexGrid
+                tableName={`orders_grid_${currentTab}`}
+                columns={this.getColumns()}
+                {...datagrid.tableProps}
+                loading={datagrid.loading}
+                rows={this.getRows()}
+                rowDetailType={true}
+                rowDetail={this.getRowDetail}
+                onRowClick={(_, row) => {
+                  if (row.root && row.orderItems.length) {
+                    let ids = this.state.expandedRowIds.slice()
+                    if (ids.includes(row.id)) {
+                      //ids.filter(id => id === row.id)
+                      this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
+                    } else {
+                      ids.push(row.id)
+                      this.setState({ expandedRowIds: ids })
+                    }
                   }
-                }
-              }}
-              expandedRowIds={this.state.expandedRowIds}
-              onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-              // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
-              defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
-              columnActions='orderId'
-              rowChildActions={[]}
-            />
+                }}
+                expandedRowIds={this.state.expandedRowIds}
+                onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
+                // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
+                defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
+                columnActions='orderId'
+                estimatedRowHeight={1000}
+              />
+            </div>
           )}
         </Container>
       </div>

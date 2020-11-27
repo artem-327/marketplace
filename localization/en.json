@@ -2936,6 +2936,11 @@
   "velloci.companyVerification.list.field": "Filed and stamped articles of incorporation",
   "velloci.companyVerification.list.tax": "Sales/Use Tax License",
   "velloci.companyVerification.list.license": "Business License",
-  "velloci.companyVerification.list.certificate": "Certificate of Good Standing"
+  "velloci.companyVerification.list.certificate": "Certificate of Good Standing",
+  "orders.orderStatus": "Order Status",
+  "orders.deliveryStatus": "Delivery Status",
+  "orders.reviewStatus": "Review Status",
+  "orders.creditStatus": "Credit Status",
+  "orders.paymentStatus": "Payment Status"
 
 }

@@ -302,7 +302,7 @@ const DetailTableCells = props => {
   return (
     <>
       {isEchoCode ? <Table.Cell className='p-0'></Table.Cell> : null}
-      <Table.Cell {...modifiedProps} className='not-found'/>
+      <Table.Cell {...modifiedProps} className='not-found' />
     </>
   )
 }
@@ -421,6 +421,7 @@ class _Table extends Component {
     sorting: pt.bool,
     treeDataType: pt.bool,
     rowDetailType: pt.bool,
+    isToggleCellComponent: pt.bool,
     groupBy: pt.array,
     defaultSelection: pt.array,
     onSelectionChange: pt.func,
@@ -466,6 +467,7 @@ class _Table extends Component {
     sorting: true,
     treeDataType: false,
     rowDetailType: false,
+    isToggleCellComponent: false,
     rowDetail: () => {},
     toggleCellComponent: () => {},
     selectedRows: [],
@@ -678,7 +680,7 @@ class _Table extends Component {
       const sameGroup = selectionGroups.every(sg => sg === selectionGroups[0])
       const finalSelection = singleSelection ? [lastSelected] : selection
       if (sameGroup || !sameGroupSelectionOnly) {
-        this.setState({selection: finalSelection})
+        this.setState({ selection: finalSelection })
         onSelectionChange(finalSelection)
 
         return true
@@ -687,7 +689,7 @@ class _Table extends Component {
     }
 
     const finalSelection = singleSelection ? [lastSelected] : selection
-    this.setState({selection: finalSelection})
+    this.setState({ selection: finalSelection })
     onSelectionChange(finalSelection)
     return true
   }
@@ -942,6 +944,7 @@ class _Table extends Component {
       sorting,
       treeDataType,
       rowDetailType,
+      isToggleCellComponent,
       onSortingChange,
       integratedSorting,
       groupBy,
@@ -1074,7 +1077,7 @@ class _Table extends Component {
                 noDataCellComponent={NoDataTableCells}
                 messages={MESSAGES}
                 rowComponent={props => {
-                  return (<Row onClick={onRowClick} {...props} />)
+                  return <Row onClick={onRowClick} {...props} />
                 }}
               />
             ) : (
@@ -1108,11 +1111,18 @@ class _Table extends Component {
               />
             )}
 
-            {rowDetailType && (
+            {rowDetailType && isToggleCellComponent && (
               <TableRowDetail
                 contentComponent={rowDetail}
                 cellComponent={props => <DetailTableCells rowDetail={rowDetail} {...props} />}
                 toggleCellComponent={toggleCellComponent}
+              />
+            )}
+
+            {rowDetailType && !isToggleCellComponent && (
+              <TableRowDetail
+                contentComponent={rowDetail}
+                cellComponent={props => <DetailTableCells rowDetail={rowDetail} {...props} />}
               />
             )}
 
