@@ -28,6 +28,7 @@ import { PHONE_REGEXP } from '~/src/utils/constants'
 import { getStringISODate } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
 import Router from 'next/router'
+import BeneficialOwnersPopup from './steps/BeneficialOwnersPopup'
 
 class VellociRegister extends Component {
   componentDidMount() {
@@ -251,7 +252,20 @@ class VellociRegister extends Component {
           Yup.lazy(v => {
             //let isAnyValueFilled = deepSearch(v, (val, key) => val !== '' && key !== 'country')
             const businessOwnershipPercentage = values.ownerInformation.isBeneficialOwner
-              ? { businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage) }
+              ? { businessOwnershipPercentage: Yup.string()
+                  .trim()
+                  .required(errorMessages.requiredMessage)
+                  .test('v', errorMessages.minimum(0), function (v) {
+                    if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                    return Number(v) >= 0
+                  })
+                  .test('v', errorMessages.maximum(100), function (v) {
+                    if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                    return Number(v) <= 100
+                  })
+                  .test('v', errorMessages.mustBeNumber, function (v) {
+                    return v === null || v === '' || !isNaN(v)
+                  })}
               : null
             return Yup.object().shape({
               firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -351,7 +365,9 @@ class VellociRegister extends Component {
       countBeneficialOwners,
       numberBeneficialOwners,
       isLoadingSubmitButton,
-      initialValues
+      initialValues,
+      openEmailPopup,
+      emailPopup
     } = this.props
     return (
       <Grid>
@@ -378,11 +394,13 @@ class VellociRegister extends Component {
                         activeStep={activeStep}
                         numberBeneficialOwners={numberBeneficialOwners}
                         countBeneficialOwners={countBeneficialOwners}
-                        isLoadingSubmitButton={isLoadingSubmitButton}>
+                        isLoadingSubmitButton={isLoadingSubmitButton}
+                        openEmailPopup={openEmailPopup}>
                         {this.getContent(formikProps)}
                       </FormRectangle>
                     </Grid>
                     <ErrorFocus />
+                    {emailPopup.isOpen && <BeneficialOwnersPopup />}
                   </Form>
                 )
               }}

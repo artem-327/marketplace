@@ -7,7 +7,7 @@ import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, D
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
-
+import { Warning } from '@material-ui/icons'
 import ProdexTable from '~/components/table'
 import DetailSidebar from '~/modules/inventory/my-listings/components/DetailSidebar'
 import QuickEditPricingPopup from '~/modules/inventory/my-listings/components/QuickEditPricingPopup'
@@ -107,6 +107,16 @@ const CapitalizedText = styled.span`
 
 const DivRow = styled.div`
   display: flex !important;
+  
+  > div {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+  
+  > span {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
 `
 
 const SpanText = styled.span`
@@ -126,6 +136,7 @@ const DivIcons = styled.div`
   position: -webkit-sticky !important;
   position: sticky !important;
   right: 0px !important;
+  float: right !important;
   display: flex !important;
   margin-left: 10px !important;
 `
@@ -496,8 +507,12 @@ class MyListings extends Component {
       getSafe(() => prevProps.rows[0].id, '') !== getSafe(() => this.props.rows[0].id, '') ||
       getSafe(() => prevProps.pricingEditOpenId, '') !== getSafe(() => this.props.pricingEditOpenId, '') ||
       (getSafe(() => this.state.updatedRow, '') && !getSafe(() => prevState.updateRow, '')) ||
-      getSafe(() => this.state.focusInput, '') !== getSafe(() => prevState.focusInput, '')
+      getSafe(() => this.state.focusInput, '') !== getSafe(() => prevState.focusInput, '') ||
+      getSafe(() => datagrid.isUpdatedRow, '')
     ) {
+      if (getSafe(() => datagrid.isUpdatedRow, '')) {
+        datagrid.setUpdatedRow(false)
+      }
       this.getRows(this.props.rows)
       if (this.state.updatedRow && !prevState.updateRow) {
         this.setState({ updatedRow: false })
@@ -829,23 +844,25 @@ class MyListings extends Component {
               {r.productName}
             </SpanText>
             <DivIcons>
-              {r.expired ? (
-                <Popup
-                  header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
-                  trigger={
-                    <div>
-                      <ClockIcon />
-                    </div>
-                  } // <div> has to be there otherwise popup will be not shown
-                />
-              ) : null}
-              {productStatusText ? (
+              {r.expired || productStatusText ? (
                 <Popup
                   size='small'
-                  header={productStatusText}
+                  inverted
+                  style={{
+                    fontSize: '12px',
+                    color: '#cecfd4',
+                    opacity: '0.9'
+                  }}
+                  header={<div>
+                    {r.expired && (
+                      <div>
+                        <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
+                      </div>)}
+                    {productStatusText && (<div>{productStatusText}</div>)}
+                  </div>}
                   trigger={
                     <div>
-                      <FileTextIcon />
+                      <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
                     </div>
                   } // <div> has to be there otherwise popup will be not shown
                 />

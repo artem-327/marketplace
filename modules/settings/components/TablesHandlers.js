@@ -349,13 +349,14 @@ class TablesHandlers extends Component {
   }
 
   onSuccess = async (publicToken, metadata) => {
-    await this.props.vellociAddAcount(publicToken)
+    await this.props.vellociAddAcount(publicToken, metadata)
   }
 
   onEvent = async (eventName, metadata) => {
     if (eventName === 'HANDOFF') {
       this.props.reloadBankAccounts(true)
     }
+
     this.props.vellociOnEvent(eventName, metadata)
   }
 
@@ -384,25 +385,23 @@ class TablesHandlers extends Component {
 
     return (
       <>
-        { currentTab !== 'documents' &&
-          currentTab !== 'logistics' &&
-          currentTab !== 'bank-accounts' && (
-            <div>
-              <div className='column'>
-                <Input
-                  style={{ width: '370px' }}
-                  icon='search'
-                  name='searchInput'
-                  value={filterValue ? filterValue.searchInput : ''}
-                  placeholder={formatMessage({
-                    id: textsTable[currentTab].SearchText,
-                    defaultMessage: 'Select Credit Card'
-                  })}
-                  onChange={this.handleFilterChangeInputSearch}
-                />
-              </div>
+        {currentTab !== 'documents' && currentTab !== 'logistics' && currentTab !== 'bank-accounts' && (
+          <div>
+            <div className='column'>
+              <Input
+                style={{ width: '370px' }}
+                icon='search'
+                name='searchInput'
+                value={filterValue ? filterValue.searchInput : ''}
+                placeholder={formatMessage({
+                  id: textsTable[currentTab].SearchText,
+                  defaultMessage: 'Select Credit Card'
+                })}
+                onChange={this.handleFilterChangeInputSearch}
+              />
             </div>
-          )}
+          </div>
+        )}
 
         {(currentTab === 'logistics' || currentTab === 'bank-accounts') && (
           <div>
@@ -605,9 +604,7 @@ class TablesHandlers extends Component {
                           onEvent={this.onEvent}>
                           <PlusCircle />
                           <div style={{ marginLeft: '10px' }}>
-                            <FormattedMessage id={textsTable[currentTab].BtnAddText}>
-                              {text => text}
-                            </FormattedMessage>
+                            <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
                           </div>
                         </PlaidButton>
                       </div>
