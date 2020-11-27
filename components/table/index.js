@@ -24,7 +24,8 @@ import {
   TableColumnVisibility,
   VirtualTableState,
   TreeDataState,
-  CustomTreeData
+  CustomTreeData,
+  RowDetailState
 } from '@devexpress/dx-react-grid'
 import {
   Grid,
@@ -35,7 +36,8 @@ import {
   TableColumnReordering,
   VirtualTable,
   TableColumnResizing,
-  TableTreeColumn
+  TableTreeColumn,
+  TableRowDetail
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
 import { getSafe } from '~/utils/functions'
@@ -291,6 +293,19 @@ const TableCells = props => {
     </Table.Cell>
   )
 }
+const DetailTableCells = props => {
+  const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
+  const modifiedProps = {
+    ...props,
+    colSpan: props.colSpan - (isEchoCode ? 2 : 1)
+  }
+  return (
+    <>
+      {isEchoCode ? <Table.Cell className='p-0'></Table.Cell> : null}
+      <Table.Cell {...modifiedProps} className='not-found'/>
+    </>
+  )
+}
 const NoDataTableCells = props => {
   const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
   const modifiedProps = {
@@ -393,6 +408,9 @@ class _Table extends Component {
       })
     ),
     rows: pt.arrayOf(pt.any),
+    selectedRows: pt.array,
+    rowDetail: pt.func,
+    toggleCellComponent: pt.func,
     columnReordering: pt.bool,
     rowSelection: pt.bool,
     showSelectAll: pt.bool,
@@ -402,6 +420,7 @@ class _Table extends Component {
     virtual: pt.bool,
     sorting: pt.bool,
     treeDataType: pt.bool,
+    rowDetailType: pt.bool,
     groupBy: pt.array,
     defaultSelection: pt.array,
     onSelectionChange: pt.func,
@@ -431,7 +450,8 @@ class _Table extends Component {
     shrinkGroups: pt.bool,
     columnAction: pt.string,
     toggleColumnSettingModal: pt.func,
-    isOpenColumnSettingModal: pt.bool
+    isOpenColumnSettingModal: pt.bool,
+    estimatedRowHeight: pt.number
   }
 
   static defaultProps = {
@@ -445,6 +465,10 @@ class _Table extends Component {
     virtual: true,
     sorting: true,
     treeDataType: false,
+    rowDetailType: false,
+    rowDetail: () => {},
+    toggleCellComponent: () => {},
+    selectedRows: [],
     groupBy: [],
     defaultHiddenColumns: [],
     singleSelection: false,
@@ -464,7 +488,8 @@ class _Table extends Component {
     shrinkGroups: false,
     columnActions: '',
     toggleColumnSettingModal: () => {},
-    isOpenColumnSettingModal: false
+    isOpenColumnSettingModal: false,
+    estimatedRowHeight: 0
   }
 
   constructor(props) {
@@ -600,6 +625,10 @@ class _Table extends Component {
     if (prevProps.tableName !== this.props.tableName) {
       this.loadColumnsSettings()
     }
+
+    if (prevProps.selectedRows !== this.props.selectedRows) {
+      this.setState({ selection: this.props.selectedRows })
+    }
   }
 
   expandGroups = () => {
@@ -628,6 +657,7 @@ class _Table extends Component {
     const {
       onSelectionChange,
       getChildGroups,
+      groupBy,
       rows,
       sameGroupSelectionOnly,
       singleSelection,
@@ -641,18 +671,25 @@ class _Table extends Component {
       return true
     }
 
-    const groups = getChildGroups(rows)
-    const selectionGroups = selection.map(s => groups.find(g => g.childRows.find(child => child.id === s)))
+    if (groupBy.length) {
+      const groups = getChildGroups(rows)
+      const selectionGroups = selection.map(s => groups.find(g => g.childRows.find(child => child.id === s)))
 
-    const sameGroup = selectionGroups.every(sg => sg === selectionGroups[0])
-    const finalSelection = singleSelection ? [lastSelected] : selection
-    if (sameGroup || !sameGroupSelectionOnly) {
-      this.setState({ selection: finalSelection })
-      onSelectionChange(finalSelection)
+      const sameGroup = selectionGroups.every(sg => sg === selectionGroups[0])
+      const finalSelection = singleSelection ? [lastSelected] : selection
+      if (sameGroup || !sameGroupSelectionOnly) {
+        this.setState({selection: finalSelection})
+        onSelectionChange(finalSelection)
 
-      return true
+        return true
+      }
+      return false
     }
-    return false
+
+    const finalSelection = singleSelection ? [lastSelected] : selection
+    this.setState({selection: finalSelection})
+    onSelectionChange(finalSelection)
+    return true
   }
 
   handleGroupSelectionChange = (groupKey, value) => {
@@ -887,6 +924,8 @@ class _Table extends Component {
   render() {
     const {
       rows,
+      rowDetail,
+      toggleCellComponent,
       columns,
       filterValue,
       columnReordering,
@@ -902,6 +941,7 @@ class _Table extends Component {
       virtual,
       sorting,
       treeDataType,
+      rowDetailType,
       onSortingChange,
       integratedSorting,
       groupBy,
@@ -926,6 +966,7 @@ class _Table extends Component {
       columnActions,
       isOpenColumnSettingModal,
       toggleColumnSettingModal,
+      estimatedRowHeight,
       ...restProps
     } = this.props
     const {
@@ -1018,16 +1059,23 @@ class _Table extends Component {
             )}
             {treeDataType && <CustomTreeData getChildRows={getChildRows} />}
 
+            {rowDetailType && (
+              <RowDetailState expandedRowIds={expandedRowIds} onExpandedRowIdsChange={onExpandedRowIdsChange} />
+            )}
+
             {virtual ? (
               <VirtualTable
                 columnExtensions={this.getColumnsExtension()}
                 height='auto'
+                estimatedRowHeight={estimatedRowHeight ? estimatedRowHeight : 49}
                 cellComponent={props => {
                   return treeDataType && rowChildActions ? TreeTableCells(props, rowChildActions) : TableCells(props)
                 }}
                 noDataCellComponent={NoDataTableCells}
                 messages={MESSAGES}
-                rowComponent={props => <Row onClick={onRowClick} {...props} />}
+                rowComponent={props => {
+                  return (<Row onClick={onRowClick} {...props} />)
+                }}
               />
             ) : (
               <Table
@@ -1057,6 +1105,14 @@ class _Table extends Component {
                 expandButtonComponent={() => {
                   return null
                 }}
+              />
+            )}
+
+            {rowDetailType && (
+              <TableRowDetail
+                contentComponent={rowDetail}
+                cellComponent={props => <DetailTableCells rowDetail={rowDetail} {...props} />}
+                toggleCellComponent={toggleCellComponent}
               />
             )}
 

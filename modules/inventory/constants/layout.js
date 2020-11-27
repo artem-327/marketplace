@@ -121,6 +121,9 @@ export const FlexTabs = styled.div`
       }
     }
   }
+  .grid.stretched[class*="StretchedGrid"] {
+    height: auto !important;
+  }
 `
 
 export const FlexContent = styled.div`

@@ -170,7 +170,7 @@ class Tutorial extends Component {
 
   componentDidMount() {
     const { tutorialTab } = this.state
-    const { isCompanyAdmin, isClientCompanyAdmin, isProductCatalogAdmin, isProductOfferManager } = this.props
+    const { isCompanyAdmin, isClientCompanyAdmin, isProductCatalogAdmin, isProductOfferManager, isAdmin } = this.props
     if (!isCompanyAdmin) {
       let tutorials = []
       let urls = []
@@ -332,6 +332,7 @@ class Tutorial extends Component {
       isMerchant,
       isClientCompanyManager,
       isOrderProcessing,
+      isAdmin,
       isCompanyAdmin,
       isBusinessVerification,
       isTutorial,
@@ -378,7 +379,7 @@ class Tutorial extends Component {
           </Rectangle>
         </ThemeProvider>
       )
-    } else if (!isLoading && accountStatus === 'none' && isBusinessVerification && !isTutorial) {
+    } else if (!isLoading && !isAdmin && accountStatus === 'none' && isBusinessVerification && !isTutorial) {
       return (
         <ThemeProvider theme={theme}>
           <Rectangle>
@@ -438,6 +439,7 @@ const mapStateToProps = state => {
     isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
     isProductCatalogAdmin: getSafe(() => state.auth.identity.isProductCatalogAdmin, false),
     isProductOfferManager: getSafe(() => state.auth.identity.isProductOfferManager, false),
+    isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
     isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false)
   }
 }

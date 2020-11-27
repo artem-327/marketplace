@@ -9,8 +9,12 @@ import ProdexTable from '~/components/table'
 import * as Actions from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import styled from 'styled-components'
-import { Label } from 'semantic-ui-react'
+import { Label, Popup, Checkbox } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
+import { FormattedDateTime } from '~/components/formatted-messages/'
+import { ChevronUp, ChevronDown } from 'react-feather'
+import GenericProductRequest from './message-details/GenericProductRequest'
+import ShippingQuoteRequest from './message-details/ShippingQuoteRequest'
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
@@ -27,6 +31,7 @@ const StyledStatusLabel = styled(Label)`
     border: solid 1px #dee2e6;
     background-color: #edeef2;
   }
+
   &.unread {
     color: #ffffff;
     background-color: #2599d5 !important;
@@ -35,10 +40,23 @@ const StyledStatusLabel = styled(Label)`
 
 const StyledNotification = styled.div`
   cursor: pointer;
+
   &:hover {
     font-weight: bold;
     color: #2599d5;
   }
+`
+
+const NotificationsCount = styled.div`
+  text-align: center;
+  font-size: 14px;
+  color: #20273a;
+  height: 30px;
+  border-radius: 4px;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  margin-bottom: 25px;
+  padding: 4px;
 `
 
 class Table extends Component {
@@ -47,7 +65,7 @@ class Table extends Component {
       {
         name: 'notification',
         title: (
-          <FormattedMessage id='alerts.column.notifications' defaultMessage='Notifications'>
+          <FormattedMessage id='alerts.column.notification' defaultMessage='Notification'>
             {text => text}
           </FormattedMessage>
         ),
@@ -56,20 +74,39 @@ class Table extends Component {
         maxWidth: 2000
       },
       {
-        name: 'readStatus',
+        name: 'notificationType',
         title: (
-          <FormattedMessage id='alerts.column.readStatus' defaultMessage='Read Status'>
+          <FormattedMessage id='alerts.column.notificationType' defaultMessage='Notification Type'>
             {text => text}
           </FormattedMessage>
         ),
         //sortPath: '',
-        align: 'center',
-        width: 130
+        width: 200
       },
       {
-        name: 'timeCreated',
+        name: 'nameOfUser',
         title: (
-          <FormattedMessage id='alerts.column.timeCreated' defaultMessage='Time Created'>
+          <FormattedMessage id='alerts.column.nameOfUser' defaultMessage='Name Of User'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        //sortPath: '',
+        width: 200
+      },
+      {
+        name: 'usersCompany',
+        title: (
+          <FormattedMessage id='alerts.column.usersCompany' defaultMessage="User's Company">
+            {text => text}
+          </FormattedMessage>
+        ),
+        //sortPath: '',
+        width: 200
+      },
+      {
+        name: 'time',
+        title: (
+          <FormattedMessage id='alerts.column.time' defaultMessage='Time'>
             {text => text}
           </FormattedMessage>
         ),
@@ -77,16 +114,18 @@ class Table extends Component {
         width: 160
       },
       {
-        name: 'timeRead',
-        title: (
-          <FormattedMessage id='alerts.column.timeRead' defaultMessage='Time Read'>
+        name: 'expand',
+        title: <div></div>,
+        caption: (
+          <FormattedMessage id='alerts.column.expand' defaultMessage='Expand'>
             {text => text}
           </FormattedMessage>
         ),
-        sortPath: 'Message.readAt',
-        width: 160
+        align: 'center',
+        width: 50
       }
-    ]
+    ],
+    expandedRowIds: []
   }
 
   statusLabel = (row, val) => {
@@ -119,16 +158,85 @@ class Table extends Component {
     )
   }
 
+  toggleDetail = (rowId) => {
+    let { expandedRowIds } = this.state
+    if (expandedRowIds.length) {
+      let found = false
+      let rows = expandedRowIds.reduce((result, id) => {
+        if (id === rowId) {
+          found = true
+          return result
+        } else {
+          result.push(id)
+          return result
+        }
+      }, [])
+      if (!found) {
+        rows.push(rowId)
+      }
+      this.setState({expandedRowIds: rows})
+    } else {
+      this.setState({expandedRowIds: [rowId]})
+    }
+  }
+
   getRows = () => {
     return this.props.rows.map(r => {
       const read = r.read ? 'read' : 'unread'
+      const selected = this.props.selectedRows.some(id => id === r.id)
+      const open = this.state.expandedRowIds.some(id => id === r.id)
       return {
         ...r,
-        clsName: read,
+        clsName: read + (selected ? ' selected' : '') + (open ? ' open' : ''),
         notification: this.notificationText(r.rawData),
-        readStatus: this.statusLabel(r.rawData, read)
+        time:
+          r.createdAt
+            ? (
+              <Popup
+                size='small'
+                inverted
+                style={{
+                  fontSize: '12px',
+                  color: '#cecfd4',
+                  opacity: '0.9'
+                }}
+                header={
+                  <div style={{ color: '#cecfd4', fontSize: '12px' }}>
+                    {moment(r.createdAt).toDate().toLocaleString()}
+                  </div>
+                }
+                trigger={
+                  <div style={{ color: r.read ? '#848893' : '#20273a' }}>
+                    {moment(r.createdAt).fromNow()}
+                  </div>
+                }
+              />
+            ) : 'N/A',
+        expand: r.info
+          ? (open
+              ? <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+              : <ChevronDown size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+              )
+          : null
       }
     })
+  }
+
+  getRowDetail = ({ row }) => {
+    const messageType = row.category
+    const messageDetailTable = {
+      'Company_Generic_Product_Requests': <GenericProductRequest row={row.rawData} />,
+      'Shipping_Quote_Request': <ShippingQuoteRequest row={row.rawData} />,
+    }
+
+    return (
+      <>
+        {row.info && messageDetailTable[messageType]
+          ? messageDetailTable[messageType]
+          : ReactHtmlParser(row.text)
+        }
+      </>
+    )
   }
 
   handleClickOnUnread = async row => {
@@ -163,21 +271,98 @@ class Table extends Component {
     }
   }
 
-  render() {
-    const { intl, datagrid, markSeenSending, menuStatusFilter } = this.props
+  toggleCellComponent = ({
+    expanded, onToggle,
+    tableColumn, tableRow, row, style,
+    ...restProps
+  }) => {
+    const { selectedRows } = this.props
+    return (
+      <td
+        style={{
+          verticalAlign: 'middle',
+          textAlign: 'center',
+          ...style,
+        }}
+        {...restProps}
+      >
+        <Checkbox
+          defaultChecked={selectedRows.some(s => s === row.id)}
+          onChange={(e, { checked }) => {
+            e.preventDefault()
+            let newSelectedRows = selectedRows.slice()
+            if (checked) {
+              if (!newSelectedRows.includes(row.id)) {
+                newSelectedRows.push(row.id)
+                this.props.onSelectionChange(newSelectedRows)
+              }
+            } else {
+              this.props.onSelectionChange(newSelectedRows.filter(id => id !== row.id))
+            }
+          }}
+        />
+      </td>
+    )
+  }
 
+  render() {
+    const { intl, datagrid, markSeenSending, menuStatusFilter, selectedRows } = this.props
     const { formatMessage } = intl
-    const { columns } = this.state
+    const { columns, expandedRowIds } = this.state
 
     return (
       <React.Fragment>
-        <ProdexTable
-          tableName={`operations_tag_${menuStatusFilter}`}
-          {...datagrid.tableProps}
-          loading={datagrid.loading || markSeenSending}
-          columns={columns}
-          rows={this.getRows()}
-        />
+
+        {selectedRows.length ? (
+          <NotificationsCount>
+            {selectedRows.length === 1
+              ? (
+                <FormattedMessage
+                  id='alerts.notificationsCount'
+                  defaultMessage='{count} {notification} on this page {is} selected'
+                  values={{
+                    count: (<b>{selectedRows.length}</b>),
+                    notification: (<b><FormattedMessage id='alerts.notification' defaultMessage='notification'/></b>),
+                    is: (<FormattedMessage id='alerts.is' defaultMessage='is'/>)
+                  }}
+                />
+              ): (
+                <FormattedMessage
+                  id='alerts.notificationsCount'
+                  defaultMessage='{count} {notification} on this page {is} selected'
+                  values={{
+                    count: (<b>{selectedRows.length}</b>),
+                    notification: (<b><FormattedMessage id='alerts.notifications' defaultMessage='notifications'/></b>),
+                    is: (<FormattedMessage id='alerts.are' defaultMessage='are'/>)
+                  }}
+                />
+              )
+            }
+          </NotificationsCount>
+        ) : null}
+
+        <div className='flex stretched notifications-wrapper'>
+          <ProdexTable
+            tableName={`operations_tag_${menuStatusFilter}`}
+            {...datagrid.tableProps}
+            loading={datagrid.loading || markSeenSending}
+            columns={columns}
+            rowDetailType={true}
+            rows={this.getRows()}
+            rowDetail={this.getRowDetail}
+            expandedRowIds={expandedRowIds}
+            onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
+            rowSelection={true}
+            lockSelection={false}
+            showSelectAll={false}
+            toggleCellComponent={this.toggleCellComponent}
+            selectedRows={selectedRows}
+            onSelectionChange={selectedRows => {
+              this.props.onSelectionChange(selectedRows)
+            }}
+            estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
+          />
+        </div>
       </React.Fragment>
     )
   }
@@ -188,13 +373,12 @@ const mapStateToProps = (state, { datagrid }) => {
   return {
     ...alerts,
     rows: datagrid.rows.map(r => {
-      const createdAt = r.createdAt && moment(r.createdAt)
-      const readAt = r.readAt && moment(r.readAt)
       return {
         ...r,
         rawData: r,
-        timeCreated: createdAt ? createdAt.fromNow() : 'N/A',
-        timeRead: readAt ? readAt.fromNow() : '-'
+        notificationType: r.category.replace(/_/g, ' '),
+        nameOfUser: getSafe(() => r.info.requestedBy.name, ''),
+        usersCompany: getSafe(() => r.info.requestedBy.company.cfDisplayName, '')
       }
     })
   }
