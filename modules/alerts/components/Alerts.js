@@ -7,8 +7,14 @@ import HighMenu from './HighMenu'
 import TablesHandlers from './TablesHandlers'
 import Table from './Table'
 import Tutorial from '~/modules/tutorial/Tutorial'
+import { generateQueryString } from '~/utils/functions'
+import ShippingQuotesPopup from '~/modules/operations/components/shipping-quotes/ShippingQuotesPopup'
 
 class Alerts extends Component {
+  state = {
+    selectedRows: []
+  }
+
   getApiConfig = () => ({
     url: '/prodex/api/messaging-center/datagrid',
     searchToFilter: v => {
@@ -50,31 +56,41 @@ class Alerts extends Component {
   })
 
   render() {
+    const { isOpenPopupOperations } = this.props
+
     return (
       <>
         {<Tutorial isTutorial={false} isBusinessVerification={true} />}
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
           <div id='page' className='flex stretched scrolling'>
             <Container fluid>
-              <HighMenu />
+              <HighMenu onDatagridUpdate={(selection) => this.setState({ selectedRows: selection })} />
             </Container>
 
             <Container fluid style={{ padding: '20px 30px' }}>
-              <TablesHandlers />
+              <TablesHandlers
+                selectedRows={this.state.selectedRows}
+                onDatagridUpdate={(selection) => this.setState({ selectedRows: selection })}
+              />
             </Container>
 
             <Container fluid style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
-              <Table />
+              <Table
+                onSelectionChange={selectedRows => this.setState({ selectedRows })}
+                selectedRows={this.state.selectedRows}
+              />
             </Container>
           </div>
         </DatagridProvider>
+        {isOpenPopupOperations && <ShippingQuotesPopup updateDatagrid={false} />}
       </>
     )
   }
 }
 
-const mapStateToProps = ({ auth }) => ({
-  tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
+const mapStateToProps = ({ auth, operations }) => ({
+  tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
+  isOpenPopupOperations: operations.isOpenPopup
 })
 
 export default connect(mapStateToProps)(Alerts)

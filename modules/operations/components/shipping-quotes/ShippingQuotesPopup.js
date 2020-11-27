@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 import Router from 'next/router'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
-
+import PropTypes from 'prop-types'
 import { DateInput } from '~/components/custom-formik'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { errorMessages, minOrZeroLength, dateValidation } from '~/constants/yupValidation'
@@ -50,7 +50,8 @@ class ShippingQuotesPopup extends React.Component {
       createShippingQuote,
       toastManager,
       intl: { formatMessage },
-      datagrid
+      datagrid,
+      updateDatagrid
     } = this.props
 
     return (
@@ -81,7 +82,7 @@ class ShippingQuotesPopup extends React.Component {
                 if (popupValues) response = await updateShippingQuote(rowId, payload)
                 else response = await createShippingQuote(payload)
 
-                datagrid.loadData()
+                if (updateDatagrid) datagrid.loadData()
 
                 let status = popupValues ? 'shippingQuoteUpdated' : 'shippingQuoteCreated'
 
@@ -175,6 +176,14 @@ class ShippingQuotesPopup extends React.Component {
       </Modal>
     )
   }
+}
+
+ShippingQuotesPopup.propTypes = {
+  updateDatagrid: PropTypes.bool
+}
+
+ShippingQuotesPopup.defaultProps = {
+  updateDatagrid: true
 }
 
 const mapDispatchToProps = {

@@ -228,6 +228,7 @@ class HighMenu extends Component {
 
   loadData(category) {
     this.props.loadData(category)
+    if (this.props.onDatagridUpdate) this.props.onDatagridUpdate([])
   }
 
   render() {
