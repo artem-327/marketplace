@@ -7,8 +7,8 @@ import HighMenu from './HighMenu'
 import TablesHandlers from './TablesHandlers'
 import Table from './Table'
 import Tutorial from '~/modules/tutorial/Tutorial'
-
 import { generateQueryString } from '~/utils/functions'
+import ShippingQuotesPopup from '~/modules/operations/components/shipping-quotes/ShippingQuotesPopup'
 
 class Alerts extends Component {
   state = {
@@ -56,6 +56,8 @@ class Alerts extends Component {
   })
 
   render() {
+    const { isOpenPopupOperations } = this.props
+
     return (
       <>
         {<Tutorial isTutorial={false} isBusinessVerification={true} />}
@@ -80,13 +82,15 @@ class Alerts extends Component {
             </Container>
           </div>
         </DatagridProvider>
+        {isOpenPopupOperations && <ShippingQuotesPopup updateDatagrid={false} />}
       </>
     )
   }
 }
 
-const mapStateToProps = ({ auth }) => ({
-  tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
+const mapStateToProps = ({ auth, operations }) => ({
+  tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
+  isOpenPopupOperations: operations.isOpenPopup
 })
 
 export default connect(mapStateToProps)(Alerts)

@@ -37,6 +37,7 @@
   "alerts.dropdown.delete": "Delete",
   "alerts.here": "here",
   "alerts.genericProduct": "{name} from {company} has requested to upload a new Company Generic Product. Please see the document attached. Once uploaded, click {here} to send a notification to the requester that the upload has been completed.",
+  "alerts.genericProductTmp": "{name} from {company} has requested to upload a new Company Generic Product. Please see the document attached.",
   "alerts.attachments": "Attachments:",
   "alerts.shippingQuoteRequest": "{name} from {company} has requested a quote for the following order:",
   "alerts.product": "Product",

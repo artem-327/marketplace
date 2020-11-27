@@ -7,6 +7,7 @@ import { generateToastMarkup, getSafe } from '~/utils/functions'
 import * as Actions from '../../actions'
 import styled from 'styled-components'
 import { ArrowRight } from 'react-feather'
+import { openPopup as openPopupOperations } from '~/modules/operations/actions'
 
 import {
   DetailMessage,
@@ -36,11 +37,15 @@ const StyledList = styled(List)`
     display: flex !important;
     flex-flow: row;
     justify-content: space-between;
+    margin: 0;
+    &:nth-child(n+2) {
+      border-top: 1px solid rgba(34, 36, 38, 0.15);
+    }
 
     > .item {
       flex-grow: 1;
       max-width: 150px;
-      padding: 2px 15px !important;
+      padding: 10px 15px !important;
 
       .header {
         margin: 0;
@@ -106,6 +111,7 @@ const AddressRow = styled.div`
       }
 
       &:active {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
         border: solid 1px #dee2e6;
         background-color: #edeef2;
         color: #20273a;
@@ -156,7 +162,6 @@ export const AddressGrid = styled(Grid)`
 `
 
 class ShippingQuoteRequest extends Component {
-
   displayAddress = ({ address, header, company }) => {
 
     return (
@@ -192,12 +197,12 @@ class ShippingQuoteRequest extends Component {
   }
 
   render() {
-    const { row } = this.props
+    const { row, openPopupOperations } = this.props
 
     return (
       <DetailMessage>
         <StyledGrid>
-          <GridRow>
+          {false && (<GridRow>
             <GridColumn width={16} style={{ color: '#20273a' }}>
               {row.text}
               {false && (<FormattedMessage
@@ -209,7 +214,7 @@ class ShippingQuoteRequest extends Component {
                 }}
               />) /* temporary disabled*/}
             </GridColumn>
-          </GridRow>
+          </GridRow>)}
 
           <GridRow>
             <GridColumn width={16}>
@@ -351,26 +356,26 @@ class ShippingQuoteRequest extends Component {
                   <div style={{ float: 'right' }}>
                     <Button
                       style={{ marginRight: '0'}}
-                      onClick={() => console.log('!!!!!!!!!! Add Shipping Quote')}
+                      onClick={() => openPopupOperations()}
                     >
                       <FormattedMessage id='alerts.addShippingQuote' defaultMessage='Add Shipping Quote'>
                         {text => text}
                       </FormattedMessage>
-                      <ArrowRight size='18'/>
+                      <ArrowRight size='18'style={{ marginLeft: '12px' }}/>
                     </Button>
                   </div>
                 </GridColumn>
               </GridRow>
-              <GridRow>
+              {false && (<GridRow>
                 <GridColumn>
                   <div style={{ display: 'flex', flexDirection: 'row', float: 'right' }}>
                     <Input
                       style={{ marginRight: '5px' }}
-                      onChange={() => console.log('!!!!!!!!!! Input onChange')}
+                      onChange={() => {}}
                     />
                     <Button
                       style={{ marginRight: '0'}}
-                      onClick={() => console.log('!!!!!!!!!! Send')}
+                      onClick={() => {}}
                     >
                       <FormattedMessage id='alerts.send' defaultMessage='Send'>
                         {text => text}
@@ -378,7 +383,7 @@ class ShippingQuoteRequest extends Component {
                     </Button>
                   </div>
                 </GridColumn>
-              </GridRow>
+              </GridRow>)}
             </Grid>
           </div>
         </AddressRow>
@@ -393,4 +398,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions })(injectIntl(withToastManager(ShippingQuoteRequest)))
+export default connect(
+  mapStateToProps,
+  { ...Actions, openPopupOperations }
+  )(injectIntl(withToastManager(ShippingQuoteRequest)))
