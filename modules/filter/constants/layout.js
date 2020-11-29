@@ -640,17 +640,7 @@ export const InputWrapper = styled.div`
 export const QuantityWrapper = styled.div`
   position: relative;
   
-  > .field .ui.input {
-    input[type=number]::-webkit-outer-spin-button,    // Remove browser arrows
-    input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    
-    input[type=number] {                              // Remove browser arrows
-      -moz-appearance:textfield;
-    } 
-  
+  .field .ui.input {
     .ui.label {
       font-size: 14px;
       font-weight: normal;
@@ -751,6 +741,17 @@ export const PopupGrid = styled(Grid)`
       margin: 4px 3px 0 0;
     }
   }
+  
+  .ui.input {
+    .ui.label {
+      font-size: 14px;
+      font-weight: normal;
+      background-color: #f8f9fb;
+      color: #20273a;
+      border: solid 1px #dee2e6;
+    }
+  }
+  
 `
 
 export const StyledModalHeader = styled(Modal.Header)`

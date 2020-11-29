@@ -62,7 +62,6 @@ import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
 import { UploadCloud, ChevronDown, X as XIcon } from 'react-feather'
-import { QuantityInput } from '~/components/custom-formik/'
 import ErrorFocus from '~/components/error-focus'
 import { palletDimensions } from '~/modules/settings/contants'
 import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
@@ -820,7 +819,7 @@ class ProductSidebar extends React.Component {
 
                       <GridRow columns={3}>
                         <GridColumn>
-                          <QuantityInput
+                          <Input
                             name='packagingSize'
                             label={
                               <>
@@ -884,7 +883,7 @@ class ProductSidebar extends React.Component {
 
                       <GridRow columns={3}>
                         <GridColumn>
-                          <QuantityInput
+                          <Input
                             name='palletMaxPkgs'
                             label={
                               <>
@@ -911,7 +910,7 @@ class ProductSidebar extends React.Component {
 
                       <GridRow columns={2}>
                         <GridColumn>
-                          <QuantityInput
+                          <Input
                             name='packageWeight'
                             label={
                               <>
@@ -1025,7 +1024,7 @@ class ProductSidebar extends React.Component {
 
                           <GridRow columns={3}>
                             <GridColumn>
-                              <QuantityInput
+                              <Input
                                 name='packagingWidth'
                                 label={
                                   <>
@@ -1041,7 +1040,7 @@ class ProductSidebar extends React.Component {
                               />
                             </GridColumn>
                             <GridColumn>
-                              <QuantityInput
+                              <Input
                                 name='packagingHeight'
                                 label={
                                   <>
@@ -1057,7 +1056,7 @@ class ProductSidebar extends React.Component {
                               />
                             </GridColumn>
                             <GridColumn>
-                              <QuantityInput
+                              <Input
                                 name='packagingLength'
                                 label={
                                   <>
@@ -1077,7 +1076,7 @@ class ProductSidebar extends React.Component {
                           {false && (
                             <GridRow>
                               <GridColumn>
-                                <QuantityInput
+                                <Input
                                   label={formatMessage({
                                     id: 'global.packagesPerPallet',
                                     defaultMessage: 'Packages per Pallet'
