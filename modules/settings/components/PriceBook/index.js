@@ -9,6 +9,8 @@ import { Broadcast } from '~/modules/broadcast'
 
 const ScrollableSegment = styled(Segment)`
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   border-radius: 4px !important;
   padding: 30px !important;
 `

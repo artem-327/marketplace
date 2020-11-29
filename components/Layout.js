@@ -482,6 +482,14 @@ class Layout extends Component {
                   )}
                 </>
               )}
+              {auth && auth.identity && auth.identity.isAdmin && (
+                <Menu.Item
+                  onClick={() => Router.push('/alerts')}
+                  data-test='navigation_notifications'
+                  className='item-cart'>
+                  <NotificationsIcon />
+                </Menu.Item>
+              )}
             </Menu.Menu>
           </TopMenuContainer>
         </TopMenu>
