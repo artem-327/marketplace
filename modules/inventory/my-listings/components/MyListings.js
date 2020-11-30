@@ -107,12 +107,12 @@ const CapitalizedText = styled.span`
 
 const DivRow = styled.div`
   display: flex !important;
-  
+
   > div {
     flex-grow: 0;
     flex-shrink: 0;
   }
-  
+
   > span {
     flex-grow: 1;
     flex-shrink: 1;
@@ -853,13 +853,16 @@ class MyListings extends Component {
                     color: '#cecfd4',
                     opacity: '0.9'
                   }}
-                  header={<div>
-                    {r.expired && (
-                      <div>
-                        <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
-                      </div>)}
-                    {productStatusText && (<div>{productStatusText}</div>)}
-                  </div>}
+                  header={
+                    <div>
+                      {r.expired && (
+                        <div>
+                          <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
+                        </div>
+                      )}
+                      {productStatusText && <div>{productStatusText}</div>}
+                    </div>
+                  }
                   trigger={
                     <div>
                       <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
@@ -982,7 +985,7 @@ class MyListings extends Component {
         if (status.code === 'GROUPED') {
           datagrid.updateRow(status.productOfferId, () => ({
             ...row,
-            warehouse: { deliveryAddress: { cfName: row.warehouse } },
+            warehouse: { deliveryAddress: { cfName: row.warehouse.deliveryAddress.cfName } },
             parentOffer: status.virtualOfferId ? status.virtualOfferId : ''
           }))
           toastManager.add(
@@ -999,7 +1002,7 @@ class MyListings extends Component {
         } else if (status.code === 'DETACHED') {
           datagrid.updateRow(status.productOfferId, () => ({
             ...row,
-            warehouse: { deliveryAddress: { cfName: row.warehouse } },
+            warehouse: { deliveryAddress: { cfName: row.warehouse.deliveryAddress.cfName } },
             parentOffer: ''
           }))
           toastManager.add(
