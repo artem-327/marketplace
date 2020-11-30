@@ -152,8 +152,7 @@ class Table extends Component {
     return (
       <StyledNotification
         className={row.info ? 'clickable' : ''}
-        onClick={row.info ? (() => this.toggleDetail(row.id)) : undefined}
-      >
+        onClick={row.info ? () => this.toggleDetail(row.id) : undefined}>
         {ReactHtmlParser(row.text)}
       </StyledNotification>
     )
@@ -332,7 +331,7 @@ class Table extends Component {
           </NotificationsCount>
         ) : null}
 
-        <div className='flex stretched notifications-wrapper'>
+        <div className='flex stretched table-detail-rows-wrapper'>
           <ProdexTable
             tableName={`operations_tag_${menuStatusFilter}`}
             {...datagrid.tableProps}

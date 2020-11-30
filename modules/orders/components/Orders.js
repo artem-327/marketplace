@@ -1059,7 +1059,7 @@ class Orders extends Component {
           {isFetching ? (
             <Spinner />
           ) : (
-            <div className='flex stretched orders-wrapper'>
+            <div className='flex stretched table-detail-rows-wrapper'>
               <ProdexGrid
                 tableName={`orders_grid_${currentTab}`}
                 columns={this.getColumns()}
