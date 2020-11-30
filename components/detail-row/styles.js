@@ -1,4 +1,4 @@
-import { Grid, Segment, List, GridColumn } from 'semantic-ui-react'
+import { Grid, Segment, List, GridColumn, Table } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 export const StyledGrid = styled(Grid)`
@@ -69,4 +69,51 @@ export const DetailMessage = styled.div`
 
 export const HeaderColumn = styled(GridColumn)`
   padding: 0px !important;
+`
+
+export const DivTable = styled.div`
+  background-color: #ffffff;
+  width: 100%;
+`
+
+export const DivHeaderTable = styled.div`
+  width: 100%;
+  text-align: left;
+  color: #848893;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  display: flex;
+`
+
+export const DivHeaderColumnTable = styled.div`
+  width: ${props => (props.widthProp ? props.widthProp : '15%')};
+  padding: 9px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+`
+
+export const DivBodyTable = styled.div`
+  width: 100%;
+  text-align: left;
+  color: #20273a;
+  font-size: 14px;
+  border-radius: 4px;
+  border: solid 1px #dee2e6;
+`
+export const DivBodyRowTable = styled.div`
+  width: 100%;
+  display: flex;
+  border-bottom: ${props => (props.isLastRow ? 'none' : 'solid 1px #dee2e6;')};
+`
+
+export const DivBodyColumnTable = styled.div`
+  width: ${props => (props.widthProp ? props.widthProp : '15%')};
+  padding: 9px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
 `

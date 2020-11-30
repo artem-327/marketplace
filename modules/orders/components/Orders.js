@@ -18,7 +18,7 @@ import { uniqueArrayByKey } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import TablesHandlers from './TablesHandlers'
 import { debounce } from 'lodash'
-import DetailRow from './components/detail-row'
+import DetailRow from '~/components/detail-row'
 
 const StyledModal = styled(Modal)`
   > .header {
@@ -515,8 +515,7 @@ class Orders extends Component {
             }>
             {item.attachments.length ? <Icon className='file related' /> : <Icon className='file non-related' />}
           </a>
-        ),
-        orderTotal: ''
+        )
       })),
       expand: this.state.expandedRowIds.some(id => id === row.id) ? (
         <ChevronUp size={16} style={{ cursor: 'pointer' }} />
