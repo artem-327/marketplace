@@ -39,11 +39,13 @@ const StyledStatusLabel = styled(Label)`
 `
 
 const StyledNotification = styled.div`
-  cursor: pointer;
+  &.clickable {
+    cursor: pointer;
 
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
+    &:hover {
+      font-weight: bold;
+      color: #2599d5;
+    }
   }
 `
 
@@ -149,10 +151,9 @@ class Table extends Component {
   notificationText = row => {
     return (
       <StyledNotification
-        onClick={() => {
-          if (row.read) this.handleClickOnRead(row)
-          else this.handleClickOnUnread(row)
-        }}>
+        className={row.info ? 'clickable' : ''}
+        onClick={row.info ? (() => this.toggleDetail(row.id)) : undefined}
+      >
         {ReactHtmlParser(row.text)}
       </StyledNotification>
     )

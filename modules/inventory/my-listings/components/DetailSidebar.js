@@ -587,17 +587,20 @@ class DetailSidebar extends Component {
           </GridColumn>
 
           <GridColumn computer={6} data-test={`add_inventory_quantityFrom_${i}_inp`}>
-            {this.quantityWrapper(`priceTiers.pricingTiers[${i}].quantityFrom`, {
-              type: 'number',
-              min: 1,
-              value: null,
-              onChange: (e, { value }) => {
-                setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
-                if (i === 0) setFieldValue('edit.minimum', value)
-              },
-              placeholder: '0',
-              disabled: i === 0
-            })}
+            <Input
+              name={`priceTiers.pricingTiers[${i}].quantityFrom`}
+              inputProps={{
+                type: 'number',
+                min: 1,
+                value: null,
+                onChange: (e, { value }) => {
+                  setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
+                  if (i === 0) setFieldValue('edit.minimum', value)
+                },
+                placeholder: '0',
+                disabled: i === 0
+              }}
+            />
           </GridColumn>
 
           <GridColumn computer={5} data-test={`add_inventory_price_${i}_inp`}>
@@ -979,63 +982,6 @@ class DetailSidebar extends Component {
     )
   }
 
-  quantityWrapper = (name, inputProps, label = null) => {
-    const { values, setFieldTouched, setFieldValue } = this.formikProps
-    const value = _.get(values, name)
-    const warning =
-      name === 'edit.pkgAvailable' &&
-      (typeof this.values.edit.minimum === 'undefined' || this.values.edit.pkgAvailable < this.values.edit.minimum) ? (
-        <span style={{ color: 'orange', fontSize: '10px' }}>
-          <FormattedMessage
-            id='validation.isLessThan'
-            defaultMessage={`Warning. PKGs Available is less than Minimum PKGs.`}
-          />
-        </span>
-      ) : null
-    return (
-      <QuantityWrapper>
-        {label && <div className='field-label'>{label}</div>}
-        <div>
-          <Input name={name} inputProps={inputProps} />
-          <div className='sideButtons'>
-            <Button
-              type='button'
-              className='buttonPlus'
-              disabled={inputProps.disabled}
-              onClick={() => {
-                if (isNaN(value) || value === '') {
-                  setFieldValue(name, 1)
-                  setFieldTouched(name, true, true)
-                } else {
-                  setFieldValue(name, parseInt(value) + 1)
-                  setFieldTouched(name, true, true)
-                }
-              }}>
-              +
-            </Button>
-            <Button
-              type='button'
-              className='buttonMinus'
-              disabled={inputProps.disabled}
-              onClick={() => {
-                if (isNaN(value) || value === '') {
-                  setFieldValue(name, 1)
-                  setFieldTouched(name, true, true)
-                } else {
-                  const val = parseInt(value)
-                  if (val > 1) setFieldValue(name, val - 1) // ! ! fix minimal value - inputProps
-                  setFieldTouched(name, true, true)
-                }
-              }}>
-              -
-            </Button>
-          </div>
-        </div>
-        {warning}
-      </QuantityWrapper>
-    )
-  }
-
   render() {
     let {
       // addProductOffer,
@@ -1303,22 +1249,24 @@ class DetailSidebar extends Component {
                                   </GridRow>
                                   <GridRow>
                                     <GridColumn width={8}>
-                                      {this.quantityWrapper(
-                                        'edit.pkgAvailable',
-                                        {
-                                          min: 1,
+                                      <Input
+                                        name='edit.pkgAvailable'
+                                        label={
+                                          <>
+                                            <FormattedMessage
+                                              id='addInventory.pkgsAvailable'
+                                              defaultMessage='PKGs Available'>
+                                              {text => text}
+                                            </FormattedMessage>
+                                            <Required />
+                                          </>
+                                        }
+                                        inputProps={{
+                                          placeholder: '0',
                                           type: 'number',
-                                          placeholder: '0'
-                                        },
-                                        <>
-                                          <FormattedMessage
-                                            id='addInventory.pkgsAvailable'
-                                            defaultMessage='PKGs Available'>
-                                            {text => text}
-                                          </FormattedMessage>
-                                          <Required />
-                                        </>
-                                      )}
+                                          min: 1
+                                        }}
+                                      />
                                     </GridColumn>
                                     <GridColumn width={8}>
                                       <Dropdown
@@ -1652,9 +1600,20 @@ class DetailSidebar extends Component {
                                         </GridRow>
                                         <GridRow>
                                           <GridColumn width={8} data-test='add_inventory_product_minimumOQ_inp'>
-                                            {this.quantityWrapper(
-                                              'edit.minimum',
-                                              {
+                                            <Input
+                                              name='edit.minimum'
+                                              label={
+                                                <>
+                                                  <FormattedMessage
+                                                    id='global.minimumPkgs'
+                                                    defaultMessage='Minimum PKGs'>
+                                                    {text => text}
+                                                  </FormattedMessage>
+                                                  <Required />
+                                                </>
+                                              }
+                                              inputProps={{
+                                                placeholder: '0',
                                                 disabled: sidebarValues && sidebarValues.grouped,
                                                 type: 'number',
                                                 min: 1,
@@ -1667,32 +1626,29 @@ class DetailSidebar extends Component {
                                                     //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
                                                   }
                                                 }
-                                              },
-                                              <>
-                                                <FormattedMessage id='global.minimumPkgs' defaultMessage='Minimum PKGs'>
-                                                  {text => text}
-                                                </FormattedMessage>
-                                                <Required />
-                                              </>
-                                            )}
+                                              }}
+                                            />
                                           </GridColumn>
                                           <GridColumn width={8} data-test='add_inventory_product_splits_inp'>
-                                            {this.quantityWrapper(
-                                              'edit.splits',
-                                              {
+                                            <Input
+                                              name='edit.splits'
+                                              label={
+                                                <>
+                                                  <FormattedMessage id='global.splitPkgs' defaultMessage='Split PKGs'>
+                                                    {text => text}
+                                                  </FormattedMessage>
+                                                  <Required />
+                                                </>
+                                              }
+                                              inputProps={{
+                                                placeholder: '0',
                                                 disabled: sidebarValues && sidebarValues.grouped,
                                                 type: 'number',
                                                 min: 1,
                                                 onChange: (e, { value }) =>
                                                   this.onSplitsChange(value, values, setFieldValue, validateForm)
-                                              },
-                                              <>
-                                                <FormattedMessage id='global.splitPkgs' defaultMessage='Split PKGs'>
-                                                  {text => text}
-                                                </FormattedMessage>
-                                                <Required />
-                                              </>
-                                            )}
+                                              }}
+                                            />
                                           </GridColumn>
                                         </GridRow>
                                         <GridRow>

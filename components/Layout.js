@@ -21,7 +21,7 @@ import {
   GlobalSidebars,
   CustomSpanReturn
 } from '~/components/constants/layout'
-import { Container, Menu, Dropdown, Icon, Image, FormField, Popup } from 'semantic-ui-react'
+import { Container, Menu, Dropdown, Icon, Image, FormField, Popup, Dimmer } from 'semantic-ui-react'
 import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echo.svg'
@@ -537,6 +537,8 @@ class Layout extends Component {
             </Rectangle>
           </CustomDiv>
         ) : null}
+
+        <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }}/>
         <GlobalSidebars>
           {openGlobalAddFormName === 'inventory-my-products' && (<ProductSidebar openGlobalAddForm={openGlobalAddForm}/>)}
           {openGlobalAddFormName === 'inventory-my-listings' && (<ListingSidebar openGlobalAddForm={openGlobalAddForm}/>)}

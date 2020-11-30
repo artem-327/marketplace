@@ -43,7 +43,6 @@ import {
   DateInputStyledWrapper,
   SaveFiltersGrid,
   InputWrapper,
-  QuantityWrapper,
   StyledModalContent,
   CustomMenu,
   SmallGrid,
@@ -405,54 +404,6 @@ class WantedBoardFilter extends Component {
     )
   }
 
-  quantityWrapper = (name, { values, setFieldValue, setFieldTouched, label }) => {
-    return (
-      <QuantityWrapper>
-        <Input
-          name={name}
-          inputProps={{
-            placeholder: '0',
-            type: 'number',
-            label: label,
-            labelPosition: 'left',
-            fluid: true
-          }}
-        />
-        <div className='sideButtons'>
-          <Button
-            type='button'
-            className='buttonPlus'
-            onClick={() => {
-              if (isNaN(values[name]) || values[name] === '') {
-                setFieldValue(name, 1)
-                setFieldTouched(name, true, true)
-              } else {
-                setFieldValue(name, parseInt(values[name]) + 1)
-                setFieldTouched(name, true, true)
-              }
-            }}>
-            +
-          </Button>
-          <Button
-            type='button'
-            className='buttonMinus'
-            onClick={() => {
-              if (isNaN(values[name]) || values[name] === '') {
-                setFieldValue(name, 1)
-                setFieldTouched(name, true, true)
-              } else {
-                const value = parseInt(values[name])
-                if (value > 1) setFieldValue(name, value - 1)
-                setFieldTouched(name, true, true)
-              }
-            }}>
-            -
-          </Button>
-        </div>
-      </QuantityWrapper>
-    )
-  }
-
   dateField = (name, { values, setFieldValue, handleChange, min }) => {
     let inputName = `${name}${values[name]}`
     let { intl } = this.props
@@ -689,20 +640,28 @@ class WantedBoardFilter extends Component {
             <SmallGrid>
               <GridRow>
                 <GridColumn width={8}>
-                  {this.quantityWrapper('quantityFrom', {
-                    values,
-                    setFieldValue,
-                    setFieldTouched,
-                    label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' })
-                  })}
+                  <Input
+                    name='quantityFrom'
+                    inputProps={{
+                      placeholder: '0',
+                      type: 'number',
+                      label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    }}
+                  />
                 </GridColumn>
                 <GridColumn width={8}>
-                  {this.quantityWrapper('quantityTo', {
-                    values,
-                    setFieldValue,
-                    setFieldTouched,
-                    label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' })
-                  })}
+                  <Input
+                    name='quantityTo'
+                    inputProps={{
+                      placeholder: '0',
+                      type: 'number',
+                      label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    }}
+                  />
                 </GridColumn>
               </GridRow>
             </SmallGrid>
