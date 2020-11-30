@@ -2936,6 +2936,18 @@
   "velloci.companyVerification.list.field": "Filed and stamped articles of incorporation",
   "velloci.companyVerification.list.tax": "Sales/Use Tax License",
   "velloci.companyVerification.list.license": "Business License",
-  "velloci.companyVerification.list.certificate": "Certificate of Good Standing"
+  "velloci.companyVerification.list.certificate": "Certificate of Good Standing",
+  "orders.orderStatus": "Order Status",
+  "orders.shippingStatus": "Delivery Status",
+  "orders.reviewStatus": "Review Status",
+  "orders.creditStatus": "Credit Status",
+  "orders.paymentStatus": "Payment Status",
+  "orders.productName": "Product Name",
+  "orders.packaging": "Packaging",
+  "orders.fobPrice": "FOB Price",
+  "orders.bl": "B/L",
+  "orders.sds": "SDS",
+  "orders.cofA": "C of A",
+  "orders.orderTotal": "Order Total"
 
 }

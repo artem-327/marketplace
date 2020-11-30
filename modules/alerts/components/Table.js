@@ -152,14 +152,13 @@ class Table extends Component {
     return (
       <StyledNotification
         className={row.info ? 'clickable' : ''}
-        onClick={row.info ? (() => this.toggleDetail(row.id)) : undefined}
-      >
+        onClick={row.info ? () => this.toggleDetail(row.id) : undefined}>
         {ReactHtmlParser(row.text)}
       </StyledNotification>
     )
   }
 
-  toggleDetail = (rowId) => {
+  toggleDetail = rowId => {
     let { expandedRowIds } = this.state
     if (expandedRowIds.length) {
       let found = false
@@ -175,9 +174,9 @@ class Table extends Component {
       if (!found) {
         rows.push(rowId)
       }
-      this.setState({expandedRowIds: rows})
+      this.setState({ expandedRowIds: rows })
     } else {
-      this.setState({expandedRowIds: [rowId]})
+      this.setState({ expandedRowIds: [rowId] })
     }
   }
 
@@ -190,35 +189,30 @@ class Table extends Component {
         ...r,
         clsName: read + (selected ? ' selected' : '') + (open ? ' open' : ''),
         notification: this.notificationText(r.rawData),
-        time:
-          r.createdAt
-            ? (
-              <Popup
-                size='small'
-                inverted
-                style={{
-                  fontSize: '12px',
-                  color: '#cecfd4',
-                  opacity: '0.9'
-                }}
-                header={
-                  <div style={{ color: '#cecfd4', fontSize: '12px' }}>
-                    {moment(r.createdAt).toDate().toLocaleString()}
-                  </div>
-                }
-                trigger={
-                  <div style={{ color: r.read ? '#848893' : '#20273a' }}>
-                    {moment(r.createdAt).fromNow()}
-                  </div>
-                }
-              />
-            ) : 'N/A',
-        expand: r.info
-          ? (open
-              ? <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
-              : <ChevronDown size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
-              )
-          : null
+        time: r.createdAt ? (
+          <Popup
+            size='small'
+            inverted
+            style={{
+              fontSize: '12px',
+              color: '#cecfd4',
+              opacity: '0.9'
+            }}
+            header={
+              <div style={{ color: '#cecfd4', fontSize: '12px' }}>{moment(r.createdAt).toDate().toLocaleString()}</div>
+            }
+            trigger={<div style={{ color: r.read ? '#848893' : '#20273a' }}>{moment(r.createdAt).fromNow()}</div>}
+          />
+        ) : (
+          'N/A'
+        ),
+        expand: r.info ? (
+          open ? (
+            <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+          ) : (
+            <ChevronDown size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+          )
+        ) : null
       }
     })
   }
@@ -226,17 +220,12 @@ class Table extends Component {
   getRowDetail = ({ row }) => {
     const messageType = row.category
     const messageDetailTable = {
-      'Company_Generic_Product_Requests': <GenericProductRequest row={row.rawData} />,
-      'Shipping_Quote_Request': <ShippingQuoteRequest row={row.rawData} />,
+      Company_Generic_Product_Requests: <GenericProductRequest row={row.rawData} />,
+      Shipping_Quote_Request: <ShippingQuoteRequest row={row.rawData} />
     }
 
     return (
-      <>
-        {row.info && messageDetailTable[messageType]
-          ? messageDetailTable[messageType]
-          : ReactHtmlParser(row.text)
-        }
-      </>
+      <>{row.info && messageDetailTable[messageType] ? messageDetailTable[messageType] : ReactHtmlParser(row.text)}</>
     )
   }
 
@@ -272,21 +261,16 @@ class Table extends Component {
     }
   }
 
-  toggleCellComponent = ({
-    expanded, onToggle,
-    tableColumn, tableRow, row, style,
-    ...restProps
-  }) => {
+  toggleCellComponent = ({ expanded, onToggle, tableColumn, tableRow, row, style, ...restProps }) => {
     const { selectedRows } = this.props
     return (
       <td
         style={{
           verticalAlign: 'middle',
           textAlign: 'center',
-          ...style,
+          ...style
         }}
-        {...restProps}
-      >
+        {...restProps}>
         <Checkbox
           defaultChecked={selectedRows.some(s => s === row.id)}
           onChange={(e, { checked }) => {
@@ -313,36 +297,41 @@ class Table extends Component {
 
     return (
       <React.Fragment>
-
         {selectedRows.length ? (
           <NotificationsCount>
-            {selectedRows.length === 1
-              ? (
-                <FormattedMessage
-                  id='alerts.notificationsCount'
-                  defaultMessage='{count} {notification} on this page {is} selected'
-                  values={{
-                    count: (<b>{selectedRows.length}</b>),
-                    notification: (<b><FormattedMessage id='alerts.notification' defaultMessage='notification'/></b>),
-                    is: (<FormattedMessage id='alerts.is' defaultMessage='is'/>)
-                  }}
-                />
-              ): (
-                <FormattedMessage
-                  id='alerts.notificationsCount'
-                  defaultMessage='{count} {notification} on this page {is} selected'
-                  values={{
-                    count: (<b>{selectedRows.length}</b>),
-                    notification: (<b><FormattedMessage id='alerts.notifications' defaultMessage='notifications'/></b>),
-                    is: (<FormattedMessage id='alerts.are' defaultMessage='are'/>)
-                  }}
-                />
-              )
-            }
+            {selectedRows.length === 1 ? (
+              <FormattedMessage
+                id='alerts.notificationsCount'
+                defaultMessage='{count} {notification} on this page {is} selected'
+                values={{
+                  count: <b>{selectedRows.length}</b>,
+                  notification: (
+                    <b>
+                      <FormattedMessage id='alerts.notification' defaultMessage='notification' />
+                    </b>
+                  ),
+                  is: <FormattedMessage id='alerts.is' defaultMessage='is' />
+                }}
+              />
+            ) : (
+              <FormattedMessage
+                id='alerts.notificationsCount'
+                defaultMessage='{count} {notification} on this page {is} selected'
+                values={{
+                  count: <b>{selectedRows.length}</b>,
+                  notification: (
+                    <b>
+                      <FormattedMessage id='alerts.notifications' defaultMessage='notifications' />
+                    </b>
+                  ),
+                  is: <FormattedMessage id='alerts.are' defaultMessage='are' />
+                }}
+              />
+            )}
           </NotificationsCount>
         ) : null}
 
-        <div className='flex stretched notifications-wrapper'>
+        <div className='flex stretched table-detail-rows-wrapper'>
           <ProdexTable
             tableName={`operations_tag_${menuStatusFilter}`}
             {...datagrid.tableProps}
@@ -357,6 +346,7 @@ class Table extends Component {
             lockSelection={false}
             showSelectAll={false}
             toggleCellComponent={this.toggleCellComponent}
+            isToggleCellComponent={true}
             selectedRows={selectedRows}
             onSelectionChange={selectedRows => {
               this.props.onSelectionChange(selectedRows)

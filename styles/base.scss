@@ -2112,7 +2112,7 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 // Firefox
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -2126,17 +2126,13 @@ input[type=number] {
 
 .listings-wrapper,
 .marketplace-wrapper {
-
   .table-responsive {
-
     table.table {
       border-spacing: 0;
       border-collapse: separate;
 
       thead {
-
         tr {
-
           th {
             height: 20px;
             border: 0 none;
@@ -2166,13 +2162,12 @@ input[type=number] {
             }
 
             .flex-row {
-
               > span {
                 display: flex;
                 flex-flow: row nowrap;
                 width: 100% !important;
 
-                > [class*="header-title"] {
+                > [class*='header-title'] {
                   flex-grow: 0;
                   flex-shrink: 1;
                   overflow: hidden;
@@ -2199,9 +2194,7 @@ input[type=number] {
       }
 
       tbody {
-
         tr {
-
           td {
             position: relative;
             overflow: visible;
@@ -2225,7 +2218,7 @@ input[type=number] {
             }
 
             &:not(.p-0):before {
-              content: "";
+              content: '';
               position: absolute;
               top: 100%;
               left: 0;
@@ -2243,7 +2236,7 @@ input[type=number] {
               padding-left: 20px !important;
 
               &:after {
-                content: "";
+                content: '';
                 position: absolute;
                 left: -1px;
                 bottom: 100%;
@@ -2263,7 +2256,7 @@ input[type=number] {
               padding-right: 20px !important;
 
               &:after {
-                content: "";
+                content: '';
                 position: absolute;
                 right: -1px;
                 bottom: 100%;
@@ -2277,7 +2270,7 @@ input[type=number] {
               }
             }
 
-            span[class*="table-header-title"] {
+            span[class*='table-header-title'] {
               display: inline-block;
               width: calc(100% - 18px);
               vertical-align: top;
@@ -2285,7 +2278,6 @@ input[type=number] {
           }
 
           &.group-row {
-
             td {
               position: relative;
               height: 30px;
@@ -2299,7 +2291,7 @@ input[type=number] {
               line-height: 30px;
 
               &:not(.p-0):after {
-                content: "";
+                content: '';
                 position: absolute;
                 top: 6px;
                 left: 0;
@@ -2341,7 +2333,6 @@ input[type=number] {
             }
 
             &:hover {
-
               td {
                 background: #eff9ff;
 
@@ -2351,7 +2342,6 @@ input[type=number] {
               }
 
               + tr:not(.group-row) {
-
                 td:nth-child(2):after,
                 td:nth-last-child(2):after {
                   background: #eff9ff;
@@ -2361,7 +2351,6 @@ input[type=number] {
           }
 
           &:not(.group-row):first-child {
-
             td {
               border-top: 1px solid #dde2e6;
 
@@ -2396,11 +2385,8 @@ input[type=number] {
     overflow: visible;
 
     table.table {
-
       tbody {
-
         tr {
-
           td {
             position: relative;
             overflow: visible;
@@ -2418,17 +2404,14 @@ input[type=number] {
   }
 }
 
-.notifications-wrapper {
-
+.table-detail-rows-wrapper {
   .table-responsive {
     table.table {
       border-spacing: 0 2px;
       border-collapse: separate;
 
       thead {
-
         tr {
-
           th {
             height: 20px;
             border: 0 none;
@@ -2440,7 +2423,7 @@ input[type=number] {
             font-weight: 700;
             color: #848893;
 
-            &:nth-last-child(n+2) {
+            &:nth-last-child(n + 2) {
               background: #f8f9fb none;
               box-shadow: 0 -3px 0 0 #f8f9fb !important;
             }
@@ -2463,13 +2446,12 @@ input[type=number] {
             }
 
             .flex-row {
-
               > span {
                 display: flex;
                 flex-flow: row nowrap;
                 width: 100% !important;
 
-                > [class*="header-title"] {
+                > [class*='header-title'] {
                   flex-grow: 0;
                   flex-shrink: 1;
                   overflow: hidden;
@@ -2496,9 +2478,7 @@ input[type=number] {
       }
 
       tbody {
-
         tr {
-
           td {
             position: relative;
             overflow: visible;
@@ -2535,7 +2515,7 @@ input[type=number] {
             }
 
             &:not(.p-0):before {
-              content: "";
+              content: '';
               position: absolute;
               top: 100%;
               left: 0;
@@ -2574,7 +2554,7 @@ input[type=number] {
               padding-right: 20px !important;
 
               &:after {
-                content: "";
+                content: '';
                 position: absolute;
                 right: -1px;
                 bottom: 100%;
@@ -2588,7 +2568,7 @@ input[type=number] {
               }
             }
 
-            span[class*="table-header-title"] {
+            span[class*='table-header-title'] {
               display: inline-block;
               width: calc(100% - 18px);
               vertical-align: top;
@@ -2615,8 +2595,7 @@ input[type=number] {
               display: none !important;
             }
 
-            &[class*="skeleton-cell"] {
-
+            &[class*='skeleton-cell'] {
               &:nth-child(n) {
                 border-left: 0 none;
                 border-right: 0 none;
@@ -2640,7 +2619,6 @@ input[type=number] {
           }
 
           &.open {
-
             td:first-child:not(.p-0),
             td.p-0:first-child + td {
               border-bottom-left-radius: 0;
@@ -2651,7 +2629,6 @@ input[type=number] {
             }
 
             + tr {
-
               td:nth-child(n) {
                 border-top: 0 none;
                 border-radius: 3px;
@@ -2660,7 +2637,7 @@ input[type=number] {
                 white-space: normal !important;
 
                 &:before {
-                  content: "";
+                  content: '';
                   position: absolute;
                   top: -3px;
                   left: -1px;
@@ -2681,9 +2658,7 @@ input[type=number] {
           }
 
           &.selected {
-
             td {
-
               &:nth-child(n) {
                 border-color: #2599d5;
                 background-color: #e8f7ff;
