@@ -209,7 +209,7 @@ class PickUpLocationsSidebar extends React.Component {
   }
 
   submitHandler = async (values, setSubmitting) => {
-    const { popupValues, putEditWarehouse, postNewWarehouseRequest } = this.props
+    const { popupValues, putEditWarehouse, postNewWarehouseRequest, openGlobalAddForm } = this.props
     const { attachmentFiles } = this.state
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
     let requestData = {}
@@ -241,6 +241,7 @@ class PickUpLocationsSidebar extends React.Component {
       } else {
         await postNewWarehouseRequest(true, requestData, attachmentFiles)
       }
+      if (openGlobalAddForm) openGlobalAddForm('')
     } catch {
     } finally {
       setSubmitting(false)
