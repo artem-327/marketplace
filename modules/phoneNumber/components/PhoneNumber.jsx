@@ -99,7 +99,7 @@ export default class PhoneNumber extends Component {
   componentDidUpdate(prevProps, nextProps, snapshot) {
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
 
-    if (phone && (phone !== this.state.phoneFull)) {
+    if (phone && phone !== this.state.phoneFull) {
       phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
 
       this.setState({
@@ -137,11 +137,9 @@ export default class PhoneNumber extends Component {
     setFieldValue(
       name,
       phone.phoneNumber
-        ? (
-          phone.phoneCountryCode && phone.phoneCountryCode.length
-            ? '+' + phone.phoneCountryCode + phone.phoneNumber
-            : phone.phoneNumber
-        )
+        ? phone.phoneCountryCode && phone.phoneCountryCode.length
+          ? '+' + phone.phoneCountryCode + phone.phoneNumber
+          : phone.phoneNumber
         : ''
     )
     setFieldTouched(name, true, true)
@@ -152,8 +150,7 @@ export default class PhoneNumber extends Component {
     const { name, setFieldValue, setFieldTouched } = this.props
 
     if (currentState) {
-      if (currentState.value && (currentState.value.charAt(0) === '+'))
-      {
+      if (currentState.value && currentState.value.charAt(0) === '+') {
         const enteredNumber = currentState.value.replace(/\D/g, '')
 
         let phone = splitPhoneNumber(enteredNumber, this.props.phoneCountryCodes)
@@ -161,22 +158,22 @@ export default class PhoneNumber extends Component {
           value = phone.phoneNumber
           const phoneFull = phone.phoneCountryCode + phone.phoneNumber
 
-          this.setState({
-            phoneCountryCode: phone.phoneCountryCode,
-            phoneNumber: phone.phoneNumber,
-            phoneFull
-          }, () => {
-            setFieldValue(
-              name,
-              '+' + enteredNumber
-            )
-            setFieldTouched(name, true, true)
+          this.setState(
+            {
+              phoneCountryCode: phone.phoneCountryCode,
+              phoneNumber: phone.phoneNumber,
+              phoneFull
+            },
+            () => {
+              setFieldValue(name, '+' + enteredNumber)
+              setFieldTouched(name, true, true)
 
-            return {
-              ...nextState,
-              value: phone.phoneNumber
+              return {
+                ...nextState,
+                value: phone.phoneNumber
+              }
             }
-          })
+          )
         }
       }
 
@@ -201,11 +198,9 @@ export default class PhoneNumber extends Component {
         setFieldValue(
           name,
           phone.phoneNumber
-            ? (
-              phone.phoneCountryCode && phone.phoneCountryCode.length
-                ? '+' + phone.phoneCountryCode + phone.phoneNumber
-                : phone.phoneNumber
-            )
+            ? phone.phoneCountryCode && phone.phoneCountryCode.length
+              ? '+' + phone.phoneCountryCode + phone.phoneNumber
+              : phone.phoneNumber
             : ''
         )
         setFieldTouched(name, true, true)
@@ -234,13 +229,12 @@ export default class PhoneNumber extends Component {
       <Field
         name={name}
         render={({ field, form }) => {
-
           return (
             <FormField error={!!error}>
               {label && <label>{label}</label>}
               <span style={{ display: 'flex' }} className='phone-number'>
                 <StyledDropdown
-                  name={name+'CountryCode'}
+                  name={name + 'CountryCode'}
                   className='phone-code'
                   options={phoneCountryCodes}
                   onChange={this.handleChangeDropdown}
@@ -250,6 +244,7 @@ export default class PhoneNumber extends Component {
                   value={phoneCountryCode}
                 />
                 <StyledInputMask
+                  autoComplete='something-unsupported'
                   name={name}
                   className='phone-num'
                   beforeMaskedStateChange={this.beforeMaskedStateChange}
