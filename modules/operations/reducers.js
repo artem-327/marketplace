@@ -14,7 +14,9 @@ export const initialState = {
   orderProcessing: false,
   orderAccountingDocuments: [],
   orderAccountingDocumentsLoading: false,
-  tableHandlersFilters: null
+  tableHandlersFilters: null,
+  searchedManQuotRequests: [],
+  searchedManQuotRequestsLoading: false
 }
 
 export default function reducers(state = initialState, action) {
@@ -180,6 +182,20 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         tableHandlersFilters: action.payload
+      }
+    }
+
+    case AT.OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST_PENDING: {
+      return { ...state, searchedManQuotRequestsLoading: true }
+    }
+    case AT.OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST_REJECTED: {
+      return { ...state, searchedManQuotRequestsLoading: false }
+    }
+    case AT.OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST_FULFILLED: {
+      return {
+        ...state,
+        searchedManQuotRequests: action.payload,
+        searchedManQuotRequestsLoading: false
       }
     }
 

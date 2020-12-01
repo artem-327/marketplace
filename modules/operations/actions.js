@@ -143,3 +143,18 @@ export function deleteRequest(id) {
     payload: api.deleteRequest(id)
   }
 }
+
+export const searchManualQuoteRequest = name => ({
+  type: AT.OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST,
+  payload: api.searchManualQuoteRequest({
+    orFilters: [
+      {
+        operator: 'LIKE',
+        path: 'Tag.name',
+        values: [name.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+})
