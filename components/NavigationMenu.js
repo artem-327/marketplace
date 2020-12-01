@@ -470,7 +470,7 @@ class Navigation extends Component {
           </DropdownItem>
         ) : null}
 
-        {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin || isClientCompanyAdmin) && (
+        {(isCompanyAdmin || isUserAdmin || isClientCompanyAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
             text={
