@@ -1121,6 +1121,7 @@ class _Table extends Component {
 
             {rowDetailType && !isToggleCellComponent && (
               <TableRowDetail
+                toggleColumnWidth={1}
                 contentComponent={rowDetail}
                 cellComponent={props => <DetailTableCells rowDetail={rowDetail} {...props} />}
               />
