@@ -612,7 +612,7 @@ class MyListings extends Component {
             )
           ).then(async () => {
             try {
-              this.props.deleteProductOffer(row.id)
+              await this.props.deleteProductOffer(row.id)
               datagrid.removeRow(row.id)
             } catch (e) {
               console.error(e)
