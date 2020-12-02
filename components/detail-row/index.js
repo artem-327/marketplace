@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 //Components
-import Header from './Header'
-import Content from './Content'
+import Header from './header'
+import Content from './content'
 import Buttons from './Buttons'
 //Styles
 import { StyledGrid, DetailMessage } from './styles'
