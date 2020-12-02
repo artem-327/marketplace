@@ -19,6 +19,8 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import TablesHandlers from './TablesHandlers'
 import { debounce } from 'lodash'
 import DetailRow from '~/components/detail-row'
+//Constants
+import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from '~/modules/orders/constants'
 
 const StyledModal = styled(Modal)`
   > .header {
@@ -965,7 +967,14 @@ class Orders extends Component {
   }
 
   getRowDetail = ({ row }) => {
-    return <DetailRow row={row} items={row.orderItems} />
+    return (
+      <DetailRow
+        row={row}
+        items={row.orderItems}
+        headerAttributes={HEADER_ATTRIBUTES}
+        contentAttributes={CONTENT_ATTRIBUTES}
+      />
+    )
   }
 
   toggleCellComponent = ({ expanded, onToggle, tableColumn, tableRow, row, style, ...restProps }) => {

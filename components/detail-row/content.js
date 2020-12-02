@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage } from 'react-intl'
 import { GridRow } from 'semantic-ui-react'
 
 import {
-  StyledGrid,
   DivTable,
   DivHeaderTable,
   DivHeaderColumnTable,
