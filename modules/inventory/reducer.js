@@ -26,12 +26,12 @@ export const initialState = {
   autocompleteDataLoading: false,
   documentTypesFetching: false,
   simpleEditOpen: false,
-  popupValues: {},
+  popupValues: null,
   isOpenPopup: false,
   editTrig: false,
   sidebarDetailOpen: false,
-  sidebarActiveTab: -1,
-  sidebarValues: {},
+  sidebarActiveTab: 0,
+  sidebarValues: null,
   product: null,
   editProductOfferInitTrig: false,
   editedId: null,
@@ -559,7 +559,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         sidebarDetailOpen: false,
         sidebarValues: null,
-        editedId: null
+        editedId: null,
+        sidebarActiveTab: 0
       }
     }
 

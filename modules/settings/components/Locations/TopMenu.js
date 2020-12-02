@@ -27,7 +27,7 @@ class TopMenu extends Component {
               style={{ textTransform: 'uppercase' }}
               name={formatMessage({
                 id: 'settings.locations.menu.deliveryLocations',
-                defaultMessage: 'Delivery Locations'
+                defaultMessage: 'Customer Ship To'
               })}
               onClick={() =>
                 this.tabSwitch('delivery-locations')
@@ -39,7 +39,7 @@ class TopMenu extends Component {
               style={{ textTransform: 'uppercase' }}
               name={formatMessage({
                 id: 'settings.locations.menu.pickUpLocations',
-                defaultMessage: 'Pick-Up Locations'
+                defaultMessage: 'Warehouses'
               })}
               onClick={() =>
                 this.tabSwitch('pick-up-locations')

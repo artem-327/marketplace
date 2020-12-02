@@ -77,13 +77,19 @@ class AddressForm extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    const { addZip } = this.props
     const values = this.getValues()
     const oldValues = this.getValues(prevProps.values)
 
     const country = values && values.address && values.address.country
     const oldCountry = oldValues && oldValues.address && oldValues.address.country
-
+    if (
+      values.id !== oldValues.id ||
+      getSafe(() => values.address.id, '') !== getSafe(() => oldValues.address.id, '')
+    ) {
+      if (getSafe(() => values.address.zip, '')) await addZip(JSON.parse(values.address.zip))
+    }
     if (country && country !== oldCountry) {
       const parsed = JSON.parse(country)
 

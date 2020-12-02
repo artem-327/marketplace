@@ -5,6 +5,7 @@ import escapeRegExp from 'lodash/escapeRegExp'
 import debounce from 'lodash/debounce'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { AddBox } from '@material-ui/icons'
 
 import {
   Modal,
@@ -60,8 +61,7 @@ import styled from 'styled-components'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
-import { UploadCloud, ChevronDown } from 'react-feather'
-import { QuantityInput } from '~/components/custom-formik/'
+import { UploadCloud, ChevronDown, X as XIcon } from 'react-feather'
 import ErrorFocus from '~/components/error-focus'
 import { palletDimensions } from '~/modules/settings/contants'
 import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
@@ -82,6 +82,26 @@ const CustomHighSegment = styled(Segment)`
   color: #20273a;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
   border: unset !important;
+  display: flex;
+  flex-direction: row;
+
+  svg {
+    font-size: 18px;
+    vertical-align: middle;
+  }
+  
+  svg.title-icon {
+    margin-left: 15px;
+    color: #cecfd4;
+  }
+  
+  svg.close-icon {
+    right: 0;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
 `
 
 const BottomButtons = styled.div`
@@ -96,8 +116,18 @@ const BottomButtons = styled.div`
 `
 
 const CustomButtonSubmit = styled(Button.Submit)`
-  background-color: #2599d5 !important;
-  color: #fff !important;
+  &.ui.primary.button {
+    background-color: #2599d5;
+    color: #fff;
+    
+    &:hover {
+      background-color: #188ec9;
+    }
+
+    &:active {
+      background-color: #0d82bc;
+    }
+  }
 `
 
 export const DivIcon = styled.div`
@@ -372,7 +402,14 @@ class ProductSidebar extends React.Component {
   }
 
   handlerSubmit = async (values, actions) => {
-    const { popupValues, handleSubmitProductEditPopup, handleSubmitProductAddPopup, datagrid, closePopup } = this.props
+    const {
+      popupValues,
+      handleSubmitProductEditPopup,
+      handleSubmitProductAddPopup,
+      datagrid,
+      closePopup,
+      openGlobalAddForm
+    } = this.props
     delete values.casProducts
 
     const packagingDimensions = !getSafe(() => values.palletSaleOnly, false)
@@ -427,9 +464,12 @@ class ProductSidebar extends React.Component {
       } else {
         await handleSubmitProductAddPopup(formValues, this.state.attachments)
       }
-      let status = popupValues ? 'productUpdated' : 'productCreated'
-      datagrid.loadData()
-      closePopup()
+      if (!!openGlobalAddForm) {
+        openGlobalAddForm('')
+      } else {
+        datagrid.loadData()
+        closePopup()
+      }
     } catch (e) {
       console.error(e)
     } finally {
@@ -596,6 +636,7 @@ class ProductSidebar extends React.Component {
   render() {
     const {
       closePopup,
+      openGlobalAddForm,
       productsUnitsType,
       popupValues,
       freightClasses,
@@ -627,7 +668,7 @@ class ProductSidebar extends React.Component {
         initialValues={this.getInitialFormValues()}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={closePopup}
+        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
         onSubmit={this.handlerSubmit}
         loading={loading}>
         {formikProps => {
@@ -641,6 +682,7 @@ class ProductSidebar extends React.Component {
             <>
               <CustomForm autoComplete='off'>
                 <FlexSidebar
+                  className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
                   visible={true}
                   width='very wide'
                   style={{ width: '640px' }}
@@ -650,11 +692,26 @@ class ProductSidebar extends React.Component {
                     <Loader />
                   </Dimmer>
                   <CustomHighSegment>
-                    {popupValues ? (
-                      <FormattedMessage id='global.editCompanyProduct' defaultMessage='Edit Company Product' />
-                    ) : (
-                      <FormattedMessage id='global.addCompanyProduct' defaultMessage='Add Company Product' />
-                    )}
+                    {openGlobalAddForm
+                      ? (
+                        <>
+                          <div>
+                            <span>
+                              <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
+                            </span>
+                            <AddBox className='title-icon' />
+                          </div>
+                          <div style={{ position: 'absolute', right: '20px' }}>
+                            <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                          </div>
+                        </>
+                      )
+                      : (popupValues ? (
+                        <FormattedMessage id='global.editCompanyProduct' defaultMessage='Edit Company Product' />
+                        ) : (
+                        <FormattedMessage id='global.addCompanyProduct' defaultMessage='Add Company Product' />
+                        ))
+                    }
                   </CustomHighSegment>
                   <FlexContent style={{ padding: '30px' }}>
                     <StyledGrid>
@@ -762,7 +819,7 @@ class ProductSidebar extends React.Component {
 
                       <GridRow columns={3}>
                         <GridColumn>
-                          <QuantityInput
+                          <Input
                             name='packagingSize'
                             label={
                               <>
@@ -826,7 +883,7 @@ class ProductSidebar extends React.Component {
 
                       <GridRow columns={3}>
                         <GridColumn>
-                          <QuantityInput
+                          <Input
                             name='palletMaxPkgs'
                             label={
                               <>
@@ -853,7 +910,7 @@ class ProductSidebar extends React.Component {
 
                       <GridRow columns={2}>
                         <GridColumn>
-                          <QuantityInput
+                          <Input
                             name='packageWeight'
                             label={
                               <>
@@ -967,7 +1024,7 @@ class ProductSidebar extends React.Component {
 
                           <GridRow columns={3}>
                             <GridColumn>
-                              <QuantityInput
+                              <Input
                                 name='packagingWidth'
                                 label={
                                   <>
@@ -983,7 +1040,7 @@ class ProductSidebar extends React.Component {
                               />
                             </GridColumn>
                             <GridColumn>
-                              <QuantityInput
+                              <Input
                                 name='packagingHeight'
                                 label={
                                   <>
@@ -999,7 +1056,7 @@ class ProductSidebar extends React.Component {
                               />
                             </GridColumn>
                             <GridColumn>
-                              <QuantityInput
+                              <Input
                                 name='packagingLength'
                                 label={
                                   <>
@@ -1019,7 +1076,7 @@ class ProductSidebar extends React.Component {
                           {false && (
                             <GridRow>
                               <GridColumn>
-                                <QuantityInput
+                                <Input
                                   label={formatMessage({
                                     id: 'global.packagesPerPallet',
                                     defaultMessage: 'Packages per Pallet'
@@ -1256,12 +1313,16 @@ class ProductSidebar extends React.Component {
                     </StyledGrid>
                   </FlexContent>
 
-                  <BottomButtons>
-                    <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
-                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button.Reset>
+                  <BottomButtons className='bottom-buttons'>
+                    {!openGlobalAddForm && (
+                      <Button.Reset
+                        onClick={closePopup}
+                        data-test='settings_product_popup_reset_btn'>
+                        <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button.Reset>
+                    )}
                     <Popup
                       disabled={editable}
                       trigger={
