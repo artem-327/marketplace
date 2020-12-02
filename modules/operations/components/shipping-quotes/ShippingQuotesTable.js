@@ -10,6 +10,7 @@ import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 import { getLocaleDateFormat } from '~/components/date-format'
 import moment from 'moment/moment'
+import DetailRow from '~/components/detail-row'
 
 import {
   deleteShippingQuote,
@@ -74,7 +75,8 @@ class ShippingQuotesTable extends Component {
             </FormattedMessage>
           )
         }
-      ]
+      ],
+      expandedRowIds: []
     }
   }
 
@@ -108,13 +110,17 @@ class ShippingQuotesTable extends Component {
     ]
   }
 
+  getRowDetail = ({ row }) => {
+    return <DetailRow row={row} />
+  }
+
   render() {
     const { datagrid, rows, filterValue, loading } = this.props
 
     let { columns } = this.state
 
     return (
-      <React.Fragment>
+      <div className='flex stretched table-detail-rows-wrapper'>
         <ProdexGrid
           tableName='operations_shipping_quotes'
           {...datagrid.tableProps}
@@ -124,8 +130,24 @@ class ShippingQuotesTable extends Component {
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
           columnActions='carrierName'
+          rowDetailType={true}
+          rowDetail={this.getRowDetail}
+          onRowClick={(_, row) => {
+            if (row.id) {
+              let isIdIn = this.state.expandedRowIds.some()
+              if (isIdIn) {
+                this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
+              } else {
+                ids.push(row.id)
+                this.setState({ expandedRowIds: ids })
+              }
+            }
+          }}
+          expandedRowIds={this.state.expandedRowIds}
+          onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
+          estimatedRowHeight={1000}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

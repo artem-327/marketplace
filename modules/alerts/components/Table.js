@@ -157,8 +157,7 @@ class Table extends Component {
           }
           if (row.read) this.handleClickOnRead(row)
           else this.handleClickOnUnread(row)
-        }
-        }>
+        }}>
         {ReactHtmlParser(row.text)}
       </StyledNotification>
     )
@@ -337,7 +336,7 @@ class Table extends Component {
           </NotificationsCount>
         ) : null}
 
-        <div className='flex stretched notifications-wrapper'>
+        <div className='flex stretched table-detail-rows-wrapper'>
           <ProdexTable
             tableName={`operations_tag_${menuStatusFilter}`}
             {...datagrid.tableProps}
