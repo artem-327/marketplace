@@ -40,7 +40,8 @@ const initialState = {
   templates: [],
   filter: {
     search: '',
-    category: 'region'
+    category: 'region',
+    broadcast: 'all'
   },
   mode: 'client', // price
   isOpenModalCompanyInfo: false,

@@ -34,6 +34,10 @@ const StyledMenu = styled(Menu)`
           padding-top: 5px !important;
           padding-bottom: 5px !important;
         }
+        
+        &:hover {
+          font-weight: 700 !important;
+        }
       }
     }
   
@@ -103,6 +107,12 @@ const StyledMenu = styled(Menu)`
               padding-top: 5px !important;
               padding-bottom: 5px !important;
             }
+          }
+          
+          &:hover {
+            background: transparent !important;
+            font-weight: 700 !important;
+            color: #2599d5 !important;
           }
         }
       }
@@ -218,6 +228,7 @@ class HighMenu extends Component {
 
   loadData(category) {
     this.props.loadData(category)
+    if (this.props.onDatagridUpdate) this.props.onDatagridUpdate([])
   }
 
   render() {

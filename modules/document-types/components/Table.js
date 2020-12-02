@@ -32,7 +32,11 @@ class Table extends Component {
 
     const { formatMessage } = intl
     return [
-      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: row => openEditPopup(row),
+        hidden: row => !row.editable,
+      },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
         callback: row =>

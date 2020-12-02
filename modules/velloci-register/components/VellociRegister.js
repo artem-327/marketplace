@@ -15,6 +15,7 @@ import {
 } from '~/constants/yupValidation'
 import SetupIndicator from './SetupIndicator'
 import FormRectangle from './FormRectangle'
+import CompanyVerification from './steps/CompanyVerification'
 import ControlPerson from './steps/ControlPerson'
 import BusinessInfo from './steps/BusinessInfo'
 import FormationDocument from './steps/FormationDocument'
@@ -27,6 +28,7 @@ import { PHONE_REGEXP } from '~/src/utils/constants'
 import { getStringISODate } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
 import Router from 'next/router'
+import BeneficialOwnersPopup from './steps/BeneficialOwnersPopup'
 
 class VellociRegister extends Component {
   componentDidMount() {
@@ -148,7 +150,7 @@ class VellociRegister extends Component {
 
   handleSubmit = async values => {
     const { activeStep, postRegisterVelloci, postUploadDocuments, getIdentity, loadSubmitButton } = this.props
-    if (activeStep !== 5) return
+    if (activeStep !== 6) return
 
     try {
       loadSubmitButton(true)
@@ -184,9 +186,9 @@ class VellociRegister extends Component {
     formikProps
       .validateForm()
       .then(errors => {
-        if (errors[titleForms[activeStep]] || activeStep === 5) {
+        if (errors[titleForms[activeStep]] || activeStep === 6) {
           formikProps.handleSubmit()
-        } else if ((_.isEmpty(errors) && activeStep !== 5) || (!errors[titleForms[activeStep]] && activeStep !== 5)) {
+        } else if ((_.isEmpty(errors) && activeStep !== 6) || (!errors[titleForms[activeStep]] && activeStep !== 6)) {
           nextStep(activeStep + 1)
           formikProps.setErrors({})
         }
@@ -250,7 +252,20 @@ class VellociRegister extends Component {
           Yup.lazy(v => {
             //let isAnyValueFilled = deepSearch(v, (val, key) => val !== '' && key !== 'country')
             const businessOwnershipPercentage = values.ownerInformation.isBeneficialOwner
-              ? { businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage) }
+              ? { businessOwnershipPercentage: Yup.string()
+                  .trim()
+                  .required(errorMessages.requiredMessage)
+                  .test('v', errorMessages.minimum(0), function (v) {
+                    if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                    return Number(v) >= 0
+                  })
+                  .test('v', errorMessages.maximum(100), function (v) {
+                    if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                    return Number(v) <= 100
+                  })
+                  .test('v', errorMessages.mustBeNumber, function (v) {
+                    return v === null || v === '' || !isNaN(v)
+                  })}
               : null
             return Yup.object().shape({
               firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -312,18 +327,21 @@ class VellociRegister extends Component {
 
     switch (activeStep) {
       case 0: {
-        return <ControlPerson formikProps={formikProps} entityTypes={entityTypes} naicsCodes={naicsCodes} />
+        return <CompanyVerification formikProps={formikProps} />
       }
       case 1: {
-        return <BusinessInfo formikProps={formikProps} />
+        return <ControlPerson formikProps={formikProps} entityTypes={entityTypes} naicsCodes={naicsCodes} />
       }
       case 2: {
-        return <FormationDocument formikProps={formikProps} error={error} entityDocuments={entityDocuments} />
+        return <BusinessInfo formikProps={formikProps} />
       }
       case 3: {
-        return <OwnerInformation formikProps={formikProps} countBeneficialOwners={countBeneficialOwners} />
+        return <FormationDocument formikProps={formikProps} error={error} entityDocuments={entityDocuments} />
       }
       case 4: {
+        return <OwnerInformation formikProps={formikProps} countBeneficialOwners={countBeneficialOwners} />
+      }
+      case 5: {
         return (
           <PersonalInformation
             formikProps={formikProps}
@@ -332,7 +350,7 @@ class VellociRegister extends Component {
           />
         )
       }
-      case 5: {
+      case 6: {
         return <TermsAndConditions formikProps={formikProps} />
       }
       default:
@@ -347,7 +365,9 @@ class VellociRegister extends Component {
       countBeneficialOwners,
       numberBeneficialOwners,
       isLoadingSubmitButton,
-      initialValues
+      initialValues,
+      openEmailPopup,
+      emailPopup
     } = this.props
     return (
       <Grid>
@@ -374,11 +394,13 @@ class VellociRegister extends Component {
                         activeStep={activeStep}
                         numberBeneficialOwners={numberBeneficialOwners}
                         countBeneficialOwners={countBeneficialOwners}
-                        isLoadingSubmitButton={isLoadingSubmitButton}>
+                        isLoadingSubmitButton={isLoadingSubmitButton}
+                        openEmailPopup={openEmailPopup}>
                         {this.getContent(formikProps)}
                       </FormRectangle>
                     </Grid>
                     <ErrorFocus />
+                    {emailPopup.isOpen && <BeneficialOwnersPopup />}
                   </Form>
                 )
               }}

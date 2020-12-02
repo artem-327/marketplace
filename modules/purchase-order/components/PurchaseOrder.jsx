@@ -304,9 +304,17 @@ class PurchaseOrder extends Component {
     setSubmitting(false)
 
     if (values.address) {
+      let shippingWarehouseId =
+        getSafe(() => this.state.selectedAddress.warehouse, '') && getSafe(() => this.state.selectedAddress.id, '')
+          ? { shippingWarehouseId: this.state.selectedAddress.id }
+          : ''
+      let shippingDeliveryAddressId =
+        !getSafe(() => this.state.selectedAddress.warehouse, '') && getSafe(() => this.state.selectedAddress.id, '')
+          ? { shippingDeliveryAddressId: this.state.selectedAddress.id }
+          : ''
       let payload = {
-        destinationCountryId: this.state.selectedAddress.address.country.id,
-        destinationZIP: this.state.selectedAddress.address.zip.zip
+        ...shippingWarehouseId,
+        ...shippingDeliveryAddressId
       }
       await requestManualShipment(payload)
       toastManager.add(
@@ -582,16 +590,14 @@ class PurchaseOrder extends Component {
                           </>
                         )}
 
-                      {this.state.selectedAddress && (
-                        <FreightLabel
-                          echoFreight={echoFreight}
-                          setFieldValue={(fieldName, value) => {
-                            shippingQuoteSelected(null)
-                            setFieldValue(fieldName, value)
-                            if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
-                          }}
-                        />
-                      )}
+                      <FreightLabel
+                        echoFreight={echoFreight}
+                        setFieldValue={(fieldName, value) => {
+                          shippingQuoteSelected(null)
+                          setFieldValue(fieldName, value)
+                          if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
+                        }}
+                      />
                     </Grid>
                   </Segment>
                   <Segment>

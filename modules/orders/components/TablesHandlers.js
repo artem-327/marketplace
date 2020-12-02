@@ -357,8 +357,22 @@ class TablesHandlers extends Component {
             <>
               <div>
                 <div className='column'>
+                  <Input
+                    name='orderId'
+                    inputProps={{
+                      style: { width: '200px' },
+                      placeholder: formatMessage({
+                        id: 'orders.searchByOrderID',
+                        defaultMessage: 'Search By Order ID'
+                      }),
+                      icon: 'search',
+                      onChange: this.handleFilterChange
+                    }}
+                  />
+                </div>
+                <div className='column'>
                   <Dropdown
-                    style={{ width: '220px' }}
+                    style={{ width: '170px' }}
                     name='status'
                     selection
                     value={filterValue.status}
@@ -370,20 +384,6 @@ class TablesHandlers extends Component {
                     onChange={this.handleFilterChange}
                   />
                 </div>
-                <div className='column'>
-                  <Input
-                    name='orderId'
-                    inputProps={{
-                      style: { width: '370px' },
-                      placeholder: formatMessage({
-                        id: 'orders.searchByOrderID',
-                        defaultMessage: 'Search By Order ID'
-                      }),
-                      icon: 'search',
-                      onChange: this.handleFilterChange
-                    }}
-                  />
-                </div>
               </div>
               <div>
                 <div className='column' style={{ paddingTop: '10px' }}>
@@ -393,7 +393,7 @@ class TablesHandlers extends Component {
                   <DateInput
                     name='dateFrom'
                     inputProps={{
-                      style: { width: '220px' },
+                      style: { width: '150px' },
                       maxDate: moment(),
                       clearable: true,
                       placeholder: formatMessage({
@@ -408,7 +408,7 @@ class TablesHandlers extends Component {
                   <DateInput
                     name='dateTo'
                     inputProps={{
-                      style: { width: '220px' },
+                      style: { width: '150px' },
                       maxDate: moment(),
                       clearable: true,
                       placeholder: formatMessage({

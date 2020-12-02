@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 //import MyProductsPage from './components/MyProducts'
 import PriceBook from '~/modules/settings/components/PriceBook'
 import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
+import Tutorial from '~/modules/tutorial/Tutorial'
 import styled from 'styled-components'
 
 const SettingsGrid = styled(Grid)`
@@ -46,9 +47,12 @@ class GlobalPriceBook extends Component {
   render() {
     return (
       <Container fluid className='flex stretched' style={{ padding: '30px 0' }}>
+        <Tutorial marginGlobalPrice={true} isTutorial={false} isBusinessVerification={true} />
         <SettingsGrid columns='equal' className='flex stretched' style={{ padding: '0 30px' }}>
           <Grid.Row>
-            <CustomGridColumn className='flex stretched'><PriceBook /></CustomGridColumn>
+            <CustomGridColumn className='flex stretched'>
+              <PriceBook />
+            </CustomGridColumn>
           </Grid.Row>
         </SettingsGrid>
       </Container>

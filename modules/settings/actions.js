@@ -1219,10 +1219,10 @@ export function vellociGetToken() {
     payload: api.vellociGetToken()
   }
 }
-export function vellociAddAcount(publicToken) {
+export function vellociAddAcount(publicToken, metadata) {
   return {
     type: AT.VELLOCI_ADD_ACOUNT,
-    payload: api.vellociAddAcount(publicToken)
+    payload: api.vellociAddAcount(publicToken, metadata)
   }
 }
 

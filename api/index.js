@@ -48,7 +48,7 @@ customAxios.interceptors.response.use(
 
     const hasWindow = typeof window !== 'undefined'
 
-    if (status === 401 || status === 403) {
+    if (status === 401) {
       return resetTokenAndReattemptRequest(error)
     }
 
@@ -63,12 +63,6 @@ customAxios.interceptors.response.use(
     if (status === 403) {
       hasWindow && window.localStorage.setItem('errorStatus', '403')
       Router.push('/errors')
-    }
-
-    try {
-      Message.checkForMessages(error.response)
-    } catch (error) {
-      console.error(error)
     }
 
     // const errData = error && error.response && error.response.data
@@ -111,6 +105,12 @@ customAxios.interceptors.response.use(
 
         reader.readAsText(error.response.data)
       })
+    } else {
+      try {
+        Message.checkForMessages(error.response)
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     if (
@@ -161,6 +161,7 @@ async function resetTokenAndReattemptRequest(error) {
     }
     return retryOriginalRequest
   } catch (err) {
+    Router.push('/auth/logout')
     return Promise.reject(err)
   }
 }

@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import moment from 'moment'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
+import { currency } from '~/constants/index'
 
 const CustomGrid = styled(Grid)`
   flex-shrink: 0;
@@ -919,7 +920,7 @@ class Dashboard extends Component {
                   onClickUrl={isAdmin && !takeover ? '/companies/companies' : '/manage-guests/guests'}
                   icon={<Briefcase />}
                   data={companiesCount}
-                  title={isAdmin && !takeover ? 'Total Companies' : 'Total Guest Companies'}
+                  title={isAdmin && !takeover ? 'Companies' : 'Guests'}
                   titleId={
                     isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalGuestCompanies.title'
                   }
@@ -939,7 +940,7 @@ class Dashboard extends Component {
               onClickUrl={isAdmin && !takeover ? '/companies/users' : '/settings/users'}
               icon={<User />}
               data={usersCount}
-              title='Total Users Count'
+              title='Users'
               titleId='dashboard.totalUsersCount.title'
               styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
             />
@@ -950,19 +951,21 @@ class Dashboard extends Component {
                   onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-listings'}
                   icon={isAdmin && !takeover ? <DollarSign /> : <Layers />}
                   data={productOffersValue && Math.round(productOffersValue)}
-                  title={isAdmin && !takeover ? 'Total Inventory Count' : 'Total Inventory Count'}
+                  title={isAdmin && !takeover ? 'Inventory' : 'Inventory'}
                   titleId={
                     isAdmin && !takeover
                       ? 'dashboard.totalValueWithoutMilion.title'
                       : 'dashboard.totalInventoryCount.title'
                   }
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
+                  style='currency'
+                  currency={currency}
                 />
                 <SummaryRectangle
                   onClickUrl={isAdmin && !takeover ? '' : '/marketplace/listings'}
                   icon={<DollarSign />}
                   data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
-                  title={isAdmin && !takeover ? 'Total Broadcasted Value' : 'Total Sales'}
+                  title={isAdmin && !takeover ? 'Broadcasted' : 'Sales'}
                   titleId={
                     isAdmin && !takeover
                       ? 'dashboard.totalBroadcastedValueWithoutMilion.title'
@@ -970,6 +973,8 @@ class Dashboard extends Component {
                   }
                   styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
                   isLastSummary
+                  style='currency'
+                  currency={currency}
                 />
               </>
             )}
@@ -1006,7 +1011,7 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        {(!isAdmin && !isClientCompany) || takeover ? (
+        {false && ((!isAdmin && !isClientCompany) || takeover) ? (
           <Grid.Row>
             {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
               <Grid.Column width={5}>

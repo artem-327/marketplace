@@ -24,7 +24,7 @@ import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from 'moment'
 import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
-import { inputWrapper, quantityWrapper } from '../../components'
+import { inputWrapper } from '../../components'
 import { Required } from '~/components/constants/layout'
 import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
 
@@ -73,19 +73,9 @@ import {
 
 import {
   FlexSidebar,
-  //FlexTabs,
   FlexContent,
-  //TopMargedColumn,
-  //GraySegment,
   HighSegment,
-  //DivIcon,
-  //CloceIcon,
-  //InputWrapper,
-  //QuantityWrapper,
   BottomButtons,
-  //SmallGrid,
-  //InputLabeledWrapper,
-  //CustomLabel,
   LabeledRow
 } from '../../constants/layout'
 
@@ -600,32 +590,32 @@ class DetailSidebar extends Component {
 
                     <GridRow>
                       <GridColumn width={8} data-test='my_requested_items_sidebar_assayMin_inp'>
-                        {quantityWrapper(
-                          'element.assayMin',
-                          {
+                        <Input
+                          name='element.assayMin'
+                          inputProps={{
+                            placeholder: '0',
                             min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps,
-                          <FormattedMessage id='global.assayMin' defaultMessage='Assay Min'>
-                            {text => text}
-                          </FormattedMessage>
-                        )}
+                            type: 'number'
+                          }}
+                          label={
+                            <FormattedMessage id='global.assayMin' defaultMessage='Assay Min'>
+                              {text => text}
+                            </FormattedMessage>}
+                        />
                       </GridColumn>
                       <GridColumn width={8} data-test='my_requested_items_sidebar_assayMax_inp'>
-                        {quantityWrapper(
-                          'element.assayMax',
-                          {
+                        <Input
+                          name='element.assayMax'
+                          inputProps={{
+                            placeholder: '0',
                             min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps,
-                          <FormattedMessage id='global.assayMax' defaultMessage='Assay Max'>
-                            {text => text}
-                          </FormattedMessage>
-                        )}
+                            type: 'number'
+                          }}
+                          label={
+                            <FormattedMessage id='global.assayMax' defaultMessage='Assay Max'>
+                              {text => text}
+                            </FormattedMessage>}
+                        />
                       </GridColumn>
                     </GridRow>
 
@@ -648,21 +638,18 @@ class DetailSidebar extends Component {
 
                     <GridRow>
                       <GridColumn width={8} data-test='my_requested_items_sidebar_quantity_inp'>
-                        {quantityWrapper(
-                          'quantity',
-                          {
+                        <Input
+                          name='quantity'
+                          inputProps={{
+                            placeholder: '0',
                             min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps,
-                          <>
+                            type: 'number'
+                          }}
+                          label={
                             <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
                               {text => text}
-                            </FormattedMessage>
-                            <Required />
-                          </>
-                        )}
+                            </FormattedMessage>}
+                        />
                       </GridColumn>
                       <GridColumn width={8}>
                         <Dropdown
@@ -686,7 +673,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Delivery Location'>
+                            <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Customer Ship To'>
                               {text => text}
                             </FormattedMessage>
                           }

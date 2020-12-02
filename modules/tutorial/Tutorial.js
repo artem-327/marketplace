@@ -11,6 +11,7 @@ import styled, { ThemeProvider } from 'styled-components'
 import { updateMyProfile } from '~/modules/profile/actions'
 import { tabChanged, handleLocationsTab } from '~/modules/settings/actions'
 import { defaultTabs } from '~/modules/settings/contants'
+import get from 'lodash/get'
 
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 
@@ -70,6 +71,20 @@ const CustomSkipButton = styled(Button)`
   margin-right: 10px !important;
 `
 
+const DivEstimated = styled.div`
+  color: #848893;
+  font-size: 12px;
+`
+
+const CustomBeginNowButton = styled(Button)`
+  border: solid 1px #dee2e6 !important;
+  background-color: #ffffff !important;
+  color: #20273a !important;
+  letter-spacing: normal !important;
+  margin-right: 15px !important;
+  font-weight: bold !important;
+`
+
 const OvalEmpty = styled.div`
   width: 18px;
   height: 18px;
@@ -115,6 +130,11 @@ const Icons = styled.div`
   align-items: center;
 `
 
+const DivBottomBusinessVerification = styled.div`
+  display: flex;
+  align-items: center;
+`
+
 const cookies = new Cookies()
 
 let tutorialTabs = [
@@ -143,13 +163,14 @@ class Tutorial extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tutorialTab: ''
+      tutorialTab: '',
+      isLoading: true
     }
   }
 
   componentDidMount() {
     const { tutorialTab } = this.state
-    const { isCompanyAdmin, isClientCompanyAdmin, isProductCatalogAdmin, isProductOfferManager } = this.props
+    const { isCompanyAdmin, isClientCompanyAdmin, isProductCatalogAdmin, isProductOfferManager, isAdmin } = this.props
     if (!isCompanyAdmin) {
       let tutorials = []
       let urls = []
@@ -177,7 +198,7 @@ class Tutorial extends Component {
     }
 
     if (!tutorialTab) {
-      this.setState({ tutorialTab: this.getNextTab() })
+      this.setState({ tutorialTab: this.getNextTab(), isLoading: false })
     }
   }
 
@@ -302,7 +323,7 @@ class Tutorial extends Component {
   }
 
   render() {
-    const { tutorialTab } = this.state
+    const { tutorialTab, isLoading } = this.state
     const {
       marginMarketplace,
       marginHolds,
@@ -311,7 +332,12 @@ class Tutorial extends Component {
       isMerchant,
       isClientCompanyManager,
       isOrderProcessing,
-      isCompanyAdmin
+      isAdmin,
+      isCompanyAdmin,
+      isBusinessVerification,
+      isTutorial,
+      accountStatus,
+      marginGlobalPrice
     } = this.props
 
     let margin = '15px 32px 15px 32px'
@@ -319,40 +345,75 @@ class Tutorial extends Component {
     if (marginHolds) margin = '0 0 14px 0'
     if (marginOrders) margin = '20px 32px 0 32px'
     if (marginWantedBoard) margin = '15px 0 15px 0'
+    if (marginGlobalPrice) margin = '0px 32px 15px 32px'
 
     const theme = {
       margin
     }
-    return !isCompanyAdmin && (isMerchant || isClientCompanyManager || isOrderProcessing) ? null : (
-      <>
-        {tutorialTab ? (
-          <ThemeProvider theme={theme}>
-            <Rectangle>
-              <div>
-                <Title>
-                  <FormattedMessage id={`tutorial.${tutorialTab}.title`} defaultMessage={'Title'}>
-                    {text => text}
-                  </FormattedMessage>
-                </Title>
-                <Content>
-                  <FormattedMessage id={`tutorial.${tutorialTab}.content`} defaultMessage={'Content'}>
-                    {text => text}
-                  </FormattedMessage>
-                </Content>
+    if ((!isCompanyAdmin && (isMerchant || isClientCompanyManager || isOrderProcessing)) || isLoading) {
+      return null
+    } else if (!isLoading && tutorialTab && !isBusinessVerification && isTutorial) {
+      return (
+        <ThemeProvider theme={theme}>
+          <Rectangle>
+            <div>
+              <Title>
+                <FormattedMessage id={`tutorial.${tutorialTab}.title`} defaultMessage={'Title'}>
+                  {text => text}
+                </FormattedMessage>
+              </Title>
+              <Content>
+                <FormattedMessage id={`tutorial.${tutorialTab}.content`} defaultMessage={'Content'}>
+                  {text => text}
+                </FormattedMessage>
+              </Content>
 
-                <CustomSkipButton type='button' onClick={e => this.handleSetCookies(e, true)}>
-                  <FormattedMessage id='"global.skip"' defaultMessage='Skip' />
-                </CustomSkipButton>
-                <CustomButton type='button' onClick={e => this.handleSetCookies(e, false)}>
-                  <FormattedMessage id={`tutorial.${tutorialTab}.button`} defaultMessage='Button' />
-                </CustomButton>
-              </div>
-              {this.getIcons()}
-            </Rectangle>
-          </ThemeProvider>
-        ) : null}
-      </>
-    )
+              <CustomSkipButton type='button' onClick={e => this.handleSetCookies(e, true)}>
+                <FormattedMessage id='"global.skip"' defaultMessage='Skip' />
+              </CustomSkipButton>
+              <CustomButton type='button' onClick={e => this.handleSetCookies(e, false)}>
+                <FormattedMessage id={`tutorial.${tutorialTab}.button`} defaultMessage='Button' />
+              </CustomButton>
+            </div>
+            {this.getIcons()}
+          </Rectangle>
+        </ThemeProvider>
+      )
+    } else if (!isLoading && !isAdmin && accountStatus === 'none' && isBusinessVerification && !isTutorial) {
+      return (
+        <ThemeProvider theme={theme}>
+          <Rectangle>
+            <div>
+              <Title>
+                <FormattedMessage id='tutorial.businessVerification.title' defaultMessage='Business Verification'>
+                  {text => text}
+                </FormattedMessage>
+              </Title>
+              <Content>
+                <FormattedMessage
+                  id='tutorial.businessVerification.content'
+                  defaultMessage='EchoSystem is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, EchoSystem must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'>
+                  {text => text}
+                </FormattedMessage>
+              </Content>
+              <DivBottomBusinessVerification>
+                <CustomBeginNowButton type='button' onClick={e => Router.push('/velloci-register')}>
+                  <FormattedMessage id='tutorial.businessVerification.beginNow' defaultMessage='Begin now' />
+                </CustomBeginNowButton>
+                <DivEstimated>
+                  <FormattedMessage
+                    id={'tutorial.businessVerification.estimated'}
+                    defaultMessage='Estimated time ~ 10 minutes'
+                  />
+                </DivEstimated>
+              </DivBottomBusinessVerification>
+            </div>
+          </Rectangle>
+        </ThemeProvider>
+      )
+    } else {
+      return null
+    }
   }
 }
 
@@ -363,7 +424,14 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
+  const company = get(state, 'auth.identity.company', null)
+
+  let accountStatus = 'none'
+  if (company && company.dwollaAccountStatus) accountStatus = company.dwollaAccountStatus
+  else if (company && company.vellociAccountStatus) accountStatus = company.vellociAccountStatus
+
   return {
+    accountStatus,
     name: getSafe(() => state.auth.identity.name, ''),
     isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false),
     isMerchant: getSafe(() => state.auth.identity.isMerchant, false),
@@ -371,6 +439,7 @@ const mapStateToProps = state => {
     isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
     isProductCatalogAdmin: getSafe(() => state.auth.identity.isProductCatalogAdmin, false),
     isProductOfferManager: getSafe(() => state.auth.identity.isProductOfferManager, false),
+    isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
     isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false)
   }
 }

@@ -321,7 +321,7 @@ class Navigation extends Component {
                   dataTest='navigation_menu_inventory_my_products_drpdn'>
                   {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
                 </Dropdown.Item>
-                {!isClientCompanyAdmin && (
+                {isCompanyAdmin && (
                   <Dropdown.Item
                     as={MenuLink}
                     to='/inventory/global-price-book'
@@ -396,7 +396,7 @@ class Navigation extends Component {
                     as={MenuLink}
                     to='/wanted-board/bids-sent'
                     dataTest='navigation_wanted_board_bids_sent_drpdn'>
-                    {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
+                    {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'My Offers' })}
                   </Dropdown.Item>
                 </>
               )}
@@ -404,7 +404,7 @@ class Navigation extends Component {
                 as={MenuLink}
                 to='/wanted-board/bids-received'
                 dataTest='navigation_wanted_board_bids_received_drpdn'>
-                {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'Bids Received' })}
+                {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'My Requests' })}
               </Dropdown.Item>
             </PerfectScrollbar>
           </Dropdown.Menu>
@@ -442,7 +442,7 @@ class Navigation extends Component {
             icon={<Coffee size={22} />}
             text={
               <>
-                <FormattedMessage id='navigation.manageGuests' defaultMessage='Manage Guests' />
+                <FormattedMessage id='navigation.manageGuests' defaultMessage='Guests' />
                 {manageGuests ? <ChevronUp /> : <ChevronDown />}
               </>
             }
@@ -470,7 +470,7 @@ class Navigation extends Component {
           </DropdownItem>
         ) : null}
 
-        {(isCompanyAdmin || isUserAdmin || isProductCatalogAdmin || isClientCompanyAdmin) && (
+        {(isCompanyAdmin || isUserAdmin || isClientCompanyAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
             text={

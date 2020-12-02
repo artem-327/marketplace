@@ -15,6 +15,7 @@ class Messages extends Component {
 
   checkForMessages = response => {
     if (!response) return
+    const { intl: { formatMessage } } = this.props
     let { data, config } = response
     let messages = data.clientMessage
       ? [data]
@@ -22,7 +23,16 @@ class Messages extends Component {
       ? data.filter(d => d && !!d.clientMessage)
       : data && data.messages && data.messages.length > 0
       ? data.messages
+      : data.error === 'access_denied'
+      ? [{
+          level: 'ERROR',
+          clientMessage: formatMessage({
+            id: 'error.accessDenied',
+            defaultMessage: "You don't have sufficient role to perform this action."
+          })
+        }]
       : []
+
     // let messages = getSafe(
     //   () => data.messages,
     //   data.clientMessage ? [data] : Array.isArray(data) ? data.filter(d => !!d.clientMessage) : []

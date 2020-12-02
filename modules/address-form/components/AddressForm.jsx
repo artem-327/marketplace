@@ -77,13 +77,19 @@ class AddressForm extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    const { addZip } = this.props
     const values = this.getValues()
     const oldValues = this.getValues(prevProps.values)
 
     const country = values && values.address && values.address.country
     const oldCountry = oldValues && oldValues.address && oldValues.address.country
-
+    if (
+      values.id !== oldValues.id ||
+      getSafe(() => values.address.id, '') !== getSafe(() => oldValues.address.id, '')
+    ) {
+      if (getSafe(() => values.address.zip, '')) await addZip(JSON.parse(values.address.zip))
+    }
     if (country && country !== oldCountry) {
       const parsed = JSON.parse(country)
 
@@ -95,7 +101,7 @@ class AddressForm extends Component {
   }
 
   handleChange = (_, { name, value }) => {
-    let { addressDatalistOptions, values } = this.props
+    let { addressDatalistOptions, values, searchEnabled } = this.props
     const { getAddressSearch, setFieldValue, addZip, addressDatalistLength } = this.props
 
     if (!values) return
@@ -130,7 +136,7 @@ class AddressForm extends Component {
       if (adrLength > 1 && adrLength > this.state.previousAddressLength && !addressDatalistLength) {
         this.setState({ previousAddressLength: adrLength })
         return
-      } else {
+      } else if (searchEnabled) {
         this.setState({ previousAddressLength: adrLength })
 
         const body = {
@@ -199,6 +205,7 @@ class AddressForm extends Component {
       countriesLoading,
       loading,
       required,
+      searchEnabled,
       children,
       intl: { formatMessage }
     } = this.props
@@ -378,7 +385,8 @@ AddressForm.propTypes = {
   additionalCountryInputProps: object,
   fixedCountries: array,
   handleChange: func,
-  required: bool
+  required: bool,
+  searchEnabled: bool
 }
 
 AddressForm.defaultProps = {
@@ -415,7 +423,8 @@ AddressForm.defaultProps = {
   additionalCountryInputProps: {},
   fixedCountries: [],
   handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!'),
-  required: false
+  required: false,
+  searchEnabled: true
 }
 
 export default injectIntl(AddressForm)

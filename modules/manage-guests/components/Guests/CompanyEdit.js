@@ -35,7 +35,7 @@ const FixyWrapper = styled.div`
 `
 
 const ScrollableSegment = styled(Segment)`
-  max-height: 90vh;
+  max-height: 95vh;
   overflow-y: auto;
 `
 

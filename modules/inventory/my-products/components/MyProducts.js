@@ -277,7 +277,7 @@ class MyProducts extends Component {
 
     return (
       <>
-        {false && !tutorialCompleted && <Tutorial />}
+        {<Tutorial isTutorial={false} isBusinessVerification={true} />}
 
         <Container fluid style={{ padding: '0px 30px' }} className='flex stretched'>
           <div style={{ padding: '10px 0' }}>
