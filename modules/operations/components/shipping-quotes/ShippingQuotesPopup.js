@@ -23,7 +23,7 @@ const initialFormValues = {
   quoteId: '',
   price: '',
   validityDate: '',
-  shippingRequest: ''
+  shippingQuoteRequestId: ''
 }
 
 const formValidation = () =>
@@ -48,7 +48,6 @@ class ShippingQuotesPopup extends React.Component {
     this.props.searchManualQuoteRequest(text)
   }, 250)
 
-
   render() {
     const {
       closePopup,
@@ -67,11 +66,11 @@ class ShippingQuotesPopup extends React.Component {
     const formatedSearchedManQuotRequests = searchedManQuotRequests.map(val => ({
         key: val.id,
         value: val.id,
-        text: `${val.id} - ${val.name}`,
+        text: `${val.id} - ${val.requestingCompany.name}`,
         content: (
           <Header
-            content={`${val.id} - ${val.name}`}
-            subheader={val.name}
+            content={`${val.id} - ${val.requestingCompany.name}`}
+            subheader={val.requestingUser.name}
             style={{ fontSize: '14px' }}
           />
         )
@@ -99,7 +98,7 @@ class ShippingQuotesPopup extends React.Component {
                 quoteId: values.quoteId,
                 price: Number(values.price),
                 ...(values.validityDate !== '' && { validityDate: getStringISODate(values.validityDate) }),
-                ...(values.shippingRequest !=='' && { shippingRequest: values.shippingRequest })
+                ...(values.shippingQuoteRequestId !=='' && { shippingQuoteRequestId: values.shippingQuoteRequestId })
               }
 
               try {
@@ -190,7 +189,7 @@ class ShippingQuotesPopup extends React.Component {
                           {text => text}
                         </FormattedMessage>
                       }
-                      name='shippingRequest'
+                      name='shippingQuoteRequestId'
                       options={formatedSearchedManQuotRequests}
                       inputProps={{
                         loading: searchedManQuotRequestsLoading,

@@ -150,7 +150,12 @@ export const searchManualQuoteRequest = name => ({
     orFilters: [
       {
         operator: 'LIKE',
-        path: 'Tag.name',
+        path: 'ShippingQuoteRequest.requestingCompany.name',
+        values: [name.toString()]
+      },
+      {
+        operator: 'LIKE',
+        path: 'ShippingQuoteRequest.requestingUser.name',
         values: [name.toString()]
       }
     ],
