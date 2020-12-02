@@ -2932,5 +2932,6 @@
   "velloci.companyVerification.list.license": "Business License",
   "velloci.companyVerification.list.certificate": "Certificate of Good Standing",
   "detailRow.shippingQuoteId": "Shipping Quote ID",
-  "detailRow.infoType": "Info Type"
+  "detailRow.infoType": "Info Type",
+  "detailRow.checkout": "Checkout"
 }

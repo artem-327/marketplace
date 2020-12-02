@@ -5,6 +5,7 @@ import ProdexGrid from '~/components/table'
 import confirm from '~/src/components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
+import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
@@ -33,7 +34,8 @@ class ShippingQuotesTable extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          actions: this.getActions()
+          actions: this.getActions(),
+          width: 400
         },
         /*{
         name: 'createdAt',
@@ -49,7 +51,8 @@ class ShippingQuotesTable extends Component {
             <FormattedMessage id='operations.price' defaultMessage='Price'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 100
         },
         {
           name: 'quoteId',
@@ -57,7 +60,8 @@ class ShippingQuotesTable extends Component {
             <FormattedMessage id='operations.quoteId' defaultMessage='Quote Id'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 200
         },
         /*{
         name: 'updatedAt',
@@ -73,7 +77,19 @@ class ShippingQuotesTable extends Component {
             <FormattedMessage id='operations.validityDate' defaultMessage='Validity Date'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 200
+        },
+        {
+          name: 'expand',
+          title: <div></div>,
+          caption: (
+            <FormattedMessage id='alerts.column.expand' defaultMessage='Expand'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          align: 'center',
+          width: 50
         }
       ],
       expandedRowIds: []
@@ -113,12 +129,12 @@ class ShippingQuotesTable extends Component {
   getRowDetail = ({ row }) => {
     return (
       <DetailRow
-        //row={row.info}
+        //FIXME row={row.info}
         row={{
           shippingQuoteId: 'DHD3',
           infoType: 'MessageShippingQuoteInfoResponse'
         }}
-        //items={[row.info]}
+        //FIXME row={[row.info]}
         items={[
           {
             shippingQuoteId: 'DHD3',
@@ -127,8 +143,32 @@ class ShippingQuotesTable extends Component {
         ]}
         headerAttributes={['shippingQuoteId']}
         contentAttributes={[{ name: 'infoType', width: '100%' }]}
+        buttons={[
+          {
+            name: 'checkout',
+            action: () => console.log('Here is action'),
+            columnWidth: 16,
+            fluid: true,
+            buttonStyles: 'background-color: #2599d5 !important; color: #ffffff !important;'
+          }
+        ]}
       />
     )
+  }
+
+  getRows = () => {
+    const { rows } = this.props
+    return rows.map(row => {
+      return {
+        ...row,
+        expand: this.state.expandedRowIds.some(id => id === row.id) ? (
+          <ChevronUp size={16} style={{ cursor: 'pointer' }} />
+        ) : (
+          <ChevronDown size={16} style={{ cursor: 'pointer' }} />
+        ),
+        clsName: this.state.expandedRowIds.some(id => id === row.id) ? ' open' : ''
+      }
+    })
   }
 
   render() {
@@ -143,7 +183,7 @@ class ShippingQuotesTable extends Component {
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={columns}
-          rows={rows}
+          rows={this.getRows()}
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
           columnActions='carrierName'
