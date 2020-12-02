@@ -22,7 +22,7 @@ function Content({ items, attributes }) {
             <DivHeaderTable>
               {attributes.map(attr => (
                 <DivHeaderColumnTable widthProp={attr.width}>
-                  <FormattedMessage id={`orders.${attr.name}`} defaultMessage='Title' />
+                  <FormattedMessage id={`detailRow.${attr.name}`} defaultMessage='Title' />
                 </DivHeaderColumnTable>
               ))}
             </DivHeaderTable>

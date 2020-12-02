@@ -111,7 +111,24 @@ class ShippingQuotesTable extends Component {
   }
 
   getRowDetail = ({ row }) => {
-    return <DetailRow row={row} />
+    return (
+      <DetailRow
+        //row={row.info}
+        row={{
+          shippingQuoteId: 'DHD3',
+          infoType: 'MessageShippingQuoteInfoResponse'
+        }}
+        //items={[row.info]}
+        items={[
+          {
+            shippingQuoteId: 'DHD3',
+            infoType: 'MessageShippingQuoteInfoResponse'
+          }
+        ]}
+        headerAttributes={['shippingQuoteId']}
+        contentAttributes={[{ name: 'infoType', width: '100%' }]}
+      />
+    )
   }
 
   render() {
@@ -134,8 +151,9 @@ class ShippingQuotesTable extends Component {
           rowDetail={this.getRowDetail}
           onRowClick={(_, row) => {
             if (row.id) {
-              let isIdIn = this.state.expandedRowIds.some()
-              if (isIdIn) {
+              let ids = this.state.expandedRowIds.slice()
+              if (ids.includes(row.id)) {
+                //ids.filter(id => id === row.id)
                 this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
               } else {
                 ids.push(row.id)

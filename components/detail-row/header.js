@@ -19,7 +19,7 @@ function Header({ row, attributes }) {
                   <List.Item>
                     <List.Content>
                       <List.Header as='label'>
-                        <FormattedMessage id={`orders.${attr}`} defaultMessage='Title' />
+                        <FormattedMessage id={`detailRow.${attr}`} defaultMessage='Title' />
                       </List.Header>
                       <List.Description as='span'>{getSafe(() => row[attr], '')}</List.Description>
                     </List.Content>

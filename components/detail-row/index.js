@@ -6,11 +6,11 @@ import Header from './header'
 import Content from './content'
 import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from './constants'
 
-function DetailRow({ row, headerAttributes, contentAttributes }) {
+function DetailRow({ row, items, headerAttributes, contentAttributes }) {
   return (
     <>
       <Header row={row} attributes={headerAttributes.length ? headerAttributes : HEADER_ATTRIBUTES} />
-      <Content items={row.orderItems} attributes={contentAttributes.length ? contentAttributes : CONTENT_ATTRIBUTES} />
+      <Content items={items} attributes={contentAttributes.length ? contentAttributes : CONTENT_ATTRIBUTES} />
     </>
   )
 }
