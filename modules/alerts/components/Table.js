@@ -337,6 +337,7 @@ class Table extends Component {
             {...datagrid.tableProps}
             loading={datagrid.loading || markSeenSending}
             columns={columns}
+            isToggleCellComponent={true}
             rowDetailType={true}
             rows={this.getRows()}
             rowDetail={this.getRowDetail}

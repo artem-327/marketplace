@@ -353,11 +353,15 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_REMOVE_ATTACHMENT_PENDING:
-    case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {
+    case AT.INVENTORY_REMOVE_ATTACHMENT_PENDING: {
       return {
         ...state,
         updatingDatagrid: true
+      }
+    }
+    case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {
+      return {
+        ...state
       }
     }
 

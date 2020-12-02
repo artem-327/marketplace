@@ -216,7 +216,8 @@ class DatagridProvider extends Component {
 
   removeRowById = id => {
     this.setState(s => ({
-      rows: s.rows.filter(r => r.id !== id)
+      rows: s.rows.filter(r => r.id !== id),
+      isUpdatedRow: true
     }))
   }
 

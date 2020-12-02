@@ -1,30 +1,37 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { injectIntl } from 'react-intl'
 //Components
 import Header from './header'
 import Content from './content'
-import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from './constants'
-
-function DetailRow({ row, headerAttributes, contentAttributes }) {
+import Buttons from './Buttons'
+//Styles
+import { StyledGrid, DetailMessage } from './styles'
+function DetailRow({ row, items, headerAttributes, contentAttributes, buttons }) {
   return (
-    <>
-      <Header row={row} attributes={headerAttributes.length ? headerAttributes : HEADER_ATTRIBUTES} />
-      <Content items={row.orderItems} attributes={contentAttributes.length ? contentAttributes : CONTENT_ATTRIBUTES} />
-    </>
+    <DetailMessage>
+      <StyledGrid>
+        <Header row={row} attributes={headerAttributes} />
+        <Content items={items} attributes={contentAttributes} />
+        <Buttons row={row} buttons={buttons} />
+      </StyledGrid>
+    </DetailMessage>
   )
 }
 
 DetailRow.propTypes = {
   row: PropTypes.object,
+  items: PropTypes.array,
   headerAttributes: PropTypes.array,
-  contentAttributes: PropTypes.array
+  contentAttributes: PropTypes.array,
+  buttons: PropTypes.array
 }
 
 DetailRow.defaultProps = {
   row: {},
+  items: [],
   headerAttributes: [],
-  contentAttributes: []
+  contentAttributes: [],
+  buttons: []
 }
 
-export default injectIntl(DetailRow)
+export default DetailRow

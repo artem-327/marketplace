@@ -1,4 +1,4 @@
-import { Grid, Segment, List, GridColumn, Table } from 'semantic-ui-react'
+import { Grid, Segment, List, GridColumn, Table, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 export const StyledGrid = styled(Grid)`
@@ -67,8 +67,8 @@ export const DetailMessage = styled.div`
   padding: 0 5px 5px 5px;
 `
 
-export const HeaderColumn = styled(GridColumn)`
-  padding: 0px !important;
+export const ColumnDetail = styled(GridColumn)`
+  padding-left: 0px !important;
 `
 
 export const DivTable = styled.div`
@@ -116,4 +116,9 @@ export const DivBodyColumnTable = styled.div`
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
+`
+
+export const CustomButton = styled(Button)`
+  ${props =>
+    props.buttonStyles ? props.buttonStyles : 'background-color: #2599d5 !important; color: #ffffff !important;'};
 `
