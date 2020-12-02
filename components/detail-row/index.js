@@ -1,0 +1,39 @@
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+//Components
+import Header from './Header'
+import Content from './Content'
+import Buttons from './Buttons'
+//Constants
+import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from './constants'
+//Styles
+import { StyledGrid, DetailMessage } from './styles'
+function DetailRow({ row, items, headerAttributes, contentAttributes, buttons }) {
+  return (
+    <DetailMessage>
+      <StyledGrid>
+        <Header row={row} attributes={headerAttributes.length ? headerAttributes : HEADER_ATTRIBUTES} />
+        <Content items={items} attributes={contentAttributes.length ? contentAttributes : CONTENT_ATTRIBUTES} />
+        <Buttons row={row} buttons={buttons} />
+      </StyledGrid>
+    </DetailMessage>
+  )
+}
+
+DetailRow.propTypes = {
+  row: PropTypes.object,
+  items: PropTypes.array,
+  headerAttributes: PropTypes.array,
+  contentAttributes: PropTypes.array,
+  buttons: PropTypes.array
+}
+
+DetailRow.defaultProps = {
+  row: {},
+  items: [],
+  headerAttributes: [],
+  contentAttributes: [],
+  buttons: []
+}
+
+export default DetailRow
