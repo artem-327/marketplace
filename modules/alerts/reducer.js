@@ -22,8 +22,7 @@ export default function reducers(state = initialState, action) {
 
     case AT.ALERTS_MARK_SEEN_ARRAY_PENDING:
     case AT.ALERTS_MARK_UNSEEN_ARRAY_PENDING:
-    case AT.ALERTS_DELETE_ARRAY_PENDING:
-    case AT.ALERTS_MARK_SEEN_PENDING: {
+    case AT.ALERTS_DELETE_ARRAY_PENDING: {
       return { ...state, markSeenSending: true }
     }
 
@@ -32,16 +31,19 @@ export default function reducers(state = initialState, action) {
     case AT.ALERTS_MARK_UNSEEN_ARRAY_REJECTED:
     case AT.ALERTS_MARK_UNSEEN_ARRAY_FULFILLED:
     case AT.ALERTS_DELETE_ARRAY_REJECTED:
-    case AT.ALERTS_DELETE_ARRAY_FULFILLED:
-    case AT.ALERTS_MARK_SEEN_FULFILLED:
-    case AT.ALERTS_MARK_SEEN_REJECTED: {
+    case AT.ALERTS_DELETE_ARRAY_FULFILLED: {
       return { ...state, markSeenSending: false }
     }
 
+    /*
+    case AT.ALERTS_MARK_SEEN_PENDING:
     case AT.ALERTS_MARK_UNSEEN_PENDING: {
       return { ...state, markSeenSending: true }
     }
+    */
 
+    case AT.ALERTS_MARK_SEEN_FULFILLED:
+    case AT.ALERTS_MARK_SEEN_REJECTED:
     case AT.ALERTS_MARK_UNSEEN_FULFILLED:
     case AT.ALERTS_MARK_UNSEEN_REJECTED: {
       return { ...state, markSeenSending: false }
