@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 //Components
-import Header from './Header'
-import Content from './Content'
+import Header from './header'
+import Content from './content'
 import Buttons from './Buttons'
-//Constants
-import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from './constants'
 //Styles
 import { StyledGrid, DetailMessage } from './styles'
 function DetailRow({ row, items, headerAttributes, contentAttributes, buttons }) {
   return (
     <DetailMessage>
       <StyledGrid>
-        <Header row={row} attributes={headerAttributes.length ? headerAttributes : HEADER_ATTRIBUTES} />
-        <Content items={items} attributes={contentAttributes.length ? contentAttributes : CONTENT_ATTRIBUTES} />
+        <Header row={row} attributes={headerAttributes} />
+        <Content items={items} attributes={contentAttributes} />
         <Buttons row={row} buttons={buttons} />
       </StyledGrid>
     </DetailMessage>
