@@ -2029,6 +2029,7 @@
   "operations.deleteRequest": "Delete Request",
   "operations.requestedBy": "Requested by",
   "operations.attachedDocuments": "Attached Documents",
+  "operations.shippingRequest": "Shipping Request",
   "confirm.delete.operations.tag.title": "Delete",
   "confirm.delete.operations.tag.content": "Do you really want to delete tag?",
   "orders.detail": "Detail",

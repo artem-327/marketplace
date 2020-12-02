@@ -13,15 +13,17 @@ import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { errorMessages, minOrZeroLength, dateValidation } from '~/constants/yupValidation'
 import { withDatagrid } from '~/modules/datagrid'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
-import { closePopup, updateShippingQuote, createShippingQuote } from '../../actions'
+import { closePopup, updateShippingQuote, createShippingQuote, searchManualQuoteRequest } from '../../actions'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
+import { debounce } from 'lodash'
 
 const initialFormValues = {
   carrierName: '',
   quoteId: '',
   price: '',
-  validityDate: ''
+  validityDate: '',
+  shippingQuoteRequestId: ''
 }
 
 const formValidation = () =>
@@ -41,6 +43,11 @@ const formValidation = () =>
   )
 
 class ShippingQuotesPopup extends React.Component {
+
+  handleSearch = debounce(text => {
+    this.props.searchManualQuoteRequest(text)
+  }, 250)
+
   render() {
     const {
       closePopup,
@@ -51,8 +58,24 @@ class ShippingQuotesPopup extends React.Component {
       toastManager,
       intl: { formatMessage },
       datagrid,
-      updateDatagrid
+      updateDatagrid,
+      searchedManQuotRequests,
+      searchedManQuotRequestsLoading
     } = this.props
+
+    const formatedSearchedManQuotRequests = searchedManQuotRequests.map(val => ({
+        key: val.id,
+        value: val.id,
+        text: `${val.id} - ${val.requestingCompany.name}`,
+        content: (
+          <Header
+            content={`${val.id} - ${val.requestingCompany.name}`}
+            subheader={val.requestingUser.name}
+            style={{ fontSize: '14px' }}
+          />
+        )
+      })
+    )
 
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
@@ -74,7 +97,8 @@ class ShippingQuotesPopup extends React.Component {
                 carrierName: values.carrierName,
                 quoteId: values.quoteId,
                 price: Number(values.price),
-                ...(values.validityDate !== '' && { validityDate: getStringISODate(values.validityDate) })
+                ...(values.validityDate !== '' && { validityDate: getStringISODate(values.validityDate) }),
+                ...(values.shippingQuoteRequestId !=='' && { shippingQuoteRequestId: values.shippingQuoteRequestId })
               }
 
               try {
@@ -158,6 +182,30 @@ class ShippingQuotesPopup extends React.Component {
                       fieldProps={{ width: 8 }}
                     />
                   </FormGroup>
+                  <FormGroup>
+                    <Dropdown
+                      label={
+                        <FormattedMessage id='operations.shippingRequest' defaultMessage='Shipping Request'>
+                          {text => text}
+                        </FormattedMessage>
+                      }
+                      name='shippingQuoteRequestId'
+                      options={formatedSearchedManQuotRequests}
+                      inputProps={{
+                        loading: searchedManQuotRequestsLoading,
+                        'data-test': 'operations_shipping_quote_shipping_request_drpdn',
+                        size: 'large',
+                        minCharacters: 1,
+                        icon: 'search',
+                        search: options => options,
+                        selection: true,
+                        clearable: true,
+                        onSearchChange: (e, { searchQuery }) =>
+                          searchQuery.length > 0 && this.handleSearch(searchQuery)
+                      }}
+                      fieldProps={{ width: 8 }}
+                    />
+                  </FormGroup>
                   <div style={{ textAlign: 'right' }}>
                     <Button.Reset data-test='operations_shipping_quote_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -192,7 +240,8 @@ ShippingQuotesPopup.defaultProps = {
 const mapDispatchToProps = {
   closePopup,
   updateShippingQuote,
-  createShippingQuote
+  createShippingQuote,
+  searchManualQuoteRequest
 }
 
 const mapStateToProps = state => {
@@ -202,6 +251,8 @@ const mapStateToProps = state => {
 
   return {
     rowId: getSafe(() => popupValues.id),
+    searchedManQuotRequests: state.operations.searchedManQuotRequests,
+    searchedManQuotRequestsLoading: state.operations.searchedManQuotRequestsLoading,
     popupValues: popupValues
       ? {
           carrierName: popupValues.carrierName,

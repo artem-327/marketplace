@@ -24,5 +24,7 @@ export default {
   denyRequest: id =>
     api.patch(`/prodex/api/company-generic-product-requests/${id}/deny`),
   deleteRequest: id =>
-    api.delete(`/prodex/api/company-generic-product-requests/${id}`)
+    api.delete(`/prodex/api/company-generic-product-requests/${id}`),
+  searchManualQuoteRequest: filter => api.post(`/prodex/api/shipment/manual-quotes/requests/datagrid`, filter)
+    .then(response => response.data)
 }
