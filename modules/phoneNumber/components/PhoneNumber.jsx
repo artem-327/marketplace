@@ -73,10 +73,14 @@ function splitPhoneNumber(phone, phoneCountryCodes) {
 }
 
 export default class PhoneNumber extends Component {
-  state = {
-    phoneCountryCode: '',
-    phoneNumber: '',
-    phoneFull: ''
+  constructor(props) {
+    super(props)
+    this.refDropdown = React.createRef()
+    this.state = {
+      phoneCountryCode: '',
+      phoneNumber: '',
+      phoneFull: ''
+    }
   }
 
   componentDidMount = async () => {
@@ -242,9 +246,12 @@ export default class PhoneNumber extends Component {
                   disabled={disabled}
                   placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
                   value={phoneCountryCode}
+                  onFocus={e => {
+                    e.target.setAttribute('autocomplete', 'something-unsupported')
+                  }}
+                  ref={this.refDropdown}
                 />
                 <StyledInputMask
-                  autoComplete='something-unsupported'
                   name={name}
                   className='phone-num'
                   beforeMaskedStateChange={this.beforeMaskedStateChange}
