@@ -301,7 +301,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 100,
+        width: 200,
         sortPath: 'Order.id',
         actions: this.getActionsOrdersList()
       },
@@ -312,7 +312,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 220,
         sortPath: 'Order.sellerCompanyName'
       }, // ! ! ? seller vs purchaser
       {
@@ -322,7 +322,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120,
+        width: 150,
         sortPath: 'Order.createdAt'
       },
       {
@@ -332,7 +332,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 160
       },
       {
         name: 'orderStatus',
@@ -341,7 +341,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 120
+        width: 170
       },
       {
         name: 'orderTotal',
@@ -350,7 +350,7 @@ class Orders extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        width: 160,
+        width: 150,
         align: 'right',
         sortPath: 'Order.cfPriceSubtotal'
       },
