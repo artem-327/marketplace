@@ -80,6 +80,7 @@ class ShippingQuotesTable extends Component {
           ),
           width: 200
         },
+        /*
         {
           name: 'expand',
           title: <div></div>,
@@ -91,6 +92,7 @@ class ShippingQuotesTable extends Component {
           align: 'center',
           width: 50
         }
+        */
       ],
       expandedRowIds: []
     }
@@ -187,7 +189,7 @@ class ShippingQuotesTable extends Component {
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
           columnActions='carrierName'
-          rowDetailType={true}
+          rowDetailType={false}
           rowDetail={this.getRowDetail}
           onRowClick={(_, row) => {
             if (row.id) {
