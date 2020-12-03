@@ -153,12 +153,8 @@ class Table extends Component {
       <StyledNotification
         style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
         onClick={() => {
-          if (row.info) {
-            const open = this.state.expandedRowIds.some(id => id === row.id)
-            if (!open) this.toggleDetail(row.id)
-          }
-          if (row.read) this.handleClickOnRead(row)
-          else this.handleClickOnUnread(row)
+          if (row.info) this.toggleDetail(row.id)
+          if (!row.read) this.handleClickOnUnread(row)
         }}>
         {ReactHtmlParser(row.text)}
       </StyledNotification>
@@ -217,7 +213,14 @@ class Table extends Component {
           open ? (
             <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
           ) : (
-            <ChevronDown size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+            <ChevronDown
+              size={16}
+              onClick={() => {
+                this.toggleDetail(r.id)
+                if (!r.read) this.handleClickOnUnread(r)
+              }}
+              style={{ cursor: 'pointer' }}
+            />
           )
         ) : null
       }
