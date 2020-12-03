@@ -15,6 +15,7 @@ import { FormattedDateTime } from '~/components/formatted-messages/'
 import { ChevronUp, ChevronDown } from 'react-feather'
 import GenericProductRequest from './message-details/GenericProductRequest'
 import ShippingQuoteRequest from './message-details/ShippingQuoteRequest'
+import ShippingQuoteInfo from './message-details/ShippingQuoteInfo'
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
@@ -150,6 +151,7 @@ class Table extends Component {
   notificationText = row => {
     return (
       <StyledNotification
+        style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
         onClick={() => {
           if (row.info) {
             const open = this.state.expandedRowIds.some(id => id === row.id)
@@ -223,14 +225,17 @@ class Table extends Component {
   }
 
   getRowDetail = ({ row }) => {
-    const messageType = row.category
+    const messageType = row.info && row.info.infoType ? row.info.infoType : ''
     const messageDetailTable = {
-      Company_Generic_Product_Requests: <GenericProductRequest row={row.rawData} />,
-      Shipping_Quote_Request: <ShippingQuoteRequest row={row.rawData} />
+      MessageCompanyGenericProductRequestInfoResponse: <GenericProductRequest row={row.rawData} />,
+      MessageShippingQuoteRequestInfoResponse: <ShippingQuoteRequest row={row.rawData} />,
+      MessageShippingQuoteInfoResponse: <ShippingQuoteInfo row={row.rawData} />
     }
 
     return (
-      <>{row.info && messageDetailTable[messageType] ? messageDetailTable[messageType] : ReactHtmlParser(row.text)}</>
+      <>{
+        messageType && messageDetailTable[messageType] ? messageDetailTable[messageType] : ReactHtmlParser(row.text)
+      }</>
     )
   }
 
