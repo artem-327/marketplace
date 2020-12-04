@@ -32,7 +32,7 @@ const StyledQuoteDiv = styled.div`
 class ShippingQuoteInfo extends Component {
 
   render() {
-    const { row } = this.props
+    const { row, cartItems } = this.props
 
     return (
       <DetailMessage>
@@ -60,6 +60,7 @@ class ShippingQuoteInfo extends Component {
           <GridRow style={{ marginTop: '10px' }}>
             <GridColumn width={16}>
               <Button
+                disabled={!cartItems}
                 style={{ margin: '0'}}
                 onClick={() => {
                   Router.push(`/purchase-order?shippingQuoteId=${row.info.shippingQuoteId}`)
@@ -81,7 +82,7 @@ class ShippingQuoteInfo extends Component {
 
 const mapStateToProps = state => {
   return {
-
+    cartItems: getSafe(() => state.cart.cart.cartItems.length, 0)
   }
 }
 
