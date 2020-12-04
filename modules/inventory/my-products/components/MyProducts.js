@@ -13,7 +13,7 @@ import { debounce } from 'lodash'
 import { UnitOfPackaging } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
 import styled from 'styled-components'
-import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle } from 'react-feather'
+import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle, MoreVertical } from 'react-feather'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { CustomRowDiv } from '../../constants/layout'
 import ProductSidebar from './ProductSidebar'
@@ -43,6 +43,59 @@ const Circle = styled.div`
   }
 `
 
+const DivRow = styled.div`
+  display: flex !important;
+
+  > div {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  > span {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+`
+
+const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+
+  .dropdown.icon {
+    display: none;
+  }
+`
+
+const RowDropdownIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 2px -4px;
+
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #848893 !important;
+  }
+`
+
 const StyledDropdown = styled(Dropdown)`
   z-index: 601 !important;
 `
@@ -54,37 +107,15 @@ class MyProducts extends Component {
     this.state = {
       columns: [
         {
-          name: 'productStatus',
-          title: (
-            <Popup
-              size='small'
-              header={
-                <FormattedMessage
-                  id='global.productStatusIndicator'
-                  defaultMessage='Status indicator if Company Product will be shown on Marketplace'
-                />
-              }
-              trigger={
-                <div>
-                  <FileTextIcon />
-                </div>
-              } // <div> has to be there otherwise popup will be not shown
-            />
-          ),
-          caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />,
-          width: 40,
-          align: 'center'
-        },
-        {
           name: 'intProductName',
           title: (
             <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name'>
               {text => text}
             </FormattedMessage>
           ),
-          width: 200,
+          width: 250,
           sortPath: 'CompanyProduct.intProductName',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'intProductCode',
@@ -258,6 +289,129 @@ class MyProducts extends Component {
     ]
   }
 
+  getProductStatus = product => {
+    let status = product.companyGenericProduct
+      ? !product.companyGenericProduct.isPublished
+        ? 'Unpublished'
+        : ''
+      : 'Unmapped'
+
+    let popupText, dispIcon
+
+    switch (status) {
+      case 'Unpublished':
+        popupText = (
+          <FormattedMessage
+            id='global.notPublished'
+            defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace.'
+          />
+        )
+        dispIcon = <Circle className='red' />
+        break
+
+      case 'Unmapped':
+        popupText = (
+          <FormattedMessage
+            id='settings.product.unmapped'
+            defaultMessage='This product is not mapped and will not show on the Marketplace.'
+          />
+        )
+        dispIcon = <Circle className='red' />
+        break
+
+      default:
+        popupText = (
+          <FormattedMessage id='global.productOk' defaultMessage='This product is being broadcasted to the marketplace' />
+        )
+        dispIcon = <Circle />
+    }
+
+    return (
+      <Popup
+        size='small'
+        header={popupText}
+        trigger={<div>{dispIcon}</div>} // <div> has to be there otherwise popup will be not shown
+      />
+    )
+  }
+
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
+  getActionsByRow = row => {
+    const { intl: {formatMessage}, openPopup, deleteProduct, datagrid } = this.props
+
+    return [
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: () => openPopup(row.rawData)
+      },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        disabled: () => this.props.editedId === row.id,
+        callback: () => {
+          return confirm(
+            formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
+            formatMessage(
+              {
+                id: 'confirm.deleteItem',
+                defaultMessage: `Do you really want to delete '${row.rawData.intProductName}'?`
+              },
+              { item: row.rawData.intProductName }
+            )
+          ).then(async () => {
+            try {
+              await deleteProduct(row.id, row.intProductName)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          })
+        }
+      }
+    ]
+  }
+
+  getRows = rows => {
+    const { openPopup } = this.props
+
+    return rows.map(r => {
+      return {
+        ...r,
+        intProductName: (
+          <DivRow>
+            <RowDropdown
+              trigger={
+                <RowDropdownIcon>
+                  <MoreVertical />
+                </RowDropdownIcon>
+              }>
+              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(r), r)}</Dropdown.Menu>
+            </RowDropdown>
+            <div style={{ marginRight: '8px' }}>
+              {this.getProductStatus(r.rawData)}
+            </div>
+            <SpanText onClick={() => openPopup(r.rawData)}>
+              {r.intProductName}
+            </SpanText>
+          </DivRow>
+        )
+      }
+    })
+  }
+
   render() {
     const {
       rows,
@@ -356,12 +510,12 @@ class MyProducts extends Component {
               </div>
             </CustomRowDiv>
           </div>
-          <div className='flex stretched inventory-wrapper' style={{ padding: '10px 0' }}>
+          <div className='flex stretched inventory-wrapper listings-wrapper' style={{ padding: '10px 0' }}>
             <ProdexTable
               tableName='inventory_my_products'
               {...datagrid.tableProps}
               loading={datagrid.loading || loading}
-              rows={rows}
+              rows={this.getRows(rows)}
               columns={columns}
               style={{ marginTop: '5px' }}
               defaultSorting={{
@@ -370,7 +524,6 @@ class MyProducts extends Component {
                 direction: 'asc'
               }}
               editingRowId={editedId}
-              columnActions='intProductName'
             />
           </div>
         </Container>
@@ -379,52 +532,6 @@ class MyProducts extends Component {
       </>
     )
   }
-}
-
-const getProductStatus = product => {
-  let status = product.companyGenericProduct
-    ? !product.companyGenericProduct.isPublished
-      ? 'Unpublished'
-      : ''
-    : 'Unmapped'
-
-  let popupText, dispIcon
-
-  switch (status) {
-    case 'Unpublished':
-      popupText = (
-        <FormattedMessage
-          id='global.notPublished'
-          defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace.'
-        />
-      )
-      dispIcon = <Circle className='red' />
-      break
-
-    case 'Unmapped':
-      popupText = (
-        <FormattedMessage
-          id='settings.product.unmapped'
-          defaultMessage='This product is not mapped and will not show on the Marketplace.'
-        />
-      )
-      dispIcon = <Circle className='red' />
-      break
-
-    default:
-      popupText = (
-        <FormattedMessage id='global.productOk' defaultMessage='This product is being broadcasted to the marketplace' />
-      )
-      dispIcon = <Circle />
-  }
-
-  return (
-    <Popup
-      size='small'
-      header={popupText}
-      trigger={<div>{dispIcon}</div>} // <div> has to be there otherwise popup will be not shown
-    />
-  )
 }
 
 const mapStateToProps = (state, { datagrid }) => {
@@ -439,11 +546,7 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         ...product,
         rawData: product,
-        intProductName: (
-          <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {product.intProductName}
-          </div>
-        ),
+        intProductName: product.intProductName,
         packagingTypeName: getSafe(() => product.packagingType.name) ? (
           <UnitOfPackaging value={product.packagingType.name} />
         ) : (
@@ -461,7 +564,6 @@ const mapStateToProps = (state, { datagrid }) => {
         genericProductName: getSafe(() => product.companyGenericProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
         packagingUnit: getSafe(() => product.packagingUnit.id),
-        productStatus: getProductStatus(product),
         productStatusTmp:
           product.companyGenericProduct && !product.companyGenericProduct.isPublished ? (
             <Popup
