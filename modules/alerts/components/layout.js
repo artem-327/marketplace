@@ -48,5 +48,9 @@ export const StyledGrid = styled(Grid)`
       background-color: #edeef2;
       color: #20273a;
     }
+    
+    &:disabled {
+      color: #cecfd4;
+    }
   }
 `
