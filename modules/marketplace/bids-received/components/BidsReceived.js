@@ -22,7 +22,6 @@ import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
-import MakeOfferPopup from './MakeOfferPopup'
 
 const defaultHiddenColumns = [
   'origin',
@@ -133,7 +132,7 @@ const RowDropdownIcon = styled.div`
   }
 `
 
-class Listings extends Component {
+class BidsReceived extends Component {
   constructor(props) {
     super(props)
     //this.getRowActions = this.getRowActions.bind(this)
@@ -322,7 +321,7 @@ class Listings extends Component {
     const { sidebarChanged } = this.props
     let { isOpen, isHoldRequest } = this.props.sidebar
 
-    this.props.handleVariableSave('tableHandlersFiltersListings', this.state.filterValues)
+    this.props.handleVariableSave('tableHandlersFiltersBidsReceived', this.state.filterValues)
     if (isOpen || isHoldRequest) sidebarChanged({ isHoldRequest: false, isOpen: false })
   }
 
@@ -493,7 +492,6 @@ class Listings extends Component {
     const {
       isMerchant,
       isCompanyAdmin,
-      openPopup,
       intl: { formatMessage }
     } = this.props
     const rowActions = []
@@ -518,22 +516,13 @@ class Listings extends Component {
       }),
       callback: () => this.tableRowClicked(row.id)
     }
-    const buttonMakeAnOffer = {
-      text: formatMessage({
-        id: 'marketplace.makeAnOffer',
-        defaultMessage: 'Make an Offer'
-      }),
-      callback: () => openPopup(row.rawData)
-    }
     if (isMerchant || isCompanyAdmin) {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
       rowActions.push(buttonRequestHold)
-      rowActions.push(buttonMakeAnOffer)
     } else {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
-      rowActions.push(buttonMakeAnOffer)
     }
     return rowActions
   }
@@ -547,8 +536,7 @@ class Listings extends Component {
       isCompanyAdmin,
       sidebar: { openInfo },
       tableHandlersFiltersListings,
-      activeMarketplaceFilter,
-      isOpenPopup
+      activeMarketplaceFilter
     } = this.props
     const { columns, fixed, openFilterPopup } = this.state
     let { formatMessage } = intl
@@ -640,26 +628,10 @@ class Listings extends Component {
             data-test='marketplace_listings_row_action'
           />
         </div>
-        <AddCart openInfo={openInfo} />
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
-        {isOpenPopup && <MakeOfferPopup />}
       </Container>
     )
   }
 }
 
-Listings.propTypes = {
-  isMerchant: boolean,
-  isCompanyAdmin: boolean,
-  isOpenColumnSettingModal: boolean,
-  tutorialCompleted: boolean
-}
-
-Listings.defaultProps = {
-  isMerchant: false,
-  isCompanyAdmin: false,
-  tutorialCompleted: false,
-  isOpenColumnSettingModal: false
-}
-
-export default injectIntl(Listings)
+export default injectIntl(BidsReceived)

@@ -70,3 +70,17 @@ export function toggleHolds(type) {
     payload: type
   }
 }
+
+export function openPopup(row = null) {
+  return {
+    type: AT.MARKETPLACE_OPEN_POPUP,
+    payload: row
+  }
+}
+
+export function closePopup() {
+  return {
+    type: AT.MARKETPLACE_CLOSE_POPUP,
+    payload: null
+  }
+}

@@ -27,7 +27,11 @@ export const initialState = {
   holds: [],
   typeHolds: 'my',
   countHolds: '',
-  tableHandlersFiltersHolds: null
+  tableHandlersFiltersHolds: null,
+  tableHandlersFiltersBidsSent: null,
+  tableHandlersFiltersBidsReceived: null,
+  isOpenPopup: false,
+  popupValues: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -241,6 +245,21 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         typeHolds: payload
+      }
+    }
+
+    case AT.MARKETPLACE_OPEN_POPUP: {
+      return {
+        ...state,
+        isOpenPopup: true,
+        popupValues: action.payload
+      }
+    }
+    case AT.MARKETPLACE_CLOSE_POPUP: {
+      return {
+        ...state,
+        isOpenPopup: false,
+        popupValues: null
       }
     }
 

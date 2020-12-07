@@ -6,11 +6,11 @@ import moment from 'moment/moment'
 import { getLocationString } from '~/src/utils/functions'
 import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'
-import Listings from './Listings'
+import BidsReceived from './BidsReceived'
 import * as Actions from '../../actions'
 import { sidebarChanged } from '~/src/modules/cart'
 import { getProductOffer } from '~/modules/purchase-order/actions'
-import { openPopup as openInfoPopup, closePopup } from '~/modules/company-product-info/actions'
+import { openPopup, closePopup } from '~/modules/company-product-info/actions'
 import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
@@ -29,7 +29,6 @@ function mapStateToProps(store, { datagrid }) {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       return {
         ...po,
-        rawData: po,
         id: po.id,
         expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
         productGroupName: getSafe(() => po.companyProduct.companyGenericProduct.productGroup.name, ''),
@@ -103,9 +102,9 @@ export default withDatagrid(
   connect(mapStateToProps, {
     ...Actions,
     sidebarChanged,
-    openInfoPopup,
+    openPopup,
     closePopup,
     getProductOffer,
     applyFilter
-  })(Listings)
+  })(BidsReceived)
 )
