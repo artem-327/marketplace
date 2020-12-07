@@ -2,20 +2,23 @@ context("Grades CRUD", () => {
 
     let gradeId = null
     let filter = [{"operator": "LIKE", "path": "ProductGrade.name", "values": ["%Test%"]}]
+    let filterEdited = [{"operator": "LIKE", "path": "ProductGrade.name", "values": ["%Graceful%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST", "/prodex/api/cas-products/datagrid").as("loading")
+        cy.route("GET", "/prodex/api/dashboard").as("loading")
         cy.route("POST", "/prodex/api/product-grades/datagrid").as("gradesLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
-        cy.url().should("include", "admin")
+        cy.url().should("include", "dashboard")
 
         cy.wait("@loading")
 
-        cy.contains("Grades").click()
+        cy.get('.flex-wrapper > :nth-child(6)').click()
+        cy.waitForUI()
+        cy.get('[data-test=navigation_admin_settings_grades_drpdn]').click()
 
         cy.wait("@gradesLoad")
     })
@@ -23,6 +26,10 @@ context("Grades CRUD", () => {
     it("Creates a grade", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'product-grades', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'product-grades', itemId)
+            })
+            cy.getFirstEntityWithFilter(token, 'product-grades', filterEdited).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'product-grades', itemId)
             })

@@ -309,7 +309,7 @@ Cypress.Commands.add("getFirstEntityWithFilter", (token, entity, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orOperator: true, orFilters: filter}
+        body: {pageSize: 50, orFilters: filter}
     }).then((response) => {
         expect(response.status).to.eq(200)
         if (response.body[0] == undefined) {
