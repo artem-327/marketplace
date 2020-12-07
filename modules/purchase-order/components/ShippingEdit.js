@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Grid, GridColumn, Modal, Divider, FormGroup, Segment, Sidebar, Dimmer, Loader } from 'semantic-ui-react'
-import { Form, Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
+import { Grid, GridColumn, Modal, Divider, FormGroup, Segment, Sidebar, Dimmer, Loader, Form } from 'semantic-ui-react'
+import { Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
+import { Formik } from 'formik'
 import { bool, func, object } from 'prop-types'
 import { removeEmpty, getSafe } from '~/utils/functions'
 
@@ -13,6 +14,9 @@ import { withToastManager } from 'react-toast-notifications'
 import { PHONE_REGEXP } from '../../../src/utils/constants'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
+import { addressValidationSchema, errorMessages, phoneValidation } from '~/constants/yupValidation'
+import { AddressForm } from '~/modules/address-form'
+import { generateToastMarkup } from '~/utils/functions'
 
 import {
   FlexSidebar,
@@ -21,6 +25,7 @@ import {
   BottomButtons,
   LabeledRow
 } from '~/modules/wanted-board/constants/layout'
+import ErrorFocus from '~/components/error-focus'
 
 const CustomSegment = styled(Segment)`
   background-color: #f8f9fb !important;
@@ -45,10 +50,6 @@ const RowSidebarAddress = styled(Grid.Row)`
   padding-top: 0px !important;
 `
 
-import { AddressForm } from '~/modules/address-form'
-import { addressValidationSchema } from '~/constants/yupValidation'
-import { generateToastMarkup } from '~/utils/functions'
-
 const initialValues = {
   addressName: '',
   contactPhone: '',
@@ -69,34 +70,23 @@ const initialValues = {
   deliveryNotes: ''
 }
 
+const validationScheme = Yup.lazy(values => {
+  return Yup.object().shape({
+    contactName: Yup.string(errorMessages.invalidString).required(errorMessages.requiredMessage),
+    addressName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    //lastName: Yup.string(errorMessages.invalidString).required(errorMessages.requiredMessage),
+    contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
+    contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
+    address: addressValidationSchema()
+  })
+})
+
 class ShippingEdit extends Component {
   state = {
     clickedNewAddressInEditMode: false
   }
 
-  validationSchema = (opts = {}) => {
-    let defaultOpts = {
-      invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
-      invalidEmail: <FormattedMessage id='validation.invalidEmail' defaultMessage='Invalid e-mail address' />,
-      requiredMessage: <FormattedMessage id='validation.required' defaultMessage='Required' />,
-      invalidPhoneNumber: <FormattedMessage id='validation.phoneNumber' defaultMessage='Enter valid phone number' />
-    }
-
-    let newOpts = { ...defaultOpts, ...opts }
-
-    let { invalidString, invalidEmail, requiredMessage, invalidPhoneNumber } = newOpts
-
-    return Yup.object().shape({
-      contactName: Yup.string(invalidString).required(requiredMessage),
-      addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-      // lastName: Yup.string(invalidString).required(requiredMessage),
-      contactEmail: Yup.string().trim().email(invalidEmail).required(requiredMessage),
-      contactPhone: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
-      address: addressValidationSchema()
-    })
-  }
-
-  markup = ({ setFieldValue, values, setFieldTouched, errors, touched, isSubmitting }) => {
+  markup = ({ setFieldValue, values, setFieldTouched, errors, touched, isSubmitting, handleSubmit }) => {
     const {
       isNewAddress,
       onClose,
@@ -273,9 +263,8 @@ class ShippingEdit extends Component {
             </Button>
 
             <Button
-              onClick={e => {
-                this.submitForm()
-                e.stopPropagation()
+              onClick={() => {
+                handleSubmit()
               }}
               loading={this.props.isFetching}
               primary
@@ -292,7 +281,7 @@ class ShippingEdit extends Component {
     )
   }
 
-  handleSubmit = async (values, { setSubmitting }) => {
+  handleSubmit = async values => {
     let { isNewAddress, onClose, isWarehouse } = this.props
 
     const { handleSubmit, toastManager } = this.props
@@ -301,6 +290,7 @@ class ShippingEdit extends Component {
     if (getSafe(() => values.address.id, false)) delete values.address.id
     if (getSafe(() => values.id, false)) delete values.id
     if (getSafe(() => values.cfName, false)) delete values.cfName
+    if (getSafe(() => values.messages, false)) delete values.messages
 
     try {
       if (isWarehouse) {
@@ -345,7 +335,7 @@ class ShippingEdit extends Component {
     } catch (e) {
       console.error(e)
     } finally {
-      setSubmitting(false)
+      this.formikProps.setSubmitting(false)
     }
   }
 
@@ -363,16 +353,22 @@ class ShippingEdit extends Component {
     }
 
     return (
-      <Form
-        onSubmit={this.handleSubmit}
+      <Formik
+        onSubmit={async values => {
+          await this.handleSubmit(values)
+        }}
         enableReinitialize
         initialValues={this.props.initialValues ? { ...initialValues, ...this.props.initialValues } : initialValues}
-        validationSchema={this.validationSchema}>
+        validationSchema={validationScheme}>
         {props => {
-          this.submitForm = props.submitForm
-          return this.markup(props)
+          this.formikProps = props
+          return (
+            <Form>
+              {this.markup(props)} <ErrorFocus />
+            </Form>
+          )
         }}
-      </Form>
+      </Formik>
     )
   }
 }
