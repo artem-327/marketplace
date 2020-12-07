@@ -50,7 +50,10 @@ import {
   FormFieldBroadcastAllButton,
   UnpaddedRow,
   ButtonCancel,
-  GridBottom
+  GridBottom,
+  GridColumnSearch,
+  ButtonApply,
+  ButtonSaveAs
 } from './Broadcast.style'
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -84,7 +87,7 @@ class Broadcast extends Component {
   }
 
   componentDidMount() {
-    if (this.props.filter.category !== 'region') this.handleFilterChange(null, { name: 'category', value: 'region' })
+    if (this.props.filter.category !== 'branch') this.handleFilterChange(null, { name: 'category', value: 'branch' })
     this.props.getTemplates()
     this.props.getAssociations()
   }
@@ -258,7 +261,7 @@ class Broadcast extends Component {
       region: {
         name: formatMessage({
           id: 'broadcast.byRegion',
-          defaultMessage: 'By Region'
+          defaultMessage: 'Regions'
         }),
         rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
         depth: 1,
@@ -295,7 +298,7 @@ class Broadcast extends Component {
         // name: 'By company',
         name: formatMessage({
           id: 'broadcast.byCompany',
-          defaultMessage: 'By Company'
+          defaultMessage: 'Companies'
         }),
         // rule: treeData.model,
         rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
@@ -427,8 +430,8 @@ class Broadcast extends Component {
         if (
           (associationFilter !== 'ALL' &&
             !getSafe(() => company.model.associations, []).includes(associationFilter) &&
-            associationFilter !== 'Guest Company') ||
-          (associationFilter === 'Guest Company' && company.model.elements[0].clientCompany === false) ||
+            associationFilter !== 'Guests') ||
+          (associationFilter === 'Guests' && company.model.elements[0].clientCompany === false) ||
           (filter.broadcast !== 'all' &&
             ((filter.broadcast === 'on' && getSafe(() => company.model.broadcast, '') === 0) ||
               (filter.broadcast === 'off' && getSafe(() => company.model.broadcast, '') > 0)))
@@ -615,8 +618,8 @@ class Broadcast extends Component {
           selection
           loading={associationsFetching}
           options={[
-            { key: 'ALL', text: 'Association - All', value: 'ALL' },
-            { key: 'Guest Company', text: 'Guest Company', value: 'Guest Company' }
+            { key: 'ALL', text: 'Partners', value: 'ALL' },
+            { key: 'Guests', text: 'Guests', value: 'Guests' }
           ].concat(options)}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
@@ -775,7 +778,8 @@ class Broadcast extends Component {
       isLoadingModalCompanyInfo,
       templateSaving,
       associationsFetching,
-      associations
+      associations,
+      close
     } = this.props
 
     const { templateInitialValues } = this.state
@@ -866,12 +870,12 @@ class Broadcast extends Component {
                       options={[
                         {
                           key: 'region',
-                          text: 'By Region',
+                          text: 'Regions',
                           value: 'region'
                         },
                         {
                           key: 'branch',
-                          text: 'By Company',
+                          text: 'Companies',
                           value: 'branch'
                         }
                       ]}
@@ -884,8 +888,8 @@ class Broadcast extends Component {
                       selection
                       loading={associationsFetching}
                       options={[
-                        { key: 'ALL', text: 'Association - All', value: 'ALL' },
-                        { key: 'Guest Company', text: 'Guest Company', value: 'Guest Company' }
+                        { key: 'ALL', text: 'Partners', value: 'ALL' },
+                        { key: 'Guests', text: 'Guests', value: 'Guests' }
                       ].concat(options)}
                       onChange={(_e, { value }) => this.setState({ associationFilter: value })}
                     />
@@ -960,12 +964,12 @@ class Broadcast extends Component {
                           options={[
                             {
                               key: 'region',
-                              text: 'By Region',
+                              text: 'Regions',
                               value: 'region'
                             },
                             {
                               key: 'branch',
-                              text: 'By Company',
+                              text: 'Companies',
                               value: 'branch'
                             }
                           ]}
@@ -994,7 +998,7 @@ class Broadcast extends Component {
           ) : (
             <Grid>
               <GridRowSearch>
-                <GridColumn>
+                <GridColumnSearch>
                   <Form.Field data-test='broadcast_modal_search_inp'>
                     <InputSearch
                       name='search'
@@ -1008,7 +1012,7 @@ class Broadcast extends Component {
                       })}
                     />
                   </Form.Field>
-                </GridColumn>
+                </GridColumnSearch>
               </GridRowSearch>
               {false && (
                 <GridRow textAlign='left'>
@@ -1247,12 +1251,12 @@ class Broadcast extends Component {
                             options={[
                               {
                                 key: 'region',
-                                text: 'By Region',
+                                text: 'Regions',
                                 value: 'region'
                               },
                               {
                                 key: 'branch',
-                                text: 'By Company',
+                                text: 'Companies',
                                 value: 'branch'
                               }
                             ]}
@@ -1316,11 +1320,40 @@ class Broadcast extends Component {
                   />
                 </Rule.Content>
               </Rule.Root>
-              {!asSidebar && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>}
+              {!asSidebar && (
+                <RightAlignedDiv>
+                  <Button basic onClick={() => this.resetBroadcastRules()} data-test='broadcast_global_reset_btn'>
+                    {formatMessage({ id: 'global.reset', defaultMessage: 'Reset' })}
+                  </Button>
+                  <ButtonSave primary onClick={() => this.saveBroadcastRules()} data-test='broadcast_global_save_btn'>
+                    {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                  </ButtonSave>
+                </RightAlignedDiv>
+              )}
             </Grid.Column>
           </GridRowTable>
         </StretchedGrid>
-        {asSidebar && this.getButtons()}
+        {asSidebar && (
+          <GridBottom>
+            <Grid.Row textAlign='right'>
+              <Grid.Column width='8'>
+                <ButtonCancel onClick={() => close()} data-test='broadcast_modal_close_btn'>
+                  {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                </ButtonCancel>
+              </Grid.Column>
+              <Grid.Column width='4'>
+                <ButtonApply fluid basic onClick={() => this.apply()} data-test='broadcast_modal_apply_btn'>
+                  {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
+                </ButtonApply>
+              </Grid.Column>
+              <Grid.Column width='4'>
+                <ButtonSaveAs fluid basic onClick={() => this.saveAs()} data-test='broadcast_modal_save_as_btn'>
+                  {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
+                </ButtonSaveAs>
+              </Grid.Column>
+            </Grid.Row>
+          </GridBottom>
+        )}
       </>
     )
   }
@@ -1329,56 +1362,15 @@ class Broadcast extends Component {
     console.log('saveAs')
   }
 
-  getButtons = () => {
-    const {
-      intl: { formatMessage },
-      closeBroadcast,
-      asModal,
-      asSidebar
-    } = this.props
-
-    return (
-      <>
-        {asSidebar && (
-          <GridBottom>
-            <Grid.Row textAlign='right'>
-              <Grid.Column width='8'>
-                <ButtonCancel onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'>
-                  {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-                </ButtonCancel>
-              </Grid.Column>
-              <Grid.Column width='4'>
-                <Button fluid basic onClick={() => this.apply()} data-test='broadcast_modal_apply_btn'>
-                  {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
-                </Button>
-              </Grid.Column>
-              <Grid.Column width='4'>
-                <Button fluid basic onClick={() => this.saveAs()} data-test='broadcast_modal_save_as_btn'>
-                  {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
-                </Button>
-              </Grid.Column>
-            </Grid.Row>
-          </GridBottom>
-        )}
-        {!asSidebar && (
-          <>
-            <Button basic onClick={() => this.resetBroadcastRules()} data-test='broadcast_global_reset_btn'>
-              {formatMessage({ id: 'global.reset', defaultMessage: 'Reset' })}
-            </Button>
-            <ButtonSave primary onClick={() => this.saveBroadcastRules()} data-test='broadcast_global_save_btn'>
-              {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-            </ButtonSave>
-          </>
-        )}
-      </>
-    )
+  apply = () => {
+    console.log('apply')
   }
 
   resetAllFilters = async () => {
     this.setState({ filterSearch: '', associationFilter: 'ALL', selectedTemplate: { name: null, id: null } })
     this.props.updateFilter({
       search: '',
-      category: 'region',
+      category: 'branch',
       broadcast: 'all'
     })
   }
@@ -1423,7 +1415,7 @@ class Broadcast extends Component {
     try {
       this.handleFilterChange(null, {
         name: 'category',
-        value: 'region'
+        value: 'branch'
       })
 
       const { value } = await saveRules(id, filteredTree)
@@ -1482,7 +1474,7 @@ class Broadcast extends Component {
   }
 
   render() {
-    const { open, closeBroadcast, asModal, loading, isPrepared } = this.props
+    const { open, close, asModal, loading, isPrepared } = this.props
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
@@ -1497,14 +1489,34 @@ class Broadcast extends Component {
     }
 
     return (
-      <Modal closeIcon open={open} onClose={closeBroadcast} centered={false} size='large'>
+      <Modal closeIcon open={open} onClose={close} centered={false} size='large'>
         <Modal.Header>
           <FormattedMessage id='inventory.broadcast' defaultMessage='Price Book' />
         </Modal.Header>
         <Modal.Content scrolling className='flex stretched'>
           {this.getContent()}
         </Modal.Content>
-        <Modal.Actions>{this.getButtons()}</Modal.Actions>
+        <Modal.Actions>
+          <GridBottom>
+            <Grid.Row textAlign='right'>
+              <Grid.Column width='8'>
+                <ButtonCancel onClick={() => close()} data-test='broadcast_modal_close_btn'>
+                  {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                </ButtonCancel>
+              </Grid.Column>
+              <Grid.Column width='4'>
+                <Button fluid basic onClick={() => this.apply()} data-test='broadcast_modal_apply_btn'>
+                  {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
+                </Button>
+              </Grid.Column>
+              <Grid.Column width='4'>
+                <Button fluid basic onClick={() => this.saveAs()} data-test='broadcast_modal_save_as_btn'>
+                  {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
+                </Button>
+              </Grid.Column>
+            </Grid.Row>
+          </GridBottom>
+        </Modal.Actions>
       </Modal>
     )
   }

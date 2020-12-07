@@ -1954,6 +1954,7 @@ class DetailSidebar extends Component {
                                   asSidebar={true}
                                   saveBroadcast={this.state.saveBroadcast}
                                   changedForm={this.changedForm}
+                                  close={this.props.closeSidebarDetail}
                                 />
                               </Tab.Pane>
                             )
