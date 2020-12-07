@@ -48,7 +48,9 @@ import {
   CustomButtonDelete,
   CustomButton,
   FormFieldBroadcastAllButton,
-  UnpaddedRow
+  UnpaddedRow,
+  ButtonCancel,
+  GridBottom
 } from './Broadcast.style'
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -1314,12 +1316,17 @@ class Broadcast extends Component {
                   />
                 </Rule.Content>
               </Rule.Root>
-              {!asModal && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>}
+              {!asSidebar && <RightAlignedDiv>{this.getButtons()}</RightAlignedDiv>}
             </Grid.Column>
           </GridRowTable>
         </StretchedGrid>
+        {asSidebar && this.getButtons()}
       </>
     )
+  }
+
+  saveAs = () => {
+    console.log('saveAs')
   }
 
   getButtons = () => {
@@ -1332,10 +1339,26 @@ class Broadcast extends Component {
 
     return (
       <>
-        {asModal && (
-          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'>
-            {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-          </Button>
+        {asSidebar && (
+          <GridBottom>
+            <Grid.Row textAlign='right'>
+              <Grid.Column width='8'>
+                <ButtonCancel onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'>
+                  {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                </ButtonCancel>
+              </Grid.Column>
+              <Grid.Column width='4'>
+                <Button fluid basic onClick={() => this.apply()} data-test='broadcast_modal_apply_btn'>
+                  {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
+                </Button>
+              </Grid.Column>
+              <Grid.Column width='4'>
+                <Button fluid basic onClick={() => this.saveAs()} data-test='broadcast_modal_save_as_btn'>
+                  {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
+                </Button>
+              </Grid.Column>
+            </Grid.Row>
+          </GridBottom>
         )}
         {!asSidebar && (
           <>

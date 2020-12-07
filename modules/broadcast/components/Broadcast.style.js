@@ -309,6 +309,16 @@ const FormFieldBroadcastAllButton = styled(Form.Field)`
   }
 `
 
+const ButtonCancel = styled(Button)`
+  background: none !important;
+`
+
+const GridBottom = styled(Grid)`
+  margin: 70px -30px 0px -30px !important;
+  padding: 5px 20px 0px 20px !important;
+  box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
+`
+
 export const Rule = {
   Row,
   RowContent,
@@ -339,5 +349,7 @@ export {
   CustomButtonDelete,
   CustomButton,
   FormFieldBroadcastAllButton,
-  UnpaddedRow
+  UnpaddedRow,
+  ButtonCancel,
+  GridBottom
 }

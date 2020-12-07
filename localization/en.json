@@ -557,6 +557,7 @@
   "global.firstName": "First Name",
   "global.lastName": "Last Name",
   "global.save": "Save",
+  "global.saveAs": "Save as",
   "global.saveChanges": "Save Changes",
   "global.edit": "Edit",
   "global.new": "New",
