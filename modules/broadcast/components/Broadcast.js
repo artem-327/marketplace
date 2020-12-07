@@ -48,7 +48,8 @@ import {
   CustomButtonDelete,
   CustomButton,
   FormFieldBroadcastAllButton,
-  UnpaddedRow
+  UnpaddedRow,
+  GridColumnSearch
 } from './Broadcast.style'
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -82,7 +83,7 @@ class Broadcast extends Component {
   }
 
   componentDidMount() {
-    if (this.props.filter.category !== 'region') this.handleFilterChange(null, { name: 'category', value: 'region' })
+    if (this.props.filter.category !== 'branch') this.handleFilterChange(null, { name: 'category', value: 'branch' })
     this.props.getTemplates()
     this.props.getAssociations()
   }
@@ -425,8 +426,8 @@ class Broadcast extends Component {
         if (
           (associationFilter !== 'ALL' &&
             !getSafe(() => company.model.associations, []).includes(associationFilter) &&
-            associationFilter !== 'Guest Company') ||
-          (associationFilter === 'Guest Company' && company.model.elements[0].clientCompany === false) ||
+            associationFilter !== 'Guests') ||
+          (associationFilter === 'Guests' && company.model.elements[0].clientCompany === false) ||
           (filter.broadcast !== 'all' &&
             ((filter.broadcast === 'on' && getSafe(() => company.model.broadcast, '') === 0) ||
               (filter.broadcast === 'off' && getSafe(() => company.model.broadcast, '') > 0)))
@@ -613,8 +614,8 @@ class Broadcast extends Component {
           selection
           loading={associationsFetching}
           options={[
-            { key: 'ALL', text: 'Association - All', value: 'ALL' },
-            { key: 'Guest Company', text: 'Guest Company', value: 'Guest Company' }
+            { key: 'ALL', text: 'Partners', value: 'ALL' },
+            { key: 'Guests', text: 'Guests', value: 'Guests' }
           ].concat(options)}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
@@ -882,8 +883,8 @@ class Broadcast extends Component {
                       selection
                       loading={associationsFetching}
                       options={[
-                        { key: 'ALL', text: 'Association - All', value: 'ALL' },
-                        { key: 'Guest Company', text: 'Guest Company', value: 'Guest Company' }
+                        { key: 'ALL', text: 'Partners', value: 'ALL' },
+                        { key: 'Guests', text: 'Guests', value: 'Guests' }
                       ].concat(options)}
                       onChange={(_e, { value }) => this.setState({ associationFilter: value })}
                     />
@@ -992,7 +993,7 @@ class Broadcast extends Component {
           ) : (
             <Grid>
               <GridRowSearch>
-                <GridColumn>
+                <GridColumnSearch>
                   <Form.Field data-test='broadcast_modal_search_inp'>
                     <InputSearch
                       name='search'
@@ -1006,7 +1007,7 @@ class Broadcast extends Component {
                       })}
                     />
                   </Form.Field>
-                </GridColumn>
+                </GridColumnSearch>
               </GridRowSearch>
               {false && (
                 <GridRow textAlign='left'>
@@ -1355,7 +1356,7 @@ class Broadcast extends Component {
     this.setState({ filterSearch: '', associationFilter: 'ALL', selectedTemplate: { name: null, id: null } })
     this.props.updateFilter({
       search: '',
-      category: 'region',
+      category: 'branch',
       broadcast: 'all'
     })
   }
@@ -1400,7 +1401,7 @@ class Broadcast extends Component {
     try {
       this.handleFilterChange(null, {
         name: 'category',
-        value: 'region'
+        value: 'branch'
       })
 
       const { value } = await saveRules(id, filteredTree)

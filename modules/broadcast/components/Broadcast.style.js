@@ -258,6 +258,10 @@ const GridColumnFiltersModal = styled(Grid.Column)`
   ${props => (props.thirdColumn ? 'padding-left: 5px !important;' : '')}
 `
 
+const GridColumnSearch = styled(Grid.Column)`
+  margin-bottom: 10px !important;
+`
+
 const IconFolder = styled(Folder)`
   color: #20273a !important;
   padding-right: 7px !important;
@@ -339,5 +343,6 @@ export {
   CustomButtonDelete,
   CustomButton,
   FormFieldBroadcastAllButton,
-  UnpaddedRow
+  UnpaddedRow,
+  GridColumnSearch
 }
