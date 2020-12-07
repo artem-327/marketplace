@@ -13,6 +13,9 @@ import { withToastManager } from 'react-toast-notifications'
 import { PHONE_REGEXP } from '../../../src/utils/constants'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
+import { addressValidationSchema, errorMessages, phoneValidation } from '~/constants/yupValidation'
+import { AddressForm } from '~/modules/address-form'
+import { generateToastMarkup } from '~/utils/functions'
 
 import {
   FlexSidebar,
@@ -44,10 +47,6 @@ const RowSidebar = styled(Grid.Row)`
 const RowSidebarAddress = styled(Grid.Row)`
   padding-top: 0px !important;
 `
-
-import { AddressForm } from '~/modules/address-form'
-import { addressValidationSchema } from '~/constants/yupValidation'
-import { generateToastMarkup } from '~/utils/functions'
 
 const initialValues = {
   addressName: '',
