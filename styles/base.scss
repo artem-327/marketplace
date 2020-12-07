@@ -1849,18 +1849,30 @@ i.file {
 
             i.icon.sort:before {
               position: absolute;
+              opacity: 0;
             }
 
             i.icon.sort.up:after {
               content: '\f0dd';
-              opacity: 0.2;
+              opacity: 0;
               display: inline-block;
             }
 
             i.icon.sort.down:after {
               content: '\f0de';
-              opacity: 0.2;
+              opacity: 0;
               display: inline-block;
+            }
+
+            &:hover {
+              i.icon.sort:before {
+                opacity: 1;
+              }
+
+              i.icon.sort.up:after,
+              i.icon.sort.down:after {
+                opacity: 0.2;
+              }
             }
 
             i.icon.sort.up.inactive {
