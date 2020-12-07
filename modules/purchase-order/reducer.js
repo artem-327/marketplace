@@ -126,7 +126,7 @@ export default function reducer(state = initialState, action) {
     case AT.DELIVERY_ADDRESS_EDIT_PENDING: {
       return {
         ...state,
-        isFetching: false
+        isFetching: true
       }
     }
 
@@ -173,7 +173,7 @@ export default function reducer(state = initialState, action) {
     case AT.UPDATE_WAREHOUSE_PENDING: {
       return {
         ...state,
-        isFetching: false
+        isFetching: true
       }
     }
 
