@@ -40,7 +40,7 @@ const initialState = {
   templates: [],
   filter: {
     search: '',
-    category: 'region',
+    category: 'branch',
     broadcast: 'all'
   },
   mode: 'client', // price
