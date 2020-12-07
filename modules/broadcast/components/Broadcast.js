@@ -256,7 +256,7 @@ class Broadcast extends Component {
       region: {
         name: formatMessage({
           id: 'broadcast.byRegion',
-          defaultMessage: 'By Region'
+          defaultMessage: 'Regions'
         }),
         rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
         depth: 1,
@@ -293,7 +293,7 @@ class Broadcast extends Component {
         // name: 'By company',
         name: formatMessage({
           id: 'broadcast.byCompany',
-          defaultMessage: 'By Company'
+          defaultMessage: 'Companies'
         }),
         // rule: treeData.model,
         rule: { ...treeData.model, broadcast: getBroadcast(treeData) },
@@ -864,12 +864,12 @@ class Broadcast extends Component {
                       options={[
                         {
                           key: 'region',
-                          text: 'By Region',
+                          text: 'Regions',
                           value: 'region'
                         },
                         {
                           key: 'branch',
-                          text: 'By Company',
+                          text: 'Companies',
                           value: 'branch'
                         }
                       ]}
@@ -958,12 +958,12 @@ class Broadcast extends Component {
                           options={[
                             {
                               key: 'region',
-                              text: 'By Region',
+                              text: 'Regions',
                               value: 'region'
                             },
                             {
                               key: 'branch',
-                              text: 'By Company',
+                              text: 'Companies',
                               value: 'branch'
                             }
                           ]}
@@ -1245,12 +1245,12 @@ class Broadcast extends Component {
                             options={[
                               {
                                 key: 'region',
-                                text: 'By Region',
+                                text: 'Regions',
                                 value: 'region'
                               },
                               {
                                 key: 'branch',
-                                text: 'By Company',
+                                text: 'Companies',
                                 value: 'branch'
                               }
                             ]}
