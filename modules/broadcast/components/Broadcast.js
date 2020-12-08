@@ -1184,14 +1184,6 @@ class Broadcast extends Component {
     )
   }
 
-  saveAs = () => {
-    console.log('saveAs')
-  }
-
-  apply = () => {
-    console.log('apply')
-  }
-
   resetAllFilters = async () => {
     this.setState({ filterSearch: '', associationFilter: 'ALL', selectedTemplate: { name: null, id: null } })
     this.props.updateFilter({
