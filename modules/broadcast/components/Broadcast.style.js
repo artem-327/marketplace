@@ -29,7 +29,29 @@ const BACKGROUND = {
   state: '#eee',
   company: '#eee'
 }
-
+const FlexWrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  
+  > * {
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    
+    > .ui.grid {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+  
+  > *.dynamic {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: auto;
+  }
+`
 const Row = styled.div`
   position: relative;
   display: flex;
@@ -327,12 +349,9 @@ const ButtonSaveAs = styled(Button)`
 `
 
 const GridBottom = styled(Grid)`
-  margin: 70px -30px 0px -30px !important;
+  margin: 10px -30px 0px -30px !important;
   padding: 5px 20px 0px 20px !important;
   box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
-  position: -webkit-sticky;
-  position: sticky;
-  bottom: 0;
   background: #ffffff;
   z-index: 2;
   font-size: 14px !important;
@@ -355,6 +374,7 @@ export const Rule = {
 }
 
 export {
+  FlexWrapper,
   BottomUnpaddedRow,
   RightAlignedDiv,
   StretchedGrid,

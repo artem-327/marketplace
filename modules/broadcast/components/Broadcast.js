@@ -31,6 +31,7 @@ import {
   Rule,
   BottomUnpaddedRow,
   RightAlignedDiv,
+  FlexWrapper,
   StretchedGrid,
   GridRowSearch,
   FieldInHeaderTable,
@@ -796,7 +797,7 @@ class Broadcast extends Component {
       : []
 
     return (
-      <>
+      <FlexWrapper>
         <Form>
           {asSidebar ? (
             <>
@@ -1038,7 +1039,7 @@ class Broadcast extends Component {
           )}
         </Form>
 
-        <StretchedGrid className='flex stretched' {...additionalGridProps}>
+        <StretchedGrid className='flex dynamic stretched' {...additionalGridProps}>
           <GridRowTable>
             <Grid.Column
               width={16}
@@ -1180,7 +1181,7 @@ class Broadcast extends Component {
             </Grid.Row>
           </GridBottom>
         )}
-      </>
+      </FlexWrapper>
     )
   }
 
