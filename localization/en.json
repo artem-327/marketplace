@@ -1999,6 +1999,14 @@
   "marketplace.notes": "Notes",
   "marketplace.info": "Info",
   "marketplace.makeAnOffer": "Make an Offer",
+  "marketplace.productName": "Product Name",
+  "marketplace.yourFobPriceOffer": "Your FOB price offer",
+  "marketplace.messageToSeller": "Message to Seller",
+  "marketplace.YourTotalBid": "Your Total Bid",
+  "marketplace.optional": "Optional",
+  "marketplace.sellerHas24HoursToReply": "Seller has 24 hours to reply.",
+
+
   "operations.tables.shippingQuotes.buttonAdd": "Add Shipping Quote",
   "operations.tables.tags.buttonAdd": "Add Tag",
   "operations.tables.shippingQuotes.search": "Search shipping quote by TBD",
