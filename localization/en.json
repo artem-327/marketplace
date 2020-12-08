@@ -557,6 +557,7 @@
   "global.firstName": "First Name",
   "global.lastName": "Last Name",
   "global.save": "Save",
+  "global.saveAs": "Save as",
   "global.saveChanges": "Save Changes",
   "global.edit": "Edit",
   "global.new": "New",
@@ -2953,6 +2954,7 @@
   "detailRow.bl": "B/L",
   "detailRow.sds": "SDS",
   "detailRow.cofA": "C of A",
-  "detailRow.orderTotal": "Order Total"
+  "detailRow.orderTotal": "Order Total",
+  "broadcast.saveAsTemplate": "Save as Templates"
 
 }

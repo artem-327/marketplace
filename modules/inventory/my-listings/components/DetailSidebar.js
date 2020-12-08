@@ -1954,6 +1954,7 @@ class DetailSidebar extends Component {
                                   asSidebar={true}
                                   saveBroadcast={this.state.saveBroadcast}
                                   changedForm={this.changedForm}
+                                  close={this.props.closeSidebarDetail}
                                 />
                               </Tab.Pane>
                             )
@@ -2109,75 +2110,78 @@ class DetailSidebar extends Component {
                     )}
                   </HighSegment>
                 </FlexContent>
-                <BottomButtons className='bottom-buttons'>
-                  <div>
-                    <Button
-                      size='large'
-                      inputProps={{ type: 'button' }}
-                      onClick={() => {
-                        this.setState({ edited: false }, () =>
-                          openGlobalAddForm ? openGlobalAddForm('') : this.props.closeSidebarDetail())
-                      }}
-                      data-test='sidebar_inventory_cancel'>
-                      {Object.keys(touched).length || this.state.changedForm
-                        ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
-                        : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
-                    </Button>
-                    <Button
-                      disabled={!(Object.keys(touched).length || this.state.changedForm)}
-                      primary
-                      size='large'
-                      type='button'
-                      onClick={() => {
-                        // Dont validate if it is a broadcast tab
-                        if (this.state.activeTab === 3) {
-                          this.submitForm(values, setSubmitting, setTouched)
-                          return true
-                        }
-
-                        return validateForm().then(async r => {
-                          if (Object.keys(r).length && this.state.activeTab !== 2) {
-                            this.switchToErrors(r)
-                            submitForm() // to show errors
-                          } else {
-                            let { data } = await this.submitForm(values, setSubmitting, setTouched)
-                            if (data && !getSafe(() => this.state.sidebarValues.id, false)) {
-                              confirm(
-                                formatMessage({
-                                  id: 'confirm.editOrAddNew.header',
-                                  defaultMessage: 'Edit or add New'
-                                }),
-                                formatMessage({
-                                  id: 'confirm.editOrAddNew.content',
-                                  defaultMessage:
-                                    'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
-                                }),
-                                {
-                                  cancelText: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-                                  proceedText: formatMessage({ id: 'global.new', defaultMessage: 'New' })
-                                }
-                              )
-                                .then(() => {
-                                  this.setState(state => ({
-                                    ...state,
-                                    sidebarValues: { ...state.sidebarValues, id: null }
-                                  }))
-                                })
-                                .catch(() => {
-                                  this.setState(state => ({
-                                    ...state,
-                                    sidebarValues: { ...state.sidebarValues, id: data.id }
-                                  }))
-                                })
-                            }
+                {this.state.activeTab !== 3 && (
+                  <BottomButtons className='bottom-buttons'>
+                    <div>
+                      <Button
+                        size='large'
+                        inputProps={{ type: 'button' }}
+                        onClick={() => {
+                          this.setState({ edited: false }, () =>
+                            openGlobalAddForm ? openGlobalAddForm('') : this.props.closeSidebarDetail()
+                          )
+                        }}
+                        data-test='sidebar_inventory_cancel'>
+                        {Object.keys(touched).length || this.state.changedForm
+                          ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
+                          : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                      </Button>
+                      <Button
+                        disabled={!(Object.keys(touched).length || this.state.changedForm)}
+                        primary
+                        size='large'
+                        type='button'
+                        onClick={() => {
+                          // Dont validate if it is a broadcast tab
+                          if (this.state.activeTab === 3) {
+                            this.submitForm(values, setSubmitting, setTouched)
+                            return true
                           }
-                        })
-                      }}
-                      data-test='sidebar_inventory_save_new'>
-                      {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                    </Button>
-                  </div>
-                </BottomButtons>
+
+                          return validateForm().then(async r => {
+                            if (Object.keys(r).length && this.state.activeTab !== 2) {
+                              this.switchToErrors(r)
+                              submitForm() // to show errors
+                            } else {
+                              let { data } = await this.submitForm(values, setSubmitting, setTouched)
+                              if (data && !getSafe(() => this.state.sidebarValues.id, false)) {
+                                confirm(
+                                  formatMessage({
+                                    id: 'confirm.editOrAddNew.header',
+                                    defaultMessage: 'Edit or add New'
+                                  }),
+                                  formatMessage({
+                                    id: 'confirm.editOrAddNew.content',
+                                    defaultMessage:
+                                      'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
+                                  }),
+                                  {
+                                    cancelText: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+                                    proceedText: formatMessage({ id: 'global.new', defaultMessage: 'New' })
+                                  }
+                                )
+                                  .then(() => {
+                                    this.setState(state => ({
+                                      ...state,
+                                      sidebarValues: { ...state.sidebarValues, id: null }
+                                    }))
+                                  })
+                                  .catch(() => {
+                                    this.setState(state => ({
+                                      ...state,
+                                      sidebarValues: { ...state.sidebarValues, id: data.id }
+                                    }))
+                                  })
+                              }
+                            }
+                          })
+                        }}
+                        data-test='sidebar_inventory_save_new'>
+                        {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                      </Button>
+                    </div>
+                  </BottomButtons>
+                )}
               </FlexSidebar>
               <ErrorFocus />
             </Form>

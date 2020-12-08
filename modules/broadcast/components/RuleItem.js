@@ -79,7 +79,7 @@ const RuleItem = props => {
   }
 
   let companyName = findCompany()
-  let styleRow = asSidebar ? { 'justify-content': 'flex-end' } : {}
+  let styleRow = asSidebar ? { justifyContent: 'flex-end' } : {}
   styleRow = item.model.rule.expanded ? { ...styleRow, background: '#eff9ff' } : styleRow
 
   return (

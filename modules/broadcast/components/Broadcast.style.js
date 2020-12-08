@@ -29,7 +29,29 @@ const BACKGROUND = {
   state: '#eee',
   company: '#eee'
 }
+const FlexWrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  height: 100%;
 
+  > * {
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+
+    > .ui.grid {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  > *.dynamic {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: auto;
+  }
+`
 const Row = styled.div`
   position: relative;
   display: flex;
@@ -259,7 +281,9 @@ const GridColumnFiltersModal = styled(Grid.Column)`
 `
 
 const GridColumnSearch = styled(Grid.Column)`
-  margin-bottom: 10px !important;
+  margin-bottom: 0px !important;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
 `
 
 const IconFolder = styled(Folder)`
@@ -313,6 +337,42 @@ const FormFieldBroadcastAllButton = styled(Form.Field)`
   }
 `
 
+const ButtonCancel = styled(Button)`
+  background: none !important;
+  font-weight: bold !important;
+`
+
+const ButtonApply = styled(Button)`
+  font-weight: bold !important;
+`
+
+const ButtonSaveAs = styled(Button)`
+  font-weight: bold !important;
+`
+
+const GridBottom = styled(Grid)`
+  margin: 10px -30px 0px -30px !important;
+  padding: 5px 20px 0px 20px !important;
+  box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
+  background: #ffffff;
+  z-index: 2;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #20273a !important;
+`
+
+const GridRowBottom = styled(Grid.Row)`
+  padding: 10px 0px 0px 0px !important;
+`
+
+const GridColumnBottom = styled(Grid.Column)`
+  padding: 0px 5px !important;
+`
+
+const GridActionsModal = styled(Grid)`
+  padding-right: 14px !important;
+`
+
 export const Rule = {
   Row,
   RowContent,
@@ -324,6 +384,7 @@ export const Rule = {
 }
 
 export {
+  FlexWrapper,
   BottomUnpaddedRow,
   RightAlignedDiv,
   StretchedGrid,
@@ -344,5 +405,12 @@ export {
   CustomButton,
   FormFieldBroadcastAllButton,
   UnpaddedRow,
-  GridColumnSearch
+  ButtonCancel,
+  GridBottom,
+  GridColumnSearch,
+  ButtonApply,
+  ButtonSaveAs,
+  GridActionsModal,
+  GridRowBottom,
+  GridColumnBottom
 }

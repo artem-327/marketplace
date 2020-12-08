@@ -33,8 +33,7 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
 })
 
 export const saveRules = createAsyncAction('BROADCAST_SAVE', async (id, rules) => {
-  if (id)
-  {
+  if (id) {
     const data = await api.saveRules(id, rules)
     return {
       broadcastTemplateName: getSafe(() => data.broadcastTemplateName, null)
@@ -51,6 +50,9 @@ export const deleteTemplate = createAsyncAction('DELETE_TEMPLATE', id => api.del
 export const getTemplates = createAsyncAction('GET_TEMPLATES', () => api.getTemplates())
 
 export const closeBroadcast = createAction('BROADCAST_CLOSE')
+export const switchTemplateModal = createAction('BROADCAST_SWITCH_TEMPLATE_MODAL', isOpenTemplateModal => ({
+  isOpenTemplateModal: isOpenTemplateModal
+}))
 export const updateFilter = createAction('BROADCAST_FILTER_UPDATE', filter => filter)
 export const switchMode = createAction('BROADCAST_SWITCH_MODE', mode => mode)
 export const loadingChanged = createAction('BROADCAST_LOADING', (force = null) => force)
