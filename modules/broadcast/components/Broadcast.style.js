@@ -340,6 +340,10 @@ const GridBottom = styled(Grid)`
   color: #20273a !important;
 `
 
+const GridActionsModal = styled(Grid)`
+  padding-right: 14px !important;
+`
+
 export const Rule = {
   Row,
   RowContent,
@@ -375,5 +379,6 @@ export {
   GridBottom,
   GridColumnSearch,
   ButtonApply,
-  ButtonSaveAs
+  ButtonSaveAs,
+  GridActionsModal
 }

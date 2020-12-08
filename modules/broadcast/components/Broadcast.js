@@ -53,7 +53,8 @@ import {
   GridBottom,
   GridColumnSearch,
   ButtonApply,
-  ButtonSaveAs
+  ButtonSaveAs,
+  GridActionsModal
 } from './Broadcast.style'
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -124,10 +125,6 @@ class Broadcast extends Component {
 
   componentDidUpdate(oldProps) {
     const { loadedRulesTrig, broadcastTemplateName, templates } = this.props
-
-    if (oldProps.saveBroadcast !== this.props.saveBroadcast && this.props.saveBroadcast) {
-      this.saveBroadcastRules()
-    }
 
     if (oldProps.loadedRulesTrig !== loadedRulesTrig) {
       let name = broadcastTemplateName
@@ -568,7 +565,6 @@ class Broadcast extends Component {
     const { getTemplate } = this.props
 
     let name = data.options.find(opt => opt.value === data.value).text
-    setFieldValue('name', name)
     this.setState({
       ...this.state,
       selectedTemplate: { name, id: data.value },
@@ -593,7 +589,6 @@ class Broadcast extends Component {
 
     await deleteTemplate(id)
 
-    setFieldValue('name', '')
     this.setState({ selectedTemplate: { id: '' } })
 
     toastManager.add(
@@ -781,8 +776,6 @@ class Broadcast extends Component {
       associations,
       close
     } = this.props
-
-    const { templateInitialValues } = this.state
 
     let totalCompanies = _.uniqBy(
       treeData.all(n => n.model.type === 'company'),
@@ -1044,182 +1037,6 @@ class Broadcast extends Component {
             </Grid>
           )}
         </Form>
-        <Formik
-          initialValues={templateInitialValues}
-          validateOnChange={true}
-          enableReinitialize
-          onSubmit={async (values, { setSubmitting, setFieldValue }) => {
-            let payload = {
-              mappedBroadcastRules: {
-                ...this.treeToModel(undefined, undefined, true)
-              },
-              name: values.name
-            }
-
-            if (templates.some(el => el.name === values.name)) {
-              let { name, id } = this.state.selectedTemplate
-
-              await confirm(
-                formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
-                formatMessage({
-                  id: 'broadcast.overwriteTemplate.content'
-                })
-              )
-
-              await updateTemplate(id, payload)
-            } else {
-              let { value } = await saveTemplate(payload)
-              this.setState({ selectedTemplate: value })
-              setFieldValue('templates', value.id)
-            }
-
-            let status = values.name === name ? 'Updated' : 'Saved'
-            setSubmitting(false)
-          }}
-          render={props => {
-            this.submitForm = props.submitForm
-            this.setFieldValue = props.setFieldValue
-
-            return (
-              <Form onSubmit={props.handleSubmit}>
-                {false && asSidebar ? (
-                  <Grid className='upper-grid'>
-                    <BottomUnpaddedRow>
-                      <GridColumn computer={16}>
-                        <Header as='h4'>
-                          <FormattedMessage id='broadcast.templates' defaultMessage='Templates' />
-                        </Header>
-                      </GridColumn>
-                    </BottomUnpaddedRow>
-
-                    <GridRow>
-                      <GridColumn computer={10}>
-                        <FormikDropdown
-                          name='templates'
-                          data-test='broadcast_modal_template_drpdn_addtn'
-                          options={templates.map(template => ({
-                            key: template.id,
-                            text: template.name,
-                            value: template.id
-                          }))}
-                          inputProps={{
-                            style: { width: '100%' },
-                            onChange: async (e, data) => {
-                              const dataName = getSafe(() => templates.find(el => el.id === data.value).name, null)
-                              if (dataName) {
-                                this.onTemplateSelected(
-                                  e,
-                                  {
-                                    options: templates.map(template => ({
-                                      key: template.id,
-                                      text: template.name,
-                                      value: template.id
-                                    })),
-                                    value: data.value
-                                  },
-                                  props.setFieldValue
-                                )
-                                this.setState({
-                                  selectedTemplate: {
-                                    id: data.value,
-                                    name: dataName
-                                  }
-                                })
-                                this.formChanged()
-                              } else {
-                                props.setFieldValue('name', data.value)
-                                await this.submitForm()
-                                this.formChanged()
-                              }
-                            },
-                            allowAdditions: true,
-                            additionLabel: formatMessage({
-                              id: 'global.dropdown.add',
-                              defaultMessage: 'Add '
-                            }),
-                            search: true,
-                            loading: templateSaving,
-                            selection: true,
-                            selectOnBlur: false,
-                            noResultsMessage: formatMessage(
-                              {
-                                id: 'global.dropdown.startTyping',
-                                defaultMessage: 'Start typing to add {typeName}.'
-                              },
-                              {
-                                typeName: formatMessage({
-                                  id: 'global.aCode',
-                                  defaultMessage: 'a code'
-                                })
-                              }
-                            )
-                          }}
-                        />
-                      </GridColumn>
-                      <GridColumn computer={6}>
-                        <CustomButton
-                          data-test='broadcast_modal_delete_btn'
-                          onClick={() => this.handleTemplateDelete(props.setFieldValue)}
-                          disabled={!this.state.selectedTemplate.id}
-                          loading={this.props.templateDeleting}
-                          type='button'
-                          basic
-                          fluid
-                          negative>
-                          {formatMessage({
-                            id: 'global.delete',
-                            defaultMessage: 'Delete'
-                          })}
-                        </CustomButton>
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow
-                      style={
-                        asSidebar
-                          ? {
-                              position: 'absolute',
-                              top: '-20000px',
-                              left: '-20000px'
-                            }
-                          : null
-                      }>
-                      <GridColumn computer={10} style={{ paddingRight: '0px', minWidth: '100px' }}>
-                        <FormikInput
-                          inputProps={{
-                            fluid: true,
-                            placeholder: formatMessage({
-                              id: 'broadcast.templateName',
-                              defaultMessage: 'Template Name'
-                            }),
-                            'data-test': 'broadcast_modal_templateName_inp'
-                          }}
-                          name='name'
-                        />
-                      </GridColumn>
-
-                      <GridColumn computer={6}>
-                        <CustomButton
-                          onClick={this.submitForm}
-                          type='button'
-                          loading={this.props.templateSaving}
-                          fluid
-                          basic
-                          positive
-                          disabled={!props.values.name}
-                          data-test='broadcast_modal_submit_btn'>
-                          {formatMessage({
-                            id: 'global.save',
-                            defaultMessage: 'Save'
-                          })}
-                        </CustomButton>
-                      </GridColumn>
-                    </GridRow>
-                  </Grid>
-                ) : null}
-              </Form>
-            )
-          }}></Formik>
 
         <StretchedGrid className='flex stretched' {...additionalGridProps}>
           <GridRowTable>
@@ -1341,15 +1158,24 @@ class Broadcast extends Component {
                   {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
                 </ButtonCancel>
               </Grid.Column>
+
               <Grid.Column width='4'>
-                <ButtonApply fluid basic onClick={() => this.apply()} data-test='broadcast_modal_apply_btn'>
-                  {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
-                </ButtonApply>
-              </Grid.Column>
-              <Grid.Column width='4'>
-                <ButtonSaveAs fluid basic onClick={() => this.saveAs()} data-test='broadcast_modal_save_as_btn'>
+                <ButtonSaveAs
+                  fluid
+                  basic
+                  onClick={() => this.props.switchTemplateModal(true)}
+                  data-test='broadcast_modal_save_as_btn'>
                   {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
                 </ButtonSaveAs>
+              </Grid.Column>
+              <Grid.Column width='4'>
+                <ButtonApply
+                  fluid
+                  basic
+                  onClick={() => this.saveBroadcastRules()}
+                  data-test='broadcast_modal_apply_btn'>
+                  {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
+                </ButtonApply>
               </Grid.Column>
             </Grid.Row>
           </GridBottom>
@@ -1474,7 +1300,19 @@ class Broadcast extends Component {
   }
 
   render() {
-    const { open, close, asModal, loading, isPrepared } = this.props
+    const {
+      isOpenTemplateModal,
+      close,
+      asModal,
+      loading,
+      isPrepared,
+      templates,
+      updateTemplate,
+      intl: { formatMessage },
+      saveTemplate,
+      switchTemplateModal
+    } = this.props
+    const { templateInitialValues } = this.state
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
@@ -1485,40 +1323,108 @@ class Broadcast extends Component {
             <Loader active={true} />
           </Dimmer>
         )
-      return this.getContent()
-    }
+      return (
+        <>
+          {isOpenTemplateModal ? (
+            <Formik
+              initialValues={templateInitialValues}
+              validateOnChange={true}
+              enableReinitialize
+              onSubmit={async (values, { setSubmitting, setFieldValue }) => {
+                let payload = {
+                  mappedBroadcastRules: {
+                    ...this.treeToModel(undefined, undefined, true)
+                  },
+                  name: values.name
+                }
 
-    return (
-      <Modal closeIcon open={open} onClose={close} centered={false} size='large'>
-        <Modal.Header>
-          <FormattedMessage id='inventory.broadcast' defaultMessage='Price Book' />
-        </Modal.Header>
-        <Modal.Content scrolling className='flex stretched'>
+                if (templates.some(el => el.name === values.name)) {
+                  let { name, id } = templates.find(template => template.name === values.name)
+
+                  await confirm(
+                    formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
+                    formatMessage({
+                      id: 'broadcast.overwriteTemplate.content'
+                    })
+                  )
+
+                  await updateTemplate(id, payload)
+                } else {
+                  let { value } = await saveTemplate(payload)
+                  this.setState({ selectedTemplate: value })
+                  setFieldValue('templates', value.id)
+                }
+
+                let status = values.name === name ? 'Updated' : 'Saved'
+                setSubmitting(false)
+              }}
+              render={props => {
+                this.submitForm = props.submitForm
+                this.setFieldValue = props.setFieldValue
+
+                return (
+                  <Form onSubmit={props.handleSubmit}>
+                    <Modal closeIcon open={isOpenTemplateModal} onClose={() => switchTemplateModal(false)} size='small'>
+                      <Modal.Header>
+                        <FormattedMessage id='broadcast.saveAsTemplate' defaultMessage='Save as Template' />
+                      </Modal.Header>
+                      <Modal.Content scrolling className='flex stretched'>
+                        <Grid>
+                          <Grid.Row>
+                            <Grid.Column>
+                              <FormikInput
+                                inputProps={{
+                                  fluid: true,
+                                  placeholder: formatMessage({
+                                    id: 'broadcast.templateName',
+                                    defaultMessage: 'Template Name'
+                                  }),
+                                  'data-test': 'broadcast_modal_templateName_inp'
+                                }}
+                                name='name'
+                              />
+                            </Grid.Column>
+                          </Grid.Row>
+                        </Grid>
+                      </Modal.Content>
+                      <Modal.Actions>
+                        <GridActionsModal>
+                          <Grid.Row textAlign='right'>
+                            <Grid.Column width='13'>
+                              <ButtonCancel
+                                onClick={() => switchTemplateModal(false)}
+                                data-test='broadcast_template_modal_close_btn'>
+                                {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                              </ButtonCancel>
+                            </Grid.Column>
+                            <Grid.Column width='3'>
+                              <ButtonSaveAs
+                                fluid
+                                onClick={this.submitForm}
+                                type='button'
+                                loading={this.props.templateSaving}
+                                basic
+                                disabled={!props.values.name}
+                                data-test='broadcast_modal_submit_btn'>
+                                {formatMessage({
+                                  id: 'global.save',
+                                  defaultMessage: 'Save'
+                                })}
+                              </ButtonSaveAs>
+                            </Grid.Column>
+                          </Grid.Row>
+                        </GridActionsModal>
+                      </Modal.Actions>
+                    </Modal>
+                  </Form>
+                )
+              }}></Formik>
+          ) : null}
+
           {this.getContent()}
-        </Modal.Content>
-        <Modal.Actions>
-          <GridBottom>
-            <Grid.Row textAlign='right'>
-              <Grid.Column width='8'>
-                <ButtonCancel onClick={() => close()} data-test='broadcast_modal_close_btn'>
-                  {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-                </ButtonCancel>
-              </Grid.Column>
-              <Grid.Column width='4'>
-                <Button fluid basic onClick={() => this.apply()} data-test='broadcast_modal_apply_btn'>
-                  {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
-                </Button>
-              </Grid.Column>
-              <Grid.Column width='4'>
-                <Button fluid basic onClick={() => this.saveAs()} data-test='broadcast_modal_save_as_btn'>
-                  {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
-                </Button>
-              </Grid.Column>
-            </Grid.Row>
-          </GridBottom>
-        </Modal.Actions>
-      </Modal>
-    )
+        </>
+      )
+    }
   }
 }
 
@@ -1527,6 +1433,7 @@ Broadcast.propTypes = {
   additionalGridProps: object,
   hideFobPrice: bool,
   asSidebar: bool,
+  isOpenTemplateModal: bool,
   saveSidebar: number
 }
 
@@ -1535,6 +1442,7 @@ Broadcast.defaultProps = {
   additionalGridProps: {},
   hideFobPrice: false,
   asSidebar: false,
+  isOpenTemplateModal: false,
   saveSidebar: 0
 }
 
