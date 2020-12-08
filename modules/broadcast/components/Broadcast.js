@@ -55,7 +55,9 @@ import {
   GridColumnSearch,
   ButtonApply,
   ButtonSaveAs,
-  GridActionsModal
+  GridActionsModal,
+  GridColumnBottom,
+  GridRowBottom
 } from './Broadcast.style'
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -1153,14 +1155,14 @@ class Broadcast extends Component {
         </StretchedGrid>
         {asSidebar && (
           <GridBottom>
-            <Grid.Row textAlign='right'>
-              <Grid.Column width='8'>
+            <GridRowBottom textAlign='right'>
+              <GridColumnBottom width='8'>
                 <ButtonCancel onClick={() => close()} data-test='broadcast_modal_close_btn'>
                   {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
                 </ButtonCancel>
-              </Grid.Column>
+              </GridColumnBottom>
 
-              <Grid.Column width='4'>
+              <GridColumnBottom width='4'>
                 <ButtonSaveAs
                   fluid
                   basic
@@ -1168,8 +1170,8 @@ class Broadcast extends Component {
                   data-test='broadcast_modal_save_as_btn'>
                   {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
                 </ButtonSaveAs>
-              </Grid.Column>
-              <Grid.Column width='4'>
+              </GridColumnBottom>
+              <GridColumnBottom width='4'>
                 <ButtonApply
                   fluid
                   basic
@@ -1177,8 +1179,8 @@ class Broadcast extends Component {
                   data-test='broadcast_modal_apply_btn'>
                   {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
                 </ButtonApply>
-              </Grid.Column>
-            </Grid.Row>
+              </GridColumnBottom>
+            </GridRowBottom>
           </GridBottom>
         )}
       </FlexWrapper>

@@ -33,19 +33,19 @@ const FlexWrapper = styled.div`
   display: flex;
   flex-flow: column;
   height: 100%;
-  
+
   > * {
     flex-grow: 0;
     flex-shrink: 0;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    
+
     > .ui.grid {
       margin-top: 0;
       margin-bottom: 0;
     }
   }
-  
+
   > *.dynamic {
     flex-grow: 1;
     flex-shrink: 1;
@@ -281,7 +281,9 @@ const GridColumnFiltersModal = styled(Grid.Column)`
 `
 
 const GridColumnSearch = styled(Grid.Column)`
-  margin-bottom: 10px !important;
+  margin-bottom: 0px !important;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
 `
 
 const IconFolder = styled(Folder)`
@@ -359,6 +361,14 @@ const GridBottom = styled(Grid)`
   color: #20273a !important;
 `
 
+const GridRowBottom = styled(Grid.Row)`
+  padding: 10px 0px 0px 0px !important;
+`
+
+const GridColumnBottom = styled(Grid.Column)`
+  padding: 0px 5px !important;
+`
+
 const GridActionsModal = styled(Grid)`
   padding-right: 14px !important;
 `
@@ -400,5 +410,7 @@ export {
   GridColumnSearch,
   ButtonApply,
   ButtonSaveAs,
-  GridActionsModal
+  GridActionsModal,
+  GridRowBottom,
+  GridColumnBottom
 }
