@@ -226,15 +226,20 @@ class ShippingEdit extends Component {
                     />
                   </Grid.Row>
 
-                  <Grid.Row>
-                    <Input
-                      name='taxId'
-                      label={formatMessage({ id: 'global.taxId', defaultMessage: 'Tax ID' })}
-                      inputProps={{
-                        placeholder: formatMessage({ id: 'global.placeholder.taxId', defaultMessage: '!Enter Tax ID' })
-                      }}
-                    />
-                  </Grid.Row>
+                  {isWarehouse && (
+                    <Grid.Row>
+                      <Input
+                        name='taxId'
+                        label={formatMessage({ id: 'global.taxId', defaultMessage: 'Tax ID' })}
+                        inputProps={{
+                          placeholder: formatMessage({
+                            id: 'global.placeholder.taxId',
+                            defaultMessage: '!Enter Tax ID'
+                          })
+                        }}
+                      />
+                    </Grid.Row>
+                  )}
                   <Grid.Row>
                     <ColumnSidebar>
                       <TextArea
@@ -307,6 +312,7 @@ class ShippingEdit extends Component {
           warehouse: true
         }
         if (getSafe(() => payload.deliveryAddress.warehouse, false)) delete payload.deliveryAddress.warehouse
+        if (getSafe(() => payload.deliveryAddress.taxId, false)) delete payload.deliveryAddress.taxId
       } else {
         payload = {
           ...values,
