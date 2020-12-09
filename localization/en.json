@@ -1022,7 +1022,7 @@
   "company.logoButtonDelete": "Delete",
   "company.logoButtonUpload": "Upload",
   "company.logoButtonChange": "Change",
-  "confirm.editOrAddNew.header": "Edit or add New",
+  "confirm.editOrAddNew.header": "Edit or Add New",
   "confirm.editOrAddNew.content": "If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.",
   "confirm.deleteNmfcNumber.header": "Delete NMFC Number",
   "confirm.deleteNmfcNumber.content": "Do you really want to delete NMFC Number with code: {code}?",
