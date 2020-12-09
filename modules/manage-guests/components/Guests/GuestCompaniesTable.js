@@ -177,7 +177,18 @@ class GuestCompaniesTable extends Component {
             key={`review${row.id}`}
             toggle={true}
             defaultChecked={row.reviewRequested}
-            onClick={() => this.props.reviewRequest(row.id)}
+            onClick={async () => {
+              try {
+                await this.props.reviewRequest(row.id)
+                this.props.datagrid.updateRow(row.id, () => ({
+                  ...row,
+                  reviewRequested: !row.reviewRequested,
+                  associations: row.rawAssociations
+                }))
+              } catch (e) {
+                console.log(e)
+              }
+            }}
             data-test={`guest_company_table_review_requested_${row.id}_chckb`}
           />
         )
@@ -224,12 +235,7 @@ class GuestCompaniesTable extends Component {
   }
 
   render() {
-    const {
-      datagrid,
-      rows,
-      intl,
-      loading
-    } = this.props
+    const { datagrid, rows, intl, loading } = this.props
 
     return (
       <div className='flex stretched listings-wrapper'>
@@ -259,17 +265,16 @@ const mapStateToProps = ({ manageGuests }, { datagrid }) => {
       rawData: c,
       ...c,
       displayName: (
-        <div
-          style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}
-        >{getSafe(() => c.cfDisplayName, '')}</div>
+        <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {getSafe(() => c.cfDisplayName, '')}
+        </div>
       ),
       companyAdmin: getSafe(() => c.primaryUser.name, ''),
-      associations: (
-        <ArrayToFirstItem values={getSafe(() => c.associations, []).map(r => r.name)} />
-      ),
+      rawAssociations: getSafe(() => c.associations, []),
+      associations: <ArrayToFirstItem values={getSafe(() => c.associations, []).map(r => r.name)} />,
       adminEmail: getSafe(() => c.primaryUser.email, ''),
       primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.cfName, ''),
-      reviewRequested: getSafe(() => c.reviewRequested, false),
+      reviewRequested: getSafe(() => c.reviewRequested, false)
     }))
   }
 }
