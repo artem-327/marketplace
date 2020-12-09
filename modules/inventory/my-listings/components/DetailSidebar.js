@@ -2148,7 +2148,7 @@ class DetailSidebar extends Component {
                                 confirm(
                                   formatMessage({
                                     id: 'confirm.editOrAddNew.header',
-                                    defaultMessage: 'Edit or add New'
+                                    defaultMessage: 'Edit or Add New'
                                   }),
                                   formatMessage({
                                     id: 'confirm.editOrAddNew.content',
