@@ -142,8 +142,6 @@ const DivIcons = styled.div`
 `
 
 const FobPrice = styled.div`
-  text-decoration: underline;
-  text-decoration-style: dotted;
   cursor: pointer;
 
   &:hover {
