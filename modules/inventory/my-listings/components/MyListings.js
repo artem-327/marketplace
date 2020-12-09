@@ -619,30 +619,30 @@ class MyListings extends Component {
             }
           })
         }
-      },
-      {
-        text: formatMessage({
-          id: 'inventory.groupOffer',
-          defaultMessage: 'Join/Create Virtual Group'
-        }),
-        callback: () =>
-          this.groupOffer(
-            {
-              overrideBroadcastRules: false,
-              productOfferIds: [row.id]
-            },
-            row.rawData
-          ),
-        disabled: () => !!row.parentOffer
-      },
-      {
-        text: formatMessage({
-          id: 'inventory.detachOffer',
-          defaultMessage: 'Detach from Virtual Group'
-        }),
-        callback: () => this.detachOffer([row.id], row.rawData),
-        disabled: () => !row.parentOffer
       }
+      // {
+      //   text: formatMessage({
+      //     id: 'inventory.groupOffer',
+      //     defaultMessage: 'Join/Create Virtual Group'
+      //   }),
+      //   callback: () =>
+      //     this.groupOffer(
+      //       {
+      //         overrideBroadcastRules: false,
+      //         productOfferIds: [row.id]
+      //       },
+      //       row.rawData
+      //     ),
+      //   disabled: () => !!row.parentOffer
+      // },
+      // {
+      //   text: formatMessage({
+      //     id: 'inventory.detachOffer',
+      //     defaultMessage: 'Detach from Virtual Group'
+      //   }),
+      //   callback: () => this.detachOffer([row.id], row.rawData),
+      //   disabled: () => !row.parentOffer
+      // }
     ]
   }
 
