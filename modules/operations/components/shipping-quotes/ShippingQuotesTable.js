@@ -25,23 +25,23 @@ class ShippingQuotesTable extends Component {
     this.state = {
       columns: [
         {
-          name: 'carrierName',
+          name: 'quoteId',
           title: (
-            <FormattedMessage id='operations.carrierName' defaultMessage='Carrier Name'>
+            <FormattedMessage id='operations.quoteId' defaultMessage='Quote Id'>
               {text => text}
             </FormattedMessage>
           ),
           actions: this.getActions(),
           width: 400
         },
-        /*{
-        name: 'createdAt',
-        title: (
-          <FormattedMessage id='operations.createdAt' defaultMessage='Created At'>
-            {text => text}
-          </FormattedMessage>
-        )
-      },*/
+        {
+          name: 'validityDate',
+          title: (
+            <FormattedMessage id='operations.validityDate' defaultMessage='Validity Date'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
         {
           name: 'price',
           title: (
@@ -52,14 +52,22 @@ class ShippingQuotesTable extends Component {
           width: 100
         },
         {
-          name: 'quoteId',
+          name: 'carrierName',
           title: (
-            <FormattedMessage id='operations.quoteId' defaultMessage='Quote Id'>
+            <FormattedMessage id='operations.carrierName' defaultMessage='Carrier Name'>
               {text => text}
             </FormattedMessage>
           ),
           width: 200
         },
+        /*{
+        name: 'createdAt',
+        title: (
+          <FormattedMessage id='operations.createdAt' defaultMessage='Created At'>
+            {text => text}
+          </FormattedMessage>
+        )
+      },*/
         /*{
         name: 'updatedAt',
         title: (

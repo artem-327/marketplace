@@ -500,6 +500,7 @@ class Listings extends Component {
     const {
       isMerchant,
       isCompanyAdmin,
+      isClientCompanyAdmin,
       intl: { formatMessage }
     } = this.props
     const rowActions = []
@@ -524,7 +525,7 @@ class Listings extends Component {
       }),
       callback: () => this.tableRowClicked(row.id)
     }
-    if (isMerchant || isCompanyAdmin) {
+    if (isMerchant || isCompanyAdmin || isClientCompanyAdmin) {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
       rowActions.push(buttonRequestHold)

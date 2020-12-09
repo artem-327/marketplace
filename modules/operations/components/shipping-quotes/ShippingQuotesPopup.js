@@ -36,7 +36,7 @@ const formValidation = () =>
           val => !val || moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
         )
       ),
-      carrierName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      carrierName: Yup.string().trim().min(3, errorMessages.minLength(3)),
       quoteId: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       price: Yup.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
     })
@@ -134,12 +134,9 @@ class ShippingQuotesPopup extends React.Component {
                     <Input
                       type='text'
                       label={
-                        <>
-                          <FormattedMessage id='operations.carrierName' defaultMessage='Carrier Name'>
-                            {text => text}
-                          </FormattedMessage>
-                          <Required />
-                        </>
+                        <FormattedMessage id='operations.carrierName' defaultMessage='Carrier Name'>
+                          {text => text}
+                        </FormattedMessage>
                       }
                       name='carrierName'
                       fieldProps={{ width: 8 }}
