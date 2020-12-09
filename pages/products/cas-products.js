@@ -10,8 +10,8 @@ class Index extends Component {
       intl: { formatMessage }
     } = this.props
     return (
-      <Layout title={formatMessage({ id: 'title.products.casProducts', defaultMessage: 'Cas Products' })}>
-        <ProductsPage currentTab={'cas-products'}/>
+      <Layout title={formatMessage({ id: 'title.products.casProducts', defaultMessage: 'CAS Products' })}>
+        <ProductsPage currentTab={'cas-products'} />
       </Layout>
     )
   }
