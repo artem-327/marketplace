@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Input, Button } from 'semantic-ui-react'
+import { Container, Input, Button, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { debounce } from 'lodash'
@@ -10,9 +10,9 @@ import { groupActionsMarketplace } from '~/modules/company-product-info/constant
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { SubmitOffer } from './SubmitOffer/index'
-import { PlusCircle, Sliders } from 'react-feather'
+import { PlusCircle, Sliders, MoreVertical } from 'react-feather'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { CustomRowDiv } from '../../constants/layout'
+import { CustomRowDiv, DivRow, RowDropdown, RowDropdownIcon } from '../../constants/layout'
 import { getSafe } from '~/utils/functions'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import SearchInput from '../../components/SearchInput'
@@ -25,6 +25,13 @@ const FiltersRow = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   margin-bottom: -5px;
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
 `
 
 class Listings extends Component {
@@ -41,7 +48,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 290,
-          actions: this.getActions()
+          allowReordering: false
           //align: 'right',
           //sortPath: 'ProductOffer.pkgAvailable'
         },
@@ -206,7 +213,7 @@ class Listings extends Component {
     }
   }
 
-  getActions = () => {
+  getActionsByRow = () => {
     const { intl } = this.props
     let { formatMessage } = intl
     return [
@@ -224,6 +231,44 @@ class Listings extends Component {
         }
       }
     ]
+  }
+
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
+  getRows = rows => {
+    return rows.map(r => {
+      return {
+        ...r,
+        product: (
+          <DivRow>
+            <RowDropdown
+              trigger={
+                <RowDropdownIcon>
+                  <MoreVertical />
+                </RowDropdownIcon>
+              }>
+              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(r), r)}</Dropdown.Menu>
+            </RowDropdown>
+            <SpanText>
+              {r.product}
+            </SpanText>
+          </DivRow>
+        )
+      }
+    })
   }
 
   renderContent = () => {
@@ -290,15 +335,14 @@ class Listings extends Component {
             </div>
           </CustomRowDiv>
         </div>
-        <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
+        <div className='flex stretched listings-wrapper' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
             tableName={'wanted_board_listings_grid'}
             {...datagrid.tableProps}
-            rows={rows}
+            rows={this.getRows(rows)}
             columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
-            columnActions={'product'}
           />
         </div>
         {openFilterPopup && <WantedBoardFilter onClose={() => this.setState({ openFilterPopup: false })} />}

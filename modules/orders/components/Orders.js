@@ -10,7 +10,7 @@ import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import Link from 'next/link'
-import { CheckCircle, ChevronDown, ChevronUp, ChevronRight } from 'react-feather'
+import { CheckCircle, ChevronDown, ChevronUp, ChevronRight, MoreVertical } from 'react-feather'
 import { handleFiltersValue } from '~/modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
 import { AttachmentManager } from '~/modules/attachments'
@@ -118,6 +118,59 @@ const CustomDivTextAddedMewDocument = styled.div`
   line-height: 1.43;
   letter-spacing: normal;
   color: #848893;
+`
+
+const DivRow = styled.div`
+  display: flex !important;
+
+  > div {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  > span {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+`
+
+const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+
+  .dropdown.icon {
+    display: none;
+  }
+`
+
+const RowDropdownIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin: 2px 8px 2px -4px;
+
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #848893 !important;
+  }
 `
 
 class Orders extends Component {
@@ -305,7 +358,7 @@ class Orders extends Component {
         ),
         width: 200,
         sortPath: 'Order.id',
-        actions: this.getActionsOrdersList()
+        allowReordering: false
       },
       {
         name: 'customerName',
@@ -370,13 +423,46 @@ class Orders extends Component {
     ]
   }
 
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
   getRows = () => {
-    const { currentTab } = this.props
+    const { currentTab, router } = this.props
     let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
 
     return this.props.rows.map(row => ({
       ...row,
-      orderId: <div>{row.id}</div>,
+      orderId: (
+        <DivRow>
+          <RowDropdown
+            trigger={
+              <RowDropdownIcon>
+                <MoreVertical />
+              </RowDropdownIcon>
+            }>
+            <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
+          </RowDropdown>
+          <SpanText
+            onClick={(e) => {
+              e.preventDefault()
+              router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
+            }}>
+            {row.id}
+          </SpanText>
+        </DivRow>
+      ),
       productName: (
         <ArrayToFirstItem
           values={
@@ -835,7 +921,7 @@ class Orders extends Component {
     ]
   }
 
-  getActionsOrdersList = () => {
+  getActionsByRow = () => {
     const {
       currentTab,
       router,
@@ -1093,7 +1179,6 @@ class Orders extends Component {
                 onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
                 // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
                 defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
-                columnActions='orderId'
                 estimatedRowHeight={1000}
               />
             </div>

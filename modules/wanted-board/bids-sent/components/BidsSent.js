@@ -12,12 +12,13 @@ import { Datagrid } from '~/modules/datagrid'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 import { getSafe } from '~/utils/functions'
-import { CustomRowDiv } from '../../constants/layout'
+import { CustomRowDiv, DivRow, RowDropdown, RowDropdownIcon } from '../../constants/layout'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
 import SearchInput from '../../components/SearchInput'
 import { statusFilterList } from '../../constants/constants'
 import styled from 'styled-components'
+import { MoreVertical } from 'react-feather'
 
 const StyledDropdown = styled(Dropdown)`
   z-index: 501 !important;
@@ -26,6 +27,13 @@ const StyledDropdown = styled(Dropdown)`
   input.search {
     height: auto !important;
   }
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
 `
 
 class BidsSent extends Component {
@@ -42,7 +50,7 @@ class BidsSent extends Component {
             </FormattedMessage>
           ),
           width: 375,
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'fobPrice',
@@ -155,7 +163,7 @@ class BidsSent extends Component {
     this.setState({ filterValues: { ...this.state.filterValues, statusFilter: value } })
   }
 
-  getActions = () => {
+  getActionsByRow = () => {
     const { datagrid, intl, myOffersSidebarTrigger } = this.props
     let { formatMessage } = intl
     return [
@@ -227,7 +235,7 @@ class BidsSent extends Component {
     ]
   }
 
-  getRows = () => {
+  getFilteredRows = () => {
     const { rows } = this.props
 
     switch (this.state.filterValues.statusFilter) {
@@ -255,6 +263,44 @@ class BidsSent extends Component {
       default:
         return rows
     }
+  }
+
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
+  getRows = () => {
+    return this.getFilteredRows().map(r => {
+      return {
+        ...r,
+        product: (
+          <DivRow>
+            <RowDropdown
+              trigger={
+                <RowDropdownIcon>
+                  <MoreVertical />
+                </RowDropdownIcon>
+              }>
+              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(r), r)}</Dropdown.Menu>
+            </RowDropdown>
+            <SpanText>
+              {r.product}
+            </SpanText>
+          </DivRow>
+        )
+      }
+    })
   }
 
   renderContent = () => {
@@ -297,7 +343,7 @@ class BidsSent extends Component {
             <ColumnSettingButton />
           </CustomRowDiv>
         </div>
-        <div className='flex stretched' style={{ padding: '10px 0' }}>
+        <div className='flex stretched listings-wrapper' style={{ padding: '10px 0' }}>
           <ProdexGrid
             tableName='my_offers_grid'
             {...datagrid.tableProps}
@@ -306,7 +352,6 @@ class BidsSent extends Component {
             columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
-            columnActions='product'
             editingRowId={editedId}
           />
         </div>

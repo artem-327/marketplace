@@ -13,6 +13,8 @@ import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { injectIntl } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
+import { MoreVertical } from 'react-feather'
+import { Dropdown } from 'semantic-ui-react'
 
 const BasicLink = styled.a`
   color: black !important;
@@ -20,6 +22,59 @@ const BasicLink = styled.a`
   &:hover {
     color: white !important;
     text-decoration: none !important;
+  }
+`
+
+const DivRow = styled.div`
+  display: flex !important;
+
+  > div {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  > span {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+`
+
+const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+
+  .dropdown.icon {
+    display: none;
+  }
+`
+
+const RowDropdownIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin: 2px 8px 2px -4px;
+
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #848893 !important;
   }
 `
 
@@ -39,8 +94,7 @@ class DocumentManagerTable extends Component {
           sortPath: 'Attachment.name',
           width: 620,
           maxWidth: 2000,
-          actions: this.getActions()
-
+          allowReordering: false
         },
         {
           name: 'documentTypeName',
@@ -86,11 +140,40 @@ class DocumentManagerTable extends Component {
     }
   }
 
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
   getRows = (data = []) =>
     data.map(row => ({
       rawData: row,
       id: row.id,
-      name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{row.name}</div>,
+      name: (
+        <DivRow>
+          <RowDropdown
+            trigger={
+              <RowDropdownIcon>
+                <MoreVertical />
+              </RowDropdownIcon>
+            }>
+            <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
+          </RowDropdown>
+          <SpanText onClick={() => this.props.openPopup(row)}>
+            {row.name}
+          </SpanText>
+        </DivRow>
+        ),
       documentTypeName: getSafe(() => row.documentType.name, ''),
       expirationDate: row.expirationDate && moment(row.expirationDate).format(getLocaleDateFormat()),
       broadcast: 'TBD',
@@ -99,7 +182,7 @@ class DocumentManagerTable extends Component {
       linkCount: row.linkCount
     }))
 
-  getActions = () => {
+  getActionsByRow = () => {
     const {
       datagrid, openPopup, intl, removeAttachment, documentManagerDatagridSharedWithMe
     } = this.props
@@ -112,7 +195,7 @@ class DocumentManagerTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        callback: row => openPopup(row.rawData),
+        callback: row => openPopup(row),
         hidden: () => documentManagerDatagridSharedWithMe
       },
       {
@@ -123,9 +206,9 @@ class DocumentManagerTable extends Component {
             formatMessage(
               {
                 id: 'confirm.deleteDocument.content',
-                defaultMessage: `Do you really want to delete ${row.rawData.name} document?`
+                defaultMessage: `Do you really want to delete ${row.name} document?`
               },
-              { name: row.rawData.name }
+              { name: row.name }
             )
           ).then(async () => {
             try {
@@ -157,16 +240,17 @@ class DocumentManagerTable extends Component {
     } = this.props
 
     return (
-      <ProdexGrid
-        tableName='manage_guests_documents'
-        {...datagrid.tableProps}
-        columns={this.state.columns}
-        rows={this.getRows(rows)}
-        loading={datagrid.loading || updatingDatagrid}
-        style={{ marginTop: '5px' }}
-        columnActions={'name'}
-        editingRowId={editedId}
-      />
+      <div className='flex stretched listings-wrapper'>
+        <ProdexGrid
+          tableName='manage_guests_documents'
+          {...datagrid.tableProps}
+          columns={this.state.columns}
+          rows={this.getRows(rows)}
+          loading={datagrid.loading || updatingDatagrid}
+          style={{ marginTop: '5px' }}
+          editingRowId={editedId}
+        />
+      </div>
     )
   }
 }

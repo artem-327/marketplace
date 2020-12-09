@@ -17,6 +17,63 @@ import {
   deleteUser
 } from '../../../actions'
 
+import { MoreVertical } from 'react-feather'
+import { Dropdown } from 'semantic-ui-react'
+import styled from 'styled-components'
+
+const DivRow = styled.div`
+  display: flex !important;
+
+  > div {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  > span {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+`
+
+const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+
+  .dropdown.icon {
+    display: none;
+  }
+`
+
+const RowDropdownIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin: 2px 8px 2px -4px;
+
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #848893 !important;
+  }
+`
+
 class UsersTable extends Component {
   constructor(props) {
     super(props)
@@ -32,7 +89,7 @@ class UsersTable extends Component {
           ),
           sortPath: 'User.name',
           width: 300,
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'jobTitle',
@@ -93,7 +150,7 @@ class UsersTable extends Component {
     if (!clientCompanyRoles.length) getClientCompanyRoles()
   }
 
-  getActions = () => {
+  getActionsByRow = () => {
     const {
       openPopup,
       intl,
@@ -131,6 +188,44 @@ class UsersTable extends Component {
     ]
   }
 
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <DivRow>
+            <RowDropdown
+              trigger={
+                <RowDropdownIcon>
+                  <MoreVertical />
+                </RowDropdownIcon>
+              }>
+              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
+            </RowDropdown>
+            <SpanText onClick={() => this.props.openPopup(row.rawData)}>
+              {row.name}
+            </SpanText>
+          </DivRow>
+        )
+      }
+    })
+  }
+
   render() {
     const {
       rows,
@@ -144,17 +239,18 @@ class UsersTable extends Component {
 
     return (
       <React.Fragment>
-        <ProdexGrid
-          tableName='manage_guests_users'
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          columns={columns}
-          rows={rows}
-          loading={datagrid.loading || loading}
-          style={{ marginTop: '5px' }}
-          columnActions={'name'}
-          editingRowId={editedId}
-        />
+        <div className='flex stretched listings-wrapper'>
+          <ProdexGrid
+            tableName='manage_guests_users'
+            {...datagrid.tableProps}
+            filterValue={filterValue}
+            columns={columns}
+            rows={this.getRows(rows)}
+            loading={datagrid.loading || loading}
+            style={{ marginTop: '5px' }}
+            editingRowId={editedId}
+          />
+        </div>
       </React.Fragment>
     )
   }

@@ -12,6 +12,9 @@ import { removeAttachment } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 import { bool, array } from 'prop-types'
 import { getLocaleDateFormat } from '~/components/date-format'
+import { MoreVertical } from 'react-feather'
+import { Dropdown } from 'semantic-ui-react'
+import { DivRow, RowDropdown, RowDropdownIcon, SpanText } from '../../layout'
 
 const BasicLink = styled.a`
   color: black !important;
@@ -36,7 +39,7 @@ class DocumentManager extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'documentTypeName',
@@ -72,7 +75,7 @@ class DocumentManager extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'documentTypeName',
@@ -93,16 +96,47 @@ class DocumentManager extends Component {
       ]
     }
   }
+
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
   getRows = (data = []) =>
     data.map(row => ({
       ...row,
       documentTypeName: getSafe(() => row.documentType.name, ''),
       expirationDate: row.expirationDate && moment(row.expirationDate).format(getLocaleDateFormat()),
       issuedAt: row.issuedAt && moment(row.issuedAt).format(getLocaleDateFormat()),
-      customName: getSafe(() => row.customName, row.name)
+      customName: getSafe(() => row.customName, row.name),
+      name: (
+        <DivRow>
+          <RowDropdown
+            trigger={
+              <RowDropdownIcon>
+                <MoreVertical />
+              </RowDropdownIcon>
+            }>
+            <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
+          </RowDropdown>
+          <SpanText onClick={() => this.props.openSidebar(row)}>
+            {row.name}
+          </SpanText>
+        </DivRow>
+      )
     }))
 
-  getActions = () => {
+  getActionsByRow = () => {
     const { datagrid, openSidebar, removeAttachment, edit, download, deletable } = this.props
 
     return [
@@ -161,17 +195,18 @@ class DocumentManager extends Component {
     let rows = this.getRows(items ? items : this.props.rows)
 
     return (
-      <ProdexGrid
-        tableName='settings_documents'
-        {...datagrid.tableProps}
-        columns={reduceColumns ? this.state.columnsReduced : this.state.columns}
-        rows={rows}
-        loading={items ? false : loading || datagrid.loading}
-        style={{ marginTop: '5px' }}
-        normalWidth={normalWidth}
-        columnActions='name'
-        editingRowId={editedId}
-      />
+      <div className='flex stretched listings-wrapper'>
+        <ProdexGrid
+          tableName='settings_documents'
+          {...datagrid.tableProps}
+          columns={reduceColumns ? this.state.columnsReduced : this.state.columns}
+          rows={rows}
+          loading={items ? false : loading || datagrid.loading}
+          style={{ marginTop: '5px' }}
+          normalWidth={normalWidth}
+          editingRowId={editedId}
+        />
+      </div>
     )
   }
 }

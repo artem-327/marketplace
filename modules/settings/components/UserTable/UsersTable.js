@@ -23,7 +23,9 @@ import {
   setPrimaryUser
 } from '../../actions'
 
-import { Checkbox, Popup, Label, List, Icon } from 'semantic-ui-react'
+import { Checkbox, Popup, Label, List, Icon, Dropdown } from 'semantic-ui-react'
+import { DivRow, RowDropdown, RowDropdownIcon, SpanText } from '../../layout'
+import { MoreVertical } from 'react-feather'
 
 const handleSwitchEnabled = id => {
   userSwitchEnableDisable(id)
@@ -42,7 +44,7 @@ class UsersTable extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'jobTitle',
@@ -128,7 +130,7 @@ class UsersTable extends Component {
     return this.props.editedItem
   }
 
-  getActions = () => {
+  getActionsByRow = () => {
     const { openSidebar, intl, deleteUser, resendWelcomeEmail, setPrimaryUser, datagrid } = this.props
 
     const { formatMessage } = intl
@@ -182,6 +184,50 @@ class UsersTable extends Component {
     ]
   }
 
+  getActionItems = (actions = [], row) => {
+    if (!getSafe(() => actions.length, false)) return
+    return actions.map((a, i) =>
+      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
+        <Dropdown.Item
+          data-test={`action_${row.id}_${i}`}
+          key={i}
+          text={typeof a.text !== 'function' ? a.text : a.text(row)}
+          disabled={getSafe(() => a.disabled(row), false)}
+          onClick={() => a.callback(row)}
+        />
+      )
+    )
+  }
+
+  getRows = rows => {
+    const { primaryUserId } = this.props
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <DivRow>
+            <RowDropdown
+              trigger={
+                <RowDropdownIcon>
+                  <MoreVertical />
+                </RowDropdownIcon>
+              }>
+              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
+            </RowDropdown>
+            <SpanText onClick={() => this.props.openSidebar(row.rawData)}>
+              {row.id === primaryUserId ? (
+                <>
+                  <Icon name='user crown' style={{ color: '#2599d5' }} />
+                  {row.name}
+                </>
+              ) : row.name}
+            </SpanText>
+          </DivRow>
+        )
+      }
+    })
+  }
+
   render() {
     const {
       rows,
@@ -197,17 +243,18 @@ class UsersTable extends Component {
 
     return (
       <React.Fragment>
-        <ProdexGrid
-          tableName='settings_users'
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          columns={columns}
-          rows={rows}
-          loading={datagrid.loading || loading}
-          style={{ marginTop: '5px' }}
-          columnActions='name'
-          editingRowId={editedId}
-        />
+        <div className='flex stretched listings-wrapper'>
+          <ProdexGrid
+            tableName='settings_users'
+            {...datagrid.tableProps}
+            filterValue={filterValue}
+            columns={columns}
+            rows={this.getRows(rows)}
+            loading={datagrid.loading || loading}
+            style={{ marginTop: '5px' }}
+            editingRowId={editedId}
+          />
+        </div>
       </React.Fragment>
     )
   }
@@ -261,20 +308,13 @@ const userEnableDisableStatus = (r, currentUserId) => {
 const mapStateToProps = (state, { datagrid }) => {
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
+    primaryUserId: getSafe(() => state.auth.identity.company.primaryUser.id, ''),
     rows: datagrid.rows.map(user => {
       const isCompanyAdmin = (user.roles || []).some(role => role.id === 2)
 
       return {
         rawData: user,
-        name:
-          user.id === getSafe(() => state.auth.identity.company.primaryUser.id, '') ? (
-            <>
-              <Icon name='user crown' style={{ color: '#2599d5' }} />
-              <span style={{ fontWeight: '500' }}>{user.name}</span>
-            </>
-          ) : (
-            <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</div>
-          ),
+        name: user.name,
         jobTitle: user.jobTitle || '',
         email: user.email,
         phone: user.phone || '',
