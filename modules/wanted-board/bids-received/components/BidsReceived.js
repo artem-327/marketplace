@@ -9,6 +9,7 @@ import { debounce } from 'lodash'
 
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import confirm from '~/src/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'

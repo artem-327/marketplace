@@ -12,7 +12,8 @@ import { Datagrid } from '~/modules/datagrid'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 import { getSafe } from '~/utils/functions'
-import { CustomRowDiv, DivRow, RowDropdown, RowDropdownIcon } from '../../constants/layout'
+import { CustomRowDiv } from '../../constants/layout'
+import ActionCell from '~/components/table/ActionCell'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
 import SearchInput from '../../components/SearchInput'
@@ -163,7 +164,7 @@ class BidsSent extends Component {
     this.setState({ filterValues: { ...this.state.filterValues, statusFilter: value } })
   }
 
-  getActionsByRow = () => {
+  getActions = () => {
     const { datagrid, intl, myOffersSidebarTrigger } = this.props
     let { formatMessage } = intl
     return [
@@ -265,39 +266,16 @@ class BidsSent extends Component {
     }
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = () => {
     return this.getFilteredRows().map(r => {
       return {
         ...r,
         product: (
-          <DivRow>
-            <RowDropdown
-              trigger={
-                <RowDropdownIcon>
-                  <MoreVertical />
-                </RowDropdownIcon>
-              }>
-              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(r), r)}</Dropdown.Menu>
-            </RowDropdown>
-            <SpanText>
-              {r.product}
-            </SpanText>
-          </DivRow>
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            content={r.product}
+          />
         )
       }
     })

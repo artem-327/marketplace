@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { openSidebar, deleteBranch, getBranch, setPrimaryBranch } from '../../../actions'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import { getIdentity } from '~/modules/auth/actions'
-
 import { getSafe } from '~/utils/functions'
-
 import confirm from '~/src/components/Confirmable/confirm'
 import { FormattedPhone } from '~/components/formatted-messages/'
 
@@ -28,7 +27,7 @@ class BranchesTable extends Component {
           ),
           width: 210,
           sortPath: 'Branch.deliveryAddress.addressName',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'streetAddress',
@@ -123,8 +122,8 @@ class BranchesTable extends Component {
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
         callback: row => {
-          getBranch(row.id)
-          openSidebar(row)
+          //getBranch(row.id)
+          openSidebar(row.rawData)
         }
       },
       {
@@ -162,22 +161,39 @@ class BranchesTable extends Component {
     ]
   }
 
+  getRows = () => {
+    return this.props.rows.map(row => {
+      return {
+        ...row,
+        addressName: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.addressName}
+            onContentClick={() => this.props.openSidebar(row.rawData)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
-    const { filterValue, rows, datagrid, loading, identityLoading, editedId } = this.props
+    const { filterValue, datagrid, loading, identityLoading, editedId } = this.props
 
     return (
       <React.Fragment>
-        <ProdexGrid
-          tableName='settings_branches'
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          columns={this.state.columns}
-          loading={datagrid.loading || loading || identityLoading}
-          rows={rows}
-          style={{ marginTop: '5px' }}
-          columnActions='addressName'
-          editingRowId={editedId}
-        />
+        <div className='flex stretched listings-wrapper'>
+          <ProdexGrid
+            tableName='settings_branches'
+            {...datagrid.tableProps}
+            filterValue={filterValue}
+            columns={this.state.columns}
+            loading={datagrid.loading || loading || identityLoading}
+            rows={this.getRows()}
+            style={{ marginTop: '5px' }}
+            editingRowId={editedId}
+          />
+        </div>
       </React.Fragment>
     )
   }
@@ -195,16 +211,13 @@ const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(r => {
       return {
+        rawData: r,
         streetAddress: getSafe(() => r.deliveryAddress.address.streetAddress),
         city: getSafe(() => r.deliveryAddress.address.city),
         countryName: getSafe(() => r.deliveryAddress.address.country.name),
         provinceName: getSafe(() => r.deliveryAddress.address.province.name),
         name: getSafe(() => r.deliveryAddress.cfName, ''),
-        addressName: (
-          <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {getSafe(() => r.deliveryAddress.cfName, '')}
-          </div>
-        ),
+        addressName: getSafe(() => r.deliveryAddress.cfName, ''),
         contactName: getSafe(() => r.deliveryAddress.contactName, ''),
         contactEmail: getSafe(() => r.deliveryAddress.contactEmail, ''),
         phoneFormatted: <FormattedPhone value={getSafe(() => r.deliveryAddress.contactPhone, '')} />,

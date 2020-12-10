@@ -12,9 +12,7 @@ import { removeAttachment } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 import { bool, array } from 'prop-types'
 import { getLocaleDateFormat } from '~/components/date-format'
-import { MoreVertical } from 'react-feather'
-import { Dropdown } from 'semantic-ui-react'
-import { DivRow, RowDropdown, RowDropdownIcon, SpanText } from '../../layout'
+import ActionCell from '~/components/table/ActionCell'
 
 const BasicLink = styled.a`
   color: black !important;
@@ -97,21 +95,6 @@ class DocumentManager extends Component {
     }
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = (data = []) =>
     data.map(row => ({
       ...row,
@@ -120,23 +103,16 @@ class DocumentManager extends Component {
       issuedAt: row.issuedAt && moment(row.issuedAt).format(getLocaleDateFormat()),
       customName: getSafe(() => row.customName, row.name),
       name: (
-        <DivRow>
-          <RowDropdown
-            trigger={
-              <RowDropdownIcon>
-                <MoreVertical />
-              </RowDropdownIcon>
-            }>
-            <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
-          </RowDropdown>
-          <SpanText onClick={() => this.props.openSidebar(row)}>
-            {row.name}
-          </SpanText>
-        </DivRow>
+        <ActionCell
+          row={row}
+          getActions={this.getActions}
+          content={row.name}
+          onContentClick={() => this.props.openSidebar(row)}
+        />
       )
     }))
 
-  getActionsByRow = () => {
+  getActions = () => {
     const { datagrid, openSidebar, removeAttachment, edit, download, deletable } = this.props
 
     return [

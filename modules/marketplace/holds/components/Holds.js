@@ -4,15 +4,14 @@ import styled from 'styled-components'
 import { Container, Grid, Dropdown, Label, Input } from 'semantic-ui-react'
 import { withRouter } from 'next/router'
 import Router from 'next/router'
-
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
-import { MoreVertical } from 'react-feather'
 
 const HoldDropdown = styled(Dropdown)`
   z-index: 601 !important;
@@ -39,53 +38,6 @@ const CustomRowDiv = styled.div`
   input,
   .ui.dropdown {
     height: 40px;
-  }
-`
-
-const DivRow = styled.div`
-  display: flex !important;
-
-  > div {
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
-  > span {
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-`
-
-const SpanText = styled.span`
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  overflow: hidden !important;
-  font-weight: 500;
-`
-
-const RowDropdown = styled(Dropdown)`
-  display: block !important;
-  height: 100% !important;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-
-  .dropdown.icon {
-    display: none;
-  }
-`
-
-const RowDropdownIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  margin: 2px 8px 2px -4px;
-
-  svg {
-    width: 16px !important;
-    height: 16px !important;
-    color: #848893 !important;
   }
 `
 
@@ -186,7 +138,7 @@ class Holds extends Component {
     }
   }
 
-  getActionsByRow = () => {
+  getActions = () => {
     const { intl, isMerchant, isCompanyAdmin, isProductOfferManager, isClientCompanyAdmin } = this.props
     let filterValue = {
       searchInput: '',
@@ -319,41 +271,16 @@ class Holds extends Component {
     ]
   }
 
-
-
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = rows => {
     return rows.map(r => {
       return {
         ...r,
         intProductName: (
-          <DivRow>
-            <RowDropdown
-              trigger={
-                <RowDropdownIcon>
-                  <MoreVertical />
-                </RowDropdownIcon>
-              }>
-              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(r), r)}</Dropdown.Menu>
-            </RowDropdown>
-            <SpanText>
-              {r.intProductName}
-            </SpanText>
-          </DivRow>
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            content={r.intProductName}
+          />
         )
       }
     })

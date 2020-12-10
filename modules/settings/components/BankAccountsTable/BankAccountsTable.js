@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import { Header, Modal, Form, Segment, Label, Table, Dropdown } from 'semantic-ui-react'
+import { Header, Modal, Form, Segment, Label, Table } from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/src/components/Confirmable/confirm'
 import { Formik } from 'formik'
@@ -30,8 +30,7 @@ import {
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
-import { MoreVertical } from 'react-feather'
-import { DivRow, RowDropdown, RowDropdownIcon } from '../../layout'
+import ActionCell from '~/components/table/ActionCell'
 
 const Container = styled.div`
   overflow-y: auto;
@@ -340,7 +339,7 @@ class BankAccountsTable extends Component {
     }
   ]
 
-  getActionsByRow = () => {
+  getActions = () => {
     const {
       deleteBankAccount,
       dwollaInitiateVerification,
@@ -432,37 +431,16 @@ class BankAccountsTable extends Component {
     ]
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = rows => {
     return rows.map(row => {
       return {
         ...row,
         name: (
-          <DivRow>
-            <RowDropdown
-              trigger={
-                <RowDropdownIcon>
-                  <MoreVertical />
-                </RowDropdownIcon>
-              }>
-              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
-            </RowDropdown>
-            <SpanText>{row.name}</SpanText>
-          </DivRow>
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+          />
         )
       }
     })

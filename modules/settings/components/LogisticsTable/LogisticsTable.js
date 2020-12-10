@@ -10,9 +10,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { withDatagrid } from '~/modules/datagrid'
-import { MoreVertical } from 'react-feather'
-import { Dropdown } from 'semantic-ui-react'
-import { DivRow, RowDropdown, RowDropdownIcon, SpanText } from '../../layout'
+import ActionCell from '~/components/table/ActionCell'
 
 class LogisticsTable extends Component {
   constructor(props) {
@@ -48,7 +46,7 @@ class LogisticsTable extends Component {
     this.props.getLogisticsAccounts()
   }
 
-  getActionsByRow = () => {
+  getActions = () => {
     const {
       openSidebar,
       intl: { formatMessage },
@@ -89,21 +87,6 @@ class LogisticsTable extends Component {
     ]
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = () => {
     const { logisticsAccounts, loading, filterValue, editedId } = this.props
 
@@ -115,19 +98,12 @@ class LogisticsTable extends Component {
         logisticsProviderNameForSearch: acc.provider.name,
         usernameForSearch: acc.accountInfos && acc.accountInfos.map(d => d.username),
         logisticsProviderName: (
-          <DivRow>
-            <RowDropdown
-              trigger={
-                <RowDropdownIcon>
-                  <MoreVertical />
-                </RowDropdownIcon>
-              }>
-              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(acc), acc)}</Dropdown.Menu>
-            </RowDropdown>
-            <SpanText onClick={() => this.props.openSidebar(acc)}>
-              {acc.provider.name}
-            </SpanText>
-          </DivRow>
+          <ActionCell
+            row={acc}
+            getActions={this.getActions}
+            content={acc.provider.name}
+            onContentClick={() => this.props.openSidebar(acc)}
+          />
         )
       }
     })

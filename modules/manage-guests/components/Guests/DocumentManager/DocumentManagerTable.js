@@ -5,6 +5,7 @@ import moment from 'moment'
 import styled from 'styled-components'
 
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { withDatagrid } from '~/modules/datagrid'
 import * as Actions from '../../../actions'
 import { openPopup } from '~/modules/settings/actions'
@@ -13,8 +14,6 @@ import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { injectIntl } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
-import { MoreVertical } from 'react-feather'
-import { Dropdown } from 'semantic-ui-react'
 
 const BasicLink = styled.a`
   color: black !important;
@@ -22,59 +21,6 @@ const BasicLink = styled.a`
   &:hover {
     color: white !important;
     text-decoration: none !important;
-  }
-`
-
-const DivRow = styled.div`
-  display: flex !important;
-
-  > div {
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
-  > span {
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-`
-
-const SpanText = styled.span`
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  overflow: hidden !important;
-  font-weight: 500;
-  cursor: pointer;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-`
-
-const RowDropdown = styled(Dropdown)`
-  display: block !important;
-  height: 100% !important;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-
-  .dropdown.icon {
-    display: none;
-  }
-`
-
-const RowDropdownIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  margin: 2px 8px 2px -4px;
-
-  svg {
-    width: 16px !important;
-    height: 16px !important;
-    color: #848893 !important;
   }
 `
 
@@ -140,39 +86,17 @@ class DocumentManagerTable extends Component {
     }
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = (data = []) =>
     data.map(row => ({
       rawData: row,
       id: row.id,
       name: (
-        <DivRow>
-          <RowDropdown
-            trigger={
-              <RowDropdownIcon>
-                <MoreVertical />
-              </RowDropdownIcon>
-            }>
-            <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
-          </RowDropdown>
-          <SpanText onClick={() => this.props.openPopup(row)}>
-            {row.name}
-          </SpanText>
-        </DivRow>
+        <ActionCell
+          row={row}
+          getActions={this.getActions}
+          content={row.name}
+          onContentClick={() => this.props.openPopup(row)}
+        />
         ),
       documentTypeName: getSafe(() => row.documentType.name, ''),
       expirationDate: row.expirationDate && moment(row.expirationDate).format(getLocaleDateFormat()),
@@ -182,7 +106,7 @@ class DocumentManagerTable extends Component {
       linkCount: row.linkCount
     }))
 
-  getActionsByRow = () => {
+  getActions = () => {
     const {
       datagrid, openPopup, intl, removeAttachment, documentManagerDatagridSharedWithMe
     } = this.props

@@ -23,9 +23,8 @@ import {
   setPrimaryUser
 } from '../../actions'
 
-import { Checkbox, Popup, Label, List, Icon, Dropdown } from 'semantic-ui-react'
-import { DivRow, RowDropdown, RowDropdownIcon, SpanText } from '../../layout'
-import { MoreVertical } from 'react-feather'
+import { Checkbox, Popup, Label, List, Icon } from 'semantic-ui-react'
+import ActionCell from '~/components/table/ActionCell'
 
 const handleSwitchEnabled = id => {
   userSwitchEnableDisable(id)
@@ -130,7 +129,7 @@ class UsersTable extends Component {
     return this.props.editedItem
   }
 
-  getActionsByRow = () => {
+  getActions = () => {
     const { openSidebar, intl, deleteUser, resendWelcomeEmail, setPrimaryUser, datagrid } = this.props
 
     const { formatMessage } = intl
@@ -184,45 +183,25 @@ class UsersTable extends Component {
     ]
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = rows => {
     const { primaryUserId } = this.props
     return rows.map(row => {
       return {
         ...row,
         name: (
-          <DivRow>
-            <RowDropdown
-              trigger={
-                <RowDropdownIcon>
-                  <MoreVertical />
-                </RowDropdownIcon>
-              }>
-              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
-            </RowDropdown>
-            <SpanText onClick={() => this.props.openSidebar(row.rawData)}>
-              {row.id === primaryUserId ? (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={
+              row.id === primaryUserId ? (
                 <>
                   <Icon name='user crown' style={{ color: '#2599d5' }} />
                   {row.name}
                 </>
-              ) : row.name}
-            </SpanText>
-          </DivRow>
+              ) : row.name
+            }
+            onContentClick={() => this.props.openSidebar(row.rawData)}
+          />
         )
       }
     })

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
 import { injectIntl } from 'react-intl'
@@ -10,62 +11,6 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { getSafe, getFormattedAddress } from '~/utils/functions'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { Checkbox } from 'semantic-ui-react'
-import { MoreVertical } from 'react-feather'
-import { Dropdown } from 'semantic-ui-react'
-import styled from 'styled-components'
-
-const DivRow = styled.div`
-  display: flex !important;
-
-  > div {
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
-  > span {
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-`
-
-const SpanText = styled.span`
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  overflow: hidden !important;
-  font-weight: 500;
-  cursor: pointer;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-`
-
-const RowDropdown = styled(Dropdown)`
-  display: block !important;
-  height: 100% !important;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-
-  .dropdown.icon {
-    display: none;
-  }
-`
-
-const RowDropdownIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  margin: 2px 8px 2px -4px;
-
-  svg {
-    width: 16px !important;
-    height: 16px !important;
-    color: #848893 !important;
-  }
-`
 
 class GuestCompaniesTable extends Component {
   constructor(props) {
@@ -138,39 +83,17 @@ class GuestCompaniesTable extends Component {
     }
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = rows => {
     return rows.map(row => {
       return {
         ...row,
         displayName: (
-          <DivRow>
-            <RowDropdown
-              trigger={
-                <RowDropdownIcon>
-                  <MoreVertical />
-                </RowDropdownIcon>
-              }>
-              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(row), row)}</Dropdown.Menu>
-            </RowDropdown>
-            <SpanText onClick={() => this.props.openCompanyEdit(row.rawData)}>
-              {row.displayName}
-            </SpanText>
-          </DivRow>
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.displayName}
+            onContentClick={() => this.props.openCompanyEdit(row.rawData)}
+          />
         ),
         reviewRequested: (
           <Checkbox
@@ -196,7 +119,7 @@ class GuestCompaniesTable extends Component {
     })
   }
 
-  getActionsByRow = () => {
+  getActions = () => {
     const {
       datagrid,
       intl,
