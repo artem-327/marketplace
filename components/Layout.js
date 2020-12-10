@@ -199,7 +199,7 @@ class Layout extends Component {
     this.setState({ showCopyright: false, copyrightClassName: '' })
   }
 
-  componentWillUpdate(prevProps) {
+  UNSAFE_componentWillUpdate(prevProps) {
     if (
       prevProps.adminTab !== this.props.adminTab ||
       prevProps.companyTab !== this.props.companyTab ||

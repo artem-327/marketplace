@@ -39,7 +39,7 @@ const CapitalizedText = styled.span`
 `
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
-  <Link prefetch href={to}>
+  <Link href={to}>
     <Menu.Item as='a' active={pathname === to}>
       {children}
     </Menu.Item>

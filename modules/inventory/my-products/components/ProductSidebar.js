@@ -51,7 +51,6 @@ import { addAttachment } from '~/modules/inventory/actions'
 
 import { Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import './styles.scss'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
@@ -371,7 +370,7 @@ class ProductSidebar extends React.Component {
     this.resetComponent()
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.popupValues && nextProps.popupValues.packagingUnit) {
       this.filterPackagingTypes(nextProps.popupValues.packagingUnit.id, nextProps.unitsAll, nextProps.packagingTypesAll)
     } else this.setState({ packagingTypesReduced: nextProps.packagingType })

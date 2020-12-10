@@ -1,4 +1,4 @@
-import App, { Container } from 'next/app'
+import App from 'next/app'
 import React from 'react'
 import withRedux from 'next-redux-wrapper'
 import { makeStore } from '~/store'
@@ -69,15 +69,13 @@ class ProdexApp extends App {
     const { Component, pageProps, store } = this.props
 
     return (
-      <Container>
-        <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
-          <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={7 * 1000} components={{ Toast: ProdexToast }}>
-            <Provider store={store}>
-              <Component {...pageProps} />
-            </Provider>
-          </ToastProvider>
-        </IntlProvider>
-      </Container>
+      <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
+        <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={7 * 1000} components={{ Toast: ProdexToast }}>
+          <Provider store={store}>
+            <Component {...pageProps} />
+          </Provider>
+        </ToastProvider>
+      </IntlProvider>
     )
   }
 }
