@@ -11,7 +11,7 @@ import { Popup, Icon } from 'semantic-ui-react'
 
 import { getSafe } from '~/utils/functions'
 
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { FormattedPhone } from '~/components/formatted-messages/'
 
 class PickUpLocationsTable extends Component {

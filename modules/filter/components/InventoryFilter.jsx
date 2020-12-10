@@ -9,26 +9,13 @@ import { removeEmpty } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import ErrorFocus from '~/components/error-focus'
 
-import {
-  Button,
-  FormField,
-  GridRow,
-  GridColumn,
-  Dimmer,
-  Label,
-  Modal,
-  Menu
-} from 'semantic-ui-react'
+import { Button, FormField, GridRow, GridColumn, Dimmer, Label, Modal, Menu } from 'semantic-ui-react'
 
 import { uniqueArrayByKey } from '~/utils/functions'
 
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 
-import {
-  datagridValues,
-  dateDropdownOptions,
-  filterTypes
-} from '../constants/filter'
+import { datagridValues, dateDropdownOptions, filterTypes } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
@@ -80,7 +67,7 @@ class InventoryFilter extends Component {
     searchWarehouseQuery: '',
     isTyping: false,
     searchManufacturerQuery: '',
-    searchOriginQuery: '',
+    searchOriginQuery: ''
   }
 
   componentDidMount() {
@@ -88,7 +75,6 @@ class InventoryFilter extends Component {
       fetchProductConditions,
       fetchProductForms,
       fetchPackagingTypes,
-      fetchWarehouseDistances,
       fetchProductGrade,
       fetchWarehouses,
       setParams,
@@ -119,7 +105,6 @@ class InventoryFilter extends Component {
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
-      this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
       this.fetchIfNoData(fetchProductGrade, 'productGrades'),
       this.fetchIfNoData(fetchWarehouses, 'warehouses')
     ]).finally(() =>
@@ -938,14 +923,14 @@ class InventoryFilter extends Component {
                   id: 2,
                   text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
                   value: false
-                },
+                }
               ]}
               selection
               inputProps={{
                 fluid: true,
                 clearable: true,
                 upward: true,
-                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
+                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' })
               }}
             />
           </GridColumn>
@@ -1030,9 +1015,7 @@ class InventoryFilter extends Component {
                   </StyledModalContent>
                 </>
               ) : (
-                <>
-                  {this.formSaveFilter(props)}
-                </>
+                <>{this.formSaveFilter(props)}</>
               )}
 
               <BottomButtons>
@@ -1044,7 +1027,7 @@ class InventoryFilter extends Component {
                       className='light'
                       onClick={this.toggleSaveFilter}
                       data-test='filter_save_cancel_btn'>
-                      {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
+                      {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
                     </Button>
                     <Button
                       disabled={savedFiltersActive}
@@ -1053,8 +1036,8 @@ class InventoryFilter extends Component {
                       className='secondary'
                       loading={isFilterSaving}
                       onClick={async () => {
-                        let {values} = props
-                        const {validateForm, submitForm} = props
+                        let { values } = props
+                        const { validateForm, submitForm } = props
 
                         validateForm().then(err => {
                           const errors = Object.keys(err)
@@ -1071,109 +1054,110 @@ class InventoryFilter extends Component {
                       {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                     </Button>
                   </div>
+                ) : savedFiltersActive ? (
+                  <div style={{ textAlign: 'right' }}>
+                    <Button
+                      type='button'
+                      size='large'
+                      className='light'
+                      onClick={() => onClose()}
+                      data-test='filter_close'>
+                      {formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                    </Button>
+                  </div>
                 ) : (
-                  savedFiltersActive ? (
-                    <div style={{ textAlign: 'right'}}>
+                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <div>
                       <Button
                         type='button'
                         size='large'
-                        className='light'
                         onClick={() => onClose()}
-                        data-test='filter_close'>
-                        {formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                        className='light greyText'
+                        data-test='filter_cancel'>
+                        {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                      </Button>
+                      <Button
+                        type='button'
+                        size='large'
+                        className='light danger'
+                        onClick={(e, data) => {
+                          this.resetForm({ ...initialValues })
+                          //this.props.applyFilter({filters: []})
+                          //this.props.applyDatagridFilter({filters: []})
+                          //this.props.onClear(e, data)
+                        }}
+                        data-test='filter_clear'>
+                        {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
                       </Button>
                     </div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <div>
-                        <Button
-                          type='button'
-                          size='large'
-                          onClick={() => onClose()}
-                          className='light greyText'
-                          data-test='filter_cancel'>
-                          {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-                        </Button>
-                        <Button
-                          type='button'
-                          size='large'
-                          className='light danger'
-                          onClick={(e, data) => {
-                            this.resetForm({...initialValues})
-                            //this.props.applyFilter({filters: []})
-                            //this.props.applyDatagridFilter({filters: []})
-                            //this.props.onClear(e, data)
-                          }}
-                          data-test='filter_clear'>
-                          {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
-                        </Button>
-                      </div>
-                      <div>
-                        <Button
-                          type={'button'}
-                          size='large'
-                          className='secondary outline'
-                          loading={isFilterSaving}
-                          onClick={async () => {
-                            const {validateForm, submitForm, values} = props
+                    <div>
+                      <Button
+                        type={'button'}
+                        size='large'
+                        className='secondary outline'
+                        loading={isFilterSaving}
+                        onClick={async () => {
+                          const { validateForm, submitForm, values } = props
 
-                            validateForm().then(err => {
-                              const errors = Object.keys(err)
-                              if (errors.length && errors[0] !== 'isCanceled') {
-                                // Errors found
-                                submitForm() // to show errors
+                          validateForm().then(err => {
+                            const errors = Object.keys(err)
+                            if (errors.length && errors[0] !== 'isCanceled') {
+                              // Errors found
+                              submitForm() // to show errors
+                            } else {
+                              // No errors found
+                              const requestData = this.generateRequestData(values)
+                              if (requestData.filters.length) {
+                                this.toggleSaveFilter()
                               } else {
-                                // No errors found
-                                const requestData = this.generateRequestData(values)
-                                if (requestData.filters.length) {
-                                  this.toggleSaveFilter()
-                                } else {
-                                  toastManager.add(
-                                    generateToastMarkup(
-                                      <FormattedMessage id='filter.saveEmptyFilterHeader' defaultMessage='Empty Filter' />,
-                                      <FormattedMessage
-                                        id='filter.saveEmptyFilter'
-                                        defaultMessage='There are no any filters configured'
-                                      />
-                                    ),
-                                    {
-                                      appearance: 'warning'
-                                    }
-                                  )
-                                }
+                                toastManager.add(
+                                  generateToastMarkup(
+                                    <FormattedMessage
+                                      id='filter.saveEmptyFilterHeader'
+                                      defaultMessage='Empty Filter'
+                                    />,
+                                    <FormattedMessage
+                                      id='filter.saveEmptyFilter'
+                                      defaultMessage='There are no any filters configured'
+                                    />
+                                  ),
+                                  {
+                                    appearance: 'warning'
+                                  }
+                                )
                               }
-                            })
-                          }}
-                          data-test='filter_save_new'>
-                          {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
-                        </Button>
-                        <Button
-                          size='large'
-                          loading={isFilterApplying}
-                          type='submit'
-                          secondary
-                          onClick={async () => {
-                            let {values} = props
-                            const {validateForm, submitForm} = props
+                            }
+                          })
+                        }}
+                        data-test='filter_save_new'>
+                        {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
+                      </Button>
+                      <Button
+                        size='large'
+                        loading={isFilterApplying}
+                        type='submit'
+                        secondary
+                        onClick={async () => {
+                          let { values } = props
+                          const { validateForm, submitForm } = props
 
-                            validateForm().then(async (err) => {
-                              const errors = Object.keys(err)
-                              if (errors.length && errors[0] !== 'isCanceled') {
-                                // Errors found
-                                submitForm() // to show errors
-                              } else {
-                                // No errors found
-                                await submitForm()
-                                onClose()
-                              }
-                            })
-                          }}
-                          data-test='filter_apply'>
-                          {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
-                        </Button>
-                      </div>
+                          validateForm().then(async err => {
+                            const errors = Object.keys(err)
+                            if (errors.length && errors[0] !== 'isCanceled') {
+                              // Errors found
+                              submitForm() // to show errors
+                            } else {
+                              // No errors found
+                              await submitForm()
+                              onClose()
+                            }
+                          })
+                        }}
+                        data-test='filter_apply'>
+                        {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
+                      </Button>
                     </div>
-                  )
+                  </div>
                 )}
               </BottomButtons>
               <ErrorFocus />

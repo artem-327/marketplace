@@ -29,7 +29,7 @@ import { debounce } from 'lodash'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
@@ -414,7 +414,10 @@ class UsersSidebar extends React.Component {
                           label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
                           name='jobTitle'
                           inputProps={{
-                            placeholder: formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
+                            placeholder: formatMessage({
+                              id: 'global.enterJobTitle',
+                              defaultMessage: 'Enter Job Title'
+                            })
                           }}
                         />
                       </GridColumn>
@@ -535,7 +538,9 @@ class UsersSidebar extends React.Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <>{formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}</>
+                            <>
+                              {formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}
+                            </>
                           }
                           name='buyMarketSegments'
                           options={allBuyMarketSegmentsOptions}

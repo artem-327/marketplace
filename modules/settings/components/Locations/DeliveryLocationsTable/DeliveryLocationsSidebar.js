@@ -11,7 +11,7 @@ import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { addressValidationSchema, errorMessages, validateTime } from '~/constants/yupValidation'
-import { PHONE_REGEXP } from '~/src/utils/constants'
+import { PHONE_REGEXP } from '~/utils/constants'
 
 import { AddressForm } from '~/modules/address-form/'
 

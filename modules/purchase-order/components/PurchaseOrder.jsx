@@ -26,9 +26,8 @@ import ShippingQuote from './ShippingQuote'
 import Payment from './Payment'
 import CartItemSummary from '~/components/summary/CartItemSummary'
 import Summary from '~/components/summary/Summary'
-import Spinner from '../../../src/components/Spinner/Spinner'
-import confirm from '~/src/components/Confirmable/confirm'
-import { checkToken } from '../../../src/utils/auth'
+import Spinner from '../../../components/Spinner/Spinner'
+import confirm from '~/components/Confirmable/confirm'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 import { errorMessages } from '~/constants/yupValidation'
@@ -257,7 +256,6 @@ class PurchaseOrder extends Component {
   }
 
   deleteCart = id => {
-    if (checkToken(this.props)) return
     let { cart } = this.props
 
     let { formatMessage } = this.props.intl

@@ -26,14 +26,12 @@ import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echo.svg'
 import LogoSmall from '~/assets/images/nav/logo4x.png'
-// import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
 import NotificationsIcon from './NotificationsIcon'
 
 import CreateMenu from './CreateMenu'
-import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
 import Settings from '~/components/settings'
 import { connect } from 'react-redux'
@@ -319,7 +317,7 @@ class Layout extends Component {
       isMerchant,
       isProductCatalogAdmin,
       isProductOfferManager,
-      isUserAdmin,
+      isUserAdmin
     } = identity
 
     let icon = Icon && <Icon name='user' />
@@ -341,7 +339,6 @@ class Layout extends Component {
 
     return (
       <MainContainer fluid className={mainClass}>
-        <PopUp />
         <Head>
           <title>
             {formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}
@@ -363,19 +360,17 @@ class Layout extends Component {
 
               <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
             </PerfectScrollbar>
-            {false
-              ? (
-                <Container className='bottom'>
-                  <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
-                    <Sidebar />
-                    {formatMessage({
-                      id: 'global.collapseMenu',
-                      defaultMessage: 'Collapse Menu'
-                    })}
-                  </Menu.Item>
-                </Container>
-              )
-              : null }
+            {false ? (
+              <Container className='bottom'>
+                <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
+                  <Sidebar />
+                  {formatMessage({
+                    id: 'global.collapseMenu',
+                    defaultMessage: 'Collapse Menu'
+                  })}
+                </Menu.Item>
+              </Container>
+            ) : null}
           </LeftMenuContainer>
         </LeftMenu>
 
@@ -476,9 +471,9 @@ class Layout extends Component {
                     isProductCatalogAdmin ||
                     isProductOfferManager ||
                     isUserAdmin) && (
-                      <Menu.Item>
-                        <CreateMenu />
-                      </Menu.Item>
+                    <Menu.Item>
+                      <CreateMenu />
+                    </Menu.Item>
                   )}
                 </>
               )}
@@ -538,14 +533,20 @@ class Layout extends Component {
           </CustomDiv>
         ) : null}
 
-        <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }}/>
+        <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }} />
         <GlobalSidebars>
-          {openGlobalAddFormName === 'inventory-my-products' && (<ProductSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'inventory-my-listings' && (<ListingSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'wanted-board-listings' && (<WantedSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'my-account-users' && (<UserSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'manage-guests-guests' && (<GuestSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'my-account-locations' && (<WarehouseSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+          {openGlobalAddFormName === 'inventory-my-products' && (
+            <ProductSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'inventory-my-listings' && (
+            <ListingSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'my-account-users' && <UserSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'manage-guests-guests' && <GuestSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'my-account-locations' && (
+            <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
         </GlobalSidebars>
       </MainContainer>
     )

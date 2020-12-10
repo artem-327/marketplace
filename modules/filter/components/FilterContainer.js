@@ -7,8 +7,6 @@ import { getAutocompleteData, applyDatagridFilter } from '~/modules/marketplace/
 
 import { getSafe } from '~/utils/functions'
 
-import { fetchWarehouseDistances } from '~/src/modules/location'
-
 function mapStateToProps(store) {
   return {
     ...store.filter,
@@ -16,12 +14,11 @@ function mapStateToProps(store) {
     preferredCurrency: getSafe(() => store.auth.identity.preferredCurrency.code, currency),
     warehouseDistances: store.location.warehouseDistances,
     autocompleteDataLoading: store.marketplace.autocompleteDataLoading,
-    autocompleteData: store.marketplace.autocompleteData,
+    autocompleteData: store.marketplace.autocompleteData
   }
 }
 
 const mapDispatchToProps = {
-  fetchWarehouseDistances,
   getAutocompleteData,
   applyDatagridFilter,
   ...Actions

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
@@ -142,9 +142,12 @@ class CompaniesTable extends Component {
         ...row,
         paymentAccountStatus:
           row.paymentProcessor === 'DWOLLA'
-            ? (row.hasDwollaAccount ? 'Dwolla' : 'No')
-            : (row.hasVellociAccount ? 'Velloci' : 'No')
-        ,
+            ? row.hasDwollaAccount
+              ? 'Dwolla'
+              : 'No'
+            : row.hasVellociAccount
+            ? 'Velloci'
+            : 'No',
         reviewRequested: (
           <Checkbox
             key={`review${row.id}`}

@@ -7,15 +7,11 @@ import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-message
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 
-import {
-  openPopup,
-  getClientCompanyRoles,
-  deleteUser
-} from '../../../actions'
+import { openPopup, getClientCompanyRoles, deleteUser } from '../../../actions'
 
 class UsersTable extends Component {
   constructor(props) {
@@ -94,13 +90,7 @@ class UsersTable extends Component {
   }
 
   getActions = () => {
-    const {
-      openPopup,
-      intl,
-      datagrid,
-      deleteUser,
-      companyId
-    } = this.props
+    const { openPopup, intl, datagrid, deleteUser, companyId } = this.props
     const { formatMessage } = intl
 
     return [
@@ -132,13 +122,7 @@ class UsersTable extends Component {
   }
 
   render() {
-    const {
-      rows,
-      filterValue,
-      loading,
-      datagrid,
-      editedId
-    } = this.props
+    const { rows, filterValue, loading, datagrid, editedId } = this.props
 
     let { columns } = this.state
 
@@ -180,12 +164,10 @@ const mapStateToProps = (state, { datagrid }) => {
         phone: user.phone || '',
         phoneFormatted: <FormattedPhone value={user.phone} />,
         homeBranchName: getSafe(() => user.homeBranch.deliveryAddress.cfName, ''),
-        userRoles:
-          <ArrayToFirstItem values={user && user.roles && user.roles.length && user.roles.map(r => r.name)} />
+        userRoles: <ArrayToFirstItem values={user && user.roles && user.roles.length && user.roles.map(r => r.name)} />
       }
     })
   }
 }
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UsersTable)))
-

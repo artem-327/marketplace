@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 

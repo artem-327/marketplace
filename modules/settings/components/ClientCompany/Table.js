@@ -5,7 +5,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { injectIntl } from 'react-intl'
 import { companyDatagridColumns, mapCompanyRows } from '~/constants/index'
 import { deleteClientCompany, openPopup } from '../../actions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 
 const columns = companyDatagridColumns
 

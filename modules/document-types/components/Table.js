@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import { getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation } from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
@@ -35,7 +35,7 @@ class Table extends Component {
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
         callback: row => openEditPopup(row),
-        hidden: row => !row.editable,
+        hidden: row => !row.editable
       },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),

@@ -11,7 +11,7 @@ import { Warning } from '@material-ui/icons'
 import ProdexTable from '~/components/table'
 import DetailSidebar from '~/modules/inventory/my-listings/components/DetailSidebar'
 import QuickEditPricingPopup from '~/modules/inventory/my-listings/components/QuickEditPricingPopup'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/inventory/my-products/components/ProductImportPopup'
@@ -562,7 +562,7 @@ class MyListings extends Component {
           id: 'global.tds',
           defaultMessage: 'TDS'
         }),
-        disabled: () => row.groupId,
+        disabled: () => !!row.groupId,
         callback: () => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
       },
       {
@@ -570,7 +570,7 @@ class MyListings extends Component {
           id: 'global.documents',
           defaultMessage: 'Documents'
         }),
-        disabled: () => row.groupId,
+        disabled: () => !!row.groupId,
         callback: () => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
       },
       {
@@ -578,7 +578,7 @@ class MyListings extends Component {
           id: 'inventory.broadcast',
           defaultMessage: 'Price Book'
         }),
-        disabled: () => row.groupId,
+        disabled: () => !!row.groupId,
         callback: () => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
       },
       {
@@ -586,7 +586,7 @@ class MyListings extends Component {
           id: 'inventory.priceTiers',
           defaultMessage: 'Price Tiers'
         }),
-        disabled: () => row.groupId,
+        disabled: () => !!row.groupId,
         callback: () => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
       },
       {

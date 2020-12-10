@@ -12,7 +12,7 @@ import { removeAttachment } from '~/modules/inventory/actions'
 import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { injectIntl } from 'react-intl'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 
 const BasicLink = styled.a`
   color: black !important;
@@ -40,7 +40,6 @@ class DocumentManagerTable extends Component {
           width: 620,
           maxWidth: 2000,
           actions: this.getActions()
-
         },
         {
           name: 'documentTypeName',
@@ -100,9 +99,7 @@ class DocumentManagerTable extends Component {
     }))
 
   getActions = () => {
-    const {
-      datagrid, openPopup, intl, removeAttachment, documentManagerDatagridSharedWithMe
-    } = this.props
+    const { datagrid, openPopup, intl, removeAttachment, documentManagerDatagridSharedWithMe } = this.props
     const { formatMessage } = intl
 
     return [
@@ -152,9 +149,7 @@ class DocumentManagerTable extends Component {
   }
 
   render() {
-    const {
-      rows, datagrid, editedId, updatingDatagrid
-    } = this.props
+    const { rows, datagrid, editedId, updatingDatagrid } = this.props
 
     return (
       <ProdexGrid
@@ -179,21 +174,6 @@ const mapStateToProps = ({ manageGuests, simpleAdd }, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(
-  mapStateToProps,
-  { ...Actions, removeAttachment }
-)(injectIntl(DocumentManagerTable)))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default withDatagrid(
+  connect(mapStateToProps, { ...Actions, removeAttachment })(injectIntl(DocumentManagerTable))
+)

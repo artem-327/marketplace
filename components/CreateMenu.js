@@ -55,11 +55,7 @@ export const CreateDropdown = styled(Dropdown)`
 
 class CreateMenu extends Component {
   render() {
-    const {
-      identity,
-      openGlobalAddForm,
-      openGlobalAddFormName
-    } = this.props
+    const { identity, openGlobalAddForm, openGlobalAddFormName } = this.props
 
     const {
       isClientCompanyAdmin,
@@ -152,7 +148,6 @@ const stateToProps = state => {
   return {
     openGlobalAddFormName: state.layout.openGlobalAddFormName,
     identity: getSafe(() => state.auth.identity, {})
-
   }
 }
 

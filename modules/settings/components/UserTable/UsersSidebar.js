@@ -35,7 +35,7 @@ import { debounce } from 'lodash'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
@@ -67,7 +67,7 @@ const HighSegment = styled.div`
   color: #20273a;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
   background-color: #ffffff;
-  text-transform: uppercase;  
+  text-transform: uppercase;
   display: flex;
   flex-direction: row;
 
@@ -75,12 +75,12 @@ const HighSegment = styled.div`
     font-size: 18px;
     vertical-align: middle;
   }
-  
+
   svg.title-icon {
     margin-left: 15px;
     color: #cecfd4;
   }
-  
+
   svg.close-icon {
     right: 0;
     position: absolute;
@@ -536,25 +536,23 @@ class UsersSidebar extends React.Component {
               </Dimmer>
 
               <HighSegment basic>
-                {openGlobalAddForm
-                  ? (
-                    <>
-                      <div>
-                            <span>
-                              <FormattedMessage id='createMenu.addUser' defaultMessage='Add User' />
-                            </span>
-                        <Person className='title-icon' />
-                      </div>
-                      <div style={{ position: 'absolute', right: '20px' }}>
-                        <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
-                      </div>
-                    </>
-                  ) : (
-                    popupValues
-                      ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
-                      : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })
-                  )
-                }
+                {openGlobalAddForm ? (
+                  <>
+                    <div>
+                      <span>
+                        <FormattedMessage id='createMenu.addUser' defaultMessage='Add User' />
+                      </span>
+                      <Person className='title-icon' />
+                    </div>
+                    <div style={{ position: 'absolute', right: '20px' }}>
+                      <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
+                    </div>
+                  </>
+                ) : popupValues ? (
+                  formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
+                ) : (
+                  formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })
+                )}
               </HighSegment>
 
               <FlexContent>
@@ -582,8 +580,10 @@ class UsersSidebar extends React.Component {
                           label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
                           name='jobTitle'
                           inputProps={{
-                            placeholder:
-                              formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
+                            placeholder: formatMessage({
+                              id: 'global.enterJobTitle',
+                              defaultMessage: 'Enter Job Title'
+                            })
                           }}
                         />
                       </GridColumn>
@@ -704,7 +704,9 @@ class UsersSidebar extends React.Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <>{formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}</>
+                            <>
+                              {formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}
+                            </>
                           }
                           name='buyMarketSegments'
                           options={allBuyMarketSegmentsOptions}
@@ -764,10 +766,7 @@ class UsersSidebar extends React.Component {
               <BottomButtons className='bottom-buttons'>
                 <div style={{ textAlign: 'right' }}>
                   {!openGlobalAddForm && (
-                    <Button
-                      className='light'
-                      onClick={closeSidebar}
-                      data-test='settings_users_popup_reset_btn'>
+                    <Button className='light' onClick={closeSidebar} data-test='settings_users_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                         {text => text}
                       </FormattedMessage>

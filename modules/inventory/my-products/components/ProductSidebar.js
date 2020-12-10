@@ -28,7 +28,7 @@ import { Formik } from 'formik'
 import { CompanyProductMixtures } from '~/components/shared-components/'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 import { DisabledButtonWrapped } from '~/utils/components'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { Required } from '~/components/constants/layout'
 
 import {
@@ -89,12 +89,12 @@ const CustomHighSegment = styled(Segment)`
     font-size: 18px;
     vertical-align: middle;
   }
-  
+
   svg.title-icon {
     margin-left: 15px;
     color: #cecfd4;
   }
-  
+
   svg.close-icon {
     right: 0;
     position: absolute;
@@ -119,7 +119,7 @@ const CustomButtonSubmit = styled(Button.Submit)`
   &.ui.primary.button {
     background-color: #2599d5;
     color: #fff;
-    
+
     &:hover {
       background-color: #188ec9;
     }
@@ -668,7 +668,7 @@ class ProductSidebar extends React.Component {
         initialValues={this.getInitialFormValues()}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
+        onReset={() => (openGlobalAddForm ? openGlobalAddForm('') : closePopup())}
         onSubmit={this.handlerSubmit}
         loading={loading}>
         {formikProps => {
@@ -692,26 +692,23 @@ class ProductSidebar extends React.Component {
                     <Loader />
                   </Dimmer>
                   <CustomHighSegment>
-                    {openGlobalAddForm
-                      ? (
-                        <>
-                          <div>
-                            <span>
-                              <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
-                            </span>
-                            <AddBox className='title-icon' />
-                          </div>
-                          <div style={{ position: 'absolute', right: '20px' }}>
-                            <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
-                          </div>
-                        </>
-                      )
-                      : (popupValues ? (
-                        <FormattedMessage id='global.editCompanyProduct' defaultMessage='Edit Company Product' />
-                        ) : (
-                        <FormattedMessage id='global.addCompanyProduct' defaultMessage='Add Company Product' />
-                        ))
-                    }
+                    {openGlobalAddForm ? (
+                      <>
+                        <div>
+                          <span>
+                            <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
+                          </span>
+                          <AddBox className='title-icon' />
+                        </div>
+                        <div style={{ position: 'absolute', right: '20px' }}>
+                          <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
+                        </div>
+                      </>
+                    ) : popupValues ? (
+                      <FormattedMessage id='global.editCompanyProduct' defaultMessage='Edit Company Product' />
+                    ) : (
+                      <FormattedMessage id='global.addCompanyProduct' defaultMessage='Add Company Product' />
+                    )}
                   </CustomHighSegment>
                   <FlexContent style={{ padding: '30px' }}>
                     <StyledGrid>
@@ -1315,9 +1312,7 @@ class ProductSidebar extends React.Component {
 
                   <BottomButtons className='bottom-buttons'>
                     {!openGlobalAddForm && (
-                      <Button.Reset
-                        onClick={closePopup}
-                        data-test='settings_product_popup_reset_btn'>
+                      <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
                         <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                           {text => text}
                         </FormattedMessage>

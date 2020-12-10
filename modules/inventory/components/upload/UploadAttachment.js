@@ -7,7 +7,7 @@ import { Table, TableCell, Modal, Button } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import { FieldArray } from 'formik'
 //Components
-import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
+import File from '~/components/File/File'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 //Actions
 import { getDocumentTypes } from '~/modules/inventory/actions'

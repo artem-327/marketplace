@@ -10,7 +10,7 @@ import { Warning } from '@material-ui/icons'
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
-import AddCart from '~/src/pages/cart/components/AddCart'
+import AddCart from '~/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
@@ -642,20 +642,6 @@ class Listings extends Component {
       </Container>
     )
   }
-}
-
-Listings.propTypes = {
-  isMerchant: boolean,
-  isCompanyAdmin: boolean,
-  isOpenColumnSettingModal: boolean,
-  tutorialCompleted: boolean
-}
-
-Listings.defaultProps = {
-  isMerchant: false,
-  isCompanyAdmin: false,
-  tutorialCompleted: false,
-  isOpenColumnSettingModal: false
 }
 
 export default injectIntl(Listings)

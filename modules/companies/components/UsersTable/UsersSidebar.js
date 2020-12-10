@@ -36,7 +36,7 @@ import { debounce } from 'lodash'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
@@ -535,8 +535,10 @@ class UsersSidebar extends React.Component {
                           label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
                           name='jobTitle'
                           inputProps={{
-                            placeholder:
-                              formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
+                            placeholder: formatMessage({
+                              id: 'global.enterJobTitle',
+                              defaultMessage: 'Enter Job Title'
+                            })
                           }}
                         />
                       </GridColumn>
@@ -620,7 +622,10 @@ class UsersSidebar extends React.Component {
                               setFieldValue('additionalBranches', [])
                             },
                             loading: searchedCompaniesLoading,
-                            placeholder: formatMessage({ id: 'global.selectCompany', defaultMessage: 'Select Company' }),
+                            placeholder: formatMessage({
+                              id: 'global.selectCompany',
+                              defaultMessage: 'Select Company'
+                            }),
                             'data-test': 'admin_users_popup_company_drpdn'
                           }}
                         />
@@ -673,7 +678,10 @@ class UsersSidebar extends React.Component {
                         <Dropdown
                           label={
                             <>
-                              {formatMessage({ id: 'global.sellMarketSegments', defaultMessage: 'Sell Market Segment' })}
+                              {formatMessage({
+                                id: 'global.sellMarketSegments',
+                                defaultMessage: 'Sell Market Segment'
+                              })}
                             </>
                           }
                           name='sellMarketSegments'

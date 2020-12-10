@@ -6,7 +6,7 @@ import { withRouter } from 'next/router'
 import moment from 'moment/moment'
 
 import Orders from './Orders'
-import * as OrdersHelper from '~/src/helpers/Orders'
+import * as OrdersHelper from '~/components/helpers/Orders'
 import * as Actions from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'

@@ -41,14 +41,14 @@ const CustomButtonSubmit = styled(Button.Submit)`
     font-size: 1em;
     margin: 0 0.357142857em;
     padding: 9px 18px 9px;
-    border: none;    
+    border: none;
     background-color: #2599d5;
     color: #ffffff;
-    
+
     &:hover {
       background-color: #188ec9;
     }
-    
+
     &.disabled {
       background-color: #bde0f2;
       color: #ffffff;
@@ -99,7 +99,7 @@ const CustomDiv = styled.div`
 const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
   z-index: 1;
-  
+
   &.add-form {
     padding: 1.071428571em 2.142857143em !important;
     font-size: 14px;
@@ -115,12 +115,12 @@ const CustomHighSegment = styled(HighSegment)`
     font-size: 18px;
     vertical-align: middle;
   }
-  
+
   svg.title-icon {
     margin-left: 15px;
     color: #cecfd4;
   }
-  
+
   svg.close-icon {
     right: 0;
     position: absolute;
@@ -574,7 +574,7 @@ class PickUpLocationsSidebar extends React.Component {
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closeSidebar()}
+        onReset={() => (openGlobalAddForm ? openGlobalAddForm('') : closeSidebar())}
         onSubmit={this.submitHandler}
         loading={loading}>
         {formikProps => (
@@ -592,33 +592,31 @@ class PickUpLocationsSidebar extends React.Component {
                     <Loader />
                   </Dimmer>
                   <CustomHighSegment basic className={openGlobalAddForm ? 'add-form' : ''}>
-                    {openGlobalAddForm
-                      ? (
-                        <>
-                          <div>
-                            <span>
-                              <FormattedMessage id='createMenu.addWarehouse' defaultMessage='Add Warehouse' />
-                            </span>
-                            <Store className='title-icon' />
-                          </div>
-                          <div style={{ position: 'absolute', right: '20px' }}>
-                            <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
-                          </div>
-                        </>
-                      ) : (
-                        <CustomMenu pointing secondary>
-                          {tabs.map((tab, i) => (
-                            <Menu.Item
-                              key={tab.key}
-                              onClick={() => this.tabChanged(i)}
-                              active={editTab === i}
-                              disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
-                              {formatMessage(tab.text)}
-                            </Menu.Item>
-                          ))}
-                        </CustomMenu>
-                      )
-                    }
+                    {openGlobalAddForm ? (
+                      <>
+                        <div>
+                          <span>
+                            <FormattedMessage id='createMenu.addWarehouse' defaultMessage='Add Warehouse' />
+                          </span>
+                          <Store className='title-icon' />
+                        </div>
+                        <div style={{ position: 'absolute', right: '20px' }}>
+                          <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
+                        </div>
+                      </>
+                    ) : (
+                      <CustomMenu pointing secondary>
+                        {tabs.map((tab, i) => (
+                          <Menu.Item
+                            key={tab.key}
+                            onClick={() => this.tabChanged(i)}
+                            active={editTab === i}
+                            disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
+                            {formatMessage(tab.text)}
+                          </Menu.Item>
+                        ))}
+                      </CustomMenu>
+                    )}
                   </CustomHighSegment>
                 </div>
                 <FlexContent style={{ padding: '16px' }}>

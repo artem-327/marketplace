@@ -70,7 +70,7 @@ import { getSafe } from '~/utils/functions'
 
 import { errorMessages } from '~/constants/yupValidation'
 
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { normalizeTree, getBroadcast, getNodeStatus } from '~/modules/broadcast/utils'
 import CompanyInfo from './CompanyInfo'
 

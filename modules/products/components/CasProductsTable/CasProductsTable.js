@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Popup, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'

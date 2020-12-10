@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import NumberFormat from 'react-number-format'
 import moment from 'moment/moment'
 import { bool, objectOf, func, array } from 'prop-types'
 

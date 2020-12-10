@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import ProdexTable from '~/components/table'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 
 export default class Table extends Component {
   constructor(props) {

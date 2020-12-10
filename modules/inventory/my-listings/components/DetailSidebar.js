@@ -8,7 +8,7 @@ import { DateInput } from '~/components/custom-formik'
 import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { PriceField } from '~/styles/styledComponents'
 
@@ -2105,7 +2105,7 @@ class DetailSidebar extends Component {
                     </FlexTabs>
                     {openGlobalAddForm && (
                       <div style={{ position: 'absolute', right: '20px', top: '17px' }}>
-                        <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                        <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
                       </div>
                     )}
                   </HighSegment>

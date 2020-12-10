@@ -808,7 +808,7 @@ class Dashboard extends Component {
                                 fluid
                               />
                               {dateFromEdited ? (
-                                <span class='sui-error-message' style={{ position: 'absolute' }}>
+                                <span className='sui-error-message' style={{ position: 'absolute' }}>
                                   {formatMessage({
                                     id: 'dashboard.error.invalidDate',
                                     defaultMessage: 'Invalid Date'
@@ -858,7 +858,7 @@ class Dashboard extends Component {
                                 fluid
                               />
                               {dateToEdited ? (
-                                <span class='sui-error-message' style={{ position: 'absolute' }}>
+                                <span className='sui-error-message' style={{ position: 'absolute' }}>
                                   {formatMessage({
                                     id: 'dashboard.error.invalidDate',
                                     defaultMessage: 'Invalid Date'
@@ -887,6 +887,7 @@ class Dashboard extends Component {
                       <Grid.Column width={4}>
                         {quickFilters.map((item, index) => (
                           <QuickFilter
+                            key={index}
                             className={activeQuick === index + 1 ? 'active' : null}
                             onClick={() => this.filterQuickDate(++index)}>
                             {item}

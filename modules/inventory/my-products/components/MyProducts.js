@@ -7,7 +7,7 @@ import * as Actions from '~/modules/settings/actions'
 import { openPopup, handleProductCatalogUnmappedValue } from '../../actions'
 import Router from 'next/router'
 
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { injectIntl, FormattedNumber, FormattedMessage } from 'react-intl'
 import { debounce } from 'lodash'
 import { UnitOfPackaging } from '~/components/formatted-messages'
@@ -321,7 +321,10 @@ class MyProducts extends Component {
 
       default:
         popupText = (
-          <FormattedMessage id='global.productOk' defaultMessage='This product is being broadcasted to the marketplace' />
+          <FormattedMessage
+            id='global.productOk'
+            defaultMessage='This product is being broadcasted to the marketplace'
+          />
         )
         dispIcon = <Circle />
     }
@@ -351,7 +354,12 @@ class MyProducts extends Component {
   }
 
   getActionsByRow = row => {
-    const { intl: {formatMessage}, openPopup, deleteProduct, datagrid } = this.props
+    const {
+      intl: { formatMessage },
+      openPopup,
+      deleteProduct,
+      datagrid
+    } = this.props
 
     return [
       {
@@ -400,12 +408,8 @@ class MyProducts extends Component {
               }>
               <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(r), r)}</Dropdown.Menu>
             </RowDropdown>
-            <div style={{ marginRight: '8px' }}>
-              {this.getProductStatus(r.rawData)}
-            </div>
-            <SpanText onClick={() => openPopup(r.rawData)}>
-              {r.intProductName}
-            </SpanText>
+            <div style={{ marginRight: '8px' }}>{this.getProductStatus(r.rawData)}</div>
+            <SpanText onClick={() => openPopup(r.rawData)}>{r.intProductName}</SpanText>
           </DivRow>
         )
       }

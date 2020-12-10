@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 import { getSafe } from '~/utils/functions'
 import { downloadAttachment } from '~/modules/inventory/actions'
-import {Button, Dropdown, Icon} from 'semantic-ui-react'
+import { Button, Dropdown, Icon } from 'semantic-ui-react'
 
 import * as Actions from '../../actions'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { echoRowActions } from './constants'
-import {FileText, MoreVertical} from 'react-feather'
+import { FileText, MoreVertical } from 'react-feather'
 import styled from 'styled-components'
 import { Popup } from 'semantic-ui-react'
 
@@ -62,7 +62,7 @@ const RowDropdown = styled(Dropdown)`
     font-weight: bold;
     color: #2599d5;
   }
-  
+
   .dropdown.icon {
     display: none;
   }
@@ -125,12 +125,7 @@ class ProductCatalogTable extends Component {
               } // <div> has to be there otherwise popup will be not shown
             />
           ),
-          caption: (
-            <FormattedMessage
-              id='global.productStatusIcon'
-              defaultMessage='Product Status Icon'
-            />
-          ),
+          caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />,
           width: 40,
           align: 'center'
         },
@@ -207,7 +202,7 @@ class ProductCatalogTable extends Component {
     }
   }
 
-  getRowActions = (row) => {
+  getRowActions = row => {
     const {
       datagrid,
       intl: { formatMessage },
@@ -279,19 +274,15 @@ class ProductCatalogTable extends Component {
         ...row,
         name: (
           <DivRow>
-            <RowDropdown trigger={(
-                          <RowDropdownIcon>
-                            <MoreVertical />
-                          </RowDropdownIcon>
-                        )}
-            >
-              <Dropdown.Menu>
-                {this.getActionItems(this.getRowActions(row), row)}
-              </Dropdown.Menu>
+            <RowDropdown
+              trigger={
+                <RowDropdownIcon>
+                  <MoreVertical />
+                </RowDropdownIcon>
+              }>
+              <Dropdown.Menu>{this.getActionItems(this.getRowActions(row), row)}</Dropdown.Menu>
             </RowDropdown>
-            <SpanText onClick={() => editEchoProductChangeTab(0, true, { id: row.id })}>
-              {row.name}
-            </SpanText>
+            <SpanText onClick={() => editEchoProductChangeTab(0, true, { id: row.id })}>{row.name}</SpanText>
           </DivRow>
         ),
         publishedStatus: row.isPublished ? (
@@ -437,8 +428,7 @@ class ProductCatalogTable extends Component {
 
 const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
   const editedId =
-    (!!productsAdmin.currentAddForm || !!productsAdmin.currentEditForm) &&
-    productsAdmin.popupValues
+    (!!productsAdmin.currentAddForm || !!productsAdmin.currentEditForm) && productsAdmin.popupValues
       ? productsAdmin.popupValues.id
       : -1
 

@@ -5,11 +5,11 @@ import moment from 'moment'
 import Router from 'next/router'
 import { AlertCircle } from 'react-feather'
 //Components
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 import { getLocaleDateFormat } from '~/components/date-format'
-import AddCart from '~/src/pages/cart/components/AddCart'
+import AddCart from '~/components/AddCart'
 //Styles
 import {
   CapitalizedText,

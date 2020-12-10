@@ -3,7 +3,7 @@ import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 're
 import { Modal, Container, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
 import styled, { withTheme } from 'styled-components'
 
-import Spinner from '~/src/components/Spinner/Spinner'
+import Spinner from '~/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'

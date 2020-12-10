@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import { openPopup, deleteProductGroups } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
@@ -76,7 +76,7 @@ class ProductGroupsTable extends Component {
               console.error(e)
             }
           }),
-        disabled: row => this.props.editedId === row.id,
+        disabled: row => this.props.editedId === row.id
       }
     ]
   }
