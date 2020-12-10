@@ -45,7 +45,7 @@ const initialState = {
   tableHandlersFilters: null
 }
 
-export default function (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     /*
         case AT.ORDERS_FETCH_REQUESTED:

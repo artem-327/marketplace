@@ -119,7 +119,7 @@ function* reject(action) {
   }
 }
 
-export default function* () {
+export default function* orders() {
   yield takeLatest(AT.ORDERS_FETCH, getOrders) // Not used in Orders menu any more
   yield takeEvery(AT.ORDERS_DETAIL_FETCH, getOrder)
   yield takeEvery(AT.ORDER_CONFIRM_FETCH, confirm)
