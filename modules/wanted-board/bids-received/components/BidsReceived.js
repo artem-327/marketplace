@@ -34,8 +34,8 @@ const StyledDropdown = styled(Dropdown)`
 
 const CountedName = styled.div`
   display: flex;
-  alignitems: center;
-  flexdirection: row;
+  align-items: center;
+  flex-direction: row;
 
   > .ui.label {
     margin: -3px;
@@ -45,7 +45,10 @@ const CountedName = styled.div`
     color: #2599d5;
     border-radius: 2px;
     background-color: #b7e7ff;
+    cursor: pointer;
+
     &.cnt-0 {
+      cursor: default;
       color: #848893;
       border: solid 1px #dee2e6;
       background-color: #f8f9fb;
