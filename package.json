@@ -54,6 +54,8 @@
     "react-intl": "^2.8.0",
     "react-perfect-scrollbar": "^1.4.2",
     "react-plaid-link": "^3.0.0",
+    "react-query": "^2.26.4",
+    "react-query-devtools": "^2.6.3",
     "react-redux": "^5.1.1",
     "react-redux-form": "^1.16.10",
     "react-textarea-autosize": "^7.1.2",
