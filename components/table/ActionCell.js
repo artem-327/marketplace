@@ -88,17 +88,20 @@ class ActionCell extends Component {
 
   render() {
     const { getActions, leftContent, content, onContentClick, row, rightAlignedContent } = this.props
-    const actions = getActions(row)
+    const actions = getActions ? getActions(row) : null
     return (
       <DivRow>
-        <RowDropdown
-          trigger={
-            <RowDropdownIcon>
-              {actions && actions.length ? (<MoreVertical />) : null}
-            </RowDropdownIcon>
-          }>
-          <Dropdown.Menu>{this.getActionItems(actions, row)}</Dropdown.Menu>
-        </RowDropdown>
+        {getActions ? (
+          <RowDropdown
+            disabled={!actions.length}
+            trigger={
+              <RowDropdownIcon>
+                {actions && actions.length ? (<MoreVertical />) : null}
+              </RowDropdownIcon>
+            }>
+            <Dropdown.Menu>{this.getActionItems(actions, row)}</Dropdown.Menu>
+          </RowDropdown>
+        ) : null}
         {leftContent ? (<div style={{ marginRight: '8px' }}>{leftContent}</div>) : null}
         <SpanText
           {...(!!onContentClick && { onClick: (e) => onContentClick(e), className: 'clickable' })}
@@ -122,7 +125,7 @@ ActionCell.propTypes = {
 
 ActionCell.defaultProps = {
   row: {},
-  getActions: () => {},
+  getActions: null,
   leftContent: null,
   content: '',
   onContentClick: null,

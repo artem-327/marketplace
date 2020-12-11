@@ -4,6 +4,7 @@ import { Modal, Container, Icon, Button, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Spinner from '~/src/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { actions } from 'react-redux-form'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
@@ -63,7 +64,7 @@ class Orders extends Component {
           width: 100,
           align: 'right',
           sortPath: 'Order.id',
-          actions: this.getActionsOrdersList()
+          allowReordering: false
         },
         {
           name: 'globalStatus',
@@ -386,13 +387,18 @@ class Orders extends Component {
   getRows = () => {
     return this.props.rows.map(row => ({
       ...row,
+
       orderId: (
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {this.state.expandedRowIds.some(el => el === row.id) ? (
+        <ActionCell
+          row={row}
+          getActions={this.getActions}
+          content={row.id}
+          onContentClick={() => this.props.openOrderDetail(row.rawData)}
+          leftContent={
+            this.state.expandedRowIds.some(el => el === row.id) ? (
               <ChevronDown
                 size={20}
-                style={{ color: '#2599d5', cursor: 'pointer' }}
+                style={{ color: '#2599d5', cursor: 'pointer', marginLeft: '-6px' }}
                 onClick={e => {
                   e.stopPropagation()
                   const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
@@ -402,7 +408,7 @@ class Orders extends Component {
             ) : (
               <ChevronRight
                 size={20}
-                style={{ color: '#2599d5', cursor: 'pointer' }}
+                style={{ color: '#2599d5', cursor: 'pointer', marginLeft: '-6px' }}
                 onClick={e => {
                   e.stopPropagation()
                   let expandedRowIds = this.state.expandedRowIds.slice()
@@ -410,10 +416,9 @@ class Orders extends Component {
                   this.setState({ expandedRowIds })
                 }}
               />
-            )}
-          </div>
-          <div>{row.id}</div>
-        </div>
+            )
+          }
+        />
       ),
       productName: (
         <ArrayToFirstItem
@@ -672,7 +677,7 @@ class Orders extends Component {
     }
   }
 
-  getActionsOrdersList = () => {
+  getActions = () => {
     const {
       intl: { formatMessage }
     } = this.props
@@ -759,34 +764,35 @@ class Orders extends Component {
           {isFetching ? (
             <Spinner />
           ) : (
-            <ProdexGrid
-              tableName='operations_orders_grid'
-              columns={columns}
-              {...datagrid.tableProps}
-              loading={datagrid.loading || orderProcessing}
-              rows={this.getRows()}
-              treeDataType={true}
-              tableTreeColumn={'orderId'}
-              getChildRows={(row, rootRows) => {
-                return row ? row.orderItems : rootRows
-              }}
-              onRowClick={(_, row) => {
-                if (row.root && row.orderItems.length) {
-                  let ids = this.state.expandedRowIds.slice()
-                  if (ids.includes(row.id)) {
-                    //ids.filter(id => id === row.id)
-                    this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
-                  } else {
-                    ids.push(row.id)
-                    this.setState({ expandedRowIds: ids })
+            <div className='flex stretched tree-wrapper'>
+              <ProdexGrid
+                tableName='operations_orders_grid'
+                columns={columns}
+                {...datagrid.tableProps}
+                loading={datagrid.loading || orderProcessing}
+                rows={this.getRows()}
+                treeDataType={true}
+                tableTreeColumn={'orderId'}
+                getChildRows={(row, rootRows) => {
+                  return row ? row.orderItems : rootRows
+                }}
+                onRowClick={(_, row) => {
+                  if (row.root && row.orderItems.length) {
+                    let ids = this.state.expandedRowIds.slice()
+                    if (ids.includes(row.id)) {
+                      //ids.filter(id => id === row.id)
+                      this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
+                    } else {
+                      ids.push(row.id)
+                      this.setState({ expandedRowIds: ids })
+                    }
                   }
-                }
-              }}
-              expandedRowIds={this.state.expandedRowIds}
-              onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-              columnActions='orderId'
-              rowChildActions={[]}
-            />
+                }}
+                expandedRowIds={this.state.expandedRowIds}
+                onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
+                rowChildActions={[]}
+              />
+            </div>
           )}
         </Container>
       </div>
