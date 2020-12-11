@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { withDatagrid } from '~/modules/datagrid'
 
 import * as Actions from '~/modules/settings/actions'
@@ -13,7 +14,7 @@ import { debounce } from 'lodash'
 import { UnitOfPackaging } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
 import styled from 'styled-components'
-import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle, MoreVertical } from 'react-feather'
+import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle } from 'react-feather'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { CustomRowDiv } from '../../constants/layout'
 import ProductSidebar from './ProductSidebar'
@@ -40,59 +41,6 @@ const Circle = styled.div`
   background-color: #84c225;
   &.red {
     background-color: #f16844;
-  }
-`
-
-const DivRow = styled.div`
-  display: flex !important;
-
-  > div {
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
-  > span {
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-`
-
-const SpanText = styled.span`
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  overflow: hidden !important;
-  font-weight: 500;
-  cursor: pointer;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-`
-
-const RowDropdown = styled(Dropdown)`
-  display: block !important;
-  height: 100% !important;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-
-  .dropdown.icon {
-    display: none;
-  }
-`
-
-const RowDropdownIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  margin: 2px 0 2px -4px;
-
-  svg {
-    width: 16px !important;
-    height: 16px !important;
-    color: #848893 !important;
   }
 `
 
@@ -335,33 +283,18 @@ class MyProducts extends Component {
     )
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
-  getActionsByRow = row => {
+  getActions = () => {
     const { intl: {formatMessage}, openPopup, deleteProduct, datagrid } = this.props
 
     return [
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: () => openPopup(row.rawData)
+        callback: row => openPopup(row.rawData)
       },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-        disabled: () => this.props.editedId === row.id,
-        callback: () => {
+        disabled: row => this.props.editedId === row.id,
+        callback: row => {
           return confirm(
             formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
             formatMessage(
@@ -371,7 +304,7 @@ class MyProducts extends Component {
               },
               { item: row.rawData.intProductName }
             )
-          ).then(async () => {
+          ).then(async row => {
             try {
               await deleteProduct(row.id, row.intProductName)
               datagrid.removeRow(row.id)
@@ -391,22 +324,13 @@ class MyProducts extends Component {
       return {
         ...r,
         intProductName: (
-          <DivRow>
-            <RowDropdown
-              trigger={
-                <RowDropdownIcon>
-                  <MoreVertical />
-                </RowDropdownIcon>
-              }>
-              <Dropdown.Menu>{this.getActionItems(this.getActionsByRow(r), r)}</Dropdown.Menu>
-            </RowDropdown>
-            <div style={{ marginRight: '8px' }}>
-              {this.getProductStatus(r.rawData)}
-            </div>
-            <SpanText onClick={() => openPopup(r.rawData)}>
-              {r.intProductName}
-            </SpanText>
-          </DivRow>
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            content={r.intProductName}
+            onContentClick={() => openPopup(r.rawData)}
+            leftContent={this.getProductStatus(r.rawData)}
+          />
         )
       }
     })

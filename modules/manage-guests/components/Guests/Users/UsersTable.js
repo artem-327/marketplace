@@ -5,6 +5,7 @@ import moment from 'moment'
 
 import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-messages/'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { withDatagrid } from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
 import confirm from '~/src/components/Confirmable/confirm'
@@ -32,7 +33,7 @@ class UsersTable extends Component {
           ),
           sortPath: 'User.name',
           width: 300,
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'jobTitle',
@@ -131,6 +132,22 @@ class UsersTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+            onContentClick={() => this.props.openPopup(row.rawData)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const {
       rows,
@@ -144,17 +161,18 @@ class UsersTable extends Component {
 
     return (
       <React.Fragment>
-        <ProdexGrid
-          tableName='manage_guests_users'
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          columns={columns}
-          rows={rows}
-          loading={datagrid.loading || loading}
-          style={{ marginTop: '5px' }}
-          columnActions={'name'}
-          editingRowId={editedId}
-        />
+        <div className='flex stretched listings-wrapper'>
+          <ProdexGrid
+            tableName='manage_guests_users'
+            {...datagrid.tableProps}
+            filterValue={filterValue}
+            columns={columns}
+            rows={this.getRows(rows)}
+            loading={datagrid.loading || loading}
+            style={{ marginTop: '5px' }}
+            editingRowId={editedId}
+          />
+        </div>
       </React.Fragment>
     )
   }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation } from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage } from 'react-intl'
@@ -21,7 +22,7 @@ class Table extends Component {
             </FormattedMessage>
           ),
           sortPath: 'DocumentType.name',
-          actions: this.getActions()
+          allowReordering: false
         }
       ]
     }
@@ -64,21 +65,37 @@ class Table extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+
+      return {
+        ...row,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+            onContentClick={row.editable ? () => this.props.openEditPopup(row) : null}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { loading, rows, datagrid, filterValue } = this.props
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexTable
           tableName='admin_document_types'
           {...datagrid.tableProps}
           filterValue={filterValue}
           loading={datagrid.loading || loading}
           columns={this.state.columns}
-          rows={rows}
-          columnActions='name'
+          rows={this.getRows(rows)}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }
