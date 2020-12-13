@@ -332,7 +332,7 @@ export const datagridValues = {
   conforming: {
     paths: [paths.wantedBoard.conforming],
     description: 'Condition',
-    operator: operators.LIKE,
+    operator: operators.EQUALS,
 
     toFilter: function (values) {
       let parsed = JSON.parse(values)
@@ -472,7 +472,7 @@ export const datagridValues = {
   maximumPricePerUOM: {
     paths: [paths.wantedBoard.maximumPricePerUOM],
     description: 'Maximum Price per UOM',
-    operator: operators.EQUALS,
+    operator: operators.LESS_THAN_OR_EQUAL_TO,
 
     toFilter: function (values) {
       return {

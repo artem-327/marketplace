@@ -128,7 +128,8 @@ class PurchaseOrder extends Component {
     submitting: false,
     addressId: 'deliveryAddressId',
     shippingQuotes: [],
-    selectedAddress: ''
+    selectedAddress: '',
+    isSetShippingQuoteId: false
   }
   componentDidMount = async () => {
     const { preFilledValues, clearPreFilledValues, getWarehouses, paymentProcessor } = this.props
@@ -166,6 +167,12 @@ class PurchaseOrder extends Component {
 
       clearPreFilledValues()
     }
+
+    const shippingQuoteId = getSafe(() => Router.router.query.shippingQuoteId, '')
+    if (shippingQuoteId) {
+      this.formikProps.setFieldValue('shipmentQuoteId', shippingQuoteId)
+      this.setState({ isSetShippingQuoteId: true })
+    }
   }
 
   handleQuoteSelect = index => {
@@ -179,6 +186,8 @@ class PurchaseOrder extends Component {
 
   getAddress = selectedAddressId => {
     let { deliveryAddresses, warehouses, branches, cart } = this.props
+    const { isSetShippingQuoteId } = this.state
+
     let addresses = []
     if (deliveryAddresses.length) {
       addresses = deliveryAddresses
@@ -201,7 +210,7 @@ class PurchaseOrder extends Component {
       },
       () => {
         this.props.shippingChanged(this.state.selectedAddress)
-        if (!cart.weightLimitExceed) this.getShippingQuotes(this.state.selectedAddress)
+        if (!cart.weightLimitExceed && !isSetShippingQuoteId) this.getShippingQuotes(this.state.selectedAddress)
       }
     )
   }
@@ -354,6 +363,8 @@ class PurchaseOrder extends Component {
       closeSidebarAddress,
       openSidebarAddress
     } = this.props
+    const { isSetShippingQuoteId } = this.state
+
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
 
@@ -441,7 +452,7 @@ class PurchaseOrder extends Component {
                         </VerticalUnpaddedColumn>
                       </StyledRow>
 
-                      {!cart.weightLimitExceed && this.state.selectedAddress ? (
+                      {!cart.weightLimitExceed && this.state.selectedAddress && !isSetShippingQuoteId ? (
                         <SemanticContainer className='flex stretched' style={{ maxHeight: '220px' }}>
                           <QuoteRow className='flex stretched'>
                             <ShippingQuote
@@ -474,7 +485,7 @@ class PurchaseOrder extends Component {
                           </GridRow>
                         )
                       )}
-                      {cart.weightLimitExceed && this.state.selectedAddress && (
+                      {cart.weightLimitExceed && this.state.selectedAddress && !isSetShippingQuoteId && (
                         <>
                           <GridRow>
                             <GridColumn computer={16}>
@@ -505,6 +516,7 @@ class PurchaseOrder extends Component {
                       {getSafe(() => shippingQuotes.rates, []).length === 0 &&
                         this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
+                        !isSetShippingQuoteId &&
                         !cart.weightLimitExceed && (
                           <GridRow>
                             <GridColumn computer={16}>
@@ -530,6 +542,7 @@ class PurchaseOrder extends Component {
                         )}
                       {this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
+                        !isSetShippingQuoteId &&
                         (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
                           <>
                             <TopUnpaddedRow>
@@ -565,7 +578,7 @@ class PurchaseOrder extends Component {
                             )}
                             <VerticalUnpaddedRow>
                               <VerticalUnpaddedColumn computer={16}>
-                                <Header as='h2'>
+                                <Header as='h2' style={{ paddingTop: isSetShippingQuoteId ? '14px' : '0' }}>
                                   <FormattedMessage
                                     id='cart.quoteReceived'
                                     defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'

@@ -95,7 +95,8 @@ function mapStateToProps(store, { datagrid }) {
     isProductInfoOpen: store.companyProductInfo.isOpen,
     isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
     isCompanyAdmin: getSafe(() => store.auth.identity.isCompanyAdmin, false),
-    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
+    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
+    isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false)
   }
 }
 

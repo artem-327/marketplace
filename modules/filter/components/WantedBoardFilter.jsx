@@ -699,35 +699,40 @@ class WantedBoardFilter extends Component {
         </GridRow>
 
         <GridRow>
-          {false && (
-            <GridColumn width={8}>
-              <FormattedMessage id='filter.condition' defaultMessage='Condition' />
-              <Dropdown
-                name='conforming'
-                options={[
-                  {
-                    key: 1,
-                    text: formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' }),
-                    value:
-                      `{"value":"TRUE","name":"${formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' })}"}`
-                  },
-                  {
-                    key: 2,
-                    text: formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' }),
-                    value:
-                      `{"value":"FALSE","name":"${formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' })}"}`
-                  },
-                ]}
-                selection
-                inputProps={{
-                  fluid: true,
-                  clearable: true,
-                  upward: true,
-                  placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
-                }}
-              />
-            </GridColumn>
-          )}
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.condition' defaultMessage='Condition' />
+            <Dropdown
+              name='conforming'
+              options={[
+                {
+                  key: 1,
+                  text: formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' }),
+                  value:
+                    `{"value":"true","name":"${formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' })}"}`
+                },
+                {
+                  key: 2,
+                  text: formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' }),
+                  value:
+                    `{"value":"false","name":"${formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' })}"}`
+                },
+              ]}
+              selection
+              inputProps={{
+                fluid: true,
+                clearable: true,
+                upward: true,
+                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
+              }}
+            />
+          </GridColumn>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.form' defaultMessage='Form' />
+            {productFormsDropdown}
+          </GridColumn>
+        </GridRow>
+
+        <GridRow>
           <GridColumn width={8}>
             <FormattedMessage id='filter.percentage' />
             <SmallGrid>
@@ -761,49 +766,6 @@ class WantedBoardFilter extends Component {
               </GridRow>
             </SmallGrid>
           </GridColumn>
-
-          <GridColumn width={8}>
-            <FormattedMessage id='filter.form' defaultMessage='Form' />
-            {productFormsDropdown}
-          </GridColumn>
-        </GridRow>
-
-        <GridRow>
-          {false && (
-            <GridColumn width={8}>
-              <FormattedMessage id='filter.percentage' />
-              <SmallGrid>
-                <GridRow>
-                  <GridColumn width={8}>
-                    {this.inputWrapper(
-                      'assayFrom',
-                      {
-                        type: 'number',
-                        placeholder: '0.00',
-                        label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
-                        labelPosition: 'left',
-                        fluid: true
-                      },
-                      '%'
-                    )}
-                  </GridColumn>
-                  <GridColumn width={8}>
-                    {this.inputWrapper(
-                      'assayTo',
-                      {
-                        type: 'number',
-                        placeholder: '0.00',
-                        label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
-                        labelPosition: 'left',
-                        fluid: true
-                      },
-                      '%'
-                    )}
-                  </GridColumn>
-                </GridRow>
-              </SmallGrid>
-            </GridColumn>
-          )}
         </GridRow>
       </PopupGrid>
     )
@@ -1078,7 +1040,7 @@ WantedBoardFilter.defaultProps = {
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
   getOriginUrl: '/prodex/api/countries',
-  savedUrl: '/prodex/api/purchase-requests/other/datagrid/saved-filters',
+  savedUrl: '/prodex/api/purchase-requests/own/datagrid/saved-filters',
   searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${text}`,
   onApply: filter => {},
   onClear: () => {},

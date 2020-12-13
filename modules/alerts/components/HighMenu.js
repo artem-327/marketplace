@@ -160,6 +160,7 @@ class HighMenu extends Component {
   }
 
   handleResize() {
+    if (!(this.refMenu && this.refMenu.current)) return
     let notificationsMenu = this.refMenu.current.children[0]
     const dotsSpace = 20
     const menuStyles = window.getComputedStyle(notificationsMenu)

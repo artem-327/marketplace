@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import confirm from '~/src/components/Confirmable/confirm'
 
@@ -18,7 +19,7 @@ export default class Table extends Component {
             </FormattedMessage>
           ),
           sortPath: 'NmfcNumber.prefix',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'description',
@@ -73,20 +74,38 @@ export default class Table extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        code: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.code}
+            onContentClick={() => this.props.openEditPopup(row)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
-    const { config, loading, datagrid, filterValue } = this.props
+    const { config, loading, datagrid, filterValue, rows } = this.props
 
     const { tableName } = config
 
     return (
-      <ProdexTable
-        tableName={tableName}
-        {...datagrid.tableProps}
-        filterValue={filterValue}
-        loading={datagrid.loading || loading}
-        columns={this.state.columns}
-        columnActions='code'
-      />
+      <div className='flex stretched listings-wrapper'>
+        <ProdexTable
+          tableName={tableName}
+          {...datagrid.tableProps}
+          filterValue={filterValue}
+          loading={datagrid.loading || loading}
+          columns={this.state.columns}
+          rows={this.getRows(datagrid.tableProps.rows)}
+        />
+      </div>
     )
   }
 }

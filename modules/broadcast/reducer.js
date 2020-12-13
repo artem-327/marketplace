@@ -4,6 +4,7 @@ import { getSafe } from '~/utils/functions'
 import {
   openBroadcast,
   closeBroadcast,
+  switchTemplateModal,
   updateFilter,
   saveRules,
   switchMode,
@@ -46,7 +47,8 @@ const initialState = {
   mode: 'client', // price
   isOpenModalCompanyInfo: false,
   dataCompanyInfo: {},
-  isLoadingModalCompanyInfo: false
+  isLoadingModalCompanyInfo: false,
+  isOpenTemplateModal: false
 }
 
 export default typeToReducer(
@@ -80,6 +82,13 @@ export default typeToReducer(
         open: false,
         data: null,
         loading: false
+      }
+    },
+
+    [switchTemplateModal]: (state, { payload: { isOpenTemplateModal } }) => {
+      return {
+        ...state,
+        isOpenTemplateModal
       }
     },
 
@@ -120,7 +129,8 @@ export default typeToReducer(
     [saveTemplate.fulfilled]: (state, { payload }) => ({
       ...state,
       templateSaving: false,
-      templates: state.templates.concat(payload)
+      templates: state.templates.concat(payload),
+      isOpenTemplateModal: false
     }),
 
     [saveTemplate.rejected]: state => ({
@@ -171,7 +181,8 @@ export default typeToReducer(
 
     [updateTemplate.fulfilled]: state => ({
       ...state,
-      templateSaving: false
+      templateSaving: false,
+      isOpenTemplateModal: false
     }),
 
     [updateTemplate.rejected]: state => ({
