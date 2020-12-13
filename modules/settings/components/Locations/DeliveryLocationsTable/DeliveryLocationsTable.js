@@ -1,17 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
 import ProdexGrid from '~/components/table'
 import confirm from '~/components/Confirmable/confirm'
+import ActionCell from '~/components/table/ActionCell'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
-
-// import { TablePopUp } from '~/components/tablePopup'
-
 import { getSafe } from '~/utils/functions'
-
 import { getDeliveryAddressesByFilterRequest, deleteDeliveryAddress, openSidebar } from '../../../actions'
-import Router from 'next/router'
 
 class DeliveryAddressesTable extends Component {
   constructor(props) {
@@ -28,7 +23,7 @@ class DeliveryAddressesTable extends Component {
           ),
           width: 330,
           sortPath: 'DeliveryAddress.address.streetAddress',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'city',
@@ -108,24 +103,41 @@ class DeliveryAddressesTable extends Component {
     ]
   }
 
+  getRows = () => {
+    return this.props.rows.map(row => {
+      return {
+        ...row,
+        streetAddress: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.streetAddress}
+            onContentClick={() => this.props.openSidebar(row.rawData)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
-    const { datagrid, rows, loading, intl, editedId } = this.props
+    const { datagrid, loading, intl, editedId } = this.props
 
     let { columns } = this.state
 
     return (
       <React.Fragment>
-        <ProdexGrid
-          tableName='settings_delivery_address'
-          {...datagrid.tableProps}
-          // filterValue={filterValue}
-          columns={columns}
-          rows={rows}
-          loading={datagrid.loading || loading}
-          style={{ marginTop: '5px' }}
-          columnActions='streetAddress'
-          editingRowId={editedId}
-        />
+        <div className='flex stretched listings-wrapper'>
+          <ProdexGrid
+            tableName='settings_delivery_address'
+            {...datagrid.tableProps}
+            // filterValue={filterValue}
+            columns={columns}
+            rows={this.getRows()}
+            loading={datagrid.loading || loading}
+            style={{ marginTop: '5px' }}
+            editingRowId={editedId}
+          />
+        </div>
       </React.Fragment>
     )
   }
@@ -148,9 +160,7 @@ const mapStateToProps = (state, { datagrid }) => {
         rawData: d, // all row data, used for edit popup
         streetAddressString: streetAddress,
         id: d.id,
-        streetAddress: (
-          <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{streetAddress}</div>
-        ),
+        streetAddress: streetAddress,
         city: getSafe(() => d.address.city, ''),
         province: getSafe(() => d.address.province.name, ''),
         country: getSafe(() => d.address.country.name, ''),

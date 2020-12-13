@@ -4,6 +4,7 @@ import confirm from '~/components/Confirmable/confirm'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { getSafe } from '~/utils/functions'
 import { downloadAttachment } from '~/modules/inventory/actions'
 import { Button, Dropdown, Icon } from 'semantic-ui-react'
@@ -17,17 +18,6 @@ import { FileText, MoreVertical } from 'react-feather'
 import styled from 'styled-components'
 import { Popup } from 'semantic-ui-react'
 
-const FileTextIcon = styled(FileText)`
-  display: block;
-  width: 20px;
-  height: 20px;
-  margin: 0 auto;
-  vertical-align: top;
-  font-size: 20px;
-  color: #848893;
-  line-height: 20px;
-`
-
 const Circle = styled.div`
   width: 14px;
   height: 14px;
@@ -37,51 +27,6 @@ const Circle = styled.div`
   &.red {
     background-color: #f16844;
   }
-`
-
-const SpanText = styled.span`
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  overflow: hidden !important;
-  font-weight: 500;
-  cursor: pointer;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-`
-
-const RowDropdown = styled(Dropdown)`
-  display: block !important;
-  height: 100% !important;
-  margin-left: 2px;
-  margin-right: 8px;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-
-  .dropdown.icon {
-    display: none;
-  }
-`
-
-const RowDropdownIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  margin: 2px 0 2px -4px;
-
-  svg {
-    width: 16px !important;
-    height: 16px !important;
-    color: #848893 !important;
-  }
-`
-
-const DivRow = styled.div`
-  display: flex !important;
 `
 
 class ProductCatalogTable extends Component {
@@ -103,7 +48,7 @@ class ProductCatalogTable extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 150,
+          width: 250,
           sortPath: 'CompanyGenericProduct.name',
           allowReordering: false
         },
@@ -202,7 +147,7 @@ class ProductCatalogTable extends Component {
     }
   }
 
-  getRowActions = row => {
+  getActions = row => {
     const {
       datagrid,
       intl: { formatMessage },
@@ -249,21 +194,6 @@ class ProductCatalogTable extends Component {
     ]
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = rows => {
     const {
       editEchoProductChangeTab,
@@ -273,47 +203,44 @@ class ProductCatalogTable extends Component {
       return {
         ...row,
         name: (
-          <DivRow>
-            <RowDropdown
-              trigger={
-                <RowDropdownIcon>
-                  <MoreVertical />
-                </RowDropdownIcon>
-              }>
-              <Dropdown.Menu>{this.getActionItems(this.getRowActions(row), row)}</Dropdown.Menu>
-            </RowDropdown>
-            <SpanText onClick={() => editEchoProductChangeTab(0, true, { id: row.id })}>{row.name}</SpanText>
-          </DivRow>
-        ),
-        publishedStatus: row.isPublished ? (
-          <Popup
-            size='small'
-            header={
-              <FormattedMessage
-                id='global.productOk'
-                defaultMessage='This product is being broadcasted to the marketplace'
-              />
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+            onContentClick={() => editEchoProductChangeTab(0, true, { id: row.id })}
+            leftContent={
+              row.isPublished ? (
+                <Popup
+                  size='small'
+                  header={
+                    <FormattedMessage
+                      id='global.productOk'
+                      defaultMessage='This product is being broadcasted to the marketplace'
+                    />
+                  }
+                  trigger={
+                    <div>
+                      <Circle />
+                    </div>
+                  } // <div> has to be there otherwise popup will be not shown
+                />
+              ) : (
+                <Popup
+                  size='small'
+                  header={
+                    <FormattedMessage
+                      id='global.notPublished'
+                      defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace'
+                    />
+                  }
+                  trigger={
+                    <div>
+                      <Circle className='red' />
+                    </div>
+                  } // <div> has to be there otherwise popup will be not shown
+                />
+              )
             }
-            trigger={
-              <div>
-                <Circle />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
-          />
-        ) : (
-          <Popup
-            size='small'
-            header={
-              <FormattedMessage
-                id='global.notPublished'
-                defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace'
-              />
-            }
-            trigger={
-              <div>
-                <Circle className='red' />
-              </div>
-            } // <div> has to be there otherwise popup will be not shown
           />
         ),
         sds:
@@ -409,7 +336,7 @@ class ProductCatalogTable extends Component {
 
     return (
       <React.Fragment>
-        <div className='products-wrapper'>
+        <div className='flex stretched listings-wrapper'>
           <ProdexTable
             tableName='admin_product-catalog'
             {...datagrid.tableProps}

@@ -13,11 +13,13 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import { debounce } from 'lodash'
 import { getSafe } from '~/utils/functions'
 import { CustomRowDiv } from '../../constants/layout'
+import ActionCell from '~/components/table/ActionCell'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { SubmitOffer } from '../../listings/components/SubmitOffer/index'
 import SearchInput from '../../components/SearchInput'
 import { statusFilterList } from '../../constants/constants'
 import styled from 'styled-components'
+import { MoreVertical } from 'react-feather'
 
 const StyledDropdown = styled(Dropdown)`
   z-index: 501 !important;
@@ -26,6 +28,13 @@ const StyledDropdown = styled(Dropdown)`
   input.search {
     height: auto !important;
   }
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
 `
 
 class BidsSent extends Component {
@@ -42,7 +51,7 @@ class BidsSent extends Component {
             </FormattedMessage>
           ),
           width: 375,
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'fobPrice',
@@ -227,7 +236,7 @@ class BidsSent extends Component {
     ]
   }
 
-  getRows = () => {
+  getFilteredRows = () => {
     const { rows } = this.props
 
     switch (this.state.filterValues.statusFilter) {
@@ -255,6 +264,21 @@ class BidsSent extends Component {
       default:
         return rows
     }
+  }
+
+  getRows = () => {
+    return this.getFilteredRows().map(r => {
+      return {
+        ...r,
+        product: (
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            content={r.product}
+          />
+        )
+      }
+    })
   }
 
   renderContent = () => {
@@ -297,7 +321,7 @@ class BidsSent extends Component {
             <ColumnSettingButton />
           </CustomRowDiv>
         </div>
-        <div className='flex stretched' style={{ padding: '10px 0' }}>
+        <div className='flex stretched listings-wrapper' style={{ padding: '10px 0' }}>
           <ProdexGrid
             tableName='my_offers_grid'
             {...datagrid.tableProps}
@@ -306,7 +330,6 @@ class BidsSent extends Component {
             columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
-            columnActions='product'
             editingRowId={editedId}
           />
         </div>

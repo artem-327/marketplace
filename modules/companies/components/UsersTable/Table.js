@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import {
   deleteUser,
   getUsersMe,
@@ -38,7 +39,7 @@ class UsersTable extends Component {
           ),
           width: 180,
           sortPath: 'User.name',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'companyName',
@@ -159,21 +160,36 @@ class UsersTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+            onContentClick={() => this.props.openSidebar(row)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { loading, rows, datagrid, editedId } = this.props
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexTable
           tableName={'admin_users'}
           {...datagrid.tableProps}
           loading={datagrid.loading || loading}
           columns={this.state.columns}
-          rows={rows}
-          columnActions='name'
+          rows={this.getRows(rows)}
           editingRowId={editedId}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

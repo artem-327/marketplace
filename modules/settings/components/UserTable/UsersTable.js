@@ -24,6 +24,7 @@ import {
 } from '../../actions'
 
 import { Checkbox, Popup, Label, List, Icon } from 'semantic-ui-react'
+import ActionCell from '~/components/table/ActionCell'
 
 const handleSwitchEnabled = id => {
   userSwitchEnableDisable(id)
@@ -42,7 +43,7 @@ class UsersTable extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'jobTitle',
@@ -182,6 +183,30 @@ class UsersTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    const { primaryUserId } = this.props
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={
+              row.id === primaryUserId ? (
+                <>
+                  <Icon name='user crown' style={{ color: '#2599d5' }} />
+                  {row.name}
+                </>
+              ) : row.name
+            }
+            onContentClick={() => this.props.openSidebar(row.rawData)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { rows, filterValue, loading, intl, datagrid, editedId } = this.props
 
@@ -190,17 +215,18 @@ class UsersTable extends Component {
 
     return (
       <React.Fragment>
-        <ProdexGrid
-          tableName='settings_users'
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          columns={columns}
-          rows={rows}
-          loading={datagrid.loading || loading}
-          style={{ marginTop: '5px' }}
-          columnActions='name'
-          editingRowId={editedId}
-        />
+        <div className='flex stretched listings-wrapper'>
+          <ProdexGrid
+            tableName='settings_users'
+            {...datagrid.tableProps}
+            filterValue={filterValue}
+            columns={columns}
+            rows={this.getRows(rows)}
+            loading={datagrid.loading || loading}
+            style={{ marginTop: '5px' }}
+            editingRowId={editedId}
+          />
+        </div>
       </React.Fragment>
     )
   }
@@ -254,20 +280,13 @@ const userEnableDisableStatus = (r, currentUserId) => {
 const mapStateToProps = (state, { datagrid }) => {
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
+    primaryUserId: getSafe(() => state.auth.identity.company.primaryUser.id, ''),
     rows: datagrid.rows.map(user => {
       const isCompanyAdmin = (user.roles || []).some(role => role.id === 2)
 
       return {
         rawData: user,
-        name:
-          user.id === getSafe(() => state.auth.identity.company.primaryUser.id, '') ? (
-            <>
-              <Icon name='user crown' style={{ color: '#2599d5' }} />
-              <span style={{ fontWeight: '500' }}>{user.name}</span>
-            </>
-          ) : (
-            <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</div>
-          ),
+        name: user.name,
         jobTitle: user.jobTitle || '',
         email: user.email,
         phone: user.phone || '',

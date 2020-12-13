@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import confirm from '~/components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
@@ -31,7 +32,7 @@ class ShippingQuotesTable extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          actions: this.getActions(),
+          allowReordering: false,
           width: 400
         },
         {
@@ -119,24 +120,32 @@ class ShippingQuotesTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        quoteId: <ActionCell row={row} getActions={this.getActions} content={row.quoteId} />
+      }
+    })
+  }
+
   render() {
     const { datagrid, rows, filterValue, loading } = this.props
 
     let { columns } = this.state
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexGrid
           tableName='operations_shipping_quotes'
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={columns}
-          rows={rows}
+          rows={this.getRows(rows)}
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
-          columnActions='carrierName'
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

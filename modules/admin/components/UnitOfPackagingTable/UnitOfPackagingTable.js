@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import {
   getDataRequest,
   openEditPopup,
@@ -27,7 +28,7 @@ class UnitOfPackagingTable extends Component {
             </FormattedMessage>
           ),
           sortPath: 'PackagingType.name',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'measureType',
@@ -76,23 +77,38 @@ class UnitOfPackagingTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+            onContentClick={() => this.props.openEditPopup(row)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { loading, rows, datagrid, filterValue } = this.props
 
     const { tableName } = this.props.config
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexTable
           tableName={tableName}
           {...datagrid.tableProps}
           filterValue={filterValue}
           loading={datagrid.loading || loading}
           columns={this.state.columns}
-          rows={rows}
-          columnActions='name'
+          rows={this.getRows(rows)}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

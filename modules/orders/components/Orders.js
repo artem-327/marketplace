@@ -5,6 +5,7 @@ import styled, { withTheme } from 'styled-components'
 
 import Spinner from '~/components/Spinner/Spinner'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { filterPresets } from '~/modules/filter/constants/filter'
 import { currency } from '~/constants/index'
@@ -305,7 +306,7 @@ class Orders extends Component {
         ),
         width: 200,
         sortPath: 'Order.id',
-        actions: this.getActionsOrdersList()
+        allowReordering: false
       },
       {
         name: 'customerName',
@@ -371,12 +372,23 @@ class Orders extends Component {
   }
 
   getRows = () => {
-    const { currentTab } = this.props
+    const { currentTab, router } = this.props
     let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
 
     return this.props.rows.map(row => ({
       ...row,
-      orderId: <div>{row.id}</div>,
+      orderId: (
+        <ActionCell
+          row={row}
+          getActions={this.getActionsByRow}
+          content={row.id}
+          onContentClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
+          }}
+        />
+      ),
       productName: (
         <ArrayToFirstItem
           values={
@@ -835,7 +847,7 @@ class Orders extends Component {
     ]
   }
 
-  getActionsOrdersList = () => {
+  getActionsByRow = () => {
     const {
       currentTab,
       router,
@@ -1093,7 +1105,6 @@ class Orders extends Component {
                 onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
                 // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
                 defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
-                columnActions='orderId'
                 estimatedRowHeight={1000}
               />
             </div>

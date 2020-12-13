@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 
@@ -43,25 +44,40 @@ class DataTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+            onContentClick={() => this.props.openEditPopup(row)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { loading, rows, datagrid, filterValue } = this.props
 
     const { tableName } = this.props.config
     const { columns } = this.props.config.display
-    columns[0].actions = this.getActions()
+    columns[0].allowReordering = false
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexTable
           tableName={tableName}
           {...datagrid.tableProps}
           filterValue={filterValue}
           loading={datagrid.loading || loading}
           columns={columns}
-          rows={rows}
-          columnActions='name'
+          rows={this.getRows(rows)}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

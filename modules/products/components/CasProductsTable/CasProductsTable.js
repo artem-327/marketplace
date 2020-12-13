@@ -5,6 +5,7 @@ import { Popup, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import {
   openPopup,
   openEditAltNamesCasPopup,
@@ -30,7 +31,7 @@ class CasProductsTable extends Component {
           ),
           width: 375,
           sortPath: 'CasProduct.casIndexName',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'casNumber',
@@ -92,25 +93,41 @@ class CasProductsTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      const { hazardClassesLabeled, ...rest } = row
+      return {
+        ...row,
+        casIndexName: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.casIndexName}
+            onContentClick={() => this.props.openPopup(rest)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { datagrid, rows, editedId } = this.props
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexTable
           {...datagrid.tableProps}
           tableName='admin_cas_products'
           columns={this.state.columns}
-          rows={rows}
+          rows={this.getRows(rows)}
           defaultSorting={{
             columnName: 'casIndexName',
             sortPath: 'CasProduct.casIndexName',
             direction: 'asc'
           }}
-          columnActions='casIndexName'
           editingRowId={editedId}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

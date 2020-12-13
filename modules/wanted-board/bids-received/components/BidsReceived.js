@@ -9,6 +9,7 @@ import { debounce } from 'lodash'
 
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import confirm from '~/components/Confirmable/confirm'
 import DetailSidebar from './DetailSidebar'
@@ -33,17 +34,21 @@ const StyledDropdown = styled(Dropdown)`
 
 const CountedName = styled.div`
   display: flex;
-  alignitems: center;
-  flexdirection: row;
+  align-items: center;
+  flex-direction: row;
 
   > .ui.label {
-    margin: 0;
+    margin: -3px;
+    top: 1px;
     font-weight: normal;
     font-size: 12px;
     color: #2599d5;
     border-radius: 2px;
     background-color: #b7e7ff;
+    cursor: pointer;
+
     &.cnt-0 {
+      cursor: default;
       color: #848893;
       border: solid 1px #dee2e6;
       background-color: #f8f9fb;
@@ -77,7 +82,7 @@ class BidsReceived extends Component {
             </FormattedMessage>
           ),
           width: 304,
-          actions: this.getActions()
+          allowReordering: false
           //align: 'right',
           //sortPath: 'ProductOffer.pkgAvailable'
         },
@@ -473,40 +478,60 @@ class BidsReceived extends Component {
       const offersLength = filteredPurchaseRequestOffers.length
       return {
         ...row,
-        purchaseRequestOffers: filteredPurchaseRequestOffers,
+        purchaseRequestOffers: filteredPurchaseRequestOffers.map(rowOffer => ({
+          ...rowOffer,
+          product: (
+            <ActionCell
+              row={rowOffer}
+              getActions={this.getActions}
+              content={row.product}
+            />
+          )
+        })),
         product: (
-          <CountedName>
-            <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
-            <div style={{ width: '30px', height: '20px', padding: '5px' }}>
-              {offersLength ? (
-                this.state.expandedRowIds.some(el => el === row.id) ? (
-                  <ChevronDown
-                    size={20}
-                    style={{ color: '#2599d5', cursor: 'pointer' }}
-                    onClick={e => {
-                      e.stopPropagation()
-                      const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
-                      this.setState({ expandedRowIds })
-                    }}
-                  />
-                ) : (
-                  <ChevronRight
-                    size={20}
-                    style={{ color: '#2599d5', cursor: 'pointer' }}
-                    onClick={e => {
-                      e.stopPropagation()
-                      let expandedRowIds = this.state.expandedRowIds.slice()
-                      expandedRowIds.push(row.id)
-                      this.setState({ expandedRowIds })
-                    }}
-                  />
-                )
-              ) : (
-                <div style={{ padding: '0 10px' }} />
-              )}
-            </div>
-            {row.product}
-          </CountedName>
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.product}
+            onContentClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              this.props.sidebarDetailTrigger(row, 'bids-received')
+            }}
+            leftContent={
+              <CountedName>
+                <Label className={`cnt-${offersLength}`}>{offersLength}</Label>
+                <div style={{ width: '25px', height: '20px', padding: '0 5px' }}>
+                  {offersLength ? (
+                    this.state.expandedRowIds.some(el => el === row.id) ? (
+                      <ChevronDown
+                        size={20}
+                        style={{ color: '#2599d5', cursor: 'pointer' }}
+                        onClick={e => {
+                          e.stopPropagation()
+                          const expandedRowIds = this.state.expandedRowIds.filter(id => id !== row.id)
+                          this.setState({ expandedRowIds })
+                        }}
+                      />
+                    ) : (
+                      <ChevronRight
+                        size={20}
+                        style={{ color: '#2599d5', cursor: 'pointer' }}
+                        onClick={e => {
+                          e.stopPropagation()
+                          let expandedRowIds = this.state.expandedRowIds.slice()
+                          expandedRowIds.push(row.id)
+                          this.setState({ expandedRowIds })
+                        }}
+                      />
+                    )
+                  ) : (
+                    <div style={{ padding: '0 10px' }} />
+                  )}
+                </div>
+              </CountedName>
+            }
+          />
         ),
         casNumber: (
           <CountedName>
@@ -611,7 +636,7 @@ class BidsReceived extends Component {
             </div>
           </CustomRowDiv>
         </div>
-        <div className='flex stretched wanted-wrapper' style={{ padding: '10px 0 20px 0' }}>
+        <div className='flex stretched tree-wrapper' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
             tableName={'bids_received_grid'}
             {...datagrid.tableProps}
@@ -639,7 +664,6 @@ class BidsReceived extends Component {
             }}
             expandedRowIds={this.state.expandedRowIds}
             onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-            columnActions={'product'}
           />
         </div>
       </>

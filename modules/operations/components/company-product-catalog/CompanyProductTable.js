@@ -2,17 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
-import confirm from '~/components/Confirmable/confirm'
+import ActionCell from '~/components/table/ActionCell'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 
 import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 import { getLocaleDateFormat } from '~/components/date-format'
-import moment from 'moment/moment'
-
-import {} from '../../actions'
-import Router from 'next/router'
 
 class CompanyProductTable extends Component {
   state = {
@@ -25,7 +21,8 @@ class CompanyProductTable extends Component {
           </FormattedMessage>
         ),
         width: 250,
-        sortPath: 'CompanyProduct.intProductName'
+        sortPath: 'CompanyProduct.intProductName',
+        allowReordering: false
       },
       {
         name: 'intProductCode',
@@ -71,6 +68,15 @@ class CompanyProductTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        intProductName: <ActionCell row={row} content={row.intProductName} />
+      }
+    })
+  }
+
   render() {
     const { datagrid, rows, filterValue, loading, intl } = this.props
 
@@ -78,17 +84,17 @@ class CompanyProductTable extends Component {
     const { formatMessage } = intl
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexGrid
           tableName='operations_company_product_catalog'
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={columns}
-          rows={rows}
+          rows={this.getRows(rows)}
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

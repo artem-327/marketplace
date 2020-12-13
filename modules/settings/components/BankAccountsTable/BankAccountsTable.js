@@ -29,8 +29,8 @@ import {
 } from '../../actions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
-
 import { errorMessages } from '~/constants/yupValidation'
+import ActionCell from '~/components/table/ActionCell'
 
 const Container = styled.div`
   overflow-y: auto;
@@ -54,6 +54,13 @@ const StatusLabel = styled(Label)`
   font-style: normal !important;
   text-align: center !important;
   color: #ffffff !important;
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
 `
 
 const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
@@ -304,7 +311,7 @@ class BankAccountsTable extends Component {
           {text => text}
         </FormattedMessage>
       ),
-      actions: this.getActions()
+      allowReordering: false
     },
     {
       name: 'bankAccountType',
@@ -424,20 +431,36 @@ class BankAccountsTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { myRows, loading, filterValue, intl, bankAccounts, method, accountStatus, documentRequired } = this.props
 
     return (
       <React.Fragment>
         {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
-          <ProdexTable
-            tableName='settings_bankaccounts'
-            rows={myRows}
-            loading={loading}
-            columns={this.getColumns()}
-            filterValue={filterValue}
-            columnActions='name'
-          />
+          <div className='flex stretched listings-wrapper'>
+            <ProdexTable
+              tableName='settings_bankaccounts'
+              rows={this.getRows(myRows)}
+              loading={loading}
+              columns={this.getColumns()}
+              filterValue={filterValue}
+            />
+          </div>
         )}
 
         {(bankAccounts.accountStatus || bankAccounts.documentStatus) && (

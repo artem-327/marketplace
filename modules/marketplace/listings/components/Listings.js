@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input, Dropdown } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
 import { MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { Warning } from '@material-ui/icons'
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import AddCart from '~/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -64,80 +65,6 @@ const FiltersRow = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   margin-bottom: -5px;
-`
-
-const DivRow = styled.div`
-  display: flex !important;
-
-  > div {
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
-  > span {
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-`
-
-const SpanText = styled.span`
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  overflow: hidden !important;
-  font-weight: 500;
-  cursor: pointer;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-`
-
-const DivIcons = styled.div`
-  position: -webkit-sticky !important;
-  position: sticky !important;
-  right: 0px !important;
-  float: right;
-  display: flex !important;
-  margin-left: 10px !important;
-`
-
-const DivSetting = styled.div`
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  cursor: pointer !important;
-  border-radius: 3px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  border: solid 1px #dee2e6;
-  background-color: #ffffff;
-`
-
-const RowDropdown = styled(Dropdown)`
-  display: block !important;
-  height: 100% !important;
-  margin-right: 8px;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-
-  .dropdown.icon {
-    display: none;
-  }
-`
-
-const RowDropdownIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  margin: 2px 0 2px -4px;
-
-  svg {
-    width: 16px !important;
-    height: 16px !important;
-    color: #848893 !important;
-  }
 `
 
 class Listings extends Component {
@@ -379,21 +306,6 @@ class Listings extends Component {
     )
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
   getRows = () => {
     const {
       rows,
@@ -404,26 +316,17 @@ class Listings extends Component {
       ...r,
       clsName: r.condition ? 'non-conforming' : '',
       intProductName: (
-        <DivRow>
-          <RowDropdown
-            trigger={
-              <RowDropdownIcon>
-                <MoreVertical />
-              </RowDropdownIcon>
-            }>
-            <Dropdown.Menu>{this.getActionItems(this.getRowActions(r), r)}</Dropdown.Menu>
-          </RowDropdown>
-          <SpanText
-            className='buy-offer'
-            onClick={e => {
-              e.stopPropagation()
-              e.preventDefault()
-              this.tableRowClicked(r.id)
-            }}>
-            {r.intProductName}
-          </SpanText>
-          <DivIcons>
-            {r.expired || r.condition ? (
+        <ActionCell
+          row={r}
+          getActions={this.getActions}
+          content={r.intProductName}
+          onContentClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            this.tableRowClicked(r.id)
+          }}
+          rightAlignedContent={
+            r.expired || r.condition ? (
               <Popup
                 size='small'
                 inverted
@@ -455,9 +358,9 @@ class Listings extends Component {
                   </div>
                 } // <div> has to be there otherwise popup will be not shown
               />
-            ) : null}
-          </DivIcons>
-        </DivRow>
+            ) : null
+          }
+        />
       ),
       condition: r.condition ? (
         <Popup
@@ -496,7 +399,7 @@ class Listings extends Component {
     sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
-  getRowActions = row => {
+  getActions = row => {
     const {
       isMerchant,
       isCompanyAdmin,

@@ -5,6 +5,7 @@ import moment from 'moment'
 import styled from 'styled-components'
 
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { withDatagrid } from '~/modules/datagrid'
 import * as Actions from '../../../actions'
 import { openPopup } from '~/modules/settings/actions'
@@ -39,7 +40,8 @@ class DocumentManagerTable extends Component {
           sortPath: 'Attachment.name',
           width: 620,
           maxWidth: 2000,
-          actions: this.getActions()
+          actions: this.getActions(),
+          allowReordering: false
         },
         {
           name: 'documentTypeName',
@@ -89,7 +91,14 @@ class DocumentManagerTable extends Component {
     data.map(row => ({
       rawData: row,
       id: row.id,
-      name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{row.name}</div>,
+      name: (
+        <ActionCell
+          row={row}
+          getActions={this.getActions}
+          content={row.name}
+          onContentClick={() => this.props.openPopup(row)}
+        />
+      ),
       documentTypeName: getSafe(() => row.documentType.name, ''),
       expirationDate: row.expirationDate && moment(row.expirationDate).format(getLocaleDateFormat()),
       broadcast: 'TBD',
@@ -109,7 +118,7 @@ class DocumentManagerTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        callback: row => openPopup(row.rawData),
+        callback: row => openPopup(row),
         hidden: () => documentManagerDatagridSharedWithMe
       },
       {
@@ -120,9 +129,9 @@ class DocumentManagerTable extends Component {
             formatMessage(
               {
                 id: 'confirm.deleteDocument.content',
-                defaultMessage: `Do you really want to delete ${row.rawData.name} document?`
+                defaultMessage: `Do you really want to delete ${row.name} document?`
               },
-              { name: row.rawData.name }
+              { name: row.name }
             )
           ).then(async () => {
             try {
@@ -152,16 +161,17 @@ class DocumentManagerTable extends Component {
     const { rows, datagrid, editedId, updatingDatagrid } = this.props
 
     return (
-      <ProdexGrid
-        tableName='manage_guests_documents'
-        {...datagrid.tableProps}
-        columns={this.state.columns}
-        rows={this.getRows(rows)}
-        loading={datagrid.loading || updatingDatagrid}
-        style={{ marginTop: '5px' }}
-        columnActions={'name'}
-        editingRowId={editedId}
-      />
+      <div className='flex stretched listings-wrapper'>
+        <ProdexGrid
+          tableName='manage_guests_documents'
+          {...datagrid.tableProps}
+          columns={this.state.columns}
+          rows={this.getRows(rows)}
+          loading={datagrid.loading || updatingDatagrid}
+          style={{ marginTop: '5px' }}
+          editingRowId={editedId}
+        />
+      </div>
     )
   }
 }

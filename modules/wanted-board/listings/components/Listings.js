@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Input, Button } from 'semantic-ui-react'
+import { Container, Input, Button, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { debounce } from 'lodash'
@@ -10,9 +10,10 @@ import { groupActionsMarketplace } from '~/modules/company-product-info/constant
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { SubmitOffer } from './SubmitOffer/index'
-import { PlusCircle, Sliders } from 'react-feather'
+import { PlusCircle, Sliders, MoreVertical } from 'react-feather'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { CustomRowDiv } from '../../constants/layout'
+import ActionCell from '~/components/table/ActionCell'
 import { getSafe } from '~/utils/functions'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import SearchInput from '../../components/SearchInput'
@@ -25,6 +26,13 @@ const FiltersRow = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   margin-bottom: -5px;
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
 `
 
 class Listings extends Component {
@@ -41,7 +49,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 290,
-          actions: this.getActions()
+          allowReordering: false
           //align: 'right',
           //sortPath: 'ProductOffer.pkgAvailable'
         },
@@ -226,6 +234,21 @@ class Listings extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(r => {
+      return {
+        ...r,
+        product: (
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            content={r.product}
+          />
+        )
+      }
+    })
+  }
+
   renderContent = () => {
     const {
       datagrid,
@@ -290,15 +313,14 @@ class Listings extends Component {
             </div>
           </CustomRowDiv>
         </div>
-        <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
+        <div className='flex stretched listings-wrapper' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
             tableName={'wanted_board_listings_grid'}
             {...datagrid.tableProps}
-            rows={rows}
+            rows={this.getRows(rows)}
             columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
-            columnActions={'product'}
           />
         </div>
         {openFilterPopup && <WantedBoardFilter onClose={() => this.setState({ openFilterPopup: false })} />}
