@@ -84,3 +84,45 @@ export function closePopup() {
     payload: null
   }
 }
+
+// ! ! ! ! ! ******************************************************************************
+
+export const makeOffer = (body) => ({
+  type: AT.MARKETPLACE_MAKE_OFFER,
+  payload: api.makeOffer(body)
+})
+
+export const deleteOffer = (id) => ({
+  type: AT.MARKETPLACE_DELETE_OFFER,
+  payload: api.deleteOffer(id)
+})
+
+export const buyerAcceptOffer = (id) => ({
+  type: AT.MARKETPLACE_BUYER_ACCEPT_OFFER,
+  payload: api.buyerAcceptOffer(id)
+})
+
+export const buyerDenyOffer = (id) => ({
+  type: AT.MARKETPLACE_BUYER_DENY_OFFER,
+  payload: api.buyerDenyOffer(id)
+})
+
+export const buyerCounterOffer = (id) => ({
+  type: AT.MARKETPLACE_BUYER_COUNTER_OFFER,
+  payload: api.buyerCounterOffer(id)
+})
+
+export const sellerAcceptOffer = (id) => ({
+  type: AT.MARKETPLACE_SELLER_ACCEPT_OFFER,
+  payload: api.sellerAcceptOffer(id)
+})
+
+export const sellerDenyOffer = (id) => ({
+  type: AT.MARKETPLACE_SELLER_DENY_OFFER,
+  payload: api.sellerDenyOffer(id)
+})
+
+export const sellerCounterOffer = (id) => ({
+  type: AT.MARKETPLACE_SELLER_COUNTER_OFFER,
+  payload: api.sellerCounterOffer(id)
+})

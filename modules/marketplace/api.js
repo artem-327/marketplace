@@ -26,3 +26,37 @@ export const cancelHold = id => api.patch(`/prodex/api/holds/${id}/cancel`)
 export const approveHold = id => api.patch(`/prodex/api/holds/${id}/approve`)
 
 export const toCartHold = id => api.patch(`/prodex/api/holds/${id}/to-cart`)
+
+// ! ! ! ! ! ******************************************************************************
+
+export const makeOffer = body => {
+  return api.post(`/prodex/api/purchase-request-offers`, body).then(response => response.data)
+}
+
+export const deleteOffer = id => {
+  return api.delete(`/prodex/api/purchase-request-offers/id/${id}`).then(response => response.data)
+}
+
+export const buyerAcceptOffer = id => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/accept-last-offer`).then(response => response.data)
+}
+
+export const buyerDenyOffer = id => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/accept-last-offer`).then(response => response.data)
+}
+
+export const buyerCounterOffer = id => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/accept-last-offer`).then(response => response.data)
+}
+
+export const sellerAcceptOffer = id => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/accept-last-offer`).then(response => response.data)
+}
+
+export const sellerDenyOffer = id => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/accept-last-offer`).then(response => response.data)
+}
+
+export const sellerCounterOffer = id => {
+  return api.patch(`/prodex/api/purchase-request-offers/id/${id}/accept-last-offer`).then(response => response.data)
+}

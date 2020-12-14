@@ -18,6 +18,7 @@ export const initialState = {
   broadcastedProductOffersPageLoaded: -1,
   warehousesList: [],
   loading: false,
+  updating: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
   datagridFilter: { filters: [] },
@@ -260,6 +261,55 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null
+      }
+    }
+
+    case AT.MARKETPLACE_MAKE_OFFER_PENDING: {
+      return {
+        ...state,
+        updating: true
+      }
+    }
+
+    case AT.MARKETPLACE_MAKE_OFFER_REJECTED:
+    case AT.MARKETPLACE_MAKE_OFFER_FULFILLED: {
+      return {
+        ...state,
+        updating: false
+      }
+    }
+
+
+    case AT.MARKETPLACE_DELETE_OFFER_PENDING:
+    case AT.MARKETPLACE_BUYER_ACCEPT_OFFER_PENDING:
+    case AT.MARKETPLACE_BUYER_DENY_OFFER_PENDING:
+    case AT.MARKETPLACE_BUYER_COUNTER_OFFER_PENDING:
+    case AT.MARKETPLACE_SELLER_ACCEPT_OFFER_PENDING:
+    case AT.MARKETPLACE_SELLER_DENY_OFFER_PENDING:
+    case AT.MARKETPLACE_SELLER_COUNTER_OFFER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.MARKETPLACE_DELETE_OFFER_FULFILLED:
+    case AT.MARKETPLACE_DELETE_OFFER_REJECTED:
+    case AT.MARKETPLACE_BUYER_ACCEPT_OFFER_FULFILLED:
+    case AT.MARKETPLACE_BUYER_ACCEPT_OFFER_REJECTED:
+    case AT.MARKETPLACE_BUYER_DENY_OFFER_FULFILLED:
+    case AT.MARKETPLACE_BUYER_DENY_OFFER_REJECTED:
+    case AT.MARKETPLACE_BUYER_COUNTER_OFFER_FULFILLED:
+    case AT.MARKETPLACE_BUYER_COUNTER_OFFER_REJECTED:
+    case AT.MARKETPLACE_SELLER_ACCEPT_OFFER_FULFILLED:
+    case AT.MARKETPLACE_SELLER_ACCEPT_OFFER_REJECTED:
+    case AT.MARKETPLACE_SELLER_DENY_OFFER_FULFILLED:
+    case AT.MARKETPLACE_SELLER_DENY_OFFER_REJECTED:
+    case AT.MARKETPLACE_SELLER_COUNTER_OFFER_FULFILLED:
+    case AT.MARKETPLACE_SELLER_COUNTER_OFFER_REJECTED: {
+      return {
+        ...state,
+        loading: false
       }
     }
 

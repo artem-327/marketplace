@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import { Input, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
+import { Input, Button, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import {
   Form,
   Modal,
@@ -10,10 +10,15 @@ import {
   Grid,
   GridRow,
   GridColumn,
-  List
+  List,
+  Label,
+  FormField,
+  FormGroup,
+  Segment
 } from 'semantic-ui-react'
 
 import { Formik } from 'formik'
+import { Field as FormikField } from 'formik'
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
@@ -22,7 +27,9 @@ import styled from 'styled-components'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty } from '~/utils/functions'
+import confirm from '~/src/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
+import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
 import ErrorFocus from '~/components/error-focus'
 import { Schedule } from '@material-ui/icons'
@@ -139,7 +146,9 @@ const StyledGrid = styled(Grid)`
 
 const initValues = {
   priceOffer: '',
-  message: ''
+  message: '',
+  accept: '',
+  counter: ''
 }
 
 const formValidation = () =>
@@ -220,7 +229,7 @@ class MakeOfferPopup extends React.Component {
                               <FormattedMessage id='marketplace.productName' defaultMessage='Product Name' />
                             </div>
                             <div className='name'>
-                              {this.props.productName}
+                              productName
                             </div>
                           </StyledRectangle>
                         </GridColumn>
@@ -281,13 +290,96 @@ class MakeOfferPopup extends React.Component {
                       </GridRow>
 
                       <GridRow>
+                        <GridColumn>
+                          <TableSegment>
+                            <StyledList divided relaxed horizontal size='large'>
+                              <List.Item>
+                                <List.Content>
+                                  <List.Header as='label'>
+                                    <FormattedMessage
+                                      id='marketplace.offeredFobPrice'
+                                      defaultMessage='Offered FOB Price' />
+                                  </List.Header>
+                                  <List.Description as='span' className='green' >
+                                    offeredFobPrice
+                                  </List.Description>
+                                </List.Content>
+                              </List.Item>
+                              <List.Item>
+                                <List.Content>
+                                  <List.Header as='label'>
+                                    <FormattedMessage
+                                      id='marketplace.totalOfferedPrice'
+                                      defaultMessage='Total Offered Price' />
+                                  </List.Header>
+                                  <List.Description as='span' className='green' >
+                                    totalOfferedPrice
+                                  </List.Description>
+                                </List.Content>
+                              </List.Item>
+
+                            </StyledList>
+                          </TableSegment>
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn>
+                          <StyledRectangle>
+                            <div className='header'>
+                              <FormattedMessage
+                                id='marketplace.messageFromSeller'
+                                defaultMessage='Message from Seller' />
+                            </div>
+                            <div className='message'>
+                              message from seller
+                            </div>
+                          </StyledRectangle>
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn>
+                          <Checkbox
+                            name='accept'
+                            defaultChecked={false}
+                            onChange={() => console.log('!!!!!!!!!! onChange accept')}
+                            data-test={`bids_received_accept_chckb`}
+                            label={formatMessage({ id: 'global.accept', defaultMessage: 'Accept' })}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow style={{ padding: '0' }}>
+                        <GridColumn>
+                          <FormattedMessage id='marketplace.or' defaultMessage='or' />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn>
+                          <Checkbox
+                            name='counter'
+                            defaultChecked={false}
+                            onChange={() => console.log('!!!!!!!!!! onChange counter')}
+                            data-test={`bids_received_counter_chckb`}
+                            label={formatMessage({ id: 'global.counter', defaultMessage: 'Counter' })}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
                         <GridColumn width={5}>
                           <PriceInput
                             name='priceOffer'
                             inputProps={{
-                              placeholder: '0',
+                              placeholder: formatMessage({
+                                id: 'marketplace.enterCounterBid',
+                                defaultMessage: 'Enter Counter Bid'
+                              }),
                               min: 0,
-                              type: 'number'
+                              type: 'number',
+                              disabled: !(values.accept || values.counter)
                             }}
                             label={
                               <FormattedMessage
@@ -299,20 +391,6 @@ class MakeOfferPopup extends React.Component {
                             currencyLabel={'$'}
                           />
                         </GridColumn>
-                        <GridColumn width={3}>
-                          <Form.Field>
-                            <label>
-                              <FormattedMessage
-                                id='marketplace.YourTotalBid'
-                                defaultMessage='Your Total Bid'>
-                                {text => text}
-                              </FormattedMessage>
-                            </label>
-                            <FieldRectangle>
-                              value
-                            </FieldRectangle>
-                          </Form.Field>
-                        </GridColumn>
                       </GridRow>
 
                       <GridRow>
@@ -320,7 +398,7 @@ class MakeOfferPopup extends React.Component {
                           <TextArea
                             name='message'
                             label={
-                              <FormattedMessage id='marketplace.messageToSeller' defaultMessage='Message to Seller' />
+                              <FormattedMessage id='marketplace.messageToBuyer' defaultMessage='Message to Buyer' />
                             }
                             inputProps={{
                               'data-test': 'wanted_board_sidebar_specialNotes_inp',
@@ -332,21 +410,6 @@ class MakeOfferPopup extends React.Component {
                           />
                           <SmallText style={{ marginTop: '-14px' }}>
                             <FormattedMessage id='marketplace.optional' defaultMessage='Optional' />
-                          </SmallText>
-                        </GridColumn>
-                      </GridRow>
-
-                      <GridRow>
-                        <GridColumn>
-                          <SmallText>
-                            <Schedule className='title-icon' />
-                            <div>
-                              <FormattedMessage
-                                id='marketplace.sellerHas24HoursToReply.'
-                                defaultMessage='Seller has 24 hours to reply.'>
-                                {text => text}
-                              </FormattedMessage>
-                            </div>
                           </SmallText>
                         </GridColumn>
                       </GridRow>

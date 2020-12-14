@@ -22,6 +22,7 @@ import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
+import BidsReceivedPopup from './BidsReceivedPopup'
 
 const defaultHiddenColumns = [
   'origin',
@@ -492,6 +493,7 @@ class BidsReceived extends Component {
     const {
       isMerchant,
       isCompanyAdmin,
+      openPopup,
       intl: { formatMessage }
     } = this.props
     const rowActions = []
@@ -516,13 +518,22 @@ class BidsReceived extends Component {
       }),
       callback: () => this.tableRowClicked(row.id)
     }
+    const buttonBidsReceived = {
+      text: formatMessage({
+        id: 'marketplace.tbd',
+        defaultMessage: 'TBD ! !'
+      }),
+      callback: () => openPopup(row.rawData)
+    }
     if (isMerchant || isCompanyAdmin) {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
       rowActions.push(buttonRequestHold)
+      rowActions.push(buttonBidsReceived)
     } else {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
+      rowActions.push(buttonBidsReceived)
     }
     return rowActions
   }
@@ -536,7 +547,8 @@ class BidsReceived extends Component {
       isCompanyAdmin,
       sidebar: { openInfo },
       tableHandlersFiltersListings,
-      activeMarketplaceFilter
+      activeMarketplaceFilter,
+      isOpenPopup
     } = this.props
     const { columns, fixed, openFilterPopup } = this.state
     let { formatMessage } = intl
@@ -629,6 +641,7 @@ class BidsReceived extends Component {
           />
         </div>
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
+        {isOpenPopup && <BidsReceivedPopup />}
       </Container>
     )
   }
