@@ -3,12 +3,13 @@ import cn from 'classnames'
 import moment from 'moment/moment'
 import { debounce } from 'lodash'
 import { Clock, FileText, CornerLeftUp, CornerLeftDown, MoreVertical, PlusCircle, Sliders } from 'react-feather'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
-
+import { Warning } from '@material-ui/icons'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import DetailSidebar from '~/modules/inventory/my-listings/components/DetailSidebar'
 import QuickEditPricingPopup from '~/modules/inventory/my-listings/components/QuickEditPricingPopup'
 import confirm from '~/src/components/Confirmable/confirm'
@@ -26,7 +27,7 @@ import { InventoryFilter } from '~/modules/filter'
 
 const defaultHiddenColumns = [
   'productNumber',
-  'warehouse',
+  'manufacturer',
   'cost',
   'minOrderQuantity',
   'splits',
@@ -105,59 +106,51 @@ const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
 
-const DivRow = styled.div`
-  display: flex !important;
-`
-
-const SpanText = styled.span`
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  overflow: hidden !important;
-  font-weight: 500;
-  cursor: pointer;
-`
-
-const DivIcons = styled.div`
-  position: -webkit-sticky !important;
-  position: sticky !important;
-  right: 0px !important;
-  display: flex !important;
-  margin-left: 10px !important;
-`
-
 const FobPrice = styled.div`
-  text-decoration: underline;
-  text-decoration-style: dotted;
   cursor: pointer;
-  
+
   &:hover {
-    text-decoration-style: solid;
+    //text-decoration-style: solid;
+    text-decoration: none;
+    font-weight: bold;
+    color: #2599d5;
   }
 `
 
-const RowDropDownIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  margin: 2px 0 2px -4px;
-  
-  svg {
-    width: 16px !important;
-    height: 16px !important;
-    color: #848893 !important;
-  }
+const BroadcastDiv = styled.div`
+  margin: 0 8px 0 4px;
 `
 
 class MyListings extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      columns: [
+      fixed: [
         {
+          name: 'productName',
+          position: 3
+        }
+      ],
+      columns: [
+        /*{
           name: 'actCol',
           title: ' ',
           width: 30,
-          actions: this.getActions()
+          actions: this.getActions(),
+          disabled: true
         },
+        {
+          name: 'broadcast',
+          title: (
+            <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100,
+          align: 'left',
+          sortPath: 'ProductOffer.broadcasted',
+          disabled: true
+        },*/
         {
           name: 'productName',
           title: (
@@ -166,7 +159,8 @@ class MyListings extends Component {
             </FormattedMessage>
           ),
           width: 250,
-          sortPath: 'ProductOffer.companyProduct.intProductName'
+          sortPath: 'ProductOffer.companyProduct.intProductName',
+          allowReordering: false
         },
         {
           name: 'fobPrice',
@@ -252,17 +246,6 @@ class MyListings extends Component {
           width: 220
         },
         // { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #'>{(text) => text}</FormattedMessage>, width: 70 },
-        {
-          name: 'broadcast',
-          title: (
-            <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 100,
-          align: 'left',
-          sortPath: 'ProductOffer.broadcasted'
-        },
         {
           name: 'minOrderQuantity',
           title: (
@@ -379,7 +362,10 @@ class MyListings extends Component {
       request: null,
       filterValues: {
         SearchByNamesAndTags: null
-      }
+      },
+      rows: [],
+      updatedRow: false,
+      focusInput: ''
     }
   }
 
@@ -449,6 +435,25 @@ class MyListings extends Component {
     const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
     if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
       datagrid.setFilter(datagridFilter, datagridFilterReload, 'inventory')
+    }
+    if (
+      (!getSafe(() => prevState.rows.length, '') &&
+        !getSafe(() => this.state.rows.length, '') &&
+        !getSafe(() => prevProps.rows.length, '') &&
+        getSafe(() => this.props.rows.length, '')) ||
+      getSafe(() => prevProps.rows[0].id, '') !== getSafe(() => this.props.rows[0].id, '') ||
+      getSafe(() => prevProps.pricingEditOpenId, '') !== getSafe(() => this.props.pricingEditOpenId, '') ||
+      (getSafe(() => this.state.updatedRow, '') && !getSafe(() => prevState.updateRow, '')) ||
+      getSafe(() => this.state.focusInput, '') !== getSafe(() => prevState.focusInput, '') ||
+      getSafe(() => datagrid.isUpdatedRow, '')
+    ) {
+      if (getSafe(() => datagrid.isUpdatedRow, '')) {
+        datagrid.setUpdatedRow(false)
+      }
+      this.getRows(this.props.rows)
+      if (this.state.updatedRow && !prevState.updateRow) {
+        this.setState({ updatedRow: false })
+      }
     }
   }
 
@@ -544,37 +549,37 @@ class MyListings extends Component {
             )
           ).then(async () => {
             try {
-              this.props.deleteProductOffer(row.id)
+              await this.props.deleteProductOffer(row.id)
               datagrid.removeRow(row.id)
             } catch (e) {
               console.error(e)
             }
           })
         }
-      },
-      {
-        text: formatMessage({
-          id: 'inventory.groupOffer',
-          defaultMessage: 'Join/Create Virtual Group'
-        }),
-        callback: row =>
-          this.groupOffer(
-            {
-              overrideBroadcastRules: false,
-              productOfferIds: [row.id]
-            },
-            row.rawData
-          ),
-        disabled: row => !!row.parentOffer
-      },
-      {
-        text: formatMessage({
-          id: 'inventory.detachOffer',
-          defaultMessage: 'Detach from Virtual Group'
-        }),
-        callback: row => this.detachOffer([row.id], row.rawData),
-        disabled: row => !row.parentOffer
       }
+      // {
+      //   text: formatMessage({
+      //     id: 'inventory.groupOffer',
+      //     defaultMessage: 'Join/Create Virtual Group'
+      //   }),
+      //   callback: () =>
+      //     this.groupOffer(
+      //       {
+      //         overrideBroadcastRules: false,
+      //         productOfferIds: [row.id]
+      //       },
+      //       row.rawData
+      //     ),
+      //   disabled: () => !!row.parentOffer
+      // },
+      // {
+      //   text: formatMessage({
+      //     id: 'inventory.detachOffer',
+      //     defaultMessage: 'Detach from Virtual Group'
+      //   }),
+      //   callback: () => this.detachOffer([row.id], row.rawData),
+      //   disabled: () => !row.parentOffer
+      // }
     ]
   }
 
@@ -599,10 +604,17 @@ class MyListings extends Component {
   }
 
   getRows = rows => {
-    const { datagrid, pricingEditOpenId, setPricingEditOpenId, sidebarDetailTrigger, toastManager } = this.props
+    const {
+      datagrid,
+      pricingEditOpenId,
+      setPricingEditOpenId,
+      sidebarDetailTrigger,
+      toastManager,
+      closePricingEditPopup
+    } = this.props
     let title = ''
 
-    return rows.map((r, rIndex) => {
+    let result = rows.map((r, rIndex) => {
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
       if (r.groupId) {
@@ -698,38 +710,85 @@ class MyListings extends Component {
 
       return {
         ...r,
-        actCol: (
-          <RowDropDownIcon>
-            <MoreVertical />
-          </RowDropDownIcon>
-        ),
         productName: (
-          <DivRow>
-            <SpanText onClick={() => this.tableRowClickedProductOffer(r, true, 0, sidebarDetailTrigger)}>{r.productName}</SpanText>
-            <DivIcons>
-              {r.expired ? (
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            leftContent={
+              <BroadcastDiv>
                 <Popup
-                  header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
+                  id={r.id}
+                  position={rIndex === 0 ? 'bottom right' : 'top right'}
                   trigger={
-                    <div>
-                      <ClockIcon />
-                    </div>
-                  } // <div> has to be there otherwise popup will be not shown
+                    <Checkbox
+                      data-test='my_inventory_broadcast_chckb'
+                      toggle
+                      defaultChecked={r.cfStatus.toLowerCase() === 'broadcasting' && isOfferValid}
+                      className={cn({
+                        error:
+                          r.cfStatus.toLowerCase() === 'incomplete' ||
+                          r.cfStatus.toLowerCase() === 'unmapped' ||
+                          r.cfStatus.toLowerCase() === 'unpublished'
+                      })}
+                      disabled={
+                        r.cfStatus.toLowerCase() === 'incomplete' ||
+                        r.cfStatus.toLowerCase() === 'unmapped' ||
+                        r.cfStatus.toLowerCase() === 'unpublished' ||
+                        r.cfStatus.toLowerCase() === 'n/a' ||
+                        !isOfferValid ||
+                        !!r.groupId
+                      }
+                      onChange={(e, data) => {
+                        e.preventDefault()
+                        try {
+                          this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
+                          this.props.datagrid.updateRow(r.id, () => ({
+                            ...r.rawData,
+                            cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
+                          }))
+                          // Its necessary to render and see changes in MyListing when datagrid updated row
+                          this.setState({ updatedRow: true })
+                        } catch (error) {
+                          console.error(error)
+                        }
+                      }}
+                    />
+                  }
+                  content={title}
                 />
-              ) : null}
-              {productStatusText ? (
+              </BroadcastDiv>
+            }
+            content={r.productName}
+            onContentClick={() => this.tableRowClickedProductOffer(r, true, 0, sidebarDetailTrigger)}
+            rightAlignedContent={
+              r.expired || productStatusText ? (
                 <Popup
                   size='small'
-                  header={productStatusText}
+                  inverted
+                  style={{
+                    fontSize: '12px',
+                    color: '#cecfd4',
+                    opacity: '0.9'
+                  }}
+                  header={
+                    <div>
+                      {r.expired && (
+                        <div>
+                          <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
+                        </div>
+                      )}
+                      {productStatusText && <div>{productStatusText}</div>}
+                    </div>
+                  }
                   trigger={
                     <div>
-                      <FileTextIcon />
+                      <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
                     </div>
                   } // <div> has to be there otherwise popup will be not shown
                 />
               ) : null}
-            </DivIcons>
-          </DivRow>
+          />
+
         ),
         packaging: (
           <>
@@ -742,14 +801,23 @@ class MyListings extends Component {
         ) : (
           <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
         ),
-        fobPrice: (
+        fobPrice: r.grouped ? (
+          r.fobPrice
+        ) : (
           <StyledPopup
-            content={<QuickEditPricingPopup rawData={r.rawData} />}
+            content={
+              <QuickEditPricingPopup
+                handlechange={(values, index, focusInput) =>
+                  this.handleChangePriceTiers(values, rIndex, index, focusInput)
+                }
+                rawData={getSafe(() => this.state.rows[rIndex].rawData, '') || r.rawData}
+                focusInput={this.state.focusInput}
+              />
+            }
             on='click'
             trigger={<FobPrice>{r.fobPrice}</FobPrice>}
             open={pricingEditOpenId === r.rawData.id}
             onOpen={() => setPricingEditOpenId(r.rawData.id)}
-            onClose={() => setPricingEditOpenId(null)}
           />
         ),
         broadcast: (
@@ -780,10 +848,12 @@ class MyListings extends Component {
                     e.preventDefault()
                     try {
                       this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
-                      datagrid.updateRow(r.id, () => ({
+                      this.props.datagrid.updateRow(r.id, () => ({
                         ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                       }))
+                      // Its necessary to render and see changes in MyListing when datagrid updated row
+                      this.setState({ updatedRow: true })
                     } catch (error) {
                       console.error(error)
                     }
@@ -796,6 +866,21 @@ class MyListings extends Component {
         )
       }
     })
+    this.setState({ rows: result })
+  }
+
+  handleChangePriceTiers = (values, rIndex, pIndex, focusInput) => {
+    let newRows = this.state.rows
+
+    if (pIndex || pIndex === 0) {
+      //pIndex means pricingTiers index and that row was changed. values are {}
+      newRows[rIndex].rawData.pricingTiers[pIndex] = values
+    } else {
+      // it was added or removed row pricingTiers. values are []
+      newRows[rIndex].rawData.pricingTiers = values
+    }
+
+    this.setState({ rows: newRows, focusInput: (pIndex || pIndex === 0) && focusInput ? focusInput : '' })
   }
 
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
@@ -817,7 +902,7 @@ class MyListings extends Component {
         if (status.code === 'GROUPED') {
           datagrid.updateRow(status.productOfferId, () => ({
             ...row,
-            warehouse: { deliveryAddress: { cfName: row.warehouse } },
+            warehouse: { deliveryAddress: { cfName: row.warehouse.deliveryAddress.cfName } },
             parentOffer: status.virtualOfferId ? status.virtualOfferId : ''
           }))
           toastManager.add(
@@ -834,7 +919,7 @@ class MyListings extends Component {
         } else if (status.code === 'DETACHED') {
           datagrid.updateRow(status.productOfferId, () => ({
             ...row,
-            warehouse: { deliveryAddress: { cfName: row.warehouse } },
+            warehouse: { deliveryAddress: { cfName: row.warehouse.deliveryAddress.cfName } },
             parentOffer: ''
           }))
           toastManager.add(
@@ -861,9 +946,17 @@ class MyListings extends Component {
   }
 
   groupOffer = async (request, row) => {
-    const { groupOffers } = this.props
+    const { groupOffers, datagrid } = this.props
     try {
       const response = await groupOffers(request)
+
+      datagrid.updateRow(row.id, () => ({
+        ...row,
+        grouped: true,
+        parentOffer: getSafe(() => response.value.productOfferStatuses[0].virtualOfferId, null)
+      }))
+      this.setState({ updatedRow: true })
+
       this.showMessage(response, request, row)
     } catch (error) {
       console.error(error)
@@ -871,9 +964,13 @@ class MyListings extends Component {
   }
 
   detachOffer = async (productOfferIds, row) => {
-    const { detachOffers } = this.props
+    const { detachOffers, datagrid } = this.props
     try {
       const response = await detachOffers(productOfferIds)
+
+      datagrid.updateRow(row.id, () => ({ ...row, grouped: false, parentOffer: null }))
+      this.setState({ updatedRow: true })
+
       this.showMessage(response, null, row)
     } catch (error) {
       console.error(error)
@@ -885,7 +982,6 @@ class MyListings extends Component {
       openBroadcast,
       sidebarDetailOpen,
       intl: { formatMessage },
-      rows,
       datagrid,
       openImportPopup,
       isOpenImportPopup,
@@ -901,7 +997,7 @@ class MyListings extends Component {
       updatingDatagrid,
       activeInventoryFilter
     } = this.props
-    const { columns, clientMessage, request, openFilterPopup } = this.state
+    const { columns, fixed, clientMessage, request, openFilterPopup, rows } = this.state
 
     return (
       <>
@@ -934,7 +1030,7 @@ class MyListings extends Component {
           </Modal.Actions>
         </Modal>
         {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
-        {false && !tutorialCompleted && <Tutorial />}
+        {<Tutorial isTutorial={false} isBusinessVerification={true} />}
         <Container fluid style={{ padding: '20px 25px 10px' }}>
           <CustomRowDiv>
             <div>
@@ -956,8 +1052,8 @@ class MyListings extends Component {
                   data-test='my_inventory_advanced_filters_btn'>
                   <Sliders />
                   {formatMessage({
-                    id: 'myInventory.advancedFilters',
-                    defaultMessage: 'Advanced Filters'
+                    id: 'global.filters',
+                    defaultMessage: 'Filters'
                   })}
                 </Button>
               </div>
@@ -1030,7 +1126,8 @@ class MyListings extends Component {
             {...datagrid.tableProps}
             tableName='my_inventory_grid'
             columns={columns}
-            rows={this.getRows(rows)}
+            fixed={fixed}
+            rows={rows}
             selectByRowClick
             hideCheckboxes
             loading={datagrid.loading || updatingDatagrid}

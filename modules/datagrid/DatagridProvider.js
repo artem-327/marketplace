@@ -29,7 +29,8 @@ const initialState = {
   isScrollToUp: false,
   savedFilters: {},
   refreshTable: false,
-  loadedAllData: false
+  loadedAllData: false,
+  isUpdatedRow: false
 }
 
 // singleton instance
@@ -192,7 +193,7 @@ class DatagridProvider extends Component {
       console.error(e)
       this.setState({ loading: false, refreshTable: false })
     } finally {
-      this.setState({ isScrollToEnd: false, isScrollToUp: false, refreshTable: false })
+      this.setState({ isScrollToEnd: false, isScrollToUp: false, refreshTable: false, isUpdatedRow: false })
       this.apiConfig = null
     }
   }
@@ -205,7 +206,7 @@ class DatagridProvider extends Component {
         } else return ro
       })
 
-      return { rows }
+      return { rows, isUpdatedRow: true }
     })
   }
 
@@ -215,7 +216,8 @@ class DatagridProvider extends Component {
 
   removeRowById = id => {
     this.setState(s => ({
-      rows: s.rows.filter(r => r.id !== id)
+      rows: s.rows.filter(r => r.id !== id),
+      isUpdatedRow: true
     }))
   }
 
@@ -342,12 +344,13 @@ class DatagridProvider extends Component {
               values: filt.values
             })
           }
-
         } else {
-          filterObject[filt.operator] = [{
-            path: filt.path,
-            values: filt.values
-          }]
+          filterObject[filt.operator] = [
+            {
+              path: filt.path,
+              values: filt.values
+            }
+          ]
         }
       }
     })
@@ -425,13 +428,18 @@ class DatagridProvider extends Component {
     this.loadData()
   }
 
+  setUpdatedRow = (isUpdated = false) => {
+    this.setState({ isUpdatedRow: isUpdated })
+  }
+
   render() {
     const {
       rows,
       loading,
       datagridParams: { filters },
       savedFilters,
-      loadedAllData
+      loadedAllData,
+      isUpdatedRow
     } = this.state
 
     return (
@@ -442,6 +450,7 @@ class DatagridProvider extends Component {
           loading,
           filters,
           savedFilters,
+          isUpdatedRow,
           autoRefresh: this.props.autoRefresh,
           removeRow: this.removeRowById,
           updateRow: this.updateRow,
@@ -454,6 +463,7 @@ class DatagridProvider extends Component {
           clear: this.clear,
           setApiConfig: this.setApiConfig,
           setSearchPattern: this.setSearchPattern,
+          setUpdatedRow: this.setUpdatedRow,
 
           tableProps: {
             rows,

@@ -10,7 +10,7 @@ import Router from 'next/dist/client/router'
 import { closeImportPopup } from '~/modules/settings/actions'
 
 const StyledButton = styled(Button)`
-  width: 200px;
+  min-width: 200px !important;
 `
 
 class ConfirmationPage extends Component {
@@ -84,9 +84,9 @@ class ConfirmationPage extends Component {
             <Grid.Row key={i} style={{ 'padding-top': '0.25rem', 'padding-bottom': '0.25rem' }}>
               <FormattedMessage
                 id='import.errorAtLine'
-                defaultMessage={`Error at line ${error.csvLineNumber}: ${error.cause}`}
+                defaultMessage={`Error at line ${error.lineNumber}: ${error.cause}`}
                 values={{
-                  lineNumber: error.csvLineNumber,
+                  lineNumber: error.lineNumber,
                   errorCause: error.cause
                 }}
               />

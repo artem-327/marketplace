@@ -9,7 +9,7 @@ export const TopMenu = styled(Menu)`
   top: 0;
   right: 0 !important;
   bottom: 0;
-  left: 300px !important;
+  left: 240px !important;
   border: 0 none !important;
 
   &.ui.menu.fixed .item-cart {
@@ -142,7 +142,7 @@ export const LeftMenu = styled(Menu)`
   left: 0;
   bottom: 0;
   transition: width 250ms linear;
-  width: 300px !important;
+  width: 240px !important;
   height: auto;
   background-color: #fff !important;
   box-shadow: 1px 0 3px 0 rgba(0, 0, 0, 0.06), inset -1px 0 0 0 #dee2e6 !important;
@@ -157,6 +157,7 @@ export const LeftMenu = styled(Menu)`
     > .container > .scrollbar-container {
       overflow: hidden;
       max-height: 100vh;
+      margin-left: -10px;
 
       > .ps__rail-y {
         position: absolute;
@@ -179,6 +180,7 @@ export const LeftMenu = styled(Menu)`
         display: flex;
         flex-flow: column;
         height: auto;
+        padding-left: 10px;
 
         > .ui.form {
           min-height: 200px;
@@ -187,6 +189,7 @@ export const LeftMenu = styled(Menu)`
         > a.item {
           flex-grow: 0;
           flex-shrink: 0;
+          font-size: 14px !important;
 
           &.opened {
             margin-bottom: 0;
@@ -360,17 +363,21 @@ export const LeftMenu = styled(Menu)`
 
     .scrollbar-container > img {
       object-fit: contain;
-      height: 70px;
-      margin: 15px auto;
+      height: 36px;
+      margin: 22px auto;
     }
 
     .container > a.item,
     .flex-wrapper > a.item,
     .flex-wrapper > .scrollbar-container > a.item {
       border-radius: 4px;
-      text-transform: uppercase;
+      text-transform: none;
       white-space: nowrap;
-      font-weight: 700 !important;
+      font-weight: 400 !important;
+      
+      svg {
+        color: #cecfd4;
+      }
 
       &:hover,
       &:hover i {
@@ -378,7 +385,7 @@ export const LeftMenu = styled(Menu)`
       }
 
       &:hover svg {
-        color: #2599d5 !important;
+        color: #20273a !important;
       }
       
 
@@ -388,7 +395,7 @@ export const LeftMenu = styled(Menu)`
 
       &.active i,
       &.active svg {
-        color: #2599d5 !important;
+        color: #20273a !important;
       }
 
       .active-filter {
@@ -400,7 +407,7 @@ export const LeftMenu = styled(Menu)`
         height: 24px;
         margin: 0 !important;
         border-radius: 4px;
-        background-color: #2599d5;
+        background-color: #20273a;
         vertical-align: top;
         font-size: 22px;
         line-height: 22px;
@@ -426,60 +433,35 @@ export const LeftMenu = styled(Menu)`
     .flex-wrapper > .scrollbar-container > .item {
       overflow: hidden;
       box-sizing: border-box;
-      width: 280px;
+      width: 220px;
       height: auto;
-      min-height: 50px;
-      max-height: 50px;
-      margin: 4px 0;
+      min-height: 44px;
+      max-height: 44px;
+      margin: 1px 0;
       border-radius: 4px !important;
-      padding: 12px 40px 12px 55px;
+      padding: 12px 28px 12px 44px;
       text-align: left;
       color: #20273a !important;
-      line-height: 26px;
-
+      line-height: 20px;
+      
       &:before,
       &:after {
-        content: '' !important;
-        position: absolute !important;
-        top: 20px !important;
-        left: auto !important;
-        right: 18px !important;
-        bottom: auto !important;
-        transform-origin: 50% 50%;
-        transition: transform 250ms linear, opacity 250ms linear;
-        opacity: 1;
-        display: block !important;
-        width: 1px !important;
-        height: 9px !important;
-        border-radius: 1px;
-        background: #cecfd4 !important;
-      }
-
-      &:nth-child(n):before,
-      &:nth-child(n):after {
-        display: block !important; // solving rewrites from semantic css
-      }
-
-      &:after {
-        top: 24px !important;
-        right: 14px !important;
-        width: 9px !important;
-        height: 1px !important;
+        content: none !important;
       }
 
       &.opened {
         max-height: none;
-
-        &:before,
-        &:after {
-          transform: rotate(135deg);
-          background: #546fd3 !important;
-        }
       }
 
       &.dropdown {
         box-sizing: border-box;
-        width: 280px;
+        width: 220px;
+        
+        > .text {
+          text-transform: none !important;
+          font-size: 14px !important;
+          font-weight: 400 !important;
+        }
 
         > .menu {
           padding: 10px 0;
@@ -489,11 +471,12 @@ export const LeftMenu = styled(Menu)`
           a {
             display: block;
             box-sizing: border-box;
-            height: 40px;
+            height: 30px;
             margin: 0;
-            padding: 12px 40px 12px 55px !important;
-            font-size: 15px !important;
+            padding: 7px 28px 7px 44px !important;
+            font-size: 12px !important;
             color: #848893 !important;
+            line-height: 16px !important;
 
             &.active,
             &:hover {
@@ -513,9 +496,8 @@ export const LeftMenu = styled(Menu)`
             flex-flow: column;
             width: auto;
             height: 0;
-            margin: 12px -40px 0 -55px;
-            border: none;
-            border-top: 1px solid #dee2e6;
+            margin: 0 -28px 0 -44px;
+            border: 0 none;
             border-radius: 4px;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
@@ -618,14 +600,14 @@ export const LeftMenu = styled(Menu)`
       i,
       svg {
         position: absolute;
-        top: 14px;
-        left: 15px;
-        width: 22px !important;
-        height: 22px;
+        top: 13px;
+        left: 13px;
+        width: 18px !important;
+        height: 18px;
         margin: 0 !important;
         vertical-align: top;
-        font-size: 22px;
-        line-height: 22px;
+        font-size: 18px;
+        line-height: 18px;
 
         &.hexagon {
           transform-origin: 60% 50%;
@@ -637,12 +619,26 @@ export const LeftMenu = styled(Menu)`
         text-transform: uppercase;
         white-space: nowrap;
         font-weight: 700 !important;
-        line-height: 26px;
+        line-height: 20px;
 
         ~ .chevron {
           margin-right: -33px;
-          width: 26px !important;
-          height: 26px;
+          width: 20px !important;
+          height: 20px;
+        }
+        
+        > svg {
+          position: absolute !important;
+          top: 11px;
+          left: auto;
+          right: 12px;
+          width: 14px !important;
+          height: 24px;
+          margin: 0 !important;
+          font-size: 14px;
+          font-weight: 400;
+          color: #cecfd4;
+          line-height: 1.71;
         }
       }
 
@@ -650,13 +646,16 @@ export const LeftMenu = styled(Menu)`
       &.active {
         background: transparent !important;
 
-        > .text,
+        > .text {
+          color: #20273a !important;
+        }
+        
         > .text ~ i,
         > .text ~ svg {
-          color: #20273a !important;
+          color: #cecfd4 !important;
 
           &.hexagon {
-            color: #2599d5 !important;
+            color: #20273a !important;
           }
         }
       }
@@ -679,7 +678,7 @@ export const LeftMenu = styled(Menu)`
 
         > .text ~ i,
         > .text ~ svg {
-          color: #2599d5 !important;
+          color: #20273a !important;
         }
 
         &:before,
@@ -697,7 +696,7 @@ export const LeftMenu = styled(Menu)`
 
         > .text ~ i,
         > .text ~ svg {
-          color: #2599d5 !important;
+          color: #20273a !important;
         }
 
         &:before,
@@ -709,7 +708,7 @@ export const LeftMenu = styled(Menu)`
       &.opened {
         > .text ~ i.hexagon,
         > .text ~ svg.hexagon {
-          color: #2599d5 !important;
+          color: #20273a !important;
         }
       }
     }
@@ -744,7 +743,7 @@ export const LeftMenu = styled(Menu)`
 
       .scrollbar-container > img {
         width: 30px;
-        margin-left: 10px;
+        margin-left: 20px;
         margin-right: 10px;
       }
 
@@ -777,6 +776,19 @@ export const LeftMenu = styled(Menu)`
       .flex-wrapper > a.item {
         width: 50px !important;
       }
+      
+      .container,
+      .flex-wrapper,
+      .flex-wrapper > .scrollbar-container {
+      
+        > .item {
+        
+          i,
+          svg {
+            left: 16px;
+          }
+        }
+      }
 
       .scrollbar-container,
       .scrollbar-container > .flex-wrapper {
@@ -793,10 +805,20 @@ export const LeftMenu = styled(Menu)`
         .ui.form {
           min-height: 100px;
         }
+        
+        .item.dropdown {
+        
+          > .text {
+            
+            > svg {
+              display: none !important;
+            }
+          }
+        }
 
         .item.dropdown.opened {
           overflow: visible !important;
-          min-height: 50px;
+          min-height: 44px;
           border-width: 1px 0 1px 1px;
           border-style: solid;
           border-color: #dee2e6;
@@ -812,13 +834,17 @@ export const LeftMenu = styled(Menu)`
             border-color: #dee2e6;
             border-radius: 0;
             border-top-right-radius: 4px;
-            padding: 11px 40px 11px 55px;
+            padding: 11px 28px 11px 44px;
             background: #edeef2;
+            
+            > svg {
+              display: block !important;
+            }
           }
 
           > .menu {
             position: absolute !important;
-            top: 48px !important;
+            top: 42px !important;
             left: 58px !important;
             bottom: auto !important;
             box-sizing: border-box;
@@ -836,7 +862,7 @@ export const LeftMenu = styled(Menu)`
             }
 
             a {
-              padding-left: 40px !important;
+              padding-left: 28px !important;
             }
           }
 
@@ -846,7 +872,7 @@ export const LeftMenu = styled(Menu)`
               overflow: hidden !important;
               display: flex !important;
               flex-flow: column;
-              padding: 0 !important;
+              padding: 0 0 10px !important;
 
               > .scrollbar-container {
                 flex-grow: 0;
@@ -893,10 +919,12 @@ export const LeftMenu = styled(Menu)`
 
             > .menu {
               top: auto !important;
-              bottom: 48px !important;
+              bottom: 42px !important;
               border-width: 1px 1px 0 1px;
               border-radius: 0;
               border-top-right-radius: 4px;
+              padding-top: 10px !important;
+              padding-bottom: 0 !important;
             }
           }
         }
@@ -910,7 +938,8 @@ export const LeftMenu = styled(Menu)`
     &:not(.collapsed) {
       .scrollbar-container {
         position: relative;
-        width: calc(100% + 10px);
+        width: calc(100% + 20px);
+        margin-left: -10px;
         margin-right: -10px;
 
         .ps__rail-y .ps__thumb-y {
@@ -921,7 +950,7 @@ export const LeftMenu = styled(Menu)`
 
       .scrollbar-container > .flex-wrapper > .item.dropdown.upward.opened > .menu,
       .scrollbar-container > .flex-wrapper > .item.dropdown:not(.upward).opened > .menu {
-        max-height: calc(100% - 26px) !important;
+        max-height: calc(100% + 20px) !important;
         margin-bottom: -12px !important;
       }
     }
@@ -1003,14 +1032,14 @@ export const FlexContainer = styled.div`
   top: 80px;
   right: 0;
   bottom: 0;
-  left: 300px;
+  left: 240px;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
 `
 export const LogoImage = styled(Image)`
-  width: 177px;
-  margin: 33px auto 31px;
+  width: 80px;
+  margin: 22px auto;
 `
 export const CircularLabel = styled(Label)`
   position: absolute;
@@ -1097,4 +1126,25 @@ export const CustomSpanReturn = styled.span`
   text-align: center;
   color: #4183c4;
   cursor: pointer;
+`
+
+export const GlobalSidebars = styled.div`
+  .bottom-buttons .ui.button,
+  .bottom-buttons .ui.large.button,
+  .bottom-buttons .ui.large.primary.button
+  .bottom-buttons .ui.primary.button {
+    border: solid 1px #dee2e6 !important;
+    background-color: #ffffff !important;
+    color: #20273a !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+    
+    &:hover {
+      background-color: #f8f9fb !important
+    }
+    
+    &.disabled {
+      background-color: #ffffff !important;
+      color: #cecfd4 !important;
+    }
+  }
 `

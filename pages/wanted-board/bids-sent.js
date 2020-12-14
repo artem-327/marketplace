@@ -11,7 +11,7 @@ class MyOffersPage extends Component {
     } = this.props
 
     return (
-      <Layout title={formatMessage({ id: 'title.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}>
+      <Layout title={formatMessage({ id: 'title.wantedBoardBidsSent', defaultMessage: 'My Offers' })}>
         <BidsSent />
       </Layout>
     )

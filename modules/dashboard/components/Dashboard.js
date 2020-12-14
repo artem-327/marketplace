@@ -14,6 +14,7 @@ import styled from 'styled-components'
 import moment from 'moment'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
+import { currency } from '~/constants/index'
 
 const CustomGrid = styled(Grid)`
   flex-shrink: 0;
@@ -858,7 +859,7 @@ class Dashboard extends Component {
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
         <Grid.Row>
           <Grid.Column width={16}>
-            {false && isAdmin && !takeover && /* #35120 - currently not used */(
+            {isAdmin && !takeover && (
               <Popup
                 on='click'
                 trigger={
@@ -1002,6 +1003,19 @@ class Dashboard extends Component {
           </Grid.Column>
         </Grid.Row>
 
+        <Grid.Row>
+          <Grid.Column width={10}>
+            <DivContainerGraph>
+              <Tab
+                style={{ padding: '0 20px 0 20px' }}
+                className='inventory-sidebar tab-menu flex stretched'
+                menu={{ secondary: true, pointing: true }}
+                activeIndex={this.state.activeTab}
+                panes={panes}
+              />
+            </DivContainerGraph>
+          </Grid.Column>
+
         {isClientCompany && (
           <Grid.Row>
             <Grid.Column width={5}>
@@ -1022,16 +1036,18 @@ class Dashboard extends Component {
             <Grid.Row>
               <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={'/companies/companies'}
+                  onClickUrl={isAdmin && !takeover ? '/companies/companies' : '/manage-guests/guests'}
                   icon={<Briefcase />}
                   data={companiesCount}
-                  title={'Total Companies'}
-                  titleId={'dashboard.totalCompanies.title'}
+                  title={isAdmin && !takeover ? 'Companies' : 'Guests'}
+                  titleId={
+                    isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalGuestCompanies.title'
+                  }
                 />
               </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={'/operations/company-product-catalog'}
+                  onClickUrl={isAdmin && !takeover ? '/operations/company-product-catalog' : '/inventory/my-products'}
                   icon={<Package />}
                   data={companyProductsCount}
                   title='Total Products'
@@ -1053,7 +1069,7 @@ class Dashboard extends Component {
             <Grid.Row>
               <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={'/companies/users'}
+                  onClickUrl={isAdmin && !takeover ? '/companies/users' : '/settings/users'}
                   icon={<User />}
                   data={usersCount}
                   title='Total Users Count'
@@ -1105,9 +1121,15 @@ class Dashboard extends Component {
                   onClickUrl={'/inventory/my-listings'}
                   icon={<Layers />}
                   data={productOffersValue && Math.round(productOffersValue)}
-                  title={'Total Inventory Count'}
-                  titleId={'dashboard.totalInventoryCount.title'}
+                  title={isAdmin && !takeover ? 'Inventory' : 'Inventory'}
+                  titleId={
+                    isAdmin && !takeover
+                      ? 'dashboard.totalValueWithoutMilion.title'
+                      : 'dashboard.totalInventoryCount.title'
+                  }
                   styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
+                  style='currency'
+                  currency={currency}
                 />
               </Grid.Column>
             </Grid.Row>
@@ -1128,13 +1150,19 @@ class Dashboard extends Component {
               </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={'/marketplace/listings'}
+                  onClickUrl={isAdmin && !takeover ? '' : '/marketplace/listings'}
                   icon={<DollarSign />}
                   data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
-                  title={'Total Sales'}
-                  titleId={'dashboard.totalSales.title'}
+                  title={isAdmin && !takeover ? 'Broadcasted' : 'Sales'}
+                  titleId={
+                    isAdmin && !takeover
+                      ? 'dashboard.totalBroadcastedValueWithoutMilion.title'
+                      : 'dashboard.totalSales.title'
+                  }
                   styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
                   isLastSummary
+                  style='currency'
+                  currency={currency}
                 />
               </Grid.Column>
             </Grid.Row>
@@ -1212,7 +1240,7 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        {(!isAdmin && !isClientCompany) || takeover ? (
+        {false && ((!isAdmin && !isClientCompany) || takeover) ? (
           <Grid.Row>
             {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
               <Grid.Column width={5}>
@@ -1245,6 +1273,19 @@ class Dashboard extends Component {
                 />
               </Grid.Column>
             ) : null}
+          </Grid.Row>
+        ) : null}
+        {isAdmin && !takeover ? (
+          <Grid.Row>
+            <Grid.Column width={5}>
+              <PieGraph
+                innerRadius='30%'
+                isCurrency={true}
+                data={top10ProductGroups}
+                title='POPULAR PRODUCTS'
+                titleId='dasboard.productsPopular.title'
+              />
+            </Grid.Column>
           </Grid.Row>
         ) : null}
       </CustomGrid>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
 import { injectIntl } from 'react-intl'
@@ -26,7 +27,7 @@ class GuestCompaniesTable extends Component {
           ),
           sortPath: 'ClientCompany.cfDisplayName',
           width: 210,
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'companyAdmin',
@@ -86,12 +87,31 @@ class GuestCompaniesTable extends Component {
     return rows.map(row => {
       return {
         ...row,
+        displayName: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.displayName}
+            onContentClick={() => this.props.openCompanyEdit(row.rawData)}
+          />
+        ),
         reviewRequested: (
           <Checkbox
             key={`review${row.id}`}
             toggle={true}
             defaultChecked={row.reviewRequested}
-            onClick={() => this.props.reviewRequest(row.id)}
+            onClick={async () => {
+              try {
+                await this.props.reviewRequest(row.id)
+                this.props.datagrid.updateRow(row.id, () => ({
+                  ...row,
+                  reviewRequested: !row.reviewRequested,
+                  associations: row.rawAssociations
+                }))
+              } catch (e) {
+                console.log(e)
+              }
+            }}
             data-test={`guest_company_table_review_requested_${row.id}_chckb`}
           />
         )
@@ -138,22 +158,18 @@ class GuestCompaniesTable extends Component {
   }
 
   render() {
-    const {
-      datagrid,
-      rows,
-      intl,
-      loading
-    } = this.props
+    const { datagrid, rows, intl, loading } = this.props
 
     return (
-      <ProdexGrid
-        {...datagrid.tableProps}
-        loading={datagrid.loading || loading}
-        tableName='manage_guests_client_companies'
-        rows={this.getRows(rows)}
-        columns={this.state.columns}
-        columnActions={'displayName'}
-      />
+      <div className='flex stretched listings-wrapper'>
+        <ProdexGrid
+          {...datagrid.tableProps}
+          loading={datagrid.loading || loading}
+          tableName='manage_guests_client_companies'
+          rows={this.getRows(rows)}
+          columns={this.state.columns}
+        />
+      </div>
     )
   }
 }
@@ -172,17 +188,16 @@ const mapStateToProps = ({ manageGuests }, { datagrid }) => {
       rawData: c,
       ...c,
       displayName: (
-        <div
-          style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}
-        >{getSafe(() => c.cfDisplayName, '')}</div>
+        <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {getSafe(() => c.cfDisplayName, '')}
+        </div>
       ),
       companyAdmin: getSafe(() => c.primaryUser.name, ''),
-      associations: (
-        <ArrayToFirstItem values={getSafe(() => c.associations, []).map(r => r.name)} />
-      ),
+      rawAssociations: getSafe(() => c.associations, []),
+      associations: <ArrayToFirstItem values={getSafe(() => c.associations, []).map(r => r.name)} />,
       adminEmail: getSafe(() => c.primaryUser.email, ''),
       primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.cfName, ''),
-      reviewRequested: getSafe(() => c.reviewRequested, false),
+      reviewRequested: getSafe(() => c.reviewRequested, false)
     }))
   }
 }

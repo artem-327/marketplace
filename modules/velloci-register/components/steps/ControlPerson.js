@@ -76,7 +76,7 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
             <CustomDivContent style={{ color: '#848893', padding: '10px' }}>
               <FormattedMessage
                 id='velloci.controlPerson.infoContent'
-                defaultMessage='A control person is a single individual with significant responsibility to constrol manage or direct legal entity customer, including an executive ocer or senior manager (e.g. a Chief Executive Ocer, Chief Financial Ocer, Chief Operating Ocer, Managing Member, General Partner, President, Vice President or Treasurer); or any other individual who regulary performs similar functions.'
+                defaultMessage='A control person is a single individual with significant responsibility to control, manage or direct legal entity customer, including an executive Officer or senior manager (e.g. a Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President or Treasurer); or any other individual who regularly performs similar functions.'
               />
               <br />
               <br />

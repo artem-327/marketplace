@@ -17,6 +17,7 @@ import { getLocaleDateFormat } from '~/components/date-format'
 import BidsReceived from './BidsReceived'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import styled from 'styled-components'
+import { getProductName } from '../../constants/constants'
 
 const StyledArrayToFirstItem = styled(ArrayToFirstItem)`
   .ui.label.bordered.right {
@@ -96,16 +97,16 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     clientCompany: getSafe(() => store.auth.identity.clientCompany, false),
-    type: store.wantedBoard.myRequestedItemsType,
+    isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
+    isCompanyAdmin: getSafe(() => store.auth.identity.isCompanyAdmin, false),
     editedId: store.wantedBoard.editWindowOpen === 'bids-received' ? store.wantedBoard.editedId : null,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
     loading: getSafe(() => store.wantedBoard.loading, false),
     openSidebar: getSafe(() => store.wantedBoard.openSidebar, false),
     sidebarValues: getSafe(() => store.wantedBoard.sidebarValues, null),
     rows: datagrid.rows.map(row => {
-      const productName = getSafe(() => row.element.productGroup.name, null)
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
-      const product = getSafe(() => row.element.productGroup.name, null)
+      const product = getProductName(row.element)
       const casNumber = casNumberAndName(getSafe(() => row.element.casProduct, null))
       const purchaseRequestOffers = row.purchaseRequestOffers.map(pro => {
         const condition = getSafe(() => pro.productOffer.conforming, null)
@@ -114,7 +115,7 @@ function mapStateToProps(store, { datagrid }) {
           id: row.id + '_' + pro.id,
           clsName: 'tree-table nested-row',
           rawData: pro,
-          product: getSafe(() => productName, '...'),
+          product: getSafe(() => product, '...'),
           casNumber: getSafe(
             () => pro.productOffer.companyProduct.productGroup.elements[0].casProduct.casNumber,
             '...'
@@ -165,7 +166,7 @@ function mapStateToProps(store, { datagrid }) {
         offer: false,
         product: product ? product : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
         casNumber: casNumber ? casNumber : <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />,
-        assay: productName ? (
+        assay: product ? (
           'N/A'
         ) : (
           <FormattedAssay

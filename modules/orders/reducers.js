@@ -1,6 +1,7 @@
 import * as AT from './action-types'
 import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
 import { uniqueArrayByKey, getSafe } from '~/utils/functions'
+import Router from 'next/router'
 
 const initialState = {
   data: [],
@@ -94,6 +95,7 @@ export default function (state = initialState, action) {
     case AT.ORDER_GET_SALE_ORDER_REJECTED:
     case AT.ORDER_GET_PURCHASE_ORDER_REJECTED:
     case AT.ORDERS_DETAIL_FETCH_FAILURE:
+      action.payload === 'sale' ? Router.push('/orders/sales') : Router.push('/orders/purchase')
       return {
         ...state,
         isDetailFetching: false

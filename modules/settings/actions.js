@@ -693,10 +693,10 @@ export function deleteCreditCard(cardId) {
 //   }
 // }
 
-export function uploadCSVFile(payload) {
+export function uploadCSVFile(payload, type = '.csv') {
   return {
     type: AT.POST_UPLOAD_CSV_FILE,
-    payload: api.uploadCSVFile(payload)
+    payload: api.uploadCSVFile(payload, type)
   }
 }
 
@@ -1219,10 +1219,10 @@ export function vellociGetToken() {
     payload: api.vellociGetToken()
   }
 }
-export function vellociAddAcount(publicToken) {
+export function vellociAddAcount(publicToken, metadata) {
   return {
     type: AT.VELLOCI_ADD_ACOUNT,
-    payload: api.vellociAddAcount(publicToken)
+    payload: api.vellociAddAcount(publicToken, metadata)
   }
 }
 

@@ -29,5 +29,13 @@ export default {
   getPoliticallyExposedPersons: () =>
     api.get('/prodex/api/payments/velloci/enums/politically-exposed-persons').then(response => response.data),
   getTinTypes: () => api.get('/prodex/api/payments/velloci/enums/tin-types').then(response => response.data),
-  getBusinessDetails: () => api.get('/prodex/api/payments/velloci/business-details').then(response => response.data)
+  getBusinessDetails: () => api.get('/prodex/api/payments/velloci/business-details').then(response => response.data),
+  inviteBeneficialOwners: (body, companyId) => api
+    .post(`/prodex/api/payments/velloci/users/invite-beneficial-owners?companyId=${companyId}`, body)
+    .then(response => response.data),
+  registerBeneficialOwner: (body, token) => api
+    .post(`/prodex/api/payments/velloci/users/register-beneficial-owner?token=${token}`, body)
+    .then(response => response.data),
+  checkMagicToken: (token) => api
+    .get(`/prodex/api/users/me/magic-token?token=${token}`).then(response => response.data)
 }

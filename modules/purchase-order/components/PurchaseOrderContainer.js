@@ -11,6 +11,12 @@ function mapStateToProps(store) {
     if (selectedAddress.deliveryAddress) var { address } = selectedAddress.deliveryAddress
     else var { address } = selectedAddress
   }
+  let taxId =
+    getSafe(() => selectedAddress.warehouse, false) &&
+    getSafe(() => store.cart.warehouses.length, '') &&
+    getSafe(() => selectedAddress.id, '')
+      ? getSafe(() => store.cart.warehouses.find(warehouse => warehouse.id === selectedAddress.id).taxId, '')
+      : ''
 
   function getAddressName() {
     if (selectedAddress.addressName) {
@@ -34,6 +40,7 @@ function mapStateToProps(store) {
     selectedAddressId: store.forms.cart.selectedAddressId,
     initialValues: selectedAddress && {
       ...selectedAddress,
+      taxId: taxId,
       addressName: getAddressName(),
       address: {
         ...address,
@@ -51,8 +58,6 @@ function mapStateToProps(store) {
     shippingQuotes: getSafe(() => store.cart.shippingQuotes, {}),
     purchaseHazmatEligible: getSafe(() => store.auth.identity.company.purchaseHazmatEligible),
     cartItems: getSafe(() => store.cart.cart.cartItems, []),
-    paymentTerm: getSafe(() => store.cart.cart.paymentTerm, ''),
-    paymentNetDays: getSafe(() => store.cart.cart.paymentNetDays, ''),
     isOpenSidebar: getSafe(() => store.cart.isOpenSidebar, false)
   }
 }

@@ -3,10 +3,11 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
-import { getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { removeEmpty } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
+import ErrorFocus from '~/components/error-focus'
 
 import {
   Button,
@@ -42,7 +43,6 @@ import {
   DateInputStyledWrapper,
   SaveFiltersGrid,
   InputWrapper,
-  QuantityWrapper,
   StyledModalContent,
   CustomMenu,
   SmallGrid,
@@ -165,6 +165,7 @@ class InventoryFilter extends Component {
         inputs[key] !== '' &&
         (Object.keys(inputs[key]).length > 0 || typeof inputs[key] === 'boolean' || typeof inputs[key] === 'number') &&
         key !== 'expiration' &&
+        key !== 'neededAt' &&
         key !== 'mfg'
       ) {
         if (datagridValues[key] && !!datagridValues[key].nested) {
@@ -439,54 +440,6 @@ class InventoryFilter extends Component {
         <Input name={name} inputProps={inputProps} />
         <Label className={labelClass}>{labelText}</Label>
       </InputWrapper>
-    )
-  }
-
-  quantityWrapper = (name, { values, setFieldValue, setFieldTouched, label }) => {
-    return (
-      <QuantityWrapper>
-        <Input
-          name={name}
-          inputProps={{
-            placeholder: '0',
-            type: 'number',
-            label: label,
-            labelPosition: 'left',
-            fluid: true
-          }}
-        />
-        <div className='sideButtons'>
-          <Button
-            type='button'
-            className='buttonPlus'
-            onClick={() => {
-              if (isNaN(values[name]) || values[name] === '') {
-                setFieldValue(name, 1)
-                setFieldTouched(name, true, true)
-              } else {
-                setFieldValue(name, parseInt(values[name]) + 1)
-                setFieldTouched(name, true, true)
-              }
-            }}>
-            +
-          </Button>
-          <Button
-            type='button'
-            className='buttonMinus'
-            onClick={() => {
-              if (isNaN(values[name]) || values[name] === '') {
-                setFieldValue(name, 1)
-                setFieldTouched(name, true, true)
-              } else {
-                const value = parseInt(values[name])
-                if (value > 1) setFieldValue(name, value - 1)
-                setFieldTouched(name, true, true)
-              }
-            }}>
-            -
-          </Button>
-        </div>
-      </QuantityWrapper>
     )
   }
 
@@ -852,20 +805,28 @@ class InventoryFilter extends Component {
             <SmallGrid>
               <GridRow>
                 <GridColumn width={8}>
-                  {this.quantityWrapper('quantityFrom', {
-                    values,
-                    setFieldValue,
-                    setFieldTouched,
-                    label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' })
-                  })}
+                  <Input
+                    name='quantityFrom'
+                    inputProps={{
+                      placeholder: '0',
+                      type: 'number',
+                      label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    }}
+                  />
                 </GridColumn>
                 <GridColumn width={8}>
-                  {this.quantityWrapper('quantityTo', {
-                    values,
-                    setFieldValue,
-                    setFieldTouched,
-                    label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' })
-                  })}
+                  <Input
+                    name='quantityTo'
+                    inputProps={{
+                      placeholder: '0',
+                      type: 'number',
+                      label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    }}
+                  />
                 </GridColumn>
               </GridRow>
             </SmallGrid>
@@ -999,7 +960,9 @@ class InventoryFilter extends Component {
       isFilterSaving,
       intl: { formatMessage },
       filterState,
-      onClose
+      onClose,
+      toastManager,
+      filterType
     } = this.props
 
     const { savedFiltersActive, openedSaveFilter } = this.state
@@ -1058,6 +1021,7 @@ class InventoryFilter extends Component {
                             deleteFilter={this.props.deleteFilter}
                             updateFilterNotifications={this.props.updateFilterNotifications}
                             savedFilterUpdating={this.props.savedFilterUpdating}
+                            filterType={filterType}
                           />
                         </PerfectScrollbar>
                       )}
@@ -1150,7 +1114,36 @@ class InventoryFilter extends Component {
                           size='large'
                           className='secondary outline'
                           loading={isFilterSaving}
-                          onClick={async () => this.toggleSaveFilter()}
+                          onClick={async () => {
+                            const {validateForm, submitForm, values} = props
+
+                            validateForm().then(err => {
+                              const errors = Object.keys(err)
+                              if (errors.length && errors[0] !== 'isCanceled') {
+                                // Errors found
+                                submitForm() // to show errors
+                              } else {
+                                // No errors found
+                                const requestData = this.generateRequestData(values)
+                                if (requestData.filters.length) {
+                                  this.toggleSaveFilter()
+                                } else {
+                                  toastManager.add(
+                                    generateToastMarkup(
+                                      <FormattedMessage id='filter.saveEmptyFilterHeader' defaultMessage='Empty Filter' />,
+                                      <FormattedMessage
+                                        id='filter.saveEmptyFilter'
+                                        defaultMessage='There are no any filters configured'
+                                      />
+                                    ),
+                                    {
+                                      appearance: 'warning'
+                                    }
+                                  )
+                                }
+                              }
+                            })
+                          }}
                           data-test='filter_save_new'>
                           {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
                         </Button>
@@ -1183,6 +1176,7 @@ class InventoryFilter extends Component {
                   )
                 )}
               </BottomButtons>
+              <ErrorFocus />
             </Modal>
           )
         }}

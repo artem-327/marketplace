@@ -6,6 +6,7 @@ export const initialState = {
   offerDetail: {},
   orderDetail: {},
   cart: {},
+  cartItemsCount: 0,
   deliveryAddresses: [],
   payments: [],
   isFetching: true,
@@ -126,7 +127,7 @@ export default function reducer(state = initialState, action) {
     case AT.DELIVERY_ADDRESS_EDIT_PENDING: {
       return {
         ...state,
-        isFetching: false
+        isFetching: true
       }
     }
 
@@ -173,7 +174,7 @@ export default function reducer(state = initialState, action) {
     case AT.UPDATE_WAREHOUSE_PENDING: {
       return {
         ...state,
-        isFetching: false
+        isFetching: true
       }
     }
 
@@ -244,6 +245,7 @@ export default function reducer(state = initialState, action) {
           item.locationStr = getLocationString(item.productOffer)
         })
       }
+
       return {
         ...state,
         cart: payload,
@@ -417,7 +419,8 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_CART_ITEM_FULFILLED: {
       return {
         ...state,
-        cart: action.payload.data
+        cart: action.payload.data,
+        cartItemsCount: action.payload.data.cartItems.length
       }
     }
 
@@ -573,6 +576,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isOpenSidebar: false
+      }
+    }
+
+    case AT.CART_GET_COUNT_ITEMS_FULFILLED: {
+      return {
+        ...state,
+        cartItemsCount: action.payload
       }
     }
 

@@ -80,14 +80,14 @@ export default class PhoneNumber extends Component {
   }
 
   componentDidMount = async () => {
-    const { name, setFieldValue, setFieldTouched } = this.props
+    const { name, setFieldValue, setFieldTouched, defaultCountryCode } = this.props
 
     if (!this.props.phoneCountryCodes.length) await this.props.getCountryCodes()
 
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
     phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
     this.setState({
-      phoneCountryCode: phone.phoneCountryCode,
+      phoneCountryCode: phone.phoneCountryCode ? phone.phoneCountryCode : defaultCountryCode,
       phoneNumber: phone.phoneNumber,
       phoneFull: phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
     })
@@ -99,11 +99,11 @@ export default class PhoneNumber extends Component {
   componentDidUpdate(prevProps, nextProps, snapshot) {
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
 
-    if (phone !== this.state.phoneFull) {
+    if (phone && phone !== this.state.phoneFull) {
       phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
 
       this.setState({
-        phoneCountryCode: phone.phoneCountryCode,
+        phoneCountryCode: phone.phoneCountryCode ? phone.phoneCountryCode : this.props.defaultCountryCode,
         phoneNumber: phone.phoneNumber,
         phoneFull: phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
       })
@@ -113,6 +113,8 @@ export default class PhoneNumber extends Component {
   shouldComponentUpdate(nextProps, nextState, nextContext) {
     return (
       this.state.phoneFull !== nextState.phoneFull ||
+      this.state.phoneCountryCode !== nextState.phoneCountryCode ||
+      this.state.phoneNumber !== nextState.phoneNumber ||
       get(this.props.values, this.props.name, '') !== get(nextProps.values, nextProps.name, '') ||
       get(this.props.errors, this.props.name, '') !== get(nextProps.errors, nextProps.name, '') ||
       get(this.props.touched, this.props.name, '') !== get(nextProps.touched, nextProps.name, '') ||
@@ -134,33 +136,77 @@ export default class PhoneNumber extends Component {
 
     setFieldValue(
       name,
-      phone.phoneCountryCode && phone.phoneCountryCode.length
+      phone.phoneNumber
+        ? phone.phoneCountryCode && phone.phoneCountryCode.length
         ? '+' + phone.phoneCountryCode + phone.phoneNumber
         : phone.phoneNumber
+        : ''
     )
     setFieldTouched(name, true, true)
   }
 
-  handleChangeInput = data => {
+  beforeMaskedStateChange = ({ currentState, nextState, previousState }) => {
+    let { value } = nextState
     const { name, setFieldValue, setFieldTouched } = this.props
-    const { value } = data && data.target
-    const newValue = value.replace(/[\s+_]/g, '')
 
-    const phone = { ...this.state, ...{ phoneNumber: newValue } }
-    const phoneFull =
-      phone.phoneCountryCode && phone.phoneCountryCode.length
-        ? phone.phoneCountryCode + phone.phoneNumber
-        : phone.phoneNumber
+    if (currentState) {
+      if (currentState.value && currentState.value.charAt(0) === '+') {
+        const enteredNumber = currentState.value.replace(/\D/g, '')
 
-    this.setState({ phoneNumber: newValue, phoneFull })
+        let phone = splitPhoneNumber(enteredNumber, this.props.phoneCountryCodes)
+        if (phone.phoneCountryCode) {
+          value = phone.phoneNumber
+          const phoneFull = phone.phoneCountryCode + phone.phoneNumber
 
-    setFieldValue(
-      name,
-      phone.phoneCountryCode && phone.phoneCountryCode.length
-        ? '+' + phone.phoneCountryCode + phone.phoneNumber
-        : phone.phoneNumber
-    )
-    setFieldTouched(name, true, true)
+          this.setState(
+            {
+              phoneCountryCode: phone.phoneCountryCode,
+              phoneNumber: phone.phoneNumber,
+              phoneFull
+            },
+            () => {
+              setFieldValue(name, '+' + enteredNumber)
+              setFieldTouched(name, true, true)
+
+              return {
+                ...nextState,
+                value: phone.phoneNumber
+              }
+            }
+          )
+        }
+      }
+
+      if (previousState && currentState) {
+        // same as onChange, not in render
+
+        // Component bug workaround
+        const currentNumber = currentState.value.replace(/\D/g, '')
+        const nextNumber = nextState.value.replace(/\D/g, '')
+        const previousNumber = previousState.value.replace(/\D/g, '')
+        const newValue = currentNumber === previousNumber ? nextNumber : currentNumber
+        // end of workaround
+
+        const phone = { ...this.state, ...{ phoneNumber: newValue } }
+        const phoneFull =
+          phone.phoneCountryCode && phone.phoneCountryCode.length
+            ? phone.phoneCountryCode + phone.phoneNumber
+            : phone.phoneNumber
+
+        this.setState({ phoneNumber: newValue, phoneFull })
+
+        setFieldValue(
+          name,
+          phone.phoneNumber
+            ? phone.phoneCountryCode && phone.phoneCountryCode.length
+            ? '+' + phone.phoneCountryCode + phone.phoneNumber
+            : phone.phoneNumber
+            : ''
+        )
+        setFieldTouched(name, true, true)
+      }
+    }
+    return { ...nextState, value }
   }
 
   render() {
@@ -183,47 +229,30 @@ export default class PhoneNumber extends Component {
       <Field
         name={name}
         render={({ field, form }) => {
-          if (!get(errors, name, null) && ((form && !error) || form.isValidating)) {
-            if (!phoneCountryCode && phoneNumber) {
-              form.setFieldError(
-                name,
-                formatMessage({ id: 'global.phoneCountryCodeRequired', defaultMessage: 'Phone country code required' })
-              )
-            } else if (
-              (phoneCountryCode && !phoneNumber) ||
-              (phoneNumber && phoneNumber.includes('_'))
-            ) {
-              form.setFieldError(
-                name,
-                formatMessage({ id: 'global.phoneNumberIsInvalid', defaultMessage: 'Phone number is invalid' })
-              )
-            }
-          }
-
           return (
             <FormField error={!!error}>
               {label && <label>{label}</label>}
               <span style={{ display: 'flex' }} className='phone-number'>
                 <StyledDropdown
+                  name={name + 'CountryCode'}
                   className='phone-code'
                   options={phoneCountryCodes}
                   onChange={this.handleChangeDropdown}
                   search
                   disabled={disabled}
-                  clearable={clearable}
                   placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
                   value={phoneCountryCode}
                 />
                 <StyledInputMask
                   name={name}
                   className='phone-num'
+                  beforeMaskedStateChange={this.beforeMaskedStateChange}
                   mask='999 999 9999'
                   maskchar=' '
                   compact='true'
                   disabled={disabled}
                   type='text'
                   value={phoneNumber}
-                  onChange={this.handleChangeInput}
                   placeholder={
                     placeholder || formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })
                   }

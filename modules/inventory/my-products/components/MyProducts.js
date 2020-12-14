@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { withDatagrid } from '~/modules/datagrid'
 
 import * as Actions from '~/modules/settings/actions'
@@ -54,37 +55,15 @@ class MyProducts extends Component {
     this.state = {
       columns: [
         {
-          name: 'productStatus',
-          title: (
-            <Popup
-              size='small'
-              header={
-                <FormattedMessage
-                  id='global.productStatusIndicator'
-                  defaultMessage='Status indicator if Company Product will be shown on Marketplace'
-                />
-              }
-              trigger={
-                <div>
-                  <FileTextIcon />
-                </div>
-              } // <div> has to be there otherwise popup will be not shown
-            />
-          ),
-          caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />,
-          width: 40,
-          align: 'center'
-        },
-        {
           name: 'intProductName',
           title: (
             <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name'>
               {text => text}
             </FormattedMessage>
           ),
-          width: 200,
+          width: 250,
           sortPath: 'CompanyProduct.intProductName',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'intProductCode',
@@ -258,6 +237,105 @@ class MyProducts extends Component {
     ]
   }
 
+  getProductStatus = product => {
+    let status = product.companyGenericProduct
+      ? !product.companyGenericProduct.isPublished
+        ? 'Unpublished'
+        : ''
+      : 'Unmapped'
+
+    let popupText, dispIcon
+
+    switch (status) {
+      case 'Unpublished':
+        popupText = (
+          <FormattedMessage
+            id='global.notPublished'
+            defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace.'
+          />
+        )
+        dispIcon = <Circle className='red' />
+        break
+
+      case 'Unmapped':
+        popupText = (
+          <FormattedMessage
+            id='settings.product.unmapped'
+            defaultMessage='This product is not mapped and will not show on the Marketplace.'
+          />
+        )
+        dispIcon = <Circle className='red' />
+        break
+
+      default:
+        popupText = (
+          <FormattedMessage id='global.productOk' defaultMessage='This product is being broadcasted to the marketplace' />
+        )
+        dispIcon = <Circle />
+    }
+
+    return (
+      <Popup
+        size='small'
+        header={popupText}
+        trigger={<div>{dispIcon}</div>} // <div> has to be there otherwise popup will be not shown
+      />
+    )
+  }
+
+  getActions = () => {
+    const { intl: {formatMessage}, openPopup, deleteProduct, datagrid } = this.props
+
+    return [
+      {
+        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+        callback: row => openPopup(row.rawData)
+      },
+      {
+        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+        disabled: row => this.props.editedId === row.id,
+        callback: row => {
+          return confirm(
+            formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
+            formatMessage(
+              {
+                id: 'confirm.deleteItem',
+                defaultMessage: `Do you really want to delete '${row.rawData.intProductName}'?`
+              },
+              { item: row.rawData.intProductName }
+            )
+          ).then(async row => {
+            try {
+              await deleteProduct(row.id, row.intProductName)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          })
+        }
+      }
+    ]
+  }
+
+  getRows = rows => {
+    const { openPopup } = this.props
+
+    return rows.map(r => {
+      return {
+        ...r,
+        intProductName: (
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            content={r.intProductName}
+            onContentClick={() => openPopup(r.rawData)}
+            leftContent={this.getProductStatus(r.rawData)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const {
       rows,
@@ -277,7 +355,7 @@ class MyProducts extends Component {
 
     return (
       <>
-        {false && !tutorialCompleted && <Tutorial />}
+        {<Tutorial isTutorial={false} isBusinessVerification={true} />}
 
         <Container fluid style={{ padding: '0px 30px' }} className='flex stretched'>
           <div style={{ padding: '10px 0' }}>
@@ -291,7 +369,7 @@ class MyProducts extends Component {
                     value={filterValue ? filterValue.searchInput : ''}
                     placeholder={formatMessage({
                       id: 'settings.tables.products.search',
-                      defaultMessage: 'Search product by name, number ...'
+                      defaultMessage: 'Search product by name, code'
                     })}
                     onChange={this.handleFilterChangeInputSearch}
                   />
@@ -356,12 +434,12 @@ class MyProducts extends Component {
               </div>
             </CustomRowDiv>
           </div>
-          <div className='flex stretched inventory-wrapper' style={{ padding: '10px 0' }}>
+          <div className='flex stretched inventory-wrapper listings-wrapper' style={{ padding: '10px 0' }}>
             <ProdexTable
               tableName='inventory_my_products'
               {...datagrid.tableProps}
               loading={datagrid.loading || loading}
-              rows={rows}
+              rows={this.getRows(rows)}
               columns={columns}
               style={{ marginTop: '5px' }}
               defaultSorting={{
@@ -370,7 +448,6 @@ class MyProducts extends Component {
                 direction: 'asc'
               }}
               editingRowId={editedId}
-              columnActions='intProductName'
             />
           </div>
         </Container>
@@ -379,52 +456,6 @@ class MyProducts extends Component {
       </>
     )
   }
-}
-
-const getProductStatus = product => {
-  let status = product.companyGenericProduct
-    ? !product.companyGenericProduct.isPublished
-      ? 'Unpublished'
-      : ''
-    : 'Unmapped'
-
-  let popupText, dispIcon
-
-  switch (status) {
-    case 'Unpublished':
-      popupText = (
-        <FormattedMessage
-          id='global.notPublished'
-          defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace.'
-        />
-      )
-      dispIcon = <Circle className='red' />
-      break
-
-    case 'Unmapped':
-      popupText = (
-        <FormattedMessage
-          id='settings.product.unmapped'
-          defaultMessage='This product is not mapped and will not show on the Marketplace.'
-        />
-      )
-      dispIcon = <Circle className='red' />
-      break
-
-    default:
-      popupText = (
-        <FormattedMessage id='global.productOk' defaultMessage='This product is being broadcasted to the marketplace' />
-      )
-      dispIcon = <Circle />
-  }
-
-  return (
-    <Popup
-      size='small'
-      header={popupText}
-      trigger={<div>{dispIcon}</div>} // <div> has to be there otherwise popup will be not shown
-    />
-  )
 }
 
 const mapStateToProps = (state, { datagrid }) => {
@@ -439,11 +470,7 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         ...product,
         rawData: product,
-        intProductName: (
-          <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {product.intProductName}
-          </div>
-        ),
+        intProductName: product.intProductName,
         packagingTypeName: getSafe(() => product.packagingType.name) ? (
           <UnitOfPackaging value={product.packagingType.name} />
         ) : (
@@ -461,7 +488,6 @@ const mapStateToProps = (state, { datagrid }) => {
         genericProductName: getSafe(() => product.companyGenericProduct.name, 'N/A'),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
         packagingUnit: getSafe(() => product.packagingUnit.id),
-        productStatus: getProductStatus(product),
         productStatusTmp:
           product.companyGenericProduct && !product.companyGenericProduct.isPublished ? (
             <Popup

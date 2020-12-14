@@ -102,10 +102,10 @@ class FilterTags extends Component {
   }
 
   render() {
-    let { appliedFilter } = this.props
+    let { appliedFilter, filterType } = this.props
 
     if (!appliedFilter.filters || appliedFilter.filters.length === 0) return null
-    let filters = groupFilters(appliedFilter.filters, this.props.params)
+    let filters = groupFilters(appliedFilter.filters, this.props.params, filterType)
 
     if (!filters || filters.length === 0) return null
     let tagsToDisplay = []

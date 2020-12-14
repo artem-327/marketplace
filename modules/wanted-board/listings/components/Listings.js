@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Input, Button } from 'semantic-ui-react'
+import { Container, Input, Button, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { debounce } from 'lodash'
@@ -10,18 +10,37 @@ import { groupActionsMarketplace } from '~/modules/company-product-info/constant
 import DetailSidebar from './DetailSidebar'
 import { Datagrid } from '~/modules/datagrid'
 import { SubmitOffer } from './SubmitOffer/index'
-import { PlusCircle } from 'react-feather'
+import { PlusCircle, Sliders, MoreVertical } from 'react-feather'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { CustomRowDiv, ProductChemicalSwitch } from '../../constants/layout'
+import { CustomRowDiv } from '../../constants/layout'
+import ActionCell from '~/components/table/ActionCell'
 import { getSafe } from '~/utils/functions'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
+import SearchInput from '../../components/SearchInput'
+import styled from 'styled-components'
+import FilterTags from '~/modules/filter/components/FitlerTags'
+import { WantedBoardFilter } from '~/modules/filter'
+
+const FiltersRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: -5px;
+`
+
+const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
+`
 
 class Listings extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      columnsProduct: [
+      columns: [
         {
           name: 'product',
           title: (
@@ -30,119 +49,9 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 290,
-          actions: this.getActions()
+          allowReordering: false
           //align: 'right',
           //sortPath: 'ProductOffer.pkgAvailable'
-        },
-        {
-          name: 'casNumber',
-          title: (
-            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 225,
-          disabled: true
-        },
-        {
-          name: 'assay',
-          title: (
-            <FormattedMessage id='wantedBoard.assay' defaultMessage='Assay'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 130,
-          disabled: true
-        },
-        {
-          name: 'packaging',
-          title: (
-            <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150
-        },
-        /*
-      {
-        name: 'manufacturer',
-        title: (
-          <FormattedMessage id='wantedBoard.manufacturer' defaultMessage='Manufacturer'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        width: 420
-      },
-      */
-        {
-          name: 'form',
-          title: (
-            <FormattedMessage id='wantedBoard.form' defaultMessage='Form'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'fobPrice',
-          title: (
-            <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150
-        },
-        {
-          name: 'quantity',
-          title: (
-            <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 180
-        },
-        {
-          name: 'neededBy',
-          title: (
-            <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'createdAt',
-          title: (
-            <FormattedMessage id='wantedBoard.datePost' defaultMessage='Date Post'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120,
-          sortPath: 'PurchaseRequest.createdAt'
-        }
-      ],
-      columnsChemical: [
-        {
-          name: 'product',
-          title: (
-            <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 290,
-          disabled: true
-          //align: 'right',
-          //sortPath: 'ProductOffer.pkgAvailable'
-        },
-        {
-          name: 'casNumber',
-          title: (
-            <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 225,
-          actions: this.getActions()
         },
         {
           name: 'assay',
@@ -217,8 +126,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 120,
-          sortPath: 'PurchaseRequest.createdAt',
-          disabled: true
+          sortPath: 'PurchaseRequest.createdAt'
         }
       ],
       selectedRows: [],
@@ -226,23 +134,32 @@ class Listings extends Component {
       open: false,
       popupValues: null,
       filterValues: {
-        searchInput: ''
-      }
+        searchByNamesAndCas: null
+      },
+      openFilterPopup: false
     }
   }
 
   componentDidMount() {
-    const { tableHandlersFiltersListings } = this.props
+    const { tableHandlersFiltersListings, advancedFilters, applyDatagridFilter, datagrid } = this.props
 
     if (tableHandlersFiltersListings) {
       this.setState({ filterValues: tableHandlersFiltersListings }, () => {
         const filter = {
-          ...this.state.filterValues
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
         }
-        this.handleFiltersValue(filter)
+        datagrid.setSearch(filter, !advancedFilters.filters, 'pageFilters')
       })
     } else {
-      this.handleFiltersValue(this.state.filterValues)
+      datagrid.setSearch(this.state.filterValues, !advancedFilters.filters, 'pageFilters')
+    }
+
+    if (advancedFilters.filters) {
+      let datagridFilter = this.toDatagridFilter(advancedFilters)
+      applyDatagridFilter(datagridFilter, true)
     }
   }
 
@@ -251,33 +168,50 @@ class Listings extends Component {
     if (this.props.openSidebar && this.props.activeTab === 'listings') this.props.closeDetailSidebar()
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = this.props
+    if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
+      datagrid.setFilter(datagridFilter, datagridFilterReload, 'wantedBoardListings')
+    }
+  }
+
   handleFiltersValue = debounce(filter => {
     const { datagrid } = this.props
     datagrid && datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  handleProductChemicalSwitch = data => {
-    const { datagrid } = this.props
-    this.props.setWantedBoardType(data)
-    datagrid.clear()
-    const filter = {
-      ...this.state.filterValues
-    }
-    this.handleFiltersValue(filter)
+  SearchByNamesAndCasChanged = data => {
+    this.setState(
+      {
+        filterValues: {
+          ...this.state.filterValues,
+          searchByNamesAndCas: data
+        }
+      },
+      () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.searchByNamesAndCas && {
+            ...this.state.filterValues.searchByNamesAndCas.filters
+          })
+        }
+        this.handleFiltersValue(filter)
+      }
+    )
   }
 
-  handleFilterChangeInputSearch = (e, data) => {
-    if (!data) return
-    e && e.stopPropagation()
-    this.setState({
-      filterValues: {
-        searchInput: data.value
-      }
-    })
-    const filter = {
-      filterName: data.value
+  toDatagridFilter = savedFilter => {
+    let { filters, ...rest } = savedFilter
+
+    return {
+      filters: filters.map(filter => ({
+        operator: filter.operator,
+        path: filter.path,
+        values: filter.values.map(val => val.value)
+      })),
+      pageNumber: 0,
+      pageSize: 50
     }
-    this.handleFiltersValue(filter)
   }
 
   getActions = () => {
@@ -300,6 +234,21 @@ class Listings extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(r => {
+      return {
+        ...r,
+        product: (
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            content={r.product}
+          />
+        )
+      }
+    })
+  }
+
   renderContent = () => {
     const {
       datagrid,
@@ -308,53 +257,46 @@ class Listings extends Component {
       editedId,
       sidebarDetailTrigger,
       openedSubmitOfferPopup,
-      type,
       popupValues,
-      tutorialCompleted
+      tutorialCompleted,
+      tableHandlersFiltersListings
     } = this.props
-    const { columnsProduct, columnsChemical, filterValues } = this.state
+    const { columns, filterValues, openFilterPopup } = this.state
     let { formatMessage } = intl
 
     return (
       <>
-        {false && !tutorialCompleted && <Tutorial marginWantedBoard />}
+        {<Tutorial marginWantedBoard isTutorial={false} isBusinessVerification={true} />}
         {openedSubmitOfferPopup && <SubmitOffer {...popupValues} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
-            <div className='column'>
-              <Input
-                style={{ width: 340 }}
-                name='searchInput'
-                icon='search'
-                value={filterValues.searchInput}
-                placeholder={formatMessage({
-                  id: 'wantedBoard.searchByProductName',
-                  defaultMessage: 'Search by product name'
-                })}
-                onChange={this.handleFilterChangeInputSearch}
-              />
+            <div>
+              <div className='column' style={{ width: '340px' }}>
+                <SearchInput
+                  onChange={this.SearchByNamesAndCasChanged}
+                  initFilterState={getSafe(() => tableHandlersFiltersListings.searchByNamesAndCas, null)}
+                  filterApply={false}
+                />
+              </div>
+              <div className='column'>
+                <Button
+                  className='light'
+                  size='large'
+                  primary
+                  onClick={() => this.setState({ openFilterPopup: true })}
+                  data-test='wanted_board_advanced_filters_btn'>
+                  <Sliders />
+                  {formatMessage({
+                    id: 'global.filters',
+                    defaultMessage: 'Filters'
+                  })}
+                </Button>
+              </div>
+              <FiltersRow>
+                <FilterTags filterType='wantedBoardListings' datagrid={datagrid} />
+              </FiltersRow>
             </div>
             <div>
-              <div className='column'>
-                <ProductChemicalSwitch className={type}>
-                  <Button
-                    attached='left'
-                    onClick={() => this.handleProductChemicalSwitch('product')}
-                    data-test='wanted_board_product_switch_btn'>
-                    <FormattedMessage id='wantedBoard.product' defaultMessage='Product'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                  <Button
-                    attached='right'
-                    onClick={() => this.handleProductChemicalSwitch('chemical')}
-                    data-test='wanted_board_chemical_switch_btn'>
-                    <FormattedMessage id='wantedBoard.chemical' defaultMessage='Chemical'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                </ProductChemicalSwitch>
-              </div>
               <div className='column'>
                 <Button
                   className='secondary'
@@ -371,18 +313,17 @@ class Listings extends Component {
             </div>
           </CustomRowDiv>
         </div>
-        <div className='flex stretched' style={{ padding: '10px 0 20px 0' }}>
+        <div className='flex stretched listings-wrapper' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
-            key={type}
-            tableName={`wanted_board_${type}_grid`}
+            tableName={'wanted_board_listings_grid'}
             {...datagrid.tableProps}
-            rows={rows}
-            columns={type === 'product' ? columnsProduct : columnsChemical}
+            rows={this.getRows(rows)}
+            columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
-            columnActions={type === 'product' ? 'product' : 'casNumber'}
           />
         </div>
+        {openFilterPopup && <WantedBoardFilter onClose={() => this.setState({ openFilterPopup: false })} />}
       </>
     )
   }

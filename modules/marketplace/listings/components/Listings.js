@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
-import {AlertTriangle, Clock, MoreVertical, Sliders} from 'react-feather'
+import { MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number, boolean } from 'prop-types'
 import Link from 'next/link'
 import styled from 'styled-components'
-
+import { Warning } from '@material-ui/icons'
 import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -28,7 +29,7 @@ const defaultHiddenColumns = [
   'expiration',
   'condition',
   'form',
-  'location',
+  'manufacturer',
   'association',
   'notes',
   'leadTime'
@@ -45,36 +46,6 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
     </Menu.Item>
   </Link>
 ))
-
-const RedTriangle = styled(AlertTriangle)`
-  display: block;
-  width: 20px;
-  height: 19px;
-  margin: 0 auto;
-  vertical-align: top;
-  font-size: 20px;
-  color: #f16844;
-  line-height: 20px;
-
-  &.grey {
-    color: #20273a;
-  }
-`
-
-const ClockIcon = styled(Clock)`
-  display: block;
-  width: 20px;
-  height: 19px;
-  margin: 0 auto;
-  vertical-align: top;
-  font-size: 20px;
-  color: #f16844;
-  line-height: 20px;
-
-  &.grey {
-    color: #20273a;
-  }
-`
 
 const CustomDiv = styled.div`
   white-space: nowrap;
@@ -96,64 +67,21 @@ const FiltersRow = styled.div`
   margin-bottom: -5px;
 `
 
-const DivRow = styled.div`
-  display: flex !important;
-`
-
-const SpanText = styled.span`
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  overflow: hidden !important;
-  font-weight: 500;
-  cursor: pointer;
-`
-
-const DivIcons = styled.div`
-  position: -webkit-sticky !important;
-  position: sticky !important;
-  right: 0px !important;
-  display: flex !important;
-  margin-left: 10px !important;
-`
-
-const DivSetting = styled.div`
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  cursor: pointer !important;
-  border-radius: 3px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  border: solid 1px #dee2e6;
-  background-color: #ffffff;
-`
-
-const RowDropDownIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  margin: 2px 0 2px -4px;
-  
-  svg {
-    width: 16px !important;
-    height: 16px !important;
-    color: #848893 !important;
-  }
-`
-
 class Listings extends Component {
   constructor(props) {
     super(props)
     //this.getRowActions = this.getRowActions.bind(this)
     this.state = {
+      fixed: [
+        {
+          name: 'intProductName',
+          position: 2
+        }
+      ],
       columns: [
         { name: 'productGroupName', disabled: true },
         { name: 'productNumber', disabled: true },
         // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
-        {
-          name: 'actCol',
-          title: ' ',
-          width: 40,
-          actions: this.getRowActions()
-        },
         {
           name: 'intProductName',
           title: (
@@ -161,30 +89,9 @@ class Listings extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 180,
-          sortPath: 'ProductOffer.companyProduct.intProductName'
-        },
-        {
-          name: 'fobPrice',
-          title: (
-            <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160,
-          align: 'right',
-          sortPath: 'ProductOffer.cfPricePerUOM'
-        },
-        {
-          name: 'available',
-          title: (
-            <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 140,
-          align: 'right',
-          sortPath: 'ProductOffer.pkgAvailable'
+          width: 430,
+          sortPath: 'ProductOffer.companyProduct.intProductName',
+          allowReordering: false
         },
         {
           name: 'packaging',
@@ -196,6 +103,17 @@ class Listings extends Component {
           width: 140
         },
         {
+          name: 'available',
+          title: (
+            <FormattedMessage id='marketplace.available' defaultMessage='Avail PKGs'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140,
+          align: 'right',
+          sortPath: 'ProductOffer.pkgAvailable'
+        },
+        {
           name: 'quantity',
           title: (
             <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>
@@ -205,6 +123,26 @@ class Listings extends Component {
           width: 140,
           align: 'right',
           sortPath: 'ProductOffer.quantity'
+        },
+        {
+          name: 'location',
+          title: (
+            <FormattedMessage id='marketplace.location' defaultMessage='Location'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160
+        },
+        {
+          name: 'fobPrice',
+          title: (
+            <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 160,
+          align: 'right',
+          sortPath: 'ProductOffer.cfPricePerUOM'
         },
         {
           name: 'manufacturer',
@@ -255,15 +193,6 @@ class Listings extends Component {
           ),
           width: 100,
           sortPath: 'ProductOffer.form.name'
-        },
-        {
-          name: 'location',
-          title: (
-            <FormattedMessage id='marketplace.location' defaultMessage='Location'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160
         },
         {
           name: 'association',
@@ -386,43 +315,52 @@ class Listings extends Component {
     return rows.map(r => ({
       ...r,
       clsName: r.condition ? 'non-conforming' : '',
-      actCol: (
-        <RowDropDownIcon>
-          <MoreVertical />
-        </RowDropDownIcon>
-      ),
       intProductName: (
-        <DivRow>
-          <SpanText onClick={() => this.tableRowClicked(r.id)}>{r.intProductName}</SpanText>
-          <DivIcons>
-            {r.expired ? (
-              <Popup
-                header={<FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />}
-                trigger={
-                  <div>
-                    <ClockIcon />
-                  </div>
-                } // <div> has to be there otherwise popup will be not shown
-              />
-            ) : null}
-            {r.condition ? (
+        <ActionCell
+          row={r}
+          getActions={this.getActions}
+          content={r.intProductName}
+          onContentClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            this.tableRowClicked(r.id)
+          }}
+          rightAlignedContent={
+            r.expired || r.condition ? (
               <Popup
                 size='small'
+                inverted
+                style={{
+                  fontSize: '12px',
+                  color: '#cecfd4',
+                  opacity: '0.9'
+                }}
                 header={
-                  <FormattedMessage
-                    id='global.nonConforming.tooltip'
-                    defaultMessage='This is a non-conforming product.'
-                  />
+                  <div>
+                    {r.expired && (
+                      <div>
+                        <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
+                      </div>
+                    )}
+                    {r.condition && (
+                      <div>
+                        <FormattedMessage
+                          id='global.nonConforming.tooltip'
+                          defaultMessage='This is a non-conforming product.'
+                        />
+                      </div>
+                    )}
+                  </div>
                 }
                 trigger={
                   <div>
-                    <RedTriangle />
+                    <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
                   </div>
                 } // <div> has to be there otherwise popup will be not shown
               />
-            ) : null}
-          </DivIcons>
-        </DivRow>
+            ) : null
+          }
+        />
       ),
       condition: r.condition ? (
         <Popup
@@ -461,11 +399,11 @@ class Listings extends Component {
     sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
-  getRowActions = () => {
+  getActions = row => {
     const {
-      openPopup,
       isMerchant,
       isCompanyAdmin,
+      isClientCompanyAdmin,
       intl: { formatMessage }
     } = this.props
     const rowActions = []
@@ -474,23 +412,23 @@ class Listings extends Component {
         id: 'marketplace.info',
         defaultMessage: 'Info'
       }),
-      callback: row => openPopup(row)
+      callback: () => this.tableRowClicked(row.id, false, true)
     }
     const buttonRequestHold = {
       text: formatMessage({
         id: 'hold.requestHold',
         defaultMessage: 'Request Hold'
       }),
-      callback: row => this.tableRowClicked(row.id, true)
+      callback: () => this.tableRowClicked(row.id, true)
     }
     const buttonBuy = {
       text: formatMessage({
         id: 'marketplace.buy',
         defaultMessage: 'Buy Product Offer'
       }),
-      callback: row => this.tableRowClicked(row.id)
+      callback: () => this.tableRowClicked(row.id)
     }
-    if (isMerchant || isCompanyAdmin) {
+    if (isMerchant || isCompanyAdmin || isClientCompanyAdmin) {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
       rowActions.push(buttonRequestHold)
@@ -505,7 +443,6 @@ class Listings extends Component {
     const {
       datagrid,
       intl,
-      openPopup,
       isMerchant,
       tutorialCompleted,
       isCompanyAdmin,
@@ -513,13 +450,13 @@ class Listings extends Component {
       tableHandlersFiltersListings,
       activeMarketplaceFilter
     } = this.props
-    const { columns, openFilterPopup } = this.state
+    const { columns, fixed, openFilterPopup } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
-        {false && !tutorialCompleted && <Tutorial marginMarketplace />}
+        {<Tutorial marginMarketplace isTutorial={false} isBusinessVerification={true} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
@@ -542,8 +479,8 @@ class Listings extends Component {
                   data-test='my_inventory_advanced_filters_btn'>
                   <Sliders />
                   {formatMessage({
-                    id: 'myInventory.advancedFilters',
-                    defaultMessage: 'Advanced Filters'
+                    id: 'global.filters',
+                    defaultMessage: 'Filters'
                   })}
                 </Button>
               </div>
@@ -563,6 +500,7 @@ class Listings extends Component {
             {...datagrid.tableProps}
             rows={rows}
             columns={columns}
+            fixed={fixed}
             groupBy={['productNumber']}
             getChildGroups={rows =>
               _(rows)
@@ -593,14 +531,13 @@ class Listings extends Component {
               }
               */
             }
-            onRowClick={(e, row) => {
+            /*onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
                 this.tableRowClicked(row.id, false, true)
               }
-            }}
+            }}*/
             data-test='marketplace_listings_row_action'
-            columnActions={'actCol'}
           />
         </div>
         <AddCart openInfo={openInfo} />

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
-import confirm from '~/src/components/Confirmable/confirm'
+import ActionCell from '~/components/table/ActionCell'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 
@@ -10,9 +10,6 @@ import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 import { getLocaleDateFormat } from '~/components/date-format'
 import moment from 'moment/moment'
-
-import {} from '../../actions'
-import Router from 'next/router'
 
 class CompanyInventoryTable extends Component {
   state = {
@@ -24,7 +21,8 @@ class CompanyInventoryTable extends Component {
             {text => text}
           </FormattedMessage>
         ),
-        sortPath: 'ProductOffer.companyProduct.intProductName'
+        sortPath: 'ProductOffer.companyProduct.intProductName',
+        allowReordering: false
       },
       {
         name: 'productCode',
@@ -65,6 +63,20 @@ class CompanyInventoryTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        productName: (
+          <ActionCell
+            row={row}
+            content={row.productName}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { datagrid, rows, filterValue, loading, intl } = this.props
 
@@ -72,17 +84,17 @@ class CompanyInventoryTable extends Component {
     const { formatMessage } = intl
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexGrid
           tableName='operations_company_inventory'
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={columns}
-          rows={rows}
+          rows={this.getRows(rows)}
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

@@ -76,11 +76,26 @@ export const generateQueryString = params => {
   if (typeof params !== 'object') return ''
   let keys = Object.keys(params)
   if (keys.length === 0) return ''
+  let queryParams
 
-  let queryParams = `?${keys[0]}=${params[keys[0]]}`
+  if (Array.isArray(params[keys[0]])) {
+    queryParams = `?${keys[0]}=${params[keys[0]][0]}`
+    for (let j = 1; j < params[keys[0]].length; j++) {
+      queryParams += `&${keys[0]}=${params[keys[0]][j]}`
+    }
+  } else {
+    queryParams = `?${keys[0]}=${params[keys[0]]}`
+  }
 
   for (let i = 1; i < keys.length; i++) {
-    queryParams += `&${keys[i]}=${params[keys[i]]}`
+    if (Array.isArray(params[keys[i]])) {
+      queryParams += `&${keys[i]}=${params[keys[i]][0]}`
+      for (let j = 1; j < params[keys[i]].length; j++) {
+        queryParams += `&${keys[i]}=${params[keys[i]][j]}`
+      }
+    } else {
+      queryParams += `&${keys[i]}=${params[keys[i]]}`
+    }
   }
 
   return queryParams
@@ -132,7 +147,7 @@ export const getIntOrNull = value => {
 export const getPrice = (quantity, pricingTiers) => {
   if (pricingTiers) {
     if (pricingTiers.length === 1) {
-      return parseInt(pricingTiers[0].pricePerUOM, 10)
+      return parseFloat(pricingTiers[0].pricePerUOM)
     } else {
       let sortedTiers = pricingTiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
       let index = 0
@@ -141,7 +156,7 @@ export const getPrice = (quantity, pricingTiers) => {
           index = i
         } else break
       }
-      return parseInt(sortedTiers[index].pricePerUOM, 10)
+      return parseFloat(sortedTiers[index].pricePerUOM)
     }
   }
   return 0

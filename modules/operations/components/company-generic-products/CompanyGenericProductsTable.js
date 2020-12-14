@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import confirm from '~/src/components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
@@ -78,10 +79,10 @@ class CompanyGenericProductsTable extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 100,
+          width: 110,
           align: 'center',
           sortPath: 'CompanyGenericProductRequest.processed',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'requestedAt',
@@ -221,6 +222,13 @@ class CompanyGenericProductsTable extends Component {
   getRows = () => {
     return this.props.rows.map(row => ({
       ...row,
+      processed: (
+        <ActionCell
+          row={row}
+          getActions={this.getActions}
+          content={row.processed}
+        />
+      ),
       attachments:
         row.attachments && row.attachments.length ? (
           <a href='#' onClick={e => this.openAttachmentsPopup(e, row.attachments)}>
@@ -433,16 +441,17 @@ class CompanyGenericProductsTable extends Component {
             </Modal.Actions>
           </StyledModal>
         )}
-        <ProdexGrid
-          tableName='operations_company_generic_products_create_request'
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          columns={columns}
-          rows={this.getRows()}
-          loading={datagrid.loading || loading}
-          style={{ marginTop: '5px' }}
-          columnActions='processed'
-        />
+        <div className='flex stretched listings-wrapper'>
+          <ProdexGrid
+            tableName='operations_company_generic_products_create_request'
+            {...datagrid.tableProps}
+            filterValue={filterValue}
+            columns={columns}
+            rows={this.getRows()}
+            loading={datagrid.loading || loading}
+            style={{ marginTop: '5px' }}
+          />
+        </div>
       </React.Fragment>
     )
   }

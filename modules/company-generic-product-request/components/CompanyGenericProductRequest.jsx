@@ -49,10 +49,7 @@ const initialValues = {
 
 const formValidation = () =>
   Yup.object().shape({
-    productName: Yup.string()
-      .trim()
-      .min(3, errorMessages.minLength(3))
-      .required(errorMessages.requiredMessage)
+    productName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
   })
 
 class CompanyGenericProductRequestForm extends Component {
@@ -91,41 +88,27 @@ class CompanyGenericProductRequestForm extends Component {
       asLink
     } = this.props
 
-    const {
-      attachments,
-      loading
-    } = this.state
+    const { attachments, loading } = this.state
 
     return (
       <>
-        {asLink
-          ? (
-            <a href='#' onClick={() => this.setState({open: true})}>
-              {buttonCaption}
-            </a>
-          ) : (
-            <CustomButton
-              fluid
-              type='button'
-              onClick={() => this.setState({open: true})}
-            >
-              {buttonCaption}
-            </CustomButton>
-          )
-        }
+        {asLink ? (
+          <a href='#' onClick={() => this.setState({ open: true })}>
+            {buttonCaption}
+          </a>
+        ) : (
+          <CustomButton fluid type='button' onClick={() => this.setState({ open: true })}>
+            {buttonCaption}
+          </CustomButton>
+        )}
         {this.state.open && (
-          <Formik
-            initialValues={initialValues}
-            validationSchema={formValidation()}
-            onSubmit={() => {}}
-          >
+          <Formik initialValues={initialValues} validationSchema={formValidation()} onSubmit={() => {}}>
             {formikProps => (
               <Modal
                 centered={true}
                 open={this.state.open}
                 onClose={() => this.setState({ open: false, attachments: [] })}
-                size='small'
-              >
+                size='small'>
                 <Dimmer inverted active={loading}>
                   <Loader />
                 </Dimmer>
@@ -133,15 +116,13 @@ class CompanyGenericProductRequestForm extends Component {
                 <CustomHeader>
                   <Grid verticalAlign='middle'>
                     <GridRow>
-                      <GridColumn>
-                        {headerCaption}
-                      </GridColumn>
+                      <GridColumn>{headerCaption}</GridColumn>
                     </GridRow>
                   </Grid>
                 </CustomHeader>
 
                 <Modal.Content scrolling>
-                  <Form style={{ padding: '0 9px 4px'}}>
+                  <Form style={{ padding: '0 9px 4px' }}>
                     <Grid>
                       <GridRow>
                         <GridColumn>
@@ -248,10 +229,7 @@ class CompanyGenericProductRequestForm extends Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                  <Button
-                    basic
-                    onClick={() => this.setState({ open: false, attachments: [] })}
-                  >
+                  <Button basic onClick={() => this.setState({ open: false, attachments: [] })}>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
@@ -271,7 +249,7 @@ class CompanyGenericProductRequestForm extends Component {
                         }
                       })
                     }}>
-                    <FormattedMessage id='global.save' defaultMessage='Save'>
+                    <FormattedMessage id='global.send' defaultMessage='Send'>
                       {text => text}
                     </FormattedMessage>
                   </Button>
@@ -308,4 +286,3 @@ CompanyGenericProductRequestForm.defaultProps = {
 const mapDispatchToProps = { downloadAttachment, addAttachment, updateAttachment, loadFile }
 
 export default injectIntl(connect(null, mapDispatchToProps)(CompanyGenericProductRequestForm))
-

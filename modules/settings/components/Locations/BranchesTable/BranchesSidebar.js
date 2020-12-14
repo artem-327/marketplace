@@ -307,7 +307,7 @@ class BranchSidebar extends React.Component {
             <Checkbox
               label={formatMessage({
                 id: 'settings.alsoCreateAsPickUpLocation',
-                defaultMessage: 'Also create as Pick-Up Location'
+                defaultMessage: 'Also create as Warehouse'
               })}
               name='alsoCreate'
               inputProps={{ 'data-test': 'settings_branches_popup_pick_up_location_chckb' }}

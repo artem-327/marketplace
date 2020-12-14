@@ -36,15 +36,20 @@ export const initialState = {
   searchedCasNumbersLoading: false,
   openedSubmitOfferPopup: false,
   popupValues: null,
-  wantedBoardType: 'product',
-  myRequestedItemsType: 'product',
   tableHandlersFiltersListings: null,
   tableHandlersFiltersBidsReceived: null,
   tableHandlersFiltersBidsSent: null,
   openSidebar: false,
   isSecondPage: false,
   matchingOfferInfo: null,
-  activeTab: ''
+  activeTab: '',
+  componentSearchProducts: [],
+  componentSearchProductsLoading: false,
+  componentSearchCas: [],
+  componentSearchCasLoading: false,
+  datagridFilter: { filters: [] },
+  datagridFilterReload: false,
+  datagridFilterUpdate: false,
 }
 
 export default function reducer(state = initialState, action) {
@@ -62,7 +67,8 @@ export default function reducer(state = initialState, action) {
     case AT.WB_FALSE_SECOND_PAGE: {
       return {
         ...state,
-        isSecondPage: false
+        isSecondPage: false,
+        matchingOfferInfo: null
       }
     }
 
@@ -89,19 +95,6 @@ export default function reducer(state = initialState, action) {
         openSidebar: false,
         activeTab: '',
         sidebarValues: null
-      }
-    }
-
-    case AT.WB_SET_WANTED_BOARD_TYPE: {
-      return {
-        ...state,
-        wantedBoardType: payload
-      }
-    }
-    case AT.WB_SET_MY_REQUESTED_ITEM_TYPE: {
-      return {
-        ...state,
-        myRequestedItemsType: payload
       }
     }
 
@@ -523,6 +516,43 @@ export default function reducer(state = initialState, action) {
         ...state,
         matchingOfferInfo: payload,
         updatingDatagrid: false
+      }
+    }
+
+    case AT.WB_COMPONENT_SEARCH_PRODUCT_PENDING: {
+      return { ...state, componentSearchProductsLoading: true }
+    }
+    case AT.WB_COMPONENT_SEARCH_PRODUCT_REJECTED: {
+      return { ...state, componentSearchProductsLoading: false }
+    }
+    case AT.WB_COMPONENT_SEARCH_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        componentSearchProducts: action.payload,
+        componentSearchProductsLoading: false
+      }
+    }
+
+    case AT.WB_COMPONENT_SEARCH_CAS_PENDING: {
+      return { ...state, componentSearchCasLoading: true }
+    }
+    case AT.WB_COMPONENT_SEARCH_CAS_REJECTED: {
+      return { ...state, componentSearchCasLoading: false }
+    }
+    case AT.WB_COMPONENT_SEARCH_CAS_FULFILLED: {
+      return {
+        ...state,
+        componentSearchCas: action.payload,
+        componentSearchCasLoading: false
+      }
+    }
+
+    case AT.WB_APPLY_DATAGRID_FILTER: {
+      return {
+        ...state,
+        datagridFilter: payload.filter,
+        datagridFilterReload: payload.reload,
+        datagridFilterUpdate: !state.datagridFilterUpdate
       }
     }
 

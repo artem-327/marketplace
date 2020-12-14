@@ -646,7 +646,7 @@ class Map extends Component {
             <Table.Row>
               {csvWithoutHeader ? (
                 <Table.HeaderCell colSpan={CSV.bodyCSV.length > 4 ? 4 : CSV.bodyCSV.length}>
-                  <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
+                  <FormattedMessage id='settings.csvPreview' defaultMessage='Preview' />
                 </Table.HeaderCell>
               ) : (
                 <>
@@ -654,7 +654,7 @@ class Map extends Component {
                     <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
                   </Table.HeaderCell>
                   <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
-                    <FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' />
+                    <FormattedMessage id='settings.csvPreview' defaultMessage='Preview' />
                   </Table.HeaderCell>
                 </>
               )}

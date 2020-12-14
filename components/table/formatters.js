@@ -7,12 +7,37 @@ import styled from 'styled-components'
 const DropdownActions = styled(Dropdown)`
   display: block !important;
   height: 100% !important;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
 `
 
 const DivName = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  
+  .group-name {
+    font-weight: 400;
+    color: #20273a;
+    
+    > span {
+      color: #848893;
+    }
+  }
+    
+  &.has-actions:hover {  
+    .group-name {
+      font-weight: bold;
+      color: #2599d5;
+      > span {
+        font-weight: bold;
+        color: #2599d5;
+      }
+    }      
+  }
 `
 
 const getDropdownItems = (actions = [], row) => {
@@ -79,14 +104,17 @@ export function rowActionsCellFormatter({ column: { actions, name }, row, groupL
   if (row.groupedBy && row.key) {
     const nameGroup = row.key.split('_')[0]
     trigger = (
-      <span style={{ fontWeight: '400', color: '#20273a' }}>
-        {nameGroup ? nameGroup : 'Unmapped'} <span style={{ color: '#848893' }}>({groupLength})</span>
+      <span className='group-name'>
+        {nameGroup ? nameGroup : 'Unmapped'} <span>({groupLength})</span>
       </span>
     )
   }
 
   return displayMenu ? (
-    <DropdownActions icon='' trigger={<DivName>{trigger}</DivName>} onOpen={e => repositionMenu(e.currentTarget)}>
+    <DropdownActions
+      icon=''
+      trigger={<DivName className={actions &&actions.length ? 'has-actions' : ''}>{trigger}</DivName>}
+      onOpen={e => repositionMenu(e.currentTarget)}>
       <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
     </DropdownActions>
   ) : (

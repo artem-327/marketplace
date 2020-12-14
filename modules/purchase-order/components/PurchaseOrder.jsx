@@ -128,7 +128,8 @@ class PurchaseOrder extends Component {
     submitting: false,
     addressId: 'deliveryAddressId',
     shippingQuotes: [],
-    selectedAddress: ''
+    selectedAddress: '',
+    isSetShippingQuoteId: false
   }
   componentDidMount = async () => {
     const { preFilledValues, clearPreFilledValues, getWarehouses, paymentProcessor } = this.props
@@ -166,6 +167,12 @@ class PurchaseOrder extends Component {
 
       clearPreFilledValues()
     }
+
+    const shippingQuoteId = getSafe(() => Router.router.query.shippingQuoteId, '')
+    if (shippingQuoteId) {
+      this.formikProps.setFieldValue('shipmentQuoteId', shippingQuoteId)
+      this.setState({ isSetShippingQuoteId: true })
+    }
   }
 
   handleQuoteSelect = index => {
@@ -179,6 +186,8 @@ class PurchaseOrder extends Component {
 
   getAddress = selectedAddressId => {
     let { deliveryAddresses, warehouses, branches, cart } = this.props
+    const { isSetShippingQuoteId } = this.state
+
     let addresses = []
     if (deliveryAddresses.length) {
       addresses = deliveryAddresses
@@ -201,7 +210,7 @@ class PurchaseOrder extends Component {
       },
       () => {
         this.props.shippingChanged(this.state.selectedAddress)
-        if (!cart.weightLimitExceed) this.getShippingQuotes(this.state.selectedAddress)
+        if (!cart.weightLimitExceed && !isSetShippingQuoteId) this.getShippingQuotes(this.state.selectedAddress)
       }
     )
   }
@@ -304,9 +313,17 @@ class PurchaseOrder extends Component {
     setSubmitting(false)
 
     if (values.address) {
+      let shippingWarehouseId =
+        getSafe(() => this.state.selectedAddress.warehouse, '') && getSafe(() => this.state.selectedAddress.id, '')
+          ? { shippingWarehouseId: this.state.selectedAddress.id }
+          : ''
+      let shippingDeliveryAddressId =
+        !getSafe(() => this.state.selectedAddress.warehouse, '') && getSafe(() => this.state.selectedAddress.id, '')
+          ? { shippingDeliveryAddressId: this.state.selectedAddress.id }
+          : ''
       let payload = {
-        destinationCountryId: this.state.selectedAddress.address.country.id,
-        destinationZIP: this.state.selectedAddress.address.zip.zip
+        ...shippingWarehouseId,
+        ...shippingDeliveryAddressId
       }
       await requestManualShipment(payload)
       toastManager.add(
@@ -342,13 +359,12 @@ class PurchaseOrder extends Component {
       shippingQuotesAreFetching,
       shipping,
       purchaseHazmatEligible,
-      paymentTerm,
-      paymentTerms,
-      paymentNetDays,
       isOpenSidebar,
       closeSidebarAddress,
       openSidebarAddress
     } = this.props
+    const { isSetShippingQuoteId } = this.state
+
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
 
@@ -436,7 +452,7 @@ class PurchaseOrder extends Component {
                         </VerticalUnpaddedColumn>
                       </StyledRow>
 
-                      {!cart.weightLimitExceed && this.state.selectedAddress ? (
+                      {!cart.weightLimitExceed && this.state.selectedAddress && !isSetShippingQuoteId ? (
                         <SemanticContainer className='flex stretched' style={{ maxHeight: '220px' }}>
                           <QuoteRow className='flex stretched'>
                             <ShippingQuote
@@ -469,7 +485,7 @@ class PurchaseOrder extends Component {
                           </GridRow>
                         )
                       )}
-                      {cart.weightLimitExceed && this.state.selectedAddress && (
+                      {cart.weightLimitExceed && this.state.selectedAddress && !isSetShippingQuoteId && (
                         <>
                           <GridRow>
                             <GridColumn computer={16}>
@@ -500,6 +516,7 @@ class PurchaseOrder extends Component {
                       {getSafe(() => shippingQuotes.rates, []).length === 0 &&
                         this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
+                        !isSetShippingQuoteId &&
                         !cart.weightLimitExceed && (
                           <GridRow>
                             <GridColumn computer={16}>
@@ -525,6 +542,7 @@ class PurchaseOrder extends Component {
                         )}
                       {this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
+                        !isSetShippingQuoteId &&
                         (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
                           <>
                             <TopUnpaddedRow>
@@ -560,7 +578,7 @@ class PurchaseOrder extends Component {
                             )}
                             <VerticalUnpaddedRow>
                               <VerticalUnpaddedColumn computer={16}>
-                                <Header as='h2'>
+                                <Header as='h2' style={{ paddingTop: isSetShippingQuoteId ? '14px' : '0' }}>
                                   <FormattedMessage
                                     id='cart.quoteReceived'
                                     defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
@@ -585,56 +603,16 @@ class PurchaseOrder extends Component {
                           </>
                         )}
 
-                      {this.state.selectedAddress && (
-                        <FreightLabel
-                          echoFreight={echoFreight}
-                          setFieldValue={(fieldName, value) => {
-                            shippingQuoteSelected(null)
-                            setFieldValue(fieldName, value)
-                            if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
-                          }}
-                        />
-                      )}
+                      <FreightLabel
+                        echoFreight={echoFreight}
+                        setFieldValue={(fieldName, value) => {
+                          shippingQuoteSelected(null)
+                          setFieldValue(fieldName, value)
+                          if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
+                        }}
+                      />
                     </Grid>
                   </Segment>
-                  <Rectangle style={{ marginBottom: '10px' }}>
-                    <CustomDivTitle>
-                      <InfoIcon size={24} />
-                      <CustomDivInTitle>
-                        <FormattedMessage id='cart.payment.terms.title' defaultMessage={`Payment Terms Information`} />
-                      </CustomDivInTitle>
-                    </CustomDivTitle>
-                    <CustomDivContent>
-                      {paymentTerm === 'REGULAR' ? (
-                        <FormattedMessage
-                          id='cart.payment.netX.content'
-                          defaultMessage={`The payment terms of this order are {value}, meaning the payment for this purchase will be transferred {days} from the day it ships.`}
-                          values={{
-                            value: <b>Net {paymentNetDays}</b>,
-                            days: <b>{paymentNetDays} days</b>
-                          }}
-                        />
-                      ) : paymentTerm === 'HALF_UPFRONT' ? (
-                        <FormattedMessage
-                          id='cart.payment.terms50.content'
-                          defaultMessage={`This purchase has payment terms of {value}. Which means, once the order is accepted, {percentage} of the payment will be withdrawn from your account and 50% will be withdrawn {shipmentDate}.`}
-                          values={{
-                            value: <b>50/50</b>,
-                            percentage: <b>50%</b>,
-                            shipmentDate: <b>{paymentNetDays} days after the shipment date</b>
-                          }}
-                        />
-                      ) : (
-                        <FormattedMessage
-                          id='cart.payment.terms100.content'
-                          defaultMessage={`This purchase has payment terms of {percentage} down. Which means, once the order is accepted, the entire payment will be withdrawn from your account.`}
-                          values={{
-                            percentage: <b>100%</b>
-                          }}
-                        />
-                      )}
-                    </CustomDivContent>
-                  </Rectangle>
                   <Segment>
                     <Grid className='bottom-padded'>
                       <StyledRow verticalAlign='middle' bottomShadow>

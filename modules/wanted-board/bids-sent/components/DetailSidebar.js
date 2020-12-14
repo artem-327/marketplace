@@ -17,7 +17,7 @@ import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from 'moment'
 import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
-import { inputWrapper, quantityWrapper } from '../../components'
+import { inputWrapper } from '../../components'
 import { Required } from '~/components/constants/layout'
 
 import { Dimmer, Loader, Grid, GridRow, GridColumn } from 'semantic-ui-react'
@@ -403,7 +403,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
+                            <FormattedMessage id='wantedBoard.weightUnit' defaultMessage='Weight Unit'>
                               {text => text}
                             </FormattedMessage>
                           }

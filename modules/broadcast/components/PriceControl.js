@@ -25,13 +25,24 @@ export default class PriceControl extends Component {
   handleChange = (e, { name, value }) => {
     e.preventDefault()
     e.stopPropagation()
-    const { changeInModel } = this.props
+    const { associationFilter, filter, treeData, changeInModel } = this.props
 
-    // helper
+    // helper writes values
     const asignValues = (values, rule) => {
       Object.keys(values).forEach(key => {
         rule[key] = values[key]
       })
+    }
+    // helper loop through elements
+    const changeInElements = (elementsParam, values, id) => {
+      if (getSafe(() => elementsParam.length, false)) {
+        elementsParam.forEach(element => {
+          if (!element.hidden) {
+            if (!element.priceOverride && (element.id === id || !id)) asignValues(values, element)
+          }
+          if (getSafe(() => element.elements.length, '') > 0) changeInElements(element.elements, values, id)
+        })
+      }
     }
 
     let { item } = this.props
@@ -44,7 +55,6 @@ export default class PriceControl extends Component {
     let val = rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
 
     let minimum = name === 'type' ? this.calculateMinimum(value) : this.calculateMinimum(type)
-    console.log({ name, type, val, minimum })
     if (this.state.type !== type) this.setState({ type })
 
     let values = {}
@@ -64,28 +74,76 @@ export default class PriceControl extends Component {
         values = { priceMultiplier: value ? parseFloat(value, 10) : 0, priceAddition: 0 }
       }
     }
-    console.log({ values })
 
     asignValues(values, rule)
-
+    let idCompanies = []
+    let foundAllNodes = []
     if (item.hasChildren()) {
-      item.walk(n => {
-        if (!n.model.rule.priceOverride) asignValues(values, n.model.rule)
-      })
-      // Same hack as in RuleItem.handleChange
-      item.model.rule.elements.forEach(el => {
-        if (!el.priceOverride) asignValues(values, el)
-        if (getSafe(() => el.elements.length, 0) > 0) {
-          el.elements.forEach(e => {
-            if (!e.priceOverride) asignValues(values, e)
+      if ((item.isRoot() && associationFilter === 'ALL' && !filter.search) || !item.isRoot()) {
+        // it writes value to the model
+        // its not sufficient for display all values in all levels in FE inputs
+        item.walk(n => {
+          if (!n.model.rule.priceOverride && !n.model.rule.hidden) asignValues(values, n.model.rule)
+        })
+
+        //find all parents (state) of branches when change whole company
+        let copyTreeData = treeData
+        if (
+          rule.type !== 'root' &&
+          this.props.filter.category === 'branch' &&
+          item.model.children.length > item.model.rule.elements.length
+        ) {
+          foundAllNodes = copyTreeData.all(
+            n => n.model.id === item.model.rule.id && n.model.type === item.model.rule.type
+          )
+          foundAllNodes.forEach(nod => {
+            nod.walk(no => {
+              if (!getSafe(() => no.model.rule, '') && !no.model.priceOverride && !no.model.hidden) {
+                no.model.rule = { ...no.model, ...asignValues(values, no.model) }
+                if (getSafe(() => no.model.rule.elements.length, 0) > 0) {
+                  Object.keys(values).forEach(key => {
+                    changeInModel(no.model.rule.elements, { key, value: values[key] })
+                  })
+                }
+              }
+            })
           })
         }
-      })
+        // it writes value to the elements
+        changeInElements(item.model.rule.elements, values)
+      } else if (item.isRoot() && (associationFilter !== 'ALL' || filter.search)) {
+        //write changes to the filtered model
+        item.walk(n => {
+          if (filter.category === 'branch') {
+            if (!n.model.rule.priceOverride && n.model.rule.type === 'branch' && !n.model.rule.hidden) {
+              // it writes value to the filtered model (branches)
+              // its sufficient for display value in inputs of branches
+              asignValues(values, n.model.rule)
+              if (
+                !n.parent.model.rule.priceOverride &&
+                n.parent.model.rule.type === 'company' &&
+                !n.parent.model.rule.hidden
+              ) {
+                // it writes value to the parent (company) to the model
+                // but for some reasons its not sufficient for display value in inputs
+                asignValues(values, n.parent.model.rule)
+                // here are collected ids of filtered companies
+                idCompanies.push(n.parent.model.rule.id)
+              }
+            }
+          }
+        })
+        // Value for company will be displayed in company input when we write value to the elements
+        if (idCompanies.length) {
+          idCompanies = _.uniqBy(idCompanies)
+          //write changes to the correct elements (parent = company of branche)
+          idCompanies.forEach(id => {
+            changeInElements(item.model.rule.elements, values, id)
+          })
+        }
+      }
     }
-    let copy = _.cloneDeep(item)
-    // changeInModel(copy.model.rule.elements, values)
-    console.log({ copy })
-    this.props.onChange(item)
+    this.props.onChange(item, foundAllNodes)
     return false
   }
 
@@ -140,7 +198,7 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const { disabled, offer, item, hideFobPrice, filter, asSidebar } = this.props
+    const { disabled, offer, item, hideFobPrice, filter, asSidebar, treeData } = this.props
     const {
       model: { rule }
     } = item
@@ -174,6 +232,7 @@ export default class PriceControl extends Component {
           onChange={this.handleChange}
           size='small'
           data-test='broadcast_price_control_price_inp'
+          treeData={treeData}
         />
         <ControlBox asSidebar={asSidebar}>
           <Radio
@@ -203,10 +262,12 @@ export default class PriceControl extends Component {
 }
 
 const PriceInput = styled(Input)`
-  width: ${props => (props.asSidebar ? '138px' : '110px')};
+  width: ${props => (props.asSidebar ? '70px' : '100px')};
   margin-right: 10px;
-  border-right: 1px solid #dee2e6;
   padding: 8px;
+  input {
+    background: #fdfdfd !important;
+  }
 `
 
 const ControlBox = styled.div`
@@ -234,5 +295,5 @@ const Box = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding-right: 10px;
-  ${props => !props.asSidebar && 'max-width: 170px;'}
+  ${props => (!props.asSidebar ? 'max-width: 170px;' : 'max-width: 180px;')}
 `

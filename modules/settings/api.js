@@ -79,7 +79,9 @@ export default {
   getCountry: () => api.get('/prodex/api/countries').then(response => response.data),
   getCurrencies: () => api.get('/prodex/api/currencies').then(response => response.data),
   getStoredCSV: body => {
-    return api.get(`/prodex/api/imports/read-stored-spreadsheet?temporaryFileId=${body}`).then(response => response.data)
+    return api
+      .get(`/prodex/api/imports/read-stored-spreadsheet?temporaryFileId=${body}`)
+      .then(response => response.data)
   },
 
   loadFile: attachment => {
@@ -118,10 +120,9 @@ export default {
       .post(`/prodex/api/imports/product-offers/spreadsheet-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
-  uploadCSVFile: file => {
+  uploadCSVFile: (file, type) => {
     const formData = new FormData()
-    formData.append('file', new Blob([file], { type: 'text/csv' }), file.name)
-
+    formData.append('file', new Blob([file], { type }), file.name)
     return api.post('/prodex/api/imports/temporary-files', formData).then(response => response.data)
   },
   getCSVMapCompanyGenericProduct: () =>
@@ -265,8 +266,8 @@ export default {
       .then(response => response.data),
   vellociGetToken: () =>
     api.get('/prodex/api/payments/bank-accounts/velloci/add/token').then(response => response.data),
-  vellociAddAcount: publicToken =>
+  vellociAddAcount: (publicToken, metadata) =>
     api
-      .post(`/prodex/api/payments/bank-accounts/velloci/add?publicToken=${publicToken}`)
+      .post(`/prodex/api/payments/bank-accounts/velloci/add?publicToken=${publicToken}`, metadata)
       .then(response => response.data)
 }

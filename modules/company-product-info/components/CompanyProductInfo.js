@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { object, bool, number, node, func, array } from 'prop-types'
-import { Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu, Sidebar, Table } from 'semantic-ui-react'
+import { Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu, Sidebar, Table, Header } from 'semantic-ui-react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { Form, Input, Dropdown as FormikDropdown, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { injectIntl, FormattedMessage } from 'react-intl'
@@ -315,8 +315,15 @@ class CompanyProductInfo extends Component {
     </GridRow>
   )
 
+  getHeader = title => (
+    <Header as='h3'>
+      <FormattedMessage id={`global.${title}`} defaultMessage='Title' />
+    </Header>
+  )
+
   getSharedContent = (prefix = '') => (
     <>
+      {prefix === 'casProduct.' && this.getHeader('others')}
       {this.getInput({
         id: 'global.physicalState',
         defaultMessage: 'Physical State',
@@ -476,6 +483,7 @@ class CompanyProductInfo extends Component {
       case all.key:
       case epa.key: {
         markup.push(
+          this.getHeader('epa'),
           this.getDropdown({
             id: 'casProduct.epaSection302EhsTPQ',
             defaultMessage: 'Section 302 (EHS) TPQ',
@@ -536,6 +544,7 @@ class CompanyProductInfo extends Component {
       case all.key:
       case rightToKnow.key: {
         markup.push(
+          this.getHeader('rightToKnow'),
           this.getDropdown({
             id: 'casProduct.rtkMassachusettes',
             defaultMessage: 'Massachusettes',
@@ -573,6 +582,7 @@ class CompanyProductInfo extends Component {
       case all.key:
       case dhs.key: {
         markup.push(
+          this.getHeader('dhs'),
           this.getDropdown({
             id: 'casProduct.dhsReleaseMinimumConcentration',
             defaultMessage: 'Release: Minimum Concentration (%)',
@@ -657,6 +667,7 @@ class CompanyProductInfo extends Component {
       case all.key:
       case caProp65.key: {
         markup.push(
+          this.getHeader('caProp65'),
           this.getDropdown({
             id: 'casProduct.caprop65TypeofToxicity',
             defaultMessage: 'Type of Toxicity',
@@ -687,6 +698,7 @@ class CompanyProductInfo extends Component {
       case all.key:
       case dea.key: {
         markup.push(
+          this.getHeader('dea'),
           this.getDropdown({
             id: 'casProduct.deaListII',
             defaultMessage: 'List II',
@@ -706,6 +718,7 @@ class CompanyProductInfo extends Component {
       case all.key:
       case international.key: {
         markup.push(
+          this.getHeader('international'),
           this.getDropdown({
             id: 'casProduct.internationalDSL',
             defaultMessage: 'DSL',

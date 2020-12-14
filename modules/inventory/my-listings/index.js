@@ -11,13 +11,12 @@ const MyListings = () => (
         searchToFilter: v => {
           let filters = { or: [], and: [] }
           if (v && v.filterName && v.filterName.length > 0) {
-            v.filterName.forEach(name =>
-              filters.or = filters.or.concat(
-                [
+            v.filterName.forEach(
+              name =>
+                (filters.or = filters.or.concat([
                   { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
                   { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${name}%`] }
-                ]
-              )
+                ]))
             )
           }
           if (v && v.filterTags && v.filterTags.length > 0) {

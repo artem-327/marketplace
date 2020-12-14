@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import confirm from '~/src/components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
@@ -17,7 +18,6 @@ import {
   // handleOpenConfirmPopup,
   // closeConfirmPopup,
 } from '../../actions'
-import Router from 'next/router'
 
 class ShippingQuotesTable extends Component {
   constructor(props) {
@@ -26,13 +26,40 @@ class ShippingQuotesTable extends Component {
     this.state = {
       columns: [
         {
+          name: 'quoteId',
+          title: (
+            <FormattedMessage id='operations.quoteId' defaultMessage='Quote Id'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          allowReordering: false,
+          width: 400
+        },
+        {
+          name: 'validityDate',
+          title: (
+            <FormattedMessage id='operations.validityDate' defaultMessage='Validity Date'>
+              {text => text}
+            </FormattedMessage>
+          )
+        },
+        {
+          name: 'price',
+          title: (
+            <FormattedMessage id='operations.price' defaultMessage='Price'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 100
+        },
+        {
           name: 'carrierName',
           title: (
             <FormattedMessage id='operations.carrierName' defaultMessage='Carrier Name'>
               {text => text}
             </FormattedMessage>
           ),
-          actions: this.getActions()
+          width: 200
         },
         /*{
         name: 'createdAt',
@@ -42,22 +69,6 @@ class ShippingQuotesTable extends Component {
           </FormattedMessage>
         )
       },*/
-        {
-          name: 'price',
-          title: (
-            <FormattedMessage id='operations.price' defaultMessage='Price'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'quoteId',
-          title: (
-            <FormattedMessage id='operations.quoteId' defaultMessage='Quote Id'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
         /*{
         name: 'updatedAt',
         title: (
@@ -72,7 +83,8 @@ class ShippingQuotesTable extends Component {
             <FormattedMessage id='operations.validityDate' defaultMessage='Validity Date'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 200
         }
       ]
     }
@@ -108,24 +120,38 @@ class ShippingQuotesTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        quoteId: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.quoteId}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { datagrid, rows, filterValue, loading } = this.props
 
     let { columns } = this.state
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexGrid
           tableName='operations_shipping_quotes'
           {...datagrid.tableProps}
           filterValue={filterValue}
           columns={columns}
-          rows={rows}
+          rows={this.getRows(rows)}
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
-          columnActions='carrierName'
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

@@ -24,7 +24,7 @@ import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from 'moment'
 import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
-import { inputWrapper, quantityWrapper } from '../../components'
+import { inputWrapper } from '../../components'
 import { Required } from '~/components/constants/layout'
 import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
 
@@ -73,19 +73,9 @@ import {
 
 import {
   FlexSidebar,
-  //FlexTabs,
   FlexContent,
-  //TopMargedColumn,
-  //GraySegment,
   HighSegment,
-  //DivIcon,
-  //CloceIcon,
-  //InputWrapper,
-  //QuantityWrapper,
   BottomButtons,
-  //SmallGrid,
-  //InputLabeledWrapper,
-  //CustomLabel,
   LabeledRow
 } from '../../constants/layout'
 
@@ -463,8 +453,7 @@ class DetailSidebar extends Component {
       intl: { formatMessage },
       toastManager,
       removeAttachment,
-      currencySymbol,
-      type
+      currencySymbol
     } = this.props
 
     const { hasProvinces } = this.state
@@ -494,8 +483,6 @@ class DetailSidebar extends Component {
           this.resetForm = resetForm
           this.formikProps = formikProps
 
-          const typeProduct = type === 'product'
-
           return (
             <Form>
               <FlexSidebar
@@ -512,126 +499,126 @@ class DetailSidebar extends Component {
                 </HighSegment>
                 <FlexContent>
                   <Grid>
-                    {typeProduct && (
-                      <GridRow>
-                        <GridColumn width={16}>
-                          <Dropdown
-                            label={
-                              <>
-                                <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name'>
+                    <GridRow>
+                      <GridColumn width={16}>
+                        <Dropdown
+                          label={
+                            <>
+                              <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name'>
+                                {text => text}
+                              </FormattedMessage>
+                              <Required />
+                            </>
+                          }
+                          name='element.productGroup'
+                          options={this.props.autocompleteData}
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.enterProductName',
+                              defaultMessage: 'Enter any Product Name'
+                            }),
+                            loading: this.props.autocompleteDataLoading,
+                            'data-test': 'my_requested_items_sidebar_productName_drpdn',
+                            size: 'large',
+                            minCharacters: 1,
+                            icon: 'search',
+                            search: options => options,
+                            selection: true,
+                            clearable: true,
+                            onSearchChange: (e, { searchQuery }) =>
+                              searchQuery.length > 0 && this.searchProducts(searchQuery)
+                          }}
+                        />
+                        {!values.element.productGroup && (
+                          <div style={{ marginTop: '-10px' }}>
+                            <CompanyGenericProductRequestForm
+                              asLink
+                              buttonCaption={
+                                <FormattedMessage
+                                  id='wantedBoard.requestACompanyGenericProduct'
+                                  defaultMessage='Request a Company Generic Product'>
                                   {text => text}
                                 </FormattedMessage>
-                                <Required />
-                              </>
-                            }
-                            name='element.productGroup'
-                            options={this.props.autocompleteData}
-                            inputProps={{
-                              placeholder: formatMessage({
-                                id: 'wantedBoard.enterProductName',
-                                defaultMessage: 'Enter any Product Name'
-                              }),
-                              loading: this.props.autocompleteDataLoading,
-                              'data-test': 'my_requested_items_sidebar_productName_drpdn',
-                              size: 'large',
-                              minCharacters: 1,
-                              icon: 'search',
-                              search: options => options,
-                              selection: true,
-                              clearable: true,
-                              onSearchChange: (e, { searchQuery }) =>
-                                searchQuery.length > 0 && this.searchProducts(searchQuery)
-                            }}
-                          />
-                          {!values.element.productGroup && (
-                            <div style={{ marginTop: '-10px' }}>
-                              <CompanyGenericProductRequestForm
-                                asLink
-                                buttonCaption={
-                                  <FormattedMessage
-                                    id='wantedBoard.requestACompanyGenericProduct'
-                                    defaultMessage='Request a Company Generic Product'>
-                                    {text => text}
-                                  </FormattedMessage>
-                                }
-                                headerCaption={
-                                  <FormattedMessage
-                                    id='wantedBoard.requestACompanyGenericProduct'
-                                    defaultMessage='Request a Company Generic Product'
-                                  />
-                                }
-                              />
-                            </div>
-                          )}
-                        </GridColumn>
-                      </GridRow>
-                    )}
-                    {!typeProduct && (
-                      <GridRow>
-                        <GridColumn>
-                          <Dropdown
-                            label={
-                              <>
-                                <FormattedMessage id='wantedBoard.casNumber' defaultMessage='CAS Number'>
-                                  {text => text}
-                                </FormattedMessage>
-                                <Required />
-                              </>
-                            }
-                            name='element.casProduct'
-                            options={searchedCasNumbers}
-                            inputProps={{
-                              placeholder: formatMessage({
-                                id: 'wantedBoard.enterCasNumber',
-                                defaultMessage: 'Enter CAS Number'
-                              }),
-                              loading: searchedCasNumbersLoading,
-                              'data-test': 'my_requested_items_sidebar_casNumber_drpdn',
-                              size: 'large',
-                              minCharacters: 1,
-                              icon: 'search',
-                              search: options => options,
-                              selection: true,
-                              clearable: true,
-                              onSearchChange: (e, { searchQuery }) =>
-                                searchQuery.length > 0 && this.searchCasNumber(searchQuery)
-                            }}
-                          />
-                        </GridColumn>
-                      </GridRow>
-                    )}
-                    {!typeProduct && (
-                      <GridRow>
-                        <GridColumn width={8} data-test='my_requested_items_sidebar_assayMin_inp'>
-                          {quantityWrapper(
-                            'element.assayMin',
-                            {
-                              min: 0,
-                              type: 'number',
-                              placeholder: '0'
-                            },
-                            this.formikProps,
+                              }
+                              headerCaption={
+                                <FormattedMessage
+                                  id='wantedBoard.requestACompanyGenericProduct'
+                                  defaultMessage='Request a Company Generic Product'
+                                />
+                              }
+                            />
+                          </div>
+                        )}
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn>
+                        <Dropdown
+                          label={
+                            <>
+                              <FormattedMessage
+                                id='wantedBoard.functionalEquivalent'
+                                defaultMessage='Functional Equivalent'
+                              >
+                                {text => text}
+                              </FormattedMessage>
+                              <Required />
+                            </>
+                          }
+                          name='element.casProduct'
+                          options={searchedCasNumbers}
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'wantedBoard.enterCasNumber',
+                              defaultMessage: 'Enter CAS Number'
+                            }),
+                            loading: searchedCasNumbersLoading,
+                            'data-test': 'my_requested_items_sidebar_casNumber_drpdn',
+                            size: 'large',
+                            minCharacters: 1,
+                            icon: 'search',
+                            search: options => options,
+                            selection: true,
+                            clearable: true,
+                            onSearchChange: (e, { searchQuery }) =>
+                              searchQuery.length > 0 && this.searchCasNumber(searchQuery)
+                          }}
+                        />
+                      </GridColumn>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn width={8} data-test='my_requested_items_sidebar_assayMin_inp'>
+                        <Input
+                          name='element.assayMin'
+                          inputProps={{
+                            placeholder: '0',
+                            min: 0,
+                            type: 'number'
+                          }}
+                          label={
                             <FormattedMessage id='global.assayMin' defaultMessage='Assay Min'>
                               {text => text}
-                            </FormattedMessage>
-                          )}
-                        </GridColumn>
-                        <GridColumn width={8} data-test='my_requested_items_sidebar_assayMax_inp'>
-                          {quantityWrapper(
-                            'element.assayMax',
-                            {
-                              min: 0,
-                              type: 'number',
-                              placeholder: '0'
-                            },
-                            this.formikProps,
+                            </FormattedMessage>}
+                        />
+                      </GridColumn>
+                      <GridColumn width={8} data-test='my_requested_items_sidebar_assayMax_inp'>
+                        <Input
+                          name='element.assayMax'
+                          inputProps={{
+                            placeholder: '0',
+                            min: 0,
+                            type: 'number'
+                          }}
+                          label={
                             <FormattedMessage id='global.assayMax' defaultMessage='Assay Max'>
                               {text => text}
-                            </FormattedMessage>
-                          )}
-                        </GridColumn>
-                      </GridRow>
-                    )}
+                            </FormattedMessage>}
+                        />
+                      </GridColumn>
+                    </GridRow>
+
                     <GridRow>
                       <GridColumn data-test='my_requested_items_sidebar_fobPrice_inp'>
                         {inputWrapper(
@@ -651,26 +638,23 @@ class DetailSidebar extends Component {
 
                     <GridRow>
                       <GridColumn width={8} data-test='my_requested_items_sidebar_quantity_inp'>
-                        {quantityWrapper(
-                          'quantity',
-                          {
+                        <Input
+                          name='quantity'
+                          inputProps={{
+                            placeholder: '0',
                             min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps,
-                          <>
+                            type: 'number'
+                          }}
+                          label={
                             <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
                               {text => text}
-                            </FormattedMessage>
-                            <Required />
-                          </>
-                        )}
+                            </FormattedMessage>}
+                        />
                       </GridColumn>
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage id='wantedBoard.measurement' defaultMessage='Measurement'>
+                            <FormattedMessage id='wantedBoard.weightUnit' defaultMessage='Weight Unit'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -689,7 +673,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Delivery Location'>
+                            <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Customer Ship To'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -735,7 +719,7 @@ class DetailSidebar extends Component {
 
                     <GridRow className='label-row'>
                       <GridColumn width={8}>
-                        <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By'>
+                        <FormattedMessage id='wantedBoard.dateNeededBy' defaultMessage='Date Needed By'>
                           {text => text}
                         </FormattedMessage>
                       </GridColumn>
@@ -847,7 +831,7 @@ class DetailSidebar extends Component {
                     )}
 
                     <GridRow>
-                      <GridColumn width={8}>
+                      <GridColumn>
                         <Dropdown
                           label={
                             <FormattedMessage id='wantedBoard.condition' defaultMessage='Condition'>
@@ -867,10 +851,13 @@ class DetailSidebar extends Component {
                           }}
                         />
                       </GridColumn>
-                      <GridColumn width={8}>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn>
                         <Dropdown
                           label={
-                            <FormattedMessage id='wantedBoard.origin' defaultMessage='Origin'>
+                            <FormattedMessage id='wantedBoard.countryOfOrigin' defaultMessage='Country of Origin'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -890,7 +877,7 @@ class DetailSidebar extends Component {
                     </GridRow>
 
                     <GridRow>
-                      <GridColumn width={8}>
+                      <GridColumn>
                         <Dropdown
                           label={
                             <FormattedMessage id='wantedBoard.grade' defaultMessage='Grade'>
@@ -910,7 +897,10 @@ class DetailSidebar extends Component {
                           }}
                         />
                       </GridColumn>
-                      <GridColumn width={8}>
+                    </GridRow>
+
+                    <GridRow>
+                      <GridColumn>
                         <Dropdown
                           label={
                             <FormattedMessage id='wantedBoard.form' defaultMessage='Form'>
@@ -1150,8 +1140,7 @@ const mapStateToProps = ({
     searchedManufacturers,
     searchedManufacturersLoading,
     searchedCasNumbers,
-    searchedCasNumbersLoading,
-    myRequestedItemsType
+    searchedCasNumbersLoading
     //  searchedOrigins,
     //  searchedOriginsLoading,
     //  searchedProducts,
@@ -1184,7 +1173,6 @@ const mapStateToProps = ({
   searchedManufacturersLoading,
   searchedCasNumbers,
   searchedCasNumbersLoading,
-  type: myRequestedItemsType,
   //  searchedOrigins,
   //  searchedOriginsLoading,
   //  searchedProducts,

@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import { Container, Grid, Dropdown, Label, Input } from 'semantic-ui-react'
 import { withRouter } from 'next/router'
 import Router from 'next/router'
-
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import { Datagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
@@ -212,7 +212,7 @@ class Holds extends Component {
         ),
         width: 160,
         sortPath: 'InventoryHold.productOffer.companyProduct.intProductName',
-        actions: this.getActions()
+        allowReordering: false
       },
       {
         name: 'pkgsHeld',
@@ -271,6 +271,21 @@ class Holds extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(r => {
+      return {
+        ...r,
+        intProductName: (
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            content={r.intProductName}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const { rows, datagrid, intl, tutorialCompleted, toggleHolds } = this.props
     const { columns, filterValue } = this.state
@@ -279,7 +294,7 @@ class Holds extends Component {
 
     return (
       <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
-        {false && !tutorialCompleted && <Tutorial marginHolds />}
+        {<Tutorial marginHolds isTutorial={false} isBusinessVerification={true} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
@@ -330,7 +345,7 @@ class Holds extends Component {
             </div>
           </CustomRowDiv>
         </div>
-        <div className='flex stretched' style={{ padding: '10px 0' }}>
+        <div className='flex stretched listings-wrapper' style={{ padding: '10px 0' }}>
           <ProdexGrid
             groupActions={row => {
               let values = row.key.split('_')
@@ -341,10 +356,9 @@ class Holds extends Component {
             }}
             tableName='marketplace_hold_grid'
             {...datagrid.tableProps}
-            rows={rows}
+            rows={this.getRows(rows)}
             columns={this.getColumns()}
             rowSelection
-            showSelectionColumn
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             getChildGroups={rows =>
               _(rows)
@@ -356,7 +370,6 @@ class Holds extends Component {
                 .value()
             }
             data-test='marketplace_holds_row_action'
-            columnActions='intProductName'
           />
         </div>
       </Container>

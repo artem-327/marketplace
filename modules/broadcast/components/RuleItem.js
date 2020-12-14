@@ -21,8 +21,9 @@ const RuleItem = props => {
     asSidebar,
     openModalCompanyInfo,
     getCompanyInfo,
-    changeInModel
-    // tree,
+    changeInModel,
+    associationFilter,
+    treeData
   } = props
   // let item = _.cloneDeep(props.item)
   let { item } = props
@@ -78,16 +79,33 @@ const RuleItem = props => {
   }
 
   let companyName = findCompany()
+  let styleRow = asSidebar ? { justifyContent: 'flex-end' } : {}
+  styleRow = item.model.rule.expanded ? { ...styleRow, background: '#eff9ff' } : styleRow
 
   return (
     <>
       <Rule.Row
-        depth={nodePath.length}
+        asSidebar={asSidebar}
         type={rule.type}
         onClick={() => rule.type !== 'root' && handleRowClick(item)}
         data-test='broadcast_rule_row_click'
-        style={asSidebar ? { 'justify-content': 'flex-end' } : {}}>
-        <Rule.RowContent>
+        style={styleRow}>
+        <Rule.Toggle
+          style={
+            asSidebar ? { flex: '0 0 62px' } : { flex: '0 0 88px', maxWidth: '60px', paddingLeft: '0 !important' }
+          }>
+          <Checkbox
+            className={rule.priceOverride && nodeBroadcast === 1 && 'independent'}
+            data-test='broadcast_rule_toggle_chckb'
+            toggle
+            fitted
+            indeterminate={nodeBroadcast === 2}
+            checked={nodeBroadcast === 1}
+            // disabled={toggleDisabled}
+            onClick={e => onChange(item, 'broadcast', e)}
+          />
+        </Rule.Toggle>
+        <Rule.RowContent depth={nodePath.length}>
           {displayArrow ? <Icon name={`chevron ${item.model.rule.expanded ? 'down' : 'right'}`} /> : <EmptyIconSpace />}
           {rule.type !== 'branch' || (rule.type === 'branch' && companyName) ? (
             <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
@@ -108,19 +126,6 @@ const RuleItem = props => {
           )}
         </Rule.RowContent>
 
-        <Rule.Toggle style={asSidebar ? { flex: '0 0 62px' } : { flex: '0 0 88px', maxWidth: '60px' }}>
-          <Checkbox
-            className={rule.priceOverride && nodeBroadcast === 1 && 'independent'}
-            data-test='broadcast_rule_toggle_chckb'
-            toggle
-            fitted
-            indeterminate={nodeBroadcast === 2}
-            checked={nodeBroadcast === 1}
-            // disabled={toggleDisabled}
-            onClick={e => onChange(item, 'broadcast', e)}
-          />
-        </Rule.Toggle>
-
         <PriceControl
           changeInModel={changeInModel}
           hideFobPrice={hideFobPrice}
@@ -131,6 +136,9 @@ const RuleItem = props => {
           item={item}
           onChange={onPriceChange}
           asSidebar={asSidebar}
+          filter={filter}
+          associationFilter={associationFilter}
+          treeData={treeData}
         />
       </Rule.Row>
 
@@ -152,6 +160,7 @@ const RuleItem = props => {
             asSidebar={asSidebar}
             openModalCompanyInfo={openModalCompanyInfo}
             getCompanyInfo={getCompanyInfo}
+            treeData={treeData}
           />
         ))}
     </>

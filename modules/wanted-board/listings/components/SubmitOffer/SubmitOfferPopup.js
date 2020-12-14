@@ -410,7 +410,6 @@ class SubmitOfferPopup extends React.Component {
     select: '',
     nextSubmit: false,
     inputRows: 0,
-    pkgAvailable: '',
     selectedRow: { id: '' }
   }
 
@@ -425,14 +424,15 @@ class SubmitOfferPopup extends React.Component {
       let fulfillmentType = ''
       if (this.state.nextSubmit)
         fulfillmentType = { fulfillmentType: Yup.string().required(errorMessages.requiredMessage) }
+
       return Yup.object().shape({
         ...(values.lotExpirationDate && {
-          lotExpirationDate: dateValidation(false).concat(
-            Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
-              const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-              return enteredDate >= moment().endOf('day').format()
+          lotExpirationDate: Yup.string()
+            .test('minDate', errorMessages.dateNotInPast, function (date) {
+              const enteredDate = moment(getStringISODate(date)).endOf('day')
+              return enteredDate >= moment().endOf('day')
             })
-          )
+            .concat(dateValidation(false))
         }),
         ...fulfillmentType,
         items: Yup.array().of(
@@ -448,7 +448,22 @@ class SubmitOfferPopup extends React.Component {
               }
             }
 
-            if (getSafe(() => matchingOfferInfo.maximumPackageAmount, 0) < sumPkgAmount) {
+            if (values.fulfillmentType === 'PARTIAL') {
+              pkgAmount = {
+                pkgAmount: Yup.number()
+                  .positive(errorMessages.positive)
+                  .typeError(errorMessages.requiredMessage)
+                  .required(errorMessages.requiredMessage)
+                  .test(
+                    'is_over_max',
+                    errorMessages.maximum(matchingOfferInfo.minimumPackageAmount),
+                    () => sumPkgAmount <= matchingOfferInfo.minimumPackageAmount
+                  )
+              }
+            } else if (
+              getSafe(() => matchingOfferInfo.maximumPackageAmount, '') &&
+              getSafe(() => matchingOfferInfo.maximumPackageAmount, 0) < sumPkgAmount
+            ) {
               pkgAmount = {
                 pkgAmount: Yup.number()
                   .positive(errorMessages.positive)
@@ -460,7 +475,10 @@ class SubmitOfferPopup extends React.Component {
                     () => sumPkgAmount < matchingOfferInfo.maximumPackageAmount
                   )
               }
-            } else if (getSafe(() => matchingOfferInfo.minimumPackageAmount, 0) > sumPkgAmount) {
+            } else if (
+              getSafe(() => matchingOfferInfo.minimumPackageAmount, '') &&
+              getSafe(() => matchingOfferInfo.minimumPackageAmount, 0) > sumPkgAmount
+            ) {
               pkgAmount = {
                 pkgAmount: Yup.number()
                   .positive(errorMessages.positive)
@@ -475,14 +493,15 @@ class SubmitOfferPopup extends React.Component {
             }
 
             let fulfilledAt = ''
+
             if (values.fulfillmentType === 'COMPLETE_SCHEDULE')
               fulfilledAt = {
-                fulfilledAt: dateValidation(this.state.nextSubmit ? true : false).concat(
-                  Yup.string().test('minDate', errorMessages.dateNotInPast, function (date) {
-                    const enteredDate = moment(getStringISODate(date)).endOf('day').format()
-                    return enteredDate >= moment().endOf('day').format()
+                fulfilledAt: Yup.string()
+                  .test('minDate', errorMessages.dateNotInPast, function (date) {
+                    const enteredDate = moment(getStringISODate(date)).endOf('day')
+                    return enteredDate >= moment().endOf('day')
                   })
-                )
+                  .concat(dateValidation(this.state.nextSubmit ? true : false))
               }
 
             return Yup.object().shape({
@@ -580,19 +599,24 @@ class SubmitOfferPopup extends React.Component {
     } = this.props
     let expiresAt = null
     if (lotExpirationDate) {
-      expiresAt = moment(getStringISODate(lotExpirationDate)).endOf('day').format()
+      expiresAt =
+        typeof lotExpirationDate === 'object'
+          ? lotExpirationDate.endOf('day').format()
+          : typeof lotExpirationDate === 'string'
+          ? moment(getStringISODate(lotExpirationDate)).endOf('day').format()
+          : ''
     }
 
     const editedItems = items.map(item => {
       switch (fulfillmentType) {
         case 'PARTIAL':
-          return { pkgAmount: Number(item.pkgAmount), pricePerUOM: Number(item.pricePerUOM) }
+          return { pkgAmount: Number(item.pkgAmount), pricePerUOM: parseFloat(item.pricePerUOM) }
         case 'COMPLETE_IMMEDIATE':
-          return { pricePerUOM: Number(item.pricePerUOM) }
+          return { pricePerUOM: parseFloat(item.pricePerUOM) }
         case 'COMPLETE_SCHEDULE':
           return {
             pkgAmount: Number(item.pkgAmount),
-            pricePerUOM: Number(item.pricePerUOM),
+            pricePerUOM: parseFloat(item.pricePerUOM),
             fulfilledAt:
               item.fulfilledAt && typeof item.fulfilledAt === 'object'
                 ? item.fulfilledAt.format()
@@ -659,7 +683,7 @@ class SubmitOfferPopup extends React.Component {
           <InputWrapper>
             <div>
               <div className='field'>
-                <FormattedNumber value={row.pricePerUOM} />
+                <FormattedNumber minimumFractionDigits={3} maximumFractionDigits={3} value={row.pricePerUOM} />
               </div>
               <Label>{currencySymbol}</Label>
             </div>
@@ -686,10 +710,17 @@ class SubmitOfferPopup extends React.Component {
         })
         .catch(err => console.log('catch', err))
     }
+
+    if (name === 'fulfillmentType' && value === 'PARTIAL') {
+      this.setFieldValue(
+        'items[0].pkgAmount',
+        getSafe(() => this.props.matchingOfferInfo.minimumPackageAmount, '')
+      )
+    }
     if (name === 'fulfillmentType' && value === 'COMPLETE_IMMEDIATE') {
       this.setFieldValue(
         'items[0].pkgAmount',
-        getSafe(() => this.props.matchingOfferInfo.automaticPackageAmount, '') || this.state.pkgAvailable
+        getSafe(() => this.props.matchingOfferInfo.automaticPackageAmount, '')
       )
     } else if (name === 'fulfillmentType' && value === 'COMPLETE_SCHEDULE' && this.props.isSecondPage) {
       const initialVal = this.state.initialValues
@@ -700,9 +731,11 @@ class SubmitOfferPopup extends React.Component {
     if (this.values.fulfillmentType === 'COMPLETE_SCHEDULE') {
       let total = 0
       if (name.includes('pkgAmount')) {
-        total = Number(value) * Number(this.values.items[index].pricePerUOM)
+        total = Number(value) * parseFloat(this.values.items[index].pricePerUOM)
       } else if (name.includes('pricePerUOM')) {
         total = Number(value) * Number(this.values.items[index].pkgAmount)
+      } else {
+        total = Number(this.values.items[index].pkgAmount) * parseFloat(this.values.items[index].pricePerUOM)
       }
       this.setFieldValue(`items[${index}].total`, total)
     }
@@ -710,7 +743,7 @@ class SubmitOfferPopup extends React.Component {
     if (name === 'fulfillmentType' && !this.values.items[index].total) {
       this.setFieldValue(
         `items[${index}].total`,
-        Number(this.values.items[index].pricePerUOM) * Number(this.values.items[index].pkgAmount)
+        parseFloat(this.values.items[index].pricePerUOM) * Number(this.values.items[index].pkgAmount)
       )
     }
     const { datagrid, counterRequestedItem } = this.props
@@ -796,6 +829,7 @@ class SubmitOfferPopup extends React.Component {
         <DateInput
           name={`items[${index}].fulfilledAt`}
           inputProps={{
+            //minDate: moment().add(1, 'days'), TypeError: Cannot read property 'position' of undefined
             onChange: (e, { name, value }) => this.handleChange(e, { name, value: getStringISODate(value) }),
             clearable: true,
             fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'
@@ -873,7 +907,7 @@ class SubmitOfferPopup extends React.Component {
           {getSafe(() => items.length, '')
             ? items.map((item, index) => {
                 return (
-                  <Table.Row>
+                  <Table.Row key={index}>
                     <TableCell>{this.renderQuantityInput(fulfillmentType, index)}</TableCell>
                     <TableCell>{this.renderDateInputFulfilledAt(fulfillmentType, index)}</TableCell>
                     <TableCell>{this.renderPriceInput(fulfillmentType, index)}</TableCell>
@@ -915,31 +949,31 @@ class SubmitOfferPopup extends React.Component {
       getSafe(() => matchingOfferInfo.automaticPackageAmount, '')
     ) {
       result = matchingOfferInfo.automaticPackageAmount
-      return result
     } else if (pkgAmount) {
       result = pkgAmount
-      return result
     } else if (getSafe(() => popupValues.cfHistoryLastPkgAmount, '')) {
       result = popupValues.cfHistoryLastPkgAmount
-      return result
     }
+    return result
   }
 
   getInitialValues = () => {
     const { popupValues } = this.props
 
     const arrayTimestamps = getSafe(() => popupValues.histories.length)
-      ? popupValues.histories.map(historie => (historie.updatedAt ? Date.parse(historie.updatedAt) : ''))
+      ? popupValues.histories.map(historie => (historie.createdAt ? Date.parse(historie.createdAt) : ''))
       : ''
 
-    const newestDate = getSafe(() => arrayTimestamps.length, '') ? Math.max.apply(Math, arrayTimestamps) : ''
+    const newestDate = getSafe(() => arrayTimestamps.length, '') ? Math.max(...arrayTimestamps) : ''
 
     const i =
       newestDate && getSafe(() => arrayTimestamps.length, '') ? arrayTimestamps.findIndex(el => el === newestDate) : 0
 
     let items = getSafe(() => popupValues.histories[i].items, '')
       ? popupValues.histories[i].items.map(item => ({
-          fulfilledAt: getSafe(() => item.fulfilledAt, '') ? moment(item.fulfilledAt) : '',
+          fulfilledAt: getSafe(() => item.fulfilledAt, '')
+            ? moment(item.fulfilledAt).format(getLocaleDateFormat())
+            : '',
           pkgAmount: this.getPkgAmount(item.pkgAmount),
           pricePerUOM: getSafe(() => item.pricePerUOM, ''),
           total:
@@ -983,6 +1017,7 @@ class SubmitOfferPopup extends React.Component {
     const { columns, initialValues } = this.state
     const rows = this.getRows()
     const qtyPart = getSafe(() => popupValues.unit.nameAbbreviation, '')
+
     return (
       <>
         <ToggleForm
@@ -1092,7 +1127,7 @@ class SubmitOfferPopup extends React.Component {
                                 <List.Item>
                                   <List.Content>
                                     <List.Header as='label'>
-                                      <FormattedMessage id='wantedBoard.neededBy' defaultMessage='Needed By' />
+                                      <FormattedMessage id='wantedBoard.dateNeededBy' defaultMessage='Date Needed By' />
                                     </List.Header>
                                     <List.Description as='span'>
                                       {popupValues.neededAt ? (
@@ -1263,7 +1298,7 @@ function mapStateToProps(store, props) {
     rows: props.datagrid.rows.map(row => ({
       ...row,
       pricePerUOM: row.pricePerUOM
-        ? parseInt(row.pricePerUOM, null)
+        ? parseFloat(row.pricePerUOM, null)
         : getPrice(props.rawData.quantity, row.pricingTiers)
     })),
     popupValues: props.rawData,
