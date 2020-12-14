@@ -174,3 +174,21 @@ export const getFormattedAddress = address => {
     address.country
   )
 }
+
+export const findDuplicateInArray = (arra1, key) => {
+  let object = {}
+  let result = []
+
+  arra1.forEach(item => {
+    if (!object[item[key]]) object[item[key]] = 0
+    object[item[key]] += 1
+  })
+
+  for (let prop in object) {
+    if (object[prop] >= 2) {
+      result.push(prop)
+    }
+  }
+
+  return result
+}
