@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
 import { injectIntl } from 'react-intl'
@@ -26,7 +27,7 @@ class GuestCompaniesTable extends Component {
           ),
           sortPath: 'ClientCompany.cfDisplayName',
           width: 210,
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'companyAdmin',
@@ -86,6 +87,14 @@ class GuestCompaniesTable extends Component {
     return rows.map(row => {
       return {
         ...row,
+        displayName: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.displayName}
+            onContentClick={() => this.props.openCompanyEdit(row.rawData)}
+          />
+        ),
         reviewRequested: (
           <Checkbox
             key={`review${row.id}`}
@@ -111,7 +120,12 @@ class GuestCompaniesTable extends Component {
   }
 
   getActions = () => {
-    const { datagrid, intl, deleteClientCompany, openCompanyEdit } = this.props
+    const {
+      datagrid,
+      intl,
+      deleteClientCompany,
+      openCompanyEdit
+    } = this.props
     const { formatMessage } = intl
 
     return [
@@ -147,14 +161,15 @@ class GuestCompaniesTable extends Component {
     const { datagrid, rows, intl, loading } = this.props
 
     return (
-      <ProdexGrid
-        {...datagrid.tableProps}
-        loading={datagrid.loading || loading}
-        tableName='manage_guests_client_companies'
-        rows={this.getRows(rows)}
-        columns={this.state.columns}
-        columnActions={'displayName'}
-      />
+      <div className='flex stretched listings-wrapper'>
+        <ProdexGrid
+          {...datagrid.tableProps}
+          loading={datagrid.loading || loading}
+          tableName='manage_guests_client_companies'
+          rows={this.getRows(rows)}
+          columns={this.state.columns}
+        />
+      </div>
     )
   }
 }

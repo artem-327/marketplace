@@ -1,3 +1,5 @@
+import { DivCircle } from './styles'
+
 export function getOrderStatus(orderStatus) {
   switch (orderStatus) {
     case 1:
@@ -12,6 +14,55 @@ export function getOrderStatus(orderStatus) {
       return 'Cancelled'
     case 6:
       return 'Discarded'
+    default:
+      return 'N/A'
+  }
+}
+
+export function getOrderStatusWithIconCircle(orderStatus) {
+  switch (orderStatus) {
+    case 1:
+      return (
+        <div style={{ display: 'flex' }}>
+          <DivCircle backgroundColor='#ffc65d' />
+          Pending
+        </div>
+      )
+    case 2:
+      return (
+        <div style={{ display: 'flex' }}>
+          <DivCircle backgroundColor='#84c225' />
+          Confirmed
+        </div>
+      )
+    case 3:
+      return (
+        <div style={{ display: 'flex' }}>
+          <DivCircle backgroundColor='#f16844' />
+          Rejected
+        </div>
+      )
+    case 4:
+      return (
+        <div style={{ display: 'flex' }}>
+          <DivCircle backgroundColor='#2599d5' />
+          Draft
+        </div>
+      )
+    case 5:
+      return (
+        <div style={{ display: 'flex' }}>
+          <DivCircle backgroundColor='#f16844' />
+          Cancelled
+        </div>
+      )
+    case 6:
+      return (
+        <div style={{ display: 'flex' }}>
+          <DivCircle backgroundColor='#f16844' />
+          Discarded
+        </div>
+      )
     default:
       return 'N/A'
   }

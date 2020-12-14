@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Sidebar } from 'semantic-ui-react'
+import { Dropdown } from 'semantic-ui-react'
 
 export const UpperCaseText = styled.div`
   text-transform: uppercase;
@@ -90,13 +91,18 @@ export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  top: 80px !important;
   padding-bottom: 80px;
+  top: 80px !important;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 1000 !important;
   text-align: left;
   font-size: 14px;
 
+  &.full-screen-sidebar {
+    top: 0 !important;
+    padding-bottom: 0px;
+  }
+  
   .ui.grid {
     margin: 1.607142857em 1.428571429em;
     .row {
@@ -197,15 +203,34 @@ export const BottomButtons = styled.div`
     font-size: 1em;
     margin: 0 0.357142857em;
     padding: 9px 18px 9px;
-    color: #848893;
-    background-color: #ffffff;
+    
     border: solid 1px #dee2e6;
-  }
-
-  .ui.primary.button {
-    color: #ffffff;
-    background-color: #2599d5;
-    border: none;
+    background-color: #ffffff;
+    color: #20273a;
+    
+    &:hover {
+      background-color: #f8f9fb;
+    }
+    
+    &.disabled {
+      background-color: #ffffff;
+      color: #cecfd4;
+    }
+    
+    &.large.primary {
+      border: none;    
+      background-color: #2599d5;
+      color: #ffffff;
+      
+      &:hover {
+        background-color: #188ec9;
+      }
+      
+      &.disabled {
+        background-color: #bde0f2;
+        color: #ffffff;
+      }
+    }
   }
 
   .ui.modal & {
@@ -224,6 +249,26 @@ export const HighSegment = styled.div`
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
   background-color: #ffffff;
   padding-left: ${props => (props.paddingLeft20 ? '20px' : '30px')};
+  display: flex;
+  flex-direction: row;
+
+  svg {
+    font-size: 18px;
+    vertical-align: middle;
+  }
+  
+  svg.title-icon {
+    margin-left: 15px;
+    color: #cecfd4;
+  }
+  
+  svg.close-icon {
+    right: 0;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
 `
 
 export const FlexContent = styled.div`
@@ -399,5 +444,57 @@ export const QuantityWrapper = styled.div`
         }
       }
     }
+  }
+`
+
+export const DivRow = styled.div`
+  display: flex !important;
+
+  > div {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  > span {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+`
+
+export const SpanText = styled.span`
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  font-weight: 500;
+  
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+`
+
+export const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+
+  .dropdown.icon {
+    display: none;
+  }
+`
+
+export const RowDropdownIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin: 2px 8px 2px -4px;
+
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #848893 !important;
   }
 `

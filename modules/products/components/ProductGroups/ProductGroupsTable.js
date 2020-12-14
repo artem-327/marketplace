@@ -7,6 +7,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { openPopup, deleteProductGroups } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
@@ -25,7 +26,7 @@ class ProductGroupsTable extends Component {
             </FormattedMessage>
           ),
           sortPath: 'ProductGroup.name',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'tags',
@@ -81,6 +82,22 @@ class ProductGroupsTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+            onContentClick={() => this.props.openPopup(row)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const {
       intl,
@@ -97,18 +114,17 @@ class ProductGroupsTable extends Component {
     const { formatMessage } = intl
     const { columns } = this.state
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexTable
           tableName={'product_group'}
           {...datagrid.tableProps}
           filterValue={filterValue}
           loading={datagrid.loading || loading}
           columns={columns}
-          rows={rows}
-          columnActions='name'
+          rows={this.getRows(rows)}
           editingRowId={editedId}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

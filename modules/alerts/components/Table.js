@@ -40,6 +40,7 @@ const StyledStatusLabel = styled(Label)`
 `
 
 const StyledNotification = styled.div`
+  &.clickable {
     cursor: pointer;
 
     &:hover {
@@ -236,9 +237,9 @@ class Table extends Component {
     }
 
     return (
-      <>{
-        messageType && messageDetailTable[messageType] ? messageDetailTable[messageType] : ReactHtmlParser(row.text)
-      }</>
+      <>
+        {messageType && messageDetailTable[messageType] ? messageDetailTable[messageType] : ReactHtmlParser(row.text)}
+      </>
     )
   }
 
@@ -360,6 +361,7 @@ class Table extends Component {
             lockSelection={false}
             showSelectAll={false}
             toggleCellComponent={this.toggleCellComponent}
+            isToggleCellComponent={true}
             selectedRows={selectedRows}
             onSelectionChange={selectedRows => {
               this.props.onSelectionChange(selectedRows)

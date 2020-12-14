@@ -4,6 +4,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { Checkbox } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
@@ -43,7 +44,7 @@ class CompaniesTable extends Component {
           ),
           width: 220,
           sortPath: 'Company.name',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'p44CompanyId',
@@ -140,6 +141,14 @@ class CompaniesTable extends Component {
     return rows.map(row => {
       return {
         ...row,
+        displayName: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.displayName}
+            onContentClick={() => this.props.openEditCompany(row.id, row.rawData)}
+          />
+        ),
         paymentAccountStatus:
           row.paymentProcessor === 'DWOLLA'
             ? (row.hasDwollaAccount ? 'Dwolla' : 'No')
@@ -267,17 +276,16 @@ class CompaniesTable extends Component {
     const { datagrid, rows, editedId } = this.props
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexTable
           {...datagrid.tableProps}
           tableName='admin_companies'
           columns={this.state.columns}
           defaultSorting={{ columnName: 'displayName', direction: 'asc', sortPath: 'Company.name' }}
           rows={this.getRows(rows)}
-          columnActions='displayName'
           editingRowId={editedId}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

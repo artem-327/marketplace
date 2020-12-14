@@ -43,7 +43,6 @@ import {
   DateInputStyledWrapper,
   SaveFiltersGrid,
   InputWrapper,
-  QuantityWrapper,
   StyledModalContent,
   CustomMenu,
   SmallGrid,
@@ -405,54 +404,6 @@ class WantedBoardFilter extends Component {
     )
   }
 
-  quantityWrapper = (name, { values, setFieldValue, setFieldTouched, label }) => {
-    return (
-      <QuantityWrapper>
-        <Input
-          name={name}
-          inputProps={{
-            placeholder: '0',
-            type: 'number',
-            label: label,
-            labelPosition: 'left',
-            fluid: true
-          }}
-        />
-        <div className='sideButtons'>
-          <Button
-            type='button'
-            className='buttonPlus'
-            onClick={() => {
-              if (isNaN(values[name]) || values[name] === '') {
-                setFieldValue(name, 1)
-                setFieldTouched(name, true, true)
-              } else {
-                setFieldValue(name, parseInt(values[name]) + 1)
-                setFieldTouched(name, true, true)
-              }
-            }}>
-            +
-          </Button>
-          <Button
-            type='button'
-            className='buttonMinus'
-            onClick={() => {
-              if (isNaN(values[name]) || values[name] === '') {
-                setFieldValue(name, 1)
-                setFieldTouched(name, true, true)
-              } else {
-                const value = parseInt(values[name])
-                if (value > 1) setFieldValue(name, value - 1)
-                setFieldTouched(name, true, true)
-              }
-            }}>
-            -
-          </Button>
-        </div>
-      </QuantityWrapper>
-    )
-  }
-
   dateField = (name, { values, setFieldValue, handleChange, min }) => {
     let inputName = `${name}${values[name]}`
     let { intl } = this.props
@@ -689,20 +640,28 @@ class WantedBoardFilter extends Component {
             <SmallGrid>
               <GridRow>
                 <GridColumn width={8}>
-                  {this.quantityWrapper('quantityFrom', {
-                    values,
-                    setFieldValue,
-                    setFieldTouched,
-                    label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' })
-                  })}
+                  <Input
+                    name='quantityFrom'
+                    inputProps={{
+                      placeholder: '0',
+                      type: 'number',
+                      label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    }}
+                  />
                 </GridColumn>
                 <GridColumn width={8}>
-                  {this.quantityWrapper('quantityTo', {
-                    values,
-                    setFieldValue,
-                    setFieldTouched,
-                    label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' })
-                  })}
+                  <Input
+                    name='quantityTo'
+                    inputProps={{
+                      placeholder: '0',
+                      type: 'number',
+                      label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' }),
+                      labelPosition: 'left',
+                      fluid: true
+                    }}
+                  />
                 </GridColumn>
               </GridRow>
             </SmallGrid>
@@ -740,35 +699,40 @@ class WantedBoardFilter extends Component {
         </GridRow>
 
         <GridRow>
-          {false && (
-            <GridColumn width={8}>
-              <FormattedMessage id='filter.condition' defaultMessage='Condition' />
-              <Dropdown
-                name='conforming'
-                options={[
-                  {
-                    key: 1,
-                    text: formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' }),
-                    value:
-                      `{"value":"TRUE","name":"${formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' })}"}`
-                  },
-                  {
-                    key: 2,
-                    text: formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' }),
-                    value:
-                      `{"value":"FALSE","name":"${formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' })}"}`
-                  },
-                ]}
-                selection
-                inputProps={{
-                  fluid: true,
-                  clearable: true,
-                  upward: true,
-                  placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
-                }}
-              />
-            </GridColumn>
-          )}
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.condition' defaultMessage='Condition' />
+            <Dropdown
+              name='conforming'
+              options={[
+                {
+                  key: 1,
+                  text: formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' }),
+                  value:
+                    `{"value":"true","name":"${formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' })}"}`
+                },
+                {
+                  key: 2,
+                  text: formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' }),
+                  value:
+                    `{"value":"false","name":"${formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' })}"}`
+                },
+              ]}
+              selection
+              inputProps={{
+                fluid: true,
+                clearable: true,
+                upward: true,
+                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
+              }}
+            />
+          </GridColumn>
+          <GridColumn width={8}>
+            <FormattedMessage id='filter.form' defaultMessage='Form' />
+            {productFormsDropdown}
+          </GridColumn>
+        </GridRow>
+
+        <GridRow>
           <GridColumn width={8}>
             <FormattedMessage id='filter.percentage' />
             <SmallGrid>
@@ -802,49 +766,6 @@ class WantedBoardFilter extends Component {
               </GridRow>
             </SmallGrid>
           </GridColumn>
-
-          <GridColumn width={8}>
-            <FormattedMessage id='filter.form' defaultMessage='Form' />
-            {productFormsDropdown}
-          </GridColumn>
-        </GridRow>
-
-        <GridRow>
-          {false && (
-            <GridColumn width={8}>
-              <FormattedMessage id='filter.percentage' />
-              <SmallGrid>
-                <GridRow>
-                  <GridColumn width={8}>
-                    {this.inputWrapper(
-                      'assayFrom',
-                      {
-                        type: 'number',
-                        placeholder: '0.00',
-                        label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
-                        labelPosition: 'left',
-                        fluid: true
-                      },
-                      '%'
-                    )}
-                  </GridColumn>
-                  <GridColumn width={8}>
-                    {this.inputWrapper(
-                      'assayTo',
-                      {
-                        type: 'number',
-                        placeholder: '0.00',
-                        label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
-                        labelPosition: 'left',
-                        fluid: true
-                      },
-                      '%'
-                    )}
-                  </GridColumn>
-                </GridRow>
-              </SmallGrid>
-            </GridColumn>
-          )}
         </GridRow>
       </PopupGrid>
     )
@@ -1119,7 +1040,7 @@ WantedBoardFilter.defaultProps = {
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
   getOriginUrl: '/prodex/api/countries',
-  savedUrl: '/prodex/api/purchase-requests/other/datagrid/saved-filters',
+  savedUrl: '/prodex/api/purchase-requests/own/datagrid/saved-filters',
   searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${text}`,
   onApply: filter => {},
   onClear: () => {},

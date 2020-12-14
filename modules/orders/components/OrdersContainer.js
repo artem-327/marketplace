@@ -54,7 +54,7 @@ function mapStateToProps(state, { router, datagrid, currentTab }) {
       globalStatus: r.cfGlobalStatus,
       date: r.orderDate && moment(r.orderDate).format(getLocaleDateFormat()),
       customerName: currentTab === 'sales' ? r.buyerCompanyName : r.sellerCompanyName,
-      orderStatus: OrdersHelper.getOrderStatus(r.orderStatus),
+      orderStatus: OrdersHelper.getOrderStatusWithIconCircle(r.orderStatus),
       shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
       creditStatus: OrdersHelper.getCreditStatus(r.creditReviewStatus),
@@ -84,7 +84,29 @@ function mapStateToProps(state, { router, datagrid, currentTab }) {
           clsName: 'tree-table nested-row',
           cofA,
           sds,
-          bl
+          bl,
+          packaging:
+            item.packagingSize && item.packagingType && item.packagingUnit
+              ? item.packagingSize + ' ' + item.packagingUnit.name.toLowerCase() + ' ' + item.packagingType.name
+              : 'N/A',
+          fobPrice: (
+            <FormattedNumber
+              minimumFractionDigits={2}
+              maximumFractionDigits={2}
+              style='currency'
+              currency={currency}
+              value={item.pricePerUOM}
+            />
+          ),
+          orderTotal: (
+            <FormattedNumber
+              minimumFractionDigits={2}
+              maximumFractionDigits={2}
+              style='currency'
+              currency={currency}
+              value={item.priceSubtotal}
+            />
+          )
         }
       })
     })),

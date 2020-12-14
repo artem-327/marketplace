@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { openSidebar, deleteBranch, getBranch } from '../../../actions'
@@ -8,11 +9,19 @@ import Router from 'next/router'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import { Popup, Icon } from 'semantic-ui-react'
-
 import { getSafe } from '~/utils/functions'
-
 import confirm from '~/src/components/Confirmable/confirm'
 import { FormattedPhone } from '~/components/formatted-messages/'
+
+import styled from 'styled-components'
+const DivIcons = styled.div`
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  right: 0px !important;
+  float: right !important;
+  display: flex !important;
+  margin-left: 10px !important;
+`
 
 class PickUpLocationsTable extends Component {
   constructor(props) {
@@ -21,22 +30,15 @@ class PickUpLocationsTable extends Component {
     this.state = {
       columns: [
         {
-          name: 'certificateIcon',
-          title: <div></div>,
-          width: 45,
-          align: 'center',
-          caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />
-        },
-        {
           name: 'addressName',
           title: (
-            <FormattedMessage id='settings.pickupLocation' defaultMessage='Pick-Up Location'>
+            <FormattedMessage id='settings.pickupLocation' defaultMessage='Warehouse'>
               {text => text}
             </FormattedMessage>
           ),
-          width: 170,
+          width: 250,
           sortPath: 'Branch.deliveryAddress.addressName',
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'streetAddress',
@@ -115,23 +117,31 @@ class PickUpLocationsTable extends Component {
   getRows = rows => {
     return rows.map(r => ({
       ...r,
-      certificateIcon:
-        getSafe(() => r.attachments.length, false) && getSafe(() => r.countryName, false) === 'USA' ? (
-          <Popup
-            position='right center'
-            header={
-              <FormattedMessage
-                id='settings.warehouse.certificateIcon.header'
-                defaultMessage='Certificate is attached and so will be visible anywhere'
+      addressName: (
+        <ActionCell
+          row={r}
+          getActions={this.getActions}
+          content={r.addressName}
+          onContentClick={() => this.props.openSidebar(r.rawData, 0)}
+          rightAlignedContent={
+            getSafe(() => r.attachments.length, false) && getSafe(() => r.countryName, false) === 'USA' ? (
+              <Popup
+                position='right center'
+                header={
+                  <FormattedMessage
+                    id='settings.warehouse.certificateIcon.header'
+                    defaultMessage='Certificate is attached and so will be visible anywhere'
+                  />
+                }
+                trigger={
+                  <div>
+                    <Icon className='file related' />
+                  </div>
+                }
               />
-            }
-            trigger={
-              <div>
-                <Icon className='file related' />
-              </div>
-            }
-          />
-        ) : null
+            ) : null}
+        />
+      )
     }))
   }
 
@@ -183,17 +193,18 @@ class PickUpLocationsTable extends Component {
 
     return (
       <React.Fragment>
-        <ProdexGrid
-          tableName='settings_pickup_locations'
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          columns={this.state.columns}
-          loading={datagrid.loading || loading}
-          rows={this.getRows(rows)}
-          style={{ marginTop: '5px' }}
-          columnActions='addressName'
-          editingRowId={editedId}
-        />
+        <div className='flex stretched listings-wrapper'>
+          <ProdexGrid
+            tableName='settings_pickup_locations'
+            {...datagrid.tableProps}
+            filterValue={filterValue}
+            columns={this.state.columns}
+            loading={datagrid.loading || loading}
+            rows={this.getRows(rows)}
+            style={{ marginTop: '5px' }}
+            editingRowId={editedId}
+          />
+        </div>
       </React.Fragment>
     )
   }
@@ -215,11 +226,7 @@ const mapStateToProps = (state, { datagrid }) => {
         countryName: getSafe(() => r.deliveryAddress.address.country.name),
         provinceName: getSafe(() => r.deliveryAddress.address.province.name),
         name: getSafe(() => r.deliveryAddress.cfName, ''),
-        addressName: (
-          <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {getSafe(() => r.deliveryAddress.cfName, '')}
-          </div>
-        ),
+        addressName: getSafe(() => r.deliveryAddress.cfName, ''),
         contactName: getSafe(() => r.deliveryAddress.contactName, ''),
         contactEmail: getSafe(() => r.deliveryAddress.contactEmail, ''),
         phoneFormatted: <FormattedPhone value={getSafe(() => r.deliveryAddress.contactPhone, '')} />,

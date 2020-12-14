@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
+import ActionCell from '~/components/table/ActionCell'
 import { deleteLogisticsProvider, openPopup } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-messages/'
@@ -24,7 +25,7 @@ class LogisticsTable extends Component {
             </FormattedMessage>
           ),
           width: 300,
-          actions: this.getActions()
+          allowReordering: false
         },
         {
           name: 'identifierType',
@@ -103,6 +104,22 @@ class LogisticsTable extends Component {
     ]
   }
 
+  getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={this.getActions}
+            content={row.name}
+            onContentClick={() => this.props.openPopup(row.rawData)}
+          />
+        )
+      }
+    })
+  }
+
   render() {
     const {
       loading,
@@ -112,17 +129,16 @@ class LogisticsTable extends Component {
     } = this.props
 
     return (
-      <React.Fragment>
+      <div className='flex stretched listings-wrapper'>
         <ProdexTable
           tableName='admin_logistics_providers'
           {...datagrid.tableProps}
           filterValue={filterValue}
           loading={datagrid.loading || loading}
           columns={this.state.columns}
-          rows={rows}
-          columnActions='name'
+          rows={this.getRows(rows)}
         />
-      </React.Fragment>
+      </div>
     )
   }
 }

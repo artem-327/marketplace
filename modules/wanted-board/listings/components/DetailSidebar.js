@@ -24,9 +24,11 @@ import { errorMessages, dateValidation } from '~/constants/yupValidation'
 import moment from 'moment'
 import { withDatagrid } from '~/modules/datagrid'
 import _ from 'lodash'
-import { inputWrapper, quantityWrapper } from '../../components'
+import { inputWrapper } from '../../components'
 import { Required } from '~/components/constants/layout'
 import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
+import { Inbox } from '@material-ui/icons'
+import { X as XIcon } from 'react-feather'
 
 import {
   Segment,
@@ -72,19 +74,9 @@ import {
 
 import {
   FlexSidebar,
-  //FlexTabs,
   FlexContent,
-  //TopMargedColumn,
-  //GraySegment,
   HighSegment,
-  //DivIcon,
-  //CloceIcon,
-  //InputWrapper,
-  //QuantityWrapper,
   BottomButtons,
-  //SmallGrid,
-  //InputLabeledWrapper,
-  //CustomLabel,
   LabeledRow
 } from '../../constants/layout'
 
@@ -279,7 +271,7 @@ class DetailSidebar extends Component {
   }, 250)
 
   submitForm = async (values, setSubmitting, setTouched) => {
-    const { addPurchaseRequest, editPurchaseRequest, datagrid } = this.props
+    const { addPurchaseRequest, editPurchaseRequest, openGlobalAddForm } = this.props
     const { sidebarValues } = this.props
 
     let neededAt = null,
@@ -312,7 +304,7 @@ class DetailSidebar extends Component {
     try {
       const response = await addPurchaseRequest(body)
       //datagrid.loadData() // Not needed here - endpoint affects datagrid in another tab
-      this.props.closeDetailSidebar()
+      openGlobalAddForm ? openGlobalAddForm('') : this.props.closeDetailSidebar()
     } catch (e) {}
     setSubmitting(false)
   }
@@ -394,6 +386,7 @@ class DetailSidebar extends Component {
       toastManager,
       removeAttachment,
       currencySymbol,
+      openGlobalAddForm
     } = this.props
 
     const { hasProvinces } = this.state
@@ -426,6 +419,7 @@ class DetailSidebar extends Component {
           return (
             <Form>
               <FlexSidebar
+                className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
                 visible={true}
                 width='very wide'
                 style={{ width: '430px' }}
@@ -435,7 +429,23 @@ class DetailSidebar extends Component {
                   <Loader />
                 </Dimmer>
                 <HighSegment basic>
-                  <FormattedMessage id='wantedBoard.specificProducts' defaultMessage='SPECIFIC PRODUCT(S)' />
+                  {openGlobalAddForm
+                    ? (
+                      <>
+                        <div>
+                            <span>
+                              <FormattedMessage id='createMenu.addWanted' defaultMessage='Add Wanted' />
+                            </span>
+                          <Inbox className='title-icon' />
+                        </div>
+                        <div style={{ position: 'absolute', right: '20px' }}>
+                          <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                        </div>
+                      </>
+                    ) : (
+                      <FormattedMessage id='wantedBoard.specificProducts' defaultMessage='SPECIFIC PRODUCT(S)' />
+                    )
+                  }
                 </HighSegment>
                 <FlexContent>
                   <Grid>
@@ -530,32 +540,32 @@ class DetailSidebar extends Component {
 
                     <GridRow>
                       <GridColumn width={8} data-test='wanted_board_sidebar_assayMin_inp'>
-                        {quantityWrapper(
-                          'element.assayMin',
-                          {
+                        <Input
+                          name='element.assayMin'
+                          inputProps={{
+                            placeholder: '0',
                             min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps,
-                          <FormattedMessage id='global.assayMin' defaultMessage='Assay Min'>
-                            {text => text}
-                          </FormattedMessage>
-                        )}
+                            type: 'number'
+                          }}
+                          label={
+                            <FormattedMessage id='global.assayMin' defaultMessage='Assay Min'>
+                              {text => text}
+                            </FormattedMessage>}
+                        />
                       </GridColumn>
                       <GridColumn width={8} data-test='wanted_board_sidebar_assayMax_inp'>
-                        {quantityWrapper(
-                          'element.assayMax',
-                          {
+                        <Input
+                          name='element.assayMax'
+                          inputProps={{
+                            placeholder: '0',
                             min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps,
-                          <FormattedMessage id='global.assayMax' defaultMessage='Assay Max'>
-                            {text => text}
-                          </FormattedMessage>
-                        )}
+                            type: 'number'
+                          }}
+                          label={
+                            <FormattedMessage id='global.assayMax' defaultMessage='Assay Max'>
+                              {text => text}
+                            </FormattedMessage>}
+                        />
                       </GridColumn>
                     </GridRow>
 
@@ -578,21 +588,18 @@ class DetailSidebar extends Component {
 
                     <GridRow>
                       <GridColumn width={8} data-test='wanted_board_sidebar_quantity_inp'>
-                        {quantityWrapper(
-                          'quantity',
-                          {
+                        <Input
+                          name='quantity'
+                          inputProps={{
+                            placeholder: '0',
                             min: 0,
-                            type: 'number',
-                            placeholder: '0'
-                          },
-                          this.formikProps,
-                          <>
+                            type: 'number'
+                          }}
+                          label={
                             <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
                               {text => text}
-                            </FormattedMessage>
-                            <Required />
-                          </>
-                        )}
+                            </FormattedMessage>}
+                        />
                       </GridColumn>
                       <GridColumn width={8}>
                         <Dropdown
@@ -616,7 +623,7 @@ class DetailSidebar extends Component {
                       <GridColumn width={8}>
                         <Dropdown
                           label={
-                            <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Delivery Location'>
+                            <FormattedMessage id='wantedBoard.deliveryLocation' defaultMessage='Customer Ship To'>
                               {text => text}
                             </FormattedMessage>
                           }
@@ -986,16 +993,18 @@ class DetailSidebar extends Component {
                     )}
                   </Grid>
                 </FlexContent>
-                <BottomButtons>
+                <BottomButtons className='bottom-buttons'>
                   <div>
-                    <Button
-                      size='large'
-                      onClick={() => this.props.closeDetailSidebar()}
-                      data-test='wanted_board_sidebar_cancel_btn'>
-                      {Object.keys(touched).length || this.state.changedForm
-                        ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
-                        : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
-                    </Button>
+                    {!openGlobalAddForm && (
+                      <Button
+                        size='large'
+                        onClick={this.props.closeDetailSidebar}
+                        data-test='wanted_board_sidebar_cancel_btn'>
+                        {Object.keys(touched).length || this.state.changedForm
+                          ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
+                          : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                      </Button>
+                    )}
                     <Button
                       disabled={!(Object.keys(touched).length || this.state.changedForm)}
                       primary
