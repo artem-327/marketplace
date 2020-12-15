@@ -9,26 +9,13 @@ import { removeEmpty } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import ErrorFocus from '~/components/error-focus'
 
-import {
-  Button,
-  FormField,
-  GridRow,
-  GridColumn,
-  Dimmer,
-  Label,
-  Modal,
-  Menu
-} from 'semantic-ui-react'
+import { Button, FormField, GridRow, GridColumn, Dimmer, Label, Modal, Menu } from 'semantic-ui-react'
 
 import { uniqueArrayByKey } from '~/utils/functions'
 
 import confirm from '~/src/components/Confirmable/confirm'
 
-import {
-  datagridValues,
-  dateDropdownOptions,
-  filterTypes
-} from '../constants/filter'
+import { datagridValues, dateDropdownOptions, filterTypes } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
@@ -49,6 +36,7 @@ import {
   PopupGrid,
   StyledModalHeader
 } from '../constants/layout'
+import { getDuplicatePackagingTypesByKey } from '~/services/filters'
 
 class WantedBoardFilter extends Component {
   state = {
@@ -62,24 +50,18 @@ class WantedBoardFilter extends Component {
     searchQuery: '',
     isTyping: false,
     searchManufacturerQuery: '',
-    searchOriginQuery: '',
+    searchOriginQuery: ''
   }
 
   componentDidMount() {
-    const {
-      fetchProductForms,
-      fetchPackagingTypes,
-      fetchProductGrade,
-      setParams,
-      filterState
-    } = this.props
+    const { fetchProductForms, fetchPackagingTypes, fetchProductGrade, setParams, filterState } = this.props
 
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     Promise.all([
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
-      this.fetchIfNoData(fetchProductGrade, 'productGrades'),
+      this.fetchIfNoData(fetchProductGrade, 'productGrades')
     ]).finally(() =>
       this.setState({
         ...(filterState !== null && filterState.state),
@@ -113,6 +95,13 @@ class WantedBoardFilter extends Component {
   toSavedFilter = inputs => {
     let datagridFilter = {
       filters: []
+    }
+
+    const { packagingTypes } = this.props
+
+    let duplicatePackagingTypes = getDuplicatePackagingTypesByKey(inputs.packagingTypes, packagingTypes, 'name')
+    if (duplicatePackagingTypes.length) {
+      inputs.packagingTypes = [...inputs.packagingTypes, ...duplicatePackagingTypes]
     }
 
     let keys = Object.keys(inputs)
@@ -395,11 +384,14 @@ class WantedBoardFilter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
-  inputWrapper = (name, inputProps, labelText, labelClass = null) => {
+  inputWrapper = (name, inputProps, leftLabel, labelText, labelClass = '') => {
     return (
-      <InputWrapper>
-        <Input name={name} inputProps={inputProps} />
-        <Label className={labelClass}>{labelText}</Label>
+      <InputWrapper className='ui fluid left labeled input'>
+        {leftLabel ? <Label>{leftLabel}</Label> : null}
+        <div className={labelClass + (leftLabel ? ' left-label' : '')}>
+          <Input name={name} inputProps={inputProps} />
+          <Label>{labelText}</Label>
+        </div>
       </InputWrapper>
     )
   }
@@ -531,6 +523,7 @@ class WantedBoardFilter extends Component {
     let {
       productForms,
       packagingTypes,
+      uniquePackagingTypes,
       productGrades,
       intl,
       autocompleteData,
@@ -542,7 +535,7 @@ class WantedBoardFilter extends Component {
     const { formatMessage } = intl
 
     let packagingTypesDropdown = this.generateDropdown(
-      packagingTypes,
+      uniquePackagingTypes,
       values,
       formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
       'packagingTypes'
@@ -678,8 +671,9 @@ class WantedBoardFilter extends Component {
                       placeholder: '0.00',
                       fluid: true
                     },
+                    null,
                     currencySymbol,
-                    'green'
+                    'price'
                   )}
                 </GridColumn>
               </GridRow>
@@ -707,22 +701,26 @@ class WantedBoardFilter extends Component {
                 {
                   key: 1,
                   text: formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' }),
-                  value:
-                    `{"value":"true","name":"${formatMessage({ id: 'global.conforming', defaultMessage: 'Conforming' })}"}`
+                  value: `{"value":"true","name":"${formatMessage({
+                    id: 'global.conforming',
+                    defaultMessage: 'Conforming'
+                  })}"}`
                 },
                 {
                   key: 2,
                   text: formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' }),
-                  value:
-                    `{"value":"false","name":"${formatMessage({ id: 'global.nonConforming', defaultMessage: 'Non Conforming' })}"}`
-                },
+                  value: `{"value":"false","name":"${formatMessage({
+                    id: 'global.nonConforming',
+                    defaultMessage: 'Non Conforming'
+                  })}"}`
+                }
               ]}
               selection
               inputProps={{
                 fluid: true,
                 clearable: true,
                 upward: true,
-                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
+                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' })
               }}
             />
           </GridColumn>
@@ -743,10 +741,9 @@ class WantedBoardFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
                     '%'
                   )}
                 </GridColumn>
@@ -756,10 +753,9 @@ class WantedBoardFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
                     '%'
                   )}
                 </GridColumn>
@@ -814,13 +810,15 @@ class WantedBoardFilter extends Component {
                       data-test='filter_advanced_filter'>
                       {formatMessage({ id: 'filter.advancedFilter', defaultMessage: 'Advanced Filter' })}
                     </Menu.Item>
-                    <Menu.Item
-                      key={'savedFilters'}
-                      onClick={() => this.toggleFilter(true)}
-                      active={savedFiltersActive}
-                      data-test='filter_saved_filters'>
-                      {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
-                    </Menu.Item>
+                    {false && (
+                      <Menu.Item
+                        key={'savedFilters'}
+                        onClick={() => this.toggleFilter(true)}
+                        active={savedFiltersActive}
+                        data-test='filter_saved_filters'>
+                        {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
+                      </Menu.Item>
+                    )}
                   </CustomMenu>
 
                   <StyledModalContent>
@@ -847,9 +845,7 @@ class WantedBoardFilter extends Component {
                   </StyledModalContent>
                 </>
               ) : (
-                <>
-                  {this.formSaveFilter(props)}
-                </>
+                <>{this.formSaveFilter(props)}</>
               )}
 
               <BottomButtons>
@@ -861,7 +857,7 @@ class WantedBoardFilter extends Component {
                       className='light'
                       onClick={this.toggleSaveFilter}
                       data-test='filter_save_cancel_btn'>
-                      {formatMessage({id: 'global.cancel', defaultMessage: 'Cancel'})}
+                      {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
                     </Button>
                     <Button
                       disabled={savedFiltersActive}
@@ -870,8 +866,8 @@ class WantedBoardFilter extends Component {
                       className='secondary'
                       loading={isFilterSaving}
                       onClick={async () => {
-                        let {values} = props
-                        const {validateForm, submitForm} = props
+                        let { values } = props
+                        const { validateForm, submitForm } = props
 
                         validateForm().then(err => {
                           const errors = Object.keys(err)
@@ -888,109 +884,110 @@ class WantedBoardFilter extends Component {
                       {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                     </Button>
                   </div>
+                ) : savedFiltersActive ? (
+                  <div style={{ textAlign: 'right' }}>
+                    <Button
+                      type='button'
+                      size='large'
+                      className='light'
+                      onClick={() => onClose()}
+                      data-test='filter_close'>
+                      {formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                    </Button>
+                  </div>
                 ) : (
-                  savedFiltersActive ? (
-                    <div style={{ textAlign: 'right'}}>
+                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <div>
                       <Button
                         type='button'
                         size='large'
-                        className='light'
                         onClick={() => onClose()}
-                        data-test='filter_close'>
-                        {formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                        className='light greyText'
+                        data-test='filter_cancel'>
+                        {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                      </Button>
+                      <Button
+                        type='button'
+                        size='large'
+                        className='light danger'
+                        onClick={(e, data) => {
+                          this.resetForm({ ...initialValues })
+                          //this.props.applyFilter({filters: []})
+                          //this.props.applyDatagridFilter({filters: []})
+                          //this.props.onClear(e, data)
+                        }}
+                        data-test='filter_clear'>
+                        {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
                       </Button>
                     </div>
-                  ) : (
-                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <div>
-                        <Button
-                          type='button'
-                          size='large'
-                          onClick={() => onClose()}
-                          className='light greyText'
-                          data-test='filter_cancel'>
-                          {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-                        </Button>
-                        <Button
-                          type='button'
-                          size='large'
-                          className='light danger'
-                          onClick={(e, data) => {
-                            this.resetForm({...initialValues})
-                            //this.props.applyFilter({filters: []})
-                            //this.props.applyDatagridFilter({filters: []})
-                            //this.props.onClear(e, data)
-                          }}
-                          data-test='filter_clear'>
-                          {formatMessage({ id: 'filter.clear', defaultMessage: 'Clear' })}
-                        </Button>
-                      </div>
-                      <div>
-                        <Button
-                          type={'button'}
-                          size='large'
-                          className='secondary outline'
-                          loading={isFilterSaving}
-                          onClick={async () => {
-                            const {validateForm, submitForm, values} = props
+                    <div>
+                      <Button
+                        type={'button'}
+                        size='large'
+                        className='secondary outline'
+                        loading={isFilterSaving}
+                        onClick={async () => {
+                          const { validateForm, submitForm, values } = props
 
-                            validateForm().then(err => {
-                              const errors = Object.keys(err)
-                              if (errors.length && errors[0] !== 'isCanceled') {
-                                // Errors found
-                                submitForm() // to show errors
+                          validateForm().then(err => {
+                            const errors = Object.keys(err)
+                            if (errors.length && errors[0] !== 'isCanceled') {
+                              // Errors found
+                              submitForm() // to show errors
+                            } else {
+                              // No errors found
+                              const requestData = this.generateRequestData(values)
+                              if (requestData.filters.length) {
+                                this.toggleSaveFilter()
                               } else {
-                                // No errors found
-                                const requestData = this.generateRequestData(values)
-                                if (requestData.filters.length) {
-                                  this.toggleSaveFilter()
-                                } else {
-                                  toastManager.add(
-                                    generateToastMarkup(
-                                      <FormattedMessage id='filter.saveEmptyFilterHeader' defaultMessage='Empty Filter' />,
-                                      <FormattedMessage
-                                        id='filter.saveEmptyFilter'
-                                        defaultMessage='There are no any filters configured'
-                                      />
-                                    ),
-                                    {
-                                      appearance: 'warning'
-                                    }
-                                  )
-                                }
+                                toastManager.add(
+                                  generateToastMarkup(
+                                    <FormattedMessage
+                                      id='filter.saveEmptyFilterHeader'
+                                      defaultMessage='Empty Filter'
+                                    />,
+                                    <FormattedMessage
+                                      id='filter.saveEmptyFilter'
+                                      defaultMessage='There are no any filters configured'
+                                    />
+                                  ),
+                                  {
+                                    appearance: 'warning'
+                                  }
+                                )
                               }
-                            })
-                          }}
-                          data-test='filter_save_new'>
-                          {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
-                        </Button>
-                        <Button
-                          size='large'
-                          loading={isFilterApplying}
-                          type='submit'
-                          secondary
-                          onClick={async () => {
-                            let {values} = props
-                            const {validateForm, submitForm} = props
+                            }
+                          })
+                        }}
+                        data-test='filter_save_new'>
+                        {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
+                      </Button>
+                      <Button
+                        size='large'
+                        loading={isFilterApplying}
+                        type='submit'
+                        secondary
+                        onClick={async () => {
+                          let { values } = props
+                          const { validateForm, submitForm } = props
 
-                            validateForm().then(async (err) => {
-                              const errors = Object.keys(err)
-                              if (errors.length && errors[0] !== 'isCanceled') {
-                                // Errors found
-                                submitForm() // to show errors
-                              } else {
-                                // No errors found
-                                await submitForm()
-                                onClose()
-                              }
-                            })
-                          }}
-                          data-test='filter_apply'>
-                          {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
-                        </Button>
-                      </div>
+                          validateForm().then(async err => {
+                            const errors = Object.keys(err)
+                            if (errors.length && errors[0] !== 'isCanceled') {
+                              // Errors found
+                              submitForm() // to show errors
+                            } else {
+                              // No errors found
+                              await submitForm()
+                              onClose()
+                            }
+                          })
+                        }}
+                        data-test='filter_apply'>
+                        {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
+                      </Button>
                     </div>
-                  )
+                  </div>
                 )}
               </BottomButtons>
               <ErrorFocus />
@@ -1040,7 +1037,7 @@ WantedBoardFilter.defaultProps = {
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
   getOriginUrl: '/prodex/api/countries',
-  savedUrl: '/prodex/api/purchase-requests/other/datagrid/saved-filters',
+  savedUrl: '/prodex/api/purchase-requests/own/datagrid/saved-filters',
   searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${text}`,
   onApply: filter => {},
   onClear: () => {},

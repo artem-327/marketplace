@@ -2855,7 +2855,7 @@
   "velloci.formationDocument.documentTypeLabel": "Select document type",
   "velloci.formationDocument.documentTypePlaceholder": "Pick one",
   "velloci.companyVerification.infoContent": "We require the social security number, legal name, and address for each beneficial owner (a beneficial owner is any owner who owns 25% or more of the business) . If the company is publicly traded and there aren't any owners with 25% or more ownership, we require the financial controller's full SSN, legal name, and address. If you do not have access to this information, you can email the relevant parties from within the app and they can enter their information securely themselves. You may complete the registration while they submit their information.",
-  "velloci.ownerInformation.infoContent": "This information is required under the Bank Secrecy Act and is intended to assist the government and law enforcement int the ongoing fight against money laundering and the financing of terrorism.",
+  "velloci.ownerInformation.infoContent": "This information is required under the Bank Secrecy Act and is intended to assist the government and law enforcement in the ongoing fight against money laundering and the financing of terrorism.",
   "velloci.ownerInformation.requiredTitle": "Required information under the Bank Secrecy Act",
   "velloci.ownerInformation.beneficialOwner": "Are you the beneficial owner?",
   "velloci.ownerInformation.otherBeneficialOwners": "OTHER BENEFICIAL OWNERS",
@@ -2868,9 +2868,9 @@
   "velloci.ownerInformation.needInfo": "Here is the info you'll need:",
   "velloci.ownerInformation.obtainInfoTitle": "Can't Obtain this Information",
   "velloci.companyVerification.infoTitle": "Beneficial Owner Information",
-  "velloci.companyVerification.infoText": "Thank you for taking the time to register your business with EchoSystem. Feel free to reach out with any questions you may have about this process. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.",
+  "velloci.companyVerification.infoText": "Thank you for taking the time to register your business with EchoSystem. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.",
   "velloci.companyVerification.text": "We require the full legal business name and registered business address. In addition, you will need to submit one of the following five documents in PDF format. It is important that the document/s you submit clearly shows your company EIN number. Please have these ready prior to starting your verification. We require one of the following:",
-  "velloci.ownerInformation.obtainInfoContent": "No problem. Please select email and we will send them a link to complete the process.",
+  "velloci.ownerInformation.obtainInfoContent": "No problem. Please select email and we will send them the form to fill separately. You may continue the KYC process for yourself and complete registration.",
   "velloci.personalInfo.firstName.placeholder": "Enter first name",
   "velloci.personalInfo.middleName.placeholder": "Enter middle name",
   "velloci.personalInfo.lastName.placeholder": "Enter last name",
@@ -2966,6 +2966,7 @@
   "detailRow.sds": "SDS",
   "detailRow.cofA": "C of A",
   "detailRow.orderTotal": "Order Total",
-  "broadcast.saveAsTemplate": "Save as Templates"
+  "broadcast.saveAsTemplate": "Save as Templates",
+  "product.packaging.selectFirst": "Please select Packaging Unit"
 
 }

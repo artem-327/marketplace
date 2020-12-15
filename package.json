@@ -25,6 +25,8 @@
     "dotenv": "^6.2.0",
     "dotenv-webpack": "^1.7.0",
     "ein-validator": "^1.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
     "express": "^4.16.4",
     "file-loader": "^3.0.1",
     "form-data": "^2.3.3",
@@ -91,7 +93,7 @@
     "sass-loader": "^7.1.0",
     "scroll-to-element": "^2.0.2",
     "semantic-ui-calendar-react": "^0.14.4",
-    "semantic-ui-react": "^0.88.0",
+    "semantic-ui-react": "^0.86.0",
     "shortid": "^2.2.14",
     "styled-components": "^4.3.2",
     "styled-jsx": "^3.2.1",
@@ -119,7 +121,6 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-react": "^7.12.4",
     "gulp": "^3.0.0",
-    "react-intl": "^2.8.0",
     "semantic-ui": "^2.4.2"
   },
   "browserslist": [

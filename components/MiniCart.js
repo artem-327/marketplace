@@ -3,20 +3,21 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { getCartCountItems } from '~/modules/purchase-order/actions'
 import { Icon, Label } from 'semantic-ui-react'
-import { ShoppingCart } from 'react-feather'
+import { Truck } from 'react-feather'
 import { getSafe } from '~/utils/functions'
 
-const IconCart = styled(ShoppingCart)`
-  width: 24px;
-  height: 25px;
+const IconCart = styled(Truck)`
+  width: 22px;
+  height: 22px;
   color: #20273a !important;
 `
 const CircularLabel = styled(Label)`
   position: absolute;
-  top: -0.75em;
+  top: -0.3em;
   left: auto;
-  right: -1em;
+  right: -0.1em;
   bottom: auto;
+  border-radius: 6px !important;
   font-size: 0.7142857rem !important;
   font-style: normal !important;
   font-weight: 400 !important;

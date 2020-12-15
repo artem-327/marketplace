@@ -70,7 +70,7 @@ export const paths = {
     conforming: 'PurchaseRequest.conditionConforming',
     form: 'PurchaseRequest.forms.id',
     assayFrom: 'PurchaseRequest.elements.assayMin',
-    assayTo: 'PurchaseRequest.elements.assayMax',
+    assayTo: 'PurchaseRequest.elements.assayMax'
   }
 }
 
@@ -84,7 +84,8 @@ export const dateFormat = getLocaleDateFormat()
 export const replaceAmbigiousCharacters = text =>
   text.toLowerCase().replace(/ /g, '').replace(/\//g, '').replace(/-/g, '')
 
-const checkboxesToFormik = (values, checkboxes) => {  // ! ! can be deleted?
+const checkboxesToFormik = (values, checkboxes) => {
+  // ! ! can be deleted?
   let obj = {}
   let tmp = values.map(val => checkboxes.find(ch => ch.id === parseInt(val.value)))
 
@@ -104,7 +105,7 @@ const toFormikArray = (values, arr) => {
   values.forEach(val => {
     const element = arr.find(el => el.id === parseInt(val.value))
     if (element) {
-      tmp.push (JSON.stringify({id: element.id, name: element.name}))
+      tmp.push(JSON.stringify({ id: element.id, name: element.name }))
     }
   })
   return tmp
@@ -520,10 +521,12 @@ export const datagridValues = {
     },
 
     valuesDescription: function (values) {
-      return values.map(val => {
+      let result = values.map(val => {
         let parsed = JSON.parse(val.description)
         return parsed.name
       })
+      // Returns unique array without duplicate names
+      return [...new Set(result)]
     },
 
     tagDescription: function (values) {
@@ -1271,7 +1274,6 @@ export const datagridValues = {
 // }
 
 export const groupFilters = (appliedFilters, { currencyCode } = '$', filterType) => {
-
   let groups = [
     {
       description: 'Quantity',
@@ -1461,8 +1463,10 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$', filterType)
       results.push({
         description: filter && filter.description,
         valuesDescription: filter && filter.valuesDescription && filter.valuesDescription.toString(),
-        tagDescription: filter && filter.tagDescription && Array.isArray(filter.tagDescription)
-          ? filter.tagDescription.toString() : filter.tagDescription,
+        tagDescription:
+          filter && filter.tagDescription && Array.isArray(filter.tagDescription)
+            ? filter.tagDescription.toString()
+            : filter.tagDescription,
         indexes: [i]
       })
     }
