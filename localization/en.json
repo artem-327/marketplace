@@ -2966,6 +2966,7 @@
   "detailRow.sds": "SDS",
   "detailRow.cofA": "C of A",
   "detailRow.orderTotal": "Order Total",
-  "broadcast.saveAsTemplate": "Save as Templates"
+  "broadcast.saveAsTemplate": "Save as Templates",
+  "product.packaging.selectFirst": "Please select Packaging Unit"
 
 }
