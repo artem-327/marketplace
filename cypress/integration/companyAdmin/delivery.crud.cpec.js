@@ -44,8 +44,6 @@ context("Prodex Delivery Addresses CRUD", () => {
         cy.enterText("#field_input_contactName", "Marie Currie")
         //cy.get("div[data-test='settings_delivery_address_emailPhone_inp']").within(($form) => {
             cy.get('.phone-num').type("1234567895")
-            cy.contains("+CCC").click()
-        cy.get('.phone-number > .ui > .visible > :nth-child(1)').click()
         //})
 
         cy.enterText("#field_input_contactEmail", "marie@address.com")

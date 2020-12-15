@@ -52,7 +52,7 @@ context("Shipping quotes CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 4)
+            .should("have.length", 2)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(Date must be in future)/i)
         })

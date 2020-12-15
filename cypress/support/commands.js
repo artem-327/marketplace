@@ -85,7 +85,7 @@ Cypress.Commands.add("openElement", (elementId, dropdownOption) => {
     cy.waitForUI()
 
     cy.get("[data-test=action_" + elementId + "_0]").scrollIntoView()
-    cy.get("[data-test=action_" + elementId + "_0]").parent().parent().click()
+    cy.get("[data-test=action_" + elementId + "_0]").parent().parent().click({force: true})
     cy.get("[data-test=action_" + elementId + "_" + dropdownOption + "]").click()
 })
 

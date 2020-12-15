@@ -47,8 +47,6 @@ context("Prodex Warehouse CRUD", () => {
         cy.enterText("input[id='field_input_deliveryAddress.contactName']","David Cameron")
         cy.get("div[data-test='settings_warehouse_popup_phoneEmail_inp']").within(($form) =>{
             cy.get("input[placeholder = 'Phone Number']").type("2025550156")
-            cy.contains("+CCC").click()
-            cy.contains("USA").click()
         })
         cy.enterText("input[id='field_input_deliveryAddress.contactEmail']","test@central.com")
 

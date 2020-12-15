@@ -35,8 +35,8 @@ context("Prodex Global Price", () => {
             .eq(0)
             .should("have.class", "ui fitted toggle checkbox")
             .click()
-        cy.get("[data-test='broadcast_modal_save_btn']").click()
 
+        cy.get('[data-test=broadcast_global_save_btn]').click()
         cy.wait("@rulesSaving")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
@@ -58,8 +58,8 @@ context("Prodex Global Price", () => {
             .eq(0)
             .should("have.class", "ui checked fitted toggle checkbox")
             .click()
-        cy.get("[data-test='broadcast_modal_save_btn']").click()
 
+        cy.get('[data-test=broadcast_global_save_btn]').click()
         cy.wait("@rulesSaving")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
@@ -77,6 +77,9 @@ context("Prodex Global Price", () => {
         cy.wait("@rulesLoading")
         cy.waitForUI()
 
+        cy.get('[data-test=broadcast_global_category_drpdn]').click()
+        cy.contains("Region").click()
+
         cy.contains("Canada").click()
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
@@ -89,10 +92,11 @@ context("Prodex Global Price", () => {
             .should("have.class", "ui fitted toggle checkbox")
             .click()
 
-        cy.get("[data-test='broadcast_modal_save_btn']").click()
-
+        cy.get('[data-test=broadcast_global_save_btn]').click()
         cy.wait("@rulesSaving")
 
+        cy.get('[data-test=broadcast_global_category_drpdn]').click()
+        cy.contains("Region").click()
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(1)
@@ -104,7 +108,7 @@ context("Prodex Global Price", () => {
 
     })
 
-    it("Switch to company broadcasting", () => {
+    it("Switch to Region broadcasting", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.turnOffGlobalBroadcasting(token)
         })
@@ -114,15 +118,15 @@ context("Prodex Global Price", () => {
         cy.wait("@rulesLoading")
         cy.waitForUI()
 
-        cy.get("[data-test=broadcast_modal_category_drpdn]").click()
-        cy.contains("By Company").click()
+        cy.get('[data-test=broadcast_global_category_drpdn]').click()
+        cy.contains("Region").click()
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
             .should("have.class", "ui fitted toggle checkbox")
             .click()
-        cy.get("[data-test='broadcast_modal_save_btn']").click()
 
+        cy.get('[data-test=broadcast_global_save_btn]').click()
         cy.wait("@rulesSaving")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")

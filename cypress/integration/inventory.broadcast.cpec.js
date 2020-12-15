@@ -47,7 +47,7 @@ context("Inventory Broadcasting", () => {
         })
 
         cy.waitForUI()
-        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_0]").click()
 
         cy.wait("@offerLoading")
@@ -64,7 +64,7 @@ context("Inventory Broadcasting", () => {
 
         cy.waitForUI()
         //Set not broadcasted
-        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_0]").click()
 
         cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "Yes")
@@ -76,10 +76,11 @@ context("Inventory Broadcasting", () => {
         })
 
         cy.get("[data-test=sidebar_inventory_save_new]").click()
-        cy.waitForUI()
+        cy.visit("/inventory/my-listings")
+        cy.wait("@inventoryLoading", { timeout: 100000 })
 
         //Assert saved
-        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click({force: true})
         cy.waitForUI()
         cy.get("[data-test=action_" + offerId + "_0]").click()
         cy.waitForUI()
@@ -96,7 +97,7 @@ context("Inventory Broadcasting", () => {
         cy.reload()
         cy.waitForUI()
 
-        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
         cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
@@ -105,7 +106,7 @@ context("Inventory Broadcasting", () => {
             .eq(8)
             .should("have.class", "ui checked fitted toggle checkbox")
             .click()
-        cy.get("[data-test='sidebar_inventory_save_new']").click()
+        cy.get('[data-test=broadcast_modal_apply_btn]').click()
 
         cy.wait("@rulesSaving")
 
@@ -124,7 +125,7 @@ context("Inventory Broadcasting", () => {
             })
         })
 
-        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
         cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
@@ -133,7 +134,7 @@ context("Inventory Broadcasting", () => {
             .eq(0)
             .should("have.class", "ui checked fitted toggle checkbox")
             .click()
-        cy.get("[data-test='sidebar_inventory_save_new']").click()
+        cy.get('[data-test=broadcast_modal_apply_btn]').click()
 
         cy.wait("@rulesSaving")
         cy.contains("Price book for this offer has been deleted")
@@ -150,10 +151,13 @@ context("Inventory Broadcasting", () => {
             })
         })
 
-        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
         cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
+
+        cy.get('[data-test=broadcast_global_category_drpdn]').click()
+        cy.contains("Region").click()
 
         cy.contains("Canada").click()
 
@@ -167,9 +171,12 @@ context("Inventory Broadcasting", () => {
             .should("have.class", "ui checked fitted toggle checkbox")
             .click()
 
-        cy.get("[data-test='sidebar_inventory_save_new']").click()
+        cy.get('[data-test=broadcast_modal_apply_btn]').click()
 
         cy.wait("@rulesSaving")
+
+        cy.get('[data-test=broadcast_global_category_drpdn]').click()
+        cy.contains("Region").click()
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(1)
@@ -181,26 +188,26 @@ context("Inventory Broadcasting", () => {
 
     })
 
-    it("Switch to company broadcasting", () => {
+    it("Switch to Region broadcasting", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.returnTurnOffJson().then(jsonBody => {
                 cy.setOfferPriceBook(token, offerId, jsonBody)
             })
         })
 
-        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click()
+        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
         cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
 
-        cy.get("[data-test=broadcast_modal_category_drpdn]").click()
-        cy.contains("By Company").click()
+        cy.get('[data-test=broadcast_global_category_drpdn]').click()
+        cy.contains("Region").click()
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
             .should("have.class", "ui checked fitted toggle checkbox")
             .click()
-        cy.get("[data-test='sidebar_inventory_save_new']").click()
+        cy.get('[data-test=broadcast_modal_apply_btn]').click()
 
         cy.wait("@rulesSaving")
 

@@ -43,8 +43,6 @@ context("Companies CRUD", () => {
         cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.contactEmail"]', "james@duck.com")
         cy.get('div[data-test="admin_popup_company_primaryBranchNameEmailPhone_inp"]').within(($form) => {
             cy.get('input[placeholder = "Phone Number"]').type("2025550156")
-            cy.contains("+CCC").click()
-            cy.contains("USA").click()
         })
 
         cy.enterText("input[id='field_input_primaryBranch.deliveryAddress.address.streetAddress']", "125 N G St")

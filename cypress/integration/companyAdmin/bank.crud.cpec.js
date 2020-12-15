@@ -1,4 +1,4 @@
-context("Prodex Bank Account CRUD", () => {
+xcontext("Prodex Bank Account CRUD", () => {
     const userJSON = require('../../fixtures/user.json')
     let accountName = null
 
