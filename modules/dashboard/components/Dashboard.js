@@ -506,9 +506,8 @@ class Dashboard extends Component {
   filterDates = (type, dates) => {
     const { isAdmin, takeover } = this.props
     // get daily stats data
-    this.props.getDailyStatistics(
-      moment(dates[0]).format('YYYY-MM-DD') + 'T00:00:00Z',
-      moment(dates[1]).add(1, 'days').format('YYYY-MM-DD') + 'T00:00:00Z'
+    this.props.getDashboardData(
+      moment(dates[0]).format('YYYY-MM-DD') + 'T00%3A00%3A00Z'
     )
     this.setState({
       activeTab: isAdmin && !takeover ? 1 : 2,
@@ -558,9 +557,8 @@ class Dashboard extends Component {
         break
     }
 
-    this.props.getDailyStatistics(
-      moment(dateFrom).format('YYYY-MM-DD') + 'T00:00:00Z',
-      moment(dateTo).add(1, 'days').format('YYYY-MM-DD') + 'T00:00:00Z'
+    this.props.getDashboardData(
+      moment(dateFrom).format('YYYY-MM-DD') + 'T00%3A00%3A00Z'
     )
     this.setState({ dateRangeSelected: value })
   }
@@ -859,7 +857,7 @@ class Dashboard extends Component {
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
         <Grid.Row>
           <Grid.Column width={16}>
-            {isAdmin && !takeover && (
+            {false && isAdmin && !takeover && /* #35120 - currently not used */(
               <Popup
                 on='click'
                 trigger={
@@ -1015,6 +1013,7 @@ class Dashboard extends Component {
               />
             </DivContainerGraph>
           </Grid.Column>
+        </Grid.Row>
 
         {isClientCompany && (
           <Grid.Row>
