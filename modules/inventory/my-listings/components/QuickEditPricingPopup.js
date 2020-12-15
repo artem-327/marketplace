@@ -57,7 +57,7 @@ const StyledForm = styled(Form)`
           }
         }
 
-        .right-labeled {
+        .labeled {
           position: relative;
           > div.label {
             position: absolute !important;
@@ -65,20 +65,33 @@ const StyledForm = styled(Form)`
             max-height: 28px !important;
             min-width: 28px;
             top: 6px;
-            right: 6px;
             border-radius: 2px;
             text-align: center;
             padding: 4px 6px 6px 6px;
           }
 
-          &.price > div.label {
-            color: #84c225;
-            background-color: rgba(132, 194, 37, 0.15);
+          &.price { 
+            .ui.input > input {
+              padding-left: 44px;
+            }
+          
+            > div.label {
+              left: 6px;
+              color: #84c225;
+              background-color: rgba(132, 194, 37, 0.15);
+            }
           }
 
-          &.quantity > div.label {
-            color: #848893;
-            background-color: #edeef2;
+          &.quantity { 
+            .ui.input > input {
+              padding-right: 94px;
+            }
+            
+            > div.label {
+              right: 6px;
+              color: #848893;
+              background-color: #edeef2;
+            }
           }
         }
       }
@@ -235,7 +248,7 @@ class QuickEditPricingPopup extends React.Component {
       tiers.push(
         <GridRow key={i}>
           <GridColumn>
-            <div className='quantity right-labeled'>
+            <div className='quantity labeled'>
               <Input
                 name={`pricingTiers[${i}].quantityFrom`}
                 inputProps={{
@@ -267,7 +280,7 @@ class QuickEditPricingPopup extends React.Component {
           </GridColumn>
 
           <GridColumn>
-            <div className='price right-labeled'>
+            <div className='price labeled'>
               <Input
                 name={`pricingTiers[${i}].pricePerUOM`}
                 inputProps={{
