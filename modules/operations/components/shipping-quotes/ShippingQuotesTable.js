@@ -41,7 +41,8 @@ class ShippingQuotesTable extends Component {
             <FormattedMessage id='operations.validityDate' defaultMessage='Validity Date'>
               {text => text}
             </FormattedMessage>
-          )
+          ),
+          width: 200
         },
         {
           name: 'price',
@@ -77,15 +78,6 @@ class ShippingQuotesTable extends Component {
           </FormattedMessage>
         )
       },*/
-        {
-          name: 'validityDate',
-          title: (
-            <FormattedMessage id='operations.validityDate' defaultMessage='Validity Date'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 200
-        }
       ]
     }
   }

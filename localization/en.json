@@ -2008,7 +2008,7 @@
   "marketplace.info": "Info",
   "operations.tables.shippingQuotes.buttonAdd": "Add Shipping Quote",
   "operations.tables.tags.buttonAdd": "Add Tag",
-  "operations.tables.shippingQuotes.search": "Search shipping quote by TBD",
+  "operations.tables.shippingQuotes.search": "Search shipping quote by ID",
   "operations.tables.tags.search": "Search tags",
   "operations.tables.companyProductCatalog.search": "Search product catalog by name, number ",
   "operations.tables.companyProductCatalog.SearchCompanyText": "Search product catalog by company",

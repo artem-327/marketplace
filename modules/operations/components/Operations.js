@@ -67,15 +67,9 @@ class Operations extends Component {
             filter.or = [
               {
                 operator: 'LIKE',
-                path: 'ShippingQuote.carrierName',
-                values: [`%${v.searchInput}%`]
-              },
-              /* #35358 path TBD
-              {
-                operator: 'LIKE',
                 path: 'ShippingQuote.quoteId',
-                values: [v.searchInput]
-              }*/
+                values: [`%${v.searchInput}%`]
+              }
             ]
           return filter
         }
