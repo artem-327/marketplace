@@ -12,7 +12,13 @@ export const transformRequestOptions = params => {
   }
   return options ? options.slice(0, -1) : options
 }
-
+/**
+ * Function removes duplicates in array of objects based on key and returns array with unique objects.
+ *
+ * @param {array} array The array of objects.
+ * @param {string} key The string as key in object.
+ * @return {array} The array of objects without duplicates.
+ */
 export const uniqueArrayByKey = (array, key) => {
   let unique = []
 
@@ -174,12 +180,18 @@ export const getFormattedAddress = address => {
     address.country
   )
 }
-
-export const findDuplicateInArray = (arra1, key) => {
+/**
+ * Function finds duplicates in array of objects and returns array of keys which are duplicates.
+ *
+ * @param {array} array The array of objects.
+ * @param {string} key The string as key in object.
+ * @return {array} The array of unique keys which are the same value in array of object.
+ */
+export const getArrayKeysWithSameValueByKey = (array, key) => {
   let object = {}
   let result = []
 
-  arra1.forEach(item => {
+  array.forEach(item => {
     if (!object[item[key]]) object[item[key]] = 0
     object[item[key]] += 1
   })

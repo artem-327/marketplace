@@ -3,15 +3,18 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import {
+  generateToastMarkup,
+  getSafe,
+  getArrayKeysWithSameValueByKey,
+  removeEmpty,
+  uniqueArrayByKey
+} from '~/utils/functions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { removeEmpty } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import ErrorFocus from '~/components/error-focus'
 
 import { Button, FormField, GridRow, GridColumn, Dimmer, Label, Modal, Menu } from 'semantic-ui-react'
-
-import { uniqueArrayByKey } from '~/utils/functions'
 
 import confirm from '~/src/components/Confirmable/confirm'
 
@@ -20,7 +23,6 @@ import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
 import Notifications from './Notifications'
-import { findDuplicateInArray } from '~/utils/functions'
 
 import {
   FlexContent,
@@ -140,11 +142,48 @@ class InventoryFilter extends Component {
     return data
   }
 
+  /**
+   * Function get all duplicates in array of object and returns array of JSON string which are duplicates name but diferent ids.
+   *
+   * @param {array} types The array of JSON string.
+   * @param {string} key The string of key in object.
+   * @return {array} The array of JSON string.
+   */
+  getDuplicatePackagingTypesByKey = (types, key) => {
+    if (!types.length || !key) return []
+    const { packagingTypes } = this.props
+    let duplicatePackagingTypes = []
+
+    // Gets arrray of duplicate names from original array of packaging type from BE.
+    let arrayDuplicateKeys = getArrayKeysWithSameValueByKey(packagingTypes, key)
+    // Checks if exist duplicate name.
+    if (arrayDuplicateKeys.length) {
+      for (let t of types) {
+        let type = JSON.parse(t)
+        // Gets duplicate name if user chooses.
+        let duplicateValue = arrayDuplicateKeys.find(d => d === type[key])
+        if (duplicateValue) {
+          for (let p of packagingTypes) {
+            // Checks if exist duplicate name in original array and id is not equal with chooses packaging type.
+            if (p[key] === duplicateValue && type.id !== p.id) {
+              // Adds duplicate to inputs.packaging as string JSON.
+              duplicatePackagingTypes.push(JSON.stringify({ id: p.id, [key]: p[key] }))
+            }
+          }
+        }
+      }
+    }
+    return duplicatePackagingTypes
+  }
+
   toSavedFilter = inputs => {
     let datagridFilter = {
       filters: []
     }
-
+    let duplicatePackagingTypes = this.getDuplicatePackagingTypesByKey(inputs.packagingTypes, 'name')
+    if (duplicatePackagingTypes.length) {
+      inputs.packagingTypes = [...inputs.packagingTypes, ...duplicatePackagingTypes]
+    }
     let keys = Object.keys(inputs)
 
     keys.forEach(key => {
@@ -425,7 +464,7 @@ class InventoryFilter extends Component {
   inputWrapper = (name, inputProps, leftLabel, labelText, labelClass = '') => {
     return (
       <InputWrapper className='ui fluid left labeled input'>
-        {leftLabel ? (<Label>{leftLabel}</Label>) : null}
+        {leftLabel ? <Label>{leftLabel}</Label> : null}
         <div className={labelClass + (leftLabel ? ' left-label' : '')}>
           <Input name={name} inputProps={inputProps} />
           <Label>{labelText}</Label>
@@ -569,6 +608,7 @@ class InventoryFilter extends Component {
       productConditions,
       productForms,
       packagingTypes,
+      uniquePackagingTypes,
       productGrades,
       intl,
       autocompleteData,
@@ -584,7 +624,7 @@ class InventoryFilter extends Component {
     const { formatMessage } = intl
 
     let packagingTypesDropdown = this.generateDropdown(
-      packagingTypes,
+      uniquePackagingTypes,
       values,
       formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
       'packagingTypes'
