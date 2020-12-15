@@ -180,27 +180,3 @@ export const getFormattedAddress = address => {
     address.country
   )
 }
-/**
- * Function finds duplicates in array of objects and returns array of keys which are duplicates.
- *
- * @param {array} array The array of objects.
- * @param {string} key The string as key in object.
- * @return {array} The array of unique keys which are the same value in array of object.
- */
-export const getArrayKeysWithSameValueByKey = (array, key) => {
-  let object = {}
-  let result = []
-
-  array.forEach(item => {
-    if (!object[item[key]]) object[item[key]] = 0
-    object[item[key]] += 1
-  })
-
-  for (let prop in object) {
-    if (object[prop] >= 2) {
-      result.push(prop)
-    }
-  }
-
-  return result
-}
