@@ -143,10 +143,10 @@ class InventoryFilter extends Component {
   }
 
   /**
-   * Function get all duplicates in array of object and returns array of JSON string which are duplicates name but diferent ids.
+   * Function returns array of JSON string which have duplicate names from original packagingTypes.
    *
-   * @param {array} types The array of JSON string.
-   * @param {string} key The string of key in object.
+   * @param {array} types The array of JSON string from inputs.packagingTypes.
+   * @param {string} key The string of key in object inputs.packagingTypes.
    * @return {array} The array of JSON string.
    */
   getDuplicatePackagingTypesByKey = (types, key) => {
