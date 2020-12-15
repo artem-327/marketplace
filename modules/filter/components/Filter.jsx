@@ -433,11 +433,14 @@ class Filter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
-  inputWrapper = (name, inputProps, labelText, labelClass = null) => {
+  inputWrapper = (name, inputProps, leftLabel, labelText, labelClass = '') => {
     return (
-      <InputWrapper>
-        <Input name={name} inputProps={inputProps} />
-        <Label className={labelClass}>{labelText}</Label>
+      <InputWrapper className='ui fluid left labeled input'>
+        {leftLabel ? (<Label>{leftLabel}</Label>) : null}
+        <div className={labelClass + (leftLabel ? ' left-label' : '')}>
+          <Input name={name} inputProps={inputProps} />
+          <Label>{labelText}</Label>
+        </div>
       </InputWrapper>
     )
   }
@@ -834,12 +837,11 @@ class Filter extends Component {
                       min: 0.01,
                       step: 0.01,
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
                     currencySymbol,
-                    'green'
+                    'price'
                   )}
                 </GridColumn>
                 <GridColumn className='price-input' width={8}>
@@ -850,12 +852,11 @@ class Filter extends Component {
                       min: 0.01,
                       step: 0.01,
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
                     currencySymbol,
-                    'green'
+                    'price'
                   )}
                 </GridColumn>
               </GridRow>
@@ -901,10 +902,9 @@ class Filter extends Component {
                       type: 'number',
                       min: 0,
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
                     '%'
                   )}
                 </GridColumn>
@@ -915,10 +915,9 @@ class Filter extends Component {
                       type: 'number',
                       min: 0,
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
                     '%'
                   )}
                 </GridColumn>

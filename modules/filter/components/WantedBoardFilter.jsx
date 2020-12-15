@@ -395,11 +395,14 @@ class WantedBoardFilter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
-  inputWrapper = (name, inputProps, labelText, labelClass = null) => {
+  inputWrapper = (name, inputProps, leftLabel, labelText, labelClass = '') => {
     return (
-      <InputWrapper>
-        <Input name={name} inputProps={inputProps} />
-        <Label className={labelClass}>{labelText}</Label>
+      <InputWrapper className='ui fluid left labeled input'>
+        {leftLabel ? (<Label>{leftLabel}</Label>) : null}
+        <div className={labelClass + (leftLabel ? ' left-label' : '')}>
+          <Input name={name} inputProps={inputProps} />
+          <Label>{labelText}</Label>
+        </div>
       </InputWrapper>
     )
   }
@@ -678,8 +681,9 @@ class WantedBoardFilter extends Component {
                       placeholder: '0.00',
                       fluid: true
                     },
+                    null,
                     currencySymbol,
-                    'green'
+                    'price'
                   )}
                 </GridColumn>
               </GridRow>
@@ -743,10 +747,9 @@ class WantedBoardFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
                     '%'
                   )}
                 </GridColumn>
@@ -756,10 +759,9 @@ class WantedBoardFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
                     '%'
                   )}
                 </GridColumn>
