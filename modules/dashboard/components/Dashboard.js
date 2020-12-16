@@ -667,8 +667,6 @@ class Dashboard extends Component {
       dateRangeSelected
     } = this.state
 
-    console.log('!!!!!!!!!! render state', this.state)
-
     const adminMenuTabs = [
       {
         menuItem: (
@@ -1185,7 +1183,6 @@ class Dashboard extends Component {
                 </Grid.Column>
                 <Grid.Column width={5}>
                   <PieGraph
-                    innerRadius='30%'
                     isCurrency={true}
                     data={top10ProductGroups}
                     title='POPULAR PRODUCTS'
@@ -1212,7 +1209,6 @@ class Dashboard extends Component {
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
-                innerRadius='30%'
                 valueLegend='users'
                 data={top10CompaniesByUsers}
                 title='COMPANIES BY USERS'
@@ -1221,7 +1217,6 @@ class Dashboard extends Component {
             </Grid.Column>
             <Grid.Column width={5}>
               <PieGraph
-                innerRadius='30%'
                 data={top10CompaniesByCompanyProducts}
                 title='COMPANIES BY PRODUCTS'
                 titleId='dasboard.companiesProducts.title'
@@ -1229,7 +1224,6 @@ class Dashboard extends Component {
             </Grid.Column>
             <Grid.Column width={5}>
               <PieGraph
-                innerRadius='30%'
                 isCurrency={true}
                 valueLegend='/year'
                 data={top10CompaniesBySalesInLastYear}
@@ -1244,7 +1238,6 @@ class Dashboard extends Component {
             {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
               <Grid.Column width={5}>
                 <PieGraph
-                  innerRadius='30%'
                   data={top10CompanyProductsByQuantitySales}
                   title='PRODUCTS BY QUANTITY'
                   titleId='dasboard.productsQuantity.title'
@@ -1254,7 +1247,6 @@ class Dashboard extends Component {
             {top10CompanyProductsByValueSales && top10CompanyProductsByValueSales.length ? (
               <Grid.Column width={5}>
                 <PieGraph
-                  innerRadius='30%'
                   isCurrency={true}
                   data={top10CompanyProductsByValueSales}
                   title='PRODUCTS BY VALUE'
@@ -1265,7 +1257,6 @@ class Dashboard extends Component {
             {top10Buyers && top10Buyers.length ? (
               <Grid.Column width={5}>
                 <PieGraph
-                  innerRadius='30%'
                   data={top10Buyers}
                   title='TOP 10 BUYERS'
                   titleId='dasboard.topBuyers.title'
@@ -1278,7 +1269,6 @@ class Dashboard extends Component {
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
-                innerRadius='30%'
                 isCurrency={true}
                 data={top10ProductGroups}
                 title='POPULAR PRODUCTS'
