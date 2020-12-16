@@ -1,3 +1,4 @@
+import { getSafe } from '~/utils/functions'
 /**
  * Function finds duplicates in array of objects and returns array of keys which are duplicates.
  *
@@ -21,6 +22,41 @@ export const getArrayKeysWithSameValueByKey = (array, key) => {
   }
   return result
 }
+/**
+ * Function checks if array of object have some duplication by key.
+ *
+ * @param {array} arrayJSONStrings The array of JSON strings from inputs Packaging Types.
+ * @param {string} key The string of key in object.
+ * @return {boolean} The boolean true or false if there are some duplication.
+ */
+export const checkForDuplicatesByKey = (arrayJSONStrings, key) => {
+  if (!getSafe(() => arrayJSONStrings.length, '') || !key) return false
+  // Gets array of keys from arrayJSONStrings.
+  let keys = arrayJSONStrings.map(t => {
+    let type = JSON.parse(t)
+    return type[key]
+  })
+  return new Set(keys).size !== keys.length
+}
+
+/**
+ * Function reduces array of object based on ids from array of JSON strings.
+ *
+ * @param {array} arrayJSONStrings The array of JSON strings from inputs Packaging Types.
+ * @param {array} arrayTypes The original array of objects from BE packagingTypes.
+ * @return {array} The array of objects without the same ids from arrayJSONStrings.
+ */
+export const removeObjectsById = (arrayJSONStrings, arrayTypes) => {
+  if (!getSafe(() => arrayJSONStrings.length, '') || !getSafe(() => arrayTypes.length, '')) return []
+  // Gets array of keys from arrayJSONStrings.
+  const toDelete = new Set(
+    arrayJSONStrings.map(t => {
+      let type = JSON.parse(t)
+      return type.id
+    })
+  )
+  return arrayTypes.filter(obj => !toDelete.has(obj.id))
+}
 
 /**
  * Function returns array of JSON string which have duplicate names from original packagingTypes.
@@ -31,8 +67,11 @@ export const getArrayKeysWithSameValueByKey = (array, key) => {
  * @return {array} The array of JSON string.
  */
 export const getDuplicatePackagingTypesByKey = (types, originalTypes, key) => {
-  if (!types.length || !key) return []
+  if (!getSafe(() => types.length, '') || !key || !getSafe(() => originalTypes.length, '')) return []
   let duplicatePackagingTypes = []
+
+  // Ctreates new unique array of object
+  const reducedOriginalTypesArray = removeObjectsById(types, originalTypes)
 
   // Gets arrray of duplicate names from original array of packaging type from BE.
   let arrayDuplicateKeys = getArrayKeysWithSameValueByKey(originalTypes, key)
@@ -43,7 +82,7 @@ export const getDuplicatePackagingTypesByKey = (types, originalTypes, key) => {
       // Gets duplicate name if user chooses.
       let duplicateValue = arrayDuplicateKeys.find(d => d === type[key])
       if (duplicateValue) {
-        for (let p of originalTypes) {
+        for (let p of reducedOriginalTypesArray) {
           // Checks if exist duplicate name in original array and id is not equal with chooses packaging type.
           if (p[key] === duplicateValue && type.id !== p.id) {
             // Adds duplicate to inputs.packaging as string JSON.
