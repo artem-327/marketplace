@@ -591,6 +591,10 @@ export const InputWrapper = styled.div`
   > div {
     position: relative;
     
+    &.price {
+      width: 100%;
+    }
+    
     > .field .ui.input {
       input[type=number]::-webkit-outer-spin-button,    // Remove browser arrows
       input[type=number]::-webkit-inner-spin-button {

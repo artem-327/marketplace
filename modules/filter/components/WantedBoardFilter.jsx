@@ -810,15 +810,13 @@ class WantedBoardFilter extends Component {
                       data-test='filter_advanced_filter'>
                       {formatMessage({ id: 'filter.advancedFilter', defaultMessage: 'Advanced Filter' })}
                     </Menu.Item>
-                    {false && (
-                      <Menu.Item
-                        key={'savedFilters'}
-                        onClick={() => this.toggleFilter(true)}
-                        active={savedFiltersActive}
-                        data-test='filter_saved_filters'>
-                        {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
-                      </Menu.Item>
-                    )}
+                    <Menu.Item
+                      key={'savedFilters'}
+                      onClick={() => this.toggleFilter(true)}
+                      active={savedFiltersActive}
+                      data-test='filter_saved_filters'>
+                      {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
+                    </Menu.Item>
                   </CustomMenu>
 
                   <StyledModalContent>
@@ -1037,7 +1035,7 @@ WantedBoardFilter.defaultProps = {
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
   getOriginUrl: '/prodex/api/countries',
-  savedUrl: '/prodex/api/purchase-requests/own/datagrid/saved-filters',
+  savedUrl: '/prodex/api/purchase-requests/other/datagrid/saved-filters',
   searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${text}`,
   onApply: filter => {},
   onClear: () => {},
