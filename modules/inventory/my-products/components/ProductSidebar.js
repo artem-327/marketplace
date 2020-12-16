@@ -89,12 +89,12 @@ const CustomHighSegment = styled(Segment)`
     font-size: 18px;
     vertical-align: middle;
   }
-  
+
   svg.title-icon {
     margin-left: 15px;
     color: #cecfd4;
   }
-  
+
   svg.close-icon {
     right: 0;
     position: absolute;
@@ -119,7 +119,7 @@ const CustomButtonSubmit = styled(Button.Submit)`
   &.ui.primary.button {
     background-color: #2599d5;
     color: #fff;
-    
+
     &:hover {
       background-color: #188ec9;
     }
@@ -614,7 +614,6 @@ class ProductSidebar extends React.Component {
   }
 
   handleChangePackagingType = (e, value, setFieldValue, values) => {
-    e.preventDefault()
     const { packagingTypesAll } = this.props
     const selectedPackingType = packagingTypesAll.find(type => type.id === value)
 
@@ -668,7 +667,7 @@ class ProductSidebar extends React.Component {
         initialValues={this.getInitialFormValues()}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
+        onReset={() => (openGlobalAddForm ? openGlobalAddForm('') : closePopup())}
         onSubmit={this.handlerSubmit}
         loading={loading}>
         {formikProps => {
@@ -692,26 +691,23 @@ class ProductSidebar extends React.Component {
                     <Loader />
                   </Dimmer>
                   <CustomHighSegment>
-                    {openGlobalAddForm
-                      ? (
-                        <>
-                          <div>
-                            <span>
-                              <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
-                            </span>
-                            <AddBox className='title-icon' />
-                          </div>
-                          <div style={{ position: 'absolute', right: '20px' }}>
-                            <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
-                          </div>
-                        </>
-                      )
-                      : (popupValues ? (
-                        <FormattedMessage id='global.editCompanyProduct' defaultMessage='Edit Company Product' />
-                        ) : (
-                        <FormattedMessage id='global.addCompanyProduct' defaultMessage='Add Company Product' />
-                        ))
-                    }
+                    {openGlobalAddForm ? (
+                      <>
+                        <div>
+                          <span>
+                            <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
+                          </span>
+                          <AddBox className='title-icon' />
+                        </div>
+                        <div style={{ position: 'absolute', right: '20px' }}>
+                          <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                        </div>
+                      </>
+                    ) : popupValues ? (
+                      <FormattedMessage id='global.editCompanyProduct' defaultMessage='Edit Company Product' />
+                    ) : (
+                      <FormattedMessage id='global.addCompanyProduct' defaultMessage='Add Company Product' />
+                    )}
                   </CustomHighSegment>
                   <FlexContent style={{ padding: '30px' }}>
                     <StyledGrid>
@@ -858,25 +854,40 @@ class ProductSidebar extends React.Component {
                           />
                         </GridColumn>
                         <GridColumn>
-                          <Dropdown
-                            name='packagingType'
-                            options={packagingTypesReduced}
-                            label={
-                              <>
-                                <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />
-                                <Required />
-                              </>
+                          <Popup
+                            disabled={!!getSafe(() => formikProps.values.packagingUnit, false)}
+                            position={'bottom left'}
+                            content={
+                              <FormattedMessage
+                                id='product.packaging.selectFirst'
+                                defaultMessage='Please select Packaging Unit'
+                              />
                             }
-                            inputProps={{
-                              'data-test': 'settings_product_popup_packagingType_drpdn',
-                              placeholder: formatMessage({
-                                id: 'productCatalog.selectType',
-                                defaultMessage: 'Select Type'
-                              }),
-                              onChange: (e, { value }) => {
-                                this.handleChangePackagingType(e, value, setFieldValue, values)
-                              }
-                            }}
+                            trigger={
+                              <div>
+                                <Dropdown
+                                  name='packagingType'
+                                  options={packagingTypesReduced}
+                                  label={
+                                    <>
+                                      <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />
+                                      <Required />
+                                    </>
+                                  }
+                                  inputProps={{
+                                    disabled: !getSafe(() => formikProps.values.packagingUnit, false),
+                                    'data-test': 'settings_product_popup_packagingType_drpdn',
+                                    placeholder: formatMessage({
+                                      id: 'productCatalog.selectType',
+                                      defaultMessage: 'Select Type'
+                                    }),
+                                    onChange: (e, { value }) => {
+                                      this.handleChangePackagingType(e, value, setFieldValue, values)
+                                    }
+                                  }}
+                                />
+                              </div>
+                            }
                           />
                         </GridColumn>
                       </GridRow>
@@ -1315,9 +1326,7 @@ class ProductSidebar extends React.Component {
 
                   <BottomButtons className='bottom-buttons'>
                     {!openGlobalAddForm && (
-                      <Button.Reset
-                        onClick={closePopup}
-                        data-test='settings_product_popup_reset_btn'>
+                      <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
                         <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                           {text => text}
                         </FormattedMessage>

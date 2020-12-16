@@ -1,7 +1,7 @@
 import * as a from './actions'
 import typeToReducer from 'type-to-reducer'
 
-import { uniqueArrayByKey, mapAutocompleteData } from '~/utils/functions'
+import { uniqueArrayByKey, mapAutocompleteData, getUniqueArrayOfObjectsByKey } from '~/utils/functions'
 
 import { datagridValues, paths, filterPresets } from './constants/filter'
 import { currency } from '~/constants/index'
@@ -41,6 +41,7 @@ export const initialState = {
   productConditions: [],
   productForms: [],
   packagingTypes: [],
+  uniquePackagingTypes: [],
   productGrades: [],
   warehouses: [],
   params: {
@@ -126,9 +127,10 @@ export default typeToReducer(
     /* FILTER_SAVING */
 
     [a.filterSaving]: (state, { payload: isSaving }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
-      ...state,
+        ...state,
         [filterType]: {
           ...state[filterType],
           isFilterSaving: isSaving
@@ -139,9 +141,10 @@ export default typeToReducer(
     /* FILTER_APPLYING */
 
     [a.filterApplying]: (state, { payload: isApplying }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
-      ...state,
+        ...state,
         [filterType]: {
           ...state[filterType],
           isFilterApplying: isApplying
@@ -152,7 +155,8 @@ export default typeToReducer(
     /* GET_SAVED_FILTERS */
 
     [a.getSavedFilters.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -162,7 +166,8 @@ export default typeToReducer(
       }
     },
     [a.getSavedFilters.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       let { data } = payload
       let autocompleteData = []
 
@@ -193,7 +198,8 @@ export default typeToReducer(
       }
     },
     [a.getSavedFilters.rejected]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -242,7 +248,8 @@ export default typeToReducer(
     /* GET_AUTOCOMPLETE_WAREHOUSE_DATA */
 
     [a.getAutocompleteWarehouse.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -252,7 +259,8 @@ export default typeToReducer(
       }
     },
     [a.getAutocompleteWarehouse.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -263,7 +271,8 @@ export default typeToReducer(
       }
     },
     [a.getAutocompleteWarehouse.rejected]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -277,7 +286,8 @@ export default typeToReducer(
     /* SAVE_FILTER */
 
     [a.saveFilter.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -287,7 +297,8 @@ export default typeToReducer(
       }
     },
     [a.saveFilter.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -298,7 +309,8 @@ export default typeToReducer(
       }
     },
     [a.saveFilter.rejected]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -311,7 +323,8 @@ export default typeToReducer(
     /* APPLY_FILTER */
 
     [a.applyFilter]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       let appliedFilter = asignFiltersDescription(payload, state.params)
       return {
         ...state,
@@ -328,7 +341,8 @@ export default typeToReducer(
     /* DELETE_FILTER */
 
     [a.deleteFilter.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -339,7 +353,8 @@ export default typeToReducer(
     },
 
     [a.deleteFilter.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -351,7 +366,8 @@ export default typeToReducer(
     },
 
     [a.deleteFilter.rejected]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -364,7 +380,8 @@ export default typeToReducer(
     /* UPDATE_FILTER_NOTIFICATIONS */
 
     [a.updateFilterNotifications.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -375,7 +392,8 @@ export default typeToReducer(
     },
 
     [a.updateFilterNotifications.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       let savedFilters = state[filterType].savedFilters.slice(0)
       let index = savedFilters.findIndex(el => el.id === payload.id)
 
@@ -392,7 +410,8 @@ export default typeToReducer(
     },
 
     [a.updateFilterNotifications.rejected]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -405,7 +424,8 @@ export default typeToReducer(
     /* UPDATE_FILTER */
 
     [a.updateFilter.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -416,7 +436,8 @@ export default typeToReducer(
     },
 
     [a.updateFilter.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       let savedFilters = state[filterType].savedFilters.slice(0)
       let index = savedFilters.findIndex(el => el.id === payload.id)
 
@@ -435,7 +456,8 @@ export default typeToReducer(
     /* GET_AUTOCOMPLETE_MANUFACTURER_DATA */
 
     [a.getAutocompleteManufacturer.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -445,7 +467,8 @@ export default typeToReducer(
       }
     },
     [a.getAutocompleteManufacturer.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -456,7 +479,8 @@ export default typeToReducer(
       }
     },
     [a.getAutocompleteManufacturer.rejected]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -470,7 +494,8 @@ export default typeToReducer(
     /* GET_AUTOCOMPLETE_ORIGIN_DATA */
 
     [a.getAutocompleteOrigin.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -480,7 +505,8 @@ export default typeToReducer(
       }
     },
     [a.getAutocompleteOrigin.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -491,7 +517,8 @@ export default typeToReducer(
       }
     },
     [a.getAutocompleteOrigin.rejected]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -502,7 +529,8 @@ export default typeToReducer(
       }
     },
     [a.saveFilterState]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -526,7 +554,8 @@ export default typeToReducer(
     [a.fetchPackagingTypes.fulfilled]: (state, { payload }) => {
       return {
         ...state,
-        packagingTypes: payload
+        packagingTypes: payload,
+        uniquePackagingTypes: uniqueArrayByKey(payload, 'name')
       }
     },
     [a.fetchProductGrade.fulfilled]: (state, { payload }) => {
@@ -542,7 +571,8 @@ export default typeToReducer(
       }
     },
     [a.fetchCountries.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -552,7 +582,8 @@ export default typeToReducer(
       }
     },
     [a.fetchCountries.rejected]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -562,7 +593,8 @@ export default typeToReducer(
       }
     },
     [a.fetchCountries.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -573,7 +605,8 @@ export default typeToReducer(
       }
     },
     [a.fetchProvinces.pending]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -583,7 +616,8 @@ export default typeToReducer(
       }
     },
     [a.fetchProvinces.rejected]: state => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -593,7 +627,8 @@ export default typeToReducer(
       }
     },
     [a.fetchProvinces.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType; if (!filterType) return { ...state }
+      const filterType = state.params.filterType
+      if (!filterType) return { ...state }
       return {
         ...state,
         [filterType]: {
@@ -602,7 +637,7 @@ export default typeToReducer(
           provincesLoading: false
         }
       }
-    },
+    }
   },
   initialState
 )

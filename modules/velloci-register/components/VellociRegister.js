@@ -252,20 +252,22 @@ class VellociRegister extends Component {
           Yup.lazy(v => {
             //let isAnyValueFilled = deepSearch(v, (val, key) => val !== '' && key !== 'country')
             const businessOwnershipPercentage = values.ownerInformation.isBeneficialOwner
-              ? { businessOwnershipPercentage: Yup.string()
-                  .trim()
-                  .required(errorMessages.requiredMessage)
-                  .test('v', errorMessages.minimum(0), function (v) {
-                    if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-                    return Number(v) >= 0
-                  })
-                  .test('v', errorMessages.maximum(100), function (v) {
-                    if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-                    return Number(v) <= 100
-                  })
-                  .test('v', errorMessages.mustBeNumber, function (v) {
-                    return v === null || v === '' || !isNaN(v)
-                  })}
+              ? {
+                  businessOwnershipPercentage: Yup.string()
+                    .trim()
+                    .required(errorMessages.requiredMessage)
+                    .test('v', errorMessages.minimum(0), function (v) {
+                      if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                      return Number(v) >= 0
+                    })
+                    .test('v', errorMessages.maximum(100), function (v) {
+                      if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                      return Number(v) <= 100
+                    })
+                    .test('v', errorMessages.mustBeNumber, function (v) {
+                      return v === null || v === '' || !isNaN(v)
+                    })
+                }
               : null
             return Yup.object().shape({
               firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -293,21 +295,19 @@ class VellociRegister extends Component {
             })
           })
         ),
-        termsAndConditions: Yup.lazy(() => {
-          return Yup.object().shape({
-            electronicComunications: Yup.boolean()
-              .required(errorMessages.requiredMessage)
-              .oneOf([true], errorMessages.requiredMessage),
-            privacyPolicy: Yup.boolean()
-              .required(errorMessages.requiredMessage)
-              .oneOf([true], errorMessages.requiredMessage),
-            depositAccountAgreement: Yup.boolean()
-              .required(errorMessages.requiredMessage)
-              .oneOf([true], errorMessages.requiredMessage),
-            trueComplete: Yup.boolean()
-              .required(errorMessages.requiredMessage)
-              .oneOf([true], errorMessages.requiredMessage)
-          })
+        termsAndConditions: Yup.object().shape({
+          electronicComunications: Yup.boolean()
+            .required(errorMessages.requiredMessage)
+            .oneOf([true], errorMessages.requiredMessage),
+          privacyPolicy: Yup.boolean()
+            .required(errorMessages.requiredMessage)
+            .oneOf([true], errorMessages.requiredMessage),
+          depositAccountAgreement: Yup.boolean()
+            .required(errorMessages.requiredMessage)
+            .oneOf([true], errorMessages.requiredMessage),
+          trueComplete: Yup.boolean()
+            .required(errorMessages.requiredMessage)
+            .oneOf([true], errorMessages.requiredMessage)
         })
       })
     })

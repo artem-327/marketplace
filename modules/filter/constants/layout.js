@@ -588,52 +588,69 @@ export const SavedFiltersNotifications = styled.div`
 `
 
 export const InputWrapper = styled.div`
-  position: relative;
-
-  > .field .ui.input {
-  
-    input[type=number]::-webkit-outer-spin-button,    // Remove browser arrows
-    input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
+  > div {
+    position: relative;
+    
+    > .field .ui.input {
+      input[type=number]::-webkit-outer-spin-button,    // Remove browser arrows
+      input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      
+      input[type=number] {                              // Remove browser arrows
+        -moz-appearance:textfield;
+      }
+    
+      input {
+        width: 100% !important;
+        position: static;
+        padding-right: 52px;        
+      }
+    }
+    
+    &.left-label > .field .ui.input input {
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
+    }
+    
+    > .ui.label {
+      height: 28px;
+      border-radius: 2px;
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: normal;
+      text-align: center;
+      color: #848893;
+      background-color: #edeef2;
+      align-items: center;
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      border: none !important;
       margin: 0;
     }
     
-    input[type=number] {                              // Remove browser arrows
-      -moz-appearance:textfield;
-    }
-  
-    input {
-      position: static;
-      padding-right: 36px; 
-    }
-    .ui.label {
-      font-size: 14px;
-      font-weight: normal;
-      background-color: #f8f9fb;
-      color: #20273a;
-      border: solid 1px #dee2e6;
+    &.price {
+      > .field .ui.input input {
+        padding-right: 14px;
+        padding-left: 50px;
+      }
+    
+      > .ui.label {
+        right: auto;
+        left: 6px;
+        color: #84c225 !important;
+        background-color: #84c22526 !important;
+      }
     }
   }
+  
   > .ui.label {
-    height: 28px;
-    border-radius: 2px;
-    font-size: 14px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    letter-spacing: normal;
-    text-align: center;
-    color: #848893;
-    background-color: #edeef2;
-    align-items: center;
-    position: absolute;
-    top: 6px;
-    right: 6px;
-  }
-  
-  > .ui.label.green {
-    color: #84c225 !important;
-    background-color: #84c22526 !important;
+    height: 40px;
+    border-right-color: transparent !important;
   }
 `
 

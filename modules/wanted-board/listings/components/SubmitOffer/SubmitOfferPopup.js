@@ -782,7 +782,7 @@ class SubmitOfferPopup extends React.Component {
             type: 'number',
             onChange: (e, data) => this.handleChange(e, data, index),
             label: <GreenLabel>{this.props.currencySymbol}</GreenLabel>,
-            labelPosition: 'right',
+            labelPosition: 'left',
             fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'
           }}
         />
