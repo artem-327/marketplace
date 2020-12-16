@@ -2042,69 +2042,6 @@ class DetailSidebar extends Component {
                                     <GridColumn>
                                       <Header as='h3'>
                                         <FormattedMessage
-                                          id='addInventory.pricesCount'
-                                          defaultMessage='How many price tiers would you like to offer?'>
-                                          {text => (
-                                            <>
-                                              {text}
-                                              <Popup
-                                                content={
-                                                  <>
-                                                    <FormattedMessage
-                                                      id='addInventory.pricesCount.description1'
-                                                      defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.'
-                                                    />
-                                                    <br /> <br />
-                                                    <FormattedMessage
-                                                      id='addInventory.pricesCount.description2'
-                                                      defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.'
-                                                    />
-                                                    <br /> <br />
-                                                    <FormattedMessage
-                                                      id='addInventory.pricesCount.description3'
-                                                      defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.'
-                                                    />
-                                                  </>
-                                                }
-                                                trigger={<Icon name='info circle' color='blue' />}
-                                                wide
-                                              />
-                                            </>
-                                          )}
-                                        </FormattedMessage>
-                                      </Header>
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn width={4}>
-                                      <Dropdown
-                                        label={formatMessage({
-                                          id: 'addInventory.priceTiers',
-                                          defaultMessage: 'Price Tiers'
-                                        })}
-                                        name='priceTiers.priceTiers'
-                                        options={this.getPriceTiers(10)}
-                                        inputProps={{
-                                          'data-test': 'new_inventory_price_tiers_drpdn',
-                                          fluid: true,
-                                          onChange: (e, { value }) => {
-                                            this.onChange()
-                                            let pricingTiers = values.priceTiers.pricingTiers.slice()
-                                            let difference = value - pricingTiers.length
-                                            if (difference < 0) pricingTiers.splice(value)
-                                            else
-                                              for (let i = 0; i < difference; i++)
-                                                pricingTiers.push({ price: '', quantityFrom: '' })
-                                            setFieldValue('priceTiers.pricingTiers', pricingTiers)
-                                          }
-                                        }}
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn>
-                                      <Header as='h3'>
-                                        <FormattedMessage
                                           id='addInventory.fobPrice.header'
                                           defaultMessage='What is the FOB price for each tier?'>
                                           {text => (
