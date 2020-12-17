@@ -21,7 +21,17 @@ class FormikInput extends Component {
   }
 
   render() {
-    const { name, label, validate, inputProps = {}, fieldProps = {}, inputRef, fast, inputOnly } = this.props
+    const {
+      name,
+      label,
+      validate,
+      inputProps = {},
+      fieldProps = {},
+      inputRef,
+      fast,
+      inputOnly,
+      addSeparator
+    } = this.props
     const { onChange, placeholder, ...safeInputProps } = inputProps
     const DesiredField = fast === true ? FastField : Field
 
@@ -43,19 +53,32 @@ class FormikInput extends Component {
                   value={field.value}
                   inputProps={{
                     onChange: (e, { name, value }) => {
-                      const formatedValue = value
-                        .replace(/[/.]/g, '-')
-                        .replace(/ /g, '')
-                        .split('-')
+                      let val = value
+                      if (addSeparator) {
+                        //get separator (character) from getLocaleDateFormat
+                        let separator = [...getLocaleDateFormat()].find(
+                          char => char !== 'M' && char !== 'D' && char !== 'Y'
+                        )
+                        // check and add space if is space after dot
+                        separator = getLocaleDateFormat().search(' ') > 0 ? `${separator} ` : separator
+                        // check position and add separator or not if separator is there and user try to remove separator from input
+                        val =
+                          (value.length === 2 && field.value.charAt(2) !== separator) ||
+                          (value.length === 5 && field.value.charAt(5) !== separator)
+                            ? `${value}${separator}`
+                            : value
+                      } else {
+                        const formatedValue = value.replace(/[/.]/g, '-').replace(/ /g, '').split('-')
 
-                      const canAutomaticallyAdjustDateFormat =
-                        formatedValue.some(d => d.length >= 4)
-                        && formatedValue.length === 3
-                        && moment(value, getLocaleDateFormat()).isValid()
-                      const val =
-                        canAutomaticallyAdjustDateFormat
+                        const canAutomaticallyAdjustDateFormat =
+                          formatedValue.some(d => d.length >= 4) &&
+                          formatedValue.length === 3 &&
+                          moment(value, getLocaleDateFormat()).isValid()
+                        val = canAutomaticallyAdjustDateFormat
                           ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
                           : value
+                      }
+
                       setFieldValue(form, name, val, true)
                       Promise.resolve().then(() => {
                         onChange && onChange(e, { name, value: val })
@@ -72,19 +95,15 @@ class FormikInput extends Component {
                   clearable
                   onChange={(e, { name, value }) => {
                     //automatic adjust date in input based on format date
-                    const formatedValue = value
-                      .replace(/[/.]/g, '-')
-                      .replace(/ /g, '')
-                      .split('-')
+                    const formatedValue = value.replace(/[/.]/g, '-').replace(/ /g, '').split('-')
 
                     const canAutomaticallyAdjustDateFormat =
-                      formatedValue.some(d => d.length >= 4)
-                      && formatedValue.length === 3
-                      && moment(value, getLocaleDateFormat()).isValid()
-                    const val =
-                      canAutomaticallyAdjustDateFormat
-                        ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
-                        : value
+                      formatedValue.some(d => d.length >= 4) &&
+                      formatedValue.length === 3 &&
+                      moment(value, getLocaleDateFormat()).isValid()
+                    const val = canAutomaticallyAdjustDateFormat
+                      ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
+                      : value
                     setFieldValue(form, name, val, true)
                     Promise.resolve().then(() => {
                       onChange && onChange(e, { name, value: val })

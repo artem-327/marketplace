@@ -452,7 +452,8 @@ class _Table extends Component {
     columnAction: pt.string,
     toggleColumnSettingModal: pt.func,
     isOpenColumnSettingModal: pt.bool,
-    estimatedRowHeight: pt.number
+    estimatedRowHeight: pt.number,
+    defaultHiddenColumns: pt.array
   }
 
   static defaultProps = {
