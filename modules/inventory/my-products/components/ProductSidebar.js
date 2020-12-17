@@ -1352,7 +1352,7 @@ class ProductSidebar extends React.Component {
                                 }
                               })
                             }}>
-                            <FormattedMessage id='global.save' defaultMessage='Save'>
+                            <FormattedMessage id='global.send' defaultMessage='Send'>
                               {text => text}
                             </FormattedMessage>
                           </CustomButtonSubmit>
