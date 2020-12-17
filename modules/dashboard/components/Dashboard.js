@@ -419,24 +419,28 @@ const StyledCalendar = styled(Calendar)`
   }
 `
 
-const StatsTypeSelect = styled(Dropdown)`
+const StatsTypeSelect = styled(Dropdown)` 
   > .menu {
     > .item {
-      //margin-left: 0 !important;
-      //margin-right: 0 !important;
-
-      &,
-      &.active {
-        border-bottom-color: #ffffff !important;
-      }
+      border: none !important;
+      margin: 0 !important;
     }
+  }
+`
+
+const StyledTab = styled(Tab)`
+  & > .ui.pointing.secondary.menu {
+    min-height: 50px !important;
+    margin: 0 -20px !important;
+    padding: 0 5px 0 20px !important;
   }
 `
 
 const RightChartControl = styled.div`
   display: flex;
-  //width: 100%;
-  float: right;
+  margin: auto;
+  margin-right: 0;
+  height: 40px;
 `
 
 class Dashboard extends Component {
@@ -715,9 +719,8 @@ class Dashboard extends Component {
             {activeTab === 1 ? (
               <StatsTypeSelect
                 key='statsType'
-                style={{ marginLeft: 'auto' }}
-                item
-                pointing='top right'
+                style={{ marginRight: '10px' }}
+                selection
                 options={Object.entries(statsTabs).map(stType => {
                   return { text: stType[1][0], value: stType[0] }
                 })}
@@ -729,8 +732,7 @@ class Dashboard extends Component {
             <StatsTypeSelect
               key='dateRangeSelect'
               style={{ minWidth: '150px' }}
-              item
-              pointing='top right'
+              selection
               options={dateRangeOptions}
               onChange={(e, { value }) => this.setDateRange(value)}
               value={dateRangeSelected}
@@ -788,8 +790,8 @@ class Dashboard extends Component {
             {activeTab === 2 ? (
               <StatsTypeSelect
                 key='statsType'
-                style={{ marginLeft: 'auto' }}
-                item
+                style={{ marginRight: '10px' }}
+                selection
                 pointing='top right'
                 options={Object.entries(statsTabs).map(stType => {
                   return { text: stType[1][0], value: stType[0] }
@@ -802,8 +804,7 @@ class Dashboard extends Component {
             <StatsTypeSelect
               key='dateRangeSelect'
               style={{ minWidth: '150px' }}
-              item
-              pointing='top right'
+              selection
               options={dateRangeOptions}
               onChange={(e, { value }) => this.setDateRange(value)}
               value={dateRangeSelected}
@@ -1002,7 +1003,7 @@ class Dashboard extends Component {
         <Grid.Row>
           <Grid.Column width={10}>
             <DivContainerGraph>
-              <Tab
+              <StyledTab
                 style={{ padding: '0 20px 0 20px' }}
                 className='inventory-sidebar tab-menu flex stretched'
                 menu={{ secondary: true, pointing: true }}
@@ -1172,7 +1173,7 @@ class Dashboard extends Component {
               <>
                 <Grid.Column width={10}>
                   <DivContainerGraph>
-                    <Tab
+                    <StyledTab
                       style={{ padding: '0 20px 0 20px' }}
                       className='inventory-sidebar tab-menu flex stretched'
                       menu={{ secondary: true, pointing: true }}
@@ -1193,7 +1194,7 @@ class Dashboard extends Component {
             ) : (
             <Grid.Column width={15}>
               <DivContainerGraph>
-                <Tab
+                <StyledTab
                   style={{ padding: '0 20px 0 20px' }}
                   className='inventory-sidebar tab-menu flex stretched'
                   menu={{ secondary: true, pointing: true }}
