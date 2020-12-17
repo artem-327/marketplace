@@ -95,6 +95,7 @@ function FormationDocument({ formikProps, intl: { formatMessage }, error, entity
             <Required />
           </DivLegalAddressTitle>
           <UploadAttachment
+            acceptFiles='.png,.jpg,.pdf'
             name='companyFormationDocument.attachments'
             attachments={formikProps.values.companyFormationDocument.attachments}
             fileMaxSize={20}
