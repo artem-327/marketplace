@@ -33,10 +33,7 @@ function prepareDetail(data, type) {
   if (typeof data.id === 'undefined') return {}
 
   const subtotal = getSafe(() => data.cfPriceSubtotal, 0)
-  const totalPriceWithShipping = getSafe(
-    () => data.cfPriceTotal,
-    getSafe(() => data.cfPriceSubtotal, 0)
-  )
+  const totalPriceWithShipping = getSafe(() => data.cfPriceTotal, 0)
   const orderItems = getSafe(() => data.orderItems, [])
 
   let paymentNetDays = data.cfPaymentTerms && data.cfPaymentTerms.split(' ')
@@ -77,7 +74,15 @@ function prepareDetail(data, type) {
     creditStatus: OrdersHelper.getCreditStatus(data.creditReviewStatus),
     deliveryDate:
       typeof data.deliveryDate !== 'undefined' ? moment(data.deliveryDate).toDate().toLocaleString() : 'N/A',
-    echoFee: getSafe(() => data.echoFee, 0),
+    echoFee: (
+      <FormattedNumber
+        minimumFractionDigits={2}
+        maximumFractionDigits={2}
+        style='currency'
+        currency={currency}
+        value={data.echoFee ? data.echoFee : 0}
+      />
+    ),
     freight: (
       <FormattedNumber
         minimumFractionDigits={2}
@@ -87,6 +92,15 @@ function prepareDetail(data, type) {
         value={data.shippingPrice ? data.shippingPrice : 0}
       />
     ),
+    cfTax: getSafe(() => data.cfTax > 0, '') ? (
+      <FormattedNumber
+        minimumFractionDigits={2}
+        maximumFractionDigits={2}
+        style='currency'
+        currency={currency}
+        value={data.cfTax}
+      />
+    ) : null,
     grossProfit: (
       <FormattedNumber
         minimumFractionDigits={2}

@@ -7,19 +7,21 @@ import { Bell } from 'react-feather'
 import { getSafe } from '~/utils/functions'
 
 const IconBell = styled(Bell)`
-  width: 24px;
-  height: 25px;
+  width: 22px;
+  height: 22px;
   color: #20273a !important;
 `
 const CircularLabel = styled(Label)`
   position: absolute;
-  top: -0.75em;
+  top: 3px;
   left: auto;
-  right: -1em;
+  right: 5px;
   bottom: auto;
-  font-size: 0.7142857rem !important;
-  font-style: normal !important;
-  font-weight: 400 !important;
+  width: 8px;
+  height: 8px;
+  padding: 0 !important;
+  box-shadow: 0 0 0 2px #ffffff !important;
+  font-size: 0px !important;
 `
 
 class NotificationsIcon extends Component {

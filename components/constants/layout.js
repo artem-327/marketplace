@@ -13,8 +13,7 @@ export const TopMenu = styled(Menu)`
   border: 0 none !important;
 
   &.ui.menu.fixed .item-cart {
-    margin-right: 5px;
-    padding: 20px;
+    padding: 20px 14px;
 
     &:hover {
       background: transparent !important;
@@ -32,7 +31,7 @@ export const TopMenu = styled(Menu)`
     background-clip: content-box !important;
     text-align: center;
 
-    &:before {
+    /*&:before {
       content: '';
       position: absolute;
       top: 0;
@@ -42,7 +41,7 @@ export const TopMenu = styled(Menu)`
       height: 31px;
       margin: 24px 0;
       background: #dee2e6 !important;
-    }
+    }*/
 
     > i.icon {
       margin: 0 auto;
@@ -135,6 +134,29 @@ export const TopMenu = styled(Menu)`
 export const TopMenuContainer = styled(Container)`
   width: 100% !important;
   padding: 0 30px;
+  
+  .menu.right {
+  
+    > a {
+    
+      > i.icons {
+        width: 40px;
+        height: 40px;
+        margin: -9px;
+        border-radius: 50%;
+        padding: 9px;
+        
+        svg {
+          width: 22px;
+          height: 22px;
+        }
+      }
+      
+      &:hover > i.icons {
+        background: #edeef2;
+      }
+    }
+  }
 `
 export const LeftMenu = styled(Menu)`
   position: fixed;

@@ -36,6 +36,7 @@ import {
   PopupGrid,
   StyledModalHeader
 } from '../constants/layout'
+import { getDuplicatePackagingTypesByKey } from '~/services/filters'
 
 class WantedBoardFilter extends Component {
   state = {
@@ -94,6 +95,13 @@ class WantedBoardFilter extends Component {
   toSavedFilter = inputs => {
     let datagridFilter = {
       filters: []
+    }
+
+    const { packagingTypes } = this.props
+
+    let duplicatePackagingTypes = getDuplicatePackagingTypesByKey(inputs.packagingTypes, packagingTypes, 'name')
+    if (duplicatePackagingTypes.length) {
+      inputs.packagingTypes = [...inputs.packagingTypes, ...duplicatePackagingTypes]
     }
 
     let keys = Object.keys(inputs)
@@ -376,11 +384,14 @@ class WantedBoardFilter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
-  inputWrapper = (name, inputProps, labelText, labelClass = null) => {
+  inputWrapper = (name, inputProps, leftLabel, labelText, labelClass = '') => {
     return (
-      <InputWrapper>
-        <Input name={name} inputProps={inputProps} />
-        <Label className={labelClass}>{labelText}</Label>
+      <InputWrapper className='ui fluid left labeled input'>
+        {leftLabel ? <Label>{leftLabel}</Label> : null}
+        <div className={labelClass + (leftLabel ? ' left-label' : '')}>
+          <Input name={name} inputProps={inputProps} />
+          <Label>{labelText}</Label>
+        </div>
       </InputWrapper>
     )
   }
@@ -512,6 +523,7 @@ class WantedBoardFilter extends Component {
     let {
       productForms,
       packagingTypes,
+      uniquePackagingTypes,
       productGrades,
       intl,
       autocompleteData,
@@ -523,7 +535,7 @@ class WantedBoardFilter extends Component {
     const { formatMessage } = intl
 
     let packagingTypesDropdown = this.generateDropdown(
-      packagingTypes,
+      uniquePackagingTypes,
       values,
       formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
       'packagingTypes'
@@ -659,8 +671,9 @@ class WantedBoardFilter extends Component {
                       placeholder: '0.00',
                       fluid: true
                     },
+                    null,
                     currencySymbol,
-                    'green'
+                    'price'
                   )}
                 </GridColumn>
               </GridRow>
@@ -728,10 +741,9 @@ class WantedBoardFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
                     '%'
                   )}
                 </GridColumn>
@@ -741,10 +753,9 @@ class WantedBoardFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
                     '%'
                   )}
                 </GridColumn>
@@ -799,15 +810,13 @@ class WantedBoardFilter extends Component {
                       data-test='filter_advanced_filter'>
                       {formatMessage({ id: 'filter.advancedFilter', defaultMessage: 'Advanced Filter' })}
                     </Menu.Item>
-                    {false && (
-                      <Menu.Item
-                        key={'savedFilters'}
-                        onClick={() => this.toggleFilter(true)}
-                        active={savedFiltersActive}
-                        data-test='filter_saved_filters'>
-                        {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
-                      </Menu.Item>
-                    )}
+                    <Menu.Item
+                      key={'savedFilters'}
+                      onClick={() => this.toggleFilter(true)}
+                      active={savedFiltersActive}
+                      data-test='filter_saved_filters'>
+                      {formatMessage({ id: 'filter.savedFilters', defaultMessage: 'Saved Filters' })}
+                    </Menu.Item>
                   </CustomMenu>
 
                   <StyledModalContent>
@@ -1026,7 +1035,7 @@ WantedBoardFilter.defaultProps = {
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
   getOriginUrl: '/prodex/api/countries',
-  savedUrl: '/prodex/api/purchase-requests/own/datagrid/saved-filters',
+  savedUrl: '/prodex/api/purchase-requests/other/datagrid/saved-filters',
   searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${text}`,
   onApply: filter => {},
   onClear: () => {},

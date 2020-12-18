@@ -3,15 +3,12 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe, removeEmpty, uniqueArrayByKey } from '~/utils/functions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { removeEmpty } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import ErrorFocus from '~/components/error-focus'
 
 import { Button, FormField, GridRow, GridColumn, Dimmer, Label, Modal, Menu } from 'semantic-ui-react'
-
-import { uniqueArrayByKey } from '~/utils/functions'
 
 import confirm from '~/components/Confirmable/confirm'
 
@@ -20,6 +17,7 @@ import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
 import Notifications from './Notifications'
+import { getDuplicatePackagingTypesByKey } from '~/services/filters'
 
 import {
   FlexContent,
@@ -141,7 +139,12 @@ class InventoryFilter extends Component {
     let datagridFilter = {
       filters: []
     }
+    const { packagingTypes } = this.props
 
+    let duplicatePackagingTypes = getDuplicatePackagingTypesByKey(inputs.packagingTypes, packagingTypes, 'name')
+    if (duplicatePackagingTypes.length) {
+      inputs.packagingTypes = [...inputs.packagingTypes, ...duplicatePackagingTypes]
+    }
     let keys = Object.keys(inputs)
 
     keys.forEach(key => {
@@ -419,11 +422,14 @@ class InventoryFilter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
-  inputWrapper = (name, inputProps, labelText, labelClass = null) => {
+  inputWrapper = (name, inputProps, leftLabel, labelText, labelClass = '') => {
     return (
-      <InputWrapper>
-        <Input name={name} inputProps={inputProps} />
-        <Label className={labelClass}>{labelText}</Label>
+      <InputWrapper className='ui fluid left labeled input'>
+        {leftLabel ? <Label>{leftLabel}</Label> : null}
+        <div className={labelClass + (leftLabel ? ' left-label' : '')}>
+          <Input name={name} inputProps={inputProps} />
+          <Label>{labelText}</Label>
+        </div>
       </InputWrapper>
     )
   }
@@ -563,6 +569,7 @@ class InventoryFilter extends Component {
       productConditions,
       productForms,
       packagingTypes,
+      uniquePackagingTypes,
       productGrades,
       intl,
       autocompleteData,
@@ -578,7 +585,7 @@ class InventoryFilter extends Component {
     const { formatMessage } = intl
 
     let packagingTypesDropdown = this.generateDropdown(
-      packagingTypes,
+      uniquePackagingTypes,
       values,
       formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
       'packagingTypes'
@@ -826,12 +833,11 @@ class InventoryFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
                     currencySymbol,
-                    'green'
+                    'price'
                   )}
                 </GridColumn>
                 <GridColumn className='price-input' width={8}>
@@ -840,12 +846,11 @@ class InventoryFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
                     currencySymbol,
-                    'green'
+                    'price'
                   )}
                 </GridColumn>
               </GridRow>
@@ -886,10 +891,9 @@ class InventoryFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.min', defaultMessage: 'Min' }),
                     '%'
                   )}
                 </GridColumn>
@@ -899,10 +903,9 @@ class InventoryFilter extends Component {
                     {
                       type: 'number',
                       placeholder: '0.00',
-                      label: formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
-                      labelPosition: 'left',
                       fluid: true
                     },
+                    formatMessage({ id: 'filter.max', defaultMessage: 'Max' }),
                     '%'
                   )}
                 </GridColumn>

@@ -243,7 +243,7 @@ export const InputWrapper = styled.div`
     > .field {
       margin: 0 !important;
       .ui.input input {
-        padding-right: 47px; 
+        padding-left: 47px; 
         background-color: #fdfdfd;
       }
     }
@@ -259,7 +259,7 @@ export const InputWrapper = styled.div`
       background-color: rgba(132, 194, 37, 0.15);
       position: absolute;
       top: 0.42857143em;
-      right: 0.42857143em;
+      left: 0.42857143em;
     }
   }
 `

@@ -420,8 +420,6 @@ class Broadcast extends Component {
       }
     })
 
-    if (associationFilter === 'ALL' && filter.broadcast === 'all') return tree
-
     let companiesToHide = []
     let nodesToHide = tree.all(n => {
       if (n.model.rule.type === 'branch') {
@@ -434,7 +432,8 @@ class Broadcast extends Component {
           (associationFilter === 'Guests' && company.model.elements[0].clientCompany === false) ||
           (filter.broadcast !== 'all' &&
             ((filter.broadcast === 'on' && getSafe(() => company.model.broadcast, '') === 0) ||
-              (filter.broadcast === 'off' && getSafe(() => company.model.broadcast, '') > 0)))
+              (filter.broadcast === 'off' && getSafe(() => company.model.broadcast, '') > 0))) ||
+          (associationFilter === 'ALL' && company.model.elements[0].clientCompany)
         ) {
           if (companiesToHide.indexOf(company.model.id) === -1) companiesToHide.push(company)
           return true

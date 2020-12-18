@@ -1252,7 +1252,7 @@ class Detail extends Component {
                                   <Table.Footer>
                                     <TableRowData>
                                       <Table.HeaderCell>
-                                        <FormattedMessage id='order.total' defaultMessage='Total' />
+                                        <FormattedMessage id='order.totalPrice' defaultMessage='Total Price' />
                                       </Table.HeaderCell>
                                       <Table.HeaderCell textAlign='right'>
                                         <strong>{order.total}</strong>
@@ -1275,21 +1275,23 @@ class Detail extends Component {
                                   <Table.Body>
                                     <TableRowData>
                                       <Table.Cell>
-                                        <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
+                                        <FormattedMessage id='order.shippingCost' defaultMessage='Shipping Cost' />
                                       </Table.Cell>
                                       <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
                                     </TableRowData>
-                                    <TableRowData>
-                                      <Table.Cell>
-                                        <FormattedMessage id='order.tax' defaultMessage='Tax' />
-                                      </Table.Cell>
-                                      <Table.Cell textAlign='right'>{'$0'}</Table.Cell>
-                                    </TableRowData>
+                                    {order.cfTax && (
+                                      <TableRowData>
+                                        <Table.Cell>
+                                          <FormattedMessage id='order.tax' defaultMessage='Tax' />
+                                        </Table.Cell>
+                                        <Table.Cell textAlign='right'>{order.cfTax}</Table.Cell>
+                                      </TableRowData>
+                                    )}
                                   </Table.Body>
                                   <Table.Footer>
                                     <TableRowData>
                                       <Table.HeaderCell>
-                                        <FormattedMessage id='order.total' defaultMessage='Total' />
+                                        <FormattedMessage id='order.totalPrice' defaultMessage='Total Price' />
                                       </Table.HeaderCell>
                                       <Table.HeaderCell textAlign='right'>
                                         <strong>{order.total}</strong>

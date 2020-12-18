@@ -613,7 +613,6 @@ class ProductSidebar extends React.Component {
   }
 
   handleChangePackagingType = (e, value, setFieldValue, values) => {
-    e.preventDefault()
     const { packagingTypesAll } = this.props
     const selectedPackingType = packagingTypesAll.find(type => type.id === value)
 
@@ -854,25 +853,40 @@ class ProductSidebar extends React.Component {
                           />
                         </GridColumn>
                         <GridColumn>
-                          <Dropdown
-                            name='packagingType'
-                            options={packagingTypesReduced}
-                            label={
-                              <>
-                                <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />
-                                <Required />
-                              </>
+                          <Popup
+                            disabled={!!getSafe(() => formikProps.values.packagingUnit, false)}
+                            position={'bottom left'}
+                            content={
+                              <FormattedMessage
+                                id='product.packaging.selectFirst'
+                                defaultMessage='Please select Packaging Unit'
+                              />
                             }
-                            inputProps={{
-                              'data-test': 'settings_product_popup_packagingType_drpdn',
-                              placeholder: formatMessage({
-                                id: 'productCatalog.selectType',
-                                defaultMessage: 'Select Type'
-                              }),
-                              onChange: (e, { value }) => {
-                                this.handleChangePackagingType(e, value, setFieldValue, values)
-                              }
-                            }}
+                            trigger={
+                              <div>
+                                <Dropdown
+                                  name='packagingType'
+                                  options={packagingTypesReduced}
+                                  label={
+                                    <>
+                                      <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />
+                                      <Required />
+                                    </>
+                                  }
+                                  inputProps={{
+                                    disabled: !getSafe(() => formikProps.values.packagingUnit, false),
+                                    'data-test': 'settings_product_popup_packagingType_drpdn',
+                                    placeholder: formatMessage({
+                                      id: 'productCatalog.selectType',
+                                      defaultMessage: 'Select Type'
+                                    }),
+                                    onChange: (e, { value }) => {
+                                      this.handleChangePackagingType(e, value, setFieldValue, values)
+                                    }
+                                  }}
+                                />
+                              </div>
+                            }
                           />
                         </GridColumn>
                       </GridRow>
@@ -1337,7 +1351,7 @@ class ProductSidebar extends React.Component {
                                 }
                               })
                             }}>
-                            <FormattedMessage id='global.save' defaultMessage='Save'>
+                            <FormattedMessage id='global.send' defaultMessage='Send'>
                               {text => text}
                             </FormattedMessage>
                           </CustomButtonSubmit>

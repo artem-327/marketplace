@@ -295,21 +295,19 @@ class VellociRegister extends Component {
             })
           })
         ),
-        termsAndConditions: Yup.lazy(() => {
-          return Yup.object().shape({
-            electronicComunications: Yup.boolean()
-              .required(errorMessages.requiredMessage)
-              .oneOf([true], errorMessages.requiredMessage),
-            privacyPolicy: Yup.boolean()
-              .required(errorMessages.requiredMessage)
-              .oneOf([true], errorMessages.requiredMessage),
-            depositAccountAgreement: Yup.boolean()
-              .required(errorMessages.requiredMessage)
-              .oneOf([true], errorMessages.requiredMessage),
-            trueComplete: Yup.boolean()
-              .required(errorMessages.requiredMessage)
-              .oneOf([true], errorMessages.requiredMessage)
-          })
+        termsAndConditions: Yup.object().shape({
+          electronicComunications: Yup.boolean()
+            .required(errorMessages.requiredMessage)
+            .oneOf([true], errorMessages.requiredMessage),
+          privacyPolicy: Yup.boolean()
+            .required(errorMessages.requiredMessage)
+            .oneOf([true], errorMessages.requiredMessage),
+          depositAccountAgreement: Yup.boolean()
+            .required(errorMessages.requiredMessage)
+            .oneOf([true], errorMessages.requiredMessage),
+          trueComplete: Yup.boolean()
+            .required(errorMessages.requiredMessage)
+            .oneOf([true], errorMessages.requiredMessage)
         })
       })
     })

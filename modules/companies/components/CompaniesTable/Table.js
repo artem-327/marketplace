@@ -36,7 +36,7 @@ class CompaniesTable extends Component {
     this.state = {
       columns: [
         {
-          name: 'displayName',
+          name: 'companyName',
           title: (
             <FormattedMessage id='global.companyName' defaultMessage='Company Name'>
               {text => text}
@@ -45,6 +45,16 @@ class CompaniesTable extends Component {
           width: 220,
           sortPath: 'Company.name',
           allowReordering: false
+        },
+        {
+          name: 'dba',
+          title: (
+            <FormattedMessage id='global.dba' defaultMessage='DBA'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 220,
+          sortPath: 'Company.cfDisplayName'
         },
         {
           name: 'p44CompanyId',
@@ -287,6 +297,7 @@ class CompaniesTable extends Component {
           defaultSorting={{ columnName: 'displayName', direction: 'asc', sortPath: 'Company.name' }}
           rows={this.getRows(rows)}
           editingRowId={editedId}
+          defaultHiddenColumns={['dba']}
         />
       </div>
     )
@@ -302,7 +313,8 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
     rows: datagrid.rows.map(c => ({
       rawData: c,
       ...c,
-      displayName: getSafe(() => c.cfDisplayName, '') ? c.cfDisplayName : getSafe(() => c.name, ''),
+      companyName: getSafe(() => c.name, ''),
+      dba: getSafe(() => c.dba, ''),
       associations: (
         <ArrayToFirstItem values={getSafe(() => c.associations, '') ? c.associations.map(r => r.name) : []} />
       ),

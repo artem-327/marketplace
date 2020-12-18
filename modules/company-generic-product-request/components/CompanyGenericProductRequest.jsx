@@ -249,7 +249,7 @@ class CompanyGenericProductRequestForm extends Component {
                         }
                       })
                     }}>
-                    <FormattedMessage id='global.send' defaultMessage='Send'>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>
                       {text => text}
                     </FormattedMessage>
                   </Button>

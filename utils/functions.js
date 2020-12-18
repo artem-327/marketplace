@@ -12,7 +12,13 @@ export const transformRequestOptions = params => {
   }
   return options ? options.slice(0, -1) : options
 }
-
+/**
+ * Function removes duplicates in array of objects based on key and returns array with unique objects.
+ *
+ * @param {array} array The array of objects.
+ * @param {string} key The string as key in object.
+ * @return {array} The array of objects without duplicates.
+ */
 export const uniqueArrayByKey = (array, key) => {
   let unique = []
 
