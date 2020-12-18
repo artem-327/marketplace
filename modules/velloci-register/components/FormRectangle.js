@@ -76,7 +76,8 @@ function FormRectangle({
   numberBeneficialOwners,
   isLoadingSubmitButton,
   openEmailPopup,
-  registerBeneficialOwner
+  registerBeneficialOwner,
+  nextStep
 }) {
   const { values } = formikProps
   return (
@@ -155,7 +156,7 @@ function FormRectangle({
           disabled={isLoadingSubmitButton}
           loading={isLoadingSubmitButton}
           type='button'
-          onClick={() => submitForm(formikProps)}
+          onClick={() => submitForm(formikProps, activeStep, nextStep)}
           primary>
           <FormattedMessage
             id={
