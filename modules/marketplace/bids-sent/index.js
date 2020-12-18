@@ -1,10 +1,9 @@
 import BidsSentContainer from './components/BidsSentContainer'
 import { DatagridProvider } from '~/modules/datagrid'
-import { CompanyProductInfo } from '~/modules/company-product-info'
 
 export const BidsSent = props => {
   const urlApiConfig = {
-    url: '/prodex/api/product-offers/broadcasted/datagrid/',
+    url: '/prodex/api/product-offer-bids/own/datagrid',
     searchToFilter: v => {
       let filters = { or: [], and: [] }
       if (v && v.filterName && v.filterName.length > 0) {
@@ -41,7 +40,6 @@ export const BidsSent = props => {
   }
   return (
     <>
-      <CompanyProductInfo fromMarketPlace />
       <DatagridProvider apiConfig={urlApiConfig} preserveFilters skipInitLoad>
         <BidsSentContainer {...props} />
       </DatagridProvider>

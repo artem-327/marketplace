@@ -85,8 +85,6 @@ export function closePopup() {
   }
 }
 
-// ! ! ! ! ! ******************************************************************************
-
 export const makeOffer = (body) => ({
   type: AT.MARKETPLACE_MAKE_OFFER,
   payload: api.makeOffer(body)
@@ -97,32 +95,22 @@ export const deleteOffer = (id) => ({
   payload: api.deleteOffer(id)
 })
 
-export const buyerAcceptOffer = (id) => ({
-  type: AT.MARKETPLACE_BUYER_ACCEPT_OFFER,
-  payload: api.buyerAcceptOffer(id)
+export const acceptOffer = (id) => ({
+  type: AT.MARKETPLACE_ACCEPT_OFFER,
+  payload: api.acceptOffer(id)
 })
 
-export const buyerDenyOffer = (id) => ({
-  type: AT.MARKETPLACE_BUYER_DENY_OFFER,
-  payload: api.buyerDenyOffer(id)
+export const rejectOffer = (id) => ({
+  type: AT.MARKETPLACE_REJECT_OFFER,
+  payload: api.rejectOffer(id)
 })
 
-export const buyerCounterOffer = (id) => ({
-  type: AT.MARKETPLACE_BUYER_COUNTER_OFFER,
-  payload: api.buyerCounterOffer(id)
+export const counterOffer = (id, body) => ({
+  type: AT.MARKETPLACE_COUNTER_OFFER,
+  payload: api.counterOffer(id, body)
 })
 
-export const sellerAcceptOffer = (id) => ({
-  type: AT.MARKETPLACE_SELLER_ACCEPT_OFFER,
-  payload: api.sellerAcceptOffer(id)
-})
-
-export const sellerDenyOffer = (id) => ({
-  type: AT.MARKETPLACE_SELLER_DENY_OFFER,
-  payload: api.sellerDenyOffer(id)
-})
-
-export const sellerCounterOffer = (id) => ({
-  type: AT.MARKETPLACE_SELLER_COUNTER_OFFER,
-  payload: api.sellerCounterOffer(id)
+export const addOfferToCart = (id) => ({
+  type: AT.MARKETPLACE_ADD_OFFER_TO_CART,
+  payload: api.addOfferToCart(id)
 })

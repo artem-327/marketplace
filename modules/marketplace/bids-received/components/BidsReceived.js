@@ -640,7 +640,6 @@ class BidsReceived extends Component {
             data-test='marketplace_listings_row_action'
           />
         </div>
-        {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
         {isOpenPopup && <BidsReceivedPopup />}
       </Container>
     )

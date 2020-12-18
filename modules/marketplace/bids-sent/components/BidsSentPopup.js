@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import { Input, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
+import { Input, Button, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import {
   Form,
   Modal,
@@ -10,10 +10,15 @@ import {
   Grid,
   GridRow,
   GridColumn,
-  List
+  List,
+  Label,
+  FormField,
+  FormGroup,
+  Segment
 } from 'semantic-ui-react'
 
 import { Formik } from 'formik'
+import { Field as FormikField } from 'formik'
 import * as Yup from 'yup'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
@@ -22,7 +27,9 @@ import styled from 'styled-components'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty, getSafe, getPricing } from '~/utils/functions'
+import confirm from '~/src/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
+import get from 'lodash/get'
 import ErrorFocus from '~/components/error-focus'
 import { Schedule } from '@material-ui/icons'
 
@@ -136,6 +143,7 @@ const StyledGrid = styled(Grid)`
 `
 
 
+
 const formValidation = () =>
   Yup.object().shape({
     pricePerUOM: Yup.string().trim().required(errorMessages.requiredMessage),
@@ -147,32 +155,31 @@ const formValidation = () =>
       })
   })
 
-class MakeOfferPopup extends React.Component {
+class BidsSentPopup extends React.Component {
   state = {
   }
 
   getInitialFormValues = () => {
     const { popupValues } = this.props
     return {
-        message: '',
-        pkgAmount: '',
-        pricePerUOM: '',
-        productOffer: popupValues.id
-      }
+      message: '',
+      pkgAmount: popupValues.cfHistoryLastPkgAmount,
+      pricePerUOM: ''
+    }
   }
 
   submitOffer = async ({values, setSubmitting }) => {
-    const { closePopup, makeOffer, datagrid } = this.props
+    const { popupValues, closePopup, counterOffer, datagrid } = this.props
+
     const body = {
       pkgAmount: parseInt(values.pkgAmount),
-      productOffer: values.productOffer,
       pricePerUOM: parseFloat(values.pricePerUOM),
       message: values.message
     }
     removeEmpty(body)
 
     try {
-      await makeOffer(body)
+      await counterOffer(popupValues.id, body)
       datagrid.loadData()
       closePopup()
     } catch (e) {
@@ -185,6 +192,7 @@ class MakeOfferPopup extends React.Component {
     const {
       intl: { formatMessage },
       popupValues,
+      productOffer,
       closePopup,
       isSending,
       listFobPriceUnit,
@@ -207,8 +215,9 @@ class MakeOfferPopup extends React.Component {
           let amount = pkgAmount
           if (isNaN(pkgAmount)) amount = 1
 
-          const listFobPrice = getPricing(popupValues, amount).price
+          const listFobPrice = 10 // ! ! getPricing(popupValues, amount).price
           const totalListPrice = amount * listFobPrice
+
 
           return (
             <StyledModal closeIcon onClose={closePopup} open={true} size='large'>
@@ -216,7 +225,7 @@ class MakeOfferPopup extends React.Component {
                 <Loader />
               </Dimmer>
               <Modal.Header>
-                <FormattedMessage id='marketplace.makeAnOffer' defaultMessage='Make an Offer' />
+                <FormattedMessage id='marketplace.bidReceived' defaultMessage='Bid Received' />
               </Modal.Header>
               <Modal.Content scrolling>
                 <Form>
@@ -304,6 +313,98 @@ class MakeOfferPopup extends React.Component {
                       </GridRow>
 
                       <GridRow>
+                        <GridColumn>
+                          <TableSegment>
+                            <StyledList divided relaxed horizontal size='large'>
+                              <List.Item>
+                                <List.Content>
+                                  <List.Header as='label'>
+                                    <FormattedMessage
+                                      id='marketplace.offeredFobPrice'
+                                      defaultMessage='Offered FOB Price' />
+                                  </List.Header>
+                                  <List.Description as='span' className='green' >
+                                    <FormattedNumber
+                                      minimumFractionDigits={2}
+                                      maximumFractionDigits={2}
+                                      style='currency'
+                                      currency={currency}
+                                      value={popupValues.cfHistoryLastPricePerUOM}
+                                    />
+                                    {' '}
+                                    {listFobPriceUnit}
+                                  </List.Description>
+                                </List.Content>
+                              </List.Item>
+                              <List.Item>
+                                <List.Content>
+                                  <List.Header as='label'>
+                                    <FormattedMessage
+                                      id='marketplace.totalOfferedPrice'
+                                      defaultMessage='Total Offered Price' />
+                                  </List.Header>
+                                  <List.Description as='span' className='green' >
+                                    <FormattedNumber
+                                      minimumFractionDigits={2}
+                                      maximumFractionDigits={2}
+                                      style='currency'
+                                      currency={currency}
+                                      value={popupValues.cfHistoryLastPricePerUOM * popupValues.cfHistoryLastPkgAmount}
+                                    />
+                                  </List.Description>
+                                </List.Content>
+                              </List.Item>
+                            </StyledList>
+                          </TableSegment>
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn>
+                          <StyledRectangle>
+                            <div className='header'>
+                              <FormattedMessage
+                                id='marketplace.messageFromSeller'
+                                defaultMessage='Message from Seller' />
+                            </div>
+                            <div className='message'>
+                              message from seller
+                            </div>
+                          </StyledRectangle>
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn>
+                          <Checkbox
+                            name='accept'
+                            defaultChecked={false}
+                            onChange={() => console.log('!!!!!!!!!! onChange accept')}
+                            data-test={`bids_received_accept_chckb`}
+                            label={formatMessage({ id: 'global.accept', defaultMessage: 'Accept' })}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow style={{ padding: '0' }}>
+                        <GridColumn>
+                          <FormattedMessage id='marketplace.or' defaultMessage='or' />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn>
+                          <Checkbox
+                            name='counter'
+                            defaultChecked={false}
+                            onChange={() => console.log('!!!!!!!!!! onChange counter')}
+                            data-test={`bids_received_counter_chckb`}
+                            label={formatMessage({ id: 'global.counter', defaultMessage: 'Counter' })}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
                         <GridColumn width={5}>
                           <Input
                             label={
@@ -318,7 +419,8 @@ class MakeOfferPopup extends React.Component {
                                 formatMessage({ id: 'global.enterQuantity', defaultMessage: 'Enter Quantity' }),
                               type: 'number',
                               min: 1,
-                              step: 1
+                              step: 1,
+                              disabled: values.accept || !values.counter
                             }}
                           />
                         </GridColumn>
@@ -326,41 +428,23 @@ class MakeOfferPopup extends React.Component {
                           <PriceInput
                             name='pricePerUOM'
                             inputProps={{
-                              placeholder: '0',
+                              placeholder: formatMessage({
+                                id: 'marketplace.enterCounterBid',
+                                defaultMessage: 'Enter Counter Bid'
+                              }),
                               min: 0,
-                              type: 'number'
+                              type: 'number',
+                              disabled: values.accept || !values.counter
                             }}
                             label={
-                              <>
-                                <FormattedMessage
-                                  id='marketplace.yourFobPriceOffer'
-                                  defaultMessage='Your FOB price offer'
-                                />
-                                <Required />
-                              </>
+                              <FormattedMessage
+                                id='marketplace.yourFobPriceOffer'
+                                defaultMessage='Your FOB price offer'>
+                                {text => text}
+                              </FormattedMessage>
                             }
                             currencyLabel={'$'}
                           />
-                        </GridColumn>
-                        <GridColumn width={3}>
-                          <Form.Field>
-                            <label>
-                              <FormattedMessage
-                                id='marketplace.YourTotalBid'
-                                defaultMessage='Your Total Bid'>
-                                {text => text}
-                              </FormattedMessage>
-                            </label>
-                            <FieldRectangle>
-                              <FormattedNumber
-                                minimumFractionDigits={2}
-                                maximumFractionDigits={2}
-                                style='currency'
-                                currency={currency}
-                                value={values.pkgAmount * values.pricePerUOM}
-                              />
-                            </FieldRectangle>
-                          </Form.Field>
                         </GridColumn>
                       </GridRow>
 
@@ -369,7 +453,7 @@ class MakeOfferPopup extends React.Component {
                           <TextArea
                             name='message'
                             label={
-                              <FormattedMessage id='marketplace.messageToSeller' defaultMessage='Message to Seller' />
+                              <FormattedMessage id='marketplace.messageToBuyer' defaultMessage='Message to Buyer' />
                             }
                             inputProps={{
                               'data-test': 'wanted_board_sidebar_specialNotes_inp',
@@ -381,21 +465,6 @@ class MakeOfferPopup extends React.Component {
                           />
                           <SmallText style={{ marginTop: '-14px' }}>
                             <FormattedMessage id='marketplace.optional' defaultMessage='Optional' />
-                          </SmallText>
-                        </GridColumn>
-                      </GridRow>
-
-                      <GridRow>
-                        <GridColumn>
-                          <SmallText>
-                            <Schedule className='title-icon' />
-                            <div>
-                              <FormattedMessage
-                                id='marketplace.sellerHas24HoursToReply.'
-                                defaultMessage='Seller has 24 hours to reply.'>
-                                {text => text}
-                              </FormattedMessage>
-                            </div>
                           </SmallText>
                         </GridColumn>
                       </GridRow>
@@ -428,7 +497,7 @@ class MakeOfferPopup extends React.Component {
                   }}
                   type='button'
                   data-test='inventory_quick_edit_pricing_popup_save_btn'>
-                  {formatMessage({ id: 'marketplace.submitOffer', defaultMessage: 'Submit Offer' })}
+                  {formatMessage({ id: 'marketplace.send', defaultMessage: 'Send' })}
                 </Button.Submit>
               </Modal.Actions>
             </StyledModal>
@@ -441,18 +510,21 @@ class MakeOfferPopup extends React.Component {
 
 function mapStateToProps(store) {
   const { popupValues } = store.marketplace
+  const productOffer = popupValues.productOffer
+  const companyProduct = productOffer.companyProduct
 
-  const priceUnit = getSafe(() => popupValues.companyProduct.packagingUnit.nameAbbreviation, '')
+  const priceUnit = getSafe(() => companyProduct.packagingUnit.nameAbbreviation, '')
 
   return {
     popupValues,
+    productOffer,
     isSending: store.marketplace.isSending,
-    productName: getSafe(() => popupValues.companyProduct.intProductName, ''),
+    productName: getSafe(() => companyProduct.intProductName, ''),
     listFobPriceUnit: priceUnit ? `/ ${priceUnit}` : '',
-    packagingType: getSafe(() => popupValues.companyProduct.packagingType.name, ''),
-    packagingUnit: getSafe(() => popupValues.companyProduct.packagingUnit.nameAbbreviation, ''),
-    packagingSize: getSafe(() => popupValues.companyProduct.packagingSize, 1)
+    packagingType: getSafe(() => companyProduct.packagingType.name, ''),
+    packagingUnit: getSafe(() => companyProduct.packagingUnit.nameAbbreviation, ''),
+    packagingSize: getSafe(() => companyProduct.packagingSize, 1)
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(MakeOfferPopup)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(BidsSentPopup)))
