@@ -28,7 +28,7 @@ import {
   Button as ButtonSemantic
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
-import { Trash, PlusCircle, X as XIcon } from 'react-feather'
+import { Trash, PlusCircle, X as XIcon, Plus, Trash2 } from 'react-feather'
 
 import {
   sidebarDetailTrigger,
@@ -104,10 +104,6 @@ const CustomGridColumn = styled(GridColumn)`
   padding-bottom: 0px !important;
 `
 
-const PricingLabel = styled.label`
-  line-height: 40px;
-`
-
 const PricingIcon = styled(Icon)`
   line-height: 40px;
 `
@@ -134,6 +130,32 @@ const IconTrash = styled(Trash)`
 
 const DivIconPlusCircle = styled.div`
   margin: 0;
+`
+
+const DivTrash = styled.div`
+  cursor: pointer;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const DivButtonPlus = styled.div`
+  cursor: pointer;
+  border-radius: 3px;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  height: 40px;
+  width: 40px;
+  padding-top: 6px;
+  text-align: center;
+`
+
+const DivLevel = styled.div`
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const initValues = {
@@ -262,6 +284,7 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
 })
 
 const validationScheme = val.lazy(values => {
+  let minimumQuantity = getSafe(() => values.edit.minimum, 0) > 0 ? values.edit.minimum - 1 : 0
   return val.object().shape({
     edit: val.object().shape({
       product: val.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
@@ -351,7 +374,7 @@ const validationScheme = val.lazy(values => {
               .number()
               .typeError(errorMessages.mustBeNumber)
               .required(errorMessages.requiredMessage)
-              .moreThan(0, errorMessages.greaterThan(0)),
+              .moreThan(minimumQuantity, errorMessages.greaterOrEqual(minimumQuantity + 1)),
             price: val
               .number()
               .typeError(errorMessages.mustBeNumber)
@@ -565,20 +588,19 @@ class DetailSidebar extends Component {
     validateForm()
   }, 250)
 
-  renderPricingTiers = count => {
-    const { setFieldValue } = this.formikProps
+  renderPricingTiers = pricingTiers => {
+    if (!pricingTiers || !getSafe(() => pricingTiers.length, '')) return
+    const { setFieldValue, values } = this.formikProps
     let tiers = []
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < pricingTiers.length; i++) {
       tiers.push(
         <GridRow>
-          <GridColumn computer={2} textAlign='center'>
-            <PricingLabel name={`priceTiers.pricingTiers[${i}].level`} style={{ verticalAlign: 'middle' }}>
-              {i + 1}
-            </PricingLabel>
+          <GridColumn computer={1} textAlign='center'>
+            <DivLevel name={`priceTiers.pricingTiers[${i}].level`}>{i + 1}</DivLevel>
           </GridColumn>
 
-          <GridColumn computer={1}>
+          <GridColumn computer={2} textAlign='center'>
             <PricingIcon className='greater than equal' />
           </GridColumn>
 
@@ -586,7 +608,7 @@ class DetailSidebar extends Component {
             <Input name={`priceTiers.pricingTiers[${i}].manuallyModified`} inputProps={{ type: 'hidden', value: 0 }} />
           </GridColumn>
 
-          <GridColumn computer={6} data-test={`add_inventory_quantityFrom_${i}_inp`}>
+          <GridColumn computer={5} data-test={`add_inventory_quantityFrom_${i}_inp`}>
             <Input
               name={`priceTiers.pricingTiers[${i}].quantityFrom`}
               inputProps={{
@@ -617,6 +639,19 @@ class DetailSidebar extends Component {
               this.props.currencySymbol
             )}
           </GridColumn>
+          <GridColumn computer={1} textAlign='center'>
+            {i > 0 ? (
+              <DivTrash
+                onClick={() => {
+                  let pricingTiers = values.priceTiers.pricingTiers.slice()
+                  pricingTiers.splice(i, 1)
+                  setFieldValue('priceTiers.pricingTiers', pricingTiers)
+                }}>
+                <Trash2 color='#f16844' />
+              </DivTrash>
+            ) : null}
+          </GridColumn>
+          <GridColumn computer={1}></GridColumn>
         </GridRow>
       )
     }
@@ -2007,69 +2042,6 @@ class DetailSidebar extends Component {
                                     <GridColumn>
                                       <Header as='h3'>
                                         <FormattedMessage
-                                          id='addInventory.pricesCount'
-                                          defaultMessage='How many price tiers would you like to offer?'>
-                                          {text => (
-                                            <>
-                                              {text}
-                                              <Popup
-                                                content={
-                                                  <>
-                                                    <FormattedMessage
-                                                      id='addInventory.pricesCount.description1'
-                                                      defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.'
-                                                    />
-                                                    <br /> <br />
-                                                    <FormattedMessage
-                                                      id='addInventory.pricesCount.description2'
-                                                      defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.'
-                                                    />
-                                                    <br /> <br />
-                                                    <FormattedMessage
-                                                      id='addInventory.pricesCount.description3'
-                                                      defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.'
-                                                    />
-                                                  </>
-                                                }
-                                                trigger={<Icon name='info circle' color='blue' />}
-                                                wide
-                                              />
-                                            </>
-                                          )}
-                                        </FormattedMessage>
-                                      </Header>
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn width={4}>
-                                      <Dropdown
-                                        label={formatMessage({
-                                          id: 'addInventory.priceTiers',
-                                          defaultMessage: 'Price Tiers'
-                                        })}
-                                        name='priceTiers.priceTiers'
-                                        options={this.getPriceTiers(10)}
-                                        inputProps={{
-                                          'data-test': 'new_inventory_price_tiers_drpdn',
-                                          fluid: true,
-                                          onChange: (e, { value }) => {
-                                            this.onChange()
-                                            let pricingTiers = values.priceTiers.pricingTiers.slice()
-                                            let difference = value - pricingTiers.length
-                                            if (difference < 0) pricingTiers.splice(value)
-                                            else
-                                              for (let i = 0; i < difference; i++)
-                                                pricingTiers.push({ price: '', quantityFrom: '' })
-                                            setFieldValue('priceTiers.pricingTiers', pricingTiers)
-                                          }
-                                        }}
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn>
-                                      <Header as='h3'>
-                                        <FormattedMessage
                                           id='addInventory.fobPrice.header'
                                           defaultMessage='What is the FOB price for each tier?'>
                                           {text => (
@@ -2093,7 +2065,19 @@ class DetailSidebar extends Component {
                                   </GridRow>
                                   {/* <Grid> */}
                                   <GridRow>
-                                    <GridColumn>{this.renderPricingTiers(values.priceTiers.priceTiers)}</GridColumn>
+                                    <GridColumn>{this.renderPricingTiers(values.priceTiers.pricingTiers)}</GridColumn>
+                                  </GridRow>
+                                  <GridRow>
+                                    <GridColumn verticalAlign='middle'>
+                                      <DivButtonPlus
+                                        onClick={() => {
+                                          let pricingTiers = values.priceTiers.pricingTiers
+                                          pricingTiers.push({ quantityFrom: '', price: '' })
+                                          setFieldValue('priceTiers.pricingTiers', pricingTiers)
+                                        }}>
+                                        <Plus size='18' color='#20273a' />
+                                      </DivButtonPlus>
+                                    </GridColumn>
                                   </GridRow>
                                   {/* </Grid> */}
                                 </Grid>
