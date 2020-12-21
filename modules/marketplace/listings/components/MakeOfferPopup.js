@@ -288,7 +288,7 @@ class MakeOfferPopup extends React.Component {
                                 </List.Content>
                               </List.Item>
 
-                              <List.Item>
+                              {false && (<List.Item>
                                 <List.Content>
                                   <List.Header as='label'>
                                     <FormattedMessage id='marketplace.incoterms' defaultMessage='Incoterms' />
@@ -297,7 +297,7 @@ class MakeOfferPopup extends React.Component {
                                     TBD
                                   </List.Description>
                                 </List.Content>
-                              </List.Item>
+                              </List.Item>)}
                             </StyledList>
                           </TableSegment>
                         </GridColumn>

@@ -191,7 +191,7 @@ export const PriceInput = ({ name, inputProps, label, currencyLabel }) => {
           inputProps={inputProps}
           name={name}
         />
-        <Label>{currencyLabel}</Label>
+        <Label className={inputProps && inputProps.disabled ? 'disabled' : ''}>{currencyLabel}</Label>
       </div>
     </InputWrapper>
   )

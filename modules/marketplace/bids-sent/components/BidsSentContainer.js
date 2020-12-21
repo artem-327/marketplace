@@ -85,6 +85,11 @@ function mapStateToProps(store, { datagrid }) {
           "pkgAvailable": 100,
           "pkgAllocated": 0,
           "quantity": 100,
+          pricingTiers: [
+            {quantityFrom: 2, pricePerUOM: 40},
+            {quantityFrom: 50, pricePerUOM: 33},
+            {quantityFrom: 100, pricePerUOM: 29}
+          ],
           "companyProduct": {
             "id": 102,
             "intProductName": "Methyl methacrylate",

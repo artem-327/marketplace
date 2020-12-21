@@ -111,6 +111,10 @@ const FieldRectangle = styled.div`
   line-height: 1.29;
   letter-spacing: normal;
   color: #20273a;
+  
+  &.disabled {
+    opacity: 0.45;
+  }
 `
 
 const SmallText = styled.div`
@@ -215,9 +219,10 @@ class BidsSentPopup extends React.Component {
           let amount = pkgAmount
           if (isNaN(pkgAmount)) amount = 1
 
-          const listFobPrice = 10 // ! ! getPricing(popupValues, amount).price
+          const listFobPrice = getPricing(popupValues.productOffer, amount).price
           const totalListPrice = amount * listFobPrice
 
+          const disabledInputPrice = values.accept || !values.counter
 
           return (
             <StyledModal closeIcon onClose={closePopup} open={true} size='large'>
@@ -297,7 +302,7 @@ class BidsSentPopup extends React.Component {
                                 </List.Content>
                               </List.Item>
 
-                              <List.Item>
+                              {false && (<List.Item>
                                 <List.Content>
                                   <List.Header as='label'>
                                     <FormattedMessage id='marketplace.incoterms' defaultMessage='Incoterms' />
@@ -306,7 +311,7 @@ class BidsSentPopup extends React.Component {
                                     TBD
                                   </List.Description>
                                 </List.Content>
-                              </List.Item>
+                              </List.Item>)}
                             </StyledList>
                           </TableSegment>
                         </GridColumn>
@@ -410,7 +415,7 @@ class BidsSentPopup extends React.Component {
                             label={
                               <>
                                 {formatMessage({ id: 'global.quantity', defaultMessage: 'Quantity' })}
-                                <Required />
+                                {!disabledInputPrice && (<Required />)}
                               </>
                             }
                             name='pkgAmount'
@@ -420,7 +425,7 @@ class BidsSentPopup extends React.Component {
                               type: 'number',
                               min: 1,
                               step: 1,
-                              disabled: values.accept || !values.counter
+                              disabled: disabledInputPrice
                             }}
                           />
                         </GridColumn>
@@ -434,17 +439,40 @@ class BidsSentPopup extends React.Component {
                               }),
                               min: 0,
                               type: 'number',
-                              disabled: values.accept || !values.counter
+                              disabled: disabledInputPrice
                             }}
                             label={
-                              <FormattedMessage
-                                id='marketplace.yourFobPriceOffer'
-                                defaultMessage='Your FOB price offer'>
-                                {text => text}
-                              </FormattedMessage>
+                              <>
+                                <FormattedMessage
+                                  id='marketplace.yourFobPriceOffer'
+                                  defaultMessage='Your FOB price offer'>
+                                  {text => text}
+                                </FormattedMessage>
+                                {!disabledInputPrice && (<Required />)}
+                              </>
                             }
                             currencyLabel={'$'}
                           />
+                        </GridColumn>
+                        <GridColumn width={3}>
+                          <Form.Field>
+                            <label>
+                              <FormattedMessage
+                                id='marketplace.YourTotalBid'
+                                defaultMessage='Your Total Bid'>
+                                {text => text}
+                              </FormattedMessage>
+                            </label>
+                            <FieldRectangle className={disabledInputPrice ? 'disabled' : ''}>
+                              <FormattedNumber
+                                minimumFractionDigits={2}
+                                maximumFractionDigits={2}
+                                style='currency'
+                                currency={currency}
+                                value={values.pkgAmount * values.pricePerUOM}
+                              />
+                            </FieldRectangle>
+                          </Form.Field>
                         </GridColumn>
                       </GridRow>
 
