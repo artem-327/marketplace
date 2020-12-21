@@ -64,10 +64,7 @@ class FormikInput extends Component {
                             ? `${value}${separator}`
                             : value
                       } else {
-                        const formatedValue = value
-                          .replace(/[/.]/g, '-')
-                          .replace(/ /g, '')
-                          .split('-')
+                        const formatedValue = value.replace(/[/.]/g, '-').replace(/ /g, '').split('-')
   
                         const canAutomaticallyAdjustDateFormat =
                           formatedValue.some(d => d.length >= 4)
@@ -94,19 +91,15 @@ class FormikInput extends Component {
                   clearable
                   onChange={(e, { name, value }) => {
                     //automatic adjust date in input based on format date
-                    const formatedValue = value
-                      .replace(/[/.]/g, '-')
-                      .replace(/ /g, '')
-                      .split('-')
-
+                    const formatedValue = value.replace(/[/.]/g, '-').replace(/ /g, '').split('-')
+                    
                     const canAutomaticallyAdjustDateFormat =
-                      formatedValue.some(d => d.length >= 4)
-                      && formatedValue.length === 3
-                      && moment(value, getLocaleDateFormat()).isValid()
-                    const val =
-                      canAutomaticallyAdjustDateFormat
-                        ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
-                        : value
+                      formatedValue.some(d => d.length >= 4) &&
+                      formatedValue.length === 3 &&
+                      moment(value, getLocaleDateFormat()).isValid()
+                    const val = canAutomaticallyAdjustDateFormat
+                      ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
+                      : value
                     setFieldValue(form, name, val, true)
                     Promise.resolve().then(() => {
                       onChange && onChange(e, { name, value: val })

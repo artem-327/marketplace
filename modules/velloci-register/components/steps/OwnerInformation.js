@@ -61,20 +61,16 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
       <GridRow>
         <GridColumn>
           <Rectangle style={{ margin: '0px' }}>
-            <CustomDivTitle>
-              <Info size={20} style={{ color: '#2599d5' }} />
+            <CustomDivContent style={{ display: 'flex', color: '#848893', padding: '0px' }}>
+              <div>
+                <Info size={20} style={{ color: '#2599d5' }} />
+              </div>
               <CustomDivInTitle>
                 <FormattedMessage
-                  id='velloci.ownerInformation.requiredTitle'
-                  defaultMessage='Required information under the Bank Secrecy Act'
+                  id='velloci.ownerInformation.infoContent'
+                  defaultMessage='This information is required under the Bank Secrecy Act and is intended to assist the government and law enforcement int the ongoing fight against money laundering and the financing of terrorism.'
                 />
               </CustomDivInTitle>
-            </CustomDivTitle>
-            <CustomDivContent style={{ color: '#848893', padding: '4px 30px' }}>
-              <FormattedMessage
-                id='velloci.ownerInformation.infoContent'
-                defaultMessage='This information is required under the Bank Secrecy Act and is intended to assist the government and law enforcement int the ongoing fight against money laundering and the financing of terrorism.'
-              />
             </CustomDivContent>
           </Rectangle>
         </GridColumn>
@@ -270,7 +266,7 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
             <CustomDivContent style={{ color: '#848893', padding: '4px 30px' }}>
               <FormattedMessage
                 id='velloci.ownerInformation.obtainInfoContent'
-                defaultMessage='No problem. Please select email and we will send them a link to complete the process.'
+                defaultMessage='No problem. Please select email and we will send them the form to fill separately. You may continue the KYC process for yourself and complete registration.'
               />
             </CustomDivContent>
           </Rectangle>
