@@ -350,6 +350,7 @@ class UploadAttachment extends Component {
             <React.Fragment>
               {!hasFile || this.props.uploadedContent ? (
                 <ReactDropzone
+                  accept={this.props.acceptFiles}
                   ref={this.reactDropzoneRef}
                   className={hasFile ? 'dropzoneLotHasFile' : 'dropzoneLot'}
                   activeClassName='active'
@@ -410,6 +411,7 @@ UploadAttachment.propTypes = {
   type: PropTypes.string,
   uploadClass: PropTypes.string,
   uploadedClass: PropTypes.string,
+  acceptFiles: PropTypes.string,
   listDocumentTypes: PropTypes.array
 }
 
