@@ -316,11 +316,10 @@ class AddressForm extends Component {
             />
           </FormGroup>
 
-          <FormGroup widths='equal'>
+          <DatalistGroup widths='equal'>
             <Input
               inputProps={{
                 onFocus: e => (e.target.autocomplete = null),
-                icon: 'dropdown',
                 list: datalistName,
                 onChange: this.handleChange,
                 fluid: true,
@@ -339,8 +338,8 @@ class AddressForm extends Component {
               onAddition={(e, data) => setFieldValue(fields[this.props.zip.name], data.value)}
               onChange={this.handleChange}
               additionalInputProps={{
-                loading,
-                placeholder: formatMessage({ id: 'global.address.enterZip', defaultMessage: 'Enter Zip' })
+                icon: null,
+                placeholder: formatMessage({ id: 'global.address.enterZip', defaultMessage: 'Enter Zip' }),
               }}
               name={fields.zip}
               required={required}
@@ -348,7 +347,7 @@ class AddressForm extends Component {
               initialZipCodes={initialZipCodes}
               data-test='address_form_zip_drpdn'
             />
-          </FormGroup>
+          </DatalistGroup>
         </CustomSegment>
       </>
     )
