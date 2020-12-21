@@ -1684,6 +1684,7 @@
   "cart.shoppingCartHeader": "ITEMS ({number})",
   "notFound": "... think we are lost, sir !",
   "cart.keepShopping": "Keep Shopping",
+  "cart.proceedToCheckout": "Proceed to Checkout",
   "cart.empty": "Your cart is empty.",
   "cart.minimumQQ": "Minimum QQ",
   "cart.minimumOrderQQ": "Min. Purchase",
