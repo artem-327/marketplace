@@ -905,6 +905,7 @@
   "global.selectAdditionalHomeBranch": "Select Additional Home Branch",
   "global.selectSellMarketSegments": "Select Sell Market Segments",
   "global.selectBuyMarketSegments": "Select Buy Market Segments",
+  "global.purchaseMarketSegments": "Purchase Market Segments",
   "global.tags": "Tags",
   "global.buy": "Buy",
   "global.price": "Price",
