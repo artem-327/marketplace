@@ -158,14 +158,10 @@ function FormRectangle({
           onClick={() => submitForm(formikProps)}
           primary>
           <FormattedMessage
-            id={registerBeneficialOwner
-              ? 'global.send'
-              : (activeStep === 6 ? 'velloci.submitApplication' : 'global.next')
+            id={
+              registerBeneficialOwner ? 'global.send' : activeStep === 6 ? 'velloci.submitApplication' : 'global.next'
             }
-            defaultMessage={registerBeneficialOwner
-              ? 'Send'
-              : (activeStep === 6 ? 'Submit Application' : 'Next')
-            }>
+            defaultMessage={registerBeneficialOwner ? 'Send' : activeStep === 6 ? 'Submit Application' : 'Next'}>
             {text => text}
           </FormattedMessage>
         </ButtonSubmit>
@@ -176,7 +172,7 @@ function FormRectangle({
             </FormattedMessage>
           </ButtonBack>
         ) : null}
-        {activeStep === 4 ? (
+        {activeStep === 4 && getSafe(() => values.ownerInformation.isOtherBeneficialOwner, false) ? (
           <ButtonBack type='button' onClick={openEmailPopup} basic>
             <FormattedMessage id='global.email' defaultMessage='Email'>
               {text => text}
