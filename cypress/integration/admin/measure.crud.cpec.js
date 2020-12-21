@@ -46,9 +46,8 @@ context("Units of measure CRUD", () => {
         cy.waitForUI()
 
         cy.get("[data-test='table_row_action']").within(() => {
-            cy.get("div[role='listbox']").click()
+            cy.get(".clickable").click({force: true})
         })
-        cy.contains("Edit").click()
 
         cy.get("#field_input_val1")
             .clear()
@@ -76,7 +75,7 @@ context("Units of measure CRUD", () => {
         cy.waitForUI()
 
         cy.get("[data-test='table_row_action']").within(() => {
-            cy.get("div[role='listbox']").click()
+            cy.get("div[role='listbox']").click({force: true})
         })
 
         cy.contains("Delete").click()

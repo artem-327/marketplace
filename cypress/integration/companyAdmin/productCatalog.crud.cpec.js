@@ -122,7 +122,7 @@ context("Company Product Catalog CRUD", () => {
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
 
         cy.get(".error")
-            .should("have.length", 17)
+            .should("have.length", 11)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(Number value should be integer)|(Must be a number)/i)
         })

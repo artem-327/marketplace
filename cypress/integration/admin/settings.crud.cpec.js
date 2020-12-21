@@ -23,12 +23,14 @@ context("Admin Settings RUD", () => {
     it("Update settings", function () {
         cy.contains("Other Settings")
 //TODO Selector workaround
-        cy.get(":nth-child(30)").within(() => {
+        cy.get("div:nth-child(32)").within(() => {
             cy.get("input")
                 .clear()
                 .type("tomas-artio@email.cz")
         })
 
+        //cy.get('#field_input_admin\.OTHER_SETTINGS\.APP_OPERATIONS_EMAIL_ADDRESS\.value\.visible').clear()
+        //    .type("tomas-artio@email.cz")
         cy.get("button[class='ui primary button']").click({force: true})
         cy.wait(1000)
 

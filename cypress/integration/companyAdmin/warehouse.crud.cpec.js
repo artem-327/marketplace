@@ -22,7 +22,7 @@ context("Prodex Warehouse CRUD", () => {
         cy.get("[data-test='navigation_settings_locations_drpdn']").click()
         cy.wait("@deliveryLoadingPOST")
 
-        cy.contains("Pick Up Locations").click()
+        cy.contains("Warehouses").click()
         cy.wait("@warehouseLoading")
         cy.waitForUI()
     })
@@ -112,7 +112,7 @@ context("Prodex Warehouse CRUD", () => {
         cy.reload()
         cy.wait("@deliveryLoadingPOST")
 
-        cy.contains("Pick Up Locations").click()
+        cy.contains("Warehouses").click()
         cy.wait("@warehouseLoading")
 
         cy.contains("Central branch").should("not.exist")
