@@ -6,9 +6,8 @@ context("Shopping cart CRUD", () => {
 
     beforeEach(function () {
         cy.viewport(2500, 3500)
-        cy.server()
-        cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
+        cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
+        cy.intercept("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
 
         cy.FElogin(userJSON.email, userJSON.password)
 

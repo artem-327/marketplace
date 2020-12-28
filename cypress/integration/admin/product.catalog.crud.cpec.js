@@ -9,9 +9,8 @@ context("Generic Company Product CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("GET", "/prodex/api/dashboard").as("loading")
-        cy.route("POST", "/prodex/api/company-generic-products/datagrid").as("genericLoading")
+        cy.intercept("GET", "/prodex/api/dashboard").as("loading")
+        cy.intercept("POST", "/prodex/api/company-generic-products/datagrid").as("genericLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
@@ -39,6 +38,7 @@ context("Generic Company Product CRUD", () => {
 
         cy.get("#name").type("TestoEchoprod")
         cy.get("#code").type("TEST-05")
+        cy.get('.phone-num').type("123456789")
         cy.selectFromDropdown("[data-test='admin_product_popup_cas_0_drpdn']", "382-45-6")
         cy.selectFromDropdown("#field_dropdown_productGroup", "Product Group A")
         cy.selectFromDropdown("#field_dropdown_company", "Testering")
@@ -78,8 +78,8 @@ context("Generic Company Product CRUD", () => {
     })
 
     it("Creates a alternative name", () => {
-        cy.route("POST", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameSaving")
-        cy.route("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
+        cy.intercept("POST", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameSaving")
+        cy.intercept("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
         cy.openElement(productId, 4)
@@ -106,8 +106,8 @@ context("Generic Company Product CRUD", () => {
     })
 
     it("Deletes a alternative name", () => {
-        cy.route("DELETE", "/prodex/api/company-generic-products/alternative-names/id/**").as("nameDelete")
-        cy.route("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
+        cy.intercept("DELETE", "/prodex/api/company-generic-products/alternative-names/id/**").as("nameDelete")
+        cy.intercept("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
         cy.openElement(productId, 4)

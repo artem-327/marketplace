@@ -1,6 +1,5 @@
 Cypress.Commands.add("selectChemical", (chemical) => {
-    cy.server()
-    cy.route("GET",'/prodex/api/company-products/own/search?*').as('search')
+    cy.intercept("GET",'/prodex/api/company-products/own/search?*').as('search')
 
     cy.waitForUI()
 
@@ -18,8 +17,7 @@ Cypress.Commands.add("selectChemical", (chemical) => {
 })
 
 Cypress.Commands.add("selectProductGroup", (group) => {
-    cy.server()
-    cy.route("GET",'/prodex/api/product-groups/search?*').as('search')
+    cy.intercept("GET",'/prodex/api/product-groups/search?*').as('search')
 
     cy.waitForUI()
 

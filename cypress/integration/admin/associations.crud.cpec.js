@@ -6,9 +6,8 @@ context("Associations CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("GET", "/prodex/api/dashboard").as("loading")
-        cy.route("POST", "/prodex/api/associations/datagrid").as("groupsLoading")
+        cy.intercept("GET", "/prodex/api/dashboard").as("loading")
+        cy.intercept("POST", "/prodex/api/associations/datagrid").as("groupsLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 

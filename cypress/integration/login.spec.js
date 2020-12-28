@@ -12,9 +12,8 @@ context("Login and logout", () => {
     const echoOperator =  require('../fixtures/echoOperator.json')
 
     it('Bad credentials', () => {
-        cy.server()
         //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/oauth/token').as('login')
+        cy.intercept('POST', '/prodex/oauth/token').as('login')
 
         cy.visit("")
         cy.url().should("include", "login")
@@ -26,25 +25,18 @@ context("Login and logout", () => {
             .should("have.value", "test")
         cy.get("button[type=submit]").click({force: true})
 
-        cy.wait('@login')
-
         //Assert on XHR
-        cy.get('@login').then(function (xhr) {
-            expect(xhr.status).to.eq(400)
-            expect(xhr.requestHeaders).to.have.property('Content-Type')
-            expect(xhr.method).to.eq('POST')
-            expect(xhr.responseBody).to.have.property('error')
-            expect(xhr.responseBody).to.have.property('error_description')
+        cy.wait('@login').then(({ request, response }) => {
+            expect(response.statusCode).to.eq(400)
             cy.get(".error.message p")
                 .should("have.text", "Bad credentials")
         })
     })
 
     it('Admin login and logout', () => {
-        cy.server()
         //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/oauth/token').as('login')
-        cy.route('POST', '/auth/logout').as('logout')
+        cy.intercept('POST', '/prodex/oauth/token').as('login')
+        cy.intercept('POST', '/auth/logout').as('logout')
 
         cy.visit("")
         cy.url().should("include", "login")
@@ -55,21 +47,9 @@ context("Login and logout", () => {
             .type("echopass123")
             .should("have.value", "echopass123")
         cy.get("button[type=submit]").click({force: true})
-
-        cy.wait('@login')
-
         //Assert on XHR
-        cy.get('@login').then(function (xhr) {
-            expect(xhr.status).to.eq(200)
-            expect(xhr.requestHeaders).to.have.property('Content-Type')
-            expect(xhr.method).to.eq('POST')
-            expect(xhr.url).to.contain("oauth/token")
-            expect(xhr.responseBody).to.have.property('access_token')
-            expect(xhr.responseBody).to.have.property('expires_in')
-            expect(xhr.responseBody).to.have.property('refresh_token')
-            expect(xhr.responseBody).to.have.property('scope')
-            expect(xhr.responseBody).to.have.property('token_type')
-            expect(xhr.responseBody.token_type).to.eq("bearer")
+        cy.wait('@login').then(({ request, response }) => {
+            expect(response.statusCode).to.eq(200)
         })
 
         cy.url().should("include", "/dashboard")
@@ -80,10 +60,9 @@ context("Login and logout", () => {
     })
 
     it('Normal user login and logout', () => {
-        cy.server()
         //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/oauth/token').as('login')
-        cy.route('POST', '/auth/logout').as('logout')
+        cy.intercept('POST', '/prodex/oauth/token').as('login')
+        cy.intercept('POST', '/auth/logout').as('logout')
 
         cy.visit("")
         cy.url().should("include", "login")
@@ -94,21 +73,9 @@ context("Login and logout", () => {
             .type("echopass123")
             .should("have.value", "echopass123")
         cy.get("button[type=submit]").click({force: true})
-
-        cy.wait('@login')
-
         //Assert on XHR
-        cy.get('@login').then(function (xhr) {
-            expect(xhr.status).to.eq(200)
-            expect(xhr.requestHeaders).to.have.property('Content-Type')
-            expect(xhr.method).to.eq('POST')
-            expect(xhr.url).to.contain("oauth/token")
-            expect(xhr.responseBody).to.have.property('access_token')
-            expect(xhr.responseBody).to.have.property('expires_in')
-            expect(xhr.responseBody).to.have.property('refresh_token')
-            expect(xhr.responseBody).to.have.property('scope')
-            expect(xhr.responseBody).to.have.property('token_type')
-            expect(xhr.responseBody.token_type).to.eq("bearer")
+        cy.wait('@login').then(({ request, response }) => {
+            expect(response.statusCode).to.eq(200)
         })
 
         cy.waitForUI()
@@ -120,10 +87,9 @@ context("Login and logout", () => {
     })
 
     it('Disabled user login', () => {
-        cy.server()
         //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/oauth/token').as('login')
-        cy.route('POST', '/auth/logout').as('logout')
+        cy.intercept('POST', '/prodex/oauth/token').as('login')
+        cy.intercept('POST', '/auth/logout').as('logout')
 
         cy.visit("")
         cy.url().should("include", "login")
@@ -136,18 +102,11 @@ context("Login and logout", () => {
         cy.get("button[type=submit]").click({force: true})
 
         cy.wait('@login')
-
         cy.contains("Bad credentials")
     })
 
     it('Merchant login and logout', () => {
-        cy.server()
-        //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
         cy.FElogin(merchantUser.email, merchantUser.password)
-
-        //Assert on XHR
-        cy.wait('@login', {timeout: 30000})
 
         cy.waitForUI()
         cy.get(".user-menu-wrapper").click()
@@ -156,13 +115,7 @@ context("Login and logout", () => {
     })
 
     it('Order view login and logout', () => {
-        cy.server()
-        //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
         cy.FElogin(orderViewUser.email, orderViewUser.password)
-
-        //Assert on XHR
-        cy.wait('@login', {timeout: 30000})
 
         cy.waitForUI()
         cy.get(".user-menu-wrapper").click()
@@ -171,13 +124,7 @@ context("Login and logout", () => {
     })
 
     it('Order processing login and logout', () => {
-        cy.server()
-        //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
         cy.FElogin(orderProcessingUser.email, orderProcessingUser.password)
-
-        //Assert on XHR
-        cy.wait('@login', {timeout: 30000})
 
         cy.waitForUI()
         cy.get(".user-menu-wrapper").click()
@@ -186,13 +133,7 @@ context("Login and logout", () => {
     })
 
     it('Product Catalog Admin login and logout', () => {
-        cy.server()
-        //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
         cy.FElogin(productCatalogUser.email, productCatalogUser.password)
-
-        //Assert on XHR
-        cy.wait('@login', {timeout: 30000})
 
         cy.waitForUI()
         cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
@@ -201,13 +142,7 @@ context("Login and logout", () => {
     })
 
     it('Product Offer Manager login and logout', () => {
-        cy.server()
-        //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
         cy.FElogin(productOfferManager.email, productOfferManager.password)
-
-        //Assert on XHR
-        cy.wait('@login', {timeout: 30000})
 
         cy.waitForUI()
         cy.get(".user-menu-wrapper").click()
@@ -216,13 +151,7 @@ context("Login and logout", () => {
     })
 
     it('User admin login and logout', () => {
-        cy.server()
-        //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
         cy.FElogin(userAdmin.email, userAdmin.password)
-
-        //Assert on XHR
-        cy.wait('@login', {timeout: 30000})
 
         cy.waitForUI()
         cy.get(".user-menu-wrapper").click()
@@ -231,9 +160,6 @@ context("Login and logout", () => {
     })
 
     it('Echo Operator login and logout', () => {
-        cy.server()
-        //This is the post call we are interested in capturing
-        cy.route('POST', '/prodex/api/product-offers/own/datagrid/').as('login')
         cy.FElogin(echoOperator.email, echoOperator.password)
 
         cy.waitForUI()

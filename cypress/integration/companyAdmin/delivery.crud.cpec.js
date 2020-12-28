@@ -4,10 +4,8 @@ context("Prodex Delivery Addresses CRUD", () => {
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/delivery-addresses/datagrid").as("addressLoading")
-        cy.route("POST", "/prodex/api/delivery-addresses/datagrid").as("addressLoading")
+        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("POST", "/prodex/api/delivery-addresses/datagrid").as("addressLoadingPOST")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
         cy.viewport(2250, 2250)
@@ -17,8 +15,7 @@ context("Prodex Delivery Addresses CRUD", () => {
         cy.wait("@inventoryLoading")
         cy.openSettings()
         cy.get("[data-test='navigation_settings_locations_drpdn']").click()
-
-        cy.wait("@addressLoading")
+        cy.wait("@addressLoadingPOST")
         cy.waitForUI()
     })
 
@@ -42,9 +39,7 @@ context("Prodex Delivery Addresses CRUD", () => {
         cy.selectFromDropdown("div[id='field_dropdown_address.zip']", "75000")
 
         cy.enterText("#field_input_contactName", "Marie Currie")
-        //cy.get("div[data-test='settings_delivery_address_emailPhone_inp']").within(($form) => {
-            cy.get('.phone-num').type("1234567895")
-        //})
+        cy.get('.phone-num').type("1234567895")
 
         cy.enterText("#field_input_contactEmail", "marie@address.com")
 
@@ -113,7 +108,7 @@ context("Prodex Delivery Addresses CRUD", () => {
         cy.contains("126 N G St").should("not.exist")
 
         cy.reload()
-        cy.wait("@addressLoading")
+        cy.wait("@addressLoadingPOST")
 
         cy.contains("126 N G St").should("not.exist")
     })

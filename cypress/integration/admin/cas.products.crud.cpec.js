@@ -6,9 +6,8 @@ context("CAS products CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("GET", "/prodex/api/dashboard").as("loading")
-        cy.route("POST", "/prodex/api/cas-products/datagrid").as("CASloading")
+        cy.intercept("GET", "/prodex/api/dashboard").as("loading")
+        cy.intercept("POST", "/prodex/api/cas-products/datagrid").as("CASloading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
@@ -70,8 +69,8 @@ context("CAS products CRUD", () => {
     })
 
     it("Creates a alternative name", () => {
-        cy.route("POST", "/prodex/api/cas-products/alternative-names/**").as("nameSaving")
-        cy.route("GET", "/prodex/api/cas-products/alternative-names/**").as("nameGetting")
+        cy.intercept("POST", "/prodex/api/cas-products/alternative-names/**").as("nameSaving")
+        cy.intercept("GET", "/prodex/api/cas-products/alternative-names/**").as("nameGetting")
 
         cy.get('.column > .ui > input')
             .type("100-95-521")
@@ -101,8 +100,8 @@ context("CAS products CRUD", () => {
     })
 
     it("Deletes a alternative name", () => {
-        cy.route("DELETE", "/prodex/api/cas-products/alternative-names/**").as("nameDelete")
-        cy.route("GET", "/prodex/api/cas-products/alternative-names/**").as("nameGetting")
+        cy.intercept("DELETE", "/prodex/api/cas-products/alternative-names/**").as("nameDelete")
+        cy.intercept("GET", "/prodex/api/cas-products/alternative-names/**").as("nameGetting")
 
         cy.get('.column > .ui > input')
             .type("100-95-521")

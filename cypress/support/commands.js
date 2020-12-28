@@ -25,9 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add("FElogin", (email, password) => {
-    cy.server()
-    //This is the post call we are interested in capturing
-    cy.route('POST', '/prodex/oauth/token').as('login')
+    cy.intercept('POST', '/prodex/oauth/token').as('login')
     cy.visit("")
     cy.url().should("include", "login")
     cy.get("input[name=username]")
@@ -36,12 +34,9 @@ Cypress.Commands.add("FElogin", (email, password) => {
         .type(password)
     cy.get("[data-test=login_submit_btn]").click({force: true})
 
-    cy.wait('@login')
-
     //Assert on XHR
-    cy.get('@login').then(function (xhr) {
-        expect(xhr.status).to.eq(200)
-        expect(xhr.responseBody).to.have.property('access_token')
+    cy.wait('@login').then(({ request, response }) => {
+        expect(response.statusCode).to.eq(200)
     })
 })
 

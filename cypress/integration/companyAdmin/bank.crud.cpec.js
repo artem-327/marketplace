@@ -7,11 +7,10 @@ xcontext("Prodex Bank Account CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.server()
-        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/payments/bank-accounts/dwolla").as("accountsLoading")
-        cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
-        cy.route("POST", "/prodex/api/payments/**").as("verifyLoading")
+        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/payments/bank-accounts/dwolla").as("accountsLoading")
+        cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
+        cy.intercept("POST", "/prodex/api/payments/**").as("verifyLoading")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 

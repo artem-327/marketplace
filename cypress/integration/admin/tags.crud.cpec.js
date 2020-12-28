@@ -5,9 +5,8 @@ context("Tags CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("GET", "/prodex/api/dashboard").as("loading")
-        cy.route("POST", "/prodex/api/tags/datagrid").as("tagsLoad")
+        cy.intercept("GET", "/prodex/api/dashboard").as("loading")
+        ccy.intercept("POST", "/prodex/api/tags/datagrid").as("tagsLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 

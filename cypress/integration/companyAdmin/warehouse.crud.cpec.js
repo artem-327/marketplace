@@ -6,11 +6,10 @@ context("Prodex Warehouse CRUD", () => {
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
-        cy.route("POST", "/prodex/api/branches/warehouses/datagrid").as("warehouseLoading")
-        cy.route("POST", "/prodex/api/delivery-addresses/datagrid").as("deliveryLoadingPOST")
+        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
+        cy.intercept("POST", "/prodex/api/branches/warehouses/datagrid").as("warehouseLoading")
+        cy.intercept("POST", "/prodex/api/delivery-addresses/datagrid").as("deliveryLoadingPOST")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 

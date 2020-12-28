@@ -5,11 +5,10 @@ context("Companies CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("GET", "/prodex/api/dashboard").as("dashboardload")
-        cy.route("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
-        cy.route("POST", "/prodex/api/companies").as("companyCreate")
-        cy.route("GET", "/_next/static/webpack/").as("datagridLoad")
+        cy.intercept("GET", "/prodex/api/dashboard").as("dashboardload")
+        cy.intercept("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
+        cy.intercept("POST", "/prodex/api/companies").as("companyCreate")
+        cy.intercept("GET", "/_next/static/webpack/").as("datagridLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
@@ -41,9 +40,7 @@ context("Companies CRUD", () => {
         cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.addressName"]', "Main")
         cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.contactName"]', "James Duckling")
         cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.contactEmail"]', "james@duck.com")
-        cy.get('div[data-test="admin_popup_company_primaryBranchNameEmailPhone_inp"]').within(($form) => {
-            cy.get('input[placeholder = "Phone Number"]').type("2025550156")
-        })
+        cy.get('div[data-test="admin_popup_company_primaryBranchNameEmailPhone_inp"]').find('input[placeholder = "Phone Number"]').type("2025550156")
 
         cy.enterText("input[id='field_input_primaryBranch.deliveryAddress.address.streetAddress']", "125 N G St")
         cy.enterText("input[id='field_input_primaryBranch.deliveryAddress.address.city']", "Harlingen")
@@ -55,9 +52,7 @@ context("Companies CRUD", () => {
             .should("have.value", "75000")
 
         cy.wait(1000)
-        cy.get("div[id='field_dropdown_primaryBranch.deliveryAddress.address.zip']").within(() => {
-            cy.get("div[role='option']").eq(0).click({force: true})
-        })
+        cy.get("div[id='field_dropdown_primaryBranch.deliveryAddress.address.zip']").find("div[role='option']").eq(0).click({force: true})
 
         cy.waitForUI()
 

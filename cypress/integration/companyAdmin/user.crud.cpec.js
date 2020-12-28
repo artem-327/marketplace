@@ -5,12 +5,11 @@ context("Prodex User CRUD", () => {
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/companies/id/**").as("companyLoading")
-        cy.route("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
-        cy.route("GET", "/prodex/api/settings/user").as("usersLogin")
-        cy.route("POST", "/prodex/api/users").as("usersSave")
+        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/companies/id/**").as("companyLoading")
+        cy.intercept("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
+        cy.intercept("GET", "/prodex/api/settings/user").as("usersLogin")
+        cy.intercept("POST", "/prodex/api/users").as("usersSave")
         cy.viewport(2500, 1200)
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
@@ -41,9 +40,7 @@ context("Prodex User CRUD", () => {
 
         cy.get("#field_dropdown_homeBranch").click()
         cy.waitForUI()
-        cy.get("#field_dropdown_homeBranch").within(() => {
-            cy.get("div[role='option']").eq(0).click()
-        })
+        cy.get("#field_dropdown_homeBranch").find("div[role='option']").eq(0).click()
 
         cy.get('[style="padding-bottom: 0px;"]').within(() => {
             cy.contains("Merchant").click()
@@ -108,8 +105,8 @@ context("Prodex User CRUD", () => {
         cy.openElement(userID, 0)
 
         cy.get('[style="padding-bottom: 0px;"]').within(() => {
-            cy.get(':nth-child(1) > :nth-child(2) > [data-test=settings_users_popup_FormikField_change]').should("not.selected")
-            cy.get(':nth-child(2) > :nth-child(1) > [data-test=settings_users_popup_FormikField_change]').should("not.selected")
+            cy.contains("Merchant").prev().should("not.be.checked")
+            cy.contains("Order View").prev().should("be.checked")
         })
     })
 

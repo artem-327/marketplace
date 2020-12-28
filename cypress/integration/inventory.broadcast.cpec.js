@@ -27,16 +27,14 @@ context("Inventory Broadcasting", () => {
     beforeEach(function () {
         cy.viewport(3000, 2000)
 
-        cy.server()
-        cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("PATCH", '/prodex/api/product-offers/*/broadcast?broadcasted=***').as('broadcast')
-        cy.route("POST", '/prodex/api/broadcast-rules/*').as('rulesSaving')
-        cy.route("GET", "/prodex/api/product-offers/*").as("offerLoading")
+        cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
+        cy.intercept("PATCH", '/prodex/api/product-offers/*/broadcast?broadcasted=***').as('broadcast')
+        cy.intercept("POST", '/prodex/api/broadcast-rules/*').as('rulesSaving')
+        cy.intercept("GET", "/prodex/api/product-offers/*").as("offerLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
-        cy.visit("/inventory/my-listings")
         cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.url().should("include", "inventory")
     })
@@ -100,7 +98,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
-        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 100000 }).should("be.visible")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(8)
@@ -128,7 +126,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
-        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 100000 }).should("be.visible")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -137,7 +135,6 @@ context("Inventory Broadcasting", () => {
         cy.get('[data-test=broadcast_modal_apply_btn]').click()
 
         cy.wait("@rulesSaving")
-        cy.contains("Price book for this offer has been deleted")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
@@ -154,7 +151,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
-        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 100000 }).should("be.visible")
 
         cy.get('[data-test=broadcast_global_category_drpdn]').click()
         cy.contains("Region").click()
@@ -198,7 +195,7 @@ context("Inventory Broadcasting", () => {
         cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
         cy.get("[data-test=action_" + offerId + "_3]").click()
 
-        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 10000 }).should("be.visible")
+        cy.get("[data-test=broadcast_rule_row_click]", { timeout: 100000 }).should("be.visible")
 
         cy.get('[data-test=broadcast_global_category_drpdn]').click()
         cy.contains("Region").click()

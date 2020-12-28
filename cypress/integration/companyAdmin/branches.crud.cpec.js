@@ -8,11 +8,10 @@ context("Prodex Branches CRUD", () => {
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/settings/user").as("settingsLoading")
-        cy.route("POST", "/prodex/api/branches/datagrid").as("branchesLoadingPOST")
-        cy.route("POST", "/prodex/api/delivery-addresses/datagrid").as("deliveryLoadingPOST")
+        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
+        cy.intercept("POST", "/prodex/api/branches/datagrid").as("branchesLoadingPOST")
+        cy.intercept("POST", "/prodex/api/delivery-addresses/datagrid").as("deliveryLoadingPOST")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
 
@@ -47,9 +46,7 @@ context("Prodex Branches CRUD", () => {
         cy.selectFromDropdown("div[id='field_dropdown_deliveryAddress.address.zip']", "75000")
 
         cy.enterText("input[id='field_input_deliveryAddress.contactName']", "David Cameron")
-        cy.get("div[data-test='settings_branches_popup_phoneEmail_inp']").within(($form) => {
-            cy.get("input[placeholder = 'Phone Number']").type("1234567895")
-        })
+        cy.get("div[data-test='settings_branches_popup_phoneEmail_inp']").find("input[placeholder = 'Phone Number']").type("1234567895")
         cy.enterText("input[id='field_input_deliveryAddress.contactEmail']", "test@central.com")
 
         cy.get('[data-test=settings_branches_popup_submit_btn]').click()
@@ -68,11 +65,7 @@ context("Prodex Branches CRUD", () => {
         cy.get("input[id='field_input_deliveryAddress.contactName']")
             .should("have.value", "David Cameron")
 
-
-        cy.get("div[data-test='settings_branches_popup_phoneEmail_inp']").within(($form) => {
-            cy.get("input[placeholder = 'Phone Number']").should("have.value", "123 456 7895")
-        })
-
+        cy.get("div[data-test='settings_branches_popup_phoneEmail_inp']").find("input[placeholder = 'Phone Number']").should("have.value", "123 456 7895")
         cy.get("input[id='field_input_deliveryAddress.contactEmail']")
             .should("have.value", "test@central.com")
     })
@@ -91,7 +84,7 @@ context("Prodex Branches CRUD", () => {
 
         cy.searchInList("Arnold")
         cy.wait("@branchesLoadingPOST")
-
+        cy.waitForUI()
         cy.openElement(branchId, 0)
 
         cy.get("input[id='field_input_deliveryAddress.addressName']")

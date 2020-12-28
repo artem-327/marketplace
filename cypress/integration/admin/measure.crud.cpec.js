@@ -3,9 +3,8 @@ context("Units of measure CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("GET", "/prodex/api/dashboard").as("loading")
-        cy.route("POST", "/prodex/api/units/datagrid").as("unitLoad")
+        cy.intercept("GET", "/prodex/api/dashboard").as("loading")
+        cy.intercept("POST", "/prodex/api/units/datagrid").as("unitLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
@@ -45,10 +44,7 @@ context("Units of measure CRUD", () => {
         cy.get("input[type=text]").eq(0).type("Test")
         cy.waitForUI()
 
-        cy.get("[data-test='table_row_action']").within(() => {
-            cy.get(".clickable").click({force: true})
-        })
-
+        cy.get("[data-test='table_row_action']").find(".clickable").click({force: true})
         cy.get("#field_input_val1")
             .clear()
             .type("test")
@@ -74,10 +70,7 @@ context("Units of measure CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get("[data-test='table_row_action']").within(() => {
-            cy.get("div[role='listbox']").click({force: true})
-        })
-
+        cy.get("[data-test='table_row_action']").find("div[role='listbox']").click({force: true})
         cy.contains("Delete").click()
 
         cy.contains("Yes").click()

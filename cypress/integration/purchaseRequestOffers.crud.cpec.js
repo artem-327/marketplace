@@ -27,12 +27,11 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
 
     beforeEach(function () {
         cy.viewport(3000, 2500)
-        cy.server()
-        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("POST", "/prodex/api/purchase-request-offers").as("createOffer")
-        cy.route("POST", "/prodex/api/purchase-requests/other/datagrid**").as("wantedBoardLoading")
-        cy.route("POST", "/prodex/api/purchase-requests/own/datagrid**").as("wantedBoardReceivedLoading")
-        cy.route("POST", "/prodex/api/purchase-requests/id/**").as("matchingLoading")
+        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("POST", "/prodex/api/purchase-request-offers").as("createOffer")
+        cy.intercept("POST", "/prodex/api/purchase-requests/other/datagrid**").as("wantedBoardLoading")
+        cy.intercept("POST", "/prodex/api/purchase-requests/own/datagrid**").as("wantedBoardReceivedLoading")
+        cy.intercept("POST", "/prodex/api/purchase-requests/id/**").as("matchingLoading")
 
         cy.FElogin(sellerJSON.email, sellerJSON.password)
 

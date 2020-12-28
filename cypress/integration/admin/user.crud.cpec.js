@@ -5,14 +5,13 @@ context("Prodex Admin User CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
-        cy.route("POST", "/prodex/api/users/datagrid/all").as("usersLogin")
-        cy.route("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
-        cy.route("POST", "/prodex/api/users").as("usersSave")
-        cy.route("GET", "/prodex/api/dashboard").as("dashboardload")
-        cy.viewport(2000, 800)
+        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
+        cy.intercept("POST", "/prodex/api/users/datagrid/all").as("usersLogin")
+        cy.intercept("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
+        cy.intercept("POST", "/prodex/api/users").as("usersSave")
+        cy.intercept("GET", "/prodex/api/dashboard").as("dashboardload")
+        cy.viewport(2000, 1000)
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
@@ -116,8 +115,8 @@ context("Prodex Admin User CRUD", () => {
         cy.openElement(userID, 0)
 
         cy.get(':nth-child(3) > .grid > :nth-child(2)').within(() => {
-            cy.get(':nth-child(1) > :nth-child(2) > [data-test=settings_users_popup_FormikField_change]').should("not.selected")
-            cy.get(':nth-child(2) > :nth-child(1) > [data-test=settings_users_popup_FormikField_change]').should("not.selected")
+            cy.contains("Merchant").prev().should("not.be.checked")
+            cy.contains("Order View").prev().should("be.checked")
         })
     })
 

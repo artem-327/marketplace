@@ -2,10 +2,9 @@ context("Prodex Global Price", () => {
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("GET", '/prodex/api/broadcast-rules/general').as('rulesLoading')
-        cy.route("POST", '/prodex/api/broadcast-rules/general').as('rulesSaving')
+        cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
+        cy.intercept("GET", '/prodex/api/broadcast-rules/general').as('rulesLoading')
+        cy.intercept("POST", '/prodex/api/broadcast-rules/general').as('rulesSaving')
         cy.viewport(1280, 800)
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})

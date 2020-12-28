@@ -2,9 +2,8 @@ context("Market place tests",() => {
     const userJSON = require('../fixtures/user.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("POST","/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("POST", "/prodex/api/product-offers/broadcasted/datagrid/").as("marketplaceLoading")
+        cy.intercept("POST","/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("POST", "/prodex/api/product-offers/broadcasted/datagrid/").as("marketplaceLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
 
@@ -18,8 +17,7 @@ context("Market place tests",() => {
     it("Filter marketplace", () =>{
         let searchedValue = null
 
-        cy.server()
-        cy.route("GET","/prodex/api/product-groups/search?**").as("search")
+        cy.intercept("GET","/prodex/api/product-groups/search?**").as("search")
 
         cy.waitForUI()
 

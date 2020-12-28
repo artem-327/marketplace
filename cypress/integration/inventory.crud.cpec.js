@@ -21,10 +21,9 @@ context("Inventory CRUD", () => {
 
     beforeEach(function () {
         cy.viewport(3000, 2000)
-        cy.server()
-        cy.route("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.route("GET", "/prodex/api/countries/search*").as("addingLoading")
-        cy.route("GET", "/prodex/api/product-offers/*").as("offerLoading")
+        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/countries/search*").as("addingLoading")
+        cy.intercept("GET", "/prodex/api/product-offers/*").as("offerLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
 
@@ -206,8 +205,7 @@ context("Inventory CRUD", () => {
     })
 
     it('Filter inventory', () => {
-        cy.server()
-        cy.route("GET", '/prodex/api/company-products/own/search?*').as('search')
+        cy.intercept("GET", '/prodex/api/company-products/own/search?*').as('search')
 
         cy.waitForUI()
         cy.get("[data-test='my_inventory_advanced_filters_btn']").click()

@@ -6,9 +6,8 @@ context("Market Segments CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("GET", "/prodex/api/dashboard").as("loading")
-        cy.route("POST", "/prodex/api/market-segments/datagrid").as("segments")
+        cy.intercept("GET", "/prodex/api/dashboard").as("loading")
+        cy.intercept("POST", "/prodex/api/market-segments/datagrid").as("segments")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 

@@ -8,8 +8,7 @@ context("Permissions tests",() => {
     const echoOperator =  require('../fixtures/echoOperator.json')
 
     beforeEach(function () {
-        cy.server()
-        cy.route("POST","**/datagrid**").as("loading")
+        cy.intercept("POST","**/datagrid**").as("loading")
     })
 
     it("Merchant permissions", () =>{
