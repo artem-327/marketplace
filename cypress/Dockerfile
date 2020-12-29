@@ -28,3 +28,4 @@ USER appuser
 # show user effective id and group - it should be non-zero
 # meaning the current user is not root
 RUN id
+RUN cypress install
