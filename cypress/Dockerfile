@@ -15,7 +15,7 @@ ARG GROUP_ID=999
 
 # if you want to see all existing groups uncomment the next command
 # RUN cat /etc/group
-
+RUN chmod -R 777 /root/.cache
 RUN groupadd -g ${GROUP_ID} appuser
 # do not log creating new user, otherwise there could be a lot of messages
 RUN useradd -r --no-log-init -u ${USER_ID} -g appuser appuser
