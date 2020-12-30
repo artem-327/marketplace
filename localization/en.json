@@ -677,6 +677,8 @@
   "global.flammabilityOrExplosiveUpper": "Flammability or Explosive Upper",
   "global.flammabilitySolidGas": "Flammability (solid, gas)",
   "global.generalAdvice": "General Advice",
+  "global.emergencyCompanyName": "Emergency Company Name",
+  "global.emergencyContactName": "Emergency Contact name",
   "global.emergencyPhone": "Emergency Phone",
   "global.hazardStatement": "Hazard Statement",
   "global.hazardousDecompositionProducts": "Hazardous Decomposition Products",
