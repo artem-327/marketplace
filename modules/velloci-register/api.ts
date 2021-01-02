@@ -1,14 +1,12 @@
-import api from '~/api'
-
-import { getSafe, generateQueryString } from '~/utils/functions'
+import api from '../../api'
 
 export default {
-  postRegisterVelloci: (body, companyId) => {
+  postRegisterVelloci: (body: any, companyId: any) => {
     let queryParams = companyId ? `/${companyId}` : ''
     return api.post(`/prodex/api/payments/velloci/register${queryParams}`, body)
   },
-  postUploadDocuments: (files, companyId) => {
-    const formData = new FormData()
+  postUploadDocuments: (files: [], companyId: number) => {
+    const formData: FormData = new FormData()
     for (let i in files) {
       formData.append('files', files[i])
     }
@@ -30,12 +28,13 @@ export default {
     api.get('/prodex/api/payments/velloci/enums/politically-exposed-persons').then(response => response.data),
   getTinTypes: () => api.get('/prodex/api/payments/velloci/enums/tin-types').then(response => response.data),
   getBusinessDetails: () => api.get('/prodex/api/payments/velloci/business-details').then(response => response.data),
-  inviteBeneficialOwners: (body, companyId) => api
-    .post(`/prodex/api/payments/velloci/users/invite-beneficial-owners?companyId=${companyId}`, body)
-    .then(response => response.data),
-  registerBeneficialOwner: (body, token) => api
-    .post(`/prodex/api/payments/velloci/users/register-beneficial-owner?token=${token}`, body)
-    .then(response => response.data),
-  checkMagicToken: (token) => api
-    .get(`/prodex/api/users/me/magic-token?token=${token}`).then(response => response.data)
+  inviteBeneficialOwners: (body: object, companyId: number) =>
+    api
+      .post(`/prodex/api/payments/velloci/users/invite-beneficial-owners?companyId=${companyId}`, body)
+      .then(response => response.data),
+  registerBeneficialOwner: (body: object, token: string) =>
+    api
+      .post(`/prodex/api/payments/velloci/users/register-beneficial-owner?token=${token}`, body)
+      .then(response => response.data),
+  checkMagicToken: (token: string) => api.get(`/prodex/api/users/me/magic-token?token=${token}`).then(response => response.data)
 }

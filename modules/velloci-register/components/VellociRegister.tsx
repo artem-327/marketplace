@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
-import { Formik } from 'formik'
+import { Formik, FormikProps } from 'formik'
 import _ from 'lodash'
 import Router from 'next/router'
 //Components
@@ -10,19 +10,48 @@ import SetupIndicator from './SetupIndicator'
 import FormRectangle from './FormRectangle'
 import BeneficialOwnersPopup from './steps/BeneficialOwnersPopup'
 //Hooks
-import { usePrevious } from '~/hooks'
+import { usePrevious } from '../../../hooks'
 //Services
 import { getValidationSchema, getBody, submitForm } from '../form-services'
 import { getContent } from './SwitchPages'
-import ErrorFocus from '~/components/error-focus'
-import { getSafe } from '~/utils/functions'
+import ErrorFocus from '../../../components/error-focus'
+import { getSafe } from '../../../utils/functions'
 //Constants
 import { titleIds, subtitleIds, verifyPersonalInformation } from '../constants'
 
-// Global variable to store global state
-let selfFormikProps = {}
+interface IVelloci {
+  prevStep: (activeStep: number) => void;
+  nextStep: any;
+  activeStep: any;
+  countBeneficialOwners: any;
+  numberBeneficialOwners: any;
+  isLoadingSubmitButton: any;
+  initialValues: any;
+  openEmailPopup: any;
+  emailPopup: any;
+  entityTypes: any;
+  getEntityTypes: any;
+  naicsCodes: any;
+  getNaicsCodes: any;
+  businessRoles: any;
+  getBusinessRoles: any;
+  entityDocuments: any;
+  getEntityDocuments: any;
+  politicallyExposedPersons: any;
+  getPoliticallyExposedPersons: any;
+  cleareActiveStep: any;
+  postRegisterVelloci: any;
+  getIdentity: any;
+  loadSubmitButton: any;
+}
 
-const VellociRegister = ({
+interface IFormValues {
+
+}
+// Global variable to store global state
+let selfFormikProps: any = {}
+
+const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
   prevStep,
   nextStep,
   activeStep,
@@ -46,10 +75,9 @@ const VellociRegister = ({
   postRegisterVelloci,
   getIdentity,
   loadSubmitButton
-}) => {
+}: IVelloci) => {
   // Stores previos values for compating with current value
   const prevNumberBeneficialOwners = usePrevious(numberBeneficialOwners)
-
   // Similar to call componentDidMount:
   useEffect(() => {
     try {
@@ -90,7 +118,7 @@ const VellociRegister = ({
     // if [] has some variables, then is similar as componentDidUpdate:
   }, [numberBeneficialOwners, prevNumberBeneficialOwners])
 
-  const handleSubmit = async values => {
+  const handleSubmit = async (values: any) => {
     if (activeStep !== 6) return
 
     try {
@@ -132,7 +160,7 @@ const VellociRegister = ({
             validateOnChange={true}
             initialValues={initialValues}
             validationSchema={getValidationSchema()}
-            render={formikProps => {
+            render={(formikProps: any) => {
               selfFormikProps = formikProps
               return (
                 <Form>
@@ -149,16 +177,7 @@ const VellociRegister = ({
                       isLoadingSubmitButton={isLoadingSubmitButton}
                       openEmailPopup={openEmailPopup}
                       nextStep={nextStep}>
-                      {getContent(
-                        formikProps,
-                        entityTypes,
-                        naicsCodes,
-                        entityDocuments,
-                        countBeneficialOwners,
-                        businessRoles,
-                        numberBeneficialOwners,
-                        activeStep
-                      )}
+                      {getContent(selfFormikProps, entityTypes, naicsCodes, entityDocuments, countBeneficialOwners, businessRoles, numberBeneficialOwners, activeStep) }
                     </FormRectangle>
                   </Grid>
                   <ErrorFocus />
@@ -175,11 +194,10 @@ const VellociRegister = ({
 
 VellociRegister.propTypes = {
   nextStep: PropTypes.func,
-  prevStep: PropTypes.func,
   activeStep: PropTypes.number,
   countBeneficialOwners: PropTypes.func,
   numberBeneficialOwners: PropTypes.number,
-  isLoadingSubmitButton: PropTypes.bolean,
+  isLoadingSubmitButton: PropTypes.bool,
   initialValues: PropTypes.object,
   openEmailPopup: PropTypes.func,
   emailPopup: PropTypes.object,
@@ -201,7 +219,6 @@ VellociRegister.propTypes = {
 
 VellociRegister.defaultProps = {
   nextStep: () => {},
-  prevStep: () => {},
   activeStep: 0,
   countBeneficialOwners: () => {},
   numberBeneficialOwners: 0,

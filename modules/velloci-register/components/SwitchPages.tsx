@@ -1,3 +1,5 @@
+import { FormikProps, FormikErrors, FormikSharedConfig, FormikState, FormikActions, FormikHandlers, FormikComputedProps, FormikRegistration } from 'formik'
+
 //Components
 import CompanyVerification from './steps/CompanyVerification'
 import ControlPerson from './steps/ControlPerson'
@@ -7,17 +9,17 @@ import OwnerInformation from './steps/OwnerInformation'
 import PersonalInformation from './steps/PersonalInformation'
 import TermsAndConditions from './steps/TermsAndConditions'
 //Helpers
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../utils/functions'
 
 export const getContent = (
-  formikProps,
-  entityTypes,
-  naicsCodes,
-  entityDocuments,
-  countBeneficialOwners,
-  businessRoles,
-  numberBeneficialOwners,
-  activeStep
+  formikProps: any,
+  entityTypes: any,
+  naicsCodes: any,
+  entityDocuments: any,
+  countBeneficialOwners: any,
+  businessRoles: any,
+  numberBeneficialOwners: any,
+  activeStep: any
 ) => {
   let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
 

@@ -2,10 +2,31 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button, Popup, Icon } from 'semantic-ui-react'
-import { FormattedMessage } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+const { FormattedMessage } = require('react-intl')
+import { getSafe } from '../../../utils/functions'
 
-const DivRectangleForm = styled.div`
+interface IDivRectangleForm {
+  activeStep: number;
+};
+
+interface IRectangle {
+  prevStep: (activeStep: number) => void;
+  children: any;
+  formikProps: any;
+  title: any;
+  subtitle: any;
+  activeStep: any;
+  submitForm: any;
+  countBeneficialOwners: any;
+  numberBeneficialOwners: any;
+  isLoadingSubmitButton: any;
+  openEmailPopup: any;
+  nextStep: any;
+  registerBeneficialOwner?: any;
+
+}
+
+const DivRectangleForm = styled.div<IDivRectangleForm>`
   padding: 0px !important;
   width: 740px;
   overflow: auto;
@@ -16,6 +37,7 @@ const DivRectangleForm = styled.div`
   text-align: initial;
   position: relative;
   margin-bottom: 20px;
+  height: ${props => props.activeStep === 4 || props.activeStep === 5 ? '1000px' : props.activeStep === 6 ? '400px' : '860px'};
 `
 
 const DivTitleRectangleForm = styled.div`
@@ -64,7 +86,8 @@ const RightAlignedDiv = styled.div`
   margin: 0 30px 10px 0;
 `
 
-function FormRectangle({
+
+const FormRectangle: React.FC<IRectangle> = ({
   children,
   formikProps,
   title,
@@ -76,16 +99,16 @@ function FormRectangle({
   numberBeneficialOwners,
   isLoadingSubmitButton,
   openEmailPopup,
-  registerBeneficialOwner,
-  nextStep
-}) {
+    nextStep,
+    registerBeneficialOwner
+}) => {
   const { values } = formikProps
   return (
-    <DivRectangleForm height={activeStep === 4 || activeStep === 5 ? '1000px' : activeStep === 6 ? '400px' : '860px'}>
+    <DivRectangleForm activeStep={activeStep}>
       <DivTitleRectangleForm>
         <DivTitleText>
           <FormattedMessage id={title} defaultMessage='Title'>
-            {text => text}
+            {(text: any) => text}
           </FormattedMessage>
         </DivTitleText>
         {subtitle ? (
@@ -163,20 +186,20 @@ function FormRectangle({
               registerBeneficialOwner ? 'global.send' : activeStep === 6 ? 'velloci.submitApplication' : 'global.next'
             }
             defaultMessage={registerBeneficialOwner ? 'Send' : activeStep === 6 ? 'Submit Application' : 'Next'}>
-            {text => text}
+            {(text: any) => text}
           </FormattedMessage>
         </ButtonSubmit>
         {!registerBeneficialOwner && activeStep > 0 ? (
           <ButtonBack type='button' onClick={() => prevStep(activeStep - 1)} basic>
             <FormattedMessage id='global.back' defaultMessage='Back'>
-              {text => text}
+              {(text: any) => text}
             </FormattedMessage>
           </ButtonBack>
         ) : null}
         {activeStep === 4 && getSafe(() => values.ownerInformation.isOtherBeneficialOwner, false) ? (
           <ButtonBack type='button' onClick={openEmailPopup} basic>
             <FormattedMessage id='global.email' defaultMessage='Email'>
-              {text => text}
+              {(text: any) => text}
             </FormattedMessage>
           </ButtonBack>
         ) : null}
@@ -190,20 +213,17 @@ FormRectangle.propTypes = {
   formikProps: PropTypes.object,
   title: PropTypes.string,
   subtitle: PropTypes.string,
-  prevStep: PropTypes.func,
   submitForm: PropTypes.func,
   activeStep: PropTypes.number,
   countBeneficialOwners: PropTypes.func,
   numberBeneficialOwners: PropTypes.number,
-  openEmailPopup: PropTypes.func,
-  registerBeneficialOwner: PropTypes.booleanValue
+  openEmailPopup: PropTypes.func
 }
 
 FormRectangle.defaultProps = {
   formikProps: {},
   title: 'Title',
   subtitle: '',
-  prevStep: () => {},
   submitForm: () => {},
   activeStep: 0,
   countBeneficialOwners: () => {},
