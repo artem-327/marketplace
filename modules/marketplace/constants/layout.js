@@ -19,7 +19,7 @@ export const TableSegment = styled(Segment)`
     padding: 10px 15px;
     border-radius: 4px;
     border: solid 1px #dee2e6;
-    background-color: #f8f9fb;
+    //background-color: #f8f9fb;
     box-shadow: none;
   }
 `
@@ -28,22 +28,17 @@ export const StyledRectangle = styled.div`
   padding: 11px 15px;
   border-radius: 4px;
   border: solid 1px #dee2e6;
-  background-color: #f8f9fb;
+  background-color: #edeef2;
   
   .header {
     font-size: 12px;
     color: #848893;
   }
   
-  .name {
+  .message {
     font-size: 14px;
     color: #20273a;
-    font-weight: bold;
-  }
-  
-  .name {
     font-size: 14px;
-    color: #20273a;
     line-height: 1.57;
   }
 `

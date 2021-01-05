@@ -24,17 +24,9 @@ import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 import BidsSentPopup from './BidsSentPopup'
+import BidsSentRowDetail from './BidsSentRowDetail'
+import moment from 'moment'
 
-const defaultHiddenColumns = [
-  'origin',
-  'expiration',
-  'condition',
-  'form',
-  'manufacturer',
-  'association',
-  'notes',
-  'leadTime'
-]
 
 const CapitalizedText = styled.span`
   text-transform: capitalize;
@@ -53,162 +45,60 @@ const CustomSearchNameTags = styled.div`
   }
 `
 
+export const DivRow = styled.div`
+  display: flex !important;
+
+  > div {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  > span {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+`
+
+export const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+
+  .dropdown.icon {
+    display: none;
+  }
+`
+
 class BidsSent extends Component {
   constructor(props) {
     super(props)
-    //this.getRowActions = this.getRowActions.bind(this)
     this.state = {
-      fixed: [
-        {
-          name: 'intProductName',
-          position: 2
-        }
-      ],
       columns: [
-        { name: 'productGroupName', disabled: true },
-        { name: 'productNumber', disabled: true },
-        // { name: 'merchant', title: <FormattedMessage id='marketplace.merchant' defaultMessage='Merchant'>{(text) => text}</FormattedMessage>, width: 250 },
         {
-          name: 'intProductName',
-          title: (
-            <FormattedMessage id='global.productName' defaultMessage='Product Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 430,
+          name: 'name',
+          title: <div></div>,
+          width: 310,
           sortPath: 'ProductOffer.companyProduct.intProductName',
           allowReordering: false
         },
         {
-          name: 'packaging',
-          title: (
-            <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 140
+          name: 'description',
+          title: <div></div>,
+          width: 600
         },
         {
-          name: 'available',
-          title: (
-            <FormattedMessage id='marketplace.available' defaultMessage='Avail PKGs'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 140,
-          align: 'right',
+          name: 'createdAt',
+          title: <div></div>,
+          width: 150,
           sortPath: 'ProductOffer.pkgAvailable'
-        },
-        {
-          name: 'quantity',
-          title: (
-            <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 140,
-          align: 'right',
-          sortPath: 'ProductOffer.quantity'
-        },
-        {
-          name: 'location',
-          title: (
-            <FormattedMessage id='marketplace.location' defaultMessage='Location'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160
-        },
-        {
-          name: 'fobPrice',
-          title: (
-            <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160,
-          align: 'right',
-          sortPath: 'ProductOffer.cfPricePerUOM'
-        },
-        {
-          name: 'manufacturer',
-          title: (
-            <FormattedMessage id='marketplace.manufacturer' defaultMessage='Manufacturer'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 220,
-          sortPath: 'ProductOffer.companyProduct.companyGenericProduct.manufacturer.name'
-        },
-        {
-          name: 'origin',
-          title: (
-            <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120,
-          sortPath: 'ProductOffer.origin.name'
-        },
-        {
-          name: 'expiration',
-          title: (
-            <FormattedMessage id='marketplace.expirationDate' defaultMessage='Expiration Date'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120,
-          sortPath: 'ProductOffer.lotExpirationDate'
-        },
-        {
-          name: 'condition',
-          title: (
-            <FormattedMessage id='marketplace.condition' defaultMessage='Condition'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 100,
-          sortPath: 'ProductOffer.condition.name'
-        },
-        {
-          name: 'form',
-          title: (
-            <FormattedMessage id='marketplace.form' defaultMessage='Form'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 100,
-          sortPath: 'ProductOffer.form.name'
-        },
-        {
-          name: 'association',
-          title: (
-            <FormattedMessage id='marketplace.association' defaultMessage='Association'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160
-        },
-        {
-          name: 'notes',
-          title: (
-            <FormattedMessage id='marketplace.notes' defaultMessage='Notes'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160
-        },
-        {
-          name: 'leadTime',
-          title: (
-            <FormattedMessage id='marketplace.leadTime' defaultMessage='Lead Time (days)'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 160
         }
       ],
       //pageNumber: 0,
+      expandedRowIds: [],
       filterValues: {
         SearchByNamesAndTags: null
       }
@@ -278,6 +168,18 @@ class BidsSent extends Component {
     )
   }
 
+  handleRowClick = row => {
+    const { expandedRowIds } = this.state
+
+    if (expandedRowIds.length) {
+      if (expandedRowIds[0] === row.id) {
+        this.setState({ expandedRowIds: [] })
+      }
+    } else {
+      this.setState({ expandedRowIds: [row.id] })
+    }
+  }
+
   getRows = () => {
     const {
       rows,
@@ -286,19 +188,29 @@ class BidsSent extends Component {
 
     return rows.map(r => ({
       ...r,
-      intProductName: (
+      name: (
         <ActionCell
           row={r}
           getActions={this.getActions}
+          leftContent={'icon'}
           content={r.intProductName}
           onContentClick={(e) => {
             e.stopPropagation()
             e.preventDefault()
-            console.log('!!!!!!!!!! row name clicked')
+            this.handleRowClick(r)
           }}
         />
       ),
-
+      description: (
+        <div onClick={() => this.handleRowClick(r)}>
+          text
+        </div>
+      ),
+      createdAt: (
+        <div onClick={() => this.handleRowClick(r)}>
+          {moment(r.createdAt).fromNow()}
+        </div>
+      )
     }))
   }
 
@@ -361,6 +273,10 @@ class BidsSent extends Component {
     return rowActions
   }
 
+  getRowDetail = ({ row }) => {
+    return (<BidsSentRowDetail popupValues={row.rawData}/>)
+  }
+
   render = () => {
     const {
       datagrid,
@@ -371,7 +287,7 @@ class BidsSent extends Component {
       tableHandlersFiltersListings,
       isOpenPopup
     } = this.props
-    const { columns, fixed, openFilterPopup } = this.state
+    const { columns, fixed, openFilterPopup, expandedRowIds } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -396,14 +312,20 @@ class BidsSent extends Component {
           </CustomRowDiv>
         </div>
 
-        <div className='flex stretched marketplace-wrapper' style={{ padding: '10px 5px' }}>
+        <div className='flex stretched table-detail-rows-wrapper'>
           <ProdexGrid
-            defaultHiddenColumns={defaultHiddenColumns}
-            tableName='marketplace_listings_grid'
+            tableName='marketplace_bids_sent_grid'
             {...datagrid.tableProps}
             rows={rows}
             columns={columns}
-            fixed={fixed}
+            rowDetailType={true}
+            rowDetail={this.getRowDetail}
+            expandedRowIds={expandedRowIds}
+            rowSelection={true}
+            lockSelection={false}
+            showSelectAll={false}
+            isToggleCellComponent={false}
+            estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
             data-test='marketplace_listings_row_action'
           />
         </div>
