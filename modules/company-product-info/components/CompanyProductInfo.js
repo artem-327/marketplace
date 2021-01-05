@@ -863,6 +863,16 @@ class CompanyProductInfo extends Component {
               name: 'companyGenericProduct.mfrProductCodes'
             })}
             {this.getTextarea({
+              id: 'global.emergencyCompanyName',
+              defaultMessage: 'Emergency Company Name',
+              name: 'companyGenericProduct.emergencyCompanyName'
+            })}
+            {this.getTextarea({
+              id: 'global.emergencyContactName',
+              defaultMessage: 'Emergency Contact Name',
+              name: 'companyGenericProduct.emergencyContactName'
+            })}
+            {this.getTextarea({
               id: 'global.emergencyNumber',
               defaultMessage: 'Emergency Number',
               name: 'companyGenericProduct.emergencyPhone'
