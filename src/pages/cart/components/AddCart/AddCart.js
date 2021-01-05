@@ -1359,7 +1359,7 @@ class AddCart extends Component {
                 })}
                 {this.renderField({
                   id: 'global.emergencyContactName',
-                  defaultMessage: 'Emergency Contact name',
+                  defaultMessage: 'Emergency Contact Name',
                   name: 'companyProduct.companyGenericProduct.emergencyContactName'
                 })}
                 {this.renderField({

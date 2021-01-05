@@ -1261,7 +1261,7 @@ class AddEditEchoProduct extends React.Component {
         {this.RowInput({
           name: 'emergencyContactName',
           id: 'global.emergencyContactName',
-          defaultMessage: 'Emergency Contact name'
+          defaultMessage: 'Emergency Contact Name'
         })}
         {this.RowPhone({
           name: 'emergencyPhone',

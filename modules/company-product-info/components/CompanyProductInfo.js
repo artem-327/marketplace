@@ -856,7 +856,7 @@ class CompanyProductInfo extends Component {
             })}
             {this.getTextarea({
               id: 'global.emergencyContactName',
-              defaultMessage: 'Emergency Contact name',
+              defaultMessage: 'Emergency Contact Name',
               name: 'companyGenericProduct.emergencyContactName'
             })}
             {this.getTextarea({
