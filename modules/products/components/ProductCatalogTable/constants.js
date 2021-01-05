@@ -53,6 +53,8 @@ export const defaultValues = {
   dotVesselStowageOther: '',
   dotUnNumber: '',
   elements: [{ name: '', casProduct: '', assayMin: '', assayMax: '', proprietary: false }],
+  emergencyCompanyName: '',
+  emergencyContactName: '',
   emergencyPhone: '',
   endocrineDisruptorInformation: '',
   evaporationPoint: '',
