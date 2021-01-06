@@ -13,7 +13,7 @@ import { usePrevious } from '../../../hooks'
 //Services
 import { getValidationSchema, getBody, submitForm } from '../form-services'
 import { getContent } from './SwitchPages'
-import ErrorFocus from '../../../components/error-focus' 
+import ErrorFocus from '../../../components/error-focus'
 import { getSafe } from '../../../utils/functions'
 //Constants
 import { titleIds, subtitleIds, verifyPersonalInformation } from '../constants'
@@ -132,7 +132,7 @@ const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
             validateOnChange={true}
             initialValues={initialValues}
             validationSchema={getValidationSchema()}
-            render={(formikProps) => {
+            render={formikProps => {
               selfFormikProps = formikProps
               return (
                 <Form>
@@ -149,7 +149,16 @@ const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
                       isLoadingSubmitButton={isLoadingSubmitButton}
                       openEmailPopup={openEmailPopup}
                       nextStep={nextStep}>
-                      {getContent(selfFormikProps, entityTypes, naicsCodes, entityDocuments, countBeneficialOwners, businessRoles, numberBeneficialOwners, activeStep) }
+                      {getContent(
+                        selfFormikProps,
+                        entityTypes,
+                        naicsCodes,
+                        entityDocuments,
+                        countBeneficialOwners,
+                        businessRoles,
+                        numberBeneficialOwners,
+                        activeStep
+                      )}
                     </FormRectangle>
                   </Grid>
                   <ErrorFocus />
