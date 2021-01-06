@@ -1,5 +1,3 @@
-import { FormikProps, FormikErrors, FormikSharedConfig, FormikState, FormikActions, FormikHandlers, FormikComputedProps, FormikRegistration } from 'formik'
-
 //Components
 import CompanyVerification from './steps/CompanyVerification'
 import ControlPerson from './steps/ControlPerson'
@@ -12,15 +10,15 @@ import TermsAndConditions from './steps/TermsAndConditions'
 import { getSafe } from '../../../utils/functions'
 
 export const getContent = (
-  formikProps: any,
-  entityTypes: any,
-  naicsCodes: any,
-  entityDocuments: any,
-  countBeneficialOwners: any,
-  businessRoles: any,
-  numberBeneficialOwners: any,
-  activeStep: any
-) => {
+  formikProps: any, //TODO specify types
+  entityTypes: any, //TODO specify types
+  naicsCodes: any, //TODO specify types
+  entityDocuments: any, //TODO specify types
+  countBeneficialOwners: any, //TODO specify types
+  businessRoles: any, //TODO specify types
+  numberBeneficialOwners: any, //TODO specify types
+  activeStep: any //TODO specify types
+): JSX.Element => {
   let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
 
   switch (activeStep) {
@@ -52,6 +50,6 @@ export const getContent = (
       return <TermsAndConditions formikProps={formikProps} />
     }
     default:
-      return null
+      return <></>
   }
 }

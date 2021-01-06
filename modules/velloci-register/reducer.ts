@@ -1,8 +1,8 @@
 import * as AT from './action-types'
 
-import { VellociActionTypes } from './types'
+import { VellociActionTypes, IInitialStateTypes, IOption, IPayloadObject } from './types'
 
-export const initialState = {
+export const initialState: IInitialStateTypes = {
   activeStep: 0,
   loading: false,
   numberBeneficialOwners: 0,
@@ -49,7 +49,7 @@ export const initialState = {
   isLoadingSubmitButton: false
 }
 
-export default function reducer(state = initialState, action: VellociActionTypes & { type: string, payload: any }) {
+export default function reducer(state = initialState, action: VellociActionTypes & { type: string, payload: any }): IInitialStateTypes {
   let { type, payload } = action
 
   switch (type) {
@@ -122,7 +122,7 @@ export default function reducer(state = initialState, action: VellociActionTypes
         entityTypes: {
           data:
             payload && payload.length
-              ? payload.map(el => {
+              ? payload.map((el: string) => {
                   let text = ''
                   if (el === 'llc' || el === 'llp' || el === 'lp') text = el.toUpperCase()
                   else text = el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
@@ -153,11 +153,11 @@ export default function reducer(state = initialState, action: VellociActionTypes
     }
 
     case AT.GET_NAICS_CODES_FULFILLED: {
-      let naicsOptions = []
-      let firstChemical = []
+      let naicsOptions: IOption[] = [] 
+      let firstChemical: IOption[] = []  
       if (payload) {
         Object.keys(payload).forEach(key => {
-          payload[key].forEach(obj => {
+          payload[key].forEach((obj: IPayloadObject) => {
             if (obj.code === 325 || obj.code === 4246) {
               firstChemical.push({
                 key: obj.code,

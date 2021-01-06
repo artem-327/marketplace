@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik, FormikProps } from 'formik'
 import _ from 'lodash'
@@ -14,42 +13,15 @@ import { usePrevious } from '../../../hooks'
 //Services
 import { getValidationSchema, getBody, submitForm } from '../form-services'
 import { getContent } from './SwitchPages'
-import ErrorFocus from '../../../components/error-focus'
+import ErrorFocus from '../../../components/error-focus' 
 import { getSafe } from '../../../utils/functions'
 //Constants
 import { titleIds, subtitleIds, verifyPersonalInformation } from '../constants'
+//Types
+import { IVelloci, IFormValues } from './types'
 
-interface IVelloci {
-  prevStep: (activeStep: number) => void;
-  nextStep: any;
-  activeStep: any;
-  countBeneficialOwners: any;
-  numberBeneficialOwners: any;
-  isLoadingSubmitButton: any;
-  initialValues: any;
-  openEmailPopup: any;
-  emailPopup: any;
-  entityTypes: any;
-  getEntityTypes: any;
-  naicsCodes: any;
-  getNaicsCodes: any;
-  businessRoles: any;
-  getBusinessRoles: any;
-  entityDocuments: any;
-  getEntityDocuments: any;
-  politicallyExposedPersons: any;
-  getPoliticallyExposedPersons: any;
-  cleareActiveStep: any;
-  postRegisterVelloci: any;
-  getIdentity: any;
-  loadSubmitButton: any;
-}
-
-interface IFormValues {
-
-}
 // Global variable to store global state
-let selfFormikProps: any = {}
+let selfFormikProps: any = {} //TODO specify type
 
 const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
   prevStep,
@@ -75,7 +47,7 @@ const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
   postRegisterVelloci,
   getIdentity,
   loadSubmitButton
-}: IVelloci) => {
+}) => {
   // Stores previos values for compating with current value
   const prevNumberBeneficialOwners = usePrevious(numberBeneficialOwners)
   // Similar to call componentDidMount:
@@ -160,7 +132,7 @@ const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
             validateOnChange={true}
             initialValues={initialValues}
             validationSchema={getValidationSchema()}
-            render={(formikProps: any) => {
+            render={(formikProps) => {
               selfFormikProps = formikProps
               return (
                 <Form>
@@ -190,56 +162,6 @@ const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
       </GridColumn>
     </Grid>
   )
-}
-
-VellociRegister.propTypes = {
-  nextStep: PropTypes.func,
-  activeStep: PropTypes.number,
-  countBeneficialOwners: PropTypes.func,
-  numberBeneficialOwners: PropTypes.number,
-  isLoadingSubmitButton: PropTypes.bool,
-  initialValues: PropTypes.object,
-  openEmailPopup: PropTypes.func,
-  emailPopup: PropTypes.object,
-  entityTypes: PropTypes.object,
-  getEntityTypes: PropTypes.func,
-  naicsCodes: PropTypes.object,
-  getNaicsCodes: PropTypes.func,
-  businessRoles: PropTypes.object,
-  getBusinessRoles: PropTypes.object,
-  entityDocuments: PropTypes.object,
-  getEntityDocuments: PropTypes.func,
-  politicallyExposedPersons: PropTypes.object,
-  getPoliticallyExposedPersons: PropTypes.func,
-  cleareActiveStep: PropTypes.func,
-  postRegisterVelloci: PropTypes.func,
-  getIdentity: PropTypes.func,
-  loadSubmitButton: PropTypes.func
-}
-
-VellociRegister.defaultProps = {
-  nextStep: () => {},
-  activeStep: 0,
-  countBeneficialOwners: () => {},
-  numberBeneficialOwners: 0,
-  isLoadingSubmitButton: false,
-  initialValues: {},
-  openEmailPopup: () => {},
-  emailPopup: {},
-  entityTypes: {},
-  getEntityTypes: () => {},
-  naicsCodes: {},
-  getNaicsCodes: () => {},
-  businessRoles: {},
-  getBusinessRoles: {},
-  entityDocuments: {},
-  getEntityDocuments: () => {},
-  politicallyExposedPersons: {},
-  getPoliticallyExposedPersons: () => {},
-  cleareActiveStep: () => {},
-  postRegisterVelloci: () => {},
-  getIdentity: () => {},
-  loadSubmitButton: () => {}
 }
 
 export default VellociRegister

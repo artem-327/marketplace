@@ -29,6 +29,17 @@ const Circle = styled.div`
   }
 `
 
+const FileTextIcon = styled(FileText)`
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #848893;
+  line-height: 20px;
+`
+
 class ProductCatalogTable extends Component {
   constructor(props) {
     super(props)
