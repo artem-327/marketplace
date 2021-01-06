@@ -5,8 +5,6 @@ import { makeStore } from '~/store'
 import { Provider } from 'react-redux'
 import { IntlProvider, FormattedNumber } from 'react-intl'
 import { Formik } from 'formik'
-import { ReactQueryDevtools } from 'react-query-devtools'
-import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 
 import EN from '../localization/en.json'
 import NProgress from 'nprogress'
@@ -18,8 +16,6 @@ import 'nprogress/nprogress.css'
 import { ToastProvider } from 'react-toast-notifications'
 import TagManager from 'react-gtm-module'
 import { AlertCircle, AlertTriangle, CheckCircle, Info, X } from 'react-feather'
-
-const queryCache = new QueryCache()
 
 const gtmId = process.env.REACT_APP_GTM_ID || 'GTM-MKSVRW4'
 
@@ -73,16 +69,13 @@ class ProdexApp extends App {
     const { Component, pageProps, store } = this.props
 
     return (
-      <ReactQueryCacheProvider queryCache={queryCache}>
-        <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
-          <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={7 * 1000} components={{ Toast: ProdexToast }}>
-            <Provider store={store}>
-              <Component {...pageProps} />
-            </Provider>
-          </ToastProvider>
-        </IntlProvider>
-        <ReactQueryDevtools initialIsOpen />
-      </ReactQueryCacheProvider>
+      <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
+        <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={7 * 1000} components={{ Toast: ProdexToast }}>
+          <Provider store={store}>
+            <Component {...pageProps} />
+          </Provider>
+        </ToastProvider>
+      </IntlProvider>
     )
   }
 }

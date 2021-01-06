@@ -9,7 +9,7 @@ import { getSafe } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
 import { initialValues } from '../constants'
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store: any) => ({
   ...store.vellociRegister,
   initialValues: {
     ...initialValues,

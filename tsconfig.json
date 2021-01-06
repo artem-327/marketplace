@@ -72,7 +72,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "modules/velloci-register/components/SetupIndicator.js"  ],
+, "modules/velloci-register/form-services/index.js", "modules/velloci-register/components/SetupIndicator.js"  ],
   "exclude": [
     "node_modules" // would be the default
   ]
