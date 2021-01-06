@@ -32,7 +32,11 @@ class ReinitiateTransfer extends React.Component {
   }
 
   componentDidMount() {
-    this.props.loadBankAccounts(this.props.paymentProcessor)
+    if (this.props.paymentProcessor === 'DWOLLA') {
+      this.props.loadDwollaBankAccounts()
+    } else {
+      this.props.loadVellociBankAccounts()
+    }
   }
 
   render() {
