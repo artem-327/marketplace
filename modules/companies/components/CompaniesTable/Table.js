@@ -151,11 +151,11 @@ class CompaniesTable extends Component {
     return rows.map(row => {
       return {
         ...row,
-        displayName: (
+        companyName: (
           <ActionCell
             row={row}
             getActions={this.getActions}
-            content={row.displayName}
+            content={row.companyName}
             onContentClick={() => this.props.openEditCompany(row.id, row.rawData)}
           />
         ),
