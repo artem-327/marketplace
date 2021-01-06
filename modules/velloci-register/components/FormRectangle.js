@@ -38,14 +38,19 @@ const DivButtonsBottom = styled.div`
 
 const ButtonSubmit = styled(Button)`
   float: right !important;
-  background: #2599d5 !important;
+  background: #ffffff !important;
   margin-left: 10px !important;
   margin-right: 0px !important;
+  color: #20273a !important;
+  border: solid 1px #dee2e6 !important;
+  border-radius: 3px !important;
 `
 
 const ButtonBack = styled(Button)`
   float: right !important;
   margin-left: 10px !important;
+  border: none !important;
+  box-shadow: none !important;
 `
 
 const DivSubtitleText = styled.div`
