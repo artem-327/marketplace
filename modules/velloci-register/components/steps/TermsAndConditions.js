@@ -43,7 +43,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
           <SpanBold>
             <FormattedMessage
               id='velloci.termsAndConditions.title'
-              defaultMessage="Here are a few legal terms that you'll have to read and accept before finishing"
+              defaultMessage="Please review and accept the following terms and conditions to finish registration"
             />
           </SpanBold>
         </GridColumn>
@@ -59,7 +59,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
           <LabelCheckbox>
             <FormattedMessage
               id='velloci.termsAndConditions.electronicComunications'
-              defaultMessage='I agree that I have read, understood and consent to the '>
+              defaultMessage='I agree that I have read, understood, and consent to the '>
               {text => (
                 <>
                   {text}
@@ -86,7 +86,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
           <LabelCheckbox>
             <FormattedMessage
               id='velloci.termsAndConditions.privacyPolicy'
-              defaultMessage="I agree that I have read, understood and consent to the ">
+              defaultMessage="I agree that I have read, understood, and consent to the ">
               {text => (
                 <>
                   {text}
@@ -117,7 +117,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
           <LabelCheckbox>
             <FormattedMessage
               id='velloci.termsAndConditions.depositAccountAgreement'
-              defaultMessage="I agree that I have read, understood and consent to the bank's ">
+              defaultMessage="I agree that I have read, understood, and consent to the bank's ">
               {text => (
                 <>
                   {text}
@@ -158,7 +158,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
           <LabelCheckbox>
             <FormattedMessage
               id='velloci.termsAndConditions.trueComplete'
-              defaultMessage='I certify my answear are true and complete to the best of my knowledge.'
+              defaultMessage='I certify my answers are true and complete to the best of my knowledge.'
             />
           </LabelCheckbox>
         </GridColumnCheckbox>

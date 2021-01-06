@@ -1351,6 +1351,16 @@ class AddCart extends Component {
                   name: 'companyProduct.companyGenericProduct.mfrProductCodes'
                 })}
                 {this.renderField({
+                  id: 'global.emergencyCompanyName',
+                  defaultMessage: 'Emergency Company Name',
+                  name: 'companyProduct.companyGenericProduct.emergencyCompanyName'
+                })}
+                {this.renderField({
+                  id: 'global.emergencyContactName',
+                  defaultMessage: 'Emergency Contact Name',
+                  name: 'companyProduct.companyGenericProduct.emergencyContactName'
+                })}
+                {this.renderField({
                   id: 'global.emergencyNumber',
                   defaultMessage: 'Emergency Number',
                   name: 'companyProduct.companyGenericProduct.emergencyPhone'

@@ -319,7 +319,7 @@ export default class Cart extends Component {
                 </GridColumn>
                 <GridColumn computer={7}>
                   <Button fluid primary disabled={itemsCount === 0 || cartIsFetching} onClick={this.handleContinue}>
-                    {formatMessage({ id: 'global.continue', defaultMessage: 'Continue' })}
+                    {formatMessage({ id: 'cart.proceedToCheckout', defaultMessage: 'Proceed to Checkout' })}
                     <Icon name='arrow right' />
                   </Button>
                 </GridColumn>

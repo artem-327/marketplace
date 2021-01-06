@@ -413,6 +413,8 @@ class AddEditEchoProduct extends React.Component {
                 })),
               [{ name: '', casProduct: '', assayMin: '', assayMax: '', proprietary: false }]
             ),
+            emergencyCompanyName: getSafe(() => popupValues.emergencyCompanyName, ''),
+            emergencyContactName: getSafe(() => popupValues.emergencyContactName, ''),
             emergencyPhone: getSafe(() => popupValues.emergencyPhone, ''),
             endocrineDisruptorInformation: getSafe(() => popupValues.endocrineDisruptorInformation, ''),
             evaporationPoint: getSafe(() => popupValues.evaporationPoint, ''),
@@ -672,7 +674,7 @@ class AddEditEchoProduct extends React.Component {
             .then(
               async () => {
                 // Confirm
-                if (await this.submitForm(values, setSubmitting)) callback()
+                this.submitForm(values, setSubmitting, callback)
               },
               () => {
                 // Cancel
@@ -700,7 +702,7 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-  submitForm = async (values, setSubmitting) => {
+  submitForm = async (values, setSubmitting, callback) => {
     const {
       putCompanyGenericProducts,
       postCompanyGenericProducts,
@@ -711,7 +713,6 @@ class AddEditEchoProduct extends React.Component {
     } = this.props
 
     const { popupValues } = this.state
-    let sendSuccess = false
 
     let formValues = {
       ...values,
@@ -766,11 +767,10 @@ class AddEditEchoProduct extends React.Component {
       }
 
       setSubmitting(false)
-      sendSuccess = true
+      callback()
     } catch (err) {
       setSubmitting(false)
     }
-    return sendSuccess
   }
 
   RowInput = ({ name, readOnly = false, id, defaultMessage, required }) => (
@@ -1253,6 +1253,16 @@ class AddEditEchoProduct extends React.Component {
             />
           </GridColumn>
         </GridRow>
+        {this.RowInput({
+          name: 'emergencyCompanyName',
+          id: 'global.emergencyCompanyName',
+          defaultMessage: 'Emergency Company Name'
+        })}
+        {this.RowInput({
+          name: 'emergencyContactName',
+          id: 'global.emergencyContactName',
+          defaultMessage: 'Emergency Contact Name'
+        })}
         {this.RowPhone({
           name: 'emergencyPhone',
           id: 'global.emergencyPhone',
@@ -2157,7 +2167,7 @@ class AddEditEchoProduct extends React.Component {
         initialValues={this.getInitialFormValues()}
         validationSchema={validationScheme}
         onSubmit={async (values, { setSubmitting }) => {
-          if (this.submitForm(values, setSubmitting)) closePopup()
+          this.submitForm(values, setSubmitting, closePopup)
         }}
         render={formikProps => {
           let { touched, validateForm, resetForm, values } = formikProps
