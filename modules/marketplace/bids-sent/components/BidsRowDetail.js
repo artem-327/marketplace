@@ -32,6 +32,8 @@ import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import ErrorFocus from '~/components/error-focus'
 import { Schedule } from '@material-ui/icons'
+import { DefaultIcon, IconWrapper, StyledName, NameWrapper, DetailHistoryRow } from '../../constants/layout'
+import moment from 'moment'
 
 import { TableSegment, StyledList, StyledRectangle, PriceInput } from '../../constants/layout'
 
@@ -138,7 +140,7 @@ const SmallText = styled.div`
 const StyledGrid = styled(Grid)`
   &.ui.grid {
     //margin: -7.5px -10px;
-    margin: 0 5px;
+    margin: 0;
   
     .row {
       margin: 0; // ! ! asi
@@ -169,8 +171,16 @@ const formValidation = () =>
       })
   })
 
-class BidsSentRowDetail extends React.Component {
+class BidsRowDetail extends React.Component {
   state = {
+  }
+
+  componentDidMount() {
+    console.log('!!!!!!!!!! componentDidMount')
+  }
+
+  componentWillUnmount() {
+    console.log('!!!!!!!!!! componentWillUnmount')
   }
 
   getInitialFormValues = () => {
@@ -215,6 +225,10 @@ class BidsSentRowDetail extends React.Component {
       packagingSize
     } = this.props
 
+    //console.log('!!!!!!!!!! aaaaa popupValues', popupValues)
+
+    const histories = popupValues.histories.slice(1)
+
     return (
       <Formik
         autoComplete='off'
@@ -242,6 +256,33 @@ class BidsSentRowDetail extends React.Component {
               <div>
                 <Form>
                   <StyledGrid>
+                    {histories.map(r => {
+                      return (
+                        <DetailHistoryRow>
+                          <GridColumn width={4}>
+                            <NameWrapper>
+                              <IconWrapper>{DefaultIcon}</IconWrapper>
+                              <StyledName style={{ marginLeft: '10px', paddingTop: '2px' }}>
+                                <div className='name'>
+                                  {r.createdBy.name}
+                                </div>
+                                <div className='company'>
+                                  {r.createdBy.company.cfDisplayName}
+                                </div>
+                              </StyledName>
+                            </NameWrapper>
+                          </GridColumn>
+                          <GridColumn width={9}>
+                            text text text
+                          </GridColumn>
+                          <GridColumn width={3} style={{ color: '#848893' }}>
+                            {moment(r.createdAt).fromNow()}
+                          </GridColumn>
+
+
+                        </DetailHistoryRow>
+                      )})
+                    }
                     <GridRow>
                       <GridColumn>
                         <TableSegment>
@@ -559,4 +600,4 @@ function mapStateToProps(store, params) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(BidsSentRowDetail)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(BidsRowDetail)))

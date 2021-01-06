@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input, Dropdown } from 'semantic-ui-react'
+import { Container, Icon, Image, Dropdown } from 'semantic-ui-react'
 import { MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -23,53 +23,14 @@ import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
-import BidsSentPopup from './BidsSentPopup'
-import BidsSentRowDetail from './BidsSentRowDetail'
+import BidsRowDetail from './BidsRowDetail'
 import moment from 'moment'
-
-
-const CapitalizedText = styled.span`
-  text-transform: capitalize;
-`
-
-const CustomDiv = styled.div`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
+import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
 
 const CustomSearchNameTags = styled.div`
   .column {
     width: 370px;
     padding-top: 0 !important;
-  }
-`
-
-export const DivRow = styled.div`
-  display: flex !important;
-
-  > div {
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
-  > span {
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-`
-
-export const RowDropdown = styled(Dropdown)`
-  display: block !important;
-  height: 100% !important;
-
-  &:hover {
-    font-weight: bold;
-    color: #2599d5;
-  }
-
-  .dropdown.icon {
-    display: none;
   }
 `
 
@@ -186,32 +147,46 @@ class BidsSent extends Component {
       intl: { formatMessage }
     } = this.props
 
-    return rows.map(r => ({
-      ...r,
-      name: (
-        <ActionCell
-          row={r}
-          getActions={this.getActions}
-          leftContent={'icon'}
-          content={r.intProductName}
-          onContentClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            this.handleRowClick(r)
-          }}
-        />
-      ),
-      description: (
-        <div onClick={() => this.handleRowClick(r)}>
-          text
-        </div>
-      ),
-      createdAt: (
-        <div onClick={() => this.handleRowClick(r)}>
-          {moment(r.createdAt).fromNow()}
-        </div>
-      )
-    }))
+    return rows.map(r => {
+      const lastHistory = r.histories[r.histories.length - 1]
+      return({
+        ...r,
+        name: (
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            leftContent={<IconWrapper>{DefaultIcon}</IconWrapper>}
+            content={
+              <StyledName>
+                <div className='name'>
+                  {lastHistory.createdBy.name}
+                </div>
+                <div className='company'>
+                  {lastHistory.createdBy.company.cfDisplayName}
+                </div>
+              </StyledName>
+            }
+            onContentClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              this.handleRowClick(r)
+            }}
+          />
+        ),
+        description: (
+          <div onClick={() => this.handleRowClick(r)}>
+            text
+          </div>
+        ),
+        createdAt: (
+          <div
+            style={{ color: '#848893' }}
+            onClick={() => this.handleRowClick(r)}>
+            {moment(r.createdAt).fromNow()}
+          </div>
+        )
+      })
+    })
   }
 
   getActions = row => {
@@ -245,7 +220,7 @@ class BidsSent extends Component {
         id: 'marketplace.counter',
         defaultMessage: 'Counter'
       }),
-      callback: () => openPopup(row.rawData)
+      callback: () => openPopup(row)
     }
     const buttonDelete = {
       text: formatMessage({
@@ -274,7 +249,7 @@ class BidsSent extends Component {
   }
 
   getRowDetail = ({ row }) => {
-    return (<BidsSentRowDetail popupValues={row.rawData}/>)
+    return (<BidsRowDetail popupValues={row}/>)
   }
 
   render = () => {
@@ -329,7 +304,6 @@ class BidsSent extends Component {
             data-test='marketplace_listings_row_action'
           />
         </div>
-        {isOpenPopup && <BidsSentPopup />}
       </Container>
     )
   }

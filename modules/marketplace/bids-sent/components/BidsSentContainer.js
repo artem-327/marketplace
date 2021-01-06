@@ -15,6 +15,8 @@ import { getLocaleDateFormat } from '~/components/date-format'
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.marketplace,
+    rows: datagrid.rows,
+    /* // ! !
     rows: [
       {
         "id": 1,
@@ -440,11 +442,11 @@ function mapStateToProps(store, { datagrid }) {
             "createdBy": {
               "id": 114,
               "email": "tomas.drlicek@artio.cz",
-              "name": "Tomas Tester",
+              "name": "Tomas Tester last",
               "company": {
                 "id": 275,
-                "name": "Norman Fox",
-                "cfDisplayName": "Norman Fox",
+                "name": "Norman Fox last",
+                "cfDisplayName": "Norman Fox last",
                 "phone": "+13243344344",
                 "website": "http://www.univar.com/",
                 "sellEligible": true,
@@ -1249,16 +1251,11 @@ function mapStateToProps(store, { datagrid }) {
         "cfHistoryLastType": "NORMAL"
       }
       ].map(bid => {
-      const po = bid.productOffer
-      const priceUnit = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, '')
-
       return {
-        ...bid,
-        rawData: bid,
-        intProductName: getSafe(() => po.companyProduct.intProductName, ''),
-
+        ...bid
       }
     }),
+    */
     isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
     isCompanyAdmin: getSafe(() => store.auth.identity.isCompanyAdmin, false),
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
