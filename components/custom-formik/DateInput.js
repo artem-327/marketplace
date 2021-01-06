@@ -77,9 +77,9 @@ class FormikInput extends Component {
                         const formatedValue = value.replace(/[/.]/g, '-').replace(/ /g, '').split('-')
 
                         const canAutomaticallyAdjustDateFormat =
-                          formatedValue.some(d => d.length >= 4)
-                          && formatedValue.length === 3
-                          && moment(value, getLocaleDateFormat()).isValid()
+                          formatedValue.some(d => d.length >= 4) &&
+                          formatedValue.length === 3 &&
+                          moment(value, getLocaleDateFormat()).isValid()
                         val = canAutomaticallyAdjustDateFormat
                           ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
                           : value

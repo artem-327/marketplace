@@ -40,7 +40,7 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
           <Rectangle style={{ margin: '0px' }}>
             <CustomDivTitle>
               <Info size={20} style={{ color: '#2599d5' }} />
-              <CustomDivInTitle>
+              <CustomDivInTitle style={{ color: '#2599d5' }}>
                 <FormattedMessage id='velloci.businessInfo.infoTitle' defaultMessage='Why do you need this info?' />
               </CustomDivInTitle>
             </CustomDivTitle>
@@ -149,7 +149,7 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
           <Rectangle style={{ margin: '0px' }}>
             <CustomDivTitle>
               <Info size={20} style={{ color: '#2599d5' }} />
-              <CustomDivInTitle>
+              <CustomDivInTitle style={{ color: '#2599d5' }}>
                 <FormattedMessage id='velloci.businessInfo.meanTitle' defaultMessage='What does this mean?' />
               </CustomDivInTitle>
             </CustomDivTitle>

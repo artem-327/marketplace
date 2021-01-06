@@ -118,3 +118,5 @@ export const mapCompanyRows = companyRows =>
   }))
 
 export const currencySymbol = '$'
+
+export const SUPPORT_EMAIL = 'support@echosystem.com'

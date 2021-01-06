@@ -269,7 +269,10 @@ class MyProducts extends Component {
 
       default:
         popupText = (
-          <FormattedMessage id='global.productOk' defaultMessage='This product is being broadcasted to the marketplace' />
+          <FormattedMessage
+            id='global.productOk'
+            defaultMessage='This product is being broadcasted to the marketplace'
+          />
         )
         dispIcon = <Circle />
     }
@@ -281,40 +284,6 @@ class MyProducts extends Component {
         trigger={<div>{dispIcon}</div>} // <div> has to be there otherwise popup will be not shown
       />
     )
-  }
-
-  getActions = () => {
-    const { intl: {formatMessage}, openPopup, deleteProduct, datagrid } = this.props
-
-    return [
-      {
-        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => openPopup(row.rawData)
-      },
-      {
-        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-        disabled: row => this.props.editedId === row.id,
-        callback: row => {
-          return confirm(
-            formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
-            formatMessage(
-              {
-                id: 'confirm.deleteItem',
-                defaultMessage: `Do you really want to delete '${row.rawData.intProductName}'?`
-              },
-              { item: row.rawData.intProductName }
-            )
-          ).then(async row => {
-            try {
-              await deleteProduct(row.id, row.intProductName)
-              datagrid.removeRow(row.id)
-            } catch (e) {
-              console.error(e)
-            }
-          })
-        }
-      }
-    ]
   }
 
   getRows = rows => {
