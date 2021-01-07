@@ -67,7 +67,7 @@ const HighSegment = styled.div`
   color: #20273a;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
   background-color: #ffffff;
-  text-transform: uppercase;  
+  text-transform: uppercase;
   display: flex;
   flex-direction: row;
 
@@ -75,12 +75,12 @@ const HighSegment = styled.div`
     font-size: 18px;
     vertical-align: middle;
   }
-  
+
   svg.title-icon {
     margin-left: 15px;
     color: #cecfd4;
   }
-  
+
   svg.close-icon {
     right: 0;
     position: absolute;
@@ -206,7 +206,7 @@ const initValues = {
 
 class UsersSidebar extends React.Component {
   state = {
-    popupValues: null,
+    sidebarValues: null,
     branches: [],
     selectedSellMarketSegmentsOptions: [],
     selectedBuyMarketSegmentsOptions: []
@@ -226,12 +226,17 @@ class UsersSidebar extends React.Component {
     })
 
   componentDidMount = async () => {
-    const { companyId, popupValues, isCompanyAdmin, openGlobalAddForm, getUsersDataRequest } = this.props
+    const { companyId, sidebarValues, isCompanyAdmin, openGlobalAddForm, getUsersDataRequest } = this.props
     if (companyId !== null) {
       const { value } = await this.props.getCompanyDetails(companyId)
       let branches = uniqueArrayByKey(
-        (popupValues && popupValues.homeBranch ? this.getHomeBranchesOptions([popupValues.homeBranch]) : []).concat(
-          popupValues && popupValues.additionalBranches ? this.getBranchesOptions(popupValues.additionalBranches) : [],
+        (sidebarValues && sidebarValues.homeBranch
+          ? this.getHomeBranchesOptions([sidebarValues.homeBranch])
+          : []
+        ).concat(
+          sidebarValues && sidebarValues.additionalBranches
+            ? this.getBranchesOptions(sidebarValues.additionalBranches)
+            : [],
           value && value.branches ? this.getBranchesOptions(value.branches) : []
         ),
         'key'
@@ -239,10 +244,10 @@ class UsersSidebar extends React.Component {
       this.setState({ branches })
     }
 
-    if (this.props.popupValues) {
-      this.switchUser(this.props.popupValues)
+    if (this.props.sidebarValues) {
+      this.switchUser(this.props.sidebarValues)
     } else {
-      this.setState({ popupValues: null })
+      this.setState({ sidebarValues: null })
     }
 
     /*Comemnted by https://pm.artio.net/issues/34033#note-14 */
@@ -256,7 +261,7 @@ class UsersSidebar extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.editTrig !== prevProps.editTrig) {
-      if (!this.state.popupValues || this.props.popupValues.id !== this.state.popupValues) {
+      if (!this.state.sidebarValues || this.props.sidebarValues.id !== this.state.sidebarValues) {
         let { values, touched, validateForm, submitForm } = this.formikProps
         if (Object.keys(touched).length) {
           validateForm().then(err => {
@@ -281,30 +286,30 @@ class UsersSidebar extends React.Component {
                     // Confirm
                     //if (await submitForm(values, this.formikProps, false).sendSuccess) {
                     if (await this.submitUser(values, this.formikProps, false)) {
-                      this.switchUser(this.props.popupValues)
+                      this.switchUser(this.props.sidebarValues)
                     }
                   },
                   () => {
                     // Cancel
-                    this.switchUser(this.props.popupValues)
+                    this.switchUser(this.props.sidebarValues)
                   }
                 )
                 .catch(() => {})
             }
           })
         } else {
-          this.switchUser(this.props.popupValues)
+          this.switchUser(this.props.sidebarValues)
         }
       }
     }
   }
 
-  switchUser = async popupValues => {
+  switchUser = async sidebarValues => {
     let selectedSellMarketSegmentsOptions = []
     let selectedBuyMarketSegmentsOptions = []
 
-    if (getSafe(() => popupValues.sellMarketSegments.length, [])) {
-      selectedSellMarketSegmentsOptions = popupValues.sellMarketSegments.map(d => {
+    if (getSafe(() => sidebarValues.sellMarketSegments.length, [])) {
+      selectedSellMarketSegmentsOptions = sidebarValues.sellMarketSegments.map(d => {
         return {
           key: d.id,
           text: d.name,
@@ -313,8 +318,8 @@ class UsersSidebar extends React.Component {
       })
     }
 
-    if (getSafe(() => popupValues.buyMarketSegments.length, [])) {
-      selectedBuyMarketSegmentsOptions = popupValues.buyMarketSegments.map(d => {
+    if (getSafe(() => sidebarValues.buyMarketSegments.length, [])) {
+      selectedBuyMarketSegmentsOptions = sidebarValues.buyMarketSegments.map(d => {
         return {
           key: d.id,
           text: d.name,
@@ -326,12 +331,12 @@ class UsersSidebar extends React.Component {
     this.setState({
       selectedSellMarketSegmentsOptions,
       selectedBuyMarketSegmentsOptions,
-      popupValues: {
-        ...popupValues,
-        homeBranch: popupValues.homeBranch,
-        additionalBranches: popupValues.additionalBranches,
-        sellMarketSegments: getSafe(() => popupValues.sellMarketSegments, []),
-        buyMarketSegments: getSafe(() => popupValues.buyMarketSegments, [])
+      sidebarValues: {
+        ...sidebarValues,
+        homeBranch: sidebarValues.homeBranch,
+        additionalBranches: sidebarValues.additionalBranches,
+        sellMarketSegments: getSafe(() => sidebarValues.sellMarketSegments, []),
+        buyMarketSegments: getSafe(() => sidebarValues.buyMarketSegments, [])
       }
     })
   }
@@ -356,7 +361,7 @@ class UsersSidebar extends React.Component {
       getIdentity,
       openGlobalAddForm
     } = this.props
-    const { popupValues } = this.state
+    const { sidebarValues } = this.state
     let sendSuccess = false
 
     actions.setSubmitting(false)
@@ -378,11 +383,11 @@ class UsersSidebar extends React.Component {
     removeEmpty(data)
 
     try {
-      if (popupValues) {
-        const { value } = await handlerSubmitUserEditPopup(popupValues.id, data)
-        !openGlobalAddForm && datagrid.updateRow(popupValues.id, () => value)
+      if (sidebarValues) {
+        const { value } = await handlerSubmitUserEditPopup(sidebarValues.id, data)
+        !openGlobalAddForm && datagrid.updateRow(sidebarValues.id, () => value)
         sendSuccess = true
-        if (currentUserId === popupValues.id) getIdentity()
+        if (currentUserId === sidebarValues.id) getIdentity()
       } else {
         await postNewUserRequest(data)
         !openGlobalAddForm && datagrid.loadData()
@@ -395,19 +400,19 @@ class UsersSidebar extends React.Component {
   }
 
   getInitialFormValues = () => {
-    const { popupValues } = this.state
-    return popupValues
+    const { sidebarValues } = this.state
+    return sidebarValues
       ? {
-          additionalBranches: popupValues.additionalBranches.map(d => d.id),
-          email: popupValues.email,
-          homeBranch: popupValues.homeBranch ? popupValues.homeBranch.id : '',
-          jobTitle: popupValues.jobTitle,
-          name: popupValues.name,
-          phone: popupValues.phone,
+          additionalBranches: sidebarValues.additionalBranches.map(d => d.id),
+          email: sidebarValues.email,
+          homeBranch: sidebarValues.homeBranch ? sidebarValues.homeBranch.id : '',
+          jobTitle: sidebarValues.jobTitle,
+          name: sidebarValues.name,
+          phone: sidebarValues.phone,
           preferredCurrency: currencyId,
-          roles: popupValues.roles.map(d => d.id),
-          sellMarketSegments: getSafe(() => popupValues.sellMarketSegments, []).map(d => d.id),
-          buyMarketSegments: getSafe(() => popupValues.buyMarketSegments, []).map(d => d.id)
+          roles: sidebarValues.roles.map(d => d.id),
+          sellMarketSegments: getSafe(() => sidebarValues.sellMarketSegments, []).map(d => d.id),
+          buyMarketSegments: getSafe(() => sidebarValues.buyMarketSegments, []).map(d => d.id)
         }
       : initValues
   }
@@ -501,7 +506,7 @@ class UsersSidebar extends React.Component {
       openGlobalAddForm
     } = this.props
 
-    const { branches, popupValues, selectedSellMarketSegmentsOptions, selectedBuyMarketSegmentsOptions } = this.state
+    const { branches, sidebarValues, selectedSellMarketSegmentsOptions, selectedBuyMarketSegmentsOptions } = this.state
 
     const allSellMarketSegmentsOptions = uniqueArrayByKey(
       searchedSellMarketSegments.concat(selectedSellMarketSegmentsOptions),
@@ -538,25 +543,23 @@ class UsersSidebar extends React.Component {
               </Dimmer>
 
               <HighSegment basic>
-                {openGlobalAddForm
-                  ? (
-                    <>
-                      <div>
-                            <span>
-                              <FormattedMessage id='createMenu.addUser' defaultMessage='Add User' />
-                            </span>
-                        <Person className='title-icon' />
-                      </div>
-                      <div style={{ position: 'absolute', right: '20px' }}>
-                        <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
-                      </div>
-                    </>
-                  ) : (
-                    popupValues
-                      ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
-                      : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })
-                  )
-                }
+                {openGlobalAddForm ? (
+                  <>
+                    <div>
+                      <span>
+                        <FormattedMessage id='createMenu.addUser' defaultMessage='Add User' />
+                      </span>
+                      <Person className='title-icon' />
+                    </div>
+                    <div style={{ position: 'absolute', right: '20px' }}>
+                      <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                    </div>
+                  </>
+                ) : sidebarValues ? (
+                  formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
+                ) : (
+                  formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })
+                )}
               </HighSegment>
 
               <FlexContent>
@@ -584,8 +587,10 @@ class UsersSidebar extends React.Component {
                           label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
                           name='jobTitle'
                           inputProps={{
-                            placeholder:
-                              formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
+                            placeholder: formatMessage({
+                              id: 'global.enterJobTitle',
+                              defaultMessage: 'Enter Job Title'
+                            })
                           }}
                         />
                       </GridColumn>
@@ -708,7 +713,12 @@ class UsersSidebar extends React.Component {
                         <GridColumn width={8}>
                           <Dropdown
                             label={
-                              <>{formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}</>
+                              <>
+                                {formatMessage({
+                                  id: 'global.buyMarketSegments',
+                                  defaultMessage: 'Buy Market Segment'
+                                })}
+                              </>
                             }
                             name='buyMarketSegments'
                             options={allBuyMarketSegmentsOptions}
@@ -769,10 +779,7 @@ class UsersSidebar extends React.Component {
               <BottomButtons className='bottom-buttons'>
                 <div style={{ textAlign: 'right' }}>
                   {!openGlobalAddForm && (
-                    <Button
-                      className='light'
-                      onClick={closeSidebar}
-                      data-test='settings_users_popup_reset_btn'>
+                    <Button className='light' onClick={closeSidebar} data-test='settings_users_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                         {text => text}
                       </FormattedMessage>
@@ -817,7 +824,7 @@ const mapStateToProps = state => {
     updating: settings.updating,
     userRoles: settings.roles,
     clientCompanyRoles: settings.clientCompanyRoles,
-    popupValues: settings.popupValues,
+    sidebarValues: settings.sidebarValues,
     searchedSellMarketSegments: getSafe(() => companiesAdmin.searchedSellMarketSegments, []).map(d => ({
       key: d.id,
       text: d.name,

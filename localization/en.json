@@ -2085,6 +2085,7 @@
   "settings.user.disabled.clickToChange": "User disabled. Click to enable user.",
   "settings.user.setAsCompPrimUser": "Set as Company Primary User",
   "settings.assignUserRoles": "Assign User Roles",
+  "settings.user.userSettings": "User Settings",
   "settings.editAlternativeNames": "Edit Alternative Names",
   "settings.editRoles": "Edit Roles",
   "settings.dwollaOnlyForUSA": "Dwolla is only supported for companies located in USA.",
@@ -2973,5 +2974,4 @@
   "detailRow.orderTotal": "Order Total",
   "broadcast.saveAsTemplate": "Save as Templates",
   "product.packaging.selectFirst": "Please select Packaging Unit"
-
 }

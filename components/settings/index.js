@@ -31,10 +31,11 @@ const ButtonsWrapper = styled(Grid)`
   left: 0;
   z-index: 5;
   overflow: hidden;
-  width: calc(100% + 84px);
-  margin: 0 0 0 -42px !important;
+  ${props => (props.isUserSettings ? '' : 'width: calc(100% + 84px);')}
+  ${props => (props.isUserSettings ? '' : 'margin: 0 0 0 -42px !important;')}
+  ${props => (props.isUserSettings ? '' : 'padding: 0 42px !important;')}
   border-top: 1px solid #dee2e6;
-  padding: 0 42px !important;
+
   background: #fff;
 
   .scrollable > & {
@@ -256,7 +257,9 @@ class Settings extends Component {
       scrolling,
       triggerSystemSettingsModal,
       intl: { formatMessage },
-      role
+      role,
+      isCompanyAdmin,
+      isUserAdmin
     } = this.props
     let { loading, systemSettings } = this.state
     let initialValues = this.parseInitialValues(systemSettings)
@@ -307,7 +310,7 @@ class Settings extends Component {
                                             <>
                                               <Checkbox
                                                 inputProps={{
-                                                  disabled: !el.changeable,
+                                                  disabled: !el.changeable && !isUserAdmin && !isCompanyAdmin,
                                                   onChange: e => e.stopPropagation(),
                                                   onClick: e => e.stopPropagation()
                                                 }}
@@ -357,7 +360,7 @@ class Settings extends Component {
                     )
                   })
                 : null}
-              <ButtonsWrapper>
+              <ButtonsWrapper isUserSettings={this.props.isUserSettings}>
                 <Grid.Column textAlign='right'>
                   <Popup
                     position='left center'
@@ -449,12 +452,18 @@ class Settings extends Component {
 Settings.propTypes = {
   asModal: bool,
   scrolling: bool,
-  role: oneOf(['user', 'admin', 'company']).isRequired
+  role: oneOf(['user', 'admin', 'company']).isRequired,
+  isUserSettings: bool,
+  isUserAdmin: bool,
+  isCompanyAdmin: bool
 }
 
 Settings.defaultProps = {
   asModal: true,
-  scrolling: true
+  scrolling: true,
+  isUserSettings: false,
+  isUserAdmin: false,
+  isCompanyAdmin: false
 }
 
 export default connect(

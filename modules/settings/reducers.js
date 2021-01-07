@@ -134,7 +134,8 @@ export const initialState = {
   renderCopyright: false,
   vellociAccBalance: null,
   vellociToken: '',
-  isReloadBankAcounts: false
+  isReloadBankAcounts: false,
+  sidebarValues: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -166,7 +167,7 @@ export default function reducer(state = initialState, action) {
         isOpenSidebar: true,
         editTrig: !state.editTrig,
         openTab: action.payload.openTab,
-        popupValues: action.payload.data,
+        sidebarValues: action.payload.data,
         editedId: payload.data ? payload.data.id : null
       }
     }
@@ -175,7 +176,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenSidebar: false,
         openTab: null,
-        popupValues: null,
+        sidebarValues: null,
         editedId: null
       }
     }
@@ -1444,7 +1445,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        popupValues: null
+        sidebarValues: null
         // isOpenPopup: false,
       }
     }
@@ -1453,7 +1454,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        popupValues: action.payload.data
+        sidebarValues: action.payload.data
       }
     }
 
@@ -1515,7 +1516,7 @@ export default function reducer(state = initialState, action) {
         locationsTab: payload,
         isOpenSidebar: state.locationsTab !== payload ? false : state.isOpenSidebar,
         openTab: state.locationsTab !== payload ? null : state.openTab,
-        popupValues: state.locationsTab !== payload ? null : state.popupValues,
+        sidebarValues: state.locationsTab !== payload ? null : state.sidebarValues,
         editedId: state.locationsTab !== payload ? null : state.editedId
       }
     }

@@ -107,7 +107,7 @@ class DeliveryLocationsSidebar extends React.Component {
   }
 
   submitHandler = async (values, setSubmitting) => {
-    const { popupValues, updateDeliveryAddresses, createDeliveryAddress } = this.props
+    const { sidebarValues, updateDeliveryAddresses, createDeliveryAddress } = this.props
     const { attachmentFiles } = this.state
     let country = JSON.parse(values.address.country).countryId
 
@@ -130,8 +130,8 @@ class DeliveryLocationsSidebar extends React.Component {
     removeEmpty(requestData)
 
     try {
-      if (popupValues) {
-        await updateDeliveryAddresses(popupValues.id, requestData)
+      if (sidebarValues) {
+        await updateDeliveryAddresses(sidebarValues.id, requestData)
       } else {
         await createDeliveryAddress(requestData)
       }
@@ -143,37 +143,37 @@ class DeliveryLocationsSidebar extends React.Component {
   }
 
   getInitialFormValues = () => {
-    let { popupValues } = this.props
+    let { sidebarValues } = this.props
 
-    const provinceId = getSafe(() => popupValues.address.province.id, '')
-    const countryId = getSafe(() => popupValues.address.country.id, null)
-    const hasProvinces = getSafe(() => popupValues.address.country.hasProvinces, false)
-    const zip = getSafe(() => popupValues.address.zip.zip, '')
-    const zipID = getSafe(() => popupValues.address.zip.id, '')
+    const provinceId = getSafe(() => sidebarValues.address.province.id, '')
+    const countryId = getSafe(() => sidebarValues.address.country.id, null)
+    const hasProvinces = getSafe(() => sidebarValues.address.country.hasProvinces, false)
+    const zip = getSafe(() => sidebarValues.address.zip.zip, '')
+    const zipID = getSafe(() => sidebarValues.address.zip.id, '')
 
     const initialValues = {
       address: {
-        streetAddress: getSafe(() => popupValues.address.streetAddress, ''),
-        city: getSafe(() => popupValues.address.city, ''),
+        streetAddress: getSafe(() => sidebarValues.address.streetAddress, ''),
+        city: getSafe(() => sidebarValues.address.city, ''),
         province: provinceId,
         country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
         zip
       },
-      addressName: getSafe(() => popupValues.addressName, ''),
-      callAhead: getSafe(() => popupValues.callAhead, false),
-      closeTime: getSafe(() => popupValues.closeTime, ''),
-      contactEmail: getSafe(() => popupValues.contactEmail, ''),
-      contactName: getSafe(() => popupValues.contactName, ''),
-      contactPhone: getSafe(() => popupValues.contactPhone, ''),
-      deliveryNotes: getSafe(() => popupValues.deliveryNotes, ''),
-      forkLift: getSafe(() => popupValues.forkLift, false),
-      liftGate: getSafe(() => popupValues.liftGate, false),
-      readyTime: getSafe(() => popupValues.readyTime, ''),
+      addressName: getSafe(() => sidebarValues.addressName, ''),
+      callAhead: getSafe(() => sidebarValues.callAhead, false),
+      closeTime: getSafe(() => sidebarValues.closeTime, ''),
+      contactEmail: getSafe(() => sidebarValues.contactEmail, ''),
+      contactName: getSafe(() => sidebarValues.contactName, ''),
+      contactPhone: getSafe(() => sidebarValues.contactPhone, ''),
+      deliveryNotes: getSafe(() => sidebarValues.deliveryNotes, ''),
+      forkLift: getSafe(() => sidebarValues.forkLift, false),
+      liftGate: getSafe(() => sidebarValues.liftGate, false),
+      readyTime: getSafe(() => sidebarValues.readyTime, ''),
 
       zipID,
       countryId,
       hasProvinces,
-      province: getSafe(() => popupValues.address.province, '')
+      province: getSafe(() => sidebarValues.address.province, '')
     }
     return initialValues
   }
@@ -334,7 +334,7 @@ class DeliveryLocationsSidebar extends React.Component {
   render() {
     const {
       closeSidebar,
-      popupValues,
+      sidebarValues,
       loading,
       intl: { formatMessage }
     } = this.props
@@ -364,7 +364,7 @@ class DeliveryLocationsSidebar extends React.Component {
                       <Loader />
                     </Dimmer>
                     <CustomHighSegment basic>
-                      {popupValues ? (
+                      {sidebarValues ? (
                         <FormattedMessage id='sidebar.edit' defaultMessage='EDIT' />
                       ) : (
                         <FormattedMessage id='sidebar.addNew' defaultMessage='ADD NEW' />
@@ -422,8 +422,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    hasProvinces: state.settings.popupValues ? state.settings.popupValues.hasProvinces : false,
-    popupValues: state.settings.popupValues,
+    hasProvinces: state.settings.sidebarValues ? state.settings.sidebarValues.hasProvinces : false,
+    sidebarValues: state.settings.sidebarValues,
     country: state.settings.country,
     countries: state.settings.countries,
     provincesDropDown: state.settings.provincesDropDown,
