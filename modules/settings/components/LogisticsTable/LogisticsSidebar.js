@@ -69,21 +69,24 @@ class LogisticsSidebar extends Component {
   }
 
   getInitialValues = () => {
-    let { popupValues } = this.props
-    return popupValues
+    let { sidebarValues } = this.props
+    return sidebarValues
       ? {
-          providerIdentifier: JSON.stringify(popupValues.provider.identifier),
-          providerIdentifierName: `${popupValues.provider.name} (${popupValues.provider.identifierValue})`,
+          providerIdentifier: JSON.stringify(sidebarValues.provider.identifier),
+          providerIdentifierName: `${sidebarValues.provider.name} (${sidebarValues.provider.identifierValue})`,
           username:
-            popupValues.accountInfos && popupValues.accountInfos.length ? popupValues.accountInfos[0].username : '',
+            sidebarValues.accountInfos && sidebarValues.accountInfos.length
+              ? sidebarValues.accountInfos[0].username
+              : '',
           password: '',
-          apiKey: popupValues.accountInfos && popupValues.accountInfos.length ? popupValues.accountInfos[0].apiKey : ''
+          apiKey:
+            sidebarValues.accountInfos && sidebarValues.accountInfos.length ? sidebarValues.accountInfos[0].apiKey : ''
         }
       : initialValues
   }
 
-  getValidationSchema = popupValues => {
-    if (popupValues) {
+  getValidationSchema = sidebarValues => {
+    if (sidebarValues) {
       return Yup.object().shape({
         username: Yup.string(requiredMessage).required(requiredMessage),
         password: passwordValidationAnyChar()
@@ -99,7 +102,7 @@ class LogisticsSidebar extends Component {
 
   render() {
     let {
-      popupValues,
+      sidebarValues,
       closeSidebar,
       logisticsProviders,
       logisticsProvidersFetching,
@@ -111,7 +114,7 @@ class LogisticsSidebar extends Component {
 
     return (
       <CustomForm
-        validationSchema={this.getValidationSchema(popupValues)}
+        validationSchema={this.getValidationSchema(sidebarValues)}
         enableReinitialize={true}
         validateOnChange={false}
         validateOnBlur={false}
@@ -120,10 +123,10 @@ class LogisticsSidebar extends Component {
           const apiKey = values.apiKey ? { apiKey: values.apiKey } : null
 
           const payload = {
-            providerIdentifier: getSafe(() => popupValues.provider.identifierType, '')
+            providerIdentifier: getSafe(() => sidebarValues.provider.identifierType, '')
               ? {
-                  type: popupValues.provider.identifierType,
-                  value: popupValues.provider.identifierValue
+                  type: sidebarValues.provider.identifierType,
+                  value: sidebarValues.provider.identifierValue
                 }
               : JSON.parse(values.providerIdentifier),
             username: values.username,
@@ -132,8 +135,8 @@ class LogisticsSidebar extends Component {
           }
 
           try {
-            if (popupValues) {
-              await updateLogisticsAccount(popupValues.id, payload)
+            if (sidebarValues) {
+              await updateLogisticsAccount(sidebarValues.id, payload)
             } else {
               await createLogisticsAccount(payload)
               getLogisticsAccounts()
@@ -147,7 +150,7 @@ class LogisticsSidebar extends Component {
         <FlexSidebar visible={true} width='very wide' style={{ width: '630px' }} direction='right' animation='overlay'>
           <div>
             <CustomHighSegment basic>
-              {popupValues ? (
+              {sidebarValues ? (
                 <FormattedMessage id='settings.editLogistics' defaultMessage='Edit Logistics' />
               ) : (
                 <FormattedMessage id='settings.addLogistics' defaultMessage='Add Logistics' />
@@ -157,7 +160,7 @@ class LogisticsSidebar extends Component {
           <FlexContent style={{ padding: '16px' }}>
             <CustomSegmentContent basic>
               <FormGroup widths='equal' data-test='settings_logistics_apikey_inp'>
-                {popupValues ? (
+                {sidebarValues ? (
                   <Input
                     name='providerIdentifierName'
                     label={formatMessage({
@@ -265,8 +268,8 @@ const mapDispatchToProps = {
   getLogisticsAccounts
 }
 
-const mapStateToProps = ({ settings: { popupValues, logisticsProvidersFetching, logisticsProviders } }) => ({
-  popupValues,
+const mapStateToProps = ({ settings: { sidebarValues, logisticsProvidersFetching, logisticsProviders } }) => ({
+  sidebarValues,
   logisticsProvidersFetching,
   logisticsProviders
 })

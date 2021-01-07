@@ -31,10 +31,11 @@ const ButtonsWrapper = styled(Grid)`
   left: 0;
   z-index: 5;
   overflow: hidden;
-  width: calc(100% + 84px);
-  margin: 0 0 0 -42px !important;
+  ${props => (props.isUserSettings ? '' : 'width: calc(100% + 84px);')}
+  ${props => (props.isUserSettings ? '' : 'margin: 0 0 0 -42px !important;')}
+  ${props => (props.isUserSettings ? '' : 'padding: 0 42px !important;')}
   border-top: 1px solid #dee2e6;
-  padding: 0 42px !important;
+
   background: #fff;
 
   .scrollable > & {
@@ -357,7 +358,7 @@ class Settings extends Component {
                     )
                   })
                 : null}
-              <ButtonsWrapper>
+              <ButtonsWrapper isUserSettings={this.props.isUserSettings}>
                 <Grid.Column textAlign='right'>
                   <Popup
                     position='left center'
@@ -449,12 +450,14 @@ class Settings extends Component {
 Settings.propTypes = {
   asModal: bool,
   scrolling: bool,
-  role: oneOf(['user', 'admin', 'company']).isRequired
+  role: oneOf(['user', 'admin', 'company']).isRequired,
+  isUserSettings: bool
 }
 
 Settings.defaultProps = {
   asModal: true,
-  scrolling: true
+  scrolling: true,
+  isUserSettings: false
 }
 
 export default connect(

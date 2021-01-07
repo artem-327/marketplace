@@ -41,14 +41,14 @@ const CustomButtonSubmit = styled(Button.Submit)`
     font-size: 1em;
     margin: 0 0.357142857em;
     padding: 9px 18px 9px;
-    border: none;    
+    border: none;
     background-color: #2599d5;
     color: #ffffff;
-    
+
     &:hover {
       background-color: #188ec9;
     }
-    
+
     &.disabled {
       background-color: #bde0f2;
       color: #ffffff;
@@ -99,7 +99,7 @@ const CustomDiv = styled.div`
 const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
   z-index: 1;
-  
+
   &.add-form {
     padding: 1.071428571em 2.142857143em !important;
     font-size: 14px;
@@ -115,12 +115,12 @@ const CustomHighSegment = styled(HighSegment)`
     font-size: 18px;
     vertical-align: middle;
   }
-  
+
   svg.title-icon {
     margin-left: 15px;
     color: #cecfd4;
   }
-  
+
   svg.close-icon {
     right: 0;
     position: absolute;
@@ -197,8 +197,8 @@ class PickUpLocationsSidebar extends React.Component {
     loadSidebar: false
   }
   componentDidMount() {
-    const { popupValues, getProvinces, openTab } = this.props
-    popupValues && popupValues.hasProvinces && getProvinces(popupValues.countryId)
+    const { sidebarValues, getProvinces, openTab } = this.props
+    sidebarValues && sidebarValues.hasProvinces && getProvinces(sidebarValues.countryId)
     openTab && this.setState({ editTab: this.props.openTab })
   }
 
@@ -209,7 +209,7 @@ class PickUpLocationsSidebar extends React.Component {
   }
 
   submitHandler = async (values, setSubmitting) => {
-    const { popupValues, putEditWarehouse, postNewWarehouseRequest, openGlobalAddForm } = this.props
+    const { sidebarValues, putEditWarehouse, postNewWarehouseRequest, openGlobalAddForm } = this.props
     const { attachmentFiles } = this.state
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
     let requestData = {}
@@ -236,8 +236,8 @@ class PickUpLocationsSidebar extends React.Component {
     removeEmpty(requestData)
 
     try {
-      if (popupValues) {
-        await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
+      if (sidebarValues) {
+        await putEditWarehouse(requestData, sidebarValues.id, attachmentFiles)
       } else {
         await postNewWarehouseRequest(true, requestData, attachmentFiles)
       }
@@ -250,43 +250,43 @@ class PickUpLocationsSidebar extends React.Component {
   }
 
   getInitialFormValues = () => {
-    let { popupValues } = this.props
+    let { sidebarValues } = this.props
 
-    const provinceId = getSafe(() => popupValues.deliveryAddress.address.province.id, '')
-    const countryId = getSafe(() => popupValues.deliveryAddress.address.country.id, null)
-    const hasProvinces = getSafe(() => popupValues.deliveryAddress.address.country.hasProvinces, false)
-    const zip = getSafe(() => popupValues.deliveryAddress.address.zip.zip, '')
-    const zipID = getSafe(() => popupValues.deliveryAddress.address.zip.id, '')
+    const provinceId = getSafe(() => sidebarValues.deliveryAddress.address.province.id, '')
+    const countryId = getSafe(() => sidebarValues.deliveryAddress.address.country.id, null)
+    const hasProvinces = getSafe(() => sidebarValues.deliveryAddress.address.country.hasProvinces, false)
+    const zip = getSafe(() => sidebarValues.deliveryAddress.address.zip.zip, '')
+    const zipID = getSafe(() => sidebarValues.deliveryAddress.address.zip.id, '')
 
     const initialValues = {
       //name: r.name,
-      taxId: getSafe(() => popupValues.taxId, ''),
-      //warehouse: getSafe(() => popupValues.warehouse, false),
+      taxId: getSafe(() => sidebarValues.taxId, ''),
+      //warehouse: getSafe(() => sidebarValues.warehouse, false),
       deliveryAddress: {
         address: {
-          streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
-          city: getSafe(() => popupValues.deliveryAddress.address.city, ''),
+          streetAddress: getSafe(() => sidebarValues.deliveryAddress.address.streetAddress, ''),
+          city: getSafe(() => sidebarValues.deliveryAddress.address.city, ''),
           province: provinceId,
           country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
           zip
         },
-        readyTime: getSafe(() => popupValues.deliveryAddress.readyTime, ''),
-        closeTime: getSafe(() => popupValues.deliveryAddress.closeTime, ''),
-        liftGate: getSafe(() => popupValues.deliveryAddress.liftGate, false),
-        forkLift: getSafe(() => popupValues.deliveryAddress.forkLift, false),
-        callAhead: getSafe(() => popupValues.deliveryAddress.callAhead, false),
-        deliveryNotes: getSafe(() => popupValues.deliveryAddress.deliveryNotes, ''),
-        addressName: getSafe(() => popupValues.deliveryAddress.addressName, ''),
-        contactName: getSafe(() => popupValues.deliveryAddress.contactName, ''),
-        contactPhone: getSafe(() => popupValues.deliveryAddress.contactPhone, ''),
-        contactEmail: getSafe(() => popupValues.deliveryAddress.contactEmail, '')
+        readyTime: getSafe(() => sidebarValues.deliveryAddress.readyTime, ''),
+        closeTime: getSafe(() => sidebarValues.deliveryAddress.closeTime, ''),
+        liftGate: getSafe(() => sidebarValues.deliveryAddress.liftGate, false),
+        forkLift: getSafe(() => sidebarValues.deliveryAddress.forkLift, false),
+        callAhead: getSafe(() => sidebarValues.deliveryAddress.callAhead, false),
+        deliveryNotes: getSafe(() => sidebarValues.deliveryAddress.deliveryNotes, ''),
+        addressName: getSafe(() => sidebarValues.deliveryAddress.addressName, ''),
+        contactName: getSafe(() => sidebarValues.deliveryAddress.contactName, ''),
+        contactPhone: getSafe(() => sidebarValues.deliveryAddress.contactPhone, ''),
+        contactEmail: getSafe(() => sidebarValues.deliveryAddress.contactEmail, '')
       },
-      attachments: getSafe(() => popupValues.attachments, []),
+      attachments: getSafe(() => sidebarValues.attachments, []),
       zipID,
       countryId,
       hasProvinces,
-      branchId: getSafe(() => popupValues.id, ''),
-      province: getSafe(() => popupValues.deliveryAddress.address.province, ''),
+      branchId: getSafe(() => sidebarValues.id, ''),
+      province: getSafe(() => sidebarValues.deliveryAddress.address.province, ''),
       alsoCreate: false
     }
 
@@ -300,7 +300,7 @@ class PickUpLocationsSidebar extends React.Component {
   renderEdit = formikProps => {
     const {
       intl: { formatMessage },
-      popupValues
+      sidebarValues
     } = this.props
     const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
@@ -459,7 +459,7 @@ class PickUpLocationsSidebar extends React.Component {
             />
           </FormGroup>
         </CustomSegment>
-        {!popupValues && (
+        {!sidebarValues && (
           <FormGroup data-test='settings_branches_popup_contactName_inp'>
             <Checkbox
               label={formatMessage({ id: 'settings.alsoCreateAsBranch', defaultMessage: 'Also create as Branch' })}
@@ -473,12 +473,12 @@ class PickUpLocationsSidebar extends React.Component {
   }
 
   renderCertificates = formikProps => {
-    const { removeAttachmentLinkToBranch, removeAttachment, addAttachment, loadFile, popupValues } = this.props
+    const { removeAttachmentLinkToBranch, removeAttachment, addAttachment, loadFile, sidebarValues } = this.props
     const { setFieldValue, values } = formikProps
     return (
       <>
-        {getSafe(() => popupValues.attachments.length, false) &&
-        getSafe(() => popupValues.deliveryAddress.address.country.name, false) === 'USA' ? (
+        {getSafe(() => sidebarValues.attachments.length, false) &&
+        getSafe(() => sidebarValues.deliveryAddress.address.country.name, false) === 'USA' ? (
           <Rectangle>
             <CustomDivTitle>
               <AlertCircle color='orange' size={24} />
@@ -519,7 +519,7 @@ class PickUpLocationsSidebar extends React.Component {
               attachmentFiles: prevState.attachmentFiles.concat(files)
             }))
           }
-          idForm={getSafe(() => popupValues.id, 0)}
+          idForm={getSafe(() => sidebarValues.id, 0)}
           attachmentFiles={this.state.attachmentFiles}
           removeAttachmentFromUpload={id => {
             const attachmentFiles = this.state.attachmentFiles.filter(attachment => attachment.id !== id)
@@ -551,7 +551,7 @@ class PickUpLocationsSidebar extends React.Component {
   render() {
     const {
       closeSidebar,
-      popupValues,
+      sidebarValues,
       isOpenSidebar,
       openGlobalAddForm,
       loading,
@@ -563,7 +563,7 @@ class PickUpLocationsSidebar extends React.Component {
     let initialValues = this.getInitialFormValues()
 
     const tabs = [
-      popupValues
+      sidebarValues
         ? { text: { id: 'sidebar.edit', defaultMessage: 'EDIT' }, key: 'edit' }
         : { text: { id: 'sidebar.addNew', defaultMessage: 'ADD NEW' }, key: 'addNew' },
       { text: { id: 'sidebar.certificates', defaultMessage: 'CERTIFICATES' }, key: 'certificates' }
@@ -574,7 +574,7 @@ class PickUpLocationsSidebar extends React.Component {
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closeSidebar()}
+        onReset={() => (openGlobalAddForm ? openGlobalAddForm('') : closeSidebar())}
         onSubmit={this.submitHandler}
         loading={loading}>
         {formikProps => (
@@ -592,33 +592,31 @@ class PickUpLocationsSidebar extends React.Component {
                     <Loader />
                   </Dimmer>
                   <CustomHighSegment basic className={openGlobalAddForm ? 'add-form' : ''}>
-                    {openGlobalAddForm
-                      ? (
-                        <>
-                          <div>
-                            <span>
-                              <FormattedMessage id='createMenu.addWarehouse' defaultMessage='Add Warehouse' />
-                            </span>
-                            <Store className='title-icon' />
-                          </div>
-                          <div style={{ position: 'absolute', right: '20px' }}>
-                            <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
-                          </div>
-                        </>
-                      ) : (
-                        <CustomMenu pointing secondary>
-                          {tabs.map((tab, i) => (
-                            <Menu.Item
-                              key={tab.key}
-                              onClick={() => this.tabChanged(i)}
-                              active={editTab === i}
-                              disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
-                              {formatMessage(tab.text)}
-                            </Menu.Item>
-                          ))}
-                        </CustomMenu>
-                      )
-                    }
+                    {openGlobalAddForm ? (
+                      <>
+                        <div>
+                          <span>
+                            <FormattedMessage id='createMenu.addWarehouse' defaultMessage='Add Warehouse' />
+                          </span>
+                          <Store className='title-icon' />
+                        </div>
+                        <div style={{ position: 'absolute', right: '20px' }}>
+                          <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                        </div>
+                      </>
+                    ) : (
+                      <CustomMenu pointing secondary>
+                        {tabs.map((tab, i) => (
+                          <Menu.Item
+                            key={tab.key}
+                            onClick={() => this.tabChanged(i)}
+                            active={editTab === i}
+                            disabled={tab.key === 'certificates' && !formikProps.values.branchId}>
+                            {formatMessage(tab.text)}
+                          </Menu.Item>
+                        ))}
+                      </CustomMenu>
+                    )}
                   </CustomHighSegment>
                 </div>
                 <FlexContent style={{ padding: '16px' }}>
@@ -679,8 +677,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    hasProvinces: state.settings.popupValues ? state.settings.popupValues.hasProvinces : false,
-    popupValues: state.settings.popupValues,
+    hasProvinces: state.settings.sidebarValues ? state.settings.sidebarValues.hasProvinces : false,
+    sidebarValues: state.settings.sidebarValues,
     country: state.settings.country,
     countries: state.settings.countries,
     provincesDropDown: state.settings.provincesDropDown,

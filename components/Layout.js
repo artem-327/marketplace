@@ -319,18 +319,21 @@ class Layout extends Component {
       isMerchant,
       isProductCatalogAdmin,
       isProductOfferManager,
-      isUserAdmin,
+      isUserAdmin
     } = identity
 
     let icon = Icon && (
-      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
-        <g fill="none" fill-rule="evenodd">
+      <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'>
+        <g fill='none' fill-rule='evenodd'>
           <g>
             <g>
               <g>
                 <g>
-                  <g transform="translate(-1400 -19) translate(240) translate(855 18.737) translate(137) translate(168 1)">
-                    <path fill="#748CAD" d="M29 29l-.094-1.875c-.125-.625-1.39-1.39-3.797-2.297-.093-.031-.172-.062-.234-.094-1.469-.53-2.234-.828-2.297-.89-.187-.125-.281-.657-.281-1.594 0-.375.14-.742.422-1.102.281-.359.5-.992.656-1.898.063-.313.156-.563.281-.75.125-.188.25-.563.375-1.125.094-.281.102-.547.024-.797-.078-.25-.117-.406-.117-.469.062-.5.125-1.015.187-1.547.063-.718-.25-1.492-.938-2.32C22.5 11.414 21.438 11 20 11c-1.438 0-2.5.414-3.188 1.242-.687.828-1 1.602-.937 2.32.063.532.125 1.047.188 1.547 0 .063-.04.22-.118.47-.078.25-.07.515.024.796.125.563.25.938.375 1.125.125.188.218.438.281.75.156.906.375 1.54.656 1.898.282.36.422.727.422 1.102v.281c0 .688-.062 1.102-.187 1.242-.125.141-.547.336-1.266.586-.531.188-.984.344-1.36.47-2.406.905-3.671 1.671-3.796 2.296C11.03 27.563 11 28.188 11 29h18z"/>
+                  <g transform='translate(-1400 -19) translate(240) translate(855 18.737) translate(137) translate(168 1)'>
+                    <path
+                      fill='#748CAD'
+                      d='M29 29l-.094-1.875c-.125-.625-1.39-1.39-3.797-2.297-.093-.031-.172-.062-.234-.094-1.469-.53-2.234-.828-2.297-.89-.187-.125-.281-.657-.281-1.594 0-.375.14-.742.422-1.102.281-.359.5-.992.656-1.898.063-.313.156-.563.281-.75.125-.188.25-.563.375-1.125.094-.281.102-.547.024-.797-.078-.25-.117-.406-.117-.469.062-.5.125-1.015.187-1.547.063-.718-.25-1.492-.938-2.32C22.5 11.414 21.438 11 20 11c-1.438 0-2.5.414-3.188 1.242-.687.828-1 1.602-.937 2.32.063.532.125 1.047.188 1.547 0 .063-.04.22-.118.47-.078.25-.07.515.024.796.125.563.25.938.375 1.125.125.188.218.438.281.75.156.906.375 1.54.656 1.898.282.36.422.727.422 1.102v.281c0 .688-.062 1.102-.187 1.242-.125.141-.547.336-1.266.586-.531.188-.984.344-1.36.47-2.406.905-3.671 1.671-3.796 2.296C11.03 27.563 11 28.188 11 29h18z'
+                    />
                   </g>
                 </g>
               </g>
@@ -379,19 +382,17 @@ class Layout extends Component {
 
               <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
             </PerfectScrollbar>
-            {false
-              ? (
-                <Container className='bottom'>
-                  <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
-                    <Sidebar />
-                    {formatMessage({
-                      id: 'global.collapseMenu',
-                      defaultMessage: 'Collapse Menu'
-                    })}
-                  </Menu.Item>
-                </Container>
-              )
-              : null }
+            {false ? (
+              <Container className='bottom'>
+                <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
+                  <Sidebar />
+                  {formatMessage({
+                    id: 'global.collapseMenu',
+                    defaultMessage: 'Collapse Menu'
+                  })}
+                </Menu.Item>
+              </Container>
+            ) : null}
           </LeftMenuContainer>
         </LeftMenu>
 
@@ -492,9 +493,9 @@ class Layout extends Component {
                     isProductCatalogAdmin ||
                     isProductOfferManager ||
                     isUserAdmin) && (
-                      <Menu.Item>
-                        <CreateMenu />
-                      </Menu.Item>
+                    <Menu.Item>
+                      <CreateMenu />
+                    </Menu.Item>
                   )}
                 </>
               )}
@@ -554,14 +555,20 @@ class Layout extends Component {
           </CustomDiv>
         ) : null}
 
-        <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }}/>
+        <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }} />
         <GlobalSidebars>
-          {openGlobalAddFormName === 'inventory-my-products' && (<ProductSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'inventory-my-listings' && (<ListingSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'wanted-board-listings' && (<WantedSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'my-account-users' && (<UserSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'manage-guests-guests' && (<GuestSidebar openGlobalAddForm={openGlobalAddForm}/>)}
-          {openGlobalAddFormName === 'my-account-locations' && (<WarehouseSidebar openGlobalAddForm={openGlobalAddForm}/>)}
+          {openGlobalAddFormName === 'inventory-my-products' && (
+            <ProductSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'inventory-my-listings' && (
+            <ListingSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'my-account-users' && <UserSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'manage-guests-guests' && <GuestSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'my-account-locations' && (
+            <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
         </GlobalSidebars>
       </MainContainer>
     )

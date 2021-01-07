@@ -14,6 +14,7 @@ import { getSafe } from '~/utils/functions'
 import {
   getUsersDataRequest,
   openSidebar,
+  openPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteUser,
@@ -23,7 +24,7 @@ import {
   setPrimaryUser
 } from '../../actions'
 
-import { Checkbox, Popup, Label, List, Icon } from 'semantic-ui-react'
+import { Checkbox, Popup, Icon } from 'semantic-ui-react'
 import ActionCell from '~/components/table/ActionCell'
 
 const handleSwitchEnabled = id => {
@@ -179,6 +180,10 @@ class UsersTable extends Component {
           const { value } = await setPrimaryUser(this.props.currentCompanyId, row.id)
         },
         hidden: row => !row.isCompanyAdmin || this.props.currentCompanyId === null
+      },
+      {
+        text: <FormattedMessage id='settings.user.userSettings' defaultMessage='User Settings' />,
+        callback: row => this.props.openPopup(row)
       }
     ]
   }
@@ -198,7 +203,9 @@ class UsersTable extends Component {
                   <Icon name='user crown' style={{ color: '#2599d5' }} />
                   {row.name}
                 </>
-              ) : row.name
+              ) : (
+                row.name
+              )
             }
             onContentClick={() => this.props.openSidebar(row.rawData)}
           />
@@ -208,14 +215,7 @@ class UsersTable extends Component {
   }
 
   render() {
-    const {
-      rows,
-      filterValue,
-      loading,
-      intl,
-      datagrid,
-      editedId
-    } = this.props
+    const { rows, filterValue, loading, intl, datagrid, editedId } = this.props
 
     let { columns } = this.state
     const { formatMessage } = intl
@@ -242,6 +242,7 @@ class UsersTable extends Component {
 const mapDispatchToProps = {
   getUsersDataRequest,
   openSidebar,
+  openPopup,
   openRolesPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,
