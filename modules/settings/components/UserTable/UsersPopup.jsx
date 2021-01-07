@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 //Components
 import SystemSettings from '~/components/settings'
 
-const UsersPopup = ({ isOpenPopup, closePopup, editedId }) => {
+const UsersPopup = ({ isOpenPopup, closePopup, editedId, isUserAdmin, isCompanyAdmin }) => {
   return (
     <Modal
       open={isOpenPopup}
@@ -18,7 +18,15 @@ const UsersPopup = ({ isOpenPopup, closePopup, editedId }) => {
         <FormattedMessage id='settings.user.userSettings' defaultMessage='User Settings' />
       </Modal.Header>
       <Modal.Content>
-        <SystemSettings asModal={false} role='user' scrolling={false} isUserSettings={true} editedId={editedId} />
+        <SystemSettings
+          isUserAdmin={isUserAdmin}
+          isCompanyAdmin={isCompanyAdmin}
+          asModal={false}
+          role='user'
+          scrolling={false}
+          isUserSettings={true}
+          editedId={editedId}
+        />
       </Modal.Content>
     </Modal>
   )
@@ -26,12 +34,16 @@ const UsersPopup = ({ isOpenPopup, closePopup, editedId }) => {
 
 UsersPopup.propTypes = {
   isOpenPopup: PropTypes.bool,
+  isUserAdmin: PropTypes.bool,
+  isCompanyAdmin: PropTypes.bool,
   closePopup: PropTypes.func,
   editedId: PropTypes.number
 }
 
 UsersPopup.defaultProps = {
   isOpenPopup: false,
+  isUserAdmin: false,
+  isCompanyAdmin: false,
   closePopup: () => {},
   editedId: null
 }

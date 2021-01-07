@@ -257,7 +257,9 @@ class Settings extends Component {
       scrolling,
       triggerSystemSettingsModal,
       intl: { formatMessage },
-      role
+      role,
+      isCompanyAdmin,
+      isUserAdmin
     } = this.props
     let { loading, systemSettings } = this.state
     let initialValues = this.parseInitialValues(systemSettings)
@@ -308,7 +310,7 @@ class Settings extends Component {
                                             <>
                                               <Checkbox
                                                 inputProps={{
-                                                  disabled: !el.changeable,
+                                                  disabled: !el.changeable && !isUserAdmin && !isCompanyAdmin,
                                                   onChange: e => e.stopPropagation(),
                                                   onClick: e => e.stopPropagation()
                                                 }}
@@ -451,13 +453,17 @@ Settings.propTypes = {
   asModal: bool,
   scrolling: bool,
   role: oneOf(['user', 'admin', 'company']).isRequired,
-  isUserSettings: bool
+  isUserSettings: bool,
+  isUserAdmin: bool,
+  isCompanyAdmin: bool
 }
 
 Settings.defaultProps = {
   asModal: true,
   scrolling: true,
-  isUserSettings: false
+  isUserSettings: false,
+  isUserAdmin: false,
+  isCompanyAdmin: false
 }
 
 export default connect(

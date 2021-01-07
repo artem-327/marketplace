@@ -306,6 +306,7 @@ class Settings extends Component {
       isOpenUploadDocumentsPopup,
       isDwollaOpenPopup,
       isUserAdmin,
+      isCompanyAdmin,
       isOpenSidebar,
       editedId
     } = this.props
@@ -328,7 +329,15 @@ class Settings extends Component {
     }
 
     const popupForm = {
-      users: <UsersPopup isOpenPopup={isOpenPopup} closePopup={closePopup} editedId={editedId} />,
+      users: (
+        <UsersPopup
+          isOpenPopup={isOpenPopup}
+          closePopup={closePopup}
+          editedId={editedId}
+          isUserAdmin={isUserAdmin}
+          isCompanyAdmin={isCompanyAdmin}
+        />
+      ),
       'credit-cards': <CreditCardsPopup />,
       'guest-companies': <ClientCompanyPopup />
     }
