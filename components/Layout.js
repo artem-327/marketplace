@@ -221,7 +221,7 @@ class Layout extends Component {
     )
     let mainContainer = getSafe(() => this.mainContainer.current, '')
 
-    if (!tableResponsive || !mainContainer) return
+    if (!mainContainer) return
     // let parentSegment = null
     // const { router, adminLoading, cartLoading, settingsLoading, wantedBoardLoading } = this.props
 
