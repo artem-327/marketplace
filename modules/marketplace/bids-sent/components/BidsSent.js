@@ -62,7 +62,8 @@ class BidsSent extends Component {
       expandedRowIds: [],
       filterValues: {
         SearchByNamesAndTags: null
-      }
+      },
+      rowDetailState: null
     }
   }
 
@@ -249,7 +250,13 @@ class BidsSent extends Component {
   }
 
   getRowDetail = ({ row }) => {
-    return (<BidsRowDetail popupValues={row}/>)
+    return (
+      <BidsRowDetail
+        initValues={this.state.rowDetailState}
+        popupValues={row}
+        onUnmount={(values) => this.setState({ rowDetailState: values })}
+      />
+    )
   }
 
   render = () => {

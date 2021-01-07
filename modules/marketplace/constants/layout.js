@@ -213,15 +213,18 @@ export const DefaultIcon = (
 export const IconWrapper = styled.div`
     position: relative;
     box-sizing: content-box;
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: 20px;
     text-align: center;
     border: solid 1px #dee2e6;
     background-color: #ffffff;
+    margin: -4px 0;
 `
 
 export const StyledName = styled.div`
+  margin: -4px 0;
+  
   .name {
     font-size: 14px;
     font-weight: 500;
@@ -240,9 +243,32 @@ export const NameWrapper = styled.div`
   flex-direction: row;
 `
 
-export const DetailHistoryRow = styled(GridRow)`
-  box-shadow: 0 1px 0 0 #dee2e6;
-  height: 60px;
+export const HistoryRow = styled(GridRow)`
+  &.row {
+    box-shadow: 0 1px 0 0 #dee2e6;
+  }
+`
+
+export const HistoryDetailGrid = styled(Grid)`
+  &.ui.grid {
+    margin: 0;
+  
+    .row {
+      margin: 0;
+      padding: 7.5px 0;
+      
+      .column {
+        margin: 0;
+        padding: 0 10px;  
+      }  
+    }
+  }
+`
+
+export const HistoryDetailRow = styled(GridRow)`
+  &.row {
+    padding: 6.5px 0 !important;
+  }
   
   .column {
     display: flex !important;

@@ -32,7 +32,15 @@ import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import ErrorFocus from '~/components/error-focus'
 import { Schedule } from '@material-ui/icons'
-import { DefaultIcon, IconWrapper, StyledName, NameWrapper, DetailHistoryRow } from '../../constants/layout'
+import {
+  DefaultIcon,
+  IconWrapper,
+  StyledName,
+  NameWrapper,
+  HistoryRow,
+  HistoryDetailGrid,
+  HistoryDetailRow
+} from '../../constants/layout'
 import moment from 'moment'
 
 import { TableSegment, StyledList, StyledRectangle, PriceInput } from '../../constants/layout'
@@ -44,19 +52,6 @@ export const DetailRow = styled.div`
   background-color: #f8f9fb;
 `
 
-const StyledModal = styled(Modal)`  
-  > i.close.icon {
-    font-size: 18px;
-  }
-  
-  &.ui.large.modal > .header {
-    font-size: 18px;
-  }
-  
-  &.ui.large.modal > .scrolling.content {
-    padding: 30px;
-  }
-`
 
 const BottomButtons = styled.div`
   display: inline-block;
@@ -139,15 +134,14 @@ const SmallText = styled.div`
 
 const StyledGrid = styled(Grid)`
   &.ui.grid {
-    //margin: -7.5px -10px;
     margin: 0;
   
     .row {
-      margin: 0; // ! ! asi
+      margin: 0;
       padding: 7.5px 0;
       
       .column {
-        margin: 0; // ! ! asi
+        margin: 0;
         padding: 0 10px;  
       }  
     }
@@ -173,23 +167,33 @@ const formValidation = () =>
 
 class BidsRowDetail extends React.Component {
   state = {
+    initialFormValues: {
+      id: '',
+      message: '',
+      pkgAmount: '',
+      pricePerUOM: ''
+    },
+    detailExpandedIds: []
   }
 
   componentDidMount() {
-    console.log('!!!!!!!!!! componentDidMount')
+    const { popupValues, initValues } = this.props
+
+    if (initValues && (initValues.id === popupValues.id)) {
+      this.setState({ initialFormValues: initValues })
+    } else {
+      this.setState({ initialFormValues: {
+          id: popupValues.id,
+          message: '',
+          pkgAmount: popupValues.cfHistoryLastPkgAmount,
+          pricePerUOM: ''
+      }})
+    }
   }
 
   componentWillUnmount() {
-    console.log('!!!!!!!!!! componentWillUnmount')
-  }
-
-  getInitialFormValues = () => {
-    const { popupValues } = this.props
-    return {
-      message: '',
-      pkgAmount: popupValues.cfHistoryLastPkgAmount,
-      pricePerUOM: ''
-    }
+    if (Object.keys(this.formikProps.touched).length && this.props.onUnmount)
+      this.props.onUnmount(this.formikProps.values)
   }
 
   submitOffer = async ({values, setSubmitting }) => {
@@ -225,19 +229,23 @@ class BidsRowDetail extends React.Component {
       packagingSize
     } = this.props
 
+    const { detailExpandedIds } = this.state
+
     //console.log('!!!!!!!!!! aaaaa popupValues', popupValues)
 
     const histories = popupValues.histories.slice(1)
+    const lastHistory = popupValues.histories[popupValues.histories.length - 1]
 
     return (
       <Formik
         autoComplete='off'
         enableReinitialize
-        initialValues={this.getInitialFormValues()}
+        initialValues={this.state.initialFormValues}
         validationSchema={formValidation()}
         onSubmit={this.submitOffer}>
         {formikProps => {
           let { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting } = formikProps
+          this.formikProps = formikProps
 
           const pkgAmount = parseInt(values.pkgAmount)
           let amount = pkgAmount
@@ -256,31 +264,122 @@ class BidsRowDetail extends React.Component {
               <div>
                 <Form>
                   <StyledGrid>
-                    {histories.map(r => {
+                    {histories.map((r, index) => {
                       return (
-                        <DetailHistoryRow>
-                          <GridColumn width={4}>
-                            <NameWrapper>
-                              <IconWrapper>{DefaultIcon}</IconWrapper>
-                              <StyledName style={{ marginLeft: '10px', paddingTop: '2px' }}>
-                                <div className='name'>
-                                  {r.createdBy.name}
-                                </div>
-                                <div className='company'>
-                                  {r.createdBy.company.cfDisplayName}
-                                </div>
-                              </StyledName>
-                            </NameWrapper>
+                        <HistoryRow>
+                          <GridColumn style={{ padding: '0' }}>
+                            <HistoryDetailGrid>
+                              <HistoryDetailRow
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  const { detailExpandedIds } = this.state
+                                  if (detailExpandedIds.length) {
+                                    if (detailExpandedIds[0] === index) {
+                                      this.setState({ detailExpandedIds: [] })
+                                    } else {
+                                      this.setState({ detailExpandedIds: [index] })
+                                    }
+                                  } else {
+                                    this.setState({ detailExpandedIds: [index] })
+                                  }
+                                }}>
+                                  <GridColumn width={4}>
+                                    <NameWrapper>
+                                      <IconWrapper>{DefaultIcon}</IconWrapper>
+                                      <StyledName style={{ marginLeft: '10px', paddingTop: '2px' }}>
+                                        <div className='name'>
+                                          {r.createdBy.name}
+                                        </div>
+                                        <div className='company'>
+                                          {r.createdBy.company.cfDisplayName}
+                                        </div>
+                                      </StyledName>
+                                    </NameWrapper>
+                                  </GridColumn>
+                                  <GridColumn width={9}>
+                                    text text text
+                                  </GridColumn>
+                                  <GridColumn width={3} style={{ color: '#848893' }}>
+                                    {moment(r.createdAt).fromNow()}
+                                  </GridColumn>
+                              </HistoryDetailRow>
+                              {detailExpandedIds.some(id => id === index) && (
+                                <>
+                                  <GridRow>
+                                    <GridColumn>
+                                      <TableSegment>
+                                        <StyledList divided relaxed horizontal size='large'>
+                                          <List.Item>
+                                            <List.Content>
+                                              <List.Header as='label'>
+                                                <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity' />
+                                              </List.Header>
+                                              <List.Description as='span' className='green'>
+                                                {`${r.pkgAmount * packagingSize} ${packagingUnit} ${packagingType}`}
+                                              </List.Description>
+                                            </List.Content>
+                                          </List.Item>
+                                          <List.Item>
+                                            <List.Content>
+                                              <List.Header as='label'>
+                                                <FormattedMessage
+                                                  id='marketplace.offeredFobPrice'
+                                                  defaultMessage='Offered FOB Price' />
+                                              </List.Header>
+                                              <List.Description as='span' className='green' >
+                                                <FormattedNumber
+                                                  minimumFractionDigits={2}
+                                                  maximumFractionDigits={2}
+                                                  style='currency'
+                                                  currency={currency}
+                                                  value={r.pricePerUOM}
+                                                />
+                                                {' '}
+                                                {listFobPriceUnit}
+                                              </List.Description>
+                                            </List.Content>
+                                          </List.Item>
+                                          <List.Item>
+                                            <List.Content>
+                                              <List.Header as='label'>
+                                                <FormattedMessage
+                                                  id='marketplace.totalOfferedPrice'
+                                                  defaultMessage='Total Offered Price' />
+                                              </List.Header>
+                                              <List.Description as='span' className='green' >
+                                                <FormattedNumber
+                                                  minimumFractionDigits={2}
+                                                  maximumFractionDigits={2}
+                                                  style='currency'
+                                                  currency={currency}
+                                                  value={r.pricePerUOM * r.pkgAmount}
+                                                />
+                                              </List.Description>
+                                            </List.Content>
+                                          </List.Item>
+                                        </StyledList>
+                                      </TableSegment>
+                                    </GridColumn>
+                                  </GridRow>
+                                  <GridRow>
+                                    <GridColumn>
+                                      <StyledRectangle>
+                                        <div className='header'>
+                                          <FormattedMessage
+                                            id='marketplace.messageFromSeller'
+                                            defaultMessage='Message from Seller' />
+                                        </div>
+                                        <div className='message'>
+                                          {r.message}
+                                        </div>
+                                      </StyledRectangle>
+                                    </GridColumn>
+                                  </GridRow>
+                                </>
+                              )}
+                            </HistoryDetailGrid>
                           </GridColumn>
-                          <GridColumn width={9}>
-                            text text text
-                          </GridColumn>
-                          <GridColumn width={3} style={{ color: '#848893' }}>
-                            {moment(r.createdAt).fromNow()}
-                          </GridColumn>
-
-
-                        </DetailHistoryRow>
+                        </HistoryRow>
                       )})
                     }
                     <GridRow>
@@ -418,7 +517,7 @@ class BidsRowDetail extends React.Component {
                               defaultMessage='Message from Seller' />
                           </div>
                           <div className='message'>
-                            message from seller
+                            {lastHistory.message}
                           </div>
                         </StyledRectangle>
                       </GridColumn>
