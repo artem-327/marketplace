@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl'
 const confirm = createConfirmation(ConfirmDialog)
 
 // confirm function easy to call.
-export default function(
+export default function (
   title,
   confirmation,
   options = {

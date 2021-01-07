@@ -1,10 +1,7 @@
 import styled from 'styled-components'
 import { Button } from 'semantic-ui-react'
 
-//Types
-import { IDivRectangleForm } from '../types'
-
-export const DivRectangleForm = styled.div<IDivRectangleForm>`
+export const DivRectangleForm = styled.div`
   padding: 0px !important;
   width: 740px;
   overflow: auto;

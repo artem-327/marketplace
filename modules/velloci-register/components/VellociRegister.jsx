@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
-import { Formik, FormikProps } from 'formik'
+import { Formik } from 'formik'
 import _ from 'lodash'
 import Router from 'next/router'
+import PropTypes from 'prop-types'
 //Components
 import SetupIndicator from './SetupIndicator'
 import FormRectangle from './FormRectangle'
@@ -17,13 +18,11 @@ import ErrorFocus from '../../../components/error-focus'
 import { getSafe } from '../../../utils/functions'
 //Constants
 import { titleIds, subtitleIds, verifyPersonalInformation } from '../constants'
-//Types
-import { IVelloci, IFormValues } from './types'
 
 // Global variable to store global state
-let selfFormikProps: any = {} //TODO specify type
+let selfFormikProps = {} //TODO specify type
 
-const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
+const VellociRegister = ({
   prevStep,
   nextStep,
   activeStep,
@@ -90,7 +89,7 @@ const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
     // if [] has some variables, then is similar as componentDidUpdate:
   }, [numberBeneficialOwners, prevNumberBeneficialOwners])
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async values => {
     if (activeStep !== 6) return
 
     try {
@@ -171,6 +170,58 @@ const VellociRegister: React.FC<IVelloci & FormikProps<IFormValues>> = ({
       </GridColumn>
     </Grid>
   )
+}
+
+VellociRegister.propTypes = {
+  nextStep: PropTypes.func,
+  prevStep: PropTypes.func,
+  activeStep: PropTypes.number,
+  countBeneficialOwners: PropTypes.func,
+  numberBeneficialOwners: PropTypes.number,
+  isLoadingSubmitButton: PropTypes.bool,
+  initialValues: PropTypes.object,
+  openEmailPopup: PropTypes.func,
+  emailPopup: PropTypes.object,
+  entityTypes: PropTypes.object,
+  getEntityTypes: PropTypes.func,
+  naicsCodes: PropTypes.object,
+  getNaicsCodes: PropTypes.func,
+  businessRoles: PropTypes.object,
+  getBusinessRoles: PropTypes.object,
+  entityDocuments: PropTypes.object,
+  getEntityDocuments: PropTypes.func,
+  politicallyExposedPersons: PropTypes.object,
+  getPoliticallyExposedPersons: PropTypes.func,
+  cleareActiveStep: PropTypes.func,
+  postRegisterVelloci: PropTypes.func,
+  getIdentity: PropTypes.func,
+  loadSubmitButton: PropTypes.func
+}
+
+VellociRegister.defaultProps = {
+  nextStep: () => {},
+  prevStep: () => {},
+  activeStep: 0,
+  countBeneficialOwners: () => {},
+  numberBeneficialOwners: 0,
+  isLoadingSubmitButton: false,
+  initialValues: {},
+  openEmailPopup: () => {},
+  emailPopup: {},
+  entityTypes: {},
+  getEntityTypes: () => {},
+  naicsCodes: {},
+  getNaicsCodes: () => {},
+  businessRoles: {},
+  getBusinessRoles: {},
+  entityDocuments: {},
+  getEntityDocuments: () => {},
+  politicallyExposedPersons: {},
+  getPoliticallyExposedPersons: () => {},
+  cleareActiveStep: () => {},
+  postRegisterVelloci: () => {},
+  getIdentity: () => {},
+  loadSubmitButton: () => {}
 }
 
 export default VellociRegister

@@ -10,15 +10,15 @@ import TermsAndConditions from './steps/TermsAndConditions'
 import { getSafe } from '../../../utils/functions'
 
 export const getContent = (
-  formikProps: any, //TODO specify types
-  entityTypes: any, //TODO specify types
-  naicsCodes: any, //TODO specify types
-  entityDocuments: any, //TODO specify types
-  countBeneficialOwners: any, //TODO specify types
-  businessRoles: any, //TODO specify types
-  numberBeneficialOwners: any, //TODO specify types
-  activeStep: any //TODO specify types
-): JSX.Element => {
+  formikProps,
+  entityTypes,
+  naicsCodes,
+  entityDocuments,
+  countBeneficialOwners,
+  businessRoles,
+  numberBeneficialOwners,
+  activeStep
+) => {
   let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
 
   switch (activeStep) {

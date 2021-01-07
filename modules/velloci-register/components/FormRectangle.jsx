@@ -1,23 +1,24 @@
 import React from 'react'
 import { Button, Popup, Icon } from 'semantic-ui-react'
-const { FormattedMessage } = require('react-intl')
+import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
+//Services
 import { getSafe } from '../../../utils/functions'
-import { FormikProps } from 'formik'
 
 //Styles
-import { RightAlignedDiv, 
-  SpanSubtitleValue, 
-  DivSubtitleText, 
-  ButtonBack, 
-  ButtonSubmit, 
-  DivButtonsBottom, 
-  DivTitleText, 
-  DivTitleRectangleForm, 
-  DivRectangleForm} from './styles'
-  //Types 
-  import {IRectangle, IFormValues} from './types'
+import {
+  RightAlignedDiv,
+  SpanSubtitleValue,
+  DivSubtitleText,
+  ButtonBack,
+  ButtonSubmit,
+  DivButtonsBottom,
+  DivTitleText,
+  DivTitleRectangleForm,
+  DivRectangleForm
+} from './styles'
 
-const FormRectangle: React.FC<IRectangle & FormikProps<IFormValues>> = ({
+const FormRectangle = ({
   children,
   formikProps,
   title,
@@ -29,16 +30,16 @@ const FormRectangle: React.FC<IRectangle & FormikProps<IFormValues>> = ({
   numberBeneficialOwners,
   isLoadingSubmitButton,
   openEmailPopup,
-    nextStep,
-    registerBeneficialOwner
+  nextStep,
+  registerBeneficialOwner
 }) => {
-  const { values } = formikProps 
+  const { values } = formikProps
   return (
     <DivRectangleForm activeStep={activeStep}>
       <DivTitleRectangleForm>
         <DivTitleText>
           <FormattedMessage id={title} defaultMessage='Title'>
-            {(text: any) => text}
+            {text => text}
           </FormattedMessage>
         </DivTitleText>
         {subtitle ? (
@@ -116,26 +117,50 @@ const FormRectangle: React.FC<IRectangle & FormikProps<IFormValues>> = ({
               registerBeneficialOwner ? 'global.send' : activeStep === 6 ? 'velloci.submitApplication' : 'global.next'
             }
             defaultMessage={registerBeneficialOwner ? 'Send' : activeStep === 6 ? 'Submit Application' : 'Next'}>
-            {(text: any) => text}
+            {text => text}
           </FormattedMessage>
         </ButtonSubmit>
         {!registerBeneficialOwner && activeStep > 0 ? (
           <ButtonBack type='button' onClick={() => prevStep(activeStep - 1)} basic>
             <FormattedMessage id='global.back' defaultMessage='Back'>
-              {(text: any) => text}
+              {text => text}
             </FormattedMessage>
           </ButtonBack>
         ) : null}
         {activeStep === 4 && getSafe(() => values.ownerInformation.isOtherBeneficialOwner, false) ? (
           <ButtonBack type='button' onClick={openEmailPopup} basic>
             <FormattedMessage id='global.email' defaultMessage='Email'>
-              {(text: any) => text}
+              {text => text}
             </FormattedMessage>
           </ButtonBack>
         ) : null}
       </DivButtonsBottom>
     </DivRectangleForm>
   )
+}
+
+FormRectangle.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+  formikProps: PropTypes.object,
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  submitForm: PropTypes.func,
+  activeStep: PropTypes.number,
+  countBeneficialOwners: PropTypes.func,
+  numberBeneficialOwners: PropTypes.number,
+  openEmailPopup: PropTypes.func
+}
+
+FormRectangle.defaultProps = {
+  formikProps: {},
+  title: 'Title',
+  subtitle: '',
+  submitForm: () => {},
+  activeStep: 0,
+  countBeneficialOwners: () => {},
+  numberBeneficialOwners: 0,
+  openEmailPopup: () => {},
+  registerBeneficialOwner: false
 }
 
 export default FormRectangle
