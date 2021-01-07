@@ -369,9 +369,10 @@ class UsersSidebar extends React.Component {
       name: values.name,
       phone: values.phone,
       preferredCurrency: currencyId,
-      roles: values.roles,
-      sellMarketSegments: values.sellMarketSegments,
-      buyMarketSegments: values.buyMarketSegments
+      roles: values.roles
+      /*Commented by https://pm.artio.net/issues/34033#note-14 */
+      //sellMarketSegments: values.sellMarketSegments,
+      //buyMarketSegments: values.buyMarketSegments
     }
 
     removeEmpty(data)

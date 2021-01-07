@@ -106,10 +106,13 @@ class UsersSidebar extends React.Component {
       this.setState({ popupValues: null })
     }
 
+    /*Commented by https://pm.artio.net/issues/34033#note-14 */
+    /*
     if (isCompanyAdmin) {
       this.props.searchSellMarketSegments('')
       this.props.searchBuyMarketSegments('')
     }
+    */
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -219,9 +222,10 @@ class UsersSidebar extends React.Component {
       name: values.name,
       phone: values.phone,
       preferredCurrency: currencyId,
-      roles: values.roles,
-      sellMarketSegments: values.sellMarketSegments,
-      buyMarketSegments: values.buyMarketSegments
+      roles: values.roles
+      /*Commented by https://pm.artio.net/issues/34033#note-14 */
+      //sellMarketSegments: values.sellMarketSegments,
+      //buyMarketSegments: values.buyMarketSegments
     }
 
     removeEmpty(data)
@@ -501,71 +505,77 @@ class UsersSidebar extends React.Component {
                         />
                       </GridColumn>
                     </GridRow>
-                    <GridRow>
-                      <GridColumn width={8}>
-                        <Dropdown
-                          label={
-                            <>
-                              {formatMessage({
-                                id: 'global.sellMarketSegments',
-                                defaultMessage: 'Sell Market Segment'
-                              })}
-                            </>
-                          }
-                          name='sellMarketSegments'
-                          options={allSellMarketSegmentsOptions}
-                          inputProps={{
-                            loading: searchedSellMarketSegmentsLoading,
-                            search: true,
-                            icon: 'search',
-                            selection: true,
-                            multiple: true,
-                            disabled: !values.homeBranch || !isCompanyAdmin,
-                            placeholder: formatMessage({
-                              id: 'global.selectSellMarketSegments',
-                              defaultMessage: 'Select Sell Market Segments'
-                            }),
-                            noResultsMessage: formatMessage({
-                              id: 'global.startTypingToSearch',
-                              defaultMessage: 'Start typing to begin search'
-                            }),
-                            onSearchChange: this.handleSellMarketSegmentsSearchChange,
-                            onChange: (_, { value }) =>
-                              this.handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
-                          }}
-                        />
-                      </GridColumn>
-                      <GridColumn width={8}>
-                        <Dropdown
-                          label={
-                            <>
-                              {formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}
-                            </>
-                          }
-                          name='buyMarketSegments'
-                          options={allBuyMarketSegmentsOptions}
-                          inputProps={{
-                            loading: searchedBuyMarketSegmentsLoading,
-                            search: true,
-                            icon: 'search',
-                            selection: true,
-                            multiple: true,
-                            disabled: !values.homeBranch || !isCompanyAdmin,
-                            placeholder: formatMessage({
-                              id: 'global.selectBuyMarketSegments',
-                              defaultMessage: 'Select Buy Market Segment'
-                            }),
-                            noResultsMessage: formatMessage({
-                              id: 'global.startTypingToSearch',
-                              defaultMessage: 'Start typing to begin search'
-                            }),
-                            onSearchChange: this.handleBuyMarketSegmentsSearchChange,
-                            onChange: (_, { value }) =>
-                              this.handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions)
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
+                    {/*Comemnted by https://pm.artio.net/issues/34033#note-9 */}
+                    {false && (
+                      <GridRow>
+                        <GridColumn width={8}>
+                          <Dropdown
+                            label={
+                              <>
+                                {formatMessage({
+                                  id: 'global.sellMarketSegments',
+                                  defaultMessage: 'Sell Market Segment'
+                                })}
+                              </>
+                            }
+                            name='sellMarketSegments'
+                            options={allSellMarketSegmentsOptions}
+                            inputProps={{
+                              loading: searchedSellMarketSegmentsLoading,
+                              search: true,
+                              icon: 'search',
+                              selection: true,
+                              multiple: true,
+                              disabled: !values.homeBranch || !isCompanyAdmin,
+                              placeholder: formatMessage({
+                                id: 'global.selectSellMarketSegments',
+                                defaultMessage: 'Select Sell Market Segments'
+                              }),
+                              noResultsMessage: formatMessage({
+                                id: 'global.startTypingToSearch',
+                                defaultMessage: 'Start typing to begin search'
+                              }),
+                              onSearchChange: this.handleSellMarketSegmentsSearchChange,
+                              onChange: (_, { value }) =>
+                                this.handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn width={8}>
+                          <Dropdown
+                            label={
+                              <>
+                                {formatMessage({
+                                  id: 'global.purchaseMarketSegments',
+                                  defaultMessage: 'Purchase Market Segments'
+                                })}
+                              </>
+                            }
+                            name='buyMarketSegments'
+                            options={allBuyMarketSegmentsOptions}
+                            inputProps={{
+                              loading: searchedBuyMarketSegmentsLoading,
+                              search: true,
+                              icon: 'search',
+                              selection: true,
+                              multiple: true,
+                              disabled: !values.homeBranch || !isCompanyAdmin,
+                              placeholder: formatMessage({
+                                id: 'global.selectBuyMarketSegments',
+                                defaultMessage: 'Select Buy Market Segment'
+                              }),
+                              noResultsMessage: formatMessage({
+                                id: 'global.startTypingToSearch',
+                                defaultMessage: 'Start typing to begin search'
+                              }),
+                              onSearchChange: this.handleBuyMarketSegmentsSearchChange,
+                              onChange: (_, { value }) =>
+                                this.handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions)
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    )}
                   </Grid>
                 </CustomSegment>
                 <CustomSegment>

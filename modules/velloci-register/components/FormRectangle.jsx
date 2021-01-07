@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl'
 import PropTypes from 'prop-types'
 //Services
 import { getSafe } from '../../../utils/functions'
-
 //Styles
 import {
   RightAlignedDiv,

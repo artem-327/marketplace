@@ -286,60 +286,6 @@ class MyProducts extends Component {
     )
   }
 
-  getActionItems = (actions = [], row) => {
-    if (!getSafe(() => actions.length, false)) return
-    return actions.map((a, i) =>
-      'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
-        <Dropdown.Item
-          data-test={`action_${row.id}_${i}`}
-          key={i}
-          text={typeof a.text !== 'function' ? a.text : a.text(row)}
-          disabled={getSafe(() => a.disabled(row), false)}
-          onClick={() => a.callback(row)}
-        />
-      )
-    )
-  }
-
-  getActionsByRow = row => {
-    const {
-      intl: { formatMessage },
-      openPopup,
-      deleteProduct,
-      datagrid
-    } = this.props
-
-    return [
-      {
-        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => openPopup(row.rawData)
-      },
-      {
-        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-        disabled: row => this.props.editedId === row.id,
-        callback: row => {
-          return confirm(
-            formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
-            formatMessage(
-              {
-                id: 'confirm.deleteItem',
-                defaultMessage: `Do you really want to delete '${row.rawData.intProductName}'?`
-              },
-              { item: row.rawData.intProductName }
-            )
-          ).then(async row => {
-            try {
-              await deleteProduct(row.id, row.intProductName)
-              datagrid.removeRow(row.id)
-            } catch (e) {
-              console.error(e)
-            }
-          })
-        }
-      }
-    ]
-  }
-
   getRows = rows => {
     const { openPopup } = this.props
 

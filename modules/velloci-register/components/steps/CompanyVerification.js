@@ -10,6 +10,8 @@ import {
   CustomDivInTitle,
   CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
+//Constants
+import { SUPPORT_EMAIL } from '../../../../constants/index'
 
 const GridCompanyVerification = styled(Grid)`
   margin: 14px 16px !important;
@@ -36,6 +38,12 @@ const IconCheck = styled(Check)`
   margin-left: 10px;
   color: #cecfd4;
   vertical-align: text-bottom;
+`
+
+const DivRectangle = styled(Rectangle)`
+  margin: 0px;
+  background-color: #f8f9fb;
+  border: solid 1px #dee2e6;
 `
 
 function CompanyVerification() {
@@ -86,8 +94,8 @@ function CompanyVerification() {
       </GridRow>
       <GridRow>
         <GridColumn>
-          <Rectangle style={{ margin: '0px', backgroundColor: '#ddf1fc' }}>
-            <CustomDivTitle style={{ color: '#2599d5' }}>
+          <DivRectangle>
+            <CustomDivTitle>
               <CustomDivInTitle>
                 <FormattedMessage
                   id='velloci.companyVerification.infoTitle'
@@ -101,7 +109,7 @@ function CompanyVerification() {
                 defaultMessage='A control person is a single individual with significant responsibility to control, manage or direct legal entity customer, including an executive Officer or senior manager (e.g. a Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President or Treasurer); or any other individual who regularly performs similar functions.'
               />
             </CustomDivContent>
-          </Rectangle>
+          </DivRectangle>
         </GridColumn>
       </GridRow>
 
@@ -112,8 +120,8 @@ function CompanyVerification() {
             defaultMessage='Thank you for taking the time to register your business with EchoSystem. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.'
             values={{
               email: (
-                <CustomA>
-                  <FormattedMessage id='global.email.support' defaultMessage='support@echosystem.com' />
+                <CustomA href={`mailto: ${SUPPORT_EMAIL}`}>
+                  <FormattedMessage id='global.email.support' defaultMessage={SUPPORT_EMAIL} />
                 </CustomA>
               ),
               phoneNumber: (

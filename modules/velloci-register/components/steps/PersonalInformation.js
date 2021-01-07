@@ -206,7 +206,7 @@ function PersonalInformation({
               <Rectangle style={{ margin: '0px 0px 10px 0px' }}>
                 <CustomDivTitle>
                   <Info size={20} style={{ color: '#2599d5' }} />
-                  <CustomDivInTitle>
+                  <CustomDivInTitle style={{ color: '#2599d5' }}>
                     <FormattedMessage
                       id='velloci.personalInfo.infoTitle'
                       defaultMessage='Which address should I use?'
@@ -328,7 +328,7 @@ function PersonalInformation({
                   defaultMessage: 'xx'
                 }),
                 type: 'text',
-                pattern: '\d*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
+                pattern: 'd*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
                 maxLength: '3',
                 'data-test': 'settings_velloci_registration_personal_info_business_ownership_percentage_inpt'
               }}
