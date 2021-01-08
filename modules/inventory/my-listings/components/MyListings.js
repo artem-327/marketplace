@@ -501,32 +501,32 @@ class MyListings extends Component {
           id: 'global.tds',
           defaultMessage: 'TDS'
         }),
-        disabled: () => !!row.groupId,
-        callback: () => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
+        disabled: row => !!row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'global.documents',
           defaultMessage: 'Documents'
         }),
-        disabled: () => !!row.groupId,
-        callback: () => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
+        disabled: row => !!row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'inventory.broadcast',
           defaultMessage: 'Price Book'
         }),
-        disabled: () => !!row.groupId,
-        callback: () => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+        disabled: row => !!row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'inventory.priceTiers',
           defaultMessage: 'Price Tiers'
         }),
-        disabled: () => !!row.groupId,
-        callback: () => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
+        disabled: row => !!row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
@@ -562,7 +562,7 @@ class MyListings extends Component {
       //     id: 'inventory.groupOffer',
       //     defaultMessage: 'Join/Create Virtual Group'
       //   }),
-      //   callback: () =>
+      //   callback: (row) =>
       //     this.groupOffer(
       //       {
       //         overrideBroadcastRules: false,
@@ -570,15 +570,15 @@ class MyListings extends Component {
       //       },
       //       row.rawData
       //     ),
-      //   disabled: () => !!row.parentOffer
+      //   disabled: (row) => !!row.parentOffer
       // },
       // {
       //   text: formatMessage({
       //     id: 'inventory.detachOffer',
       //     defaultMessage: 'Detach from Virtual Group'
       //   }),
-      //   callback: () => this.detachOffer([row.id], row.rawData),
-      //   disabled: () => !row.parentOffer
+      //   callback: (row) => this.detachOffer([row.id], row.rawData),
+      //   disabled: (row) => !row.parentOffer
       // }
     ]
   }
