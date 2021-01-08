@@ -525,8 +525,8 @@ class DetailSidebar extends Component {
     }
   }
 
-  changedForm = () => {
-    this.setState({ changedForm: true })
+  changedForm = (isChanged = true) => {
+    this.setState({ changedForm: isChanged })
   }
 
   getPriceTiers = max => {
