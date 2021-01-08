@@ -190,12 +190,14 @@ export default function reducer(state = initialState, action) {
         openedPurchaseOrderShipping: false,
         opendSaleAttachingProductOffer: false
       }
-    case AT.ORDER_LOAD_BANK_ACCOUNTS_PENDING:
+
+    case AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS_PENDING:
+    case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_PENDING:
       return {
         ...state,
         bankAccountsLoading: true
       }
-    case AT.ORDER_LOAD_BANK_ACCOUNTS_FULFILLED:
+    case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_FULFILLED:
       return {
         ...state,
         bankAccounts: action.payload.data.map(bankAccount => {
@@ -207,7 +209,20 @@ export default function reducer(state = initialState, action) {
         }),
         bankAccountsLoading: false
       }
-    case AT.ORDER_LOAD_BANK_ACCOUNTS_REJECTED:
+    case AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS_FULFILLED:
+      return {
+        ...state,
+        bankAccounts: action.payload.data.map(bankAccount => {
+          return {
+            id: bankAccount.id,
+            text: bankAccount.display_name,
+            value: bankAccount.account_public_id
+          }
+        }),
+        bankAccountsLoading: false
+      }
+    case AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS_REJECTED:
+    case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_REJECTED:
       return {
         ...state,
         bankAccountsLoading: false
