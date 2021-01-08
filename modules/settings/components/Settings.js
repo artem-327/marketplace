@@ -15,6 +15,7 @@ import UsersSidebar from './UserTable/UsersSidebar'
 import UsersPopup from './UserTable/UsersPopup'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsSidebar from './BankAccountsTable/BankAccountsSidebar'
+import SendLinkPopup from './BankAccountsTable/SendLinkPopup'
 import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDocPopup'
 import TablesHandlers from './TablesHandlers'
 
@@ -339,7 +340,8 @@ class Settings extends Component {
         />
       ),
       'credit-cards': <CreditCardsPopup />,
-      'guest-companies': <ClientCompanyPopup />
+      'guest-companies': <ClientCompanyPopup />,
+      'bank-accounts': <SendLinkPopup isOpenPopup={isOpenPopup} closePopup={closePopup} />
     }
 
     const sidebarForm = {

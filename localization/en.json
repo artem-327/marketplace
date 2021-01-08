@@ -2192,6 +2192,7 @@
   "settings.tables.creditCards.search": "Search credit card ",
   "settings.tables.bankAccounts.buttonAdd": "Add Account",
   "settings.tables.bankAccounts.search": "Search bank account ",
+  "settings.tables.bankAccounts.sendLink": "Send Link",
   "settings.tables.bankAccounts.registerDwolla": "Register Dwolla Account",
   "settings.tables.bankAccounts.uploadDoc": "Upload Documents",
   "settings.tables.bankAccounts.uploadOwnerDoc": "Upload Owner Documents",
@@ -2973,5 +2974,7 @@
   "detailRow.cofA": "C of A",
   "detailRow.orderTotal": "Order Total",
   "broadcast.saveAsTemplate": "Save as Templates",
-  "product.packaging.selectFirst": "Please select Packaging Unit"
+  "product.packaging.selectFirst": "Please select Packaging Unit",
+  "settings.sendLink.text": "You may email a link to an account controller to add the bank accounts separately",
+  "global.emailAddress": "Email Address"
 }
