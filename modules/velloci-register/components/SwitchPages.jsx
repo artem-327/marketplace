@@ -9,45 +9,38 @@ import TermsAndConditions from './steps/TermsAndConditions'
 //Helpers
 import { getSafe } from '../../../utils/functions'
 
-export const getContent = (
-  formikProps,
-  entityTypes,
-  naicsCodes,
-  entityDocuments,
-  countBeneficialOwners,
-  businessRoles,
-  numberBeneficialOwners,
-  activeStep
-) => {
-  let error = getSafe(() => formikProps.errors.companyFormationDocument.attachments, false)
+export const switchPages = props => {
+  let error = getSafe(() => props.formikProps.errors.companyFormationDocument.attachments, false)
 
-  switch (activeStep) {
+  switch (props.activeStep) {
     case 0: {
-      return <CompanyVerification formikProps={formikProps} />
+      return <CompanyVerification formikProps={props.formikProps} />
     }
     case 1: {
-      return <ControlPerson formikProps={formikProps} entityTypes={entityTypes} naicsCodes={naicsCodes} />
+      return (
+        <ControlPerson formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
+      )
     }
     case 2: {
-      return <BusinessInfo formikProps={formikProps} />
+      return <BusinessInfo formikProps={props.formikProps} />
     }
     case 3: {
-      return <FormationDocument formikProps={formikProps} error={error} entityDocuments={entityDocuments} />
+      return <FormationDocument formikProps={props.formikProps} error={error} entityDocuments={props.entityDocuments} />
     }
     case 4: {
-      return <OwnerInformation formikProps={formikProps} countBeneficialOwners={countBeneficialOwners} />
+      return <OwnerInformation formikProps={props.formikProps} countBeneficialOwners={props.countBeneficialOwners} />
     }
     case 5: {
       return (
         <PersonalInformation
-          formikProps={formikProps}
-          businessRoles={businessRoles}
-          numberBeneficialOwners={numberBeneficialOwners}
+          formikProps={props.formikProps}
+          businessRoles={props.businessRoles}
+          numberBeneficialOwners={props.numberBeneficialOwners}
         />
       )
     }
     case 6: {
-      return <TermsAndConditions formikProps={formikProps} />
+      return <TermsAndConditions formikProps={props.formikProps} />
     }
     default:
       return <></>

@@ -214,3 +214,40 @@ export const submitForm = async (formikProps, activeStep, nextStep) => {
     })
     .catch(err => console.log('catch', err))
 }
+
+/**
+ * Function handle submit form and register Velloci.
+ * @param {object} values The object of values from form.
+ * @param {object} props The props of velloci form.
+ * @param {object} selfFormikProps The object of formik props.
+ */
+export const handleSubmit = async (values, props, selfFormikProps) => {
+  if (props.activeStep !== 6) return
+
+  try {
+    props.loadSubmitButton(true)
+    const body = getBody(values)
+
+    const files = getSafe(() => values.companyFormationDocument.attachments, '')
+    let companyId = null
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
+      if (searchParams.has('companyId')) {
+        companyId = Number(searchParams.get('companyId'))
+      }
+    }
+
+    await props.postRegisterVelloci(body, companyId, files)
+    if (companyId) {
+      Router.push('/companies/companies')
+    } else {
+      await props.getIdentity()
+      Router.push('/settings/bank-accounts')
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    props.loadSubmitButton(false)
+    selfFormikProps.setSubmitting(false)
+  }
+}
