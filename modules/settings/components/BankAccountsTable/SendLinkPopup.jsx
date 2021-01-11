@@ -1,25 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Grid } from 'semantic-ui-react'
-import { Input } from 'formik-semantic-ui-fixed-validation'
 import { Formik } from 'formik'
+import { Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import * as Yup from 'yup'
-
 //Components
 import BasicButton from '../../../../components/buttons/BasicButton'
-import { errorMessages, multipleEmails } from '~/constants/yupValidation'
-
-const initialFormValues = {
-  email: ''
-}
-
-const formValidation = () =>
-  Yup.lazy(values =>
-    Yup.object().shape({
-      email: multipleEmails().required(errorMessages.requiredMessage)
-    })
-  )
+//Services
+import { initialFormValues, formValidation } from './services'
+//Styles
+import { ModalActions, GridColumnInputEmail } from './styles'
 
 const SendLinkPopup = ({ isOpenPopup, closePopup, intl: { formatMessage } }) => {
   return (
@@ -61,7 +51,7 @@ const SendLinkPopup = ({ isOpenPopup, closePopup, intl: { formatMessage } }) => 
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
-                    <Grid.Column>
+                    <GridColumnInputEmail>
                       <Input
                         label={formatMessage({ id: 'global.emailAddress', defaultMessage: 'Email Address' })}
                         name='email'
@@ -73,11 +63,11 @@ const SendLinkPopup = ({ isOpenPopup, closePopup, intl: { formatMessage } }) => 
                           fluid: true
                         }}
                       />
-                    </Grid.Column>
+                    </GridColumnInputEmail>
                   </Grid.Row>
                 </Grid>
               </Modal.Content>
-              <Modal.Actions>
+              <ModalActions>
                 <BasicButton
                   noBorder
                   onClick={() => closePopup()}
@@ -93,7 +83,7 @@ const SendLinkPopup = ({ isOpenPopup, closePopup, intl: { formatMessage } }) => 
                     {text => text}
                   </FormattedMessage>
                 </BasicButton>
-              </Modal.Actions>
+              </ModalActions>
             </>
           )
         }}
