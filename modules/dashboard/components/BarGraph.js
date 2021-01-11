@@ -88,16 +88,16 @@ const BarGraph = ({ data, dataKey, isCurrency, title, titleId, subTitle, subTitl
             <YAxis tickFormatter={formatYAxis} tickLine={false} axisLine={false} width={80} />
             <CartesianGrid vertical={false} strokeDasharray='2 10' />
             {isCurrency && unitsCurrency > 0 ? (
-              <Tooltip content={<CustomTooltip unitsCurrency={unitsCurrency} />} />
+              <Tooltip content={<CustomTooltip unitsCurrency={unitsCurrency} />} cursor={false} />
             ) : (
-              <Tooltip />
+              <Tooltip cursor={false} />
             )}
             <Legend />
             <Bar
               legendType='circle'
               dataKey={dataKey ? dataKey : 'Transactions'}
               fill='#2599d5'
-              isAnimationActive={true}
+              isAnimationActive={false}
               barSize={15}
             />
           </BarChart>

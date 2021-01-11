@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
-import { Menu, Grid, Tab, Popup, Input, Dropdown } from 'semantic-ui-react'
-import { Briefcase, Package, DollarSign, User, Layers, Coffee, Globe } from 'react-feather'
+import { Menu, Grid, Tab, Popup, Input, Dropdown, Button } from 'semantic-ui-react'
+import { Package, DollarSign, User, Layers, Coffee, Globe, Activity, BarChart2 } from 'react-feather'
 //components
 import { getSafe } from '~/utils/functions'
 import PieGraph from './PieGraph'
@@ -443,6 +443,51 @@ const RightChartControl = styled.div`
   height: 40px;
 `
 
+const GraphTypeSwitch = styled.div`
+  display: inline-block;
+  margin: auto 10px;
+
+  .ui.button {
+    height: 32px;
+    min-width: 32px;
+    padding: 6px !important;
+    text-align: center;
+  }
+ 
+  &.line-graph {
+    .ui.left.button {
+      background-color: #2599d5;
+      border: solid 1px #2599d5;
+      > svg {
+        color: #ffffff;
+      }
+    }
+    .ui.right.button {
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      > svg {
+        color: #20273a;
+      }
+    }
+  }
+  &.bar-graph {
+    .ui.left.button {
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      > svg {
+        color: #20273a;
+      }
+    }
+    .ui.right.button {
+      background-color: #2599d5;
+      border: solid 1px #2599d5;
+      > svg {
+        color: #ffffff;
+      }
+    }
+  }
+`
+
 class Dashboard extends Component {
   state = {
     activeTab: 0,
@@ -453,15 +498,12 @@ class Dashboard extends Component {
     dateToEdited: null,
     selectedDate: null,
     statsType: null,
-    dateRangeSelected: 0
+    dateRangeSelected: 0,
+    graphType: 0
   }
 
   componentDidMount() {
-    try {
-      this.props.getDashboardData()
-    } catch (error) {
-      console.error(error)
-    }
+    this.setDateRange(0)
   }
 
   filterQuickDate = type => {
@@ -525,7 +567,7 @@ class Dashboard extends Component {
   }
 
   setDateRange = value => {
-    const { isAdmin, takeover } = this.props
+    const { isAdmin, takeover, getDashboardData, getDailyStatistics } = this.props
     let dateFrom,
       dateTo = null
 
@@ -562,15 +604,45 @@ class Dashboard extends Component {
         break
     }
 
-    this.props.getDashboardData(
-      moment(dateFrom).format('YYYY-MM-DD') + 'T00%3A00%3A00Z'
-    )
-
-    if (isAdmin && !takeover) {
-
+    try {
+      getDashboardData(
+        moment(dateFrom).format('YYYY-MM-DD') + 'T00%3A00%3A00Z'
+      )
+    } catch (error) {
+      console.error(error)
     }
 
+    if (isAdmin && !takeover) {
+      try {
+        getDailyStatistics(
+          moment(dateFrom).format('YYYY-MM-DD') + 'T00:00:00Z',
+          moment(dateTo).add(1, 'days').format('YYYY-MM-DD') + 'T00:00:00Z'
+        )
+      } catch (error) {
+        console.error(error)
+      }
+    }
     this.setState({ dateRangeSelected: value })
+  }
+
+  graphTypeSwitch = () => {
+    const { graphType } = this.state
+    return (
+      <GraphTypeSwitch className={graphType ? 'bar-graph' : 'line-graph'}>
+        <Button
+          attached='left'
+          onClick={() => this.setState({ graphType: 0 })}
+          data-test='dashboard_stats_line_graph_type_btn'>
+            <Activity size={20} />
+        </Button>
+        <Button
+          attached='right'
+          onClick={() => this.setState({ graphType: 1 })}
+          data-test='dashboard_stats_bar_graph_type_btn'>
+            <BarChart2 size={20} />
+        </Button>
+      </GraphTypeSwitch>
+    )
   }
 
   render() {
@@ -675,7 +747,8 @@ class Dashboard extends Component {
       dateToEdited,
       selectedDate,
       statsType,
-      dateRangeSelected
+      dateRangeSelected,
+      graphType
     } = this.state
 
     const adminMenuTabs = [
@@ -687,13 +760,23 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='sales' attached={false}>
-            <BarGraph
-              data={totalSumOfSalesMonthly}
-              title='Total Sum Of Sales Monthly'
-              titleId='dasboard.sales.graph.title'
-              subTitle='in thousand dollars'
-              subTitleId='dasboard.sales.graph.subtitle'
-            />{' '}
+            {graphType === 0 ? (
+              <LineGraph
+                data={totalSumOfSalesMonthly}
+                title='Total Sum Of Sales Monthly'
+                titleId='dasboard.sales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            ) : (
+              <BarGraph
+                data={totalSumOfSalesMonthly}
+                title='Total Sum Of Sales Monthly'
+                titleId='dasboard.sales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
         )
       },
@@ -707,16 +790,29 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='stats' attached={false}>
-            <LineGraph
-              data={stats}
-              dataKey={statsType ? statsTabs[statsType][0] : Object.entries(statsTabs)[0][1][0]}
-              isCurrency={statsType ? statsTabs[statsType][1] : false}
-              unitsCurrency={1}
-              title='Daily Statistics'
-              titleId='dashboard.daily.stats.title'
-              subTitle=''
-              subTitleId=''
-            />
+            {graphType === 0 ? (
+              <LineGraph
+                data={stats}
+                dataKey={statsType ? statsTabs[statsType][0] : Object.entries(statsTabs)[0][1][0]}
+                isCurrency={statsType ? statsTabs[statsType][1] : false}
+                unitsCurrency={1}
+                title='Daily Statistics'
+                titleId='dashboard.daily.stats.title'
+                subTitle=''
+                subTitleId=''
+              />
+            ) : (
+              <BarGraph
+                data={stats}
+                dataKey={statsType ? statsTabs[statsType][0] : Object.entries(statsTabs)[0][1][0]}
+                isCurrency={statsType ? statsTabs[statsType][1] : false}
+                unitsCurrency={1}
+                title='Total Sum Of Sales Monthly'
+                titleId='dasboard.sales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
         )
       },
@@ -745,6 +841,7 @@ class Dashboard extends Component {
               value={dateRangeSelected}
               data-test='dashboard_date_range_select_drpdn'
             />
+            {this.graphTypeSwitch()}
           </RightChartControl>
         )
       }
@@ -761,13 +858,23 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='company-sales' attached={false}>
-            <LineGraph
-              data={companySumOfSalesMonthly}
-              title='Company Sum Of Sales Monthly'
-              titleId='dasboard.companySales.graph.title'
-              subTitle='in thousand dollars'
-              subTitleId='dasboard.sales.graph.subtitle'
-            />
+            {graphType === 0 ? (
+              <LineGraph
+                data={companySumOfSalesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            ) : (
+              <BarGraph
+                data={companySumOfSalesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
         )
       },
@@ -781,13 +888,23 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='company-purchases' attached={false}>
-            <LineGraph
-              data={companySumOfPurchasesMonthly}
-              title='Company Sum Of Purchases Monthly'
-              titleId='dasboard.companyPurchase.graph.title'
-              subTitle='in thousand dollars'
-              subTitleId='dasboard.sales.graph.subtitle'
-            />
+            {graphType === 0 ? (
+              <LineGraph
+                data={companySumOfPurchasesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            ) : (
+              <BarGraph
+                data={companySumOfPurchasesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
         )
       },
@@ -817,6 +934,7 @@ class Dashboard extends Component {
               value={dateRangeSelected}
               data-test='dashboard_date_range_select_drpdn'
             />
+            {this.graphTypeSwitch()}
           </RightChartControl>
         )
       }
@@ -833,13 +951,23 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='company-purchases' attached={false}>
-            <LineGraph
-              data={companySumOfPurchasesMonthly}
-              title='Company Sum Of Purchases Monthly'
-              titleId='dasboard.companyPurchase.graph.title'
-              subTitle='in thousand dollars'
-              subTitleId='dasboard.sales.graph.subtitle'
-            />
+            {graphType === 0 ? (
+              <LineGraph
+                data={companySumOfPurchasesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            ) : (
+              <BarGraph
+                data={companySumOfPurchasesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
         )
       },
@@ -869,6 +997,7 @@ class Dashboard extends Component {
               value={dateRangeSelected}
               data-test='dashboard_date_range_select_drpdn'
             />
+            {this.graphTypeSwitch()}
           </RightChartControl>
         )
       }
@@ -1035,22 +1164,6 @@ class Dashboard extends Component {
             )}
           </Grid.Column>
         </Grid.Row>
-
-        {/* // ! ! */ false && (
-        <Grid.Row>
-          <Grid.Column width={10}>
-            <DivContainerGraph>
-              <StyledTab
-                style={{ padding: '0 20px 0 20px' }}
-                className='inventory-sidebar tab-menu flex stretched'
-                menu={{ secondary: true, pointing: true }}
-                activeIndex={this.state.activeTab}
-                panes={panes}
-              />
-            </DivContainerGraph>
-          </Grid.Column>
-        </Grid.Row>
-        )}
 
         {isClientCompany && (
           <Grid.Row>
