@@ -1605,6 +1605,7 @@
   "cart.totalItems": "TOTAL ITEMS: {count}",
   "cart.weightLimitExceeded.header": "We are sorry, but no matching Shipping Quotes were provided by logistics company.",
   "cart.weightLimitExceeded.content": "Your order weight exceeds weight limit {limit} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.",
+  "cart.palletLimitExceeded.content": "Your order pallet exceeds pallet limit {limit} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.",
   "cart.selectWhOrAddress": "Please, select delivery address or warehouse first.",
   "cart.quoteReceived": "If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.",
   "cart.requestShippingQuote": "Request Shipping Quote",
@@ -1617,6 +1618,8 @@
   "cart.productForm": "Form:",
   "cart.packaging": "Packaging:",
   "cart.numOfPackages": "# of Packages:",
+  "cart.palletCount": "Pallet Count",
+  "cart.palletCountLimit": "Pallet Count Limit",
   "cart.fobPrice": "FOB Price:",
   "cart.priceLevel": "Price Level",
   "cart.fobPricing": "FOB Pricing:",
@@ -1630,7 +1633,7 @@
   "cart.pricingLevel": "Pricing Level:",
   "cart.selectQuantity": "Quantity",
   "cart.SummaryHeader": "3. Summary",
-  "cart.totalQuantity": "Total Quantity",
+  "cart.totalQuantity": "Total Quantity:",
   "cart.price": "Price:",
   "cart.priceLb": "Price/LB",
   "cart.subtotal": "Subtotal",
@@ -2980,5 +2983,4 @@
   "detailRow.orderTotal": "Order Total",
   "broadcast.saveAsTemplate": "Save as Templates",
   "product.packaging.selectFirst": "Please select Packaging Unit"
-
 }
