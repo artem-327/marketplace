@@ -2976,5 +2976,8 @@
   "broadcast.saveAsTemplate": "Save as Templates",
   "product.packaging.selectFirst": "Please select Packaging Unit",
   "settings.sendLink.text": "You may email a link to an account controller to add the bank accounts separately",
-  "global.emailAddress": "Email Address"
+  "global.emailAddress": "Email Address",
+  "settings.accounts.viewInactiveAccounts": "View Inactive Accounts",
+  "settings.accounts.hideInactiveAccounts": "Hide Inactive Accounts",
+  "settings.accounts.deleteInstitutions": "Delete Institutions"
 }

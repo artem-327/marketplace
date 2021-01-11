@@ -306,36 +306,20 @@ class BankAccountsTable extends Component {
     { name: 'accountName', disabled: true },
     {
       name: 'name',
-      title: (
-        <FormattedMessage id='settings.accountName' defaultMessage='Account Name'>
-          {text => text}
-        </FormattedMessage>
-      ),
+      title: ' ',
       allowReordering: false
     },
     {
       name: 'bankAccountType',
-      title: (
-        <FormattedMessage id='settings.accountType' defaultMessage='Account Type'>
-          {text => text}
-        </FormattedMessage>
-      )
+      title: ' '
     },
     {
       name: 'bankName',
-      title: (
-        <FormattedMessage id='settings.bankName' defaultMessage='Bank Name'>
-          {text => text}
-        </FormattedMessage>
-      )
+      title: ' '
     },
     {
       name: 'statusLabel',
-      title: (
-        <FormattedMessage id='settings.status' defaultMessage='Status'>
-          {text => text}
-        </FormattedMessage>
-      )
+      title: ' '
     }
   ]
 
@@ -435,15 +419,35 @@ class BankAccountsTable extends Component {
     return rows.map(row => {
       return {
         ...row,
-        name: (
-          <ActionCell
-            row={row}
-            getActions={this.getActions}
-            content={row.name}
-          />
-        )
+        name: <ActionCell row={row} getActions={this.getActions} content={row.name} />
       }
     })
+  }
+
+  groupActions = (rows, idBank, callback) => {
+    let bankAccount = rows.find(el => el.id === idBank)
+
+    if (!bankAccount) return []
+
+    const tabs = [
+      {
+        text: { id: 'settings.accounts.viewInactiveAccounts', defaultMessage: 'View Inactive Accounts' },
+        key: 'viewInactiveAccounts'
+      },
+      {
+        text: { id: 'settings.accounts.hideInactiveAccounts', defaultMessage: 'Hide Inactive Accounts' },
+        key: 'hideInactiveAccounts'
+      },
+      {
+        text: { id: 'settings.accounts.deleteInstitutions', defaultMessage: 'Delete Institutions' },
+        key: 'deleteInstitutions'
+      }
+    ]
+
+    return tabs.map((tab, i) => ({
+      text: tab.text,
+      callback: () => callback(bankAccount, i)
+    }))
   }
 
   render() {
@@ -459,6 +463,27 @@ class BankAccountsTable extends Component {
               loading={loading}
               columns={this.getColumns()}
               filterValue={filterValue}
+              groupBy={['bankName']}
+              getChildGroups={rows =>
+                _(rows)
+                  .groupBy('bankName')
+                  .map(v => ({
+                    key: `${v[0].bankName}_${v.length}_${v[0].id}`,
+                    childRows: v
+                  }))
+                  .value()
+              }
+              groupActions={row => {
+                console.log('row====================================')
+                console.log(row)
+                console.log('====================================')
+                let values = row.key.split('_')
+                return this.groupActions(myRows, values[values.length - 1], openPopup).map(a => ({
+                  ...a,
+                  text: <FormattedMessage {...a.text}>{text => text}</FormattedMessage>
+                }))
+              }}
+              renderGroupLabel={({ row: { value }, groupLength }) => null}
             />
           </div>
         )}
