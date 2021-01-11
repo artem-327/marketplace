@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { Menu, Grid, Tab, Popup, Input, Dropdown } from 'semantic-ui-react'
-import { Briefcase, Package, DollarSign, User, Layers } from 'react-feather'
+import { Briefcase, Package, DollarSign, User, Layers, Coffee, Globe } from 'react-feather'
 //components
 import { getSafe } from '~/utils/functions'
 import PieGraph from './PieGraph'
@@ -525,6 +525,7 @@ class Dashboard extends Component {
   }
 
   setDateRange = value => {
+    const { isAdmin, takeover } = this.props
     let dateFrom,
       dateTo = null
 
@@ -564,6 +565,11 @@ class Dashboard extends Component {
     this.props.getDashboardData(
       moment(dateFrom).format('YYYY-MM-DD') + 'T00%3A00%3A00Z'
     )
+
+    if (isAdmin && !takeover) {
+
+    }
+
     this.setState({ dateRangeSelected: value })
   }
 
@@ -581,6 +587,7 @@ class Dashboard extends Component {
       top10CompanyProductsByValueSales,
       broadcastedProductOffersValue,
       usersCount,
+      productOffers,
       companySumOfPurchasesMonthly,
       companySumOfSalesMonthly,
       top10Buyers,
@@ -835,6 +842,35 @@ class Dashboard extends Component {
             />
           </TabPane>
         )
+      },
+      {
+        menuItem: (
+          <RightChartControl>
+            {activeTab === 2 ? (
+              <StatsTypeSelect
+                key='statsType'
+                style={{ marginRight: '10px' }}
+                selection
+                pointing='top right'
+                options={Object.entries(statsTabs).map(stType => {
+                  return { text: stType[1][0], value: stType[0] }
+                })}
+                onChange={(e, { value }) => this.setState({ statsType: value })}
+                value={!statsType ? Object.entries(statsTabs)[0][0] : statsType}
+                data-test='dashboard_stats_drpdn'
+              />
+            ) : null}
+            <StatsTypeSelect
+              key='dateRangeSelect'
+              style={{ minWidth: '150px' }}
+              selection
+              options={dateRangeOptions}
+              onChange={(e, { value }) => this.setDateRange(value)}
+              value={dateRangeSelected}
+              data-test='dashboard_date_range_select_drpdn'
+            />
+          </RightChartControl>
+        )
       }
     ]
 
@@ -1000,6 +1036,7 @@ class Dashboard extends Component {
           </Grid.Column>
         </Grid.Row>
 
+        {/* // ! ! */ false && (
         <Grid.Row>
           <Grid.Column width={10}>
             <DivContainerGraph>
@@ -1013,6 +1050,7 @@ class Dashboard extends Component {
             </DivContainerGraph>
           </Grid.Column>
         </Grid.Row>
+        )}
 
         {isClientCompany && (
           <Grid.Row>
@@ -1021,9 +1059,9 @@ class Dashboard extends Component {
                 onClickUrl={'/settings/users'}
                 icon={<User />}
                 data={usersCount}
-                title='Total Users Count'
+                title='Users'
                 titleId='dashboard.totalUsersCount.title'
-                styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
+                styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(230, 243, 211)' }}
               />
             </Grid.Column>
           </Grid.Row>
@@ -1031,16 +1069,17 @@ class Dashboard extends Component {
 
         {isAdmin && !takeover && (
           <>
-            <Grid.Row>
+            <Grid.Row style={{ paddingBottom: '6px' }}>
               <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={isAdmin && !takeover ? '/companies/companies' : '/manage-guests/guests'}
-                  icon={<Briefcase />}
+                  icon={<Coffee />}
                   data={companiesCount}
                   title={isAdmin && !takeover ? 'Companies' : 'Guests'}
                   titleId={
                     isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalGuestCompanies.title'
                   }
+                  styleCircle={{ backgroundColor: '#2599d5', border: 'solid 5px rgb(211, 235, 247)' }}
                 />
               </Grid.Column>
               <Grid.Column width={5}>
@@ -1048,18 +1087,20 @@ class Dashboard extends Component {
                   onClickUrl={isAdmin && !takeover ? '/operations/company-product-catalog' : '/inventory/my-products'}
                   icon={<Package />}
                   data={companyProductsCount}
-                  title='Total Products'
+                  title='Products'
                   titleId='dashboard.totalProducts.title'
-                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
+                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 244, 222)' }}
                 />
               </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
-                  icon={<DollarSign />}
+                  icon={<Layers />}
                   data={productOffersValue && Math.round(productOffersValue)}
                   title={'Total Inventory Count'}
                   titleId={'dashboard.totalValueWithoutMilion.title'}
-                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
+                  styleCircle={{ backgroundColor: '#96d3b7', border: 'solid 5px rgb(234, 246, 241)' }}
+                  style='currency'
+                  currency={currency}
                 />
               </Grid.Column>
             </Grid.Row>
@@ -1070,13 +1111,10 @@ class Dashboard extends Component {
                   onClickUrl={isAdmin && !takeover ? '/companies/users' : '/settings/users'}
                   icon={<User />}
                   data={usersCount}
-                  title='Total Users Count'
+                  title='Users'
                   titleId='dashboard.totalUsersCount.title'
-                  styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
+                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(230, 243, 211)' }}
                 />
-              </Grid.Column>
-              <Grid.Column width={5}>
-
               </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
@@ -1084,8 +1122,9 @@ class Dashboard extends Component {
                   data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
                   title={'Total Broadcasted Value'}
                   titleId={'dashboard.totalBroadcastedValueWithoutMilion.title'}
-                  styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
-                  isLastSummary
+                  styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(252, 225, 218)' }}
+                  style='currency'
+                  currency={currency}
                 />
               </Grid.Column>
             </Grid.Row>
@@ -1094,14 +1133,15 @@ class Dashboard extends Component {
 
         {!isAdmin && !isClientCompany && (
           <>
-            <Grid.Row>
+            <Grid.Row style={{ paddingBottom: '6px' }}>
               <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={'/manage-guests/guests'}
-                  icon={<Briefcase />}
+                  icon={<Coffee />}
                   data={companiesCount}
-                  title={'Total Guest Companies'}
+                  title={'Guest'}
                   titleId={'dashboard.totalGuestCompanies.title'}
+                  styleCircle={{ backgroundColor: '#2599d5', border: 'solid 5px rgb(211, 235, 247)' }}
                 />
               </Grid.Column>
               <Grid.Column width={5}>
@@ -1109,9 +1149,9 @@ class Dashboard extends Component {
                   onClickUrl={'/inventory/my-products'}
                   icon={<Package />}
                   data={companyProductsCount}
-                  title='Total Products'
+                  title='Products'
                   titleId='dashboard.totalProducts.title'
-                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
+                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 244, 222)' }}
                 />
               </Grid.Column>
               <Grid.Column width={5}>
@@ -1125,7 +1165,7 @@ class Dashboard extends Component {
                       ? 'dashboard.totalValueWithoutMilion.title'
                       : 'dashboard.totalInventoryCount.title'
                   }
-                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
+                  styleCircle={{ backgroundColor: '#96d3b7', border: 'solid 5px rgb(234, 246, 241)' }}
                   style='currency'
                   currency={currency}
                 />
@@ -1138,13 +1178,20 @@ class Dashboard extends Component {
                   onClickUrl={'/settings/users'}
                   icon={<User />}
                   data={usersCount}
-                  title='Total Users Count'
+                  title='Users'
                   titleId='dashboard.totalUsersCount.title'
-                  styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
+                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(230, 243, 211)' }}
                 />
               </Grid.Column>
               <Grid.Column width={5}>
-
+                <SummaryRectangle
+                  onClickUrl={'/inventory/my-listings'}
+                  icon={<Globe />}
+                  data={productOffers}
+                  title='Product Offers'
+                  titleId='dashboard.totalProductOffers.title'
+                  styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(219, 243, 248)' }}
+                />
               </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
@@ -1157,8 +1204,7 @@ class Dashboard extends Component {
                       ? 'dashboard.totalBroadcastedValueWithoutMilion.title'
                       : 'dashboard.totalSales.title'
                   }
-                  styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
-                  isLastSummary
+                  styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(252, 225, 218)' }}
                   style='currency'
                   currency={currency}
                 />
@@ -1168,44 +1214,19 @@ class Dashboard extends Component {
         )}
 
         <Grid.Row>
-          {isAdmin && !takeover
-            ? (
-              <>
-                <Grid.Column width={10}>
-                  <DivContainerGraph>
-                    <StyledTab
-                      style={{ padding: '0 20px 0 20px' }}
-                      className='inventory-sidebar tab-menu flex stretched'
-                      menu={{ secondary: true, pointing: true }}
-                      activeIndex={this.state.activeTab}
-                      panes={panes}
-                    />
-                  </DivContainerGraph>
-                </Grid.Column>
-                <Grid.Column width={5}>
-                  <PieGraph
-                    isCurrency={true}
-                    data={top10ProductGroups}
-                    title='POPULAR PRODUCTS'
-                    titleId='dasboard.productsPopular.title'
-                  />
-                </Grid.Column>
-              </>
-            ) : (
-            <Grid.Column width={15}>
-              <DivContainerGraph>
-                <StyledTab
-                  style={{ padding: '0 20px 0 20px' }}
-                  className='inventory-sidebar tab-menu flex stretched'
-                  menu={{ secondary: true, pointing: true }}
-                  activeIndex={this.state.activeTab}
-                  panes={panes}
-                />
-              </DivContainerGraph>
-            </Grid.Column>
-            )
-          }
+          <Grid.Column width={15}>
+            <DivContainerGraph>
+              <StyledTab
+                style={{ padding: '0 20px 0 20px' }}
+                className='inventory-sidebar tab-menu flex stretched'
+                menu={{ secondary: true, pointing: true }}
+                activeIndex={this.state.activeTab}
+                panes={panes}
+              />
+            </DivContainerGraph>
+          </Grid.Column>
         </Grid.Row>
+
         {isAdmin && !takeover ? (
           <Grid.Row>
             <Grid.Column width={5}>
@@ -1234,7 +1255,8 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        {false && ((!isAdmin && !isClientCompany) || takeover) ? (
+
+        {(!isAdmin && !isClientCompany) || takeover ? (
           <Grid.Row>
             {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
               <Grid.Column width={5}>
@@ -1259,7 +1281,7 @@ class Dashboard extends Component {
               <Grid.Column width={5}>
                 <PieGraph
                   data={top10Buyers}
-                  title='TOP 10 BUYERS'
+                  title='TOP 5 BUYERS'
                   titleId='dasboard.topBuyers.title'
                 />
               </Grid.Column>
