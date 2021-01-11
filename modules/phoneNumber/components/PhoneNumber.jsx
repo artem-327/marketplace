@@ -80,7 +80,7 @@ export default class PhoneNumber extends Component {
   }
 
   componentDidMount = async () => {
-    const { name, setFieldValue, setFieldTouched, defaultCountryCode } = this.props
+    const { defaultCountryCode } = this.props
 
     if (!this.props.phoneCountryCodes.length) await this.props.getCountryCodes()
 
@@ -99,7 +99,7 @@ export default class PhoneNumber extends Component {
   componentDidUpdate(prevProps, nextProps, snapshot) {
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
 
-    if (phone && phone !== this.state.phoneFull) {
+    if (phone !== this.state.phoneFull) {
       phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
 
       this.setState({
@@ -219,7 +219,6 @@ export default class PhoneNumber extends Component {
       touched,
       isSubmitting,
       disabled,
-      clearable,
       placeholder
     } = this.props
 
@@ -228,7 +227,7 @@ export default class PhoneNumber extends Component {
     return (
       <Field
         name={name}
-        render={({ field, form }) => {
+        render={() => {
           return (
             <FormField error={!!error}>
               {label && <label>{label}</label>}

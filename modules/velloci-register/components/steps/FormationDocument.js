@@ -41,7 +41,7 @@ function FormationDocument({ formikProps, intl: { formatMessage }, error, entity
           <Rectangle style={{ margin: '0px' }}>
             <CustomDivTitle>
               <Info size={20} style={{ color: '#2599d5' }} />
-              <CustomDivInTitle>
+              <CustomDivInTitle style={{ color: '#2599d5' }}>
                 <FormattedMessage
                   id='velloci.formationDocument.requiredTitle'
                   defaultMessage='What files are required?'
@@ -62,7 +62,7 @@ function FormationDocument({ formikProps, intl: { formatMessage }, error, entity
           <Rectangle style={{ margin: '0px' }}>
             <CustomDivTitle>
               <Info size={20} style={{ color: '#2599d5' }} />
-              <CustomDivInTitle>
+              <CustomDivInTitle style={{ color: '#2599d5' }}>
                 <FormattedMessage
                   id='velloci.formationDocument.optionalTitle'
                   defaultMessage='What files are optional?'
@@ -95,6 +95,7 @@ function FormationDocument({ formikProps, intl: { formatMessage }, error, entity
             <Required />
           </DivLegalAddressTitle>
           <UploadAttachment
+            acceptFiles='.png,.jpg,.pdf'
             name='companyFormationDocument.attachments'
             attachments={formikProps.values.companyFormationDocument.attachments}
             fileMaxSize={20}

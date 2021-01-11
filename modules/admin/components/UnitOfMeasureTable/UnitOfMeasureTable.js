@@ -104,7 +104,7 @@ class UnitOfMeasureTable extends Component {
             row={row}
             getActions={this.getActions}
             content={row.name}
-            onContentClick={() => this.props.openEditPopup(row)}
+            {...(row.system === false && { onContentClick: () => this.props.openEditPopup(row) })}
           />
         )
       }

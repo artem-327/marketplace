@@ -34,11 +34,11 @@ const CheckboxControlPerson = styled(Checkbox)`
 const ButtonOrCustom = styled(Button.Group)`
   .ui.button {
     background-color: #ffffff !important;
-    color: #848893 !important;
+    color: #20273a !important;
     font-weight: bold !important;
   }
   .ui.active.button {
-    background-color: #2599d5 !important;
+    background-color: #20273a !important;
     color: #ffffff !important;
   }
 `
@@ -59,13 +59,19 @@ const SpanEstablishedLabel = styled.span`
   color: #848893;
 `
 
+const DivRectangle = styled(Rectangle)`
+  margin: 0px;
+  background-color: #f8f9fb;
+  border: solid 1px #dee2e6;
+`
+
 function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naicsCodes }) {
   return (
     <GridControlPerson>
       <GridRow>
         <GridColumn>
-          <Rectangle style={{ margin: '0px', backgroundColor: '#ddf1fc' }}>
-            <CustomDivTitle style={{ color: '#2599d5' }}>
+          <DivRectangle>
+            <CustomDivTitle>
               <CustomDivInTitle>
                 <FormattedMessage
                   id='velloci.controlPerson.infoTitle'
@@ -85,7 +91,7 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
                 defaultMessage='If this does not apply to you, you will not be able to continue. Please get the person who will be the Control Person  of this account to continue.'
               />
             </CustomDivContent>
-          </Rectangle>
+          </DivRectangle>
         </GridColumn>
       </GridRow>
       <GridRow>

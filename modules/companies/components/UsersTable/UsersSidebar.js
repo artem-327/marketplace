@@ -165,8 +165,9 @@ class UsersSidebar extends React.Component {
       this.props.searchCompany('', 30)
       this.setState({ popupValues: null })
     }
-    this.props.searchSellMarketSegments('')
-    this.props.searchBuyMarketSegments('')
+    // Commented by https://pm.artio.net/issues/34033#note-9
+    //this.props.searchSellMarketSegments('')
+    //this.props.searchBuyMarketSegments('')
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -319,9 +320,10 @@ class UsersSidebar extends React.Component {
       name: values.name,
       phone: values.phone,
       preferredCurrency: currencyId,
-      roles: values.roles,
-      sellMarketSegments: values.sellMarketSegments,
-      buyMarketSegments: values.buyMarketSegments
+      roles: values.roles
+      /*Commented by https://pm.artio.net/issues/34033#note-14 */
+      //sellMarketSegments: values.sellMarketSegments,
+      //buyMarketSegments: values.buyMarketSegments
     }
 
     removeEmpty(data)
@@ -535,8 +537,10 @@ class UsersSidebar extends React.Component {
                           label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
                           name='jobTitle'
                           inputProps={{
-                            placeholder:
-                              formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
+                            placeholder: formatMessage({
+                              id: 'global.enterJobTitle',
+                              defaultMessage: 'Enter Job Title'
+                            })
                           }}
                         />
                       </GridColumn>
@@ -620,7 +624,10 @@ class UsersSidebar extends React.Component {
                               setFieldValue('additionalBranches', [])
                             },
                             loading: searchedCompaniesLoading,
-                            placeholder: formatMessage({ id: 'global.selectCompany', defaultMessage: 'Select Company' }),
+                            placeholder: formatMessage({
+                              id: 'global.selectCompany',
+                              defaultMessage: 'Select Company'
+                            }),
                             'data-test': 'admin_users_popup_company_drpdn'
                           }}
                         />
@@ -668,60 +675,69 @@ class UsersSidebar extends React.Component {
                         />
                       </GridColumn>
                     </GridRow>
-                    <GridRow>
-                      <GridColumn width={8}>
-                        <Dropdown
-                          label={
-                            <>
-                              {formatMessage({ id: 'global.sellMarketSegments', defaultMessage: 'Sell Market Segment' })}
-                            </>
-                          }
-                          name='sellMarketSegments'
-                          options={allSellMarketSegmentsOptions}
-                          inputProps={{
-                            loading: searchedSellMarketSegmentsLoading,
-                            search: true,
-                            icon: 'search',
-                            selection: true,
-                            multiple: true,
-                            disabled: !values.homeBranch,
-                            noResultsMessage: formatMessage({
-                              id: 'global.startTypingToSearch',
-                              defaultMessage: 'Start typing to begin search'
-                            }),
-                            onSearchChange: this.handleSellMarketSegmentsSearchChange,
-                            onChange: (_, { value }) =>
-                              this.handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
-                          }}
-                        />
-                      </GridColumn>
-                      <GridColumn width={8}>
-                        <Dropdown
-                          label={
-                            <>
-                              {formatMessage({ id: 'global.buyMarketSegments', defaultMessage: 'Buy Market Segment' })}
-                            </>
-                          }
-                          name='buyMarketSegments'
-                          options={allBuyMarketSegmentsOptions}
-                          inputProps={{
-                            loading: searchedBuyMarketSegmentsLoading,
-                            search: true,
-                            icon: 'search',
-                            selection: true,
-                            multiple: true,
-                            disabled: !values.homeBranch,
-                            noResultsMessage: formatMessage({
-                              id: 'global.startTypingToSearch',
-                              defaultMessage: 'Start typing to begin search'
-                            }),
-                            onSearchChange: this.handleBuyMarketSegmentsSearchChange,
-                            onChange: (_, { value }) =>
-                              this.handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions)
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
+                    {/*Comemnted by https://pm.artio.net/issues/34033#note-9 */}
+                    {false && (
+                      <GridRow>
+                        <GridColumn width={8}>
+                          <Dropdown
+                            label={
+                              <>
+                                {formatMessage({
+                                  id: 'global.sellMarketSegments',
+                                  defaultMessage: 'Sell Market Segment'
+                                })}
+                              </>
+                            }
+                            name='sellMarketSegments'
+                            options={allSellMarketSegmentsOptions}
+                            inputProps={{
+                              loading: searchedSellMarketSegmentsLoading,
+                              search: true,
+                              icon: 'search',
+                              selection: true,
+                              multiple: true,
+                              disabled: !values.homeBranch,
+                              noResultsMessage: formatMessage({
+                                id: 'global.startTypingToSearch',
+                                defaultMessage: 'Start typing to begin search'
+                              }),
+                              onSearchChange: this.handleSellMarketSegmentsSearchChange,
+                              onChange: (_, { value }) =>
+                                this.handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn width={8}>
+                          <Dropdown
+                            label={
+                              <>
+                                {formatMessage({
+                                  id: 'global.purchaseMarketSegments',
+                                  defaultMessage: 'Purchase Market Segments'
+                                })}
+                              </>
+                            }
+                            name='buyMarketSegments'
+                            options={allBuyMarketSegmentsOptions}
+                            inputProps={{
+                              loading: searchedBuyMarketSegmentsLoading,
+                              search: true,
+                              icon: 'search',
+                              selection: true,
+                              multiple: true,
+                              disabled: !values.homeBranch,
+                              noResultsMessage: formatMessage({
+                                id: 'global.startTypingToSearch',
+                                defaultMessage: 'Start typing to begin search'
+                              }),
+                              onSearchChange: this.handleBuyMarketSegmentsSearchChange,
+                              onChange: (_, { value }) =>
+                                this.handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions)
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    )}
                   </Grid>
                 </CustomSegment>
 
