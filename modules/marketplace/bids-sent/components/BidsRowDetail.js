@@ -173,27 +173,40 @@ class BidsRowDetail extends React.Component {
       pkgAmount: '',
       pricePerUOM: ''
     },
-    detailExpandedIds: []
+    detailExpandedIds: [],
+    touched: false
   }
 
   componentDidMount() {
     const { popupValues, initValues } = this.props
 
-    if (initValues && (initValues.id === popupValues.id)) {
-      this.setState({ initialFormValues: initValues })
+    if (initValues && initValues.values && (initValues.values.id === popupValues.id)) {
+      this.setState({
+        ...initValues.state,
+        initialFormValues: initValues.values,
+        touched: false
+      })
     } else {
-      this.setState({ initialFormValues: {
+      this.setState({
+        initialFormValues: {
           id: popupValues.id,
           message: '',
           pkgAmount: popupValues.cfHistoryLastPkgAmount,
           pricePerUOM: ''
-      }})
+        },
+        detailExpandedIds: [],
+        touched: false
+      })
     }
   }
 
   componentWillUnmount() {
-    if (Object.keys(this.formikProps.touched).length && this.props.onUnmount)
-      this.props.onUnmount(this.formikProps.values)
+    if ((this.state.touched || Object.keys(this.formikProps.touched).length) && this.props.onUnmount) {
+      this.props.onUnmount({
+        values: this.formikProps.values,
+        state: this.state
+      })
+    }
   }
 
   submitOffer = async ({values, setSubmitting }) => {
@@ -275,12 +288,12 @@ class BidsRowDetail extends React.Component {
                                   const { detailExpandedIds } = this.state
                                   if (detailExpandedIds.length) {
                                     if (detailExpandedIds[0] === index) {
-                                      this.setState({ detailExpandedIds: [] })
+                                      this.setState({ detailExpandedIds: [], touched: true })
                                     } else {
-                                      this.setState({ detailExpandedIds: [index] })
+                                      this.setState({ detailExpandedIds: [index], touched: true })
                                     }
                                   } else {
-                                    this.setState({ detailExpandedIds: [index] })
+                                    this.setState({ detailExpandedIds: [index], touched: true })
                                   }
                                 }}>
                                   <GridColumn width={4}>
