@@ -14,7 +14,8 @@ import {
   Label,
   FormField,
   FormGroup,
-  Segment
+  Segment,
+  Radio
 } from 'semantic-ui-react'
 
 import { Formik } from 'formik'
@@ -43,64 +44,17 @@ import {
 } from '../../constants/layout'
 import moment from 'moment'
 
-import { TableSegment, StyledList, StyledRectangle, PriceInput } from '../../constants/layout'
+import { TableSegment, StyledList, StyledRectangle, PriceInput, BottomButtons } from '../../constants/layout'
+import * as AT from "../../../admin/action-types";
+import * as api from "../../../admin/api";
 
 export const DetailRow = styled.div`
   text-align: left;
   font-size: 14px;
   border: solid 1px #dee2e6;
   background-color: #f8f9fb;
-`
-
-
-const BottomButtons = styled.div`
-  display: inline-block;
-  position: relative;
-  overflow: visible;
-  margin: 0;
-  box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
-  padding: 10px 25px;
-  text-align: right;
-
-  .ui.button {
-    height: 40px;
-    border-radius: 3px;
-    font-weight: 500;
-    color: #848893;
-    margin: 0 5px;
-    align-items: center;
-
-    &.light {
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-      border: solid 1px #dee2e6;
-      background-color: #ffffff;
-      color: #848893;
-      &:hover {
-        background-color: #f8f9fb;
-        color: #20273a;
-      }
-      &:active {
-        background-color: #edeef2;
-        color: #20273a;
-      }
-    }
-    &.secondary {
-      color: #ffffff;
-      background-color: #2599d5;
-      &:hover {
-        background-color: #188ec9;
-      }
-      &:active {
-        background-color: #0d82bc;
-      }
-    }
-  }
-
-  .ui.modal & {
-    margin: 30px -1.5rem -1.5rem;
-    border-top: 1px solid #dee2e6;
-    box-shadow: 0 0 0 0 transparent;
-  }
+  max-height: calc(80vh - 180px);
+  overflow-y: auto;
 `
 
 const FieldRectangle = styled.div`
@@ -121,15 +75,17 @@ const FieldRectangle = styled.div`
   }
 `
 
+const MessageInputHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
 const SmallText = styled.div`
   font-size: 12px;
   color: #848893;
-  display: flex;
-  
-  > svg.title-icon {
-    font-size: 14px;
-    margin-right: 8px;
-  }
+  position: relative;
+  bottom: -6px;
 `
 
 const StyledGrid = styled(Grid)`
@@ -152,7 +108,17 @@ const StyledGrid = styled(Grid)`
   }
 `
 
+const RowDescription = styled.div`
+  white-space: nowrap;
+  display: flex;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
 
+const BlueText = styled.div`
+  color: #2599d5;
+  margin: 0 4px;
+`
 
 const formValidation = () =>
   Yup.object().shape({
@@ -174,7 +140,8 @@ class BidsRowDetail extends React.Component {
       pricePerUOM: ''
     },
     detailExpandedIds: [],
-    touched: false
+    touched: false,
+    radioState: ''
   }
 
   componentDidMount() {
@@ -210,23 +177,89 @@ class BidsRowDetail extends React.Component {
   }
 
   submitOffer = async ({values, setSubmitting }) => {
-    const { popupValues, closePopup, counterOffer, datagrid } = this.props
+    const { popupValues, onClose, counterOffer, acceptOffer, datagrid } = this.props
+    const { radioState } = this.state
 
-    const body = {
-      pkgAmount: parseInt(values.pkgAmount),
-      pricePerUOM: parseFloat(values.pricePerUOM),
-      message: values.message
-    }
-    removeEmpty(body)
+    switch (radioState) {
+      case 'counter': {
+        const body = {
+          pkgAmount: parseInt(values.pkgAmount),
+          pricePerUOM: parseFloat(values.pricePerUOM),
+          message: values.message
+        }
+        removeEmpty(body)
 
-    try {
-      await counterOffer(popupValues.id, body)
-      datagrid.loadData()
-      closePopup()
-    } catch (e) {
-      console.error(e)
+        try {
+          await counterOffer(popupValues.id, body)
+          datagrid.loadData()
+          onClose(popupValues)
+        } catch (e) {
+          console.error(e)
+        }
+        break
+      }
+      case 'accept': {
+        try {
+          await acceptOffer(popupValues.id)
+          datagrid.loadData()
+          onClose(popupValues)
+        } catch (e) {
+          console.error(e)
+        }
+        break
+      }
+      case 'reject': {
+        try {
+          await rejectOffer(popupValues.id)
+          datagrid.loadData()
+          onClose(popupValues)
+        } catch (e) {
+          console.error(e)
+        }
+        break
+      }
     }
     setSubmitting(false)
+  }
+
+  getDetailTable = table => {
+    return (
+      <TableSegment>
+        <StyledList divided relaxed horizontal size='large'>
+          {table.map(t => (
+            <List.Item>
+              <List.Content>
+                <List.Header as='label'>
+                  {t[0]}
+                </List.Header>
+                <List.Description as='span' className={t[2] ? t[2] : ''}>
+                  {t[1]}
+                </List.Description>
+              </List.Content>
+            </List.Item>
+          ))}
+        </StyledList>
+      </TableSegment>
+    )
+  }
+
+  getRowText = ({ row, index, fob, quantity, product }) => {
+    const hasUserName = !!row.createdBy.name
+
+    return (
+      <RowDescription>
+        <FormattedMessage
+          id='marketplace.detailRow.userCompanyHasCountered'
+          values={{
+            name: <BlueText>{row.createdBy.name}</BlueText>,
+            company: <BlueText>{row.createdBy.company.name}</BlueText>,
+            fob: <BlueText>{fob}</BlueText>,
+            quantity: <BlueText>{quantity}</BlueText>,
+            product: <BlueText>{product}</BlueText>
+          }}
+        />
+      </RowDescription>
+    )
   }
 
   render() {
@@ -242,7 +275,7 @@ class BidsRowDetail extends React.Component {
       packagingSize
     } = this.props
 
-    const { detailExpandedIds } = this.state
+    const { detailExpandedIds, radioState } = this.state
 
     //console.log('!!!!!!!!!! aaaaa popupValues', popupValues)
 
@@ -265,425 +298,371 @@ class BidsRowDetail extends React.Component {
           if (isNaN(pkgAmount)) amount = 1
 
           const listFobPrice = getPricing(popupValues.productOffer, amount).price
-          const totalListPrice = amount * listFobPrice
+          const totalListPrice = amount * packagingSize * listFobPrice
 
-          const disabledInputPrice = values.accept || !values.counter
+          const disabledInputPrice = radioState !== 'counter'
 
           return (
             <DetailRow>
               <Dimmer active={isSending} inverted>
                 <Loader />
               </Dimmer>
-              <div>
-                <Form>
-                  <StyledGrid>
-                    {histories.map((r, index) => {
-                      return (
-                        <HistoryRow>
-                          <GridColumn style={{ padding: '0' }}>
-                            <HistoryDetailGrid>
-                              <HistoryDetailRow
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => {
-                                  const { detailExpandedIds } = this.state
-                                  if (detailExpandedIds.length) {
-                                    if (detailExpandedIds[0] === index) {
-                                      this.setState({ detailExpandedIds: [], touched: true })
-                                    } else {
-                                      this.setState({ detailExpandedIds: [index], touched: true })
-                                    }
+              <Form>
+                <StyledGrid >
+                  {histories.map((r, index) => {
+                    return (
+                      <HistoryRow>
+                        <GridColumn style={{ padding: '0' }}>
+                          <HistoryDetailGrid>
+                            <HistoryDetailRow
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                const { detailExpandedIds } = this.state
+                                if (detailExpandedIds.length) {
+                                  if (detailExpandedIds[0] === index) {
+                                    this.setState({ detailExpandedIds: [], touched: true })
                                   } else {
                                     this.setState({ detailExpandedIds: [index], touched: true })
                                   }
-                                }}>
-                                  <GridColumn width={4}>
-                                    <NameWrapper>
-                                      <IconWrapper>{DefaultIcon}</IconWrapper>
-                                      <StyledName style={{ marginLeft: '10px', paddingTop: '2px' }}>
-                                        <div className='name'>
-                                          {r.createdBy.name}
-                                        </div>
-                                        <div className='company'>
-                                          {r.createdBy.company.cfDisplayName}
-                                        </div>
-                                      </StyledName>
-                                    </NameWrapper>
+                                } else {
+                                  this.setState({ detailExpandedIds: [index], touched: true })
+                                }
+                              }}>
+                                <GridColumn width={4}>
+                                  <NameWrapper>
+                                    <IconWrapper>{DefaultIcon}</IconWrapper>
+                                    <StyledName style={{ marginLeft: '10px', paddingTop: '2px' }}>
+                                      <div className='name'>
+                                        {r.createdBy.name}
+                                      </div>
+                                      <div className='company'>
+                                        {r.createdBy.company.cfDisplayName}
+                                      </div>
+                                    </StyledName>
+                                  </NameWrapper>
+                                </GridColumn>
+                                <GridColumn width={9}>
+                                  {this.getRowText({
+                                      row: r,
+                                      index,
+                                      fob: (
+                                        <>
+                                          <FormattedNumber
+                                            minimumFractionDigits={2}
+                                            maximumFractionDigits={2}
+                                            style='currency'
+                                            currency={currency}
+                                            value={r.pricePerUOM}
+                                          />
+                                          {listFobPriceUnit}
+                                        </>
+                                      ),
+                                    quantity: `${r.pkgAmount} (${packagingSize} ${packagingUnit} ${packagingType})`,
+                                    product: this.props.productName
+                                  })}
+                                </GridColumn>
+                                <GridColumn width={3} style={{ color: '#848893' }}>
+                                  {moment(r.createdAt).fromNow()}
+                                </GridColumn>
+                            </HistoryDetailRow>
+                            {detailExpandedIds.some(id => id === index) && (
+                              <>
+                                <GridRow>
+                                  <GridColumn>
+                                    {this.getDetailTable([
+                                      [
+                                        <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity' />,
+                                        `${r.pkgAmount} (${packagingSize} ${packagingUnit} ${packagingType})`,
+                                        'green'
+                                      ],
+                                      [
+                                        <FormattedMessage
+                                          id='marketplace.offeredFobPrice' defaultMessage='Offered FOB Price' />,
+                                        <>
+                                          <FormattedNumber
+                                            minimumFractionDigits={2}
+                                            maximumFractionDigits={2}
+                                            style='currency'
+                                            currency={currency}
+                                            value={r.pricePerUOM}
+                                          />
+                                          {listFobPriceUnit}
+                                        </>,
+                                        'green'
+                                      ],
+                                      [
+                                        <FormattedMessage
+                                          id='marketplace.totalOfferedPrice' defaultMessage='Total Offered Price' />,
+                                        <FormattedNumber
+                                          minimumFractionDigits={2}
+                                          maximumFractionDigits={2}
+                                          style='currency'
+                                          currency={currency}
+                                          value={r.pkgAmount * r.pricePerUOM * packagingSize}
+                                        />,
+                                        'green'
+                                      ]
+                                    ])}
                                   </GridColumn>
-                                  <GridColumn width={9}>
-                                    text text text
+                                </GridRow>
+                                <GridRow>
+                                  <GridColumn>
+                                    <StyledRectangle className='dark-grey'>
+                                      <div className='header'>
+                                        <FormattedMessage
+                                          id='marketplace.messageFromSeller'
+                                          defaultMessage='Message from Seller' />
+                                      </div>
+                                      <div className='message'>
+                                        {r.message}
+                                      </div>
+                                    </StyledRectangle>
                                   </GridColumn>
-                                  <GridColumn width={3} style={{ color: '#848893' }}>
-                                    {moment(r.createdAt).fromNow()}
-                                  </GridColumn>
-                              </HistoryDetailRow>
-                              {detailExpandedIds.some(id => id === index) && (
-                                <>
-                                  <GridRow>
-                                    <GridColumn>
-                                      <TableSegment>
-                                        <StyledList divided relaxed horizontal size='large'>
-                                          <List.Item>
-                                            <List.Content>
-                                              <List.Header as='label'>
-                                                <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity' />
-                                              </List.Header>
-                                              <List.Description as='span' className='green'>
-                                                {`${r.pkgAmount * packagingSize} ${packagingUnit} ${packagingType}`}
-                                              </List.Description>
-                                            </List.Content>
-                                          </List.Item>
-                                          <List.Item>
-                                            <List.Content>
-                                              <List.Header as='label'>
-                                                <FormattedMessage
-                                                  id='marketplace.offeredFobPrice'
-                                                  defaultMessage='Offered FOB Price' />
-                                              </List.Header>
-                                              <List.Description as='span' className='green' >
-                                                <FormattedNumber
-                                                  minimumFractionDigits={2}
-                                                  maximumFractionDigits={2}
-                                                  style='currency'
-                                                  currency={currency}
-                                                  value={r.pricePerUOM}
-                                                />
-                                                {' '}
-                                                {listFobPriceUnit}
-                                              </List.Description>
-                                            </List.Content>
-                                          </List.Item>
-                                          <List.Item>
-                                            <List.Content>
-                                              <List.Header as='label'>
-                                                <FormattedMessage
-                                                  id='marketplace.totalOfferedPrice'
-                                                  defaultMessage='Total Offered Price' />
-                                              </List.Header>
-                                              <List.Description as='span' className='green' >
-                                                <FormattedNumber
-                                                  minimumFractionDigits={2}
-                                                  maximumFractionDigits={2}
-                                                  style='currency'
-                                                  currency={currency}
-                                                  value={r.pricePerUOM * r.pkgAmount}
-                                                />
-                                              </List.Description>
-                                            </List.Content>
-                                          </List.Item>
-                                        </StyledList>
-                                      </TableSegment>
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn>
-                                      <StyledRectangle>
-                                        <div className='header'>
-                                          <FormattedMessage
-                                            id='marketplace.messageFromSeller'
-                                            defaultMessage='Message from Seller' />
-                                        </div>
-                                        <div className='message'>
-                                          {r.message}
-                                        </div>
-                                      </StyledRectangle>
-                                    </GridColumn>
-                                  </GridRow>
-                                </>
-                              )}
-                            </HistoryDetailGrid>
-                          </GridColumn>
-                        </HistoryRow>
-                      )})
-                    }
-                    <GridRow>
-                      <GridColumn>
-                        <TableSegment>
-                          <StyledList divided relaxed horizontal size='large'>
-                            <List.Item>
-                              <List.Content>
-                                <List.Header as='label'>
-                                  <FormattedMessage id='marketplace.productName' defaultMessage='Product Name' />
-                                </List.Header>
-                                <List.Description as='span'>
-                                  {this.props.productName}
-                                </List.Description>
-                              </List.Content>
-                            </List.Item>
-
-                            <List.Item>
-                              <List.Content>
-                                <List.Header as='label'>
-                                  <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity' />
-                                </List.Header>
-                                <List.Description as='span'>
-                                  {`${isNaN(pkgAmount) ? packagingSize : pkgAmount * packagingSize} ${packagingUnit} ${packagingType}`}
-                                </List.Description>
-                              </List.Content>
-                            </List.Item>
-
-                            <List.Item>
-                              <List.Content>
-                                <List.Header as='label'>
-                                  <FormattedMessage id='marketplace.listFobPrice' defaultMessage='List FOB Price' />
-                                </List.Header>
-                                <List.Description as='span'>
-                                  <FormattedNumber
-                                    minimumFractionDigits={2}
-                                    maximumFractionDigits={2}
-                                    style='currency'
-                                    currency={currency}
-                                    value={listFobPrice}
-                                  />
-                                  {' '}
-                                  {listFobPriceUnit}
-                                </List.Description>
-                              </List.Content>
-                            </List.Item>
-
-                            <List.Item>
-                              <List.Content>
-                                <List.Header as='label'>
-                                  <FormattedMessage
-                                    id='marketplace.totalListPrice'
-                                    defaultMessage='Total List Price' />
-                                </List.Header>
-                                <List.Description as='span'>
-                                  <FormattedNumber
-                                    minimumFractionDigits={2}
-                                    maximumFractionDigits={2}
-                                    style='currency'
-                                    currency={currency}
-                                    value={totalListPrice}
-                                  />
-                                </List.Description>
-                              </List.Content>
-                            </List.Item>
-
-                            {false && (<List.Item>
-                              <List.Content>
-                                <List.Header as='label'>
-                                  <FormattedMessage id='marketplace.incoterms' defaultMessage='Incoterms' />
-                                </List.Header>
-                                <List.Description as='span'>
-                                  TBD
-                                </List.Description>
-                              </List.Content>
-                            </List.Item>)}
-                          </StyledList>
-                        </TableSegment>
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow>
-                      <GridColumn>
-                        <TableSegment>
-                          <StyledList divided relaxed horizontal size='large'>
-                            <List.Item>
-                              <List.Content>
-                                <List.Header as='label'>
-                                  <FormattedMessage
-                                    id='marketplace.offeredFobPrice'
-                                    defaultMessage='Offered FOB Price' />
-                                </List.Header>
-                                <List.Description as='span' className='green' >
-                                  <FormattedNumber
-                                    minimumFractionDigits={2}
-                                    maximumFractionDigits={2}
-                                    style='currency'
-                                    currency={currency}
-                                    value={popupValues.cfHistoryLastPricePerUOM}
-                                  />
-                                  {' '}
-                                  {listFobPriceUnit}
-                                </List.Description>
-                              </List.Content>
-                            </List.Item>
-                            <List.Item>
-                              <List.Content>
-                                <List.Header as='label'>
-                                  <FormattedMessage
-                                    id='marketplace.totalOfferedPrice'
-                                    defaultMessage='Total Offered Price' />
-                                </List.Header>
-                                <List.Description as='span' className='green' >
-                                  <FormattedNumber
-                                    minimumFractionDigits={2}
-                                    maximumFractionDigits={2}
-                                    style='currency'
-                                    currency={currency}
-                                    value={popupValues.cfHistoryLastPricePerUOM * popupValues.cfHistoryLastPkgAmount}
-                                  />
-                                </List.Description>
-                              </List.Content>
-                            </List.Item>
-                          </StyledList>
-                        </TableSegment>
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow>
-                      <GridColumn>
-                        <StyledRectangle>
-                          <div className='header'>
-                            <FormattedMessage
-                              id='marketplace.messageFromSeller'
-                              defaultMessage='Message from Seller' />
-                          </div>
-                          <div className='message'>
-                            {lastHistory.message}
-                          </div>
-                        </StyledRectangle>
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow>
-                      <GridColumn>
-                        <Checkbox
-                          name='accept'
-                          defaultChecked={false}
-                          onChange={() => console.log('!!!!!!!!!! onChange accept')}
-                          data-test={`bids_received_accept_chckb`}
-                          label={formatMessage({ id: 'global.accept', defaultMessage: 'Accept' })}
-                        />
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow style={{ padding: '0' }}>
-                      <GridColumn>
-                        <FormattedMessage id='marketplace.or' defaultMessage='or' />
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow>
-                      <GridColumn>
-                        <Checkbox
-                          name='counter'
-                          defaultChecked={false}
-                          onChange={() => console.log('!!!!!!!!!! onChange counter')}
-                          data-test={`bids_received_counter_chckb`}
-                          label={formatMessage({ id: 'global.counter', defaultMessage: 'Counter' })}
-                        />
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow>
-                      <GridColumn width={5}>
-                        <Input
-                          label={
-                            <>
-                              {formatMessage({ id: 'global.quantity', defaultMessage: 'Quantity' })}
-                              {!disabledInputPrice && (<Required />)}
-                            </>
-                          }
-                          name='pkgAmount'
-                          inputProps={{
-                            placeholder:
-                              formatMessage({ id: 'global.enterQuantity', defaultMessage: 'Enter Quantity' }),
-                            type: 'number',
-                            min: 1,
-                            step: 1,
-                            disabled: disabledInputPrice
-                          }}
-                        />
-                      </GridColumn>
-                      <GridColumn width={5}>
-                        <PriceInput
-                          name='pricePerUOM'
-                          inputProps={{
-                            placeholder: formatMessage({
-                              id: 'marketplace.enterCounterBid',
-                              defaultMessage: 'Enter Counter Bid'
-                            }),
-                            min: 0,
-                            type: 'number',
-                            disabled: disabledInputPrice
-                          }}
-                          label={
-                            <>
-                              <FormattedMessage
-                                id='marketplace.yourFobPriceOffer'
-                                defaultMessage='Your FOB price offer'>
-                                {text => text}
-                              </FormattedMessage>
-                              {!disabledInputPrice && (<Required />)}
-                            </>
-                          }
-                          currencyLabel={'$'}
-                        />
-                      </GridColumn>
-                      <GridColumn width={3}>
-                        <Form.Field>
-                          <label>
-                            <FormattedMessage
-                              id='marketplace.YourTotalBid'
-                              defaultMessage='Your Total Bid'>
-                              {text => text}
-                            </FormattedMessage>
-                          </label>
-                          <FieldRectangle className={disabledInputPrice ? 'disabled' : ''}>
+                                </GridRow>
+                              </>
+                            )}
+                          </HistoryDetailGrid>
+                        </GridColumn>
+                      </HistoryRow>
+                    )})
+                  }
+                  <GridRow>
+                    <GridColumn>
+                      {this.getDetailTable([
+                        [
+                          <FormattedMessage id='marketplace.productName' defaultMessage='Product Name' />,
+                          this.props.productName
+                        ],
+                        [
+                          <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity' />,
+                          isNaN(pkgAmount)
+                            ? `${packagingSize} ${packagingUnit} ${packagingType}`
+                            : `${pkgAmount} (${packagingSize} ${packagingUnit} ${packagingType})`
+                        ],
+                        [
+                          <FormattedMessage id='marketplace.listFobPrice' defaultMessage='List FOB Price' />,
+                          <>
                             <FormattedNumber
                               minimumFractionDigits={2}
                               maximumFractionDigits={2}
                               style='currency'
                               currency={currency}
-                              value={values.pkgAmount * values.pricePerUOM}
+                              value={listFobPrice}
                             />
-                          </FieldRectangle>
-                        </Form.Field>
-                      </GridColumn>
-                    </GridRow>
+                            {listFobPriceUnit}
+                          </>
+                        ],
+                        [
+                          <FormattedMessage id='marketplace.totalListPrice' defaultMessage='Total List Price' />,
+                          <FormattedNumber
+                            minimumFractionDigits={2}
+                            maximumFractionDigits={2}
+                            style='currency'
+                            currency={currency}
+                            value={totalListPrice}
+                          />
+                        ]
+                      ])}
+                    </GridColumn>
+                  </GridRow>
 
-                    <GridRow>
-                      <GridColumn>
-                        <TextArea
-                          name='message'
-                          label={
+                  <GridRow>
+                    <GridColumn>
+                      {this.getDetailTable([
+                        [
+                          <FormattedMessage id='marketplace.offeredFobPrice' defaultMessage='Offered FOB Price' />,
+                          <>
+                            <FormattedNumber
+                              minimumFractionDigits={2}
+                              maximumFractionDigits={2}
+                              style='currency'
+                              currency={currency}
+                              value={popupValues.cfHistoryLastPricePerUOM}
+                            />
+                            {listFobPriceUnit}
+                          </>,
+                          'green'
+                        ],
+                        [
+                          <FormattedMessage
+                            id='marketplace.totalOfferedPrice' defaultMessage='Total Offered Price'/>,
+                          <FormattedNumber
+                            minimumFractionDigits={2}
+                            maximumFractionDigits={2}
+                            style='currency'
+                            currency={currency}
+                            value={
+                              popupValues.cfHistoryLastPricePerUOM * packagingSize
+                              * popupValues.cfHistoryLastPkgAmount
+                            }
+                          />,
+                          'green'
+                        ]
+                      ])}
+                    </GridColumn>
+                  </GridRow>
+
+                  <GridRow>
+                    <GridColumn>
+                      <StyledRectangle className='dark-grey'>
+                        <div className='header'>
+                          <FormattedMessage
+                            id='marketplace.messageFromSeller'
+                            defaultMessage='Message from Seller' />
+                        </div>
+                        <div className='message'>
+                          {lastHistory.message}
+                        </div>
+                      </StyledRectangle>
+                    </GridColumn>
+                  </GridRow>
+
+                  <GridRow>
+                    <GridColumn width={5}>
+                      <Input
+                        label={
+                          <>
+                            {formatMessage({ id: 'global.quantity', defaultMessage: 'Quantity' })}
+                            {!disabledInputPrice && (<Required />)}
+                          </>
+                        }
+                        name='pkgAmount'
+                        inputProps={{
+                          placeholder:
+                            formatMessage({ id: 'global.enterQuantity', defaultMessage: 'Enter Quantity' }),
+                          type: 'number',
+                          min: 1,
+                          step: 1,
+                          disabled: disabledInputPrice
+                        }}
+                      />
+                    </GridColumn>
+                    <GridColumn width={5}>
+                      <PriceInput
+                        name='pricePerUOM'
+                        inputProps={{
+                          placeholder: formatMessage({
+                            id: 'marketplace.enterCounterBid',
+                            defaultMessage: 'Enter Counter Bid'
+                          }),
+                          min: 0,
+                          type: 'number',
+                          disabled: disabledInputPrice
+                        }}
+                        label={
+                          <>
+                            <FormattedMessage
+                              id='marketplace.yourFobPriceOffer'
+                              defaultMessage='Your FOB price offer'>
+                              {text => text}
+                            </FormattedMessage>
+                            {!disabledInputPrice && (<Required />)}
+                          </>
+                        }
+                        currencyLabel={'$'}
+                      />
+                    </GridColumn>
+                    <GridColumn width={3}>
+                      <Form.Field>
+                        <label>
+                          <FormattedMessage
+                            id='marketplace.YourTotalBid'
+                            defaultMessage='Your Total Bid'>
+                            {text => text}
+                          </FormattedMessage>
+                        </label>
+                        <FieldRectangle className={disabledInputPrice ? 'disabled' : ''}>
+                          <FormattedNumber
+                            minimumFractionDigits={2}
+                            maximumFractionDigits={2}
+                            style='currency'
+                            currency={currency}
+                            value={values.pkgAmount * packagingSize * values.pricePerUOM}
+                          />
+                        </FieldRectangle>
+                      </Form.Field>
+                    </GridColumn>
+                  </GridRow>
+
+                  <GridRow>
+                    <GridColumn width={4} style={{ display: 'flex', flexDirection: 'column'}}>
+                      <Radio
+                        checked={radioState === 'counter'}
+                        value={'counter'}
+                        onChange={(_e, { value }) => {
+                          this.setState({ radioState: value })
+                        }}
+                        label={formatMessage({ id: 'marketplace.counter', defaultMessage: 'Counter' })}
+                      />
+                      <Radio
+                        checked={radioState === 'accept'}
+                        value={'accept'}
+                        onChange={(_e, { value }) => {
+                          this.setState({ radioState: value })
+                        }}
+                        label={formatMessage({ id: 'marketplace.accept', defaultMessage: 'Accept' })}
+                      />
+                      <Radio
+                        checked={radioState === 'reject'}
+                        value={'reject'}
+                        onChange={(_e, { value }) => {
+                          this.setState({ radioState: value })
+                        }}
+                        label={formatMessage({ id: 'marketplace.reject', defaultMessage: 'Reject' })}
+                      />
+                    </GridColumn>
+                    <GridColumn width={12}>
+                      <TextArea
+                        name='message'
+                        label={
+                          <MessageInputHeader>
                             <FormattedMessage id='marketplace.messageToBuyer' defaultMessage='Message to Buyer' />
-                          }
-                          inputProps={{
-                            'data-test': 'wanted_board_sidebar_specialNotes_inp',
-                            placeholder: formatMessage({
-                              id: 'marketplace.enterMessage',
-                              defaultMessage: 'Enter Message...'
-                            })
-                          }}
-                        />
-                        <SmallText style={{ marginTop: '-14px' }}>
-                          <FormattedMessage id='marketplace.optional' defaultMessage='Optional' />
-                        </SmallText>
-                      </GridColumn>
-                    </GridRow>
-                  </StyledGrid>
-                  <ErrorFocus />
-                </Form>
-              </div>
-              <div>
-                <Button
-                  size='large'
-                  inputProps={{ type: 'button' }}
-                  onClick={closePopup}
-                  data-test='inventory_quick_edit_pricing_popup_cancel_btn'>
-                  {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-                </Button>
-                <Button.Submit
-                  primary
-                  size='large'
-                  onClick={() => {
-                    let { validateForm, submitForm } = formikProps
-                    validateForm().then(err => {
-                      const errors = Object.keys(err)
-                      if (errors.length && errors[0] !== 'isCanceled') {
-                        submitForm() // to show errors
-                      } else {
-                        this.submitOffer(formikProps)
-                      }
-                    })
-                  }}
-                  type='button'
-                  data-test='inventory_quick_edit_pricing_popup_save_btn'>
-                  {formatMessage({ id: 'marketplace.send', defaultMessage: 'Send' })}
-                </Button.Submit>
-              </div>
+                            <SmallText>
+                              <FormattedMessage id='marketplace.optional' defaultMessage='Optional' />
+                            </SmallText>
+                          </MessageInputHeader>
+                        }
+                        inputProps={{
+                          'data-test': 'wanted_board_sidebar_specialNotes_inp',
+                          placeholder: formatMessage({
+                            id: 'marketplace.enterMessage',
+                            defaultMessage: 'Enter Message...'
+                          })
+                        }}
+                      />
+                    </GridColumn>
+                  </GridRow>
+                </StyledGrid>
+                <ErrorFocus />
+                <BottomButtons>
+                  <Button
+                    className='borderless'
+                    size='large'
+                    onClick={() => this.props.onClose(popupValues)}
+                    data-test='inventory_quick_edit_pricing_popup_cancel_btn'>
+                    {formatMessage({ id: 'marketplace.close', defaultMessage: 'Close' })}
+                  </Button>
+                  <Button.Submit
+                    disabled={radioState === ''}
+                    className='light'
+                    size='large'
+                    onClick={() => {
+                      let { validateForm, submitForm } = formikProps
+                      validateForm().then(err => {
+                        const errors = Object.keys(err)
+                        if (errors.length && errors[0] !== 'isCanceled') {
+                          submitForm() // to show errors
+                        } else {
+                          this.submitOffer(formikProps)
+                        }
+                      })
+                    }}
+                    type='button'
+                    data-test='inventory_quick_edit_pricing_popup_save_btn'>
+                    {formatMessage({ id: 'marketplace.submit', defaultMessage: 'Submit' })}
+                  </Button.Submit>
+                </BottomButtons>
+              </Form>
             </DetailRow>
           )
         }}
@@ -705,7 +684,7 @@ function mapStateToProps(store, params) {
     productOffer,
     isSending: store.marketplace.isSending,
     productName: getSafe(() => companyProduct.intProductName, ''),
-    listFobPriceUnit: priceUnit ? `/ ${priceUnit}` : '',
+    listFobPriceUnit: priceUnit ? `/${priceUnit}` : '',
     packagingType: getSafe(() => companyProduct.packagingType.name, ''),
     packagingUnit: getSafe(() => companyProduct.packagingUnit.nameAbbreviation, ''),
     packagingSize: getSafe(() => companyProduct.packagingSize, 1)

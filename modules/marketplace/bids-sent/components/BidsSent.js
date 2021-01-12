@@ -43,19 +43,20 @@ class BidsSent extends Component {
           name: 'name',
           title: <div></div>,
           width: 310,
-          sortPath: 'ProductOffer.companyProduct.intProductName',
+          //sortPath: 'ProductOffer.companyProduct.intProductName',
           allowReordering: false
         },
         {
           name: 'description',
           title: <div></div>,
-          width: 600
+          width: 600,
+          maxWidth: 2000,
         },
         {
           name: 'createdAt',
           title: <div></div>,
           width: 150,
-          sortPath: 'ProductOffer.pkgAvailable'
+          //sortPath: 'ProductOffer.pkgAvailable'
         }
       ],
       //pageNumber: 0,
@@ -250,11 +251,13 @@ class BidsSent extends Component {
   }
 
   getRowDetail = ({ row }) => {
+    console.log('!!!!!!!!!! bids sent getRowDetail row', row)
     return (
       <BidsRowDetail
         initValues={this.state.rowDetailState}
         popupValues={row}
         onUnmount={(values) => this.setState({ rowDetailState: values })}
+        onClose={() => this.setState({ expandedRowIds: [] })}
       />
     )
   }

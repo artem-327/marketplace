@@ -208,7 +208,7 @@ class MakeOfferPopup extends React.Component {
           if (isNaN(pkgAmount)) amount = 1
 
           const listFobPrice = getPricing(popupValues, amount).price
-          const totalListPrice = amount * listFobPrice
+          const totalListPrice = amount * packagingSize * listFobPrice
 
           return (
             <StyledModal closeIcon onClose={closePopup} open={true} size='large'>
@@ -224,7 +224,7 @@ class MakeOfferPopup extends React.Component {
                     <StyledGrid>
                       <GridRow>
                         <GridColumn>
-                          <StyledRectangle>
+                          <StyledRectangle className='grey'>
                             <div className='header'>
                               <FormattedMessage id='marketplace.productName' defaultMessage='Product Name' />
                             </div>
@@ -237,7 +237,7 @@ class MakeOfferPopup extends React.Component {
 
                       <GridRow>
                         <GridColumn>
-                          <TableSegment>
+                          <TableSegment style={{ backgroundColor: '#f8f9fb' }}>
                             <StyledList divided relaxed horizontal size='large'>
                               <List.Item>
                                 <List.Content>
@@ -245,7 +245,10 @@ class MakeOfferPopup extends React.Component {
                                     <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity' />
                                   </List.Header>
                                   <List.Description as='span'>
-                                    {`${isNaN(pkgAmount) ? packagingSize : pkgAmount * packagingSize} ${packagingUnit} ${packagingType}`}
+                                    {isNaN(pkgAmount)
+                                      ? `${packagingSize} ${packagingUnit} ${packagingType}`
+                                      : `${pkgAmount} (${packagingSize} ${packagingUnit} ${packagingType})`
+                                    }
                                   </List.Description>
                                 </List.Content>
                               </List.Item>
@@ -357,7 +360,7 @@ class MakeOfferPopup extends React.Component {
                                 maximumFractionDigits={2}
                                 style='currency'
                                 currency={currency}
-                                value={values.pkgAmount * values.pricePerUOM}
+                                value={values.pkgAmount * packagingSize * values.pricePerUOM}
                               />
                             </FieldRectangle>
                           </Form.Field>

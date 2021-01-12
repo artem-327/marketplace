@@ -19,7 +19,6 @@ export const TableSegment = styled(Segment)`
     padding: 10px 15px;
     border-radius: 4px;
     border: solid 1px #dee2e6;
-    //background-color: #f8f9fb;
     box-shadow: none;
   }
 `
@@ -28,7 +27,15 @@ export const StyledRectangle = styled.div`
   padding: 11px 15px;
   border-radius: 4px;
   border: solid 1px #dee2e6;
-  background-color: #edeef2;
+  background-color: #fff;
+  
+  &.grey {
+    background-color: #f8f9fb;
+  }
+  
+  &.dark-grey {
+    background-color: #edeef2;
+  }
   
   .header {
     font-size: 12px;
@@ -49,6 +56,7 @@ export const StyledList = styled(List)`
     flex-flow: row;
     justify-content: space-between;
     margin: 0;
+
     &:nth-child(n+2) {
       border-top: 1px solid rgba(34, 36, 38, 0.15);
     }
@@ -273,5 +281,68 @@ export const HistoryDetailRow = styled(GridRow)`
   .column {
     display: flex !important;
     align-items: center !important;
+  }
+`
+
+export const BottomButtons = styled.div`
+  display: inline-block;
+  position: relative;
+  overflow: visible;
+  margin: 0;
+  box-shadow: inset 0 1px 0 0 #dee2e6;
+  background-color: rgba(255, 255, 255, 0);
+  padding: 10px 5px;
+  text-align: right;
+  width: 100%;
+
+  .ui.button {
+    height: 40px;
+    border-radius: 3px;
+    font-weight: 500;
+    color: #848893;
+    margin: 0 5px;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+
+    &.light {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      color: #848893;
+
+      &:hover {
+        background-color: #f8f9fb;
+        color: #20273a;
+      }
+
+      &:active {
+        background-color: #edeef2;
+        color: #20273a;
+      }
+      
+      &.disabled {
+        color: #cecfd4;
+      }
+    }
+
+    &.borderless {
+      color: #20273a;
+      background-color: transparent;
+
+      &:hover {
+        background-color: #f8f9fb;
+      }
+
+      &:active {
+        background-color: #f8f9fb;
+      }
+    }
+  }
+
+  .ui.modal & {
+    margin: 30px -1.5rem -1.5rem;
+    border-top: 1px solid #dee2e6;
+    box-shadow: 0 0 0 0 transparent;
   }
 `
