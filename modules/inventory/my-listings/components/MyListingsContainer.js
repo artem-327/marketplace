@@ -86,7 +86,8 @@ function mapStateToProps(store, { datagrid }) {
         packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
         //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
-        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.quantity} /> : 'N/A',
+        qtyPart: qtyPart,
+        quantity: po.quantity,
         cost: po.costPerUOM ? (
           <FormattedNumber
             minimumFractionDigits={2}

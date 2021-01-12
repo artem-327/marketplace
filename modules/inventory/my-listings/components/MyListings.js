@@ -24,6 +24,7 @@ import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
 import { InventoryFilter } from '~/modules/filter'
+import { FormattedUnit } from '~/components/formatted-messages'
 
 const defaultHiddenColumns = [
   'productNumber',
@@ -1012,6 +1013,7 @@ class MyListings extends Component {
             <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
           </>
         ),
+        quantity: r.qtyPart ? <FormattedUnit unit={r.qtyPart} separator=' ' value={r.quantity} /> : 'N/A',
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
