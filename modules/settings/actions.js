@@ -1232,3 +1232,36 @@ export function reloadBankAccounts(isReload) {
     payload: isReload
   }
 }
+
+export function deleteInstitution(institutionId) {
+  return async dispatch => {
+    const response = await api.deleteInstitution(institutionId)
+    dispatch({
+      type: AT.DELETE_INSTITUTION,
+      payload: response
+    })
+    Datagrid.loadData()
+    return
+  }
+}
+
+export function hideInactiveAccounts(isHide) {
+  return {
+    type: AT.HIDE_INACTIVE_ACCOUNTS,
+    payload: isHide
+  }
+}
+
+export function inviteToAddBankAccounts(companyId, emailAddress, name) {
+  return {
+    type: AT.INVITE_TO_ADD_BANK_ACCOUNTS,
+    payload: api.inviteToAddBankAccounts(companyId, emailAddress, name)
+  }
+}
+
+export function openPopupDeleteInstitutions(institutionId) {
+  return {
+    type: AT.OPEN_POPUP_DELETE_INSTITUTION,
+    payload: institutionId
+  }
+}

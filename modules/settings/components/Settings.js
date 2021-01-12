@@ -36,7 +36,15 @@ import { companyDetailsTab } from '../contants'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, renderCopyright, closePopup, closeSidebar } from '../actions'
+import {
+  addTab,
+  tabChanged,
+  resetSettings,
+  renderCopyright,
+  closePopup,
+  closeSidebar,
+  inviteToAddBankAccounts
+} from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -309,7 +317,9 @@ class Settings extends Component {
       isUserAdmin,
       isCompanyAdmin,
       isOpenSidebar,
-      editedId
+      editedId,
+      inviteToAddBankAccounts,
+      companyId
     } = this.props
 
     const tables = {
@@ -341,7 +351,14 @@ class Settings extends Component {
       ),
       'credit-cards': <CreditCardsPopup />,
       'guest-companies': <ClientCompanyPopup />,
-      'bank-accounts': <SendLinkPopup isOpenPopup={isOpenPopup} closePopup={closePopup} />
+      'bank-accounts': (
+        <SendLinkPopup
+          isOpenPopup={isOpenPopup}
+          closePopup={closePopup}
+          inviteToAddBankAccounts={inviteToAddBankAccounts}
+          companyId={companyId}
+        />
+      )
     }
 
     const sidebarForm = {
@@ -486,5 +503,6 @@ export default connect(mapStateToProps, {
   getIdentity,
   renderCopyright,
   closePopup,
-  closeSidebar
+  closeSidebar,
+  inviteToAddBankAccounts
 })(withToastManager(Settings))

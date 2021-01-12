@@ -11,7 +11,7 @@ import { initialFormValues, formValidation } from './services'
 //Styles
 import { ModalActions, GridColumnInputEmail } from './styles'
 
-const SendLinkPopup = ({ isOpenPopup, closePopup, intl: { formatMessage } }) => {
+const SendLinkPopup = ({ isOpenPopup, closePopup, inviteToAddBankAccounts, companyId, intl: { formatMessage } }) => {
   return (
     <Modal
       open={isOpenPopup}
@@ -26,14 +26,15 @@ const SendLinkPopup = ({ isOpenPopup, closePopup, intl: { formatMessage } }) => 
         validationSchema={formValidation()}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            //await props.sendLink(values.email)
-            closePopup()
+            await inviteToAddBankAccounts(companyId, values.email, 'name')
           } catch (e) {
             console.error(e)
+          } finally {
+            closePopup()
+            setSubmitting(false)
           }
-          setSubmitting(false)
         }}>
-        {formikProps => {
+        {({ submitForm }) => {
           return (
             <>
               <Modal.Header>
@@ -69,6 +70,7 @@ const SendLinkPopup = ({ isOpenPopup, closePopup, intl: { formatMessage } }) => 
               </Modal.Content>
               <ModalActions>
                 <BasicButton
+                  type='button'
                   noBorder
                   onClick={() => closePopup()}
                   data-test='settings_bank_account_send_link_popup_cancel_btn'>
@@ -77,7 +79,8 @@ const SendLinkPopup = ({ isOpenPopup, closePopup, intl: { formatMessage } }) => 
                   </FormattedMessage>
                 </BasicButton>
                 <BasicButton
-                  onClick={() => console.log('add endpoint')} //TODO add endpoint
+                  type='button'
+                  onClick={() => submitForm()}
                   data-test='settings_bank_account_send_link_popup_send_btn'>
                   <FormattedMessage id='global.send' defaultMessage='Send'>
                     {text => text}
@@ -95,12 +98,16 @@ const SendLinkPopup = ({ isOpenPopup, closePopup, intl: { formatMessage } }) => 
 SendLinkPopup.propTypes = {
   isOpenPopup: PropTypes.bool,
   closePopup: PropTypes.func,
+  companyId: PropTypes.number,
+  inviteToAddBankAccounts: PropTypes.func,
   intl: { formatMessage: PropTypes.func }
 }
 
 SendLinkPopup.defaultProps = {
   isOpenPopup: false,
+  companyId: null,
   closePopup: () => {},
+  inviteToAddBankAccounts: () => {},
   intl: { formatMessage: () => {} }
 }
 

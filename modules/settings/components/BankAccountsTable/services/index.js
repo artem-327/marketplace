@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 //Constants
-import { errorMessages, multipleEmails } from '~/constants/yupValidation'
+import { errorMessages } from '~/constants/yupValidation'
 
 export const initialFormValues = {
   email: ''
@@ -9,6 +9,6 @@ export const initialFormValues = {
 export const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
-      email: multipleEmails().required(errorMessages.requiredMessage)
+      email: Yup.string().trim().email().required(errorMessages.requiredMessage)
     })
   )

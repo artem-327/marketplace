@@ -511,6 +511,7 @@
   "global.measureType": "Measure Type",
   "global.ratioToBaseSiUnit": "Ratio to Base SI Unit",
   "global.delete": "Delete",
+  "global.deactivate": "Deactivate",
   "global.no": "No",
   "global.download": "Download",
   "global.title": "Title",
@@ -2092,7 +2093,8 @@
   "settings.editUser": "Edit User",
   "settings.finalizeVerification": "Finalize Verification",
   "settings.initiateVerification": "Initiate Verification",
-  "settings.setAsPreferredBankAccount": "Set as Preferred Bank Account",
+  "settings.setAsPreferredBankAccount": "Set as Preferred",
+  "settings.setAsActiveBankAccount": "Set as Active",
   "settings.checking": "Checking",
   "settings.savings": "Savings",
   "settings.status": "Status",
@@ -2979,5 +2981,8 @@
   "global.emailAddress": "Email Address",
   "settings.accounts.viewInactiveAccounts": "View Inactive Accounts",
   "settings.accounts.hideInactiveAccounts": "Hide Inactive Accounts",
-  "settings.accounts.deleteInstitutions": "Delete Institutions"
+  "settings.accounts.deleteInstitutions": "Delete Institutions",
+  "settings.accounts.confirm.deleteInstitutions": "Deleting this institution will remove all accounts associated with it. Do you wish to continue?",
+  "confirm.deactivateBankAccount": "Deactivate Bank Account",
+  "confirm.deactivate": "Do you really want to deactivate {item}?"
 }
