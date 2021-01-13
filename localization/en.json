@@ -2973,5 +2973,7 @@
   "detailRow.cofA": "C of A",
   "detailRow.orderTotal": "Order Total",
   "broadcast.saveAsTemplate": "Save as Templates",
-  "product.packaging.selectFirst": "Please select Packaging Unit"
+  "product.packaging.selectFirst": "Please select Packaging Unit",
+  "inventory.modal.editListing": "Edit Listing",
+  "inventory.modal.addListing": "Add Listing"
 }

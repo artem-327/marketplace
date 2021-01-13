@@ -1,86 +1,79 @@
 import styled from 'styled-components'
 
-import {
-  Sidebar,
-  Segment,
-  GridColumn,
-  Icon,
-  Grid
-} from 'semantic-ui-react'
+import { Sidebar, Segment, GridColumn, Icon, Grid, Modal } from 'semantic-ui-react'
 
-
-export const FlexSidebar = styled(Sidebar)`
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
+export const FlexSidebar = styled(Modal)`
+  display: flex !important;
+  flex-direction: column !important;
+  background-color: #ffffff !important;
   top: 80px !important;
-  padding-bottom: 80px;
-  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
+  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075) !important;
   z-index: 1000 !important;
-  text-align: left;
-  font-size: 14px;
-  
+  text-align: left !important;
+  font-size: 14px !important;
+
   &.full-screen-sidebar {
     top: 0 !important;
-    padding-bottom: 0px;
+    padding-bottom: 0px !important;
   }
-  
+
   .field {
     font-size: 1em !important;
     line-height: 1.29 !important;
-    font-weight: normal;
+    font-weight: normal !important;
+    padding-top: 7px;
     > label {
       font-size: 1em !important;
-      color: #404040;
+      color: #404040 !important;
       margin: 0em 0em 0.428571429em 0em !important;
     }
     > textarea,
     > .ui.input input,
     > .ui.dropdown {
-      min-height: 32px;
-      font-size: 1em;
-      line-height: 1.29;
-      padding-top: 0.714285714em;
-      padding-bottom: 0.714285714em;
-      border: solid 1px #dee2e6;
-      background-color: #fdfdfd;
+      min-height: 32px !important;
+      font-size: 1em !important;
+      line-height: 1.29 !important;
+      padding-top: 0.714285714em !important;
+      padding-bottom: 0.714285714em !important;
+      border: solid 1px #dee2e6 !important;
+      background-color: #fdfdfd !important;
       &.disabled {
-        opacity: 1;
-        color: #cecfd4;
+        opacity: 1 !important;
+        color: #cecfd4 !important;
       }
       > .default.text {
-        margin: 0 0 0 0.64285714em;
-      }      
+        margin: 0 0 0 0.64285714em !important;
+      }
     }
     > .ui.multiple.selection.dropdown {
-      padding: 7.5px 11px;
+      padding: 7.5px 11px !important;
       > a.ui.label {
-        margin: 1.5px;
-        padding: 3px 0.357142857em;
-        box-shadow: none;
-        background: none;
-        border-radius: 2px;
-        background-color: #edeef2;
-        color: #848893;
-        font-weight: normal;
+        margin: 1.5px !important;
+        padding: 3px 0.357142857em !important;
+        box-shadow: none !important;
+        background: none !important;
+        border-radius: 2px !important;
+        background-color: #edeef2 !important;
+        color: #848893 !important;
+        font-weight: normal !important;
       }
       > .default.text {
-        margin: 3px 15px;
+        margin: 3px 15px !important;
       }
     }
   }
   .ui.button.doc-manager {
-    border-radius: 3px;
-    border: solid 1px #2599d5;
-    background-color: #ddf1fc;
-    color: #2599d5;
+    border-radius: 3px !important;
+    border: solid 1px #2599d5 !important;
+    background-color: #ddf1fc !important;
+    color: #2599d5 !important;
     > i.icon {
-      font-size: 18px;
+      font-size: 18px !important;
     }
-  } 
+  }
   .column.product-offer-documents {
     tbody tr td:nth-child(2) {
-      color: #2599d5;
+      color: #2599d5 !important;
     }
   }
 `
@@ -117,19 +110,19 @@ export const FlexTabs = styled.div`
         padding: 0.535714286em 0;
         > .column {
           padding: 0 0.714285714em;
-        }    
+        }
       }
     }
   }
-  .grid.stretched[class*="StretchedGrid"] {
+  .grid.stretched[class*='StretchedGrid'] {
     height: auto !important;
   }
 `
 
-export const FlexContent = styled.div`
-  flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
+export const FlexContent = styled(Modal.Content)`
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  padding: 0 !important;
 `
 
 export const TopMargedColumn = styled(GridColumn)`
@@ -149,7 +142,7 @@ export const GraySegment = styled(Segment)`
       padding: 0.535714286em 0;
       > .column {
         padding: 0 1em;
-      }    
+      }
     }
   }
 `
@@ -166,29 +159,29 @@ export const BottomButtons = styled.div`
     font-size: 1em;
     margin: 0 0.357142857em;
     padding: 9px 18px 9px;
-    
+
     border: solid 1px #dee2e6;
     background-color: #ffffff;
     color: #20273a;
-    
+
     &:hover {
       background-color: #f8f9fb;
     }
-    
+
     &.disabled {
       background-color: #ffffff;
       color: #cecfd4;
     }
-    
+
     &.large.primary {
-      border: none;    
+      border: none;
       background-color: #2599d5;
       color: #ffffff;
-      
+
       &:hover {
         background-color: #188ec9;
       }
-      
+
       &.disabled {
         background-color: #bde0f2;
         color: #ffffff;
@@ -200,20 +193,20 @@ export const BottomButtons = styled.div`
 export const HighSegment = styled(Segment)`
   height: 100%;
   padding: 0 !important;
-  
+
   svg {
     font-size: 18px;
     vertical-align: middle;
   }
-  
+
   svg.title-icon {
     margin-left: 15px;
     color: #cecfd4;
   }
-  
+
   svg.close-icon {
     right: 0;
-    position: absolute;    
+    position: absolute;
     width: 18px;
     height: 18px;
     cursor: pointer;
@@ -233,17 +226,17 @@ export const CloceIcon = styled(Icon)`
 
 export const InputWrapper = styled.div`
   > .field-label {
-      margin: 0em 0em 0.428571429em 0em;
-      font-size: 1em;
-      line-height: 1.29;
-      color: #404040;
+    margin: 0em 0em 0.428571429em 0em;
+    font-size: 1em;
+    line-height: 1.29;
+    color: #404040;
   }
   & div {
     position: relative;
     > .field {
       margin: 0 !important;
       .ui.input input {
-        padding-left: 47px; 
+        padding-left: 47px;
         background-color: #fdfdfd;
       }
     }
@@ -277,7 +270,7 @@ export const InputLabeledWrapper = styled.div`
         border-radius: 3px 0 0 3px;
         width: 50% !important;
       }
-      > div.ui.label {    
+      > div.ui.label {
         font-weight: normal;
         border-radius: 0 3px 3px 0;
         border: solid 1px #dee2e6;
@@ -300,10 +293,10 @@ export const QuantityWrapper = styled.div`
     > .field {
       margin: 0 !important;
       .ui.input input {
-        padding-right: 47px; 
+        padding-right: 47px;
         background-color: #fdfdfd;
       }
-    }    
+    }
     > .sideButtons {
       position: absolute;
       width: 40px;
@@ -324,7 +317,7 @@ export const QuantityWrapper = styled.div`
         line-height: 14px;
         border-radius: 0 3px 0 0;
         width: 40px;
-        
+
         &.buttonPlus {
           padding: 3px 0 2px 0;
         }
@@ -339,13 +332,13 @@ export const QuantityWrapper = styled.div`
 
 export const SmallGrid = styled(Grid)`
   & {
-  margin: 0 -0.357142857em !important;
-  > .row {
-    padding: 0.535714286em 0 !important;
-    > .column {
-      padding: 0 0.357142857em !important;
-    }    
-  }
+    margin: 0 -0.357142857em !important;
+    > .row {
+      padding: 0.535714286em 0 !important;
+      > .column {
+        padding: 0 0.357142857em !important;
+      }
+    }
   }
 `
 
