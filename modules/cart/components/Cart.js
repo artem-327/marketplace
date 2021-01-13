@@ -256,6 +256,25 @@ export default class Cart extends Component {
                     </Header>
                   </VerticalUnpaddedColumn>
                 </StyledRow>
+
+                <BottomUnpaddedRow columns={2}>
+                  <VerticalUnpaddedColumn>
+                    <FormattedMessage id='cart.palletCount' defaultMessage='Pallet Count' />
+                  </VerticalUnpaddedColumn>
+                  <VerticalUnpaddedColumn textAlign='right'>
+                    <FormattedNumber minimumFractionDigits={0} value={cart.palletCountTotal || 0} />
+                  </VerticalUnpaddedColumn>
+                </BottomUnpaddedRow>
+
+                <TopUnpaddedRow columns={2}>
+                  <VerticalUnpaddedColumn>
+                    <FormattedMessage id='cart.palletCountLimit' defaultMessage='Pallet Count limit' />
+                  </VerticalUnpaddedColumn>
+                  <VerticalUnpaddedColumn textAlign='right'>
+                    <FormattedNumber minimumFractionDigits={0} value={cart.palletCountLimit || 0} />
+                  </VerticalUnpaddedColumn>
+                </TopUnpaddedRow>
+
                 <BottomUnpaddedRow columns={2}>
                   <VerticalUnpaddedColumn>
                     <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />

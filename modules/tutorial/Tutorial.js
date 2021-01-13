@@ -336,7 +336,7 @@ class Tutorial extends Component {
       isCompanyAdmin,
       isBusinessVerification,
       isTutorial,
-      accountStatus,
+      vellociBusinessId,
       marginGlobalPrice
     } = this.props
 
@@ -379,7 +379,7 @@ class Tutorial extends Component {
           </Rectangle>
         </ThemeProvider>
       )
-    } else if (!isLoading && !isAdmin && accountStatus === 'none' && isBusinessVerification && !isTutorial) {
+    } else if (!isLoading && !isAdmin && !vellociBusinessId && isBusinessVerification && !isTutorial) {
       return (
         <ThemeProvider theme={theme}>
           <Rectangle>
@@ -426,12 +426,8 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
 
-  let accountStatus = 'none'
-  if (company && company.dwollaAccountStatus) accountStatus = company.dwollaAccountStatus
-  else if (company && company.vellociAccountStatus) accountStatus = company.vellociAccountStatus
-
   return {
-    accountStatus,
+    vellociBusinessId: getSafe(() => company.vellociBusinessId, false),
     name: getSafe(() => state.auth.identity.name, ''),
     isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false),
     isMerchant: getSafe(() => state.auth.identity.isMerchant, false),

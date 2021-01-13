@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
-import { Menu, Grid, Tab, Popup, Input, Dropdown } from 'semantic-ui-react'
-import { Briefcase, Package, DollarSign, User, Layers } from 'react-feather'
+import { Menu, Grid, Tab, Popup, Input, Dropdown, Button } from 'semantic-ui-react'
+import { Package, DollarSign, User, Layers, Coffee, Globe, Activity, BarChart2 } from 'react-feather'
 //components
 import { getSafe } from '~/utils/functions'
 import PieGraph from './PieGraph'
 import LineGraph from './LineGraph'
+import BarGraph from './BarGraph'
 import SummaryRectangle from './SummaryRectangle'
 //styled
 import styled from 'styled-components'
@@ -25,7 +26,7 @@ const UpperCaseText = styled.div`
 `
 
 const DivContainerGraph = styled.div`
-  width: 100%;
+  //width: 100%;
   height: 580px;
   border-radius: 4px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
@@ -418,15 +419,70 @@ const StyledCalendar = styled(Calendar)`
   }
 `
 
-const StatsTypeSelect = styled(Dropdown)`
+const StatsTypeSelect = styled(Dropdown)` 
   > .menu {
     > .item {
-      margin-left: 0 !important;
-      margin-right: 0 !important;
+      border: none !important;
+      margin: 0 !important;
+    }
+  }
+`
 
-      &,
-      &.active {
-        border-bottom-color: #ffffff !important;
+const StyledTab = styled(Tab)`
+  & > .ui.pointing.secondary.menu {
+    min-height: 50px !important;
+    margin: 0 -20px !important;
+    padding: 0 5px 0 20px !important;
+  }
+`
+
+const RightChartControl = styled.div`
+  display: flex;
+  margin: auto;
+  margin-right: 0;
+  height: 40px;
+`
+
+const GraphTypeSwitch = styled.div`
+  display: inline-block;
+  margin: auto 10px;
+
+  .ui.button {
+    height: 32px;
+    min-width: 32px;
+    padding: 6px !important;
+    text-align: center;
+  }
+ 
+  &.line-graph {
+    .ui.left.button {
+      background-color: #2599d5;
+      border: solid 1px #2599d5;
+      > svg {
+        color: #ffffff;
+      }
+    }
+    .ui.right.button {
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      > svg {
+        color: #20273a;
+      }
+    }
+  }
+  &.bar-graph {
+    .ui.left.button {
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+      > svg {
+        color: #20273a;
+      }
+    }
+    .ui.right.button {
+      background-color: #2599d5;
+      border: solid 1px #2599d5;
+      > svg {
+        color: #ffffff;
       }
     }
   }
@@ -441,15 +497,13 @@ class Dashboard extends Component {
     dateTo: null,
     dateToEdited: null,
     selectedDate: null,
-    statsType: null
+    statsType: null,
+    dateRangeSelected: 0,
+    graphType: 0
   }
 
   componentDidMount() {
-    try {
-      this.props.getDashboardData()
-    } catch (error) {
-      console.error(error)
-    }
+    this.setDateRange(0)
   }
 
   filterQuickDate = type => {
@@ -498,9 +552,8 @@ class Dashboard extends Component {
   filterDates = (type, dates) => {
     const { isAdmin, takeover } = this.props
     // get daily stats data
-    this.props.getDailyStatistics(
-      moment(dates[0]).format('YYYY-MM-DD') + 'T00:00:00Z',
-      moment(dates[1]).add(1, 'days').format('YYYY-MM-DD') + 'T00:00:00Z'
+    this.props.getDashboardData(
+      moment(dates[0]).format('YYYY-MM-DD') + 'T00%3A00%3A00Z'
     )
     this.setState({
       activeTab: isAdmin && !takeover ? 1 : 2,
@@ -511,6 +564,85 @@ class Dashboard extends Component {
       dateToEdited: null,
       selectedDate: moment(dates[0]).format('D MMM YYYY') + ' - ' + moment(dates[1]).format('D MMM YYYY')
     })
+  }
+
+  setDateRange = value => {
+    const { isAdmin, takeover, getDashboardData, getDailyStatistics } = this.props
+    let dateFrom,
+      dateTo = null
+
+    switch (value) {
+      case 0: // Max
+        dateFrom = moment('01/01/2020', 'DD/MM/YYYY')
+        dateTo = moment()
+        break
+
+      case 1: // 1 year
+        dateFrom = moment().subtract(1, 'years')
+        dateTo = moment()
+        break
+
+      case 2: // YTD
+        dateFrom = moment().startOf('year')
+        dateTo = moment()
+        break
+
+      case 3: // 6 months
+        dateFrom = moment().subtract(6, 'months')
+        dateTo = moment()
+        break
+
+      case 4: // 3 months
+        dateFrom = moment().subtract(3, 'months')
+        dateTo = moment()
+        break
+
+      case 5: // 1 month
+      default:
+        dateFrom = moment().subtract(1, 'months')
+        dateTo = moment()
+        break
+    }
+
+    try {
+      getDashboardData(
+        moment(dateFrom).format('YYYY-MM-DD') + 'T00%3A00%3A00Z'
+      )
+    } catch (error) {
+      console.error(error)
+    }
+
+    if (isAdmin && !takeover) {
+      try {
+        getDailyStatistics(
+          moment(dateFrom).format('YYYY-MM-DD') + 'T00:00:00Z',
+          moment(dateTo).add(1, 'days').format('YYYY-MM-DD') + 'T00:00:00Z'
+        )
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    this.setState({ dateRangeSelected: value })
+  }
+
+  graphTypeSwitch = () => {
+    const { graphType } = this.state
+    return (
+      <GraphTypeSwitch className={graphType ? 'bar-graph' : 'line-graph'}>
+        <Button
+          attached='left'
+          onClick={() => this.setState({ graphType: 0 })}
+          data-test='dashboard_stats_line_graph_type_btn'>
+            <Activity size={20} />
+        </Button>
+        <Button
+          attached='right'
+          onClick={() => this.setState({ graphType: 1 })}
+          data-test='dashboard_stats_bar_graph_type_btn'>
+            <BarChart2 size={20} />
+        </Button>
+      </GraphTypeSwitch>
+    )
   }
 
   render() {
@@ -527,6 +659,7 @@ class Dashboard extends Component {
       top10CompanyProductsByValueSales,
       broadcastedProductOffersValue,
       usersCount,
+      productOffers,
       companySumOfPurchasesMonthly,
       companySumOfSalesMonthly,
       top10Buyers,
@@ -563,6 +696,33 @@ class Dashboard extends Component {
       ]
     }
 
+    const dateRangeOptions = [
+      {
+        value: 0,
+        text: formatMessage({ id: 'dashboard.dateFilter.max', defaultMessage: 'Max' })
+      },
+      {
+        value: 1,
+        text: formatMessage({ id: 'dashboard.dateFilter.1year', defaultMessage: '1 year' })
+      },
+      {
+        value: 2,
+        text: formatMessage({ id: 'dashboard.dateFilter.ytd', defaultMessage: 'YTD' })
+      },
+      {
+        value: 3,
+        text: formatMessage({ id: 'dashboard.dateFilter.6months', defaultMessage: '6 months' })
+      },
+      {
+        value: 4,
+        text: formatMessage({ id: 'dashboard.dateFilter.3months', defaultMessage: '3 months' })
+      },
+      {
+        value: 5,
+        text: formatMessage({ id: 'dashboard.dateFilter.1month', defaultMessage: '1 month' })
+      },
+    ]
+
     let stats = []
     if (dailyStats && dailyStats.length) {
       stats = dailyStats.map(day => {
@@ -586,7 +746,9 @@ class Dashboard extends Component {
       dateTo,
       dateToEdited,
       selectedDate,
-      statsType
+      statsType,
+      dateRangeSelected,
+      graphType
     } = this.state
 
     const adminMenuTabs = [
@@ -598,13 +760,23 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='sales' attached={false}>
-            <LineGraph
-              data={totalSumOfSalesMonthly}
-              title='Total Sum Of Sales Monthly'
-              titleId='dasboard.sales.graph.title'
-              subTitle='in thousand dollars'
-              subTitleId='dasboard.sales.graph.subtitle'
-            />{' '}
+            {graphType === 0 ? (
+              <LineGraph
+                data={totalSumOfSalesMonthly}
+                title='Total Sum Of Sales Monthly'
+                titleId='dasboard.sales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            ) : (
+              <BarGraph
+                data={totalSumOfSalesMonthly}
+                title='Total Sum Of Sales Monthly'
+                titleId='dasboard.sales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
         )
       },
@@ -618,28 +790,40 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='stats' attached={false}>
-            <LineGraph
-              data={stats}
-              dataKey={statsType ? statsTabs[statsType][0] : Object.entries(statsTabs)[0][1][0]}
-              isCurrency={statsType ? statsTabs[statsType][1] : false}
-              unitsCurrency={1}
-              title='Daily Statistics'
-              titleId='dashboard.daily.stats.title'
-              subTitle=''
-              subTitleId=''
-            />
+            {graphType === 0 ? (
+              <LineGraph
+                data={stats}
+                dataKey={statsType ? statsTabs[statsType][0] : Object.entries(statsTabs)[0][1][0]}
+                isCurrency={statsType ? statsTabs[statsType][1] : false}
+                unitsCurrency={1}
+                title='Daily Statistics'
+                titleId='dashboard.daily.stats.title'
+                subTitle=''
+                subTitleId=''
+              />
+            ) : (
+              <BarGraph
+                data={stats}
+                dataKey={statsType ? statsTabs[statsType][0] : Object.entries(statsTabs)[0][1][0]}
+                isCurrency={statsType ? statsTabs[statsType][1] : false}
+                unitsCurrency={1}
+                title='Total Sum Of Sales Monthly'
+                titleId='dasboard.sales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
         )
       },
       {
         menuItem: (
-          <>
+          <RightChartControl>
             {activeTab === 1 ? (
               <StatsTypeSelect
                 key='statsType'
-                style={{ marginLeft: 'auto' }}
-                item
-                pointing='top right'
+                style={{ marginRight: '10px' }}
+                selection
                 options={Object.entries(statsTabs).map(stType => {
                   return { text: stType[1][0], value: stType[0] }
                 })}
@@ -648,7 +832,17 @@ class Dashboard extends Component {
                 data-test='dashboard_stats_drpdn'
               />
             ) : null}
-          </>
+            <StatsTypeSelect
+              key='dateRangeSelect'
+              style={{ minWidth: '150px' }}
+              selection
+              options={dateRangeOptions}
+              onChange={(e, { value }) => this.setDateRange(value)}
+              value={dateRangeSelected}
+              data-test='dashboard_date_range_select_drpdn'
+            />
+            {this.graphTypeSwitch()}
+          </RightChartControl>
         )
       }
     ]
@@ -664,13 +858,23 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='company-sales' attached={false}>
-            <LineGraph
-              data={companySumOfSalesMonthly}
-              title='Company Sum Of Sales Monthly'
-              titleId='dasboard.companySales.graph.title'
-              subTitle='in thousand dollars'
-              subTitleId='dasboard.sales.graph.subtitle'
-            />
+            {graphType === 0 ? (
+              <LineGraph
+                data={companySumOfSalesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            ) : (
+              <BarGraph
+                data={companySumOfSalesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
         )
       },
@@ -684,24 +888,34 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='company-purchases' attached={false}>
-            <LineGraph
-              data={companySumOfPurchasesMonthly}
-              title='Company Sum Of Purchases Monthly'
-              titleId='dasboard.companyPurchase.graph.title'
-              subTitle='in thousand dollars'
-              subTitleId='dasboard.sales.graph.subtitle'
-            />
+            {graphType === 0 ? (
+              <LineGraph
+                data={companySumOfPurchasesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            ) : (
+              <BarGraph
+                data={companySumOfPurchasesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
         )
       },
       {
         menuItem: (
-          <>
+          <RightChartControl>
             {activeTab === 2 ? (
               <StatsTypeSelect
                 key='statsType'
-                style={{ marginLeft: 'auto' }}
-                item
+                style={{ marginRight: '10px' }}
+                selection
                 pointing='top right'
                 options={Object.entries(statsTabs).map(stType => {
                   return { text: stType[1][0], value: stType[0] }
@@ -711,7 +925,17 @@ class Dashboard extends Component {
                 data-test='dashboard_stats_drpdn'
               />
             ) : null}
-          </>
+            <StatsTypeSelect
+              key='dateRangeSelect'
+              style={{ minWidth: '150px' }}
+              selection
+              options={dateRangeOptions}
+              onChange={(e, { value }) => this.setDateRange(value)}
+              value={dateRangeSelected}
+              data-test='dashboard_date_range_select_drpdn'
+            />
+            {this.graphTypeSwitch()}
+          </RightChartControl>
         )
       }
     ]
@@ -727,14 +951,54 @@ class Dashboard extends Component {
         ),
         render: () => (
           <TabPane key='company-purchases' attached={false}>
-            <LineGraph
-              data={companySumOfPurchasesMonthly}
-              title='Company Sum Of Purchases Monthly'
-              titleId='dasboard.companyPurchase.graph.title'
-              subTitle='in thousand dollars'
-              subTitleId='dasboard.sales.graph.subtitle'
-            />
+            {graphType === 0 ? (
+              <LineGraph
+                data={companySumOfPurchasesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            ) : (
+              <BarGraph
+                data={companySumOfPurchasesMonthly}
+                title='Company Sum Of Sales Monthly'
+                titleId='dasboard.companySales.graph.title'
+                subTitle='in thousand dollars'
+                subTitleId='dasboard.sales.graph.subtitle'
+              />
+            )}
           </TabPane>
+        )
+      },
+      {
+        menuItem: (
+          <RightChartControl>
+            {activeTab === 2 ? (
+              <StatsTypeSelect
+                key='statsType'
+                style={{ marginRight: '10px' }}
+                selection
+                pointing='top right'
+                options={Object.entries(statsTabs).map(stType => {
+                  return { text: stType[1][0], value: stType[0] }
+                })}
+                onChange={(e, { value }) => this.setState({ statsType: value })}
+                value={!statsType ? Object.entries(statsTabs)[0][0] : statsType}
+                data-test='dashboard_stats_drpdn'
+              />
+            ) : null}
+            <StatsTypeSelect
+              key='dateRangeSelect'
+              style={{ minWidth: '150px' }}
+              selection
+              options={dateRangeOptions}
+              onChange={(e, { value }) => this.setDateRange(value)}
+              value={dateRangeSelected}
+              data-test='dashboard_date_range_select_drpdn'
+            />
+            {this.graphTypeSwitch()}
+          </RightChartControl>
         )
       }
     ]
@@ -757,7 +1021,7 @@ class Dashboard extends Component {
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
         <Grid.Row>
           <Grid.Column width={16}>
-            {isAdmin && !takeover && (
+            {false && isAdmin && !takeover && /* #35120 - currently not used */(
               <Popup
                 on='click'
                 trigger={
@@ -900,56 +1164,113 @@ class Dashboard extends Component {
             )}
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={10}>
-            <DivContainerGraph>
-              <Tab
-                style={{ padding: '0 20px 0 20px' }}
-                className='inventory-sidebar tab-menu flex stretched'
-                menu={{ secondary: true, pointing: true }}
-                activeIndex={this.state.activeTab}
-                panes={panes}
-              />
-            </DivContainerGraph>
-          </Grid.Column>
 
-          <Grid.Column width={5}>
-            {!isClientCompany && (
-              <>
+        {isClientCompany && (
+          <Grid.Row>
+            <Grid.Column width={5}>
+              <SummaryRectangle
+                onClickUrl={'/settings/users'}
+                icon={<User />}
+                data={usersCount}
+                title='Users'
+                titleId='dashboard.totalUsersCount.title'
+                styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(230, 243, 211)' }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+        )}
+
+        {isAdmin && !takeover && (
+          <>
+            <Grid.Row style={{ paddingBottom: '6px' }}>
+              <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={isAdmin && !takeover ? '/companies/companies' : '/manage-guests/guests'}
-                  icon={<Briefcase />}
+                  icon={<Coffee />}
                   data={companiesCount}
                   title={isAdmin && !takeover ? 'Companies' : 'Guests'}
                   titleId={
                     isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalGuestCompanies.title'
                   }
+                  styleCircle={{ backgroundColor: '#2599d5', border: 'solid 5px rgb(211, 235, 247)' }}
                 />
+              </Grid.Column>
+              <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={isAdmin && !takeover ? '/operations/company-product-catalog' : '/inventory/my-products'}
                   icon={<Package />}
                   data={companyProductsCount}
-                  title='Total Products'
+                  title='Products'
                   titleId='dashboard.totalProducts.title'
-                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(232, 255, 197)' }}
+                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 244, 222)' }}
                 />
-              </>
-            )}
-
-            <SummaryRectangle
-              onClickUrl={isAdmin && !takeover ? '/companies/users' : '/settings/users'}
-              icon={<User />}
-              data={usersCount}
-              title='Users'
-              titleId='dashboard.totalUsersCount.title'
-              styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(255, 233, 227)' }}
-            />
-
-            {!isClientCompany && (
-              <>
+              </Grid.Column>
+              <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={isAdmin && !takeover ? '' : '/inventory/my-listings'}
-                  icon={isAdmin && !takeover ? <DollarSign /> : <Layers />}
+                  icon={<Layers />}
+                  data={productOffersValue && Math.round(productOffersValue)}
+                  title={'Total Inventory Count'}
+                  titleId={'dashboard.totalValueWithoutMilion.title'}
+                  styleCircle={{ backgroundColor: '#96d3b7', border: 'solid 5px rgb(234, 246, 241)' }}
+                  style='currency'
+                  currency={currency}
+                />
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={isAdmin && !takeover ? '/companies/users' : '/settings/users'}
+                  icon={<User />}
+                  data={usersCount}
+                  title='Users'
+                  titleId='dashboard.totalUsersCount.title'
+                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(230, 243, 211)' }}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  icon={<DollarSign />}
+                  data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
+                  title={'Total Broadcasted Value'}
+                  titleId={'dashboard.totalBroadcastedValueWithoutMilion.title'}
+                  styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(252, 225, 218)' }}
+                  style='currency'
+                  currency={currency}
+                />
+              </Grid.Column>
+            </Grid.Row>
+          </>
+        )}
+
+        {!isAdmin && !isClientCompany && (
+          <>
+            <Grid.Row style={{ paddingBottom: '6px' }}>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/manage-guests/guests'}
+                  icon={<Coffee />}
+                  data={companiesCount}
+                  title={'Guest'}
+                  titleId={'dashboard.totalGuestCompanies.title'}
+                  styleCircle={{ backgroundColor: '#2599d5', border: 'solid 5px rgb(211, 235, 247)' }}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/inventory/my-products'}
+                  icon={<Package />}
+                  data={companyProductsCount}
+                  title='Products'
+                  titleId='dashboard.totalProducts.title'
+                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 244, 222)' }}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/inventory/my-listings'}
+                  icon={<Layers />}
                   data={productOffersValue && Math.round(productOffersValue)}
                   title={isAdmin && !takeover ? 'Inventory' : 'Inventory'}
                   titleId={
@@ -957,10 +1278,35 @@ class Dashboard extends Component {
                       ? 'dashboard.totalValueWithoutMilion.title'
                       : 'dashboard.totalInventoryCount.title'
                   }
-                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 232, 190)' }}
+                  styleCircle={{ backgroundColor: '#96d3b7', border: 'solid 5px rgb(234, 246, 241)' }}
                   style='currency'
                   currency={currency}
                 />
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/settings/users'}
+                  icon={<User />}
+                  data={usersCount}
+                  title='Users'
+                  titleId='dashboard.totalUsersCount.title'
+                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(230, 243, 211)' }}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
+                <SummaryRectangle
+                  onClickUrl={'/inventory/my-listings'}
+                  icon={<Globe />}
+                  data={productOffers}
+                  title='Product Offers'
+                  titleId='dashboard.totalProductOffers.title'
+                  styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(219, 243, 248)' }}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={isAdmin && !takeover ? '' : '/marketplace/listings'}
                   icon={<DollarSign />}
@@ -971,20 +1317,33 @@ class Dashboard extends Component {
                       ? 'dashboard.totalBroadcastedValueWithoutMilion.title'
                       : 'dashboard.totalSales.title'
                   }
-                  styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(224, 250, 255)' }}
-                  isLastSummary
+                  styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(252, 225, 218)' }}
                   style='currency'
                   currency={currency}
                 />
-              </>
-            )}
+              </Grid.Column>
+            </Grid.Row>
+          </>
+        )}
+
+        <Grid.Row>
+          <Grid.Column width={15}>
+            <DivContainerGraph>
+              <StyledTab
+                style={{ padding: '0 20px 0 20px' }}
+                className='inventory-sidebar tab-menu flex stretched'
+                menu={{ secondary: true, pointing: true }}
+                activeIndex={this.state.activeTab}
+                panes={panes}
+              />
+            </DivContainerGraph>
           </Grid.Column>
         </Grid.Row>
+
         {isAdmin && !takeover ? (
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
-                innerRadius='30%'
                 valueLegend='users'
                 data={top10CompaniesByUsers}
                 title='COMPANIES BY USERS'
@@ -993,7 +1352,6 @@ class Dashboard extends Component {
             </Grid.Column>
             <Grid.Column width={5}>
               <PieGraph
-                innerRadius='30%'
                 data={top10CompaniesByCompanyProducts}
                 title='COMPANIES BY PRODUCTS'
                 titleId='dasboard.companiesProducts.title'
@@ -1001,7 +1359,6 @@ class Dashboard extends Component {
             </Grid.Column>
             <Grid.Column width={5}>
               <PieGraph
-                innerRadius='30%'
                 isCurrency={true}
                 valueLegend='/year'
                 data={top10CompaniesBySalesInLastYear}
@@ -1011,14 +1368,14 @@ class Dashboard extends Component {
             </Grid.Column>
           </Grid.Row>
         ) : null}
-        {false && ((!isAdmin && !isClientCompany) || takeover) ? (
+
+        {(!isAdmin && !isClientCompany) || takeover ? (
           <Grid.Row>
             {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
               <Grid.Column width={5}>
                 <PieGraph
-                  innerRadius='30%'
                   data={top10CompanyProductsByQuantitySales}
-                  title='PRODUCTS SOLD BY QUANTITY'
+                  title='PRODUCTS BY QUANTITY'
                   titleId='dasboard.productsQuantity.title'
                 />
               </Grid.Column>
@@ -1026,10 +1383,9 @@ class Dashboard extends Component {
             {top10CompanyProductsByValueSales && top10CompanyProductsByValueSales.length ? (
               <Grid.Column width={5}>
                 <PieGraph
-                  innerRadius='30%'
                   isCurrency={true}
                   data={top10CompanyProductsByValueSales}
-                  title='PRODUCTS SOLD BY VALUE'
+                  title='PRODUCTS BY VALUE'
                   titleId='dasboard.productsValue.title'
                 />
               </Grid.Column>
@@ -1037,9 +1393,8 @@ class Dashboard extends Component {
             {top10Buyers && top10Buyers.length ? (
               <Grid.Column width={5}>
                 <PieGraph
-                  innerRadius='30%'
                   data={top10Buyers}
-                  title='TOP 10 BUYERS'
+                  title='TOP 5 BUYERS'
                   titleId='dasboard.topBuyers.title'
                 />
               </Grid.Column>
@@ -1050,7 +1405,6 @@ class Dashboard extends Component {
           <Grid.Row>
             <Grid.Column width={5}>
               <PieGraph
-                innerRadius='30%'
                 isCurrency={true}
                 data={top10ProductGroups}
                 title='POPULAR PRODUCTS'
