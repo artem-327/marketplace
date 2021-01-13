@@ -288,7 +288,7 @@ export const BottomButtons = styled.div`
   display: inline-block;
   position: relative;
   overflow: visible;
-  margin: 0;
+  margin: 0 !important;
   box-shadow: inset 0 1px 0 0 #dee2e6;
   background-color: rgba(255, 255, 255, 0);
   padding: 10px 5px;

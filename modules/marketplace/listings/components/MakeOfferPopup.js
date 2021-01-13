@@ -26,7 +26,7 @@ import { uniqueArrayByKey } from '~/utils/functions'
 import ErrorFocus from '~/components/error-focus'
 import { Schedule } from '@material-ui/icons'
 
-import { TableSegment, StyledList, StyledRectangle, PriceInput } from '../../constants/layout'
+import { TableSegment, StyledList, StyledRectangle, PriceInput, BottomButtons } from '../../constants/layout'
 
 const StyledModal = styled(Modal)`  
   > i.close.icon {
@@ -42,7 +42,7 @@ const StyledModal = styled(Modal)`
   }
 `
 
-const BottomButtons = styled.div`
+const BottomButtons2 = styled.div`
   display: inline-block;
   position: relative;
   overflow: visible;
@@ -186,7 +186,7 @@ class MakeOfferPopup extends React.Component {
       intl: { formatMessage },
       popupValues,
       closePopup,
-      isSending,
+      updating,
       listFobPriceUnit,
       packagingType,
       packagingUnit,
@@ -212,7 +212,7 @@ class MakeOfferPopup extends React.Component {
 
           return (
             <StyledModal closeIcon onClose={closePopup} open={true} size='large'>
-              <Dimmer active={isSending} inverted>
+              <Dimmer active={updating} inverted>
                 <Loader />
               </Dimmer>
               <Modal.Header>
@@ -407,16 +407,16 @@ class MakeOfferPopup extends React.Component {
                   </>
                 </Form>
               </Modal.Content>
-              <Modal.Actions>
+              <BottomButtons>
                 <Button
+                  className='borderless'
                   size='large'
-                  inputProps={{ type: 'button' }}
                   onClick={closePopup}
                   data-test='inventory_quick_edit_pricing_popup_cancel_btn'>
                   {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
                 </Button>
                 <Button.Submit
-                  primary
+                  className='light'
                   size='large'
                   onClick={() => {
                     let { validateForm, submitForm } = formikProps
@@ -433,7 +433,7 @@ class MakeOfferPopup extends React.Component {
                   data-test='inventory_quick_edit_pricing_popup_save_btn'>
                   {formatMessage({ id: 'marketplace.submitOffer', defaultMessage: 'Submit Offer' })}
                 </Button.Submit>
-              </Modal.Actions>
+              </BottomButtons>
             </StyledModal>
           )
         }}
@@ -449,7 +449,7 @@ function mapStateToProps(store) {
 
   return {
     popupValues,
-    isSending: store.marketplace.isSending,
+    updating: store.marketplace.updating,
     productName: getSafe(() => popupValues.companyProduct.intProductName, ''),
     listFobPriceUnit: priceUnit ? `/ ${priceUnit}` : '',
     packagingType: getSafe(() => popupValues.companyProduct.packagingType.name, ''),

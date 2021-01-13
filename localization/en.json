@@ -2041,6 +2041,8 @@
   "marketplace.addToCart": "Add To Cart",
   "marketplace.enterQuantity": "Enter Quantity",
   "marketplace.detailRow.userCompanyHasCountered": "{name} of {company} has countered with {fob} for {quantity} of {product}",
+  "marketplace.confirm.deleteBid.Header": "Delete Bid",
+  "marketplace.confirm.deleteBid.Content": "Do you really want to remove Bid?",
   "operations.tables.shippingQuotes.buttonAdd": "Add Shipping Quote",
   "operations.tables.tags.buttonAdd": "Add Tag",
   "operations.tables.shippingQuotes.search": "Search shipping quote by ID",

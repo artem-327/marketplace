@@ -78,6 +78,13 @@ const GlobalTableOverrideStyle = createGlobalStyle`
     background-color: #f8f9fb !important;
     color: #848893  !important;
   }
+  
+  .greyed:not(:hover) td {
+    background-color: #edeef2;
+    color: #848893;
+    
+    
+  }
 `
 
 const SettingButton = styled(Settings)`

@@ -6,34 +6,22 @@ export const BidsSent = props => {
     url: '/prodex/api/product-offer-bids/own/datagrid',
     searchToFilter: v => {
       let filters = { or: [], and: [] }
-      if (v && v.filterName && v.filterName.length > 0) {
-        v.filterName.forEach(name =>
-          filters.or = filters.or.concat(
-            [
-              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
-              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${name}%`] },
-              {
-                operator: 'LIKE',
-                path: 'ProductOffer.companyProduct.companyGenericProduct.name',
-                values: [`%${name}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.name',
-                values: [`%${name}%`]
-              }
-            ]
-          )
+      if (v && v.searchInput) {
+        filters.or = filters.or.concat(
+          [
+            { operator: 'LIKE', path: 'ProductOfferBid.createdBy.name', values: [`%${v.searchInput}%`] },
+            {
+              operator: 'LIKE',
+              path: 'ProductOfferBid.histories.createdBy.homeBranch.company.name',
+              values: [`%${v.searchInput}%`]
+            },
+            {
+              operator: 'LIKE',
+              path: 'ProductOfferBid.histories.createdBy.homeBranch.company.cfDisplayName',
+              values: [`%${v.searchInput}%`]
+            },
+          ]
         )
-      }
-      if (v && v.filterTags && v.filterTags.length > 0) {
-        filters.and = v.filterTags.map(idTag => {
-          return {
-            operator: 'EQUALS',
-            path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
-            values: [idTag]
-          }
-        })
       }
       return filters
     }

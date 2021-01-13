@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Icon, Image, Dropdown } from 'semantic-ui-react'
+import { Container, Icon, Image, Dropdown, Input } from 'semantic-ui-react'
 import { MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -19,20 +19,12 @@ import Tutorial from '~/modules/tutorial/Tutorial'
 import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
-import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 import BidsRowDetail from '../../bids-sent/components/BidsRowDetail'
 import moment from 'moment'
 import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
-
-const CustomSearchNameTags = styled.div`
-  .column {
-    width: 370px;
-    padding-top: 0 !important;
-  }
-`
 
 class BidsReceived extends Component {
   constructor(props) {
@@ -62,22 +54,19 @@ class BidsReceived extends Component {
       //pageNumber: 0,
       expandedRowIds: [],
       filterValues: {
-        SearchByNamesAndTags: null
+        searchInput: ''
       },
       RowDetailState: null
     }
   }
 
   componentDidMount() {
-    const { tableHandlersFiltersBidsSent, advancedFilters, datagrid, applyDatagridFilter } = this.props
+    const { tableHandlersFiltersBidsReceived, advancedFilters, datagrid, applyDatagridFilter } = this.props
 
-    if (tableHandlersFiltersBidsSent) {
-      this.setState({ filterValues: tableHandlersFiltersBidsSent }, () => {
+    if (tableHandlersFiltersBidsReceived) {
+      this.setState({ filterValues: tableHandlersFiltersBidsReceived }, () => {
         const filter = {
           ...this.state.filterValues,
-          ...(!!this.state.filterValues.SearchByNamesAndTags && {
-            ...this.state.filterValues.SearchByNamesAndTags.filters
-          })
         }
         datagrid.setSearch(filter, true, 'pageFilters')
       })
@@ -92,18 +81,13 @@ class BidsReceived extends Component {
     if (isOpenPopup) closePopup()
   }
 
-  toDatagridFilter = savedFilter => {
-    let { filters, ...rest } = savedFilter
-
-    return {
-      filters: filters.map(filter => ({
-        operator: filter.operator,
-        path: filter.path,
-        values: filter.values.map(val => val.value)
-      })),
-      //pageNumber: savedFilter.pageNumber,
-      pageSize: 50
+  handleFilterChangeInputSearch = (e, data) => {
+    const filter = {
+      ...this.state.filterValues,
+      [data.name]: data.value
     }
+    this.setState({ filterValues: filter })
+    this.handleFiltersValue(filter)
   }
 
   handleFiltersValue = debounce(filter => {
@@ -111,32 +95,14 @@ class BidsReceived extends Component {
     datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  SearchByNamesAndTagsChanged = data => {
-    this.setState(
-      {
-        filterValues: {
-          ...this.state.filterValues,
-          SearchByNamesAndTags: data
-        }
-      },
-      () => {
-        const filter = {
-          ...this.state.filterValues,
-          ...(!!this.state.filterValues.SearchByNamesAndTags && {
-            ...this.state.filterValues.SearchByNamesAndTags.filters
-          })
-        }
-        this.handleFiltersValue(filter)
-      }
-    )
-  }
-
   handleRowClick = row => {
     const { expandedRowIds } = this.state
 
     if (expandedRowIds.length) {
       if (expandedRowIds[0] === row.id) {
         this.setState({ expandedRowIds: [] })
+      } else {
+        this.setState({ expandedRowIds: [row.id] })
       }
     } else {
       this.setState({ expandedRowIds: [row.id] })
@@ -148,11 +114,19 @@ class BidsReceived extends Component {
       rows,
       intl: { formatMessage }
     } = this.props
+    const { expandedRowIds } = this.state
 
     return rows.map(r => {
       const lastHistory = r.histories[r.histories.length - 1]
+      const greyed = expandedRowIds.length && (expandedRowIds[0] !== r.id)
+
       return({
         ...r,
+        clsName:
+          (expandedRowIds[0] === r.id
+              ? 'open zoomed'    // row detail expanded
+              : (greyed ? 'bids-greyed' : '')
+          ),
         name: (
           <ActionCell
             row={r}
@@ -176,13 +150,13 @@ class BidsReceived extends Component {
           />
         ),
         description: (
-          <div onClick={() => this.handleRowClick(r)}>
+          <div onClick={() => this.handleRowClick(r)} style={{ paddingTop: '5px', cursor: 'pointer' }}>
             text
           </div>
         ),
         createdAt: (
           <div
-            style={{ color: '#848893' }}
+            style={{ paddingTop: '5px', color: '#848893', cursor: 'pointer' }}
             onClick={() => this.handleRowClick(r)}>
             {moment(r.createdAt).fromNow()}
           </div>
@@ -196,10 +170,9 @@ class BidsReceived extends Component {
       isMerchant,
       isCompanyAdmin,
       intl: { formatMessage },
-      deleteOffer,
       acceptOffer,
       rejectOffer,
-      openPopup
+      datagrid
     } = this.props
     const rowActions = []
 
@@ -208,56 +181,54 @@ class BidsReceived extends Component {
         id: 'marketplace.accept',
         defaultMessage: 'Accept'
       }),
-      callback: () => acceptOffer(row.id)
+      callback: async () => {
+        try {
+          await acceptOffer(row.id)
+          this.setState({ expandedRowIds: [] })
+          datagrid.loadData()
+        } catch (e) {
+          console.error(e)
+        }
+      }
     }
     const buttonReject = {
       text: formatMessage({
         id: 'marketplace.reject',
         defaultMessage: 'Reject'
       }),
-      callback: () => rejectOffer(row.id)
+      callback: async () => {
+        try {
+          await rejectOffer(row.id)
+          this.setState({ expandedRowIds: [] })
+          datagrid.loadData()
+        } catch (e) {
+          console.error(e)
+        }
+      }
     }
     const buttonCounter = {
       text: formatMessage({
         id: 'marketplace.counter',
         defaultMessage: 'Counter'
       }),
-      callback: () => openPopup(row)
-    }
-    const buttonDelete = {
-      text: formatMessage({
-        id: 'marketplace.delete',
-        defaultMessage: 'Delete'
-      }),
-      callback: () => deleteOffer(row.id)
+      callback: () => this.setState({ expandedRowIds: [row.id] })
     }
 
     rowActions.push(buttonAccept)
     rowActions.push(buttonReject)
     rowActions.push(buttonCounter)
-    rowActions.push(buttonDelete)
 
-    /*
-    if (isMerchant || isCompanyAdmin) {
-      rowActions.push(buttonInfo)
-      rowActions.push(buttonBuy)
-      rowActions.push(buttonRequestHold)
-    } else {
-      rowActions.push(buttonInfo)
-      rowActions.push(buttonBuy)
-    }
-    */
     return rowActions
   }
 
   getRowDetail = ({ row }) => {
-    console.log('!!!!!!!!!! bids received getRowDetail row', row)
     return (
       <BidsRowDetail
         initValues={this.state.rowDetailState}
         popupValues={row}
         onUnmount={(values) => this.setState({ rowDetailState: values })}
         onClose={() => this.setState({ expandedRowIds: [] })}
+        seller
       />
     )
   }
@@ -266,11 +237,7 @@ class BidsReceived extends Component {
     const {
       datagrid,
       intl,
-      isMerchant,
-      tutorialCompleted,
-      isCompanyAdmin,
-      tableHandlersFiltersListings,
-      isOpenPopup
+      loading
     } = this.props
     const { columns, fixed, openFilterPopup, expandedRowIds } = this.state
     let { formatMessage } = intl
@@ -283,14 +250,17 @@ class BidsReceived extends Component {
           <CustomRowDiv>
             <div>
               <div className='column'>
-                <CustomSearchNameTags>
-                  <SearchByNamesAndTags
-                    onChange={this.SearchByNamesAndTagsChanged}
-                    initFilterState={getSafe(() => tableHandlersFiltersListings.SearchByNamesAndTags, null)}
-                    filterApply={false}
-                    isMarketplace={true}
-                  />
-                </CustomSearchNameTags>
+                <Input
+                  style={{ width: '370px' }}
+                  icon='search'
+                  name='searchInput'
+                  value={this.state.filterValues.searchInput}
+                  placeholder={formatMessage({
+                    id: 'marketplace.SearchBidByNameOrCompany',
+                    defaultMessage: 'Search bid by name or company...'
+                  })}
+                  onChange={this.handleFilterChangeInputSearch}
+                />
               </div>
             </div>
             <ColumnSettingButton />
@@ -301,6 +271,7 @@ class BidsReceived extends Component {
           <ProdexGrid
             tableName='marketplace_bids_sent_grid'
             {...datagrid.tableProps}
+            loading={datagrid.loading || loading}
             rows={rows}
             columns={columns}
             rowDetailType={true}

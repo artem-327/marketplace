@@ -47,6 +47,7 @@ const DivIcons = styled.div`
 export const RowDropdown = styled(Dropdown)`
   display: block !important;
   height: 100% !important;
+  margin: auto 0;
 
   &:hover {
     font-weight: bold;

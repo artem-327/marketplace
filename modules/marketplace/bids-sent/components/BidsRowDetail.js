@@ -177,7 +177,7 @@ class BidsRowDetail extends React.Component {
   }
 
   submitOffer = async ({values, setSubmitting }) => {
-    const { popupValues, onClose, counterOffer, acceptOffer, datagrid } = this.props
+    const { popupValues, onClose, counterOffer, acceptOffer, rejectOffer, datagrid } = this.props
     const { radioState } = this.state
 
     switch (radioState) {
@@ -190,7 +190,9 @@ class BidsRowDetail extends React.Component {
         removeEmpty(body)
 
         try {
-          await counterOffer(popupValues.id, body)
+          const response = await counterOffer(popupValues.id, body)
+          console.log('!!!!!!!!!! submitOffer counterOffer response', response)
+          // ! ! update row only
           datagrid.loadData()
           onClose(popupValues)
         } catch (e) {
@@ -269,6 +271,7 @@ class BidsRowDetail extends React.Component {
       productOffer,
       closePopup,
       isSending,
+      loading,
       listFobPriceUnit,
       packagingType,
       packagingUnit,
@@ -304,7 +307,7 @@ class BidsRowDetail extends React.Component {
 
           return (
             <DetailRow>
-              <Dimmer active={isSending} inverted>
+              <Dimmer active={isSending || loading} inverted>
                 <Loader />
               </Dimmer>
               <Form>
@@ -562,7 +565,7 @@ class BidsRowDetail extends React.Component {
                         currencyLabel={'$'}
                       />
                     </GridColumn>
-                    <GridColumn width={3}>
+                    <GridColumn width={5}>
                       <Form.Field>
                         <label>
                           <FormattedMessage
@@ -585,7 +588,7 @@ class BidsRowDetail extends React.Component {
                   </GridRow>
 
                   <GridRow>
-                    <GridColumn width={4} style={{ display: 'flex', flexDirection: 'column'}}>
+                    <GridColumn width={4} style={{ display: 'flex', flexDirection: 'column', paddingTop: '4px'}}>
                       <Radio
                         checked={radioState === 'counter'}
                         value={'counter'}
@@ -683,6 +686,7 @@ function mapStateToProps(store, params) {
     popupValues,
     productOffer,
     isSending: store.marketplace.isSending,
+    loading: store.marketplace.loading,
     productName: getSafe(() => companyProduct.intProductName, ''),
     listFobPriceUnit: priceUnit ? `/${priceUnit}` : '',
     packagingType: getSafe(() => companyProduct.packagingType.name, ''),
