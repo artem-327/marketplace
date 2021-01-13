@@ -361,6 +361,20 @@ const GridBottom = styled(Grid)`
   color: #20273a !important;
 `
 
+const GridBottomBack = styled(Grid)`
+  margin: 10px -30px 0px -30px !important;
+  padding: 5px 20px 0px 20px !important;
+  box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
+  background: #ffffff;
+  z-index: 2;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #20273a !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  width: inherit !important;
+`
+
 const GridRowBottom = styled(Grid.Row)`
   padding: 10px 0px 0px 0px !important;
 `
@@ -412,5 +426,6 @@ export {
   ButtonSaveAs,
   GridActionsModal,
   GridRowBottom,
-  GridColumnBottom
+  GridColumnBottom,
+  GridBottomBack
 }
