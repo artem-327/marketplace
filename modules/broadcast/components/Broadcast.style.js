@@ -241,6 +241,14 @@ const InputSearch = styled(Input)`
     background: #fdfdfd !important;
     border: solid 1px #dee2e6 !important;
   }
+  .ui.form .field.field & input:focus,
+  .ui.form .field.field & input:-webkit-autofill,
+  .ui.form .field.field & input:-webkit-autofill:focus {
+    border-color: #dee2e6 !important;
+    background: #fdfdfd !important;
+    -webkit-box-shadow: inset 0 0 0 50px #fdfdfd !important;
+    box-shadow: inset 0 0 0 50px #fdfdfd !important;
+  }
 `
 
 const GridRowTable = styled(Grid.Row)`
