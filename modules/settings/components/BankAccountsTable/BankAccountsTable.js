@@ -25,7 +25,8 @@ import {
   getCurrentUser,
   dwollaSetPreferred,
   getVellociAccBalance,
-  reloadBankAccounts
+  reloadBankAccounts,
+  getCompanyDetails
 } from '../../actions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -288,17 +289,21 @@ class BankAccountsTable extends Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.tabClicked !== prevProps.tabClicked || this.props.isReloadBankAcounts) {
-      this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
-      this.props.getCurrentUser()
-      this.props.getIdentity().then(resp => {
-        getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
-          this.props.getDwollaAccBalance()
-        getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
-          this.props.getVellociAccBalance()
-      })
-      this.props.reloadBankAccounts(false)
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.isReloadBankAcounts) {
+      await this.props.reloadBankAccounts(false)
+      setTimeout(async () => {
+        await this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
+        await this.props.getIdentity().then(resp => {
+          getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
+            this.props.getDwollaAccBalance()
+          getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
+            this.props.getVellociAccBalance()
+          if (getSafe(() => resp.value.identity.company.id, '')) {
+            this.props.getCompanyDetails(resp.value.identity.company.id)
+          }
+        })
+      }, 2500)
     }
   }
 
@@ -435,13 +440,7 @@ class BankAccountsTable extends Component {
     return rows.map(row => {
       return {
         ...row,
-        name: (
-          <ActionCell
-            row={row}
-            getActions={this.getActions}
-            content={row.name}
-          />
-        )
+        name: <ActionCell row={row} getActions={this.getActions} content={row.name} />
       }
     })
   }
@@ -590,7 +589,8 @@ const mapDispatchToProps = {
   dwollaSetPreferred,
   getIdentity,
   getVellociAccBalance,
-  reloadBankAccounts
+  reloadBankAccounts,
+  getCompanyDetails
 }
 
 const statusToLabel = {

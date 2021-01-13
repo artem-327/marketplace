@@ -23,8 +23,11 @@ const formValidation = () =>
 
 class ProductGroupsPopup extends React.Component {
   state = {
-    selectedTagsOptions: [],
-    selectedMarketSegmentsOptions: []
+    selectedTagsOptions: []
+    /**
+     * Commented based on https://pm.artio.net/issues/34033#note-22
+     */
+    //selectedMarketSegmentsOptions: []
   }
 
   componentDidMount() {
@@ -35,14 +38,17 @@ class ProductGroupsPopup extends React.Component {
           text: d.name,
           value: d.id
         }
-      }),
-      selectedMarketSegmentsOptions: getSafe(() => this.props.popupValues.rawData.marketSegments, []).map(d => {
-        return {
-          key: d.id,
-          text: d.name,
-          value: d.id
-        }
       })
+      /**
+       * Commented based on https://pm.artio.net/issues/34033#note-22
+       */
+      // selectedMarketSegmentsOptions: getSafe(() => this.props.popupValues.rawData.marketSegments, []).map(d => {
+      //   return {
+      //     key: d.id,
+      //     text: d.name,
+      //     value: d.id
+      //   }
+      // })
     })
   }
 
@@ -58,14 +64,17 @@ class ProductGroupsPopup extends React.Component {
             text: d.name,
             value: d.id
           }
-        }),
-        selectedMarketSegmentsOptions: getSafe(() => this.props.popupValues.rawData.marketSegments, []).map(d => {
-          return {
-            key: d.id,
-            text: d.name,
-            value: d.id
-          }
         })
+        /**
+         * Commented based on https://pm.artio.net/issues/34033#note-22
+         */
+        // selectedMarketSegmentsOptions: getSafe(() => this.props.popupValues.rawData.marketSegments, []).map(d => {
+        //   return {
+        //     key: d.id,
+        //     text: d.name,
+        //     value: d.id
+        //   }
+        // })
       })
     }
   }
@@ -78,15 +87,17 @@ class ProductGroupsPopup extends React.Component {
     const newOptions = options.filter(el => value.some(v => el.value === v))
     this.setState({ selectedTagsOptions: newOptions })
   }
+  /**
+   * Commented based on https://pm.artio.net/issues/34033#note-22
+   */
+  // handleMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
+  //   this.props.searchMarketSegments(searchQuery)
+  // }, 250)
 
-  handleMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
-    this.props.searchMarketSegments(searchQuery)
-  }, 250)
-
-  handleMarketSegmentsChange = (value, options) => {
-    const newOptions = options.filter(el => value.some(v => el.value === v))
-    this.setState({ selectedMarketSegmentsOptions: newOptions })
-  }
+  // handleMarketSegmentsChange = (value, options) => {
+  //   const newOptions = options.filter(el => value.some(v => el.value === v))
+  //   this.setState({ selectedMarketSegmentsOptions: newOptions })
+  // }
 
   render() {
     const {
@@ -103,19 +114,25 @@ class ProductGroupsPopup extends React.Component {
       searchedMarketSegmentsLoading,
       searchedMarketSegments
     } = this.props
-    const { selectedTagsOptions, selectedMarketSegmentsOptions } = this.state
+    const { selectedTagsOptions } = this.state //, selectedMarketSegmentsOptions  commented based on https://pm.artio.net/issues/34033#note-22
 
     const initialFormValues = {
       name: getSafe(() => popupValues.name, ''),
-      tags: getSafe(() => popupValues.tags.props.ids, ''),
-      marketSegments: getSafe(() => popupValues.marketSegments.props.ids, '')
+      tags: getSafe(() => popupValues.tags.props.ids, '')
+      /**
+       * Commented based on https://pm.artio.net/issues/34033#note-22
+       */
+      // marketSegments: getSafe(() => popupValues.marketSegments.props.ids, '')
     }
 
     const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
-    const allMarketSegmentsOptions = uniqueArrayByKey(
-      searchedMarketSegments.concat(selectedMarketSegmentsOptions),
-      'key'
-    )
+    /**
+     * Commented based on https://pm.artio.net/issues/34033#note-22
+     */
+    // const allMarketSegmentsOptions = uniqueArrayByKey(
+    //   searchedMarketSegments.concat(selectedMarketSegmentsOptions),
+    //   'key'
+    // )
 
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
@@ -134,12 +151,12 @@ class ProductGroupsPopup extends React.Component {
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
               const request = {}
-              const propsToInclude = ['tags', 'name', 'marketSegments']
+              const propsToInclude = ['tags', 'name'] //, 'marketSegments'  commented based on https://pm.artio.net/issues/34033#note-22
               propsToInclude.forEach(prop => (values[prop] ? (request[prop] = values[prop]) : null))
 
               try {
-                if (popupValues)
-                  await putProductGroups(rowId, request, selectedTagsOptions, selectedMarketSegmentsOptions)
+                if (popupValues) await putProductGroups(rowId, request, selectedTagsOptions)
+                //, selectedMarketSegmentsOptions  commented based on https://pm.artio.net/issues/34033#note-22
                 else await postProductGroups(request)
               } catch (err) {
                 console.error(err)
@@ -190,31 +207,36 @@ class ProductGroupsPopup extends React.Component {
                         onChange: (_, { value }) => this.handleTagsChange(value, allTagsOptions)
                       }}
                     />
-                    <FormikDropdown
-                      fieldProps={{ width: 5 }}
-                      label={
-                        <>
-                          <FormattedMessage id='product.groups.marketSegment' defaultMessage='Market Segment'>
-                            {text => text}
-                          </FormattedMessage>
-                        </>
-                      }
-                      name='marketSegments'
-                      options={allMarketSegmentsOptions || []}
-                      inputProps={{
-                        loading: searchedMarketSegmentsLoading,
-                        search: true,
-                        icon: 'search',
-                        selection: true,
-                        multiple: true,
-                        noResultsMessage: formatMessage({
-                          id: 'global.startTypingToSearch',
-                          defaultMessage: 'Start typing to begin search'
-                        }),
-                        onSearchChange: this.handleMarketSegmentsSearchChange,
-                        onChange: (_, { value }) => this.handleMarketSegmentsChange(value, allMarketSegmentsOptions)
-                      }}
-                    />
+                    {/*commented based on https://pm.artio.net/issues/34033#note-22*/}
+                    {false && (
+                      <>
+                        <FormikDropdown
+                          fieldProps={{ width: 5 }}
+                          label={
+                            <>
+                              <FormattedMessage id='product.groups.marketSegment' defaultMessage='Market Segment'>
+                                {text => text}
+                              </FormattedMessage>
+                            </>
+                          }
+                          name='marketSegments'
+                          options={allMarketSegmentsOptions || []}
+                          inputProps={{
+                            loading: searchedMarketSegmentsLoading,
+                            search: true,
+                            icon: 'search',
+                            selection: true,
+                            multiple: true,
+                            noResultsMessage: formatMessage({
+                              id: 'global.startTypingToSearch',
+                              defaultMessage: 'Start typing to begin search'
+                            }),
+                            onSearchChange: this.handleMarketSegmentsSearchChange,
+                            onChange: (_, { value }) => this.handleMarketSegmentsChange(value, allMarketSegmentsOptions)
+                          }}
+                        />
+                      </>
+                    )}
                   </FormGroup>
 
                   <div style={{ textAlign: 'right' }}>
@@ -261,15 +283,18 @@ const mapStateToProps = state => {
           text: d.name,
           value: d.id
         }))
-      : [],
-    searchedMarketSegments: getSafe(() => state.productsAdmin.searchedMarketSegments.length, false)
-      ? state.productsAdmin.searchedMarketSegments.map(d => ({
-          key: d.id,
-          text: d.name,
-          value: d.id
-        }))
-      : [],
-    searchedMarketSegmentsLoading: getSafe(() => state.productsAdmin.searchedMarketSegmentsLoading, false)
+      : []
+    /**
+     * Commented based on https://pm.artio.net/issues/34033#note-22
+     */
+    // searchedMarketSegments: getSafe(() => state.productsAdmin.searchedMarketSegments.length, false)
+    //   ? state.productsAdmin.searchedMarketSegments.map(d => ({
+    //       key: d.id,
+    //       text: d.name,
+    //       value: d.id
+    //     }))
+    //   : [],
+    // searchedMarketSegmentsLoading: getSafe(() => state.productsAdmin.searchedMarketSegmentsLoading, false)
   }
 }
 

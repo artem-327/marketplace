@@ -62,6 +62,8 @@ const simpleCompanyGenericProductList = {
     'dotUserSpecialPrecautionsMapper',
     'dotVesselStowageLocationMapper',
     'dotVesselStowageOtherMapper',
+    'emergencyCompanyNameMapper',
+    'emergencyContactNameMapper',
     'emergencyPhoneMapper',
     'endocrineDisruptorInformationMapper',
     'evaporationPointMapper',

@@ -93,6 +93,10 @@ function mapStateToProps(store) {
         : getSafe(() => data.companyProductOffersValue, 0),
     usersCount:
       isAdmin && !takeover ? getSafe(() => data.totalUsersCount, 0) : getSafe(() => data.companyUsersCount, 0),
+    productOffers:
+      isAdmin && !takeover
+        ? getSafe(() => data.companyProductOffersCount, 0)
+        : getSafe(() => data.companyProductOffersCount, 0),
     loading: getSafe(() => data.loading, ''),
     totalSumOfSalesMonthly: getSafe(() => data.totalSumOfSalesMonthly, '')
       ? Object.entries(data.totalSumOfSalesMonthly)
