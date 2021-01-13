@@ -319,7 +319,8 @@ class Settings extends Component {
       isOpenSidebar,
       editedId,
       inviteToAddBankAccounts,
-      companyId
+      companyId,
+      companyName
     } = this.props
 
     const tables = {
@@ -357,6 +358,7 @@ class Settings extends Component {
           closePopup={closePopup}
           inviteToAddBankAccounts={inviteToAddBankAccounts}
           companyId={companyId}
+          companyName={companyName}
         />
       )
     }
@@ -489,6 +491,7 @@ const mapStateToProps = ({ settings, auth }) => {
     documentsOwner: getSafe(() => settings.documentsOwner, []),
     isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false),
     companyId: getSafe(() => auth.identity.company.id, false),
+    companyName: getSafe(() => auth.identity.company.name, false),
     hasLogo: getSafe(() => auth.identity.company.hasLogo, false)
   }
 }

@@ -11,7 +11,14 @@ import { initialFormValues, formValidation } from './services'
 //Styles
 import { ModalActions, GridColumnInputEmail } from './styles'
 
-const SendLinkPopup = ({ isOpenPopup, closePopup, inviteToAddBankAccounts, companyId, intl: { formatMessage } }) => {
+const SendLinkPopup = ({
+  isOpenPopup,
+  closePopup,
+  inviteToAddBankAccounts,
+  companyId,
+  companyName,
+  intl: { formatMessage }
+}) => {
   return (
     <Modal
       open={isOpenPopup}
@@ -26,7 +33,7 @@ const SendLinkPopup = ({ isOpenPopup, closePopup, inviteToAddBankAccounts, compa
         validationSchema={formValidation()}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            await inviteToAddBankAccounts(companyId, values.email, 'name')
+            await inviteToAddBankAccounts(companyId, values.email, companyName)
           } catch (e) {
             console.error(e)
           } finally {
@@ -99,6 +106,7 @@ SendLinkPopup.propTypes = {
   isOpenPopup: PropTypes.bool,
   closePopup: PropTypes.func,
   companyId: PropTypes.number,
+  companyName: PropTypes.string,
   inviteToAddBankAccounts: PropTypes.func,
   intl: { formatMessage: PropTypes.func }
 }
@@ -106,6 +114,7 @@ SendLinkPopup.propTypes = {
 SendLinkPopup.defaultProps = {
   isOpenPopup: false,
   companyId: null,
+  companyName: '',
   closePopup: () => {},
   inviteToAddBankAccounts: () => {},
   intl: { formatMessage: () => {} }

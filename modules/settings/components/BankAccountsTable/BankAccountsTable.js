@@ -305,7 +305,8 @@ class BankAccountsTable extends Component {
       name: 'name',
       title: ' ',
       allowReordering: false,
-      width: 750
+      width: 750,
+      maxWidth: 2000
     },
     {
       name: 'bankAccountType',
@@ -422,12 +423,14 @@ class BankAccountsTable extends Component {
       verified: '#84c225',
       unverified: '#f16844',
       verification_in_process: '#ffb24f',
+      inactive: '#f16844',
       active: '#84c225'
     }
     const colorAccountName = {
       verified: '#20273a',
       unverified: '#f16844',
       verification_in_process: '#ffb24f',
+      inactive: '#f16844',
       active: '#20273a'
     }
     let newRows = []
