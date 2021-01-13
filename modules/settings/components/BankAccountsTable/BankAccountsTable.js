@@ -290,20 +290,18 @@ class BankAccountsTable extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.isReloadBankAcounts) {
+    if (this.props.isReloadBankAcounts || (prevProps.isLoadingAddedAccounts && !this.props.isLoadingAddedAccounts)) {
       await this.props.reloadBankAccounts(false)
-      setTimeout(async () => {
-        await this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
-        await this.props.getIdentity().then(resp => {
-          getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
-            this.props.getDwollaAccBalance()
-          getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
-            this.props.getVellociAccBalance()
-          if (getSafe(() => resp.value.identity.company.id, '')) {
-            this.props.getCompanyDetails(resp.value.identity.company.id)
-          }
-        })
-      }, 2500)
+      await this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
+      await this.props.getIdentity().then(resp => {
+        getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
+          this.props.getDwollaAccBalance()
+        getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
+          this.props.getVellociAccBalance()
+        if (getSafe(() => resp.value.identity.company.id, '')) {
+          this.props.getCompanyDetails(resp.value.identity.company.id)
+        }
+      })
     }
   }
 
@@ -706,7 +704,8 @@ const mapStateToProps = state => {
     company: company,
     currentUser: state.settings.currentUser,
     tabClicked: state.settings.tabClicked,
-    isReloadBankAcounts: state.settings.isReloadBankAcounts
+    isReloadBankAcounts: state.settings.isReloadBankAcounts,
+    isLoadingAddedAccounts: state.settings.isLoadingAddedAccounts
   }
 }
 
