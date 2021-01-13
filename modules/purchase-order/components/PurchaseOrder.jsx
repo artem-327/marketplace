@@ -384,7 +384,7 @@ class PurchaseOrder extends Component {
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
-    let palletLimitStr = cart.palletCountTotal ? `of ${cart.palletCountTotal}` : ''
+    let palletLimitStr = cart.palletCountLimit ? `of ${cart.palletCountLimit}` : ''
 
     let isAnyItemHazardous = cart.cartItems.some(
       item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
