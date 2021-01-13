@@ -353,10 +353,6 @@ class TablesHandlers extends Component {
   }
 
   onEvent = async (eventName, metadata) => {
-    if (eventName === 'HANDOFF' || eventName === 'TRANSITION_VIEW') {
-      this.props.reloadBankAccounts(true)
-    }
-
     this.props.vellociOnEvent(eventName, metadata)
   }
 

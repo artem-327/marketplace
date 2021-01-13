@@ -31,10 +31,22 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
     }
   }
 })
-
-export const saveRules = createAsyncAction('BROADCAST_SAVE', async (id, rules) => {
-  if (id) {
-    const data = await api.saveRules(id, rules)
+export const broadcastChange = createAsyncAction('BROADCAST_CHANGE', async (row, option, template, datagrid) => {
+  let editedRow = {
+    ...row,
+    broadcastOption: option,
+    broadcastTemplateResponse: template
+  }
+  datagrid.updateRow(row.id, () => ({ ...row, isBroadcastLoading: true }))
+  await api.broadcastChange(row.id, option, template ? template.id : null)
+  datagrid.updateRow(row.id, () => ({ ...editedRow, isBroadcastLoading: false }))
+  return editedRow
+})
+export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, datagrid) => {
+  if (row && row.id) {
+    datagrid.updateRow(row.id, () => ({ ...row, isBroadcastLoading: true }))
+    const data = await api.saveRules(row.id, rules)
+    datagrid.updateRow(row.id, () => ({ ...row, isBroadcastLoading: false, broadcastOption: 'CUSTOM_RULES' }))
     return {
       broadcastTemplateName: getSafe(() => data.broadcastTemplateName, null)
     }

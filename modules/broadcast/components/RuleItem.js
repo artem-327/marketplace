@@ -1,6 +1,6 @@
 import { Icon, Checkbox } from 'semantic-ui-react'
 import PriceControl from './PriceControl'
-import { Rule } from './Broadcast.style'
+import { Rule } from './styles/Broadcast.style'
 import { getBroadcast } from '~/modules/broadcast/utils'
 import { getSafe } from '~/utils/functions'
 

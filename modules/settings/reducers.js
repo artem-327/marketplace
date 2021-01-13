@@ -134,7 +134,8 @@ export const initialState = {
   renderCopyright: false,
   vellociAccBalance: null,
   vellociToken: '',
-  isReloadBankAcounts: false
+  isReloadBankAcounts: false,
+  isLoadingAddedAccounts: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1569,6 +1570,32 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isReloadBankAcounts: payload
+      }
+    }
+
+    /* VELLOCI_ADD_ACOUNT */
+
+    case AT.VELLOCI_ADD_ACOUNT_PENDING: {
+      return {
+        ...state,
+        isLoadingAddedAccounts: true,
+        loading: true
+      }
+    }
+
+    case AT.VELLOCI_ADD_ACOUNT_FULFILLED: {
+      return {
+        ...state,
+        isLoadingAddedAccounts: false,
+        loading: false
+      }
+    }
+
+    case AT.VELLOCI_ADD_ACOUNT_REJECTED: {
+      return {
+        ...state,
+        isLoadingAddedAccounts: false,
+        loading: false
       }
     }
 
