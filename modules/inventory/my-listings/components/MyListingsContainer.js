@@ -3,11 +3,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import MyListings from './MyListings'
 import * as Actions from '../../actions'
+import { getTemplates } from '~/modules/broadcast/actions'
 import { withDatagrid } from '~/modules/datagrid'
 // import { Label, Popup, List } from 'semantic-ui-react'
 
 import { openImportPopup } from '~/modules/settings/actions'
-import { openBroadcast } from '~/modules/broadcast/actions'
+import { openBroadcast, broadcastChange } from '~/modules/broadcast/actions'
 import { applyFilter } from '~/modules/filter/actions'
 import { openPopup, closePopup } from '~/modules/company-product-info/actions'
 import { setCompanyElligible } from '~/modules/auth/actions'
@@ -25,6 +26,7 @@ function mapStateToProps(store, { datagrid }) {
 
   return {
     ...store.simpleAdd,
+    broadcastTemplates: store.broadcast.templates,
     advancedFilters: store.filter.inventory.appliedFilter,
     editedId,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
@@ -84,7 +86,8 @@ function mapStateToProps(store, { datagrid }) {
         packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
         //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
-        quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.quantity} /> : 'N/A',
+        qtyPart: qtyPart,
+        quantity: po.quantity,
         cost: po.costPerUOM ? (
           <FormattedNumber
             minimumFractionDigits={2}
@@ -143,10 +146,12 @@ function mapStateToProps(store, { datagrid }) {
 export default withDatagrid(
   connect(mapStateToProps, {
     ...Actions,
+    getTemplates,
     openPopup,
     closePopup,
     openImportPopup,
     openBroadcast,
+    broadcastChange,
     applyFilter,
     setCompanyElligible
   })(MyListings)

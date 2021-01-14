@@ -1229,7 +1229,7 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager, templates } = this.props
+    const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager, templates, changedForm, sidebarValues, inventoryGrid } = this.props
     let filteredTree = this.treeToModel(undefined, undefined, true)
 
     try {
@@ -1238,7 +1238,7 @@ class Broadcast extends Component {
         value: 'branch'
       })
 
-      const { value } = await saveRules(id, filteredTree)
+      const { value } = await saveRules(sidebarValues, filteredTree, inventoryGrid)
 
       let name,
         dataId = null
@@ -1288,6 +1288,7 @@ class Broadcast extends Component {
           }
         )
       }
+      changedForm(false)
     } catch (err) {
       console.error(err)
     }
@@ -1302,6 +1303,7 @@ class Broadcast extends Component {
       isPrepared,
       templates,
       updateTemplate,
+      changedForm,
       intl: { formatMessage },
       saveTemplate,
       switchTemplateModal
@@ -1343,10 +1345,12 @@ class Broadcast extends Component {
                   )
 
                   await updateTemplate(id, payload)
+                  changedForm(false)
                 } else {
                   let { value } = await saveTemplate(payload)
                   this.setState({ selectedTemplate: value })
                   setFieldValue('templates', value.id)
+                  changedForm(false)
                 }
 
                 let status = values.name === name ? 'Updated' : 'Saved'
@@ -1428,7 +1432,9 @@ Broadcast.propTypes = {
   hideFobPrice: bool,
   asSidebar: bool,
   isOpenTemplateModal: bool,
-  saveSidebar: number
+  saveSidebar: number,
+  sidebarValues: object,
+  inventoryGrid: object
 }
 
 Broadcast.defaultProps = {
@@ -1437,7 +1443,9 @@ Broadcast.defaultProps = {
   hideFobPrice: false,
   asSidebar: false,
   isOpenTemplateModal: false,
-  saveSidebar: 0
+  saveSidebar: 0,
+  sidebarValues: {},
+  inventoryGrid: {}
 }
 
 export default injectIntl(

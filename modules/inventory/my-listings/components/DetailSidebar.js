@@ -543,8 +543,8 @@ class DetailSidebar extends Component {
     }
   }
 
-  changedForm = () => {
-    this.setState({ changedForm: true })
+  changedForm = (isChanged = true) => {
+    this.setState({ changedForm: isChanged })
   }
 
   getPriceTiers = max => {
@@ -1061,7 +1061,8 @@ class DetailSidebar extends Component {
       removeAttachmentLinkProductOffer,
       removeAttachment,
       currencySymbol,
-      openGlobalAddForm
+      openGlobalAddForm,
+      inventoryGrid
     } = this.props
 
     const leftWidth = 6
@@ -2022,6 +2023,8 @@ class DetailSidebar extends Component {
                                   saveBroadcast={this.state.saveBroadcast}
                                   changedForm={this.changedForm}
                                   close={this.props.closeSidebarDetail}
+                                  sidebarValues={sidebarValues}
+                                  inventoryGrid={inventoryGrid}
                                 />
                               </Tab.Pane>
                             )
@@ -2250,7 +2253,7 @@ const mapStateToProps = ({
     listDocumentTypes,
     editProductOfferInitTrig
   }
-}) => ({
+}, { inventoryGrid }) => ({
   autocompleteData,
   autocompleteDataLoading,
   listConditions,
@@ -2269,7 +2272,8 @@ const mapStateToProps = ({
   warehousesList,
   listDocumentTypes,
   editProductOfferInitTrig,
-  currencySymbol: '$'
+  currencySymbol: '$',
+  inventoryGrid
 })
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar))))

@@ -1,10 +1,10 @@
 import * as AT from './action-types'
 import * as api from './api'
 
-export function getDashboardData() {
+export function getDashboardData(dateFrom = null) {
   return {
     type: AT.GET_DASHBOARD_DATA,
-    payload: api.getDashboardData()
+    payload: api.getDashboardData(dateFrom)
   }
 }
 
