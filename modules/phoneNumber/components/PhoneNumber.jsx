@@ -103,7 +103,11 @@ export default class PhoneNumber extends Component {
       phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
 
       this.setState({
-        phoneCountryCode: phone.phoneCountryCode ? phone.phoneCountryCode : this.props.defaultCountryCode,
+        phoneCountryCode: phone.phoneCountryCode
+          ? phone.phoneCountryCode
+          : this.state.phoneCountryCode
+            ? this.state.phoneCountryCode
+            : this.props.defaultCountryCode,
         phoneNumber: phone.phoneNumber,
         phoneFull: phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
       })
