@@ -155,7 +155,9 @@ class CompanyInfo extends Component {
             </FormattedMessage>
           </CustomColumn>
           <CustomColumn mobile={rightWidth} computer={rightWidth}>
-            <CustomDivValue name='participateSince'>{getSafe(() => dataCompanyInfo.createdAt, 'N/A')}</CustomDivValue>
+            <CustomDivValue name='participateSince'>
+              {dataCompanyInfo.createdAt && moment(dataCompanyInfo.createdAt).format(getLocaleDateFormat())}
+            </CustomDivValue>
           </CustomColumn>
         </CustomRow>
         <GridRow>
