@@ -774,7 +774,7 @@ class MyListings extends Component {
         ),
         title: formatMessage({ id: 'myInventory.network', defaultMessage: 'Network'}),
         subtitle: formatMessage({ id: 'myInventory.networkSubtitle', defaultMessage: 'Your accepted Partners and invited Guests'}),
-        value: 'FREE_FOR_ALL'
+        value: 'GLOBAL_RULES'
       },
       /*{
         icon: (
