@@ -1,8 +1,9 @@
 import styled from 'styled-components'
 
-import { Sidebar, Segment, GridColumn, Icon, Grid, Modal } from 'semantic-ui-react'
+import { Sidebar, Segment, GridColumn, Icon, Grid, Modal, Dropdown, FormField, Header } from 'semantic-ui-react'
+import { TextArea } from 'formik-semantic-ui-fixed-validation'
 
-export const FlexSidebar = styled(Modal)`
+export const ModalInventory = styled(Modal)`
   display: flex !important;
   flex-direction: column !important;
   background-color: #ffffff !important;
@@ -27,7 +28,23 @@ export const FlexSidebar = styled(Modal)`
       color: #404040 !important;
       margin: 0em 0em 0.428571429em 0em !important;
     }
-    > textarea,
+    > textarea {
+      min-height: 32px !important;
+      font-size: 1em !important;
+      line-height: 1.29 !important;
+      border: solid 1px #dee2e6 !important;
+      background-color: #fdfdfd !important;
+      &.disabled {
+        opacity: 1 !important;
+        color: #cecfd4 !important;
+      }
+      > .default.text {
+        margin: 0 0 0 0.64285714em !important;
+      }
+      padding: 10px !important;
+      border-radius: 4px !important;
+      width: -webkit-fill-available !important;
+    }
     > .ui.input input,
     > .ui.dropdown {
       min-height: 32px !important;
@@ -119,9 +136,7 @@ export const FlexTabs = styled.div`
   }
 `
 
-export const FlexContent = styled(Modal.Content)`
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+export const ModalContentInventory = styled(Modal.Content)`
   padding: 0 !important;
 `
 
@@ -226,7 +241,7 @@ export const CloceIcon = styled(Icon)`
 
 export const InputWrapper = styled.div`
   > .field-label {
-    margin: 0em 0em 0.428571429em 0em;
+    //margin: 0em 0em 0.428571429em 0em;
     font-size: 1em;
     line-height: 1.29;
     color: #404040;
@@ -241,25 +256,25 @@ export const InputWrapper = styled.div`
       }
     }
     > .ui.label {
-      padding: 0.5em 0.7142857em;
+      //padding: 0.5em 0.7142857em;
       font-size: 14px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
       text-align: center;
-      color: #84c225;
+      color: #848893;
       border-radius: 2px;
-      background-color: rgba(132, 194, 37, 0.15);
+      background-color: #edeef2;
       position: absolute;
-      top: 0.42857143em;
-      left: 0.42857143em;
+      top: 0.85em;
+      left: 0.3em;
     }
   }
 `
 
 export const InputLabeledWrapper = styled.div`
   > .field-label {
-    margin: 0em 0em 0.428571429em 0em;
+    // margin: 0em 0em 0.428571429em 0em;
     font-size: 1em;
     line-height: 1.29;
     color: #404040;
@@ -283,7 +298,7 @@ export const InputLabeledWrapper = styled.div`
 
 export const QuantityWrapper = styled.div`
   > .field-label {
-    margin: 0em 0em 0.428571429em 0em;
+    //margin: 0em 0em 0.428571429em 0em;
     font-size: 1em;
     line-height: 1.29;
     color: #404040;
@@ -415,4 +430,29 @@ export const CustomRowDiv = styled.div`
       }
     }
   }
+`
+
+export const DivIconOptions = styled.div`
+  padding-right: 15px;
+`
+
+export const HeaderOptions = styled(Header)`
+  display: flex;
+`
+
+export const GridColumnOptionalInformation = styled(GridColumn)`
+  cursor: pointer;
+  padding: 25px 10px 7px 10px !important;
+  color: #404040 !important;
+  font-size: 14px;
+`
+
+export const FormFieldZeroPadding = styled(FormField)`
+  padding: 0px !important;
+`
+
+export const TextAreaField = styled(TextArea)`
+  padding-left: 10px !important;
+  border-radius: 4px !important;
+  width: -webkit-fill-available !important;
 `

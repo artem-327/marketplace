@@ -29,7 +29,7 @@ import {
   Button as ButtonSemantic
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
-import { Trash, PlusCircle, X as XIcon, Plus, Trash2 } from 'react-feather'
+import { Trash, PlusCircle, X as XIcon, Plus, Trash2, ChevronDown, ChevronUp } from 'react-feather'
 
 import {
   sidebarDetailTrigger,
@@ -64,9 +64,9 @@ import DocumentTab from '~/components/document-tab'
 import { Required } from '~/components/constants/layout'
 
 import {
-  FlexSidebar,
+  ModalInventory,
   FlexTabs,
-  FlexContent,
+  ModalContentInventory,
   TopMargedColumn,
   GraySegment,
   HighSegment,
@@ -77,7 +77,14 @@ import {
   BottomButtons,
   SmallGrid,
   InputLabeledWrapper,
-  CustomLabel
+  CustomLabel,
+  NetworkDropdown,
+  NetworkChevronDown,
+  DivIconOptions,
+  HeaderOptions,
+  GridColumnOptionalInformation,
+  FormFieldZeroPadding,
+  TextAreaField
 } from '../../constants/layout'
 import ErrorFocus from '~/components/error-focus'
 
@@ -104,6 +111,13 @@ const CustomGridRow = styled(GridRow)`
 const CustomGridColumn = styled(Grid.Column)`
   padding-bottom: 0px !important;
   padding-top: 7px !important;
+`
+
+const GridColumnRequired = styled(Grid.Column)`
+  padding: 0px 10px !important;
+  color: #404040 !important;
+  font-size: 14px !important;
+  line-height: 1.29 !important;
 `
 
 const PricingIcon = styled(Icon)`
@@ -168,8 +182,8 @@ const DivTitle = styled.div`
   padding: 20px 20px 0px 20px;
 `
 
-const SpanRequiredFields = styled.span`
-  padding: 0px 10px 20px 10px;
+const DivRequiredFields = styled.div`
+  padding: 10px 10px 30px 10px;
   border-radius: 4px;
   border: solid 1px #dee2e6;
   background-color: #f8f9fb;
@@ -202,7 +216,9 @@ const initValues = {
     splits: 1, // splitPkg
     doesExpire: false,
     expirationDate: '',
-    documentType: ''
+    documentType: '',
+    whoShouldSee: 'FREE_FOR_ALL',
+    acceptBids: true
   },
   priceTiers: {
     priceTiers: 1,
@@ -420,7 +436,8 @@ class DetailSidebar extends Component {
     edited: false,
     sidebarValues: null,
     initValues: initValues,
-    attachmentFiles: []
+    attachmentFiles: [],
+    isOpenOptionalInformation: false
   }
 
   componentDidMount = async () => {
@@ -1094,6 +1111,148 @@ class DetailSidebar extends Component {
       }
     ]
 
+    const optionsSeeOffer = [
+      {
+        icon: (
+          <DivIconOptions>
+            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+              <g fill='none' fill-rule='evenodd'>
+                <path
+                  d='M0 0L24 0 24 24 0 24z'
+                  transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
+                />
+                <path
+                  fill='#20273A'
+                  fill-rule='nonzero'
+                  d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'
+                  transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
+                />
+              </g>
+            </svg>
+          </DivIconOptions>
+        ),
+        title: formatMessage({ id: 'myInventory.network', defaultMessage: 'Network' }),
+        subtitle: formatMessage({
+          id: 'myInventory.networkSubtitle',
+          defaultMessage: 'Your accepted Partners and invited Guests'
+        }),
+        value: 'FREE_FOR_ALL'
+      },
+      /*{
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+              <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -447) translate(1105 295) translate(0 29) translate(20 123)"/>
+              <path fill="#848893" fill-rule="nonzero" d="M16.5 12c1.38 0 2.49-1.12 2.49-2.5S17.88 7 16.5 7C15.12 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5C7.34 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V18c0 .55.45 1 1 1h9c.55 0 1-.45 1-1v-1.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V18c0 .55.45 1 1 1h6v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z" transform="translate(-1125 -447) translate(1105 295) translate(0 29) translate(20 123)"/>
+            </g>
+          </svg>
+    
+        ),
+        title: formatMessage({ id: 'myInventory.partners', defaultMessage: 'Partners' }),
+        subtitle: formatMessage({ id: 'myInventory.partnersSubtitle', defaultMessage: 'Your accepted Partners' }),
+        value: ''
+      },*/
+      {
+        icon: (
+          <DivIconOptions>
+            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+              <g fill='none' fill-rule='evenodd'>
+                <path
+                  d='M0 0L24 0 24 24 0 24z'
+                  transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
+                />
+                <path
+                  fill='#848893'
+                  fill-rule='nonzero'
+                  d='M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z'
+                  transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
+                />
+              </g>
+            </svg>
+          </DivIconOptions>
+        ),
+        title: formatMessage({ id: 'myInventory.guests', defaultMessage: 'Guests' }),
+        subtitle: formatMessage({ id: 'myInventory.guestsSubtitle', defaultMessage: 'Your invited Guests' }),
+        value: 'CLIENT_COMPANIES'
+      },
+      {
+        icon: (
+          <DivIconOptions>
+            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+              <g fill='none' fill-rule='evenodd'>
+                <g>
+                  <path
+                    d='M0 0L24 0 24 24 0 24z'
+                    transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
+                  />
+                  <path
+                    d='M0 0L24 0 24 24 0 24z'
+                    opacity='.87'
+                    transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
+                  />
+                </g>
+                <path
+                  fill='#848893'
+                  fill-rule='nonzero'
+                  d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z'
+                  transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
+                />
+              </g>
+            </svg>
+          </DivIconOptions>
+        ),
+        title: formatMessage({ id: 'myInventory.justMe', defaultMessage: 'Just Me' }),
+        subtitle: formatMessage({ id: 'myInventory.justMeSubtitle', defaultMessage: 'Only my Company' }),
+        value: 'NO_BROADCAST'
+      }
+      // ...broadcastTemplates.map(template => {
+      //   return {
+      //     icon: (
+      //       <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+      //         <g fill='none' fill-rule='evenodd'>
+      //           <path
+      //             d='M0 0L24 0 24 24 0 24z'
+      //             transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+      //           />
+      //           <path
+      //             fill='#848893'
+      //             fill-rule='nonzero'
+      //             d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
+      //             transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+      //           />
+      //         </g>
+      //       </svg>
+      //     ),
+      //     title: template.name,
+      //     subtitle: formatMessage({ id: 'myInventory.customTemplate', defaultMessage: 'Custom Template' }),
+      //     id: template.id,
+      //     tmp: template.name,
+      //     value: `BROADCAST_TEMPLATE|${template.id}`
+      //   }
+      // }),
+      // {
+      //   icon: (
+      //     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+      //       <g fill='none' fill-rule='evenodd'>
+      //         <path
+      //           d='M0 0L24 0 24 24 0 24z'
+      //           transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+      //         />
+      //         <path
+      //           fill='#848893'
+      //           fill-rule='nonzero'
+      //           d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
+      //           transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+      //         />
+      //       </g>
+      //     </svg>
+      //   ),
+      //   title: formatMessage({ id: 'myInventory.custom', defaultMessage: 'Custom' }),
+      //   subtitle: formatMessage({ id: 'myInventory.customSubtitle', defaultMessage: 'Create Custom Rule' }),
+      //   value: 'CUSTOM_RULES'
+      // }
+    ]
+
     // const { toggleFilter } = this.props
 
     return (
@@ -1122,7 +1281,7 @@ class DetailSidebar extends Component {
 
           return (
             <Form onChange={this.onChange}>
-              <FlexSidebar
+              <ModalInventory
                 open={true}
                 dimmer={loading}
                 closeIcon
@@ -1132,7 +1291,7 @@ class DetailSidebar extends Component {
                     openGlobalAddForm ? openGlobalAddForm('') : this.props.closeSidebarDetail()
                   )
                 }}>
-                <FlexContent>
+                <ModalContentInventory>
                   <HighSegment basic>
                     <DivTitle>
                       {formatMessage({
@@ -1210,572 +1369,625 @@ class DetailSidebar extends Component {
                                       </CustomGridColumn>
                                     </CustomGridRow>
                                   )}
-                                  <SpanRequiredFields>
-                                    <Grid>
-                                      <GridRow>
-                                        <CustomGridColumn>
-                                          <FormField>
-                                            <FormattedMessage
-                                              id='addInventory.companyProduct'
-                                              defaultMessage='Company Product'>
-                                              {text => (
-                                                <label>
-                                                  {text}
-                                                  <Required />
-                                                </label>
-                                              )}
-                                            </FormattedMessage>
-                                            <Dropdown
-                                              name='edit.product'
-                                              options={this.props.autocompleteData.map((el, i) => {
-                                                const code = getSafe(() => el.intProductCode, '')
-                                                const name = getSafe(() => el.intProductName, '')
-                                                const dispName = code && name ? `${name} (${code})` : code ? code : name
-                                                const packagingSize = getSafe(() => el.packagingSize, '')
-                                                const packagingUnit = getSafe(
-                                                  () => el.packagingUnit.nameAbbreviation,
-                                                  ''
-                                                )
-                                                const packagingType = getSafe(() => el.packagingType.name, '')
-                                                return {
-                                                  key: i,
-                                                  text: (
-                                                    <>
-                                                      {`${dispName}: ${packagingSize} ${packagingUnit} `}
-                                                      <span style={{ textTransform: 'capitalize' }}>
-                                                        {packagingType}
-                                                      </span>
-                                                    </>
-                                                  ),
-                                                  value: el.id
-                                                }
-                                              })}
-                                              inputProps={{
-                                                placeholder: (
-                                                  <FormattedMessage
-                                                    id='addInventory.searchByProductName'
-                                                    defaultMessage='Search by product name'
-                                                  />
-                                                ),
-                                                disabled: sidebarValues && sidebarValues.grouped,
-                                                loading: this.props.autocompleteDataLoading,
-                                                'data-test': 'new_inventory_product_search_drpdn',
-                                                minCharacters: 1,
-                                                icon: 'search',
-                                                fluid: true,
-                                                search: options => options,
-                                                selection: true,
-                                                clearable: true,
-                                                onChange: (e, { value }) =>
-                                                  this.handleChangeProduct(e, value, setFieldValue),
-                                                onSearchChange: (e, { searchQuery }) =>
-                                                  searchQuery.length > 0 && this.searchProducts(searchQuery)
-                                              }}
-                                            />
-                                          </FormField>
-                                        </CustomGridColumn>
-                                      </GridRow>
-                                      <GridRow>
-                                        <CustomGridColumn>
-                                          <FormField>
-                                            <FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>
-                                              {text => (
-                                                <label>
-                                                  {text}
-                                                  <Required />
-                                                </label>
-                                              )}
-                                            </FormattedMessage>
-                                            <Dropdown
-                                              name='edit.warehouse'
-                                              options={warehousesList}
-                                              inputProps={{
-                                                disabled: sidebarValues && sidebarValues.grouped,
-                                                onChange: this.onChange,
-                                                selection: true,
-                                                value: 0,
-                                                fluid: true,
-                                                'data-test': 'new_inventory_warehouse_drpdn',
-                                                placeholder: (
-                                                  <FormattedMessage
-                                                    id='addInventory.selectWarehouse'
-                                                    defaultMessage='Select Warehouse'
-                                                  />
-                                                )
-                                              }}
-                                            />
-                                          </FormField>
-                                        </CustomGridColumn>
-                                      </GridRow>
-                                      <GridRow>
-                                        <CustomGridColumn width={8}>
-                                          <FormField width={8}>
-                                            <FormattedMessage
-                                              id='addInventory.pkgsAvailable'
-                                              defaultMessage='PKGs Available'>
-                                              {text => (
-                                                <label>
-                                                  {text}
-                                                  <Required />
-                                                </label>
-                                              )}
-                                            </FormattedMessage>
-                                            <Input
-                                              name='edit.pkgAvailable'
-                                              inputProps={{
-                                                placeholder: '0',
-                                                type: 'number',
-                                                min: 1,
-                                                fluid: true
-                                              }}
-                                            />
-                                          </FormField>
-                                        </CustomGridColumn>
-                                        <CustomGridColumn width={4} data-test='add_inventory_product_minimumOQ_inp'>
-                                          <FormField width={4}>
-                                            <FormattedMessage id='global.minimumPkgs' defaultMessage='Minimum PKGs'>
-                                              {text => (
-                                                <label>
-                                                  {text}
-                                                  <Required />
-                                                </label>
-                                              )}
-                                            </FormattedMessage>
-                                            <Input
-                                              name='edit.minimum'
-                                              inputProps={{
-                                                placeholder: '0',
-                                                disabled: sidebarValues && sidebarValues.grouped,
-                                                type: 'number',
-                                                fluid: true,
-                                                min: 1,
-                                                onChange: (e, { value }) => {
-                                                  value = parseInt(value)
-                                                  if (value > 1 && !isNaN(value)) {
-                                                    setFieldValue('minimumRequirement', true)
-                                                    // It seems to do bug when created new inventory
-                                                    // value is adding in handleSubmit
-                                                    //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
-                                                  }
-                                                }
-                                              }}
-                                            />
-                                          </FormField>
-                                        </CustomGridColumn>
-                                        <CustomGridColumn width={4} data-test='add_inventory_product_splits_inp'>
-                                          <FormField width={4}>
-                                            <FormattedMessage id='global.splitPkgs' defaultMessage='Split PKGs'>
-                                              {text => (
-                                                <label>
-                                                  {text}
-                                                  <Required />
-                                                </label>
-                                              )}
-                                            </FormattedMessage>
-                                            <Input
-                                              name='edit.splits'
-                                              inputProps={{
-                                                placeholder: '0',
-                                                disabled: sidebarValues && sidebarValues.grouped,
-                                                type: 'number',
-                                                min: 1,
-                                                fluid: true,
-                                                onChange: (e, { value }) =>
-                                                  this.onSplitsChange(value, values, setFieldValue, validateForm)
-                                              }}
-                                            />
-                                          </FormField>
-                                        </CustomGridColumn>
-                                      </GridRow>
-                                    </Grid>
-                                  </SpanRequiredFields>
+
+                                  <CustomGridRow>
+                                    <GridColumnRequired>
+                                      <FormattedMessage id='global.required' defaultMessage='Required' />
+                                    </GridColumnRequired>
+                                  </CustomGridRow>
                                   <GridRow>
                                     <GridColumn>
-                                      <FormField>
-                                        <FormattedMessage id='addInventory.grades' defaultMessage='Grades'>
+                                      <DivRequiredFields>
+                                        <Grid>
+                                          <CustomGridRow>
+                                            <CustomGridColumn>
+                                              <FormField>
+                                                <FormattedMessage
+                                                  id='addInventory.companyProduct'
+                                                  defaultMessage='Company Product'>
+                                                  {text => (
+                                                    <label>
+                                                      {text}
+                                                      <Required />
+                                                    </label>
+                                                  )}
+                                                </FormattedMessage>
+                                                <Dropdown
+                                                  name='edit.product'
+                                                  options={this.props.autocompleteData.map((el, i) => {
+                                                    const code = getSafe(() => el.intProductCode, '')
+                                                    const name = getSafe(() => el.intProductName, '')
+                                                    const dispName =
+                                                      code && name ? `${name} (${code})` : code ? code : name
+                                                    const packagingSize = getSafe(() => el.packagingSize, '')
+                                                    const packagingUnit = getSafe(
+                                                      () => el.packagingUnit.nameAbbreviation,
+                                                      ''
+                                                    )
+                                                    const packagingType = getSafe(() => el.packagingType.name, '')
+                                                    return {
+                                                      key: i,
+                                                      text: (
+                                                        <>
+                                                          {`${dispName}: ${packagingSize} ${packagingUnit} `}
+                                                          <span style={{ textTransform: 'capitalize' }}>
+                                                            {packagingType}
+                                                          </span>
+                                                        </>
+                                                      ),
+                                                      value: el.id
+                                                    }
+                                                  })}
+                                                  inputProps={{
+                                                    placeholder: (
+                                                      <FormattedMessage
+                                                        id='addInventory.searchByProductName'
+                                                        defaultMessage='Search by product name'
+                                                      />
+                                                    ),
+                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    loading: this.props.autocompleteDataLoading,
+                                                    'data-test': 'new_inventory_product_search_drpdn',
+                                                    minCharacters: 1,
+                                                    icon: 'search',
+                                                    fluid: true,
+                                                    search: options => options,
+                                                    selection: true,
+                                                    clearable: true,
+                                                    onChange: (e, { value }) =>
+                                                      this.handleChangeProduct(e, value, setFieldValue),
+                                                    onSearchChange: (e, { searchQuery }) =>
+                                                      searchQuery.length > 0 && this.searchProducts(searchQuery)
+                                                  }}
+                                                />
+                                              </FormField>
+                                            </CustomGridColumn>
+                                          </CustomGridRow>
+                                          <CustomGridRow>
+                                            <CustomGridColumn>
+                                              <FormField>
+                                                <FormattedMessage id='global.warehouse' defaultMessage='Warehouse'>
+                                                  {text => (
+                                                    <label>
+                                                      {text}
+                                                      <Required />
+                                                    </label>
+                                                  )}
+                                                </FormattedMessage>
+                                                <Dropdown
+                                                  name='edit.warehouse'
+                                                  options={warehousesList}
+                                                  inputProps={{
+                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    onChange: this.onChange,
+                                                    selection: true,
+                                                    value: 0,
+                                                    fluid: true,
+                                                    'data-test': 'new_inventory_warehouse_drpdn',
+                                                    placeholder: (
+                                                      <FormattedMessage
+                                                        id='addInventory.selectWarehouse'
+                                                        defaultMessage='Select Warehouse'
+                                                      />
+                                                    )
+                                                  }}
+                                                />
+                                              </FormField>
+                                            </CustomGridColumn>
+                                          </CustomGridRow>
+                                          <CustomGridRow>
+                                            <CustomGridColumn width={8}>
+                                              <FormField width={8}>
+                                                <FormattedMessage
+                                                  id='addInventory.pkgsAvailable'
+                                                  defaultMessage='PKGs Available'>
+                                                  {text => (
+                                                    <label>
+                                                      {text}
+                                                      <Required />
+                                                    </label>
+                                                  )}
+                                                </FormattedMessage>
+                                                <Input
+                                                  name='edit.pkgAvailable'
+                                                  inputProps={{
+                                                    placeholder: '0',
+                                                    type: 'number',
+                                                    min: 1,
+                                                    fluid: true
+                                                  }}
+                                                />
+                                              </FormField>
+                                            </CustomGridColumn>
+                                            <CustomGridColumn width={4} data-test='add_inventory_product_minimumOQ_inp'>
+                                              <FormField width={4}>
+                                                <FormattedMessage id='global.minimumPkgs' defaultMessage='Minimum PKGs'>
+                                                  {text => (
+                                                    <label>
+                                                      {text}
+                                                      <Required />
+                                                    </label>
+                                                  )}
+                                                </FormattedMessage>
+                                                <Input
+                                                  name='edit.minimum'
+                                                  inputProps={{
+                                                    placeholder: '0',
+                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    type: 'number',
+                                                    fluid: true,
+                                                    min: 1,
+                                                    onChange: (e, { value }) => {
+                                                      value = parseInt(value)
+                                                      if (value > 1 && !isNaN(value)) {
+                                                        setFieldValue('minimumRequirement', true)
+                                                        // It seems to do bug when created new inventory
+                                                        // value is adding in handleSubmit
+                                                        //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
+                                                      }
+                                                    }
+                                                  }}
+                                                />
+                                              </FormField>
+                                            </CustomGridColumn>
+                                            <CustomGridColumn width={4} data-test='add_inventory_product_splits_inp'>
+                                              <FormField width={4}>
+                                                <FormattedMessage id='global.splitPkgs' defaultMessage='Split PKGs'>
+                                                  {text => (
+                                                    <label>
+                                                      {text}
+                                                      <Required />
+                                                    </label>
+                                                  )}
+                                                </FormattedMessage>
+                                                <Input
+                                                  name='edit.splits'
+                                                  inputProps={{
+                                                    placeholder: '0',
+                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    type: 'number',
+                                                    min: 1,
+                                                    fluid: true,
+                                                    onChange: (e, { value }) =>
+                                                      this.onSplitsChange(value, values, setFieldValue, validateForm)
+                                                  }}
+                                                />
+                                              </FormField>
+                                            </CustomGridColumn>
+                                          </CustomGridRow>
+                                          <CustomGridRow>
+                                            <CustomGridColumn width={8}>
+                                              <FormField width={4}>
+                                                {this.inputWrapper(
+                                                  'edit.fobPrice',
+                                                  {
+                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    type: 'number',
+                                                    min: '0',
+                                                    onChange: (e, { value }) => {
+                                                      if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
+                                                        setFieldValue(`priceTiers.pricingTiers[0].price`, value)
+                                                      }
+                                                    },
+                                                    placeholder: '0.000',
+                                                    fluid: true
+                                                  },
+                                                  <>
+                                                    <FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>
+                                                      {text => text}
+                                                    </FormattedMessage>
+                                                    <Required />
+                                                  </>,
+                                                  currencySymbol
+                                                )}
+                                              </FormField>
+                                            </CustomGridColumn>
+                                            <CustomGridColumn width={4}>
+                                              <FormField width={4}>
+                                                <FormattedMessage id='global.inStock' defaultMessage='In Stock'>
+                                                  {text => (
+                                                    <label>
+                                                      {text}
+                                                      <Required />
+                                                    </label>
+                                                  )}
+                                                </FormattedMessage>
+                                                <Dropdown
+                                                  name='edit.inStock'
+                                                  options={optionsYesNo}
+                                                  inputProps={{
+                                                    onChange: this.onChange,
+                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    'data-test': 'add_inventory_instock',
+                                                    fluid: true
+                                                  }}
+                                                />
+                                              </FormField>
+                                            </CustomGridColumn>
+                                            <CustomGridColumn width={4}>
+                                              <FormField width={4}>
+                                                {this.inputLabeledWrapper(
+                                                  'edit.leadTime',
+                                                  {
+                                                    label: formatMessage({ id: 'filter.days', defaultMessage: 'days' }),
+                                                    labelPosition: 'right',
+                                                    type: 'number',
+                                                    min: '0',
+                                                    disabled: sidebarValues && sidebarValues.grouped
+                                                  },
+                                                  <>
+                                                    <FormattedMessage id='global.leadTime' defaultMessage='Lead Time'>
+                                                      {text => text}
+                                                    </FormattedMessage>
+                                                    <Required />
+                                                  </>
+                                                )}
+                                              </FormField>
+                                            </CustomGridColumn>
+                                          </CustomGridRow>
+                                        </Grid>
+                                      </DivRequiredFields>
+                                    </GridColumn>
+                                  </GridRow>
+                                  <CustomGridRow>
+                                    <GridColumn width={8}>
+                                      <FormField width={8}>
+                                        <FormattedMessage
+                                          id='myInventory.whoShouldSee'
+                                          defaultMessage='Who should see this offer?'>
                                           {text => <label>{text}</label>}
                                         </FormattedMessage>
                                         <Dropdown
-                                          name='edit.productGrades'
-                                          options={listGrades}
+                                          name='edit.whoShouldSee'
                                           inputProps={{
-                                            placeholder: (
-                                              <FormattedMessage
-                                                id='addInventory.selectGrades'
-                                                defaultMessage='Select Grades'
-                                              />
-                                            ),
                                             onChange: this.onChange,
-                                            'data-test': 'new_inventory_grade_drpdn',
-                                            disabled: sidebarValues && sidebarValues.grouped,
-                                            selection: true,
-                                            multiple: true,
-                                            size: 'large'
+                                            'data-test': 'add_inventory_whoShouldSee',
+                                            fluid: true,
+                                            closeOnChange: true
                                           }}
+                                          options={optionsSeeOffer.map((option, optIndex) => {
+                                            return {
+                                              key: option.id ? option.id : optIndex * -1 - 1,
+                                              text: (
+                                                <HeaderOptions
+                                                  icon={option.icon}
+                                                  content={option.title}
+                                                  subheader={option.subtitle}
+                                                />
+                                              ),
+                                              value: option.value,
+                                              content: (
+                                                <HeaderOptions
+                                                  icon={option.icon}
+                                                  content={option.title}
+                                                  subheader={option.subtitle}
+                                                />
+                                              )
+                                            }
+                                          })}
                                         />
                                       </FormField>
                                     </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
+                                  </CustomGridRow>
+                                  <CustomGridRow>
                                     <GridColumn width={8}>
-                                      <Dropdown
-                                        label={
-                                          <FormattedMessage id='addInventory.form' defaultMessage='Form'>
-                                            {text => text}
-                                          </FormattedMessage>
-                                        }
-                                        name='edit.productForm'
-                                        options={listForms}
-                                        inputProps={{
-                                          onChange: this.onChange,
-                                          disabled: sidebarValues && sidebarValues.grouped,
-                                          'data-test': 'new_inventory_form_drpdn',
-                                          placeholder: (
-                                            <FormattedMessage
-                                              id='addInventory.selectForm'
-                                              defaultMessage='Select Form'
-                                            />
-                                          )
-                                        }}
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn width={8}>
-                                      <Dropdown
-                                        label={
-                                          <FormattedMessage id='addInventory.origin' defaultMessage='Country of Origin'>
-                                            {text => text}
-                                          </FormattedMessage>
-                                        }
-                                        name='edit.origin'
-                                        options={searchedOrigins}
-                                        inputProps={{
-                                          onChange: this.onChange,
-                                          'data-test': 'new_inventory_origin_drpdn',
-                                          size: 'large',
-                                          minCharacters: 0,
-                                          icon: 'search',
-                                          search: true,
-                                          selection: true,
-                                          clearable: true,
-                                          loading: searchedOriginsLoading,
-                                          disabled: sidebarValues && sidebarValues.grouped,
-                                          onSearchChange: debounce(
-                                            (e, { searchQuery }) => searchOrigins(searchQuery),
-                                            250
-                                          ),
-                                          placeholder: (
-                                            <FormattedMessage
-                                              id='addInventory.selectCountry'
-                                              defaultMessage='Select Country'
-                                            />
-                                          )
-                                        }}
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn width={8}>
-                                      <FormField width={16} data-test='detail_sidebar_fob_price'>
-                                        {this.inputWrapper(
-                                          'edit.fobPrice',
-                                          {
-                                            disabled: sidebarValues && sidebarValues.grouped,
-                                            type: 'number',
-                                            min: '0',
-                                            onChange: (e, { value }) => {
-                                              if (getSafe(() => values.priceTiers.pricingTiers.length, 0)) {
-                                                setFieldValue(`priceTiers.pricingTiers[0].price`, value)
-                                              }
-                                            },
-                                            placeholder: '0.000'
-                                          },
-                                          <>
-                                            <FormattedMessage id='global.fobPrice' defaultMessage='FOB Price'>
-                                              {text => text}
-                                            </FormattedMessage>
-                                            <Required />
-                                          </>,
-                                          currencySymbol
-                                        )}
-                                      </FormField>
-                                    </GridColumn>
-                                    <GridColumn width={8}>
-                                      <Dropdown
-                                        label={
-                                          <FormattedMessage id='addInventory.condition' defaultMessage='Condition'>
-                                            {text => text}
-                                          </FormattedMessage>
-                                        }
-                                        name='edit.conforming'
-                                        options={listConforming}
-                                        inputProps={{
-                                          onChange: this.onChange,
-                                          disabled: sidebarValues && sidebarValues.grouped,
-                                          'data-test': 'new_inventory_conforming_drpdn'
-                                        }}
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow style={{ position: 'absolute', top: '-20000px', left: '-20000px' }}>
-                                    <GridColumn width={8}>
-                                      <Dropdown
-                                        label={
-                                          <FormattedMessage id='addInventory.condition' defaultMessage='Condition'>
-                                            {text => text}
-                                          </FormattedMessage>
-                                        }
-                                        name='edit.productCondition'
-                                        options={listConditions}
-                                        inputProps={{
-                                          onChange: this.onChange,
-                                          disabled: sidebarValues && sidebarValues.grouped,
-                                          'data-test': 'new_inventory_condition_drpdn'
-                                        }}
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn width={8}>
-                                      <FormField width={16} data-test='detail_sidebar_cost'>
-                                        {this.inputWrapper(
-                                          'edit.costPerUOM',
-                                          {
-                                            disabled: sidebarValues && sidebarValues.grouped,
-                                            type: 'number',
-                                            min: '0',
-                                            placeholder: '0.000'
-                                          },
-                                          <FormattedMessage id='global.cost' defaultMessage='Cost'>
-                                            {text => text}
-                                          </FormattedMessage>,
-                                          currencySymbol
-                                        )}
-                                      </FormField>
-                                    </GridColumn>
-                                    <GridColumn width={8}>
-                                      <FormField>
+                                      <FormField width={8}>
                                         <FormattedMessage
-                                          id='addInventory.conditionNotes'
-                                          defaultMessage='Condition Notes'>
-                                          {text => (
-                                            <label>
-                                              {text}
-                                              {values.edit.conforming ? null : <Required />}
-                                            </label>
-                                          )}
+                                          id='myInventory.acceptBids'
+                                          defaultMessage='Accept bids on offer?'>
+                                          {text => <label>{text}</label>}
                                         </FormattedMessage>
-                                        <Input
-                                          name='edit.conditionNotes'
+                                        <Dropdown
+                                          name='edit.acceptBids'
+                                          options={optionsYesNo}
                                           inputProps={{
-                                            disabled: sidebarValues && sidebarValues.grouped,
-                                            placeholder: formatMessage({
-                                              id: 'addInventory.writeShortNotesHere',
-                                              defaultMessage: 'Write short notes here'
-                                            })
+                                            onChange: this.onChange,
+                                            'data-test': 'add_inventory_acceptBids',
+                                            fluid: true
                                           }}
                                         />
                                       </FormField>
                                     </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn width={8}>
-                                      <CustomHr />
-                                      <Header as='h3'>
-                                        <FormattedMessage id='global.lot' defaultMessage='Lot' />
-                                      </Header>
-                                      <GraySegment>
-                                        <Grid>
-                                          <GridRow>
-                                            <GridColumn>
-                                              <Input
-                                                label={
-                                                  <FormattedMessage id='global.lotNumber' defaultMessage='Lot Number'>
-                                                    {text => text}
-                                                  </FormattedMessage>
-                                                }
-                                                type='text'
-                                                name='edit.lotNumber'
-                                                inputProps={{
-                                                  placeholder: '0'
-                                                }}
-                                              />
-                                            </GridColumn>
-                                          </GridRow>
-                                          <GridRow>
-                                            <GridColumn>
-                                              <DateInput
-                                                label={
-                                                  <FormattedMessage
-                                                    id='global.expiredDate'
-                                                    defaultMessage='Expired Date'>
-                                                    {text => text}
-                                                  </FormattedMessage>
-                                                }
-                                                inputProps={{
-                                                  'data-test': 'sidebar_detail_lot_exp_date',
-                                                  disabled: sidebarValues && sidebarValues.grouped
-                                                }}
-                                                name='edit.lotExpirationDate'
-                                              />
-                                            </GridColumn>
-                                          </GridRow>
-                                          <GridRow>
-                                            <GridColumn>
-                                              <DateInput
-                                                label={
-                                                  <FormattedMessage id='global.mfgDate' defaultMessage='Mfg Date'>
-                                                    {text => text}
-                                                  </FormattedMessage>
-                                                }
-                                                inputProps={{
-                                                  'data-test': 'sidebar_detail_lot_mfg_date',
-                                                  disabled: sidebarValues && sidebarValues.grouped,
-                                                  maxDate: moment()
-                                                }}
-                                                name='edit.lotManufacturedDate'
-                                              />
-                                            </GridColumn>
-                                          </GridRow>
-                                        </Grid>
-                                      </GraySegment>
-                                    </GridColumn>
-                                    <GridColumn width={8}>
-                                      <SmallGrid>
-                                        <GridRow>
-                                          <GridColumn width={7}>
-                                            <Dropdown
-                                              label={
-                                                <FormattedMessage id='global.inStock' defaultMessage='In Stock'>
-                                                  {text => text}
-                                                </FormattedMessage>
-                                              }
-                                              name='edit.inStock'
-                                              options={optionsYesNo}
-                                              inputProps={{
-                                                onChange: this.onChange,
-                                                disabled: sidebarValues && sidebarValues.grouped,
-                                                'data-test': 'add_inventory_instock'
-                                              }}
-                                            />
-                                          </GridColumn>
-                                          <GridColumn width={9}>
-                                            {this.inputLabeledWrapper(
-                                              'edit.leadTime',
+                                  </CustomGridRow>
+                                  <CustomGridRow>
+                                    <GridColumnOptionalInformation
+                                      onClick={() =>
+                                        this.setState(old => ({
+                                          isOpenOptionalInformation: !old.isOpenOptionalInformation
+                                        }))
+                                      }>
+                                      <FormattedMessage
+                                        id='myInventory.optionalInformation'
+                                        defaultMessage='Optional Information'
+                                      />
+                                      {this.state.isOpenOptionalInformation ? <ChevronUp /> : <ChevronDown />}
+                                    </GridColumnOptionalInformation>
+                                  </CustomGridRow>
+                                  {this.state.isOpenOptionalInformation && (
+                                    <>
+                                      <CustomGridRow>
+                                        <GridColumn width={8}>
+                                          <FormField width={8}>
+                                            {this.inputWrapper(
+                                              'edit.costPerUOM',
                                               {
-                                                label: formatMessage({ id: 'filter.days', defaultMessage: 'days' }),
-                                                labelPosition: 'right',
+                                                disabled: sidebarValues && sidebarValues.grouped,
                                                 type: 'number',
                                                 min: '0',
-                                                disabled: sidebarValues && sidebarValues.grouped
+                                                placeholder: '0.000',
+                                                fluid: true
                                               },
-                                              <>
-                                                <FormattedMessage id='global.leadTime' defaultMessage='Lead Time'>
-                                                  {text => text}
-                                                </FormattedMessage>
-                                                <Required />
-                                              </>
+                                              <FormattedMessage id='global.cost' defaultMessage='Cost'>
+                                                {text => text}
+                                              </FormattedMessage>,
+                                              currencySymbol
                                             )}
-                                          </GridColumn>
-                                        </GridRow>
-                                        <GridRow>
-                                          <GridColumn width={7}>
+                                          </FormField>
+                                        </GridColumn>
+                                        <GridColumn width={3}>
+                                          <FormField width={3}>
+                                            <FormattedMessage
+                                              id='global.offerExpiration'
+                                              defaultMessage='Offer Expiration'>
+                                              {text => <label>{text}</label>}
+                                            </FormattedMessage>
                                             <Dropdown
-                                              label={
-                                                <FormattedMessage
-                                                  id='global.offerExpiration'
-                                                  defaultMessage='Offer Expiration'>
-                                                  {text => text}
-                                                </FormattedMessage>
-                                              }
                                               name='edit.doesExpire'
                                               options={optionsYesNo}
                                               inputProps={{
                                                 onChange: this.onChange,
                                                 disabled: sidebarValues && sidebarValues.grouped,
-                                                'data-test': 'add_inventory_doesExpire'
+                                                'data-test': 'add_inventory_doesExpire',
+                                                fluid: true
                                               }}
                                             />
-                                          </GridColumn>
-                                          <GridColumn width={9}>
-                                            <DateInput
-                                              label={
-                                                <FormattedMessage
-                                                  id='addInventory.offerExpirationDate'
-                                                  defaultMessage='Offer Expiration Date'>
-                                                  {text => text}
-                                                </FormattedMessage>
-                                              }
-                                              inputProps={{
-                                                disabled:
-                                                  !values.edit.doesExpire || (sidebarValues && sidebarValues.grouped),
-                                                'data-test': 'sidebar_detail_expiration_date'
-                                                //! ! crashes on component calendar open if expirationDate is in past:
-                                                // minDate: moment().add(1, 'days') TypeError: Cannot read property 'position' of undefined
-                                              }}
-                                              name='edit.expirationDate'
-                                            />
-                                          </GridColumn>
-                                        </GridRow>
-
-                                        <GridRow>
-                                          <GridColumn>
+                                          </FormField>
+                                        </GridColumn>
+                                        <GridColumn width={5}>
+                                          <DateInput
+                                            label={
+                                              <FormattedMessage
+                                                id='addInventory.offerExpirationDate'
+                                                defaultMessage='Offer Expiration Date'
+                                              />
+                                            }
+                                            inputProps={{
+                                              disabled:
+                                                !values.edit.doesExpire || (sidebarValues && sidebarValues.grouped),
+                                              'data-test': 'sidebar_detail_expiration_date',
+                                              fluid: true
+                                              //! ! crashes on component calendar open if expirationDate is in past:
+                                              // minDate: moment().add(1, 'days') TypeError: Cannot read property 'position' of undefined
+                                            }}
+                                            name='edit.expirationDate'
+                                          />
+                                        </GridColumn>
+                                      </CustomGridRow>
+                                      <CustomGridRow>
+                                        <GridColumn width={8}>
+                                          <FormField width={8}>
+                                            <FormattedMessage id='addInventory.form' defaultMessage='Form'>
+                                              {text => <label>{text}</label>}
+                                            </FormattedMessage>
                                             <Dropdown
-                                              label={
-                                                <FormattedMessage id='global.broadcast' defaultMessage='Broadcast'>
-                                                  {text => text}
-                                                </FormattedMessage>
-                                              }
-                                              name='edit.broadcasted'
-                                              options={optionsYesNo}
+                                              name='edit.productForm'
+                                              options={listForms}
+                                              inputProps={{
+                                                onChange: this.onChange,
+                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                'data-test': 'new_inventory_form_drpdn',
+                                                placeholder: (
+                                                  <FormattedMessage
+                                                    id='addInventory.selectForm'
+                                                    defaultMessage='Select Form'
+                                                  />
+                                                ),
+                                                fluid: true
+                                              }}
+                                            />
+                                          </FormField>
+                                        </GridColumn>
+                                        <GridColumn width={8}>
+                                          <FormField width={8}>
+                                            <FormattedMessage id='addInventory.grades' defaultMessage='Grades'>
+                                              {text => <label>{text}</label>}
+                                            </FormattedMessage>
+                                            <Dropdown
+                                              name='edit.productGrades'
+                                              options={listGrades}
+                                              inputProps={{
+                                                placeholder: (
+                                                  <FormattedMessage
+                                                    id='addInventory.selectGrades'
+                                                    defaultMessage='Select Grades'
+                                                  />
+                                                ),
+                                                onChange: this.onChange,
+                                                'data-test': 'new_inventory_grade_drpdn',
+                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                selection: true,
+                                                multiple: true,
+                                                fluid: true
+                                              }}
+                                            />
+                                          </FormField>
+                                        </GridColumn>
+                                      </CustomGridRow>
+                                      <CustomGridRow>
+                                        <GridColumn width={8}>
+                                          <FormField width={8}>
+                                            <FormattedMessage id='global.lotNumber' defaultMessage='Lot Number'>
+                                              {text => <label>{text}</label>}
+                                            </FormattedMessage>
+                                            <Input
+                                              type='text'
+                                              name='edit.lotNumber'
+                                              inputProps={{
+                                                placeholder: '0',
+                                                fluid: true
+                                              }}
+                                            />
+                                          </FormField>
+                                        </GridColumn>
+                                        <GridColumn width={8}>
+                                          <FormField width={8}>
+                                            <FormattedMessage
+                                              id='addInventory.origin'
+                                              defaultMessage='Country of Origin'>
+                                              {text => <label>{text}</label>}
+                                            </FormattedMessage>
+                                            <Dropdown
+                                              name='edit.origin'
+                                              options={searchedOrigins}
+                                              inputProps={{
+                                                onChange: this.onChange,
+                                                'data-test': 'new_inventory_origin_drpdn',
+                                                size: 'large',
+                                                minCharacters: 0,
+                                                icon: 'search',
+                                                search: true,
+                                                selection: true,
+                                                clearable: true,
+                                                loading: searchedOriginsLoading,
+                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                onSearchChange: debounce(
+                                                  (e, { searchQuery }) => searchOrigins(searchQuery),
+                                                  250
+                                                ),
+                                                placeholder: (
+                                                  <FormattedMessage
+                                                    id='addInventory.selectCountry'
+                                                    defaultMessage='Select Country'
+                                                  />
+                                                ),
+                                                fluid: true
+                                              }}
+                                            />
+                                          </FormField>
+                                        </GridColumn>
+                                      </CustomGridRow>
+                                      <CustomGridRow>
+                                        <GridColumn width={8}>
+                                          <DateInput
+                                            label={
+                                              <FormattedMessage
+                                                id='global.lotExpiredDate'
+                                                defaultMessage='Lot Expired Date'>
+                                                {text => text}
+                                              </FormattedMessage>
+                                            }
+                                            inputProps={{
+                                              'data-test': 'sidebar_detail_lot_exp_date',
+                                              disabled: sidebarValues && sidebarValues.grouped,
+                                              fluid: true
+                                            }}
+                                            name='edit.lotExpirationDate'
+                                          />
+                                        </GridColumn>
+                                        <GridColumn width={8}>
+                                          <FormField width={8}>
+                                            <FormattedMessage id='addInventory.condition' defaultMessage='Condition'>
+                                              {text => <label>{text}</label>}
+                                            </FormattedMessage>
+                                            <Dropdown
+                                              name='edit.conforming'
+                                              options={listConforming}
+                                              inputProps={{
+                                                onChange: this.onChange,
+                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                'data-test': 'new_inventory_conforming_drpdn',
+                                                fluid: true
+                                              }}
+                                            />
+                                          </FormField>
+                                        </GridColumn>
+                                      </CustomGridRow>
+                                      <CustomGridRow>
+                                        <GridColumn width={8}>
+                                          <DateInput
+                                            label={
+                                              <FormattedMessage id='global.mfgDate' defaultMessage='Mfg Date'>
+                                                {text => text}
+                                              </FormattedMessage>
+                                            }
+                                            inputProps={{
+                                              'data-test': 'sidebar_detail_lot_mfg_date',
+                                              disabled: sidebarValues && sidebarValues.grouped,
+                                              maxDate: moment(),
+                                              fluid: true
+                                            }}
+                                            name='edit.lotManufacturedDate'
+                                          />
+                                        </GridColumn>
+                                        <GridColumn width={8}>
+                                          <FormField width={8}>
+                                            <FormattedMessage
+                                              id='addInventory.conditionNotes'
+                                              defaultMessage='Condition Notes'>
+                                              {text => (
+                                                <label>
+                                                  {text}
+                                                  {values.edit.conforming ? null : <Required />}
+                                                </label>
+                                              )}
+                                            </FormattedMessage>
+                                            <Input
+                                              name='edit.conditionNotes'
                                               inputProps={{
                                                 disabled: sidebarValues && sidebarValues.grouped,
-                                                onChange: this.onChange,
-                                                'data-test': 'add_inventory_broadcast'
+                                                placeholder: formatMessage({
+                                                  id: 'addInventory.writeShortNotesHere',
+                                                  defaultMessage: 'Write short notes here'
+                                                }),
+                                                fluid: true
                                               }}
                                             />
-                                          </GridColumn>
-                                        </GridRow>
-                                      </SmallGrid>
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn>
-                                      <TextArea
-                                        name='edit.externalNotes'
-                                        label={formatMessage({
-                                          id: 'addInventory.externalNotes',
-                                          defaultMessage: 'External Notes'
-                                        })}
-                                        inputProps={{
-                                          disabled: sidebarValues && sidebarValues.grouped,
-                                          placeholder: formatMessage({
-                                            id: 'addInventory.writeExternalNotesHere',
-                                            defaultMessage: 'Write external notes here'
-                                          })
-                                        }}
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
-                                  <GridRow>
-                                    <GridColumn>
-                                      <TextArea
-                                        name='edit.internalNotes'
-                                        label={formatMessage({
-                                          id: 'addInventory.internalNotes',
-                                          defaultMessage: 'Internal Notes'
-                                        })}
-                                        inputProps={{
-                                          disabled: sidebarValues && sidebarValues.grouped,
-                                          placeholder: formatMessage({
-                                            id: 'addInventory.writeInternalNotesHere',
-                                            defaultMessage: 'Write internal notes here'
-                                          })
-                                        }}
-                                      />
-                                    </GridColumn>
-                                  </GridRow>
+                                          </FormField>
+                                        </GridColumn>
+                                      </CustomGridRow>
+
+                                      <CustomGridRow>
+                                        <GridColumn width={8}>
+                                          <FormField width={8}>
+                                            <FormattedMessage
+                                              id='addInventory.externalNotes'
+                                              defaultMessage='External Notes'>
+                                              {text => <label>{text}</label>}
+                                            </FormattedMessage>
+                                            <TextAreaField
+                                              name='edit.externalNotes'
+                                              inputProps={{
+                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                placeholder: formatMessage({
+                                                  id: 'addInventory.writeExternalNotesHere',
+                                                  defaultMessage: 'Write external notes here'
+                                                })
+                                              }}
+                                            />
+                                          </FormField>
+                                        </GridColumn>
+                                        <GridColumn width={8}>
+                                          <FormField width={8}>
+                                            <FormattedMessage
+                                              id='addInventory.internalNotes'
+                                              defaultMessage='Internal Notes'>
+                                              {text => <label>{text}</label>}
+                                            </FormattedMessage>
+                                            <TextAreaField
+                                              name='edit.internalNotes'
+                                              inputProps={{
+                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                placeholder: formatMessage({
+                                                  id: 'addInventory.writeInternalNotesHere',
+                                                  defaultMessage: 'Write internal notes here'
+                                                })
+                                              }}
+                                            />
+                                          </FormField>
+                                        </GridColumn>
+                                      </CustomGridRow>
+                                    </>
+                                  )}
                                 </Grid>
                               </Tab.Pane>
                             )
@@ -2128,7 +2340,7 @@ class DetailSidebar extends Component {
                       </div>
                     )}
                   </HighSegment>
-                </FlexContent>
+                </ModalContentInventory>
                 {this.state.activeTab !== 3 && (
                   <Modal.Actions>
                     <div>
@@ -2201,7 +2413,7 @@ class DetailSidebar extends Component {
                     </div>
                   </Modal.Actions>
                 )}
-              </FlexSidebar>
+              </ModalInventory>
               <ErrorFocus />
             </Form>
           )
@@ -2232,28 +2444,31 @@ const mapDispatchToProps = {
   removeAttachmentLinkProductOffer
 }
 
-const mapStateToProps = ({
-  simpleAdd: {
-    autocompleteData,
-    autocompleteDataLoading,
-    listConditions,
-    listForms,
-    listGrades,
-    loading,
-    sidebarActiveTab,
-    sidebarDetailOpen,
-    sidebarValues,
-    searchedManufacturers,
-    searchedManufacturersLoading,
-    searchedOrigins,
-    searchedOriginsLoading,
-    searchedProducts,
-    searchedProductsLoading,
-    warehousesList,
-    listDocumentTypes,
-    editProductOfferInitTrig
-  }
-}, { inventoryGrid }) => ({
+const mapStateToProps = (
+  {
+    simpleAdd: {
+      autocompleteData,
+      autocompleteDataLoading,
+      listConditions,
+      listForms,
+      listGrades,
+      loading,
+      sidebarActiveTab,
+      sidebarDetailOpen,
+      sidebarValues,
+      searchedManufacturers,
+      searchedManufacturersLoading,
+      searchedOrigins,
+      searchedOriginsLoading,
+      searchedProducts,
+      searchedProductsLoading,
+      warehousesList,
+      listDocumentTypes,
+      editProductOfferInitTrig
+    }
+  },
+  { inventoryGrid }
+) => ({
   autocompleteData,
   autocompleteDataLoading,
   listConditions,
