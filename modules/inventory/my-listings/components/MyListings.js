@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import cn from 'classnames'
 import moment from 'moment/moment'
 import { debounce } from 'lodash'
-import { Clock, FileText, CornerLeftUp, CornerLeftDown, MoreVertical, PlusCircle, Sliders } from 'react-feather'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input } from 'semantic-ui-react'
+import { Clock, FileText, CornerLeftUp, CornerLeftDown, MoreVertical, PlusCircle, Sliders, ChevronDown } from 'react-feather'
+import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Dropdown, Grid, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
@@ -24,6 +24,7 @@ import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
 import { InventoryFilter } from '~/modules/filter'
+import { FormattedUnit } from '~/components/formatted-messages'
 
 const defaultHiddenColumns = [
   'productNumber',
@@ -119,6 +120,142 @@ const FobPrice = styled.div`
 
 const BroadcastDiv = styled.div`
   margin: 0 8px 0 4px;
+`
+
+const NetworkDropdown = styled(Dropdown)`
+
+  &.ui.dropdown {
+    width: 50px;
+    height: 32px !important;
+    margin: -5px 0 !important;
+    border: 1px solid #dee2e6;
+    border-radius: 3px;
+    padding: 6px 5px 6px 8px;
+  
+    > .text {
+      
+      svg {
+        width: 18px;
+        height: 18px;
+        
+        path[fill] {
+          fill: #848893 !important;
+        }
+      }
+    }
+    
+    &.active {
+      background: #edeef2 !important;
+    
+      > svg {
+        transform: rotate(180deg);
+      }
+    
+      > .text svg path[fill] {
+        fill: #20273a !important;
+      }
+    }
+    
+    &.loading {
+    
+      &:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 18px;
+        margin: -.64285714em 0 0 -.64285714em;
+        border-radius: 500rem;
+        border: .2em solid rgba(0,0,0,.1);
+        width: 1.28571429em;
+        height: 1.28571429em;
+      }
+    
+      &:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 18px;
+        -webkit-animation: dropdown-spin .6s linear;
+        animation: dropdown-spin .6s linear;
+        -webkit-animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
+        width: 1.28571429em;
+        height: 1.28571429em;
+        margin: -.64285714em 0 0 -.64285714em;
+        border-radius: 500rem;
+        border-color: #767676 transparent transparent;
+        border-style: solid;
+        border-width: .2em;
+        -webkit-box-shadow: 0 0 0 1px transparent;
+        box-shadow: 0 0 0 1px transparent;
+      }
+      
+      > .text svg {
+        opacity: 0;
+      }
+    }
+  
+    > .menu {
+      margin-top: 5px !important;
+    
+      > .header {
+        height: 30px !important;
+        margin: 5px 0 !important;
+        padding: 0 20px !important;
+        text-transform: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: #404040;
+        line-height: 30px;
+      }
+            
+      &:after {
+        right: 5px !important;
+      }
+    
+      > .item {
+        box-sizing: border-box;
+        height: 60px;
+        padding: 16px 30px 12px 60px !important;
+        line-height: 16px;
+        
+        svg {
+          position: absolute;
+          top: 17px;
+          left: 20px;
+          width: 24px;
+          height: 24px;
+          
+          path[fill] {
+            fill: #848893 !important;
+          }
+        }
+        
+        &:hover svg path[fill] {
+          fill: #20273a !important;
+        }
+        
+        .content {
+          font-size: 14px;
+          color: #20273a;
+          line-height: 16px;
+          
+          .sub.header {
+            font-size: 12px;
+            color: #848893;
+            line-height: 16px;
+          }
+        }
+      }
+    }
+  }
+`
+
+const NetworkChevronDown = styled(ChevronDown)`
+  float: right !important;
+  width: 14px !important;
+  height: 20px !important;
+  color: #848893 !important;
 `
 
 class MyListings extends Component {
@@ -353,6 +490,12 @@ class MyListings extends Component {
             </FormattedMessage>
           ),
           width: 200
+        },
+        {
+          name: 'network',
+          title: ' ',
+          width: 81,
+          allowReordering: false
         }
       ],
       selectedRows: [],
@@ -370,7 +513,7 @@ class MyListings extends Component {
   }
 
   componentDidMount = async () => {
-    const { sidebarDetailTrigger, myListingsFilters, advancedFilters, datagrid, applyDatagridFilter } = this.props
+    const { sidebarDetailTrigger, myListingsFilters, advancedFilters, datagrid, applyDatagridFilter, broadcastTemplates } = this.props
     if (window) {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
@@ -387,6 +530,9 @@ class MyListings extends Component {
         }
         sidebarDetailTrigger(idOffer, true, tabOffer)
       }
+    }
+    if (broadcastTemplates && !broadcastTemplates.length) {
+      this.props.getTemplates()
     }
     // Because of #31767
     try {
@@ -610,9 +756,101 @@ class MyListings extends Component {
       setPricingEditOpenId,
       sidebarDetailTrigger,
       toastManager,
-      closePricingEditPopup
+      closePricingEditPopup,
+      intl: { formatMessage },
+      broadcastTemplates
     } = this.props
     let title = ''
+
+    const options = [
+      {
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+              <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)"/>
+              <path fill="#20273A" fill-rule="nonzero" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" transform="translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)"/>
+            </g>
+          </svg>
+        ),
+        title: formatMessage({ id: 'myInventory.network', defaultMessage: 'Network'}),
+        subtitle: formatMessage({ id: 'myInventory.networkSubtitle', defaultMessage: 'Your accepted Partners and invited Guests'}),
+        value: 'FREE_FOR_ALL'
+      },
+      /*{
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+              <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -447) translate(1105 295) translate(0 29) translate(20 123)"/>
+              <path fill="#848893" fill-rule="nonzero" d="M16.5 12c1.38 0 2.49-1.12 2.49-2.5S17.88 7 16.5 7C15.12 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5C7.34 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V18c0 .55.45 1 1 1h9c.55 0 1-.45 1-1v-1.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V18c0 .55.45 1 1 1h6v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z" transform="translate(-1125 -447) translate(1105 295) translate(0 29) translate(20 123)"/>
+            </g>
+          </svg>
+
+        ),
+        title: formatMessage({ id: 'myInventory.partners', defaultMessage: 'Partners' }),
+        subtitle: formatMessage({ id: 'myInventory.partnersSubtitle', defaultMessage: 'Your accepted Partners' }),
+        value: ''
+      },*/
+      {
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+              <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)"/>
+              <path fill="#848893" fill-rule="nonzero" d="M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z" transform="translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)"/>
+            </g>
+          </svg>
+        ),
+        title: formatMessage({ id: 'myInventory.guests', defaultMessage: 'Guests' }),
+        subtitle: formatMessage({ id: 'myInventory.guestsSubtitle', defaultMessage: 'Your invited Guests' }),
+        value: 'CLIENT_COMPANIES'
+      },
+      {
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+              <g>
+                <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)"/>
+                <path d="M0 0L24 0 24 24 0 24z" opacity=".87" transform="translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)"/>
+              </g>
+              <path fill="#848893" fill-rule="nonzero" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" transform="translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)"/>
+            </g>
+          </svg>
+
+        ),
+        title: formatMessage({ id: 'myInventory.justMe', defaultMessage: 'Just Me' }),
+        subtitle: formatMessage({ id: 'myInventory.justMeSubtitle', defaultMessage: 'Only my Company' }),
+        value: 'NO_BROADCAST'
+      },
+      ...broadcastTemplates.map(template => {
+        return {
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <g fill="none" fill-rule="evenodd">
+                <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)"/>
+                <path fill="#848893" fill-rule="nonzero" d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z" transform="translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)"/>
+              </g>
+            </svg>
+          ),
+          title: template.name,
+          subtitle: formatMessage({ id: 'myInventory.customTemplate', defaultMessage: 'Custom Template' }),
+          id: template.id,
+          tmp: template.name,
+          value: `BROADCAST_TEMPLATE|${template.id}`
+        }
+      }),
+      {
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g fill="none" fill-rule="evenodd">
+              <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)"/>
+              <path fill="#848893" fill-rule="nonzero" d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z" transform="translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)"/>
+            </g>
+          </svg>
+        ),
+        title: formatMessage({ id: 'myInventory.custom', defaultMessage: 'Custom' }),
+        subtitle: formatMessage({ id: 'myInventory.customSubtitle', defaultMessage: 'Create Custom Rule' }),
+        value: 'CUSTOM_RULES'
+      }
+    ]
 
     let result = rows.map((r, rIndex) => {
       const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
@@ -710,54 +948,33 @@ class MyListings extends Component {
 
       return {
         ...r,
+        network: (
+          <NetworkDropdown icon={<NetworkChevronDown />}
+                           floating
+                           scrolling
+                           header={formatMessage({ id: 'myInventory.whoShouldSee', defaultMessage: 'Who should see this offer?' })}
+                           pointing='top right'
+                           value={r.broadcastTemplateResponse ? r.broadcastOption+'|'+r.broadcastTemplateResponse.id : r.broadcastOption}
+                           loading={!!r.isBroadcastLoading}
+                           closeOnChange
+                           //onChange={this.broadcastChange}
+                           options={options.map((option, optIndex) => {
+                            return {
+                              key: option.id ? option.id : (optIndex * -1) - 1,
+                              text: option.icon,
+                              value: option.value,
+                              content: (
+                                <Header icon={option.icon} content={option.title} subheader={option.subtitle} />
+                              ),
+                              onClick: (e, { value }) => this.broadcastChange(r, option.value, option.id ? { id: option.id, name: option.tmp } : null)
+                            }
+                          })}
+          />
+        ),
         productName: (
           <ActionCell
             row={r}
             getActions={this.getActions}
-            leftContent={
-              <BroadcastDiv>
-                <Popup
-                  id={r.id}
-                  position={rIndex === 0 ? 'bottom right' : 'top right'}
-                  trigger={
-                    <Checkbox
-                      data-test='my_inventory_broadcast_chckb'
-                      toggle
-                      defaultChecked={r.cfStatus.toLowerCase() === 'broadcasting' && isOfferValid}
-                      className={cn({
-                        error:
-                          r.cfStatus.toLowerCase() === 'incomplete' ||
-                          r.cfStatus.toLowerCase() === 'unmapped' ||
-                          r.cfStatus.toLowerCase() === 'unpublished'
-                      })}
-                      disabled={
-                        r.cfStatus.toLowerCase() === 'incomplete' ||
-                        r.cfStatus.toLowerCase() === 'unmapped' ||
-                        r.cfStatus.toLowerCase() === 'unpublished' ||
-                        r.cfStatus.toLowerCase() === 'n/a' ||
-                        !isOfferValid ||
-                        !!r.groupId
-                      }
-                      onChange={(e, data) => {
-                        e.preventDefault()
-                        try {
-                          this.props.patchBroadcast(data.checked, r.id, r.cfStatus)
-                          this.props.datagrid.updateRow(r.id, () => ({
-                            ...r.rawData,
-                            cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
-                          }))
-                          // Its necessary to render and see changes in MyListing when datagrid updated row
-                          this.setState({ updatedRow: true })
-                        } catch (error) {
-                          console.error(error)
-                        }
-                      }}
-                    />
-                  }
-                  content={title}
-                />
-              </BroadcastDiv>
-            }
             content={r.productName}
             onContentClick={() => this.tableRowClickedProductOffer(r, true, 0, sidebarDetailTrigger)}
             rightAlignedContent={
@@ -796,6 +1013,7 @@ class MyListings extends Component {
             <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
           </>
         ),
+        quantity: r.qtyPart ? <FormattedUnit unit={r.qtyPart} separator=' ' value={r.quantity} /> : 'N/A',
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
@@ -881,6 +1099,22 @@ class MyListings extends Component {
     }
 
     this.setState({ rows: newRows, focusInput: (pIndex || pIndex === 0) && focusInput ? focusInput : '' })
+  }
+
+  broadcastChange = (row, value, template) => {
+    let { sidebarDetailTrigger } = this.props
+    switch (value) {
+      case 'CUSTOM_RULES':
+        this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+        break
+      default:
+        if (value.indexOf('|') >= 0) {
+          this.props.broadcastChange(row, value.substr(0, value.indexOf('|')), template, this.props.datagrid)
+        } else {
+          this.props.broadcastChange(row, value, null, this.props.datagrid)
+        }
+        break
+    }
   }
 
   tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
@@ -1194,7 +1428,7 @@ class MyListings extends Component {
             columnActions='actCol'
           />
         </div>
-        {sidebarDetailOpen && <DetailSidebar />}
+        {sidebarDetailOpen && <DetailSidebar inventoryGrid={this.props.datagrid} />}
         {isExportInventoryOpen && <ExportInventorySidebar onClose={() => setExportSidebarOpenState(false)} />}
         {openFilterPopup && <InventoryFilter onClose={() => this.setState({ openFilterPopup: false })} />}
       </>

@@ -180,7 +180,7 @@ class DocumentManagerSidebar extends Component {
   render() {
     const {
       closeSidebar,
-      popupValues,
+      sidebarValues,
       documentTypes,
       intl: { formatMessage },
       documentTypesFetching,
@@ -195,7 +195,7 @@ class DocumentManagerSidebar extends Component {
     return (
       <Formik
         validationSchema={validationSchema}
-        initialValues={popupValues ? popupValues : initialValues}
+        initialValues={sidebarValues ? sidebarValues : initialValues}
         validateOnChange={false}
         validateOnBlur={false}
         enableReinitialize
@@ -250,7 +250,7 @@ class DocumentManagerSidebar extends Component {
                     <Loader />
                   </Dimmer>
                   <CustomHighSegment basic>
-                    {popupValues ? (
+                    {sidebarValues ? (
                       <FormattedMessage id='settings.documents.editDocument' defaultMessage='Edit Document' />
                     ) : (
                       <FormattedMessage id='settings.documents.addDocument' defaultMessage='Add Document' />
@@ -525,10 +525,10 @@ const mapStateToProps = ({ simpleAdd, settings }) => {
   const documentTab = currentTab === '/settings/documents'
 
   return {
-    popupValues: documentTab ? settings.popupValues : null,
+    sidebarValues: documentTab ? settings.sidebarValues : null,
     documentTypes: simpleAdd.listDocumentTypes,
     documentTypesFetching: simpleAdd.documentTypesFetching,
-    edit: documentTab && getSafe(() => settings.popupValues.id, false),
+    edit: documentTab && getSafe(() => settings.sidebarValues.id, false),
     enableClose: documentTab
   }
 }

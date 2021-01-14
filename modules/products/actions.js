@@ -375,7 +375,8 @@ export function postProductGroups(request) {
   }
 }
 
-export function putProductGroups(id, request, selectedTagsOptions, selectedMarketSegmentsOptions) {
+export function putProductGroups(id, request, selectedTagsOptions) {
+  //, selectedMarketSegmentsOptions  commented based on https://pm.artio.net/issues/34033#note-22
   return {
     type: AT.PRODUCTS_GROUPS_UPDATE,
     async payload() {
@@ -383,8 +384,11 @@ export function putProductGroups(id, request, selectedTagsOptions, selectedMarke
       Datagrid.updateRow(id, () => ({
         name: request.name,
         tags: selectedTagsOptions.map(tag => ({ name: tag.text, id: tag.key })),
-        id: id,
-        marketSegments: selectedMarketSegmentsOptions.map(segment => ({ name: segment.text, id: segment.key }))
+        id: id
+        /**
+         * Commented based on https://pm.artio.net/issues/34033#note-22
+         */
+        //marketSegments: selectedMarketSegmentsOptions.map(segment => ({ name: segment.text, id: segment.key }))
       }))
       return response
     }

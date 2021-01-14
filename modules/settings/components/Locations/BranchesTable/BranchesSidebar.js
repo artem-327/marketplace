@@ -114,12 +114,12 @@ class BranchSidebar extends React.Component {
     loadSidebar: false
   }
   componentDidMount() {
-    const { popupValues, getProvinces } = this.props
-    popupValues && popupValues.hasProvinces && getProvinces(popupValues.countryId)
+    const { sidebarValues, getProvinces } = this.props
+    sidebarValues && sidebarValues.hasProvinces && getProvinces(sidebarValues.countryId)
   }
 
   submitHandler = async (values, setSubmitting) => {
-    const { popupValues, putEditWarehouse, postNewWarehouseRequest } = this.props
+    const { sidebarValues, putEditWarehouse, postNewWarehouseRequest } = this.props
     const { attachmentFiles } = this.state
     let country = JSON.parse(values.deliveryAddress.address.country).countryId
     let requestData = {}
@@ -146,8 +146,8 @@ class BranchSidebar extends React.Component {
     removeEmpty(requestData)
 
     try {
-      if (popupValues) {
-        await putEditWarehouse(requestData, popupValues.id, attachmentFiles)
+      if (sidebarValues) {
+        await putEditWarehouse(requestData, sidebarValues.id, attachmentFiles)
       } else {
         await postNewWarehouseRequest(values.alsoCreate, requestData, attachmentFiles)
       }
@@ -159,43 +159,43 @@ class BranchSidebar extends React.Component {
   }
 
   getInitialFormValues = () => {
-    let { popupValues } = this.props
+    let { sidebarValues } = this.props
 
-    const provinceId = getSafe(() => popupValues.deliveryAddress.address.province.id, '')
-    const countryId = getSafe(() => popupValues.deliveryAddress.address.country.id, null)
-    const hasProvinces = getSafe(() => popupValues.deliveryAddress.address.country.hasProvinces, false)
-    const zip = getSafe(() => popupValues.deliveryAddress.address.zip.zip, '')
-    const zipID = getSafe(() => popupValues.deliveryAddress.address.zip.id, '')
+    const provinceId = getSafe(() => sidebarValues.deliveryAddress.address.province.id, '')
+    const countryId = getSafe(() => sidebarValues.deliveryAddress.address.country.id, null)
+    const hasProvinces = getSafe(() => sidebarValues.deliveryAddress.address.country.hasProvinces, false)
+    const zip = getSafe(() => sidebarValues.deliveryAddress.address.zip.zip, '')
+    const zipID = getSafe(() => sidebarValues.deliveryAddress.address.zip.id, '')
 
     const initialValues = {
       //name: r.name,
-      taxId: getSafe(() => popupValues.taxId, ''),
-      //warehouse: getSafe(() => popupValues.warehouse, false),
+      taxId: getSafe(() => sidebarValues.taxId, ''),
+      //warehouse: getSafe(() => sidebarValues.warehouse, false),
       deliveryAddress: {
         address: {
-          streetAddress: getSafe(() => popupValues.deliveryAddress.address.streetAddress, ''),
-          city: getSafe(() => popupValues.deliveryAddress.address.city, ''),
+          streetAddress: getSafe(() => sidebarValues.deliveryAddress.address.streetAddress, ''),
+          city: getSafe(() => sidebarValues.deliveryAddress.address.city, ''),
           province: provinceId,
           country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
           zip
         },
-        readyTime: getSafe(() => popupValues.deliveryAddress.readyTime, ''),
-        closeTime: getSafe(() => popupValues.deliveryAddress.closeTime, ''),
-        liftGate: getSafe(() => popupValues.deliveryAddress.liftGate, false),
-        forkLift: getSafe(() => popupValues.deliveryAddress.forkLift, false),
-        callAhead: getSafe(() => popupValues.deliveryAddress.callAhead, false),
-        deliveryNotes: getSafe(() => popupValues.deliveryAddress.deliveryNotes, ''),
-        addressName: getSafe(() => popupValues.deliveryAddress.addressName, ''),
-        contactName: getSafe(() => popupValues.deliveryAddress.contactName, ''),
-        contactPhone: getSafe(() => popupValues.deliveryAddress.contactPhone, ''),
-        contactEmail: getSafe(() => popupValues.deliveryAddress.contactEmail, '')
+        readyTime: getSafe(() => sidebarValues.deliveryAddress.readyTime, ''),
+        closeTime: getSafe(() => sidebarValues.deliveryAddress.closeTime, ''),
+        liftGate: getSafe(() => sidebarValues.deliveryAddress.liftGate, false),
+        forkLift: getSafe(() => sidebarValues.deliveryAddress.forkLift, false),
+        callAhead: getSafe(() => sidebarValues.deliveryAddress.callAhead, false),
+        deliveryNotes: getSafe(() => sidebarValues.deliveryAddress.deliveryNotes, ''),
+        addressName: getSafe(() => sidebarValues.deliveryAddress.addressName, ''),
+        contactName: getSafe(() => sidebarValues.deliveryAddress.contactName, ''),
+        contactPhone: getSafe(() => sidebarValues.deliveryAddress.contactPhone, ''),
+        contactEmail: getSafe(() => sidebarValues.deliveryAddress.contactEmail, '')
       },
-      attachments: getSafe(() => popupValues.attachments, []),
+      attachments: getSafe(() => sidebarValues.attachments, []),
       zipID,
       countryId,
       hasProvinces,
-      branchId: getSafe(() => popupValues.id, ''),
-      province: getSafe(() => popupValues.deliveryAddress.address.province, ''),
+      branchId: getSafe(() => sidebarValues.id, ''),
+      province: getSafe(() => sidebarValues.deliveryAddress.address.province, ''),
       alsoCreate: false
     }
 
@@ -205,7 +205,7 @@ class BranchSidebar extends React.Component {
   renderEdit = formikProps => {
     const {
       intl: { formatMessage },
-      popupValues
+      sidebarValues
     } = this.props
     const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
@@ -302,7 +302,7 @@ class BranchSidebar extends React.Component {
           </FormGroup>
         </CustomSegment>
 
-        {!popupValues && (
+        {!sidebarValues && (
           <FormGroup data-test='settings_branches_popup_contactName_inp'>
             <Checkbox
               label={formatMessage({
@@ -321,7 +321,7 @@ class BranchSidebar extends React.Component {
   render() {
     const {
       closeSidebar,
-      popupValues,
+      sidebarValues,
       isOpenSidebar,
       loading,
       intl: { formatMessage }
@@ -351,7 +351,7 @@ class BranchSidebar extends React.Component {
                     <Loader />
                   </Dimmer>
                   <CustomHighSegment basic>
-                    {popupValues ? (
+                    {sidebarValues ? (
                       <FormattedMessage id='sidebar.edit' defaultMessage='EDIT' />
                     ) : (
                       <FormattedMessage id='sidebar.addNew' defaultMessage='ADD NEW' />
@@ -414,8 +414,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    hasProvinces: state.settings.popupValues ? state.settings.popupValues.hasProvinces : false,
-    popupValues: state.settings.popupValues,
+    hasProvinces: state.settings.sidebarValues ? state.settings.sidebarValues.hasProvinces : false,
+    sidebarValues: state.settings.sidebarValues,
     country: state.settings.country,
     countries: state.settings.countries,
     provincesDropDown: state.settings.provincesDropDown,

@@ -15,7 +15,6 @@ const RectangleSummary = styled.div`
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   border: solid 1px #dee2e6;
   background-color: #ffffff;
-  margin-bottom: 16px;
   
   &[style*="pointer"]:hover [class*="DivNumbers"] {
     color: #2599d5;
@@ -123,7 +122,6 @@ const SummaryRectangle = ({
   return (
     <RectangleSummary
       style={{
-        marginBottom: isLastSummary ? '0px' : '16px',
         ...(onClickUrl && { cursor: 'pointer' })
       }}
       onClick={onClickUrl ? () => Router.push(onClickUrl) : undefined}

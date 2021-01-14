@@ -95,7 +95,7 @@ class BankAccountsSidebar extends React.Component {
   render() {
     const {
       closeSidebar,
-      popupValues,
+      sidebarValues,
       intl: { formatMessage },
       updating
     } = this.props
@@ -105,7 +105,7 @@ class BankAccountsSidebar extends React.Component {
         enableReinitialize
         initialValues={{
           ...initialFormValues,
-          ...popupValues
+          ...sidebarValues
         }}
         validationSchema={formValidation}
         onReset={closeSidebar}
@@ -122,14 +122,13 @@ class BankAccountsSidebar extends React.Component {
                 width='very wide'
                 style={{ width: '630px' }}
                 direction='right'
-                animation='overlay'
-              >
+                animation='overlay'>
                 <Dimmer inverted active={updating}>
                   <Loader />
                 </Dimmer>
                 <div>
                   <CustomHighSegment basic>
-                    {popupValues ? (
+                    {sidebarValues ? (
                       <FormattedMessage id='settings.EditBankAcc' defaultMessage='Edit Bank Account' />
                     ) : (
                       <FormattedMessage id='settings.AddBankAcc' defaultMessage='Add Bank Account' />
@@ -221,8 +220,7 @@ class BankAccountsSidebar extends React.Component {
                   <Button
                     secondary
                     onClick={() => this.submitForm()}
-                    data-test='settings_bank_account_popup_submit_btn'
-                  >
+                    data-test='settings_bank_account_popup_submit_btn'>
                     <FormattedMessage id='global.save' defaultMessage='Save'>
                       {text => text}
                     </FormattedMessage>
@@ -245,7 +243,7 @@ const mapDispatchToProps = {
 }
 const mapStateToProps = state => {
   return {
-    popupValues: state.settings.popupValues,
+    sidebarValues: state.settings.sidebarValues,
     updating: state.settings.updating,
     country: state.settings.country,
     currency: getSafe(() => state.settings.currency, currency)

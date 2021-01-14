@@ -289,19 +289,21 @@ class BankAccountsTable extends Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.tabClicked !== prevProps.tabClicked || this.props.isReloadBankAcounts) {
-      this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
-      this.props.getIdentity().then(resp => {
-        getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
-          this.props.getDwollaAccBalance()
-        getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
-          this.props.getVellociAccBalance()
-        if (getSafe(() => resp.value.identity.company.id, '')) {
-          this.props.getCompanyDetails(resp.value.identity.company.id)
-        }
-      })
-      this.props.reloadBankAccounts(false)
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.isReloadBankAcounts) {
+      await this.props.reloadBankAccounts(false)
+      setTimeout(async () => {
+        await this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
+        await this.props.getIdentity().then(resp => {
+          getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
+            this.props.getDwollaAccBalance()
+          getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
+            this.props.getVellociAccBalance()
+          if (getSafe(() => resp.value.identity.company.id, '')) {
+            this.props.getCompanyDetails(resp.value.identity.company.id)
+          }
+        })
+      }, 2500)
     }
   }
 

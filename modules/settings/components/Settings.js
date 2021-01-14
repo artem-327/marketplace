@@ -12,6 +12,7 @@ import Locations from './Locations/Locations'
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import UsersSidebar from './UserTable/UsersSidebar'
+import UsersPopup from './UserTable/UsersPopup'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsSidebar from './BankAccountsTable/BankAccountsSidebar'
 import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDocPopup'
@@ -301,10 +302,13 @@ class Settings extends Component {
       actionId,
       currentTab,
       isOpenPopup,
+      closePopup,
       isOpenUploadDocumentsPopup,
       isDwollaOpenPopup,
       isUserAdmin,
-      isOpenSidebar
+      isCompanyAdmin,
+      isOpenSidebar,
+      editedId
     } = this.props
 
     const tables = {
@@ -325,10 +329,22 @@ class Settings extends Component {
     }
 
     const popupForm = {
+      users: (
+        <UsersPopup
+          isOpenPopup={isOpenPopup}
+          closePopup={closePopup}
+          editedId={editedId}
+          isUserAdmin={isUserAdmin}
+          isCompanyAdmin={isCompanyAdmin}
+        />
+      ),
+      'credit-cards': <CreditCardsPopup />,
+      'guest-companies': <ClientCompanyPopup />
+    }
+
+    const sidebarForm = {
       users: <UsersSidebar />,
       'bank-accounts': <BankAccountsSidebar />,
-      'credit-cards': <CreditCardsPopup />,
-      'guest-companies': <ClientCompanyPopup />,
       logistics: <LogisticsSidebar />,
       documents: <DocumentManagerSidebar />
     }
@@ -343,7 +359,8 @@ class Settings extends Component {
 
     return (
       <>
-        {(isOpenPopup || isOpenSidebar) && popupForm[currentTab]}
+        {isOpenPopup && popupForm[currentTab]}
+        {isOpenSidebar && sidebarForm[currentTab]}
         {isOpenUploadDocumentsPopup && uploadDocForms[currentTab]}
         {/* {isDwollaOpenPopup && addDwollaForms[currentTab] && Router.push('/dwolla-register')} */}
         {tables[currentTab] || <p>This page is still under construction</p>}

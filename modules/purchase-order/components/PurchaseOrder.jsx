@@ -209,7 +209,8 @@ class PurchaseOrder extends Component {
       },
       () => {
         this.props.shippingChanged(this.state.selectedAddress)
-        if (!cart.weightLimitExceed && !isSetShippingQuoteId) this.getShippingQuotes(this.state.selectedAddress)
+        if (!cart.weightLimitExceed && !isSetShippingQuoteId && !cart.palletLimitExceed)
+          this.getShippingQuotes(this.state.selectedAddress)
       }
     )
   }
@@ -381,6 +382,7 @@ class PurchaseOrder extends Component {
     }
 
     let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
+    let palletLimitStr = cart.palletCountLimit ? `of ${cart.palletCountLimit}` : ''
 
     let isAnyItemHazardous = cart.cartItems.some(
       item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
@@ -450,7 +452,10 @@ class PurchaseOrder extends Component {
                         </VerticalUnpaddedColumn>
                       </StyledRow>
 
-                      {!cart.weightLimitExceed && this.state.selectedAddress && !isSetShippingQuoteId ? (
+                      {!cart.weightLimitExceed &&
+                      !cart.palletLimitExceed &&
+                      this.state.selectedAddress &&
+                      !isSetShippingQuoteId ? (
                         <SemanticContainer className='flex stretched' style={{ maxHeight: '220px' }}>
                           <QuoteRow className='flex stretched'>
                             <ShippingQuote
@@ -483,39 +488,46 @@ class PurchaseOrder extends Component {
                           </GridRow>
                         )
                       )}
-                      {cart.weightLimitExceed && this.state.selectedAddress && !isSetShippingQuoteId && (
-                        <>
-                          <GridRow>
-                            <GridColumn computer={16}>
-                              <CustomMessage warning>
-                                <CustomMessage.Header>
-                                  <Icon name='warning circle' />
-                                  {formatMessage({
-                                    id: 'cart.weightLimitExceeded.header',
-                                    defaultMessage:
-                                      'We are sorry, but no matching Shipping Quotes were provided by logistics company.'
-                                  })}
-                                </CustomMessage.Header>
-                                <CustomMessage.Content>
-                                  {formatMessage(
-                                    {
-                                      id: 'cart.weightLimitExceeded.content',
-                                      defaultMessage: `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
-                                    },
-                                    { limit: weightLimitStr }
-                                  )}
-                                </CustomMessage.Content>
-                              </CustomMessage>
-                            </GridColumn>
-                          </GridRow>
-                        </>
-                      )}
+                      {(cart.weightLimitExceed || cart.palletLimitExceed) &&
+                        this.state.selectedAddress &&
+                        !isSetShippingQuoteId && (
+                          <>
+                            <GridRow>
+                              <GridColumn computer={16}>
+                                <CustomMessage warning>
+                                  <CustomMessage.Header>
+                                    <Icon name='warning circle' />
+                                    {formatMessage({
+                                      id: 'cart.weightLimitExceeded.header',
+                                      defaultMessage:
+                                        'We are sorry, but no matching Shipping Quotes were provided by logistics company.'
+                                    })}
+                                  </CustomMessage.Header>
+                                  <CustomMessage.Content>
+                                    {formatMessage(
+                                      {
+                                        id: cart.weightLimitExceed
+                                          ? 'cart.weightLimitExceeded.content'
+                                          : 'cart.palletLimitExceeded.content',
+                                        defaultMessage: cart.weightLimitExceed
+                                          ? `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                          : `Your order pallet exceeds pallet limit ${palletLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                      },
+                                      { limit: cart.weightLimitExceed ? weightLimitStr : palletLimitStr }
+                                    )}
+                                  </CustomMessage.Content>
+                                </CustomMessage>
+                              </GridColumn>
+                            </GridRow>
+                          </>
+                        )}
 
                       {getSafe(() => shippingQuotes.rates, []).length === 0 &&
                         this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
                         !isSetShippingQuoteId &&
-                        !cart.weightLimitExceed && (
+                        !cart.weightLimitExceed &&
+                        !cart.palletLimitExceed && (
                           <GridRow>
                             <GridColumn computer={16}>
                               <CustomRectangle>
@@ -541,7 +553,9 @@ class PurchaseOrder extends Component {
                       {this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
                         !isSetShippingQuoteId &&
-                        (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
+                        (cart.weightLimitExceed ||
+                          getSafe(() => shippingQuotes.rates, []).length === 0 ||
+                          cart.palletLimitExceed) && (
                           <>
                             <TopUnpaddedRow>
                               <VerticalUnpaddedColumn computer={8}>
@@ -565,7 +579,9 @@ class PurchaseOrder extends Component {
 
                       {this.state.selectedAddress &&
                         !shippingQuotesAreFetching &&
-                        (cart.weightLimitExceed || getSafe(() => shippingQuotes.rates, []).length === 0) && (
+                        (cart.weightLimitExceed ||
+                          getSafe(() => shippingQuotes.rates, []).length === 0 ||
+                          cart.palletLimitExceed) && (
                           <>
                             {false && (
                               <Grid.Row>
