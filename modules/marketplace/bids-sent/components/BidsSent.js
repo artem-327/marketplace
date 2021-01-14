@@ -22,7 +22,8 @@ import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
-import BidsRowDetail from './BidsRowDetail'
+import BidsRowDetail from '../../components/BidsRowDetail'
+import RowDescription from '../../components/RowDescription'
 import moment from 'moment'
 import confirm from '~/src/components/Confirmable/confirm'
 import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
@@ -43,7 +44,7 @@ class BidsSent extends Component {
           name: 'description',
           title: <div></div>,
           width: 600,
-          maxWidth: 2000,
+          maxWidth: 2000
         },
         {
           name: 'createdAt',
@@ -152,7 +153,12 @@ class BidsSent extends Component {
         ),
         description: (
           <div onClick={() => this.handleRowClick(r)} style={{ paddingTop: '5px', cursor: 'pointer' }}>
-            text
+            <RowDescription
+              history={lastHistory}
+              productOffer={r.productOffer}
+              index={r.histories.length}
+              lastHistory={true}
+            />
           </div>
         ),
         createdAt: (
@@ -186,9 +192,8 @@ class BidsSent extends Component {
       }),
       callback: async () => {
         try {
-          await acceptOffer(row.id)
-          this.setState({ expandedRowIds: [] })
-          datagrid.loadData()
+          const { value } = await acceptOffer(row.id)
+          datagrid.updateRow(row.id, () => value)
         } catch (e) {
           console.error(e)
         }
@@ -201,9 +206,8 @@ class BidsSent extends Component {
       }),
       callback: async () => {
         try {
-          await rejectOffer(row.id)
-          this.setState({ expandedRowIds: [] })
-          datagrid.loadData()
+          const { value } = await rejectOffer(row.id)
+          datagrid.updateRow(row.id, () => value)
         } catch (e) {
           console.error(e)
         }
@@ -316,7 +320,6 @@ class BidsSent extends Component {
             showSelectAll={false}
             isToggleCellComponent={false}
             estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
-            data-test='marketplace_listings_row_action'
           />
         </div>
       </Container>

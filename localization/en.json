@@ -2022,6 +2022,8 @@
   "marketplace.productName": "Product Name",
   "marketplace.yourFobPriceOffer": "Your FOB price offer",
   "marketplace.messageToBuyer": "Message to Buyer",
+  "marketplace.messageToSeller": "Message to Seller",
+  "marketplace.messageFromBuyer": "Message from Buyer",
   "marketplace.messageFromSeller": "Message from Seller",
   "marketplace.YourTotalBid": "Your Total Bid",
   "marketplace.optional": "Optional",
@@ -2045,7 +2047,23 @@
   "marketplace.delete": "Delete",
   "marketplace.addToCart": "Add To Cart",
   "marketplace.enterQuantity": "Enter Quantity",
+
+  "marketplace.detailRow.userCompanyHasBid": "{name} of {company} has bid {fob} for {quantity} of {product}",
+  "marketplace.detailRow.youHaveOffered": "You have offered {fob} for {quantity} of {product}",
+
+
+  "marketplace.detailRow.userCompanyHasAccepted": "{name} of {company} has accepted {fob} for {quantity} of {product}",
+  "marketplace.detailRow.youHaveAccepted": "You have accepted {fob} for {quantity} of {product}",
+
+  "marketplace.detailRow.userCompanyHasDeclined": "{name} of {company} has declined {fob} for {quantity} of {product}",
+  "marketplace.detailRow.youHaveDeclined": "You have declined {fob} for {quantity} of {product}",
+
   "marketplace.detailRow.userCompanyHasCountered": "{name} of {company} has countered with {fob} for {quantity} of {product}",
+  "marketplace.detailRow.youHaveCountered": "You have countered with {fob} for {quantity} of {product}",
+
+
+
+
   "marketplace.confirm.deleteBid.Header": "Delete Bid",
   "marketplace.confirm.deleteBid.Content": "Do you really want to remove Bid?",
   "operations.tables.shippingQuotes.buttonAdd": "Add Shipping Quote",

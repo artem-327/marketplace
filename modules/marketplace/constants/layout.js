@@ -201,7 +201,7 @@ export const PriceInput = ({ name, inputProps, label, currencyLabel }) => {
 }
 
 export const DefaultIcon = (
-  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38">
     <g fill="none" fill-rule="evenodd">
       <g>
         <g>

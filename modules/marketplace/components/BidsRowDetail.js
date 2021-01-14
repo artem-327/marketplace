@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as Actions from '../../actions'
+import * as Actions from '../actions'
 import { Input, Button, TextArea, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import {
   Form,
@@ -33,6 +33,7 @@ import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import ErrorFocus from '~/components/error-focus'
 import { Schedule } from '@material-ui/icons'
+import RowDescription from './RowDescription'
 import {
   DefaultIcon,
   IconWrapper,
@@ -40,13 +41,14 @@ import {
   NameWrapper,
   HistoryRow,
   HistoryDetailGrid,
-  HistoryDetailRow
-} from '../../constants/layout'
+  HistoryDetailRow,
+  TableSegment,
+  StyledList,
+  StyledRectangle,
+  PriceInput,
+  BottomButtons
+} from '../constants/layout'
 import moment from 'moment'
-
-import { TableSegment, StyledList, StyledRectangle, PriceInput, BottomButtons } from '../../constants/layout'
-import * as AT from "../../../admin/action-types";
-import * as api from "../../../admin/api";
 
 export const DetailRow = styled.div`
   text-align: left;
@@ -108,27 +110,17 @@ const StyledGrid = styled(Grid)`
   }
 `
 
-const RowDescription = styled.div`
-  white-space: nowrap;
-  display: flex;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`
-
-const BlueText = styled.div`
-  color: #2599d5;
-  margin: 0 4px;
-`
-
-const formValidation = () =>
+const formValidation = (requiredInputs) =>
   Yup.object().shape({
-    pricePerUOM: Yup.string().trim().required(errorMessages.requiredMessage),
-    pkgAmount: Yup.number()
-      .min(1, errorMessages.minimum(1))
-      .required(errorMessages.requiredMessage)
-      .test('int', errorMessages.integer, val => {
-        return val % 1 === 0
-      })
+    ...(requiredInputs && {
+      pricePerUOM: Yup.string().trim().required(errorMessages.requiredMessage),
+      pkgAmount: Yup.number()
+        .min(1, errorMessages.minimum(1))
+        .required(errorMessages.requiredMessage)
+        .test('int', errorMessages.integer, val => {
+          return val % 1 === 0
+        })
+    })
   })
 
 class BidsRowDetail extends React.Component {
@@ -190,10 +182,8 @@ class BidsRowDetail extends React.Component {
         removeEmpty(body)
 
         try {
-          const response = await counterOffer(popupValues.id, body)
-          console.log('!!!!!!!!!! submitOffer counterOffer response', response)
-          // ! ! update row only
-          datagrid.loadData()
+          const { value } = await counterOffer(popupValues.id, body)
+          datagrid.updateRow(popupValues.id, () => value)
           onClose(popupValues)
         } catch (e) {
           console.error(e)
@@ -202,8 +192,8 @@ class BidsRowDetail extends React.Component {
       }
       case 'accept': {
         try {
-          await acceptOffer(popupValues.id)
-          datagrid.loadData()
+          const { value } = await acceptOffer(popupValues.id)
+          datagrid.updateRow(popupValues.id, () => value)
           onClose(popupValues)
         } catch (e) {
           console.error(e)
@@ -212,8 +202,8 @@ class BidsRowDetail extends React.Component {
       }
       case 'reject': {
         try {
-          await rejectOffer(popupValues.id)
-          datagrid.loadData()
+          const { value } = await rejectOffer(popupValues.id)
+          datagrid.updateRow(popupValues.id, () => value)
           onClose(popupValues)
         } catch (e) {
           console.error(e)
@@ -245,25 +235,6 @@ class BidsRowDetail extends React.Component {
     )
   }
 
-  getRowText = ({ row, index, fob, quantity, product }) => {
-    const hasUserName = !!row.createdBy.name
-
-    return (
-      <RowDescription>
-        <FormattedMessage
-          id='marketplace.detailRow.userCompanyHasCountered'
-          values={{
-            name: <BlueText>{row.createdBy.name}</BlueText>,
-            company: <BlueText>{row.createdBy.company.name}</BlueText>,
-            fob: <BlueText>{fob}</BlueText>,
-            quantity: <BlueText>{quantity}</BlueText>,
-            product: <BlueText>{product}</BlueText>
-          }}
-        />
-      </RowDescription>
-    )
-  }
-
   render() {
     const {
       intl: { formatMessage },
@@ -275,22 +246,24 @@ class BidsRowDetail extends React.Component {
       listFobPriceUnit,
       packagingType,
       packagingUnit,
-      packagingSize
+      packagingSize,
+      seller
     } = this.props
 
     const { detailExpandedIds, radioState } = this.state
 
     //console.log('!!!!!!!!!! aaaaa popupValues', popupValues)
 
-    const histories = popupValues.histories.slice(1)
+    const histories = popupValues.histories
     const lastHistory = popupValues.histories[popupValues.histories.length - 1]
+    const disabledInputPrice = radioState !== 'counter'
 
     return (
       <Formik
         autoComplete='off'
         enableReinitialize
         initialValues={this.state.initialFormValues}
-        validationSchema={formValidation()}
+        validationSchema={formValidation(!disabledInputPrice)}
         onSubmit={this.submitOffer}>
         {formikProps => {
           let { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting } = formikProps
@@ -302,8 +275,6 @@ class BidsRowDetail extends React.Component {
 
           const listFobPrice = getPricing(popupValues.productOffer, amount).price
           const totalListPrice = amount * packagingSize * listFobPrice
-
-          const disabledInputPrice = radioState !== 'counter'
 
           return (
             <DetailRow>
@@ -345,24 +316,12 @@ class BidsRowDetail extends React.Component {
                                   </NameWrapper>
                                 </GridColumn>
                                 <GridColumn width={9}>
-                                  {this.getRowText({
-                                      row: r,
-                                      index,
-                                      fob: (
-                                        <>
-                                          <FormattedNumber
-                                            minimumFractionDigits={2}
-                                            maximumFractionDigits={2}
-                                            style='currency'
-                                            currency={currency}
-                                            value={r.pricePerUOM}
-                                          />
-                                          {listFobPriceUnit}
-                                        </>
-                                      ),
-                                    quantity: `${r.pkgAmount} (${packagingSize} ${packagingUnit} ${packagingType})`,
-                                    product: this.props.productName
-                                  })}
+                                  <RowDescription
+                                    history={r}
+                                    productOffer={productOffer}
+                                    index={index}
+                                    lastHistory={histories.length === (index - 1)}
+                                  />
                                 </GridColumn>
                                 <GridColumn width={3} style={{ color: '#848893' }}>
                                   {moment(r.createdAt).fromNow()}
@@ -509,9 +468,10 @@ class BidsRowDetail extends React.Component {
                     <GridColumn>
                       <StyledRectangle className='dark-grey'>
                         <div className='header'>
-                          <FormattedMessage
-                            id='marketplace.messageFromSeller'
-                            defaultMessage='Message from Seller' />
+                          {seller
+                            ? <FormattedMessage id='marketplace.messageFromBuyer' defaultMessage='Message from Buyer'/>
+                            : <FormattedMessage id='marketplace.messageFromSeller' defaultMessage='Message from Seller'/>
+                          }
                         </div>
                         <div className='message'>
                           {lastHistory.message}
@@ -593,7 +553,7 @@ class BidsRowDetail extends React.Component {
                         checked={radioState === 'counter'}
                         value={'counter'}
                         onChange={(_e, { value }) => {
-                          this.setState({ radioState: value })
+                          this.setState({ radioState: value, touched: true })
                         }}
                         label={formatMessage({ id: 'marketplace.counter', defaultMessage: 'Counter' })}
                       />
@@ -601,7 +561,7 @@ class BidsRowDetail extends React.Component {
                         checked={radioState === 'accept'}
                         value={'accept'}
                         onChange={(_e, { value }) => {
-                          this.setState({ radioState: value })
+                          this.setState({ radioState: value, touched: true })
                         }}
                         label={formatMessage({ id: 'marketplace.accept', defaultMessage: 'Accept' })}
                       />
@@ -609,7 +569,7 @@ class BidsRowDetail extends React.Component {
                         checked={radioState === 'reject'}
                         value={'reject'}
                         onChange={(_e, { value }) => {
-                          this.setState({ radioState: value })
+                          this.setState({ radioState: value, touched: true })
                         }}
                         label={formatMessage({ id: 'marketplace.reject', defaultMessage: 'Reject' })}
                       />
@@ -619,7 +579,10 @@ class BidsRowDetail extends React.Component {
                         name='message'
                         label={
                           <MessageInputHeader>
-                            <FormattedMessage id='marketplace.messageToBuyer' defaultMessage='Message to Buyer' />
+                            {seller
+                              ? <FormattedMessage id='marketplace.messageToBuyer' defaultMessage='Message to Buyer'/>
+                              : <FormattedMessage id='marketplace.messageToSeller' defaultMessage='Message to Seller'/>
+                            }
                             <SmallText>
                               <FormattedMessage id='marketplace.optional' defaultMessage='Optional' />
                             </SmallText>
@@ -630,7 +593,8 @@ class BidsRowDetail extends React.Component {
                           placeholder: formatMessage({
                             id: 'marketplace.enterMessage',
                             defaultMessage: 'Enter Message...'
-                          })
+                          }),
+                          disabled: disabledInputPrice
                         }}
                       />
                     </GridColumn>
