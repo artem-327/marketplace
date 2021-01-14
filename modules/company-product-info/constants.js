@@ -2,7 +2,7 @@ import { FormattedMessage } from 'react-intl'
 
 export const tabs = [
   { text: { id: 'global.ep.info', defaultMessage: 'Info(EP)' }, key: 'info' },
-  { text: { id: 'global.tds', defaultMessage: 'TDS(EP)' }, key: 'tds' },
+
   {
     text: { id: 'global.ep.properties', defaultMessage: 'Properties(EP)' },
     key: 'properties'
