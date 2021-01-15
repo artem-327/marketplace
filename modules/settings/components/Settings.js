@@ -15,6 +15,7 @@ import UsersSidebar from './UserTable/UsersSidebar'
 import UsersPopup from './UserTable/UsersPopup'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsSidebar from './BankAccountsTable/BankAccountsSidebar'
+import SendLinkPopup from './BankAccountsTable/SendLinkPopup'
 import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDocPopup'
 import TablesHandlers from './TablesHandlers'
 
@@ -35,7 +36,15 @@ import { companyDetailsTab } from '../contants'
 
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, renderCopyright, closePopup, closeSidebar } from '../actions'
+import {
+  addTab,
+  tabChanged,
+  resetSettings,
+  renderCopyright,
+  closePopup,
+  closeSidebar,
+  inviteToAddBankAccounts
+} from '../actions'
 
 import { updateCompany } from '~/modules/auth/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -308,7 +317,10 @@ class Settings extends Component {
       isUserAdmin,
       isCompanyAdmin,
       isOpenSidebar,
-      editedId
+      editedId,
+      inviteToAddBankAccounts,
+      companyId,
+      companyName
     } = this.props
 
     const tables = {
@@ -339,7 +351,16 @@ class Settings extends Component {
         />
       ),
       'credit-cards': <CreditCardsPopup />,
-      'guest-companies': <ClientCompanyPopup />
+      'guest-companies': <ClientCompanyPopup />,
+      'bank-accounts': (
+        <SendLinkPopup
+          isOpenPopup={isOpenPopup}
+          closePopup={closePopup}
+          inviteToAddBankAccounts={inviteToAddBankAccounts}
+          companyId={companyId}
+          companyName={companyName}
+        />
+      )
     }
 
     const sidebarForm = {
@@ -470,6 +491,7 @@ const mapStateToProps = ({ settings, auth }) => {
     documentsOwner: getSafe(() => settings.documentsOwner, []),
     isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false),
     companyId: getSafe(() => auth.identity.company.id, false),
+    companyName: getSafe(() => auth.identity.company.name, false),
     hasLogo: getSafe(() => auth.identity.company.hasLogo, false)
   }
 }
@@ -484,5 +506,6 @@ export default connect(mapStateToProps, {
   getIdentity,
   renderCopyright,
   closePopup,
-  closeSidebar
+  closeSidebar,
+  inviteToAddBankAccounts
 })(withToastManager(Settings))

@@ -269,5 +269,17 @@ export default {
   vellociAddAcount: (publicToken, metadata) =>
     api
       .post(`/prodex/api/payments/bank-accounts/velloci/add?publicToken=${publicToken}`, metadata)
+      .then(response => response.data),
+  deleteInstitution: institutionId =>
+    api
+      .delete(`/prodex/api/payments/bank-accounts/velloci/institution/${institutionId}`)
+      .then(response => response.data),
+  inviteToAddBankAccounts: (companyId, emailAddress, name) => {
+    const id = companyId ? `companyId=${companyId}&` : ''
+    return api
+      .post(
+        `/prodex/api/payments/bank-accounts/velloci/invite-to-add-bank-accounts?${id}emailAddress=${emailAddress}&name=${name}`
+      )
       .then(response => response.data)
+  }
 }

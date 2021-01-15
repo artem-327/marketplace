@@ -452,6 +452,7 @@ class _Table extends Component {
     columnAction: pt.string,
     toggleColumnSettingModal: pt.func,
     isOpenColumnSettingModal: pt.bool,
+    isBankTable: pt.bool,
     estimatedRowHeight: pt.number,
     defaultHiddenColumns: pt.array
   }
@@ -492,6 +493,7 @@ class _Table extends Component {
     columnActions: '',
     toggleColumnSettingModal: () => {},
     isOpenColumnSettingModal: false,
+    isBankTable: false,
     estimatedRowHeight: 0
   }
 
@@ -971,6 +973,7 @@ class _Table extends Component {
       isOpenColumnSettingModal,
       toggleColumnSettingModal,
       estimatedRowHeight,
+      isBankTable,
       ...restProps
     } = this.props
     const {
@@ -1189,13 +1192,14 @@ class _Table extends Component {
                   ) : (
                     <span {...restProps}>
                       <strong>{column.title || column.name}: </strong>
-                      {children || String(row.value)}
+                      <strong>{children || String(row.value)}</strong>
                     </span>
                   )
                 }
                 cellComponent={props => (
                   <GroupCell
                     {...this.getGroupRowCheckboxState(props.row.key)}
+                    isBankTable={isBankTable}
                     rowSelection={rowSelection}
                     hideActions={groupActions ? false : true}
                     hideCheckboxes={hideCheckboxes}
@@ -1203,7 +1207,8 @@ class _Table extends Component {
                     actionsDropdown={rowActionsCellFormatter({
                       column: { actions: groupActions ? groupActions(props.row) : null },
                       row: props.row,
-                      groupLength: getChildGroups(rows).find(group => props.row.value === group.key).groupLength
+                      groupLength: getChildGroups(rows).find(group => props.row.value === group.key).groupLength,
+                      isBankTable
                     })}
                     {...props}
                   />
