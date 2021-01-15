@@ -135,7 +135,9 @@ export const initialState = {
   vellociAccBalance: null,
   vellociToken: '',
   isReloadBankAcounts: false,
-  sidebarValues: null
+  sidebarValues: null,
+  isHideInactiveAccounts: false,
+  institutId: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -157,7 +159,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null,
-        editedId: null
+        editedId: null,
+        isOpenPopupDeleteInstitution: false
       }
     }
     case AT.OPEN_SIDEBAR: {
@@ -1570,6 +1573,67 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isReloadBankAcounts: payload
+      }
+    }
+
+    /* DELETE_INSTITUTION */
+
+    case AT.DELETE_INSTITUTION_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DELETE_INSTITUTION_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.DELETE_INSTITUTION_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.HIDE_INACTIVE_ACCOUNTS: {
+      return {
+        ...state,
+        isHideInactiveAccounts: payload
+      }
+    }
+
+    /* INVITE_TO_ADD_BANK_ACCOUNTS */
+
+    case AT.INVITE_TO_ADD_BANK_ACCOUNTS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.INVITE_TO_ADD_BANK_ACCOUNTS_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.INVITE_TO_ADD_BANK_ACCOUNTS_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.OPEN_POPUP_DELETE_INSTITUTION: {
+      return {
+        ...state,
+        isOpenPopupDeleteInstitution: true,
+        institutId: payload
       }
     }
 

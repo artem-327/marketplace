@@ -1768,6 +1768,7 @@ i.file {
           color: #20273a;
           line-height: 19px;
 
+          .settings_bankaccounts &,
           .inventory-wrapper &,
           .marketplace-wrapper & {
             border-width: 1px 0;
@@ -1907,6 +1908,7 @@ i.file {
         padding: 10px !important;
         line-height: 19px;
 
+        .settings_bankaccounts &,
         .inventory-wrapper &,
         .marketplace-wrapper & {
           border-width: 0 0 1px;
@@ -1921,6 +1923,11 @@ i.file {
 
           &.p-0 + td {
             border-width: 0 0 1px 1px;
+            box-shadow: 0 0 0 0 transparent;
+          }
+
+          &.p-0 + td:nth-last-child(2) {
+            border-width: 0 1px 1px;
             box-shadow: 0 0 0 0 transparent;
           }
         }
@@ -2134,6 +2141,7 @@ input[type='number'] {
     NEW INVENTORY/MARKETPLACE DESIGN
    ------------------------------------------------------- */
 
+.settings_bankaccounts,
 .listings-wrapper,
 .marketplace-wrapper {
   .table-responsive {
@@ -2280,6 +2288,29 @@ input[type='number'] {
               }
             }
 
+            &:nth-child(2):nth-last-child(2) {
+              position: relative;
+              border-bottom-left-radius: 3px;
+              border-bottom-right-radius: 3px;
+              padding-left: 20px !important;
+              padding-right: 20px !important;
+
+              &:after {
+                content: '';
+                position: absolute;
+                left: -1px;
+                right: -1px;
+                bottom: 100%;
+                display: block;
+                width: auto;
+                height: 3px;
+                border-width: 0 1px 1px;
+                border-style: solid;
+                border-color: #dde2e6;
+                background: #fff;
+              }
+            }
+
             span[class*='table-header-title'] {
               display: inline-block;
               width: calc(100% - 18px);
@@ -2337,6 +2368,20 @@ input[type='number'] {
                 }
               }
 
+              &:nth-child(2):nth-last-child(2) {
+                padding-left: 20px !important;
+                padding-right: 10px !important;
+
+                &:after {
+                  left: -1px;
+                  right: -1px;
+                  border-width: 1px 1px 0;
+                  border-top-left-radius: 3px;
+                  border-top-right-radius: 3px;
+                  box-shadow: 0 -5px 0 0 #f8f9fb, -5px -3px 0 3px #f8f9fb, 5px -3px 0 3px #f8f9fb;
+                }
+              }
+
               div.group-right svg {
                 color: #848893;
               }
@@ -2379,6 +2424,32 @@ input[type='number'] {
                   content: none !important;
                   display: none !important;
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.settings_bankaccounts {
+  .table-responsive {
+    table.table {
+      tbody {
+        tr {
+          &.group-row {
+            td {
+              padding-bottom: 8px !important;
+            }
+          }
+
+          td {
+            padding: 0 10px 10px !important;
+
+            &:nth-child(2):nth-last-child(2) {
+              &:after {
+                border-width: 0 1px;
               }
             }
           }

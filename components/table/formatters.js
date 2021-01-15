@@ -18,17 +18,17 @@ const DivName = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  
+
   .group-name {
     font-weight: 400;
     color: #20273a;
-    
+
     > span {
       color: #848893;
     }
   }
-    
-  &.has-actions:hover {  
+
+  &.has-actions:hover {
     .group-name {
       font-weight: bold;
       color: #2599d5;
@@ -36,8 +36,15 @@ const DivName = styled.div`
         font-weight: bold;
         color: #2599d5;
       }
-    }      
+    }
   }
+`
+
+const SpanBankName = styled.span`
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.11;
+  color: #20273a;
 `
 
 const getDropdownItems = (actions = [], row) => {
@@ -94,7 +101,7 @@ function repositionMenu(element) {
   }
 }
 
-export function rowActionsCellFormatter({ column: { actions, name }, row, groupLength }) {
+export function rowActionsCellFormatter({ column: { actions, name }, row, groupLength, isBankTable }) {
   const dropdownItems = getDropdownItems(actions, row)
 
   // Don't display if all dropdownItems are null
@@ -103,7 +110,9 @@ export function rowActionsCellFormatter({ column: { actions, name }, row, groupL
   let trigger = row[name]
   if (row.groupedBy && row.key) {
     const nameGroup = row.key.split('_')[0]
-    trigger = (
+    trigger = isBankTable ? (
+      <SpanBankName>{nameGroup ? nameGroup : 'Unmapped'}</SpanBankName>
+    ) : (
       <span className='group-name'>
         {nameGroup ? nameGroup : 'Unmapped'} <span>({groupLength})</span>
       </span>
@@ -113,7 +122,7 @@ export function rowActionsCellFormatter({ column: { actions, name }, row, groupL
   return displayMenu ? (
     <DropdownActions
       icon=''
-      trigger={<DivName className={actions &&actions.length ? 'has-actions' : ''}>{trigger}</DivName>}
+      trigger={<DivName className={actions && actions.length ? 'has-actions' : ''}>{trigger}</DivName>}
       onOpen={e => repositionMenu(e.currentTarget)}>
       <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
     </DropdownActions>

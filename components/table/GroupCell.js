@@ -31,6 +31,7 @@ const Cell = ({
   indeterminate,
   hideCheckboxes,
   hideActions,
+  isBankTable,
   ...restProps
 }) => {
   const handleClick = () => onToggle()
@@ -54,31 +55,38 @@ const Cell = ({
         </td>
       )}
       {hideActions ? (
-        <td className={'dx-g-bs4-cursor-pointer'} colSpan={colSpan - (rowSelection && !hideCheckboxes ? 5 : 4)} onClick={handleClick}>
+        <td
+          className={'dx-g-bs4-cursor-pointer'}
+          colSpan={colSpan - (rowSelection && !hideCheckboxes ? 5 : 4)}
+          onClick={handleClick}>
           {actionsDropdown}
         </td>
       ) : (
-        <td className={'actions'} colSpan={colSpan - (rowSelection && !hideCheckboxes ? 5 : 4)}>{actionsDropdown}</td>
+        <td className={'actions'} colSpan={colSpan - (rowSelection && !hideCheckboxes ? 5 : 4)}>
+          {actionsDropdown}
+        </td>
       )}
-      <td
-        key={row.key}
-        colSpan={2}
-        className={cn('dx-g-bs4-cursor-pointer', className)}
-        onClick={handleClick}
-        {...restProps}>
-        <div className='group-content'>
-          <div className='group-right'>
-            {expanded ? (
-              <ChevronDown onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
-            ) : (
-              <ChevronRight onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
-            )}
+      {!isBankTable ? (
+        <td
+          key={row.key}
+          colSpan={2}
+          className={cn('dx-g-bs4-cursor-pointer', className)}
+          onClick={handleClick}
+          {...restProps}>
+          <div className='group-content'>
+            <div className='group-right'>
+              {expanded ? (
+                <ChevronDown onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
+              ) : (
+                <ChevronRight onToggle={onToggle} data-test='GroupCheckbox_onToggle_icon' />
+              )}
+            </div>
+            <Content column={column} row={row}>
+              {children}
+            </Content>
           </div>
-          <Content column={column} row={row}>
-            {children}
-          </Content>
-        </div>
-      </td>
+        </td>
+      ) : null}
       <td className='p-0'></td>
     </>
   )
