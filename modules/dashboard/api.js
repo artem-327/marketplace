@@ -1,7 +1,7 @@
 import api from '~/api'
 
-export async function getDashboardData() {
-  return await api.get(`/prodex/api/dashboard`)
+export async function getDashboardData(dateFrom) {
+  return await api.get(`/prodex/api/dashboard${dateFrom ? ('?from=' + dateFrom): ''}`)
 }
 
 export async function getDailyStatistics(dateFrom, dateTo) {

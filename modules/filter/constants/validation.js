@@ -148,20 +148,24 @@ export const validationSchema = openedSaveFilter =>
           notificationMail: Yup.string()
             .trim()
             .email(errorMessagesGlobal.invalidEmail),
-          notificationPhone: phoneValidation()
+          notificationPhone: phoneValidation(10)
         })
       })
     })
   })
 
 export const savedFilterValidation = Yup.lazy(values => {
-  if (values.checkboxes.notifyMail) {
+  if (values.checkboxes.notifyMail || values.checkboxes.notifyPhone) {
     return Yup.object().shape({
       notifications: Yup.object().shape({
+        ...(values.checkboxes.notifyMail && {
         notificationMail: Yup.string()
           .trim()
-          .email(errorMessagesGlobal.invalidEmail),
-        notificationPhone: phoneValidation()
+          .email(errorMessagesGlobal.invalidEmail)
+        }),
+        ...(values.checkboxes.notifyPhone && {
+          notificationPhone: phoneValidation(10)
+        })
       })
     })
   }
