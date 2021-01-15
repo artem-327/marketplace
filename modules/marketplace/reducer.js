@@ -18,6 +18,7 @@ export const initialState = {
   broadcastedProductOffersPageLoaded: -1,
   warehousesList: [],
   loading: false,
+  updating: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
   datagridFilter: { filters: [] },
@@ -27,7 +28,11 @@ export const initialState = {
   holds: [],
   typeHolds: 'my',
   countHolds: '',
-  tableHandlersFiltersHolds: null
+  tableHandlersFiltersHolds: null,
+  tableHandlersFiltersBidsSent: null,
+  tableHandlersFiltersBidsReceived: null,
+  isOpenPopup: false,
+  popupValues: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -241,6 +246,63 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         typeHolds: payload
+      }
+    }
+
+    case AT.MARKETPLACE_OPEN_POPUP: {
+      return {
+        ...state,
+        isOpenPopup: true,
+        popupValues: action.payload
+      }
+    }
+    case AT.MARKETPLACE_CLOSE_POPUP: {
+      return {
+        ...state,
+        isOpenPopup: false,
+        popupValues: null
+      }
+    }
+
+    case AT.MARKETPLACE_MAKE_OFFER_PENDING: {
+      return {
+        ...state,
+        updating: true
+      }
+    }
+
+    case AT.MARKETPLACE_MAKE_OFFER_REJECTED:
+    case AT.MARKETPLACE_MAKE_OFFER_FULFILLED: {
+      return {
+        ...state,
+        updating: false
+      }
+    }
+
+    case AT.MARKETPLACE_ADD_OFFER_TO_CART_PENDING:
+    case AT.MARKETPLACE_DELETE_OFFER_PENDING:
+    case AT.MARKETPLACE_ACCEPT_OFFER_PENDING:
+    case AT.MARKETPLACE_REJECT_OFFER_PENDING:
+    case AT.MARKETPLACE_COUNTER_OFFER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.MARKETPLACE_ADD_OFFER_TO_CART_FULFILLED:
+    case AT.MARKETPLACE_ADD_OFFER_TO_CART_REJECTED:
+    case AT.MARKETPLACE_DELETE_OFFER_FULFILLED:
+    case AT.MARKETPLACE_DELETE_OFFER_REJECTED:
+    case AT.MARKETPLACE_ACCEPT_OFFER_FULFILLED:
+    case AT.MARKETPLACE_ACCEPT_OFFER_REJECTED:
+    case AT.MARKETPLACE_REJECT_OFFER_FULFILLED:
+    case AT.MARKETPLACE_REJECT_OFFER_REJECTED:
+    case AT.MARKETPLACE_COUNTER_OFFER_FULFILLED:
+    case AT.MARKETPLACE_COUNTER_OFFER_REJECTED: {
+      return {
+        ...state,
+        loading: false
       }
     }
 

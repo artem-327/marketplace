@@ -180,3 +180,23 @@ export const getFormattedAddress = address => {
     address.country
   )
 }
+
+// Taken from src/utils/functions.js without any modifications
+export function getPricing(offerDetail, quantity) {
+  if (offerDetail.pricingTiers) {
+    let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricingTiers[0].pricePerUOM
+
+    if (tiers instanceof Array) {
+      let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
+      let index = 0
+      for (let i = 0; i < sortedTiers.length; i++) {
+        if (quantity >= sortedTiers[i].quantityFrom) {
+          index = i
+        } else break
+      }
+      return { quantityFrom: offerDetail.minPkg, price: sortedTiers[index].pricePerUOM }
+    }
+
+    return { quantityFrom: offerDetail.minPkg, price: tiers[0].pricePerUOM }
+  }
+}
