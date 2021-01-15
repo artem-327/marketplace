@@ -17,7 +17,7 @@ export const GridColumnInputEmail = styled(Grid.Column)`
 
 export const DivCircle = styled.div`
   align-self: center;
-  margin: 5px;
+  margin: 5px 10px 5px 5px;
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -35,6 +35,7 @@ export const StatusLabel = styled(Label)`
   span {
     vertical-align: text-top;
     padding-left: 4px;
+    line-height: 8px;
   }
 `
 

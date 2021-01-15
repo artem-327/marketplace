@@ -445,7 +445,7 @@ class BankAccountsTable extends Component {
       const accountRow = (
         <div style={{ display: 'flex' }}>
           <DivCircle backgroundColor={backgroundColorStatus[row.status]} />
-          <span style={{ color: colorAccountName[row.status] || '#20273a' }}>{row.accountName.toUpperCase()}</span>
+          <span style={{ color: colorAccountName[row.status] || '#20273a', lineHeight: '22px' }}>{row.accountName.toUpperCase()}</span>
           {preferredBankAccountId === row.id || preferredBankAccountId === row.account_public_id ? (
             <StatusLabel horizontal>
               <Check color='#84c225' size='14' strokeWidth='4' />
@@ -489,7 +489,7 @@ class BankAccountsTable extends Component {
           institutId={institutId}
         />
         {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
-          <div className='flex stretched listings-wrapper'>
+          <div className='flex stretched settings_bankaccounts listings-wrapper'>
             <ProdexTable
               isBankTable
               tableName='settings_bankaccounts'

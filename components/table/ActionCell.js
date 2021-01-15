@@ -68,6 +68,11 @@ export const RowDropdownIcon = styled.div`
     height: 16px !important;
     color: #848893 !important;
   }
+  
+  .settings_bankaccounts & {
+    margin-left: -6px;
+    margin-right: 0;
+  }
 `
 
 class ActionCell extends Component {
