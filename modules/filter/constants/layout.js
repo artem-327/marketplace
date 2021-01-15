@@ -149,6 +149,16 @@ export const FlexContent = styled.div`
   
   .dimmer {
     background: rgba(0, 0, 0, 0.25) !important;
+  }
+  
+  .scrollbar-container {
+    position: relative;
+    
+    > .ps__rail-x,
+    > .ps__rail-y {
+      position: absolute;
+      display: none !important;
+    }
   }  
 `
 
