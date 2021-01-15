@@ -2038,6 +2038,8 @@
   "marketplace.totalOfferedPrice": "Total Offered Price",
   "marketplace.enterCounterBid": "Enter Counter Bid",
   "marketplace.or": "or",
+  "marketplace.bid": "Bid",
+  "marketplace.checkout": "Checkout",
   "marketplace.send": "Send",
   "marketplace.close": "Close",
   "marketplace.submit": "Submit",
@@ -2047,23 +2049,17 @@
   "marketplace.delete": "Delete",
   "marketplace.addToCart": "Add To Cart",
   "marketplace.enterQuantity": "Enter Quantity",
-
   "marketplace.detailRow.userCompanyHasBid": "{name} of {company} has bid {fob} for {quantity} of {product}",
   "marketplace.detailRow.youHaveOffered": "You have offered {fob} for {quantity} of {product}",
-
-
   "marketplace.detailRow.userCompanyHasAccepted": "{name} of {company} has accepted {fob} for {quantity} of {product}",
   "marketplace.detailRow.youHaveAccepted": "You have accepted {fob} for {quantity} of {product}",
-
   "marketplace.detailRow.userCompanyHasDeclined": "{name} of {company} has declined {fob} for {quantity} of {product}",
   "marketplace.detailRow.youHaveDeclined": "You have declined {fob} for {quantity} of {product}",
-
   "marketplace.detailRow.userCompanyHasCountered": "{name} of {company} has countered with {fob} for {quantity} of {product}",
   "marketplace.detailRow.youHaveCountered": "You have countered with {fob} for {quantity} of {product}",
-
-
-
-
+  "marketplace.detailRow.youWillBeNotified": "You'll be notified when they submit their purchase request.",
+  "marketplace.detailRow.youMayCheckout": "You may now checkout with this order",
+  "marketplace.detailRow.youMaySubmitBid": "You may submit a new bid here",
   "marketplace.confirm.deleteBid.Header": "Delete Bid",
   "marketplace.confirm.deleteBid.Content": "Do you really want to remove Bid?",
   "operations.tables.shippingQuotes.buttonAdd": "Add Shipping Quote",

@@ -27,6 +27,7 @@ import RowDescription from '../../components/RowDescription'
 import moment from 'moment'
 import confirm from '~/src/components/Confirmable/confirm'
 import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
+import MakeOfferPopup from '../../listings/components/MakeOfferPopup'
 
 class BidsSent extends Component {
   constructor(props) {
@@ -156,7 +157,7 @@ class BidsSent extends Component {
             <RowDescription
               history={lastHistory}
               productOffer={r.productOffer}
-              index={r.histories.length}
+              index={r.histories.length - 1}
               lastHistory={true}
             />
           </div>
@@ -275,7 +276,8 @@ class BidsSent extends Component {
     const {
       datagrid,
       intl,
-      loading
+      loading,
+      isOpenPopup
     } = this.props
     const { columns, fixed, openFilterPopup, expandedRowIds } = this.state
     let { formatMessage } = intl
@@ -322,6 +324,7 @@ class BidsSent extends Component {
             estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
           />
         </div>
+        {isOpenPopup && <MakeOfferPopup />}
       </Container>
     )
   }

@@ -27,8 +27,6 @@ export const approveHold = id => api.patch(`/prodex/api/holds/${id}/approve`)
 
 export const toCartHold = id => api.patch(`/prodex/api/holds/${id}/to-cart`)
 
-// ! ! ! ! ! ******************************************************************************
-
 export const makeOffer = body => {
   return api.post(`/prodex/api/product-offer-bids`, body).then(response => response.data)
 }

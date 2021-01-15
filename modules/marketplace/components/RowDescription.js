@@ -78,7 +78,7 @@ class RowDescription extends React.Component {
         messageId = thisUser
           ? 'marketplace.detailRow.youHaveCountered'
           : 'marketplace.detailRow.userCompanyHasCountered'
-      } else {
+      } else {  // First history - Bid
         messageId = thisUser
           ? 'marketplace.detailRow.youHaveOffered'
           : 'marketplace.detailRow.userCompanyHasBid'

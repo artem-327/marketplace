@@ -292,8 +292,8 @@ export const BottomButtons = styled.div`
   box-shadow: inset 0 1px 0 0 #dee2e6;
   background-color: rgba(255, 255, 255, 0);
   padding: 10px 5px;
-  text-align: right;
   width: 100%;
+  text-align: right;
 
   .ui.button {
     height: 40px;
@@ -338,11 +338,5 @@ export const BottomButtons = styled.div`
         background-color: #f8f9fb;
       }
     }
-  }
-
-  .ui.modal & {
-    margin: 30px -1.5rem -1.5rem;
-    border-top: 1px solid #dee2e6;
-    box-shadow: 0 0 0 0 transparent;
   }
 `

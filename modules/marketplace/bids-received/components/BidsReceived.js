@@ -155,7 +155,7 @@ class BidsReceived extends Component {
             <RowDescription
               history={lastHistory}
               productOffer={r.productOffer}
-              index={r.histories.length}
+              index={r.histories.length - 1}
               lastHistory={true}
             />
           </div>
