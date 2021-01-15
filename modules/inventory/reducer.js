@@ -29,9 +29,9 @@ export const initialState = {
   popupValues: null,
   isOpenPopup: false,
   editTrig: false,
-  sidebarDetailOpen: false,
-  sidebarActiveTab: 0,
-  sidebarValues: null,
+  isModalDetailOpen: false,
+  modalActiveTab: 0,
+  detailValues: null,
   product: null,
   editProductOfferInitTrig: false,
   editedId: null,
@@ -97,7 +97,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         poCreated: true,
         loading: false
-        //sidebarValues: payload
+        //detailValues: payload
       }
     }
 
@@ -122,7 +122,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         poCreated: true,
         loading: false
-        //sidebarValues: payload
+        //detailValues: payload
       }
     }
 
@@ -184,7 +184,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        sidebarValues: payload.data,
+        detailValues: payload.data,
         editedId: payload.data.id
       }
 
@@ -544,23 +544,23 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SIDEBAR_DETAIL_TRIGGER: {
+    case AT.MODAL_DETAIL_TRIGGER: {
       return {
         ...state,
         editProductOfferInitTrig: !state.editProductOfferInitTrig,
-        sidebarDetailOpen: true,
-        sidebarValues: payload.row, // null (Add new) or object (Edit)
-        sidebarActiveTab: payload.activeTab
+        isModalDetailOpen: true,
+        detailValues: payload.row, // null (Add new) or object (Edit)
+        modalActiveTab: payload.activeTab
       }
     }
 
-    case AT.INVENTORY_CLOSE_SIDEBAR: {
+    case AT.INVENTORY_CLOSE_MODAL: {
       return {
         ...state,
-        sidebarDetailOpen: false,
-        sidebarValues: null,
+        isModalDetailOpen: false,
+        detailValues: null,
         editedId: null,
-        sidebarActiveTab: 0
+        modalActiveTab: 0
       }
     }
 
@@ -625,7 +625,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_SET_EXPORT_SIDEBAR_OPEN_STATE: {
+    case AT.INVENTORY_SET_EXPORT_MODAL_OPEN_STATE: {
       return {
         ...state,
         isExportInventoryOpen: payload

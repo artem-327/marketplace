@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
-import ExportInventorySidebar from './ExportInventorySidebar'
+import ExportInventoryModal from './ExportInventoryModal'
 import * as Actions from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 
-import { setExportSidebarOpenState } from '../../inventory/actions'
+import { setExportModalOpenState } from '../../inventory/actions'
 
 const mapStateToProps = (store, { datagrid }) => {
   return {
@@ -32,4 +32,4 @@ const mapStateToProps = (store, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, setExportSidebarOpenState })(ExportInventorySidebar))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, setExportModalOpenState })(ExportInventoryModal))

@@ -95,7 +95,7 @@ const CustomDivContent = styled.div`
   display: flex;
 `
 
-class ExportInventorySidebar extends Component {
+class ExportInventoryModal extends Component {
   state = {
     columns: [
       {
@@ -123,7 +123,7 @@ class ExportInventorySidebar extends Component {
     selectedBranches: [],
     selectedRows: [],
     expandedRowIds: [],
-    loadSidebar: false
+    loadModal: false
   }
 
   handleFiltersValue = debounce(value => {
@@ -201,7 +201,7 @@ class ExportInventorySidebar extends Component {
 
   submitHandler = async (values, setSubmitting) => {
     const { exportProductOffer, onClose } = this.props
-    this.setState({ loadSidebar: true })
+    this.setState({ loadModal: true })
     try {
       let downloadedFile = await exportProductOffer(this.state.selectedBranches)
       const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
@@ -216,7 +216,7 @@ class ExportInventorySidebar extends Component {
     } catch (error) {
       console.error(error)
     }
-    this.setState({ loadSidebar: false })
+    this.setState({ loadModal: false })
   }
 
   getRows = rows => {
@@ -255,7 +255,7 @@ class ExportInventorySidebar extends Component {
         ),
         select: (
           <Checkbox
-            data-test='export_inventory_sidebar_company_chckb'
+            data-test='export_inventory_modal_company_chckb'
             toggle
             disabled={!hasBranches}
             defaultChecked={companyChecked || indeterminate}
@@ -288,7 +288,7 @@ class ExportInventorySidebar extends Component {
             name: <div style={{ color: '#2599d5', paddingLeft: '31px' }}>{b.name}</div>,
             select: (
               <Checkbox
-                data-test='export_inventory_sidebar_branch_chckb'
+                data-test='export_inventory_modal_branch_chckb'
                 toggle
                 defaultChecked={checked}
                 onChange={(e, { checked }) => {
@@ -321,7 +321,7 @@ class ExportInventorySidebar extends Component {
       loading
     } = this.props
 
-    const { filterValue, company, selectedCompanyOption, columns, loadSidebar } = this.state
+    const { filterValue, company, selectedCompanyOption, columns, loadModal } = this.state
 
     let allCompanyOptions
     if (selectedCompanyOption) {
@@ -332,7 +332,7 @@ class ExportInventorySidebar extends Component {
 
     return (
       <Grid padded>
-        <Dimmer inverted active={loading || loadSidebar}>
+        <Dimmer inverted active={loading || loadModal}>
           <Loader />
         </Dimmer>
         <Grid.Row>
@@ -380,8 +380,8 @@ class ExportInventorySidebar extends Component {
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={16}>
-            <div className='flex stretched'>
+          <Grid.Column>
+            <div style={{ flex: '1 auto' }}>
               <ProdexGrid
                 tableName='export_inventory'
                 {...datagrid.tableProps}
@@ -418,9 +418,9 @@ class ExportInventorySidebar extends Component {
   }
 
   render() {
-    const { onClose, loading, setExportSidebarOpenState, isExportInventoryOpen } = this.props
+    const { onClose, loading, setExportModalOpenState, isExportInventoryOpen } = this.props
 
-    const { selectedBranches, loadSidebar } = this.state
+    const { selectedBranches, loadModal } = this.state
 
     return (
       <Formik initialValues={{}} onReset={onClose} onSubmit={this.submitHandler} loading={loading}>
@@ -431,17 +431,17 @@ class ExportInventorySidebar extends Component {
               closeIcon
               onClose={e => {
                 e.stopPropagation()
-                setExportSidebarOpenState(false)
+                setExportModalOpenState(false)
               }}>
               <FlexModalContent>{this.renderContent()}</FlexModalContent>
               <Modal.Actions>
                 <Button.Reset
                   onClick={e => {
                     e.stopPropagation()
-                    setExportSidebarOpenState(false)
+                    setExportModalOpenState(false)
                   }}
                   style={{ marginRight: '10px' }}
-                  data-test='export_inventory_sidebar_reset_btn'>
+                  data-test='export_inventory_modal_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
                   </FormattedMessage>
@@ -449,7 +449,7 @@ class ExportInventorySidebar extends Component {
                 <Button.Submit
                   disabled={!selectedBranches.length}
                   onClick={this.submitHandler}
-                  data-test='export_inventory_sidebar_submit_btn'>
+                  data-test='export_inventory_modal_submit_btn'>
                   <FormattedMessage id='myInventory.export' defaultMessage='Export'>
                     {text => text}
                   </FormattedMessage>
@@ -463,4 +463,4 @@ class ExportInventorySidebar extends Component {
   }
 }
 
-export default injectIntl(withToastManager(ExportInventorySidebar))
+export default injectIntl(withToastManager(ExportInventoryModal))

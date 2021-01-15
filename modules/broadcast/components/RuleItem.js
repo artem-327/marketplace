@@ -18,7 +18,7 @@ const RuleItem = props => {
     hideFobPrice,
     filter,
     loadingChanged,
-    asSidebar,
+    asModal,
     openModalCompanyInfo,
     getCompanyInfo,
     changeInModel,
@@ -79,21 +79,19 @@ const RuleItem = props => {
   }
 
   let companyName = findCompany()
-  let styleRow = asSidebar ? { justifyContent: 'flex-end' } : {}
+  let styleRow = asModal ? { justifyContent: 'flex-end' } : {}
   styleRow = item.model.rule.expanded ? { ...styleRow, background: '#eff9ff' } : styleRow
 
   return (
     <>
       <Rule.Row
-        asSidebar={asSidebar}
+        asModal={asModal}
         type={rule.type}
         onClick={() => rule.type !== 'root' && handleRowClick(item)}
         data-test='broadcast_rule_row_click'
         style={styleRow}>
         <Rule.Toggle
-          style={
-            asSidebar ? { flex: '0 0 62px' } : { flex: '0 0 88px', maxWidth: '60px', paddingLeft: '0 !important' }
-          }>
+          style={asModal ? { flex: '0 0 62px' } : { flex: '0 0 88px', maxWidth: '60px', paddingLeft: '0 !important' }}>
           <Checkbox
             className={rule.priceOverride && nodeBroadcast === 1 && 'independent'}
             data-test='broadcast_rule_toggle_chckb'
@@ -135,7 +133,7 @@ const RuleItem = props => {
           rootRule={parentBroadcasted ? parentBroadcasted.model.rule : null}
           item={item}
           onChange={onPriceChange}
-          asSidebar={asSidebar}
+          asModal={asModal}
           filter={filter}
           associationFilter={associationFilter}
           treeData={treeData}
@@ -157,7 +155,7 @@ const RuleItem = props => {
             onRowClick={onRowClick}
             onPriceChange={onPriceChange}
             onChange={onChange}
-            asSidebar={asSidebar}
+            asModal={asModal}
             openModalCompanyInfo={openModalCompanyInfo}
             getCompanyInfo={getCompanyInfo}
             treeData={treeData}

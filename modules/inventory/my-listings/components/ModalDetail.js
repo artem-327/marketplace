@@ -32,7 +32,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { Trash, PlusCircle, X as XIcon, Plus, Trash2, ChevronDown, ChevronUp } from 'react-feather'
 
 import {
-  sidebarDetailTrigger,
+  modalDetailTrigger,
   getAutocompleteData,
   getWarehouses,
   addProductOffer,
@@ -46,7 +46,7 @@ import {
   loadFile,
   removeAttachment,
   downloadAttachment,
-  closeSidebarDetail,
+  closeModalDetail,
   getProductOffer,
   removeAttachmentLinkProductOffer
 } from '../../actions'
@@ -424,7 +424,7 @@ const validationScheme = val.lazy(values => {
   })
 })
 
-class DetailSidebar extends Component {
+class ModalDetail extends Component {
   state = {
     tabs: ['edit', 'tds', 'documents', 'priceBook', 'priceTiers'],
     activeTab: 0,
@@ -434,15 +434,15 @@ class DetailSidebar extends Component {
     documentType: 1,
     openUploadAttachment: false,
     edited: false,
-    sidebarValues: null,
+    detailValues: null,
     initValues: initValues,
     attachmentFiles: [],
     isOpenOptionalInformation: false
   }
 
   componentDidMount = async () => {
-    if (this.props.sidebarValues) {
-      await this.loadProductOffer(this.props.sidebarValues.id) // Start editing, reload product offer
+    if (this.props.detailValues) {
+      await this.loadProductOffer(this.props.detailValues.id) // Start editing, reload product offer
     } else {
       this.props.searchOrigins('', 200)
     }
@@ -452,7 +452,7 @@ class DetailSidebar extends Component {
     this.fetchIfNoData('warehousesList', this.props.getWarehouses)
     this.fetchIfNoData('listDocumentTypes', this.props.getDocumentTypes)
     this.props.searchManufacturers('', 200)
-    this.switchTab(this.props.sidebarActiveTab)
+    this.switchTab(this.props.modalActiveTab)
   }
 
   fetchIfNoData = (name, fn) => {
@@ -462,7 +462,7 @@ class DetailSidebar extends Component {
   loadProductOffer = async (id, shouldSwitchTab) => {
     const data = await this.props.getProductOffer(id)
     if (shouldSwitchTab) {
-      this.switchTab(this.props.sidebarActiveTab, data.value.data)
+      this.switchTab(this.props.modalActiveTab, data.value.data)
     }
 
     this.props.searchOrigins(
@@ -474,7 +474,7 @@ class DetailSidebar extends Component {
     }
     this.setState(
       {
-        sidebarValues: data.value.data,
+        detailValues: data.value.data,
         initValues: { ...initValues, ...this.getEditValues(data.value.data) }
       },
       () => this.resetForm()
@@ -529,30 +529,30 @@ class DetailSidebar extends Component {
   componentDidUpdate = (prevProps, prevState, snapshot) => {
     if (prevProps.editProductOfferInitTrig !== this.props.editProductOfferInitTrig) {
       const shouldSwitchTab =
-        (this.props.sidebarActiveTab > -1 && prevProps.sidebarActiveTab !== this.props.sidebarActiveTab) ||
+        (this.props.modalActiveTab > -1 && prevProps.modalActiveTab !== this.props.modalActiveTab) ||
         this.state.activeTab === 3 /* To Reload Broadcast rules */
 
-      if (this.props.sidebarValues) {
+      if (this.props.detailValues) {
         // Edit mode
-        if (!prevProps.sidebarValues) {
+        if (!prevProps.detailValues) {
           // Add new to Edit mode
           this.validateSaveOrSwitchToErrors(() => {
-            this.loadProductOffer(this.props.sidebarValues.id, shouldSwitchTab)
+            this.loadProductOffer(this.props.detailValues.id, shouldSwitchTab)
           })
         } else {
           // Edit to Edit mode
           this.validateSaveOrSwitchToErrors(() => {
-            this.loadProductOffer(this.props.sidebarValues.id, shouldSwitchTab)
+            this.loadProductOffer(this.props.detailValues.id, shouldSwitchTab)
           })
         }
       } else {
         // Add new mode
         this.validateSaveOrSwitchToErrors(() => {
-          this.setState({ sidebarValues: null, initValues: initValues }, () => {
+          this.setState({ detailValues: null, initValues: initValues }, () => {
             this.resetForm()
             this.props.searchOrigins('', 200)
             if (shouldSwitchTab) {
-              this.switchTab(this.props.sidebarActiveTab)
+              this.switchTab(this.props.modalActiveTab)
             }
           })
         })
@@ -724,9 +724,9 @@ class DetailSidebar extends Component {
 
   submitForm = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
     const { addProductOffer, datagrid, openGlobalAddForm } = this.props
-    const { sidebarValues, attachmentFiles } = this.state
-    let isEdit = getSafe(() => sidebarValues.id, null)
-    let isGrouped = getSafe(() => sidebarValues.grouped, false)
+    const { detailValues, attachmentFiles } = this.state
+    let isEdit = getSafe(() => detailValues.id, null)
+    let isGrouped = getSafe(() => detailValues.grouped, false)
     let sendSuccess = false
     let data = null
     let tdsFields = []
@@ -786,7 +786,7 @@ class DetailSidebar extends Component {
         }
 
         this.setState({
-          sidebarValues: { ...data, id: isEdit ? data.id : null },
+          detailValues: { ...data, id: isEdit ? data.id : null },
           initValues: { ...initValues, ...this.getEditValues(data) },
           edited: false
         })
@@ -810,7 +810,7 @@ class DetailSidebar extends Component {
               let po = await addProductOffer(props, entityId, false, isGrouped, attachmentFiles)
               !openGlobalAddForm && datagrid.updateRow(entityId, () => po.value)
               this.setState({
-                sidebarValues: po.value,
+                detailValues: po.value,
                 initValues: { ...initValues, ...this.getEditValues(po.value) },
                 edited: false
               })
@@ -833,7 +833,7 @@ class DetailSidebar extends Component {
     })
     try {
       if (newTab === 3) {
-        await this.props.openBroadcast(data ? data : this.state.sidebarValues).then(async () => {
+        await this.props.openBroadcast(data ? data : this.state.detailValues).then(async () => {
           this.setState({ broadcastLoading: false })
         })
       }
@@ -951,60 +951,60 @@ class DetailSidebar extends Component {
     }
   }
   hasEdited = values => {
-    return !_.isEqual(this.getEditValues(this.state.sidebarValues), values)
+    return !_.isEqual(this.getEditValues(this.state.detailValues), values)
   }
 
-  getEditValues = sidebarValues => {
+  getEditValues = detailValues => {
     let tdsFields = null
     //Convert tdsFields string array of objects to array
-    if (getSafe(() => sidebarValues.tdsFields, '')) {
-      let newJson = sidebarValues.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
+    if (getSafe(() => detailValues.tdsFields, '')) {
+      let newJson = detailValues.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
       newJson = newJson.replace(/'/g, '"')
       tdsFields = JSON.parse(newJson)
     }
 
     return {
       edit: {
-        broadcasted: getSafe(() => sidebarValues.broadcasted, false),
-        condition: getSafe(() => sidebarValues.condition, null),
-        conditionNotes: getSafe(() => sidebarValues.conditionNotes, ''),
-        conforming: getSafe(() => sidebarValues.conforming, true),
-        costPerUOM: getSafe(() => sidebarValues.costPerUOM, ''),
-        externalNotes: getSafe(() => sidebarValues.externalNotes, ''),
-        fobPrice: getSafe(() => sidebarValues.pricingTiers[0].pricePerUOM, ''),
-        inStock: getSafe(() => sidebarValues.inStock, false),
-        internalNotes: getSafe(() => sidebarValues.internalNotes, ''),
-        leadTime: getSafe(() => sidebarValues.leadTime, 1),
-        lotNumber: getSafe(() => sidebarValues.lotNumber, ''),
+        broadcasted: getSafe(() => detailValues.broadcasted, false),
+        condition: getSafe(() => detailValues.condition, null),
+        conditionNotes: getSafe(() => detailValues.conditionNotes, ''),
+        conforming: getSafe(() => detailValues.conforming, true),
+        costPerUOM: getSafe(() => detailValues.costPerUOM, ''),
+        externalNotes: getSafe(() => detailValues.externalNotes, ''),
+        fobPrice: getSafe(() => detailValues.pricingTiers[0].pricePerUOM, ''),
+        inStock: getSafe(() => detailValues.inStock, false),
+        internalNotes: getSafe(() => detailValues.internalNotes, ''),
+        leadTime: getSafe(() => detailValues.leadTime, 1),
+        lotNumber: getSafe(() => detailValues.lotNumber, ''),
         lotExpirationDate:
-          sidebarValues && sidebarValues.lotExpirationDate
-            ? moment(sidebarValues.lotExpirationDate).format(getLocaleDateFormat())
+          detailValues && detailValues.lotExpirationDate
+            ? moment(detailValues.lotExpirationDate).format(getLocaleDateFormat())
             : '',
         lotManufacturedDate:
-          sidebarValues && sidebarValues.lotManufacturedDate
-            ? moment(sidebarValues.lotManufacturedDate).format(getLocaleDateFormat())
+          detailValues && detailValues.lotManufacturedDate
+            ? moment(detailValues.lotManufacturedDate).format(getLocaleDateFormat())
             : '',
-        minimum: getSafe(() => sidebarValues.minPkg, 1),
-        origin: getSafe(() => sidebarValues.origin.id, null),
-        pkgAvailable: getSafe(() => sidebarValues.pkgAvailable, ''),
-        product: getSafe(() => sidebarValues.companyProduct.id, null),
-        productCondition: getSafe(() => sidebarValues.condition.id, null),
-        productForm: getSafe(() => sidebarValues.form.id, null),
-        productGrades: getSafe(() => sidebarValues.grades.map(grade => grade.id), []),
-        splits: getSafe(() => sidebarValues.splitPkg, 1),
-        doesExpire: getSafe(() => sidebarValues.validityDate.length > 0, false),
+        minimum: getSafe(() => detailValues.minPkg, 1),
+        origin: getSafe(() => detailValues.origin.id, null),
+        pkgAvailable: getSafe(() => detailValues.pkgAvailable, ''),
+        product: getSafe(() => detailValues.companyProduct.id, null),
+        productCondition: getSafe(() => detailValues.condition.id, null),
+        productForm: getSafe(() => detailValues.form.id, null),
+        productGrades: getSafe(() => detailValues.grades.map(grade => grade.id), []),
+        splits: getSafe(() => detailValues.splitPkg, 1),
+        doesExpire: getSafe(() => detailValues.validityDate.length > 0, false),
         expirationDate:
-          sidebarValues && sidebarValues.validityDate
-            ? moment(sidebarValues.validityDate).format(getLocaleDateFormat())
+          detailValues && detailValues.validityDate
+            ? moment(detailValues.validityDate).format(getLocaleDateFormat())
             : '',
-        warehouse: getSafe(() => sidebarValues.warehouse.id, null),
+        warehouse: getSafe(() => detailValues.warehouse.id, null),
         tdsFields: getSafe(() => tdsFields, [{ property: '', specifications: '' }])
       },
       priceTiers: {
-        priceTiers: getSafe(() => sidebarValues.pricingTiers.length, 0),
+        priceTiers: getSafe(() => detailValues.pricingTiers.length, 0),
         pricingTiers: getSafe(
           () =>
-            sidebarValues.pricingTiers.map(priceTier => ({
+            detailValues.pricingTiers.map(priceTier => ({
               price: priceTier.pricePerUOM,
               quantityFrom: priceTier.quantityFrom
             })),
@@ -1012,8 +1012,8 @@ class DetailSidebar extends Component {
         )
       },
       documents: {
-        documentType: getSafe(() => sidebarValues.documentType, null),
-        attachments: getSafe(() => sidebarValues.attachments.map(att => ({ ...att, linked: true })), [])
+        documentType: getSafe(() => detailValues.documentType, null),
+        attachments: getSafe(() => detailValues.attachments.map(att => ({ ...att, linked: true })), [])
       }
     }
   }
@@ -1060,8 +1060,8 @@ class DetailSidebar extends Component {
       listGrades,
       loading,
       // openBroadcast,
-      // sidebarDetailOpen,
-      sidebarValues,
+      // isModalDetailOpen,
+      detailValues,
       // searchedManufacturers,
       // searchedManufacturersLoading,
       searchedOrigins,
@@ -1288,7 +1288,7 @@ class DetailSidebar extends Component {
                 onClose={e => {
                   e.stopPropagation()
                   this.setState({ edited: false }, () =>
-                    openGlobalAddForm ? openGlobalAddForm('') : this.props.closeSidebarDetail()
+                    openGlobalAddForm ? openGlobalAddForm('') : this.props.closeModalDetail()
                   )
                 }}>
                 <FlexModalContent>
@@ -1298,10 +1298,10 @@ class DetailSidebar extends Component {
                   <HighSegment basic>
                     <DivTitle>
                       {formatMessage({
-                        id: getSafe(() => this.state.sidebarValues.id, false)
+                        id: getSafe(() => this.state.detailValues.id, false)
                           ? 'inventory.modal.editListing'
                           : 'inventory.modal.addListing',
-                        defaultMessage: getSafe(() => this.state.sidebarValues.id, false)
+                        defaultMessage: getSafe(() => this.state.detailValues.id, false)
                           ? 'Edit Listing'
                           : 'Add Listing'
                       })}
@@ -1351,17 +1351,17 @@ class DetailSidebar extends Component {
                                 }}
                                 data-test='detail_inventory_tab_edit'>
                                 {formatMessage({
-                                  id: getSafe(() => this.state.sidebarValues.id, false)
+                                  id: getSafe(() => this.state.detailValues.id, false)
                                     ? 'addInventory.editHeader'
                                     : 'addInventory.addHeader',
-                                  defaultMessage: getSafe(() => this.state.sidebarValues.id, false) ? 'EDIT' : 'ADD'
+                                  defaultMessage: getSafe(() => this.state.detailValues.id, false) ? 'EDIT' : 'ADD'
                                 })}
                               </Menu.Item>
                             ),
                             pane: (
                               <Tab.Pane key='edit' style={{ padding: '18px', margin: '0' }}>
                                 <Grid>
-                                  {sidebarValues && sidebarValues.grouped && (
+                                  {detailValues && detailValues.grouped && (
                                     <CustomGridRow>
                                       <CustomGridColumn>
                                         <FormattedMessage
@@ -1428,7 +1428,7 @@ class DetailSidebar extends Component {
                                                         defaultMessage='Search by product name'
                                                       />
                                                     ),
-                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    disabled: detailValues && detailValues.grouped,
                                                     loading: this.props.autocompleteDataLoading,
                                                     'data-test': 'new_inventory_product_search_drpdn',
                                                     minCharacters: 1,
@@ -1461,7 +1461,7 @@ class DetailSidebar extends Component {
                                                   name='edit.warehouse'
                                                   options={warehousesList}
                                                   inputProps={{
-                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    disabled: detailValues && detailValues.grouped,
                                                     onChange: this.onChange,
                                                     selection: true,
                                                     value: 0,
@@ -1516,7 +1516,7 @@ class DetailSidebar extends Component {
                                                   name='edit.minimum'
                                                   inputProps={{
                                                     placeholder: '0',
-                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    disabled: detailValues && detailValues.grouped,
                                                     type: 'number',
                                                     fluid: true,
                                                     min: 1,
@@ -1547,7 +1547,7 @@ class DetailSidebar extends Component {
                                                   name='edit.splits'
                                                   inputProps={{
                                                     placeholder: '0',
-                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    disabled: detailValues && detailValues.grouped,
                                                     type: 'number',
                                                     min: 1,
                                                     fluid: true,
@@ -1564,7 +1564,7 @@ class DetailSidebar extends Component {
                                                 {this.inputWrapper(
                                                   'edit.fobPrice',
                                                   {
-                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    disabled: detailValues && detailValues.grouped,
                                                     type: 'number',
                                                     min: '0',
                                                     onChange: (e, { value }) => {
@@ -1600,7 +1600,7 @@ class DetailSidebar extends Component {
                                                   options={optionsYesNo}
                                                   inputProps={{
                                                     onChange: this.onChange,
-                                                    disabled: sidebarValues && sidebarValues.grouped,
+                                                    disabled: detailValues && detailValues.grouped,
                                                     'data-test': 'add_inventory_instock',
                                                     fluid: true
                                                   }}
@@ -1616,7 +1616,7 @@ class DetailSidebar extends Component {
                                                     labelPosition: 'right',
                                                     type: 'number',
                                                     min: '0',
-                                                    disabled: sidebarValues && sidebarValues.grouped
+                                                    disabled: detailValues && detailValues.grouped
                                                   },
                                                   <>
                                                     <FormattedMessage id='global.leadTime' defaultMessage='Lead Time'>
@@ -1714,7 +1714,7 @@ class DetailSidebar extends Component {
                                             {this.inputWrapper(
                                               'edit.costPerUOM',
                                               {
-                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                disabled: detailValues && detailValues.grouped,
                                                 type: 'number',
                                                 min: '0',
                                                 placeholder: '0.000',
@@ -1739,7 +1739,7 @@ class DetailSidebar extends Component {
                                               options={optionsYesNo}
                                               inputProps={{
                                                 onChange: this.onChange,
-                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                disabled: detailValues && detailValues.grouped,
                                                 'data-test': 'add_inventory_doesExpire',
                                                 fluid: true
                                               }}
@@ -1756,8 +1756,8 @@ class DetailSidebar extends Component {
                                             }
                                             inputProps={{
                                               disabled:
-                                                !values.edit.doesExpire || (sidebarValues && sidebarValues.grouped),
-                                              'data-test': 'sidebar_detail_expiration_date',
+                                                !values.edit.doesExpire || (detailValues && detailValues.grouped),
+                                              'data-test': 'modal_detail_expiration_date',
                                               fluid: true
                                               //! ! crashes on component calendar open if expirationDate is in past:
                                               // minDate: moment().add(1, 'days') TypeError: Cannot read property 'position' of undefined
@@ -1777,7 +1777,7 @@ class DetailSidebar extends Component {
                                               options={listForms}
                                               inputProps={{
                                                 onChange: this.onChange,
-                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                disabled: detailValues && detailValues.grouped,
                                                 'data-test': 'new_inventory_form_drpdn',
                                                 placeholder: (
                                                   <FormattedMessage
@@ -1807,7 +1807,7 @@ class DetailSidebar extends Component {
                                                 ),
                                                 onChange: this.onChange,
                                                 'data-test': 'new_inventory_grade_drpdn',
-                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                disabled: detailValues && detailValues.grouped,
                                                 selection: true,
                                                 multiple: true,
                                                 fluid: true
@@ -1852,7 +1852,7 @@ class DetailSidebar extends Component {
                                                 selection: true,
                                                 clearable: true,
                                                 loading: searchedOriginsLoading,
-                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                disabled: detailValues && detailValues.grouped,
                                                 onSearchChange: debounce(
                                                   (e, { searchQuery }) => searchOrigins(searchQuery),
                                                   250
@@ -1880,8 +1880,8 @@ class DetailSidebar extends Component {
                                               </FormattedMessage>
                                             }
                                             inputProps={{
-                                              'data-test': 'sidebar_detail_lot_exp_date',
-                                              disabled: sidebarValues && sidebarValues.grouped,
+                                              'data-test': 'modal_detail_lot_exp_date',
+                                              disabled: detailValues && detailValues.grouped,
                                               fluid: true
                                             }}
                                             name='edit.lotExpirationDate'
@@ -1897,7 +1897,7 @@ class DetailSidebar extends Component {
                                               options={listConforming}
                                               inputProps={{
                                                 onChange: this.onChange,
-                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                disabled: detailValues && detailValues.grouped,
                                                 'data-test': 'new_inventory_conforming_drpdn',
                                                 fluid: true
                                               }}
@@ -1914,8 +1914,8 @@ class DetailSidebar extends Component {
                                               </FormattedMessage>
                                             }
                                             inputProps={{
-                                              'data-test': 'sidebar_detail_lot_mfg_date',
-                                              disabled: sidebarValues && sidebarValues.grouped,
+                                              'data-test': 'modal_detail_lot_mfg_date',
+                                              disabled: detailValues && detailValues.grouped,
                                               maxDate: moment(),
                                               fluid: true
                                             }}
@@ -1937,7 +1937,7 @@ class DetailSidebar extends Component {
                                             <Input
                                               name='edit.conditionNotes'
                                               inputProps={{
-                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                disabled: detailValues && detailValues.grouped,
                                                 placeholder: formatMessage({
                                                   id: 'addInventory.writeShortNotesHere',
                                                   defaultMessage: 'Write short notes here'
@@ -1960,7 +1960,7 @@ class DetailSidebar extends Component {
                                             <TextAreaField
                                               name='edit.externalNotes'
                                               inputProps={{
-                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                disabled: detailValues && detailValues.grouped,
                                                 placeholder: formatMessage({
                                                   id: 'addInventory.writeExternalNotesHere',
                                                   defaultMessage: 'Write external notes here'
@@ -1979,7 +1979,7 @@ class DetailSidebar extends Component {
                                             <TextAreaField
                                               name='edit.internalNotes'
                                               inputProps={{
-                                                disabled: sidebarValues && sidebarValues.grouped,
+                                                disabled: detailValues && detailValues.grouped,
                                                 placeholder: formatMessage({
                                                   id: 'addInventory.writeInternalNotesHere',
                                                   defaultMessage: 'Write internal notes here'
@@ -1999,7 +1999,7 @@ class DetailSidebar extends Component {
                             menuItem: (
                               <Menu.Item
                                 key='tds'
-                                disabled={sidebarValues && sidebarValues.grouped}
+                                disabled={detailValues && detailValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
                                     toastManager.add(
@@ -2121,7 +2121,7 @@ class DetailSidebar extends Component {
                             menuItem: (
                               <Menu.Item
                                 key='documents'
-                                disabled={sidebarValues && sidebarValues.grouped}
+                                disabled={detailValues && detailValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
                                     toastManager.add(
@@ -2176,7 +2176,7 @@ class DetailSidebar extends Component {
                                       attachmentFiles: prevState.attachmentFiles.concat(files)
                                     }))
                                   }
-                                  idForm={getSafe(() => sidebarValues.id, 0)}
+                                  idForm={getSafe(() => detailValues.id, 0)}
                                   attachmentFiles={this.state.attachmentFiles}
                                   removeAttachmentFromUpload={id => {
                                     const attachmentFiles = this.state.attachmentFiles.filter(
@@ -2192,7 +2192,7 @@ class DetailSidebar extends Component {
                             menuItem: (
                               <Menu.Item
                                 key='priceBook'
-                                disabled={sidebarValues && sidebarValues.grouped}
+                                disabled={detailValues && detailValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
                                     toastManager.add(
@@ -2233,12 +2233,11 @@ class DetailSidebar extends Component {
                               <Tab.Pane loading={isLoadingBroadcast} key='priceBook' style={{ padding: '18px' }}>
                                 <Broadcast
                                   isPrepared={!this.state.broadcastLoading}
-                                  asModal={false}
-                                  asSidebar={true}
+                                  asModal={true}
                                   saveBroadcast={this.state.saveBroadcast}
                                   changedForm={this.changedForm}
-                                  close={this.props.closeSidebarDetail}
-                                  sidebarValues={sidebarValues}
+                                  close={this.props.closeModalDetail}
+                                  detailValues={detailValues}
                                   inventoryGrid={inventoryGrid}
                                 />
                               </Tab.Pane>
@@ -2248,7 +2247,7 @@ class DetailSidebar extends Component {
                             menuItem: (
                               <Menu.Item
                                 key='priceTiers'
-                                disabled={sidebarValues && sidebarValues.grouped}
+                                disabled={detailValues && detailValues.grouped}
                                 onClick={() => {
                                   if (Object.keys(touched).length || this.state.changedForm) {
                                     toastManager.add(
@@ -2352,10 +2351,10 @@ class DetailSidebar extends Component {
                         inputProps={{ type: 'button' }}
                         onClick={() => {
                           this.setState({ edited: false }, () =>
-                            openGlobalAddForm ? openGlobalAddForm('') : this.props.closeSidebarDetail()
+                            openGlobalAddForm ? openGlobalAddForm('') : this.props.closeModalDetail()
                           )
                         }}
-                        data-test='sidebar_inventory_cancel'>
+                        data-test='modal_inventory_cancel'>
                         {Object.keys(touched).length || this.state.changedForm
                           ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
                           : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
@@ -2378,7 +2377,7 @@ class DetailSidebar extends Component {
                               submitForm() // to show errors
                             } else {
                               let { data } = await this.submitForm(values, setSubmitting, setTouched)
-                              if (data && !getSafe(() => this.state.sidebarValues.id, false)) {
+                              if (data && !getSafe(() => this.state.detailValues.id, false)) {
                                 confirm(
                                   formatMessage({
                                     id: 'confirm.editOrAddNew.header',
@@ -2397,20 +2396,20 @@ class DetailSidebar extends Component {
                                   .then(() => {
                                     this.setState(state => ({
                                       ...state,
-                                      sidebarValues: { ...state.sidebarValues, id: null }
+                                      detailValues: { ...state.detailValues, id: null }
                                     }))
                                   })
                                   .catch(() => {
                                     this.setState(state => ({
                                       ...state,
-                                      sidebarValues: { ...state.sidebarValues, id: data.id }
+                                      detailValues: { ...state.detailValues, id: data.id }
                                     }))
                                   })
                               }
                             }
                           })
                         }}
-                        data-test='sidebar_inventory_save_new'>
+                        data-test='modal_inventory_save_new'>
                         {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
                       </Button>
                     </div>
@@ -2427,7 +2426,7 @@ class DetailSidebar extends Component {
 }
 
 const mapDispatchToProps = {
-  sidebarDetailTrigger,
+  modalDetailTrigger,
   getAutocompleteData,
   getDocumentTypes,
   addProductOffer,
@@ -2442,7 +2441,7 @@ const mapDispatchToProps = {
   loadFile,
   removeAttachment,
   downloadAttachment,
-  closeSidebarDetail,
+  closeModalDetail,
   getProductOffer,
   removeAttachmentLinkProductOffer
 }
@@ -2456,9 +2455,9 @@ const mapStateToProps = (
       listForms,
       listGrades,
       loading,
-      sidebarActiveTab,
-      sidebarDetailOpen,
-      sidebarValues,
+      modalActiveTab,
+      isModalDetailOpen,
+      detailValues,
       searchedManufacturers,
       searchedManufacturersLoading,
       searchedOrigins,
@@ -2479,9 +2478,9 @@ const mapStateToProps = (
   listForms,
   listGrades,
   loading,
-  sidebarActiveTab,
-  sidebarDetailOpen,
-  sidebarValues,
+  modalActiveTab,
+  isModalDetailOpen,
+  detailValues,
   searchedManufacturers,
   searchedManufacturersLoading,
   searchedOrigins,
@@ -2496,4 +2495,4 @@ const mapStateToProps = (
   isLoadingBroadcast: getSafe(() => broadcast.loading, false)
 })
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar))))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ModalDetail))))

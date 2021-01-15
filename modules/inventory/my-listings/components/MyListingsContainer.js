@@ -21,8 +21,8 @@ import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
 
 function mapStateToProps(store, { datagrid }) {
-  const sidebarValues = store.simpleAdd.sidebarValues
-  const editedId = store.simpleAdd.sidebarDetailOpen && store.simpleAdd.editedId ? store.simpleAdd.editedId : -1
+  const detailValues = store.simpleAdd.detailValues
+  const editedId = store.simpleAdd.isModalDetailOpen && store.simpleAdd.editedId ? store.simpleAdd.editedId : -1
 
   return {
     ...store.simpleAdd,
@@ -30,7 +30,7 @@ function mapStateToProps(store, { datagrid }) {
     advancedFilters: store.filter.inventory.appliedFilter,
     editedId,
     sellEligible: getSafe(() => store.auth.identity.company.sellEligible, false),
-    sidebarValues,
+    detailValues,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       let fobPrice = 'N/A'

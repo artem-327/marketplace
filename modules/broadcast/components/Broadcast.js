@@ -626,7 +626,7 @@ class Broadcast extends Component {
 
   getAssociationFilter = () => {
     const {
-      asSidebar,
+      asModal,
       intl: { formatMessage }
     } = this.props
 
@@ -642,7 +642,7 @@ class Broadcast extends Component {
         </CustomButton>
       </FormFieldBroadcastAllButton>
     )
-    if (asSidebar) {
+    if (asModal) {
       return (
         <UnpaddedRow.Top verticalAlign='middle'>
           <GridColumn computer={8}>{this.getAssociationsDropdown()}</GridColumn>
@@ -758,7 +758,6 @@ class Broadcast extends Component {
       templates,
       updateTemplate,
       mode,
-      asSidebar,
       saveTemplate,
       filter,
       loading,
@@ -800,7 +799,7 @@ class Broadcast extends Component {
     return (
       <FlexWrapper>
         <Form>
-          {asSidebar ? (
+          {asModal ? (
             <>
               <CompanyInfo
                 isLoadingModalCompanyInfo={isLoadingModalCompanyInfo}
@@ -1042,22 +1041,19 @@ class Broadcast extends Component {
 
         <StretchedGrid className='flex dynamic stretched' {...additionalGridProps}>
           <GridRowTable>
-            <Grid.Column
-              width={16}
-              stretched
-              style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
-              <Rule.Root asSidebar={asSidebar}>
-                <Rule.Header asSidebar={asSidebar}>
+            <Grid.Column width={16} stretched style={asModal ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
+              <Rule.Root asModal={asModal}>
+                <Rule.Header asModal={asModal}>
                   <Rule.Toggle
                     style={
-                      asSidebar
+                      asModal
                         ? { flex: '0 0 62px', color: '#848893' }
                         : { flex: '0 0 88px', maxWidth: '60px', borderRight: 'none !important', color: '#848893' }
                     }>
                     <FormattedMessage id='broadcast.select' defaultMessage='Select' />
                   </Rule.Toggle>
                   <Rule.RowContent>
-                    {!asSidebar && (
+                    {!asModal && (
                       <>
                         <FieldInHeaderTable>
                           <DropdownInHeaderTable
@@ -1113,12 +1109,12 @@ class Broadcast extends Component {
                     )}
                   </Rule.RowContent>
 
-                  <Rule.Toggle style={!asSidebar ? { maxWidth: '110px', color: '#848893' } : { color: '#848893' }}>
+                  <Rule.Toggle style={!asModal ? { maxWidth: '110px', color: '#848893' } : { color: '#848893' }}>
                     <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
                   </Rule.Toggle>
-                  <Rule.Toggle style={!asSidebar ? { maxWidth: '60px' } : { maxWidth: '50px' }}></Rule.Toggle>
+                  <Rule.Toggle style={!asModal ? { maxWidth: '60px' } : { maxWidth: '50px' }}></Rule.Toggle>
                 </Rule.Header>
-                <Rule.Content asSidebar={asSidebar}>
+                <Rule.Content asModal={asModal}>
                   <RuleItem
                     changeInModel={this.changeInModel}
                     loadingChanged={this.props.loadingChanged}
@@ -1132,14 +1128,14 @@ class Broadcast extends Component {
                     onPriceChange={this.handlePriceChange}
                     onChange={this.handleChange}
                     data-test='broadcast_modal_rule_action'
-                    asSidebar={asSidebar}
+                    asModal={asModal}
                     openModalCompanyInfo={openModalCompanyInfo}
                     getCompanyInfo={getCompanyInfo}
                     treeData={treeData}
                   />
                 </Rule.Content>
               </Rule.Root>
-              {!asSidebar && (
+              {!asModal && (
                 <RightAlignedDiv>
                   <Button basic onClick={() => this.resetBroadcastRules()} data-test='broadcast_global_reset_btn'>
                     {formatMessage({ id: 'global.reset', defaultMessage: 'Reset' })}
@@ -1152,7 +1148,7 @@ class Broadcast extends Component {
             </Grid.Column>
           </GridRowTable>
         </StretchedGrid>
-        {asSidebar && (
+        {asModal && (
           <GridBottom>
             <GridRowBottom textAlign='right'>
               <GridColumnBottom width='8'>
@@ -1229,7 +1225,17 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager, templates, changedForm, sidebarValues, inventoryGrid } = this.props
+    const {
+      saveRules,
+      id,
+      initGlobalBroadcast,
+      asModal,
+      toastManager,
+      templates,
+      changedForm,
+      sidebarValues,
+      inventoryGrid
+    } = this.props
     let filteredTree = this.treeToModel(undefined, undefined, true)
 
     try {
@@ -1256,7 +1262,7 @@ class Broadcast extends Component {
 
       //if (this.setFieldValue) this.setFieldValue('templates', dataId)
 
-      if (!asSidebar) {
+      if (!asModal) {
         await initGlobalBroadcast()
       }
       this.setState({
@@ -1312,7 +1318,7 @@ class Broadcast extends Component {
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
-    if (!asModal) {
+    if (asModal) {
       if (loading || !isPrepared)
         return (
           <Dimmer active={true} inverted>
@@ -1430,7 +1436,7 @@ Broadcast.propTypes = {
   asModal: bool,
   additionalGridProps: object,
   hideFobPrice: bool,
-  asSidebar: bool,
+  asModal: bool,
   isOpenTemplateModal: bool,
   saveSidebar: number,
   sidebarValues: object,
@@ -1438,10 +1444,10 @@ Broadcast.propTypes = {
 }
 
 Broadcast.defaultProps = {
-  asModal: true,
+  asModal: false,
   additionalGridProps: {},
   hideFobPrice: false,
-  asSidebar: false,
+  asModal: false,
   isOpenTemplateModal: false,
   saveSidebar: 0,
   sidebarValues: {},

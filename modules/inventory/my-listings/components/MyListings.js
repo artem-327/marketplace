@@ -2,7 +2,16 @@ import React, { Component } from 'react'
 import cn from 'classnames'
 import moment from 'moment/moment'
 import { debounce } from 'lodash'
-import { Clock, FileText, CornerLeftUp, CornerLeftDown, MoreVertical, PlusCircle, Sliders, ChevronDown } from 'react-feather'
+import {
+  Clock,
+  FileText,
+  CornerLeftUp,
+  CornerLeftDown,
+  MoreVertical,
+  PlusCircle,
+  Sliders,
+  ChevronDown
+} from 'react-feather'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Dropdown, Grid, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
@@ -10,7 +19,7 @@ import styled from 'styled-components'
 import { Warning } from '@material-ui/icons'
 import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
-import DetailSidebar from '~/modules/inventory/my-listings/components/DetailSidebar'
+import ModalDetail from '~/modules/inventory/my-listings/components/ModalDetail'
 import QuickEditPricingPopup from '~/modules/inventory/my-listings/components/QuickEditPricingPopup'
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
@@ -19,7 +28,7 @@ import ProductImportPopup from '~/modules/inventory/my-products/components/Produ
 import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import SearchByNamesAndTags from '~/modules/search'
-import ExportInventorySidebar from '~/modules/export-inventory/components/ExportInventory'
+import ExportInventory from '~/modules/export-inventory/components/ExportInventory'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
@@ -123,7 +132,6 @@ const BroadcastDiv = styled.div`
 `
 
 const NetworkDropdown = styled(Dropdown)`
-
   &.ui.dropdown {
     width: 50px;
     height: 32px !important;
@@ -131,73 +139,71 @@ const NetworkDropdown = styled(Dropdown)`
     border: 1px solid #dee2e6;
     border-radius: 3px;
     padding: 6px 5px 6px 8px;
-  
+
     > .text {
-      
       svg {
         width: 18px;
         height: 18px;
-        
+
         path[fill] {
           fill: #848893 !important;
         }
       }
     }
-    
+
     &.active {
       background: #edeef2 !important;
-    
+
       > svg {
         transform: rotate(180deg);
       }
-    
+
       > .text svg path[fill] {
         fill: #20273a !important;
       }
     }
-    
+
     &.loading {
-    
       &:before {
         content: '';
         position: absolute;
         top: 50%;
         left: 18px;
-        margin: -.64285714em 0 0 -.64285714em;
+        margin: -0.64285714em 0 0 -0.64285714em;
         border-radius: 500rem;
-        border: .2em solid rgba(0,0,0,.1);
+        border: 0.2em solid rgba(0, 0, 0, 0.1);
         width: 1.28571429em;
         height: 1.28571429em;
       }
-    
+
       &:after {
         content: '';
         position: absolute;
         top: 50%;
         left: 18px;
-        -webkit-animation: dropdown-spin .6s linear;
-        animation: dropdown-spin .6s linear;
+        -webkit-animation: dropdown-spin 0.6s linear;
+        animation: dropdown-spin 0.6s linear;
         -webkit-animation-iteration-count: infinite;
         animation-iteration-count: infinite;
         width: 1.28571429em;
         height: 1.28571429em;
-        margin: -.64285714em 0 0 -.64285714em;
+        margin: -0.64285714em 0 0 -0.64285714em;
         border-radius: 500rem;
         border-color: #767676 transparent transparent;
         border-style: solid;
-        border-width: .2em;
+        border-width: 0.2em;
         -webkit-box-shadow: 0 0 0 1px transparent;
         box-shadow: 0 0 0 1px transparent;
       }
-      
+
       > .text svg {
         opacity: 0;
       }
     }
-  
+
     > .menu {
       margin-top: 5px !important;
-    
+
       > .header {
         height: 30px !important;
         margin: 5px 0 !important;
@@ -208,38 +214,38 @@ const NetworkDropdown = styled(Dropdown)`
         color: #404040;
         line-height: 30px;
       }
-            
+
       &:after {
         right: 5px !important;
       }
-    
+
       > .item {
         box-sizing: border-box;
         height: 60px;
         padding: 16px 30px 12px 60px !important;
         line-height: 16px;
-        
+
         svg {
           position: absolute;
           top: 17px;
           left: 20px;
           width: 24px;
           height: 24px;
-          
+
           path[fill] {
             fill: #848893 !important;
           }
         }
-        
+
         &:hover svg path[fill] {
           fill: #20273a !important;
         }
-        
+
         .content {
           font-size: 14px;
           color: #20273a;
           line-height: 16px;
-          
+
           .sub.header {
             font-size: 12px;
             color: #848893;
@@ -513,7 +519,14 @@ class MyListings extends Component {
   }
 
   componentDidMount = async () => {
-    const { sidebarDetailTrigger, myListingsFilters, advancedFilters, datagrid, applyDatagridFilter, broadcastTemplates } = this.props
+    const {
+      modalDetailTrigger,
+      myListingsFilters,
+      advancedFilters,
+      datagrid,
+      applyDatagridFilter,
+      broadcastTemplates
+    } = this.props
     if (window) {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
@@ -528,7 +541,7 @@ class MyListings extends Component {
             ? Number(searchParams.get('tab'))
             : Number(searchParams.get(`${window.location.href.split('?')[0]}?tab`))
         }
-        sidebarDetailTrigger(idOffer, true, tabOffer)
+        modalDetailTrigger(idOffer, true, tabOffer)
       }
     }
     if (broadcastTemplates && !broadcastTemplates.length) {
@@ -563,18 +576,18 @@ class MyListings extends Component {
 
   componentWillUnmount() {
     const {
-      sidebarDetailOpen,
-      closeSidebarDetail,
+      isModalDetailOpen,
+      closeModalDetail,
       isProductInfoOpen,
       closePopup,
       isExportInventoryOpen,
-      setExportSidebarOpenState
+      setExportModalOpenState
     } = this.props
 
     this.props.handleVariableSave('myListingsFilters', this.state.filterValues)
-    if (sidebarDetailOpen) closeSidebarDetail()
+    if (isModalDetailOpen) closeModalDetail()
     if (isProductInfoOpen) closePopup()
-    if (isExportInventoryOpen) setExportSidebarOpenState(false)
+    if (isExportInventoryOpen) setExportModalOpenState(false)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -625,7 +638,7 @@ class MyListings extends Component {
   getActions = () => {
     const {
       intl: { formatMessage },
-      sidebarDetailTrigger,
+      modalDetailTrigger,
       datagrid
     } = this.props
     return [
@@ -639,7 +652,7 @@ class MyListings extends Component {
           id: 'global.edit',
           defaultMessage: 'Edit'
         }),
-        callback: row => this.tableRowClickedProductOffer(row, true, 0, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 0, modalDetailTrigger)
       },
       //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
       {
@@ -648,7 +661,7 @@ class MyListings extends Component {
           defaultMessage: 'TDS'
         }),
         disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 1, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -656,7 +669,7 @@ class MyListings extends Component {
           defaultMessage: 'Documents'
         }),
         disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 2, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -664,7 +677,7 @@ class MyListings extends Component {
           defaultMessage: 'Price Book'
         }),
         disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 3, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -672,7 +685,7 @@ class MyListings extends Component {
           defaultMessage: 'Price Tiers'
         }),
         disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 4, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -754,7 +767,7 @@ class MyListings extends Component {
       datagrid,
       pricingEditOpenId,
       setPricingEditOpenId,
-      sidebarDetailTrigger,
+      modalDetailTrigger,
       toastManager,
       closePricingEditPopup,
       intl: { formatMessage },
@@ -765,15 +778,26 @@ class MyListings extends Component {
     const options = [
       {
         icon: (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-              <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)"/>
-              <path fill="#20273A" fill-rule="nonzero" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" transform="translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)"/>
+          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+            <g fill='none' fill-rule='evenodd'>
+              <path
+                d='M0 0L24 0 24 24 0 24z'
+                transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
+              />
+              <path
+                fill='#20273A'
+                fill-rule='nonzero'
+                d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'
+                transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
+              />
             </g>
           </svg>
         ),
-        title: formatMessage({ id: 'myInventory.network', defaultMessage: 'Network'}),
-        subtitle: formatMessage({ id: 'myInventory.networkSubtitle', defaultMessage: 'Your accepted Partners and invited Guests'}),
+        title: formatMessage({ id: 'myInventory.network', defaultMessage: 'Network' }),
+        subtitle: formatMessage({
+          id: 'myInventory.networkSubtitle',
+          defaultMessage: 'Your accepted Partners and invited Guests'
+        }),
         value: 'FREE_FOR_ALL'
       },
       /*{
@@ -792,10 +816,18 @@ class MyListings extends Component {
       },*/
       {
         icon: (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-              <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)"/>
-              <path fill="#848893" fill-rule="nonzero" d="M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z" transform="translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)"/>
+          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+            <g fill='none' fill-rule='evenodd'>
+              <path
+                d='M0 0L24 0 24 24 0 24z'
+                transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
+              />
+              <path
+                fill='#848893'
+                fill-rule='nonzero'
+                d='M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z'
+                transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
+              />
             </g>
           </svg>
         ),
@@ -805,16 +837,27 @@ class MyListings extends Component {
       },
       {
         icon: (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
+          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+            <g fill='none' fill-rule='evenodd'>
               <g>
-                <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)"/>
-                <path d="M0 0L24 0 24 24 0 24z" opacity=".87" transform="translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)"/>
+                <path
+                  d='M0 0L24 0 24 24 0 24z'
+                  transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
+                />
+                <path
+                  d='M0 0L24 0 24 24 0 24z'
+                  opacity='.87'
+                  transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
+                />
               </g>
-              <path fill="#848893" fill-rule="nonzero" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z" transform="translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)"/>
+              <path
+                fill='#848893'
+                fill-rule='nonzero'
+                d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z'
+                transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
+              />
             </g>
           </svg>
-
         ),
         title: formatMessage({ id: 'myInventory.justMe', defaultMessage: 'Just Me' }),
         subtitle: formatMessage({ id: 'myInventory.justMeSubtitle', defaultMessage: 'Only my Company' }),
@@ -823,10 +866,18 @@ class MyListings extends Component {
       ...broadcastTemplates.map(template => {
         return {
           icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-              <g fill="none" fill-rule="evenodd">
-                <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)"/>
-                <path fill="#848893" fill-rule="nonzero" d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z" transform="translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)"/>
+            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+              <g fill='none' fill-rule='evenodd'>
+                <path
+                  d='M0 0L24 0 24 24 0 24z'
+                  transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+                />
+                <path
+                  fill='#848893'
+                  fill-rule='nonzero'
+                  d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
+                  transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+                />
               </g>
             </svg>
           ),
@@ -839,10 +890,18 @@ class MyListings extends Component {
       }),
       {
         icon: (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-              <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)"/>
-              <path fill="#848893" fill-rule="nonzero" d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z" transform="translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)"/>
+          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+            <g fill='none' fill-rule='evenodd'>
+              <path
+                d='M0 0L24 0 24 24 0 24z'
+                transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+              />
+              <path
+                fill='#848893'
+                fill-rule='nonzero'
+                d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
+                transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+              />
             </g>
           </svg>
         ),
@@ -949,26 +1008,28 @@ class MyListings extends Component {
       return {
         ...r,
         network: (
-          <NetworkDropdown icon={<NetworkChevronDown />}
-                           floating
-                           scrolling
-                           header={formatMessage({ id: 'myInventory.whoShouldSee', defaultMessage: 'Who should see this offer?' })}
-                           pointing='top right'
-                           value={r.broadcastTemplateResponse ? r.broadcastOption+'|'+r.broadcastTemplateResponse.id : r.broadcastOption}
-                           loading={!!r.isBroadcastLoading}
-                           closeOnChange
-                           //onChange={this.broadcastChange}
-                           options={options.map((option, optIndex) => {
-                            return {
-                              key: option.id ? option.id : (optIndex * -1) - 1,
-                              text: option.icon,
-                              value: option.value,
-                              content: (
-                                <Header icon={option.icon} content={option.title} subheader={option.subtitle} />
-                              ),
-                              onClick: (e, { value }) => this.broadcastChange(r, option.value, option.id ? { id: option.id, name: option.tmp } : null)
-                            }
-                          })}
+          <NetworkDropdown
+            icon={<NetworkChevronDown />}
+            floating
+            scrolling
+            header={formatMessage({ id: 'myInventory.whoShouldSee', defaultMessage: 'Who should see this offer?' })}
+            pointing='top right'
+            value={
+              r.broadcastTemplateResponse ? r.broadcastOption + '|' + r.broadcastTemplateResponse.id : r.broadcastOption
+            }
+            loading={!!r.isBroadcastLoading}
+            closeOnChange
+            //onChange={this.broadcastChange}
+            options={options.map((option, optIndex) => {
+              return {
+                key: option.id ? option.id : optIndex * -1 - 1,
+                text: option.icon,
+                value: option.value,
+                content: <Header icon={option.icon} content={option.title} subheader={option.subtitle} />,
+                onClick: (e, { value }) =>
+                  this.broadcastChange(r, option.value, option.id ? { id: option.id, name: option.tmp } : null)
+              }
+            })}
           />
         ),
         productName: (
@@ -976,7 +1037,7 @@ class MyListings extends Component {
             row={r}
             getActions={this.getActions}
             content={r.productName}
-            onContentClick={() => this.tableRowClickedProductOffer(r, true, 0, sidebarDetailTrigger)}
+            onContentClick={() => this.tableRowClickedProductOffer(r, true, 0, modalDetailTrigger)}
             rightAlignedContent={
               r.expired || productStatusText ? (
                 <Popup
@@ -1003,9 +1064,9 @@ class MyListings extends Component {
                     </div>
                   } // <div> has to be there otherwise popup will be not shown
                 />
-              ) : null}
+              ) : null
+            }
           />
-
         ),
         packaging: (
           <>
@@ -1102,10 +1163,10 @@ class MyListings extends Component {
   }
 
   broadcastChange = (row, value, template) => {
-    let { sidebarDetailTrigger } = this.props
+    let { modalDetailTrigger } = this.props
     switch (value) {
       case 'CUSTOM_RULES':
-        this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+        this.tableRowClickedProductOffer(row, true, 3, modalDetailTrigger)
         break
       default:
         if (value.indexOf('|') >= 0) {
@@ -1117,12 +1178,12 @@ class MyListings extends Component {
     }
   }
 
-  tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
-    const { isProductInfoOpen, closePopup, isExportInventoryOpen, setExportSidebarOpenState } = this.props
+  tableRowClickedProductOffer = (row, bol, tab, modalDetailTrigger) => {
+    const { isProductInfoOpen, closePopup, isExportInventoryOpen, setExportModalOpenState } = this.props
 
     if (isProductInfoOpen) closePopup()
-    if (isExportInventoryOpen) setExportSidebarOpenState(false)
-    sidebarDetailTrigger(row, bol, tab)
+    if (isExportInventoryOpen) setExportModalOpenState(false)
+    modalDetailTrigger(row, bol, tab)
   }
 
   showMessage = (response, request = null, row) => {
@@ -1214,19 +1275,19 @@ class MyListings extends Component {
   render() {
     const {
       openBroadcast,
-      sidebarDetailOpen,
+      isModalDetailOpen,
       intl: { formatMessage },
       datagrid,
       openImportPopup,
       isOpenImportPopup,
       simpleEditTrigger,
-      sidebarDetailTrigger,
+      modalDetailTrigger,
       openPopup,
       editedId,
-      closeSidebarDetail,
+      closeModalDetail,
       tutorialCompleted,
       isExportInventoryOpen,
-      setExportSidebarOpenState,
+      setExportModalOpenState,
       myListingsFilters,
       updatingDatagrid,
       activeInventoryFilter
@@ -1313,7 +1374,7 @@ class MyListings extends Component {
                   className='light'
                   size='large'
                   primary
-                  onClick={() => setExportSidebarOpenState(true)}
+                  onClick={() => setExportModalOpenState(true)}
                   data-test='my_inventory_export_btn'>
                   <CornerLeftUp />
                   {formatMessage({
@@ -1341,7 +1402,7 @@ class MyListings extends Component {
                   className='secondary'
                   size='large'
                   primary
-                  onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
+                  onClick={() => this.tableRowClickedProductOffer(null, true, 0, modalDetailTrigger)}
                   data-test='my_inventory_add_btn'>
                   <PlusCircle />
                   <FormattedMessage id='global.addListing' defaultMessage='Add Listing'>
@@ -1406,10 +1467,10 @@ class MyListings extends Component {
               return groupActions(
                 rows,
                 values[values.length - 3],
-                sidebarDetailOpen,
-                closeSidebarDetail,
+                isModalDetailOpen,
+                closeModalDetail,
                 (companyProduct, i) => {
-                  if (isExportInventoryOpen) setExportSidebarOpenState(false)
+                  if (isExportInventoryOpen) setExportModalOpenState(false)
                   openPopup(companyProduct, i)
                 }
               ).map(a => ({
@@ -1428,8 +1489,8 @@ class MyListings extends Component {
             columnActions='actCol'
           />
         </div>
-        {sidebarDetailOpen && <DetailSidebar inventoryGrid={this.props.datagrid} />}
-        {isExportInventoryOpen && <ExportInventorySidebar onClose={() => setExportSidebarOpenState(false)} />}
+        {isModalDetailOpen && <ModalDetail inventoryGrid={this.props.datagrid} />}
+        {isExportInventoryOpen && <ExportInventory onClose={() => setExportModalOpenState(false)} />}
         {openFilterPopup && <InventoryFilter onClose={() => this.setState({ openFilterPopup: false })} />}
       </>
     )
