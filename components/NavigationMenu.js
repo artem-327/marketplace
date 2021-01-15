@@ -97,7 +97,9 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/inventory/global-price-book', false),
     marketplace:
       getSafe(() => Router.router.pathname === '/marketplace/listings', false) ||
-      getSafe(() => Router.router.pathname === '/marketplace/holds', false)
+      getSafe(() => Router.router.pathname === '/marketplace/holds', false) ||
+      getSafe(() => Router.router.pathname === '/marketplace/bids-sent', false) ||
+      getSafe(() => Router.router.pathname === '/marketplace/bids-received', false)
   }
 
   componentDidMount() {
@@ -356,6 +358,18 @@ class Navigation extends Component {
                 dataTest='navigation_menu_marketplace_listings_drpdn'>
                 {formatMessage({ id: 'navigation.marketplaceListings', defaultMessage: 'Listings' })}
               </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/marketplace/bids-sent'
+                dataTest='navigation_menu_marketplace_bids_sent_drpdn'>
+                {formatMessage({ id: 'navigation.marketplaceBidsSent', defaultMessage: 'Bids Sent' })}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/marketplace/bids-received'
+                dataTest='navigation_menu_marketplace_bids_received_drpdn'>
+                {formatMessage({ id: 'navigation.marketplaceBidsReceived', defaultMessage: 'Bids Received' })}
+              </Dropdown.Item>
               <Dropdown.Item as={MenuLink} to='/marketplace/holds' dataTest='navigation_menu_marketplace_holds_drpdn'>
                 {formatMessage({ id: 'navigation.marketplaceHolds', defaultMessage: 'Holds' })}
               </Dropdown.Item>
@@ -396,7 +410,7 @@ class Navigation extends Component {
                     as={MenuLink}
                     to='/wanted-board/bids-sent'
                     dataTest='navigation_wanted_board_bids_sent_drpdn'>
-                    {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'My Offers' })}
+                    {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
                   </Dropdown.Item>
                 </>
               )}

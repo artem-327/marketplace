@@ -10,7 +10,7 @@ import Listings from './Listings'
 import * as Actions from '../../actions'
 import { sidebarChanged } from '~/src/modules/cart'
 import { getProductOffer } from '~/modules/purchase-order/actions'
-import { openPopup, closePopup } from '~/modules/company-product-info/actions'
+import { openPopup as openInfoPopup, closePopup } from '~/modules/company-product-info/actions'
 import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
@@ -29,6 +29,7 @@ function mapStateToProps(store, { datagrid }) {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       return {
         ...po,
+        rawData: po,
         id: po.id,
         expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
         productGroupName: getSafe(() => po.companyProduct.companyGenericProduct.productGroup.name, ''),
@@ -103,7 +104,7 @@ export default withDatagrid(
   connect(mapStateToProps, {
     ...Actions,
     sidebarChanged,
-    openPopup,
+    openInfoPopup,
     closePopup,
     getProductOffer,
     applyFilter

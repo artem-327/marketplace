@@ -2738,6 +2738,19 @@ input[type='number'] {
             }
           }
 
+          &.bids-greyed:not(:hover) td {
+            background-color: #edeef2;
+            color: #848893;
+
+            div {
+              color: #848893;
+            }
+
+            svg {
+              opacity: 0.3;
+            }
+          }
+
           &.selected {
             td {
               &:nth-child(n) {
