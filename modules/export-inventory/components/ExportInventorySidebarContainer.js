@@ -4,6 +4,8 @@ import * as Actions from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 
+import { setExportSidebarOpenState } from '../../inventory/actions'
+
 const mapStateToProps = (store, { datagrid }) => {
   return {
     ...store.exportInventory,
@@ -16,7 +18,7 @@ const mapStateToProps = (store, { datagrid }) => {
         branches: row.branches.map(branch => ({
           id: row.id + '_' + branch.id,
           branchId: branch.id,
-          name: branch.deliveryAddress.cfName,
+          name: branch.deliveryAddress.cfName
         })),
         branchesIds: row.branches.map(b => b.id)
       }
@@ -25,9 +27,9 @@ const mapStateToProps = (store, { datagrid }) => {
       key: d.id,
       value: d.id,
       text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
-    }))
+    })),
+    isExportInventoryOpen: getSafe(() => store.simpleAdd.isExportInventoryOpen, false)
   }
 }
 
-export default withDatagrid(
-  connect(mapStateToProps, { ...Actions })(ExportInventorySidebar))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, setExportSidebarOpenState })(ExportInventorySidebar))

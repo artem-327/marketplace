@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { debounce } from 'lodash'
 import { Info, ChevronDown, ChevronRight } from 'react-feather'
-import { Checkbox, Dropdown, Loader, Dimmer } from 'semantic-ui-react'
+import { Checkbox, Dropdown, Loader, Dimmer, Modal, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
@@ -13,22 +13,21 @@ import { Button } from 'formik-semantic-ui-fixed-validation'
 import { Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
+import { HighSegment, FlexModal, FlexModalContent } from '~/modules/inventory/constants/layout'
 
 const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
-  padding: 16px 30px !important;
+  //padding: 16px 30px !important;
   text-transform: uppercase;
   font-size: 14px;
   font-weight: 500;
   color: #20273a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
+  //box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
   background-color: #ffffff;
-  z-index: 1;
 `
 
 const CustomForm = styled(Form)`
-  flex-grow: 0 !important;
+  //flex-grow: 0 !important;
 `
 
 const BottomButtons = styled.div`
@@ -79,7 +78,7 @@ const Rectangle = styled.div`
   border-radius: 4px;
   border: solid 1px #2599d5;
   background-color: #ffffff;
-  margin: 0 0 20px 0;
+
   align-items: center;
   display: block;
   padding: 12px 11px;
@@ -322,7 +321,7 @@ class ExportInventorySidebar extends Component {
       loading
     } = this.props
 
-    const { filterValue, company, selectedCompanyOption, columns } = this.state
+    const { filterValue, company, selectedCompanyOption, columns, loadSidebar } = this.state
 
     let allCompanyOptions
     if (selectedCompanyOption) {
@@ -332,73 +331,94 @@ class ExportInventorySidebar extends Component {
     }
 
     return (
-      <>
-        <Rectangle>
-          <CustomDivContent>
-            <Info size={20} style={{ color: '#2599d5', marginRight: '10px' }} />
-            <FormattedMessage
-              id='myInventory.exportInfoText'
-              defaultMessage='Please choose, per branch, how many exports you would like'>
-              {text => text}
-            </FormattedMessage>
-          </CustomDivContent>
-        </Rectangle>
-
-        <Dropdown
-          style={{ width: 275, zIndex: 501 }}
-          placeholder={formatMessage({
-            id: 'myInventory.exportInventorySearchText',
-            defaultMessage: 'Search by Company'
-          })}
-          icon='search'
-          selection
-          clearable
-          options={allCompanyOptions}
-          search={options => options}
-          value={company}
-          loading={searchedCompaniesLoading}
-          onSearchChange={(e, { searchQuery }) => {
-            searchQuery.length > 0 && this.searchCompanies(searchQuery)
-          }}
-          onChange={this.handleFilterChangeCompany}
-        />
-
-        <div className='flex stretched' style={{ padding: '20px 0' }}>
-          <ProdexGrid
-            tableName='export_inventory'
-            {...datagrid.tableProps}
-            columns={columns}
-            rows={this.getRows(rows)}
-            loading={datagrid.loading || loading}
-            rowSelection={false}
-            showSelectionColumn={false}
-            treeDataType={true}
-            tableTreeColumn='name'
-            getChildRows={(row, rootRows) => {
-              return row ? row.branches : rootRows
-            }}
-            onRowClick={(_, row) => {
-              if (row.root && row.branches.length) {
-                let ids = this.state.expandedRowIds.slice()
-                if (ids.includes(row.id)) {
-                  //ids.filter(id => id === row.id)
-                  this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
-                } else {
-                  ids.push(row.id)
-                  this.setState({ expandedRowIds: ids })
-                }
-              }
-            }}
-            expandedRowIds={this.state.expandedRowIds}
-            onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-          />
-        </div>
-      </>
+      <Grid padded>
+        <Dimmer inverted active={loading || loadSidebar}>
+          <Loader />
+        </Dimmer>
+        <Grid.Row>
+          <Grid.Column>
+            <CustomHighSegment basic>
+              <FormattedMessage id='myInventory.exportInventory' defaultMessage='Export Inventory' />
+            </CustomHighSegment>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
+            <Rectangle>
+              <CustomDivContent>
+                <Info size={20} style={{ color: '#2599d5', marginRight: '10px' }} />
+                <FormattedMessage
+                  id='myInventory.exportInfoText'
+                  defaultMessage='Please choose, per branch, how many exports you would like'>
+                  {text => text}
+                </FormattedMessage>
+              </CustomDivContent>
+            </Rectangle>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={16}>
+            <Dropdown
+              style={{ zIndex: 501 }}
+              placeholder={formatMessage({
+                id: 'myInventory.exportInventorySearchText',
+                defaultMessage: 'Search by Company'
+              })}
+              icon='search'
+              selection
+              fluid
+              clearable
+              options={allCompanyOptions}
+              search={options => options}
+              value={company}
+              loading={searchedCompaniesLoading}
+              onSearchChange={(e, { searchQuery }) => {
+                searchQuery.length > 0 && this.searchCompanies(searchQuery)
+              }}
+              onChange={this.handleFilterChangeCompany}
+            />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={16}>
+            <div className='flex stretched'>
+              <ProdexGrid
+                tableName='export_inventory'
+                {...datagrid.tableProps}
+                columns={columns}
+                rows={this.getRows(rows)}
+                loading={datagrid.loading || loading}
+                rowSelection={false}
+                showSelectionColumn={false}
+                treeDataType={true}
+                tableTreeColumn='name'
+                getChildRows={(row, rootRows) => {
+                  return row ? row.branches : rootRows
+                }}
+                onRowClick={(_, row) => {
+                  if (row.root && row.branches.length) {
+                    let ids = this.state.expandedRowIds.slice()
+                    if (ids.includes(row.id)) {
+                      //ids.filter(id => id === row.id)
+                      this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
+                    } else {
+                      ids.push(row.id)
+                      this.setState({ expandedRowIds: ids })
+                    }
+                  }
+                }}
+                expandedRowIds={this.state.expandedRowIds}
+                onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
+              />
+            </div>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 
   render() {
-    const { onClose, loading } = this.props
+    const { onClose, loading, setExportSidebarOpenState, isExportInventoryOpen } = this.props
 
     const { selectedBranches, loadSidebar } = this.state
 
@@ -406,24 +426,20 @@ class ExportInventorySidebar extends Component {
       <Formik initialValues={{}} onReset={onClose} onSubmit={this.submitHandler} loading={loading}>
         {formikProps => (
           <CustomForm autoComplete='off'>
-            <FlexSidebar
-              visible={true}
-              width='very wide'
-              style={{ width: '630px' }}
-              direction='right'
-              animation='overlay'>
-              <div>
-                <Dimmer inverted active={loading || loadSidebar}>
-                  <Loader />
-                </Dimmer>
-                <CustomHighSegment basic>
-                  <FormattedMessage id='myInventory.exportInventory' defaultMessage='Export Inventory' />
-                </CustomHighSegment>
-              </div>
-              <FlexContent style={{ padding: '30px' }}>{this.renderContent()}</FlexContent>
-              <BottomButtons>
+            <FlexModal
+              open={isExportInventoryOpen}
+              closeIcon
+              onClose={e => {
+                e.stopPropagation()
+                setExportSidebarOpenState(false)
+              }}>
+              <FlexModalContent>{this.renderContent()}</FlexModalContent>
+              <Modal.Actions>
                 <Button.Reset
-                  className='light'
+                  onClick={e => {
+                    e.stopPropagation()
+                    setExportSidebarOpenState(false)
+                  }}
                   style={{ marginRight: '10px' }}
                   data-test='export_inventory_sidebar_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -431,7 +447,6 @@ class ExportInventorySidebar extends Component {
                   </FormattedMessage>
                 </Button.Reset>
                 <Button.Submit
-                  className='secondary'
                   disabled={!selectedBranches.length}
                   onClick={this.submitHandler}
                   data-test='export_inventory_sidebar_submit_btn'>
@@ -439,8 +454,8 @@ class ExportInventorySidebar extends Component {
                     {text => text}
                   </FormattedMessage>
                 </Button.Submit>
-              </BottomButtons>
-            </FlexSidebar>
+              </Modal.Actions>
+            </FlexModal>
           </CustomForm>
         )}
       </Formik>

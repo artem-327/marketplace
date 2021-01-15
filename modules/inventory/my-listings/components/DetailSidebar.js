@@ -64,9 +64,9 @@ import DocumentTab from '~/components/document-tab'
 import { Required } from '~/components/constants/layout'
 
 import {
-  ModalInventory,
+  FlexModal,
   FlexTabs,
-  ModalContentInventory,
+  FlexModalContent,
   TopMargedColumn,
   GraySegment,
   HighSegment,
@@ -1079,7 +1079,8 @@ class DetailSidebar extends Component {
       removeAttachment,
       currencySymbol,
       openGlobalAddForm,
-      inventoryGrid
+      inventoryGrid,
+      isLoadingBroadcast
     } = this.props
 
     const leftWidth = 6
@@ -1281,9 +1282,8 @@ class DetailSidebar extends Component {
 
           return (
             <Form onChange={this.onChange}>
-              <ModalInventory
+              <FlexModal
                 open={true}
-                dimmer={loading}
                 closeIcon
                 onClose={e => {
                   e.stopPropagation()
@@ -1291,7 +1291,10 @@ class DetailSidebar extends Component {
                     openGlobalAddForm ? openGlobalAddForm('') : this.props.closeSidebarDetail()
                   )
                 }}>
-                <ModalContentInventory>
+                <FlexModalContent>
+                  <Dimmer inverted active={loading}>
+                    <Loader active={loading} />
+                  </Dimmer>
                   <HighSegment basic>
                     <DivTitle>
                       {formatMessage({
@@ -1703,7 +1706,7 @@ class DetailSidebar extends Component {
                                       {this.state.isOpenOptionalInformation ? <ChevronUp /> : <ChevronDown />}
                                     </GridColumnOptionalInformation>
                                   </CustomGridRow>
-                                  {this.state.isOpenOptionalInformation && (
+                                  {this.state.isOpenOptionalInformation ? (
                                     <>
                                       <CustomGridRow>
                                         <GridColumn width={8}>
@@ -1987,7 +1990,7 @@ class DetailSidebar extends Component {
                                         </GridColumn>
                                       </CustomGridRow>
                                     </>
-                                  )}
+                                  ) : null}
                                 </Grid>
                               </Tab.Pane>
                             )
@@ -2227,7 +2230,7 @@ class DetailSidebar extends Component {
                               </Menu.Item>
                             ),
                             pane: (
-                              <Tab.Pane key='priceBook' style={{ padding: '18px' }}>
+                              <Tab.Pane loading={isLoadingBroadcast} key='priceBook' style={{ padding: '18px' }}>
                                 <Broadcast
                                   isPrepared={!this.state.broadcastLoading}
                                   asModal={false}
@@ -2340,7 +2343,7 @@ class DetailSidebar extends Component {
                       </div>
                     )}
                   </HighSegment>
-                </ModalContentInventory>
+                </FlexModalContent>
                 {this.state.activeTab !== 3 && (
                   <Modal.Actions>
                     <div>
@@ -2413,7 +2416,7 @@ class DetailSidebar extends Component {
                     </div>
                   </Modal.Actions>
                 )}
-              </ModalInventory>
+              </FlexModal>
               <ErrorFocus />
             </Form>
           )
@@ -2465,7 +2468,8 @@ const mapStateToProps = (
       warehousesList,
       listDocumentTypes,
       editProductOfferInitTrig
-    }
+    },
+    broadcast
   },
   { inventoryGrid }
 ) => ({
@@ -2488,7 +2492,8 @@ const mapStateToProps = (
   listDocumentTypes,
   editProductOfferInitTrig,
   currencySymbol: '$',
-  inventoryGrid
+  inventoryGrid,
+  isLoadingBroadcast: getSafe(() => broadcast.loading, false)
 })
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(DetailSidebar))))
