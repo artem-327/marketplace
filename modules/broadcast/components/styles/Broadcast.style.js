@@ -30,6 +30,8 @@ const BACKGROUND = {
   company: '#eee'
 }
 const FlexWrapper = styled.div`
+  flex-grow: 1;
+  flex-shrink: 1;
   display: flex;
   flex-flow: column;
   height: 100%;
@@ -78,8 +80,9 @@ const Row = styled.div`
 `
 
 const Root = styled.div`
+  flex-grow: 1;
+  flex-shrink: 1;
   display: flex;
-  flex: 1 1 100px;
   flex-direction: column;
   margin: 0em 0.714285714em;
   background-color: #ffffff;
@@ -170,6 +173,10 @@ const RightAlignedDiv = styled.div`
 `
 
 const StretchedGrid = styled(Grid)`
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column !important;
   height: calc(100% - 30px) !important;
 
   .ui.info.message {
@@ -244,8 +251,19 @@ const InputSearch = styled(Input)`
 `
 
 const GridRowTable = styled(Grid.Row)`
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column !important;
   padding-top: 7px !important;
   padding-bottom: 0 !important;
+  
+  > div {
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+  }
 `
 
 const ButtonSave = styled(Button)`
