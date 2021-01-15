@@ -26,3 +26,27 @@ export const cancelHold = id => api.patch(`/prodex/api/holds/${id}/cancel`)
 export const approveHold = id => api.patch(`/prodex/api/holds/${id}/approve`)
 
 export const toCartHold = id => api.patch(`/prodex/api/holds/${id}/to-cart`)
+
+export const makeOffer = body => {
+  return api.post(`/prodex/api/product-offer-bids`, body).then(response => response.data)
+}
+
+export const deleteOffer = id => {
+  return api.delete(`/prodex/api/product-offer-bids/id/${id}`).then(response => response.data)
+}
+
+export const acceptOffer = id => {
+  return api.patch(`/prodex/api/product-offer-bids/id/${id}/accept-last-offer`).then(response => response.data)
+}
+
+export const rejectOffer = id => {
+  return api.patch(`/prodex/api/product-offer-bids/id/${id}/reject-last-offer`).then(response => response.data)
+}
+
+export const counterOffer = (id, body) => {
+  return api.patch(`/prodex/api/product-offer-bids/id/${id}/counter-last-offer`, body).then(response => response.data)
+}
+
+export const addOfferToCart = id => {
+  return api.patch(`/prodex/api/product-offer-bids/id/${id}/to-cart`).then(response => response.data)
+}

@@ -23,6 +23,7 @@ import SearchByNamesAndTags from '~/modules/search'
 import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
+import MakeOfferPopup from './MakeOfferPopup'
 
 const defaultHiddenColumns = [
   'origin',
@@ -38,14 +39,6 @@ const defaultHiddenColumns = [
 const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
-
-const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
-  <Link prefetch href={to}>
-    <Menu.Item as='a' active={pathname === to}>
-      {children}
-    </Menu.Item>
-  </Link>
-))
 
 const CustomDiv = styled.div`
   white-space: nowrap;
@@ -404,6 +397,7 @@ class Listings extends Component {
       isMerchant,
       isCompanyAdmin,
       isClientCompanyAdmin,
+      openPopup,
       intl: { formatMessage }
     } = this.props
     const rowActions = []
@@ -428,13 +422,22 @@ class Listings extends Component {
       }),
       callback: () => this.tableRowClicked(row.id)
     }
+    const buttonMakeAnOffer = {
+      text: formatMessage({
+        id: 'marketplace.makeAnOffer',
+        defaultMessage: 'Make an Offer'
+      }),
+      callback: () => openPopup(row.rawData)
+    }
     if (isMerchant || isCompanyAdmin || isClientCompanyAdmin) {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
       rowActions.push(buttonRequestHold)
+      rowActions.push(buttonMakeAnOffer)
     } else {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
+      rowActions.push(buttonMakeAnOffer)
     }
     return rowActions
   }
@@ -448,7 +451,8 @@ class Listings extends Component {
       isCompanyAdmin,
       sidebar: { openInfo },
       tableHandlersFiltersListings,
-      activeMarketplaceFilter
+      activeMarketplaceFilter,
+      isOpenPopup
     } = this.props
     const { columns, fixed, openFilterPopup } = this.state
     let { formatMessage } = intl
@@ -542,6 +546,7 @@ class Listings extends Component {
         </div>
         <AddCart openInfo={openInfo} />
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
+        {isOpenPopup && <MakeOfferPopup />}
       </Container>
     )
   }
