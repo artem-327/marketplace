@@ -1095,6 +1095,7 @@ class MyListings extends Component {
             trigger={<FobPrice>{r.fobPrice}</FobPrice>}
             open={pricingEditOpenId === r.rawData.id}
             onOpen={() => setPricingEditOpenId(r.rawData.id)}
+            onClose={() => setPricingEditOpenId(null)}
           />
         ),
         broadcast: (
