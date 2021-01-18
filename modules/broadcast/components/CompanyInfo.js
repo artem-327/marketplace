@@ -210,8 +210,8 @@ class CompanyInfo extends Component {
   }
 
   render() {
-    const { isOpenModalCompanyInfo, closeModalCompanyInfo, isLoadingModalCompanyInfo, asSidebar } = this.props
-    if (!asSidebar) {
+    const { isOpenModalCompanyInfo, closeModalCompanyInfo, isLoadingModalCompanyInfo, asModal } = this.props
+    if (!asModal) {
       return (
         <Modal closeIcon open={isOpenModalCompanyInfo} onClose={() => closeModalCompanyInfo(false)} size='small'>
           <Modal.Header>
@@ -258,14 +258,14 @@ CompanyInfo.propTypes = {
   isOpenModalCompanyInfo: bool,
   closeModalCompanyInfo: func,
   isLoadingModalCompanyInfo: bool,
-  asSidebar: bool
+  asModal: bool
 }
 
 CompanyInfo.defaultProps = {
   dataCompanyInfo: {},
   isLoadingModalCompanyInfo: false,
   isOpenModalCompanyInfo: false,
-  asSidebar: false,
+  asModal: false,
   closeModalCompanyInfo: () => {}
 }
 

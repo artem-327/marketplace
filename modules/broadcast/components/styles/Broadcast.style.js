@@ -65,7 +65,7 @@ const Row = styled.div`
   font-weight: ${({ type }) => FONT_WEIGHT[type]};
 
   ${props =>
-    props.asSidebar
+    props.asModal
       ? `border-top-left-radius: ${BORDER_RADIUS[props.type]};
      border-top-right-radius: ${BORDER_RADIUS[props.type]};
     `
@@ -88,7 +88,7 @@ const Root = styled.div`
   background-color: #ffffff;
 
   ${props =>
-    props.asSidebar
+    props.asModal
       ? 'flex-basis: 60px'
       : `overflow-y: scroll;
           flex-basis: 168px;
@@ -112,7 +112,7 @@ const Header = styled(Row)`
     padding-right: 10px;
   }
 
-  ${props => (props.asSidebar ? 'justify-content: flex-end;' : '')}
+  ${props => (props.asModal ? 'justify-content: flex-end;' : '')}
 `
 const Content = styled.div`
   display: flex;
@@ -120,7 +120,7 @@ const Content = styled.div`
   flex-direction: column;
   overflow-y: none;
   ${props =>
-    props.asSidebar
+    props.asModal
       ? 'border: solid 1px #dee2e6 !important; border-radius: 4px; flex: 1 0 auto; overflow-y: hidden;'
       : ''}
 `
