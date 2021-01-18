@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
-import { MoreVertical, Sliders } from 'react-feather'
+import { MoreVertical, Sliders, ChevronDown, ChevronUp } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
 import { number, boolean } from 'prop-types'
@@ -24,6 +24,11 @@ import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 import MakeOfferPopup from './MakeOfferPopup'
+
+//Components
+import DetailRow from '~/components/detail-row'
+//Constants
+import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from '~/modules/orders/constants'
 
 const defaultHiddenColumns = [
   'origin',
@@ -213,12 +218,24 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 160
+        },
+        {
+          name: 'expand',
+          title: <div></div>,
+          caption: (
+            <FormattedMessage id='alerts.column.expand' defaultMessage='Expand'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          align: 'center',
+          width: 50
         }
       ],
       //pageNumber: 0,
       filterValues: {
         SearchByNamesAndTags: null
-      }
+      },
+      expandedRowIds: []
     }
   }
 
@@ -305,82 +322,93 @@ class Listings extends Component {
       intl: { formatMessage }
     } = this.props
 
-    return rows.map(r => ({
-      ...r,
-      clsName: r.condition ? 'non-conforming' : '',
-      intProductName: (
-        <ActionCell
-          row={r}
-          getActions={this.getActions}
-          content={r.intProductName}
-          onContentClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            this.tableRowClicked(r.id)
-          }}
-          rightAlignedContent={
-            r.expired || r.condition ? (
-              <Popup
-                size='small'
-                inverted
-                style={{
-                  fontSize: '12px',
-                  color: '#cecfd4',
-                  opacity: '0.9'
-                }}
-                header={
-                  <div>
-                    {r.expired && (
-                      <div>
-                        <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
-                      </div>
-                    )}
-                    {r.condition && (
-                      <div>
-                        <FormattedMessage
-                          id='global.nonConforming.tooltip'
-                          defaultMessage='This is a non-conforming product.'
-                        />
-                      </div>
-                    )}
-                  </div>
-                }
-                trigger={
-                  <div>
-                    <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
-                  </div>
-                } // <div> has to be there otherwise popup will be not shown
-              />
-            ) : null
-          }
-        />
-      ),
-      condition: r.condition ? (
-        <Popup
-          content={r.conditionNotes}
-          trigger={
-            <div className='dashed-underline'>
-              <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
-            </div>
-          } // <div> has to be there otherwise popup will be not shown
-        />
-      ) : (
-        <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
-      ),
-      packaging: (
-        <>
-          {`${r.packagingSize} ${r.packagingUnit} `}
-          <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
-        </>
-      ),
-      notes: r.notes ? (
-        <Popup
-          content={r.notes}
-          trigger={<CustomDiv>{r.notes}</CustomDiv>} // <div> has to be there otherwise popup will be not shown
-        />
-      ) : null,
-      association: <ArrayToFirstItem values={r.association} rowItems={1} />
-    }))
+    return rows.map(r => {
+      let clsName = ''
+      let hasExpandedRowIds = this.state.expandedRowIds.some(id => id === r.id)
+      if (r.condition) clsName = 'non-conforming'
+      if (hasExpandedRowIds) clsName = `${clsName} open`
+      return {
+        ...r,
+        clsName,
+        intProductName: (
+          <ActionCell
+            row={r}
+            getActions={this.getActions}
+            content={r.intProductName}
+            onContentClick={e => {
+              e.stopPropagation()
+              e.preventDefault()
+              this.tableRowClicked(r.id)
+            }}
+            rightAlignedContent={
+              r.expired || r.condition ? (
+                <Popup
+                  size='small'
+                  inverted
+                  style={{
+                    fontSize: '12px',
+                    color: '#cecfd4',
+                    opacity: '0.9'
+                  }}
+                  header={
+                    <div>
+                      {r.expired && (
+                        <div>
+                          <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
+                        </div>
+                      )}
+                      {r.condition && (
+                        <div>
+                          <FormattedMessage
+                            id='global.nonConforming.tooltip'
+                            defaultMessage='This is a non-conforming product.'
+                          />
+                        </div>
+                      )}
+                    </div>
+                  }
+                  trigger={
+                    <div>
+                      <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
+                    </div>
+                  } // <div> has to be there otherwise popup will be not shown
+                />
+              ) : null
+            }
+          />
+        ),
+        condition: r.condition ? (
+          <Popup
+            content={r.conditionNotes}
+            trigger={
+              <div className='dashed-underline'>
+                <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
+              </div>
+            } // <div> has to be there otherwise popup will be not shown
+          />
+        ) : (
+          <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
+        ),
+        packaging: (
+          <>
+            {`${r.packagingSize} ${r.packagingUnit} `}
+            <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
+          </>
+        ),
+        notes: r.notes ? (
+          <Popup
+            content={r.notes}
+            trigger={<CustomDiv>{r.notes}</CustomDiv>} // <div> has to be there otherwise popup will be not shown
+          />
+        ) : null,
+        association: <ArrayToFirstItem values={r.association} rowItems={1} />,
+        expand: hasExpandedRowIds ? (
+          <ChevronUp size={16} style={{ cursor: 'pointer' }} />
+        ) : (
+          <ChevronDown size={16} style={{ cursor: 'pointer' }} />
+        )
+      }
+    })
   }
 
   tableRowClicked = (clickedId, isHoldRequest = false, openInfo = false) => {
@@ -442,6 +470,17 @@ class Listings extends Component {
     return rowActions
   }
 
+  getRowDetail = ({ row }) => {
+    return (
+      <DetailRow
+        row={row}
+        items={row.orderItems}
+        headerAttributes={HEADER_ATTRIBUTES}
+        contentAttributes={CONTENT_ATTRIBUTES}
+      />
+    )
+  }
+
   render = () => {
     const {
       datagrid,
@@ -497,51 +536,45 @@ class Listings extends Component {
           </CustomRowDiv>
         </div>
 
-        <div className='flex stretched marketplace-wrapper' style={{ padding: '10px 5px' }}>
+        <div className='flex stretched table-detail-rows-wrapper ' style={{ padding: '10px 5px' }}>
           <ProdexGrid
             defaultHiddenColumns={defaultHiddenColumns}
             tableName='marketplace_listings_grid'
             {...datagrid.tableProps}
             rows={rows}
+            rowDetailType={true}
+            rowDetail={this.getRowDetail}
+            estimatedRowHeight={1000}
+            onRowClick={(_, row) => {
+              let ids = this.state.expandedRowIds.slice()
+              if (ids.includes(row.id)) {
+                //ids.filter(id => id === row.id)
+                this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
+              } else {
+                ids.push(row.id)
+                this.setState({ expandedRowIds: ids })
+              }
+            }}
+            expandedRowIds={this.state.expandedRowIds}
+            onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
             columns={columns}
-            fixed={fixed}
-            groupBy={['productNumber']}
-            getChildGroups={rows =>
-              _(rows)
-                .groupBy('productGroupName')
-                .map(v => ({
-                  key: `${v[0].productGroupName}_${v[0].productNumber}_${v[0].companyProduct.id}_${v[0].tagsNames}`,
-                  groupLength: v.length,
-                  childRows: v
-                }))
-                .value()
-            }
-            renderGroupLabel={
-              ({ row: { value }, groupLength }) => null
-              /* #35127
-              {
-                const [name, number, id, tagsNames] = value.split('_')
-                // const numberArray = number.split(' & ')
-                const tagNames = tagsNames ? tagsNames.split(',') : []
-                return (
-                  <span>
-                    <span className='flex row right'>
-                      <span>
-                        {tagNames.length ? <ArrayToFirstItem values={tagNames} rowItems={5} tags={true} /> : ''}
-                      </span>
-                    </span>
-                  </span>
-                )
-              }
-              */
-            }
-            /*onRowClick={(e, row) => {
-              const targetTag = e.target.tagName.toLowerCase()
-              if (targetTag !== 'input' && targetTag !== 'label') {
-                this.tableRowClicked(row.id, false, true)
-              }
-            }}*/
             data-test='marketplace_listings_row_action'
+
+            //fixed={fixed}
+            //groupBy={['productNumber']}
+            //getChildGroups={rows =>
+            //  _(rows)
+            //    .groupBy('productGroupName')
+            //    .map(v => ({
+            //      key: `${v[0].productGroupName}_${v[0].productNumber}_${v[0].companyProduct.id}_${v[0].tagsNames}`,
+            //      groupLength: v.length,
+            //      childRows: v
+            //    }))
+            //    .value()
+            //}
+            //renderGroupLabel={
+            //  ({ row: { value }, groupLength }) => null
+            //}
           />
         </div>
         <AddCart openInfo={openInfo} />
