@@ -28,6 +28,7 @@ import moment from 'moment'
 import confirm from '~/src/components/Confirmable/confirm'
 import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
 import MakeOfferPopup from '../../listings/components/MakeOfferPopup'
+import Router from 'next/router'
 
 class BidsSent extends Component {
   constructor(props) {
@@ -44,12 +45,22 @@ class BidsSent extends Component {
         {
           name: 'description',
           title: <div></div>,
+          caption: (
+            <FormattedMessage id='marketplace.description' defaultMessage='Description'>
+              {text => text}
+            </FormattedMessage>
+          ),
           width: 600,
           maxWidth: 2000
         },
         {
           name: 'createdAt',
           title: <div></div>,
+          caption: (
+            <FormattedMessage id='marketplace.createdAt' defaultMessage='Created At'>
+              {text => text}
+            </FormattedMessage>
+          ),
           width: 150,
           //sortPath: 'ProductOffer.pkgAvailable'
         }
@@ -181,11 +192,27 @@ class BidsSent extends Component {
       deleteOffer,
       acceptOffer,
       rejectOffer,
+      addOfferToCart,
       datagrid
     } = this.props
     const { expandedRowIds } = this.state
     const rowActions = []
+    const { cfHistoryLastStatus, cfHistoryLastType } = row
 
+    const buttonPurchase = {
+      text: formatMessage({
+        id: 'marketplace.purchase',
+        defaultMessage: 'Purchase'
+      }),
+      callback: async () => {
+        try {
+          const { value } = await addOfferToCart(row.id)
+          Router.push('/cart')
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    }
     const buttonAccept = {
       text: formatMessage({
         id: 'marketplace.accept',
@@ -253,9 +280,15 @@ class BidsSent extends Component {
       }
     }
 
-    rowActions.push(buttonAccept)
-    rowActions.push(buttonReject)
-    rowActions.push(buttonCounter)
+    if (cfHistoryLastStatus === 'ACCEPTED') {
+      rowActions.push(buttonPurchase)
+    } else if (cfHistoryLastStatus === 'NEW' && cfHistoryLastType === 'NORMAL') {
+      rowActions.push(buttonReject)
+    } else if (cfHistoryLastStatus === 'NEW' && cfHistoryLastType === 'COUNTER') {
+      rowActions.push(buttonAccept)
+      rowActions.push(buttonReject)
+      rowActions.push(buttonCounter)
+    }
     rowActions.push(buttonDelete)
 
     return rowActions

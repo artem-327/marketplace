@@ -30,7 +30,8 @@ import {
 const CART_ITEM_TYPES = {
   INVENTORY_HOLD: 'INVENTORY_HOLD',
   PURCHASE_REQUEST_OFFER: 'PURCHASE_REQUEST_OFFER',
-  MARKETPLACE_OFFER: 'MARKETPLACE_OFFER'
+  MARKETPLACE_OFFER: 'MARKETPLACE_OFFER',
+  PRODUCT_OFFER_BID: 'PRODUCT_OFFER_BID'
 }
 
 export default class Cart extends Component {
@@ -112,7 +113,8 @@ export default class Cart extends Component {
               <Button
                 disabled={
                   item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
-                  item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER
+                  item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
+                  item.cartItemType === CART_ITEM_TYPES.PRODUCT_OFFER_BID
                 }
                 basic
                 onClick={() => this.editCart(item)}>
