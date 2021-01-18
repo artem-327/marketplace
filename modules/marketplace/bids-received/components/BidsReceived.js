@@ -42,12 +42,22 @@ class BidsReceived extends Component {
         {
           name: 'description',
           title: <div></div>,
+          caption: (
+            <FormattedMessage id='marketplace.description' defaultMessage='Description'>
+              {text => text}
+            </FormattedMessage>
+          ),
           width: 600,
           maxWidth: 2000,
         },
         {
           name: 'createdAt',
           title: <div></div>,
+          caption: (
+            <FormattedMessage id='marketplace.createdAt' defaultMessage='Created At'>
+              {text => text}
+            </FormattedMessage>
+          ),
           width: 150,
           //sortPath: 'ProductOffer.pkgAvailable'
         }
@@ -181,6 +191,7 @@ class BidsReceived extends Component {
       datagrid
     } = this.props
     const rowActions = []
+    const { cfHistoryLastStatus, cfHistoryLastType } = row
 
     const buttonAccept = {
       text: formatMessage({
@@ -218,9 +229,11 @@ class BidsReceived extends Component {
       callback: () => this.setState({ expandedRowIds: [row.id] })
     }
 
-    rowActions.push(buttonAccept)
-    rowActions.push(buttonReject)
-    rowActions.push(buttonCounter)
+    if (cfHistoryLastStatus === 'NEW' && cfHistoryLastType === 'NORMAL') {
+      rowActions.push(buttonAccept)
+      rowActions.push(buttonReject)
+      rowActions.push(buttonCounter)
+    }
 
     return rowActions
   }
