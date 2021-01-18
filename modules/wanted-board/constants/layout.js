@@ -302,7 +302,7 @@ export const InputWrapper = styled.div`
         // .ui.input input {
         box-sizing: border-box;
         max-width: 100%;
-        padding: 5px 30px 5px 13px;
+        padding: 5px 13px 5px 35px;
         background-color: #fdfdfd;
         font-size: 14px;
         line-height: 1.4285714;
@@ -323,9 +323,10 @@ export const InputWrapper = styled.div`
       > .ui.label {
         position: absolute;
         top: 4px;
-        right: 4px;
+        left: 4px;
         width: 24px;
         height: 24px;
+        margin: 0;
         border-radius: 2px;
         padding: 0;
         background-color: rgba(132, 194, 37, 0.15);
