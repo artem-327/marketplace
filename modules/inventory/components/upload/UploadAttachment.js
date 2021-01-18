@@ -18,7 +18,7 @@ const StyledButton = styled(Button)`
 `
 
 const DivUpload = styled.div`
-  .uploadAttachment {
+  &.uploadAttachment {
     padding: 1.4em;
     background: #f8f9fb none;
     text-align: center;
