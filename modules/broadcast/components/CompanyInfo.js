@@ -3,68 +3,22 @@ import pt, { node, bool, number, object, func } from 'prop-types'
 import { Modal, Button, Grid, GridRow, GridColumn, Input, Dimmer, Loader, Label } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
-import styled from 'styled-components'
 
 import ProdexGrid from '~/components/table'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { getSafe } from '~/utils/functions'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
-
-export const CustomRow = styled(GridRow)`
-  margin-left: 25px !important;
-  margin-right: 25px !important;
-  border-bottom: 1px solid #f0f0f0 !important;
-`
-
-export const CustomRowTable = styled(GridRow)`
-  margin-left: 25px !important;
-  margin-right: 25px !important;
-`
-
-export const CustomColumn = styled(GridColumn)`
-  padding: 0 !important;
-  color: #848893 !important;
-`
-
-export const CustomDiv = styled.div`
-  padding: 0 !important;
-`
-
-export const CustomModalActions = styled(Modal.Actions)`
-  background: none !important;
-`
-
-export const CustomLabelVerified = styled(Label)`
-  background: #84c225 !important;
-  color: #ffffff !important;
-  font-size: 12px !important;
-  font-weight: normal !important;
-  font-stretch: normal !important;
-  font-style: normal !important;
-  letter-spacing: normal !important;
-  text-align: center !important;
-  border-radius: 11px !important;
-  width: 74px !important;
-  height: 22px !important;
-`
-
-export const CustomLabelNotVerified = styled(Label)`
-  background: #dee2e6 !important;
-  color: #848893 !important;
-  font-size: 12px !important;
-  font-weight: normal !important;
-  font-stretch: normal !important;
-  font-style: normal !important;
-  letter-spacing: normal !important;
-  text-align: center !important;
-  border-radius: 11px !important;
-  width: 74px !important;
-  height: 22px !important;
-`
-
-export const CustomDivValue = styled.div`
-  color: #20273a !important;
-`
+//Styles
+import {
+  CustomDivValue,
+  CustomLabelNotVerified,
+  CustomLabelVerified,
+  CustomModalActions,
+  CustomDiv,
+  CustomColumn,
+  DivTitle,
+  CustomRow
+} from './styles/CompanyInfo.style'
 
 const leftWidth = 6
 const rightWidth = 10
@@ -135,11 +89,10 @@ const values = {
 
 class CompanyInfo extends Component {
   getContent = () => {
-    //TODO fixed with real data in 1.0.5 from new endpoint where we get all data for this modal company info
     const { dataCompanyInfo } = this.props
 
     return (
-      <Grid>
+      <>
         <CustomRow>
           <CustomColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
             <FormattedMessage id='boradcast.modal.companyName' defaultMessage='Company Name'>
@@ -159,19 +112,31 @@ class CompanyInfo extends Component {
             </FormattedMessage>
           </CustomColumn>
           <CustomColumn mobile={rightWidth} computer={rightWidth}>
-            <CustomDivValue name='associations'>
-              {dataCompanyInfo.associations && dataCompanyInfo.associations.length
-                ? (
-                    <ArrayToFirstItem
-                      values={getSafe(() => dataCompanyInfo.associations, []).map(r => r.name)}
-                    />
-                  )
-                : 'N/A'
-              }
+            <CustomDivValue name='nacdMember'>
+              {dataCompanyInfo.associations && dataCompanyInfo.associations.length ? (
+                <ArrayToFirstItem values={getSafe(() => dataCompanyInfo.associations, []).map(r => r.name)} />
+              ) : (
+                'N/A'
+              )}
+              {/* {false ? (
+                <CustomLabelNotVerified>Not Verified</CustomLabelNotVerified>
+              ) : (
+                <CustomLabelVerified>Verified</CustomLabelVerified>
+              )} */}
             </CustomDivValue>
           </CustomColumn>
         </CustomRow>
-        <CustomRow>
+        {/* {<CustomRow>
+          <CustomColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
+            <FormattedMessage id='global.nacdReferences' defaultMessage='NACD References'>
+              {text => text}
+            </FormattedMessage>
+          </CustomColumn>
+          <CustomColumn mobile={rightWidth} computer={rightWidth}>
+            <CustomDivValue name='nacdReferences'>8 Companies</CustomDivValue>
+          </CustomColumn>
+        </CustomRow>} */}
+        {/* {<CustomRow>
           <CustomColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
             <FormattedMessage id='boradcast.modal.successfulSales' defaultMessage='Successful Sales'>
               {text => text}
@@ -182,7 +147,7 @@ class CompanyInfo extends Component {
               {getSafe(() => dataCompanyInfo.successfulSales, 'N/A')}
             </CustomDivValue>
           </CustomColumn>
-        </CustomRow>
+        </CustomRow>} */}
         <CustomRow>
           <CustomColumn mobile={leftWidth} computer={leftWidth} verticalAlign='middle'>
             <FormattedMessage id='boradcast.modal.participateSince' defaultMessage='Participate Since'>
@@ -191,14 +156,14 @@ class CompanyInfo extends Component {
           </CustomColumn>
           <CustomColumn mobile={rightWidth} computer={rightWidth}>
             <CustomDivValue name='participateSince'>
-              {getSafe(() => dataCompanyInfo.participateSince, 'N/A')}
+              {dataCompanyInfo.createdAt && moment(dataCompanyInfo.createdAt).format(getLocaleDateFormat())}
             </CustomDivValue>
           </CustomColumn>
         </CustomRow>
         <GridRow>
           <CustomColumn></CustomColumn>
         </GridRow>
-        <CustomRowTable>
+        <GridRow>
           <CustomColumn>
             <ProdexGrid
               virtual={false}
@@ -239,31 +204,52 @@ class CompanyInfo extends Component {
               ]}
             />
           </CustomColumn>
-        </CustomRowTable>
-      </Grid>
+        </GridRow>
+      </>
     )
   }
 
   render() {
-    const { isOpenModalCompanyInfo, closeModalCompanyInfo, isLoadingModalCompanyInfo } = this.props
-    return (
-      <Modal closeIcon open={isOpenModalCompanyInfo} onClose={() => closeModalCompanyInfo(false)} size='small'>
-        <Modal.Header>
-          <FormattedMessage id='broadcast.companyInfo' defaultMessage='COMPANY INFO' />
-        </Modal.Header>
-        <Modal.Content>
+    const { isOpenModalCompanyInfo, closeModalCompanyInfo, isLoadingModalCompanyInfo, asModal } = this.props
+    if (!asModal) {
+      return (
+        <Modal closeIcon open={isOpenModalCompanyInfo} onClose={() => closeModalCompanyInfo(false)} size='small'>
+          <Modal.Header>
+            <FormattedMessage id='broadcast.companyInfo' defaultMessage='COMPANY INFO' />
+          </Modal.Header>
+          <Modal.Content>
+            <Dimmer inverted active={isLoadingModalCompanyInfo}>
+              <Loader />
+            </Dimmer>
+            <Grid>{this.getContent()}</Grid>
+          </Modal.Content>
+          <CustomModalActions>
+            <Button
+              basic
+              onClick={() => closeModalCompanyInfo(false)}
+              data-test='broadcast_modal_close_company_info_btn'>
+              <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+            </Button>
+          </CustomModalActions>
+        </Modal>
+      )
+    } else {
+      return (
+        <Grid>
+          <Grid.Row>
+            <Grid.Column>
+              <DivTitle>
+                <FormattedMessage id='broadcast.companyInfo' defaultMessage='Company Info' />
+              </DivTitle>
+            </Grid.Column>
+          </Grid.Row>
           <Dimmer inverted active={isLoadingModalCompanyInfo}>
             <Loader />
           </Dimmer>
           {this.getContent()}
-        </Modal.Content>
-        <CustomModalActions>
-          <Button basic onClick={() => closeModalCompanyInfo(false)} data-test='broadcast_modal_close_company_info_btn'>
-            <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
-          </Button>
-        </CustomModalActions>
-      </Modal>
-    )
+        </Grid>
+      )
+    }
   }
 }
 
@@ -271,13 +257,15 @@ CompanyInfo.propTypes = {
   dataCompanyInfo: object,
   isOpenModalCompanyInfo: bool,
   closeModalCompanyInfo: func,
-  isLoadingModalCompanyInfo: bool
+  isLoadingModalCompanyInfo: bool,
+  asModal: bool
 }
 
 CompanyInfo.defaultProps = {
   dataCompanyInfo: {},
   isLoadingModalCompanyInfo: false,
   isOpenModalCompanyInfo: false,
+  asModal: false,
   closeModalCompanyInfo: () => {}
 }
 

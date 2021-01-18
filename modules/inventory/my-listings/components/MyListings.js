@@ -596,10 +596,8 @@ class MyListings extends Component {
       datagrid.setFilter(datagridFilter, datagridFilterReload, 'inventory')
     }
     if (
-      (!getSafe(() => prevState.rows.length, '') &&
-        !getSafe(() => this.state.rows.length, '') &&
-        !getSafe(() => prevProps.rows.length, '') &&
-        getSafe(() => this.props.rows.length, '')) ||
+      (getSafe(() => prevProps.rows.length, '') === getSafe(() => this.state.rows.length, '') &&
+        getSafe(() => prevProps.rows.length, '') !== getSafe(() => this.props.rows.length, '')) ||
       getSafe(() => prevProps.rows[0].id, '') !== getSafe(() => this.props.rows[0].id, '') ||
       getSafe(() => prevProps.pricingEditOpenId, '') !== getSafe(() => this.props.pricingEditOpenId, '') ||
       (getSafe(() => this.state.updatedRow, '') && !getSafe(() => prevState.updateRow, '')) ||
@@ -798,7 +796,7 @@ class MyListings extends Component {
           id: 'myInventory.networkSubtitle',
           defaultMessage: 'Your accepted Partners and invited Guests'
         }),
-        value: 'FREE_FOR_ALL'
+        value: 'GLOBAL_RULES'
       },
       /*{
         icon: (

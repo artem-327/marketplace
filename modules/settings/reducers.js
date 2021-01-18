@@ -137,7 +137,8 @@ export const initialState = {
   isReloadBankAcounts: false,
   sidebarValues: null,
   isHideInactiveAccounts: false,
-  institutId: null
+  institutId: null,
+  isLoadingAddedAccounts: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1584,6 +1585,15 @@ export default function reducer(state = initialState, action) {
         loading: true
       }
     }
+    /* VELLOCI_ADD_ACOUNT */
+
+    case AT.VELLOCI_ADD_ACOUNT_PENDING: {
+      return {
+        ...state,
+        isLoadingAddedAccounts: true,
+        loading: true
+      }
+    }
 
     case AT.DELETE_INSTITUTION_FULFILLED: {
       return {
@@ -1592,9 +1602,24 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.VELLOCI_ADD_ACOUNT_FULFILLED: {
+      return {
+        ...state,
+        isLoadingAddedAccounts: false,
+        loading: false
+      }
+    }
+
     case AT.DELETE_INSTITUTION_REJECTED: {
       return {
         ...state,
+        loading: false
+      }
+    }
+    case AT.VELLOCI_ADD_ACOUNT_REJECTED: {
+      return {
+        ...state,
+        isLoadingAddedAccounts: false,
         loading: false
       }
     }
