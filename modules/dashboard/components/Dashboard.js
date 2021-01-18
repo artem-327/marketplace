@@ -820,27 +820,29 @@ class Dashboard extends Component {
         menuItem: (
           <RightChartControl>
             {activeTab === 1 ? (
-              <StatsTypeSelect
-                key='statsType'
-                style={{ marginRight: '10px' }}
-                selection
-                options={Object.entries(statsTabs).map(stType => {
-                  return { text: stType[1][0], value: stType[0] }
-                })}
-                onChange={(e, { value }) => this.setState({ statsType: value })}
-                value={!statsType ? Object.entries(statsTabs)[0][0] : statsType}
-                data-test='dashboard_stats_drpdn'
-              />
+              <>
+                <StatsTypeSelect
+                  key='statsType'
+                  style={{ marginRight: '10px' }}
+                  selection
+                  options={Object.entries(statsTabs).map(stType => {
+                    return { text: stType[1][0], value: stType[0] }
+                  })}
+                  onChange={(e, { value }) => this.setState({ statsType: value })}
+                  value={!statsType ? Object.entries(statsTabs)[0][0] : statsType}
+                  data-test='dashboard_stats_drpdn'
+                />
+                <StatsTypeSelect
+                  key='dateRangeSelect'
+                  style={{ minWidth: '150px' }}
+                  selection
+                  options={dateRangeOptions}
+                  onChange={(e, { value }) => this.setDateRange(value)}
+                  value={dateRangeSelected}
+                  data-test='dashboard_date_range_select_drpdn'
+                />
+              </>
             ) : null}
-            <StatsTypeSelect
-              key='dateRangeSelect'
-              style={{ minWidth: '150px' }}
-              selection
-              options={dateRangeOptions}
-              onChange={(e, { value }) => this.setDateRange(value)}
-              value={dateRangeSelected}
-              data-test='dashboard_date_range_select_drpdn'
-            />
             {this.graphTypeSwitch()}
           </RightChartControl>
         )
