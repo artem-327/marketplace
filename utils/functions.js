@@ -181,7 +181,27 @@ export const getFormattedAddress = address => {
   )
 }
 
-// Taken from src/utils/functions.js without any modifications
+export function getLocationString(productOffer) {
+  try {
+    var location = productOffer.warehouse.deliveryAddress.address
+  } catch (e) {
+    return ''
+  }
+
+  return `${location.province ? `${location.province.abbreviation},` : ''} ${location.country.name}`
+}
+
+export function addFirstTier(productOffer) {
+  let { pricingTiers, minPkg, price } = productOffer
+
+  let sortedTiers = pricingTiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
+
+  if (sortedTiers.length && minPkg < sortedTiers[0].quantityFrom)
+    return { ...productOffer, pricingTiers: [{ quantityFrom: minPkg, price: price.amount }].concat(sortedTiers) }
+
+  return productOffer
+}
+
 export function getPricing(offerDetail, quantity) {
   if (offerDetail.pricingTiers) {
     let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricingTiers[0].pricePerUOM

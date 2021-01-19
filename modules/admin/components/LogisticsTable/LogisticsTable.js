@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
 import { deleteLogisticsProvider, openPopup } from '../../actions'
@@ -88,10 +88,13 @@ class LogisticsTable extends Component {
               id: 'confirm.admin.deleteLogisticProvider.title',
               defaultMessage: 'Delete Logistic Provider'
             }),
-            formatMessage({
-              id: 'confirm.admin.deleteLogisticProvider.content',
-              defaultMessage: "Do you really want to delete '{name}' logistic provider?"
-            }, { name: row.rawData.name })
+            formatMessage(
+              {
+                id: 'confirm.admin.deleteLogisticProvider.content',
+                defaultMessage: "Do you really want to delete '{name}' logistic provider?"
+              },
+              { name: row.rawData.name }
+            )
           ).then(async () => {
             try {
               await deleteLogisticsProvider(row.id)
@@ -121,12 +124,7 @@ class LogisticsTable extends Component {
   }
 
   render() {
-    const {
-      loading,
-      rows,
-      datagrid,
-      filterValue
-    } = this.props
+    const { loading, rows, datagrid, filterValue } = this.props
 
     return (
       <div className='flex stretched listings-wrapper'>
@@ -149,23 +147,22 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
-
   return {
     rows: datagrid.rows.map(row => {
       return {
         ...row,
         rawData: row,
-        name: (
-          <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{row.name}</div>
-        ),
-        reinvoice: row.reinvoice
-          ? <FormattedMessage id='global.yes' defaultMessage='Yes'/>
-          : <FormattedMessage id='global.no' defaultMessage='No'/>
+        name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{row.name}</div>,
+        reinvoice: row.reinvoice ? (
+          <FormattedMessage id='global.yes' defaultMessage='Yes' />
+        ) : (
+          <FormattedMessage id='global.no' defaultMessage='No' />
+        )
       }
     }),
     editId: state.admin.popupValues && state.admin.popupValues.id,
     filterValue: state.admin.filterValue,
-    loading: state.admin.loading,
+    loading: state.admin.loading
   }
 }
 

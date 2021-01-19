@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import { string } from 'prop-types'
+import React, { Component } from 'react'
+import { number } from 'prop-types'
 
 import BackgroundImage from '~/images/background.svg'
 import Layout from '~/components/LayoutUnauthorized'
@@ -7,7 +7,6 @@ import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Router from 'next/router'
 import { FormattedMessage } from 'react-intl'
-
 
 const PageWrapper = styled.div`
   position: relative;
@@ -37,9 +36,7 @@ const Footer = styled.p`
   margin: 40px 0 30px 0 !important;
 `
 
-
 export default class ErrorComponent extends Component {
-
   render() {
     return (
       <Layout>
@@ -74,9 +71,8 @@ export default class ErrorComponent extends Component {
   }
 }
 
-
 ErrorComponent.propTypes = {
-  statusCode: string
+  statusCode: number
 }
 
 ErrorComponent.defaultProps = {

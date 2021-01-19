@@ -4,9 +4,9 @@ var withCss = require('@zeit/next-css')
 var path = require('path')
 var Dotenv = require('dotenv-webpack')
 
-module.exports = withCss(
-  withSass({
-    webpack: function(config) {
+module.exports = withSass(
+  withCss({
+    webpack: function (config) {
       config.module.rules.push({
         test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif|ico)$/,
         use: {

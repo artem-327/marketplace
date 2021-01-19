@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 
@@ -222,13 +222,7 @@ class CompanyGenericProductsTable extends Component {
   getRows = () => {
     return this.props.rows.map(row => ({
       ...row,
-      processed: (
-        <ActionCell
-          row={row}
-          getActions={this.getActions}
-          content={row.processed}
-        />
-      ),
+      processed: <ActionCell row={row} getActions={this.getActions} content={row.processed} />,
       attachments:
         row.attachments && row.attachments.length ? (
           <a href='#' onClick={e => this.openAttachmentsPopup(e, row.attachments)}>

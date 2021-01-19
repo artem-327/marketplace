@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 
@@ -116,13 +116,7 @@ class ShippingQuotesTable extends Component {
     return rows.map(row => {
       return {
         ...row,
-        quoteId: (
-          <ActionCell
-            row={row}
-            getActions={this.getActions}
-            content={row.quoteId}
-          />
-        )
+        quoteId: <ActionCell row={row} getActions={this.getActions} content={row.quoteId} />
       }
     })
   }

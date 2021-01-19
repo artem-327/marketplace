@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import securePage from '~/hocs/securePage'
 import Layout from 'components/Layout'
-// import ShoppingCart from '~/src/pages/cart/ShoppingCart'
 import { injectIntl } from 'react-intl'
 import Errors from '~/modules/errors'
 

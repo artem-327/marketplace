@@ -21,7 +21,7 @@ import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
 import ModalDetail from '~/modules/inventory/my-listings/components/ModalDetail'
 import QuickEditPricingPopup from '~/modules/inventory/my-listings/components/QuickEditPricingPopup'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/inventory/my-products/components/ProductImportPopup'
@@ -658,32 +658,32 @@ class MyListings extends Component {
           id: 'global.tds',
           defaultMessage: 'TDS'
         }),
-        disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 1, modalDetailTrigger)
+        disabled: row => !!row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'global.documents',
           defaultMessage: 'Documents'
         }),
-        disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 2, modalDetailTrigger)
+        disabled: row => !!row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'inventory.broadcast',
           defaultMessage: 'Price Book'
         }),
-        disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 3, modalDetailTrigger)
+        disabled: row => !!row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
           id: 'inventory.priceTiers',
           defaultMessage: 'Price Tiers'
         }),
-        disabled: row => row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 4, modalDetailTrigger)
+        disabled: row => !!row.groupId,
+        callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
       },
       {
         text: formatMessage({
@@ -719,7 +719,7 @@ class MyListings extends Component {
       //     id: 'inventory.groupOffer',
       //     defaultMessage: 'Join/Create Virtual Group'
       //   }),
-      //   callback: () =>
+      //   callback: (row) =>
       //     this.groupOffer(
       //       {
       //         overrideBroadcastRules: false,
@@ -727,15 +727,15 @@ class MyListings extends Component {
       //       },
       //       row.rawData
       //     ),
-      //   disabled: () => !!row.parentOffer
+      //   disabled: (row) => !!row.parentOffer
       // },
       // {
       //   text: formatMessage({
       //     id: 'inventory.detachOffer',
       //     defaultMessage: 'Detach from Virtual Group'
       //   }),
-      //   callback: () => this.detachOffer([row.id], row.rawData),
-      //   disabled: () => !row.parentOffer
+      //   callback: (row) => this.detachOffer([row.id], row.rawData),
+      //   disabled: (row) => !row.parentOffer
       // }
     ]
   }

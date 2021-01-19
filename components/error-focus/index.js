@@ -1,6 +1,5 @@
 import { Component } from 'react'
 import { connect } from 'formik'
-import deepKeys from 'deep-keys'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'

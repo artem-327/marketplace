@@ -8,7 +8,7 @@ import * as Actions from '~/modules/settings/actions'
 import { openPopup, handleProductCatalogUnmappedValue } from '../../actions'
 import Router from 'next/router'
 
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { injectIntl, FormattedNumber, FormattedMessage } from 'react-intl'
 import { debounce } from 'lodash'
 import { UnitOfPackaging } from '~/components/formatted-messages'

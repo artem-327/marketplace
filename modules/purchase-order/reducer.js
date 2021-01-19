@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import { getLocationString, getPricing, addFirstTier, calculateTotalPrice } from '~/src/utils/functions'
+import { getLocationString, addFirstTier } from '~/utils/functions'
 
 export const initialState = {
   offerDetail: {},

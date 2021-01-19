@@ -7,7 +7,7 @@ import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-message
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 // import { TablePopUp } from '~/components/tablePopup'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 
