@@ -2040,13 +2040,19 @@ class ModalDetail extends Component {
                               <Tab.Pane key='tds' style={{ padding: '16px' }}>
                                 <Grid>
                                   <Grid.Row>
-                                    <Grid.Column width={7}>
+                                    <Grid.Column width={4}>
                                       <FormattedMessage id='addInventory.property' defaultMessage='Property' />
                                     </Grid.Column>
-                                    <Grid.Column width={7}>
+                                    <Grid.Column width={6}>
                                       <FormattedMessage
                                         id='addInventory.specifications'
                                         defaultMessage='Specifications'
+                                      />
+                                    </Grid.Column>
+                                    <Grid.Column width={4}>
+                                      <FormattedMessage
+                                        id='addInventory.testMethod'
+                                        defaultMessage='Test Method'
                                       />
                                     </Grid.Column>
                                   </Grid.Row>
@@ -2059,21 +2065,32 @@ class ModalDetail extends Component {
                                               return (
                                                 <>
                                                   <GridRow>
-                                                    <GridColumn width={7}>
+                                                    <GridColumn width={4}>
                                                       <Input
                                                         type='text'
                                                         name={`edit.tdsFields[${index}].property`}
                                                         inputProps={{
-                                                          placeholder: 'Enter Property'
+                                                          placeholder: formatMessage({ id: 'addInventory.tdsFields.enterProperty', defaultMessage: 'Enter Property' })
                                                         }}
                                                       />
                                                     </GridColumn>
-                                                    <GridColumn width={7}>
+                                                    <GridColumn width={6}>
                                                       <Input
                                                         type='text'
                                                         name={`edit.tdsFields[${index}].specifications`}
                                                         inputProps={{
-                                                          placeholder: 'Enter Specifications'
+                                                          placeholder: formatMessage({ id: 'addInventory.tdsFields.enterSpecifications', defaultMessage: 'Enter Specifications' }),
+                                                          fluid: true
+                                                        }}
+                                                      />
+                                                    </GridColumn>
+                                                    <GridColumn width={4}>
+                                                      <Input
+                                                        type='text'
+                                                        name={`edit.tdsFields[${index}].testMethods`}
+                                                        inputProps={{
+                                                          placeholder: formatMessage({ id: 'addInventory.tdsFields.enterTestMethod', defaultMessage: 'Enter Test Method' }),
+                                                          fluid: true
                                                         }}
                                                       />
                                                     </GridColumn>
