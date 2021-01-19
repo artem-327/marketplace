@@ -10,7 +10,8 @@ import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import { Popup, Icon } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+
+import confirm from '~/components/Confirmable/confirm'
 import { FormattedPhone } from '~/components/formatted-messages/'
 
 import styled from 'styled-components'
@@ -139,7 +140,8 @@ class PickUpLocationsTable extends Component {
                   </div>
                 }
               />
-            ) : null}
+            ) : null
+          }
         />
       )
     }))

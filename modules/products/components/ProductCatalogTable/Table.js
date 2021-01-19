@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
 import { getSafe } from '~/utils/functions'
 import { downloadAttachment } from '~/modules/inventory/actions'
-import {Button, Icon} from 'semantic-ui-react'
+import { Button, Dropdown, Icon } from 'semantic-ui-react'
 
 import * as Actions from '../../actions'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { echoRowActions } from './constants'
+import { FileText, MoreVertical } from 'react-feather'
 import styled from 'styled-components'
 import { Popup } from 'semantic-ui-react'
 
@@ -26,6 +27,17 @@ const Circle = styled.div`
   &.red {
     background-color: #f16844;
   }
+`
+
+const FileTextIcon = styled(FileText)`
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  vertical-align: top;
+  font-size: 20px;
+  color: #848893;
+  line-height: 20px;
 `
 
 class ProductCatalogTable extends Component {
@@ -50,6 +62,28 @@ class ProductCatalogTable extends Component {
           width: 250,
           sortPath: 'CompanyGenericProduct.name',
           allowReordering: false
+        },
+        {
+          name: 'publishedStatus',
+          title: (
+            <Popup
+              size='small'
+              header={
+                <FormattedMessage
+                  id='global.productStatusIndicator'
+                  defaultMessage='Status indicator if Company Product will be shown on Marketplace'
+                />
+              }
+              trigger={
+                <div>
+                  <FileTextIcon />
+                </div>
+              } // <div> has to be there otherwise popup will be not shown
+            />
+          ),
+          caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />,
+          width: 40,
+          align: 'center'
         },
         {
           name: 'code',
@@ -124,7 +158,7 @@ class ProductCatalogTable extends Component {
     }
   }
 
-  getActions = (row) => {
+  getActions = row => {
     const {
       datagrid,
       intl: { formatMessage },
@@ -332,8 +366,7 @@ class ProductCatalogTable extends Component {
 
 const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
   const editedId =
-    (!!productsAdmin.currentAddForm || !!productsAdmin.currentEditForm) &&
-    productsAdmin.popupValues
+    (!!productsAdmin.currentAddForm || !!productsAdmin.currentEditForm) && productsAdmin.popupValues
       ? productsAdmin.popupValues.id
       : -1
 

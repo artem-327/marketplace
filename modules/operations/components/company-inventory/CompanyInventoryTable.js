@@ -67,12 +67,7 @@ class CompanyInventoryTable extends Component {
     return rows.map(row => {
       return {
         ...row,
-        productName: (
-          <ActionCell
-            row={row}
-            content={row.productName}
-          />
-        )
+        productName: <ActionCell row={row} content={row.productName} />
       }
     })
   }

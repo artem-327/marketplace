@@ -204,7 +204,7 @@ class AddEditGuestCompanySidebar extends React.Component {
             actions.setSubmitting(false)
           }
         }}
-        onReset={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
+        onReset={() => (openGlobalAddForm ? openGlobalAddForm('') : closePopup())}
         render={props => {
           let { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = props
           return (
@@ -220,23 +220,21 @@ class AddEditGuestCompanySidebar extends React.Component {
                   <Loader />
                 </Dimmer>
                 <HighSegment basic>
-                  {openGlobalAddForm
-                    ? (
-                      <>
-                        <div>
-                            <span>
-                              <FormattedMessage id='createMenu.addGuest' defaultMessage='Add Guest' />
-                            </span>
-                          <FolderShared className='title-icon' />
-                        </div>
-                        <div style={{ position: 'absolute', right: '20px' }}>
-                          <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
-                        </div>
-                      </>
-                    ) : (
-                      <FormattedMessage id='manageGuests.addCompany' defaultMessage='Add Guest' />
-                    )
-                  }
+                  {openGlobalAddForm ? (
+                    <>
+                      <div>
+                        <span>
+                          <FormattedMessage id='createMenu.addGuest' defaultMessage='Add Guest' />
+                        </span>
+                        <FolderShared className='title-icon' />
+                      </div>
+                      <div style={{ position: 'absolute', right: '20px' }}>
+                        <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
+                      </div>
+                    </>
+                  ) : (
+                    <FormattedMessage id='manageGuests.addCompany' defaultMessage='Add Guest' />
+                  )}
                 </HighSegment>
                 <FlexContent>
                   <>

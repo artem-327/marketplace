@@ -7,16 +7,51 @@ import { Table, TableCell, Modal, Button } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import { FieldArray } from 'formik'
 //Components
-import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
+import File from '~/components/File/File'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 //Actions
 import { getDocumentTypes } from '~/modules/inventory/actions'
-//Styles
-import './uploadAttachment.scss'
 import styled from 'styled-components'
 
 const StyledButton = styled(Button)`
   margin: 4px 4px 4px 4px !important;
+`
+
+const DivUpload = styled.div`
+  &.uploadAttachment {
+    padding: 1.4em;
+    background: #f8f9fb none;
+    text-align: center;
+    font-size: 1rem;
+    color: #cccccc;
+    width: 100%;
+    cursor: pointer;
+
+    * {
+      cursor: pointer;
+    }
+
+    .dropzoneLot {
+      background: #f8f9fb !important;
+      color: #848893;
+      border: 2px dashed #dee2e6;
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    .dropzoneLotHasFile {
+      background: #dfffdf none;
+      color: #848893;
+      border: 2px dashed #dee2e6;
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    .file-space {
+      display: block;
+      padding-top: 1em;
+    }
+  }
 `
 
 class UploadAttachment extends Component {
@@ -319,7 +354,7 @@ class UploadAttachment extends Component {
     return (
       <>
         {this.renderDuplicateFilesModal()}
-        <div className={'uploadAttachment ' + (hasFile ? ' has-file' : '')}>
+        <DivUpload className={'uploadAttachment ' + (hasFile ? ' has-file' : '')}>
           {this.props.header}
           {disabled ? (
             <span className='file-space'>
@@ -398,7 +433,7 @@ class UploadAttachment extends Component {
               )}
             </React.Fragment>
           )}
-        </div>
+        </DivUpload>
       </>
     )
   }

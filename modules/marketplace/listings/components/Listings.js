@@ -11,7 +11,7 @@ import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
-import AddCart from '~/src/pages/cart/components/AddCart'
+import AddCart from '~/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
@@ -313,7 +313,7 @@ class Listings extends Component {
           row={r}
           getActions={this.getActions}
           content={r.intProductName}
-          onContentClick={(e) => {
+          onContentClick={e => {
             e.stopPropagation()
             e.preventDefault()
             this.tableRowClicked(r.id)
@@ -550,20 +550,6 @@ class Listings extends Component {
       </Container>
     )
   }
-}
-
-Listings.propTypes = {
-  isMerchant: boolean,
-  isCompanyAdmin: boolean,
-  isOpenColumnSettingModal: boolean,
-  tutorialCompleted: boolean
-}
-
-Listings.defaultProps = {
-  isMerchant: false,
-  isCompanyAdmin: false,
-  tutorialCompleted: false,
-  isOpenColumnSettingModal: false
 }
 
 export default injectIntl(Listings)

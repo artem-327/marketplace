@@ -19,16 +19,16 @@ import styled from 'styled-components'
 import { Warning } from '@material-ui/icons'
 import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
-import DetailSidebar from '~/modules/inventory/my-listings/components/DetailSidebar'
+import ModalDetail from '~/modules/inventory/my-listings/components/ModalDetail'
 import QuickEditPricingPopup from '~/modules/inventory/my-listings/components/QuickEditPricingPopup'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { groupActions } from '~/modules/company-product-info/constants'
 import ProductImportPopup from '~/modules/inventory/my-products/components/ProductImportPopup'
 import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import SearchByNamesAndTags from '~/modules/search'
-import ExportInventorySidebar from '~/modules/export-inventory/components/ExportInventory'
+import ExportInventory from '~/modules/export-inventory/components/ExportInventory'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { ArrayToFirstItem } from '~/components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
@@ -520,7 +520,7 @@ class MyListings extends Component {
 
   componentDidMount = async () => {
     const {
-      sidebarDetailTrigger,
+      modalDetailTrigger,
       myListingsFilters,
       advancedFilters,
       datagrid,
@@ -541,7 +541,7 @@ class MyListings extends Component {
             ? Number(searchParams.get('tab'))
             : Number(searchParams.get(`${window.location.href.split('?')[0]}?tab`))
         }
-        sidebarDetailTrigger(idOffer, true, tabOffer)
+        modalDetailTrigger(idOffer, true, tabOffer)
       }
     }
     if (broadcastTemplates && !broadcastTemplates.length) {
@@ -576,18 +576,18 @@ class MyListings extends Component {
 
   componentWillUnmount() {
     const {
-      sidebarDetailOpen,
-      closeSidebarDetail,
+      isModalDetailOpen,
+      closeModalDetail,
       isProductInfoOpen,
       closePopup,
       isExportInventoryOpen,
-      setExportSidebarOpenState
+      setExportModalOpenState
     } = this.props
 
     this.props.handleVariableSave('myListingsFilters', this.state.filterValues)
-    if (sidebarDetailOpen) closeSidebarDetail()
+    if (isModalDetailOpen) closeModalDetail()
     if (isProductInfoOpen) closePopup()
-    if (isExportInventoryOpen) setExportSidebarOpenState(false)
+    if (isExportInventoryOpen) setExportModalOpenState(false)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -636,7 +636,7 @@ class MyListings extends Component {
   getActions = () => {
     const {
       intl: { formatMessage },
-      sidebarDetailTrigger,
+      modalDetailTrigger,
       datagrid
     } = this.props
     return [
@@ -650,7 +650,7 @@ class MyListings extends Component {
           id: 'global.edit',
           defaultMessage: 'Edit'
         }),
-        callback: row => this.tableRowClickedProductOffer(row, true, 0, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 0, modalDetailTrigger)
       },
       //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
       {
@@ -658,7 +658,7 @@ class MyListings extends Component {
           id: 'global.tds',
           defaultMessage: 'TDS'
         }),
-        disabled: row => row.groupId,
+        disabled: row => !!row.groupId,
         callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
       },
       {
@@ -666,7 +666,7 @@ class MyListings extends Component {
           id: 'global.documents',
           defaultMessage: 'Documents'
         }),
-        disabled: row => row.groupId,
+        disabled: row => !!row.groupId,
         callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
       },
       {
@@ -674,7 +674,7 @@ class MyListings extends Component {
           id: 'inventory.broadcast',
           defaultMessage: 'Price Book'
         }),
-        disabled: row => row.groupId,
+        disabled: row => !!row.groupId,
         callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
       },
       {
@@ -682,7 +682,7 @@ class MyListings extends Component {
           id: 'inventory.priceTiers',
           defaultMessage: 'Price Tiers'
         }),
-        disabled: row => row.groupId,
+        disabled: row => !!row.groupId,
         callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
       },
       {
@@ -719,7 +719,7 @@ class MyListings extends Component {
       //     id: 'inventory.groupOffer',
       //     defaultMessage: 'Join/Create Virtual Group'
       //   }),
-      //   callback: () =>
+      //   callback: (row) =>
       //     this.groupOffer(
       //       {
       //         overrideBroadcastRules: false,
@@ -727,15 +727,15 @@ class MyListings extends Component {
       //       },
       //       row.rawData
       //     ),
-      //   disabled: () => !!row.parentOffer
+      //   disabled: (row) => !!row.parentOffer
       // },
       // {
       //   text: formatMessage({
       //     id: 'inventory.detachOffer',
       //     defaultMessage: 'Detach from Virtual Group'
       //   }),
-      //   callback: () => this.detachOffer([row.id], row.rawData),
-      //   disabled: () => !row.parentOffer
+      //   callback: (row) => this.detachOffer([row.id], row.rawData),
+      //   disabled: (row) => !row.parentOffer
       // }
     ]
   }
@@ -765,7 +765,7 @@ class MyListings extends Component {
       datagrid,
       pricingEditOpenId,
       setPricingEditOpenId,
-      sidebarDetailTrigger,
+      modalDetailTrigger,
       toastManager,
       closePricingEditPopup,
       intl: { formatMessage },
@@ -1035,7 +1035,7 @@ class MyListings extends Component {
             row={r}
             getActions={this.getActions}
             content={r.productName}
-            onContentClick={() => this.tableRowClickedProductOffer(r, true, 0, sidebarDetailTrigger)}
+            onContentClick={() => this.tableRowClickedProductOffer(r, true, 0, modalDetailTrigger)}
             rightAlignedContent={
               r.expired || productStatusText ? (
                 <Popup
@@ -1095,6 +1095,7 @@ class MyListings extends Component {
             trigger={<FobPrice>{r.fobPrice}</FobPrice>}
             open={pricingEditOpenId === r.rawData.id}
             onOpen={() => setPricingEditOpenId(r.rawData.id)}
+            onClose={() => setPricingEditOpenId(null)}
           />
         ),
         broadcast: (
@@ -1161,10 +1162,10 @@ class MyListings extends Component {
   }
 
   broadcastChange = (row, value, template) => {
-    let { sidebarDetailTrigger } = this.props
+    let { modalDetailTrigger } = this.props
     switch (value) {
       case 'CUSTOM_RULES':
-        this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+        this.tableRowClickedProductOffer(row, true, 3, modalDetailTrigger)
         break
       default:
         if (value.indexOf('|') >= 0) {
@@ -1176,12 +1177,12 @@ class MyListings extends Component {
     }
   }
 
-  tableRowClickedProductOffer = (row, bol, tab, sidebarDetailTrigger) => {
-    const { isProductInfoOpen, closePopup, isExportInventoryOpen, setExportSidebarOpenState } = this.props
+  tableRowClickedProductOffer = (row, bol, tab, modalDetailTrigger) => {
+    const { isProductInfoOpen, closePopup, isExportInventoryOpen, setExportModalOpenState } = this.props
 
     if (isProductInfoOpen) closePopup()
-    if (isExportInventoryOpen) setExportSidebarOpenState(false)
-    sidebarDetailTrigger(row, bol, tab)
+    if (isExportInventoryOpen) setExportModalOpenState(false)
+    modalDetailTrigger(row, bol, tab)
   }
 
   showMessage = (response, request = null, row) => {
@@ -1273,19 +1274,19 @@ class MyListings extends Component {
   render() {
     const {
       openBroadcast,
-      sidebarDetailOpen,
+      isModalDetailOpen,
       intl: { formatMessage },
       datagrid,
       openImportPopup,
       isOpenImportPopup,
       simpleEditTrigger,
-      sidebarDetailTrigger,
+      modalDetailTrigger,
       openPopup,
       editedId,
-      closeSidebarDetail,
+      closeModalDetail,
       tutorialCompleted,
       isExportInventoryOpen,
-      setExportSidebarOpenState,
+      setExportModalOpenState,
       myListingsFilters,
       updatingDatagrid,
       activeInventoryFilter
@@ -1372,7 +1373,7 @@ class MyListings extends Component {
                   className='light'
                   size='large'
                   primary
-                  onClick={() => setExportSidebarOpenState(true)}
+                  onClick={() => setExportModalOpenState(true)}
                   data-test='my_inventory_export_btn'>
                   <CornerLeftUp />
                   {formatMessage({
@@ -1400,7 +1401,7 @@ class MyListings extends Component {
                   className='secondary'
                   size='large'
                   primary
-                  onClick={() => this.tableRowClickedProductOffer(null, true, 0, sidebarDetailTrigger)}
+                  onClick={() => this.tableRowClickedProductOffer(null, true, 0, modalDetailTrigger)}
                   data-test='my_inventory_add_btn'>
                   <PlusCircle />
                   <FormattedMessage id='global.addListing' defaultMessage='Add Listing'>
@@ -1465,10 +1466,10 @@ class MyListings extends Component {
               return groupActions(
                 rows,
                 values[values.length - 3],
-                sidebarDetailOpen,
-                closeSidebarDetail,
+                isModalDetailOpen,
+                closeModalDetail,
                 (companyProduct, i) => {
-                  if (isExportInventoryOpen) setExportSidebarOpenState(false)
+                  if (isExportInventoryOpen) setExportModalOpenState(false)
                   openPopup(companyProduct, i)
                 }
               ).map(a => ({
@@ -1487,8 +1488,8 @@ class MyListings extends Component {
             columnActions='actCol'
           />
         </div>
-        {sidebarDetailOpen && <DetailSidebar inventoryGrid={this.props.datagrid} />}
-        {isExportInventoryOpen && <ExportInventorySidebar onClose={() => setExportSidebarOpenState(false)} />}
+        {isModalDetailOpen && <ModalDetail inventoryGrid={this.props.datagrid} />}
+        {isExportInventoryOpen && <ExportInventory onClose={() => setExportModalOpenState(false)} />}
         {openFilterPopup && <InventoryFilter onClose={() => this.setState({ openFilterPopup: false })} />}
       </>
     )

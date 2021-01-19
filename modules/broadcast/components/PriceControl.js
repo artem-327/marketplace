@@ -198,7 +198,7 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const { disabled, offer, item, hideFobPrice, filter, asSidebar, treeData } = this.props
+    const { disabled, offer, item, hideFobPrice, filter, asModal, treeData } = this.props
     const {
       model: { rule }
     } = item
@@ -216,9 +216,9 @@ export default class PriceControl extends Component {
         : ''
 
     return (
-      <Box asSidebar={asSidebar}>
+      <Box asModal={asModal}>
         <PriceInput
-          asSidebar={asSidebar}
+          asModal={asModal}
           className='price-input'
           disabled={disabled}
           name='value'
@@ -234,7 +234,7 @@ export default class PriceControl extends Component {
           data-test='broadcast_price_control_price_inp'
           treeData={treeData}
         />
-        <ControlBox asSidebar={asSidebar}>
+        <ControlBox asModal={asModal}>
           <Radio
             disabled={disabled}
             label='%'
@@ -251,7 +251,7 @@ export default class PriceControl extends Component {
           />
         </ControlBox>
         {!hideFobPrice && (
-          <ControlBox asSidebar={asSidebar}>
+          <ControlBox asModal={asModal}>
             <FobPrice disabled={disabled}>{prices.lowStr} -</FobPrice>
             <FobPrice disabled={disabled}>{prices.highStr}</FobPrice>
           </ControlBox>
@@ -262,7 +262,7 @@ export default class PriceControl extends Component {
 }
 
 const PriceInput = styled(Input)`
-  width: ${props => (props.asSidebar ? '70px' : '100px')};
+  width: ${props => (props.asModal ? '70px' : '100px')};
   margin-right: 10px;
   padding: 8px;
   input {
@@ -273,7 +273,7 @@ const PriceInput = styled(Input)`
 const ControlBox = styled.div`
   display: flex;
   flex-direction: column;
-  ${props => !props.asSidebar && 'max-width: 60px;'}
+  ${props => !props.asModal && 'max-width: 60px;'}
 
   .ui.radio.checkbox input:focus:checked ~ label:after,
   .ui.radio.checkbox input:checked ~ label:after {
@@ -295,5 +295,5 @@ const Box = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding-right: 10px;
-  ${props => (!props.asSidebar ? 'max-width: 170px;' : 'max-width: 180px;')}
+  ${props => (!props.asModal ? 'max-width: 170px;' : 'max-width: 180px;')}
 `

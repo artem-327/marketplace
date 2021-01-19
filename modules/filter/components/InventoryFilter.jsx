@@ -10,7 +10,7 @@ import ErrorFocus from '~/components/error-focus'
 
 import { Button, FormField, GridRow, GridColumn, Dimmer, Label, Modal, Menu } from 'semantic-ui-react'
 
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 
 import { datagridValues, dateDropdownOptions, filterTypes } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
@@ -73,7 +73,6 @@ class InventoryFilter extends Component {
       fetchProductConditions,
       fetchProductForms,
       fetchPackagingTypes,
-      fetchWarehouseDistances,
       fetchProductGrade,
       fetchWarehouses,
       setParams,
@@ -104,7 +103,6 @@ class InventoryFilter extends Component {
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
-      this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
       this.fetchIfNoData(fetchProductGrade, 'productGrades'),
       this.fetchIfNoData(fetchWarehouses, 'warehouses')
     ]).finally(() =>

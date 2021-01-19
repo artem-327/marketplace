@@ -26,14 +26,12 @@ import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/logo-echo.svg'
 import LogoSmall from '~/assets/images/nav/logo4x.png'
-// import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
 import NotificationsIcon from './NotificationsIcon'
 
 import CreateMenu from './CreateMenu'
-import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
 import Settings from '~/components/settings'
 import { connect } from 'react-redux'
@@ -63,7 +61,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import ErrorComponent from '~/components/error'
 import moment from 'moment'
 
-import ListingSidebar from '~/modules/inventory/my-listings/components/DetailSidebar'
+import ListingSidebar from '~/modules/inventory/my-listings/components/ModalDetail'
 import ProductSidebar from '~/modules/inventory/my-products/components/ProductSidebar'
 import WantedSidebar from '~/modules/wanted-board/listings/components/DetailSidebar'
 import UserSidebar from '~/modules/settings/components/UserTable/UsersSidebar'
@@ -201,7 +199,7 @@ class Layout extends Component {
     this.setState({ showCopyright: false, copyrightClassName: '' })
   }
 
-  componentWillUpdate(prevProps) {
+  UNSAFE_componentWillUpdate(prevProps) {
     if (
       prevProps.adminTab !== this.props.adminTab ||
       prevProps.companyTab !== this.props.companyTab ||
@@ -360,7 +358,6 @@ class Layout extends Component {
 
     return (
       <MainContainer fluid className={mainClass}>
-        <PopUp />
         <Head>
           <title>
             {formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}

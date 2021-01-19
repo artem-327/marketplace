@@ -24,7 +24,7 @@ import Map from './Steps/Map'
 import Preview from './Steps/Preview'
 import ConfirmationPage from './Steps/ConfirmationPage'
 import _invert from 'lodash/invert'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 
@@ -151,9 +151,7 @@ class ProductImportPopup extends Component {
             </Step>
           </Step.Group>
         </Modal.Header>
-        <StyledModal>
-          {this.steps[currentStep]}
-        </StyledModal>
+        <StyledModal>{this.steps[currentStep]}</StyledModal>
         <CheckboxContainer>
           <Checkbox
             label={formatMessage({

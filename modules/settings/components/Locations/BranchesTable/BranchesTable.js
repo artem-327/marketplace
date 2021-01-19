@@ -9,7 +9,8 @@ import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import { getIdentity } from '~/modules/auth/actions'
 import { getSafe } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+
+import confirm from '~/components/Confirmable/confirm'
 import { FormattedPhone } from '~/components/formatted-messages/'
 
 class BranchesTable extends Component {

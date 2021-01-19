@@ -7,7 +7,7 @@ import { getSafe } from '~/utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { errorMessages } from '~/constants/yupValidation'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `

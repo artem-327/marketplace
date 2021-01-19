@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 
 export default class Table extends Component {
   constructor(props) {

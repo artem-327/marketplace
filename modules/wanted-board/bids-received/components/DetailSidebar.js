@@ -15,7 +15,7 @@ import { DateInput } from '~/components/custom-formik'
 import { getSafe, generateToastMarkup, uniqueArrayByKey, removeEmpty } from '~/utils/functions'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { withToastManager } from 'react-toast-notifications'
 import ProdexGrid from '~/components/table'
@@ -71,13 +71,7 @@ import {
   updateEditedId
 } from '../../actions'
 
-import {
-  FlexSidebar,
-  FlexContent,
-  HighSegment,
-  BottomButtons,
-  LabeledRow
-} from '../../constants/layout'
+import { FlexSidebar, FlexContent, HighSegment, BottomButtons, LabeledRow } from '../../constants/layout'
 
 import { listFrequency } from '../../constants/constants'
 import { comparationHelper } from '../../constants/validation'
@@ -559,8 +553,7 @@ class DetailSidebar extends Component {
                             <>
                               <FormattedMessage
                                 id='wantedBoard.functionalEquivalent'
-                                defaultMessage='Functional Equivalent'
-                              >
+                                defaultMessage='Functional Equivalent'>
                                 {text => text}
                               </FormattedMessage>
                               <Required />
@@ -600,7 +593,8 @@ class DetailSidebar extends Component {
                           label={
                             <FormattedMessage id='global.assayMin' defaultMessage='Assay Min'>
                               {text => text}
-                            </FormattedMessage>}
+                            </FormattedMessage>
+                          }
                         />
                       </GridColumn>
                       <GridColumn width={8} data-test='my_requested_items_sidebar_assayMax_inp'>
@@ -614,7 +608,8 @@ class DetailSidebar extends Component {
                           label={
                             <FormattedMessage id='global.assayMax' defaultMessage='Assay Max'>
                               {text => text}
-                            </FormattedMessage>}
+                            </FormattedMessage>
+                          }
                         />
                       </GridColumn>
                     </GridRow>
@@ -648,7 +643,8 @@ class DetailSidebar extends Component {
                           label={
                             <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed'>
                               {text => text}
-                            </FormattedMessage>}
+                            </FormattedMessage>
+                          }
                         />
                       </GridColumn>
                       <GridColumn width={8}>

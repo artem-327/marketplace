@@ -1,10 +1,10 @@
-import Document, { Head, Main, NextScript } from 'next/document'
+import Document, { Html, Head as HeadDocument, Main, NextScript } from 'next/document'
+import Head from 'next/head'
 import { ServerStyleSheet } from 'styled-components'
-
 export default class MyDocument extends Document {
-  static getInitialProps({ renderPage }) {
+  static async getInitialProps({ renderPage }) {
     const sheet = new ServerStyleSheet()
-    const page = renderPage(App => props => sheet.collectStyles(<App {...props} />))
+    const page = await renderPage(App => props => sheet.collectStyles(<App {...props} />))
     const styleTags = sheet.getStyleElement()
 
     return { ...page, styleTags }
@@ -12,11 +12,13 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <html>
+      <Html>
         <Head>
+          <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+        </Head>
+        <HeadDocument>
           {this.props.styleTags}
           <meta charSet='utf-8' />
-          <meta name='viewport' content='initial-scale=1.0, width=device-width' />
 
           <link rel='apple-touch-icon' sizes='180x180' href='/static/apple-touch-icon.png' />
           <link rel='icon' type='image/png' sizes='32x32' href='/static/favicon-32x32.png' />
@@ -27,12 +29,12 @@ export default class MyDocument extends Document {
           <meta name='msapplication-TileColor' content='#1b3454' />
           <meta name='msapplication-config' content='/static/browserconfig.xml' />
           <meta name='theme-color' content='#1b3454' />
-        </Head>
+        </HeadDocument>
         <body>
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     )
   }
 }

@@ -3,7 +3,6 @@ import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment/moment'
 
-import { getLocationString } from '~/src/utils/functions'
 import { withDatagrid } from '~/modules/datagrid'
 //import { applyFilter } from '~/modules/filter/actions'
 import * as Actions from '../../actions'
@@ -16,7 +15,6 @@ import { ArrayToFirstItem } from '~/components/formatted-messages'
 import Listings from './Listings'
 import { getProductName } from '../../constants/constants'
 
-
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
@@ -25,13 +23,15 @@ function mapStateToProps(store, { datagrid }) {
     openSidebar: getSafe(() => store.wantedBoard.openSidebar, false),
     rows: datagrid.rows.map(row => {
       const qtyPart = getSafe(() => row.unit.nameAbbreviation)
-      const assay = getSafe(() => row.element.assayMin, null) || getSafe(() => row.element.assayMax, null)
-        ? (
+      const assay =
+        getSafe(() => row.element.assayMin, null) || getSafe(() => row.element.assayMax, null) ? (
           <FormattedAssay
             min={getSafe(() => row.element.assayMin, null)}
             max={getSafe(() => row.element.assayMax, null)}
-          />)
-        : (<FormattedMessage id='wantedBoard.any' defaultMessage='Any' />)
+          />
+        ) : (
+          <FormattedMessage id='wantedBoard.any' defaultMessage='Any' />
+        )
 
       return {
         id: row.id,
