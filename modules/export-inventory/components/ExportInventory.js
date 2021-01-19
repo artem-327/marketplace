@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import ExportInventorySidebarContainer from './ExportInventorySidebarContainer'
+import ExportInventoryModalContainer from './ExportInventoryModalContainer'
 import { DatagridProvider } from '~/modules/datagrid'
-import { func } from "prop-types"
+import { func } from 'prop-types'
 
 class ExportInventory extends Component {
   getApiConfig = () => ({
@@ -9,9 +9,7 @@ class ExportInventory extends Component {
     searchToFilter: v => {
       let filters = { or: [], and: [] }
       if (v && v.company) {
-        filters.and = [
-          { operator: 'EQUALS', path: 'ClientCompany.id', values: [`${v.company}`] },
-        ]
+        filters.and = [{ operator: 'EQUALS', path: 'ClientCompany.id', values: [`${v.company}`] }]
       }
       return filters
     }
@@ -20,7 +18,7 @@ class ExportInventory extends Component {
   render() {
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
-        <ExportInventorySidebarContainer {...this.props} />
+        <ExportInventoryModalContainer {...this.props} />
       </DatagridProvider>
     )
   }
@@ -35,4 +33,3 @@ ExportInventory.defaultProps = {
 }
 
 export default ExportInventory
-

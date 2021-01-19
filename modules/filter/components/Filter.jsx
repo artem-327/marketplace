@@ -23,7 +23,7 @@ import {
 
 import { uniqueArrayByKey } from '~/utils/functions'
 
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 
 import { datagridValues, dateDropdownOptions, filterTypes } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
@@ -69,7 +69,6 @@ class Filter extends Component {
       fetchProductConditions,
       fetchProductForms,
       fetchPackagingTypes,
-      fetchWarehouseDistances,
       fetchProductGrade,
       fetchWarehouses,
       setParams,
@@ -89,7 +88,6 @@ class Filter extends Component {
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
-      this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
       this.fetchIfNoData(fetchProductGrade, 'productGrades'),
       //this.fetchIfNoData(fetchWarehouses, 'warehouses'),
       this.fetchIfNoData(fetchCountries, 'countries')

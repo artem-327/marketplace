@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
 import { openPopup, deleteTag } from '../../actions'
@@ -52,15 +52,14 @@ class TagsTable extends Component {
               },
               { name: row.name }
             )
-          )
-            .then(async () => {
-              try {
-                await deleteTag(row.id)
-                datagrid.removeRow(row.id)
-              } catch (e) {
-                console.error(e)
-              }
-            })
+          ).then(async () => {
+            try {
+              await deleteTag(row.id)
+              datagrid.removeRow(row.id)
+            } catch (e) {
+              console.error(e)
+            }
+          })
       }
     ]
   }

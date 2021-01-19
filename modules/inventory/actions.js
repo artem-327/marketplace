@@ -428,16 +428,16 @@ export const simpleEditTrigger = (popupValues = {}, force = false) => ({
   payload: { popupValues, force }
 })
 
-export const sidebarDetailTrigger = (row = null, force = false, activeTab = 0) => {
+export const modalDetailTrigger = (row = null, force = false, activeTab = 0) => {
   return {
-    type: AT.SIDEBAR_DETAIL_TRIGGER,
+    type: AT.MODAL_DETAIL_TRIGGER,
     payload: { force: force, activeTab: activeTab, row: row }
   }
 }
 
-export function closeSidebarDetail() {
+export function closeModalDetail() {
   return {
-    type: AT.INVENTORY_CLOSE_SIDEBAR
+    type: AT.INVENTORY_CLOSE_MODAL
   }
 }
 
@@ -484,9 +484,9 @@ export function closePricingEditPopup() {
   }
 }
 
-export function setExportSidebarOpenState(open) {
+export function setExportModalOpenState(open) {
   return {
-    type: AT.INVENTORY_SET_EXPORT_SIDEBAR_OPEN_STATE,
+    type: AT.INVENTORY_SET_EXPORT_MODAL_OPEN_STATE,
     payload: open
   }
 }

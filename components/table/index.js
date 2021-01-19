@@ -293,7 +293,7 @@ const TableCells = props => {
       {props.children ? (
         props.children
       ) : typeof (props.value && props.value.type) !== 'object' ? (
-        <span class='cell-wrapper'>{props.value}</span>
+        <span className='cell-wrapper'>{props.value}</span>
       ) : (
         props.value
       )}

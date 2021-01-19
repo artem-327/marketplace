@@ -29,7 +29,7 @@ import { debounce } from 'lodash'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
@@ -418,7 +418,10 @@ class UsersSidebar extends React.Component {
                           label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
                           name='jobTitle'
                           inputProps={{
-                            placeholder: formatMessage({ id: 'global.enterJobTitle', defaultMessage: 'Enter Job Title' })
+                            placeholder: formatMessage({
+                              id: 'global.enterJobTitle',
+                              defaultMessage: 'Enter Job Title'
+                            })
                           }}
                         />
                       </GridColumn>

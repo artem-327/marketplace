@@ -1,4 +1,4 @@
-import App, { Container } from 'next/app'
+import App from 'next/app'
 import React from 'react'
 import withRedux from 'next-redux-wrapper'
 import { makeStore } from '~/store'
@@ -13,7 +13,6 @@ import Router, { withRouter } from 'next/router'
 import '~/semantic/dist/semantic.css'
 import '~/styles/base.scss'
 import 'nprogress/nprogress.css'
-import shortid from 'shortid'
 import { ToastProvider } from 'react-toast-notifications'
 import TagManager from 'react-gtm-module'
 import { AlertCircle, AlertTriangle, CheckCircle, Info, X } from 'react-feather'
@@ -70,15 +69,13 @@ class ProdexApp extends App {
     const { Component, pageProps, store } = this.props
 
     return (
-      <Container>
-        <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
-          <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={7 * 1000} components={{ Toast: ProdexToast }}>
-            <Provider store={store}>
-              <Component {...pageProps} />
-            </Provider>
-          </ToastProvider>
-        </IntlProvider>
-      </Container>
+      <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
+        <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={7 * 1000} components={{ Toast: ProdexToast }}>
+          <Provider store={store}>
+            <Component {...pageProps} />
+          </Provider>
+        </ToastProvider>
+      </IntlProvider>
     )
   }
 }

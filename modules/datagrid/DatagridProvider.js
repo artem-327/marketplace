@@ -68,9 +68,9 @@ class DatagridProvider extends Component {
     this.loadNextPage()
   }
 
-  componentWillUnmount() {
-    this.props.cleanRenderCopyright()
-    clearInterval(this.interval)
+  async componentWillUnmount() {
+    await this.props.cleanRenderCopyright()
+    await clearInterval(this.interval)
   }
 
   // componentWillReceiveProps({apiConfig}) {

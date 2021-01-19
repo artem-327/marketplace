@@ -6,7 +6,7 @@ import { array } from 'prop-types'
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { withDatagrid } from '~/modules/datagrid'
@@ -82,7 +82,7 @@ class LogisticsTable extends Component {
             })
             .catch(() => {})
         },
-        disabled: row => this.props.editedId === row.id,
+        disabled: row => this.props.editedId === row.id
       }
     ]
   }
@@ -141,13 +141,9 @@ const mapDispatchToProps = {
   deleteLogisticsAccount
 }
 
-const mapStateToProps = ({ settings: {
-  loading,
-  logisticsAccounts,
-  deleteLogisticsAccount,
-  logisticsFilter,
-  editedId
-} }) => {
+const mapStateToProps = ({
+  settings: { loading, logisticsAccounts, deleteLogisticsAccount, logisticsFilter, editedId }
+}) => {
   return {
     loading,
     editedId,

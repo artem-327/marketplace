@@ -3,7 +3,6 @@ import { FormattedNumber } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment/moment'
 
-import { getLocationString } from '~/src/utils/functions'
 import { withDatagrid } from '~/modules/datagrid'
 import BidsSent from './BidsSent'
 import * as Actions from '../../actions'

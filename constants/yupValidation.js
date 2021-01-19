@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 import { getSafe, deepSearch } from '~/utils/functions'
 import { isValid } from 'ein-validator'
-import validator from 'validator'
 import React from 'react'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 
@@ -185,11 +184,7 @@ export const phoneValidation = (minLength = 5) =>
   Yup.string()
     .trim()
     //.test('phone-validation', errorMessages.invalidPhoneNumber, (val) => val && validator.isMobilePhone(val + '', null, { strictMode: true })) // tohle nejak nefunguje
-    .test(
-      'phone-validation',
-      errorMessages.invalidPhoneNumber,
-      val => !val || (val[0] === '+' && !val.includes('_'))
-    )
+    .test('phone-validation', errorMessages.invalidPhoneNumber, val => !val || (val[0] === '+' && !val.includes('_')))
     .test(
       'phone-length-validation',
       errorMessages.invalidPhoneNumber,
@@ -381,7 +376,7 @@ export const validateTime = () =>
 export const multipleEmails = () =>
   Yup.string()
     .trim()
-    .test('email-validation', errorMessages.invalidEmail, function(inputEmails) {
+    .test('email-validation', errorMessages.invalidEmail, function (inputEmails) {
       const emails = inputEmails ? inputEmails.split(';') : []
       return !emails.some(email => {
         return !Yup.string().trim().email().isValidSync(email)

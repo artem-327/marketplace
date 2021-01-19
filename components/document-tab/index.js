@@ -27,7 +27,7 @@ import UploadAttachment from '~/modules/inventory/components/upload/UploadAttach
 import ProdexGrid from '~/components/table'
 import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { AttachmentManager } from '~/modules/attachments'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { UploadCloud, XCircle } from 'react-feather'
 import { downloadAttachment, addAttachment } from '~/modules/inventory/actions'
 
@@ -244,9 +244,7 @@ class DocumentTab extends Component {
               </FormattedMessage>
             </FieldsDiv>
             <AttachmentManager
-              documentTypeIds={
-                this.state.documentType
-              }
+              documentTypeIds={this.state.documentType}
               lockedFileTypes={lockedFileTypes}
               asModal
               returnSelectedRows={rows =>
@@ -283,7 +281,9 @@ class DocumentTab extends Component {
                 edit={getSafe(() => idForm, 0)} //sidebarValues.id
                 attachments={attachmentFiles}
                 name={setFieldNameAttachments}
-                type={this.state.documentType.length ? '' + this.state.documentType[0] : '1' /* // ! ! tady ma byt string?*/}
+                type={
+                  this.state.documentType.length ? '' + this.state.documentType[0] : '1' /* // ! ! tady ma byt string?*/
+                }
                 filesLimit={1}
                 fileMaxSize={20}
                 onChange={files => {
@@ -357,9 +357,11 @@ class DocumentTab extends Component {
                         return {
                           ...row,
                           filename: row.name,
-                          name: <a href='#' onClick={() => this.downloadAttachment(row.name, row.id)}>
+                          name: (
+                            <a href='#' onClick={() => this.downloadAttachment(row.name, row.id)}>
                               {row.name}
-                            </a>,
+                            </a>
+                          ),
                           documentTypeName: row.documentType && row.documentType.name
                         }
                       })
@@ -373,7 +375,7 @@ class DocumentTab extends Component {
                       {text => text}
                     </FormattedMessage>
                   ),
-                  callback: (row) => this.downloadAttachment(row.filename, row.id)
+                  callback: row => this.downloadAttachment(row.filename, row.id)
                 },
                 {
                   text: (

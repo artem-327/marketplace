@@ -13,7 +13,7 @@ import { Button, FormField, GridRow, GridColumn, Dimmer, Label, Modal, Menu } fr
 
 import { uniqueArrayByKey } from '~/utils/functions'
 
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 
 import { datagridValues, dateDropdownOptions, filterTypes } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'

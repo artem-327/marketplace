@@ -28,7 +28,7 @@ import { Formik } from 'formik'
 import { CompanyProductMixtures } from '~/components/shared-components/'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 import { DisabledButtonWrapped } from '~/utils/components'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { Required } from '~/components/constants/layout'
 
 import {
@@ -51,7 +51,6 @@ import { addAttachment } from '~/modules/inventory/actions'
 
 import { Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import './styles.scss'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
@@ -371,7 +370,7 @@ class ProductSidebar extends React.Component {
     this.resetComponent()
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.popupValues && nextProps.popupValues.packagingUnit) {
       this.filterPackagingTypes(nextProps.popupValues.packagingUnit.id, nextProps.unitsAll, nextProps.packagingTypesAll)
     } else this.setState({ packagingTypesReduced: nextProps.packagingType })
@@ -700,7 +699,7 @@ class ProductSidebar extends React.Component {
                           <AddBox className='title-icon' />
                         </div>
                         <div style={{ position: 'absolute', right: '20px' }}>
-                          <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                          <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
                         </div>
                       </>
                     ) : popupValues ? (

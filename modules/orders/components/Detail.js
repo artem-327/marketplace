@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import '~/src/pages/inventory/addInventory/AddInventory.scss'
-import Spinner from '~/src/components/Spinner/Spinner'
+import '~/components/AddInventory.scss'
+import Spinner from '~/components/Spinner/Spinner'
 import {
   Grid,
   Segment,
@@ -39,7 +39,7 @@ import SaleReturnShipping from './components/SaleReturnShipping'
 import PurchaseOrderShipping from './components/PurchaseOrderShipping'
 import SaleAttachingProductOffer from './components/SaleAttachingProductOffer'
 
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import moment from 'moment/moment'
 import { FormattedPhone } from '~/components/formatted-messages/'
 import { withToastManager } from 'react-toast-notifications'

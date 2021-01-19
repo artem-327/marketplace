@@ -25,7 +25,11 @@ const CircularLabel = styled(Label)`
 
 class MiniCart extends Component {
   componentDidMount() {
-    this.props.getCartCountItems()
+    try {
+      this.props.getCartCountItems()
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   render() {

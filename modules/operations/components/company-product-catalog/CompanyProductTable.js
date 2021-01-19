@@ -72,12 +72,7 @@ class CompanyProductTable extends Component {
     return rows.map(row => {
       return {
         ...row,
-        intProductName: (
-          <ActionCell
-            row={row}
-            content={row.intProductName}
-          />
-        )
+        intProductName: <ActionCell row={row} content={row.intProductName} />
       }
     })
   }

@@ -11,7 +11,6 @@ import styled from 'styled-components'
 
 import { withToastManager } from 'react-toast-notifications'
 
-import { PHONE_REGEXP } from '../../../src/utils/constants'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { addressValidationSchema, errorMessages, phoneValidation } from '~/constants/yupValidation'

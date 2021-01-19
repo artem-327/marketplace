@@ -601,7 +601,7 @@ class PickUpLocationsSidebar extends React.Component {
                           <Store className='title-icon' />
                         </div>
                         <div style={{ position: 'absolute', right: '20px' }}>
-                          <XIcon onClick={() => openGlobalAddForm('')} class='close-icon' />
+                          <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
                         </div>
                       </>
                     ) : (

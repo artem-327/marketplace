@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import '~/src/pages/inventory/addInventory/AddInventory.scss'
-import Spinner from '~/src/components/Spinner/Spinner'
+import '~/components/AddInventory.scss'
+import Spinner from '~/components/Spinner/Spinner'
 import { Grid, Segment, Accordion, Table, List, Button, Icon, Divider, Header, GridRow, Modal } from 'semantic-ui-react'
 import { ChevronDown, DownloadCloud, ArrowLeft } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
