@@ -232,19 +232,11 @@ class AttachmentClass extends Component {
 
                   <CustomGridColumn width={4}>
                     <Button
-                      type='button'
                       style={{ color: 'white', backgroundColor: '#2599d5' }}
-                      disabled={!this.state.selectedRows.length}
-                      onClick={this.returnSelectedRows}>
-                      {singleSelection ? (
-                        <FormattedMessage id='attachments.attachSelectedFile' defaultMessage='Attach Selected File'>
-                          {text => text}
-                        </FormattedMessage>
-                      ) : (
-                        <FormattedMessage id='attachments.attachSelectedFiles' defaultMessage='Attach Selected Files'>
-                          {text => text}
-                        </FormattedMessage>
-                      )}
+                      onClick={() => this.setState({ uploadOpen: true })}>
+                      <FormattedMessage id='global.uploadAnother' defaultMessage='Upload Another'>
+                        {text => text}
+                      </FormattedMessage>
                     </Button>
                   </CustomGridColumn>
                 </GridRow>
@@ -264,11 +256,19 @@ class AttachmentClass extends Component {
                 </FormattedMessage>
               </Button>
               <Button
+                type='button'
                 style={{ color: 'white', backgroundColor: '#2599d5' }}
-                onClick={() => this.setState({ uploadOpen: true })}>
-                <FormattedMessage id='global.uploadAnother' defaultMessage='Upload Another'>
-                  {text => text}
-                </FormattedMessage>
+                disabled={!this.state.selectedRows.length}
+                onClick={this.returnSelectedRows}>
+                {singleSelection ? (
+                  <FormattedMessage id='attachments.attachSelectedFile' defaultMessage='Attach Selected File'>
+                    {text => text}
+                  </FormattedMessage>
+                ) : (
+                  <FormattedMessage id='attachments.attachSelectedFiles' defaultMessage='Attach Selected Files'>
+                    {text => text}
+                  </FormattedMessage>
+                )}
               </Button>
               {this.state.uploadOpen && (
                 <DocumentManagerPopup

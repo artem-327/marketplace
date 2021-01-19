@@ -30,6 +30,8 @@ const BACKGROUND = {
   company: '#eee'
 }
 const FlexWrapper = styled.div`
+  flex-grow: 1;
+  flex-shrink: 1;
   display: flex;
   flex-flow: column;
   height: 100%;
@@ -63,7 +65,7 @@ const Row = styled.div`
   font-weight: ${({ type }) => FONT_WEIGHT[type]};
 
   ${props =>
-    props.asSidebar
+    props.asModal
       ? `border-top-left-radius: ${BORDER_RADIUS[props.type]};
      border-top-right-radius: ${BORDER_RADIUS[props.type]};
     `
@@ -78,14 +80,15 @@ const Row = styled.div`
 `
 
 const Root = styled.div`
+  flex-grow: 1;
+  flex-shrink: 1;
   display: flex;
-  flex: 1 1 100px;
   flex-direction: column;
   margin: 0em 0.714285714em;
   background-color: #ffffff;
 
   ${props =>
-    props.asSidebar
+    props.asModal
       ? 'flex-basis: 60px'
       : `overflow-y: scroll;
           flex-basis: 168px;
@@ -109,7 +112,7 @@ const Header = styled(Row)`
     padding-right: 10px;
   }
 
-  ${props => (props.asSidebar ? 'justify-content: flex-end;' : '')}
+  ${props => (props.asModal ? 'justify-content: flex-end;' : '')}
 `
 const Content = styled.div`
   display: flex;
@@ -117,7 +120,7 @@ const Content = styled.div`
   flex-direction: column;
   overflow-y: none;
   ${props =>
-    props.asSidebar
+    props.asModal
       ? 'border: solid 1px #dee2e6 !important; border-radius: 4px; flex: 1 0 auto; overflow-y: hidden;'
       : ''}
 `
@@ -170,6 +173,10 @@ const RightAlignedDiv = styled.div`
 `
 
 const StretchedGrid = styled(Grid)`
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column !important;
   height: calc(100% - 30px) !important;
 
   .ui.info.message {
@@ -252,8 +259,19 @@ const InputSearch = styled(Input)`
 `
 
 const GridRowTable = styled(Grid.Row)`
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column !important;
   padding-top: 7px !important;
   padding-bottom: 0 !important;
+  
+  > div {
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+  }
 `
 
 const ButtonSave = styled(Button)`
@@ -369,6 +387,20 @@ const GridBottom = styled(Grid)`
   color: #20273a !important;
 `
 
+const GridBottomBack = styled(Grid)`
+  margin: 10px -30px 0px -30px !important;
+  padding: 5px 20px 0px 20px !important;
+  box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
+  background: #ffffff;
+  z-index: 2;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #20273a !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  width: inherit !important;
+`
+
 const GridRowBottom = styled(Grid.Row)`
   padding: 10px 0px 0px 0px !important;
 `
@@ -420,5 +452,6 @@ export {
   ButtonSaveAs,
   GridActionsModal,
   GridRowBottom,
-  GridColumnBottom
+  GridColumnBottom,
+  GridBottomBack
 }

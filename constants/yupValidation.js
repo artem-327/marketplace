@@ -26,7 +26,7 @@ export const errorMessages = {
     <FormattedMessage id='validation.requiredNonConforming' defaultMessage='Required if Condition is Non Conforming' />
   ),
   invalidPhoneNumber: (
-    <FormattedMessage id='validation.phoneNumber' defaultMessage={`Please, enter valid phone number.`} />
+    <FormattedMessage id='validation.phoneNumber' defaultMessage={`Invalid phone number`} />
   ),
   zipCode: <FormattedMessage id='validation.zipCode' defaultMessage='Enter zip code' />,
   minLength: min => (
@@ -187,7 +187,7 @@ export const phoneValidation = (minLength = 5) =>
     .test('phone-validation', errorMessages.invalidPhoneNumber, val => !val || (val[0] === '+' && !val.includes('_')))
     .test(
       'phone-length-validation',
-      errorMessages.minDigits(minLength),
+      errorMessages.invalidPhoneNumber,
       val => !val || (val[0] === '+' && val.length > minLength)
     ) // Delka vcetne '+' a predcisli, '+' povinne (tzn. bylo zvolene predcisli)
 

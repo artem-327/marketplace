@@ -11,9 +11,11 @@ import get from 'lodash/get'
 import styled from 'styled-components'
 import { getSafe } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
+import { Check } from 'react-feather'
 
 import {
   openPopup,
+  closePopup,
   getBankAccountsDataRequest,
   getDwollaAccBalance,
   handleOpenConfirmPopup,
@@ -26,12 +28,18 @@ import {
   dwollaSetPreferred,
   getVellociAccBalance,
   reloadBankAccounts,
+  deleteInstitution,
+  hideInactiveAccounts,
+  openPopupDeleteInstitutions,
   getCompanyDetails
 } from '../../actions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { errorMessages } from '~/constants/yupValidation'
 import ActionCell from '~/components/table/ActionCell'
+import ConfirmDeleteInstitution from './ConfirmDeleteInstitution'
+//Styles
+import { DivCircle, StatusLabel } from './styles'
 
 const Container = styled.div`
   overflow-y: auto;
@@ -44,17 +52,6 @@ const CustomDiv = styled.div`
   border: solid 1px #2599d5;
   background-color: #ffffff;
   padding: 30px;
-`
-
-const StatusLabel = styled(Label)`
-  height: 22px;
-  border-radius: 11px !important;
-  font-size: 12px !important;
-  font-weight: normal !important;
-  font-stretch: normal !important;
-  font-style: normal !important;
-  text-align: center !important;
-  color: #ffffff !important;
 `
 
 const SpanText = styled.span`
@@ -290,20 +287,18 @@ class BankAccountsTable extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.isReloadBankAcounts) {
+    if (this.props.isReloadBankAcounts || (prevProps.isLoadingAddedAccounts && !this.props.isLoadingAddedAccounts)) {
       await this.props.reloadBankAccounts(false)
-      setTimeout(async () => {
-        await this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
-        await this.props.getIdentity().then(resp => {
-          getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
-            this.props.getDwollaAccBalance()
-          getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
-            this.props.getVellociAccBalance()
-          if (getSafe(() => resp.value.identity.company.id, '')) {
-            this.props.getCompanyDetails(resp.value.identity.company.id)
-          }
-        })
-      }, 2500)
+      await this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
+      await this.props.getIdentity().then(resp => {
+        getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
+          this.props.getDwollaAccBalance()
+        getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
+          this.props.getVellociAccBalance()
+        if (getSafe(() => resp.value.identity.company.id, '')) {
+          this.props.getCompanyDetails(resp.value.identity.company.id)
+        }
+      })
     }
   }
 
@@ -311,36 +306,25 @@ class BankAccountsTable extends Component {
     { name: 'accountName', disabled: true },
     {
       name: 'name',
-      title: (
-        <FormattedMessage id='settings.accountName' defaultMessage='Account Name'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      allowReordering: false
+      title: ' ',
+      allowReordering: false,
+      width: 750,
+      maxWidth: 2000
     },
     {
       name: 'bankAccountType',
-      title: (
-        <FormattedMessage id='settings.accountType' defaultMessage='Account Type'>
-          {text => text}
-        </FormattedMessage>
-      )
+      title: ' ',
+      disabled: true
     },
     {
       name: 'bankName',
-      title: (
-        <FormattedMessage id='settings.bankName' defaultMessage='Bank Name'>
-          {text => text}
-        </FormattedMessage>
-      )
+      title: ' ',
+      disabled: true
     },
     {
       name: 'statusLabel',
-      title: (
-        <FormattedMessage id='settings.status' defaultMessage='Status'>
-          {text => text}
-        </FormattedMessage>
-      )
+      title: ' ',
+      disabled: true
     }
   ]
 
@@ -422,7 +406,7 @@ class BankAccountsTable extends Component {
       {
         text: formatMessage({
           id: 'settings.setAsPreferredBankAccount',
-          defaultMessage: 'Set as Preferred Bank Account'
+          defaultMessage: 'Set as Preferred'
         }),
         callback: async row => {
           try {
@@ -437,7 +421,47 @@ class BankAccountsTable extends Component {
   }
 
   getRows = rows => {
-    return rows.map(row => {
+    const { preferredBankAccountId, isHideInactiveAccounts } = this.props
+    const backgroundColorStatus = {
+      verified: '#84c225',
+      unverified: '#f16844',
+      verification_in_process: '#ffb24f',
+      inactive: '#f16844',
+      active: '#84c225'
+    }
+    const colorAccountName = {
+      verified: '#20273a',
+      unverified: '#f16844',
+      verification_in_process: '#ffb24f',
+      inactive: '#f16844',
+      active: '#20273a'
+    }
+    let newRows = []
+    if (isHideInactiveAccounts) {
+      rows.forEach(row => {
+        if (row.status === 'active') newRows.push(row)
+      })
+    } else {
+      newRows = rows
+    }
+    return newRows.map(row => {
+      const accountRow = (
+        <div style={{ display: 'flex' }}>
+          <DivCircle backgroundColor={backgroundColorStatus[row.status]} />
+          <span style={{ color: colorAccountName[row.status] || '#20273a', lineHeight: '22px' }}>
+            {row.accountName.toUpperCase()}
+          </span>
+          {preferredBankAccountId === row.id || preferredBankAccountId === row.account_public_id ? (
+            <StatusLabel horizontal>
+              <Check color='#84c225' size='14' strokeWidth='4' />
+              <span>
+                <FormattedMessage id='settings.preferred' defaultMessage='Preferred' />
+              </span>
+            </StatusLabel>
+          ) : null}
+        </div>
+      )
+      row.name = accountRow
       return {
         ...row,
         name: <ActionCell row={row} getActions={this.getActions} content={row.name} />
@@ -446,18 +470,89 @@ class BankAccountsTable extends Component {
   }
 
   render() {
-    const { myRows, loading, filterValue, intl, bankAccounts, method, accountStatus, documentRequired } = this.props
-
+    const {
+      myRows,
+      loading,
+      filterValue,
+      intl,
+      bankAccounts,
+      method,
+      accountStatus,
+      documentRequired,
+      isOpenPopupDeleteInstitution,
+      closePopup,
+      deleteInstitution,
+      institutId
+    } = this.props
+    const { formatMessage } = intl
     return (
       <React.Fragment>
+        <ConfirmDeleteInstitution
+          isOpenPopup={isOpenPopupDeleteInstitution}
+          closePopup={closePopup}
+          deleteInstitution={deleteInstitution}
+          institutId={institutId}
+        />
         {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
-          <div className='flex stretched listings-wrapper'>
+          <div className='flex stretched settings_bankaccounts listings-wrapper'>
             <ProdexTable
+              isBankTable
               tableName='settings_bankaccounts'
               rows={this.getRows(myRows)}
               loading={loading}
               columns={this.getColumns()}
               filterValue={filterValue}
+              groupBy={['bankName']}
+              getChildGroups={rows =>
+                _(rows)
+                  .groupBy('bankName')
+                  .map(v => ({
+                    key: `${v[0].bankName}_${v[0].institution_id}_${v[0].id}`,
+                    childRows: v
+                  }))
+                  .value()
+              }
+              groupActions={row => {
+                return [
+                  {
+                    text: formatMessage({
+                      id: 'settings.accounts.viewInactiveAccounts',
+                      defaultMessage: 'View Inactive Accounts'
+                    }),
+                    callback: async () => {
+                      try {
+                        await this.props.hideInactiveAccounts(false)
+                      } catch (e) {
+                        console.error(e)
+                      }
+                    }
+                  },
+                  {
+                    text: formatMessage({
+                      id: 'settings.accounts.hideInactiveAccounts',
+                      defaultMessage: 'Hide Inactive Accounts'
+                    }),
+                    callback: async () => {
+                      try {
+                        await this.props.hideInactiveAccounts(true)
+                      } catch (e) {
+                        console.error(e)
+                      }
+                    }
+                  },
+                  {
+                    text: formatMessage({
+                      id: 'settings.accounts.deleteInstitutions',
+                      defaultMessage: 'Delete Institutions'
+                    }),
+                    callback: async row => {
+                      let [bankName, institutionId, id] = row.key.split('_')
+                      await this.props.openPopupDeleteInstitutions(institutionId)
+                    }
+                  }
+                ]
+              }}
+              renderGroupLabel={({ row: { value }, groupLength }) => null}
             />
           </div>
         )}
@@ -578,6 +673,7 @@ class BankAccountsTable extends Component {
 
 const mapDispatchToProps = {
   openPopup,
+  closePopup,
   getBankAccountsDataRequest,
   getDwollaAccBalance,
   handleOpenConfirmPopup,
@@ -590,6 +686,9 @@ const mapDispatchToProps = {
   getIdentity,
   getVellociAccBalance,
   reloadBankAccounts,
+  deleteInstitution,
+  hideInactiveAccounts,
+  openPopupDeleteInstitutions,
   getCompanyDetails
 }
 
@@ -706,7 +805,11 @@ const mapStateToProps = state => {
     company: company,
     currentUser: state.settings.currentUser,
     tabClicked: state.settings.tabClicked,
-    isReloadBankAcounts: state.settings.isReloadBankAcounts
+    isReloadBankAcounts: state.settings.isReloadBankAcounts,
+    isHideInactiveAccounts: state.settings.isHideInactiveAccounts,
+    institutId: state.settings.institutId,
+    isOpenPopupDeleteInstitution: state.settings.isOpenPopupDeleteInstitution,
+    isLoadingAddedAccounts: state.settings.isLoadingAddedAccounts
   }
 }
 

@@ -61,7 +61,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import ErrorComponent from '~/components/error'
 import moment from 'moment'
 
-import ListingSidebar from '~/modules/inventory/my-listings/components/DetailSidebar'
+import ListingSidebar from '~/modules/inventory/my-listings/components/ModalDetail'
 import ProductSidebar from '~/modules/inventory/my-products/components/ProductSidebar'
 import WantedSidebar from '~/modules/wanted-board/listings/components/DetailSidebar'
 import UserSidebar from '~/modules/settings/components/UserTable/UsersSidebar'

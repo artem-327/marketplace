@@ -24,7 +24,7 @@ import ErrorFocus from '~/components/error-focus'
 const validationSchema = Yup.lazy(values => {
   let validationObject = {
     expirationDate: dateValidation(false),
-    issuedAt: values.issuedAt && dateBefore('issuedAt', 'expirationDate'),
+    issuedAt: dateValidation(false).concat(values.issuedAt && dateBefore('issuedAt', 'expirationDate')),
     documentType: Yup.object().shape({
       id: Yup.string().required(errorMessages.requiredMessage)
     })
@@ -99,7 +99,7 @@ class DocumentPopup extends Component {
           <Formik
             validationSchema={validationSchema}
             initialValues={popupValues ? popupValues : initialValues}
-            validateOnChange={false}
+            validateOnChange={true}
             validateOnBlur={false}
             enableReinitialize
             onSubmit={async (values, { setSubmitting }) => {
@@ -166,7 +166,6 @@ class DocumentPopup extends Component {
                         </FormattedMessage>
                       }
                       inputProps={{
-                        maxDate: moment(),
                         clearable: true
                       }}
                     />

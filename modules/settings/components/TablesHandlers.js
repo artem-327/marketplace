@@ -15,10 +15,12 @@ import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { bankAccountsConfig, vellociAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 import { currency } from '~/constants/index'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { PlusCircle, UploadCloud, CornerLeftDown } from 'react-feather'
+import { PlusCircle, UploadCloud, CornerLeftDown, Link2 } from 'react-feather'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { PlaidLink } from 'react-plaid-link'
 import api from '~/api'
+//Components
+import BasicButton from '../../../components/buttons/BasicButton'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -143,17 +145,18 @@ const PlaidButton = styled(PlaidLink)`
   cursor: ${props => (props.disabled ? 'not-allowed !important' : 'pointer !important')};
   pointer-events: ${props => (props.disabled ? 'none !important' : 'auto !important')};
   margin-right: 4px;
-  width: 200px !important;
+  width: 125px !important;
   box-shadow: none !important;
-  border: none !important;
-  color: #ffffff !important;
-  background-color: ${props => (props.disabled ? '#bde0f2 !important' : '#2599d5 !important')};
+  border: solid 1px #dee2e6 !important;
+  color: #20273a !important;
+  background-color: ${props => (props.disabled ? '#bde0f2 !important' : '#ffffff !important')};
   height: 40px !important;
   border-radius: 3px !important;
   font-weight: 500 !important;
   align-items: center !important;
   display: flex !important;
   justify-content: center !important;
+  font-size: 14px !important;
 `
 
 const textsTable = {
@@ -172,7 +175,8 @@ const textsTable = {
   },
   'bank-accounts': {
     BtnAddText: 'settings.tables.bankAccounts.buttonAdd',
-    SearchText: 'settings.tables.bankAccounts.search'
+    SearchText: 'settings.tables.bankAccounts.search',
+    SendLink: 'settings.tables.bankAccounts.sendLink'
   },
   'delivery-addresses': {
     BtnAddText: 'settings.tables.deliveryAddresses.buttonAdd',
@@ -353,10 +357,6 @@ class TablesHandlers extends Component {
   }
 
   onEvent = async (eventName, metadata) => {
-    if (eventName === 'HANDOFF') {
-      this.props.reloadBankAccounts(true)
-    }
-
     this.props.vellociOnEvent(eventName, metadata)
   }
 
@@ -403,7 +403,7 @@ class TablesHandlers extends Component {
           </div>
         )}
 
-        {(currentTab === 'logistics' || currentTab === 'bank-accounts') && (
+        {currentTab === 'logistics' && (
           <div>
             <div className='column'>
               <Input
@@ -418,6 +418,12 @@ class TablesHandlers extends Component {
                 onChange={(e, data) => this.props.handleVariableSave(data.name, data.value)}
               />
             </div>
+          </div>
+        )}
+
+        {currentTab === 'bank-accounts' && (
+          <div>
+            <div className='column'></div>
           </div>
         )}
 
@@ -602,7 +608,6 @@ class TablesHandlers extends Component {
                           onExit={this.onExit}
                           onSuccess={this.onSuccess}
                           onEvent={this.onEvent}>
-                          <PlusCircle />
                           <div style={{ marginLeft: '10px' }}>
                             <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
                           </div>
@@ -613,14 +618,23 @@ class TablesHandlers extends Component {
                 )}
                 {(bankAccTab && bankAccounts.addButton && paymentProcessor !== 'VELLOCI') || !bankAccTab ? (
                   <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
-                    <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
                 ) : null}
               </div>
+              {bankAccTab ? (
+                <div className='column'>
+                  <BasicButton type='button' onClick={() => openPopup()} data-test='settings_open_popup_send_link_btn'>
+                    <>
+                      <Link2 />
+                      <FormattedMessage id={textsTable[currentTab].SendLink}>{text => text}</FormattedMessage>
+                    </>
+                  </BasicButton>
+                </div>
+              ) : null}
             </>
           )}
-          <ColumnSettingButton divide={true} />
+          {!bankAccTab && <ColumnSettingButton divide={true} />}
         </div>
       </>
     )

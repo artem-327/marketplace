@@ -47,6 +47,7 @@ const DivIcons = styled.div`
 export const RowDropdown = styled(Dropdown)`
   display: block !important;
   height: 100% !important;
+  margin: auto 0;
 
   &:hover {
     font-weight: bold;
@@ -67,6 +68,11 @@ export const RowDropdownIcon = styled.div`
     width: 16px !important;
     height: 16px !important;
     color: #848893 !important;
+  }
+  
+  .settings_bankaccounts & {
+    margin-left: -6px;
+    margin-right: 0;
   }
 `
 

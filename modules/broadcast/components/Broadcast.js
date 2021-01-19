@@ -57,8 +57,9 @@ import {
   ButtonSaveAs,
   GridActionsModal,
   GridColumnBottom,
-  GridRowBottom
-} from './Broadcast.style'
+  GridRowBottom,
+  GridBottomBack
+} from './styles/Broadcast.style'
 import RuleItem from './RuleItem'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
@@ -626,7 +627,7 @@ class Broadcast extends Component {
 
   getAssociationFilter = () => {
     const {
-      asSidebar,
+      asModal,
       intl: { formatMessage }
     } = this.props
 
@@ -642,7 +643,7 @@ class Broadcast extends Component {
         </CustomButton>
       </FormFieldBroadcastAllButton>
     )
-    if (asSidebar) {
+    if (asModal) {
       return (
         <UnpaddedRow.Top verticalAlign='middle'>
           <GridColumn computer={8}>{this.getAssociationsDropdown()}</GridColumn>
@@ -758,7 +759,6 @@ class Broadcast extends Component {
       templates,
       updateTemplate,
       mode,
-      asSidebar,
       saveTemplate,
       filter,
       loading,
@@ -797,47 +797,224 @@ class Broadcast extends Component {
       ? associations.map((a, i) => ({ key: i, text: a, value: a }))
       : []
 
-    return (
-      <FlexWrapper>
-        <Form>
-          {asSidebar ? (
-            <>
-              <CompanyInfo
-                isLoadingModalCompanyInfo={isLoadingModalCompanyInfo}
-                dataCompanyInfo={dataCompanyInfo}
-                isOpenModalCompanyInfo={isOpenModalCompanyInfo}
-                closeModalCompanyInfo={closeModalCompanyInfo}
-              />
+    if (isOpenModalCompanyInfo) {
+      return (
+        <>
+          <CompanyInfo
+            isLoadingModalCompanyInfo={isLoadingModalCompanyInfo}
+            dataCompanyInfo={dataCompanyInfo}
+            isOpenModalCompanyInfo={isOpenModalCompanyInfo}
+            closeModalCompanyInfo={closeModalCompanyInfo}
+            asModal={asModal}
+          />
+          {asModal && (
+            <GridBottomBack>
+              <GridRowBottom textAlign='right'>
+                <GridColumnBottom>
+                  <ButtonCancel
+                    basic
+                    onClick={() => closeModalCompanyInfo(false)}
+                    data-test='broadcast_company_info_back_btn'>
+                    <FormattedMessage id='global.back' defaultMessage='Back' />
+                  </ButtonCancel>
+                </GridColumnBottom>
+              </GridRowBottom>
+            </GridBottomBack>
+          )}
+        </>
+      )
+    } else {
+      return (
+        <FlexWrapper>
+          <Form>
+            {asModal ? (
+              <>
+                <Grid>
+                  <GridRowTemplateModal>
+                    <GridColumn>
+                      <Modal
+                        trigger={
+                          <ButtonTemplate data-test='broadcast_modal_template_btn' type='button' basic fluid>
+                            <DivIcon>
+                              <IconFolder />
+                              <div>
+                                <span>
+                                  {formatMessage({
+                                    id: 'broadcast.select.templates',
+                                    defaultMessage: 'Select From Templates'
+                                  })}
+                                </span>
+                              </div>
+                            </DivIcon>
+                          </ButtonTemplate>
+                        }
+                        header={formatMessage({
+                          id: 'broadcast.select.templates.title',
+                          defaultMessage: 'SELECT FROM TEMPLATES'
+                        })}
+                        content={this.getModalTemplateContent()}
+                        actions={['Close']}
+                      />
+                    </GridColumn>
+                  </GridRowTemplateModal>
+                  <GridRowFiltersModal>
+                    <GridColumnFiltersModal>
+                      <Form.Field data-test='broadcast_modal_search_inp'>
+                        <InputSearch
+                          name='search'
+                          icon='search'
+                          iconPosition='right'
+                          value={this.state.filterSearch}
+                          onChange={this.handleSearchChange}
+                          placeholder={formatMessage({
+                            id: 'broadcast.search',
+                            defaultMessage: 'Search by Company Name, Branch, State, or Country'
+                          })}
+                        />
+                      </Form.Field>
+                    </GridColumnFiltersModal>
+                  </GridRowFiltersModal>
+                  <GridRowFiltersModal columns={3}>
+                    <GridColumnFiltersModal firstColumn>
+                      <DropdownInHeaderTable
+                        fluid
+                        data-test='broadcast_global_category_drpdn'
+                        selection
+                        name='category'
+                        value={filter.category}
+                        onChange={this.handleFilterChange}
+                        options={[
+                          {
+                            key: 'region',
+                            text: 'Regions',
+                            value: 'region'
+                          },
+                          {
+                            key: 'branch',
+                            text: 'Companies',
+                            value: 'branch'
+                          }
+                        ]}
+                      />
+                    </GridColumnFiltersModal>
+                    <GridColumnFiltersModal secondColumn>
+                      <DropdownInHeaderTable
+                        fluid
+                        value={this.state.associationFilter}
+                        selection
+                        loading={associationsFetching}
+                        options={[
+                          { key: 'ALL', text: 'Partners', value: 'ALL' },
+                          { key: 'Guests', text: 'Guests', value: 'Guests' }
+                        ].concat(options)}
+                        onChange={(_e, { value }) => this.setState({ associationFilter: value })}
+                      />
+                    </GridColumnFiltersModal>
+                    <GridColumnFiltersModal thirdColumn>
+                      <DropdownInHeaderTable
+                        fluid
+                        data-test='broadcast_global_broadcast_drpdn'
+                        selection
+                        name='broadcast'
+                        value={filter.broadcast}
+                        onChange={this.handleFilterChange}
+                        options={[
+                          {
+                            key: 'all',
+                            text: 'Broadcast - All',
+                            value: 'all'
+                          },
+                          {
+                            key: 'on',
+                            text: 'Broadcast - On',
+                            value: 'on'
+                          },
+                          {
+                            key: 'off',
+                            text: 'Broadcast - Off',
+                            value: 'off'
+                          }
+                        ]}
+                      />
+                    </GridColumnFiltersModal>
+                  </GridRowFiltersModal>
+                  {false && (
+                    <GridRow>
+                      <GridColumn>
+                        <Message info size='large' style={{ padding: '6px 15px' }}>
+                          <Popup
+                            trigger={<Icon name='info circle' />}
+                            content={
+                              <FormattedMessage
+                                id='broadcast.broadcastingTooltip'
+                                defaultMessage='Shows number of company branches out of the total company branches you will Broadcast to, once you turn Broadcasting on.'
+                              />
+                            }
+                          />
+                          <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Visible to' />{' '}
+                          <strong>
+                            {broadcastingBranches}/{totalBranches}
+                          </strong>
+                          <FormattedMessage id='broadcast.broadcastingBranches' defaultMessage=' branches of ' />
+                          <strong>
+                            {broadcastingCompanies}/{totalCompanies}
+                          </strong>
+                          <FormattedMessage id='broadcast.broadcastingCompanies' defaultMessage=' companies' />
+                        </Message>
+                      </GridColumn>
+                    </GridRow>
+                  )}
+                  {false && (
+                    <UnpaddedRow.Bottom>
+                      <GridColumn mobile={8}>
+                        <Form.Field>
+                          <label>
+                            <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
+                          </label>
+                          <Dropdown
+                            data-test='broadcast_modal_category_drpdn'
+                            selection
+                            name='category'
+                            value={filter.category}
+                            onChange={this.handleFilterChange}
+                            options={[
+                              {
+                                key: 'region',
+                                text: 'Regions',
+                                value: 'region'
+                              },
+                              {
+                                key: 'branch',
+                                text: 'Companies',
+                                value: 'branch'
+                              }
+                            ]}
+                          />
+                        </Form.Field>
+                      </GridColumn>
+                      <GridColumn mobile={8}>
+                        <Form.Field data-test='broadcast_modal_search_inp'>
+                          <label>
+                            <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
+                          </label>
+                          <Input
+                            name='search'
+                            icon='search'
+                            iconPosition='left'
+                            value={this.state.filterSearch}
+                            onChange={this.handleSearchChange}
+                          />
+                        </Form.Field>
+                      </GridColumn>
+                    </UnpaddedRow.Bottom>
+                  )}
+                  {false && this.getAssociationFilter()}
+                </Grid>
+              </>
+            ) : (
               <Grid>
-                <GridRowTemplateModal>
-                  <GridColumn>
-                    <Modal
-                      trigger={
-                        <ButtonTemplate data-test='broadcast_modal_template_btn' type='button' basic fluid>
-                          <DivIcon>
-                            <IconFolder />
-                            <div>
-                              <span>
-                                {formatMessage({
-                                  id: 'broadcast.select.templates',
-                                  defaultMessage: 'Select From Templates'
-                                })}
-                              </span>
-                            </div>
-                          </DivIcon>
-                        </ButtonTemplate>
-                      }
-                      header={formatMessage({
-                        id: 'broadcast.select.templates.title',
-                        defaultMessage: 'SELECT FROM TEMPLATES'
-                      })}
-                      content={this.getModalTemplateContent()}
-                      actions={['Close']}
-                    />
-                  </GridColumn>
-                </GridRowTemplateModal>
-                <GridRowFiltersModal>
-                  <GridColumnFiltersModal>
+                <GridRowSearch>
+                  <GridColumnSearch>
                     <Form.Field data-test='broadcast_modal_search_inp'>
                       <InputSearch
                         name='search'
@@ -851,75 +1028,11 @@ class Broadcast extends Component {
                         })}
                       />
                     </Form.Field>
-                  </GridColumnFiltersModal>
-                </GridRowFiltersModal>
-                <GridRowFiltersModal columns={3}>
-                  <GridColumnFiltersModal firstColumn>
-                    <DropdownInHeaderTable
-                      fluid
-                      data-test='broadcast_global_category_drpdn'
-                      selection
-                      name='category'
-                      value={filter.category}
-                      onChange={this.handleFilterChange}
-                      options={[
-                        {
-                          key: 'region',
-                          text: 'Regions',
-                          value: 'region'
-                        },
-                        {
-                          key: 'branch',
-                          text: 'Companies',
-                          value: 'branch'
-                        }
-                      ]}
-                    />
-                  </GridColumnFiltersModal>
-                  <GridColumnFiltersModal secondColumn>
-                    <DropdownInHeaderTable
-                      fluid
-                      value={this.state.associationFilter}
-                      selection
-                      loading={associationsFetching}
-                      options={[
-                        { key: 'ALL', text: 'Partners', value: 'ALL' },
-                        { key: 'Guests', text: 'Guests', value: 'Guests' }
-                      ].concat(options)}
-                      onChange={(_e, { value }) => this.setState({ associationFilter: value })}
-                    />
-                  </GridColumnFiltersModal>
-                  <GridColumnFiltersModal thirdColumn>
-                    <DropdownInHeaderTable
-                      fluid
-                      data-test='broadcast_global_broadcast_drpdn'
-                      selection
-                      name='broadcast'
-                      value={filter.broadcast}
-                      onChange={this.handleFilterChange}
-                      options={[
-                        {
-                          key: 'all',
-                          text: 'Broadcast - All',
-                          value: 'all'
-                        },
-                        {
-                          key: 'on',
-                          text: 'Broadcast - On',
-                          value: 'on'
-                        },
-                        {
-                          key: 'off',
-                          text: 'Broadcast - Off',
-                          value: 'off'
-                        }
-                      ]}
-                    />
-                  </GridColumnFiltersModal>
-                </GridRowFiltersModal>
+                  </GridColumnSearch>
+                </GridRowSearch>
                 {false && (
-                  <GridRow>
-                    <GridColumn>
+                  <GridRow textAlign='left'>
+                    <GridColumn width={8}>
                       <Message info size='large' style={{ padding: '6px 15px' }}>
                         <Popup
                           trigger={<Icon name='info circle' />}
@@ -941,249 +1054,158 @@ class Broadcast extends Component {
                         <FormattedMessage id='broadcast.broadcastingCompanies' defaultMessage=' companies' />
                       </Message>
                     </GridColumn>
+                    <GridColumn width={8}></GridColumn>
                   </GridRow>
                 )}
-                {false && (
-                  <UnpaddedRow.Bottom>
-                    <GridColumn mobile={8}>
-                      <Form.Field>
-                        <label>
-                          <FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' />
-                        </label>
-                        <Dropdown
-                          data-test='broadcast_modal_category_drpdn'
-                          selection
-                          name='category'
-                          value={filter.category}
-                          onChange={this.handleFilterChange}
-                          options={[
-                            {
-                              key: 'region',
-                              text: 'Regions',
-                              value: 'region'
-                            },
-                            {
-                              key: 'branch',
-                              text: 'Companies',
-                              value: 'branch'
-                            }
-                          ]}
-                        />
-                      </Form.Field>
-                    </GridColumn>
-                    <GridColumn mobile={8}>
-                      <Form.Field data-test='broadcast_modal_search_inp'>
-                        <label>
-                          <FormattedMessage id='broadcast.filter' defaultMessage='Filter' />
-                        </label>
-                        <Input
-                          name='search'
-                          icon='search'
-                          iconPosition='left'
-                          value={this.state.filterSearch}
-                          onChange={this.handleSearchChange}
-                        />
-                      </Form.Field>
-                    </GridColumn>
-                  </UnpaddedRow.Bottom>
-                )}
-                {false && this.getAssociationFilter()}
               </Grid>
-            </>
-          ) : (
-            <Grid>
-              <GridRowSearch>
-                <GridColumnSearch>
-                  <Form.Field data-test='broadcast_modal_search_inp'>
-                    <InputSearch
-                      name='search'
-                      icon='search'
-                      iconPosition='right'
-                      value={this.state.filterSearch}
-                      onChange={this.handleSearchChange}
-                      placeholder={formatMessage({
-                        id: 'broadcast.search',
-                        defaultMessage: 'Search by Company Name, Branch, State, or Country'
-                      })}
+            )}
+          </Form>
+
+          <StretchedGrid className='flex dynamic stretched' {...additionalGridProps}>
+            <GridRowTable>
+              <Grid.Column
+                width={16}
+                stretched
+                style={asModal ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
+                <Rule.Root asModal={asModal}>
+                  <Rule.Header asModal={asModal}>
+                    <Rule.Toggle
+                      style={
+                        asModal
+                          ? { flex: '0 0 62px', color: '#848893' }
+                          : { flex: '0 0 88px', maxWidth: '60px', borderRight: 'none !important', color: '#848893' }
+                      }>
+                      <FormattedMessage id='broadcast.select' defaultMessage='Select' />
+                    </Rule.Toggle>
+                    <Rule.RowContent>
+                      {!asModal && (
+                        <>
+                          <FieldInHeaderTable>
+                            <DropdownInHeaderTable
+                              fluid
+                              data-test='broadcast_global_category_drpdn'
+                              selection
+                              name='category'
+                              value={filter.category}
+                              onChange={this.handleFilterChange}
+                              options={[
+                                {
+                                  key: 'region',
+                                  text: 'Regions',
+                                  value: 'region'
+                                },
+                                {
+                                  key: 'branch',
+                                  text: 'Companies',
+                                  value: 'branch'
+                                }
+                              ]}
+                            />
+                          </FieldInHeaderTable>
+                          {this.getAssociationsDropdown()}
+                          <FieldInHeaderTable>
+                            <DropdownInHeaderTable
+                              fluid
+                              data-test='broadcast_global_broadcast_drpdn'
+                              selection
+                              name='broadcast'
+                              value={filter.broadcast}
+                              onChange={this.handleFilterChange}
+                              options={[
+                                {
+                                  key: 'all',
+                                  text: 'Broadcast - All',
+                                  value: 'all'
+                                },
+                                {
+                                  key: 'on',
+                                  text: 'Broadcast - On',
+                                  value: 'on'
+                                },
+                                {
+                                  key: 'off',
+                                  text: 'Broadcast - Off',
+                                  value: 'off'
+                                }
+                              ]}
+                            />
+                          </FieldInHeaderTable>
+                        </>
+                      )}
+                    </Rule.RowContent>
+
+                    <Rule.Toggle style={!asModal ? { maxWidth: '110px', color: '#848893' } : { color: '#848893' }}>
+                      <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
+                    </Rule.Toggle>
+                    <Rule.Toggle style={!asModal ? { maxWidth: '60px' } : { maxWidth: '50px' }}></Rule.Toggle>
+                  </Rule.Header>
+                  <Rule.Content asModal={asModal}>
+                    <RuleItem
+                      changeInModel={this.changeInModel}
+                      loadingChanged={this.props.loadingChanged}
+                      filter={filter}
+                      associationFilter={this.state.associationFilter}
+                      hideFobPrice={hideFobPrice}
+                      item={this.getFilteredTree()}
+                      mode={mode}
+                      offer={offer}
+                      onRowClick={this.handleRowClick}
+                      onPriceChange={this.handlePriceChange}
+                      onChange={this.handleChange}
+                      data-test='broadcast_modal_rule_action'
+                      asModal={asModal}
+                      openModalCompanyInfo={openModalCompanyInfo}
+                      getCompanyInfo={getCompanyInfo}
+                      treeData={treeData}
                     />
-                  </Form.Field>
-                </GridColumnSearch>
-              </GridRowSearch>
-              {false && (
-                <GridRow textAlign='left'>
-                  <GridColumn width={8}>
-                    <Message info size='large' style={{ padding: '6px 15px' }}>
-                      <Popup
-                        trigger={<Icon name='info circle' />}
-                        content={
-                          <FormattedMessage
-                            id='broadcast.broadcastingTooltip'
-                            defaultMessage='Shows number of company branches out of the total company branches you will Broadcast to, once you turn Broadcasting on.'
-                          />
-                        }
-                      />
-                      <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Visible to' />{' '}
-                      <strong>
-                        {broadcastingBranches}/{totalBranches}
-                      </strong>
-                      <FormattedMessage id='broadcast.broadcastingBranches' defaultMessage=' branches of ' />
-                      <strong>
-                        {broadcastingCompanies}/{totalCompanies}
-                      </strong>
-                      <FormattedMessage id='broadcast.broadcastingCompanies' defaultMessage=' companies' />
-                    </Message>
-                  </GridColumn>
-                  <GridColumn width={8}></GridColumn>
-                </GridRow>
-              )}
-            </Grid>
+                  </Rule.Content>
+                </Rule.Root>
+                {!asModal && (
+                  <RightAlignedDiv>
+                    <Button basic onClick={() => this.resetBroadcastRules()} data-test='broadcast_global_reset_btn'>
+                      {formatMessage({ id: 'global.reset', defaultMessage: 'Reset' })}
+                    </Button>
+                    <ButtonSave primary onClick={() => this.saveBroadcastRules()} data-test='broadcast_global_save_btn'>
+                      {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                    </ButtonSave>
+                  </RightAlignedDiv>
+                )}
+              </Grid.Column>
+            </GridRowTable>
+          </StretchedGrid>
+          {asModal && (
+            <GridBottom>
+              <GridRowBottom textAlign='right'>
+                <GridColumnBottom width='8'>
+                  <ButtonCancel onClick={() => close()} data-test='broadcast_modal_close_btn'>
+                    {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                  </ButtonCancel>
+                </GridColumnBottom>
+
+                <GridColumnBottom width='4'>
+                  <ButtonSaveAs
+                    fluid
+                    basic
+                    onClick={() => this.props.switchTemplateModal(true)}
+                    data-test='broadcast_modal_save_as_btn'>
+                    {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
+                  </ButtonSaveAs>
+                </GridColumnBottom>
+                <GridColumnBottom width='4'>
+                  <ButtonApply
+                    fluid
+                    basic
+                    onClick={() => this.saveBroadcastRules()}
+                    data-test='broadcast_modal_apply_btn'>
+                    {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
+                  </ButtonApply>
+                </GridColumnBottom>
+              </GridRowBottom>
+            </GridBottom>
           )}
-        </Form>
-
-        <StretchedGrid className='flex dynamic stretched' {...additionalGridProps}>
-          <GridRowTable>
-            <Grid.Column
-              width={16}
-              stretched
-              style={asSidebar ? { padding: '0', boxShadow: '0 0 0 transparent' } : null}>
-              <Rule.Root asSidebar={asSidebar}>
-                <Rule.Header asSidebar={asSidebar}>
-                  <Rule.Toggle
-                    style={
-                      asSidebar
-                        ? { flex: '0 0 62px', color: '#848893' }
-                        : { flex: '0 0 88px', maxWidth: '60px', borderRight: 'none !important', color: '#848893' }
-                    }>
-                    <FormattedMessage id='broadcast.select' defaultMessage='Select' />
-                  </Rule.Toggle>
-                  <Rule.RowContent>
-                    {!asSidebar && (
-                      <>
-                        <FieldInHeaderTable>
-                          <DropdownInHeaderTable
-                            fluid
-                            data-test='broadcast_global_category_drpdn'
-                            selection
-                            name='category'
-                            value={filter.category}
-                            onChange={this.handleFilterChange}
-                            options={[
-                              {
-                                key: 'region',
-                                text: 'Regions',
-                                value: 'region'
-                              },
-                              {
-                                key: 'branch',
-                                text: 'Companies',
-                                value: 'branch'
-                              }
-                            ]}
-                          />
-                        </FieldInHeaderTable>
-                        {this.getAssociationsDropdown()}
-                        <FieldInHeaderTable>
-                          <DropdownInHeaderTable
-                            fluid
-                            data-test='broadcast_global_broadcast_drpdn'
-                            selection
-                            name='broadcast'
-                            value={filter.broadcast}
-                            onChange={this.handleFilterChange}
-                            options={[
-                              {
-                                key: 'all',
-                                text: 'Broadcast - All',
-                                value: 'all'
-                              },
-                              {
-                                key: 'on',
-                                text: 'Broadcast - On',
-                                value: 'on'
-                              },
-                              {
-                                key: 'off',
-                                text: 'Broadcast - Off',
-                                value: 'off'
-                              }
-                            ]}
-                          />
-                        </FieldInHeaderTable>
-                      </>
-                    )}
-                  </Rule.RowContent>
-
-                  <Rule.Toggle style={!asSidebar ? { maxWidth: '110px', color: '#848893' } : { color: '#848893' }}>
-                    <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
-                  </Rule.Toggle>
-                  <Rule.Toggle style={!asSidebar ? { maxWidth: '60px' } : { maxWidth: '50px' }}></Rule.Toggle>
-                </Rule.Header>
-                <Rule.Content asSidebar={asSidebar}>
-                  <RuleItem
-                    changeInModel={this.changeInModel}
-                    loadingChanged={this.props.loadingChanged}
-                    filter={filter}
-                    associationFilter={this.state.associationFilter}
-                    hideFobPrice={hideFobPrice}
-                    item={this.getFilteredTree()}
-                    mode={mode}
-                    offer={offer}
-                    onRowClick={this.handleRowClick}
-                    onPriceChange={this.handlePriceChange}
-                    onChange={this.handleChange}
-                    data-test='broadcast_modal_rule_action'
-                    asSidebar={asSidebar}
-                    openModalCompanyInfo={openModalCompanyInfo}
-                    getCompanyInfo={getCompanyInfo}
-                    treeData={treeData}
-                  />
-                </Rule.Content>
-              </Rule.Root>
-              {!asSidebar && (
-                <RightAlignedDiv>
-                  <Button basic onClick={() => this.resetBroadcastRules()} data-test='broadcast_global_reset_btn'>
-                    {formatMessage({ id: 'global.reset', defaultMessage: 'Reset' })}
-                  </Button>
-                  <ButtonSave primary onClick={() => this.saveBroadcastRules()} data-test='broadcast_global_save_btn'>
-                    {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                  </ButtonSave>
-                </RightAlignedDiv>
-              )}
-            </Grid.Column>
-          </GridRowTable>
-        </StretchedGrid>
-        {asSidebar && (
-          <GridBottom>
-            <GridRowBottom textAlign='right'>
-              <GridColumnBottom width='8'>
-                <ButtonCancel onClick={() => close()} data-test='broadcast_modal_close_btn'>
-                  {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-                </ButtonCancel>
-              </GridColumnBottom>
-
-              <GridColumnBottom width='4'>
-                <ButtonSaveAs
-                  fluid
-                  basic
-                  onClick={() => this.props.switchTemplateModal(true)}
-                  data-test='broadcast_modal_save_as_btn'>
-                  {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
-                </ButtonSaveAs>
-              </GridColumnBottom>
-              <GridColumnBottom width='4'>
-                <ButtonApply
-                  fluid
-                  basic
-                  onClick={() => this.saveBroadcastRules()}
-                  data-test='broadcast_modal_apply_btn'>
-                  {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
-                </ButtonApply>
-              </GridColumnBottom>
-            </GridRowBottom>
-          </GridBottom>
-        )}
-      </FlexWrapper>
-    )
+        </FlexWrapper>
+      )
+    }
   }
 
   resetAllFilters = async () => {
@@ -1229,7 +1251,17 @@ class Broadcast extends Component {
   }
 
   saveBroadcastRules = async () => {
-    const { saveRules, id, initGlobalBroadcast, asSidebar, toastManager, templates, changedForm, sidebarValues, inventoryGrid } = this.props
+    const {
+      saveRules,
+      id,
+      initGlobalBroadcast,
+      asModal,
+      toastManager,
+      templates,
+      changedForm,
+      sidebarValues,
+      inventoryGrid
+    } = this.props
     let filteredTree = this.treeToModel(undefined, undefined, true)
 
     try {
@@ -1256,7 +1288,7 @@ class Broadcast extends Component {
 
       //if (this.setFieldValue) this.setFieldValue('templates', dataId)
 
-      if (!asSidebar) {
+      if (!asModal) {
         await initGlobalBroadcast()
       }
       this.setState({
@@ -1306,123 +1338,124 @@ class Broadcast extends Component {
       changedForm,
       intl: { formatMessage },
       saveTemplate,
-      switchTemplateModal
+      switchTemplateModal,
+      isLoadingModalCompanyInfo,
+      dataCompanyInfo,
+      isOpenModalCompanyInfo,
+      closeModalCompanyInfo
     } = this.props
     const { templateInitialValues } = this.state
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
-    if (!asModal) {
-      if (loading || !isPrepared)
-        return (
-          <Dimmer active={true} inverted>
-            <Loader active={true} />
-          </Dimmer>
-        )
+    if (loading || !isPrepared)
       return (
-        <>
-          {isOpenTemplateModal ? (
-            <Formik
-              initialValues={templateInitialValues}
-              validateOnChange={true}
-              enableReinitialize
-              onSubmit={async (values, { setSubmitting, setFieldValue }) => {
-                let payload = {
-                  mappedBroadcastRules: {
-                    ...this.treeToModel(undefined, undefined, true)
-                  },
-                  name: values.name
-                }
-
-                if (templates.some(el => el.name === values.name)) {
-                  let { name, id } = templates.find(template => template.name === values.name)
-
-                  await confirm(
-                    formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
-                    formatMessage({
-                      id: 'broadcast.overwriteTemplate.content'
-                    })
-                  )
-
-                  await updateTemplate(id, payload)
-                  changedForm(false)
-                } else {
-                  let { value } = await saveTemplate(payload)
-                  this.setState({ selectedTemplate: value })
-                  setFieldValue('templates', value.id)
-                  changedForm(false)
-                }
-
-                let status = values.name === name ? 'Updated' : 'Saved'
-                setSubmitting(false)
-              }}
-              render={props => {
-                this.submitForm = props.submitForm
-                this.setFieldValue = props.setFieldValue
-
-                return (
-                  <Form onSubmit={props.handleSubmit}>
-                    <Modal closeIcon open={isOpenTemplateModal} onClose={() => switchTemplateModal(false)} size='small'>
-                      <Modal.Header>
-                        <FormattedMessage id='broadcast.saveAsTemplate' defaultMessage='Save as Template' />
-                      </Modal.Header>
-                      <Modal.Content scrolling className='flex stretched'>
-                        <Grid>
-                          <Grid.Row>
-                            <Grid.Column>
-                              <FormikInput
-                                inputProps={{
-                                  fluid: true,
-                                  placeholder: formatMessage({
-                                    id: 'broadcast.templateName',
-                                    defaultMessage: 'Template Name'
-                                  }),
-                                  'data-test': 'broadcast_modal_templateName_inp'
-                                }}
-                                name='name'
-                              />
-                            </Grid.Column>
-                          </Grid.Row>
-                        </Grid>
-                      </Modal.Content>
-                      <Modal.Actions>
-                        <GridActionsModal>
-                          <Grid.Row textAlign='right'>
-                            <Grid.Column width='13'>
-                              <ButtonCancel
-                                onClick={() => switchTemplateModal(false)}
-                                data-test='broadcast_template_modal_close_btn'>
-                                {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-                              </ButtonCancel>
-                            </Grid.Column>
-                            <Grid.Column width='3'>
-                              <ButtonSaveAs
-                                fluid
-                                onClick={this.submitForm}
-                                type='button'
-                                loading={this.props.templateSaving}
-                                basic
-                                disabled={!props.values.name}
-                                data-test='broadcast_modal_submit_btn'>
-                                {formatMessage({
-                                  id: 'global.save',
-                                  defaultMessage: 'Save'
-                                })}
-                              </ButtonSaveAs>
-                            </Grid.Column>
-                          </Grid.Row>
-                        </GridActionsModal>
-                      </Modal.Actions>
-                    </Modal>
-                  </Form>
-                )
-              }}></Formik>
-          ) : null}
-
-          {this.getContent()}
-        </>
+        <Dimmer active={true} inverted>
+          <Loader active={true} />
+        </Dimmer>
       )
-    }
+    return (
+      <>
+        {isOpenTemplateModal ? (
+          <Formik
+            initialValues={templateInitialValues}
+            validateOnChange={true}
+            enableReinitialize
+            onSubmit={async (values, { setSubmitting, setFieldValue }) => {
+              let payload = {
+                mappedBroadcastRules: {
+                  ...this.treeToModel(undefined, undefined, true)
+                },
+                name: values.name
+              }
+
+              if (templates.some(el => el.name === values.name)) {
+                let { name, id } = templates.find(template => template.name === values.name)
+
+                await confirm(
+                  formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
+                  formatMessage({
+                    id: 'broadcast.overwriteTemplate.content'
+                  })
+                )
+
+                await updateTemplate(id, payload)
+                changedForm(false)
+              } else {
+                let { value } = await saveTemplate(payload)
+                this.setState({ selectedTemplate: value })
+                setFieldValue('templates', value.id)
+                changedForm(false)
+              }
+
+              let status = values.name === name ? 'Updated' : 'Saved'
+              setSubmitting(false)
+            }}
+            render={props => {
+              this.submitForm = props.submitForm
+              this.setFieldValue = props.setFieldValue
+
+              return (
+                <Form onSubmit={props.handleSubmit}>
+                  <Modal closeIcon open={isOpenTemplateModal} onClose={() => switchTemplateModal(false)} size='small'>
+                    <Modal.Header>
+                      <FormattedMessage id='broadcast.saveAsTemplate' defaultMessage='Save as Template' />
+                    </Modal.Header>
+                    <Modal.Content scrolling className='flex stretched'>
+                      <Grid>
+                        <Grid.Row>
+                          <Grid.Column>
+                            <FormikInput
+                              inputProps={{
+                                fluid: true,
+                                placeholder: formatMessage({
+                                  id: 'broadcast.templateName',
+                                  defaultMessage: 'Template Name'
+                                }),
+                                'data-test': 'broadcast_modal_templateName_inp'
+                              }}
+                              name='name'
+                            />
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <GridActionsModal>
+                        <Grid.Row textAlign='right'>
+                          <Grid.Column width='13'>
+                            <ButtonCancel
+                              onClick={() => switchTemplateModal(false)}
+                              data-test='broadcast_template_modal_close_btn'>
+                              {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                            </ButtonCancel>
+                          </Grid.Column>
+                          <Grid.Column width='3'>
+                            <ButtonSaveAs
+                              fluid
+                              onClick={this.submitForm}
+                              type='button'
+                              loading={this.props.templateSaving}
+                              basic
+                              disabled={!props.values.name}
+                              data-test='broadcast_modal_submit_btn'>
+                              {formatMessage({
+                                id: 'global.save',
+                                defaultMessage: 'Save'
+                              })}
+                            </ButtonSaveAs>
+                          </Grid.Column>
+                        </Grid.Row>
+                      </GridActionsModal>
+                    </Modal.Actions>
+                  </Modal>
+                </Form>
+              )
+            }}></Formik>
+        ) : null}
+        {this.getContent()}
+      </>
+    )
   }
 }
 
@@ -1430,7 +1463,7 @@ Broadcast.propTypes = {
   asModal: bool,
   additionalGridProps: object,
   hideFobPrice: bool,
-  asSidebar: bool,
+  asModal: bool,
   isOpenTemplateModal: bool,
   saveSidebar: number,
   sidebarValues: object,
@@ -1438,10 +1471,10 @@ Broadcast.propTypes = {
 }
 
 Broadcast.defaultProps = {
-  asModal: true,
+  asModal: false,
   additionalGridProps: {},
   hideFobPrice: false,
-  asSidebar: false,
+  asModal: false,
   isOpenTemplateModal: false,
   saveSidebar: 0,
   sidebarValues: {},
