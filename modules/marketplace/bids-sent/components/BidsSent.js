@@ -1,31 +1,16 @@
 import React, { Component } from 'react'
-import { Container, Icon, Image, Dropdown, Input } from 'semantic-ui-react'
-import { MoreVertical, Sliders } from 'react-feather'
+import { Container, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { withRouter } from 'next/router'
-import { number, boolean } from 'prop-types'
-import Link from 'next/link'
-import styled from 'styled-components'
-import { Warning } from '@material-ui/icons'
-import { ShippingQuotes } from '~/modules/shipping'
 import ProdexGrid from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
-import AddCart from '~/src/pages/cart/components/AddCart'
-import FilterTags from '~/modules/filter/components/FitlerTags'
-import { filterTypes } from '~/modules/filter/constants/filter'
-import { groupActionsMarketplace } from '~/modules/company-product-info/constants'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
-import { ArrayToFirstItem } from '~/components/formatted-messages/'
-import { getSafe } from '~/utils/functions'
-import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 import BidsRowDetail from '../../components/BidsRowDetail'
 import RowDescription from '../../components/RowDescription'
 import moment from 'moment'
-import confirm from '~/src/components/Confirmable/confirm'
+import confirm from '~/components/Confirmable/confirm'
 import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
 import MakeOfferPopup from '../../listings/components/MakeOfferPopup'
 import Router from 'next/router'
@@ -61,7 +46,7 @@ class BidsSent extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          width: 150,
+          width: 150
           //sortPath: 'ProductOffer.pkgAvailable'
         }
       ],
@@ -80,7 +65,7 @@ class BidsSent extends Component {
     if (tableHandlersFiltersBidsSent) {
       this.setState({ filterValues: tableHandlersFiltersBidsSent }, () => {
         const filter = {
-          ...this.state.filterValues,
+          ...this.state.filterValues
         }
         datagrid.setSearch(filter, true, 'pageFilters')
       })
@@ -132,15 +117,16 @@ class BidsSent extends Component {
 
     return rows.map(r => {
       const lastHistory = r.histories[r.histories.length - 1]
-      const greyed = expandedRowIds.length && (expandedRowIds[0] !== r.id)
+      const greyed = expandedRowIds.length && expandedRowIds[0] !== r.id
 
-      return({
+      return {
         ...r,
         clsName:
-          (expandedRowIds[0] === r.id
-            ? 'open zoomed'    // row detail expanded
-            : (greyed ? 'bids-greyed' : '')
-          ),
+          expandedRowIds[0] === r.id
+            ? 'open zoomed' // row detail expanded
+            : greyed
+            ? 'bids-greyed'
+            : '',
         name: (
           <ActionCell
             row={r}
@@ -148,15 +134,11 @@ class BidsSent extends Component {
             leftContent={<IconWrapper>{DefaultIcon}</IconWrapper>}
             content={
               <StyledName>
-                <div className='name'>
-                  {lastHistory.createdBy.name}
-                </div>
-                <div className='company'>
-                  {lastHistory.createdBy.company.cfDisplayName}
-                </div>
+                <div className='name'>{lastHistory.createdBy.name}</div>
+                <div className='company'>{lastHistory.createdBy.company.cfDisplayName}</div>
               </StyledName>
             }
-            onContentClick={(e) => {
+            onContentClick={e => {
               e.stopPropagation()
               e.preventDefault()
               this.handleRowClick(r)
@@ -180,7 +162,7 @@ class BidsSent extends Component {
             {moment(r.createdAt).fromNow()}
           </div>
         )
-      })
+      }
     })
   }
 
@@ -299,19 +281,14 @@ class BidsSent extends Component {
       <BidsRowDetail
         initValues={this.state.rowDetailState}
         popupValues={row}
-        onUnmount={(values) => this.setState({ rowDetailState: values })}
+        onUnmount={values => this.setState({ rowDetailState: values })}
         onClose={() => this.setState({ expandedRowIds: [] })}
       />
     )
   }
 
   render = () => {
-    const {
-      datagrid,
-      intl,
-      loading,
-      isOpenPopup
-    } = this.props
+    const { datagrid, intl, loading, isOpenPopup } = this.props
     const { columns, fixed, openFilterPopup, expandedRowIds } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
@@ -333,7 +310,7 @@ class BidsSent extends Component {
                     defaultMessage: 'Search bid by name or company...'
                   })}
                   onChange={this.handleFilterChangeInputSearch}
-                  />
+                />
               </div>
             </div>
             <ColumnSettingButton />
