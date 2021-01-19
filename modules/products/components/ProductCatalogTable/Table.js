@@ -337,7 +337,7 @@ class ProductCatalogTable extends Component {
   render() {
     const { datagrid, rows, filterValue, editedId } = this.props
 
-    let { columns, fixed } = this.state
+    let { columns } = this.state
 
     return (
       <React.Fragment>
@@ -346,7 +346,6 @@ class ProductCatalogTable extends Component {
             tableName='admin_product-catalog'
             {...datagrid.tableProps}
             columns={columns}
-            fixed={fixed}
             filterValue={filterValue}
             loading={datagrid.loading}
             rows={this.getRows(rows)}

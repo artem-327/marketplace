@@ -1285,7 +1285,7 @@ class MyListings extends Component {
       updatingDatagrid,
       activeInventoryFilter
     } = this.props
-    const { columns, fixed, clientMessage, request, openFilterPopup, rows } = this.state
+    const { columns, clientMessage, request, openFilterPopup, rows } = this.state
 
     return (
       <>
@@ -1414,7 +1414,6 @@ class MyListings extends Component {
             {...datagrid.tableProps}
             tableName='my_inventory_grid'
             columns={columns}
-            fixed={fixed}
             rows={rows}
             selectByRowClick
             hideCheckboxes
