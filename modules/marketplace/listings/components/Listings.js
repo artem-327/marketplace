@@ -83,7 +83,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 430,
-          sortPath: 'ProductOffer.companyProduct.intProductName',
+          sortPath: 'BroadcastedOffer.productOffer.companyProduct.intProductName',
           allowReordering: false
         },
         {
@@ -104,7 +104,7 @@ class Listings extends Component {
           ),
           width: 140,
           align: 'right',
-          sortPath: 'ProductOffer.pkgAvailable'
+          sortPath: 'BroadcastedOffer.productOffer.pkgAvailable'
         },
         {
           name: 'quantity',
@@ -115,7 +115,7 @@ class Listings extends Component {
           ),
           width: 140,
           align: 'right',
-          sortPath: 'ProductOffer.quantity'
+          sortPath: 'BroadcastedOffer.productOffer.quantity'
         },
         {
           name: 'location',
@@ -135,7 +135,7 @@ class Listings extends Component {
           ),
           width: 160,
           align: 'right',
-          sortPath: 'ProductOffer.cfPricePerUOM'
+          sortPath: 'BroadcastedOffer.productOffer.cfPricePerUOM'
         },
         {
           name: 'manufacturer',
@@ -145,7 +145,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 220,
-          sortPath: 'ProductOffer.companyProduct.companyGenericProduct.manufacturer.name'
+          sortPath: 'BroadcastedOffer.productOffer.companyProduct.companyGenericProduct.manufacturer.name'
         },
         {
           name: 'origin',
@@ -155,7 +155,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 120,
-          sortPath: 'ProductOffer.origin.name'
+          sortPath: 'BroadcastedOffer.productOffer.origin.name'
         },
         {
           name: 'expiration',
@@ -165,7 +165,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 120,
-          sortPath: 'ProductOffer.lotExpirationDate'
+          sortPath: 'BroadcastedOffer.productOffer.lotExpirationDate'
         },
         {
           name: 'condition',
@@ -175,7 +175,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 100,
-          sortPath: 'ProductOffer.condition.name'
+          sortPath: 'BroadcastedOffer.productOffer.condition.name'
         },
         {
           name: 'form',
@@ -185,7 +185,7 @@ class Listings extends Component {
             </FormattedMessage>
           ),
           width: 100,
-          sortPath: 'ProductOffer.form.name'
+          sortPath: 'BroadcastedOffer.productOffer.form.name'
         },
         {
           name: 'association',
@@ -506,6 +506,11 @@ class Listings extends Component {
             columns={columns}
             fixed={fixed}
             groupBy={['productNumber']}
+            defaultSorting={{
+              columnName: 'intProductName',
+              sortPath: 'BroadcastedOffer.productOffer.companyProduct.intProductName',
+              direction: 'asc'
+            }}
             getChildGroups={rows =>
               _(rows)
                 .groupBy('productGroupName')
