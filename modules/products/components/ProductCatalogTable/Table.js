@@ -45,12 +45,6 @@ class ProductCatalogTable extends Component {
     super(props)
 
     this.state = {
-      fixed: [
-        {
-          name: 'name',
-          position: 0
-        }
-      ],
       columns: [
         {
           name: 'name',

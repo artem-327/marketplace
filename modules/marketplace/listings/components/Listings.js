@@ -65,12 +65,6 @@ class Listings extends Component {
     super(props)
     //this.getRowActions = this.getRowActions.bind(this)
     this.state = {
-      fixed: [
-        {
-          name: 'intProductName',
-          position: 2
-        }
-      ],
       columns: [
         { name: 'productGroupName', disabled: true },
         { name: 'productNumber', disabled: true },

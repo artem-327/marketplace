@@ -268,12 +268,6 @@ class MyListings extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      fixed: [
-        {
-          name: 'productName',
-          position: 3
-        }
-      ],
       columns: [
         /*{
           name: 'actCol',
