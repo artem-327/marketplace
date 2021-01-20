@@ -261,13 +261,13 @@ class Navigation extends Component {
       wantedBoard
     } = this.state
 
-    const MenuLink = withRouter(({ router: { asPath }, to, children, tab, className, dataTest }) => {
+    const MenuLink = withRouter(({ router: { pathname }, to, children, tab, className, dataTest }) => {
       return (
         <Link href={to}>
           <Menu.Item
             as='a'
             data-test={dataTest}
-            active={asPath === to}
+            active={pathname === to}
             onClick={async e => await this.settingsLink(e, to, tab)}
             className={className}>
             {children}
