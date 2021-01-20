@@ -11,6 +11,8 @@ import BidsRowDetail from '../../components/BidsRowDetail'
 import RowDescription from '../../components/RowDescription'
 import moment from 'moment'
 import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
+import Router from 'next/router'
+import { getSafe } from '~/utils/functions'
 
 class BidsReceived extends Component {
   constructor(props) {
@@ -59,8 +61,28 @@ class BidsReceived extends Component {
   componentDidMount() {
     const { tableHandlersFiltersBidsReceived, advancedFilters, datagrid, applyDatagridFilter } = this.props
 
+    const initId = parseInt(getSafe(() => Router.router.query.id, 0))
+    if (initId) {
+      datagrid.setSearch({ initId }, true, 'pageFilters')
+      this.setState({ expandedRowIds: [initId] })
+    } else {
+      this.setInitFilters()
+    }
+  }
+
+  componentWillUnmount() {
+    const { isOpenPopup, closePopup } = this.props
+    if (!getSafe(() => Router.router.query.id, 0)) {
+      this.props.handleVariableSave('tableHandlersFiltersBidsReceived', this.state.filterValues)
+    }
+    if (isOpenPopup) closePopup()
+  }
+
+  setInitFilters = () => {
+    const { tableHandlersFiltersBidsReceived, datagrid } = this.props
+
     if (tableHandlersFiltersBidsReceived) {
-      this.setState({ filterValues: tableHandlersFiltersBidsReceived }, () => {
+      this.setState({filterValues: tableHandlersFiltersBidsReceived}, () => {
         const filter = {
           ...this.state.filterValues
         }
@@ -69,12 +91,6 @@ class BidsReceived extends Component {
     } else {
       datagrid.setSearch(this.state.filterValues, true, 'pageFilters')
     }
-  }
-
-  componentWillUnmount() {
-    const { isOpenPopup, closePopup } = this.props
-    this.props.handleVariableSave('tableHandlersFiltersBidsReceived', this.state.filterValues)
-    if (isOpenPopup) closePopup()
   }
 
   handleFilterChangeInputSearch = (e, data) => {
@@ -102,6 +118,13 @@ class BidsReceived extends Component {
       }
     } else {
       this.setState({ expandedRowIds: [row.id] })
+    }
+  }
+
+  handleUpdateFinished = () => {
+    if (getSafe(() => Router.router.query.id, 0)) {
+      Router.push(Router.router.pathname)
+      this.setInitFilters()
     }
   }
 
@@ -184,6 +207,7 @@ class BidsReceived extends Component {
         try {
           const { value } = await acceptOffer(row.id)
           datagrid.updateRow(row.id, () => value)
+          this.handleUpdateFinished()
         } catch (e) {
           console.error(e)
         }
@@ -198,6 +222,7 @@ class BidsReceived extends Component {
         try {
           const { value } = await rejectOffer(row.id)
           datagrid.updateRow(row.id, () => value)
+          this.handleUpdateFinished()
         } catch (e) {
           console.error(e)
         }
@@ -226,7 +251,10 @@ class BidsReceived extends Component {
         initValues={this.state.rowDetailState}
         popupValues={row}
         onUnmount={values => this.setState({ rowDetailState: values })}
-        onClose={() => this.setState({ expandedRowIds: [] })}
+        onClose={() => {
+          this.setState({ expandedRowIds: [] })
+          this.handleUpdateFinished()
+        }}
         seller
       />
     )
