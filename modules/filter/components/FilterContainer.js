@@ -12,7 +12,6 @@ function mapStateToProps(store) {
     ...store.filter,
     ...store.filter.marketplace,
     preferredCurrency: getSafe(() => store.auth.identity.preferredCurrency.code, currency),
-    warehouseDistances: store.location.warehouseDistances,
     autocompleteDataLoading: store.marketplace.autocompleteDataLoading,
     autocompleteData: store.marketplace.autocompleteData
   }
