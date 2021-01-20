@@ -1080,7 +1080,8 @@ class ModalDetail extends Component {
       currencySymbol,
       openGlobalAddForm,
       inventoryGrid,
-      isLoadingBroadcast
+      isLoadingBroadcast,
+      autocompleteDataLoading
     } = this.props
 
     const leftWidth = 6
@@ -1292,8 +1293,8 @@ class ModalDetail extends Component {
                   )
                 }}>
                 <FlexModalContent>
-                  <Dimmer inverted active={loading}>
-                    <Loader active={loading} />
+                  <Dimmer inverted active={loading || autocompleteDataLoading || searchedOriginsLoading}>
+                    <Loader active={loading || autocompleteDataLoading || searchedOriginsLoading} />
                   </Dimmer>
                   <HighSegment basic>
                     <DivTitle>
@@ -1672,26 +1673,29 @@ class ModalDetail extends Component {
                                       </FormField>
                                     </GridColumn>
                                   </CustomGridRow>
-                                  <CustomGridRow>
-                                    <GridColumn width={8}>
-                                      <FormField width={8}>
-                                        <FormattedMessage
-                                          id='myInventory.acceptBids'
-                                          defaultMessage='Accept bids on offer?'>
-                                          {text => <label>{text}</label>}
-                                        </FormattedMessage>
-                                        <Dropdown
-                                          name='edit.acceptBids'
-                                          options={optionsYesNo}
-                                          inputProps={{
-                                            onChange: this.onChange,
-                                            'data-test': 'add_inventory_acceptBids',
-                                            fluid: true
-                                          }}
-                                        />
-                                      </FormField>
-                                    </GridColumn>
-                                  </CustomGridRow>
+                                  {/* It's not supported yet */}
+                                  {false && (
+                                    <CustomGridRow>
+                                      <GridColumn width={8}>
+                                        <FormField width={8}>
+                                          <FormattedMessage
+                                            id='myInventory.acceptBids'
+                                            defaultMessage='Accept bids on offer?'>
+                                            {text => <label>{text}</label>}
+                                          </FormattedMessage>
+                                          <Dropdown
+                                            name='edit.acceptBids'
+                                            options={optionsYesNo}
+                                            inputProps={{
+                                              onChange: this.onChange,
+                                              'data-test': 'add_inventory_acceptBids',
+                                              fluid: true
+                                            }}
+                                          />
+                                        </FormField>
+                                      </GridColumn>
+                                    </CustomGridRow>
+                                  )}
                                   <CustomGridRow>
                                     <GridColumnOptionalInformation
                                       onClick={() =>
@@ -2050,10 +2054,7 @@ class ModalDetail extends Component {
                                       />
                                     </Grid.Column>
                                     <Grid.Column width={4}>
-                                      <FormattedMessage
-                                        id='addInventory.testMethod'
-                                        defaultMessage='Test Method'
-                                      />
+                                      <FormattedMessage id='addInventory.testMethod' defaultMessage='Test Method' />
                                     </Grid.Column>
                                   </Grid.Row>
                                   <FieldArray
@@ -2070,7 +2071,10 @@ class ModalDetail extends Component {
                                                         type='text'
                                                         name={`edit.tdsFields[${index}].property`}
                                                         inputProps={{
-                                                          placeholder: formatMessage({ id: 'addInventory.tdsFields.enterProperty', defaultMessage: 'Enter Property' })
+                                                          placeholder: formatMessage({
+                                                            id: 'addInventory.tdsFields.enterProperty',
+                                                            defaultMessage: 'Enter Property'
+                                                          })
                                                         }}
                                                       />
                                                     </GridColumn>
@@ -2079,7 +2083,10 @@ class ModalDetail extends Component {
                                                         type='text'
                                                         name={`edit.tdsFields[${index}].specifications`}
                                                         inputProps={{
-                                                          placeholder: formatMessage({ id: 'addInventory.tdsFields.enterSpecifications', defaultMessage: 'Enter Specifications' }),
+                                                          placeholder: formatMessage({
+                                                            id: 'addInventory.tdsFields.enterSpecifications',
+                                                            defaultMessage: 'Enter Specifications'
+                                                          }),
                                                           fluid: true
                                                         }}
                                                       />
@@ -2089,7 +2096,10 @@ class ModalDetail extends Component {
                                                         type='text'
                                                         name={`edit.tdsFields[${index}].testMethods`}
                                                         inputProps={{
-                                                          placeholder: formatMessage({ id: 'addInventory.tdsFields.enterTestMethod', defaultMessage: 'Enter Test Method' }),
+                                                          placeholder: formatMessage({
+                                                            id: 'addInventory.tdsFields.enterTestMethod',
+                                                            defaultMessage: 'Enter Test Method'
+                                                          }),
                                                           fluid: true
                                                         }}
                                                       />
