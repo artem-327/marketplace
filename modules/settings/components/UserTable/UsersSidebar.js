@@ -1,5 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Sidebar, Dimmer, Loader, Grid, GridRow, GridColumn, Checkbox, FormField, Segment } from 'semantic-ui-react'
+import { Field as FormikField } from 'formik'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { Person } from '@material-ui/icons'
+import { X as XIcon } from 'react-feather'
+import get from 'lodash/get'
+import { debounce } from 'lodash'
+//Actions
 import {
   closeSidebar,
   postNewUserRequest,
@@ -9,200 +18,34 @@ import {
 } from '../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../companies/actions'
 import { getIdentity } from '~/modules/auth/actions'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import {
-  Sidebar,
-  Dimmer,
-  Loader,
-  Grid,
-  GridRow,
-  GridColumn,
-  Checkbox,
-  FormField,
-  FormGroup,
-  Segment
-} from 'semantic-ui-react'
-import { CheckboxWithValue } from '~/components/custom-formik'
-import { Field as FormikField } from 'formik'
-import * as Yup from 'yup'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { errorMessages, phoneValidation } from '~/constants/yupValidation'
-//import { currency } from '~/constants/index'
-import { currencyId } from '~/constants/index'
-import { PhoneNumber } from '~/modules/phoneNumber'
-import styled from 'styled-components'
-import { debounce } from 'lodash'
+//Components
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
-import { removeEmpty } from '~/utils/functions'
 import confirm from '~/components/Confirmable/confirm'
-import { uniqueArrayByKey } from '~/utils/functions'
-import get from 'lodash/get'
-import { getSafe } from '~/utils/functions'
+import { PhoneNumber } from '~/modules/phoneNumber'
 import ErrorFocus from '~/components/error-focus'
-import { Person } from '@material-ui/icons'
-import { X as XIcon } from 'react-feather'
-
-const FlexSidebar = styled(Sidebar)`
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
-  top: 80px !important;
-  padding-bottom: 80px;
-  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
-  z-index: 1000 !important;
-  text-align: left;
-  font-size: 14px;
-
-  &.full-screen-sidebar {
-    top: 0 !important;
-    padding-bottom: 0px;
-  }
-`
-
-const HighSegment = styled.div`
-  padding: 1.071428571em 2.142857143em;
-  font-size: 14px;
-  font-weight: 500;
-  color: #20273a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
-  background-color: #ffffff;
-  text-transform: uppercase;
-  display: flex;
-  flex-direction: row;
-
-  svg {
-    font-size: 18px;
-    vertical-align: middle;
-  }
-
-  svg.title-icon {
-    margin-left: 15px;
-    color: #cecfd4;
-  }
-
-  svg.close-icon {
-    right: 0;
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-  }
-`
-
-const FlexContent = styled.div`
-  flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding: 30px;
-
-  .ui.grid {
-    margin: 0 -5px;
-    .row {
-      padding: 7.5px 0;
-    }
-    .column {
-      padding: 0 5px;
-    }
-  }
-
-  .field {
-    .ui.checkbox {
-      margin-bottom: 9px;
-      label {
-        color: #848893;
-      }
-      &.checked {
-        label {
-          color: #20273a;
-        }
-      }
-    }
-    .field {
-      label {
-        color: #546f93;
-      }
-    }
-  }
-`
-
-const BottomButtons = styled.div`
-  display: inline-block;
-  position: relative;
-  overflow: visible;
-  margin: 0;
-  box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
-  padding: 10px 25px;
-  text-align: right;
-
-  .ui.button {
-    height: 40px;
-    border-radius: 3px;
-    font-weight: 500;
-    color: #848893;
-    margin: 0 5px;
-    align-items: center;
-
-    &.light {
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-      border: solid 1px #dee2e6;
-      background-color: #ffffff;
-      color: #848893;
-      &:hover {
-        background-color: #f8f9fb;
-        color: #20273a;
-      }
-      &:active {
-        background-color: #edeef2;
-        color: #20273a;
-      }
-    }
-    &.secondary {
-      color: #ffffff;
-      background-color: #2599d5;
-      &:hover {
-        background-color: #188ec9;
-      }
-      &:active {
-        background-color: #0d82bc;
-      }
-    }
-  }
-
-  .ui.modal & {
-    margin: 30px -1.5rem -1.5rem;
-    border-top: 1px solid #dee2e6;
-    box-shadow: 0 0 0 0 transparent;
-  }
-`
-
-const CustomForm = styled(Form)`
-  flex-grow: 0 !important;
-`
-
-const GridColumnWError = styled(GridColumn)`
-  &.column.error {
-    color: #9f3a38;
-  }
-`
-
-const CustomSegment = styled(Segment)`
-  background-color: #f8f9fb !important;
-`
-
-const initValues = {
-  name: '',
-  email: '',
-  company: '',
-  homeBranch: '',
-  preferredCurrency: currencyId,
-  additionalBranches: [],
-  jobTitle: '',
-  phone: '',
-  roles: [],
-  buyMarketSegments: [],
-  sellMarketSegments: []
-}
+//Services
+import { getSafe } from '~/utils/functions'
+import { removeEmpty, uniqueArrayByKey } from '~/utils/functions'
+import {
+  userFormValidation,
+  getHomeBranchesOptions,
+  getBranchesOptions,
+  getInitialFormValues,
+  handleSellMarketSegmentsChange
+} from './services'
+//Constants
+import { currencyId } from '~/constants/index'
+//Styles
+import {
+  SidebarFlex,
+  DivHighSegment,
+  DivFlexContent,
+  DivBottomButtons,
+  FormStyled,
+  SegmentStyled,
+  GridColumnWError
+} from './styles'
 
 class UsersSidebar extends React.Component {
   state = {
@@ -212,32 +55,14 @@ class UsersSidebar extends React.Component {
     selectedBuyMarketSegmentsOptions: []
   }
 
-  userFormValidation = () =>
-    Yup.lazy(values => {
-      return Yup.object().shape({
-        name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-        email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
-        additionalBranches: Yup.array(),
-        jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
-        phone: phoneValidation(),
-        homeBranch: Yup.number().required(errorMessages.requiredMessage),
-        roles: Yup.array().min(1, errorMessages.minOneRole)
-      })
-    })
-
   componentDidMount = async () => {
     const { companyId, sidebarValues, isCompanyAdmin, openGlobalAddForm, getUsersDataRequest } = this.props
     if (companyId !== null) {
       const { value } = await this.props.getCompanyDetails(companyId)
       let branches = uniqueArrayByKey(
-        (sidebarValues && sidebarValues.homeBranch
-          ? this.getHomeBranchesOptions([sidebarValues.homeBranch])
-          : []
-        ).concat(
-          sidebarValues && sidebarValues.additionalBranches
-            ? this.getBranchesOptions(sidebarValues.additionalBranches)
-            : [],
-          value && value.branches ? this.getBranchesOptions(value.branches) : []
+        (sidebarValues && sidebarValues.homeBranch ? getHomeBranchesOptions([sidebarValues.homeBranch]) : []).concat(
+          sidebarValues && sidebarValues.additionalBranches ? getBranchesOptions(sidebarValues.additionalBranches) : [],
+          value && value.branches ? getBranchesOptions(value.branches) : []
         ),
         'key'
       )
@@ -341,16 +166,6 @@ class UsersSidebar extends React.Component {
     })
   }
 
-  getHomeBranchesOptions = branches => branches.map(b => ({ key: b.id, value: b.id, text: b.deliveryAddress.cfName }))
-
-  getBranchesOptions = branches => {
-    let result = []
-    branches.forEach(
-      b => b.warehouse === false && result.push({ key: b.id, value: b.id, text: b.deliveryAddress.cfName })
-    )
-    return result
-  }
-
   submitUser = async (values, actions, closeOnSubmit = true) => {
     const {
       handlerSubmitUserEditPopup,
@@ -399,32 +214,9 @@ class UsersSidebar extends React.Component {
     return sendSuccess
   }
 
-  getInitialFormValues = () => {
-    const { sidebarValues } = this.state
-    return sidebarValues
-      ? {
-          additionalBranches: sidebarValues.additionalBranches.map(d => d.id),
-          email: sidebarValues.email,
-          homeBranch: sidebarValues.homeBranch ? sidebarValues.homeBranch.id : '',
-          jobTitle: sidebarValues.jobTitle,
-          name: sidebarValues.name,
-          phone: sidebarValues.phone,
-          preferredCurrency: currencyId,
-          roles: sidebarValues.roles.map(d => d.id),
-          sellMarketSegments: getSafe(() => sidebarValues.sellMarketSegments, []).map(d => d.id),
-          buyMarketSegments: getSafe(() => sidebarValues.buyMarketSegments, []).map(d => d.id)
-        }
-      : initValues
-  }
-
   handleSellMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
     this.props.searchSellMarketSegments(searchQuery)
   }, 250)
-
-  handleSellMarketSegmentsChange = (value, options) => {
-    const newOptions = options.filter(el => value.some(v => el.value === v))
-    this.setState({ selectedSellMarketSegmentsOptions: newOptions })
-  }
 
   handleBuyMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
     this.props.searchBuyMarketSegments(searchQuery)
@@ -518,11 +310,11 @@ class UsersSidebar extends React.Component {
     )
 
     return (
-      <CustomForm
+      <FormStyled
         autoComplete='off'
         enableReinitialize
-        initialValues={this.getInitialFormValues()}
-        validationSchema={this.userFormValidation()}
+        initialValues={getInitialFormValues(sidebarValues)}
+        validationSchema={userFormValidation()}
         onSubmit={this.submitUser}>
         {formikProps => {
           let { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting } = formikProps
@@ -531,7 +323,7 @@ class UsersSidebar extends React.Component {
           let errorRoles = get(errors, 'roles', null)
 
           return (
-            <FlexSidebar
+            <SidebarFlex
               className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
               visible={true}
               width='very wide'
@@ -542,7 +334,7 @@ class UsersSidebar extends React.Component {
                 <Loader />
               </Dimmer>
 
-              <HighSegment basic>
+              <DivHighSegment basic>
                 {openGlobalAddForm ? (
                   <>
                     <div>
@@ -555,15 +347,15 @@ class UsersSidebar extends React.Component {
                       <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
                     </div>
                   </>
-                ) : popupValues ? (
+                ) : sidebarValues ? (
                   formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
                 ) : (
                   formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })
                 )}
-              </HighSegment>
+              </DivHighSegment>
 
-              <FlexContent>
-                <CustomSegment>
+              <DivFlexContent>
+                <SegmentStyled>
                   <Grid>
                     <GridRow>
                       <GridColumn width={8} data-test='settings_users_popup_name_inp'>
@@ -631,9 +423,9 @@ class UsersSidebar extends React.Component {
                       </GridColumn>
                     </GridRow>
                   </Grid>
-                </CustomSegment>
+                </SegmentStyled>
 
-                <CustomSegment>
+                <SegmentStyled>
                   <Grid>
                     <GridRow>
                       <GridColumn width={8}>
@@ -706,7 +498,12 @@ class UsersSidebar extends React.Component {
                               }),
                               onSearchChange: this.handleSellMarketSegmentsSearchChange,
                               onChange: (_, { value }) =>
-                                this.handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
+                                this.setState({
+                                  selectedSellMarketSegmentsOptions: handleSellMarketSegmentsChange(
+                                    value,
+                                    allSellMarketSegmentsOptions
+                                  )
+                                })
                             }}
                           />
                         </GridColumn>
@@ -746,9 +543,9 @@ class UsersSidebar extends React.Component {
                       </GridRow>
                     )}
                   </Grid>
-                </CustomSegment>
+                </SegmentStyled>
 
-                <CustomSegment>
+                <SegmentStyled>
                   <Grid>
                     <GridRow style={{ paddingBottom: '2.5px' }}>
                       <GridColumnWError className={errorRoles ? 'error' : ''}>
@@ -773,10 +570,10 @@ class UsersSidebar extends React.Component {
                         {JSON.stringify(values, null, 2)}
                       </pre>*/}
                   </Grid>
-                </CustomSegment>
-              </FlexContent>
+                </SegmentStyled>
+              </DivFlexContent>
 
-              <BottomButtons className='bottom-buttons'>
+              <DivBottomButtons className='bottom-buttons'>
                 <div style={{ textAlign: 'right' }}>
                   {!openGlobalAddForm && (
                     <Button className='light' onClick={closeSidebar} data-test='settings_users_popup_reset_btn'>
@@ -791,12 +588,12 @@ class UsersSidebar extends React.Component {
                     </FormattedMessage>
                   </Button.Submit>
                 </div>
-              </BottomButtons>
+              </DivBottomButtons>
               <ErrorFocus />
-            </FlexSidebar>
+            </SidebarFlex>
           )
         }}
-      </CustomForm>
+      </FormStyled>
     )
   }
 }
@@ -816,7 +613,7 @@ const mapStateToProps = state => {
   const { settings, companiesAdmin, auth } = state
 
   return {
-    currentUserId: getSafe(() => auth.identity.id, false),
+    currentUserId: getSafe(() => auth.identity.id, null),
     isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false),
     companyId: getSafe(() => state.auth.identity.company.id, null),
     isClientCompany: getSafe(() => state.auth.identity.company.isClientCompany, false),
