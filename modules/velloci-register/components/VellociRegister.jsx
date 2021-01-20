@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import _ from 'lodash'
-import Router from 'next/router'
 import PropTypes from 'prop-types'
 //Components
 import SetupIndicator from './SetupIndicator'
