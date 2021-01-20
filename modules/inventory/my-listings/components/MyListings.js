@@ -1454,6 +1454,7 @@ class MyListings extends Component {
               */
             }
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
+            groupActionsIcon
             groupActions={row => {
               let values = row.key.split('_')
               return groupActions(
