@@ -482,7 +482,8 @@ class BankAccountsTable extends Component {
       isOpenPopupDeleteInstitution,
       closePopup,
       deleteInstitution,
-      institutId
+      institutId,
+      reloadBankAccounts
     } = this.props
     const { formatMessage } = intl
     return (
@@ -492,6 +493,7 @@ class BankAccountsTable extends Component {
           closePopup={closePopup}
           deleteInstitution={deleteInstitution}
           institutId={institutId}
+          reloadBankAccounts={reloadBankAccounts}
         />
         {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
           <div className='flex stretched settings_bankaccounts listings-wrapper'>

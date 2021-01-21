@@ -1,80 +1,30 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import styled from 'styled-components'
-import {
-  Sidebar,
-  Segment,
-  Dimmer,
-  Loader,
-  Tab,
-  Menu,
-  Grid,
-  GridRow,
-  GridColumn,
-  Header,
-  Icon,
-  Popup,
-  FormField,
-  Button as ButtonSemantic
-} from 'semantic-ui-react'
+import { Grid, GridColumn } from 'semantic-ui-react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Form } from 'semantic-ui-react'
-import { FastField, Field, getIn } from 'formik'
 import { withDatagrid } from '~/modules/datagrid'
-
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import ProdexGrid from '~/components/table'
 import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
 import { AttachmentManager } from '~/modules/attachments'
 import confirm from '~/components/Confirmable/confirm'
-import { UploadCloud, XCircle } from 'react-feather'
+import { UploadCloud } from 'react-feather'
 import { downloadAttachment, addAttachment } from '~/modules/inventory/actions'
-
-const CustomColumnGridDropdown = styled(GridColumn)`
-  z-index: 610 !important;
-  white-space: nowrap !important;
-`
-
-const CloseIcon = styled(XCircle)`
-  position: absolute;
-  top: -10px;
-  right: -15px;
-`
-
-export const DivIcon = styled.div`
-  display: block;
-  height: 10px;
-  position: relative;
-`
-
-export const CustomColumnGrid = styled(GridColumn)`
-  padding-left: 0 !important;
-`
-
-export const CustomDiv = styled.div`
-  padding: 1em;
-`
-
-export const CustomA = styled.a`
-  font-weight: bold;
-  color: #2599d5;
-`
-
-export const CustomGridRow = styled(GridRow)`
-  padding-top: 0 !important;
-  justify-content: center !important;
-`
-
-export const CustomDivHr = styled.div`
-  border-bottom: 1px solid #dee2e6;
-`
-
-export const FieldsDiv = styled.div`
-  padding-bottom: 5px;
-  text-transform: capitalize;
-  color: #404040;
-`
+//Services
+import { getMimeType } from './services'
+//Styles
+import {
+  DivFields,
+  DivCustomHr,
+  GridRowCustom,
+  ACustom,
+  DivCustom,
+  GridColumnCustom,
+  DivIcon,
+  XCircleIcon,
+  GridColumnDropdown
+} from './styles'
 
 const columns = [
   {
@@ -84,7 +34,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 220
+    width: 530
   },
   {
     name: 'documentTypeName',
@@ -93,7 +43,7 @@ const columns = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 168
+    width: 250
   }
 ]
 
@@ -121,48 +71,6 @@ class DocumentTab extends Component {
     if (this.props.documentTypeIds) this.setState({ documentType: this.props.documentTypeIds })
   }
 
-  getMimeType = documentName => {
-    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
-
-    switch (documentExtension) {
-      case 'doc':
-        return 'application/msword'
-      case 'docx':
-        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-      case 'ppt':
-        return 'application/vnd.ms-powerpoint'
-      case 'pptx':
-        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-      case 'xls':
-        return 'application/vnd.ms-excel'
-      case 'xlsx':
-        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      case 'gif':
-        return 'image/gif'
-      case 'png':
-        return 'image/png'
-      case 'jpg':
-      case 'jpeg':
-        return 'image/jpeg'
-      case 'svg':
-        return 'image/svg'
-      case 'pdf':
-        return 'application/pdf'
-      case '7z':
-        return 'application/x-7z-compressed'
-      case 'zip':
-        return 'application/zip'
-      case 'tar':
-        return 'application/x-tar'
-      case 'rar':
-        return 'application/x-rar-compressed'
-      case 'xml':
-        return 'application/xml'
-      default:
-        return 'text/plain'
-    }
-  }
-
   downloadAttachment = async (documentName, documentId) => {
     const element = await this.prepareLinkToAttachment(documentId)
 
@@ -174,7 +82,7 @@ class DocumentTab extends Component {
   prepareLinkToAttachment = async documentId => {
     let downloadedFile = await this.props.downloadAttachment(documentId)
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
-    const mimeType = fileName && this.getMimeType(fileName)
+    const mimeType = fileName && getMimeType(fileName)
     const element = document.createElement('a')
     const file = new Blob([downloadedFile.value.data], { type: mimeType })
     let fileURL = URL.createObjectURL(file)
@@ -217,13 +125,13 @@ class DocumentTab extends Component {
 
     return (
       <Grid>
-        <CustomGridRow>
-          <CustomColumnGridDropdown width={8}>
-            <FieldsDiv>
+        <GridRowCustom>
+          <GridColumnDropdown width={8}>
+            <DivFields>
               <FormattedMessage id='global.uploadDocument' defaultMessage='Upload document: '>
                 {text => text}
               </FormattedMessage>
-            </FieldsDiv>
+            </DivFields>
             <Dropdown
               name={dropdownName}
               closeOnChange
@@ -232,17 +140,18 @@ class DocumentTab extends Component {
                 placeholder: <FormattedMessage id='global.documentType.choose' defaultMessage='Choose document type' />,
                 onChange: (e, { name, value }) => {
                   this.handleChange(e, name, value)
-                }
+                },
+                fluid: true
               }}
             />
-          </CustomColumnGridDropdown>
+          </GridColumnDropdown>
 
-          <CustomColumnGrid width={8}>
-            <FieldsDiv>
+          <GridColumnCustom width={8}>
+            <DivFields>
               <FormattedMessage id='global.existingDocuments' defaultMessage='Existing documents: '>
                 {text => text}
               </FormattedMessage>
-            </FieldsDiv>
+            </DivFields>
             <AttachmentManager
               documentTypeIds={this.state.documentType}
               lockedFileTypes={lockedFileTypes}
@@ -251,17 +160,17 @@ class DocumentTab extends Component {
                 this.attachDocumentsUploadAttachment(rows, values, setFieldValue, setFieldNameAttachments, changedForm)
               }
             />
-          </CustomColumnGrid>
-        </CustomGridRow>
+          </GridColumnCustom>
+        </GridRowCustom>
 
-        <CustomGridRow>
+        <GridRowCustom>
           <GridColumn style={{ paddingTop: '0', paddingBottom: '0' }}>
-            <CustomDivHr />
+            <DivCustomHr />
           </GridColumn>
-        </CustomGridRow>
+        </GridRowCustom>
 
         {this.state.openUploadAttachment ? (
-          <CustomGridRow>
+          <GridRowCustom>
             <GridColumn>
               <UploadAttachment
                 addAttachment={addAttachment}
@@ -273,7 +182,7 @@ class DocumentTab extends Component {
                         openUploadAttachment: false
                       })
                     }>
-                    <CloseIcon size='16' name='close' color='#dee2e6' />
+                    <XCircleIcon size='16' name='close' color='#dee2e6' />
                   </DivIcon>
                 }
                 id={'field_input_documents.documentType'}
@@ -297,7 +206,7 @@ class DocumentTab extends Component {
                 }}
                 data-test='new_inventory_attachments_drop'
                 emptyContent={
-                  <CustomDiv>
+                  <DivCustom>
                     <div>
                       <UploadCloud size='40' color='#dee2e6' />
                     </div>
@@ -310,16 +219,16 @@ class DocumentTab extends Component {
                       defaultMessage={'or {link} to select from computer'}
                       values={{
                         link: (
-                          <CustomA>
+                          <ACustom>
                             <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                          </CustomA>
+                          </ACustom>
                         )
                       }}
                     />
-                  </CustomDiv>
+                  </DivCustom>
                 }
                 uploadedContent={
-                  <CustomDiv>
+                  <DivCustom>
                     <div>
                       <UploadCloud size='40' color='#dee2e6' />
                     </div>
@@ -330,19 +239,19 @@ class DocumentTab extends Component {
                       defaultMessage={'or {link} to select from computer'}
                       values={{
                         link: (
-                          <CustomA>
+                          <ACustom>
                             <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                          </CustomA>
+                          </ACustom>
                         )
                       }}
                     />
-                  </CustomDiv>
+                  </DivCustom>
                 }
               />
             </GridColumn>
-          </CustomGridRow>
+          </GridRowCustom>
         ) : null}
-        <CustomGridRow>
+        <GridRowCustom>
           <GridColumn>
             <ProdexGrid
               virtual={false}
@@ -427,7 +336,7 @@ class DocumentTab extends Component {
               ]}
             />
           </GridColumn>
-        </CustomGridRow>
+        </GridRowCustom>
       </Grid>
     )
   }
