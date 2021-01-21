@@ -29,7 +29,8 @@ import {
   Button as ButtonSemantic
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
-import { Trash, PlusCircle, X as XIcon, Plus, Trash2, ChevronDown, ChevronUp } from 'react-feather'
+import { SelectTemplates, TemplateTitle, TemplateRow, TemplateWrapper, TemplateApply, TemplateDelete } from './styles'
+import { Trash, PlusCircle, X as XIcon, Plus, Trash2, ChevronDown, ChevronUp, Folder } from 'react-feather'
 
 import {
   modalDetailTrigger,
@@ -2038,6 +2039,37 @@ class ModalDetail extends Component {
                             pane: (
                               <Tab.Pane key='tds' style={{ padding: '16px' }}>
                                 <Grid>
+                                  <Grid.Row>
+                                    <Grid.Column width={6}>
+                                      <Modal trigger={
+                                        <SelectTemplates>
+                                          <Folder />
+                                          <FormattedMessage id='addInventory.selectFromTemplates' defaultMessage='Select From Templates' />
+                                        </SelectTemplates>
+                                      }>
+                                        <Modal.Header>
+                                          <FormattedMessage id='addInventory.tdsTemplates' defaultMessage='TDS Templates' />
+                                        </Modal.Header>
+                                        <Modal.Content>
+                                          <TemplateTitle>
+                                            <FormattedMessage id='addInventory.tdsTemplates.savedTemplates' defaultMessage='Saved Templates' />
+                                          </TemplateTitle>
+                                          <Grid>
+                                            <TemplateRow>
+                                              <TemplateWrapper>
+                                                <TemplateApply>
+                                                  <FormattedMessage id='global.apply' defaultMessage='Apply' />
+                                                </TemplateApply>
+                                              </TemplateWrapper>
+                                              <TemplateDelete icon>
+                                                <Trash2 />
+                                              </TemplateDelete>
+                                            </TemplateRow>
+                                          </Grid>
+                                        </Modal.Content>
+                                      </Modal>
+                                    </Grid.Column>
+                                  </Grid.Row>
                                   <Grid.Row>
                                     <Grid.Column width={4}>
                                       <FormattedMessage id='addInventory.property' defaultMessage='Property' />
