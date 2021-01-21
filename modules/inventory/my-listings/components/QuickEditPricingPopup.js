@@ -287,7 +287,7 @@ class QuickEditPricingPopup extends React.Component {
                   ref: input => {
                     this[`pricingTiers[${i}].pricePerUOM`] = input
                   },
-                  placeholder: '0.00',
+                  placeholder: '0.000',
                   onChange: (e, { name, value }) => {
                     e.persist()
                     this.props.handlechange(

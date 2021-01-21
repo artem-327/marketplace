@@ -138,7 +138,14 @@ const StyledGrid = styled(Grid)`
 
 const formValidation = () =>
   Yup.object().shape({
-    pricePerUOM: Yup.string().trim().required(errorMessages.requiredMessage),
+    pricePerUOM: Yup
+      .number()
+      .min(0.001, errorMessages.minimum(0.001))
+      .typeError(errorMessages.mustBeNumber)
+      .test('maxdec', errorMessages.maxDecimals(3), val => {
+        return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+      })
+      .required(errorMessages.requiredMessage),
     pkgAmount: Yup.number()
       .min(1, errorMessages.minimum(1))
       .required(errorMessages.requiredMessage)
@@ -260,8 +267,8 @@ class MakeOfferPopup extends React.Component {
                                   </List.Header>
                                   <List.Description as='span'>
                                     <FormattedNumber
-                                      minimumFractionDigits={2}
-                                      maximumFractionDigits={2}
+                                      minimumFractionDigits={3}
+                                      maximumFractionDigits={3}
                                       style='currency'
                                       currency={currency}
                                       value={listFobPrice}
@@ -329,8 +336,8 @@ class MakeOfferPopup extends React.Component {
                           <PriceInput
                             name='pricePerUOM'
                             inputProps={{
-                              placeholder: '0',
-                              min: 0,
+                              placeholder: '0.000',
+                              min: 0.001,
                               type: 'number'
                             }}
                             label={
