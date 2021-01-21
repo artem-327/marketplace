@@ -653,7 +653,7 @@ class MyListings extends Component {
           defaultMessage: 'TDS'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 1, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -661,7 +661,7 @@ class MyListings extends Component {
           defaultMessage: 'Documents'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 2, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -669,7 +669,7 @@ class MyListings extends Component {
           defaultMessage: 'Price Book'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 3, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -677,7 +677,7 @@ class MyListings extends Component {
           defaultMessage: 'Price Tiers'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 4, modalDetailTrigger)
       },
       {
         text: formatMessage({

@@ -41,8 +41,8 @@ function mapStateToProps(store, { datagrid }) {
             <>
               {' '}
               <FormattedNumber
-                minimumFractionDigits={2}
-                maximumFractionDigits={2}
+                minimumFractionDigits={3}
+                maximumFractionDigits={3}
                 style='currency'
                 currency={currency}
                 value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM}
@@ -56,8 +56,8 @@ function mapStateToProps(store, { datagrid }) {
             <>
               {' '}
               <FormattedNumber
-                minimumFractionDigits={2}
-                maximumFractionDigits={2}
+                minimumFractionDigits={3}
+                maximumFractionDigits={3}
                 style='currency'
                 currency={currency}
                 value={getSafe(() => po.pricingTiers[0].pricePerUOM)}
@@ -90,8 +90,8 @@ function mapStateToProps(store, { datagrid }) {
         quantity: po.quantity,
         cost: po.costPerUOM ? (
           <FormattedNumber
-            minimumFractionDigits={2}
-            maximumFractionDigits={2}
+            minimumFractionDigits={3}
+            maximumFractionDigits={3}
             style='currency'
             currency={currency}
             value={po.costPerUOM}

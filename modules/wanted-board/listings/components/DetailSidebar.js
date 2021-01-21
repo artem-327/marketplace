@@ -203,7 +203,14 @@ const validationSchema = () =>
         .moreThan(0, errorMessages.greaterThan(0))
         //.integer(errorMessages.integer)
         .required(errorMessages.requiredMessage),
-      maximumPricePerUOM: val.number().positive(errorMessages.positive).typeError(errorMessages.requiredMessage),
+      maximumPricePerUOM: val
+        .number()
+        .min(0.001, errorMessages.minimum(0.001))
+        .typeError(errorMessages.mustBeNumber)
+        .test('maxdec', errorMessages.maxDecimals(3), val => {
+          return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+        })
+        .required(errorMessages.requiredMessage),
       maximumDeliveredPrice: val.number().positive(errorMessages.positive).typeError(errorMessages.requiredMessage)
     })
   })
@@ -569,7 +576,7 @@ class DetailSidebar extends Component {
                           {
                             min: 0,
                             type: 'number',
-                            placeholder: '0.00'
+                            placeholder: '0.000'
                           },
                           <FormattedMessage id='wantedBoard.maxPrice' defaultMessage='Max Price/Unit'>
                             {text => text}

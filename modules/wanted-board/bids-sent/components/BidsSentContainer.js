@@ -94,8 +94,8 @@ function mapStateToProps(store, { datagrid }) {
         product: getSafe(() => po.productOffer.companyProduct.companyGenericProduct.name, ''),
         fobPrice: (
           <FormattedNumber
-            minimumFractionDigits={2}
-            maximumFractionDigits={2}
+            minimumFractionDigits={3}
+            maximumFractionDigits={3}
             style='currency'
             currency={currency}
             value={po.cfHistoryLastAveragePricePerUOM}

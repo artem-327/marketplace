@@ -331,12 +331,11 @@ const validationScheme = val.lazy(values => {
         })
         .required(errorMessages.requiredMessage),
       costPerUOM: val
-        .string()
-        .test('v', errorMessages.mustBeNumber, function (v) {
-          return v === null || v === '' || !isNaN(v)
-        })
-        .test('v', errorMessages.minimum(0), function (v) {
-          return v === null || v === '' || isNaN(v) || Number(v) >= 0
+        .number()
+        .min(0.001, errorMessages.minimum(0.001))
+        .typeError(errorMessages.mustBeNumber)
+        .test('maxdec', errorMessages.maxDecimals(3), val => {
+          return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
         }),
       lotNumber: val.string().typeError(errorMessages.invalidString).nullable(),
       inStock: val.bool().required(errorMessages.requiredMessage),

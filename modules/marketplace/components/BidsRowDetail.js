@@ -101,7 +101,14 @@ const StyledGrid = styled(Grid)`
 const formValidation = requiredInputs =>
   Yup.object().shape({
     ...(requiredInputs && {
-      pricePerUOM: Yup.string().trim().required(errorMessages.requiredMessage),
+      pricePerUOM: Yup
+        .number()
+        .min(0.001, errorMessages.minimum(0.001))
+        .typeError(errorMessages.mustBeNumber)
+        .test('maxdec', errorMessages.maxDecimals(3), val => {
+          return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+        })
+        .required(errorMessages.requiredMessage),
       pkgAmount: Yup.number()
         .min(1, errorMessages.minimum(1))
         .required(errorMessages.requiredMessage)
@@ -346,8 +353,8 @@ class BidsRowDetail extends React.Component {
                                           />,
                                           <>
                                             <FormattedNumber
-                                              minimumFractionDigits={2}
-                                              maximumFractionDigits={2}
+                                              minimumFractionDigits={3}
+                                              maximumFractionDigits={3}
                                               style='currency'
                                               currency={currency}
                                               value={r.pricePerUOM}
@@ -432,8 +439,8 @@ class BidsRowDetail extends React.Component {
                                 <FormattedMessage id='marketplace.listFobPrice' defaultMessage='List FOB Price' />,
                                 <>
                                   <FormattedNumber
-                                    minimumFractionDigits={2}
-                                    maximumFractionDigits={2}
+                                    minimumFractionDigits={3}
+                                    maximumFractionDigits={3}
                                     style='currency'
                                     currency={currency}
                                     value={listFobPrice}
@@ -465,8 +472,8 @@ class BidsRowDetail extends React.Component {
                                 />,
                                 <>
                                   <FormattedNumber
-                                    minimumFractionDigits={2}
-                                    maximumFractionDigits={2}
+                                    minimumFractionDigits={3}
+                                    maximumFractionDigits={3}
                                     style='currency'
                                     currency={currency}
                                     value={popupValues.cfHistoryLastPricePerUOM}

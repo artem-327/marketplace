@@ -832,7 +832,7 @@ class InventoryFilter extends Component {
                     'priceFrom',
                     {
                       type: 'number',
-                      placeholder: '0.00',
+                      placeholder: '0.000',
                       fluid: true
                     },
                     formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
@@ -845,7 +845,7 @@ class InventoryFilter extends Component {
                     'priceTo',
                     {
                       type: 'number',
-                      placeholder: '0.00',
+                      placeholder: '0.000',
                       fluid: true
                     },
                     formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
