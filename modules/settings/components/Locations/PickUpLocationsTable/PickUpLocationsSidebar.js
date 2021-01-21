@@ -20,7 +20,13 @@ import styled from 'styled-components'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { addressValidationSchema, errorMessages, minOrZeroLength, validateTime } from '~/constants/yupValidation'
+import {
+  addressValidationSchema,
+  errorMessages,
+  minOrZeroLength,
+  validateTime,
+  phoneValidation
+} from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form/'
 
@@ -183,7 +189,7 @@ const formValidation = () =>
       address: addressValidationSchema(),
       addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
       contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-      contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+      contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
       contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
       readyTime: validateTime(),
       closeTime: validateTime()

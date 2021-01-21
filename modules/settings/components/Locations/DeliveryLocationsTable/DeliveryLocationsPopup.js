@@ -16,7 +16,7 @@ import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { getSafe } from '~/utils/functions'
-import { errorMessages, provinceObjectRequired, minOrZeroLength } from '~/constants/yupValidation'
+import { errorMessages, provinceObjectRequired, minOrZeroLength, phoneValidation } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
@@ -50,7 +50,7 @@ const formValidation = () =>
       addressName: minOrZeroLength(3),
       contactName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
-      contactPhone: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
       address: Yup.object().shape({
         city: Yup.string().trim().min(3, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
         streetAddress: Yup.string().trim().min(3, errorMessages.minLength(2)).required(errorMessages.requiredMessage),

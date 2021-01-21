@@ -117,12 +117,12 @@ const validationScheme = val.object().shape({
       .trim()
       .email(errorMessages.invalidEmail)
       .required(errorMessages.requiredMessage),
-    contactPhone: phoneValidation().required(errorMessages.requiredMessage)
+    contactPhone: phoneValidation(10).required(errorMessages.requiredMessage)
   }),
   companyAdminUser: val.object().shape({
     name: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
     jobTitle: val.string(),
-    phone: phoneValidation(),
+    phone: phoneValidation(10),
     email: val
       .string(errorMessages.invalidEmail)
       .trim()
