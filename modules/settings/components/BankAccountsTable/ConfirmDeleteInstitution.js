@@ -9,7 +9,7 @@ import BasicButton from '../../../../components/buttons/BasicButton'
 //Styles
 import { ModalActions, ModalContent, DivCircleIcon, DivIcon } from './styles'
 
-const ConfirmDeleteInstitution = ({ isOpenPopup, closePopup, deleteInstitution, institutId }) => {
+const ConfirmDeleteInstitution = ({ isOpenPopup, closePopup, deleteInstitution, institutId, reloadBankAccounts }) => {
   return (
     <Modal
       closeIcon
@@ -47,6 +47,8 @@ const ConfirmDeleteInstitution = ({ isOpenPopup, closePopup, deleteInstitution, 
           onClick={async () => {
             try {
               await deleteInstitution(institutId)
+              closePopup()
+              reloadBankAccounts(true)
             } catch (e) {
               console.error(e)
             }
@@ -64,6 +66,7 @@ ConfirmDeleteInstitution.propTypes = {
   isOpenPopup: PropTypes.bool,
   closePopup: PropTypes.func,
   deleteInstitution: PropTypes.func,
+  reloadBankAccounts: PropTypes.func,
   institutId: PropTypes.number
 }
 
@@ -71,6 +74,7 @@ ConfirmDeleteInstitution.defaultProps = {
   isOpenPopup: false,
   closePopup: () => {},
   deleteInstitution: () => {},
+  reloadBankAccounts: () => {},
   institutId: null
 }
 
