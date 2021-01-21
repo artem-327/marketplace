@@ -1,52 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ProdexTable from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
-import { withDatagrid } from '~/modules/datagrid'
-
-import * as Actions from '~/modules/settings/actions'
-import { openPopup, handleProductCatalogUnmappedValue } from '../../actions'
 import Router from 'next/router'
-
-import confirm from '~/components/Confirmable/confirm'
 import { injectIntl, FormattedNumber, FormattedMessage } from 'react-intl'
 import { debounce } from 'lodash'
-import { UnitOfPackaging } from '~/components/formatted-messages'
-import { getSafe } from '~/utils/functions'
-import styled from 'styled-components'
-import { Clock, FileText, CornerLeftUp, CornerLeftDown, PlusCircle } from 'react-feather'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Grid, Input, Dropdown } from 'semantic-ui-react'
-import { CustomRowDiv } from '../../constants/layout'
+import { CornerLeftDown, PlusCircle } from 'react-feather'
+import { Container, Popup, Button, Input } from 'semantic-ui-react'
+//Components
+import ProdexTable from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
+import { withDatagrid } from '../../../datagrid'
 import ProductSidebar from './ProductSidebar'
 import ProductImportPopup from './ProductImportPopup'
-import ColumnSettingButton from '~/components/table/ColumnSettingButton'
-import Tutorial from '~/modules/tutorial/Tutorial'
-
-const FileTextIcon = styled(FileText)`
-  display: block;
-  width: 20px;
-  height: 20px;
-  margin: 0 auto;
-  vertical-align: top;
-  font-size: 20px;
-  color: #848893;
-  line-height: 20px;
-`
-
-const Circle = styled.div`
-  width: 14px;
-  height: 14px;
-  margin: 3px;
-  border-radius: 7px;
-  background-color: #84c225;
-  &.red {
-    background-color: #f16844;
-  }
-`
-
-const StyledDropdown = styled(Dropdown)`
-  z-index: 601 !important;
-`
+import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
+import Tutorial from '../../../tutorial/Tutorial'
+import confirm from '../../../../components/Confirmable/confirm'
+import { UnitOfPackaging } from '../../../../components/formatted-messages'
+//Actions
+import * as Actions from '../../../settings/actions'
+import { openPopup, handleProductCatalogUnmappedValue } from '../../actions'
+//Services
+import { getSafe } from '../../../../utils/functions'
+//Styles
+import { CustomRowDiv } from '../../constants/layout'
+import { FileTextIcon, DivCircle, DropdownStyled } from './styles'
 
 class MyProducts extends Component {
   constructor(props) {
@@ -254,7 +230,7 @@ class MyProducts extends Component {
             defaultMessage='This Company Generic Product is not published and will not be shown on the Marketplace.'
           />
         )
-        dispIcon = <Circle className='red' />
+        dispIcon = <DivCircle className='red' />
         break
 
       case 'Unmapped':
@@ -264,7 +240,7 @@ class MyProducts extends Component {
             defaultMessage='This product is not mapped and will not show on the Marketplace.'
           />
         )
-        dispIcon = <Circle className='red' />
+        dispIcon = <DivCircle className='red' />
         break
 
       default:
@@ -274,7 +250,7 @@ class MyProducts extends Component {
             defaultMessage='This product is being broadcasted to the marketplace'
           />
         )
-        dispIcon = <Circle />
+        dispIcon = <DivCircle />
     }
 
     return (
@@ -347,7 +323,7 @@ class MyProducts extends Component {
 
               <div>
                 <div className='column'>
-                  <StyledDropdown
+                  <DropdownStyled
                     style={{ width: '200px' }}
                     placeholder={formatMessage({
                       id: 'operations.tables.companyProductCatalog.MappedText',
