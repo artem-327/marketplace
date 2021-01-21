@@ -5,18 +5,27 @@ import { getSafe } from '~/utils/functions'
 import styled from 'styled-components'
 
 const DropdownActions = styled(Dropdown)`
-  display: block !important;
-  height: 100% !important;
+  display: inline-block !important;
+  height: 30px !important;
+  vertical-align: top;
 
   &:hover {
     font-weight: bold;
     color: #2599d5;
   }
+
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    margin: 7px 8px 7px -2px !important;
+  }
 `
 
 const DivName = styled.div`
+  display: inline-block;
   white-space: nowrap;
   overflow: hidden;
+  vertical-align: top;
   text-overflow: ellipsis;
 
   .group-name {
@@ -101,7 +110,7 @@ function repositionMenu(element) {
   }
 }
 
-export function rowActionsCellFormatter({ column: { actions, name }, row, groupLength, isBankTable }) {
+export function rowActionsCellFormatter({ column: { actions, name }, row, groupLength, isBankTable, menuIcon }) {
   const dropdownItems = getDropdownItems(actions, row)
 
   // Don't display if all dropdownItems are null
@@ -120,12 +129,28 @@ export function rowActionsCellFormatter({ column: { actions, name }, row, groupL
   }
 
   return displayMenu ? (
-    <DropdownActions
-      icon=''
-      trigger={<DivName className={actions && actions.length ? 'has-actions' : ''}>{trigger}</DivName>}
-      onOpen={e => repositionMenu(e.currentTarget)}>
-      <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
-    </DropdownActions>
+    menuIcon ? (
+      <>
+        <DropdownActions
+          icon=''
+          trigger={
+            <>
+              <MoreVertical />
+              <DivName className={actions && actions.length ? 'has-actions' : ''}>{trigger}</DivName>
+            </>
+          }
+          onOpen={e => repositionMenu(e.currentTarget)}>
+          <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
+        </DropdownActions>
+      </>
+    ) : (
+      <DropdownActions
+        icon=''
+        trigger={<DivName className={actions && actions.length ? 'has-actions' : ''}>{trigger}</DivName>}
+        onOpen={e => repositionMenu(e.currentTarget)}>
+        <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
+      </DropdownActions>
+    )
   ) : (
     <DivName>{trigger}</DivName>
   )

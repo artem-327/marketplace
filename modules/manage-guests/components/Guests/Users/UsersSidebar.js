@@ -81,7 +81,7 @@ class UsersSidebar extends React.Component {
         email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
         additionalBranches: Yup.array(),
         jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
-        phone: phoneValidation(),
+        phone: phoneValidation(10),
         homeBranch: Yup.number().required(errorMessages.requiredMessage),
         roles: Yup.array().min(1, errorMessages.minOneRole)
       })

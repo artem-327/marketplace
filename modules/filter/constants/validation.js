@@ -116,8 +116,13 @@ export const validationSchema = openedSaveFilter =>
         }
       ),
 
-      maximumPricePerUOM: Yup.number('number')
-        .moreThan(0, errorMessages.greaterThan(0))
+      maximumPricePerUOM: Yup
+        .number()
+        .min(0.001, errorMessages.minimum(0.001))
+        .typeError(errorMessages.mustBeNumber)
+        .test('maxdec', errorMessages.maxDecimals(3), val => {
+          return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+        })
         .notRequired(),
 
       expirationFrom: Yup.number('number')

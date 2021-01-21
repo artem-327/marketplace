@@ -668,7 +668,7 @@ class WantedBoardFilter extends Component {
                     'maximumPricePerUOM',
                     {
                       type: 'number',
-                      placeholder: '0.00',
+                      placeholder: '0.000',
                       fluid: true
                     },
                     null,

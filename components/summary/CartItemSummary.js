@@ -462,8 +462,8 @@ class CartItemSummary extends Component {
 
               <VerticalUnpaddedColumn black>
                 <FormattedNumber
-                  minimumFractionDigits={2}
-                  maximumFractionDigits={2}
+                  minimumFractionDigits={3}
+                  maximumFractionDigits={3}
                   style='currency'
                   currency={currency}
                   id='cart.packs'

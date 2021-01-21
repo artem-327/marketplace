@@ -104,7 +104,7 @@ class AddEditGuestCompanySidebar extends React.Component {
             addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
             contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
             contactName: Yup.string().trim().min(2, minLength).required(minLength),
-            contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
+            contactPhone: phoneValidation(10).concat(Yup.string().required(errorMessages.requiredMessage)),
             address: addressValidationSchema()
           })
         }),
@@ -113,7 +113,7 @@ class AddEditGuestCompanySidebar extends React.Component {
           return Yup.object().shape({
             email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
             name: Yup.string().trim().min(2, minLength).required(minLength),
-            phone: phoneValidation()
+            phone: phoneValidation(10)
           })
           // return Yup.mixed().notRequired()
         })

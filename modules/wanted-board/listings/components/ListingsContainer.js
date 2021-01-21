@@ -58,8 +58,8 @@ function mapStateToProps(store, { datagrid }) {
           ),
         fobPrice: row.maximumPricePerUOM ? (
           <FormattedNumber
-            minimumFractionDigits={2}
-            maximumFractionDigits={2}
+            minimumFractionDigits={3}
+            maximumFractionDigits={3}
             style='currency'
             currency={currency}
             value={row.maximumPricePerUOM}
