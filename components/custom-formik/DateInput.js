@@ -7,7 +7,8 @@ import { getFieldError, setFieldValue } from './helpers'
 import { DateInput } from 'semantic-ui-calendar-react'    //! ! to be deleted
 
 import DatePicker from 'react-datepicker'
-import './styles/dateInput.scss'
+import { DatePickerWrapper } from './styles/index'
+
 import { getLocaleDateFormat } from '../date-format'
 import { Input } from 'formik-semantic-ui-fixed-validation'
 import { Input as SemanticInput } from 'semantic-ui-react'
@@ -118,58 +119,59 @@ class FormikInput extends Component {
                 />
               ) : (
                 <>
-                  <DatePicker
-                    {...safeInputProps}
-                    name={name}
-                    value={field.value}
-                    showMonthYearPicker={datepickerMode === 2}
-                    showYearPicker={datepickerMode === 1}
-                    showPopperArrow={false}
-                    placeholderText={placeholder || getLocaleDateFormat()}
-                    isClearable={true}
-                    locale={typeof navigator !== 'undefined' ? window.navigator.language.slice(0, 2) : 'en'}
-                    customInput={
-                      <SemanticInput
-                        icon='calendar'
-                      />
-                    }
-
-                    onChangeRaw={e => {
-                      const { name, value } = e.target
-                      let val = ''
-                      if (value) {
-                        //console.log('!!!!!!!!!! onChangeRaw value', value)
-                        const formatedValue = value.replace(/[/.]/g, '-').replace(/ /g, '').split('-')
-                        const canAutomaticallyAdjustDateFormat =
-                          formatedValue.some(d => d.length >= 4) &&
-                          formatedValue.length === 3 &&
-                          moment(value, getLocaleDateFormat()).isValid()
-                        val = canAutomaticallyAdjustDateFormat
-                          ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
-                          : value
+                  <DatePickerWrapper>
+                    <DatePicker
+                      {...safeInputProps}
+                      name={name}
+                      value={field.value}
+                      showMonthYearPicker={datepickerMode === 2}
+                      showYearPicker={datepickerMode === 1}
+                      showPopperArrow={false}
+                      placeholderText={placeholder || getLocaleDateFormat()}
+                      isClearable={true}
+                      locale={typeof navigator !== 'undefined' ? window.navigator.language.slice(0, 2) : 'en'}
+                      customInput={
+                        <SemanticInput
+                          icon='calendar'
+                        />
                       }
-                      setFieldValue(form, name, val, true)
-                      Promise.resolve().then(() => {
-                        onChange && onChange(e, { name, value: val })
-                      })
-                    }}
-                    onSelect={value => {
-                      //console.log('!!!!!!!!!! onSelect value', value)
-                      const val = moment(value, 'en').format(getLocaleDateFormat())
-                      //const val = moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
-                      setFieldValue(form, name, val, true)
-                      Promise.resolve().then(() => {
-                        onChange && onChange(e, { name, value: val })
-                      })
-                    }}
-                    dateFormat={
-                      getLocaleDateFormat()
-                        .replace(/D/g, 'd')
-                        .replace(/m/g, 'M')
-                        .replace(/Y/g, 'y')
-                    }
-                  />
 
+                      onChangeRaw={e => {
+                        const { name, value } = e.target
+                        let val = ''
+                        if (value) {
+                          //console.log('!!!!!!!!!! onChangeRaw value', value)
+                          const formatedValue = value.replace(/[/.]/g, '-').replace(/ /g, '').split('-')
+                          const canAutomaticallyAdjustDateFormat =
+                            formatedValue.some(d => d.length >= 4) &&
+                            formatedValue.length === 3 &&
+                            moment(value, getLocaleDateFormat()).isValid()
+                          val = canAutomaticallyAdjustDateFormat
+                            ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
+                            : value
+                        }
+                        setFieldValue(form, name, val, true)
+                        Promise.resolve().then(() => {
+                          onChange && onChange(e, { name, value: val })
+                        })
+                      }}
+                      onSelect={value => {
+                        //console.log('!!!!!!!!!! onSelect value', value)
+                        const val = moment(value, 'en').format(getLocaleDateFormat())
+                        //const val = moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
+                        setFieldValue(form, name, val, true)
+                        Promise.resolve().then(() => {
+                          onChange && onChange(e, { name, value: val })
+                        })
+                      }}
+                      dateFormat={
+                        getLocaleDateFormat()
+                          .replace(/D/g, 'd')
+                          .replace(/m/g, 'M')
+                          .replace(/Y/g, 'y')
+                      }
+                    />
+                  </DatePickerWrapper>
 
 
                   <DateInput

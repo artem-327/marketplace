@@ -1,3 +1,6 @@
+import styled from 'styled-components'
+
+export const DatePickerWrapper = styled.div`
 .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle, .react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle, .react-datepicker__year-read-view--down-arrow,
 .react-datepicker__month-read-view--down-arrow,
 .react-datepicker__month-year-read-view--down-arrow {
@@ -768,7 +771,7 @@
   text-align: center;
   display: table-cell;
   vertical-align: middle;
-  content: "\00d7";
+  content: "\\00d7";
 }
 
 .react-datepicker__today-button {
@@ -844,3 +847,4 @@
   border-left-color: #e6e6e6;
   cursor: default;
 }
+`
