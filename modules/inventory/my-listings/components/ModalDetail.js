@@ -192,6 +192,16 @@ const DivRequiredFields = styled.div`
   //width: -webkit-fill-available;
 `
 
+const GridFields = styled(Grid)`
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  
+  > .row:first-child:nth-last-child(2) svg {
+    display: none !important;
+  }
+`
+
 const initValues = {
   edit: {
     broadcasted: true,
@@ -2081,89 +2091,91 @@ class ModalDetail extends Component {
                                       <FormattedMessage id='addInventory.testMethod' defaultMessage='Test Method' />
                                     </Grid.Column>
                                   </Grid.Row>
-                                  <FieldArray
-                                    name='edit.tdsFields'
-                                    render={arrayHelpers => (
-                                      <>
-                                        {getSafe(() => values.edit.tdsFields.length, '')
-                                          ? values.edit.tdsFields.map((property, index) => {
-                                              return (
-                                                <>
-                                                  <GridRow>
-                                                    <GridColumn width={4}>
-                                                      <Input
-                                                        type='text'
-                                                        name={`edit.tdsFields[${index}].property`}
-                                                        inputProps={{
-                                                          placeholder: formatMessage({
-                                                            id: 'addInventory.tdsFields.enterProperty',
-                                                            defaultMessage: 'Enter Property'
-                                                          })
-                                                        }}
-                                                      />
-                                                    </GridColumn>
-                                                    <GridColumn width={6}>
-                                                      <Input
-                                                        type='text'
-                                                        name={`edit.tdsFields[${index}].specifications`}
-                                                        inputProps={{
-                                                          placeholder: formatMessage({
-                                                            id: 'addInventory.tdsFields.enterSpecifications',
-                                                            defaultMessage: 'Enter Specifications'
-                                                          }),
-                                                          fluid: true
-                                                        }}
-                                                      />
-                                                    </GridColumn>
-                                                    <GridColumn width={4}>
-                                                      <Input
-                                                        type='text'
-                                                        name={`edit.tdsFields[${index}].testMethods`}
-                                                        inputProps={{
-                                                          placeholder: formatMessage({
-                                                            id: 'addInventory.tdsFields.enterTestMethod',
-                                                            defaultMessage: 'Enter Test Method'
-                                                          }),
-                                                          fluid: true
-                                                        }}
-                                                      />
-                                                    </GridColumn>
-                                                    <GridColumn
-                                                      width={2}
-                                                      verticalAlign='middle'
-                                                      textAlign='center'
-                                                      onClick={e => {
-                                                        arrayHelpers.remove(index)
-                                                        this.setState({ changedForm: true })
-                                                      }}>
-                                                      <IconTrash />
-                                                    </GridColumn>
-                                                  </GridRow>
-                                                  {index === getSafe(() => values.edit.tdsFields.length, 0) - 1 ? (
+                                  <GridFields>
+                                    <FieldArray
+                                      name='edit.tdsFields'
+                                      render={arrayHelpers => (
+                                        <>
+                                          {getSafe(() => values.edit.tdsFields.length, '')
+                                            ? values.edit.tdsFields.map((property, index) => {
+                                                return (
+                                                  <>
                                                     <GridRow>
+                                                      <GridColumn width={4}>
+                                                        <Input
+                                                          type='text'
+                                                          name={`edit.tdsFields[${index}].property`}
+                                                          inputProps={{
+                                                            placeholder: formatMessage({
+                                                              id: 'addInventory.tdsFields.enterProperty',
+                                                              defaultMessage: 'Enter Property'
+                                                            })
+                                                          }}
+                                                        />
+                                                      </GridColumn>
+                                                      <GridColumn width={6}>
+                                                        <Input
+                                                          type='text'
+                                                          name={`edit.tdsFields[${index}].specifications`}
+                                                          inputProps={{
+                                                            placeholder: formatMessage({
+                                                              id: 'addInventory.tdsFields.enterSpecifications',
+                                                              defaultMessage: 'Enter Specifications'
+                                                            }),
+                                                            fluid: true
+                                                          }}
+                                                        />
+                                                      </GridColumn>
+                                                      <GridColumn width={4}>
+                                                        <Input
+                                                          type='text'
+                                                          name={`edit.tdsFields[${index}].testMethods`}
+                                                          inputProps={{
+                                                            placeholder: formatMessage({
+                                                              id: 'addInventory.tdsFields.enterTestMethod',
+                                                              defaultMessage: 'Enter Test Method'
+                                                            }),
+                                                            fluid: true
+                                                          }}
+                                                        />
+                                                      </GridColumn>
                                                       <GridColumn
                                                         width={2}
                                                         verticalAlign='middle'
                                                         textAlign='center'
                                                         onClick={e => {
-                                                          arrayHelpers.push({ property: '', specifications: '' })
+                                                          arrayHelpers.remove(index)
                                                           this.setState({ changedForm: true })
                                                         }}>
-                                                        <DivAddInputTds>
-                                                          <DivIconPlusCircle>
-                                                            <IconPlusCircle />
-                                                          </DivIconPlusCircle>
-                                                        </DivAddInputTds>
+                                                        <IconTrash />
                                                       </GridColumn>
                                                     </GridRow>
-                                                  ) : null}
-                                                </>
-                                              )
-                                            })
-                                          : null}
-                                      </>
-                                    )}
-                                  />
+                                                    {index === getSafe(() => values.edit.tdsFields.length, 0) - 1 ? (
+                                                      <GridRow>
+                                                        <GridColumn
+                                                          width={2}
+                                                          verticalAlign='middle'
+                                                          textAlign='center'
+                                                          onClick={e => {
+                                                            arrayHelpers.push({ property: '', specifications: '' })
+                                                            this.setState({ changedForm: true })
+                                                          }}>
+                                                          <DivAddInputTds>
+                                                            <DivIconPlusCircle>
+                                                              <IconPlusCircle />
+                                                            </DivIconPlusCircle>
+                                                          </DivAddInputTds>
+                                                        </GridColumn>
+                                                      </GridRow>
+                                                    ) : null}
+                                                  </>
+                                                )
+                                              })
+                                            : null}
+                                        </>
+                                      )}
+                                    />
+                                  </GridFields>
                                 </Grid>
                               </Tab.Pane>
                             )
