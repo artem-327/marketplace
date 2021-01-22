@@ -54,7 +54,7 @@ class CompaniesTable extends Component {
             </FormattedMessage>
           ),
           width: 220,
-          sortPath: 'Company.cfDisplayName'
+          sortPath: 'Company.dba'
         },
         {
           name: 'p44CompanyId',
