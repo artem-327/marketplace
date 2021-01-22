@@ -516,32 +516,33 @@ class BankAccountsTable extends Component {
               }
               groupActions={row => {
                 return [
-                  {
-                    text: formatMessage({
-                      id: 'settings.accounts.viewInactiveAccounts',
-                      defaultMessage: 'View Inactive Accounts'
-                    }),
-                    callback: async () => {
-                      try {
-                        await this.props.hideInactiveAccounts(false)
-                      } catch (e) {
-                        console.error(e)
+                  this.props.isHideInactiveAccounts
+                    ? {
+                        text: formatMessage({
+                          id: 'settings.accounts.viewInactiveAccounts',
+                          defaultMessage: 'View Inactive Accounts'
+                        }),
+                        callback: async () => {
+                          try {
+                            await this.props.hideInactiveAccounts(false)
+                          } catch (e) {
+                            console.error(e)
+                          }
+                        }
                       }
-                    }
-                  },
-                  {
-                    text: formatMessage({
-                      id: 'settings.accounts.hideInactiveAccounts',
-                      defaultMessage: 'Hide Inactive Accounts'
-                    }),
-                    callback: async () => {
-                      try {
-                        await this.props.hideInactiveAccounts(true)
-                      } catch (e) {
-                        console.error(e)
-                      }
-                    }
-                  },
+                    : {
+                        text: formatMessage({
+                          id: 'settings.accounts.hideInactiveAccounts',
+                          defaultMessage: 'Hide Inactive Accounts'
+                        }),
+                        callback: async () => {
+                          try {
+                            await this.props.hideInactiveAccounts(true)
+                          } catch (e) {
+                            console.error(e)
+                          }
+                        }
+                      },
                   {
                     text: formatMessage({
                       id: 'settings.accounts.deleteInstitutions',
