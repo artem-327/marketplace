@@ -17,3 +17,9 @@ export const ROLES_ENUM = [
   { name: 'Guest Company Manager', id: 36, propertyName: 'isClientCompanyManager' },
   { name: 'Order Operator', id: 37, propertyName: 'isOrderOperator' }
 ]
+
+export const LINK_TRANSLATE_TABLE = {
+  '/my-purchase-request': '/wanted-board/listings',
+  '/test-link/for-testing': '/marketplace/bids-sent'
+}
+
