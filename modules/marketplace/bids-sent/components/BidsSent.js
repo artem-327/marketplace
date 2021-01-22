@@ -14,6 +14,7 @@ import confirm from '~/components/Confirmable/confirm'
 import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
 import MakeOfferPopup from '../../listings/components/MakeOfferPopup'
 import Router from 'next/router'
+import { getSafe } from '~/utils/functions'
 
 class BidsSent extends Component {
   constructor(props) {
@@ -60,10 +61,30 @@ class BidsSent extends Component {
   }
 
   componentDidMount() {
-    const { tableHandlersFiltersBidsSent, advancedFilters, datagrid, applyDatagridFilter } = this.props
+    const { datagrid } = this.props
+
+    const initId = parseInt(getSafe(() => Router.router.query.id, 0))
+    if (initId) {
+      datagrid.setSearch({ initId }, true, 'pageFilters')
+      this.setState({ expandedRowIds: [initId] })
+    } else {
+      this.setInitFilters()
+    }
+  }
+
+  componentWillUnmount() {
+    const { isOpenPopup, closePopup } = this.props
+    if (!getSafe(() => Router.router.query.id, 0)) {
+      this.props.handleVariableSave('tableHandlersFiltersBidsSent', this.state.filterValues)
+    }
+    if (isOpenPopup) closePopup()
+  }
+
+  setInitFilters = () => {
+    const { tableHandlersFiltersBidsSent, datagrid } = this.props
 
     if (tableHandlersFiltersBidsSent) {
-      this.setState({ filterValues: tableHandlersFiltersBidsSent }, () => {
+      this.setState({filterValues: tableHandlersFiltersBidsSent}, () => {
         const filter = {
           ...this.state.filterValues
         }
@@ -72,12 +93,6 @@ class BidsSent extends Component {
     } else {
       datagrid.setSearch(this.state.filterValues, true, 'pageFilters')
     }
-  }
-
-  componentWillUnmount() {
-    const { isOpenPopup, closePopup } = this.props
-    this.props.handleVariableSave('tableHandlersFiltersBidsSent', this.state.filterValues)
-    if (isOpenPopup) closePopup()
   }
 
   handleFilterChangeInputSearch = (e, data) => {
@@ -105,6 +120,13 @@ class BidsSent extends Component {
       }
     } else {
       this.setState({ expandedRowIds: [row.id] })
+    }
+  }
+
+  handleUpdateFinished = () => {
+    if (getSafe(() => Router.router.query.id, 0)) {
+      Router.push(Router.router.pathname)
+      this.setInitFilters()
     }
   }
 
@@ -204,6 +226,7 @@ class BidsSent extends Component {
         try {
           const { value } = await acceptOffer(row.id)
           datagrid.updateRow(row.id, () => value)
+          this.handleUpdateFinished()
         } catch (e) {
           console.error(e)
         }
@@ -218,6 +241,7 @@ class BidsSent extends Component {
         try {
           const { value } = await rejectOffer(row.id)
           datagrid.updateRow(row.id, () => value)
+          this.handleUpdateFinished()
         } catch (e) {
           console.error(e)
         }
@@ -255,6 +279,7 @@ class BidsSent extends Component {
               this.setState({ expandedRowIds: [] })
             }
             datagrid.removeRow(row.id)
+            this.handleUpdateFinished()
           } catch (e) {
             console.error(e)
           }
@@ -282,7 +307,10 @@ class BidsSent extends Component {
         initValues={this.state.rowDetailState}
         popupValues={row}
         onUnmount={values => this.setState({ rowDetailState: values })}
-        onClose={() => this.setState({ expandedRowIds: [] })}
+        onClose={() => {
+          this.setState({ expandedRowIds: [] })
+          this.handleUpdateFinished()
+        }}
       />
     )
   }

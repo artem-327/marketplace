@@ -268,12 +268,6 @@ class MyListings extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      fixed: [
-        {
-          name: 'productName',
-          position: 3
-        }
-      ],
       columns: [
         /*{
           name: 'actCol',
@@ -659,7 +653,7 @@ class MyListings extends Component {
           defaultMessage: 'TDS'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 1, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 1, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -667,7 +661,7 @@ class MyListings extends Component {
           defaultMessage: 'Documents'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 2, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 2, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -675,7 +669,7 @@ class MyListings extends Component {
           defaultMessage: 'Price Book'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 3, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 3, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -683,7 +677,7 @@ class MyListings extends Component {
           defaultMessage: 'Price Tiers'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 4, sidebarDetailTrigger)
+        callback: row => this.tableRowClickedProductOffer(row, true, 4, modalDetailTrigger)
       },
       {
         text: formatMessage({
@@ -1291,7 +1285,7 @@ class MyListings extends Component {
       updatingDatagrid,
       activeInventoryFilter
     } = this.props
-    const { columns, fixed, clientMessage, request, openFilterPopup, rows } = this.state
+    const { columns, clientMessage, request, openFilterPopup, rows } = this.state
 
     return (
       <>
@@ -1420,7 +1414,6 @@ class MyListings extends Component {
             {...datagrid.tableProps}
             tableName='my_inventory_grid'
             columns={columns}
-            fixed={fixed}
             rows={rows}
             selectByRowClick
             hideCheckboxes
@@ -1461,6 +1454,7 @@ class MyListings extends Component {
               */
             }
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
+            groupActionsIcon
             groupActions={row => {
               let values = row.key.split('_')
               return groupActions(

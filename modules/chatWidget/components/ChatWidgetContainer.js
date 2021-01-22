@@ -39,6 +39,7 @@ function mapStateToProps(state) {
       getSafe(() => state.cart.sidebar.isOpen, false) ||
       getSafe(() => state.companyProductInfo.isOpen, false) ||
       getSafe(() => state.companiesAdmin.isOpenSidebar, false) ||
+      getSafe(() => state.simpleAdd.isOpenPopup, false) ||
       (getSafe(() => state.settings.isOpenPopup, false) && (settingsTab === 'users' || settingsTab === 'documents')) ||
       adminTab === 'Users' ||
       adminTab === 'Companies' ||

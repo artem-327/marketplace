@@ -1259,7 +1259,7 @@ class Broadcast extends Component {
       toastManager,
       templates,
       changedForm,
-      sidebarValues,
+      detailValues,
       inventoryGrid
     } = this.props
     let filteredTree = this.treeToModel(undefined, undefined, true)
@@ -1270,7 +1270,7 @@ class Broadcast extends Component {
         value: 'branch'
       })
 
-      const { value } = await saveRules(sidebarValues, filteredTree, inventoryGrid)
+      const { value } = await saveRules(detailValues, filteredTree, inventoryGrid)
 
       let name,
         dataId = null
@@ -1466,7 +1466,7 @@ Broadcast.propTypes = {
   asModal: bool,
   isOpenTemplateModal: bool,
   saveSidebar: number,
-  sidebarValues: object,
+  detailValues: object,
   inventoryGrid: object
 }
 
@@ -1477,7 +1477,7 @@ Broadcast.defaultProps = {
   asModal: false,
   isOpenTemplateModal: false,
   saveSidebar: 0,
-  sidebarValues: {},
+  detailValues: {},
   inventoryGrid: {}
 }
 

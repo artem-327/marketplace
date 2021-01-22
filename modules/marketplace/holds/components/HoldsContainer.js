@@ -61,8 +61,8 @@ function mapStateToProps(store, { datagrid }) {
         expirationTime: po.expirationTime ? getDurationTime(po.expirationTime) : null,
         holdPricePerUOM: po.holdPricePerUOM ? (
           <FormattedNumber
-            minimumFractionDigits={2}
-            maximumFractionDigits={2}
+            minimumFractionDigits={3}
+            maximumFractionDigits={3}
             style='currency'
             currency={currency}
             value={po.holdPricePerUOM}

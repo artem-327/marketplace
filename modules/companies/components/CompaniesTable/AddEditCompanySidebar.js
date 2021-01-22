@@ -137,7 +137,7 @@ class AddEditCompanySidebar extends React.Component {
       let validation = Yup.object().shape({
         name: Yup.string().trim().min(2, minLength).required(minLength),
         website: websiteValidationNotRequired(),
-        phone: phoneValidation(),
+        phone: phoneValidation(10),
 
         mailingBranch: Yup.lazy(() => {
           if (mailingBranchRequired)
@@ -149,13 +149,13 @@ class AddEditCompanySidebar extends React.Component {
                   .email(errorMessages.invalidEmail)
                   .required(errorMessages.invalidEmail),
                 contactName: Yup.string().trim().min(2, minLength).required(minLength),
-                contactPhone: phoneValidation(),
+                contactPhone: phoneValidation(10),
                 address: addressValidationSchema()
               })
             })
           return Yup.object().shape({
             deliveryAddress: Yup.object().shape({
-              contactPhone: phoneValidation()
+              contactPhone: phoneValidation(10)
             })
           })
         }),
@@ -165,7 +165,7 @@ class AddEditCompanySidebar extends React.Component {
             addressName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
             contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
             contactName: Yup.string().trim().min(2, minLength).required(minLength),
-            contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
+            contactPhone: phoneValidation(10).concat(Yup.string().required(errorMessages.requiredMessage)),
             address: addressValidationSchema()
           })
         }),
@@ -174,7 +174,7 @@ class AddEditCompanySidebar extends React.Component {
           return Yup.object().shape({
             email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
             name: Yup.string().trim().min(2, minLength).required(minLength),
-            phone: phoneValidation()
+            phone: phoneValidation(10)
           })
           // return Yup.mixed().notRequired()
         })

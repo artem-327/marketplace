@@ -11,6 +11,8 @@ import styled from 'styled-components'
 import confirm from '~/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { PriceField } from '~/styles/styledComponents'
+//Actions
+import { getTemplates } from '~/modules/broadcast/actions'
 
 import {
   Segment,
@@ -190,9 +192,19 @@ const DivRequiredFields = styled.div`
   //width: -webkit-fill-available;
 `
 
+const GridFields = styled(Grid)`
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  
+  > .row:first-child:nth-last-child(2) svg {
+    display: none !important;
+  }
+`
+
 const initValues = {
   edit: {
-    broadcasted: false,
+    broadcasted: true,
     condition: null,
     conditionNotes: '',
     conforming: true,
@@ -331,12 +343,11 @@ const validationScheme = val.lazy(values => {
         })
         .required(errorMessages.requiredMessage),
       costPerUOM: val
-        .string()
-        .test('v', errorMessages.mustBeNumber, function (v) {
-          return v === null || v === '' || !isNaN(v)
-        })
-        .test('v', errorMessages.minimum(0), function (v) {
-          return v === null || v === '' || isNaN(v) || Number(v) >= 0
+        .number()
+        .min(0.001, errorMessages.minimum(0.001))
+        .typeError(errorMessages.mustBeNumber)
+        .test('maxdec', errorMessages.maxDecimals(3), val => {
+          return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
         }),
       lotNumber: val.string().typeError(errorMessages.invalidString).nullable(),
       inStock: val.bool().required(errorMessages.requiredMessage),
@@ -441,18 +452,36 @@ class ModalDetail extends Component {
   }
 
   componentDidMount = async () => {
-    if (this.props.detailValues) {
-      await this.loadProductOffer(this.props.detailValues.id) // Start editing, reload product offer
+    const {
+      detailValues,
+      broadcastTemplates,
+      getProductConditions,
+      getProductForms,
+      getProductGrades,
+      getWarehouses,
+      getDocumentTypes,
+      searchOrigins,
+      searchManufacturers,
+      modalActiveTab,
+      getTemplates
+    } = this.props
+    if (detailValues) {
+      await this.loadProductOffer(detailValues.id) // Start editing, reload product offer
     } else {
-      this.props.searchOrigins('', 200)
+      searchOrigins('', 200)
     }
-    this.fetchIfNoData('listConditions', this.props.getProductConditions)
-    this.fetchIfNoData('listForms', this.props.getProductForms)
-    this.fetchIfNoData('listGrades', this.props.getProductGrades)
-    this.fetchIfNoData('warehousesList', this.props.getWarehouses)
-    this.fetchIfNoData('listDocumentTypes', this.props.getDocumentTypes)
-    this.props.searchManufacturers('', 200)
-    this.switchTab(this.props.modalActiveTab)
+    this.fetchIfNoData('listConditions', getProductConditions)
+    this.fetchIfNoData('listForms', getProductForms)
+    this.fetchIfNoData('listGrades', getProductGrades)
+    this.fetchIfNoData('warehousesList', getWarehouses)
+    this.fetchIfNoData('listDocumentTypes', getDocumentTypes)
+
+    if (broadcastTemplates && !broadcastTemplates.length) {
+      getTemplates()
+    }
+
+    searchManufacturers('', 200)
+    this.switchTab(modalActiveTab)
   }
 
   fetchIfNoData = (name, fn) => {
@@ -1080,7 +1109,9 @@ class ModalDetail extends Component {
       currencySymbol,
       openGlobalAddForm,
       inventoryGrid,
-      isLoadingBroadcast
+      isLoadingBroadcast,
+      autocompleteDataLoading,
+      broadcastTemplates
     } = this.props
 
     const leftWidth = 6
@@ -1205,53 +1236,57 @@ class ModalDetail extends Component {
         title: formatMessage({ id: 'myInventory.justMe', defaultMessage: 'Just Me' }),
         subtitle: formatMessage({ id: 'myInventory.justMeSubtitle', defaultMessage: 'Only my Company' }),
         value: 'NO_BROADCAST'
+      },
+      ...broadcastTemplates.map(template => {
+        return {
+          icon: (
+            <DivIconOptions>
+              <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+                <g fill='none' fill-rule='evenodd'>
+                  <path
+                    d='M0 0L24 0 24 24 0 24z'
+                    transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+                  />
+                  <path
+                    fill='#848893'
+                    fill-rule='nonzero'
+                    d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
+                    transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+                  />
+                </g>
+              </svg>
+            </DivIconOptions>
+          ),
+          title: template.name,
+          subtitle: formatMessage({ id: 'myInventory.customTemplate', defaultMessage: 'Custom Template' }),
+          id: template.id,
+          tmp: template.name,
+          value: `BROADCAST_TEMPLATE|${template.id}`
+        }
+      }),
+      {
+        icon: (
+          <DivIconOptions>
+            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+              <g fill='none' fill-rule='evenodd'>
+                <path
+                  d='M0 0L24 0 24 24 0 24z'
+                  transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+                />
+                <path
+                  fill='#848893'
+                  fill-rule='nonzero'
+                  d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
+                  transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+                />
+              </g>
+            </svg>
+          </DivIconOptions>
+        ),
+        title: formatMessage({ id: 'myInventory.custom', defaultMessage: 'Custom' }),
+        subtitle: formatMessage({ id: 'myInventory.customSubtitle', defaultMessage: 'Create Custom Rule' }),
+        value: 'CUSTOM_RULES'
       }
-      // ...broadcastTemplates.map(template => {
-      //   return {
-      //     icon: (
-      //       <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
-      //         <g fill='none' fill-rule='evenodd'>
-      //           <path
-      //             d='M0 0L24 0 24 24 0 24z'
-      //             transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
-      //           />
-      //           <path
-      //             fill='#848893'
-      //             fill-rule='nonzero'
-      //             d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
-      //             transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
-      //           />
-      //         </g>
-      //       </svg>
-      //     ),
-      //     title: template.name,
-      //     subtitle: formatMessage({ id: 'myInventory.customTemplate', defaultMessage: 'Custom Template' }),
-      //     id: template.id,
-      //     tmp: template.name,
-      //     value: `BROADCAST_TEMPLATE|${template.id}`
-      //   }
-      // }),
-      // {
-      //   icon: (
-      //     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
-      //       <g fill='none' fill-rule='evenodd'>
-      //         <path
-      //           d='M0 0L24 0 24 24 0 24z'
-      //           transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
-      //         />
-      //         <path
-      //           fill='#848893'
-      //           fill-rule='nonzero'
-      //           d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
-      //           transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
-      //         />
-      //       </g>
-      //     </svg>
-      //   ),
-      //   title: formatMessage({ id: 'myInventory.custom', defaultMessage: 'Custom' }),
-      //   subtitle: formatMessage({ id: 'myInventory.customSubtitle', defaultMessage: 'Create Custom Rule' }),
-      //   value: 'CUSTOM_RULES'
-      // }
     ]
 
     // const { toggleFilter } = this.props
@@ -1292,8 +1327,8 @@ class ModalDetail extends Component {
                   )
                 }}>
                 <FlexModalContent>
-                  <Dimmer inverted active={loading}>
-                    <Loader active={loading} />
+                  <Dimmer inverted active={loading || autocompleteDataLoading || searchedOriginsLoading}>
+                    <Loader active={loading || autocompleteDataLoading || searchedOriginsLoading} />
                   </Dimmer>
                   <HighSegment basic>
                     <DivTitle>
@@ -1672,26 +1707,29 @@ class ModalDetail extends Component {
                                       </FormField>
                                     </GridColumn>
                                   </CustomGridRow>
-                                  <CustomGridRow>
-                                    <GridColumn width={8}>
-                                      <FormField width={8}>
-                                        <FormattedMessage
-                                          id='myInventory.acceptBids'
-                                          defaultMessage='Accept bids on offer?'>
-                                          {text => <label>{text}</label>}
-                                        </FormattedMessage>
-                                        <Dropdown
-                                          name='edit.acceptBids'
-                                          options={optionsYesNo}
-                                          inputProps={{
-                                            onChange: this.onChange,
-                                            'data-test': 'add_inventory_acceptBids',
-                                            fluid: true
-                                          }}
-                                        />
-                                      </FormField>
-                                    </GridColumn>
-                                  </CustomGridRow>
+                                  {/* It's not supported yet */}
+                                  {false && (
+                                    <CustomGridRow>
+                                      <GridColumn width={8}>
+                                        <FormField width={8}>
+                                          <FormattedMessage
+                                            id='myInventory.acceptBids'
+                                            defaultMessage='Accept bids on offer?'>
+                                            {text => <label>{text}</label>}
+                                          </FormattedMessage>
+                                          <Dropdown
+                                            name='edit.acceptBids'
+                                            options={optionsYesNo}
+                                            inputProps={{
+                                              onChange: this.onChange,
+                                              'data-test': 'add_inventory_acceptBids',
+                                              fluid: true
+                                            }}
+                                          />
+                                        </FormField>
+                                      </GridColumn>
+                                    </CustomGridRow>
+                                  )}
                                   <CustomGridRow>
                                     <GridColumnOptionalInformation
                                       onClick={() =>
@@ -2050,86 +2088,94 @@ class ModalDetail extends Component {
                                       />
                                     </Grid.Column>
                                     <Grid.Column width={4}>
-                                      <FormattedMessage
-                                        id='addInventory.testMethod'
-                                        defaultMessage='Test Method'
-                                      />
+                                      <FormattedMessage id='addInventory.testMethod' defaultMessage='Test Method' />
                                     </Grid.Column>
                                   </Grid.Row>
-                                  <FieldArray
-                                    name='edit.tdsFields'
-                                    render={arrayHelpers => (
-                                      <>
-                                        {getSafe(() => values.edit.tdsFields.length, '')
-                                          ? values.edit.tdsFields.map((property, index) => {
-                                              return (
-                                                <>
-                                                  <GridRow>
-                                                    <GridColumn width={4}>
-                                                      <Input
-                                                        type='text'
-                                                        name={`edit.tdsFields[${index}].property`}
-                                                        inputProps={{
-                                                          placeholder: formatMessage({ id: 'addInventory.tdsFields.enterProperty', defaultMessage: 'Enter Property' })
-                                                        }}
-                                                      />
-                                                    </GridColumn>
-                                                    <GridColumn width={6}>
-                                                      <Input
-                                                        type='text'
-                                                        name={`edit.tdsFields[${index}].specifications`}
-                                                        inputProps={{
-                                                          placeholder: formatMessage({ id: 'addInventory.tdsFields.enterSpecifications', defaultMessage: 'Enter Specifications' }),
-                                                          fluid: true
-                                                        }}
-                                                      />
-                                                    </GridColumn>
-                                                    <GridColumn width={4}>
-                                                      <Input
-                                                        type='text'
-                                                        name={`edit.tdsFields[${index}].testMethods`}
-                                                        inputProps={{
-                                                          placeholder: formatMessage({ id: 'addInventory.tdsFields.enterTestMethod', defaultMessage: 'Enter Test Method' }),
-                                                          fluid: true
-                                                        }}
-                                                      />
-                                                    </GridColumn>
-                                                    <GridColumn
-                                                      width={2}
-                                                      verticalAlign='middle'
-                                                      textAlign='center'
-                                                      onClick={e => {
-                                                        arrayHelpers.remove(index)
-                                                        this.setState({ changedForm: true })
-                                                      }}>
-                                                      <IconTrash />
-                                                    </GridColumn>
-                                                  </GridRow>
-                                                  {index === getSafe(() => values.edit.tdsFields.length, 0) - 1 ? (
+                                  <GridFields>
+                                    <FieldArray
+                                      name='edit.tdsFields'
+                                      render={arrayHelpers => (
+                                        <>
+                                          {getSafe(() => values.edit.tdsFields.length, '')
+                                            ? values.edit.tdsFields.map((property, index) => {
+                                                return (
+                                                  <>
                                                     <GridRow>
+                                                      <GridColumn width={4}>
+                                                        <Input
+                                                          type='text'
+                                                          name={`edit.tdsFields[${index}].property`}
+                                                          inputProps={{
+                                                            placeholder: formatMessage({
+                                                              id: 'addInventory.tdsFields.enterProperty',
+                                                              defaultMessage: 'Enter Property'
+                                                            })
+                                                          }}
+                                                        />
+                                                      </GridColumn>
+                                                      <GridColumn width={6}>
+                                                        <Input
+                                                          type='text'
+                                                          name={`edit.tdsFields[${index}].specifications`}
+                                                          inputProps={{
+                                                            placeholder: formatMessage({
+                                                              id: 'addInventory.tdsFields.enterSpecifications',
+                                                              defaultMessage: 'Enter Specifications'
+                                                            }),
+                                                            fluid: true
+                                                          }}
+                                                        />
+                                                      </GridColumn>
+                                                      <GridColumn width={4}>
+                                                        <Input
+                                                          type='text'
+                                                          name={`edit.tdsFields[${index}].testMethods`}
+                                                          inputProps={{
+                                                            placeholder: formatMessage({
+                                                              id: 'addInventory.tdsFields.enterTestMethod',
+                                                              defaultMessage: 'Enter Test Method'
+                                                            }),
+                                                            fluid: true
+                                                          }}
+                                                        />
+                                                      </GridColumn>
                                                       <GridColumn
                                                         width={2}
                                                         verticalAlign='middle'
                                                         textAlign='center'
                                                         onClick={e => {
-                                                          arrayHelpers.push({ property: '', specifications: '' })
+                                                          arrayHelpers.remove(index)
                                                           this.setState({ changedForm: true })
                                                         }}>
-                                                        <DivAddInputTds>
-                                                          <DivIconPlusCircle>
-                                                            <IconPlusCircle />
-                                                          </DivIconPlusCircle>
-                                                        </DivAddInputTds>
+                                                        <IconTrash />
                                                       </GridColumn>
                                                     </GridRow>
-                                                  ) : null}
-                                                </>
-                                              )
-                                            })
-                                          : null}
-                                      </>
-                                    )}
-                                  />
+                                                    {index === getSafe(() => values.edit.tdsFields.length, 0) - 1 ? (
+                                                      <GridRow>
+                                                        <GridColumn
+                                                          width={2}
+                                                          verticalAlign='middle'
+                                                          textAlign='center'
+                                                          onClick={e => {
+                                                            arrayHelpers.push({ property: '', specifications: '' })
+                                                            this.setState({ changedForm: true })
+                                                          }}>
+                                                          <DivAddInputTds>
+                                                            <DivIconPlusCircle>
+                                                              <IconPlusCircle />
+                                                            </DivIconPlusCircle>
+                                                          </DivAddInputTds>
+                                                        </GridColumn>
+                                                      </GridRow>
+                                                    ) : null}
+                                                  </>
+                                                )
+                                              })
+                                            : null}
+                                        </>
+                                      )}
+                                    />
+                                  </GridFields>
                                 </Grid>
                               </Tab.Pane>
                             )
@@ -2247,7 +2293,12 @@ class ModalDetail extends Component {
                               </Menu.Item>
                             ),
                             pane: (
-                              <Tab.Pane loading={isLoadingBroadcast} key='priceBook' style={{ padding: '18px' }}>
+                              <Tab.Pane
+                                loading={
+                                  isLoadingBroadcast && !loading && !autocompleteDataLoading && !searchedOriginsLoading
+                                }
+                                key='priceBook'
+                                style={{ padding: '18px' }}>
                                 <Broadcast
                                   isPrepared={!this.state.broadcastLoading}
                                   asModal={true}
@@ -2353,11 +2404,6 @@ class ModalDetail extends Component {
                         ]}
                       />
                     </FlexTabs>
-                    {openGlobalAddForm && (
-                      <div style={{ position: 'absolute', right: '20px', top: '17px' }}>
-                        <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
-                      </div>
-                    )}
                   </HighSegment>
                 </FlexModalContent>
                 {this.state.activeTab !== 3 && (
@@ -2460,7 +2506,8 @@ const mapDispatchToProps = {
   downloadAttachment,
   closeModalDetail,
   getProductOffer,
-  removeAttachmentLinkProductOffer
+  removeAttachmentLinkProductOffer,
+  getTemplates
 }
 
 const mapStateToProps = (
@@ -2509,7 +2556,8 @@ const mapStateToProps = (
   editProductOfferInitTrig,
   currencySymbol: '$',
   inventoryGrid,
-  isLoadingBroadcast: getSafe(() => broadcast.loading, false)
+  isLoadingBroadcast: getSafe(() => broadcast.loading, false),
+  broadcastTemplates: getSafe(() => broadcast.templates, [])
 })
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ModalDetail))))

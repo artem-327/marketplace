@@ -408,12 +408,6 @@ class _Table extends Component {
         allowReordering: pt.bool
       })
     ),
-    fixed: pt.arrayOf(
-      pt.shape({
-        name: pt.string.isRequired,
-        position: pt.number.isRequired
-      })
-    ),
     rows: pt.arrayOf(pt.any),
     selectedRows: pt.array,
     rowDetail: pt.func,
@@ -908,7 +902,18 @@ class _Table extends Component {
     const {
       columnsSettings: { order }
     } = this.state
-    const { tableName, fixed } = this.props
+    const { tableName, columns } = this.props
+    // get fixed columns
+    let fixed = columns.reduce((result, col, index) => {
+      if (col.allowReordering === false) {
+        let fixedCol = {
+          name: col.name,
+          position: index
+        }
+        result.push(fixedCol)
+      }
+      return result
+    }, [])
     if (data.order && typeof fixed !== 'undefined') {
       fixed.forEach(fixedCol => {
         if (data.order.indexOf(fixedCol.name) !== fixedCol.position) {
@@ -965,6 +970,7 @@ class _Table extends Component {
       showColumnsWhenGrouped = false,
       lockSelection,
       groupActions,
+      groupActionsIcon,
       hideSettingsIcon,
       highlightRow,
       showSelectionColumn,
@@ -1215,7 +1221,8 @@ class _Table extends Component {
                       column: { actions: groupActions ? groupActions(props.row) : null },
                       row: props.row,
                       groupLength: getChildGroups(rows).find(group => props.row.value === group.key).groupLength,
-                      isBankTable
+                      isBankTable,
+                      menuIcon: groupActionsIcon
                     })}
                     {...props}
                   />

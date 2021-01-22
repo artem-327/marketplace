@@ -837,9 +837,9 @@ class Filter extends Component {
                     'priceFrom',
                     {
                       type: 'number',
-                      min: 0.01,
-                      step: 0.01,
-                      placeholder: '0.00',
+                      min: 0.001,
+                      step: 0.001,
+                      placeholder: '0.000',
                       fluid: true
                     },
                     formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
@@ -852,9 +852,9 @@ class Filter extends Component {
                     'priceTo',
                     {
                       type: 'number',
-                      min: 0.01,
-                      step: 0.01,
-                      placeholder: '0.00',
+                      min: 0.001,
+                      step: 0.001,
+                      placeholder: '0.000',
                       fluid: true
                     },
                     formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
