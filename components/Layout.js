@@ -51,7 +51,7 @@ import { AgreementModal } from '~/components/modals'
 import { getCountryCodes } from '~/modules/phoneNumber/actions'
 
 import { chatWidgetToggle } from '~/modules/chatWidget/actions'
-import { toggleMenu, openGlobalAddForm } from '~/modules/layout/actions'
+import { toggleMenu, openGlobalAddForm, setMainContainer } from '~/modules/layout/actions'
 import { getCompanyLogo } from '~/modules/company-form/actions'
 import { withToastManager } from 'react-toast-notifications'
 
@@ -249,6 +249,10 @@ class Layout extends Component {
       this.state.copyrightClassName === 'show-cop'
     ) {
       this.cleanCopyrightState()
+    }
+
+    if (prevProps.mainContainer === null && this.mainContainer && this.mainContainer.current) {
+      this.props.setMainContainer(this.mainContainer)
     }
   }
 
@@ -581,7 +585,8 @@ const mapDispatchToProps = {
   getCountryCodes,
   toggleMenu,
   getCompanyLogo,
-  openGlobalAddForm
+  openGlobalAddForm,
+  setMainContainer
 }
 
 const mapStateToProps = state => {
@@ -591,6 +596,7 @@ const mapStateToProps = state => {
     profile: state.profile,
     collapsedMenu: state.layout.collapsedMenu,
     openGlobalAddFormName: state.layout.openGlobalAddFormName,
+    mainContainer: state.layout.mainContainer,
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover:
