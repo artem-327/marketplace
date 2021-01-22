@@ -138,8 +138,8 @@ function mapStateToProps(store, { datagrid }) {
           deliveryPriceMax: 'N/A',
           fobQuote: (
             <FormattedNumber
-              minimumFractionDigits={2}
-              maximumFractionDigits={2}
+              minimumFractionDigits={3}
+              maximumFractionDigits={3}
               style='currency'
               currency={currency}
               value={pro.cfHistoryLastAveragePricePerUOM}

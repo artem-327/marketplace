@@ -362,8 +362,8 @@ class AddCart extends Component {
             <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} />
             <FormattedUnit unit='' separator=' : ' value={quantityTo} />
             <FormattedNumber
-              minimumFractionDigits={2}
-              maximumFractionDigits={2}
+              minimumFractionDigits={3}
+              maximumFractionDigits={3}
               style='currency'
               value={tier.pricePerUOM}
               currency={currencyCode}

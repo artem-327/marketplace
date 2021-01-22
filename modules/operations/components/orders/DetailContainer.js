@@ -198,8 +198,8 @@ function prepareDetail(data, type = 'sales') {
     unitPrice: orderItems.map(d =>
       d.pricePerUOM ? (
         <FormattedNumber
-          minimumFractionDigits={2}
-          maximumFractionDigits={2}
+          minimumFractionDigits={3}
+          maximumFractionDigits={3}
           style='currency'
           currency={currency}
           value={d.pricePerUOM}

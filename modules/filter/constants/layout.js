@@ -770,6 +770,16 @@ export const PopupGrid = styled(Grid)`
       color: #848893;
       box-shadow: unset;
       margin: 4px 3px 0 0;
+      
+      &:hover {
+        font-weight: normal !important;
+        color: #848893 !important;
+      }
+      
+      i.icon.delete:hover {
+        font-weight: normal;
+        color: #000;
+      }
     }
   }
   
