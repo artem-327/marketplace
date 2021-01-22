@@ -205,10 +205,14 @@ export const FlexTabs = styled.div`
     padding: 0 2.142857143em !important;
     > .ui.grid {
       margin: 1.607142857em -0.714285714em;
-      > .row {
+      > .row,
+      > .ui.grid > .row {
         padding: 0.535714286em 0;
         > .column {
           padding: 0 0.714285714em;
+          > .field {
+            padding-top: 0 !important;
+          }
         }
       }
     }
