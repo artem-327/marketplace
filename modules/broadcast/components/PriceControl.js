@@ -176,8 +176,8 @@ export default class PriceControl extends Component {
     return {
       highStr: (
         <FormattedNumber
-          minimumFractionDigits={2}
-          maximumFractionDigits={2}
+          minimumFractionDigits={3}
+          maximumFractionDigits={3}
           style='currency'
           currency={currency}
           value={high ? high : 0}
@@ -185,8 +185,8 @@ export default class PriceControl extends Component {
       ),
       lowStr: (
         <FormattedNumber
-          minimumFractionDigits={2}
-          maximumFractionDigits={2}
+          minimumFractionDigits={3}
+          maximumFractionDigits={3}
           style='currency'
           currency={currency}
           value={low ? low : 0}

@@ -507,9 +507,13 @@ class SubmitOfferPopup extends React.Component {
             return Yup.object().shape({
               ...fulfilledAt,
               ...pkgAmount,
-              pricePerUOM: Yup.number()
-                .positive(errorMessages.positive)
-                .typeError(errorMessages.requiredMessage)
+              pricePerUOM: Yup
+                .number()
+                .min(0.001, errorMessages.minimum(0.001))
+                .typeError(errorMessages.mustBeNumber)
+                .test('maxdec', errorMessages.maxDecimals(3), val => {
+                  return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+                })
                 .required(errorMessages.requiredMessage)
             })
           })
@@ -779,6 +783,7 @@ class SubmitOfferPopup extends React.Component {
             )
           }
           inputProps={{
+            placeholder: '0.000',
             type: 'number',
             onChange: (e, data) => this.handleChange(e, data, index),
             label: <GreenLabel>{this.props.currencySymbol}</GreenLabel>,
@@ -1093,8 +1098,8 @@ class SubmitOfferPopup extends React.Component {
                                     <List.Description as='span'>
                                       {popupValues.maximumPricePerUOM ? (
                                         <FormattedNumber
-                                          minimumFractionDigits={2}
-                                          maximumFractionDigits={2}
+                                          minimumFractionDigits={3}
+                                          maximumFractionDigits={3}
                                           style='currency'
                                           currency={currency}
                                           value={popupValues.maximumPricePerUOM}

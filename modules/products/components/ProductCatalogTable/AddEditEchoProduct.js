@@ -34,7 +34,7 @@ import TextareaAutosize from 'react-autosize-textarea'
 import { FieldArray, Field } from 'formik'
 
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
-import { errorMessages, dateValidation } from '~/constants/yupValidation'
+import { errorMessages, dateValidation, phoneValidation } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
 import styled from 'styled-components'
@@ -167,6 +167,7 @@ const validationScheme = Yup.object().shape({
   name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
   productGroup: Yup.number().required(errorMessages.minOneGroup),
   company: Yup.number().required(errorMessages.minOneCompany),
+  emergencyPhone: phoneValidation(10),
   elements: Yup.array().of(
     Yup.object()
       .uniqueProperty(

@@ -65,12 +65,6 @@ class Listings extends Component {
     super(props)
     //this.getRowActions = this.getRowActions.bind(this)
     this.state = {
-      fixed: [
-        {
-          name: 'intProductName',
-          position: 2
-        }
-      ],
       columns: [
         { name: 'productGroupName', disabled: true },
         { name: 'productNumber', disabled: true },
@@ -454,7 +448,7 @@ class Listings extends Component {
       activeMarketplaceFilter,
       isOpenPopup
     } = this.props
-    const { columns, fixed, openFilterPopup } = this.state
+    const { columns, openFilterPopup } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -504,7 +498,6 @@ class Listings extends Component {
             {...datagrid.tableProps}
             rows={rows}
             columns={columns}
-            fixed={fixed}
             groupBy={['productNumber']}
             getChildGroups={rows =>
               _(rows)

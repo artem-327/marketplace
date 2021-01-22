@@ -23,6 +23,11 @@ export const BidsSent = props => {
           ]
         )
       }
+      if (v && v.initId) {
+        filters.or = filters.or.concat([
+          { operator: 'EQUALS', path: 'ProductOfferBid.id', values: [v.initId] },
+        ])
+      }
       return filters
     }
   }
