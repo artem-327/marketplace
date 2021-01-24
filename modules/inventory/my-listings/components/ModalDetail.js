@@ -108,6 +108,11 @@ const CustomDropdown = styled(Dropdown)`
 const CustomGridRow = styled(GridRow)`
   padding-top: 0px !important;
   padding-bottom: 0px !important;
+  
+  // fix for Firefox
+  textarea {
+    width: 100% !important;
+  }
 `
 
 const CustomGridColumn = styled(Grid.Column)`
