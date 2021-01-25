@@ -6,9 +6,9 @@ import {
   addressValidationSchema,
   einValidation,
   websiteValidationNotRequired,
-  dateValidation
+  dateValidation,
+  phoneValidation
 } from '~/constants/yupValidation'
-import { PHONE_REGEXP } from '~/utils/constants'
 import Router from 'next/router'
 //Services
 import { getObjectWithoutEmptyElements } from '~/services'
@@ -21,7 +21,7 @@ import { titleForms } from '../constants'
  */
 export const getValidationSchema = () =>
   Yup.lazy(values => {
-    const { requiredMessage, invalidString, invalidEmail, minLength, invalidPhoneNumber } = errorMessages
+    const { requiredMessage, invalidString, invalidEmail, minLength } = errorMessages
     const minLengthValue = 3
     const minLengthErr = minLength(minLengthValue)
 
@@ -51,7 +51,7 @@ export const getValidationSchema = () =>
       }),
       businessInfo: Yup.lazy(() => {
         return Yup.object().shape({
-          phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
+          phoneNumber: phoneValidation(10).required(requiredMessage),
           email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
           url: websiteValidationNotRequired(),
           address: addressValidationSchema(),
@@ -96,7 +96,7 @@ export const getValidationSchema = () =>
             firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
             lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
             email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
-            phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
+            phoneNumber: phoneValidation(10).required(requiredMessage),
             dateOfBirth: Yup.string()
               .test('min-age', errorMessages.aboveAge(18), val => moment().diff(getStringISODate(val), 'years') >= 18)
               .concat(dateValidation(true)),

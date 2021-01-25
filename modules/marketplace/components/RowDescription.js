@@ -39,8 +39,8 @@ class RowDescription extends React.Component {
     const fob = (
       <>
         <FormattedNumber
-          minimumFractionDigits={2}
-          maximumFractionDigits={2}
+          minimumFractionDigits={3}
+          maximumFractionDigits={3}
           style='currency'
           currency={currency}
           value={history.pricePerUOM}

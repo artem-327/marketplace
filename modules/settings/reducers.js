@@ -1585,6 +1585,21 @@ export default function reducer(state = initialState, action) {
         loading: true
       }
     }
+
+    case AT.DELETE_INSTITUTION_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.DELETE_INSTITUTION_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     /* VELLOCI_ADD_ACOUNT */
 
     case AT.VELLOCI_ADD_ACOUNT_PENDING: {
@@ -1592,13 +1607,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         isLoadingAddedAccounts: true,
         loading: true
-      }
-    }
-
-    case AT.DELETE_INSTITUTION_FULFILLED: {
-      return {
-        ...state,
-        loading: false
       }
     }
 
@@ -1610,12 +1618,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.DELETE_INSTITUTION_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
     case AT.VELLOCI_ADD_ACOUNT_REJECTED: {
       return {
         ...state,

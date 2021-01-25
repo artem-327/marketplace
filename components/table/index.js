@@ -970,6 +970,7 @@ class _Table extends Component {
       showColumnsWhenGrouped = false,
       lockSelection,
       groupActions,
+      groupActionsIcon,
       hideSettingsIcon,
       highlightRow,
       showSelectionColumn,
@@ -1220,7 +1221,8 @@ class _Table extends Component {
                       column: { actions: groupActions ? groupActions(props.row) : null },
                       row: props.row,
                       groupLength: getChildGroups(rows).find(group => props.row.value === group.key).groupLength,
-                      isBankTable
+                      isBankTable,
+                      menuIcon: groupActionsIcon
                     })}
                     {...props}
                   />

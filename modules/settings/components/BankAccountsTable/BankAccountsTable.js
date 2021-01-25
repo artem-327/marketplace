@@ -482,7 +482,8 @@ class BankAccountsTable extends Component {
       isOpenPopupDeleteInstitution,
       closePopup,
       deleteInstitution,
-      institutId
+      institutId,
+      reloadBankAccounts
     } = this.props
     const { formatMessage } = intl
     return (
@@ -492,6 +493,7 @@ class BankAccountsTable extends Component {
           closePopup={closePopup}
           deleteInstitution={deleteInstitution}
           institutId={institutId}
+          reloadBankAccounts={reloadBankAccounts}
         />
         {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
           <div className='flex stretched settings_bankaccounts listings-wrapper'>
@@ -514,32 +516,33 @@ class BankAccountsTable extends Component {
               }
               groupActions={row => {
                 return [
-                  {
-                    text: formatMessage({
-                      id: 'settings.accounts.viewInactiveAccounts',
-                      defaultMessage: 'View Inactive Accounts'
-                    }),
-                    callback: async () => {
-                      try {
-                        await this.props.hideInactiveAccounts(false)
-                      } catch (e) {
-                        console.error(e)
+                  this.props.isHideInactiveAccounts
+                    ? {
+                        text: formatMessage({
+                          id: 'settings.accounts.viewInactiveAccounts',
+                          defaultMessage: 'View Inactive Accounts'
+                        }),
+                        callback: async () => {
+                          try {
+                            await this.props.hideInactiveAccounts(false)
+                          } catch (e) {
+                            console.error(e)
+                          }
+                        }
                       }
-                    }
-                  },
-                  {
-                    text: formatMessage({
-                      id: 'settings.accounts.hideInactiveAccounts',
-                      defaultMessage: 'Hide Inactive Accounts'
-                    }),
-                    callback: async () => {
-                      try {
-                        await this.props.hideInactiveAccounts(true)
-                      } catch (e) {
-                        console.error(e)
-                      }
-                    }
-                  },
+                    : {
+                        text: formatMessage({
+                          id: 'settings.accounts.hideInactiveAccounts',
+                          defaultMessage: 'Hide Inactive Accounts'
+                        }),
+                        callback: async () => {
+                          try {
+                            await this.props.hideInactiveAccounts(true)
+                          } catch (e) {
+                            console.error(e)
+                          }
+                        }
+                      },
                   {
                     text: formatMessage({
                       id: 'settings.accounts.deleteInstitutions',

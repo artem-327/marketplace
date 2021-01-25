@@ -134,7 +134,7 @@ class CompanyModal extends React.Component {
                   .email(errorMessages.invalidEmail)
                   .required(errorMessages.invalidEmail),
                 contactName: Yup.string().trim().min(2, minLength).required(minLength),
-                contactPhone: Yup.string().trim().required(errorMessages.enterPhoneNumber),
+                contactPhone: phoneValidation(10).concat(Yup.string().required(errorMessages.requiredMessage)),
                 address: addressValidationSchema()
               })
             })
@@ -146,7 +146,7 @@ class CompanyModal extends React.Component {
             addressName: minOrZeroLength(3),
             contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
             contactName: Yup.string().trim().min(2, minLength).required(minLength),
-            contactPhone: phoneValidation().concat(Yup.string().required(errorMessages.requiredMessage)),
+            contactPhone: phoneValidation(10).concat(Yup.string().required(errorMessages.requiredMessage)),
             address: addressValidationSchema()
           })
         }),
