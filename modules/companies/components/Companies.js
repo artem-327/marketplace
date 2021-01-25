@@ -4,7 +4,7 @@ import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 import TableHandlers from './TableHandlers'
 import { withAuth } from '~/hocs'
-import { connect } from "react-redux"
+import { connect } from 'react-redux'
 
 import CompaniesTable from './CompaniesTable/Table'
 import UsersTable from './UsersTable/Table'
@@ -14,13 +14,13 @@ import AddEditCompanySidebar from './CompaniesTable/AddEditCompanySidebar'
 import UsersSidebar from './UsersTable/UsersSidebar'
 
 const tables = {
-  'companies': <CompaniesTable />,
-  'users': <UsersTable />
+  companies: <CompaniesTable />,
+  users: <UsersTable />
 }
 
 const sidebars = {
-  'companies': <AddEditCompanySidebar />,
-  'users': <UsersSidebar />
+  companies: <AddEditCompanySidebar />,
+  users: <UsersSidebar />
 }
 
 class Companies extends Component {
@@ -32,27 +32,26 @@ class Companies extends Component {
   getApiConfig = () => {
     const { currentTab } = this.props
     const datagridApiMap = {
-      'companies': {
+      companies: {
         url: '/prodex/api/companies/datagrid',
         searchToFilter: v => {
-          return (
-            v && v.searchInput
-              ? [
-                {operator: 'LIKE', path: 'Company.name', values: [`%${v.searchInput}%`]},
-                {operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v.searchInput}%`]}
+          return v && v.searchInput
+            ? [
+                { operator: 'LIKE', path: 'Company.name', values: [`%${v.searchInput}%`] },
+                { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v.searchInput}%`] },
+                { operator: 'LIKE', path: 'Company.dba', values: [`%${v.searchInput}%`] }
               ]
-              : []
-          )
+            : []
         }
       },
-      'users': {
+      users: {
         url: `/prodex/api/users/datagrid/all`,
         searchToFilter: v => {
           let filters = { or: [], and: [] }
           if (v && v.searchInput) {
             filters.or = [
-              {operator: 'LIKE', path: 'User.name', values: [`%${v.searchInput}%`]},
-              {operator: 'LIKE', path: 'User.email', values: [`%${v.searchInput}%`]},
+              { operator: 'LIKE', path: 'User.name', values: [`%${v.searchInput}%`] },
+              { operator: 'LIKE', path: 'User.email', values: [`%${v.searchInput}%`] },
               {
                 operator: 'LIKE',
                 path: 'User.homeBranch.deliveryAddress.contactName',
@@ -61,9 +60,7 @@ class Companies extends Component {
             ]
           }
           if (v && v.company) {
-            filters.and = [
-              {operator: 'EQUALS', path: 'User.homeBranch.company.id', values: [v.company]}
-            ]
+            filters.and = [{ operator: 'EQUALS', path: 'User.homeBranch.company.id', values: [v.company] }]
           }
           return filters
         }
@@ -76,21 +73,13 @@ class Companies extends Component {
   renderContent = () => {
     const { currentTab } = this.props
 
-    return (
-      <>
-        {tables[currentTab] || <p>This page is still under construction</p>}
-      </>
-    )
+    return <>{tables[currentTab] || <p>This page is still under construction</p>}</>
   }
 
   render() {
     const { currentTab, isOpenSidebar } = this.props
     return (
-      <DatagridProvider
-        apiConfig={this.getApiConfig()}
-        preserveFilters={true}
-        skipInitLoad
-      >
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={true} skipInitLoad>
         <Container fluid className='flex stretched'>
           <div style={{ padding: '20px 30px 0' }}>
             <TableHandlers currentTab={currentTab} />
