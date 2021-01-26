@@ -12,8 +12,7 @@ export const DivRectangleForm = styled.div`
   text-align: initial;
   position: relative;
   margin-bottom: 20px;
-  height: ${props =>
-    props.activeStep === 4 || props.activeStep === 5 ? '1000px' : props.activeStep === 6 ? '400px' : '860px'};
+  height: auto;
 `
 
 export const DivTitleRectangleForm = styled.div`
