@@ -31,7 +31,7 @@ import {
   Button as ButtonSemantic
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
-import { SelectTemplates, TemplateTitle, TemplateRow, TemplateWrapper, TemplateApply, TemplateDelete } from './styles'
+import { SelectTemplates, TdsHeader, TdsActions, TemplateTitle, TemplateGrid, TemplateRow, TemplateColumn, TemplateWrapper, TemplateApply, TemplateDelete } from './styles'
 import { Trash, PlusCircle, X as XIcon, Plus, Trash2, ChevronDown, ChevronUp, Folder } from 'react-feather'
 
 import {
@@ -51,7 +51,10 @@ import {
   downloadAttachment,
   closeModalDetail,
   getProductOffer,
-  removeAttachmentLinkProductOffer
+  removeAttachmentLinkProductOffer,
+  saveTdsAsTemplate,
+  getTdsTemplates,
+  deleteTdsTemplate
 } from '../../actions'
 import { Broadcast } from '~/modules/broadcast'
 import { openBroadcast } from '~/modules/broadcast/actions'
@@ -449,7 +452,9 @@ class ModalDetail extends Component {
     detailValues: null,
     initValues: initValues,
     attachmentFiles: [],
-    isOpenOptionalInformation: false
+    isOpenOptionalInformation: false,
+    openedTdsList: false,
+    openedTdsSaveAs: false
   }
 
   componentDidMount = async () => {
@@ -1082,6 +1087,10 @@ class ModalDetail extends Component {
     )
   }
 
+  closeTdsModal = () => {
+    this.setState({ openedTdsList: false, openedTdsSaveAs: false })
+  }
+
   render() {
     let {
       // addProductOffer,
@@ -1112,8 +1121,11 @@ class ModalDetail extends Component {
       inventoryGrid,
       isLoadingBroadcast,
       autocompleteDataLoading,
-      broadcastTemplates
+      broadcastTemplates,
+      tdsTemplatesLoading,
+      tdsTemplates
     } = this.props
+    const { openedTdsList, openedTdsSaveAs } = this.state
 
     const leftWidth = 6
     const rightWidth = 10
@@ -1306,8 +1318,10 @@ class ModalDetail extends Component {
             touched,
             setTouched,
             setFieldTouched,
+            setValues,
             setFieldValue,
             validateForm,
+            validateField,
             submitForm,
             setSubmitting,
             resetForm
@@ -2080,31 +2094,59 @@ class ModalDetail extends Component {
                                 <Grid>
                                   <Grid.Row>
                                     <Grid.Column width={6}>
-                                      <Modal trigger={
-                                        <SelectTemplates>
-                                          <Folder />
-                                          <FormattedMessage id='addInventory.selectFromTemplates' defaultMessage='Select From Templates' />
-                                        </SelectTemplates>
-                                      }>
-                                        <Modal.Header>
+                                      <Modal
+                                        trigger={
+                                          <SelectTemplates
+                                            onClick={() => {
+                                              this.props.getTdsTemplates()
+                                              this.setState({ openedTdsList: true })
+                                            }}
+                                          >
+                                            <Folder />
+                                            <FormattedMessage id='addInventory.selectFromTemplates' defaultMessage='Select From Templates' />
+                                          </SelectTemplates>
+                                        }
+                                        open={openedTdsList}
+                                        onClose={this.closeTdsModal}
+                                      >
+                                        <TdsHeader>
                                           <FormattedMessage id='addInventory.tdsTemplates' defaultMessage='TDS Templates' />
-                                        </Modal.Header>
+                                        </TdsHeader>
                                         <Modal.Content>
+                                          <Dimmer inverted active={tdsTemplatesLoading}>
+                                            <Loader active={tdsTemplatesLoading} />
+                                          </Dimmer>
                                           <TemplateTitle>
                                             <FormattedMessage id='addInventory.tdsTemplates.savedTemplates' defaultMessage='Saved Templates' />
                                           </TemplateTitle>
-                                          <Grid>
-                                            <TemplateRow>
-                                              <TemplateWrapper>
-                                                <TemplateApply>
-                                                  <FormattedMessage id='global.apply' defaultMessage='Apply' />
-                                                </TemplateApply>
-                                              </TemplateWrapper>
-                                              <TemplateDelete icon>
-                                                <Trash2 />
-                                              </TemplateDelete>
-                                            </TemplateRow>
-                                          </Grid>
+                                          <TemplateGrid>
+                                            {tdsTemplates.map(({ id, name, template }) => (
+                                              <TemplateRow>
+                                                <TemplateWrapper>
+                                                  {name}
+                                                  <TemplateApply
+                                                    onClick={() => {
+                                                      const tdsFields = JSON.parse(template)
+                                                      setValues({
+                                                        ...values,
+                                                        edit: {
+                                                          ...values.edit,
+                                                          tdsFields: tdsFields
+                                                        }
+                                                      })
+                                                      setFieldTouched('edit.tdsFields[0].property', true, false)
+                                                      this.closeTdsModal()
+                                                    }}
+                                                  >
+                                                    <FormattedMessage id='global.apply' defaultMessage='Apply' />
+                                                  </TemplateApply>
+                                                </TemplateWrapper>
+                                                <TemplateDelete icon onClick={() => this.props.deleteTdsTemplate(id)}>
+                                                  <Trash2 />
+                                                </TemplateDelete>
+                                              </TemplateRow>
+                                            ))}
+                                          </TemplateGrid>
                                         </Modal.Content>
                                       </Modal>
                                     </Grid.Column>
@@ -2454,6 +2496,68 @@ class ModalDetail extends Component {
                           ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
                           : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
                       </Button>
+                      <Modal
+                        trigger={(
+                          <Button
+                            primary
+                            size='large'
+                            type='button'
+                            onClick={() => {
+                              this.setState({ openedTdsSaveAs: true })
+                            }}
+                            data-test='modal_inventory_save_as'>
+                            {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
+                          </Button>
+                        )}
+                        open={openedTdsSaveAs}
+                        onClose={this.closeTdsModal}
+                      >
+                        <TdsHeader>
+                          <FormattedMessage id='addInventory.tdsTemplates' defaultMessage='TDS Templates' />
+                        </TdsHeader>
+                        <Modal.Content>
+                          <TemplateTitle>
+                            <FormattedMessage id='addInventory.tdsTemplates.saveAsTemplate' defaultMessage='Save as Template' />
+                          </TemplateTitle>
+                          <TemplateGrid>
+                            <TemplateRow>
+                              <TemplateColumn>
+                                <Input
+                                  name='templateName'
+                                  inputProps={{
+                                    fluid: true
+                                  }}
+                                  placeholder={formatMessage({ id: 'addInventory.tdsTemplates.enterTemplateName', defaultMessage: 'Enter Template Name' })}
+                                />
+                              </TemplateColumn>
+                            </TemplateRow>
+                          </TemplateGrid>
+                        </Modal.Content>
+                        <TdsActions>
+                          <Button
+                            basic
+                            floated='right'
+                            onClick={async () => {
+                              let tdsFields = []
+                              if (getSafe(() => values.edit.tdsFields.length, '')) {
+                                values.edit.tdsFields.forEach((item, index) => {
+                                  if (getSafe(() => item.property, '')) tdsFields.push(item)
+                                })
+                              }
+                              if (!values.templateName) {
+                                /*console.log('PROPS', formikProps)
+                                validateField('templateName')
+                                submitForm()*/
+                                return false
+                              }
+                              await this.props.saveTdsAsTemplate(values.templateName, JSON.stringify(tdsFields))
+                              this.closeTdsModal()
+                            }}
+                          >
+                            <FormattedMessage id='global.save' defaultMessage='Save' />
+                          </Button>
+                        </TdsActions>
+                      </Modal>
                       <Button
                         disabled={!(Object.keys(touched).length || this.state.changedForm)}
                         primary
@@ -2539,7 +2643,10 @@ const mapDispatchToProps = {
   closeModalDetail,
   getProductOffer,
   removeAttachmentLinkProductOffer,
-  getTemplates
+  getTemplates,
+  saveTdsAsTemplate,
+  getTdsTemplates,
+  deleteTdsTemplate
 }
 
 const mapStateToProps = (
@@ -2562,7 +2669,9 @@ const mapStateToProps = (
       searchedProductsLoading,
       warehousesList,
       listDocumentTypes,
-      editProductOfferInitTrig
+      editProductOfferInitTrig,
+      tdsTemplatesLoading,
+      tdsTemplates
     },
     broadcast
   },
@@ -2589,7 +2698,9 @@ const mapStateToProps = (
   currencySymbol: '$',
   inventoryGrid,
   isLoadingBroadcast: getSafe(() => broadcast.loading, false),
-  broadcastTemplates: getSafe(() => broadcast.templates, [])
+  broadcastTemplates: getSafe(() => broadcast.templates, []),
+  tdsTemplatesLoading,
+  tdsTemplates
 })
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ModalDetail))))

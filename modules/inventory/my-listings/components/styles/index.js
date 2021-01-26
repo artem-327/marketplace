@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Grid, Header, Button } from 'semantic-ui-react'
+import { Grid, Modal, Header, Button } from 'semantic-ui-react'
 
 export const SelectTemplates = styled(Button)`
   width: auto !important;
@@ -17,19 +17,48 @@ export const SelectTemplates = styled(Button)`
   }
 `
 
+export const TdsHeader = styled(Modal.Header)`
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #20273a !important;
+`
+
+export const TdsActions = styled(Modal.Actions)`
+  background: #fff !important;
+
+  &:after {
+    content: "";
+    clear: both;
+    display: block;
+  }
+`
+
 export const TemplateTitle = styled(Header)`
+  margin-top: 0 !important;
   padding-left: 9px !important;
   padding-right: 9px !important;
-  font-size: 14px;
-  font-weight: 400;
-  color: #404040;
-  line-height: 20px;
+  padding-bottom: 6px !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #404040 !important;
+  line-height: 20px !important;
+`
+
+export const TemplateGrid = styled(Grid)`
+  padding-bottom: 2em !important;
 `
 
 export const TemplateRow = styled(Grid.Row)`
   display: flex;
   flex-flow: row nowrap;
-  padding: 1rem 23px 1rem 23px !important;
+  padding: 1px 23px 1px 23px !important;
+`
+
+export const TemplateColumn = styled(Grid.Column)`
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 `
 
 export const TemplateWrapper = styled.div`
