@@ -202,7 +202,7 @@ export const getBody = values => {
  * @param {number} activeStep The index of active page.
  * @param {function} nextStep The redux action which moves user to the next page.
  */
-export const submitForm = async (formikProps, activeStep, nextStep) => {
+export const submitForm = async (formikProps, activeStep, nextStep, mainContainer) => {
   formikProps
     .validateForm()
     .then(errors => {
@@ -210,6 +210,7 @@ export const submitForm = async (formikProps, activeStep, nextStep) => {
         formikProps.handleSubmit()
       } else if ((_.isEmpty(errors) && activeStep !== 6) || (!errors[titleForms[activeStep]] && activeStep !== 6)) {
         nextStep(activeStep + 1)
+        mainContainer.current.scroll({top: 0, left: 0, behavior: 'smooth'})
         formikProps.setErrors({})
       }
     })

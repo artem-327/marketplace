@@ -48,7 +48,8 @@ const mapStateToProps = store => ({
       tinNumber: '',
       naicsCode: ''
     }
-  }
+  },
+  mainContainer: store.layout.mainContainer
 })
 
 const mapDispatchToProps = {
