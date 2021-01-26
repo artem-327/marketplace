@@ -848,3 +848,9 @@ export const DatePickerWrapper = styled.div`
   cursor: default;
 }
 `
+
+export const DivDatepickerHeader = styled.div`
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+`
