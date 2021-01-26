@@ -18,8 +18,23 @@ export const ROLES_ENUM = [
   { name: 'Order Operator', id: 37, propertyName: 'isOrderOperator' }
 ]
 
+/**
+ * Links translation table.
+ * key (left side) is requested page address
+ * value (right side) is translated page address (existing in the current FE version)
+ * - parameters used in required page url are included automatically
+ * - please, do not change existing key values in a list, add another line instead
+ */
 export const LINK_TRANSLATE_TABLE = {
+  '/marketplace/listings': '/marketplace/listings',
+  '/inventory/my-listings': '/inventory/my-listings',
+  '/wanted-board/listings': '/wanted-board/listings',
   '/my-purchase-request': '/wanted-board/listings',
-  '/test-link/for-testing': '/marketplace/bids-sent'
+  '/wanted-board/bids-sent': '/wanted-board/bids-sent',
+  '/wanted-board/bids-received': '/wanted-board/bids-received',
+  '/orders/detail': '/orders/detail',
+  '/velloci/beneficial-owners': '/velloci/beneficial-owners',
+  '/velloci/bank-accounts': '/velloci/bank-accounts',
+  '/marketplace/bids-sent': '/marketplace/bids-sent',
+  '/marketplace/bids-received': '/marketplace/bids-received'
 }
-
