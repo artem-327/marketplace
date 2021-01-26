@@ -24,6 +24,17 @@ export function getVellociToken(magicToken) {
   }
 }
 /**
+ * @param {string} magicToken
+ * @apiType GET
+ * @apiPath /users/me/magic-token
+ */
+export function getVellociBusinessId(magicToken) {
+  return {
+    type: AT.GET_VELLOCI_BUSINESS_ID,
+    payload: api.getVellociBusinessId(magicToken)
+  }
+}
+/**
  * @param {string} publicToken
  * @param {object} metadata
  * @apiType POST

@@ -13,6 +13,12 @@ export default {
       .then(response => response.data)
       .catch(err => console.error(err.message)),
 
+  getVellociBusinessId: magicToken =>
+    api
+      .get(`/prodex/api/users/me/magic-token?token=${magicToken}`)
+      .then(response => response.data)
+      .catch(err => console.error(err.message)),
+
   addVellociAcount: (publicToken, metadata) =>
     api
       .post(`/prodex/api/payments/bank-accounts/velloci/add/magic-token?publicToken=${publicToken}`, metadata)
