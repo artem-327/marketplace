@@ -1575,6 +1575,8 @@
   "addInventory.selectFromTemplates": "Select From Templates",
   "addInventory.tdsTemplates": "TDS Templates",
   "addInventory.tdsTemplates.savedTemplates": "Saved Templates",
+  "addInventory.tdsTemplates.saveAsTemplate": "Save as Template",
+  "addInventory.tdsTemplates.enterTemplateName": "Enter Template Name",
   "administration": "ADMINISTRATION",
   "administration.newCompanyName": "New Company Name",
   "administration.companies": "Companies",
