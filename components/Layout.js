@@ -344,7 +344,7 @@ class Layout extends Component {
         </g>
       </svg>
     )
-    let gravatarSrc = getSafe(() => auth.identity.gravatarSrc)
+    let gravatarSrc = getSafe(() => auth.identity.avatar)
     if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
 
     const { mainClass, copyrightClassName } = this.state

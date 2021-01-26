@@ -5,14 +5,12 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validati
 import * as Yup from 'yup'
 import moment from 'moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
 import { getLanguages } from '~/modules/settings/actions'
-
 import { getSafe } from '~/utils/functions'
-
 import { FormattedDateTime } from '~/components/formatted-messages/'
 import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import UploadAttachment from '../../inventory/components/upload/UploadAttachment'
 
 import {
   closePopup,
@@ -20,8 +18,16 @@ import {
   getCurrencies,
   updateMyProfile,
   openChangePasswordPopup,
-  setPreferredLanguage
+  setPreferredLanguage,
+  loadFile,
+  saveAvatarPicture
 } from '../actions'
+
+/* // ! !
+import {
+  loadFile
+} from '../../settings/actions'
+*/
 
 const initialFormValues = {
   name: '',
@@ -59,7 +65,9 @@ class MyProfile extends Component {
       languages,
       languagesFetching,
       tutorialCompleted,
-      setPreferredLanguage
+      setPreferredLanguage,
+      loadFile,
+      saveAvatarPicture,
     } = this.props
 
     return (
@@ -141,6 +149,27 @@ class MyProfile extends Component {
                     value: lang.language
                   }))}
                 />
+                <UploadAttachment
+                  filesLimit={1}
+                  fileMaxSize={20}
+                  onChange={files => (files.length ? saveAvatarPicture(files[0]) : null)}
+                  attachments={popupValues && popupValues.avatar ? [popupValues.avatar] : []}
+                  emptyContent={
+                    <div>
+                      prazdny obsah
+                    </div>
+                  }
+                  uploadedContent={
+                    <div>
+                      {popupValues && (
+                        <img
+                          src={popupValues.avatar}
+                        />
+                      )}
+                    </div>
+                  }
+                />
+
                 <FormattedMessage id='profile.lastLoginAt' defaultMessage='Last login at:' />{' '}
                 {popupValues && popupValues.lastLoginAt}
                 <div style={{ textAlign: 'right' }}>
@@ -181,7 +210,9 @@ const mapDispatchToProps = {
   updateMyProfile,
   openChangePasswordPopup,
   getLanguages,
-  setPreferredLanguage
+  setPreferredLanguage,
+  loadFile,
+  saveAvatarPicture
 }
 
 const mapStateToProps = state => {
@@ -190,23 +221,23 @@ const mapStateToProps = state => {
   return {
     popupValues: popupValues
       ? {
-          email: popupValues.email,
-          name: popupValues.name,
-          phone: popupValues.phone,
-          jobTitle: popupValues.jobTitle,
-          // preferredCurrency: popupValues.preferredCurrency && popupValues.preferredCurrency.id,
-          language: getSafe(() => popupValues.preferredLanguage.language),
-          lastLoginAt:
-            state.auth.identity.lastLoginAt &&
-            getSafe(
-              () =>
-                moment(state.auth.identity.lastLoginAt)
-                  .toDate()
-                  .toLocaleString(),
-              null
-            )
-        }
-      : null,
+        email: popupValues.email,
+        name: popupValues.name,
+        phone: popupValues.phone,
+        jobTitle: popupValues.jobTitle,
+        // preferredCurrency: popupValues.preferredCurrency && popupValues.preferredCurrency.id,
+        language: getSafe(() => popupValues.preferredLanguage.language),
+        lastLoginAt:
+          state.auth.identity.lastLoginAt &&
+          getSafe(
+            () =>
+              moment(state.auth.identity.lastLoginAt)
+                .toDate()
+                .toLocaleString(),
+            null
+          ),
+        avatar: popupValues.avatar
+    } : null,
     // currencies: state.profile.currency && state.profile.currency.map(d => {
     //   return {
     //     id: d.id,
