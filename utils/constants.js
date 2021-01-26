@@ -26,6 +26,7 @@ export const ROLES_ENUM = [
  * - please, do not change existing key values in a list, add another line instead
  */
 export const LINK_TRANSLATE_TABLE = {
+  /* The following paths will be deleted after some time, new emails will NOT use this */
   '/marketplace/listings': '/marketplace/listings',
   '/inventory/my-listings': '/inventory/my-listings',
   '/wanted-board/listings': '/wanted-board/listings',
@@ -36,5 +37,17 @@ export const LINK_TRANSLATE_TABLE = {
   '/velloci/beneficial-owners': '/velloci/beneficial-owners',
   '/velloci/bank-accounts': '/velloci/bank-accounts',
   '/marketplace/bids-sent': '/marketplace/bids-sent',
-  '/marketplace/bids-received': '/marketplace/bids-received'
+  '/marketplace/bids-received': '/marketplace/bids-received',
+
+  /* These paths will be used in all new emails, keep the names as in backend endpoints */
+  '/broadcasted-product-offers': '/marketplace/listings',
+  '/own-product-offers': '/inventory/my-listings',
+  '/other-purchase-requests': '/wanted-board/listings',
+  '/own-purchase-request-offers': '/wanted-board/bids-sent',
+  '/own-purchase-requests': '/wanted-board/bids-received',
+  '/order-detail': '/orders/detail',
+  '/beneficial-owners': '/velloci/beneficial-owners',
+  '/bank-accounts': '/velloci/bank-accounts',
+  '/own-product-offer-bids': '/marketplace/bids-sent',
+  '/other-product-offer-bids': '/marketplace/bids-received'
 }
