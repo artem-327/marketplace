@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { Input } from 'formik-semantic-ui-fixed-validation'
 

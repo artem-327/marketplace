@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'

@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Form, FormGroup, Divider, Accordion, Icon, Header, Loader, Dimmer } from 'semantic-ui-react'
@@ -30,7 +30,7 @@ const StyledDiv = styled.div`
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   background-color: #ffffff;
   border: solid 1px #dee2e6;
-  margin: 16px 0; 
+  margin: 16px 0;
 `
 
 const BottomButtons = styled.div`
@@ -63,7 +63,7 @@ const initialFormValues = {
   website: ''
 }
 
-class GuestCompanyInfo extends React.Component {
+class GuestCompanyInfo extends Component {
   state = {
     companyLogo: null,
     shouldUpdateLogo: false
@@ -184,14 +184,8 @@ const mapDispatchToProps = {
 const mapStateToProps = ({ manageGuests }) => {
   return {
     ...manageGuests,
-    popupValues: manageGuests.companyEditValues,
+    popupValues: manageGuests.companyEditValues
   }
 }
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(GuestCompanyInfo)))
-
-
-
-
-
-

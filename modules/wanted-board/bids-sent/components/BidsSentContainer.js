@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { connect } from 'react-redux'
 import moment from 'moment/moment'

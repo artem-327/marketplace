@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
@@ -100,7 +100,7 @@ const initialFormValues = {
   }
 }
 
-class CompanyModal extends React.Component {
+class CompanyModal extends Component {
   state = {
     primaryBranchHasProvinces: false,
     mailingBranchHasProvinces: false,

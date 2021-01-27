@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import '~/components/AddInventory.scss'
 import Spinner from '~/components/Spinner/Spinner'
 import { Grid, Segment, Accordion, Table, List, Button, Icon, Divider, Header, GridRow, Modal } from 'semantic-ui-react'

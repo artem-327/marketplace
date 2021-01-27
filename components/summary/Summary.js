@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 import { string, array, func, number, node } from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'

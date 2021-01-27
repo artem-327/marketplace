@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import cn from 'classnames'
 import moment from 'moment/moment'
 import { debounce } from 'lodash'

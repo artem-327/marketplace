@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { string, number } from 'prop-types'
 
 import styled from 'styled-components'

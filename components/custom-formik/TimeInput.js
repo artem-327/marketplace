@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { string } from 'prop-types'
 import styled from 'styled-components'
-import { Field, getIn} from 'formik'
+import { Field, getIn } from 'formik'
 import { getSafe } from '~/utils/functions'
 import { getFieldError, setFieldValue } from './helpers'
 import { Form } from 'semantic-ui-react'
@@ -12,12 +12,12 @@ export const FieldWrapper = styled(Form.Field)`
   > .field-label {
     margin: 0em 0em 0.428571429em 0em;
   }
-  
+
   .field.input-time .ui.input {
     input {
       width: 120px !important;
     }
-  }  
+  }
 `
 
 export default class TimeInput extends Component {
@@ -27,22 +27,22 @@ export default class TimeInput extends Component {
     hour12: false
   }
 
-  getFormattedTime = (time) => {
+  getFormattedTime = time => {
     const time24h = moment(time.trim(), ['hh:mm a', 'HH:mm'])
     if (!time24h.isValid()) return time
     if (this.state.hour12) return time24h.format('hh:mm A')
     else return time24h.format('HH:mm')
   }
 
-  getTimeIn24hFormat = (time) => {
+  getTimeIn24hFormat = time => {
     const time24h = moment(time.trim(), ['hh:mm a', 'HH:mm'])
     if (time24h.isValid()) return time24h.format('HH:mm')
     else return false
   }
 
   componentDidMount() {
-    const locale = (navigator && navigator.language.split('-') || ['en'])[0]
-    const hour12 = new Intl.DateTimeFormat(locale, {hour: 'numeric'}).resolvedOptions().hour12
+    const locale = ((navigator && navigator.language.split('-')) || ['en'])[0]
+    const hour12 = new Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions().hour12
 
     this.setState({
       timeValue: this.field.value,
@@ -76,7 +76,7 @@ export default class TimeInput extends Component {
           const error = getFieldError(field, form)
           return (
             <FieldWrapper error={!!error} {...fieldProps}>
-              {!!label && (<div className='field-label'>{label}</div>)}
+              {!!label && <div className='field-label'>{label}</div>}
               <SemanticTimeInput
                 className='input-time'
                 name={name}
@@ -112,7 +112,7 @@ export default class TimeInput extends Component {
 }
 
 TimeInput.propTypes = {
-  name: string,
+  name: string
 }
 
 TimeInput.defaultProps = {

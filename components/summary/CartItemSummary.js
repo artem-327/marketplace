@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { array, string, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { Grid, GridRow, GridColumn, Header, Divider, Segment, Button, Icon, Modal, FormGroup } from 'semantic-ui-react'

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { LoginForm } from '~/modules/auth'
 import styled from 'styled-components'
 import Layout from '~/components/LayoutUnauthorized'

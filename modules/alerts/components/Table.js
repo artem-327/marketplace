@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
@@ -310,7 +310,7 @@ class Table extends Component {
     const { columns, expandedRowIds } = this.state
 
     return (
-      <React.Fragment>
+      <Fragment>
         {selectedRows.length ? (
           <NotificationsCount>
             {selectedRows.length === 1 ? (
@@ -369,7 +369,7 @@ class Table extends Component {
             estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
           />
         </div>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { cloneElement, Component } from 'react'
 import { bool, oneOf } from 'prop-types'
 import { connect } from 'react-redux'
 import { Formik } from 'formik'
@@ -326,7 +326,7 @@ class Settings extends Component {
                                       </BottomMargedRow>
                                     </Grid>
 
-                                    {React.cloneElement(
+                                    {cloneElement(
                                       typeToComponent(el.type, {
                                         props: {
                                           ...getSafe(() => JSON.parse(el.frontendConfig).props),

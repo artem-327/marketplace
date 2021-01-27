@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import confirm from '~/components/Confirmable/confirm'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -340,7 +340,7 @@ class ProductCatalogTable extends Component {
     let { columns } = this.state
 
     return (
-      <React.Fragment>
+      <Fragment>
         <div className='flex stretched listings-wrapper'>
           <ProdexTable
             tableName='admin_product-catalog'
@@ -352,7 +352,7 @@ class ProductCatalogTable extends Component {
             editingRowId={editedId}
           />
         </div>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

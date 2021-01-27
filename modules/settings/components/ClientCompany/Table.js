@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import ProdexGrid from '~/components/table'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'

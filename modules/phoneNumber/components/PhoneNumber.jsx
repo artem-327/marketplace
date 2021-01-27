@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { string, object, bool, func } from 'prop-types'
 import { Field } from 'formik'
 import { FormField, Dropdown } from 'semantic-ui-react'
@@ -106,8 +106,8 @@ export default class PhoneNumber extends Component {
         phoneCountryCode: phone.phoneCountryCode
           ? phone.phoneCountryCode
           : this.state.phoneCountryCode
-            ? this.state.phoneCountryCode
-            : this.props.defaultCountryCode,
+          ? this.state.phoneCountryCode
+          : this.props.defaultCountryCode,
         phoneNumber: phone.phoneNumber,
         phoneFull: phone.phoneCountryCode.length ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber
       })
@@ -142,8 +142,8 @@ export default class PhoneNumber extends Component {
       name,
       phone.phoneNumber
         ? phone.phoneCountryCode && phone.phoneCountryCode.length
-        ? '+' + phone.phoneCountryCode + phone.phoneNumber
-        : phone.phoneNumber
+          ? '+' + phone.phoneCountryCode + phone.phoneNumber
+          : phone.phoneNumber
         : ''
     )
     setFieldTouched(name, true, true)
@@ -203,8 +203,8 @@ export default class PhoneNumber extends Component {
           name,
           phone.phoneNumber
             ? phone.phoneCountryCode && phone.phoneCountryCode.length
-            ? '+' + phone.phoneCountryCode + phone.phoneNumber
-            : phone.phoneNumber
+              ? '+' + phone.phoneCountryCode + phone.phoneNumber
+              : phone.phoneNumber
             : ''
         )
         setFieldTouched(name, true, true)

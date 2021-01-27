@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Grid, GridColumn, Segment, GridRow, Header, Button, Icon } from 'semantic-ui-react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import moment from 'moment'

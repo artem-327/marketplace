@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { createRef, Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
@@ -26,7 +26,7 @@ const StyledDropdown = styled(Dropdown)`
 class SearchInput extends Component {
   constructor(props) {
     super(props)
-    this.refDropdownMenu = React.createRef()
+    this.refDropdownMenu = createRef()
     this.state = {
       filterProductName: '',
       filterCasProduct: [],
@@ -81,7 +81,8 @@ class SearchInput extends Component {
       if (option) usedOptions.push(option)
     }
 
-    let filterProductName = [], filterCasProduct = []
+    let filterProductName = [],
+      filterCasProduct = []
     active.forEach(val => {
       if (val.charAt(0) === 'p') filterProductName.push(parseInt(val.substring(2)))
       if (val.charAt(0) === 'c') filterCasProduct.push(parseInt(val.substring(2)))
@@ -105,7 +106,8 @@ class SearchInput extends Component {
       if (data.value.some(val => val === el.value)) newUsedOptions.push(el)
     })
 
-    let filterProductName = [], filterCasProduct = []
+    let filterProductName = [],
+      filterCasProduct = []
     data.value.forEach(val => {
       if (val.charAt(0) === 'p') filterProductName.push(val.substring(2))
       if (val.charAt(0) === 'c') filterCasProduct.push(parseInt(val.substring(2)))
@@ -131,13 +133,13 @@ class SearchInput extends Component {
     } = this.props
     const { active, usedOptions, searchQuery } = this.state
 
-    const searchedCasProducts = casProducts.slice().filter(el =>
-      !active.length || !active.some(opt => opt === el.value))
+    const searchedCasProducts = casProducts
+      .slice()
+      .filter(el => !active.length || !active.some(opt => opt === el.value))
 
-    const searchedProducts =  products.slice().filter(el =>
-      !active.length || !active.some(opt => opt === el.value))
+    const searchedProducts = products.slice().filter(el => !active.length || !active.some(opt => opt === el.value))
 
-    const allOptions = uniqueArrayByKey((products.concat(casProducts)).concat(usedOptions), 'key')
+    const allOptions = uniqueArrayByKey(products.concat(casProducts).concat(usedOptions), 'key')
 
     return (
       <Fragment>
@@ -163,43 +165,40 @@ class SearchInput extends Component {
             defaultMessage: 'Start typing to begin search'
           })}
           onChange={(e, data) => this.handleDeleteClick(e, data)}
-          onSearchChange={this.handleSearchChange}
-        >
+          onSearchChange={this.handleSearchChange}>
           <Dropdown.Menu>
             <Dimmer inverted active={loading}>
               <Loader />
             </Dimmer>
             {getSafe(() => searchedProducts.length, '')
               ? searchedProducts.map(option => {
-                return option && option.text ? (
-                  <Dropdown.Item
-                    key={option.key}
-                    text={option.text}
-                    value={option.value}
-                    active={active.some(val => val === option.value)}
-                    onClick={(e, data) => this.handleClick(e, data, false)}
-                  />
-                ) : null
-              })
+                  return option && option.text ? (
+                    <Dropdown.Item
+                      key={option.key}
+                      text={option.text}
+                      value={option.value}
+                      active={active.some(val => val === option.value)}
+                      onClick={(e, data) => this.handleClick(e, data, false)}
+                    />
+                  ) : null
+                })
               : null}
             <Dropdown.Divider />
             <DivSearchTitleInOption>
               {formatMessage({ id: 'wantedBoard.showByCasProduct', defaultMessage: 'Show by CAS Product:' })}
             </DivSearchTitleInOption>
-            {
-              searchedCasProducts.map(option => {
-                return (
-                  <Dropdown.Item
-                    key={option.key}
-                    text={option.text}
-                    value={option.value}
-                    content={option.content}
-                    active={active.some(val => val === option.value)}
-                    onClick={(e, data) => this.handleClick(e, data, true)}
-                  />
-                )
-              })
-            }
+            {searchedCasProducts.map(option => {
+              return (
+                <Dropdown.Item
+                  key={option.key}
+                  text={option.text}
+                  value={option.value}
+                  content={option.content}
+                  active={active.some(val => val === option.value)}
+                  onClick={(e, data) => this.handleClick(e, data, true)}
+                />
+              )
+            })}
           </Dropdown.Menu>
         </StyledDropdown>
       </Fragment>
@@ -222,24 +221,24 @@ const mapStateToProps = state => {
     loading: state.wantedBoard.componentSearchProductsLoading || state.wantedBoard.componentSearchCasLoading,
     products: getSafe(() => state.wantedBoard.componentSearchProducts.length, '')
       ? state.wantedBoard.componentSearchProducts.map(product => {
-        return {
-          key: `p_${product.id}`,
-          text: product.name,
-          value: `p_${product.id}`
-        }
-      })
+          return {
+            key: `p_${product.id}`,
+            text: product.name,
+            value: `p_${product.id}`
+          }
+        })
       : [],
     casProducts: getSafe(() => state.wantedBoard.componentSearchCas.length, '')
       ? state.wantedBoard.componentSearchCas.map(cas => {
-        const casIndexName = getSafe(() => cas.casIndexName, '')
-        const casNumber = getSafe(() => cas.casNumber, '')
-        return {
-          key: `c_${cas.id}`,
-          text: `${casNumber ? casNumber + ' ' : ''} ${casIndexName}`,
-          value: `c_${cas.id}`,
-          content: <Header content={casNumber} subheader={casIndexName} style={{ fontSize: '1em' }} />
-        }
-      })
+          const casIndexName = getSafe(() => cas.casIndexName, '')
+          const casNumber = getSafe(() => cas.casNumber, '')
+          return {
+            key: `c_${cas.id}`,
+            text: `${casNumber ? casNumber + ' ' : ''} ${casIndexName}`,
+            value: `c_${cas.id}`,
+            content: <Header content={casNumber} subheader={casIndexName} style={{ fontSize: '1em' }} />
+          }
+        })
       : []
   }
 }

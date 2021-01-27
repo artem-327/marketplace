@@ -43,7 +43,7 @@ import { agreeWithTOS } from '~/modules/auth/actions'
 import { triggerSystemSettingsModal } from '~/modules/settings/actions'
 
 import Profile from '~/modules/profile/components/Profile'
-import React, { Component } from 'react'
+import { createRef, Component } from 'react'
 import Router from 'next/router'
 import { getSafe } from '~/utils/functions'
 import { injectIntl, FormattedMessage } from 'react-intl'
@@ -101,8 +101,8 @@ class Layout extends Component {
 
   constructor(props) {
     super(props)
-    this.navigationPS = React.createRef()
-    this.mainContainer = React.createRef()
+    this.navigationPS = createRef()
+    this.mainContainer = createRef()
   }
 
   componentDidMount() {

@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
@@ -42,8 +42,7 @@ const formValidation = () =>
     })
   )
 
-class ShippingQuotesPopup extends React.Component {
-
+class ShippingQuotesPopup extends Component {
   handleSearch = debounce(text => {
     this.props.searchManualQuoteRequest(text)
   }, 250)
@@ -64,18 +63,17 @@ class ShippingQuotesPopup extends React.Component {
     } = this.props
 
     const formatedSearchedManQuotRequests = searchedManQuotRequests.map(val => ({
-        key: val.id,
-        value: val.id,
-        text: `${val.id} - ${val.requestingCompany.name}`,
-        content: (
-          <Header
-            content={`${val.id} - ${val.requestingCompany.name}`}
-            subheader={val.requestingUser.name}
-            style={{ fontSize: '14px' }}
-          />
-        )
-      })
-    )
+      key: val.id,
+      value: val.id,
+      text: `${val.id} - ${val.requestingCompany.name}`,
+      content: (
+        <Header
+          content={`${val.id} - ${val.requestingCompany.name}`}
+          subheader={val.requestingUser.name}
+          style={{ fontSize: '14px' }}
+        />
+      )
+    }))
 
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
@@ -98,7 +96,7 @@ class ShippingQuotesPopup extends React.Component {
                 quoteId: values.quoteId,
                 price: Number(values.price),
                 ...(values.validityDate !== '' && { validityDate: getStringISODate(values.validityDate) }),
-                ...(values.shippingQuoteRequestId !=='' && { shippingQuoteRequestId: values.shippingQuoteRequestId })
+                ...(values.shippingQuoteRequestId !== '' && { shippingQuoteRequestId: values.shippingQuoteRequestId })
               }
 
               try {
@@ -197,8 +195,7 @@ class ShippingQuotesPopup extends React.Component {
                         search: options => options,
                         selection: true,
                         clearable: true,
-                        onSearchChange: (e, { searchQuery }) =>
-                          searchQuery.length > 0 && this.handleSearch(searchQuery)
+                        onSearchChange: (e, { searchQuery }) => searchQuery.length > 0 && this.handleSearch(searchQuery)
                       }}
                       fieldProps={{ width: 8 }}
                     />

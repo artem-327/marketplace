@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Button, Input } from 'formik-semantic-ui-fixed-validation'
 import _ from 'lodash'
 import { string, object } from 'prop-types'
@@ -18,19 +18,19 @@ export const QuantityWrapper = styled.div`
     position: relative;
     > .field {
       margin: 0 !important;
-      
+
       // Chrome, Safari, Edge, Opera
-      input[type=number]::-webkit-outer-spin-button,
-      input[type=number]::-webkit-inner-spin-button {
+      input[type='number']::-webkit-outer-spin-button,
+      input[type='number']::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
       }
 
       // Firefox
-      input[type=number] {
+      input[type='number'] {
         -moz-appearance: textfield;
       }
-      
+
       .ui.input input {
         padding-right: 47px;
         background-color: #fdfdfd;
@@ -70,7 +70,7 @@ export const QuantityWrapper = styled.div`
           background: #fff6f6;
           border-color: #e0b4b4;
           color: #9f3a38;
-        }        
+        }
       }
     }
   }
@@ -78,11 +78,7 @@ export const QuantityWrapper = styled.div`
 
 export default class QuantityInput extends Component {
   render() {
-    const {
-      name,
-      inputProps,
-      label
-    } = this.props
+    const { name, inputProps, label } = this.props
 
     return (
       <Field
@@ -97,43 +93,38 @@ export default class QuantityInput extends Component {
 
           return (
             <QuantityWrapper>
-              {label && (<div className='field-label'>{label}</div>)}
+              {label && <div className='field-label'>{label}</div>}
               <div>
-                <Input
-                  name={name}
-                  inputProps={inputProps}
-                />
+                <Input name={name} inputProps={inputProps} />
                 <div className='sideButtons'>
                   <Button
                     type='button'
                     className={`buttonPlus ${error ? 'error' : ''}`}
                     onClick={() => {
                       if (isNaN(value) || value === '') {
-                        const initVal = max !== null ? max : (min !== null ? min : 1)
+                        const initVal = max !== null ? max : min !== null ? min : 1
                         setFieldValue(form, name, initVal, true)
-                      }
-                      else {
+                      } else {
                         const val = parseInt(value)
-                        if (max === null || val < max)
-                          setFieldValue(form, name, val + 1, true)
+                        if (max === null || val < max) setFieldValue(form, name, val + 1, true)
                       }
-                    }}
-                  >+</Button>
+                    }}>
+                    +
+                  </Button>
                   <Button
                     type='button'
                     className={`buttonMinus ${error ? 'error' : ''}`}
                     onClick={() => {
-                      if (isNaN(value) || value === '' ) {
-                        const initVal = min !== null ? min : (max !== null ? max : 1)
+                      if (isNaN(value) || value === '') {
+                        const initVal = min !== null ? min : max !== null ? max : 1
                         setFieldValue(form, name, initVal, true)
-                      }
-                      else {
+                      } else {
                         const val = parseInt(value)
-                        if (min === null || val > min)
-                          setFieldValue(form, name, val - 1, true)
+                        if (min === null || val > min) setFieldValue(form, name, val - 1, true)
                       }
-                    }}
-                  >-</Button>
+                    }}>
+                    -
+                  </Button>
                 </div>
               </div>
             </QuantityWrapper>

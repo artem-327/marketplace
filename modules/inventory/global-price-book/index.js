@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 //import MyProductsPage from './components/MyProducts'
 import PriceBook from '~/modules/settings/components/PriceBook'
 import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'

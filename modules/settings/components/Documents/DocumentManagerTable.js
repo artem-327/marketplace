@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'

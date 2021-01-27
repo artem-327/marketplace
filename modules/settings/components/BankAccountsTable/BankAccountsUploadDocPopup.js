@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Grid, GridRow, FormGroup, FormField } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -44,7 +44,7 @@ export const CustomSpanFiles = styled.span`
   font-style: italic !important;
 `
 
-class BankAccountsUploadDocPopup extends React.Component {
+class BankAccountsUploadDocPopup extends Component {
   componentDidMount() {
     if (!this.props.verificationDocumentTypes.length) this.props.dwollaGetVerificationDocumentTypes()
   }

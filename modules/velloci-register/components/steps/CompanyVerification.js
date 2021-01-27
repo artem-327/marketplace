@@ -1,4 +1,3 @@
-import React from 'react'
 import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'

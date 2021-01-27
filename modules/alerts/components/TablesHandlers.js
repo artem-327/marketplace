@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Input, Dropdown } from 'semantic-ui-react'
 import { debounce } from 'lodash'
@@ -235,24 +235,17 @@ class TablesHandlers extends Component {
             <MoreDropdown
               className='ui dropdown-menu pointing'
               icon={null}
-              text={formatMessage({ id: 'alerts.dropdown.more', defaultMessage: 'More ...' })}
-            >
+              text={formatMessage({ id: 'alerts.dropdown.more', defaultMessage: 'More ...' })}>
               <Dropdown.Menu data-test='notifications_menu_more_drpdn'>
-                <Dropdown.Item
-                  disabled={!selectedRows.length}
-                  onClick={() => this.handleMarkAsSeen()}>
+                <Dropdown.Item disabled={!selectedRows.length} onClick={() => this.handleMarkAsSeen()}>
                   <Drafts className={'menu-icon'} />
                   <FormattedMessage id='alerts.dropdown.markAsRead' defaultMessage='Mark as read' />
                 </Dropdown.Item>
-                <Dropdown.Item
-                  disabled={!selectedRows.length}
-                  onClick={() => this.handleMarkAsUnseen()}>
+                <Dropdown.Item disabled={!selectedRows.length} onClick={() => this.handleMarkAsUnseen()}>
                   <Drafts className={'menu-icon'} />
                   <FormattedMessage id='alerts.dropdown.markAsUnread' defaultMessage='Mark as unread' />
                 </Dropdown.Item>
-                <Dropdown.Item
-                  disabled={!selectedRows.length}
-                  onClick={() => this.handleDelete()}>
+                <Dropdown.Item disabled={!selectedRows.length} onClick={() => this.handleDelete()}>
                   <Drafts className={'menu-icon'} />
                   <FormattedMessage id='alerts.dropdown.delete' defaultMessage='Delete' />
                 </Dropdown.Item>

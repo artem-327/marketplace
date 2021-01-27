@@ -1,4 +1,3 @@
-import * as React from "react"
 import {
   TableLayout as TableLayoutCore,
   StaticTableLayout

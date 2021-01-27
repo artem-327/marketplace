@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Logout } from '~/modules/auth'
 import { withRouter } from 'next/router'
 

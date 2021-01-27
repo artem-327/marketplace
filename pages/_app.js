@@ -1,5 +1,4 @@
 import App from 'next/app'
-import React from 'react'
 import withRedux from 'next-redux-wrapper'
 import { makeStore } from '~/store'
 import { Provider } from 'react-redux'

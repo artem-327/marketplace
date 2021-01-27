@@ -1,4 +1,3 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
 import { Input } from 'formik-semantic-ui-fixed-validation'

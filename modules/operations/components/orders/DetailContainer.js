@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import React from 'react'
 import Detail from './Detail'
 import * as Actions from '../../actions'
 import * as OrdersHelper from '~/components/helpers/Orders'

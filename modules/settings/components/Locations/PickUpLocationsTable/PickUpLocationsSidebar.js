@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
 import { Formik } from 'formik'
@@ -196,7 +196,7 @@ const formValidation = () =>
     })
   })
 
-class PickUpLocationsSidebar extends React.Component {
+class PickUpLocationsSidebar extends Component {
   state = {
     editTab: 0,
     attachmentFiles: [],

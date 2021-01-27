@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import _ from 'lodash'

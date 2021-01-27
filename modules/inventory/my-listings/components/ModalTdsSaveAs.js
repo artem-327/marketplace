@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { TdsActions, TdsHeader, TemplateColumn, TemplateGrid, TemplateRow, TemplateTitle } from './styles'
 import { getSafe } from '~/utils/functions'
 import * as val from 'yup'

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
 import { Container, Grid, GridColumn } from 'semantic-ui-react'
@@ -195,12 +195,12 @@ class Operations extends Component {
         searchToFilter: v =>
           v && v.searchInput
             ? [
-              {
-                operator: 'LIKE',
-                path: 'CompanyGenericProductRequest.productName',
-                values: [`%${v.searchInput}%`]
-              }
-            ]
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyGenericProductRequest.productName',
+                  values: [`%${v.searchInput}%`]
+                }
+              ]
             : []
       }
     }
@@ -251,6 +251,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withAuth(
-  connect(mapStateToProps, Actions)(Operations)
-)
+export default withAuth(connect(mapStateToProps, Actions)(Operations))

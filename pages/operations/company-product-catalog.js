@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
 import OperationsPage from '~/modules/operations'
@@ -11,10 +11,10 @@ class Index extends Component {
     } = this.props
     return (
       <Layout
-        title={
-          formatMessage({ id: 'title.companies.company-product-catalog', defaultMessage: 'Company Product Catalog' })
-        }
-      >
+        title={formatMessage({
+          id: 'title.companies.company-product-catalog',
+          defaultMessage: 'Company Product Catalog'
+        })}>
         <OperationsPage currentTab={'company-product-catalog'} />
       </Layout>
     )

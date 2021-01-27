@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
@@ -16,7 +16,7 @@ const ModalBody = styled(ModalContent)`
 
 const initValues = {}
 
-class SaleNewShipping extends React.Component {
+class SaleNewShipping extends Component {
   submitHandler = async (values, actions) => {
     const { closePopup } = this.props
 

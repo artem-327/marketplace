@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, FormGroup, Modal, Button, Dimmer, Loader, Segment, FormField } from 'semantic-ui-react'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'

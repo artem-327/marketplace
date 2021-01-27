@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { logout } from '~/modules/auth/actions'
 import { chatWidgetTerminate } from '~/modules/chatWidget/actions'

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { array, string } from 'prop-types'
 import styled from 'styled-components'
 import { GridColumn, GridRow } from 'semantic-ui-react'

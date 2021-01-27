@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Form, FormGroup, Header, Loader, Dimmer, Segment } from 'semantic-ui-react'
@@ -89,7 +89,7 @@ const initialFormValues = {
   }
 }
 
-class AddEditGuestCompanySidebar extends React.Component {
+class AddEditGuestCompanySidebar extends Component {
   state = {}
 
   formValidationNew = () =>

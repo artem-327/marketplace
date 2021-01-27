@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { PureComponent, Component } from 'react'
 import { connect } from 'react-redux'
 import pt from 'prop-types'
 import { Getter, Plugin } from '@devexpress/dx-react-core'
@@ -58,12 +58,14 @@ const GlobalTableOverrideStyle = createGlobalStyle`
       padding: .5rem;
     }
   }
-  ${isFirefox &&
+  ${
+    isFirefox &&
     `
     .bootstrapiso > .flex-column {
       flex: 0 0 auto !important;
     }
-  `}
+  `
+  }
   .group-row {
     position: relative;
     background: #EEE;
@@ -337,7 +339,7 @@ const SortLabel = ({ column, onSort, children, direction }) => (
   </span>
 )
 
-class PatchedIntegratedSelection extends React.PureComponent {
+class PatchedIntegratedSelection extends PureComponent {
   render() {
     const { lockSelection, ...restProps } = this.props
     var allRows = []
@@ -363,7 +365,7 @@ class PatchedIntegratedSelection extends React.PureComponent {
   }
 }
 
-class PatchedTableSelection extends React.PureComponent {
+class PatchedTableSelection extends PureComponent {
   render() {
     const { lockSelection, ...restProps } = this.props
     const rowSelectionEnabled = row => !lockSelection.includes(row.id)

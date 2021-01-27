@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -70,11 +70,11 @@ const StyledForm = styled(Form)`
             padding: 4px 6px 6px 6px;
           }
 
-          &.price { 
+          &.price {
             .ui.input > input {
               padding-left: 44px;
             }
-          
+
             > div.label {
               left: 6px;
               color: #84c225;
@@ -82,11 +82,11 @@ const StyledForm = styled(Form)`
             }
           }
 
-          &.quantity { 
+          &.quantity {
             .ui.input > input {
               padding-right: 94px;
             }
-            
+
             > div.label {
               right: 6px;
               color: #848893;
@@ -226,7 +226,7 @@ const validationSchema = min =>
     )
   })
 
-class QuickEditPricingPopup extends React.Component {
+class QuickEditPricingPopup extends Component {
   componentDidMount() {
     if (this.props.focusInput && typeof this[this.props.focusInput] !== 'undefined') this[this.props.focusInput].focus()
   }
