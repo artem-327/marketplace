@@ -11,6 +11,7 @@ import { FormattedDateTime } from '~/components/formatted-messages/'
 import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import UploadAttachment from '../../inventory/components/upload/UploadAttachment'
+import { getIdentity } from '../../auth/actions'
 
 import {
   closePopup,
@@ -68,6 +69,7 @@ class MyProfile extends Component {
       setPreferredLanguage,
       loadFile,
       saveAvatarPicture,
+      getIdentity,
     } = this.props
 
     return (
@@ -152,7 +154,16 @@ class MyProfile extends Component {
                 <UploadAttachment
                   filesLimit={1}
                   fileMaxSize={20}
-                  onChange={files => (files.length ? saveAvatarPicture(files[0]) : null)}
+                  onChange={async files => {
+                    if (files.length) {
+                      try {
+                        await saveAvatarPicture(files[0])
+                        getIdentity()
+                      } catch (error) {
+                        console.error(error)
+                      }
+                    }
+                  }}
                   attachments={popupValues && popupValues.avatar ? [popupValues.avatar] : []}
                   emptyContent={
                     <div>
@@ -212,6 +223,7 @@ const mapDispatchToProps = {
   getLanguages,
   setPreferredLanguage,
   loadFile,
+  getIdentity,
   saveAvatarPicture
 }
 
