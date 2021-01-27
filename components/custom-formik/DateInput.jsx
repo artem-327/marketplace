@@ -251,12 +251,7 @@ renderCustomHeader={calendarProps => {
                         onChange && onChange(e, { name, value: val })
                       })
                     }}
-                    dateFormat={
-                      getLocaleDateFormat()
-                        .replace(/D/g, 'd')
-                        .replace(/m/g, 'M')
-                        .replace(/Y/g, 'y')
-                    }
+                    dateFormat={getLocaleDateFormat(false)}
                   />
                 </DatePickerWrapper>
 

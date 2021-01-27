@@ -1,13 +1,19 @@
 import moment from 'moment'
 
-/*
-    All date formats are from https://en.wikipedia.org/wiki/Date_format_by_country 
-    and changed(CAPITAL LETTERS) 'Tokens'(dd, mm, yyyy) based on moment library https://momentjscom.readthedocs.io/en/latest/moment/04-displaying/01-format/
-    Returns string short date format based on country (For example: 'D. M. YYYY')
-*/
-export const getLocaleDateFormat = () => {
+/**
+ * Function obtains a date format based on web browser language settings.
+ *
+ * @param {boolean} momentFormat Specifies whether 'moment' format is used (true) or 'date-fns' format is used
+ * @return {string} Short date format based on country (For example: 'D. M. YYYY')
+ * All date formats are from https://en.wikipedia.org/wiki/Date_format_by_country
+ * and changed(CAPITAL LETTERS) 'Tokens'(dd, mm, yyyy) based on moment library https://momentjscom.readthedocs.io/en/latest/moment/04-displaying/01-format/
+ * Date format is compatible with 'moment' package and components using 'moment' package internally,
+ * or with 'date-fns' package and components using 'date-fns' package internally based on parameter 'momentFormat'.
+ * Default format is 'moment' (momentFormat = true).
+ */
+export const getLocaleDateFormat = (momentFormat = true) => {
   if (typeof navigator === 'undefined') {
-    return
+    return momentFormat ? 'MM/DD/YYYY' : 'MM/dd/yyyy'
   }
 
   const formats = {
@@ -136,7 +142,13 @@ export const getLocaleDateFormat = () => {
     sr: 'D.M.YYYY'
   }
 
-  return formats[navigator.language.slice(0, 2)] || 'MM/DD/YYYY'
+  const format = formats[navigator.language.slice(0, 2)] || 'MM/DD/YYYY'
+  return momentFormat
+    ? format
+    : format
+      .replace(/D/g, 'd')
+      .replace(/m/g, 'M')
+      .replace(/Y/g, 'y')
 }
 
 /*
@@ -154,10 +166,14 @@ export const getLocaleDateFormat = () => {
         success: '2019-12-31T12:10:07+01:00'
     }
 */
+
+/**
+ * Function returns date in ISO format.
+ *
+ * @param {string} stringDate Date in locale format.
+ * @return {string} Date in ISO format
+ */
 export const getStringISODate = (stringDate = '') => {
-  if (typeof navigator === 'undefined') {
-    return
-  }
   let h = '00'
   let m = '00'
   //added better regex expresion for time in string
@@ -591,6 +607,10 @@ export const getStringISODate = (stringDate = '') => {
       stringISODate: () => moment(getDateYMD(stringDate, '-')).set({ h, m }).format()
     }
   }
-  const result = formats[navigator.language.slice(0, 2)] || formats['en']
+
+  const result = typeof navigator === 'undefined'
+    ? formats['en']
+    : formats[navigator.language.slice(0, 2)] || formats['en']
+
   return result.stringISODate()
 }
