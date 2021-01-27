@@ -526,3 +526,31 @@ export function closePopup(rows = null) {
     payload: rows
   }
 }
+
+export function saveTdsAsTemplate(templateName, tdsFields) {
+  return {
+    type: AT.TDS_SAVE_AS_TEMPLATE,
+    async payload() {
+      return await api.saveTdsAsTemplate(templateName, tdsFields)
+    }
+  }
+}
+
+export function getTdsTemplates() {
+  return {
+    type: AT.TDS_GET_TEMPLATES,
+    async payload() {
+      return await api.getTdsTemplates()
+    }
+  }
+}
+
+export function deleteTdsTemplate(templateId) {
+  return {
+    type: AT.TDS_DELETE_TEMPLATE,
+    async payload() {
+      const response = await api.deleteTdsTemplate(templateId)
+      return templateId
+    }
+  }
+}
