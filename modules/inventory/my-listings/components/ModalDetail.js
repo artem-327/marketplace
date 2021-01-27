@@ -1602,7 +1602,10 @@ class ModalDetail extends Component {
                                                       onChange: (e, { value }) => {
                                                         value = parseInt(value)
                                                         if (value > 1 && !isNaN(value)) {
-                                                          setFieldValue('minimumRequirement', true)
+                                                          setFieldValue(
+                                                            'priceTiers.pricingTiers[0].quantityFrom',
+                                                            value
+                                                          )
                                                           // It seems to do bug when created new inventory
                                                           // value is adding in handleSubmit
                                                           //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
