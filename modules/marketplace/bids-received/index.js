@@ -5,23 +5,9 @@ export const BidsReceived = props => {
   const urlApiConfig = {
     url: '/prodex/api/product-offer-bids/other/datagrid',
     searchToFilter: v => {
-      let filters = { or: [], and: [] }
+      let filters = { or: [], and: [], url: '' }
       if (v && v.searchInput) {
-        filters.or = filters.or.concat(
-          [
-            { operator: 'LIKE', path: 'ProductOfferBid.createdBy.name', values: [`%${v.searchInput}%`] },
-            {
-              operator: 'LIKE',
-              path: 'ProductOfferBid.histories.createdBy.homeBranch.company.name',
-              values: [`%${v.searchInput}%`]
-            },
-            {
-              operator: 'LIKE',
-              path: 'ProductOfferBid.histories.createdBy.homeBranch.company.cfDisplayName',
-              values: [`%${v.searchInput}%`]
-            },
-          ]
-        )
+        filters.url = `/prodex/api/product-offer-bids/other/search?pattern=${v.searchInput}`
       }
       if (v && v.initId) {
         filters.or = filters.or.concat([
