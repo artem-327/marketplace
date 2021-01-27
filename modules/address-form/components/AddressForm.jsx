@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FormGroup, Header, Popup, Dropdown as SemanticDropdown, FormField, Segment } from 'semantic-ui-react'
@@ -339,7 +339,7 @@ class AddressForm extends Component {
               onChange={this.handleChange}
               additionalInputProps={{
                 icon: null,
-                placeholder: formatMessage({ id: 'global.address.enterZip', defaultMessage: 'Enter Zip' }),
+                placeholder: formatMessage({ id: 'global.address.enterZip', defaultMessage: 'Enter Zip' })
               }}
               name={fields.zip}
               required={required}

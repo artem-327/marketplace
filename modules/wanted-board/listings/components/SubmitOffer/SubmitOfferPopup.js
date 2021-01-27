@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../../actions'
 import {
@@ -333,7 +333,7 @@ const DivExpirationDate = styled.div`
   }
 `
 
-class SubmitOfferPopup extends React.Component {
+class SubmitOfferPopup extends Component {
   state = {
     columns: [
       {
@@ -507,8 +507,7 @@ class SubmitOfferPopup extends React.Component {
             return Yup.object().shape({
               ...fulfilledAt,
               ...pkgAmount,
-              pricePerUOM: Yup
-                .number()
+              pricePerUOM: Yup.number()
                 .min(0.001, errorMessages.minimum(0.001))
                 .typeError(errorMessages.mustBeNumber)
                 .test('maxdec', errorMessages.maxDecimals(3), val => {

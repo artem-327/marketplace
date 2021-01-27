@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Header, Modal, FormGroup, Accordion, Icon, Popup } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -34,7 +34,7 @@ const formValidation = Yup.object().shape({
   dwollaController: dwollaControllerValidation()
 })
 
-class BankAccountsPopup extends React.Component {
+class BankAccountsPopup extends Component {
   state = {
     accordionActive: {
       controllerAddress: true
@@ -114,7 +114,7 @@ class BankAccountsPopup extends React.Component {
 
               try {
                 await postDwollaAccount(payload)
-                 closeDwollaPopup()
+                closeDwollaPopup()
               } catch (e) {
                 console.error(e)
               } finally {

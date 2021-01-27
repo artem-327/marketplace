@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { bool, string, func, array } from 'prop-types'

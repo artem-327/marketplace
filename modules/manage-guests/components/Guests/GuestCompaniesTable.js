@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import ProdexGrid from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
 import { connect } from 'react-redux'
@@ -120,12 +120,7 @@ class GuestCompaniesTable extends Component {
   }
 
   getActions = () => {
-    const {
-      datagrid,
-      intl,
-      deleteClientCompany,
-      openCompanyEdit
-    } = this.props
+    const { datagrid, intl, deleteClientCompany, openCompanyEdit } = this.props
     const { formatMessage } = intl
 
     return [

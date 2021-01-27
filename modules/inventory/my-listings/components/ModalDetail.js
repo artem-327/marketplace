@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Button, Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -306,7 +306,7 @@ const listConforming = [
   }
 ]
 
-val.addMethod(val.number, 'divisibleBy', function(ref, message) {
+val.addMethod(val.number, 'divisibleBy', function (ref, message) {
   return this.test({
     name: 'divisibleBy',
     exclusive: false,
@@ -314,7 +314,7 @@ val.addMethod(val.number, 'divisibleBy', function(ref, message) {
     params: {
       reference: ref.path
     },
-    test: function(value) {
+    test: function (value) {
       const divisedBy = parseInt(this.resolve(ref))
       if (!divisedBy || isNaN(divisedBy)) return false
 
@@ -323,8 +323,8 @@ val.addMethod(val.number, 'divisibleBy', function(ref, message) {
   })
 })
 
-val.addMethod(val.object, 'uniqueProperty', function(propertyName, message) {
-  return this.test('unique', message, function(value) {
+val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
+  return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
       return true
     }
@@ -351,10 +351,7 @@ const validationScheme = val.lazy(values => {
   if (values.edit.costPerUOM === '') values.edit.costPerUOM = null
   return val.object().shape({
     edit: val.object().shape({
-      product: val
-        .number()
-        .typeError(errorMessages.requiredMessage)
-        .required(errorMessages.requiredMessage),
+      product: val.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
       fobPrice: val
         .number()
         .min(0.001, errorMessages.minimum(0.001))
@@ -372,10 +369,7 @@ const validationScheme = val.lazy(values => {
         .test('maxdec', errorMessages.maxDecimals(3), val => {
           return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
         }),
-      lotNumber: val
-        .string()
-        .typeError(errorMessages.invalidString)
-        .nullable(),
+      lotNumber: val.string().typeError(errorMessages.invalidString).nullable(),
       inStock: val.bool().required(errorMessages.requiredMessage),
       minimum: val
         .number()
@@ -395,10 +389,7 @@ const validationScheme = val.lazy(values => {
       // .test('match', errorMessages.greaterOrEqual(values.edit.minimum), function (pkgAvailable) {
       //   return typeof values.edit.minimum === 'undefined' || pkgAvailable >= values.edit.minimum
       // }),
-      leadTime: val
-        .number()
-        .min(1, errorMessages.minimum(1))
-        .typeError(errorMessages.mustBeNumber),
+      leadTime: val.number().min(1, errorMessages.minimum(1)).typeError(errorMessages.mustBeNumber),
       splits: val
         .number()
         .min(1, errorMessages.minimum(1))
@@ -457,10 +448,7 @@ const validationScheme = val.lazy(values => {
               .test('maxdec', errorMessages.maxDecimals(3), val => {
                 return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
               }),
-            manuallyModified: val
-              .number()
-              .min(0)
-              .max(1)
+            manuallyModified: val.number().min(0).max(1)
           })
       )
     })

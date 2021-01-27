@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -32,10 +32,7 @@ const initialFormValues = {
 }
 
 const formValidation = Yup.object().shape({
-  name: Yup.string()
-    .trim()
-    .min(3, errorMessages.minLength(3))
-    .required(errorMessages.requiredMessage),
+  name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
   phone: phoneValidation(10)
 })
 
@@ -198,13 +195,7 @@ const mapStateToProps = state => {
           language: getSafe(() => popupValues.preferredLanguage.language),
           lastLoginAt:
             state.auth.identity.lastLoginAt &&
-            getSafe(
-              () =>
-                moment(state.auth.identity.lastLoginAt)
-                  .toDate()
-                  .toLocaleString(),
-              null
-            )
+            getSafe(() => moment(state.auth.identity.lastLoginAt).toDate().toLocaleString(), null)
         }
       : null,
     // currencies: state.profile.currency && state.profile.currency.map(d => {

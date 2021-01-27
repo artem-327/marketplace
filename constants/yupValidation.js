@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 import { getSafe, deepSearch } from '~/utils/functions'
 import { isValid } from 'ein-validator'
-import React from 'react'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]

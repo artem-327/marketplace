@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Container, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexGrid from '~/components/table'
@@ -82,7 +82,7 @@ class BidsReceived extends Component {
     const { tableHandlersFiltersBidsReceived, datagrid } = this.props
 
     if (tableHandlersFiltersBidsReceived) {
-      this.setState({filterValues: tableHandlersFiltersBidsReceived}, () => {
+      this.setState({ filterValues: tableHandlersFiltersBidsReceived }, () => {
         const filter = {
           ...this.state.filterValues
         }

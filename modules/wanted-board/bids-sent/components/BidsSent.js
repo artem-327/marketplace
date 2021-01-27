@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Container, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -270,13 +270,7 @@ class BidsSent extends Component {
     return this.getFilteredRows().map(r => {
       return {
         ...r,
-        product: (
-          <ActionCell
-            row={r}
-            getActions={this.getActions}
-            content={r.product}
-          />
-        )
+        product: <ActionCell row={r} getActions={this.getActions} content={r.product} />
       }
     })
   }

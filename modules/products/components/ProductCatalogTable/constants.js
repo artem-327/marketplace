@@ -1,5 +1,4 @@
 import { FormattedMessage } from 'react-intl'
-import React from 'react'
 
 export const tabs = [
   { text: { id: 'global.ep.edit', defaultMessage: 'Edit' }, key: 'edit' },

@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import { createRef, Component } from 'react'
 import { connect } from 'react-redux'
-import {Container, Label, Menu, Dropdown} from 'semantic-ui-react'
+import { Container, Label, Menu, Dropdown } from 'semantic-ui-react'
 import * as Actions from '../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { injectIntl } from 'react-intl'
@@ -13,51 +13,50 @@ const StyledMenu = styled(Menu)`
   &.ui.menu {
     height: 50px !important;
     min-height: 50px !important;
-  
+
     > .item {
       box-sizing: content-box !important;
       height: 17px !important;
       padding-top: 16px !important;
       padding-bottom: 17px !important;
-      
+
       > div.ui.circular.label {
         box-sizing: border-box !important;
         height: 20px !important;
         padding-top: 4px !important;
         padding-bottom: 4px !important;
       }
-      
+
       &.active {
         font-weight: 400 !important;
-      
+
         > div.ui.circular.label {
           padding-top: 5px !important;
           padding-bottom: 5px !important;
         }
-        
+
         &:hover {
           font-weight: 700 !important;
         }
       }
     }
-  
+
     > .item:not(.active) .ui.circular.label {
       border: solid 1px #dee2e6;
       background-color: #f8f9fb;
       color: #848893;
     }
-    
+
     > .active.item .ui.circular.label {
       background-color: #f16844;
       color: #ffffff;
     }
-    
+
     .ui.dropdown {
-    
       .text {
         height: 50px;
         line-height: 50px;
-      
+
         svg {
           width: 20px;
           height: 20px;
@@ -65,15 +64,15 @@ const StyledMenu = styled(Menu)`
           vertical-align: middle;
         }
       }
-    
+
       i.dropdown.icon {
         display: none;
       }
-    
+
       .menu {
         padding-top: 11px !important;
         padding-bottom: 9px !important;
-      
+
         > .item {
           box-sizing: content-box !important;
           height: 20px !important;
@@ -86,7 +85,7 @@ const StyledMenu = styled(Menu)`
           padding: 10px 10px 10px 17px !important;
           text-transform: uppercase !important;
           line-height: 20px;
-          
+
           > div.ui.circular.label {
             float: right;
             box-sizing: border-box !important;
@@ -98,17 +97,17 @@ const StyledMenu = styled(Menu)`
             background-color: #f8f9fb;
             color: #848893;
           }
-          
+
           &.active {
             border-color: #2599d5 !important;
             font-weight: 400;
-        
+
             > div.ui.circular.label {
               padding-top: 5px !important;
               padding-bottom: 5px !important;
             }
           }
-          
+
           &:hover {
             background: transparent !important;
             font-weight: 700 !important;
@@ -138,7 +137,7 @@ class HighMenu extends Component {
   constructor(props) {
     super(props)
 
-    this.refMenu = React.createRef()
+    this.refMenu = createRef()
     this.handleResize = this.handleResize.bind(this)
   }
 
@@ -165,50 +164,45 @@ class HighMenu extends Component {
     const dotsSpace = 20
     const menuStyles = window.getComputedStyle(notificationsMenu)
     let freeSpace = notificationsMenu.offsetWidth - parseInt(menuStyles.paddingLeft) - parseInt(menuStyles.paddingRight)
-    let nIndex = 0;
+    let nIndex = 0
 
     for (nIndex = 0; nIndex < notificationsMenu.children.length; nIndex++) {
       let notificationItem = notificationsMenu.children[nIndex]
-      if (notificationItem.tagName.toLowerCase() !== 'a')
-        continue
+      if (notificationItem.tagName.toLowerCase() !== 'a') continue
 
       const itemStyles = window.getComputedStyle(notificationItem)
-      let itemWidth = notificationItem.clientWidth
-                    + parseInt(itemStyles.marginLeft)
-                    + parseInt(itemStyles.marginRight)
+      let itemWidth = notificationItem.clientWidth + parseInt(itemStyles.marginLeft) + parseInt(itemStyles.marginRight)
 
-      if ((parseInt(itemWidth) + dotsSpace) < parseInt(freeSpace)) {
+      if (parseInt(itemWidth) + dotsSpace < parseInt(freeSpace)) {
         freeSpace -= parseInt(itemWidth)
       } else {
         break
       }
     }
 
-    this.setState({menuSpace: nIndex})
+    this.setState({ menuSpace: nIndex })
   }
 
   updateCategories = value => {
-    const { intl: { formatMessage }, topMenuTab } = this.props
+    const {
+      intl: { formatMessage },
+      topMenuTab
+    } = this.props
 
     // Generate menu items from returned Categories
     const menuItems = value.map(cat => {
       return {
         key: cat.category,
         name: cat.category,
-        content:
-          (
-            <>
-              {formatMessage({
-                id: `alerts.menu.${cat.category.toLowerCase()}`,
-                defaultMessage: cat.category.replace(/_/g, ' ')
-              })}
-              <CircularLabel
-                circular
-              >
-                {cat.newMessages}
-              </CircularLabel>
-            </>
-          ),
+        content: (
+          <>
+            {formatMessage({
+              id: `alerts.menu.${cat.category.toLowerCase()}`,
+              defaultMessage: cat.category.replace(/_/g, ' ')
+            })}
+            <CircularLabel circular>{cat.newMessages}</CircularLabel>
+          </>
+        ),
         onClick: () => this.loadData(cat.category),
         style: { textTransform: 'uppercase' },
         'data-test': `menu_alerts_${cat.category}`
@@ -224,7 +218,8 @@ class HighMenu extends Component {
         if (value.length && value.findIndex(cat => cat.category === topMenuTab) === -1) {
           this.loadData(value[0].category)
         }
-      })
+      }
+    )
   }
 
   loadData(category) {
@@ -233,58 +228,56 @@ class HighMenu extends Component {
   }
 
   render() {
-    const {
-      topMenuTab
-    } = this.props
+    const { topMenuTab } = this.props
 
-    const {
-      categories,
-      menuItems,
-      menuSpace
-    } = this.state
+    const { categories, menuItems, menuSpace } = this.state
 
     const activeIndex = categories.findIndex(cat => cat.category === topMenuTab)
 
     return (
       <Container fluid style={{ padding: '0 32px' }}>
         <div ref={this.refMenu}>
-          <StyledMenu
-            pointing
-            secondary
-            activeIndex={activeIndex}
-            >
-            {menuItems.map((item, itemIndex) =>
+          <StyledMenu pointing secondary activeIndex={activeIndex}>
+            {menuItems.map((item, itemIndex) => (
               <>
-                {menuSpace === 0 || menuSpace > itemIndex
-                  ? (
-                    <Menu.Item key={item.key} active={itemIndex === activeIndex} onClick={item.onClick} data-test={item['data-test']} style={{ textTransform: 'uppercase' }}>
-                      {item.content}
-                    </Menu.Item>
-                  )
-                  : (
-                    <Menu.Item key={item.key} active={itemIndex === activeIndex} onClick={item.onClick} data-test={item['data-test']} style={{ position: 'absolute', top: '-20000px', left: '-20000px', textTransform: 'uppercase' }}>
-                      {item.content}
-                    </Menu.Item>
-                  )
-                }
+                {menuSpace === 0 || menuSpace > itemIndex ? (
+                  <Menu.Item
+                    key={item.key}
+                    active={itemIndex === activeIndex}
+                    onClick={item.onClick}
+                    data-test={item['data-test']}
+                    style={{ textTransform: 'uppercase' }}>
+                    {item.content}
+                  </Menu.Item>
+                ) : (
+                  <Menu.Item
+                    key={item.key}
+                    active={itemIndex === activeIndex}
+                    onClick={item.onClick}
+                    data-test={item['data-test']}
+                    style={{ position: 'absolute', top: '-20000px', left: '-20000px', textTransform: 'uppercase' }}>
+                    {item.content}
+                  </Menu.Item>
+                )}
               </>
-            )}
-            {menuSpace > 0 && menuSpace < menuItems.length
-              ? (
-                <Dropdown text={<MoreHorizontal />} direction='left'>
-                  <Dropdown.Menu>
-                    {menuItems.map((item, itemIndex) => menuSpace <= itemIndex
-                      ? (
-                        <Dropdown.Item key={item.key} active={itemIndex === activeIndex} onClick={item.onClick} data-test={item['data-test']}>
-                          {item.content}
-                        </Dropdown.Item>
-                      )
-                      : null)}
-                  </Dropdown.Menu>
-                </Dropdown>
-              )
-              : null
-            }
+            ))}
+            {menuSpace > 0 && menuSpace < menuItems.length ? (
+              <Dropdown text={<MoreHorizontal />} direction='left'>
+                <Dropdown.Menu>
+                  {menuItems.map((item, itemIndex) =>
+                    menuSpace <= itemIndex ? (
+                      <Dropdown.Item
+                        key={item.key}
+                        active={itemIndex === activeIndex}
+                        onClick={item.onClick}
+                        data-test={item['data-test']}>
+                        {item.content}
+                      </Dropdown.Item>
+                    ) : null
+                  )}
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : null}
           </StyledMenu>
         </div>
       </Container>
@@ -301,4 +294,3 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(HighMenu)))
-

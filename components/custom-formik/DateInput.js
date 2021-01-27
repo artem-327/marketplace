@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Form } from 'semantic-ui-react'
 import { FastField, Field, getIn } from 'formik'
 import moment from 'moment'

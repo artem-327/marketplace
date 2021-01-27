@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import pt from 'prop-types'
 import { Input, Radio } from 'semantic-ui-react'
 import styled from 'styled-components'

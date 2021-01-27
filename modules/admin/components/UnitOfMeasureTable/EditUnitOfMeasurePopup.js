@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Modal, FormGroup } from 'semantic-ui-react'
@@ -22,7 +22,7 @@ const formValidation = Yup.object().shape({
     .required(errorMessages.requiredMessage)
 })
 
-class EditUnitOfMeasurePopup extends React.Component {
+class EditUnitOfMeasurePopup extends Component {
   render() {
     const { closeEditPopup, config, popupValues, putEditedDataRequest, measureOptions } = this.props
 

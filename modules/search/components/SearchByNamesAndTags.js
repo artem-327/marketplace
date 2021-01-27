@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { createRef, Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
@@ -48,7 +48,7 @@ const StyledDropdown = styled(Dropdown)`
 class SearchByNamesAndTags extends Component {
   constructor(props) {
     super(props)
-    this.refDropdownMenu = React.createRef()
+    this.refDropdownMenu = createRef()
     this.state = {
       filterName: '',
       filterTags: [],
@@ -111,7 +111,8 @@ class SearchByNamesAndTags extends Component {
       if (option) usedOptions.push(option)
     }
 
-    let filterName = [], filterTags = []
+    let filterName = [],
+      filterTags = []
     active.forEach(val => {
       if (val.charAt(0) === 'p') filterName.push(val.substring(2))
       if (val.charAt(0) === 't') filterTags.push(parseInt(val.substring(2)))
@@ -135,7 +136,8 @@ class SearchByNamesAndTags extends Component {
       if (data.value.some(val => val === el.value)) newUsedOptions.push(el)
     })
 
-    let filterName = [], filterTags = []
+    let filterName = [],
+      filterTags = []
     data.value.forEach(val => {
       if (val.charAt(0) === 'p') filterName.push(val.substring(2))
       if (val.charAt(0) === 't') filterTags.push(parseInt(val.substring(2)))
@@ -161,13 +163,13 @@ class SearchByNamesAndTags extends Component {
     } = this.props
     const { active, usedOptions, searchQuery } = this.state
 
-    const searchedTags = tags.slice().filter(el =>
-      !active.length || !active.some(opt => opt === el.value))
+    const searchedTags = tags.slice().filter(el => !active.length || !active.some(opt => opt === el.value))
 
-    const searchedProductOffers =  productOffers.slice().filter(el =>
-      !active.length || !active.some(opt => opt === el.value))
+    const searchedProductOffers = productOffers
+      .slice()
+      .filter(el => !active.length || !active.some(opt => opt === el.value))
 
-    const allOptions = uniqueArrayByKey((productOffers.concat(tags)).concat(usedOptions), 'key')
+    const allOptions = uniqueArrayByKey(productOffers.concat(tags).concat(usedOptions), 'key')
 
     return (
       <Fragment>

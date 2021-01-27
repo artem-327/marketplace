@@ -1,4 +1,3 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'

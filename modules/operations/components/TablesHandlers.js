@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Input, Dropdown } from 'semantic-ui-react'
 import { Input as FormikInput } from 'formik-semantic-ui-fixed-validation'

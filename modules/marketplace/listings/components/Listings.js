@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
 import { MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { connect } from 'react-redux'
 import MyListings from './MyListings'
 import * as Actions from '../../actions'

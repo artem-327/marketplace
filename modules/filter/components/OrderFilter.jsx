@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Button, Accordion, Segment, FormGroup, Icon } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'

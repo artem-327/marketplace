@@ -1,6 +1,5 @@
 import { FormattedMessage } from 'react-intl'
 import { getSafe, getFormattedAddress } from '~/utils/functions'
-import React from 'react'
 
 export const otherPermissions = [
   { value: 'NONE', id: 'NONE', text: 'None' },

@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { withComponents } from '@devexpress/dx-react-core'
 import { TableSelection as TableSelectionBase } from '@devexpress/dx-react-grid'
 import { TableSelectAllCell as HeaderCell } from '../templates/table-select-all-cell'

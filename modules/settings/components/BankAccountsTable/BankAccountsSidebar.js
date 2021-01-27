@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Form, FormGroup, Segment, Dimmer, Loader, Button } from 'semantic-ui-react'
@@ -80,7 +80,7 @@ const bankAccountType = [
   }
 ]
 
-class BankAccountsSidebar extends React.Component {
+class BankAccountsSidebar extends Component {
   submitHandler = async (values, { setSubmitting }) => {
     const { postNewDwollaBankAccountRequest, closeSidebar } = this.props
     try {

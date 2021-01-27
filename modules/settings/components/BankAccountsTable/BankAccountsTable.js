@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { Header, Modal, Form, Segment, Label, Table } from 'semantic-ui-react'
@@ -487,7 +487,7 @@ class BankAccountsTable extends Component {
     } = this.props
     const { formatMessage } = intl
     return (
-      <React.Fragment>
+      <Fragment>
         <ConfirmDeleteInstitution
           isOpenPopup={isOpenPopupDeleteInstitution}
           closePopup={closePopup}
@@ -669,7 +669,7 @@ class BankAccountsTable extends Component {
             )}
           </Container>
         )}
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

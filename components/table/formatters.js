@@ -1,4 +1,3 @@
-import React from 'react'
 import { Dropdown, Icon } from 'semantic-ui-react'
 import { MoreVertical } from 'react-feather'
 import { getSafe } from '~/utils/functions'

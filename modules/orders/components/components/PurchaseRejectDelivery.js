@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
@@ -53,7 +53,7 @@ const initValues = {
   reason: null
 }
 
-class PurchaseRejectDelivery extends React.Component {
+class PurchaseRejectDelivery extends Component {
   state = {
     reason: null
   }

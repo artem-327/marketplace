@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Segment, Grid, Header, Button } from 'semantic-ui-react'
@@ -23,7 +23,7 @@ const ARButton = styled(Button)`
   line-height: 20px !important;
 `
 
-class ActionsRequired extends React.Component {
+class ActionsRequired extends Component {
   confirmCall = d => {
     const {
       intl: { formatMessage }

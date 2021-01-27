@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { bool, func, object, string, array, number } from 'prop-types'
 import { debounce } from 'lodash'
@@ -51,7 +51,8 @@ export default class ZipDropdown extends Component {
       loading,
       label,
       required,
-      initialZipCodes } = this.props
+      initialZipCodes
+    } = this.props
 
     return (
       <Dropdown
@@ -61,7 +62,8 @@ export default class ZipDropdown extends Component {
           <>
             {label}
             {required && <Required />}
-          </>}
+          </>
+        }
         inputProps={{
           'data-test': 'ZipDropdown_drpdn',
           // onChange: this.handleChange,

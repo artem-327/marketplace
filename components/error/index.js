@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { number } from 'prop-types'
 
 import BackgroundImage from '~/images/background.svg'

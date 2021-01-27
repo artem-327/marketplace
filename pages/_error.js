@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import ErrorComponent from '~/components/error'
 
 export default class Error extends Component {

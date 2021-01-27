@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 import { Button, Image } from 'semantic-ui-react'

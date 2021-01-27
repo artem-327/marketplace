@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
@@ -64,13 +64,13 @@ class Alerts extends Component {
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
           <div id='page' className='flex stretched scrolling'>
             <Container fluid>
-              <HighMenu onDatagridUpdate={(selection) => this.setState({ selectedRows: selection })} />
+              <HighMenu onDatagridUpdate={selection => this.setState({ selectedRows: selection })} />
             </Container>
 
             <Container fluid style={{ padding: '20px 30px' }}>
               <TablesHandlers
                 selectedRows={this.state.selectedRows}
-                onDatagridUpdate={(selection) => this.setState({ selectedRows: selection })}
+                onDatagridUpdate={selection => this.setState({ selectedRows: selection })}
               />
             </Container>
 

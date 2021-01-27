@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { DataTypeProvider } from '@devexpress/dx-react-grid'
 import { rowActionsCellFormatter, dropdownFormatter } from './formatters'
 

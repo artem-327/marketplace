@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
@@ -7,8 +7,6 @@ import { getSafe } from '~/utils/functions'
 import { Container, Menu } from 'semantic-ui-react'
 
 class TopMenu extends Component {
-
-
   tabSwitch(tab) {
     this.props.handleLocationsTab(tab)
   }
@@ -29,9 +27,7 @@ class TopMenu extends Component {
                 id: 'settings.locations.menu.deliveryLocations',
                 defaultMessage: 'Customer Ship To'
               })}
-              onClick={() =>
-                this.tabSwitch('delivery-locations')
-              }
+              onClick={() => this.tabSwitch('delivery-locations')}
               active={!activeTab || activeTab === 'delivery-locations'}
               data-test='menu_settings_locations_delivery_locations'
             />
@@ -41,9 +37,7 @@ class TopMenu extends Component {
                 id: 'settings.locations.menu.pickUpLocations',
                 defaultMessage: 'Warehouses'
               })}
-              onClick={() =>
-                this.tabSwitch('pick-up-locations')
-              }
+              onClick={() => this.tabSwitch('pick-up-locations')}
               active={activeTab === 'pick-up-locations'}
               data-test='menu_settings_locations_pick_up_locations'
             />
@@ -53,9 +47,7 @@ class TopMenu extends Component {
                 id: 'settings.locations.menu.branches',
                 defaultMessage: 'Branches'
               })}
-              onClick={() =>
-                this.tabSwitch('branches')
-              }
+              onClick={() => this.tabSwitch('branches')}
               active={activeTab === 'branches'}
               data-test='menu_settings_locations_branches'
             />
@@ -69,7 +61,7 @@ class TopMenu extends Component {
 const mapStateToProps = state => {
   const { settings } = state
   return {
-    activeTab: settings.locationsTab,
+    activeTab: settings.locationsTab
   }
 }
 

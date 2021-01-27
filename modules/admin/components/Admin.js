@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
 import { Container, Grid, Segment } from 'semantic-ui-react'
@@ -112,7 +112,7 @@ const datagridConfig = {
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
   },
-  'logistics': {
+  logistics: {
     url: '/prodex/api/logistics-providers/stored/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
@@ -128,7 +128,7 @@ const editForms = {
   conditions: <EditPopup1Parameter currentTab={'conditions'} />,
   'nmfc-numbers': <NmfcPopup />,
   associations: <EditPopup1Parameter currentTab={'associations'} />,
-  logistics: <AddEditLogisticProvider />,
+  logistics: <AddEditLogisticProvider />
 }
 
 const addForms = {
@@ -140,7 +140,7 @@ const addForms = {
   conditions: <AddNewPopup1Parameter currentTab={'conditions'} />,
   'nmfc-numbers': <NmfcPopup />,
   associations: <AddNewPopup1Parameter currentTab={'associations'} />,
-  logistics: <AddEditLogisticProvider />,
+  logistics: <AddEditLogisticProvider />
 }
 
 const addDwollaForms = {

@@ -1,15 +1,10 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Popup } from 'semantic-ui-react'
-import { any } from "prop-types";
+import { any } from 'prop-types'
 
 export default class Tooltip extends Component {
   render() {
-    return (
-      <Popup
-        {...this.props}
-        data-test='tooltip'
-      />
-    )
+    return <Popup {...this.props} data-test='tooltip' />
   }
 }
 

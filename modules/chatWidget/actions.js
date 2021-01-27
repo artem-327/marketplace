@@ -8,7 +8,6 @@ import {
   chatWidget_isChatting,
   chatWidget_isConnected
 } from './components/chatWidgetFunctions'
-import React from 'react'
 
 export function chatWidgetCreate(identity, props) {
   ChatWidget_create(identity, props)

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
 import ManageGuests from '~/modules/manage-guests'
@@ -11,12 +11,10 @@ class Index extends Component {
     const {
       intl: { formatMessage }
     } = this.props
-    const titleName = formatMessage(
-      {
-        id: 'manageGuests.manageGuestCompanies',
-        defaultMessage: 'Manage Guest Companies'
-      }
-    )
+    const titleName = formatMessage({
+      id: 'manageGuests.manageGuestCompanies',
+      defaultMessage: 'Manage Guest Companies'
+    })
 
     return (
       <Layout title={titleName}>

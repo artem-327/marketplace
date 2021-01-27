@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { Menu, Grid, Tab, Popup, Input, Dropdown, Button } from 'semantic-ui-react'
@@ -419,7 +419,7 @@ const StyledCalendar = styled(Calendar)`
   }
 `
 
-const StatsTypeSelect = styled(Dropdown)` 
+const StatsTypeSelect = styled(Dropdown)`
   > .menu {
     > .item {
       border: none !important;
@@ -453,7 +453,7 @@ const GraphTypeSwitch = styled.div`
     padding: 6px !important;
     text-align: center;
   }
- 
+
   &.line-graph {
     .ui.left.button {
       background-color: #2599d5;
@@ -552,9 +552,7 @@ class Dashboard extends Component {
   filterDates = (type, dates) => {
     const { isAdmin, takeover } = this.props
     // get daily stats data
-    this.props.getDashboardData(
-      moment(dates[0]).format('YYYY-MM-DD') + 'T00%3A00%3A00Z'
-    )
+    this.props.getDashboardData(moment(dates[0]).format('YYYY-MM-DD') + 'T00%3A00%3A00Z')
     this.setState({
       activeTab: isAdmin && !takeover ? 1 : 2,
       activeQuick: type,
@@ -605,9 +603,7 @@ class Dashboard extends Component {
     }
 
     try {
-      getDashboardData(
-        moment(dateFrom).format('YYYY-MM-DD') + 'T00%3A00%3A00Z'
-      )
+      getDashboardData(moment(dateFrom).format('YYYY-MM-DD') + 'T00%3A00%3A00Z')
     } catch (error) {
       console.error(error)
     }
@@ -633,13 +629,13 @@ class Dashboard extends Component {
           attached='left'
           onClick={() => this.setState({ graphType: 0 })}
           data-test='dashboard_stats_line_graph_type_btn'>
-            <Activity size={20} />
+          <Activity size={20} />
         </Button>
         <Button
           attached='right'
           onClick={() => this.setState({ graphType: 1 })}
           data-test='dashboard_stats_bar_graph_type_btn'>
-            <BarChart2 size={20} />
+          <BarChart2 size={20} />
         </Button>
       </GraphTypeSwitch>
     )
@@ -720,7 +716,7 @@ class Dashboard extends Component {
       {
         value: 5,
         text: formatMessage({ id: 'dashboard.dateFilter.1month', defaultMessage: '1 month' })
-      },
+      }
     ]
 
     let stats = []
@@ -1023,8 +1019,8 @@ class Dashboard extends Component {
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
         <Grid.Row>
           <Grid.Column width={16}>
-            {false && isAdmin && !takeover && /* #35120 - currently not used */(
-              <Popup
+            {false && isAdmin && !takeover && (
+              /* #35120 - currently not used */ <Popup
                 on='click'
                 trigger={
                   <Select>
@@ -1395,11 +1391,7 @@ class Dashboard extends Component {
             ) : null}
             {top10Buyers && top10Buyers.length ? (
               <Grid.Column width={5}>
-                <PieGraph
-                  data={top10Buyers}
-                  title='TOP 5 BUYERS'
-                  titleId='dasboard.topBuyers.title'
-                />
+                <PieGraph data={top10Buyers} title='TOP 5 BUYERS' titleId='dasboard.topBuyers.title' />
               </Grid.Column>
             ) : null}
           </Grid.Row>

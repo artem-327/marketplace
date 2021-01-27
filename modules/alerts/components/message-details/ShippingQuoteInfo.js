@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
@@ -10,19 +10,12 @@ import { ArrowRight } from 'react-feather'
 import { openPopup as openPopupOperations } from '~/modules/operations/actions'
 import Router from 'next/router'
 
-import {
-  DetailMessage,
-  StyledGrid
-} from '../layout'
+import { DetailMessage, StyledGrid } from '../layout'
 
-import {
-  GridRow,
-  GridColumn,
-  Button
-} from 'semantic-ui-react'
+import { GridRow, GridColumn, Button } from 'semantic-ui-react'
 
 const StyledQuoteDiv = styled.div`
-  padding: 9px 15px; 
+  padding: 9px 15px;
   color: #20273a;
   font-size: 14px;
   border-radius: 4px;
@@ -30,7 +23,6 @@ const StyledQuoteDiv = styled.div`
 `
 
 class ShippingQuoteInfo extends Component {
-
   render() {
     const { row, cartItems } = this.props
 
@@ -38,9 +30,7 @@ class ShippingQuoteInfo extends Component {
       <DetailMessage>
         <StyledGrid>
           <GridRow>
-            <GridColumn width={16} >
-              {row.text}
-            </GridColumn>
+            <GridColumn width={16}>{row.text}</GridColumn>
           </GridRow>
 
           <GridRow style={{ marginTop: '10px' }}>
@@ -51,9 +41,7 @@ class ShippingQuoteInfo extends Component {
 
           <GridRow>
             <GridColumn width={16}>
-              <StyledQuoteDiv>
-                {row.info.shippingQuoteId}
-              </StyledQuoteDiv>
+              <StyledQuoteDiv>{row.info.shippingQuoteId}</StyledQuoteDiv>
             </GridColumn>
           </GridRow>
 
@@ -61,15 +49,14 @@ class ShippingQuoteInfo extends Component {
             <GridColumn width={16}>
               <Button
                 disabled={!cartItems}
-                style={{ margin: '0'}}
+                style={{ margin: '0' }}
                 onClick={() => {
                   Router.push(`/purchase-order?shippingQuoteId=${row.info.shippingQuoteId}`)
-                }}
-              >
+                }}>
                 <FormattedMessage id='alerts.checkout' defaultMessage='Checkout'>
                   {text => text}
                 </FormattedMessage>
-                <ArrowRight size='18'style={{ marginLeft: '12px' }}/>
+                <ArrowRight size='18' style={{ marginLeft: '12px' }} />
               </Button>
             </GridColumn>
           </GridRow>
@@ -79,14 +66,12 @@ class ShippingQuoteInfo extends Component {
   }
 }
 
-
 const mapStateToProps = state => {
   return {
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0)
   }
 }
 
-export default connect(
-  mapStateToProps,
-  { ...Actions, openPopupOperations }
-)(injectIntl(withToastManager(ShippingQuoteInfo)))
+export default connect(mapStateToProps, { ...Actions, openPopupOperations })(
+  injectIntl(withToastManager(ShippingQuoteInfo))
+)

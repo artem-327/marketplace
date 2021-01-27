@@ -1,10 +1,10 @@
-import React from 'react'
+import { createContext, Component } from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
 import nextCookie from 'next-cookies'
 import Timeout from '~/components/timeout'
 
-export const SecureContext = React.createContext()
+export const SecureContext = createContext()
 
 const authorize = ctx => {
   const { auth } = nextCookie(ctx)
@@ -30,7 +30,7 @@ const authorize = ctx => {
 }
 
 const securePageHoc = Page =>
-  class SecurePage extends React.Component {
+  class SecurePage extends Component {
     static getInitialProps(ctx) {
       const auth = authorize(ctx)
 

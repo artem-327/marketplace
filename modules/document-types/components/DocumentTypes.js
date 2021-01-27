@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
@@ -17,10 +17,8 @@ class DocumentTypes extends Component {
 
   getApiConfig = () => ({
     url: 'prodex/api/document-types/datagrid',
-    searchToFilter: v => (v && v.searchInput
-      ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v.searchInput}%`] }]
-      : []
-    )
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v.searchInput}%`] }] : []
   })
 
   render() {
