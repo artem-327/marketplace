@@ -32,6 +32,7 @@ export const initialState = {
     isOpen: false,
     pricing: null,
     quantity: null,
+    pkgAmount: '',
     warning: null
   },
   shipping: {

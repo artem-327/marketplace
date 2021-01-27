@@ -960,6 +960,8 @@
   "global.lotExpiredDate": "Lot Expired Date",
   "global.nacdReferences": "NACD References",
   "global.nacdMember": "NACD Member",
+  "global.repositionNotAllowed": "Requested reposition is not allowed",
+  "global.fixedColumnsIssue": "Fixed column: '{fixedColTitle}' can not be repositioned.",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",

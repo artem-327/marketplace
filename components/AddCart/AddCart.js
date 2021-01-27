@@ -696,8 +696,8 @@ class AddCart extends Component {
                 {price && !isNaN(price) ? (
                   <>
                     <FormattedNumber
-                      minimumFractionDigits={2}
-                      maximumFractionDigits={2}
+                      minimumFractionDigits={3}
+                      maximumFractionDigits={3}
                       style='currency'
                       currency={currencyCode}
                       value={price}

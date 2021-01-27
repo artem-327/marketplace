@@ -9,12 +9,15 @@ export default class Custom404 extends Component {
   }
 
   componentDidMount() {
-    const requiredPath = getSafe(() => Router.router.asPath, '')
-    const pathName = requiredPath.split('?')
+    const asPath = getSafe(() => Router.router.asPath, '')
+    const path = asPath.split('?')
+    const newPathName = path && path[0] && LINK_TRANSLATE_TABLE[path[0]]
+      ? LINK_TRANSLATE_TABLE[path[0]]
+      : ''
 
-    if (pathName && pathName[0] && LINK_TRANSLATE_TABLE[pathName[0]]) {
-      const params = requiredPath.substring(pathName[0].length)
-      Router.push(`${LINK_TRANSLATE_TABLE[pathName[0]]}${params}`)
+    if (newPathName && (newPathName !== path[0])) {
+      const params = asPath.substring(path[0].length)
+      Router.push(`${newPathName}${params}`)
       return null
     } else {
       this.setState({ redirecting: false })

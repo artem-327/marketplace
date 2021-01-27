@@ -225,7 +225,7 @@ const initValues = {
     condition: null,
     conditionNotes: '',
     conforming: true,
-    costPerUOM: '',
+    costPerUOM: null,
     externalNotes: '',
     pkgAvailable: 1,
     product: null,
@@ -246,7 +246,7 @@ const initValues = {
     doesExpire: false,
     expirationDate: '',
     documentType: '',
-    whoShouldSee: 'FREE_FOR_ALL',
+    broadcastOption: 'FREE_FOR_ALL',
     acceptBids: true
   },
   priceTiers: {
@@ -348,6 +348,7 @@ val.addMethod(val.object, 'uniqueProperty', function(propertyName, message) {
 
 const validationScheme = val.lazy(values => {
   let minimumQuantity = getSafe(() => values.edit.minimum, 0) > 0 ? values.edit.minimum - 1 : 0
+  if (values.edit.costPerUOM === '') values.edit.costPerUOM = null
   return val.object().shape({
     edit: val.object().shape({
       product: val
@@ -364,8 +365,10 @@ const validationScheme = val.lazy(values => {
         .required(errorMessages.requiredMessage),
       costPerUOM: val
         .number()
-        .min(0.001, errorMessages.minimum(0.001))
         .typeError(errorMessages.mustBeNumber)
+        .notRequired()
+        .nullable()
+        .min(0.001, errorMessages.minimum(0.001))
         .test('maxdec', errorMessages.maxDecimals(3), val => {
           return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
         }),
@@ -1029,10 +1032,18 @@ class ModalDetail extends Component {
         condition: getSafe(() => detailValues.condition, null),
         conditionNotes: getSafe(() => detailValues.conditionNotes, ''),
         conforming: getSafe(() => detailValues.conforming, true),
-        costPerUOM: getSafe(() => detailValues.costPerUOM, ''),
+        costPerUOM: getSafe(() => detailValues.costPerUOM, null),
         externalNotes: getSafe(() => detailValues.externalNotes, ''),
         fobPrice: getSafe(() => detailValues.pricingTiers[0].pricePerUOM, ''),
+        broadcastOption: getSafe(
+          () =>
+            detailValues.broadcastTemplateResponse
+              ? detailValues.broadcastOption + '|' + detailValues.broadcastTemplateResponse.id
+              : detailValues.broadcastOption,
+          ''
+        ),
         inStock: getSafe(() => detailValues.inStock, false),
+        internalNotes: getSafe(() => detailValues.internalNotes, ''),
         internalNotes: getSafe(() => detailValues.internalNotes, ''),
         leadTime: getSafe(() => detailValues.leadTime, 1),
         lotNumber: getSafe(() => detailValues.lotNumber, ''),
@@ -1724,7 +1735,7 @@ class ModalDetail extends Component {
                                             {text => <label>{text}</label>}
                                           </FormattedMessage>
                                           <Dropdown
-                                            name='edit.whoShouldSee'
+                                            name='edit.broadcastOption'
                                             inputProps={{
                                               onChange: this.onChange,
                                               'data-test': 'add_inventory_whoShouldSee',
