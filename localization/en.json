@@ -3063,5 +3063,7 @@
   "settings.accounts.deleteInstitutions": "Delete Institutions",
   "settings.accounts.confirm.deleteInstitutions": "Deleting this institution will remove all accounts associated with it. Do you wish to continue?",
   "confirm.deactivateBankAccount": "Deactivate Bank Account",
-  "confirm.deactivate": "Do you really want to deactivate {item}?"
+  "confirm.deactivate": "Do you really want to deactivate {item}?",
+  "addBankAccounts.successfully.title": "Success!",
+  "addBankAccounts.successfully.content": "Bank accounts were succesfully added."
 }

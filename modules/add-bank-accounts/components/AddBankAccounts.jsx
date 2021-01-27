@@ -2,16 +2,16 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
-import { Dimmer, Loader, Grid } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
+import { usePlaidLink } from 'react-plaid-link'
+import { withToastManager } from 'react-toast-notifications'
 //Components
 import ErrorPage from '../../errors'
 //Actions
 import { getVellociToken, addVellociAcount, onEventVelloci, getVellociBusinessId } from '../actions'
 //Services
-import { getSafe } from '../../../utils/functions'
-//Styles
-import { PlaidButton } from '../styles/AddBankAccounts.styles'
+import { getSafe, generateToastMarkup } from '../../../utils/functions'
 
 const AddBankAccounts = ({
   getVellociToken,
@@ -21,34 +21,58 @@ const AddBankAccounts = ({
   vellociToken,
   vellociBusinessId,
   magicToken,
-  loading
+  loading,
+  toastManager
 }) => {
   useEffect(() => {
     getVellociToken(magicToken)
     getVellociBusinessId(magicToken)
   }, [getVellociToken, getVellociBusinessId, magicToken])
 
-  if (loading) {
-    return (
-      <Dimmer active={true} inverted>
-        <Loader active={true} />
-      </Dimmer>
-    )
-  } else if (!vellociToken && !vellociBusinessId && !loading) {
+  const plaidConfig = {
+    publicKey: vellociBusinessId,
+    token: vellociToken,
+    onSuccess: async (_publicToken, metadata) => {
+      try {
+        await addVellociAcount(magicToken, metadata)
+        await toastManager.add(
+          generateToastMarkup(
+            <FormattedMessage id='addBankAccounts.successfully.title' defaultMessage='Success!' />,
+            <FormattedMessage
+              id='addBankAccounts.successfully.content'
+              defaultMessage='Bank accounts were successfully added!'
+            />
+          ),
+          {
+            appearance: 'success'
+          }
+        )
+      } catch (error) {
+        console.error(error.message)
+      } finally {
+        await Router.push('/auth/login')
+      }
+    },
+    onEvent: (eventName, metadata) => onEventVelloci(eventName, metadata, magicToken),
+    onExit: (err, metadata) => {
+      if (!err && getSafe(() => metadata.link_session_id, '')) {
+        Router.push('/auth/login')
+      }
+    }
+  }
+
+  const { open, ready, error } = usePlaidLink(plaidConfig)
+
+  useEffect(() => {
+    if (ready) {
+      open()
+    }
+  }, [ready, open, error])
+
+  if ((!vellociToken && !vellociBusinessId && !loading) || error) {
     return <ErrorPage type='forbidden' status='403' logout />
   } else {
-    return (
-      <Grid verticalAlign='middle' centered>
-        <PlaidButton
-          disabled={!vellociToken || !vellociBusinessId}
-          token={vellociToken}
-          publicKey={vellociBusinessId}
-          onSuccess={async (publicToken, metadata) => addVellociAcount(publicToken, metadata)}
-          onEvent={(eventName, metadata) => onEventVelloci(eventName, metadata)}>
-          <FormattedMessage id='velloci.addBankAccounts' defaultMessage='Add Bank Accounts' />
-        </PlaidButton>
-      </Grid>
-    )
+    return <Grid verticalAlign='middle' centered></Grid>
   }
 }
 
@@ -74,7 +98,8 @@ AddBankAccounts.propTypes = {
   vellociToken: PropTypes.string,
   vellociBusinessId: PropTypes.string,
   magicToken: PropTypes.string,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  toastManager: PropTypes.object
 }
 
 AddBankAccounts.defaltProps = {
@@ -85,7 +110,8 @@ AddBankAccounts.defaltProps = {
   vellociToken: '',
   vellociBusinessId: '',
   magicToken: '',
-  loading: false
+  loading: false,
+  toastManager: null
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddBankAccounts)
+export default withToastManager(connect(mapStateToProps, mapDispatchToProps)(AddBankAccounts))
