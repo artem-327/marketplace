@@ -1,9 +1,12 @@
-import api from '../../api'
+import api from 'axios'
 
 export default {
-  onEventVelloci: (eventName, metadata) =>
+  onEventVelloci: (eventName, metadata, magicToken) =>
     api
-      .post(`/prodex/api/payments/bank-accounts/velloci/add/log/magic-token?eventName=${eventName}`, metadata)
+      .post(
+        `/prodex/api/payments/bank-accounts/velloci/add/log/magic-token?eventName=${eventName}&token=${magicToken}`,
+        metadata
+      )
       .then(response => response.data)
       .catch(err => console.error(err.message)),
 
@@ -19,9 +22,9 @@ export default {
       .then(response => response.data)
       .catch(err => console.error(err.message)),
 
-  addVellociAcount: (publicToken, metadata) =>
+  addVellociAcount: (magicToken, metadata) =>
     api
-      .post(`/prodex/api/payments/bank-accounts/velloci/add/magic-token?publicToken=${publicToken}`, metadata)
+      .post(`/prodex/api/payments/bank-accounts/velloci/add/magic-token?token=${magicToken}`, metadata)
       .then(response => response.data)
       .catch(err => console.error(err.message))
 }
