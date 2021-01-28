@@ -1,11 +1,14 @@
+// Services
 import { getSafe } from '~/utils/functions'
-import { errorMessages } from '~/constants/yupValidation'
 import * as val from 'yup'
+// Constants
+import { errorMessages } from '~/constants/yupValidation'
 
 /**
- * @param {{id: number, deliveryAddress: {cfName: string}}[]} Array of adress objects from my Company.
+ * @param {object} props - { values, setValues, setFieldTouched, closeTdsModal }
+ * @param {string} template - Stringified JSON - Array of objects {property, specifications, testMethods}
  */
-export const applyTemplate = async (props, template) => {
+export const applyTdsTemplate = async (props, template) => {
   const { values, setValues, setFieldTouched, closeTdsModal } = props
 
   const tdsFields = JSON.parse(template)
@@ -13,24 +16,35 @@ export const applyTemplate = async (props, template) => {
     ...values,
     edit: {
       ...values.edit,
-      tdsFields: tdsFields
+      tdsFields: tdsFields.map(row => ({
+        property: getSafe(() => row.property, ''),
+        specifications: getSafe(() => row.specifications, ''),
+        testMethods: getSafe(() => row.testMethods, '')
+      }))
     }
   })
   setFieldTouched('edit.tdsFields[0].property', true, false)
   closeTdsModal()
 }
 
-export const saveForm = async (props, values, origTdsFields) => {
+/**
+ * @param {object} props - {tdsFields, saveTdsAsTemplate, closeTdsModal}
+ * @param {string} templateName
+ */
+export const saveTdsTemplateAs = async (props, templateName) => {
   let tdsFields = []
-  if (getSafe(() => origTdsFields.length, '')) {
-    origTdsFields.forEach((item, index) => {
+  if (getSafe(() => props.tdsFields.length, '')) {
+    props.tdsFields.forEach(item => {
       if (getSafe(() => item.property, '')) tdsFields.push(item)
     })
   }
-  await props.saveTdsAsTemplate(values.templateName, JSON.stringify(tdsFields))
+  await props.saveTdsAsTemplate(templateName, JSON.stringify(tdsFields))
   props.closeTdsModal()
 }
 
+/**
+ * @return {object} - Yup validation scheme
+ */
 export const validationScheme = val.lazy(values => {
   return val.object().shape({
     templateName: val.string().required(errorMessages.requiredMessage)

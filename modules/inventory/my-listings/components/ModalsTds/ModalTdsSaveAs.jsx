@@ -1,14 +1,15 @@
-import { getSafe } from '~/utils/functions'
-import { injectIntl, FormattedMessage } from 'react-intl'
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Formik } from 'formik'
 import { Modal } from 'semantic-ui-react'
 import { Button, Input } from 'formik-semantic-ui-fixed-validation'
 import { func, bool, array } from 'prop-types'
-//Services
-import { validationScheme, saveForm } from './ModalsTds.services'
-//Constants
+// Services
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { getSafe } from '~/utils/functions'
+import { validationScheme, saveTdsTemplateAs } from './ModalsTds.services'
+// Constants
 import { initValues } from './ModalsTds.constants'
-//Styles
+// Styles
 import { TdsActions, TdsHeader, TemplateColumn, TemplateGrid, TemplateRow, TemplateTitle } from './ModalsTds.styles'
 
 const ModalTdsSaveAs = props => {
@@ -24,14 +25,11 @@ const ModalTdsSaveAs = props => {
       initialValues={initValues}
       validationSchema={validationScheme}
       onSubmit={async (values, { setSubmitting }) => {
-        await saveForm(props, values, props.tdsFields)
+        await saveTdsTemplateAs(props, values.templateName)
         setSubmitting(false)
       }}>
       {formikProps => {
-        let { values, submitForm, resetForm } = formikProps
-        this.values = values
-        this.resetForm = resetForm
-        this.formikProps = formikProps
+        let { submitForm } = formikProps
 
         return (
           <Modal open={open} onClose={props.closeTdsModal}>

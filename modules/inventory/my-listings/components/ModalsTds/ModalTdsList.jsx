@@ -1,3 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Modal, Dimmer, Loader } from 'semantic-ui-react'
+import { func, bool, array } from 'prop-types'
+import { Trash2 } from 'react-feather'
+// Services
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { applyTdsTemplate } from './ModalsTds.services'
+// Styles
 import {
   TdsHeader,
   TemplateApply,
@@ -7,12 +15,6 @@ import {
   TemplateTitle,
   TemplateWrapper
 } from './ModalsTds.styles'
-import { injectIntl, FormattedMessage } from 'react-intl'
-import { Modal, Dimmer, Loader } from 'semantic-ui-react'
-import { func, bool, array } from 'prop-types'
-import { Trash2 } from 'react-feather'
-// Services
-import { applyTemplate } from './ModalsTds.services'
 
 const ModalTdsList = props => {
 
@@ -43,7 +45,7 @@ const ModalTdsList = props => {
                 {name}
                 <TemplateApply
                   onClick={() => {
-                    applyTemplate(props, template)
+                    applyTdsTemplate(props, template)
                   }}>
                   <FormattedMessage id='global.apply' defaultMessage='Apply' />
                 </TemplateApply>
