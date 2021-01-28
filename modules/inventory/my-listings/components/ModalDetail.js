@@ -11,8 +11,8 @@ import styled from 'styled-components'
 import confirm from '~/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { PriceField } from '~/styles/styledComponents'
-import ModalTdsSaveAs from './ModalTdsSaveAs'
-import ModalTdsList from './ModalTdsList'
+import ModalTdsSaveAs from './ModalsTds/ModalTdsSaveAs'
+import ModalTdsList from './ModalsTds/ModalTdsList'
 //Actions
 import { getTemplates } from '~/modules/broadcast/actions'
 
@@ -33,18 +33,6 @@ import {
   Button as ButtonSemantic
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
-import {
-  SelectTemplates,
-  TdsHeader,
-  TdsActions,
-  TemplateTitle,
-  TemplateGrid,
-  TemplateRow,
-  TemplateColumn,
-  TemplateWrapper,
-  TemplateApply,
-  TemplateDelete
-} from './styles'
 import { Trash, PlusCircle, X as XIcon, Plus, Trash2, ChevronDown, ChevronUp, Folder } from 'react-feather'
 
 import {
@@ -105,6 +93,7 @@ import {
   FormFieldZeroPadding,
   TextAreaField
 } from '../../constants/layout'
+import { SelectTemplates } from './ModalsTds/ModalsTds.styles'
 import ErrorFocus from '~/components/error-focus'
 
 const tdsArray = [
