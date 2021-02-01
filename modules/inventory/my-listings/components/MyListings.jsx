@@ -17,23 +17,25 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
 import { Warning } from '@material-ui/icons'
-import ProdexTable from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
-import ModalDetail from '~/modules/inventory/my-listings/components/ModalDetail'
-import QuickEditPricingPopup from '~/modules/inventory/my-listings/components/QuickEditPricingPopup'
-import confirm from '~/components/Confirmable/confirm'
-import FilterTags from '~/modules/filter/components/FitlerTags'
-import { groupActions } from '~/modules/company-product-info/constants'
-import ProductImportPopup from '~/modules/inventory/my-products/components/ProductImportPopup'
-import { getSafe, uniqueArrayByKey, generateToastMarkup } from '~/utils/functions'
-import Tutorial from '~/modules/tutorial/Tutorial'
-import SearchByNamesAndTags from '~/modules/search'
-import ExportInventory from '~/modules/export-inventory/components/ExportInventory'
-import ColumnSettingButton from '~/components/table/ColumnSettingButton'
-import { ArrayToFirstItem } from '~/components/formatted-messages'
+import ProdexTable from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
+import ModalDetail from './ModalDetail'
+import QuickEditPricingPopup from './QuickEditPricingPopup'
+import confirm from '../../../../components/Confirmable/confirm'
+import FilterTags from '../../../filter/components/FitlerTags'
+import { groupActions } from '../../../company-product-info/constants'
+import ProductImportPopup from '../../my-products/components/ProductImportPopup'
+import { getSafe, uniqueArrayByKey, generateToastMarkup } from '../../../../utils/functions'
+import Tutorial from '../../../tutorial/Tutorial'
+import SearchByNamesAndTags from '../../../search'
+import ExportInventory from '../../../export-inventory/components/ExportInventory'
+import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
+import { ArrayToFirstItem } from '../../../../components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
-import { InventoryFilter } from '~/modules/filter'
-import { FormattedUnit } from '~/components/formatted-messages'
+import { InventoryFilter } from '../../../filter'
+import { FormattedUnit } from '../../../../components/formatted-messages'
+//Services
+import { onClickBroadcast } from '../MyListings.services'
 
 const defaultHiddenColumns = [
   'productNumber',
@@ -291,7 +293,7 @@ class MyListings extends Component {
         {
           name: 'productName',
           title: (
-            <FormattedMessage id='global.intProductName' defaultMessage='Product Name'>
+            <FormattedMessage FormattedMessage id='global.intProductName' defaultMessage='Product Name'>
               {text => text}
             </FormattedMessage>
           ),
@@ -763,9 +765,14 @@ class MyListings extends Component {
       toastManager,
       closePricingEditPopup,
       intl: { formatMessage },
-      broadcastTemplates
+      broadcastTemplates,
+      isProductInfoOpen,
+      closePopup,
+      isExportInventoryOpen,
+      setExportModalOpenState,
+      broadcastChange
     } = this.props
-    let title = ''
+    let title
 
     const options = [
       {
@@ -1019,7 +1026,20 @@ class MyListings extends Component {
                 value: option.value,
                 content: <Header icon={option.icon} content={option.title} subheader={option.subtitle} />,
                 onClick: (e, { value }) =>
-                  this.broadcastChange(r, option.value, option.id ? { id: option.id, name: option.tmp } : null)
+                  onClickBroadcast(
+                    r,
+                    option.value,
+                    {
+                      isProductInfoOpen,
+                      closePopup,
+                      isExportInventoryOpen,
+                      setExportModalOpenState,
+                      modalDetailTrigger
+                    },
+                    broadcastChange,
+                    datagrid,
+                    option.id ? { id: option.id, name: option.tmp } : null
+                  )
               }
             })}
           />
@@ -1153,30 +1173,6 @@ class MyListings extends Component {
     }
 
     this.setState({ rows: newRows, focusInput: (pIndex || pIndex === 0) && focusInput ? focusInput : '' })
-  }
-
-  broadcastChange = (row, value, template) => {
-    let { modalDetailTrigger } = this.props
-    switch (value) {
-      case 'CUSTOM_RULES':
-        this.tableRowClickedProductOffer(row, true, 3, modalDetailTrigger)
-        break
-      default:
-        if (value.indexOf('|') >= 0) {
-          this.props.broadcastChange(row, value.substr(0, value.indexOf('|')), template, this.props.datagrid)
-        } else {
-          this.props.broadcastChange(row, value, null, this.props.datagrid)
-        }
-        break
-    }
-  }
-
-  tableRowClickedProductOffer = (row, bol, tab, modalDetailTrigger) => {
-    const { isProductInfoOpen, closePopup, isExportInventoryOpen, setExportModalOpenState } = this.props
-
-    if (isProductInfoOpen) closePopup()
-    if (isExportInventoryOpen) setExportModalOpenState(false)
-    modalDetailTrigger(row, bol, tab)
   }
 
   showMessage = (response, request = null, row) => {
