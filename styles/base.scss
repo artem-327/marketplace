@@ -367,6 +367,10 @@ a.ui.button {
   z-index: 601;
 }
 
+.react-toast-notifications__container {
+  z-index: 1001 !important;
+}
+
 .table-responsive-wider .table-responsive {
   width: calc(100% + 2.2857143em);
 }
