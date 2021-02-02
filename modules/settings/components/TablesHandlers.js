@@ -618,6 +618,7 @@ class TablesHandlers extends Component {
                 )}
                 {(bankAccTab && bankAccounts.addButton && paymentProcessor !== 'VELLOCI') || !bankAccTab ? (
                   <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
+                    <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
                 ) : null}
