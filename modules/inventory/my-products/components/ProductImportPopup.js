@@ -10,12 +10,16 @@ import {
   closeImportPopup,
   getStoredCSV,
   postImportProductCSV,
+  postImportProductMap,
   clearDataOfCSV,
   closeImportPopupCancel,
   postImportCompanyGenericProductCSV,
+  postImportCompanyGenericProductMap,
   postImportProductOfferCSV,
+  postImportProductOfferMap,
   handleSaveMapCSV,
   postImportCompaniesCSV,
+  postImportCompaniesMap,
   changeCsvHeader
 } from '~/modules/settings/actions'
 
@@ -209,6 +213,7 @@ class ProductImportPopup extends Component {
       mappedHeaders,
       missingRequired,
       csvFileId,
+      selectedSavedMap, // mapper (header): csvHeader (content)
       intl: { formatMessage },
       toastManager
     } = this.props
@@ -219,7 +224,6 @@ class ProductImportPopup extends Component {
         this.setState({ currentStep: 'map', isFinishUpload: true })
         break
       case 'map':
-        const { selectedSavedMap } = this.props // mapper (header): csvHeader (content)
         if (missingRequired.length) {
           toastManager.add(
             generateToastMarkup(
@@ -274,13 +278,23 @@ class ProductImportPopup extends Component {
         }
         break
       case 'preview':
-        this.props.productOffer
-          ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId)
-          : this.props.companyGenericProduct
-          ? this.props.postImportCompanyGenericProductCSV(mappedDataHeaderCSV, csvFileId)
-          : this.props.companies
-          ? this.props.postImportCompaniesCSV(mappedDataHeaderCSV, csvFileId)
-          : this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
+        if (selectedSavedMap) {
+          this.props.productOffer
+            ? this.props.postImportProductOfferMap(csvFileId, selectedSavedMap.id)
+            : this.props.companyGenericProduct
+            ? this.props.postImportCompanyGenericProductMap(csvFileId, selectedSavedMap.id)
+            : this.props.companies
+              ? this.props.postImportCompaniesMap(csvFileId, selectedSavedMap.id)
+              : this.props.postImportProductMap(csvFileId, selectedSavedMap.id)
+        } else {
+          this.props.productOffer
+            ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId)
+            : this.props.companyGenericProduct
+            ? this.props.postImportCompanyGenericProductCSV(mappedDataHeaderCSV, csvFileId)
+            : this.props.companies
+              ? this.props.postImportCompaniesCSV(mappedDataHeaderCSV, csvFileId)
+              : this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
+        }
 
         this.setState({ currentStep: 'confirmation', isFinishPreview: true })
         break
@@ -292,12 +306,16 @@ const mapDispatchToProps = {
   closeImportPopup,
   getStoredCSV,
   postImportProductCSV,
+  postImportProductMap,
   clearDataOfCSV,
   closeImportPopupCancel,
   postImportCompanyGenericProductCSV,
+  postImportCompanyGenericProductMap,
   postImportProductOfferCSV,
+  postImportProductOfferMap,
   handleSaveMapCSV,
   postImportCompaniesCSV,
+  postImportCompaniesMap,
   changeCsvHeader
 }
 
