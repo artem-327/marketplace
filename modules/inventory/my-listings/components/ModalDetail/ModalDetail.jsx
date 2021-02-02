@@ -1,23 +1,10 @@
 import { Component } from 'react'
-import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Button, Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Button, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Form, Label } from 'semantic-ui-react'
 import { Formik, FieldArray } from 'formik'
-import { DateInput } from '~/components/custom-formik'
-import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
-import { debounce } from 'lodash'
-import styled from 'styled-components'
-import confirm from '~/components/Confirmable/confirm'
-import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
-import { PriceField } from '~/styles/styledComponents'
-import ModalTdsSaveAs from './ModalsTds/ModalTdsSaveAs'
-import ModalTdsList from './ModalsTds/ModalTdsList'
-//Actions
-import { getTemplates } from '~/modules/broadcast/actions'
-
+import _, { debounce } from 'lodash'
 import {
-  Segment,
   Dimmer,
   Loader,
   Tab,
@@ -29,420 +16,63 @@ import {
   Icon,
   Popup,
   FormField,
-  Modal,
-  Button as ButtonSemantic
+  Modal
 } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
-import { Trash, PlusCircle, X as XIcon, Plus, Trash2, ChevronDown, ChevronUp, Folder } from 'react-feather'
-
-import {
-  modalDetailTrigger,
-  getAutocompleteData,
-  getWarehouses,
-  addProductOffer,
-  getProductGrades,
-  searchOrigins,
-  getProductForms,
-  getProductConditions,
-  searchManufacturers,
-  getDocumentTypes,
-  addAttachment,
-  loadFile,
-  removeAttachment,
-  downloadAttachment,
-  closeModalDetail,
-  getProductOffer,
-  removeAttachmentLinkProductOffer,
-  saveTdsAsTemplate,
-  getTdsTemplates,
-  deleteTdsTemplate
-} from '../../actions'
-import { Broadcast } from '~/modules/broadcast'
-import { openBroadcast } from '~/modules/broadcast/actions'
-import ProdexGrid from '~/components/table'
-import * as val from 'yup'
-import { errorMessages, dateBefore, dateValidation } from '~/constants/yupValidation'
+import { Plus, Trash2, ChevronDown, ChevronUp, Folder } from 'react-feather'
 import moment from 'moment'
-import UploadAttachment from '../../components/upload/UploadAttachment'
-import { withDatagrid } from '~/modules/datagrid'
-import { AttachmentManager } from '~/modules/attachments'
-import _ from 'lodash'
-import DocumentTab from '~/components/document-tab'
-import { Required } from '~/components/constants/layout'
 
+//Components
+import { DateInput } from '../../../../../components/custom-formik'
+import confirm from '../../../../../components/Confirmable/confirm'
+import ModalTdsSaveAs from '../ModalsTds/ModalTdsSaveAs'
+import ModalTdsList from '../ModalsTds/ModalTdsList'
+import { Broadcast } from '../../../../broadcast'
+import DocumentTab from '../../../../../components/document-tab'
+import { Required } from '../../../../../components/constants/layout'
+import { SelectTemplates } from '../ModalsTds/ModalsTds.styles'
+import ErrorFocus from '../../../../../components/error-focus'
+
+//Services
+import { validationScheme } from './ModalDetail.services'
+import { getSafe, generateToastMarkup, uniqueArrayByKey } from '../../../../../utils/functions'
+import { getLocaleDateFormat, getStringISODate } from '../../../../../components/date-format'
+import { onClickBroadcast } from '../../MyListings.services'
+
+//Styles
+import { PriceField } from '../../../../../styles/styledComponents'
 import {
   FlexModal,
   FlexTabs,
   FlexModalContent,
-  TopMargedColumn,
-  GraySegment,
   HighSegment,
-  DivIcon,
-  CloceIcon,
   InputWrapper,
-  QuantityWrapper,
-  BottomButtons,
   SmallGrid,
   InputLabeledWrapper,
-  CustomLabel,
-  NetworkDropdown,
-  NetworkChevronDown,
   DivIconOptions,
   HeaderOptions,
   GridColumnOptionalInformation,
-  FormFieldZeroPadding,
   TextAreaField
-} from '../../constants/layout'
-import { SelectTemplates } from './ModalsTds/ModalsTds.styles'
-import ErrorFocus from '~/components/error-focus'
-
-const tdsArray = [
-  { property: 'name', specifications: 'value1' },
-  { property: 'name2', specifications: 'value1' }
-]
-
-const CustomHr = styled.hr`
-  border: solid 0.5px #dee2e6;
-  margin: 0.642857143em 0 1.071428571em 0;
-`
-
-const CustomDropdown = styled(Dropdown)`
-  .ui.selection.dropdown.active {
-    z-index: 602;
-  }
-`
-const CustomGridRow = styled(GridRow)`
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-`
-
-const CustomGridColumn = styled(Grid.Column)`
-  padding-bottom: 0px !important;
-  padding-top: 7px !important;
-`
-
-const GridColumnRequired = styled(Grid.Column)`
-  padding: 0px 10px !important;
-  color: #404040 !important;
-  font-size: 14px !important;
-  line-height: 1.29 !important;
-`
-
-const PricingIcon = styled(Icon)`
-  line-height: 40px;
-`
-
-const DivAddInputTds = styled.div`
-  border-radius: 3px;
-  border: solid 1px #2599d5;
-  background-color: #ddf1fc;
-  padding: 8px 0 4px 0;
-  cursor: pointer;
-`
-
-const IconPlusCircle = styled(PlusCircle)`
-  color: #2599d5;
-  line-height: 1.11;
-  width: 18px;
-  height: 20px;
-`
-
-const IconTrash = styled(Trash)`
-  cursor: pointer;
-  color: #f16844;
-`
-
-const DivIconPlusCircle = styled.div`
-  margin: 0;
-`
-
-const DivTrash = styled.div`
-  cursor: pointer;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const DivButtonPlus = styled.div`
-  cursor: pointer;
-  border-radius: 3px;
-  border: solid 1px #dee2e6;
-  background-color: #ffffff;
-  height: 40px;
-  width: 40px;
-  padding-top: 6px;
-  text-align: center;
-`
-
-const DivLevel = styled.div`
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const DivTitle = styled.div`
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.11;
-  color: #20273a;
-  padding: 20px 20px 0px 20px;
-`
-
-const DivRequiredFields = styled.div`
-  padding: 10px 10px 30px 10px;
-  border-radius: 4px;
-  border: solid 1px #dee2e6;
-  background-color: #f8f9fb;
-  //width: -webkit-fill-available;
-`
-
-const GridFields = styled(Grid)`
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-
-  > .row:first-child:nth-last-child(2) svg {
-    display: none !important;
-  }
-`
-
-const initValues = {
-  edit: {
-    broadcasted: true,
-    condition: null,
-    conditionNotes: '',
-    conforming: true,
-    costPerUOM: null,
-    externalNotes: '',
-    pkgAvailable: 1,
-    product: null,
-    warehouse: null,
-    fobPrice: '',
-    inStock: false,
-    internalNotes: '',
-    leadTime: 1,
-    lotNumber: '',
-    lotExpirationDate: '',
-    lotManufacturedDate: '',
-    minimum: 1, // minPkg
-    origin: null,
-    productCondition: null,
-    productForm: null,
-    productGrades: [],
-    splits: 1, // splitPkg
-    doesExpire: false,
-    expirationDate: '',
-    documentType: '',
-    broadcastOption: 'FREE_FOR_ALL',
-    acceptBids: true
-  },
-  priceTiers: {
-    priceTiers: 1,
-    pricingTiers: []
-  },
-  documents: {
-    documentType: null,
-    attachments: []
-  }
-}
-
-const columns = [
-  {
-    name: 'name',
-    title: (
-      <FormattedMessage id='global.name' defaultMessage='Name'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 306
-  },
-  {
-    name: 'documentTypeName',
-    title: (
-      <FormattedMessage id='global.docType' defaultMessage='Document Type'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 222
-  }
-]
-
-const optionsYesNo = [
-  {
-    key: 1,
-    text: <FormattedMessage id='global.yes' defaultMessage='Yes' />,
-    value: true
-  },
-  {
-    key: 0,
-    text: <FormattedMessage id='global.no' defaultMessage='No' />,
-    value: false
-  }
-]
-
-const listConforming = [
-  {
-    key: 1,
-    text: <FormattedMessage id='global.conforming' defaultMessage='Conforming' />,
-    value: true
-  },
-  {
-    key: 0,
-    text: <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
-    value: false
-  }
-]
-
-val.addMethod(val.number, 'divisibleBy', function (ref, message) {
-  return this.test({
-    name: 'divisibleBy',
-    exclusive: false,
-    message: message || '${path} must be divisible by ${reference}',
-    params: {
-      reference: ref.path
-    },
-    test: function (value) {
-      const divisedBy = parseInt(this.resolve(ref))
-      if (!divisedBy || isNaN(divisedBy)) return false
-
-      return !(value % divisedBy)
-    }
-  })
-})
-
-val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
-  return this.test('unique', message, function (value) {
-    if (!value || !value[propertyName]) {
-      return true
-    }
-
-    const { path } = this
-    const options = [...this.parent]
-    const currentIndex = options.indexOf(value)
-
-    const subOptions = options.slice(0, currentIndex)
-
-    if (subOptions.some(option => option[propertyName] === value[propertyName])) {
-      throw this.createError({
-        path: `${path}.${propertyName}`,
-        message
-      })
-    }
-
-    return true
-  })
-})
-
-const validationScheme = val.lazy(values => {
-  let minimumQuantity = getSafe(() => values.edit.minimum, 0) > 0 ? values.edit.minimum - 1 : 0
-  if (values.edit.costPerUOM === '') values.edit.costPerUOM = null
-  return val.object().shape({
-    edit: val.object().shape({
-      product: val.number().typeError(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-      fobPrice: val
-        .number()
-        .min(0.001, errorMessages.minimum(0.001))
-        .typeError(errorMessages.mustBeNumber)
-        .test('maxdec', errorMessages.maxDecimals(3), val => {
-          return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-        })
-        .required(errorMessages.requiredMessage),
-      costPerUOM: val
-        .number()
-        .typeError(errorMessages.mustBeNumber)
-        .notRequired()
-        .nullable()
-        .min(0.001, errorMessages.minimum(0.001))
-        .test('maxdec', errorMessages.maxDecimals(3), val => {
-          return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-        }),
-      lotNumber: val.string().typeError(errorMessages.invalidString).nullable(),
-      inStock: val.bool().required(errorMessages.requiredMessage),
-      minimum: val
-        .number()
-        .min(1, errorMessages.minimum(1))
-        .typeError(errorMessages.mustBeNumber)
-        .divisibleBy(
-          val.ref('splits'),
-          <FormattedMessage id='inventory.notDivisibleBySplits' defaultMessage='Value is not divisible by Splits' />
-        )
-        .required(errorMessages.requiredMessage),
-      pkgAvailable: val
-        .number()
-        .positive(errorMessages.positive)
-        .typeError(errorMessages.mustBeNumber)
-        .required(errorMessages.requiredMessage),
-      //This validation maybe return back. It will be depends on new BE logic.
-      // .test('match', errorMessages.greaterOrEqual(values.edit.minimum), function (pkgAvailable) {
-      //   return typeof values.edit.minimum === 'undefined' || pkgAvailable >= values.edit.minimum
-      // }),
-      leadTime: val.number().min(1, errorMessages.minimum(1)).typeError(errorMessages.mustBeNumber),
-      splits: val
-        .number()
-        .min(1, errorMessages.minimum(1))
-        .typeError(errorMessages.mustBeNumber)
-        .required(errorMessages.requiredMessage),
-      warehouse: val
-        .number(errorMessages.requiredMessage)
-        .nullable(errorMessages.requiredMessage)
-        .moreThan(0, errorMessages.requiredMessage)
-        .required(errorMessages.requiredMessage),
-      conforming: val.boolean(),
-      conditionNotes: val.string().when('conforming', {
-        is: false,
-        then: val.string().required(errorMessages.requiredNonConforming)
-      }),
-      expirationDate: dateValidation(false).concat(
-        val.string().when('doesExpire', {
-          is: true,
-          then: val
-            .string()
-            .test(
-              'min-date',
-              errorMessages.mustBeInFuture,
-              val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
-            )
-        })
-      ),
-      lotExpirationDate: dateValidation(false),
-      lotManufacturedDate: dateValidation(false).concat(
-        val
-          .string()
-          .test(
-            'max-date',
-            errorMessages.mustBeInPast,
-            val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') > -1
-          )
-      )
-    }),
-    priceTiers: val.object().shape({
-      priceTiers: val.number(),
-      pricingTiers: val.array().of(
-        val
-          .object()
-          .uniqueProperty('quantityFrom', 'Quantity has to be unique')
-          .shape({
-            quantityFrom: val
-              .number()
-              .typeError(errorMessages.mustBeNumber)
-              .required(errorMessages.requiredMessage)
-              .moreThan(minimumQuantity, errorMessages.greaterOrEqual(minimumQuantity + 1)),
-            price: val
-              .number()
-              .typeError(errorMessages.mustBeNumber)
-              .required(errorMessages.requiredMessage)
-              .moreThan(0, errorMessages.greaterThan(0))
-              .test('maxdec', errorMessages.maxDecimals(3), val => {
-                return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-              }),
-            manuallyModified: val.number().min(0).max(1)
-          })
-      )
-    })
-  })
-})
+} from '../../../constants/layout'
+import {
+  GridFields,
+  DivRequiredFields,
+  DivTitle,
+  DivLevel,
+  DivButtonPlus,
+  DivTrash,
+  DivIconPlusCircle,
+  IconPlusCircle,
+  IconTrash,
+  DivAddInputTds,
+  PricingIcon,
+  GridColumnRequired,
+  CustomGridColumn,
+  CustomGridRow
+} from './ModalDetail.styles'
+//Constants
+import { INIT_VALUES, OPTIONS_YES_NO, LIST_CONFORMING, OPTIONS_BROADCAST } from './ModalDetail.constants'
+import { INDEX_TAB_PRICE_BOOK } from '../../MyListings.constants'
 
 class ModalDetail extends Component {
   state = {
@@ -455,7 +85,7 @@ class ModalDetail extends Component {
     openUploadAttachment: false,
     edited: false,
     detailValues: null,
-    initValues: initValues,
+    initValues: INIT_VALUES,
     attachmentFiles: [],
     isOpenOptionalInformation: false,
     openedTdsList: false,
@@ -515,7 +145,7 @@ class ModalDetail extends Component {
     this.setState(
       {
         detailValues: data.value.data,
-        initValues: { ...initValues, ...this.getEditValues(data.value.data) }
+        initValues: { ...INIT_VALUES, ...this.getEditValues(data.value.data) }
       },
       () => this.resetForm()
     )
@@ -588,7 +218,7 @@ class ModalDetail extends Component {
       } else {
         // Add new mode
         this.validateSaveOrSwitchToErrors(() => {
-          this.setState({ detailValues: null, initValues: initValues }, () => {
+          this.setState({ detailValues: null, initValues: INIT_VALUES }, () => {
             this.resetForm()
             this.props.searchOrigins('', 200)
             if (shouldSwitchTab) {
@@ -827,7 +457,7 @@ class ModalDetail extends Component {
 
         this.setState({
           detailValues: { ...data, id: isEdit ? data.id : null },
-          initValues: { ...initValues, ...this.getEditValues(data) },
+          initValues: { ...INIT_VALUES, ...this.getEditValues(data) },
           edited: false
         })
         sendSuccess = true
@@ -851,7 +481,7 @@ class ModalDetail extends Component {
               !openGlobalAddForm && datagrid.updateRow(entityId, () => po.value)
               this.setState({
                 detailValues: po.value,
-                initValues: { ...initValues, ...this.getEditValues(po.value) },
+                initValues: { ...INIT_VALUES, ...this.getEditValues(po.value) },
                 edited: false
               })
               sendSuccess = true
@@ -872,7 +502,7 @@ class ModalDetail extends Component {
       activeTab: newTab
     })
     try {
-      if (newTab === 3) {
+      if (newTab === INDEX_TAB_PRICE_BOOK) {
         await this.props.openBroadcast(data ? data : this.state.detailValues).then(async () => {
           this.setState({ broadcastLoading: false })
         })
@@ -1021,7 +651,6 @@ class ModalDetail extends Component {
         ),
         inStock: getSafe(() => detailValues.inStock, false),
         internalNotes: getSafe(() => detailValues.internalNotes, ''),
-        internalNotes: getSafe(() => detailValues.internalNotes, ''),
         leadTime: getSafe(() => detailValues.leadTime, 1),
         lotNumber: getSafe(() => detailValues.lotNumber, ''),
         lotExpirationDate:
@@ -1106,20 +735,12 @@ class ModalDetail extends Component {
 
   render() {
     let {
-      // addProductOffer,
-      listConditions,
       listForms,
       listGrades,
       loading,
-      // openBroadcast,
-      // isModalDetailOpen,
       detailValues,
-      // searchedManufacturers,
-      // searchedManufacturersLoading,
       searchedOrigins,
       searchedOriginsLoading,
-      // searchedProducts,
-      // searchedProductsLoading,
       searchOrigins,
       warehousesList,
       listDocumentTypes,
@@ -1131,138 +752,19 @@ class ModalDetail extends Component {
       removeAttachment,
       currencySymbol,
       openGlobalAddForm,
-      inventoryGrid,
+      datagrid,
       isLoadingBroadcast,
       autocompleteDataLoading,
       broadcastTemplates,
       tdsTemplatesLoading,
-      tdsTemplates
+      tdsTemplates,
+      broadcastChange
     } = this.props
     const { openedTdsList, openedTdsSaveAs } = this.state
 
-    const leftWidth = 6
-    const rightWidth = 10
-
-    const optionsYesNo = [
-      {
-        key: 1,
-        text: <FormattedMessage id='global.yes' defaultMessage='Yes' />,
-        value: true
-      },
-      {
-        key: 0,
-        text: <FormattedMessage id='global.no' defaultMessage='No' />,
-        value: false
-      }
-    ]
-
-    const listConforming = [
-      {
-        key: 1,
-        text: <FormattedMessage id='global.conforming' defaultMessage='Conforming' />,
-        value: true
-      },
-      {
-        key: 0,
-        text: <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
-        value: false
-      }
-    ]
-
-    const optionsSeeOffer = [
-      {
-        icon: (
-          <DivIconOptions>
-            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
-              <g fill='none' fill-rule='evenodd'>
-                <path
-                  d='M0 0L24 0 24 24 0 24z'
-                  transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
-                />
-                <path
-                  fill='#20273A'
-                  fill-rule='nonzero'
-                  d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'
-                  transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
-                />
-              </g>
-            </svg>
-          </DivIconOptions>
-        ),
-        title: formatMessage({ id: 'myInventory.network', defaultMessage: 'Network' }),
-        subtitle: formatMessage({
-          id: 'myInventory.networkSubtitle',
-          defaultMessage: 'Your accepted Partners and invited Guests'
-        }),
-        value: 'FREE_FOR_ALL'
-      },
-      /*{
-        icon: (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-              <path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -447) translate(1105 295) translate(0 29) translate(20 123)"/>
-              <path fill="#848893" fill-rule="nonzero" d="M16.5 12c1.38 0 2.49-1.12 2.49-2.5S17.88 7 16.5 7C15.12 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5C7.34 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V18c0 .55.45 1 1 1h9c.55 0 1-.45 1-1v-1.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V18c0 .55.45 1 1 1h6v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z" transform="translate(-1125 -447) translate(1105 295) translate(0 29) translate(20 123)"/>
-            </g>
-          </svg>
-    
-        ),
-        title: formatMessage({ id: 'myInventory.partners', defaultMessage: 'Partners' }),
-        subtitle: formatMessage({ id: 'myInventory.partnersSubtitle', defaultMessage: 'Your accepted Partners' }),
-        value: ''
-      },*/
-      {
-        icon: (
-          <DivIconOptions>
-            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
-              <g fill='none' fill-rule='evenodd'>
-                <path
-                  d='M0 0L24 0 24 24 0 24z'
-                  transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
-                />
-                <path
-                  fill='#848893'
-                  fill-rule='nonzero'
-                  d='M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z'
-                  transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
-                />
-              </g>
-            </svg>
-          </DivIconOptions>
-        ),
-        title: formatMessage({ id: 'myInventory.guests', defaultMessage: 'Guests' }),
-        subtitle: formatMessage({ id: 'myInventory.guestsSubtitle', defaultMessage: 'Your invited Guests' }),
-        value: 'CLIENT_COMPANIES'
-      },
-      {
-        icon: (
-          <DivIconOptions>
-            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
-              <g fill='none' fill-rule='evenodd'>
-                <g>
-                  <path
-                    d='M0 0L24 0 24 24 0 24z'
-                    transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
-                  />
-                  <path
-                    d='M0 0L24 0 24 24 0 24z'
-                    opacity='.87'
-                    transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
-                  />
-                </g>
-                <path
-                  fill='#848893'
-                  fill-rule='nonzero'
-                  d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z'
-                  transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
-                />
-              </g>
-            </svg>
-          </DivIconOptions>
-        ),
-        title: formatMessage({ id: 'myInventory.justMe', defaultMessage: 'Just Me' }),
-        subtitle: formatMessage({ id: 'myInventory.justMeSubtitle', defaultMessage: 'Only my Company' }),
-        value: 'NO_BROADCAST'
-      },
+    const optionsSeeOffer = OPTIONS_BROADCAST.map(opt => {
+      return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }) }
+    }).concat([
       ...broadcastTemplates.map(template => {
         return {
           icon: (
@@ -1289,31 +791,8 @@ class ModalDetail extends Component {
           tmp: template.name,
           value: `BROADCAST_TEMPLATE|${template.id}`
         }
-      }),
-      {
-        icon: (
-          <DivIconOptions>
-            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
-              <g fill='none' fill-rule='evenodd'>
-                <path
-                  d='M0 0L24 0 24 24 0 24z'
-                  transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
-                />
-                <path
-                  fill='#848893'
-                  fill-rule='nonzero'
-                  d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
-                  transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
-                />
-              </g>
-            </svg>
-          </DivIconOptions>
-        ),
-        title: formatMessage({ id: 'myInventory.custom', defaultMessage: 'Custom' }),
-        subtitle: formatMessage({ id: 'myInventory.customSubtitle', defaultMessage: 'Create Custom Rule' }),
-        value: 'CUSTOM_RULES'
-      }
-    ]
+      })
+    ])
 
     // const { toggleFilter } = this.props
 
@@ -1668,7 +1147,7 @@ class ModalDetail extends Component {
                                                   </FormattedMessage>
                                                   <Dropdown
                                                     name='edit.inStock'
-                                                    options={optionsYesNo}
+                                                    options={OPTIONS_YES_NO}
                                                     inputProps={{
                                                       onChange: this.onChange,
                                                       disabled: detailValues && detailValues.grouped,
@@ -1739,7 +1218,15 @@ class ModalDetail extends Component {
                                                     content={option.title}
                                                     subheader={option.subtitle}
                                                   />
-                                                )
+                                                ),
+                                                onClick: () =>
+                                                  onClickBroadcast(
+                                                    detailValues,
+                                                    option.value,
+                                                    broadcastChange,
+                                                    datagrid,
+                                                    option.id ? { id: option.id, name: option.tmp } : null
+                                                  )
                                               }
                                             })}
                                           />
@@ -1758,7 +1245,7 @@ class ModalDetail extends Component {
                                             </FormattedMessage>
                                             <Dropdown
                                               name='edit.acceptBids'
-                                              options={optionsYesNo}
+                                              options={OPTIONS_YES_NO}
                                               inputProps={{
                                                 onChange: this.onChange,
                                                 'data-test': 'add_inventory_acceptBids',
@@ -1971,7 +1458,7 @@ class ModalDetail extends Component {
                                               </FormattedMessage>
                                               <Dropdown
                                                 name='edit.conforming'
-                                                options={listConforming}
+                                                options={LIST_CONFORMING}
                                                 inputProps={{
                                                   onChange: this.onChange,
                                                   disabled: detailValues && detailValues.grouped,
@@ -2373,7 +1860,7 @@ class ModalDetail extends Component {
                                     changedForm={this.changedForm}
                                     close={this.props.closeModalDetail}
                                     detailValues={detailValues}
-                                    inventoryGrid={inventoryGrid}
+                                    inventoryGrid={datagrid}
                                   />
                                 </Tab.Pane>
                               )
@@ -2575,83 +2062,4 @@ class ModalDetail extends Component {
   }
 }
 
-const mapDispatchToProps = {
-  modalDetailTrigger,
-  getAutocompleteData,
-  getDocumentTypes,
-  addProductOffer,
-  getProductConditions,
-  getProductForms,
-  getProductGrades,
-  getWarehouses,
-  searchManufacturers,
-  searchOrigins,
-  openBroadcast,
-  addAttachment,
-  loadFile,
-  removeAttachment,
-  downloadAttachment,
-  closeModalDetail,
-  getProductOffer,
-  removeAttachmentLinkProductOffer,
-  getTemplates,
-  saveTdsAsTemplate,
-  getTdsTemplates,
-  deleteTdsTemplate
-}
-
-const mapStateToProps = (
-  {
-    simpleAdd: {
-      autocompleteData,
-      autocompleteDataLoading,
-      listConditions,
-      listForms,
-      listGrades,
-      loading,
-      modalActiveTab,
-      isModalDetailOpen,
-      detailValues,
-      searchedManufacturers,
-      searchedManufacturersLoading,
-      searchedOrigins,
-      searchedOriginsLoading,
-      searchedProducts,
-      searchedProductsLoading,
-      warehousesList,
-      listDocumentTypes,
-      editProductOfferInitTrig,
-      tdsTemplatesLoading,
-      tdsTemplates
-    },
-    broadcast
-  },
-  { inventoryGrid }
-) => ({
-  autocompleteData,
-  autocompleteDataLoading,
-  listConditions,
-  listForms,
-  listGrades,
-  loading,
-  modalActiveTab,
-  isModalDetailOpen,
-  detailValues,
-  searchedManufacturers,
-  searchedManufacturersLoading,
-  searchedOrigins,
-  searchedOriginsLoading,
-  searchedProducts,
-  searchedProductsLoading,
-  warehousesList,
-  listDocumentTypes,
-  editProductOfferInitTrig,
-  currencySymbol: '$',
-  inventoryGrid,
-  isLoadingBroadcast: getSafe(() => broadcast.loading, false),
-  broadcastTemplates: getSafe(() => broadcast.templates, []),
-  tdsTemplatesLoading,
-  tdsTemplates
-})
-
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ModalDetail))))
+export default withToastManager(injectIntl(ModalDetail))

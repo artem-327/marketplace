@@ -1,7 +1,5 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import { withRouter } from 'next/router'
-import md5 from 'md5'
 import {
   TopMenu,
   TopMenuContainer,
@@ -12,61 +10,58 @@ import {
   CopyrightContainer,
   FlexContainer,
   LogoImage,
-  CircularLabel,
   MainTitle,
-  MainTitleWithMessage,
   CustomDiv,
   Rectangle,
-  DivInRectangle,
   GlobalSidebars,
   CustomSpanReturn
-} from '~/components/constants/layout'
+} from '../components/constants/layout'
 import { Container, Menu, Dropdown, Icon, Image, FormField, Popup, Dimmer } from 'semantic-ui-react'
 import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
-import Logo from '~/assets/images/nav/logo-echo.svg'
-import LogoSmall from '~/assets/images/nav/logo4x.png'
+import Logo from '../assets/images/nav/logo-echo.svg'
+import LogoSmall from '../assets/images/nav/logo4x.png'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
 import NotificationsIcon from './NotificationsIcon'
 
 import CreateMenu from './CreateMenu'
-import { Messages } from '~/modules/messages'
-import Settings from '~/components/settings'
+import { Messages } from '../modules/messages'
+import Settings from '../components/settings'
 import { connect } from 'react-redux'
-import { withAuth } from '~/hocs'
+import { withAuth } from '../hocs'
 
-import { takeOverCompanyFinish } from '~/modules/admin/actions'
-import { openProfilePopup } from '~/modules/profile/actions'
-import { agreeWithTOS } from '~/modules/auth/actions'
-import { triggerSystemSettingsModal } from '~/modules/settings/actions'
+import { takeOverCompanyFinish } from '../modules/admin/actions'
+import { openProfilePopup } from '../modules/profile/actions'
+import { agreeWithTOS } from '../modules/auth/actions'
+import { triggerSystemSettingsModal } from '../modules/settings/actions'
 
-import Profile from '~/modules/profile/components/Profile'
+import Profile from '../modules/profile/components/Profile'
 import { createRef, Component } from 'react'
 import Router from 'next/router'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../utils/functions'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { AgreementModal } from '~/components/modals'
-import { getCountryCodes } from '~/modules/phoneNumber/actions'
+import { AgreementModal } from '../components/modals'
+import { getCountryCodes } from '../modules/phoneNumber/actions'
 
-import { chatWidgetToggle } from '~/modules/chatWidget/actions'
-import { toggleMenu, openGlobalAddForm, setMainContainer } from '~/modules/layout/actions'
-import { getCompanyLogo } from '~/modules/company-form/actions'
+import { chatWidgetToggle } from '../modules/chatWidget/actions'
+import { toggleMenu, openGlobalAddForm, setMainContainer } from '../modules/layout/actions'
+import { getCompanyLogo } from '../modules/company-form/actions'
 import { withToastManager } from 'react-toast-notifications'
 
-import ChatWidget from '~/modules/chatWidget/components/ChatWidgetContainer'
+import ChatWidget from '../modules/chatWidget/components/ChatWidgetContainer'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-import ErrorComponent from '~/components/error'
+import ErrorComponent from '../components/error'
 import moment from 'moment'
 
-import ListingSidebar from '~/modules/inventory/my-listings/components/ModalDetail'
-import ProductSidebar from '~/modules/inventory/my-products/components/ProductSidebar'
-import WantedSidebar from '~/modules/wanted-board/listings/components/DetailSidebar'
-import UserSidebar from '~/modules/settings/components/UserTable/UsersSidebar'
-import GuestSidebar from '~/modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
-import WarehouseSidebar from '~/modules/settings/components/Locations/PickUpLocationsTable/PickUpLocationsSidebar'
+import ModalDetailContainer from '../modules/inventory/my-listings/components/ModalDetail/ModalDetailContainer'
+import ProductSidebar from '../modules/inventory/my-products/components/ProductSidebar'
+import WantedSidebar from '../modules/wanted-board/listings/components/DetailSidebar'
+import UserSidebar from '../modules/settings/components/UserTable/UsersSidebar'
+import GuestSidebar from '../modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
+import WarehouseSidebar from '../modules/settings/components/Locations/PickUpLocationsTable/PickUpLocationsSidebar'
 
 export const IconMinimize2 = styled(Minimize2)`
   text-align: center;
@@ -562,7 +557,7 @@ class Layout extends Component {
             <ProductSidebar openGlobalAddForm={openGlobalAddForm} />
           )}
           {openGlobalAddFormName === 'inventory-my-listings' && (
-            <ListingSidebar openGlobalAddForm={openGlobalAddForm} />
+            <ModalDetailContainer openGlobalAddForm={openGlobalAddForm} />
           )}
           {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'my-account-users' && <UserSidebar openGlobalAddForm={openGlobalAddForm} />}

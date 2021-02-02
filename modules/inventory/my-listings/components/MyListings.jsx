@@ -19,7 +19,7 @@ import styled from 'styled-components'
 import { Warning } from '@material-ui/icons'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
-import ModalDetail from './ModalDetail'
+import ModalDetailContainer from './ModalDetail/ModalDetailContainer'
 import QuickEditPricingPopup from './QuickEditPricingPopup'
 import confirm from '../../../../components/Confirmable/confirm'
 import FilterTags from '../../../filter/components/FitlerTags'
@@ -35,7 +35,16 @@ import { CustomRowDiv } from '../../constants/layout'
 import { InventoryFilter } from '../../../filter'
 import { FormattedUnit } from '../../../../components/formatted-messages'
 //Services
-import { onClickBroadcast } from '../MyListings.services'
+import { onClickBroadcast, tableRowClickedProductOffer } from '../MyListings.services'
+//Constants
+import {
+  INDEX_TAB_EDIT,
+  INDEX_TAB_PRICE_TIERS,
+  INDEX_TAB_DOCUMENTS,
+  INDEX_TAB_TDS,
+  INDEX_TAB_PRICE_BOOK,
+  BOOLEAN_TRUE
+} from '../MyListings.constants'
 
 const defaultHiddenColumns = [
   'productNumber',
@@ -646,7 +655,7 @@ class MyListings extends Component {
           id: 'global.edit',
           defaultMessage: 'Edit'
         }),
-        callback: row => this.tableRowClickedProductOffer(row, true, 0, modalDetailTrigger)
+        callback: row => tableRowClickedProductOffer(row, { modalDetailTrigger }, BOOLEAN_TRUE, INDEX_TAB_EDIT)
       },
       //{ text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
       {
@@ -655,7 +664,7 @@ class MyListings extends Component {
           defaultMessage: 'TDS'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 1, modalDetailTrigger)
+        callback: row => tableRowClickedProductOffer(row, { modalDetailTrigger }, BOOLEAN_TRUE, INDEX_TAB_TDS)
       },
       {
         text: formatMessage({
@@ -663,7 +672,7 @@ class MyListings extends Component {
           defaultMessage: 'Documents'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 2, modalDetailTrigger)
+        callback: row => tableRowClickedProductOffer(row, { modalDetailTrigger }, BOOLEAN_TRUE, INDEX_TAB_DOCUMENTS)
       },
       {
         text: formatMessage({
@@ -671,7 +680,7 @@ class MyListings extends Component {
           defaultMessage: 'Price Book'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 3, modalDetailTrigger)
+        callback: row => tableRowClickedProductOffer(row, { modalDetailTrigger }, BOOLEAN_TRUE, INDEX_TAB_PRICE_BOOK)
       },
       {
         text: formatMessage({
@@ -679,7 +688,7 @@ class MyListings extends Component {
           defaultMessage: 'Price Tiers'
         }),
         disabled: row => !!row.groupId,
-        callback: row => this.tableRowClickedProductOffer(row, true, 4, modalDetailTrigger)
+        callback: row => tableRowClickedProductOffer(row, { modalDetailTrigger }, BOOLEAN_TRUE, INDEX_TAB_PRICE_TIERS)
       },
       {
         text: formatMessage({
@@ -1049,7 +1058,7 @@ class MyListings extends Component {
             row={r}
             getActions={this.getActions}
             content={r.productName}
-            onContentClick={() => this.tableRowClickedProductOffer(r, true, 0, modalDetailTrigger)}
+            onContentClick={() => tableRowClickedProductOffer(r, { modalDetailTrigger }, BOOLEAN_TRUE, INDEX_TAB_EDIT)}
             rightAlignedContent={
               r.expired || productStatusText ? (
                 <Popup
@@ -1391,7 +1400,9 @@ class MyListings extends Component {
                   className='secondary'
                   size='large'
                   primary
-                  onClick={() => this.tableRowClickedProductOffer(null, true, 0, modalDetailTrigger)}
+                  onClick={() =>
+                    tableRowClickedProductOffer(null, { modalDetailTrigger }, BOOLEAN_TRUE, INDEX_TAB_EDIT)
+                  }
                   data-test='my_inventory_add_btn'>
                   <PlusCircle />
                   <FormattedMessage id='global.addListing' defaultMessage='Add Listing'>
@@ -1478,7 +1489,7 @@ class MyListings extends Component {
             columnActions='actCol'
           />
         </div>
-        {isModalDetailOpen && <ModalDetail inventoryGrid={this.props.datagrid} />}
+        {isModalDetailOpen && <ModalDetailContainer inventoryGrid={this.props.datagrid} />}
         {isExportInventoryOpen && <ExportInventory onClose={() => setExportModalOpenState(false)} />}
         {openFilterPopup && <InventoryFilter onClose={() => this.setState({ openFilterPopup: false })} />}
       </>
