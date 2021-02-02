@@ -74,7 +74,7 @@ context("Permissions tests",() => {
         cy.get("[data-test='navigation_orders_purchase_orders_drpdn']").click()
         cy.wait('@loading')
 
-        //Volatile
+        cy.searchInList("89")
         cy.waitForUI()
         cy.openElement(89, 0)
         cy.get("[data-test='orders_detail_orderShipping_btn']").should('be.visible')
@@ -137,9 +137,8 @@ context("Permissions tests",() => {
         cy.get("[data-test='navigation_menu_settings_drpdn']").click()
         cy.get("[data-test='navigation_settings_warehouses_drpdn']").should('not.exist')
 
-        //cy.get("[data-test='navigation_settings_users_drpdn']").click()
         cy.waitForUI()
         cy.wait('@loading')
-        cy.get(':nth-child(1) > .actions').should('be.visible')
+        cy.get("[data-test='navigation_settings_users_drpdn']").should('be.visible')
     })
 })

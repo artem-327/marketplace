@@ -77,11 +77,11 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
         cy.visit("/wanted-board/bids-received")
         cy.wait("@wantedBoardReceivedLoading", { timeout: 100000 })
 
-        cy.get("[data-test=action_" + purchaseRequestId + "_0]").parent().parent().parent().parent().parent().parent().click()
+        cy.get("[data-test=action_" + purchaseRequestId + "_0]").parent().parent().parent().parent().parent().parent().next().click()
 
         cy.getUserToken(buyerJSON.email, buyerJSON.password).then(token => {
             cy.getPurchaseRequestFirstOfferId(token, purchaseRequestId).then(offerId => {
-                cy.get("[data-test=action_" + purchaseRequestId + "_" +  offerId + "_5]").parent().parent().click()
+                cy.get("[data-test=action_" + purchaseRequestId + "_" +  offerId + "_5]").parent().parent().click({force: true})
                 cy.get("[data-test=action_" + purchaseRequestId + "_" +  offerId + "_5").click()
             })
         })
@@ -97,7 +97,7 @@ context("Wanted Board Purchase Request Offers CRUD", () => {
 
         cy.getUserToken(sellerJSON.email, sellerJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, "purchase-request-offers/own" ,purchaseRequestOfferFilter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "_1]").parent().parent().click()
+                cy.get("[data-test=action_" + itemId + "_1]").parent().parent().click({force: true})
                 cy.get("[data-test=action_" + itemId + "_1]").click()
             })
         })

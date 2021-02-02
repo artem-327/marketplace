@@ -74,7 +74,7 @@ context("Inventory CRUD", () => {
     it("Update item", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "_0]").parent().parent().click()
+                cy.get("[data-test=action_" + itemId + "_0]").parent().parent().click({force: true})
                 cy.get("[data-test=action_" + itemId + "_0]").click()
             })
         })
@@ -97,7 +97,7 @@ context("Inventory CRUD", () => {
     it("See item details", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "_0]").parent().parent().click()
+                cy.get("[data-test=action_" + itemId + "_0]").parent().parent().click({force: true})
                 cy.get("[data-test=action_" + itemId + "_0]").click()
             })
         })
@@ -130,7 +130,7 @@ context("Inventory CRUD", () => {
     it("Delete item", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "_5]").parent().parent().click()
+                cy.get("[data-test=action_" + itemId + "_5]").parent().parent().click({force: true})
                 cy.get("[data-test=action_" + itemId + "_5]").click()
 
                 cy.waitForUI()
@@ -155,7 +155,7 @@ context("Inventory CRUD", () => {
         })
 
         cy.get("[data-test=detail_inventory_tab_documents]").eq(0).click()
-        cy.contains("Save First").should("visible")
+        cy.contains("Errors on form").should("visible")
 
     })
 

@@ -7,7 +7,7 @@ context("Wanted Board Client Purchase Request CRUD", () => {
     beforeEach(function () {
         cy.viewport(3000, 2000)
         cy.intercept("POST", "/prodex/api/purchase-requests/own/datagrid*").as("inventoryLoading")
-        cy.intercept("POST", "/prodex/api/purchase-requests")
+        cy.intercept("POST", "/prodex/api/purchase-requests").as("createRequest")
 
         cy.FElogin(userJSON.email, userJSON.password)
 

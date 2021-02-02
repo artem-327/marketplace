@@ -108,7 +108,7 @@ context("Prodex Delivery Addresses CRUD", () => {
         cy.contains("126 N G St").should("not.exist")
 
         cy.reload()
-        cy.wait("@addressLoadingPOST")
+        cy.wait("@POST")
 
         cy.contains("126 N G St").should("not.exist")
     })
