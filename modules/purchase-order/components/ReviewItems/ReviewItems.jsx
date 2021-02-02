@@ -37,13 +37,16 @@ const ReviewItems = props => {
   }, [/* variableName */])
 
 
-  return (
-    <RowComponent
+  /*
       sectionState={props.sectionState}
       isExpanded={props.isExpanded}
       onChangeButtonClick={props.onChangeButtonClick}
       onCloseButtonClick={props.onCloseButtonClick}
       onChangeButtonText={props.onChangeButtonText}
+  * */
+  return (
+    <RowComponent
+      {...props}
       header={'1. Review Items'}
       onSubmitClick={() => {
         console.log('!!!!!!!!!! ReviewItems onSubmitClick')

@@ -36,8 +36,7 @@ import { usePrevious } from '../../../hooks'
 import ErrorFocus from '../../../components/error-focus'
 import { getSafe } from '../../../utils/functions'
 import {
-
-
+  getComponentParameters
 
 } from './Checkout.services'
 
@@ -103,66 +102,31 @@ const Checkout = props => {
               <Grid>
 
                 <ReviewItems
-                  isExpanded={openIndex === 0}
-                  sectionState={sectionState[0]}
+                  {...getComponentParameters(0, openIndex, setOpenIndex, sectionState, setSectionState)}
+
                   onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 0 onButtonClick')}
                   onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 0')}
-
-                  onChangeButtonClick={() => setOpenIndex(0)}
-                  onCloseButtonClick={() => setOpenIndex(-1)}
-                  onSubmitClick={() => {
-                    let newState = sectionState.slice()
-                    newState[0].accepted = true
-                    setSectionState(newState)
-                    setOpenIndex(1)
-                  }}
                 />
 
                 <ReviewItems
-                  isExpanded={openIndex === 1}
-                  sectionState={sectionState[1]}
+                  {...getComponentParameters(1, openIndex, setOpenIndex, sectionState, setSectionState)}
+
                   onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 1 onButtonClick')}
                   onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 1')}
-
-                  onChangeButtonClick={() => setOpenIndex(1)}
-                  onCloseButtonClick={() => setOpenIndex(-1)}
-                  onSubmitClick={() => {
-                    let newState = sectionState.slice()
-                    newState[1].accepted = true
-                    setSectionState(newState)
-                    setOpenIndex(2)
-                  }}
                 />
 
                 <ReviewItems
-                  isExpanded={openIndex === 2}
-                  sectionState={sectionState[2]}
+                  {...getComponentParameters(2, openIndex, setOpenIndex, sectionState, setSectionState)}
+
                   onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 2 onButtonClick')}
                   onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 2')}
-
-                  onChangeButtonClick={() => setOpenIndex(2)}
-                  onCloseButtonClick={() => setOpenIndex(-1)}
-                  onSubmitClick={() => {
-                    let newState = sectionState.slice()
-                    newState[2].accepted = true
-                    setSectionState(newState)
-                    setOpenIndex(3)
-                  }}
                 />
 
                 <ReviewItems
-                  isExpanded={openIndex === 3}
-                  sectionState={sectionState[3]}
+                  {...getComponentParameters(3, openIndex, setOpenIndex, sectionState, setSectionState)}
+
                   onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 0 onButtonClick')}
                   onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 3')}
-
-                  onChangeButtonClick={() => setOpenIndex(3)}
-                  onCloseButtonClick={() => setOpenIndex(-1)}
-                  onSubmitClick={() => {
-                    let newState = sectionState.slice()
-                    newState[3].accepted = true
-                    setSectionState(newState)
-                  }}
                 />
 
 
