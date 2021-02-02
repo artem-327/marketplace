@@ -2492,16 +2492,18 @@ class ModalDetail extends Component {
                             ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
                             : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
                         </Button>
-                        <Button
-                          primary
-                          size='large'
-                          type='button'
-                          onClick={() => {
-                            this.setState({ openedTdsSaveAs: true })
-                          }}
-                          data-test='modal_inventory_save_as'>
-                          {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
-                        </Button>
+                        {this.state.activeTab === 1 ? (
+                          <Button
+                            primary
+                            size='large'
+                            type='button'
+                            onClick={() => {
+                              this.setState({ openedTdsSaveAs: true })
+                            }}
+                            data-test='modal_inventory_save_as'>
+                            {formatMessage({ id: 'global.saveAs', defaultMessage: 'Save as' })}
+                          </Button>
+                        ) : null}
                         <ModalTdsSaveAs
                           open={openedTdsSaveAs}
                           closeTdsModal={this.closeTdsModal}

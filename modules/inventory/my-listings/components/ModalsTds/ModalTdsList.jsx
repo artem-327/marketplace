@@ -27,7 +27,7 @@ const ModalTdsList = props => {
   } = props
 
   return (
-    <Modal open={open} onClose={props.closeTdsModal}>
+    <Modal open={open} onClose={props.closeTdsModal} closeIcon={true}>
       <TdsHeader>
         <FormattedMessage id='addInventory.tdsTemplates' defaultMessage='TDS Templates' />
       </TdsHeader>
@@ -35,27 +35,35 @@ const ModalTdsList = props => {
         <Dimmer inverted active={tdsTemplatesLoading}>
           <Loader active={tdsTemplatesLoading} />
         </Dimmer>
-        <TemplateTitle>
-          <FormattedMessage id='addInventory.tdsTemplates.savedTemplates' defaultMessage='Saved Templates' />
-        </TemplateTitle>
-        <TemplateGrid>
-          {tdsTemplates.map(({ id, name, template }) => (
-            <TemplateRow>
-              <TemplateWrapper>
-                {name}
-                <TemplateApply
-                  onClick={() => {
-                    applyTdsTemplate(props, template)
-                  }}>
-                  <FormattedMessage id='global.apply' defaultMessage='Apply' />
-                </TemplateApply>
-              </TemplateWrapper>
-              <TemplateDelete icon onClick={() => deleteTdsTemplate(id)}>
-                <Trash2 />
-              </TemplateDelete>
-            </TemplateRow>
-          ))}
-        </TemplateGrid>
+        {tdsTemplates.length ? (
+          <>
+            <TemplateTitle>
+              <FormattedMessage id='addInventory.tdsTemplates.savedTemplates' defaultMessage='Saved Templates' />
+            </TemplateTitle>
+            <TemplateGrid>
+              {tdsTemplates.map(({ id, name, template }) => (
+                <TemplateRow>
+                  <TemplateWrapper>
+                    {name}
+                    <TemplateApply
+                      onClick={() => {
+                        applyTdsTemplate(props, template)
+                      }}>
+                      <FormattedMessage id='global.apply' defaultMessage='Apply' />
+                    </TemplateApply>
+                  </TemplateWrapper>
+                  <TemplateDelete icon onClick={() => deleteTdsTemplate(id)}>
+                    <Trash2 />
+                  </TemplateDelete>
+                </TemplateRow>
+              ))}
+            </TemplateGrid>
+          </>
+        ) : (
+          <TemplateTitle>
+            <FormattedMessage id='filter.noSavedFilters' defaultMessage='You don’t have saved filters' />
+          </TemplateTitle>
+        )}
       </Modal.Content>
     </Modal>
   )

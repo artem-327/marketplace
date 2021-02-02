@@ -32,7 +32,7 @@ const ModalTdsSaveAs = props => {
         let { submitForm } = formikProps
 
         return (
-          <Modal open={open} onClose={props.closeTdsModal}>
+          <Modal open={open} onClose={props.closeTdsModal} closeIcon={true}>
             <TdsHeader>
               <FormattedMessage id='addInventory.tdsTemplates' defaultMessage='TDS Templates' />
             </TdsHeader>
