@@ -25,6 +25,7 @@ RUN install -d -m 0755 -o appuser -g appuser /home/appuser
 RUN mv /root/.cache /home/appuser/.cache
 
 USER appuser
+ENV CYPRESS_CACHE_FOLDER=/home/cypress-user/.cache/Cypress
 # show user effective id and group - it should be non-zero
 # meaning the current user is not root
 RUN id
