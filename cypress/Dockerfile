@@ -15,20 +15,16 @@ ARG GROUP_ID=999
 
 # if you want to see all existing groups uncomment the next command
 # RUN cat /etc/group
-RUN chmod -R 777 /root/.cache
-RUN npm install
-RUN cypress install
+
 RUN groupadd -g ${GROUP_ID} appuser
 # do not log creating new user, otherwise there could be a lot of messages
 RUN useradd -r --no-log-init -u ${USER_ID} -g appuser appuser
 RUN install -d -m 0755 -o appuser -g appuser /home/appuser
 
 # move test runner binary folder to the non-root's user home directory
-RUN cp -R /root/.cache /home/appuser/.cache
+RUN mv /root/.cache /home/appuser/.cache
 
 USER appuser
 # show user effective id and group - it should be non-zero
 # meaning the current user is not root
 RUN id
-RUN npm install
-RUN cypress install
