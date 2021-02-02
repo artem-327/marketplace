@@ -23,6 +23,7 @@ RUN install -d -m 0755 -o appuser -g appuser /home/appuser
 
 # move test runner binary folder to the non-root's user home directory
 RUN mv /root/.cache /home/appuser/.cache
+RUN mv /root/.npm /home/appuser/.npm
 
 USER appuser
 ENV CYPRESS_CACHE_FOLDER=/home/appuser/.cache/Cypress
