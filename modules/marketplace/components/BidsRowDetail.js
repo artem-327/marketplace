@@ -284,7 +284,7 @@ class BidsRowDetail extends Component {
           let amount = pkgAmount
           if (isNaN(pkgAmount)) amount = 1
 
-          const listFobPrice = getPricing(popupValues.productOffer, amount).price
+          const listFobPrice = popupValues.originalPricePerUOM
           const totalListPrice = amount * packagingSize * listFobPrice
 
           return (
