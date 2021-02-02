@@ -1705,6 +1705,14 @@
   "cart.addresses": "Addresses",
   "cart.warehouses": "Warehouses",
   "cart.branches": "Branches",
+  "checkout.header.items": "Checkout ({value} Items)",
+  "checkout.header.returnToCart": "Are you sure you want to return to your Shopping Cart?",
+  "checkout.header.button.stayInCheckout": "Stay in Checkout",
+  "checkout.header.button.returnToCart": "Return to Cart",
+
+
+
+
   "order.deleteHeader": "Delete Order",
   "order.deleteBody": "You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?",
   "cart.shoppingCartHeader": "ITEMS ({number})",

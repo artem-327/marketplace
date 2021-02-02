@@ -1,5 +1,7 @@
 import { connect } from 'react-redux'
 import PurchaseOrder from './PurchaseOrder'
+import TmpBoth from './TmpBoth'
+import Checkout from './Checkout'
 import * as Actions from '../actions'
 
 import { getSafe } from '~/utils/functions'
@@ -62,4 +64,4 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, Actions)(PurchaseOrder)
+export default connect(mapStateToProps, Actions)(TmpBoth)
