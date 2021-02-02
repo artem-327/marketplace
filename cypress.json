@@ -9,5 +9,6 @@
   "viewportWidth" : 2250,
   "video": false,
   "requestTimeout": 30000,
-  "defaultCommandTimeout": 10000
+  "defaultCommandTimeout": 10000,
+  "numTestsKeptInMemory": 10
 }
