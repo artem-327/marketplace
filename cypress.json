@@ -10,5 +10,5 @@
   "video": false,
   "requestTimeout": 30000,
   "defaultCommandTimeout": 10000,
-  "numTestsKeptInMemory": 10
+  "numTestsKeptInMemory": 0
 }
