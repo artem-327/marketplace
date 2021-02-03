@@ -599,6 +599,11 @@ div.page-wrapper {
   .marketplace-container > .flex.stretched {
     flex-grow: 1;
     flex-shrink: 1;
+
+    .table-responsive {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
   }
 
   .marketplace-container {
