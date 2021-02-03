@@ -554,3 +554,10 @@ export function deleteTdsTemplate(templateId) {
     }
   }
 }
+
+export function changeBroadcast(broadcastOption) {
+  return {
+    type: AT.CHANGE_BROADCAST,
+    payload: broadcastOption
+  }
+}
