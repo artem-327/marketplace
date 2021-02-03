@@ -21,7 +21,14 @@ import {
 } from 'semantic-ui-react'
 
 import {
-  GridStyled
+  GridStyled,
+  DivRowHeader,
+  DivTopControl,
+  DivRightButtons
+
+
+
+
 } from './RowComponent.styles'
 
 
@@ -67,28 +74,28 @@ const RowComponent = props => {
   return (
     <GridRow>
       <GridColumn>
-
         <GridStyled>
-
           <GridRow>
             <GridColumn width={8}>
-              {header}
+              <DivRowHeader>{header}</DivRowHeader>
             </GridColumn>
             {sectionState.accepted && (
               <GridColumn width={8}>
-                {isExpanded ? (
-                  <Button
-                    onClick={() => onCloseButtonClick()}
-                  >
-                    Close
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => onChangeButtonClick()}
-                  >
-                    Change
-                  </Button>
-                )}
+                <DivRightButtons>
+                  {isExpanded ? (
+                    <DivTopControl
+                      onClick={() => onCloseButtonClick()}
+                    >
+                      Close
+                    </DivTopControl>
+                  ) : (
+                    <DivTopControl
+                      onClick={() => onChangeButtonClick()}
+                    >
+                      Change
+                    </DivTopControl>
+                  )}
+                </DivRightButtons>
               </GridColumn>
             )}
           </GridRow>
@@ -104,12 +111,14 @@ const RowComponent = props => {
               <GridColumn width={8}>
 
               </GridColumn>
-              <GridColumn width={8}>
-                <Button
-                  onClick={() => onSubmitClick()}
-                >
-                  {submitButtonCaption}
-                </Button>
+              <GridColumn width={8} className='buttons'>
+                <DivRightButtons>
+                  <Button
+                    onClick={() => onSubmitClick()}
+                  >
+                    {submitButtonCaption}
+                  </Button>
+                </DivRightButtons>
               </GridColumn>
             </GridRow>
           )}

@@ -2,24 +2,50 @@
 import { getSafe } from '~/utils/functions'
 
 /**
- * @param {number} rowIndex
- *
+ * @param {object} sectionState Object with section statuses
+ * @return {string} Name of section to open for edit/accept
+ */
+export const findSectionToOpen = (sectionState) => {
+  const keys = Object.keys(sectionState)
+  const index = keys.findIndex(el => sectionState[el].accepted === false)
+
+  if (index >= 0) {
+    return keys[index]
+  } else {
+    return ''
+  }
+}
+
+/**
+ * @param {string} name
+ * // ! ! ...
  *
  * @return object Default component attributes and event handlings (isExpanded, onButtonClick, onChangeButtonClick, etc.)
  */
-export const getComponentParameters = (rowIndex, openIndex, setOpenIndex, sectionState, setSectionState) => {
+export const getComponentParameters = (name, openSection, setOpenSection, sectionState, setSectionState) => {
 
   return {
-    isExpanded: openIndex === rowIndex,
-    sectionState: sectionState[rowIndex],
-    onChangeButtonClick: () => setOpenIndex(rowIndex),
-    onCloseButtonClick: () => setOpenIndex(-1), // ! ! Tohle predelat
+    isExpanded: openSection === name,
+    sectionState: sectionState[name],
+    onChangeButtonClick: () => setOpenSection(name),
+    onCloseButtonClick: () => {
+      const sectionToOpen = findSectionToOpen(sectionState)
+      setOpenSection(sectionToOpen)
+    },
+    onSubmitClick: () => {
+      if (name) {
 
-    onSubmitClick: () => {                  // pokud uz zpracovane vsechny kategorie tak Place order?
-      let newState = sectionState.slice()
-      newState[rowIndex].accepted = true
-      setSectionState(newState)
-      setOpenIndex(rowIndex + 1)
+        const newSectionState = {
+          ...sectionState,
+          [name]: {
+            ...sectionState[name],
+            accepted: true
+          }
+        }
+        const sectionToOpen = findSectionToOpen(newSectionState)
+        setSectionState(newSectionState)
+        setOpenSection(sectionToOpen)
+      }
     }
   }
 }

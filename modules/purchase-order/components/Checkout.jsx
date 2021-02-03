@@ -44,6 +44,7 @@ import {
 import {
   DivCheckoutWrapper,
   ContainerCheckout,
+  GridSections,
 
 
 
@@ -53,13 +54,13 @@ import {
 //Constants
 
 const Checkout = props => {
-  const [openIndex, setOpenIndex] = useState(0)
-  const [sectionState, setSectionState] = useState([
-    { accepted: false },   // 1. Review Items
-    { accepted: false },   // 2. Shipping & Terms
-    { accepted: false },   // 3. Payment
-    { accepted: false }    // 4. Freight Selection
-  ])
+  const [openSection, setOpenSection] = useState('review')
+  const [sectionState, setSectionState] = useState({
+    'review': { accepted: false },    // 1. Review Items
+    'shipping': { accepted: false },  // 2. Shipping & Terms
+    'payment': { accepted: false },   // 3. Payment
+    'freight': { accepted: false }    // 4. Freight Selection
+  })
 
   const {
     cartItems,
@@ -99,39 +100,37 @@ const Checkout = props => {
         <Grid>
           <GridRow>
             <GridColumn width={12}>
-              <Grid>
+              <GridSections>
 
                 <ReviewItems
-                  {...getComponentParameters(0, openIndex, setOpenIndex, sectionState, setSectionState)}
+                  {...getComponentParameters('review', openSection, setOpenSection, sectionState, setSectionState)}
 
                   onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 0 onButtonClick')}
                   onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 0')}
                 />
 
                 <ReviewItems
-                  {...getComponentParameters(1, openIndex, setOpenIndex, sectionState, setSectionState)}
+                  {...getComponentParameters('shipping', openSection, setOpenSection, sectionState, setSectionState)}
 
                   onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 1 onButtonClick')}
                   onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 1')}
                 />
 
                 <ReviewItems
-                  {...getComponentParameters(2, openIndex, setOpenIndex, sectionState, setSectionState)}
+                  {...getComponentParameters('payment', openSection, setOpenSection, sectionState, setSectionState)}
 
                   onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 2 onButtonClick')}
                   onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 2')}
                 />
 
                 <ReviewItems
-                  {...getComponentParameters(3, openIndex, setOpenIndex, sectionState, setSectionState)}
+                  {...getComponentParameters('freight', openSection, setOpenSection, sectionState, setSectionState)}
 
                   onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 0 onButtonClick')}
                   onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 3')}
                 />
 
-
-
-              </Grid>
+              </GridSections>
             </GridColumn>
             <GridColumn width={4}>
               <OrderSummary

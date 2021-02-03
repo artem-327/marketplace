@@ -22,5 +22,14 @@ export const DivCheckoutWrapper = styled.div`
 
 export const ContainerCheckout = styled(SemanticContainer)`
   padding: 20px 30px 30px 30px !important;
-  /*overflow-x: hidden;*/
+`
+
+export const GridSections = styled(Grid)`
+  &.ui.grid {
+    margin: -7.5px -5px;
+  
+    > .row {
+      padding: 2.5px 0;
+    }
+  }
 `

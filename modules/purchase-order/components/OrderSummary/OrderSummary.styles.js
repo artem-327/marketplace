@@ -3,7 +3,7 @@ import { Button, Grid } from 'semantic-ui-react'
 
 export const GridSummary = styled(Grid)`
   &.ui.grid {
-    margin: -3.5px -5px;   
+    margin: -5px;   
     border-radius: 4px;
     border: solid 1px #dee2e6;
     background-color: #ffffff;
