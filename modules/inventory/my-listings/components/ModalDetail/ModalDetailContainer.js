@@ -24,7 +24,8 @@ import {
   removeAttachmentLinkProductOffer,
   saveTdsAsTemplate,
   getTdsTemplates,
-  deleteTdsTemplate
+  deleteTdsTemplate,
+  changeBroadcast
 } from '../../../actions'
 import { openBroadcast } from '../../../../broadcast/actions'
 
@@ -54,7 +55,8 @@ const mapDispatchToProps = {
   saveTdsAsTemplate,
   getTdsTemplates,
   deleteTdsTemplate,
-  broadcastChange
+  broadcastChange,
+  changeBroadcast
 }
 
 const mapStateToProps = (
@@ -79,7 +81,8 @@ const mapStateToProps = (
       listDocumentTypes,
       editProductOfferInitTrig,
       tdsTemplatesLoading,
-      tdsTemplates
+      tdsTemplates,
+      broadcastOption
     },
     broadcast
   },
@@ -108,7 +111,8 @@ const mapStateToProps = (
   isLoadingBroadcast: getSafe(() => broadcast.loading, false),
   broadcastTemplates: getSafe(() => broadcast.templates, []),
   tdsTemplatesLoading,
-  tdsTemplates
+  tdsTemplates,
+  broadcastOption
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalDetail)

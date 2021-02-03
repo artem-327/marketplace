@@ -36,7 +36,7 @@ export const LIST_CONFORMING = [
 /**
  * @type {'FREE_FOR_ALL'}
  */
-const FREE_FOR_ALL = 'FREE_FOR_ALL'
+export const FREE_FOR_ALL = 'FREE_FOR_ALL'
 /**
  * @type {'NO_BROADCAST'}
  */
@@ -72,7 +72,9 @@ export const OPTIONS_BROADCAST = [
     title: <FormattedMessage id='myInventory.network' defaultMessage='Network' />,
     subtitleId: 'myInventory.networkSubtitle',
     subtitleText: 'Your accepted Partners and invited Guests',
-    value: FREE_FOR_ALL
+    value: FREE_FOR_ALL,
+    id: null,
+    tmp: null
   },
   /*{
     icon: (
@@ -110,7 +112,9 @@ export const OPTIONS_BROADCAST = [
     title: <FormattedMessage id='myInventory.guests' defaultMessage='Guests' />,
     subtitleId: 'myInventory.guestsSubtitle',
     subtitleText: 'Your invited Guests',
-    value: CLIENT_COMPANIES
+    value: CLIENT_COMPANIES,
+    id: null,
+    tmp: null
   },
   {
     icon: (
@@ -141,7 +145,9 @@ export const OPTIONS_BROADCAST = [
     title: <FormattedMessage id='myInventory.justMe' defaultMessage='Just Me' />,
     subtitleId: 'myInventory.justMeSubtitle',
     subtitleText: 'Only my Company',
-    value: NO_BROADCAST
+    value: NO_BROADCAST,
+    id: null,
+    tmp: null
   }
 ]
 
