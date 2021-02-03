@@ -272,7 +272,7 @@ class Filter extends Component {
     else this.setState({ openedSaveFilter: false })
   }
 
-  generateDropdown = (data, values, placeholder, groupName = null) => {
+  generateDropdown = (data, values, placeholder, groupName = null, upward = false) => {
     if (!data) return []
 
     const options = data.map(d => {
@@ -292,7 +292,8 @@ class Filter extends Component {
         inputProps={{
           multiple: true,
           fluid: true,
-          placeholder
+          placeholder,
+          upward: upward
         }}
       />
     )
@@ -598,25 +599,29 @@ class Filter extends Component {
       uniquePackagingTypes,
       values,
       formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
-      'packagingTypes'
+      'packagingTypes',
+      true
     )
     let productConditionDropdown = this.generateDropdown(
       productConditions,
       values,
       formatMessage({ id: 'filter.selectCondition', defaultMessage: 'Select Condition (Multiple Select)' }),
-      'productConditions'
+      'productConditions',
+      true
     )
     let productGradeDropdown = this.generateDropdown(
       productGrades,
       values,
       formatMessage({ id: 'filter.selectGrade', defaultMessage: 'Select Grade (Multiple Select)' }),
-      'productGrades'
+      'productGrades',
+      true
     )
     let productFormsDropdown = this.generateDropdown(
       productForms,
       values,
       formatMessage({ id: 'filter.selectForm', defaultMessage: 'Select Form (Multiple Select)' }),
-      'productForms'
+      'productForms',
+      true
     )
 
     var noResultsMessage = null

@@ -837,6 +837,87 @@ h3.ui.header {
   padding-top: 1em;
 }
 
+.field.error input[type="text"],
+.field.error input[type="password"],
+.field.error input[type="email"],
+.field.error input[type="number"],
+.field.error input[type="search"],
+.field.error input[type="tel"],
+.field.error input[type="time"],
+.field.error input[type="file"],
+.field.error input[type="url"],
+.field.error input[type="datetime-local"],
+.field.error input[type="date"],
+.field.error input:not([type]),
+.field.error select,
+.field.error textarea,
+.ui.page .field.error input[type="text"],
+.ui.page .field.error input[type="password"],
+.ui.page .field.error input[type="email"],
+.ui.page .field.error input[type="number"],
+.ui.page .field.error input[type="search"],
+.ui.page .field.error input[type="tel"],
+.ui.page .field.error input[type="time"],
+.ui.page .field.error input[type="file"],
+.ui.page .field.error input[type="url"],
+.ui.page .field.error input[type="datetime-local"],
+.ui.page .field.error input[type="date"],
+.ui.page .field.error input:not([type]),
+.ui.page .field.error select,
+.ui.page .field.error textarea {
+  border-color: #e0b4b4 !important;
+  background: #fff6f6 !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  color: #9f3a38 !important;
+}
+
+/* Chrome, Firefox (opacity only for FF), Opera, Safari 10.1+ */
+.ui.page .field.error input[type="text"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="password"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="email"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="number"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="search"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="tel"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="time"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="file"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="url"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="datetime-local"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input[type="date"]::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error input:not([type])::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error select::placeholder { color: #9f3a38 !important; opacity: 1; }
+.ui.page .field.error textarea::placeholder { color: #9f3a38 !important; opacity: 1; }
+/* Internet Explorer 10-11 */
+.ui.page .field.error input[type="text"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="password"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="email"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="number"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="search"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="tel"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="time"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="file"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="url"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="datetime-local"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="date"]:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input:not([type]):-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error select:-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error textarea:-ms-input-placeholder { color: #9f3a38 !important; }
+/* Microsoft Edge */
+.ui.page .field.error input[type="text"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="password"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="email"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="number"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="search"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="tel"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="time"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="file"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="url"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="datetime-local"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input[type="date"]::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error input:not([type])::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error select::-ms-input-placeholder { color: #9f3a38 !important; }
+.ui.page .field.error textarea::-ms-input-placeholder { color: #9f3a38 !important; }
+
 .upload-input .uploadLot {
   padding: 0;
   background: transparent none;
