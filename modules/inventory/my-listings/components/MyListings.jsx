@@ -302,7 +302,7 @@ class MyListings extends Component {
         {
           name: 'productName',
           title: (
-            <FormattedMessage FormattedMessage id='global.intProductName' defaultMessage='Product Name'>
+            <FormattedMessage id='global.intProductName' defaultMessage='Product Name'>
               {text => text}
             </FormattedMessage>
           ),
