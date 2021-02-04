@@ -371,3 +371,9 @@ Shipping.propTypes = {
   getAddress: func,
   selectedAddress: object
 }
+
+Shipping.defaultProps = {
+  deliveryAddresses: [],
+  getAddress: () => {},
+  selectedAddress: null
+}
