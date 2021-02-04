@@ -504,30 +504,33 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_AUTOCOMPLETE_DATA_FULFILLED: {
+      const data = getSafe(() => action.payload.length, null)
+        ? action.payload
+            .map(el => {
+              const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
+              const productName = getSafe(() => el.intProductName, el.mfrProductName)
+              return {
+                ...el,
+                key: el.id,
+                text: `${productName} ${productCode}`,
+                value: JSON.stringify({
+                  id: el.id,
+                  name: productName,
+                  casNumber: productCode
+                }),
+                content: {
+                  productCode: productCode,
+                  productName: productName,
+                  casProducts: getSafe(() => el.companyGenericProduct.elements, [])
+                }
+              }
+            })
+            .concat(state.autocompleteData)
+        : state.autocompleteData
       return {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(action.payload, 'id')
-          .map(el => {
-            const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
-            const productName = getSafe(() => el.intProductName, el.mfrProductName)
-            return {
-              ...el,
-              key: el.id,
-              text: `${productName} ${productCode}`,
-              value: JSON.stringify({
-                id: el.id,
-                name: productName,
-                casNumber: productCode
-              }),
-              content: {
-                productCode: productCode,
-                productName: productName,
-                casProducts: getSafe(() => el.companyGenericProduct.elements, [])
-              }
-            }
-          })
-          .concat(state.autocompleteData)
+        autocompleteData: uniqueArrayByKey(data, 'id')
       }
     }
 

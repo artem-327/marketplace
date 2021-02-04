@@ -122,17 +122,21 @@ export default {
   },
   postImportCompanyGenericProductMap: (id, mapId) => {
     return api
-      .post(`/prodex/api/imports/company-generic-products/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}`)
+      .post(
+        `/prodex/api/imports/company-generic-products/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}`
+      )
       .then(response => response.data)
   },
-  postImportProductOfferCSV: (body, id) => {
+  postImportProductOfferCSV: (body, id, paramBroadcast) => {
     return api
-      .post(`/prodex/api/imports/product-offers/spreadsheet-import?temporaryFileId=${id}`, body)
+      .post(`/prodex/api/imports/product-offers/spreadsheet-import?temporaryFileId=${id}${paramBroadcast}`, body)
       .then(response => response.data)
   },
-  postImportProductOfferMap: (id, mapId) => {
+  postImportProductOfferMap: (id, mapId, paramBroadcast) => {
     return api
-      .post(`/prodex/api/imports/product-offers/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}`)
+      .post(
+        `/prodex/api/imports/product-offers/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}${paramBroadcast}`
+      )
       .then(response => response.data)
   },
   uploadCSVFile: (file, type) => {

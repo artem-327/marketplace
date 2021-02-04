@@ -349,9 +349,15 @@ class ProductImportPopup extends Component {
         }
         break
       case 'preview':
+        const paramBroadcast =
+          broadcastOption.indexOf('|') >= 0
+            ? `&broadcastTemplateId=${getSafe(() => parseInt(broadcastOption.split('|')[1]), '')}`
+            : broadcastOption
+            ? `&broadcastOption=${broadcastOption}`
+            : null
         if (selectedSavedMap) {
           this.props.productOffer
-            ? this.props.postImportProductOfferMap(csvFileId, selectedSavedMap.id)
+            ? this.props.postImportProductOfferMap(csvFileId, selectedSavedMap.id, paramBroadcast)
             : this.props.companyGenericProduct
             ? this.props.postImportCompanyGenericProductMap(csvFileId, selectedSavedMap.id)
             : this.props.companies
@@ -359,7 +365,7 @@ class ProductImportPopup extends Component {
             : this.props.postImportProductMap(csvFileId, selectedSavedMap.id)
         } else {
           this.props.productOffer
-            ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId)
+            ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId, paramBroadcast)
             : this.props.companyGenericProduct
             ? this.props.postImportCompanyGenericProductCSV(mappedDataHeaderCSV, csvFileId)
             : this.props.companies
