@@ -606,6 +606,14 @@ div.page-wrapper {
     }
   }
 
+  .table-responsive-wider {
+    > .flex-column {
+      overflow: hidden;
+      margin-right: -2.2857143em;
+      padding-right: 2.2857143em;
+    }
+  }
+
   .marketplace-container {
     display: flex;
     flex-flow: column;
