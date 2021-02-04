@@ -1,8 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-
-import { Header, Modal, Grid, Icon, Step, ModalContent, Button, Checkbox } from 'semantic-ui-react'
+import { Header, Modal, Grid, Icon, Step, ModalContent, Button, Checkbox, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/dist/client/router'
 
@@ -31,7 +30,13 @@ import _invert from 'lodash/invert'
 import confirm from '~/components/Confirmable/confirm'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
-
+import { OPTIONS_BROADCAST } from '../../my-listings/components/ModalDetail/ModalDetail.constants'
+import { getSafe } from '../../../../utils/functions'
+import { getTemplates, broadcastChange } from '../../../broadcast/actions'
+//Styles
+import { DivIconOptions, HeaderOptions } from '../../constants/layout'
+//Actions
+import { changeBroadcast } from '../../actions'
 const StyledModal = styled(ModalContent)`
   height: 500px;
   overflow: auto;
@@ -43,8 +48,12 @@ const StyledHeader = styled(Header)`
 
 const CheckboxContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   padding: 15px;
+`
+
+const DivSeeOffer = styled.div`
+  width: 400px;
 `
 
 class ProductImportPopup extends Component {
@@ -53,6 +62,13 @@ class ProductImportPopup extends Component {
     isFinishUpload: false,
     isFinishMap: false,
     isFinishPreview: false
+  }
+
+  async componentDidMount() {
+    const { broadcastTemplates, getTemplates, formatMessage } = this.props
+    if (broadcastTemplates && !broadcastTemplates.length) {
+      await getTemplates()
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -106,10 +122,43 @@ class ProductImportPopup extends Component {
       intl: { formatMessage },
       csvImportError,
       reloadFilter,
-      csvWithoutHeader
+      csvWithoutHeader,
+      broadcastTemplates
     } = this.props
 
     const { currentStep, isFinishUpload, isFinishMap, isFinishPreview } = this.state
+
+    const optionsSeeOffer = OPTIONS_BROADCAST.map(opt => {
+      return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }) }
+    }).concat([
+      ...broadcastTemplates.map(template => {
+        return {
+          icon: (
+            <DivIconOptions>
+              <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+                <g fill='none' fill-rule='evenodd'>
+                  <path
+                    d='M0 0L24 0 24 24 0 24z'
+                    transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+                  />
+                  <path
+                    fill='#848893'
+                    fill-rule='nonzero'
+                    d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z'
+                    transform='translate(-1125 -627) translate(1105 295) translate(0 29) translate(20 303)'
+                  />
+                </g>
+              </svg>
+            </DivIconOptions>
+          ),
+          title: template.name,
+          subtitle: formatMessage({ id: 'myInventory.customTemplate', defaultMessage: 'Custom Template' }),
+          id: template.id,
+          tmp: template.name,
+          value: `BROADCAST_TEMPLATE|${template.id}`
+        }
+      })
+    ])
 
     return (
       <Modal
@@ -167,6 +216,27 @@ class ProductImportPopup extends Component {
             checked={csvWithoutHeader}
             onChange={() => this.props.changeCsvHeader()}
           />
+          {currentStep === 'preview' && (
+            <DivSeeOffer>
+              <Dropdown
+                name='import.broadcastOption'
+                data-test='aimport_inventory_whoShouldSee'
+                fluid
+                selection
+                closeOnChange
+                onChange={(e, { value }) => this.props.changeBroadcast(value)}
+                value={this.props.broadcastOption}
+                options={optionsSeeOffer.map((option, optIndex) => {
+                  return {
+                    key: option.id ? option.id : optIndex * -1 - 1,
+                    text: <HeaderOptions icon={option.icon} content={option.title} subheader={option.subtitle} />,
+                    value: option.value,
+                    content: <HeaderOptions icon={option.icon} content={option.title} subheader={option.subtitle} />
+                  }
+                })}
+              />
+            </DivSeeOffer>
+          )}
         </CheckboxContainer>
         <Modal.Actions>
           {currentStep !== 'confirmation' && (
@@ -215,7 +285,8 @@ class ProductImportPopup extends Component {
       csvFileId,
       selectedSavedMap, // mapper (header): csvHeader (content)
       intl: { formatMessage },
-      toastManager
+      toastManager,
+      broadcastOption
     } = this.props
     const { currentStep } = this.state
 
@@ -284,16 +355,16 @@ class ProductImportPopup extends Component {
             : this.props.companyGenericProduct
             ? this.props.postImportCompanyGenericProductMap(csvFileId, selectedSavedMap.id)
             : this.props.companies
-              ? this.props.postImportCompaniesMap(csvFileId, selectedSavedMap.id)
-              : this.props.postImportProductMap(csvFileId, selectedSavedMap.id)
+            ? this.props.postImportCompaniesMap(csvFileId, selectedSavedMap.id)
+            : this.props.postImportProductMap(csvFileId, selectedSavedMap.id)
         } else {
           this.props.productOffer
             ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId)
             : this.props.companyGenericProduct
             ? this.props.postImportCompanyGenericProductCSV(mappedDataHeaderCSV, csvFileId)
             : this.props.companies
-              ? this.props.postImportCompaniesCSV(mappedDataHeaderCSV, csvFileId)
-              : this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
+            ? this.props.postImportCompaniesCSV(mappedDataHeaderCSV, csvFileId)
+            : this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
         }
 
         this.setState({ currentStep: 'confirmation', isFinishPreview: true })
@@ -316,7 +387,9 @@ const mapDispatchToProps = {
   handleSaveMapCSV,
   postImportCompaniesCSV,
   postImportCompaniesMap,
-  changeCsvHeader
+  changeCsvHeader,
+  getTemplates,
+  changeBroadcast
 }
 
 const mapStateToProps = state => {
@@ -339,7 +412,9 @@ const mapStateToProps = state => {
       },
       value: state.settings.filterValue
     },
-    csvWithoutHeader: state.settings.csvWithoutHeader
+    csvWithoutHeader: state.settings.csvWithoutHeader,
+    broadcastTemplates: getSafe(() => state.broadcast.templates, []),
+    broadcastOption: getSafe(() => state.simpleAdd.broadcastOption, null)
   }
 }
 

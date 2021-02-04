@@ -31,7 +31,7 @@ function mapStateToProps(store, { datagrid }) {
     detailValues,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-      let fobPrice = 'N/A'
+      let fobPrice
 
       try {
         if (po.pricingTiers.length > 1)

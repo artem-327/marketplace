@@ -2,6 +2,8 @@ import * as AT from './action-types'
 
 import { uniqueArrayByKey, getSafe } from '~/utils/functions'
 import moment from 'moment'
+//Constants
+import { FREE_FOR_ALL } from './my-listings/components/ModalDetail/ModalDetail.constants'
 
 export const initialState = {
   fileIds: [],
@@ -47,7 +49,8 @@ export const initialState = {
   myListingsFilters: null,
   myProductsFilters: null,
   tdsTemplatesLoading: false,
-  tdsTemplates: []
+  tdsTemplates: [],
+  broadcastOption: FREE_FOR_ALL
 }
 
 export default function reducer(state = initialState, action) {
@@ -678,6 +681,13 @@ export default function reducer(state = initialState, action) {
           }
           return result
         }, [])
+      }
+    }
+
+    case AT.CHANGE_BROADCAST: {
+      return {
+        ...state,
+        broadcastOption: action.payload
       }
     }
 

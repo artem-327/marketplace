@@ -860,6 +860,7 @@ h3.ui.header {
 .field.error input:not([type]),
 .field.error select,
 .field.error textarea,
+.field.error .ui.dropdown,
 .ui.page .field.error input[type="text"],
 .ui.page .field.error input[type="password"],
 .ui.page .field.error input[type="email"],
@@ -873,12 +874,22 @@ h3.ui.header {
 .ui.page .field.error input[type="date"],
 .ui.page .field.error input:not([type]),
 .ui.page .field.error select,
-.ui.page .field.error textarea {
+.ui.page .field.error textarea,
+.ui.page .field.error .ui.dropdown {
   border-color: #e0b4b4 !important;
   background: #fff6f6 !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   color: #9f3a38 !important;
+}
+
+.field.error .ui.dropdown .default.text,
+.ui.page .field.error .ui.dropdown .default.text {
+  color: #9f3a38 !important;
+}
+
+.ui.search.dropdown > input.search {
+  left: 0;
 }
 
 /* Chrome, Firefox (opacity only for FF), Opera, Safari 10.1+ */

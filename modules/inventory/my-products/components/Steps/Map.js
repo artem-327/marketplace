@@ -244,7 +244,6 @@ const simpleProductOfferList = {
   constant: 'import',
   required: ['companyProductMapper', 'pkgAvailableMapper', 'pricingTiersMapper', 'warehouseNameMapper'],
   optional: [
-    'broadcastedMapper',
     'conditionMapper',
     'conditionNotesMapper',
     'conformingMapper',

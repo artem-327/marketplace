@@ -9,23 +9,28 @@ import styled from 'styled-components'
 export default class Payment extends Component {
   render() {
     let { payments, billingInfo, companyName } = this.props
-    let columns = payments.length === 0 ? { computer: 16 } : { computer: 8 }
 
     return (
       <>
         <GridRow>
-          <GridColumn {...columns} tablet={16}>
+          <GridColumn computer={payments && payments.length === 0 ? 16 : 8} tablet={16}>
             {payments.length === 0 ? (
-              <FormattedMessage
-                id='payments.notAvailableAddOne'
-                values={{
-                  addBankAccount: (
-                    <FormattedMessage id='payments.addBankAccount'>
-                      {text => <Link href='/settings/bank-accounts'>{text}</Link>}
-                    </FormattedMessage>
-                  )
-                }}
-              />
+              <>
+                <FormattedMessage
+                  id='payments.notAvailableAddOne'
+                  values={{
+                    addBankAccount: (
+                      <FormattedMessage id='payments.addBankAccount' defaultMessage='Add Bank Account'>
+                        {text => (
+                          <Link href='/settings/bank-accounts'>
+                            <a>{text}</a>
+                          </Link>
+                        )}
+                      </FormattedMessage>
+                    )
+                  }}
+                />
+              </>
             ) : (
               <Dropdown
                 options={payments.map(payment => ({
@@ -37,7 +42,11 @@ export default class Payment extends Component {
                 selection
                 name='payment'
                 inputProps={{
-                  placeholder: <FormattedMessage id='cart.selectBankAccount' />,
+                  placeholder: (
+                    <>
+                      <FormattedMessage id='cart.selectBankAccount' defaultMessage='Select Bank Account' />
+                    </>
+                  ),
                   'data-test': 'purchase_order_payment_drpdn'
                 }}
               />
