@@ -445,6 +445,16 @@ class ModalDetail extends Component {
         this.setState({ changedForm: false, edited: false })
         break
     }
+    /**
+     * Add broadcastedTemplateId or broadcastOption to the request body ProductOfferCreateRequest if isn't edit mode.
+     */
+    if (!isEdit && getSafe(() => values.edit.broadcastOption, null)) {
+      if (values.edit.broadcastOption.indexOf('|') >= 0) {
+        props.broadcastedTemplateId = values.edit.broadcastOption.split('|')[1]
+      } else {
+        props.broadcastOption = values.edit.broadcastOption
+      }
+    }
 
     if (Object.keys(props).length) {
       try {
@@ -758,9 +768,24 @@ class ModalDetail extends Component {
       broadcastTemplates,
       tdsTemplatesLoading,
       tdsTemplates,
-      broadcastChange
+      broadcastChange,
+      autocompleteData
     } = this.props
     const { openedTdsList, openedTdsSaveAs } = this.state
+
+    const optionsProduct = autocompleteData.map((el, i) => {
+      const code = getSafe(() => el.intProductCode, '')
+      const name = getSafe(() => el.intProductName, '')
+      const dispName = code && name ? `${name} (${code})` : code ? code : name
+      const packagingSize = getSafe(() => el.packagingSize, '')
+      const packagingUnit = getSafe(() => el.packagingUnit.nameAbbreviation, '')
+      const packagingType = getSafe(() => el.packagingType.name, '')
+      return {
+        key: i,
+        text: `${dispName}: ${packagingSize} ${packagingUnit} ${packagingType}`,
+        value: el.id
+      }
+    })
 
     const optionsSeeOffer = OPTIONS_BROADCAST.map(opt => {
       return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }) }
@@ -940,30 +965,7 @@ class ModalDetail extends Component {
                                                   </FormattedMessage>
                                                   <Dropdown
                                                     name='edit.product'
-                                                    options={this.props.autocompleteData.map((el, i) => {
-                                                      const code = getSafe(() => el.intProductCode, '')
-                                                      const name = getSafe(() => el.intProductName, '')
-                                                      const dispName =
-                                                        code && name ? `${name} (${code})` : code ? code : name
-                                                      const packagingSize = getSafe(() => el.packagingSize, '')
-                                                      const packagingUnit = getSafe(
-                                                        () => el.packagingUnit.nameAbbreviation,
-                                                        ''
-                                                      )
-                                                      const packagingType = getSafe(() => el.packagingType.name, '')
-                                                      return {
-                                                        key: i,
-                                                        text: (
-                                                          <>
-                                                            {`${dispName}: ${packagingSize} ${packagingUnit} `}
-                                                            <span style={{ textTransform: 'capitalize' }}>
-                                                              {packagingType}
-                                                            </span>
-                                                          </>
-                                                        ),
-                                                        value: el.id
-                                                      }
-                                                    })}
+                                                    options={optionsProduct}
                                                     inputProps={{
                                                       placeholder: (
                                                         <FormattedMessage
@@ -977,7 +979,7 @@ class ModalDetail extends Component {
                                                       minCharacters: 1,
                                                       icon: 'search',
                                                       fluid: true,
-                                                      search: options => options,
+                                                      search: true,
                                                       selection: true,
                                                       clearable: true,
                                                       onChange: (e, { value }) =>
@@ -1185,42 +1187,43 @@ class ModalDetail extends Component {
                                         </DivRequiredFields>
                                       </GridColumn>
                                     </GridRow>
-                                    {getSafe(() => detailValues.id, false) && (
-                                      <CustomGridRow>
-                                        <GridColumn width={8}>
-                                          <FormField width={8}>
-                                            <FormattedMessage
-                                              id='myInventory.whoShouldSee'
-                                              defaultMessage='Who should see this offer?'>
-                                              {text => <label>{text}</label>}
-                                            </FormattedMessage>
-                                            <Dropdown
-                                              name='edit.broadcastOption'
-                                              inputProps={{
-                                                onChange: this.onChange,
-                                                'data-test': 'add_inventory_whoShouldSee',
-                                                fluid: true,
-                                                closeOnChange: true
-                                              }}
-                                              options={optionsSeeOffer.map((option, optIndex) => {
-                                                return {
-                                                  key: option.id ? option.id : optIndex * -1 - 1,
-                                                  text: (
-                                                    <HeaderOptions
-                                                      icon={option.icon}
-                                                      content={option.title}
-                                                      subheader={option.subtitle}
-                                                    />
-                                                  ),
-                                                  value: option.value,
-                                                  content: (
-                                                    <HeaderOptions
-                                                      icon={option.icon}
-                                                      content={option.title}
-                                                      subheader={option.subtitle}
-                                                    />
-                                                  ),
-                                                  onClick: () => {
+
+                                    <CustomGridRow>
+                                      <GridColumn width={8}>
+                                        <FormField width={8}>
+                                          <FormattedMessage
+                                            id='myInventory.whoShouldSee'
+                                            defaultMessage='Who should see this offer?'>
+                                            {text => <label>{text}</label>}
+                                          </FormattedMessage>
+                                          <Dropdown
+                                            name='edit.broadcastOption'
+                                            inputProps={{
+                                              onChange: this.onChange,
+                                              'data-test': 'add_inventory_whoShouldSee',
+                                              fluid: true,
+                                              closeOnChange: true
+                                            }}
+                                            options={optionsSeeOffer.map((option, optIndex) => {
+                                              return {
+                                                key: option.id ? option.id : optIndex * -1 - 1,
+                                                text: (
+                                                  <HeaderOptions
+                                                    icon={option.icon}
+                                                    content={option.title}
+                                                    subheader={option.subtitle}
+                                                  />
+                                                ),
+                                                value: option.value,
+                                                content: (
+                                                  <HeaderOptions
+                                                    icon={option.icon}
+                                                    content={option.title}
+                                                    subheader={option.subtitle}
+                                                  />
+                                                ),
+                                                onClick: () => {
+                                                  getSafe(() => detailValues.id, false) &&
                                                     onClickBroadcast(
                                                       detailValues,
                                                       option.value,
@@ -1228,15 +1231,15 @@ class ModalDetail extends Component {
                                                       datagrid,
                                                       option.id ? { id: option.id, name: option.tmp } : null
                                                     )
-                                                    setFieldValue('edit.broadcastOption', option.value)
-                                                  }
+                                                  setFieldValue('edit.broadcastOption', option.value)
                                                 }
-                                              })}
-                                            />
-                                          </FormField>
-                                        </GridColumn>
-                                      </CustomGridRow>
-                                    )}
+                                              }
+                                            })}
+                                          />
+                                        </FormField>
+                                      </GridColumn>
+                                    </CustomGridRow>
+
                                     {/* It's not supported yet */}
                                     {false && (
                                       <CustomGridRow>
