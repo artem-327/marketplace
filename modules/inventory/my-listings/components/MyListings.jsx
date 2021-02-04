@@ -1034,20 +1034,20 @@ class MyListings extends Component {
                 text: option.icon,
                 value: option.value,
                 content: <Header icon={option.icon} content={option.title} subheader={option.subtitle} />,
-                onClick: (e, { value }) =>
+                onClick: () =>
                   onClickBroadcast(
                     r,
                     option.value,
+                    broadcastChange,
+                    datagrid,
+                    option.id ? { id: option.id, name: option.tmp } : null,
                     {
                       isProductInfoOpen,
                       closePopup,
                       isExportInventoryOpen,
                       setExportModalOpenState,
                       modalDetailTrigger
-                    },
-                    broadcastChange,
-                    datagrid,
-                    option.id ? { id: option.id, name: option.tmp } : null
+                    }
                   )
               }
             })}
