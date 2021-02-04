@@ -842,17 +842,17 @@ export function postImportCompanyGenericProductMap(id, mapId) {
   }
 }
 
-export function postImportProductOfferCSV(payload, id) {
+export function postImportProductOfferCSV(payload, id, paramBroadcast) {
   return {
     type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER,
-    payload: api.postImportProductOfferCSV(payload, id)
+    payload: api.postImportProductOfferCSV(payload, id, paramBroadcast)
   }
 }
 
-export function postImportProductOfferMap(id, mapId) {
+export function postImportProductOfferMap(id, mapId, paramBroadcast) {
   return {
     type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER,
-    payload: api.postImportProductOfferMap(id, mapId)
+    payload: api.postImportProductOfferMap(id, mapId, paramBroadcast)
   }
 }
 

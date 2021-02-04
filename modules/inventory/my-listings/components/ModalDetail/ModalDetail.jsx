@@ -445,16 +445,6 @@ class ModalDetail extends Component {
         this.setState({ changedForm: false, edited: false })
         break
     }
-    /**
-     * Add broadcastedTemplateId or broadcastOption to the request body ProductOfferCreateRequest if isn't edit mode.
-     */
-    if (!isEdit && getSafe(() => values.edit.broadcastOption, null)) {
-      if (values.edit.broadcastOption.indexOf('|') >= 0) {
-        props.broadcastedTemplateId = values.edit.broadcastOption.split('|')[1]
-      } else {
-        props.broadcastOption = values.edit.broadcastOption
-      }
-    }
 
     if (Object.keys(props).length) {
       try {
@@ -645,7 +635,6 @@ class ModalDetail extends Component {
 
     return {
       edit: {
-        broadcasted: getSafe(() => detailValues.broadcasted, false),
         condition: getSafe(() => detailValues.condition, null),
         conditionNotes: getSafe(() => detailValues.conditionNotes, ''),
         conforming: getSafe(() => detailValues.conforming, true),
