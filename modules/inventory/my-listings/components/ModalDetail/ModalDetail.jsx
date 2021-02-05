@@ -836,8 +836,6 @@ class ModalDetail extends Component {
             this.values = values
             this.resetForm = resetForm
             this.formikProps = formikProps
-            console.log('formikProps')
-            console.log(formikProps)
             return (
               <Form onChange={this.onChange}>
                 <FlexModal
