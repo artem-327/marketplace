@@ -39,7 +39,7 @@ export const tableRowClickedProductOffer = (row, modalProps, bool = true, indexT
  * @category Inventory - My Listings
  * @method
  * @param {TRowProductOffer} row Object from one row.
- * @param {"CUSTOM_RULES" | "GLOBAL_RULES" | "CLIENT_COMPANIES" | "FREE_FOR_ALL" | "NO_BROADCAST" | "BROADCAST_TEMPLATE|{template.id}"} value Enum
+ * @param {"CUSTOM_RULES" | "GLOBAL_RULES" | "CLIENT_COMPANIES" | "GLOBAL_RULES" | "NO_BROADCAST" | "BROADCAST_TEMPLATE|{template.id}"} value Enum
  * @param {function} broadcastChange Action of redux from /modules/broadcast/actions
  * @param {Object.<string, any>} datagrid Datagrid object.
  * @param {{ id: number, name: string } | null} [template=null] Object or null. If parameter 'value' contains '|' then template is mandatory.

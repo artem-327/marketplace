@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Echo System Documentation - Frontend components/buttons/BasicButton.jsx</title>
+  <title>Echo System Documentation - Frontend components/Confirmable/confirm.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -88,7 +88,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>components/buttons/BasicButton.jsx</h1>
+                    <h1>components/Confirmable/confirm.js</h1>
                 </header>
                 
 
@@ -97,34 +97,40 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import PropTypes from 'prop-types'
-import { CustomButton } from './styles'
+            <pre class="prettyprint source linenums"><code>//import React from 'react'
+import { createConfirmation } from 'react-confirm'
+import ConfirmDialog from './ConfirmDialog'
+
 /**
- * Basic Button from Semantic UI React.
- * @component
- * @see {@link https://react.semantic-ui.com/elements/button/} Button - Semantic UI React
+ * HOC confirm modal.
+ * @method
+ * @param {string} title Title of confirm modal.
+ * @param {string} confirmation Content of confirm modal.
+ * @param {{cancelText: string, proceedText: string}} [options={cancelText: 'No', proceedText: 'Yes'}] Text for Cancel and Confirm Buttons.
+ * @returns {Promise&lt;string>}
  * @example
- * return (&lt;CustomButton noBorder={true} >
- *   Cancel
- * &lt;/CustomButton>
- * )
+ *  confirm(
+ *    formatMessage({ id: d.confirmTitleId, defaultMessage: d.confirmTitleDefaultMessage }),
+ *    formatMessage({ id: d.confirmContentId,defaultMessage: d.confirmContentDefaultMessage},
+ *       d.confirmValues ? d.confirmValues : {}), // Some values (name of company, etc.) for the content text in modal.
+ *    {
+ *      cancelText: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
+ *      proceedText: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
+ *    }
+ *  ).then(
+ *    () => {
+ *      d.confirmAction() // confirm
+ *    },
+ *    () => {
+ *      d.cancelAction() // cancel
+ *    }
+ *  )
  */
-const BasicButton = props => {
-  return &lt;CustomButton {...props}>{props.children}&lt;/CustomButton>
-}
+const confirm = createConfirmation(ConfirmDialog)
 
-BasicButton.propTypes = {
-  /**
-   * No borders around the Button.
-   */
-  noBorder: PropTypes.bool
+export default function ConfirmComponent(title, confirmation, options = { cancelText: 'No', proceedText: 'Yes' }) {
+  return confirm({ title, confirmation, options })
 }
-
-BasicButton.defaultProps = {
-  noBorder: false
-}
-
-export default BasicButton
 </code></pre>
         </article>
     </section>

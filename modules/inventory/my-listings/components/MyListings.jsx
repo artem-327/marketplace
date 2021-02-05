@@ -1095,7 +1095,7 @@ class MyListings extends Component {
             <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
           </>
         ),
-        quantity: r.qtyPart ? <FormattedUnit unit={r.qtyPart} separator=' ' value={r.quantity} /> : 'N/A',
+        quantity: r.qtyPart && r.quantity ? <FormattedUnit unit={r.qtyPart} separator=' ' value={r.quantity} /> : 'N/A',
         condition: r.condition ? (
           <FormattedMessage id='global.conforming' defaultMessage='Conforming' />
         ) : (
