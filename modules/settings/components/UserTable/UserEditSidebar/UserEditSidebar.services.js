@@ -1,11 +1,11 @@
 import * as Yup from 'yup'
-import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 //Services
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../../utils/functions'
+import { errorMessages, phoneValidation } from '../../../../../constants/yupValidation'
 //Constants
-import { currencyId } from '~/constants/index'
-
-import { TModalProps } from './UserEditSidebar.types'
+import { currencyId } from '../../../../../constants/index'
+//Types
+import { TInitialValues } from './UserEditSidebar.types'
 
 /**
  * Validates values from form.
@@ -55,7 +55,7 @@ export const getBranchesOptions = branches => {
  * @category Settings - Users
  * @method
  * @param {object} sidebarValues
- * @return {TModalProps} Object fields for form.
+ * @return {TInitialValues} Object fields for form.
  */
 export const getInitialFormValues = sidebarValues => {
   return sidebarValues

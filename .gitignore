@@ -21,7 +21,7 @@ yarn-error.log*
 
 # dependencies
 /node_modules
-
+/Docs
 # testing
 /coverage
 
@@ -46,4 +46,4 @@ yarn-error.log*
 /.next
 /.idea
 
-Docs
+

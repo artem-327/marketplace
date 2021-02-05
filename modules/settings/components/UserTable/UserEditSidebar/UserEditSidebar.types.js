@@ -1,6 +1,6 @@
 /**
  * @category Settings - Users
- * @typedef TModalProps
+ * @typedef TInitialValues
  * @type {object}
  * @property {string} name
  * @property {string} email
