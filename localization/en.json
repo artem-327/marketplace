@@ -1706,9 +1706,25 @@
   "cart.warehouses": "Warehouses",
   "cart.branches": "Branches",
   "checkout.header.items": "Checkout ({value} Items)",
+
+  "checkout.header.reviewItems": "1. Review Items",
+  "checkout.header.shippingAndTerms": "2. Shipping & Terms",
+  "checkout.header.payment": "3. Payment",
+  "checkout.header.freightSelection": "4. Freight Selection",
+
+
+
   "checkout.header.returnToCart": "Are you sure you want to return to your Shopping Cart?",
   "checkout.header.button.stayInCheckout": "Stay in Checkout",
   "checkout.header.button.returnToCart": "Return to Cart",
+
+
+  "checkout.button.confirmItems": "Confirm Items",
+  "checkout.button.useThisAddress": "Use this Address",
+  "checkout.button.useThisPaymentMethod": "Use this Payment Method",
+  "checkout.button.useThisFreight": "Use this Freight",
+  "checkout.button.placeOrder": "Place Order",
+
 
 
 

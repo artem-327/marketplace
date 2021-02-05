@@ -25,7 +25,9 @@ import Logo from '~/assets/images/nav/logo-echo.svg'
 import HeaderRow from './HeaderRow/HeaderRow'
 import OrderSummary from './OrderSummary/OrderSummary'
 import ReviewItems from './ReviewItems/ReviewItems'
-
+import ShippingTerms from './ShippingTerms/ShippingTerms'
+import Payment from './Payment/Payment'
+import FreightSelection from './FreightSelection/FreightSelection'
 
 //Hooks
 import { usePrevious } from '../../../hooks'
@@ -61,6 +63,8 @@ const Checkout = props => {
     'payment': { accepted: false },   // 3. Payment
     'freight': { accepted: false }    // 4. Freight Selection
   })
+  const [summaryButtonCaption, setSummaryButtonCaption] = useState('')
+  const [summarySubmitFunction, setSummarySubmitFunction] = useState(() => {console.log('!!!!!!!!!! summarySubmitFunction')})
 
   const {
     cartItems,
@@ -89,7 +93,7 @@ const Checkout = props => {
 
 
 
-  //console.log('!!!!!!!!!! ve funkci props', props)
+  console.log('!!!!!!!!!! Checkout props', props)
 
   //
 
@@ -103,39 +107,66 @@ const Checkout = props => {
               <GridSections>
 
                 <ReviewItems
-                  {...getComponentParameters('review', openSection, setOpenSection, sectionState, setSectionState)}
+                  {...getComponentParameters(
+                    'review',
+                    openSection,
+                    setOpenSection,
+                    sectionState,
+                    setSectionState,
+                    setSummaryButtonCaption,
+                    setSummarySubmitFunction
+                  )}
+                  cartItems={cartItems}
 
-                  onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 0 onButtonClick')}
-                  onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 0')}
                 />
 
-                <ReviewItems
-                  {...getComponentParameters('shipping', openSection, setOpenSection, sectionState, setSectionState)}
+                <ShippingTerms
+                  {...getComponentParameters(
+                    'shipping',
+                    openSection,
+                    setOpenSection,
+                    sectionState,
+                    setSectionState,
+                    setSummaryButtonCaption,
+                    setSummarySubmitFunction
+                  )}
 
-                  onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 1 onButtonClick')}
-                  onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 1')}
+
                 />
 
-                <ReviewItems
-                  {...getComponentParameters('payment', openSection, setOpenSection, sectionState, setSectionState)}
+                <Payment
+                  {...getComponentParameters(
+                    'payment',
+                    openSection,
+                    setOpenSection,
+                    sectionState,
+                    setSectionState,
+                    setSummaryButtonCaption,
+                    setSummarySubmitFunction
+                  )}
 
-                  onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 2 onButtonClick')}
-                  onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 2')}
                 />
 
-                <ReviewItems
-                  {...getComponentParameters('freight', openSection, setOpenSection, sectionState, setSectionState)}
+                <FreightSelection
+                  {...getComponentParameters(
+                    'freight',
+                    openSection,
+                    setOpenSection,
+                    sectionState,
+                    setSectionState,
+                    setSummaryButtonCaption,
+                    setSummarySubmitFunction
+                  )}
 
-                  onButtonClick={() => console.log('!!!!!!!!!! ReviewItems 0 onButtonClick')}
-                  onChangeButtonText={() => console.log('!!!!!!!!!! onChangeButtonText 3')}
+
                 />
 
               </GridSections>
             </GridColumn>
             <GridColumn width={4}>
               <OrderSummary
-                onButtonClick={() => console.log('!!!!!!!!!! OrderSummary onButtonClick')}
-
+                onButtonClick={() => summarySubmitFunction()}
+                buttonText={summaryButtonCaption}
               />
             </GridColumn>
           </GridRow>

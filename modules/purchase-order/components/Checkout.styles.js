@@ -33,3 +33,28 @@ export const GridSections = styled(Grid)`
     }
   }
 `
+
+export const DivSectionCollapsedWrapper = styled.div`
+  margin: -5px -10px;
+`
+
+export const DivSectionCollapsedRow = styled.div`
+  display: flex;
+  flex-flow: row;
+  margin: 5px 0;
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: solid 1px #dee2e6;
+  background-color: #f8f9fb;
+`
+
+export const DivSectionName = styled.div`
+  padding: 0 5px;
+  color: #20273a;
+`
+
+export const DivSectionDescription = styled.div`
+  padding: 0 5px;
+  color: #848893;
+`
+

@@ -49,27 +49,24 @@ const RowComponent = props => {
     isExpanded,
     sectionState,
     header,
-    collapsedContent,
-    expandedContent,
+    content,
     onChangeButtonClick,
     onCloseButtonClick,
     submitButtonCaption,
-    onChangeButtonText,
     onSubmitClick
   } = props
 
   // Similar to call componentDidMount:
   useEffect(() => {
-    if (isExpanded) onChangeButtonText()
   }, [])  // If [] is empty then is similar as componentDidMount.
 
 
+  /*
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
   useEffect(() => {
-    if (isExpanded) onChangeButtonText()
-  }, [isExpanded])
-
+  }, [])
+  */
 
   return (
     <GridRow>
@@ -100,11 +97,13 @@ const RowComponent = props => {
             )}
           </GridRow>
 
-          <GridRow>
-            <GridColumn>
-              {isExpanded ? expandedContent : collapsedContent}
-            </GridColumn>
-          </GridRow>
+          {(sectionState.accepted || isExpanded) && (
+            <GridRow>
+              <GridColumn>
+                {content}
+              </GridColumn>
+            </GridRow>
+          )}
 
           {isExpanded && (
             <GridRow>

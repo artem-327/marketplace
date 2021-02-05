@@ -22,9 +22,12 @@ export const findSectionToOpen = (sectionState) => {
  *
  * @return object Default component attributes and event handlings (isExpanded, onButtonClick, onChangeButtonClick, etc.)
  */
-export const getComponentParameters = (name, openSection, setOpenSection, sectionState, setSectionState) => {
+export const getComponentParameters = (
+  name, openSection, setOpenSection, sectionState, setSectionState, setSummaryButtonCaption, setSummarySubmitFunction
+) => {
 
   return {
+    id: name, // ! ! temporary
     isExpanded: openSection === name,
     sectionState: sectionState[name],
     onChangeButtonClick: () => setOpenSection(name),
@@ -46,6 +49,10 @@ export const getComponentParameters = (name, openSection, setOpenSection, sectio
         setSectionState(newSectionState)
         setOpenSection(sectionToOpen)
       }
+    },
+    onChangeSubmitButton: value => {
+      setSummaryButtonCaption(value.caption)
+      setSummarySubmitFunction(() => value.submitFunction)
     }
   }
 }

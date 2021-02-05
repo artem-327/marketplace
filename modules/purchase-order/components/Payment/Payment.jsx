@@ -43,7 +43,7 @@ import { usePrevious } from "../../../../hooks"
 //import {
 //} from './Checkout.services'
 
-const ReviewItems = props => {
+const Payment = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded  = usePrevious(props.isExpanded)
   const [edited, setEdited] = useState(false)
@@ -55,7 +55,7 @@ const ReviewItems = props => {
     onChangeSubmitButton,
 
 
-    cartItems,
+
   } = props
 
   // Similar to call componentDidMount:
@@ -72,7 +72,7 @@ const ReviewItems = props => {
     if (isExpanded && !prevIsExpanded) {
       onChangeSubmitButton({
         caption: (
-          <FormattedMessage id='checkout.button.confirmItems' defaultMessage='Confirm Items'>
+          <FormattedMessage id='checkout.button.useThisPaymentMethod' defaultMessage='Use this Payment Method'>
             {text => text}
           </FormattedMessage>
         ),
@@ -82,19 +82,19 @@ const ReviewItems = props => {
   }, [isExpanded])
 
 
-  console.log('!!!!!!!!!! render cartItems', cartItems)
+  //console.log('!!!!!!!!!! render Payment', cartItems)
   //console.log('!!!!!!!!!! render props', props)
 
   return (
     <RowComponent
       {...props}
-      header={<FormattedMessage id='checkout.header.reviewItems' defaultMessage='1. Review Items'/>}
+      header={<FormattedMessage id='checkout.header.payment' defaultMessage='3. Payment'/>}
       onSubmitClick={() => {
-        console.log('!!!!!!!!!! ReviewItems onSubmitClick')
+        console.log('!!!!!!!!!! Payment onSubmitClick')
         props.onSubmitClick()
       }}
       submitButtonCaption={
-        <FormattedMessage id='checkout.button.confirmItems' defaultMessage='Confirm Items'>
+        <FormattedMessage id='checkout.button.useThisPaymentMethod' defaultMessage='Use this Payment Method'>
           {text => text}
         </FormattedMessage>
       }
@@ -104,32 +104,21 @@ const ReviewItems = props => {
             isExpanded
               ? (
                 <div>
-                  ReviewItems component expanded 2
+                  Payment component expanded 2
                 </div>
               ) : (
                 <DivSectionCollapsedWrapper>
-                  {cartItems.map(item =>
-                    <DivSectionCollapsedRow>
+                  <DivSectionCollapsedRow>
+                    <div>
                       <DivSectionName>
-                        {item.productName}
+                        tucne jmeno payment
                       </DivSectionName>
                       <DivSectionDescription>
-                        {item.pkgAmount * item.packagingSize}
+                        normalni text payment
                       </DivSectionDescription>
-                      <DivSectionDescription>
-                        {item.packaging}
-                      </DivSectionDescription>
-                      <DivSectionDescription>
-                        <FormattedNumber
-                          minimumFractionDigits={2}
-                          maximumFractionDigits={2}
-                          style='currency'
-                          currency={currency}
-                          value={item.cfPriceSubtotal}
-                        />
-                      </DivSectionDescription>
-                    </DivSectionCollapsedRow>
-                  )}
+                    </div>
+                  </DivSectionCollapsedRow>
+
                 </DivSectionCollapsedWrapper>
               )
           ) : null
@@ -138,30 +127,18 @@ const ReviewItems = props => {
   )
 }
 
-ReviewItems.propTypes = {
-  itemsCount: PropTypes.number
+Payment.propTypes = {
+  //itemsCount: PropTypes.number
 }
 
-ReviewItems.defaultProps = {
-  itemsCount: 0
+Payment.defaultProps = {
+  //itemsCount: 0
 }
 
 function mapStateToProps(store, props) {
   return {
-    cartItems: props.cartItems.map(item => {
-      const packagingType = getSafe(() => item.productOffer.companyProduct.packagingType.name, '')
-      const packagingUnit = getSafe(() => item.productOffer.companyProduct.packagingUnit.nameAbbreviation, '')
-      const packaging = `${packagingUnit} ${packagingType}`
 
-      return({
-        ...item,
-        productName: getSafe(() => item.productOffer.companyProduct.intProductName, ''),
-        pkgAmount: item.pkgAmount,
-        packagingSize: getSafe(() => item.productOffer.companyProduct.packagingSize, 1),
-        packaging
-      })
-    })
   }
 }
 
-export default injectIntl(connect(mapStateToProps, {  })(ReviewItems))
+export default injectIntl(connect(mapStateToProps, {  })(Payment))
