@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import moment from 'moment'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from './DetailMessages/node_modules/~/utils/functions'
 import ProdexTable from '~/components/table'
 import * as Actions from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
@@ -13,9 +13,9 @@ import { Label, Popup, Checkbox } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 import { FormattedDateTime } from '~/components/formatted-messages/'
 import { ChevronUp, ChevronDown } from 'react-feather'
-import GenericProductRequest from './message-details/GenericProductRequest'
-import ShippingQuoteRequest from './message-details/ShippingQuoteRequest'
-import ShippingQuoteInfo from './message-details/ShippingQuoteInfo'
+import GenericProductRequest from './DetailMessages/GenericProductRequest
+import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest
+import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
