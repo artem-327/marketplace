@@ -13,9 +13,9 @@ import { Label, Popup, Checkbox } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 import { FormattedDateTime } from '~/components/formatted-messages/'
 import { ChevronUp, ChevronDown } from 'react-feather'
-import GenericProductRequest from './DetailMessages/GenericProductRequest
-import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest
-import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo
+import GenericProductRequest from './DetailMessages/GenericProductRequest'
+import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest'
+import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo'
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
