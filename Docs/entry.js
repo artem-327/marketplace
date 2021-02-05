@@ -24,3 +24,6 @@
 
   import Component0 from '../components/buttons/BasicButton.jsx';
 reactComponents['BasicButton'] = Component0;
+
+import Component1 from '../components/Confirmable/ConfirmDialog.js';
+reactComponents['ConfirmDialog'] = Component1;

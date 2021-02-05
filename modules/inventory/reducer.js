@@ -3,7 +3,7 @@ import * as AT from './action-types'
 import { uniqueArrayByKey, getSafe } from '~/utils/functions'
 import moment from 'moment'
 //Constants
-import { FREE_FOR_ALL } from './my-listings/components/ModalDetail/ModalDetail.constants'
+import { GLOBAL_RULES } from './my-listings/components/ModalDetail/ModalDetail.constants'
 
 export const initialState = {
   fileIds: [],
@@ -50,7 +50,7 @@ export const initialState = {
   myProductsFilters: null,
   tdsTemplatesLoading: false,
   tdsTemplates: [],
-  broadcastOption: FREE_FOR_ALL
+  broadcastOption: GLOBAL_RULES
 }
 
 export default function reducer(state = initialState, action) {
