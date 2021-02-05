@@ -1293,3 +1293,10 @@ export function openPopupDeleteInstitutions(institutionId) {
     payload: institutionId
   }
 }
+
+export function openUserSettingsModal(id) {
+  return {
+    type: AT.GET_COMPANY_USER,
+    payload: api.getCompanyUser(id)
+  }
+}

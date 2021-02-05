@@ -129,34 +129,12 @@ export const DivFlexContent = styled.div`
   }
 `
 /**
- * @css display: inline-block;
- * @css position: relative;
- * @css overflow: visible;
- * @css margin: 0;
- * @css box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
- * @css padding: 10px 25px;
- * @css text-align: right;
- * @css (.ui.button) height: 40px;
- * @css (.ui.button) border-radius: 3px;
- * @css (.ui.button) font-weight: 500;
- * @css (.ui.button) color: #848893;
- * @css (.ui.button) margin: 0 5px;
- * @css (.ui.button) align-items: center;
- * @css (.ui.button &.light)    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
- * @css (.ui.button &.light)    border: solid 1px #dee2e6;
- * @css (.ui.button &.light)    background-color: #ffffff;
- * @css (.ui.button &.light)    color: #848893;
- * @css (.ui.button &.light &:hover)    background-color: #f8f9fb;
- * @css (.ui.button &.light &:hover)   color: #20273a;
- * @css (.ui.button &.light &:active)     background-color: #edeef2;
- * @css (.ui.button &.light &:active)      color: #20273a;
- * @css (.ui.button &.secondary)   color: #ffffff;
- * @css (.ui.button &.secondary)   background-color: #2599d5;
- * @css (.ui.button &.secondary &:hover)   background-color: #188ec9;
- * @css (.ui.button &.secondary &:active)   background-color: #0d82bc;
- * @css (.ui.modal &)   margin: 30px -1.5rem -1.5rem;
- * @css (.ui.modal &)  border-top: 1px solid #dee2e6;
- * @css (.ui.modal &)  box-shadow: 0 0 0 0 transparent;
+ * @category style-component
+ * @style
+ * @example
+ * <DivBottomButtons>
+ *  <button>Confirm</button>
+ * </DivBottomButtons>
  */
 export const DivBottomButtons = styled.div`
   display: inline-block;

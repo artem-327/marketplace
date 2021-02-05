@@ -2,9 +2,13 @@ import PropTypes from 'prop-types'
 import { Modal } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 //Components
-import SystemSettings from '~/components/settings'
-
-const UsersPopup = ({ isOpenPopup, closePopup, editedId, isUserAdmin, isCompanyAdmin }) => {
+import SystemSettings from '../../../../../components/settings'
+/**
+ * Show modal window with form to set up user's attributes.
+ * @category Settings - Users
+ * @component
+ */
+const UserSettingsModal = ({ isOpenPopup, closePopup, editedId, isUserAdmin, isCompanyAdmin }) => {
   return (
     <Modal
       open={isOpenPopup}
@@ -21,7 +25,7 @@ const UsersPopup = ({ isOpenPopup, closePopup, editedId, isUserAdmin, isCompanyA
           isUserAdmin={isUserAdmin}
           isCompanyAdmin={isCompanyAdmin}
           asModal={false}
-          role='user'
+          role={`company-user/${editedId}`}
           scrolling={false}
           isUserSettings={true}
           editedId={editedId}
@@ -31,7 +35,7 @@ const UsersPopup = ({ isOpenPopup, closePopup, editedId, isUserAdmin, isCompanyA
   )
 }
 
-UsersPopup.propTypes = {
+UserSettingsModal.propTypes = {
   isOpenPopup: PropTypes.bool,
   isUserAdmin: PropTypes.bool,
   isCompanyAdmin: PropTypes.bool,
@@ -39,7 +43,7 @@ UsersPopup.propTypes = {
   editedId: PropTypes.number
 }
 
-UsersPopup.defaultProps = {
+UserSettingsModal.defaultProps = {
   isOpenPopup: false,
   isUserAdmin: false,
   isCompanyAdmin: false,
@@ -47,4 +51,4 @@ UsersPopup.defaultProps = {
   editedId: null
 }
 
-export default UsersPopup
+export default UserSettingsModal
