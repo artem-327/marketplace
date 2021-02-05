@@ -1,15 +1,7 @@
-import React, { Component } from 'react'
-import styled from 'styled-components'
-
+import { Component } from 'react'
+//Components
 import Layout from '~/components/LayoutUnauthorized'
-import {
-  default as RegisterBeneficialOwner
-} from '~/modules/velloci-register/components/RegisterBeneficialOwnerContainer'
-
-const Container = styled.div`
-  padding: 60px 0;
-`
-
+import { default as RegisterBeneficialOwner } from '~/modules/velloci-register/components/RegisterBeneficialOwnerContainer'
 export default class RegisterBeneficialOwnerPage extends Component {
   render() {
     return (

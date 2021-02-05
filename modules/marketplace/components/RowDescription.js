@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -17,8 +17,7 @@ const BlueText = styled.div`
   margin: 0 4px;
 `
 
-class RowDescription extends React.Component {
-
+class RowDescription extends Component {
   render() {
     const {
       currentUserId,
@@ -49,39 +48,34 @@ class RowDescription extends React.Component {
       </>
     )
 
-    let messageId = thisUser
-      ? 'marketplace.detailRow.youHaveOffered'
-      : 'marketplace.detailRow.userCompanyHasBid'
+    let messageId = thisUser ? 'marketplace.detailRow.youHaveOffered' : 'marketplace.detailRow.userCompanyHasBid'
 
     if (lastHistory) {
       if (status === 'ACCEPTED') {
-        messageId = thisUser
-          ? 'marketplace.detailRow.youHaveAccepted'
-          : 'marketplace.detailRow.userCompanyHasAccepted'
-      }  else if (status === 'REJECTED') {
-        messageId = thisUser
-          ? 'marketplace.detailRow.youHaveDeclined'
-          : 'marketplace.detailRow.userCompanyHasDeclined'
+        messageId = thisUser ? 'marketplace.detailRow.youHaveAccepted' : 'marketplace.detailRow.userCompanyHasAccepted'
+      } else if (status === 'REJECTED') {
+        messageId = thisUser ? 'marketplace.detailRow.youHaveDeclined' : 'marketplace.detailRow.userCompanyHasDeclined'
       } else if (status === 'NEW' && historyType === 'COUNTER') {
         messageId = thisUser
           ? 'marketplace.detailRow.youHaveCountered'
           : 'marketplace.detailRow.userCompanyHasCountered'
       }
 
-      if (index && (status === 'NEW' && historyType === 'NORMAL')) {  // work around
+      if (index && status === 'NEW' && historyType === 'NORMAL') {
+        // work around
         messageId = thisUser
           ? 'marketplace.detailRow.youHaveCountered'
           : 'marketplace.detailRow.userCompanyHasCountered'
       }
-    } else { // not last history
+    } else {
+      // not last history
       if (index) {
         messageId = thisUser
           ? 'marketplace.detailRow.youHaveCountered'
           : 'marketplace.detailRow.userCompanyHasCountered'
-      } else {  // First history - Bid
-        messageId = thisUser
-          ? 'marketplace.detailRow.youHaveOffered'
-          : 'marketplace.detailRow.userCompanyHasBid'
+      } else {
+        // First history - Bid
+        messageId = thisUser ? 'marketplace.detailRow.youHaveOffered' : 'marketplace.detailRow.userCompanyHasBid'
       }
     }
 

@@ -1574,6 +1574,11 @@
   "addInventory.testMethod": "Test Method",
   "addInventory.property": "Property",
   "addInventory.specifications": "Specifications",
+  "addInventory.selectFromTemplates": "Select From Templates",
+  "addInventory.tdsTemplates": "TDS Templates",
+  "addInventory.tdsTemplates.savedTemplates": "Saved Templates",
+  "addInventory.tdsTemplates.saveAsTemplate": "Save as Template",
+  "addInventory.tdsTemplates.enterTemplateName": "Enter Template Name",
   "administration": "ADMINISTRATION",
   "administration.newCompanyName": "New Company Name",
   "administration.companies": "Companies",
@@ -3058,5 +3063,7 @@
   "settings.accounts.deleteInstitutions": "Delete Institutions",
   "settings.accounts.confirm.deleteInstitutions": "Deleting this institution will remove all accounts associated with it. Do you wish to continue?",
   "confirm.deactivateBankAccount": "Deactivate Bank Account",
-  "confirm.deactivate": "Do you really want to deactivate {item}?"
+  "confirm.deactivate": "Do you really want to deactivate {item}?",
+  "addBankAccounts.successfully.title": "Success!",
+  "addBankAccounts.successfully.content": "Bank accounts were succesfully added."
 }

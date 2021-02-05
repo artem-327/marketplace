@@ -69,12 +69,16 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
           })
         : []
 
+    const broadcastOption =
+      getSafe(() => values.broadcastOption, '') && values.broadcastOption.indexOf('|') >= 0
+        ? ''
+        : values.broadcastOption
+
     params = {
       anonymous: getSafe(() => values.anonymous, null),
       assayMin: getSafe(() => parseFloat(values.assayMin)),
       assayMax: getSafe(() => parseFloat(values.assayMax)),
       attachments: attachments.concat(additional),
-      broadcasted: getSafe(() => values.broadcasted, false),
       certOfAnalysis: getSafe(() => values.certOfAnalysis, null),
       costRecords:
         values.trackSubCosts && values.costs
@@ -118,7 +122,9 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
       splitPkg: parseInt(values.splits),
       validityDate: values.expirationDate ? moment(values.expirationDate).utc(values.expirationDate).format() : null,
       warehouse: parseInt(values.warehouse),
-      tdsFields: getSafe(() => values.tdsFields, '')
+      tdsFields: getSafe(() => values.tdsFields, ''),
+      broadcastedTemplateId: getSafe(() => parseInt(values.broadcastOption.split('|')[1]), ''),
+      broadcastOption
     }
   } else {
     params = values // ! ! az bude BE vracet pricingTiers, tak predelat zkombinovat tento radek s vytvarenim objektu vyse (prejmenovane / chybejici atributy)
@@ -524,5 +530,40 @@ export function closePopup(rows = null) {
   return {
     type: AT.INVENTORY_CLOSE_POPUP,
     payload: rows
+  }
+}
+
+export function saveTdsAsTemplate(templateName, tdsFields) {
+  return {
+    type: AT.TDS_SAVE_AS_TEMPLATE,
+    async payload() {
+      return await api.saveTdsAsTemplate(templateName, tdsFields)
+    }
+  }
+}
+
+export function getTdsTemplates() {
+  return {
+    type: AT.TDS_GET_TEMPLATES,
+    async payload() {
+      return await api.getTdsTemplates()
+    }
+  }
+}
+
+export function deleteTdsTemplate(templateId) {
+  return {
+    type: AT.TDS_DELETE_TEMPLATE,
+    async payload() {
+      const response = await api.deleteTdsTemplate(templateId)
+      return templateId
+    }
+  }
+}
+
+export function changeBroadcast(broadcastOption) {
+  return {
+    type: AT.CHANGE_BROADCAST,
+    payload: broadcastOption
   }
 }

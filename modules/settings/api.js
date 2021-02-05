@@ -110,14 +110,33 @@ export default {
       .then(response => response.data)
       .catch(error => console.error(error))
   },
+  postImportProductMap: (id, mapId) => {
+    return api
+      .post(`/prodex/api/imports/company-products/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}`)
+      .then(response => response.data)
+  },
   postImportCompanyGenericProductCSV: (body, id) => {
     return api
       .post(`/prodex/api/imports/company-generic-products/spreadsheet-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
-  postImportProductOfferCSV: (body, id) => {
+  postImportCompanyGenericProductMap: (id, mapId) => {
     return api
-      .post(`/prodex/api/imports/product-offers/spreadsheet-import?temporaryFileId=${id}`, body)
+      .post(
+        `/prodex/api/imports/company-generic-products/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}`
+      )
+      .then(response => response.data)
+  },
+  postImportProductOfferCSV: (body, id, paramBroadcast) => {
+    return api
+      .post(`/prodex/api/imports/product-offers/spreadsheet-import?temporaryFileId=${id}${paramBroadcast}`, body)
+      .then(response => response.data)
+  },
+  postImportProductOfferMap: (id, mapId, paramBroadcast) => {
+    return api
+      .post(
+        `/prodex/api/imports/product-offers/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}${paramBroadcast}`
+      )
       .then(response => response.data)
   },
   uploadCSVFile: (file, type) => {
@@ -142,6 +161,11 @@ export default {
   postImportCompaniesCSV: (body, id) => {
     return api
       .post(`/prodex/api/imports/companies/spreadsheet-import?temporaryFileId=${id}`, body)
+      .then(response => response.data)
+  },
+  postImportCompaniesMap: (id, mapId) => {
+    return api
+      .post(`/prodex/api/imports/companies/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}`)
       .then(response => response.data)
   },
   getCSVMapCompanies: () => api.get('/prodex/api/imports/companies/import-maps').then(response => response.data),

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { initGlobalBroadcast } from '~/modules/broadcast/actions'
 import { connect } from 'react-redux'
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { OrderSegment, OrderList } from '~/modules/orders/components/Detail'
 import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
 import styled from 'styled-components'

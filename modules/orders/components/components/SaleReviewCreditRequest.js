@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, ModalContent, Accordion, Button, Icon, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
@@ -29,7 +29,7 @@ const ButtonsRow = styled(Grid.Row)`
   > .column {
     width: auto !important;
     margin-left: 0 !important;
-    
+
     &:first-child {
       margin-left: auto !important;
     }
@@ -50,7 +50,7 @@ const validationSchema = val.object().shape({
   messageBuyer: val.string().typeError(errorMessages.invalidString).required(errorMessages.requiredMessage)
 })
 
-class SaleReviewCreditRequest extends React.Component {
+class SaleReviewCreditRequest extends Component {
   state = {
     counterValue: null,
     messageBuyer: '',

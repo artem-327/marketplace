@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Sidebar, Dimmer, Loader, Grid, GridRow, GridColumn, Checkbox, FormField, Segment } from 'semantic-ui-react'
@@ -47,7 +47,7 @@ import {
   GridColumnWError
 } from './styles'
 
-class UsersSidebar extends React.Component {
+class UsersSidebar extends Component {
   state = {
     sidebarValues: null,
     branches: [],

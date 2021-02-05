@@ -517,7 +517,9 @@ export const CustomRowDiv = styled.div`
     }
   }
 `
-
+/**
+ * @css padding-right: 15px;
+ */
 export const DivIconOptions = styled.div`
   padding-right: 15px;
 `

@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -30,7 +30,7 @@ const GridColumnEmail = styled(GridColumn)`
   }
 `
 
-class AddEditLogisticProvider extends React.Component {
+class AddEditLogisticProvider extends Component {
   componentDidMount() {
     this.props.getLogisticsProviders()
   }

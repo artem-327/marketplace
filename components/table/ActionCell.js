@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { MoreVertical } from 'react-feather'
@@ -69,7 +69,7 @@ export const RowDropdownIcon = styled.div`
     height: 16px !important;
     color: #848893 !important;
   }
-  
+
   .settings_bankaccounts & {
     margin-left: -6px;
     margin-right: 0;
@@ -100,21 +100,15 @@ class ActionCell extends Component {
         {getActions ? (
           <RowDropdown
             disabled={!actions.length}
-            trigger={
-              <RowDropdownIcon>
-                {actions && actions.length ? (<MoreVertical />) : null}
-              </RowDropdownIcon>
-            }>
+            trigger={<RowDropdownIcon>{actions && actions.length ? <MoreVertical /> : null}</RowDropdownIcon>}>
             <Dropdown.Menu>{this.getActionItems(actions, row)}</Dropdown.Menu>
           </RowDropdown>
         ) : null}
-        {leftContent ? (<div style={{ marginRight: '8px' }}>{leftContent}</div>) : null}
-        <SpanText
-          {...(!!onContentClick && { onClick: (e) => onContentClick(e), className: 'clickable' })}
-        >
+        {leftContent ? <div style={{ marginRight: '8px' }}>{leftContent}</div> : null}
+        <SpanText {...(!!onContentClick && { onClick: e => onContentClick(e), className: 'clickable' })}>
           {content}
         </SpanText>
-        {rightAlignedContent ? (<DivIcons>{rightAlignedContent}</DivIcons>) : null}
+        {rightAlignedContent ? <DivIcons>{rightAlignedContent}</DivIcons> : null}
       </DivRow>
     )
   }

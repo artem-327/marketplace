@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, FormGroup, Modal, Button } from 'semantic-ui-react'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
@@ -252,12 +252,14 @@ class DocumentPopup extends Component {
                     />
                   </FormGroup>
 
-                  {false && (<RightAlignedGroup widths='equal'>
-                    <Checkbox
-                      name='isTemporary'
-                      label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
-                    />
-                  </RightAlignedGroup>)}
+                  {false && (
+                    <RightAlignedGroup widths='equal'>
+                      <Checkbox
+                        name='isTemporary'
+                        label={formatMessage({ id: 'global.isTemporary', defaultMessage: 'Temporary' })}
+                      />
+                    </RightAlignedGroup>
+                  )}
                   <ErrorFocus />
                 </Form>
               )
@@ -300,10 +302,7 @@ DocumentPopup.defaultProps = {
 }
 
 const mapStateToProps = ({ simpleAdd, settings }) => {
-  const currentTab =
-    Router && Router.router && Router.router.pathname
-      ? Router.router.pathname
-      : ''
+  const currentTab = Router && Router.router && Router.router.pathname ? Router.router.pathname : ''
   const documentTab = currentTab && currentTab.type === '/settings/documents'
 
   return {

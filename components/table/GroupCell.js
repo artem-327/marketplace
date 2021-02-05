@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import cn from 'classnames'
 import { Checkbox } from 'semantic-ui-react'
 import { ChevronDown, ChevronRight } from 'react-feather'

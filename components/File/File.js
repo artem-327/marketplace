@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import PropTypes from 'prop-types'
 import { Icon } from 'semantic-ui-react'
 import styled from 'styled-components'
@@ -34,7 +34,7 @@ const SpanText = styled.span`
 class File extends Component {
   render() {
     return (
-      <React.Fragment>
+      <Fragment>
         <SpanText
           key={this.props.index}
           className={this.props.className}
@@ -48,7 +48,7 @@ class File extends Component {
           />
           {this.props.name}
         </SpanText>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

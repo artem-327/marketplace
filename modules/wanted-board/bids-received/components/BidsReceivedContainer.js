@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'

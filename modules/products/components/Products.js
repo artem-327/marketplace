@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
 import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'

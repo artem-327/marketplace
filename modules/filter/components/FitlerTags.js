@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { createRef, Component } from 'react'
 import { func, array, shape, number, arrayOf, object } from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -16,7 +16,7 @@ const MAX_TAG_ENTITIES = 2
 class FilterTags extends Component {
   constructor(props) {
     super(props)
-    this.myRef = React.createRef()
+    this.myRef = createRef()
     this.state = {
       hasOverflowingChildren: false
     }
@@ -42,9 +42,7 @@ class FilterTags extends Component {
         datagrid.savedFilters[filterType].filters.splice(index - i, 1)
         appliedFilter.filters.splice(index - i, 1)
       })
-      datagrid.setFilter({filters:
-        datagrid.savedFilters[filterType].filters
-      }, true, filterType)
+      datagrid.setFilter({ filters: datagrid.savedFilters[filterType].filters }, true, filterType)
     }
   }
 
@@ -52,7 +50,8 @@ class FilterTags extends Component {
     return filters.map((filter, i) => {
       let { tagDescription, description } = filter
       if (
-        (true || tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) ||
+        true ||
+        (tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) ||
         (typeof tagDescription === 'string' && this.state.hasOverflowingChildren)
       ) {
         return (
@@ -72,15 +71,14 @@ class FilterTags extends Component {
             <Grid verticalAlign='middle'>
               <PopupRow>
                 <GridColumn>
-                  {filter && tagDescription && typeof tagDescription === 'string'
-                    ? `${description}: ${tagDescription.replace(/,/g, ', ')}`
-                    : (
-                      <>
-                        {`${description}: `}
-                        {tagDescription}
-                      </>
-                    )
-                  }
+                  {filter && tagDescription && typeof tagDescription === 'string' ? (
+                    `${description}: ${tagDescription.replace(/,/g, ', ')}`
+                  ) : (
+                    <>
+                      {`${description}: `}
+                      {tagDescription}
+                    </>
+                  )}
                 </GridColumn>
               </PopupRow>
             </Grid>

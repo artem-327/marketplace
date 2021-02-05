@@ -1,4 +1,3 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage } from 'react-intl'
 import { GridRow, GridColumn, List, Button } from 'semantic-ui-react'

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { object, func, number } from 'prop-types'
 import { Input } from 'formik-semantic-ui-fixed-validation'
 import { FormGroup, Header, Popup, Button, Icon } from 'semantic-ui-react'
@@ -32,8 +32,8 @@ class BeneficialOwnersForm extends Component {
               inputProps={{ fluid: true }}
               label={
                 <>
-                  {formatMessage({id: 'global.firstName', defaultMessage: 'First Name'})}
-                  {isAnyValueFilled && <Required/>}
+                  {formatMessage({ id: 'global.firstName', defaultMessage: 'First Name' })}
+                  {isAnyValueFilled && <Required />}
                 </>
               }
               name={`beneficialOwners[${i}].firstName`}
@@ -43,7 +43,7 @@ class BeneficialOwnersForm extends Component {
               label={
                 <>
                   {formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })}
-                  {isAnyValueFilled && <Required/>}
+                  {isAnyValueFilled && <Required />}
                 </>
               }
               name={`beneficialOwners[${i}].lastName`}
@@ -74,7 +74,7 @@ class BeneficialOwnersForm extends Component {
               label={
                 <>
                   {formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
-                  {isAnyValueFilled && <Required/>}
+                  {isAnyValueFilled && <Required />}
                 </>
               }
               name={`beneficialOwners[${i}].ssn`}
@@ -84,7 +84,7 @@ class BeneficialOwnersForm extends Component {
               label={
                 <>
                   {formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
-                  {isAnyValueFilled && <Required/>}
+                  {isAnyValueFilled && <Required />}
                 </>
               }
               name={`beneficialOwners[${i}].dateOfBirth`}

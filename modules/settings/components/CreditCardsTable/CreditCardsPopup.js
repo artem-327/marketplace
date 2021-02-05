@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
@@ -10,13 +10,10 @@ import { closePopup, postNewCreditCardRequest } from '../../actions'
 import { errorMessages } from '~/constants/yupValidation'
 
 const formValidation = Yup.object().shape({
-  cardNumber: Yup.string()
-    .trim()
-    .min(16, errorMessages.minLength(16))
-    .required(errorMessages.requiredMessage)
+  cardNumber: Yup.string().trim().min(16, errorMessages.minLength(16)).required(errorMessages.requiredMessage)
 })
 
-class CreditCardsPopup extends React.Component {
+class CreditCardsPopup extends Component {
   getInitialFormValues = () => {
     return {
       cardNumber: '',

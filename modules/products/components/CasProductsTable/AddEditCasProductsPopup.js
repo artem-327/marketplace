@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Modal } from 'semantic-ui-react'
@@ -20,8 +20,7 @@ const StyledModalContent = styled(Modal.Content)`
   padding: 30px;
 `
 
-
-class AddEditCasProductsPopup extends React.Component {
+class AddEditCasProductsPopup extends Component {
   render() {
     const { closeAddPopup, popupValues, config, postNewCasProductRequest, updateCasProductRequest } = this.props
 

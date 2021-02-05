@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
 import confirm from '~/components/Confirmable/confirm'
@@ -125,7 +125,7 @@ class DeliveryAddressesTable extends Component {
     let { columns } = this.state
 
     return (
-      <React.Fragment>
+      <Fragment>
         <div className='flex stretched listings-wrapper'>
           <ProdexGrid
             tableName='settings_delivery_address'
@@ -138,7 +138,7 @@ class DeliveryAddressesTable extends Component {
             editingRowId={editedId}
           />
         </div>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

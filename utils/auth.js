@@ -34,17 +34,21 @@ export const unsetAuth = () => {
 // }
 
 export async function authorize(username, password) {
-  const { data } = await api.post(
-    '/prodex/oauth/token',
-    `grant_type=password&username=${username}&password=${password}`,
-    {
-      headers: {
-        Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'
+  try {
+    const { data } = await api.post(
+      '/prodex/oauth/token',
+      `grant_type=password&username=${username}&password=${password}`,
+      {
+        headers: {
+          Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'
+        }
       }
-    }
-  )
-
-  return data
+    )
+    return data
+  } catch (error) {
+    console.error(error)
+    return null
+  }
 }
 
 export async function refreshToken() {

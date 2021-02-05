@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { cloneElement, Component } from 'react'
 import { Modal, Grid, GridRow, GridColumn, Form, Button, Divider } from 'semantic-ui-react'
 import { node } from 'prop-types'
 import { FormattedMessage } from 'react-intl'
@@ -171,7 +171,7 @@ class SimpleEdit extends Component {
               size='small'
               onClose={() => simpleEditTrigger({}, false)}
               open={open || simpleEditOpen}
-              trigger={trigger && React.cloneElement(trigger, { onClick: () => this.setState({ open: false }) })}>
+              trigger={trigger && cloneElement(trigger, { onClick: () => this.setState({ open: false }) })}>
               <Modal.Header>
                 <FormattedMessage
                   id={`global.${popupValues.id ? 'editListing' : 'addListing'}`}

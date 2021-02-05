@@ -1,0 +1,1 @@
+declare module 'formik-semantic-ui-fixed-validation'

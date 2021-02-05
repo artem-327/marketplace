@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
@@ -20,7 +20,7 @@ const formValidation = () =>
     })
   )
 
-class TagsPopup extends React.Component {
+class TagsPopup extends Component {
   render() {
     const {
       closePopup,

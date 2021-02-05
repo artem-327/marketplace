@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
@@ -9,22 +9,15 @@ import styled from 'styled-components'
 import { FileText } from 'react-feather'
 import { downloadAttachment, downloadAttachmentPdf } from '~/modules/inventory/actions'
 
-import {
-  DetailMessage,
-  StyledGrid
-} from '../layout'
+import { DetailMessage, StyledGrid } from '../layout'
 
-import {
-  Grid,
-  GridRow,
-  GridColumn
-} from 'semantic-ui-react'
+import { Grid, GridRow, GridColumn } from 'semantic-ui-react'
 
 export const DocumentRow = styled(GridRow)`
   padding: 11px 20px 10px 15px;
   border-radius: 3px;
   border: solid 1px #dee2e6;
-  background-color: #f8f9fb;  
+  background-color: #f8f9fb;
 
   &.row {
     margin: 2px 0 !important;
@@ -34,7 +27,7 @@ export const DocumentRow = styled(GridRow)`
 export const AttachmentsGrid = styled(Grid)`
   width: 100%;
   max-width: 580px;
-  
+
   &.ui.grid {
     margin: 0;
     padding: 0;
@@ -42,7 +35,6 @@ export const AttachmentsGrid = styled(Grid)`
 `
 
 class GenericProductRequest extends Component {
-
   downloadAttachment = async (documentName, documentId) => {
     const element = await this.prepareLinkToAttachment(documentId)
 
@@ -129,22 +121,20 @@ class GenericProductRequest extends Component {
                 id='alerts.genericProductTmp'
                 defaultMessage='{name} from {company} has requested to upload a new Company Generic Product. Please see the document attached. Once uploaded, click {here} to send a notification to the requester that the upload has been completed.'
                 values={{
-                  name: (<b>{getSafe(() => row.info.requestedBy.name, 'N/A')}</b>),
-                  company: (<b>{getSafe(() => row.info.requestedBy.company.cfDisplayName, 'N/A')}</b>),
+                  name: <b>{getSafe(() => row.info.requestedBy.name, 'N/A')}</b>,
+                  company: <b>{getSafe(() => row.info.requestedBy.company.cfDisplayName, 'N/A')}</b>,
                   here: (
-                    <span
-                      style={{ color: '#2599d5', cursor: 'pointer' }}
-                      onClick={() => {}}
-                    >
-                      <FormattedMessage id='alerts.here' defaultMessage='here'/>
-                    </span>)
+                    <span style={{ color: '#2599d5', cursor: 'pointer' }} onClick={() => {}}>
+                      <FormattedMessage id='alerts.here' defaultMessage='here' />
+                    </span>
+                  )
                 }}
               />
             </GridColumn>
           </GridRow>
           <GridRow style={{ paddingBottom: '0' }}>
             <GridColumn width={10}>
-              <FormattedMessage id='alerts.attachments' defaultMessage='Attachments:'/>
+              <FormattedMessage id='alerts.attachments' defaultMessage='Attachments:' />
             </GridColumn>
           </GridRow>
           <AttachmentsGrid>
@@ -153,22 +143,17 @@ class GenericProductRequest extends Component {
                 <DocumentRow>
                   <GridColumn width={8} style={{ display: 'flex', alignItems: 'center' }}>
                     <FileText size='18' color='#20273a' />
-                    <span style={{ marginLeft: '10px'}}>{att.name}</span>
+                    <span style={{ marginLeft: '10px' }}>{att.name}</span>
                   </GridColumn>
-                  <GridColumn width={3}>
-                    {/* file size */}
-                  </GridColumn>
-                  <GridColumn
-                    width={5}
-                    onClick={() => this.downloadAttachment(att.name, att.id)}
-                  >
+                  <GridColumn width={3}>{/* file size */}</GridColumn>
+                  <GridColumn width={5} onClick={() => this.downloadAttachment(att.name, att.id)}>
                     <div style={{ color: '#2599d5', cursor: 'pointer', float: 'right', marginRight: '15px' }}>
-                      <FormattedMessage id='global.download' defaultMessage='Download:'/>
+                      <FormattedMessage id='global.download' defaultMessage='Download:' />
                     </div>
                   </GridColumn>
                 </DocumentRow>
-              )}
-            )}
+              )
+            })}
           </AttachmentsGrid>
         </StyledGrid>
       </DetailMessage>
@@ -177,10 +162,9 @@ class GenericProductRequest extends Component {
 }
 
 const mapStateToProps = state => {
-  return {
-  }
+  return {}
 }
 
-export default connect(
-  mapStateToProps, { ...Actions, downloadAttachment, downloadAttachmentPdf })
-(injectIntl(withToastManager(GenericProductRequest)))
+export default connect(mapStateToProps, { ...Actions, downloadAttachment, downloadAttachmentPdf })(
+  injectIntl(withToastManager(GenericProductRequest))
+)

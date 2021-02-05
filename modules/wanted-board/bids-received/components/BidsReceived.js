@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Container, Input, Button, Label, Dropdown } from 'semantic-ui-react'
@@ -480,20 +480,14 @@ class BidsReceived extends Component {
         ...row,
         purchaseRequestOffers: filteredPurchaseRequestOffers.map(rowOffer => ({
           ...rowOffer,
-          product: (
-            <ActionCell
-              row={rowOffer}
-              getActions={this.getActions}
-              content={row.product}
-            />
-          )
+          product: <ActionCell row={rowOffer} getActions={this.getActions} content={row.product} />
         })),
         product: (
           <ActionCell
             row={row}
             getActions={this.getActions}
             content={row.product}
-            onContentClick={(e) => {
+            onContentClick={e => {
               e.stopPropagation()
               e.preventDefault()
               this.props.sidebarDetailTrigger(row, 'bids-received')

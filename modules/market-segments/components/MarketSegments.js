@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
@@ -17,10 +17,8 @@ class MarketSegments extends Component {
 
   getApiConfig = () => ({
     url: '/prodex/api/market-segments/datagrid',
-    searchToFilter: v => (v && v.searchInput
-        ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v.searchInput}%`] }]
-        : []
-    )
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v.searchInput}%`] }] : []
   })
 
   render() {

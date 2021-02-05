@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { createRef, Fragment, Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
@@ -57,7 +57,7 @@ const DivUpload = styled.div`
 class UploadAttachment extends Component {
   constructor(props) {
     super(props)
-    this.reactDropzoneRef = React.createRef()
+    this.reactDropzoneRef = createRef()
     this.state = {
       files: [],
       duplicateFiles: []
@@ -384,7 +384,7 @@ class UploadAttachment extends Component {
               />
             </span>
           ) : (
-            <React.Fragment>
+            <Fragment>
               {!hasFile || this.props.uploadedContent ? (
                 <ReactDropzone
                   accept={this.props.acceptFiles}
@@ -433,7 +433,7 @@ class UploadAttachment extends Component {
                   />
                 </span>
               )}
-            </React.Fragment>
+            </Fragment>
           )}
         </DivUpload>
       </>

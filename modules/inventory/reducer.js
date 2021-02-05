@@ -2,6 +2,8 @@ import * as AT from './action-types'
 
 import { uniqueArrayByKey, getSafe } from '~/utils/functions'
 import moment from 'moment'
+//Constants
+import { FREE_FOR_ALL } from './my-listings/components/ModalDetail/ModalDetail.constants'
 
 export const initialState = {
   fileIds: [],
@@ -45,7 +47,10 @@ export const initialState = {
   isOpenColumnSettingModal: false,
   myProductsUnmappedValue: 'ALL',
   myListingsFilters: null,
-  myProductsFilters: null
+  myProductsFilters: null,
+  tdsTemplatesLoading: false,
+  tdsTemplates: [],
+  broadcastOption: FREE_FOR_ALL
 }
 
 export default function reducer(state = initialState, action) {
@@ -499,30 +504,33 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_AUTOCOMPLETE_DATA_FULFILLED: {
+      const data = getSafe(() => action.payload.length, null)
+        ? action.payload
+            .map(el => {
+              const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
+              const productName = getSafe(() => el.intProductName, el.mfrProductName)
+              return {
+                ...el,
+                key: el.id,
+                text: `${productName} ${productCode}`,
+                value: JSON.stringify({
+                  id: el.id,
+                  name: productName,
+                  casNumber: productCode
+                }),
+                content: {
+                  productCode: productCode,
+                  productName: productName,
+                  casProducts: getSafe(() => el.companyGenericProduct.elements, [])
+                }
+              }
+            })
+            .concat(state.autocompleteData)
+        : state.autocompleteData
       return {
         ...state,
         autocompleteDataLoading: false,
-        autocompleteData: uniqueArrayByKey(action.payload, 'id')
-          .map(el => {
-            const productCode = getSafe(() => el.intProductCode, el.mfrProductCode)
-            const productName = getSafe(() => el.intProductName, el.mfrProductName)
-            return {
-              ...el,
-              key: el.id,
-              text: `${productName} ${productCode}`,
-              value: JSON.stringify({
-                id: el.id,
-                name: productName,
-                casNumber: productCode
-              }),
-              content: {
-                productCode: productCode,
-                productName: productName,
-                casProducts: getSafe(() => el.companyGenericProduct.elements, [])
-              }
-            }
-          })
-          .concat(state.autocompleteData)
+        autocompleteData: uniqueArrayByKey(data, 'id')
       }
     }
 
@@ -649,6 +657,40 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         myProductsUnmappedValue: action.payload
+      }
+    }
+
+    case AT.TDS_GET_TEMPLATES_PENDING: {
+      return {
+        ...state,
+        tdsTemplatesLoading: true
+      }
+    }
+
+    case AT.TDS_GET_TEMPLATES_FULFILLED: {
+      return {
+        ...state,
+        tdsTemplatesLoading: false,
+        tdsTemplates: action.payload
+      }
+    }
+
+    case AT.TDS_DELETE_TEMPLATE_FULFILLED: {
+      return {
+        ...state,
+        tdsTemplates: state.tdsTemplates.reduce((result, template) => {
+          if (template.id !== payload) {
+            result.push(template)
+          }
+          return result
+        }, [])
+      }
+    }
+
+    case AT.CHANGE_BROADCAST: {
+      return {
+        ...state,
+        broadcastOption: action.payload
       }
     }
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import confirm from '~/components/Confirmable/confirm'
@@ -67,7 +67,6 @@ class Table extends Component {
 
   getRows = rows => {
     return rows.map(row => {
-
       return {
         ...row,
         name: (

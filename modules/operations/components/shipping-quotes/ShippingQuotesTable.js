@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
@@ -61,7 +61,7 @@ class ShippingQuotesTable extends Component {
             </FormattedMessage>
           ),
           width: 200
-        },
+        }
         /*{
         name: 'createdAt',
         title: (

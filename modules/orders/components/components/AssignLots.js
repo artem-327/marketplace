@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
@@ -120,7 +120,7 @@ const validationScheme = val.object().shape({
   )
 })
 
-class AssignLots extends React.Component {
+class AssignLots extends Component {
   state = {
     activeTab: 0,
     allocated: [],

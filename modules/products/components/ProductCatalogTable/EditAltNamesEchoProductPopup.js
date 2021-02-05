@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Table, TableCell, TableHeaderCell, FormField, Message, Icon, Popup, Form } from 'semantic-ui-react'
 import { Input, Button } from 'formik-semantic-ui-fixed-validation'
@@ -54,7 +54,7 @@ const nameValidation = (index, val, vals) => {
   }
 }
 
-class EditAltNamesEchoProductPopup extends React.Component {
+class EditAltNamesEchoProductPopup extends Component {
   state = {
     initialState: {
       productAltNames: []
@@ -120,72 +120,87 @@ class EditAltNamesEchoProductPopup extends React.Component {
         enableReinitialize
         initialValues={{ ...initialFormValues, ...initialState }}
         onReset={closePopup}
-        onSubmit={() => {}}
-      >
+        onSubmit={() => {}}>
         {({ values, errors, setFieldValue }) => (
+          <Modal closeIcon onClose={() => closePopup()} open centered={false}>
+            <Modal.Header>
+              <FormattedMessage id='settings.editProductAltNames' defaultMessage='Edit Product Alternative Names' />
+            </Modal.Header>
+            <Form loading={loading}>
+              <StyledModalContent>
+                <FieldArray
+                  name='productAltNames'
+                  render={arrayHelpers => (
+                    <>
+                      <Message attached='top' className='header-table-fields'>
+                        <Button
+                          type='button'
+                          icon='plus'
+                          color='blue'
+                          size='small'
+                          floated='right'
+                          style={{ marginTop: '-0.5em' }}
+                          onClick={() => this.handleAddName(arrayHelpers)}
+                          data-test='settings_product_alt_name_add_btn'
+                        />
+                        {popupValues && `${popupValues.code} ${popupValues.name}`}
+                      </Message>
 
-      <Modal closeIcon onClose={() => closePopup()} open centered={false}>
-        <Modal.Header>
-          <FormattedMessage id='settings.editProductAltNames' defaultMessage='Edit Product Alternative Names' />
-        </Modal.Header>
-        <Form loading={loading}>
-          <StyledModalContent>
-            <FieldArray
-              name='productAltNames'
-              render={arrayHelpers => (
-                <>
-                  <Message attached='top' className='header-table-fields'>
-                    <Button
-                      type='button'
-                      icon='plus'
-                      color='blue'
-                      size='small'
-                      floated='right'
-                      style={{ marginTop: '-0.5em' }}
-                      onClick={() => this.handleAddName(arrayHelpers)}
-                      data-test='settings_product_alt_name_add_btn'
-                    />
-                    {popupValues && `${popupValues.code} ${popupValues.name}`}
-                  </Message>
-
-                  <Table attached='bottom' className='table-fields'>
-                    <Table.Header>
-                      <Table.Row>
-                        <TableHeaderCell>
-                          <FormattedMessage id='settings.altName' defaultMessage='Alternative Name' />
-                        </TableHeaderCell>
-                        <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
-                        <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {values && values.productAltNames.length
-                        ? values.productAltNames.map((val, index, vals) => (
-                            <Table.Row key={index}>
-                              <TableCell width={16}>
-                                <FormField data-test={`settings_product_alt_name_name_${index}_inp`}>
-                                  <Input
-                                    name={`productAltNames[${index}].alternativeName`}
-                                    inputProps={{
-                                      onChange: (e, d) => {
-                                        const { color, description, canSave } = nameValidation(
-                                          index,
-                                          d.value.trim(),
-                                          vals
-                                        )
-                                        setFieldValue(`productAltNames[${index}].color`, color)
-                                        setFieldValue(`productAltNames[${index}].description`, description)
-                                        setFieldValue(`productAltNames[${index}].canSave`, canSave)
-                                      }
-                                    }}
-                                  />
-                                </FormField>
-                              </TableCell>
-                              <TableCell width={1}>
-                                {val.description ? (
-                                  <Popup
-                                    content={val.description}
-                                    trigger={
+                      <Table attached='bottom' className='table-fields'>
+                        <Table.Header>
+                          <Table.Row>
+                            <TableHeaderCell>
+                              <FormattedMessage id='settings.altName' defaultMessage='Alternative Name' />
+                            </TableHeaderCell>
+                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                          </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                          {values && values.productAltNames.length
+                            ? values.productAltNames.map((val, index, vals) => (
+                                <Table.Row key={index}>
+                                  <TableCell width={16}>
+                                    <FormField data-test={`settings_product_alt_name_name_${index}_inp`}>
+                                      <Input
+                                        name={`productAltNames[${index}].alternativeName`}
+                                        inputProps={{
+                                          onChange: (e, d) => {
+                                            const { color, description, canSave } = nameValidation(
+                                              index,
+                                              d.value.trim(),
+                                              vals
+                                            )
+                                            setFieldValue(`productAltNames[${index}].color`, color)
+                                            setFieldValue(`productAltNames[${index}].description`, description)
+                                            setFieldValue(`productAltNames[${index}].canSave`, canSave)
+                                          }
+                                        }}
+                                      />
+                                    </FormField>
+                                  </TableCell>
+                                  <TableCell width={1}>
+                                    {val.description ? (
+                                      <Popup
+                                        content={val.description}
+                                        trigger={
+                                          <Icon
+                                            name='save outline'
+                                            size='large'
+                                            onClick={() => {
+                                              if (val.canSave === true) {
+                                                this.handleSaveName(popupValues.id, val, index)
+                                                setFieldValue(`productAltNames[${index}].color`, 'grey')
+                                                setFieldValue(`productAltNames[${index}].description`, '')
+                                                setFieldValue(`productAltNames[${index}].canSave`, false)
+                                              }
+                                            }}
+                                            color={val.color}
+                                            data-test={`settings_product_alt_name_save_${index}_btn`}
+                                          />
+                                        }
+                                      />
+                                    ) : (
                                       <Icon
                                         name='save outline'
                                         size='large'
@@ -200,53 +215,36 @@ class EditAltNamesEchoProductPopup extends React.Component {
                                         color={val.color}
                                         data-test={`settings_product_alt_name_save_${index}_btn`}
                                       />
-                                    }
-                                  />
-                                ) : (
-                                  <Icon
-                                    name='save outline'
-                                    size='large'
-                                    onClick={() => {
-                                      if (val.canSave === true) {
-                                        this.handleSaveName(popupValues.id, val, index)
-                                        setFieldValue(`productAltNames[${index}].color`, 'grey')
-                                        setFieldValue(`productAltNames[${index}].description`, '')
-                                        setFieldValue(`productAltNames[${index}].canSave`, false)
-                                      }
-                                    }}
-                                    color={val.color}
-                                    data-test={`settings_product_alt_name_save_${index}_btn`}
-                                  />
-                                )}
-                              </TableCell>
-                              <TableCell width={1}>
-                                <Icon
-                                  name='trash alternate outline'
-                                  size='large'
-                                  onClick={() => this.handleDeleteName(popupValues.id, arrayHelpers, val, index)}
-                                  data-test={`settings_product_alt_name_delete_${index}_btn`}
-                                />
-                              </TableCell>
-                            </Table.Row>
-                          ))
-                        : null}
-                    </Table.Body>
-                  </Table>
-                </>
-              )}
-            />
-          </StyledModalContent>
-        </Form>
-        <Modal.Actions>
-          <div>
-            <Button.Reset data-test='settings_product_alt_name_reset_btn'>
-              <FormattedMessage id='global.close' defaultMessage='Close'>
-                {text => text}
-              </FormattedMessage>
-            </Button.Reset>
-          </div>
-        </Modal.Actions>
-      </Modal>
+                                    )}
+                                  </TableCell>
+                                  <TableCell width={1}>
+                                    <Icon
+                                      name='trash alternate outline'
+                                      size='large'
+                                      onClick={() => this.handleDeleteName(popupValues.id, arrayHelpers, val, index)}
+                                      data-test={`settings_product_alt_name_delete_${index}_btn`}
+                                    />
+                                  </TableCell>
+                                </Table.Row>
+                              ))
+                            : null}
+                        </Table.Body>
+                      </Table>
+                    </>
+                  )}
+                />
+              </StyledModalContent>
+            </Form>
+            <Modal.Actions>
+              <div>
+                <Button.Reset data-test='settings_product_alt_name_reset_btn'>
+                  <FormattedMessage id='global.close' defaultMessage='Close'>
+                    {text => text}
+                  </FormattedMessage>
+                </Button.Reset>
+              </div>
+            </Modal.Actions>
+          </Modal>
         )}
       </Formik>
     )

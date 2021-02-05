@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import securePage from '~/hocs/securePage'
 import { OrdersModule } from '~/modules/orders'
 import Layout from 'components/Layout'
@@ -10,7 +10,9 @@ const OrdersWithRouter = withRouter(OrdersModule)
 
 class Orders extends Component {
   render() {
-    const { intl: { formatMessage } } = this.props
+    const {
+      intl: { formatMessage }
+    } = this.props
 
     return (
       <Layout title={formatMessage({ id: 'global.purchaseOrders', defaultMessage: 'Purchase Orders' })}>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import securePage from '~/hocs/securePage'
 import OrdersModule from '~/modules/orders/detail'
 import Layout from 'components/Layout'
@@ -10,14 +10,17 @@ const OrderWithRouter = withRouter(OrdersModule)
 
 class OrderDetail extends Component {
   render() {
-    const { intl: { formatMessage } } = this.props
+    const {
+      intl: { formatMessage }
+    } = this.props
 
     return (
-      <Layout title={
-        getSafe(() => Router.router.query.type, 'sales') === 'sales'
-          ? formatMessage({ id: 'global.salesOrdersDetail', defaultMessage: 'Sales Order Detail' })
-          : formatMessage({ id: 'global.purchaseOrdersDetail', defaultMessage: 'Purchase Order Detail' })
-      }>
+      <Layout
+        title={
+          getSafe(() => Router.router.query.type, 'sales') === 'sales'
+            ? formatMessage({ id: 'global.salesOrdersDetail', defaultMessage: 'Sales Order Detail' })
+            : formatMessage({ id: 'global.purchaseOrdersDetail', defaultMessage: 'Purchase Order Detail' })
+        }>
         <OrderWithRouter />
       </Layout>
     )

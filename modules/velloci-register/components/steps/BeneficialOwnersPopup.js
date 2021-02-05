@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Grid, GridRow, GridColumn, Icon, Dimmer, Loader } from 'semantic-ui-react'
 import { Formik } from 'formik'
@@ -22,12 +22,12 @@ const StyledModal = styled(Modal)`
   .ui.modal {
     border-top: 1px solid #dee2e6;
     box-shadow: 0 0 0 0 transparent;
-    
+
     > .actions {
       background: #ffffff;
     }
   }
-  
+
   .ui.button {
     font-size: 1em;
     margin: 0 0.357142857em;
@@ -42,7 +42,7 @@ const StyledModal = styled(Modal)`
     background-color: #2599d5;
     border: none;
   }
-  
+
   .ui.grid {
     margin: 30px 0 30px 25px;
     padding: 0;
@@ -110,23 +110,25 @@ const initialFormValues = {
 const formValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
-      invitations: Yup.array().min(1, errorMessages.minOneRole).of(
-        Yup.object().shape({
-          name: Yup.string(errorMessages.requiredMessage).trim().required(errorMessages.requiredMessage),
-          email: multipleEmails().required(errorMessages.requiredMessage)
-        })
-      )
+      invitations: Yup.array()
+        .min(1, errorMessages.minOneRole)
+        .of(
+          Yup.object().shape({
+            name: Yup.string(errorMessages.requiredMessage).trim().required(errorMessages.requiredMessage),
+            email: multipleEmails().required(errorMessages.requiredMessage)
+          })
+        )
     })
   )
 
-class BeneficialOwnersPopupPopup extends React.Component {
+class BeneficialOwnersPopupPopup extends Component {
   state = {
     companyId: null
   }
 
   componentDidMount() {
     let companyId = null
-    if (!this.props.companyId && (typeof window !== 'undefined')) {
+    if (!this.props.companyId && typeof window !== 'undefined') {
       const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
       if (searchParams.has('companyId')) {
         companyId = Number(searchParams.get('companyId'))
@@ -175,12 +177,8 @@ class BeneficialOwnersPopupPopup extends React.Component {
               <Modal.Content scrolling>
                 <Grid>
                   <GridRow className='header'>
-                    <GridColumn width={7}>
-                      {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
-                    </GridColumn>
-                    <GridColumn width={7}>
-                      {formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
-                    </GridColumn>
+                    <GridColumn width={7}>{formatMessage({ id: 'global.name', defaultMessage: 'Name' })}</GridColumn>
+                    <GridColumn width={7}>{formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}</GridColumn>
                   </GridRow>
                   {values.invitations.map((value, i) => (
                     <GridRow key={i}>
@@ -197,8 +195,10 @@ class BeneficialOwnersPopupPopup extends React.Component {
                         <Input
                           name={`invitations[${i}].email`}
                           inputProps={{
-                            placeholder:
-                              formatMessage({ id: 'global.enterEmailAddress', defaultMessage: 'Enter Email Address' }),
+                            placeholder: formatMessage({
+                              id: 'global.enterEmailAddress',
+                              defaultMessage: 'Enter Email Address'
+                            }),
                             fluid: true
                           }}
                         />

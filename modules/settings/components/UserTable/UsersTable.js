@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import moment from 'moment'
@@ -221,7 +221,7 @@ class UsersTable extends Component {
     const { formatMessage } = intl
 
     return (
-      <React.Fragment>
+      <Fragment>
         <div className='flex stretched listings-wrapper'>
           <ProdexGrid
             tableName='settings_users'
@@ -234,7 +234,7 @@ class UsersTable extends Component {
             editingRowId={editedId}
           />
         </div>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

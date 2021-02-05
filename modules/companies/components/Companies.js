@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Container } from 'semantic-ui-react'
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'

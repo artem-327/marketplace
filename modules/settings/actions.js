@@ -765,6 +765,13 @@ export function postImportCompaniesCSV(payload, id) {
   }
 }
 
+export function postImportCompaniesMap(id, mapId) {
+  return {
+    type: AT.POST_CSV_IMPORT_COMPANIES,
+    payload: api.postImportCompaniesMap(id, mapId)
+  }
+}
+
 export function getCSVMapCompanies() {
   return {
     type: AT.GET_CSV_MAP_COMPANIES,
@@ -814,6 +821,13 @@ export function postImportProductCSV(payload, id) {
   }
 }
 
+export function postImportProductMap(id, mapId) {
+  return {
+    type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS,
+    payload: api.postImportProductMap(id, mapId)
+  }
+}
+
 export function postImportCompanyGenericProductCSV(payload, id) {
   return {
     type: AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS,
@@ -821,10 +835,24 @@ export function postImportCompanyGenericProductCSV(payload, id) {
   }
 }
 
-export function postImportProductOfferCSV(payload, id) {
+export function postImportCompanyGenericProductMap(id, mapId) {
+  return {
+    type: AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS,
+    payload: api.postImportCompanyGenericProductMap(id, mapId)
+  }
+}
+
+export function postImportProductOfferCSV(payload, id, paramBroadcast) {
   return {
     type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER,
-    payload: api.postImportProductOfferCSV(payload, id)
+    payload: api.postImportProductOfferCSV(payload, id, paramBroadcast)
+  }
+}
+
+export function postImportProductOfferMap(id, mapId, paramBroadcast) {
+  return {
+    type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER,
+    payload: api.postImportProductOfferMap(id, mapId, paramBroadcast)
   }
 }
 

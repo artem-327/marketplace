@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Modal, FormGroup, Header } from 'semantic-ui-react'
 import { Formik } from 'formik'
@@ -61,7 +61,7 @@ const formValidation = () =>
     })
   )
 
-class DeliveryLocationsPopup extends React.Component {
+class DeliveryLocationsPopup extends Component {
   render() {
     const {
       closePopup,

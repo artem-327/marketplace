@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
 import { Formik } from 'formik'
@@ -98,7 +98,7 @@ const formValidation = () =>
     closeTime: validateTime()
   })
 
-class DeliveryLocationsSidebar extends React.Component {
+class DeliveryLocationsSidebar extends Component {
   state = {
     loadSidebar: false
   }

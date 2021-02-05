@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, GridColumn, GridRow } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
@@ -94,7 +94,7 @@ const GridColumnText = styled(GridColumn)`
   font-weight: bold !important;
 `
 
-class PurchaseOrderShipping extends React.Component {
+class PurchaseOrderShipping extends Component {
   state = {
     selectedShippingQuote: '',
     shipmentQuoteId: ''
