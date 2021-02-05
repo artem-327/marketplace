@@ -34,9 +34,9 @@ export const LIST_CONFORMING = [
 ]
 
 /**
- * @type {'FREE_FOR_ALL'}
+ * @type {'GLOBAL_RULES'}
  */
-export const FREE_FOR_ALL = 'FREE_FOR_ALL'
+export const GLOBAL_RULES = 'GLOBAL_RULES'
 /**
  * @type {'NO_BROADCAST'}
  */
@@ -47,7 +47,7 @@ const NO_BROADCAST = 'NO_BROADCAST'
 const CLIENT_COMPANIES = 'CLIENT_COMPANIES'
 
 /**
- * @constant {{icon: JSX.Element, title: JSX.Element, subtitleId: string, subtitleText: string, value: CLIENT_COMPANIES | NO_BROADCAST | FREE_FOR_ALL}[] } OPTIONS_BROADCAST  Options for dropdown "Who should see this offer?"
+ * @constant {{icon: JSX.Element, title: JSX.Element, subtitleId: string, subtitleText: string, value: CLIENT_COMPANIES | NO_BROADCAST | GLOBAL_RULES}[] } OPTIONS_BROADCAST  Options for dropdown "Who should see this offer?"
  */
 export const OPTIONS_BROADCAST = [
   {
@@ -72,7 +72,7 @@ export const OPTIONS_BROADCAST = [
     title: <FormattedMessage id='myInventory.network' defaultMessage='Network' />,
     subtitleId: 'myInventory.networkSubtitle',
     subtitleText: 'Your accepted Partners and invited Guests',
-    value: FREE_FOR_ALL,
+    value: GLOBAL_RULES,
     id: null,
     tmp: null
   },
@@ -179,7 +179,7 @@ export const OPTIONS_BROADCAST = [
  *     doesExpire: false,
  *     expirationDate: '',
  *     documentType: '',
- *     broadcastOption: 'FREE_FOR_ALL',
+ *     broadcastOption: 'GLOBAL_RULES',
  *     acceptBids: true
  *   },
  *   priceTiers: {
@@ -219,7 +219,7 @@ export const INIT_VALUES = {
     doesExpire: false,
     expirationDate: '',
     documentType: '',
-    broadcastOption: 'FREE_FOR_ALL',
+    broadcastOption: 'GLOBAL_RULES',
     acceptBids: true
   },
   priceTiers: {

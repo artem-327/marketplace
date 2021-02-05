@@ -2,9 +2,6 @@
 import { createConfirmation } from 'react-confirm'
 import ConfirmDialog from './ConfirmDialog'
 
-// create confirm function
-const confirm = createConfirmation(ConfirmDialog)
-
 /**
  * HOC confirm modal.
  * @method
@@ -30,6 +27,8 @@ const confirm = createConfirmation(ConfirmDialog)
  *    }
  *  )
  */
+const confirm = createConfirmation(ConfirmDialog)
+
 export default function ConfirmComponent(title, confirmation, options = { cancelText: 'No', proceedText: 'Yes' }) {
   return confirm({ title, confirmation, options })
 }
