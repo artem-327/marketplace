@@ -1,14 +1,14 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
-import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
-import { getSafe } from '~/utils/functions'
-import HighMenu from './HighMenu'
+import { withDatagrid, DatagridProvider } from '../../datagrid'
+import { getSafe } from '../../../utils/functions'
+import HighMenu from './HighMenu/HighMenu'
 import TablesHandlers from './TablesHandlers'
 import Table from './Table'
-import Tutorial from '~/modules/tutorial/Tutorial'
-import { generateQueryString } from '~/utils/functions'
-import ShippingQuotesPopup from '~/modules/operations/components/shipping-quotes/ShippingQuotesPopup'
+import Tutorial from '../../tutorial/Tutorial'
+import { generateQueryString } from '../../../utils/functions'
+import ShippingQuotesPopup from '../../operations/components/shipping-quotes/ShippingQuotesPopup'
 
 class Alerts extends Component {
   state = {
