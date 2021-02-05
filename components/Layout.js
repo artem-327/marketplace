@@ -59,7 +59,7 @@ import moment from 'moment'
 import ModalDetailContainer from '../modules/inventory/my-listings/components/ModalDetail/ModalDetailContainer'
 import ProductSidebar from '../modules/inventory/my-products/components/ProductSidebar'
 import WantedSidebar from '../modules/wanted-board/listings/components/DetailSidebar'
-import UserSidebar from '../modules/settings/components/UserTable/UsersSidebar'
+import UserEditSidebar from '../modules/settings/components/UserTable/UserEditSidebar/UserEditSidebar'
 import GuestSidebar from '../modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
 import WarehouseSidebar from '../modules/settings/components/Locations/PickUpLocationsTable/PickUpLocationsSidebar'
 
@@ -560,7 +560,7 @@ class Layout extends Component {
             <ModalDetailContainer openGlobalAddForm={openGlobalAddForm} />
           )}
           {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
-          {openGlobalAddFormName === 'my-account-users' && <UserSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'my-account-users' && <UserEditSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'manage-guests-guests' && <GuestSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'my-account-locations' && (
             <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />

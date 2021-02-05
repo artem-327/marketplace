@@ -5,8 +5,12 @@ import { getSafe } from '~/utils/functions'
 //Constants
 import { currencyId } from '~/constants/index'
 
+import { TModalProps } from './UserEditSidebar.types'
+
 /**
  * Validates values from form.
+ * @category Settings - Users
+ * @method
  */
 export const userFormValidation = () =>
   Yup.lazy(values => {
@@ -23,7 +27,8 @@ export const userFormValidation = () =>
 
 /**
  * Gets home's branches for dropdown options.
- *
+ * @category Settings - Users
+ * @method
  * @param {{id: number, deliveryAddress: {cfName: string}}[]} branches
  * @return {{key: number, value: number, text: string}[]} Array objects for dropdown options.
  */
@@ -32,7 +37,8 @@ export const getHomeBranchesOptions = branches =>
 
 /**
  * Gets branches where warehouse === false for dropdown options.
- *
+ * @category Settings - Users
+ * @method
  * @param {{id: number, deliveryAddress: {cfName: string}}[]} branches
  * @return {{key: number, value: number, text: string}[]} Array objects for dropdown options.
  */
@@ -46,20 +52,10 @@ export const getBranchesOptions = branches => {
 
 /**
  * Gets sidebar or initial values for form.
- *
+ * @category Settings - Users
+ * @method
  * @param {object} sidebarValues
- * @return {{
- * name: string,
- * email: string,
- * company: string,
- * homeBranch: string,
- * preferredCurrency: number,
- * additionalBranches: array,
- * jobTitle: string,
- * phone: string,
- * roles: array,
- * buyMarketSegments: array,
- * sellMarketSegments: array}} Object fields for form.
+ * @return {TModalProps} Object fields for form.
  */
 export const getInitialFormValues = sidebarValues => {
   return sidebarValues
@@ -92,7 +88,8 @@ export const getInitialFormValues = sidebarValues => {
 
 /**
  * Handles Sell Market Segment dropdown change.
- *
+ * @category Settings - Users
+ * @method
  * @param {number} value
  * @param {{value: number}[]} options
  * @return {array} Array objects for dropdown options.

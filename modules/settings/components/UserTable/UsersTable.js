@@ -21,7 +21,8 @@ import {
   openRolesPopup,
   userSwitchEnableDisable,
   resendWelcomeEmail,
-  setPrimaryUser
+  setPrimaryUser,
+  openUserSettingsModal
 } from '../../actions'
 
 import { Checkbox, Popup, Icon } from 'semantic-ui-react'
@@ -249,7 +250,8 @@ const mapDispatchToProps = {
   deleteUser,
   userSwitchEnableDisable,
   resendWelcomeEmail,
-  setPrimaryUser
+  setPrimaryUser,
+  openUserSettingsModal
 }
 
 const userEnableDisableStatus = (r, currentUserId) => {

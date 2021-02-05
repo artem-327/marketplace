@@ -12,7 +12,7 @@
   },
   "source": {
     // TODO Edit for all folders where is JSDoc
-    "include": ["./modules/inventory/my-listings", "./components/buttons"],
+    "include": ["./modules/inventory/my-listings", "./components/buttons", "./modules/settings/components/UserTable"],
     "exclude": ["./modules/inventory/my-listings/components"]
   },
   "plugins": ["plugins/markdown", "better-docs/category", "better-docs/component"],
