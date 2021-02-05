@@ -87,6 +87,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.PROFILE_DELETE_AVATAR_PICTURE_PENDING:
     case AT.PROFILE_SAVE_AVATAR_PICTURE_PENDING: {
       return {
         ...state,
@@ -94,6 +95,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.PROFILE_DELETE_AVATAR_PICTURE_REJECTED:
+    case AT.PROFILE_DELETE_AVATAR_PICTURE_FULFILLED:
     case AT.PROFILE_SAVE_AVATAR_PICTURE_REJECTED:
     case AT.PROFILE_SAVE_AVATAR_PICTURE_FULFILLED: {
       return {

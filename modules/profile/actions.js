@@ -85,3 +85,8 @@ export const saveAvatarPicture = picture => ({
   type: AT.PROFILE_SAVE_AVATAR_PICTURE,
   payload: api.saveAvatarPicture(picture)
 })
+
+export const deleteAvatarPicture = () => ({
+  type: AT.PROFILE_DELETE_AVATAR_PICTURE,
+  payload: api.deleteAvatarPicture()
+})

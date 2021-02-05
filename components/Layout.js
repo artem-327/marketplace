@@ -101,7 +101,7 @@ class Layout extends Component {
   }
 
   componentDidMount() {
-    if (this.props.hasLogo && getSafe(() => this.props.useCompanyLogo.value === 'true', false)) this.loadCompanyLogo()
+    if (this.props.hasLogo && this.props.useCompanyLogo) this.loadCompanyLogo()
 
     const { auth, phoneCountryCodes, getCountryCodes, hasLogo } = this.props
 
@@ -171,9 +171,7 @@ class Layout extends Component {
 
   loadCompanyLogo = async () => {
     if (
-      this.props.hasLogo &&
-      getSafe(() => this.props.useCompanyLogo.value === 'true', false) &&
-      this.props.getCompanyLogo
+      this.props.hasLogo && this.props.useCompanyLogo && this.props.getCompanyLogo
     ) {
       await this.props.getCompanyLogo(this.props.companyId)
     }
@@ -302,6 +300,9 @@ class Layout extends Component {
       toggleMenu,
       hasLogo,
       useCompanyLogo,
+      avatar,
+      useGravatar,
+      gravatarSrc,
       companyName,
       isEchoOperator,
       isOrderOperator,
@@ -339,8 +340,12 @@ class Layout extends Component {
         </g>
       </svg>
     )
-    let gravatarSrc = getSafe(() => auth.identity.avatar)
-    if (gravatarSrc) icon = <Image src={gravatarSrc} avatar size='small' />
+
+    if (avatar) {
+      icon = <Image src={avatar} avatar size='small' />
+    } else if (useGravatar && gravatarSrc) {
+      icon = <Image src={gravatarSrc} avatar size='small' />
+    }
 
     const { mainClass, copyrightClassName } = this.state
     // if user is in Settings then copyrightContainer waiting to props renderCopyright
@@ -369,7 +374,7 @@ class Layout extends Component {
               <LogoImage
                 src={
                   !collapsedMenu
-                    ? hasLogo && getSafe(() => useCompanyLogo.value === 'true', false)
+                    ? hasLogo && useCompanyLogo
                       ? this.getCompanyLogo()
                       : Logo
                     : LogoSmall
@@ -595,14 +600,25 @@ const mapStateToProps = state => {
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover:
-      getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
+      getSafe(() => !!state.auth.identity.company.id, false)
+      && getSafe(() => state.auth.identity.isAdmin, false),
     phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, []),
     companyId: getSafe(() => state.auth.identity.company.id, false),
     hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),
     companyLogo: getSafe(() => state.businessTypes.companyLogo, null),
-    useCompanyLogo: getSafe(() => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false),
+    useCompanyLogo:
+      getSafe(() =>
+        state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO').value, 'false')
+        .toLowerCase() === 'true',
+    avatar: getSafe(() => state.auth.identity.avatar, null),
+    gravatarSrc: getSafe(() => state.auth.identity.gravatarSrc, null),
+    useGravatar:
+      getSafe(() =>
+        state.auth.identity.settings.find(set => set.key === 'USER_USE_GRAVATAR').value, 'false')
+        .toLowerCase() === 'true',
     companyName: getSafe(() => state.auth.identity.company.name, false),
-    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+    isEchoOperator:
+      getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
     isOrderOperator: getSafe(() => state.auth.identity.isOrderOperator, false),
     renderCopyright: getSafe(() => state.settings.renderCopyright, false),
     adminTab: getSafe(() => state.admin.currentTab.id, null),

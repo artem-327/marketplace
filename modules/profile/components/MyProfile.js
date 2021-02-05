@@ -12,6 +12,7 @@ import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import UploadAttachment from '../../inventory/components/upload/UploadAttachment'
 import { getIdentity } from '../../auth/actions'
+import { ImageSearch } from '@material-ui/icons'
 
 import {
   closePopup,
@@ -21,20 +22,16 @@ import {
   openChangePasswordPopup,
   setPreferredLanguage,
   loadFile,
-  saveAvatarPicture
+  saveAvatarPicture,
+  deleteAvatarPicture
 } from '../actions'
-
-/* // ! !
-import {
-  loadFile
-} from '../../settings/actions'
-*/
 
 const initialFormValues = {
   name: '',
   email: '',
   phone: '',
-  jobTitle: ''
+  jobTitle: '',
+  userAvatar: null
   // 'preferredCurrency': '',
 }
 
@@ -66,6 +63,7 @@ class MyProfile extends Component {
       setPreferredLanguage,
       loadFile,
       saveAvatarPicture,
+      deleteAvatarPicture,
       getIdentity,
     } = this.props
 
@@ -149,6 +147,7 @@ class MyProfile extends Component {
                   }))}
                 />
                 <UploadAttachment
+                  name='userAvatar'
                   filesLimit={1}
                   fileMaxSize={20}
                   onChange={async files => {
@@ -162,10 +161,16 @@ class MyProfile extends Component {
                     }
                   }}
                   attachments={popupValues && popupValues.avatar ? [popupValues.avatar] : []}
+                  removeAttachment={async () => {
+                    try {
+                      await deleteAvatarPicture()
+                      getIdentity()
+                    } catch (error) {
+                      console.error(error)
+                    }
+                  }}
                   emptyContent={
-                    <div>
-                      prazdny obsah
-                    </div>
+                    <ImageSearch />
                   }
                   uploadedContent={
                     <div>
@@ -221,7 +226,8 @@ const mapDispatchToProps = {
   setPreferredLanguage,
   loadFile,
   getIdentity,
-  saveAvatarPicture
+  saveAvatarPicture,
+  deleteAvatarPicture
 }
 
 const mapStateToProps = state => {

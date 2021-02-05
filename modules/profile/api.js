@@ -32,5 +32,6 @@ export default {
         }
       }
     )
-  }
+  },
+  deleteAvatarPicture: () => api.delete('/prodex/api/users/avatar')
 }
