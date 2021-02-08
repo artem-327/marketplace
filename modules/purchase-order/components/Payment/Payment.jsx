@@ -19,17 +19,20 @@ import {
   Segment,
   Popup,
   Message,
-  Divider
+  Divider,
+  Radio
 } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
   DivSectionCollapsedWrapper,
   DivSectionCollapsedRow,
+  DivSectionHeader,
   DivSectionName,
   DivSectionDescription,
-
-
-
+  GridExpandedSection,
+  GridRowExpandedSelectionRow,
+  DivFlexRow,
+  DivCentered
 } from '../Checkout.styles'
 
 
@@ -46,7 +49,7 @@ import { usePrevious } from "../../../../hooks"
 const Payment = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded  = usePrevious(props.isExpanded)
-  const [edited, setEdited] = useState(false)
+  const [checkedId, setCheckedId] = useState('')
 
   const {
     id, // temporary
@@ -56,6 +59,7 @@ const Payment = props => {
 
 
 
+    payments
   } = props
 
   // Similar to call componentDidMount:
@@ -85,6 +89,8 @@ const Payment = props => {
   //console.log('!!!!!!!!!! render Payment', cartItems)
   //console.log('!!!!!!!!!! render props', props)
 
+  const selected = payments.find(el => el.id === 'VA-3af024f2-9833-472e-8711-2d37fa49c193') // ! !
+
   return (
     <RowComponent
       {...props}
@@ -103,18 +109,51 @@ const Payment = props => {
           ? (
             isExpanded
               ? (
-                <div>
-                  Payment component expanded 2
-                </div>
+                <GridExpandedSection>
+                  {payments.map((item, index) =>
+                    <GridRowExpandedSelectionRow
+                      key={index}
+                      checked={checkedId === item.id}
+                      onClick={() => setCheckedId(item.id)}
+                      selection={'true'}
+                    >
+                      <GridColumn width={6}>
+                        <DivFlexRow>
+                          <DivCentered>
+                            <Radio
+                              checked={checkedId === item.id}
+                            />
+                          </DivCentered>
+                          <div>
+                            <DivSectionHeader>
+                              {item.name}
+                            </DivSectionHeader>
+                            <DivSectionName>
+                              {item.id}
+                            </DivSectionName>
+                          </div>
+                        </DivFlexRow>
+                      </GridColumn>
+                      <GridColumn width={10}>
+                        <DivSectionHeader>
+                          {item.institutionName}
+                        </DivSectionHeader>
+                        <DivSectionName>
+                          ...Address...
+                        </DivSectionName>
+                      </GridColumn>
+                    </GridRowExpandedSelectionRow>
+                  )}
+                </GridExpandedSection>
               ) : (
                 <DivSectionCollapsedWrapper>
                   <DivSectionCollapsedRow>
                     <div>
                       <DivSectionName>
-                        tucne jmeno payment
+                        {selected.name}
                       </DivSectionName>
                       <DivSectionDescription>
-                        normalni text payment
+                        {selected.institutionName}
                       </DivSectionDescription>
                     </div>
                   </DivSectionCollapsedRow>

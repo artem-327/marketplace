@@ -69,6 +69,8 @@ const Checkout = props => {
   const {
     cartItems,
 
+    payments,
+
 
 
   } = props
@@ -144,6 +146,8 @@ const Checkout = props => {
                     setSummaryButtonCaption,
                     setSummarySubmitFunction
                   )}
+                  payments={payments}
+
 
                 />
 

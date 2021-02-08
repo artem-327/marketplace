@@ -193,7 +193,9 @@ export default function reducer(state = initialState, action) {
         payments: action.payload.map(acc => ({
           id: acc.id || acc.account_public_id,
           name: acc.name || acc.display_name,
-          status: acc.status
+          status: acc.status,
+          type: acc.bankAccountType || acc.account_type,  // Nebo: acc.type || acc.account_type ?
+          institutionName: acc.bankName || acc.institution_name
         })),
         isFetching: false
       }

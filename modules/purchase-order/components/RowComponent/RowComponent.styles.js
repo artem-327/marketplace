@@ -10,7 +10,7 @@ export const GridStyled = styled(Grid)`
     border: solid 1px #dee2e6;
     background-color: #ffffff;
 
-    .row {
+    > .row {
       padding: 10px 0;
       
       .column {
@@ -20,15 +20,11 @@ export const GridStyled = styled(Grid)`
           padding: 0 10px;
         }
       }
-      
-      
     }
     
-    .row:not(:last-child) {
+    > .row:not(:last-child) {
       border-bottom: solid 1px #dee2e6;
     }
-    
-    
   }
 `
 

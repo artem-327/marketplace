@@ -23,6 +23,11 @@ import {
 } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
+  GridExpandedSection,
+  DivSectionExpandedRow,
+
+
+
   DivSectionCollapsedWrapper,
   DivSectionCollapsedRow,
   DivSectionName,
@@ -31,6 +36,8 @@ import {
 
 
 } from '../Checkout.styles'
+
+import ItemComponent from './ItemComponent'
 
 
 //Hooks
@@ -82,7 +89,7 @@ const ReviewItems = props => {
   }, [isExpanded])
 
 
-  console.log('!!!!!!!!!! render cartItems', cartItems)
+  //console.log('!!!!!!!!!! render cartItems', cartItems)
   //console.log('!!!!!!!!!! render props', props)
 
   return (
@@ -103,9 +110,15 @@ const ReviewItems = props => {
           ? (
             isExpanded
               ? (
-                <div>
-                  ReviewItems component expanded 2
-                </div>
+                <GridExpandedSection>
+                  {cartItems.map(item =>
+                    <GridRow>
+                      <GridColumn>
+                        <ItemComponent item={item}/>
+                      </GridColumn>
+                    </GridRow>
+                  )}
+                </GridExpandedSection>
               ) : (
                 <DivSectionCollapsedWrapper>
                   {cartItems.map(item =>
@@ -153,7 +166,7 @@ function mapStateToProps(store, props) {
       const packagingUnit = getSafe(() => item.productOffer.companyProduct.packagingUnit.nameAbbreviation, '')
       const packaging = `${packagingUnit} ${packagingType}`
 
-      return({
+      return ({
         ...item,
         productName: getSafe(() => item.productOffer.companyProduct.intProductName, ''),
         pkgAmount: item.pkgAmount,
