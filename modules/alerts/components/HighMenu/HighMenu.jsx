@@ -1,132 +1,20 @@
 import { createRef, Component } from 'react'
 import { connect } from 'react-redux'
-import { Container, Label, Menu, Dropdown } from 'semantic-ui-react'
-import * as Actions from '../actions'
-import { withDatagrid, Datagrid } from '~/modules/datagrid'
+import { Container, Menu, Dropdown } from 'semantic-ui-react'
 import { injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
-import { debounce } from 'lodash'
-import styled from 'styled-components'
 import { MoreHorizontal } from 'react-feather'
+//Actions
+import * as Actions from '../../actions'
+//Components
+import { withDatagrid } from '../../../datagrid'
+//Styles
+import { StyledMenu, CircularLabel } from './HighMenu.styles'
 
-const StyledMenu = styled(Menu)`
-  &.ui.menu {
-    height: 50px !important;
-    min-height: 50px !important;
-
-    > .item {
-      box-sizing: content-box !important;
-      height: 17px !important;
-      padding-top: 16px !important;
-      padding-bottom: 17px !important;
-
-      > div.ui.circular.label {
-        box-sizing: border-box !important;
-        height: 20px !important;
-        padding-top: 4px !important;
-        padding-bottom: 4px !important;
-      }
-
-      &.active {
-        font-weight: 400 !important;
-
-        > div.ui.circular.label {
-          padding-top: 5px !important;
-          padding-bottom: 5px !important;
-        }
-
-        &:hover {
-          font-weight: 700 !important;
-        }
-      }
-    }
-
-    > .item:not(.active) .ui.circular.label {
-      border: solid 1px #dee2e6;
-      background-color: #f8f9fb;
-      color: #848893;
-    }
-
-    > .active.item .ui.circular.label {
-      background-color: #f16844;
-      color: #ffffff;
-    }
-
-    .ui.dropdown {
-      .text {
-        height: 50px;
-        line-height: 50px;
-
-        svg {
-          width: 20px;
-          height: 20px;
-          margin: 0 10px;
-          vertical-align: middle;
-        }
-      }
-
-      i.dropdown.icon {
-        display: none;
-      }
-
-      .menu {
-        padding-top: 11px !important;
-        padding-bottom: 9px !important;
-
-        > .item {
-          box-sizing: content-box !important;
-          height: 20px !important;
-          margin-left: 0 !important;
-          margin-right: 0 !important;
-          margin-bottom: 0 !important;
-          border-width: 0 0 0 3px !important;
-          border-style: none none none solid !important;
-          border-color: transparent !important;
-          padding: 10px 10px 10px 17px !important;
-          text-transform: uppercase !important;
-          line-height: 20px;
-
-          > div.ui.circular.label {
-            float: right;
-            box-sizing: border-box !important;
-            height: 20px !important;
-            margin-right: 0 !important;
-            border: solid 1px #dee2e6;
-            padding-top: 4px !important;
-            padding-bottom: 4px !important;
-            background-color: #f8f9fb;
-            color: #848893;
-          }
-
-          &.active {
-            border-color: #2599d5 !important;
-            font-weight: 400;
-
-            > div.ui.circular.label {
-              padding-top: 5px !important;
-              padding-bottom: 5px !important;
-            }
-          }
-
-          &:hover {
-            background: transparent !important;
-            font-weight: 700 !important;
-            color: #2599d5 !important;
-          }
-        }
-      }
-    }
-  }
-`
-
-const CircularLabel = styled(Label)`
-  margin-left: 5px !important;
-  bottom: auto;
-  font-size: 0.7142857rem !important;
-  font-style: normal !important;
-  font-weight: 400 !important;
-`
-
+/**
+ * Show menu items in header Notification.
+ * @category Alert
+ * @component
+ */
 class HighMenu extends Component {
   state = {
     categories: [],
@@ -289,7 +177,11 @@ const mapStateToProps = state => {
   const { alerts } = state
   return {
     topMenuTab: alerts.topMenuTab,
-    categories: alerts.categories
+    /**
+     * Categories from api/messaging-center/message-categories
+     * Removed all Wanted_Board categories based on https://bluepallet.atlassian.net/browse/DT-88
+     */
+    categories: alerts.categories.filter(cat => cat.category.indexOf('Wanted_Board') < 0)
   }
 }
 

@@ -238,7 +238,11 @@ export default {
   updateLogisticsAccount: (id, payload) =>
     api.put(`/prodex/api/logistics-accounts/id/${id}`, payload).then(response => response.data),
   deleteLogisticsAccount: id => api.delete(`/prodex/api/logistics-accounts/id/${id}`).then(() => id),
-  getSettings: role => api.get(`/prodex/api/settings/${role}`).then(response => response.data),
+  getSettings: role =>
+    api
+      .get(`/prodex/api/settings/${role}`)
+      .then(response => response.data)
+      .catch(err => err),
   updateSettings: (role, payload) => api.patch(`/prodex/api/settings/${role}`, payload).then(response => response.data),
   getBusinessClassifications: () => api.get('/prodex/api/business-classifications').then(response => response.data),
   dwollaGetVerificationDocumentTypes: () =>
@@ -305,5 +309,10 @@ export default {
         `/prodex/api/payments/bank-accounts/velloci/invite-to-add-bank-accounts?${id}emailAddress=${emailAddress}&name=${name}`
       )
       .then(response => response.data)
-  }
+  },
+  getCompanyUser: id =>
+    api
+      .get(`/prodex/api/settings/company-user/${id}`)
+      .then(response => response.data)
+      .catch(err => console.error(err))
 }

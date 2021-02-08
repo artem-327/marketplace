@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Echo System Documentation - Frontend components/buttons/BasicButton.jsx</title>
+  <title>Echo System Documentation - Frontend components/Confirmable/ConfirmDialog.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -88,7 +88,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>components/buttons/BasicButton.jsx</h1>
+                    <h1>components/Confirmable/ConfirmDialog.js</h1>
                 </header>
                 
 
@@ -98,33 +98,51 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import PropTypes from 'prop-types'
-import { CustomButton } from './styles'
+import { confirmable } from 'react-confirm'
+
+import { Modal, Button } from 'semantic-ui-react'
 /**
- * Basic Button from Semantic UI React.
+ * Modal with header, content and actions.
  * @component
- * @see {@link https://react.semantic-ui.com/elements/button/} Button - Semantic UI React
- * @example
- * return (&lt;CustomButton noBorder={true} >
- *   Cancel
- * &lt;/CustomButton>
- * )
  */
-const BasicButton = props => {
-  return &lt;CustomButton {...props}>{props.children}&lt;/CustomButton>
+const ConfirmDialog = ({ show, proceed, dismiss, cancel, title, confirmation, options }) => {
+  const { cancelText, proceedText } = options
+  return (
+    &lt;Modal closeIcon size='tiny' centered={false} open={show} onClose={dismiss}>
+      &lt;Modal.Header>{title}&lt;/Modal.Header>
+      &lt;Modal.Content>{confirmation}&lt;/Modal.Content>
+
+      &lt;Modal.Actions>
+        &lt;Button primary inverted onClick={cancel} data-test='confirm_dialog_cancel_btn'>
+          {cancelText}
+        &lt;/Button>
+        &lt;Button onClick={proceed} primary data-test='confirm_dialog_proceed_btn'>
+          {proceedText}
+        &lt;/Button>
+      &lt;/Modal.Actions>
+    &lt;/Modal>
+  )
 }
 
-BasicButton.propTypes = {
-  /**
-   * No borders around the Button.
-   */
-  noBorder: PropTypes.bool
+ConfirmDialog.propTypes = {
+  /** From confirmable. Indicates if the dialog is shown or not. */
+  show: PropTypes.bool,
+  /** From confirmable. Call to close the dialog with promise resolved. */
+  proceed: PropTypes.func,
+  /** From confirmable. Call to close the dialog with promise rejected. */
+  cancel: PropTypes.func,
+  /** From confirmable. Call to only close the dialog. */
+  dismiss: PropTypes.func,
+  /** Arguments of your confirm function */
+  title: PropTypes.string,
+  /** Arguments of your confirm function */
+  confirmation: PropTypes.string,
+  /** Arguments of your confirm function */
+  options: PropTypes.object //
 }
 
-BasicButton.defaultProps = {
-  noBorder: false
-}
-
-export default BasicButton
+/** @description confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component. */
+export default confirmable(ConfirmDialog)
 </code></pre>
         </article>
     </section>

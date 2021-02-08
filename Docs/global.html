@@ -41,7 +41,7 @@
         <div class="logo">
              
                 <a class="image" href="index.html">
-                    <img src="./assets/images/login/logo_echo.png" alt="logo">
+                    <img src="./assets/images/login/logo_login.png" alt="logo">
                 </a>
             
              
@@ -78,7 +78,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Components</h3><ul><li><a href="BasicButton.html">BasicButton</a></li></ul></div><div class="category"><h2>Inventory - My Listings</h2><h3>Global</h3><ul><li><a href="global.html#BOOLEAN_TRUE">BOOLEAN_TRUE</a></li><li><a href="global.html#INDEX_TAB_DOCUMENTS">INDEX_TAB_DOCUMENTS</a></li><li><a href="global.html#INDEX_TAB_EDIT">INDEX_TAB_EDIT</a></li><li><a href="global.html#INDEX_TAB_PRICE_BOOK">INDEX_TAB_PRICE_BOOK</a></li><li><a href="global.html#INDEX_TAB_PRICE_TIERS">INDEX_TAB_PRICE_TIERS</a></li><li><a href="global.html#INDEX_TAB_TDS">INDEX_TAB_TDS</a></li><li><a href="global.html#onClickBroadcast">onClickBroadcast</a></li><li><a href="global.html#tableRowClickedProductOffer">tableRowClickedProductOffer</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Components</h3><ul><li><a href="BasicButton.html">BasicButton</a></li><li><a href="ConfirmDialog.html">ConfirmDialog</a></li></ul><h3>Global</h3><ul><li><a href="global.html#confirm">confirm</a></li></ul></div><div class="category"><h2>Inventory - My Listings</h2><h3>Global</h3><ul><li><a href="global.html#BOOLEAN_TRUE">BOOLEAN_TRUE</a></li><li><a href="global.html#INDEX_TAB_DOCUMENTS">INDEX_TAB_DOCUMENTS</a></li><li><a href="global.html#INDEX_TAB_EDIT">INDEX_TAB_EDIT</a></li><li><a href="global.html#INDEX_TAB_PRICE_BOOK">INDEX_TAB_PRICE_BOOK</a></li><li><a href="global.html#INDEX_TAB_PRICE_TIERS">INDEX_TAB_PRICE_TIERS</a></li><li><a href="global.html#INDEX_TAB_TDS">INDEX_TAB_TDS</a></li><li><a href="global.html#onClickBroadcast">onClickBroadcast</a></li><li><a href="global.html#tableRowClickedProductOffer">tableRowClickedProductOffer</a></li></ul></div>
                 
             </nav>
         </div>
@@ -690,6 +690,278 @@
         <div class='vertical-section'>
             <h1>Methods</h1>
             <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="confirm">
+        <a class="href-link" href="#confirm">#</a>
+        
+        <span class="code-name">
+            
+                confirm<span class="signature">(title, confirmation, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>HOC confirm modal.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>title</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>Title of confirm modal.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>confirmation</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last"><p>Content of confirm modal.</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+      <td class="default">
+      
+          {cancelText: 'No', proceedText: 'Yes'}
+      
+      </td>
+  
+
+  <td class="description last"><p>Text for Cancel and Confirm Buttons.</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="components_Confirmable_confirm.js.html" class="button">View Source</a>
+            <span>
+                <a href="components_Confirmable_confirm.js.html">components/Confirmable/confirm.js</a>, <a href="components_Confirmable_confirm.js.html#line30">line 30</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;string></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+    <h5>Example</h5>
+    
+    
+        <pre class="prettyprint"><code>confirm(   formatMessage({ id: d.confirmTitleId, defaultMessage: d.confirmTitleDefaultMessage }),   formatMessage({ id: d.confirmContentId,defaultMessage: d.confirmContentDefaultMessage},      d.confirmValues ? d.confirmValues : {}), // Some values (name of company, etc.) for the content text in modal.   {     cancelText: formatMessage({ id: 'global.no', defaultMessage: 'No' }),     proceedText: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),   } ).then(   () => {     d.confirmAction() // confirm   },   () => {     d.cancelAction() // cancel   } )</code></pre>
+    
+
+
+</div>
             
                 <div class="member">
 

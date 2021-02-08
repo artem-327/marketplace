@@ -836,7 +836,6 @@ class ModalDetail extends Component {
             this.values = values
             this.resetForm = resetForm
             this.formikProps = formikProps
-
             return (
               <Form onChange={this.onChange}>
                 <FlexModal
@@ -1061,9 +1060,11 @@ class ModalDetail extends Component {
                                                       onChange: (e, { value }) => {
                                                         value = parseInt(value)
                                                         if (value > 1 && !isNaN(value)) {
-                                                          setFieldValue(
-                                                            'priceTiers.pricingTiers[0].quantityFrom',
-                                                            value
+                                                          this.onSplitsChange(
+                                                            value,
+                                                            values,
+                                                            setFieldValue,
+                                                            validateForm
                                                           )
                                                           // It seems to do bug when created new inventory
                                                           // value is adding in handleSubmit

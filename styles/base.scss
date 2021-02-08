@@ -589,12 +589,29 @@ div.page-wrapper {
   background: #f8f9fb;
   overflow-y: auto;
   overflow-x: hidden;
+
+  > .fluid.container {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
   > .flex.stretched,
   .marketplace-container > .flex.stretched {
     flex-grow: 1;
     flex-shrink: 1;
-    height: 100%;
-    max-height: 100%;
+
+    .table-responsive {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+  }
+
+  .table-responsive-wider {
+    > .flex-column {
+      overflow: hidden;
+      margin-right: -2.2857143em;
+      padding-right: 2.2857143em;
+    }
   }
 
   .marketplace-container {

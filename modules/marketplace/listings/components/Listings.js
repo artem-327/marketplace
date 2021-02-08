@@ -60,6 +60,12 @@ const FiltersRow = styled.div`
   margin-bottom: -5px;
 `
 
+const FlexContainerSmall = styled.div`
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: 10px 0;
+`
+
 class Listings extends Component {
   constructor(props) {
     super(props)
@@ -455,7 +461,7 @@ class Listings extends Component {
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
         {<Tutorial marginMarketplace isTutorial={false} isBusinessVerification={true} />}
-        <div style={{ padding: '10px 0' }}>
+        <FlexContainerSmall>
           <CustomRowDiv>
             <div>
               <div className='column'>
@@ -489,7 +495,7 @@ class Listings extends Component {
 
             <ColumnSettingButton />
           </CustomRowDiv>
-        </div>
+        </FlexContainerSmall>
 
         <div className='flex stretched marketplace-wrapper' style={{ padding: '10px 5px' }}>
           <ProdexGrid

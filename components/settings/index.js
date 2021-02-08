@@ -1,23 +1,36 @@
-import { cloneElement, Component } from 'react'
+import React, { cloneElement, Component } from 'react'
 import { bool, oneOf } from 'prop-types'
 import { connect } from 'react-redux'
 import { Formik } from 'formik'
-import { Form, Modal, Button, Popup, Segment, Header, Icon, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import {
+  Form,
+  Modal,
+  Button,
+  Popup,
+  Segment,
+  Header,
+  Icon,
+  Grid,
+  GridRow,
+  GridColumn,
+  Dimmer,
+  Loader
+} from 'semantic-ui-react'
 import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 
 import * as Yup from 'yup'
 
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../utils/functions'
 import { typeToComponent, toYupSchema } from './constants'
 
-import { triggerSystemSettingsModal, getCurrentUser } from '~/modules/settings/actions'
+import { triggerSystemSettingsModal, getCurrentUser } from '../../modules/settings/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import styled from 'styled-components'
-import api from '~/modules/settings/api'
-import { getIdentity } from '~/modules/auth/actions'
-import securePage from '~/hocs/securePage'
+import api from '../../modules/settings/api'
+import { getIdentity } from '../../modules/auth/actions'
+import securePage from '../../hocs/securePage'
 
 const FixyWrapper = styled.div`
   position: relative;
@@ -129,13 +142,16 @@ const PScroll = styled(PerfectScrollbar)`
     }
   }
 `
-
+/**
+ * @category Settings - Company Settings
+ * @component
+ */
 class Settings extends Component {
   state = {
     role: null,
     systemSettings: [],
     validationSchema: null,
-    loading: false,
+    loading: true,
     clickedButton: null,
     fetching: true
   }
@@ -148,7 +164,8 @@ class Settings extends Component {
     this.setState({
       fetching: false,
       systemSettings,
-      validationSchema
+      validationSchema,
+      loading: false
     })
   }
 
@@ -278,6 +295,9 @@ class Settings extends Component {
             systemSettings.every(group => group.settings.every(val => !val.changeable))
           return (
             <FormSpaced className={asModal ? 'scrollable' : ''}>
+              <Dimmer inverted active={loading}>
+                <Loader />
+              </Dimmer>
               {systemSettings && systemSettings.length
                 ? systemSettings.map(group => {
                     return (
@@ -452,7 +472,8 @@ class Settings extends Component {
 Settings.propTypes = {
   asModal: bool,
   scrolling: bool,
-  role: oneOf(['user', 'admin', 'company']).isRequired,
+  /** This props completes urls GET and PATCH also. */
+  role: oneOf(['user', 'admin', 'company', 'comapny-user']).isRequired,
   isUserSettings: bool,
   isUserAdmin: bool,
   isCompanyAdmin: bool
