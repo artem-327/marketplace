@@ -3,7 +3,8 @@ import { Component } from 'react'
 import { themes } from '../constants'
 import { FormattedMessage } from 'react-intl'
 
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '../../../utils/functions'
+import { isJsonString } from '../../../services'
 
 let Message
 class Messages extends Component {
@@ -64,11 +65,24 @@ class Messages extends Component {
   onMessage = (message, config) => {
     let { toastManager } = this.props
 
-    const clientMessage = getSafe(() => message.clientMessage, null)
+    let clientMessage = getSafe(() => message.clientMessage, null)
     const descriptionMessage = getSafe(() => message.descriptionMessage, null)
     const exceptionMessage = getSafe(() => message.exceptionMessage, null)
 
+    const exceptionErrorJSON = isJsonString(exceptionMessage) ? JSON.parse(exceptionMessage) : null
+    const errorTypeDuplicateItem =
+      (exceptionErrorJSON &&
+        getSafe(() => exceptionErrorJSON.description, '') &&
+        getSafe(() => exceptionErrorJSON.error_type, '') === 'DUPLICATE_ITEM') ||
+      exceptionMessage.indexOf('DUPLICATE_ITEM') >= 0
+        ? getSafe(() => exceptionErrorJSON.description, 'This institution has already been added.')
+        : null
     const url = getSafe(() => config.url, '')
+
+    if (errorTypeDuplicateItem && url.startsWith('/prodex/api/payments/bank-accounts/velloci')) {
+      clientMessage = errorTypeDuplicateItem
+    }
+
     const isPaymentEndpoint = url.startsWith('/prodex/api/payments')
     const dwollaValidationError =
       isPaymentEndpoint &&
