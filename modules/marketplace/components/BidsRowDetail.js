@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import * as Actions from '../actions'
 import { Input, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import Router from 'next/router'
-import { Form, Dimmer, Loader, Grid, GridRow, GridColumn, List, Radio } from 'semantic-ui-react'
+import { Form, Dimmer, Loader, Grid, GridRow, GridColumn, List, Radio, Image } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
@@ -296,6 +296,10 @@ class BidsRowDetail extends Component {
                 <Form>
                   <StyledGrid>
                     {histories.map((r, index) => {
+                      const UserIcon = r.createdBy.avatar
+                        ? (<Image src={r.createdBy.avatar} avatar size='small' />)
+                        : DefaultIcon
+
                       return (
                         <HistoryRow>
                           <GridColumn style={{ padding: '0' }}>
@@ -316,7 +320,7 @@ class BidsRowDetail extends Component {
                                 }}>
                                 <GridColumn width={4}>
                                   <NameWrapper>
-                                    <IconWrapper>{DefaultIcon}</IconWrapper>
+                                    <IconWrapper>{UserIcon}</IconWrapper>
                                     <StyledName style={{ marginLeft: '10px', paddingTop: '2px' }}>
                                       <div className='name'>{r.createdBy.name}</div>
                                       <div className='company'>{r.createdBy.company.cfDisplayName}</div>

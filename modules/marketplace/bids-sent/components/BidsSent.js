@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Container, Input } from 'semantic-ui-react'
+import { Container, Input, Image } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexGrid from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
@@ -141,6 +141,10 @@ class BidsSent extends Component {
       const lastHistory = r.histories[r.histories.length - 1]
       const greyed = expandedRowIds.length && expandedRowIds[0] !== r.id
 
+      const Icon = r.createdBy.avatar
+        ? (<Image src={r.createdBy.avatar} avatar size='small' />)
+        : DefaultIcon
+
       return {
         ...r,
         clsName:
@@ -153,7 +157,7 @@ class BidsSent extends Component {
           <ActionCell
             row={r}
             getActions={this.getActions}
-            leftContent={<IconWrapper>{DefaultIcon}</IconWrapper>}
+            leftContent={<IconWrapper>{Icon}</IconWrapper>}
             content={
               <StyledName>
                 <div className='name'>{lastHistory.createdBy.name}</div>
