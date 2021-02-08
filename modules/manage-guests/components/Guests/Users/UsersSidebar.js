@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { closePopup, addNewUser, editUser } from '../../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '~/modules/companies/actions'
@@ -66,7 +66,7 @@ const initValues = {
   sellMarketSegments: []
 }
 
-class UsersSidebar extends React.Component {
+class UsersSidebar extends Component {
   state = {
     popupValues: null,
     branches: [],

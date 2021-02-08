@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
 import DocumentTypes from '~/modules/document-types'

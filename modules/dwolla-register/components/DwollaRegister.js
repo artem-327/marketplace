@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Grid, GridColumn, GridRow, Segment, Header, Form, Button, Icon, Popup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { Formik } from 'formik'
@@ -727,9 +727,10 @@ class DwollaRegister extends Component {
                       <GridColumn>
                         <RightAlignedDiv>
                           <Button
-                            onClick={() => (isAdmin
-                              ? Router.push('/admin/units-of-measure')
-                              : Router.push('/settings/company-details'))
+                            onClick={() =>
+                              isAdmin
+                                ? Router.push('/admin/units-of-measure')
+                                : Router.push('/settings/company-details')
                             }
                             primary>
                             <FormattedMessage id='global.complete' defaultMessage='Complete'>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { openSidebar, getLogisticsAccounts, deleteLogisticsAccount } from '~/modules/settings/actions'

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
 import { Modal, Container, Icon, Button, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Grid, Button } from 'semantic-ui-react'
@@ -25,14 +25,14 @@ class ConfirmationPage extends Component {
     const status = recordsFailed ? 'SomeFailed' : 'Success'
 
     return clientMessage ? (
-      <React.Fragment>
+      <Fragment>
         <Grid.Row>
           <FormattedMessage id='settings.importFailed' defaultMessage='Import Failed' />
         </Grid.Row>
         <Grid.Row>{clientMessage}</Grid.Row>
-      </React.Fragment>
+      </Fragment>
     ) : (
-      <React.Fragment>
+      <Fragment>
         <Grid.Row style={{ 'padding-bottom': '1.25rem' }}>
           <FormattedMessage
             id={`settings.import${status}`}
@@ -93,7 +93,7 @@ class ConfirmationPage extends Component {
             </Grid.Row>
           ))}
         <Grid.Row></Grid.Row>
-      </React.Fragment>
+      </Fragment>
     )
   }
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
@@ -127,7 +127,7 @@ class PurchaseOrder extends Component {
     submitting: false,
     addressId: 'deliveryAddressId',
     shippingQuotes: [],
-    selectedAddress: '',
+    selectedAddress: null,
     isSetShippingQuoteId: false
   }
   componentDidMount = async () => {
@@ -636,7 +636,6 @@ class PurchaseOrder extends Component {
                           </Header>
                         </VerticalUnpaddedColumn>
                       </StyledRow>
-
                       <Payment
                         dispatch={dispatch}
                         billingInfo={billingInfo}

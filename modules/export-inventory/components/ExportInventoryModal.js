@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { debounce } from 'lodash'
 import { Info, ChevronDown, ChevronRight } from 'react-feather'
 import { Checkbox, Dropdown, Loader, Dimmer, Modal, Grid } from 'semantic-ui-react'

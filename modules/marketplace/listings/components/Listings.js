@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
 import { MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -58,6 +58,12 @@ const FiltersRow = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   margin-bottom: -5px;
+`
+
+const FlexContainerSmall = styled.div`
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: 10px 0;
 `
 
 class Listings extends Component {
@@ -455,7 +461,7 @@ class Listings extends Component {
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
         {<Tutorial marginMarketplace isTutorial={false} isBusinessVerification={true} />}
-        <div style={{ padding: '10px 0' }}>
+        <FlexContainerSmall>
           <CustomRowDiv>
             <div>
               <div className='column'>
@@ -489,7 +495,7 @@ class Listings extends Component {
 
             <ColumnSettingButton />
           </CustomRowDiv>
-        </div>
+        </FlexContainerSmall>
 
         <div className='flex stretched marketplace-wrapper' style={{ padding: '10px 5px' }}>
           <ProdexGrid

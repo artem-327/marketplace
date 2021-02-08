@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import filter from 'lodash/filter'
 import escapeRegExp from 'lodash/escapeRegExp'
@@ -336,7 +336,7 @@ const checkPalletParamsRequired = v => {
   return !!(v.palletMinPkgs || v.palletMaxPkgs || v.palletWeight || v.palletLength || v.palletWidth || v.palletHeight)
 }
 
-class ProductSidebar extends React.Component {
+class ProductSidebar extends Component {
   state = {
     openUpload: false,
     documentType: null,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
 import { Modal, Container, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
 import styled, { withTheme } from 'styled-components'
@@ -382,7 +382,7 @@ class Orders extends Component {
           row={row}
           getActions={this.getActionsByRow}
           content={row.id}
-          onContentClick={(e) => {
+          onContentClick={e => {
             e.stopPropagation()
             e.preventDefault()
             router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)

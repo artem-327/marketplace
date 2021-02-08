@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { getVersion } from '~/modules/auth/api'
 
 export default class Heartbeat extends Component {

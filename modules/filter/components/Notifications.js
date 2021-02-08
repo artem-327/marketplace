@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 
 import { GridColumn, Grid, GridRow } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -36,9 +36,9 @@ class Notifications extends Component {
         <GridRow>
           <GridColumn computer={16}>
             <FormikCheckbox
-              inputProps={{disabled, 'data-test': 'filter_notifications_notifyMail_chckb'}}
+              inputProps={{ disabled, 'data-test': 'filter_notifications_notifyMail_chckb' }}
               name='checkboxes.notifyMail'
-              label={formatMessage({id: 'filter.notifications.email', defaultMessage: 'Email Notifications:'})}
+              label={formatMessage({ id: 'filter.notifications.email', defaultMessage: 'Email Notifications:' })}
             />
           </GridColumn>
         </GridRow>
@@ -51,9 +51,9 @@ class Notifications extends Component {
             trigger={
               <GridColumn computer={16} data-test='filter_notifications_email_inp'>
                 <Input
-                  fieldProps={{disabled: !(values.checkboxes && values.checkboxes.notifyMail) || disabled}}
+                  fieldProps={{ disabled: !(values.checkboxes && values.checkboxes.notifyMail) || disabled }}
                   inputProps={{
-                    placeholder: formatMessage({id: 'filter.useMyEmail', defaultMessage: 'Your Email Address'}),
+                    placeholder: formatMessage({ id: 'filter.useMyEmail', defaultMessage: 'Your Email Address' }),
                     fluid: true
                   }}
                   type='text'
@@ -61,11 +61,15 @@ class Notifications extends Component {
                 />
               </GridColumn>
             }>
-          <div>
-            <p><FormattedMessage id='filter.notifications.email.tooltipHead' /></p>
-            <p><FormattedMessage id='filter.notifications.email.tooltipText' /></p>
-          </div>
-        </Tooltip>
+            <div>
+              <p>
+                <FormattedMessage id='filter.notifications.email.tooltipHead' />
+              </p>
+              <p>
+                <FormattedMessage id='filter.notifications.email.tooltipText' />
+              </p>
+            </div>
+          </Tooltip>
         </GridRow>
         <GridRow>
           <GridColumn computer={16}>
@@ -87,7 +91,7 @@ class Notifications extends Component {
                 <div className='phoneNumber'>
                   <PhoneNumber
                     name='notifications.notificationPhone'
-                    disabled={ !(values.checkboxes && values.checkboxes.notifyPhone) || disabled }
+                    disabled={!(values.checkboxes && values.checkboxes.notifyPhone) || disabled}
                     clearable
                     label={null}
                     values={values}
@@ -102,20 +106,26 @@ class Notifications extends Component {
               </GridColumn>
             }>
             <GridColumn computer={14}>
-              <p><FormattedMessage id='filter.notifications.mobile.tooltipHead' /></p>
-              <p><FormattedMessage id='filter.notifications.mobile.tooltipText' /></p>
+              <p>
+                <FormattedMessage id='filter.notifications.mobile.tooltipHead' />
+              </p>
+              <p>
+                <FormattedMessage id='filter.notifications.mobile.tooltipText' />
+              </p>
             </GridColumn>
           </Tooltip>
         </GridRow>
-        {false && (<GridRow>
-          <GridColumn computer={16}>
-            <FormikCheckbox
-              inputProps={{ disabled, 'data-test': 'filter_notifications_notifySystem_chckb' }}
-              name='checkboxes.notifySystem'
-              label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })}
-            />
-          </GridColumn>
-        </GridRow>)}
+        {false && (
+          <GridRow>
+            <GridColumn computer={16}>
+              <FormikCheckbox
+                inputProps={{ disabled, 'data-test': 'filter_notifications_notifySystem_chckb' }}
+                name='checkboxes.notifySystem'
+                label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })}
+              />
+            </GridColumn>
+          </GridRow>
+        )}
       </NotificationsFiltersGrid>
     )
   }

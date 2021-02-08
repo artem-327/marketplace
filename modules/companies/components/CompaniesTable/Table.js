@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import confirm from '~/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
@@ -54,7 +54,7 @@ class CompaniesTable extends Component {
             </FormattedMessage>
           ),
           width: 220,
-          sortPath: 'Company.cfDisplayName'
+          sortPath: 'Company.dba'
         },
         {
           name: 'p44CompanyId',

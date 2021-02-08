@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { Modal, FormGroup, Form, Button } from 'semantic-ui-react'

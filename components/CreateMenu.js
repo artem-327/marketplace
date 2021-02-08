@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { getSafe } from '~/utils/functions'
@@ -38,7 +38,7 @@ export const CreateDropdown = styled(Dropdown)`
   .menu.right &.dropdown-menu > .menu {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
-  
+
     > .item {
       display: flex !important;
       padding-top: 5px !important;
@@ -49,7 +49,7 @@ export const CreateDropdown = styled(Dropdown)`
       font-style: normal;
       color: #20273a;
       line-height: 1.428571;
-  
+
       .menu-icon {
         width: 18px;
         height: 20px;
@@ -58,12 +58,12 @@ export const CreateDropdown = styled(Dropdown)`
       }
       &:hover {
         background-color: #edeef2;
-  
+
         .menu-icon {
           color: #20273a;
         }
       }
-      
+
       + .item {
         margin-top: 6px !important;
       }
@@ -116,8 +116,8 @@ class CreateMenu extends Component {
               <FormattedMessage id='createMenu.newListing' defaultMessage='New Listing' />
             </Dropdown.Item>
           )}
-
-          {(isCompanyAdmin || isMerchant) && (
+          {/* Temporary comented based on https://bluepallet.atlassian.net/browse/DT-88 */}
+          {false && (isCompanyAdmin || isMerchant) && (
             <Dropdown.Item
               onClick={() => {
                 openGlobalAddForm('wanted-board-listings')

@@ -1,7 +1,6 @@
 import * as AT from './action-types'
 import { uniqueArrayByKey, getSafe } from '~/utils/functions'
 import { Header } from 'semantic-ui-react'
-import React from 'react'
 
 export const initialState = {
   editedId: null,

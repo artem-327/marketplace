@@ -1,23 +1,16 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Button, Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Label } from 'semantic-ui-react'
 import _ from 'lodash'
 
-import {
-  InputWrapper,
-  QuantityWrapper,
-  InputLabeledWrapper,
-} from './constants/layout'
+import { InputWrapper, QuantityWrapper, InputLabeledWrapper } from './constants/layout'
 
 export const inputWrapper = (name, inputProps, label, labelText) => {
   return (
     <InputWrapper>
-      {label && (<div className='field-label'>{label}</div>)}
+      {label && <div className='field-label'>{label}</div>}
       <div>
-        <Input
-          inputProps={inputProps}
-          name={name}
-        />
+        <Input inputProps={inputProps} name={name} />
         <Label>{labelText}</Label>
       </div>
     </InputWrapper>
@@ -27,11 +20,8 @@ export const inputWrapper = (name, inputProps, label, labelText) => {
 export const inputLabeledWrapper = (name, inputProps, label) => {
   return (
     <InputLabeledWrapper>
-      {label && (<div className='field-label'>{label}</div>)}
-      <Input
-        inputProps={inputProps}
-        name={name}
-      />
+      {label && <div className='field-label'>{label}</div>}
+      <Input inputProps={inputProps} name={name} />
     </InputLabeledWrapper>
   )
 }
@@ -41,12 +31,9 @@ export const quantityWrapper = (name, inputProps, formikProps, label = null) => 
   const value = _.get(values, name)
   return (
     <QuantityWrapper>
-      {label && (<div className='field-label'>{label}</div>)}
+      {label && <div className='field-label'>{label}</div>}
       <div>
-        <Input
-          name={name}
-          inputProps={inputProps}
-        />
+        <Input name={name} inputProps={inputProps} />
         <div className='sideButtons'>
           <Button
             type='button'
@@ -55,28 +42,28 @@ export const quantityWrapper = (name, inputProps, formikProps, label = null) => 
               if (isNaN(value) || value === '') {
                 setFieldValue(name, 1)
                 setFieldTouched(name, true, true)
-              }
-              else {
+              } else {
                 setFieldValue(name, parseInt(value) + 1)
                 setFieldTouched(name, true, true)
               }
-            }}
-          >+</Button>
+            }}>
+            +
+          </Button>
           <Button
             type='button'
             className='buttonMinus'
             onClick={() => {
-              if (isNaN(value) || value === '' ) {
+              if (isNaN(value) || value === '') {
                 setFieldValue(name, 1)
                 setFieldTouched(name, true, true)
-              }
-              else {
+              } else {
                 const val = parseInt(value)
                 if (val > 1) setFieldValue(name, val - 1) // ! ! fix minimal value - inputProps
                 setFieldTouched(name, true, true)
               }
-            }}
-          >-</Button>
+            }}>
+            -
+          </Button>
         </div>
       </div>
     </QuantityWrapper>

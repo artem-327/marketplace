@@ -43,7 +43,6 @@ export async function authorize(username, password) {
       }
     }
   )
-
   return data
 }
 

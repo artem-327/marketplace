@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { connect } from 'react-redux'
 import MyListings from './MyListings'
 import * as Actions from '../../actions'
@@ -33,7 +31,7 @@ function mapStateToProps(store, { datagrid }) {
     detailValues,
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-      let fobPrice = 'N/A'
+      let fobPrice
 
       try {
         if (po.pricingTiers.length > 1)
@@ -87,7 +85,7 @@ function mapStateToProps(store, { datagrid }) {
         //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
         qtyPart: qtyPart,
-        quantity: po.quantity,
+        quantity: getSafe(() => po.quantity, ''),
         cost: po.costPerUOM ? (
           <FormattedNumber
             minimumFractionDigits={3}

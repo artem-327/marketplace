@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Grid, Form, Dimmer, Loader } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'

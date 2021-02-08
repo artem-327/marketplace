@@ -1,11 +1,13 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import { confirmable } from 'react-confirm'
 
 import { Modal, Button } from 'semantic-ui-react'
-
+/**
+ * Modal with header, content and actions.
+ * @component
+ */
 const ConfirmDialog = ({ show, proceed, dismiss, cancel, title, confirmation, options }) => {
-  let { cancelText, proceedText } = options
+  const { cancelText, proceedText } = options
   return (
     <Modal closeIcon size='tiny' centered={false} open={show} onClose={dismiss}>
       <Modal.Header>{title}</Modal.Header>
@@ -24,14 +26,21 @@ const ConfirmDialog = ({ show, proceed, dismiss, cancel, title, confirmation, op
 }
 
 ConfirmDialog.propTypes = {
-  show: PropTypes.bool, // from confirmable. indicates if the dialog is shown or not.
-  proceed: PropTypes.func, // from confirmable. call to close the dialog with promise resolved.
-  cancel: PropTypes.func, // from confirmable. call to close the dialog with promise rejected.
-  dismiss: PropTypes.func, // from confirmable. call to only close the dialog.
-  title: PropTypes.string, // arguments of your confirm function
-  confirmation: PropTypes.string, // arguments of your confirm function
-  options: PropTypes.object // arguments of your confirm function
+  /** From confirmable. Indicates if the dialog is shown or not. */
+  show: PropTypes.bool,
+  /** From confirmable. Call to close the dialog with promise resolved. */
+  proceed: PropTypes.func,
+  /** From confirmable. Call to close the dialog with promise rejected. */
+  cancel: PropTypes.func,
+  /** From confirmable. Call to only close the dialog. */
+  dismiss: PropTypes.func,
+  /** Arguments of your confirm function */
+  title: PropTypes.string,
+  /** Arguments of your confirm function */
+  confirmation: PropTypes.string,
+  /** Arguments of your confirm function */
+  options: PropTypes.object //
 }
 
-// confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component.
+/** @description confirmable HOC pass props `show`, `dismiss`, `cancel` and `proceed` to your component. */
 export default confirmable(ConfirmDialog)

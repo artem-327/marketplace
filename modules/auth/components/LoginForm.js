@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { withRouter } from 'next/router'
 import { Segment, Image, Button, Message, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
@@ -86,7 +86,7 @@ const LoginButton = styled(Button)`
 const AutoColumn = styled(GridColumn)`
   width: auto !important;
   white-space: nowrap;
-  
+
   &.right.aligned {
     margin-left: auto !important;
   }
@@ -100,7 +100,6 @@ const validationScheme = val.object().shape({
     .required(errorMessages.requiredMessage)
     .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
 })
-
 
 const resetScheme = val.object().shape({
   username: val.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
@@ -246,9 +245,7 @@ class LoginForm extends Component {
                   </ToggleLabel>
                 </AutoColumn>
 
-                <AutoColumn textAlign='right'>
-                  {version && `v${version}`}
-                </AutoColumn>
+                <AutoColumn textAlign='right'>{version && `v${version}`}</AutoColumn>
               </GridRow>
             </Grid>
           </LoginSegment>

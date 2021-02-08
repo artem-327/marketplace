@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { Confirm } from 'semantic-ui-react'
@@ -36,7 +36,7 @@ class ProductCatalogTable extends Component {
     const { columns } = this.state
 
     return (
-      <React.Fragment>
+      <Fragment>
         <Confirm
           size='tiny'
           content={formatMessage({
@@ -60,7 +60,7 @@ class ProductCatalogTable extends Component {
             }
           ]}
         />
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

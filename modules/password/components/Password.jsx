@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { bool } from 'prop-types'
 import { Segment, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
 

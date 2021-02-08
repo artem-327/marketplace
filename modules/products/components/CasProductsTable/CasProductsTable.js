@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import confirm from '~/components/Confirmable/confirm'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Popup, Label } from 'semantic-ui-react'

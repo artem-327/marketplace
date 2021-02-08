@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Input as FormikInput } from 'formik-semantic-ui-fixed-validation'
 
 import { getSafe } from '~/utils/functions'

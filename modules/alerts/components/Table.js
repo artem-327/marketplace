@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
@@ -13,9 +13,9 @@ import { Label, Popup, Checkbox } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 import { FormattedDateTime } from '~/components/formatted-messages/'
 import { ChevronUp, ChevronDown } from 'react-feather'
-import GenericProductRequest from './message-details/GenericProductRequest'
-import ShippingQuoteRequest from './message-details/ShippingQuoteRequest'
-import ShippingQuoteInfo from './message-details/ShippingQuoteInfo'
+import GenericProductRequest from './DetailMessages/GenericProductRequest'
+import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest'
+import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo'
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
@@ -310,7 +310,7 @@ class Table extends Component {
     const { columns, expandedRowIds } = this.state
 
     return (
-      <React.Fragment>
+      <Fragment>
         {selectedRows.length ? (
           <NotificationsCount>
             {selectedRows.length === 1 ? (
@@ -369,7 +369,7 @@ class Table extends Component {
             estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
           />
         </div>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

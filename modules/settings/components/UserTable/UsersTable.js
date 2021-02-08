@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import moment from 'moment'
@@ -21,7 +21,8 @@ import {
   openRolesPopup,
   userSwitchEnableDisable,
   resendWelcomeEmail,
-  setPrimaryUser
+  setPrimaryUser,
+  openUserSettingsModal
 } from '../../actions'
 
 import { Checkbox, Popup, Icon } from 'semantic-ui-react'
@@ -221,7 +222,7 @@ class UsersTable extends Component {
     const { formatMessage } = intl
 
     return (
-      <React.Fragment>
+      <Fragment>
         <div className='flex stretched listings-wrapper'>
           <ProdexGrid
             tableName='settings_users'
@@ -234,7 +235,7 @@ class UsersTable extends Component {
             editingRowId={editedId}
           />
         </div>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }
@@ -249,7 +250,8 @@ const mapDispatchToProps = {
   deleteUser,
   userSwitchEnableDisable,
   resendWelcomeEmail,
-  setPrimaryUser
+  setPrimaryUser,
+  openUserSettingsModal
 }
 
 const userEnableDisableStatus = (r, currentUserId) => {

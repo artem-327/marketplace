@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { loadFile, addAttachment } from '~/modules/inventory/actions'
@@ -26,7 +26,7 @@ const validationScheme = val.object().shape({
   paymentAccount: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage)
 })
 
-class ReinitiateTransfer extends React.Component {
+class ReinitiateTransfer extends Component {
   state = {
     allowTransfer: false
   }
@@ -137,7 +137,7 @@ function mapStateToProps(state) {
     orderId: state.orders.detail.id,
     bankAccounts: state.orders.bankAccounts,
     bankAccountsLoading: state.orders.bankAccountsLoading,
-    paymentProcessor: getSafe(() => state.auth.identity.company.paymentProcessor, ''),
+    paymentProcessor: getSafe(() => state.auth.identity.company.paymentProcessor, '')
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 
 import ProdexGrid from '~/components/table'
@@ -417,7 +417,7 @@ class CompanyGenericProductsTable extends Component {
     let { columns } = this.state
 
     return (
-      <React.Fragment>
+      <Fragment>
         {this.state.openAttachmentsPopup && (
           <StyledModal size='small' closeIcon={false} onClose={this.closePopup} centered={true} open={true}>
             <Modal.Header style={{ textTransform: 'uppercase' }}>
@@ -446,7 +446,7 @@ class CompanyGenericProductsTable extends Component {
             style={{ marginTop: '5px' }}
           />
         </div>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

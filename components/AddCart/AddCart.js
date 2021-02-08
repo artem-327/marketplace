@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import Router from 'next/router'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -696,8 +696,8 @@ class AddCart extends Component {
                 {price && !isNaN(price) ? (
                   <>
                     <FormattedNumber
-                      minimumFractionDigits={2}
-                      maximumFractionDigits={2}
+                      minimumFractionDigits={3}
+                      maximumFractionDigits={3}
                       style='currency'
                       currency={currencyCode}
                       value={price}

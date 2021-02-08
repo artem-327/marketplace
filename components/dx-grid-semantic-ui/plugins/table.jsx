@@ -1,4 +1,3 @@
-import * as React from "react";
 import { withComponents } from "@devexpress/dx-react-core";
 import { Table as TableBase } from "@devexpress/dx-react-grid";
 import { Table as TableSUI } from "semantic-ui-react";

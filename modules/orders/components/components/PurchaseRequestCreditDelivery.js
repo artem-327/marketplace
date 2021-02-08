@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
@@ -78,7 +78,7 @@ const validationSchema = val.object().shape({
     .required(errorMessages.requiredMessage)
 })
 
-class PurchaseRequestCreditDelivery extends React.Component {
+class PurchaseRequestCreditDelivery extends Component {
   state = {
     reason: null,
     reasonText: null

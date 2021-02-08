@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
 import { Header, Menu, Button, Checkbox, Input, Dropdown, Grid, GridRow, GridColumn, Popup } from 'semantic-ui-react'

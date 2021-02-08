@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import ExportInventoryModalContainer from './ExportInventoryModalContainer'
 import { DatagridProvider } from '~/modules/datagrid'
 import { func } from 'prop-types'

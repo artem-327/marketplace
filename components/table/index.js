@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { PureComponent, Component } from 'react'
 import { connect } from 'react-redux'
 import pt from 'prop-types'
 import { Getter, Plugin } from '@devexpress/dx-react-core'
@@ -40,11 +40,12 @@ import {
   TableRowDetail
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
-import { getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 //Actions
 import { toggleColumnSettingModal } from '~/modules/inventory/actions'
 
 import { RowActionsFormatterProvider, DropdownFormatterProvider } from './providers'
+import { withToastManager } from 'react-toast-notifications'
 
 const isFirefox = typeof InstallTrigger !== 'undefined'
 
@@ -338,7 +339,7 @@ const SortLabel = ({ column, onSort, children, direction }) => (
   </span>
 )
 
-class PatchedIntegratedSelection extends React.PureComponent {
+class PatchedIntegratedSelection extends PureComponent {
   render() {
     const { lockSelection, ...restProps } = this.props
     var allRows = []
@@ -364,7 +365,7 @@ class PatchedIntegratedSelection extends React.PureComponent {
   }
 }
 
-class PatchedTableSelection extends React.PureComponent {
+class PatchedTableSelection extends PureComponent {
   render() {
     const { lockSelection, ...restProps } = this.props
     const rowSelectionEnabled = row => !lockSelection.includes(row.id)
@@ -902,13 +903,22 @@ class _Table extends Component {
     const {
       columnsSettings: { order }
     } = this.state
-    const { tableName, columns } = this.props
+    const {
+      tableName,
+      columns,
+      toastManager,
+      intl: { formatMessage }
+    } = this.props
     // get fixed columns
     let fixed = columns.reduce((result, col, index) => {
       if (col.allowReordering === false) {
         let fixedCol = {
           name: col.name,
-          position: index
+          position: index,
+          title:
+            typeof col.title === 'object' && typeof col.title !== null
+              ? formatMessage({ id: col.title.props.id, defaultMessage: col.title.props.defaultMessage })
+              : col.name
         }
         result.push(fixedCol)
       }
@@ -918,6 +928,23 @@ class _Table extends Component {
       fixed.forEach(fixedCol => {
         if (data.order.indexOf(fixedCol.name) !== fixedCol.position) {
           data.order = order
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage
+                id='global.repositionNotAllowed'
+                defaultMessage='Requested reposition is not allowed'
+              />,
+              <FormattedMessage
+                id='global.fixedColumnsIssue'
+                defaultMessage={`Fixed column: '${fixedCol.title}' can not be repositioned.`}
+                values={{ fixedColTitle: fixedCol.title }}
+              />
+            ),
+            {
+              appearance: 'warning',
+              pauseOnHover: true
+            }
+          )
         }
       })
     }
@@ -1260,4 +1287,4 @@ const mapStateToProps = state => ({
   isOpenColumnSettingModal: getSafe(() => state.simpleAdd.isOpenColumnSettingModal, false)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(_Table))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(_Table)))

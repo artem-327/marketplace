@@ -1,17 +1,8 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Input, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
-import {
-  Form,
-  Modal,
-  Dimmer,
-  Loader,
-  Grid,
-  GridRow,
-  GridColumn,
-  List
-} from 'semantic-ui-react'
+import { Form, Modal, Dimmer, Loader, Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
 
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -28,15 +19,15 @@ import { Schedule } from '@material-ui/icons'
 
 import { TableSegment, StyledList, StyledRectangle, PriceInput, BottomButtons } from '../../constants/layout'
 
-const StyledModal = styled(Modal)`  
+const StyledModal = styled(Modal)`
   > i.close.icon {
     font-size: 18px;
   }
-  
+
   &.ui.large.modal > .header {
     font-size: 18px;
   }
-  
+
   &.ui.large.modal > .scrolling.content {
     padding: 30px;
   }
@@ -110,7 +101,7 @@ const SmallText = styled.div`
   font-size: 12px;
   color: #848893;
   display: flex;
-  
+
   > svg.title-icon {
     font-size: 14px;
     margin-right: 8px;
@@ -120,26 +111,24 @@ const SmallText = styled.div`
 const StyledGrid = styled(Grid)`
   &.ui.grid {
     margin: -7.5px -10px;
-  
+
     .row {
       padding: 7.5px 0;
-      
+
       .column {
-        padding: 0 10px;  
-      }  
+        padding: 0 10px;
+      }
     }
-    
+
     .ui.input {
       height: 40px;
     }
   }
 `
 
-
 const formValidation = () =>
   Yup.object().shape({
-    pricePerUOM: Yup
-      .number()
+    pricePerUOM: Yup.number()
       .min(0.001, errorMessages.minimum(0.001))
       .typeError(errorMessages.mustBeNumber)
       .test('maxdec', errorMessages.maxDecimals(3), val => {
@@ -154,21 +143,20 @@ const formValidation = () =>
       })
   })
 
-class MakeOfferPopup extends React.Component {
-  state = {
-  }
+class MakeOfferPopup extends Component {
+  state = {}
 
   getInitialFormValues = () => {
     const { popupValues } = this.props
     return {
-        message: '',
-        pkgAmount: '',
-        pricePerUOM: '',
-        productOffer: popupValues.id
-      }
+      message: '',
+      pkgAmount: '',
+      pricePerUOM: '',
+      productOffer: popupValues.id
+    }
   }
 
-  submitOffer = async ({values, setSubmitting }) => {
+  submitOffer = async ({ values, setSubmitting }) => {
     const { closePopup, makeOffer, datagrid } = this.props
     const body = {
       pkgAmount: parseInt(values.pkgAmount),
@@ -235,9 +223,7 @@ class MakeOfferPopup extends React.Component {
                             <div className='header'>
                               <FormattedMessage id='marketplace.productName' defaultMessage='Product Name' />
                             </div>
-                            <div className='name'>
-                              {this.props.productName}
-                            </div>
+                            <div className='name'>{this.props.productName}</div>
                           </StyledRectangle>
                         </GridColumn>
                       </GridRow>
@@ -254,8 +240,7 @@ class MakeOfferPopup extends React.Component {
                                   <List.Description as='span'>
                                     {isNaN(pkgAmount)
                                       ? `${packagingSize} ${packagingUnit} ${packagingType}`
-                                      : `${pkgAmount} (${packagingSize} ${packagingUnit} ${packagingType})`
-                                    }
+                                      : `${pkgAmount} (${packagingSize} ${packagingUnit} ${packagingType})`}
                                   </List.Description>
                                 </List.Content>
                               </List.Item>
@@ -272,8 +257,7 @@ class MakeOfferPopup extends React.Component {
                                       style='currency'
                                       currency={currency}
                                       value={listFobPrice}
-                                    />
-                                    {' '}
+                                    />{' '}
                                     {listFobPriceUnit}
                                   </List.Description>
                                 </List.Content>
@@ -284,7 +268,8 @@ class MakeOfferPopup extends React.Component {
                                   <List.Header as='label'>
                                     <FormattedMessage
                                       id='marketplace.totalListPrice'
-                                      defaultMessage='Total List Price' />
+                                      defaultMessage='Total List Price'
+                                    />
                                   </List.Header>
                                   <List.Description as='span'>
                                     <FormattedNumber
@@ -298,16 +283,16 @@ class MakeOfferPopup extends React.Component {
                                 </List.Content>
                               </List.Item>
 
-                              {false && (<List.Item>
-                                <List.Content>
-                                  <List.Header as='label'>
-                                    <FormattedMessage id='marketplace.incoterms' defaultMessage='Incoterms' />
-                                  </List.Header>
-                                  <List.Description as='span'>
-                                    TBD
-                                  </List.Description>
-                                </List.Content>
-                              </List.Item>)}
+                              {false && (
+                                <List.Item>
+                                  <List.Content>
+                                    <List.Header as='label'>
+                                      <FormattedMessage id='marketplace.incoterms' defaultMessage='Incoterms' />
+                                    </List.Header>
+                                    <List.Description as='span'>TBD</List.Description>
+                                  </List.Content>
+                                </List.Item>
+                              )}
                             </StyledList>
                           </TableSegment>
                         </GridColumn>
@@ -324,8 +309,10 @@ class MakeOfferPopup extends React.Component {
                             }
                             name='pkgAmount'
                             inputProps={{
-                              placeholder:
-                                formatMessage({ id: 'global.enterQuantity', defaultMessage: 'Enter Quantity' }),
+                              placeholder: formatMessage({
+                                id: 'global.enterQuantity',
+                                defaultMessage: 'Enter Quantity'
+                              }),
                               type: 'number',
                               min: 1,
                               step: 1
@@ -355,9 +342,7 @@ class MakeOfferPopup extends React.Component {
                         <GridColumn width={3}>
                           <Form.Field>
                             <label>
-                              <FormattedMessage
-                                id='marketplace.YourTotalBid'
-                                defaultMessage='Your Total Bid'>
+                              <FormattedMessage id='marketplace.YourTotalBid' defaultMessage='Your Total Bid'>
                                 {text => text}
                               </FormattedMessage>
                             </label>

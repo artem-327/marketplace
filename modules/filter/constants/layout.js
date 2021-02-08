@@ -737,7 +737,7 @@ export const SmallGrid = styled(Grid)`
   & {
   margin: 0 -0.357142857em !important;
   > .row {
-    padding: 0.535714286em 0 !important;
+    padding: 5px 0 !important;
     > .column {
       padding: 0 0.357142857em !important;
     }    
@@ -747,7 +747,7 @@ export const SmallGrid = styled(Grid)`
 
 export const PopupGrid = styled(Grid)`
   > .row {
-    padding: 7.5px 0 !important;
+    padding: 5px 0 !important;
     > .column {
       > .field .ui.dropdown {
         margin-top: 7px;

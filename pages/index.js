@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import securePage from '../hocs/securePage'
 import Router from 'next/router'
 import { connect } from 'react-redux'

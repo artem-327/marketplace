@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import pt, { node, bool, number, object, func } from 'prop-types'
 import { Modal, Button, Grid, GridRow, GridColumn, Input, Dimmer, Loader, Label } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'

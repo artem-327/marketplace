@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { cloneElement, Component } from 'react'
 import { object, bool, number, node, func, array } from 'prop-types'
 import { Segment, GridRow, Grid, GridColumn, Button, Dropdown, Menu, Sidebar, Table, Header } from 'semantic-ui-react'
 import TextareaAutosize from 'react-textarea-autosize'
@@ -1269,7 +1269,7 @@ class CompanyProductInfo extends Component {
     let { isOpen, readOnly } = this.props
 
     const contentWrapper = children =>
-      React.cloneElement(
+      cloneElement(
         this.props.contentWrapper ? (
           this.props.contentWrapper(children)
         ) : (
@@ -1280,7 +1280,7 @@ class CompanyProductInfo extends Component {
       )
 
     const actionsWrapper = children =>
-      React.cloneElement(
+      cloneElement(
         this.props.actionsWrapper ? (
           this.props.actionsWrapper(children)
         ) : readOnly ? (
@@ -1292,7 +1292,7 @@ class CompanyProductInfo extends Component {
         )
       )
 
-    const Content = React.cloneElement(
+    const Content = cloneElement(
       this.props.wrapper ? this.props.wrapper : <WiderSidebar visible={isOpen} direction='right' width='very wide' />,
       {},
       <>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Segment, FormGroup } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'

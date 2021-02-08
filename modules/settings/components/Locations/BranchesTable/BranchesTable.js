@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
@@ -182,7 +182,7 @@ class BranchesTable extends Component {
     const { filterValue, datagrid, loading, identityLoading, editedId } = this.props
 
     return (
-      <React.Fragment>
+      <Fragment>
         <div className='flex stretched listings-wrapper'>
           <ProdexGrid
             tableName='settings_branches'
@@ -195,7 +195,7 @@ class BranchesTable extends Component {
             editingRowId={editedId}
           />
         </div>
-      </React.Fragment>
+      </Fragment>
     )
   }
 }

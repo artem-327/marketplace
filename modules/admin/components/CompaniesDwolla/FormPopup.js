@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Form, Modal, FormGroup, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
@@ -76,7 +76,7 @@ const formValidationNew = Yup.object().shape({
 //   "zip": "string"
 // }
 
-class AddNewPopupCasProducts extends React.Component {
+class AddNewPopupCasProducts extends Component {
   state = {
     primaryBranchHasProvinces: false,
     mailingBranchHasProvinces: false,

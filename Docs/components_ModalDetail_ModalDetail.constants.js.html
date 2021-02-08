@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Echo System Documentation - Frontend components/ModalDetail/ModalDetail.constants.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+             
+                <a class="image" href="index.html">
+                    <img src="assets/images/login/logo_echo.png" alt="logo">
+                </a>
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">Echo System Documentation - Frontend</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#applyTdsTemplate">applyTdsTemplate</a></li><li><a href="global.html#BOOLEAN_TRUE">BOOLEAN_TRUE</a></li><li><a href="global.html#CLIENT_COMPANIES">CLIENT_COMPANIES</a></li><li><a href="global.html#FREE_FOR_ALL">FREE_FOR_ALL</a></li><li><a href="global.html#INDEX_TAB_DOCUMENTS">INDEX_TAB_DOCUMENTS</a></li><li><a href="global.html#INDEX_TAB_EDIT">INDEX_TAB_EDIT</a></li><li><a href="global.html#INDEX_TAB_PRICE_BOOK">INDEX_TAB_PRICE_BOOK</a></li><li><a href="global.html#INDEX_TAB_PRICE_TIERS">INDEX_TAB_PRICE_TIERS</a></li><li><a href="global.html#INDEX_TAB_TDS">INDEX_TAB_TDS</a></li><li><a href="global.html#INIT_VALUES">INIT_VALUES</a></li><li><a href="global.html#LIST_CONFORMING">LIST_CONFORMING</a></li><li><a href="global.html#NO_BROADCAST">NO_BROADCAST</a></li><li><a href="global.html#onClickBroadcast">onClickBroadcast</a></li><li><a href="global.html#OPTIONS_BROADCAST">OPTIONS_BROADCAST</a></li><li><a href="global.html#OPTIONS_YES_NO">OPTIONS_YES_NO</a></li><li><a href="global.html#saveTdsTemplateAs">saveTdsTemplateAs</a></li><li><a href="global.html#SelectTemplates">SelectTemplates</a></li><li><a href="global.html#tableRowClickedProductOffer">tableRowClickedProductOffer</a></li><li><a href="global.html#TdsActions">TdsActions</a></li><li><a href="global.html#TdsHeader">TdsHeader</a></li><li><a href="global.html#TemplateApply">TemplateApply</a></li><li><a href="global.html#TemplateColumn">TemplateColumn</a></li><li><a href="global.html#TemplateDelete">TemplateDelete</a></li><li><a href="global.html#TemplateGrid">TemplateGrid</a></li><li><a href="global.html#TemplateRow">TemplateRow</a></li><li><a href="global.html#TemplateTitle">TemplateTitle</a></li><li><a href="global.html#TemplateWrapper">TemplateWrapper</a></li><li><a href="global.html#validationScheme">validationScheme</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/ModalDetail/ModalDetail.constants.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { injectIntl, FormattedMessage } from 'react-intl'
+//Styles
+import { DivIconOptions } from '../../../constants/layout'
+
+/**
+ * @constant {{key: number, text: JSX.Element, value: boolean}[]} OPTIONS_YES_NO Options for dropdown.
+ */
+export const OPTIONS_YES_NO = [
+  {
+    key: 1,
+    text: &lt;FormattedMessage id='global.yes' defaultMessage='Yes' />,
+    value: true
+  },
+  {
+    key: 0,
+    text: &lt;FormattedMessage id='global.no' defaultMessage='No' />,
+    value: false
+  }
+]
+/**
+ * @constant {{key: number, text: JSX.Element, value: boolean}[]} LIST_CONFORMING Options for dropdown.
+ */
+export const LIST_CONFORMING = [
+  {
+    key: 1,
+    text: &lt;FormattedMessage id='global.conforming' defaultMessage='Conforming' />,
+    value: true
+  },
+  {
+    key: 0,
+    text: &lt;FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />,
+    value: false
+  }
+]
+
+/**
+ * @type {'FREE_FOR_ALL'}
+ */
+const FREE_FOR_ALL = 'FREE_FOR_ALL'
+/**
+ * @type {'NO_BROADCAST'}
+ */
+const NO_BROADCAST = 'NO_BROADCAST'
+/**
+ * @type {'CLIENT_COMPANIES'}
+ */
+const CLIENT_COMPANIES = 'CLIENT_COMPANIES'
+
+/**
+ * @constant {{icon: JSX.Element, title: JSX.Element, subtitleId: string, subtitleText: string, value: CLIENT_COMPANIES | NO_BROADCAST | FREE_FOR_ALL}[] } OPTIONS_BROADCAST  Options for dropdown "Who should see this offer?"
+ */
+export const OPTIONS_BROADCAST = [
+  {
+    icon: (
+      &lt;DivIconOptions>
+        &lt;svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+          &lt;g fill='none' fill-rule='evenodd'>
+            &lt;path
+              d='M0 0L24 0 24 24 0 24z'
+              transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
+            />
+            &lt;path
+              fill='#20273A'
+              fill-rule='nonzero'
+              d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'
+              transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
+            />
+          &lt;/g>
+        &lt;/svg>
+      &lt;/DivIconOptions>
+    ),
+    title: &lt;FormattedMessage id='myInventory.network' defaultMessage='Network' />,
+    subtitleId: 'myInventory.networkSubtitle',
+    subtitleText: 'Your accepted Partners and invited Guests',
+    value: FREE_FOR_ALL
+  },
+  /*{
+    icon: (
+      &lt;svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        &lt;g fill="none" fill-rule="evenodd">
+          &lt;path d="M0 0L24 0 24 24 0 24z" transform="translate(-1125 -447) translate(1105 295) translate(0 29) translate(20 123)"/>
+          &lt;path fill="#848893" fill-rule="nonzero" d="M16.5 12c1.38 0 2.49-1.12 2.49-2.5S17.88 7 16.5 7C15.12 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5C7.34 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V18c0 .55.45 1 1 1h9c.55 0 1-.45 1-1v-1.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V18c0 .55.45 1 1 1h6v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z" transform="translate(-1125 -447) translate(1105 295) translate(0 29) translate(20 123)"/>
+        &lt;/g>
+      &lt;/svg>
+
+    ),
+    title: &lt;FormattedMessage id='myInventory.partners', defaultMessage: 'Partners' />,
+    subtitle: &lt;FormattedMessage id='myInventory.partnersSubtitle', defaultMessage: 'Your accepted Partners' />,
+    value: ''
+  },*/
+  {
+    icon: (
+      &lt;DivIconOptions>
+        &lt;svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+          &lt;g fill='none' fill-rule='evenodd'>
+            &lt;path
+              d='M0 0L24 0 24 24 0 24z'
+              transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
+            />
+            &lt;path
+              fill='#848893'
+              fill-rule='nonzero'
+              d='M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z'
+              transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
+            />
+          &lt;/g>
+        &lt;/svg>
+      &lt;/DivIconOptions>
+    ),
+    title: &lt;FormattedMessage id='myInventory.guests' defaultMessage='Guests' />,
+    subtitleId: 'myInventory.guestsSubtitle',
+    subtitleText: 'Your invited Guests',
+    value: CLIENT_COMPANIES
+  },
+  {
+    icon: (
+      &lt;DivIconOptions>
+        &lt;svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+          &lt;g fill='none' fill-rule='evenodd'>
+            &lt;g>
+              &lt;path
+                d='M0 0L24 0 24 24 0 24z'
+                transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
+              />
+              &lt;path
+                d='M0 0L24 0 24 24 0 24z'
+                opacity='.87'
+                transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
+              />
+            &lt;/g>
+            &lt;path
+              fill='#848893'
+              fill-rule='nonzero'
+              d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z'
+              transform='translate(-1125 -567) translate(1105 295) translate(0 29) translate(20 243)'
+            />
+          &lt;/g>
+        &lt;/svg>
+      &lt;/DivIconOptions>
+    ),
+    title: &lt;FormattedMessage id='myInventory.justMe' defaultMessage='Just Me' />,
+    subtitleId: 'myInventory.justMeSubtitle',
+    subtitleText: 'Only my Company',
+    value: NO_BROADCAST
+  }
+]
+
+/**
+ * @constant {{
+ *   edit: {
+ *     broadcasted: true,
+ *     condition: null,
+ *     conditionNotes: '',
+ *     conforming: true,
+ *     costPerUOM: null,
+ *     externalNotes: '',
+ *     pkgAvailable: 1,
+ *     product: null,
+ *     warehouse: null,
+ *     fobPrice: '',
+ *     inStock: false,
+ *     internalNotes: '',
+ *     leadTime: 1,
+ *     lotNumber: '',
+ *     lotExpirationDate: '',
+ *     lotManufacturedDate: '',
+ *     minimum: 1,
+ *     origin: null,
+ *     productCondition: null,
+ *     productForm: null,
+ *     productGrades: [],
+ *     splits: 1,
+ *     doesExpire: false,
+ *     expirationDate: '',
+ *     documentType: '',
+ *     broadcastOption: 'FREE_FOR_ALL',
+ *     acceptBids: true
+ *   },
+ *   priceTiers: {
+ *     priceTiers: 1,
+ *     pricingTiers: []
+ *   },
+ *   documents: {
+ *     documentType: null,
+ *     attachments: []
+ *   }
+ * }} INIT_VALUES Initial values for form.
+ */
+export const INIT_VALUES = {
+  edit: {
+    broadcasted: true,
+    condition: null,
+    conditionNotes: '',
+    conforming: true,
+    costPerUOM: null,
+    externalNotes: '',
+    pkgAvailable: 1,
+    product: null,
+    warehouse: null,
+    fobPrice: '',
+    inStock: false,
+    internalNotes: '',
+    leadTime: 1,
+    lotNumber: '',
+    lotExpirationDate: '',
+    lotManufacturedDate: '',
+    minimum: 1, // minPkg
+    origin: null,
+    productCondition: null,
+    productForm: null,
+    productGrades: [],
+    splits: 1, // splitPkg
+    doesExpire: false,
+    expirationDate: '',
+    documentType: '',
+    broadcastOption: 'FREE_FOR_ALL',
+    acceptBids: true
+  },
+  priceTiers: {
+    priceTiers: 1,
+    pricingTiers: []
+  },
+  documents: {
+    documentType: null,
+    attachments: []
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>
