@@ -17,9 +17,9 @@ import TablesHandlers from './TablesHandlers'
 import Tutorial from '~/modules/tutorial/Tutorial'
 
 import PickUpLocationsTable from './PickUpLocationsTable/PickUpLocationsTable'
-import BranchesTable from './BranchesTable/BranchesTable'
+import BranchesTable from './Branches/BranchesTable'
 import PickUpLocationsSidebar from './PickUpLocationsTable/PickUpLocationsSidebar'
-import BranchesSidebar from './BranchesTable/BranchesSidebar'
+import BranchesSidebar from './Branches/BranchesSidebar/BranchesSidebar'
 import DeliveryLocationsTable from './DeliveryLocationsTable/DeliveryLocationsTable'
 import DeliveryLocationsSidebar from './DeliveryLocationsTable/DeliveryLocationsSidebar'
 

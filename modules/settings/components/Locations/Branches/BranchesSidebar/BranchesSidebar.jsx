@@ -1,8 +1,19 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { withDatagrid } from '~/modules/datagrid'
+import { withDatagrid } from '../../../../../datagrid'
 import { Formik } from 'formik'
 import { Header, FormGroup, Dimmer, Loader, Segment, Form } from 'semantic-ui-react'
+import { Input, Checkbox, Button } from 'formik-semantic-ui-fixed-validation'
+import { FormattedMessage, injectIntl } from 'react-intl'
+//Components
+import { PhoneNumber } from '../../../../../phoneNumber'
+import { AddressForm } from '../../../../../address-form/'
+//Services
+import { formValidation, getInitialFormValues } from './BranchesSidebar.services'
+import { getSafe } from '../../../../../../utils/functions'
+import { removeEmpty } from '../../../../../../utils/functions'
+import ErrorFocus from '../../../../../../components/error-focus'
+//Actions
 import {
   closeSidebar,
   putEditWarehouse,
@@ -13,100 +24,18 @@ import {
   removeAttachment,
   addAttachment,
   loadFile
-} from '../../../actions'
-import { Input, Checkbox, Button } from 'formik-semantic-ui-fixed-validation'
-import * as Yup from 'yup'
-import styled from 'styled-components'
-
-import { FormattedMessage, injectIntl } from 'react-intl'
-
-import { addressValidationSchema, errorMessages, minOrZeroLength, phoneValidation } from '~/constants/yupValidation'
-
-import { AddressForm } from '~/modules/address-form/'
-
-import { getSafe } from '~/utils/functions'
-import { PhoneNumber } from '~/modules/phoneNumber'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
-import { Required } from '~/components/constants/layout'
-import { removeEmpty } from '~/utils/functions'
-import { TimeInput } from '~/components/custom-formik/'
-import ErrorFocus from '~/components/error-focus'
-
-const CustomButtonSubmit = styled(Button.Submit)`
-  background-color: #2599d5 !important;
-  color: #fff !important;
-  margin: 0 5px !important;
-`
-
-const CustomSegment = styled(Segment)`
-  background-color: #f8f9fb !important;
-  .field {
-    .ui.checkbox {
-      label {
-        color: #848893;
-      }
-      &.checked {
-        label {
-          color: #20273a;
-        }
-      }
-    }
-
-    .field {
-      label {
-        color: #546f93;
-      }
-    }
-
-    .phone-number {
-      .phone-code,
-      .phone-num {
-        height: 40px;
-      }
-    }
-  }
-`
-
-const CustomForm = styled(Form)`
-  flex-grow: 0 !important;
-`
-
-const CustomDiv = styled.div`
-  text-align: right;
-  z-index: 1;
-  padding: 10px 25px;
-  margin-top: 0px;
-  box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
-`
-
-const CustomHighSegment = styled(HighSegment)`
-  margin: 0 !important;
-  padding: 16px 30px !important;
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: 500;
-  color: #20273a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
-  background-color: #ffffff;
-  z-index: 1;
-`
-
-const CustomSegmentContent = styled(Segment)`
-  padding-top: 0px !important;
-`
-
-const minLength = errorMessages.minLength(3)
-
-const formValidation = () =>
-  Yup.object().shape({
-    deliveryAddress: Yup.object().shape({
-      address: addressValidationSchema(),
-      addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-      contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-      contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
-      contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
-    })
-  })
+} from '../../../../actions'
+//Styles
+import {
+  CustomSegmentContent,
+  CustomHighSegment,
+  CustomDiv,
+  CustomForm,
+  CustomSegment,
+  CustomButtonSubmit
+} from './BranchesSidebar.styles'
+import { FlexSidebar, FlexContent } from '../../../../../inventory/constants/layout'
+import { Required } from '../../../../../../components/constants/layout'
 
 class BranchSidebar extends Component {
   state = {
@@ -156,50 +85,6 @@ class BranchSidebar extends Component {
       setSubmitting(false)
       this.setState({ loadSidebar: false })
     }
-  }
-
-  getInitialFormValues = () => {
-    let { sidebarValues } = this.props
-
-    const provinceId = getSafe(() => sidebarValues.deliveryAddress.address.province.id, '')
-    const countryId = getSafe(() => sidebarValues.deliveryAddress.address.country.id, null)
-    const hasProvinces = getSafe(() => sidebarValues.deliveryAddress.address.country.hasProvinces, false)
-    const zip = getSafe(() => sidebarValues.deliveryAddress.address.zip.zip, '')
-    const zipID = getSafe(() => sidebarValues.deliveryAddress.address.zip.id, '')
-
-    const initialValues = {
-      //name: r.name,
-      taxId: getSafe(() => sidebarValues.taxId, ''),
-      //warehouse: getSafe(() => sidebarValues.warehouse, false),
-      deliveryAddress: {
-        address: {
-          streetAddress: getSafe(() => sidebarValues.deliveryAddress.address.streetAddress, ''),
-          city: getSafe(() => sidebarValues.deliveryAddress.address.city, ''),
-          province: provinceId,
-          country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
-          zip
-        },
-        readyTime: getSafe(() => sidebarValues.deliveryAddress.readyTime, ''),
-        closeTime: getSafe(() => sidebarValues.deliveryAddress.closeTime, ''),
-        liftGate: getSafe(() => sidebarValues.deliveryAddress.liftGate, false),
-        forkLift: getSafe(() => sidebarValues.deliveryAddress.forkLift, false),
-        callAhead: getSafe(() => sidebarValues.deliveryAddress.callAhead, false),
-        deliveryNotes: getSafe(() => sidebarValues.deliveryAddress.deliveryNotes, ''),
-        addressName: getSafe(() => sidebarValues.deliveryAddress.addressName, ''),
-        contactName: getSafe(() => sidebarValues.deliveryAddress.contactName, ''),
-        contactPhone: getSafe(() => sidebarValues.deliveryAddress.contactPhone, ''),
-        contactEmail: getSafe(() => sidebarValues.deliveryAddress.contactEmail, '')
-      },
-      attachments: getSafe(() => sidebarValues.attachments, []),
-      zipID,
-      countryId,
-      hasProvinces,
-      branchId: getSafe(() => sidebarValues.id, ''),
-      province: getSafe(() => sidebarValues.deliveryAddress.address.province, ''),
-      alsoCreate: false
-    }
-
-    return initialValues
   }
 
   renderEdit = formikProps => {
@@ -327,7 +212,7 @@ class BranchSidebar extends Component {
       intl: { formatMessage }
     } = this.props
 
-    let initialValues = this.getInitialFormValues()
+    let initialValues = getInitialFormValues(sidebarValues)
 
     return (
       <Formik
