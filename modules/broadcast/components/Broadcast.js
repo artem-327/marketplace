@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { bool, number, object } from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'

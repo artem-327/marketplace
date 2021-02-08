@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
 import { Input, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
@@ -101,8 +101,7 @@ const StyledGrid = styled(Grid)`
 const formValidation = requiredInputs =>
   Yup.object().shape({
     ...(requiredInputs && {
-      pricePerUOM: Yup
-        .number()
+      pricePerUOM: Yup.number()
         .min(0.001, errorMessages.minimum(0.001))
         .typeError(errorMessages.mustBeNumber)
         .test('maxdec', errorMessages.maxDecimals(3), val => {
@@ -118,7 +117,7 @@ const formValidation = requiredInputs =>
     })
   })
 
-class BidsRowDetail extends React.Component {
+class BidsRowDetail extends Component {
   state = {
     initialFormValues: {
       id: '',
@@ -285,7 +284,7 @@ class BidsRowDetail extends React.Component {
           let amount = pkgAmount
           if (isNaN(pkgAmount)) amount = 1
 
-          const listFobPrice = getPricing(popupValues.productOffer, amount).price
+          const listFobPrice = popupValues.originalPricePerUOM
           const totalListPrice = amount * packagingSize * listFobPrice
 
           return (

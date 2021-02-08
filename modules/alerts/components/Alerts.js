@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
-import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
-import { getSafe } from '~/utils/functions'
-import HighMenu from './HighMenu'
+import { withDatagrid, DatagridProvider } from '../../datagrid'
+import { getSafe } from '../../../utils/functions'
+import HighMenu from './HighMenu/HighMenu'
 import TablesHandlers from './TablesHandlers'
 import Table from './Table'
-import Tutorial from '~/modules/tutorial/Tutorial'
-import { generateQueryString } from '~/utils/functions'
-import ShippingQuotesPopup from '~/modules/operations/components/shipping-quotes/ShippingQuotesPopup'
+import Tutorial from '../../tutorial/Tutorial'
+import { generateQueryString } from '../../../utils/functions'
+import ShippingQuotesPopup from '../../operations/components/shipping-quotes/ShippingQuotesPopup'
 
 class Alerts extends Component {
   state = {
@@ -64,13 +64,13 @@ class Alerts extends Component {
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
           <div id='page' className='flex stretched scrolling'>
             <Container fluid>
-              <HighMenu onDatagridUpdate={(selection) => this.setState({ selectedRows: selection })} />
+              <HighMenu onDatagridUpdate={selection => this.setState({ selectedRows: selection })} />
             </Container>
 
             <Container fluid style={{ padding: '20px 30px' }}>
               <TablesHandlers
                 selectedRows={this.state.selectedRows}
-                onDatagridUpdate={(selection) => this.setState({ selectedRows: selection })}
+                onDatagridUpdate={selection => this.setState({ selectedRows: selection })}
               />
             </Container>
 

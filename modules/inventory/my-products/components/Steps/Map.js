@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -244,7 +244,6 @@ const simpleProductOfferList = {
   constant: 'import',
   required: ['companyProductMapper', 'pkgAvailableMapper', 'pricingTiersMapper', 'warehouseNameMapper'],
   optional: [
-    'broadcastedMapper',
     'conditionMapper',
     'conditionNotesMapper',
     'conformingMapper',
@@ -485,7 +484,7 @@ class Map extends Component {
     !csvWithoutHeader && CSV.bodyCSV[0].lineNumber === 1 && CSV.bodyCSV.shift()
 
     return (
-      <React.Fragment>
+      <Fragment>
         {(this.props.productOffer || this.props.companyGenericProduct || this.props.companies) && (
           <Grid centered padded>
             <Grid.Row verticalAlign='middle'>
@@ -700,7 +699,7 @@ class Map extends Component {
             </Table.Body>
           )}
         </MapTable>
-      </React.Fragment>
+      </Fragment>
     )
   }
 

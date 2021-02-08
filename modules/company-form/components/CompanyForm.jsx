@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { FormGroup, FormField, Popup, Image, Dropdown, Grid, GridRow, GridColumn, Button } from 'semantic-ui-react'
 import { Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -91,20 +91,18 @@ const StyledImageIcon = styled(ImageIcon)`
 `
 
 const ButtonsRow = styled(GridRow)`
-  
   .button {
     min-width: 100% !important;
     padding-left: 5px !important;
     padding-right: 5px !important;
-  
+
     svg {
       margin-left: 0 !important;
       margin-right: 5px !important;
     }
   }
-  
+
   @media (max-width: 1800px) {
-  
     .button {
       position: relative;
       overflow: hidden;
@@ -112,7 +110,7 @@ const ButtonsRow = styled(GridRow)`
       text-indent: -5000px;
       max-width: 100%;
       min-width: 32px !important;
-      
+
       svg {
         position: absolute;
         top: 50%;
@@ -344,10 +342,10 @@ class CompanyForm extends Component {
                   options={
                     associations && associations.length
                       ? associations.map(assoc => ({
-                        text: assoc.name,
-                        value: assoc.id,
-                        key: assoc.id
-                      }))
+                          text: assoc.name,
+                          value: assoc.id,
+                          key: assoc.id
+                        }))
                       : []
                   }
                   clearable

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { Header, GridColumn, GridRow, Grid, Segment, Message } from 'semantic-ui-react'
+import { Header, GridColumn, GridRow, Grid, Segment, Message, ButtonGroup } from 'semantic-ui-react'
 import { AlertCircle } from 'react-feather'
 
 export const GridContainer = styled(Grid)`
@@ -52,11 +52,57 @@ export const CustomHeader = styled(Header)`
 `
 
 export const CartColumn = styled(GridColumn)`
-  margin: 30px;
+  max-width: calc(100% - 430px);
+  margin: 30px 0 30px 30px;
+  
+  @media (max-width: 1200px) {
+    max-width: calc(100% - 360px);
+    min-width: calc(100% - 360px);
+  }
+  
+  @media (max-width: 1000px) {
+    order: 2;
+    max-width: calc(100% - 60px);
+    min-width: calc(100% - 60px);
+    margin-top: 0 !important;
+  }
 `
 
 export const SummaryColumn = styled(GridColumn)`
-  margin: 30px 30px 30px 0px;
+  min-width: 370px;
+  margin: 30px 0 30px 0;
+  
+  @media (max-width: 1200px) {
+    min-width: 300px;
+  }
+  
+  @media (max-width: 1000px) {
+    order: 1;
+    max-width: calc(100% - 60px);
+    min-width: calc(100% - 60px);
+    margin: 30px 30px 0 !important;
+  }
+`
+
+export const CartButtonGroup = styled(ButtonGroup)`
+  .ui.button {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+  
+  @media (max-width: 1200px) and (min-width: 1001px) {
+    display: block !important;
+    width: 100% !important;
+  
+    .ui.button {
+      width: 100%;
+      border-radius: 3px !important;
+      
+      + .ui.button {
+        margin-top: 5px;
+      }
+    }
+  }
 `
 export const ContentSegment = styled(Segment)`
   padding-top: 0px;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { FormGroup, Popup, Icon } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Input } from 'formik-semantic-ui-fixed-validation'
@@ -64,34 +64,32 @@ class ControllerForm extends Component {
           <Input
             inputProps={{ fluid: true }}
             label={
-              fullSsnInput
-                ? (
-                  <>
-                    {formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
-                    {<Required/>}
-                  </>
-                )
-                : (
-                  <>
-                    <FormattedMessage id='settings.ssn' defaultMessage='SSN'>
-                      {text => (
-                        <>
-                          <Popup
-                            trigger={<Icon name='info circle' color='blue' />}
-                            content={
-                              <FormattedMessage
-                                id='settings.lastFourDigits'
-                                defaultMessage='Enter only last four digits'
-                              />
-                            }
-                          />
-                          {text}
-                        </>
-                      )}
-                    </FormattedMessage>
-                    <Required />
-                  </>
-                )
+              fullSsnInput ? (
+                <>
+                  {formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
+                  {<Required />}
+                </>
+              ) : (
+                <>
+                  <FormattedMessage id='settings.ssn' defaultMessage='SSN'>
+                    {text => (
+                      <>
+                        <Popup
+                          trigger={<Icon name='info circle' color='blue' />}
+                          content={
+                            <FormattedMessage
+                              id='settings.lastFourDigits'
+                              defaultMessage='Enter only last four digits'
+                            />
+                          }
+                        />
+                        {text}
+                      </>
+                    )}
+                  </FormattedMessage>
+                  <Required />
+                </>
+              )
             }
             name='dwollaController.ssn'
           />

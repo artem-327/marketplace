@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 
 import { Label, Popup, List, Header } from 'semantic-ui-react'
 import { string, array, number, bool, func } from 'prop-types'

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import Link from 'next/link'
 import Router, { withRouter } from 'next/router'
 
@@ -376,53 +376,55 @@ class Navigation extends Component {
             </PerfectScrollbar>
           </Dropdown.Menu>
         </DropdownItem>
-
-        <DropdownItem
-          icon={<Grid size={22} />}
-          text={
-            <>
-              <FormattedMessage id='navigation.wantedBoard' defaultMessage='Wanted Board' />
-              {wantedBoard ? <ChevronUp /> : <ChevronDown />}
-            </>
-          }
-          className={wantedBoard ? 'opened' : null}
-          opened={wantedBoard}
-          onClick={() =>
-            this.toggleOpened(
-              'wantedBoard',
-              !isClientCompany ? '/wanted-board/listings' : '/wanted-board/bids-received'
-            )
-          }
-          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-          refId={'wantedBoard'}
-          data-test='navigation_menu_wanted_board_drpdn'>
-          <Dropdown.Menu data-test='navigation_menu_manage_wanted_board_menu'>
-            <PerfectScrollbar>
-              {!isClientCompany && (
-                <>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/wanted-board/listings'
-                    dataTest='navigation_wanted_board_listings_drpdn'>
-                    {formatMessage({ id: 'navigation.wantedBoardListings', defaultMessage: 'Listings' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/wanted-board/bids-sent'
-                    dataTest='navigation_wanted_board_bids_sent_drpdn'>
-                    {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
-                  </Dropdown.Item>
-                </>
-              )}
-              <Dropdown.Item
-                as={MenuLink}
-                to='/wanted-board/bids-received'
-                dataTest='navigation_wanted_board_bids_received_drpdn'>
-                {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'My Requests' })}
-              </Dropdown.Item>
-            </PerfectScrollbar>
-          </Dropdown.Menu>
-        </DropdownItem>
+        {/* Temporary hide based on https://bluepallet.atlassian.net/browse/DT-88*/}
+        {false && (
+          <DropdownItem
+            icon={<Grid size={22} />}
+            text={
+              <>
+                <FormattedMessage id='navigation.wantedBoard' defaultMessage='Wanted Board' />
+                {wantedBoard ? <ChevronUp /> : <ChevronDown />}
+              </>
+            }
+            className={wantedBoard ? 'opened' : null}
+            opened={wantedBoard}
+            onClick={() =>
+              this.toggleOpened(
+                'wantedBoard',
+                !isClientCompany ? '/wanted-board/listings' : '/wanted-board/bids-received'
+              )
+            }
+            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+            refId={'wantedBoard'}
+            data-test='navigation_menu_wanted_board_drpdn'>
+            <Dropdown.Menu data-test='navigation_menu_manage_wanted_board_menu'>
+              <PerfectScrollbar>
+                {!isClientCompany && (
+                  <>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/wanted-board/listings'
+                      dataTest='navigation_wanted_board_listings_drpdn'>
+                      {formatMessage({ id: 'navigation.wantedBoardListings', defaultMessage: 'Listings' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/wanted-board/bids-sent'
+                      dataTest='navigation_wanted_board_bids_sent_drpdn'>
+                      {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
+                    </Dropdown.Item>
+                  </>
+                )}
+                <Dropdown.Item
+                  as={MenuLink}
+                  to='/wanted-board/bids-received'
+                  dataTest='navigation_wanted_board_bids_received_drpdn'>
+                  {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'My Requests' })}
+                </Dropdown.Item>
+              </PerfectScrollbar>
+            </Dropdown.Menu>
+          </DropdownItem>
+        )}
         <DropdownItem
           icon={<FileText size={22} />}
           text={

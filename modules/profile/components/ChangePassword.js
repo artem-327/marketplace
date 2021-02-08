@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
@@ -22,14 +22,10 @@ const formValidation = () =>
         .min(3, errorMessages.minLength(3))
         .required(errorMessages.requiredMessage),
       newPassword: passwordValidation(),
-      newPasswordRetype: Yup
-        .string(errorMessages.passwordsMustMatch)
+      newPasswordRetype: Yup.string(errorMessages.passwordsMustMatch)
         .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
         .required(errorMessages.requiredMessage)
-        .oneOf(
-          [values.newPassword],
-          errorMessages.passwordsMustMatch
-        )
+        .oneOf([values.newPassword], errorMessages.passwordsMustMatch)
     })
   )
 

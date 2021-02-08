@@ -1,5 +1,4 @@
 import { FormattedMessage } from "react-intl"
-import React from "react"
 import { getSafe } from '~/utils/functions'
 
 export const getProductName = element => {

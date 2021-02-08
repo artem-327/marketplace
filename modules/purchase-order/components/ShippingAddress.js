@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 
 import { GridRow, GridColumn } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
@@ -15,7 +15,6 @@ const CompanyHeader = styled.b`
   color: #000000;
 `
 
-
 export default class ShippingAddress extends Component {
   render() {
     let { billingInfo, companyName, additionalContent, header } = this.props
@@ -24,9 +23,7 @@ export default class ShippingAddress extends Component {
     return (
       <ItemDescriptionGrid>
         <GridRow>
-          <GridColumn>
-            {header}
-          </GridColumn>
+          <GridColumn>{header}</GridColumn>
         </GridRow>
 
         <BottomUnpaddedRow>
@@ -36,18 +33,14 @@ export default class ShippingAddress extends Component {
         </BottomUnpaddedRow>
 
         <BottomUnpaddedRow>
-          <VerticalUnpaddedColumn>
-            {billingInfo.address.streetAddress}
-          </VerticalUnpaddedColumn>
+          <VerticalUnpaddedColumn>{billingInfo.address.streetAddress}</VerticalUnpaddedColumn>
         </BottomUnpaddedRow>
 
         <BottomUnpaddedRow>
           <TopUnpaddedColumn>
             {billingInfo.address && billingInfo.address.city}
-            {billingInfo.address &&
-              billingInfo.address.province &&
-              `, ${billingInfo.address.province.name}`}
-      , {billingInfo.address && billingInfo.address.zip.zip}
+            {billingInfo.address && billingInfo.address.province && `, ${billingInfo.address.province.name}`},{' '}
+            {billingInfo.address && billingInfo.address.zip.zip}
           </TopUnpaddedColumn>
         </BottomUnpaddedRow>
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { FormattedNumber } from 'react-intl'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import PropTypes from 'prop-types'
 // @ts-ignore
 import { FormattedMessage } from 'react-intl'

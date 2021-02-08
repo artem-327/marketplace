@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Container, Grid, Dropdown, Label, Input } from 'semantic-ui-react'
@@ -275,13 +275,7 @@ class Holds extends Component {
     return rows.map(r => {
       return {
         ...r,
-        intProductName: (
-          <ActionCell
-            row={r}
-            getActions={this.getActions}
-            content={r.intProductName}
-          />
-        )
+        intProductName: <ActionCell row={r} getActions={this.getActions} content={r.intProductName} />
       }
     })
   }

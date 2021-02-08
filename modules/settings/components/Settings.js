@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Button } from 'formik-semantic-ui-fixed-validation'
 import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
@@ -11,8 +11,8 @@ import Locations from './Locations/Locations'
 
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
-import UsersSidebar from './UserTable/UsersSidebar'
-import UsersPopup from './UserTable/UsersPopup'
+import UserEditSidebar from './UserTable/UserEditSidebar/UserEditSidebar'
+import UserSettingsModal from './UserTable/UserSettingsModal/UserSettingsModal'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsSidebar from './BankAccountsTable/BankAccountsSidebar'
 import SendLinkPopup from './BankAccountsTable/SendLinkPopup'
@@ -320,7 +320,8 @@ class Settings extends Component {
       editedId,
       inviteToAddBankAccounts,
       companyId,
-      companyName
+      companyName,
+      isLoadingModal
     } = this.props
 
     const tables = {
@@ -342,7 +343,7 @@ class Settings extends Component {
 
     const popupForm = {
       users: (
-        <UsersPopup
+        <UserSettingsModal
           isOpenPopup={isOpenPopup}
           closePopup={closePopup}
           editedId={editedId}
@@ -364,7 +365,7 @@ class Settings extends Component {
     }
 
     const sidebarForm = {
-      users: <UsersSidebar />,
+      users: <UserEditSidebar />,
       'bank-accounts': <BankAccountsSidebar />,
       logistics: <LogisticsSidebar />,
       documents: <DocumentManagerSidebar />

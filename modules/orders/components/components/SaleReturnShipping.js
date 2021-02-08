@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import {
@@ -107,7 +107,7 @@ const GridColumnText = styled(GridColumn)`
   font-weight: bold !important;
 `
 
-class SaleReturnShipping extends React.Component {
+class SaleReturnShipping extends Component {
   state = {
     selectedShippingQuote: 0,
     shipmentQuoteId: ''

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import moment from 'moment'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Radio } from 'semantic-ui-react'
@@ -9,7 +9,7 @@ import ProdexGrid from '~/components/table'
 
 const GridContainer = styled.div`
   padding-top: 15px !important;
-  
+
   /* Fixes for Edge */
   .table-responsive-wider,
   .table-responsive-wider > div {

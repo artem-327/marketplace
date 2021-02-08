@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
@@ -16,7 +16,7 @@ const initValues = {
   trackingId: ''
 }
 
-class EnterTrackingIdReturnShip extends React.Component {
+class EnterTrackingIdReturnShip extends Component {
   markShipped = async (value, actions) => {
     const { orderId, closePopup } = this.props
 

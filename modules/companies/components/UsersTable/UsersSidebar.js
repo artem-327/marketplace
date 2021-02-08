@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   closePopup,
@@ -125,7 +125,7 @@ const initValues = {
   isClientCompany: false
 }
 
-class UsersSidebar extends React.Component {
+class UsersSidebar extends Component {
   state = {
     popupValues: null,
     selectedCompany: [],

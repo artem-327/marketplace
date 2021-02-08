@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Button } from 'formik-semantic-ui-fixed-validation'
 import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
@@ -22,8 +22,8 @@ import UsersSidebar from './Users/UsersSidebar'
 import DocumentManagerTable from './DocumentManager/DocumentManagerTable'
 import DocumentManagerSidebar from './DocumentManager/DocumentManagerSidebar'
 
-import {  } from '../../actions'
-import {closePopup} from "../../actions";
+import {} from '../../actions'
+import { closePopup } from '../../actions'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -94,20 +94,17 @@ class ManageGuests extends Component {
   }
 
   renderContent = () => {
-    const {
-      guestsTab,
-      isOpenPopup,
-    } = this.props
+    const { guestsTab, isOpenPopup } = this.props
 
     const tables = {
       'company-info': <GuestCompanyInfo />,
-      'users': <UsersTable />,
+      users: <UsersTable />,
       'document-manager': <DocumentManagerTable />
     }
 
     const popupForm = {
       //guests: <AddEditGuestCompanySidebar />,
-      'users': <UsersSidebar />,
+      users: <UsersSidebar />,
       'document-manager': <DocumentManagerSidebar />
     }
 
@@ -126,7 +123,7 @@ class ManageGuests extends Component {
         <Container fluid>
           <TablesHandlers guestsTab={guestsTab} />
         </Container>
-        <SettingsGrid columns='equal' style={{padding: '0 30px'}} className='flex stretched'>
+        <SettingsGrid columns='equal' style={{ padding: '0 30px' }} className='flex stretched'>
           <Grid.Row>
             <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
           </Grid.Row>
@@ -138,14 +135,14 @@ class ManageGuests extends Component {
   getApiConfig = () => {
     const { guestsTab, companyEditValues } = this.props
     const datagridApiMap = {
-      'users': {
+      users: {
         url: `/prodex/api/users/datagrid?clientCompanyId=${companyEditValues.id}`,
         searchToFilter: v => {
           let filter = { or: [], and: [] }
 
           if (v && v.searchInput)
             filter.or = [
-              {operator: 'LIKE', path: 'User.name', values: [`%${v.searchInput}%`]},
+              { operator: 'LIKE', path: 'User.name', values: [`%${v.searchInput}%`] },
               {
                 operator: 'LIKE',
                 path: 'User.homeBranch.deliveryAddress.contactName',
@@ -200,11 +197,7 @@ class ManageGuests extends Component {
       return this.renderPage()
     } else {
       return (
-        <DatagridProvider
-          apiConfig={this.getApiConfig()}
-          preserveFilters={true}
-          skipInitLoad
-        >
+        <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={true} skipInitLoad>
           {this.renderPage()}
         </DatagridProvider>
       )

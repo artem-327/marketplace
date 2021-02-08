@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 import { Button, Image } from 'semantic-ui-react'
@@ -118,8 +118,9 @@ class ErrorPage extends Component {
   }
 
   render() {
+    const { logout } = this.props
     const { errorSvg, errorType, errorStatus } = this.state
-    const isInternalServerError = errorStatus === ERROR_STATUSES.INTERNATL_SERVER_ERROR
+    const isInternalServerError = errorStatus === ERROR_STATUSES.INTERNAL_SERVER_ERROR
 
     return (
       <PageError>
@@ -138,13 +139,13 @@ class ErrorPage extends Component {
         <ButtonDiv>
           <CustomButton
             type='button'
-            onClick={() => (isInternalServerError ? Router.push('/auth/logout?auto=true') : Router.back())}>
+            onClick={() => (isInternalServerError || logout ? Router.push('/auth/logout?auto=true') : Router.back())}>
             <div>
               <Layers size={22} />
             </div>
             <ButtonContent>
               <FormattedMessage
-                id={isInternalServerError ? 'error.logout' : 'error.bringMeBack'}
+                id={isInternalServerError || logout ? 'error.logout' : 'error.bringMeBack'}
                 defaultMessage='Bring me back to last page'>
                 {text => text}
               </FormattedMessage>

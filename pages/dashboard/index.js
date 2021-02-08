@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import securePage from '~/hocs/securePage'
 import { injectIntl } from 'react-intl'

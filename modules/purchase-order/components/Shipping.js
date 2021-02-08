@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { array, func, object, bool } from 'prop-types'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -370,4 +370,10 @@ Shipping.propTypes = {
   deliveryAddresses: array,
   getAddress: func,
   selectedAddress: object
+}
+
+Shipping.defaultProps = {
+  deliveryAddresses: [],
+  getAddress: () => {},
+  selectedAddress: null
 }

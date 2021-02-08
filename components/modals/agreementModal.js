@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Modal, Button, Checkbox, Divider } from 'semantic-ui-react'
 import { func, oneOfType, string, node, bool, object } from 'prop-types'
 import { connect } from 'react-redux'

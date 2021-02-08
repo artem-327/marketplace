@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Fragment, Component } from 'react'
 import './uploadVerifyFiles.scss'
 import PropTypes from 'prop-types'
 import ReactDropzone from 'react-dropzone'
@@ -205,7 +205,7 @@ class UploadVerifyFiles extends Component {
           {disabled ? (
             <span className='file-space'>{this.renderFiles(attachments, disabled)}</span>
           ) : hasFile ? (
-            <React.Fragment>
+            <Fragment>
               {this.props.uploadedContent ? (
                 <ReactDropzone
                   className='dropzoneLotHasFile'
@@ -229,7 +229,7 @@ class UploadVerifyFiles extends Component {
                 ''
               )}
               <span className='file-space'>{this.renderFiles(attachments, disabled)}</span>
-            </React.Fragment>
+            </Fragment>
           ) : (
             <ReactDropzone
               className='dropzoneLot'

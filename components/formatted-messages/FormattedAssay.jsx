@@ -1,23 +1,19 @@
-import React, { Component } from 'react'
-import { string, number } from "prop-types";
+import { Component } from 'react'
+import { string, number } from 'prop-types'
 
 export default class FormattedAssay extends Component {
   render() {
     let { min, max, delimiter } = this.props
 
-    return (
-      min ?
-        max ?
-          min === max ?
-            `${min}%`
-            :
-            `${min}%${delimiter}${max}%`
-          :
-          `> ${min}%`
-        :
-        max ? `< ${max}%`
-          : null
-    )
+    return min
+      ? max
+        ? min === max
+          ? `${min}%`
+          : `${min}%${delimiter}${max}%`
+        : `> ${min}%`
+      : max
+      ? `< ${max}%`
+      : null
   }
 }
 

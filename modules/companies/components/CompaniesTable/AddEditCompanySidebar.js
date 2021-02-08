@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Form, FormGroup, Divider, Accordion, Icon, Header, Loader, Dimmer, Segment } from 'semantic-ui-react'
@@ -103,7 +103,7 @@ const initialFormValues = {
   }
 }
 
-class AddEditCompanySidebar extends React.Component {
+class AddEditCompanySidebar extends Component {
   state = {
     primaryBranchHasProvinces: false,
     mailingBranchHasProvinces: false,
@@ -677,8 +677,7 @@ class AddEditCompanySidebar extends React.Component {
               <ErrorFocus />
             </Form>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }

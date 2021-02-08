@@ -1,11 +1,11 @@
-import React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Segment, Grid, Header, Button } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import moment from 'moment/moment'
-import confirm from '~/components/Confirmable/confirm'
+import confirm from '../../../../components/Confirmable/confirm'
 import { withToastManager } from 'react-toast-notifications'
 import { AlertCircle, AlertTriangle, CheckCircle, Info } from 'react-feather'
 import styled from 'styled-components'
@@ -23,7 +23,7 @@ const ARButton = styled(Button)`
   line-height: 20px !important;
 `
 
-class ActionsRequired extends React.Component {
+class ActionsRequired extends Component {
   confirmCall = d => {
     const {
       intl: { formatMessage }

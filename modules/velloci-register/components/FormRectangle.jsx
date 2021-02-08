@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button, Popup, Icon } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import PropTypes from 'prop-types'
@@ -30,7 +29,8 @@ const FormRectangle = ({
   isLoadingSubmitButton,
   openEmailPopup,
   nextStep,
-  registerBeneficialOwner
+  registerBeneficialOwner,
+  mainContainer
 }) => {
   const { values } = formikProps
   return (
@@ -109,7 +109,7 @@ const FormRectangle = ({
           disabled={isLoadingSubmitButton}
           loading={isLoadingSubmitButton}
           type='button'
-          onClick={() => submitForm(formikProps, activeStep, nextStep)}
+          onClick={() => submitForm(formikProps, activeStep, nextStep, mainContainer)}
           primary>
           <FormattedMessage
             id={
@@ -147,7 +147,8 @@ FormRectangle.propTypes = {
   activeStep: PropTypes.number,
   countBeneficialOwners: PropTypes.func,
   numberBeneficialOwners: PropTypes.number,
-  openEmailPopup: PropTypes.func
+  openEmailPopup: PropTypes.func,
+  mainContainer: PropTypes.object
 }
 
 FormRectangle.defaultProps = {
@@ -159,7 +160,8 @@ FormRectangle.defaultProps = {
   countBeneficialOwners: () => {},
   numberBeneficialOwners: 0,
   openEmailPopup: () => {},
-  registerBeneficialOwner: false
+  registerBeneficialOwner: false,
+  mainContainer: {}
 }
 
 export default FormRectangle

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import _ from 'lodash'
@@ -91,7 +91,8 @@ const VellociRegister = props => {
                       countBeneficialOwners={props.countBeneficialOwners}
                       isLoadingSubmitButton={props.isLoadingSubmitButton}
                       openEmailPopup={props.openEmailPopup}
-                      nextStep={props.nextStep}>
+                      nextStep={props.nextStep}
+                      mainContainer={props.mainContainer}>
                       {switchPages({ ...props, formikProps })}
                     </FormRectangle>
                   </Grid>
@@ -131,7 +132,8 @@ VellociRegister.propTypes = {
     cleareActiveStep: PropTypes.func,
     postRegisterVelloci: PropTypes.func,
     getIdentity: PropTypes.func,
-    loadSubmitButton: PropTypes.func
+    loadSubmitButton: PropTypes.func,
+    mainContainer: PropTypes.object
   }
 }
 
@@ -159,7 +161,8 @@ VellociRegister.defaultProps = {
     cleareActiveStep: () => {},
     postRegisterVelloci: () => {},
     getIdentity: () => {},
-    loadSubmitButton: () => {}
+    loadSubmitButton: () => {},
+    mainContainer: {}
   }
 }
 
