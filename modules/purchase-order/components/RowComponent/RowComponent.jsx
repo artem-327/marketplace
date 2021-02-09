@@ -53,7 +53,8 @@ const RowComponent = props => {
     onChangeButtonClick,
     onCloseButtonClick,
     submitButtonCaption,
-    onSubmitClick
+    onSubmitClick,
+    submitButtonDisabled
   } = props
 
   // Similar to call componentDidMount:
@@ -113,6 +114,7 @@ const RowComponent = props => {
               <GridColumn width={8} className='buttons'>
                 <DivRightButtons>
                   <Button
+                    disabled={submitButtonDisabled}
                     onClick={() => onSubmitClick()}
                   >
                     {submitButtonCaption}
@@ -129,10 +131,12 @@ const RowComponent = props => {
 }
 
 RowComponent.propTypes = {
+  submitButtonDisabled: PropTypes.bool,
   itemsCount: PropTypes.number
 }
 
 RowComponent.defaultProps = {
+  submitButtonDisabled: false,
   itemsCount: 0
 }
 

@@ -53,6 +53,7 @@ const FreightSelection = props => {
     isExpanded,
     sectionState,
     onChangeSubmitButton,
+    setSectionSubmitValue,
 
 
 
@@ -76,8 +77,9 @@ const FreightSelection = props => {
             {text => text}
           </FormattedMessage>
         ),
-        submitFunction: () => props.onSubmitClick()
+        submitFunction: (val) => props.onSubmitClick(val)
       })
+      setSectionSubmitValue(props.value)
     }
   }, [isExpanded])
 

@@ -56,15 +56,16 @@ import {
 //Constants
 
 const Checkout = props => {
-  const [openSection, setOpenSection] = useState('review')
+  const [openSection, setOpenSection] = useState('shipping') // ! !
   const [sectionState, setSectionState] = useState({
-    'review': { accepted: false },    // 1. Review Items
-    'shipping': { accepted: false },  // 2. Shipping & Terms
-    'payment': { accepted: false },   // 3. Payment
-    'freight': { accepted: false }    // 4. Freight Selection
+    'review': { accepted: true, value: null },    // 1. Review Items
+    'shipping': { accepted: false, value: null },  // 2. Shipping & Terms
+    'payment': { accepted: false, value: null },   // 3. Payment
+    'freight': { accepted: false, value: null }    // 4. Freight Selection
   })
   const [summaryButtonCaption, setSummaryButtonCaption] = useState('')
-  const [summarySubmitFunction, setSummarySubmitFunction] = useState(() => {console.log('!!!!!!!!!! summarySubmitFunction')})
+  const [summarySubmitFunction, setSummarySubmitFunction] = useState(() => {})
+  const [sectionSubmitValue, setSectionSubmitValue] = useState(null)
 
   const {
     cartItems,
@@ -96,6 +97,7 @@ const Checkout = props => {
 
 
   console.log('!!!!!!!!!! Checkout props', props)
+  console.log('!!!!!!!!!! Checkout sectionSubmitValue', sectionSubmitValue)
 
   //
 
@@ -116,13 +118,15 @@ const Checkout = props => {
                     sectionState,
                     setSectionState,
                     setSummaryButtonCaption,
-                    setSummarySubmitFunction
+                    setSummarySubmitFunction,
+                    setSectionSubmitValue
                   )}
                   cartItems={cartItems}
 
                 />
 
                 <ShippingTerms
+                  {...props}
                   {...getComponentParameters(
                     'shipping',
                     openSection,
@@ -130,10 +134,9 @@ const Checkout = props => {
                     sectionState,
                     setSectionState,
                     setSummaryButtonCaption,
-                    setSummarySubmitFunction
+                    setSummarySubmitFunction,
+                    setSectionSubmitValue
                   )}
-
-
                 />
 
                 <Payment
@@ -144,9 +147,11 @@ const Checkout = props => {
                     sectionState,
                     setSectionState,
                     setSummaryButtonCaption,
-                    setSummarySubmitFunction
+                    setSummarySubmitFunction,
+                    setSectionSubmitValue
                   )}
                   payments={payments}
+
 
 
                 />
@@ -159,7 +164,8 @@ const Checkout = props => {
                     sectionState,
                     setSectionState,
                     setSummaryButtonCaption,
-                    setSummarySubmitFunction
+                    setSummarySubmitFunction,
+                    setSectionSubmitValue
                   )}
 
 
@@ -169,7 +175,7 @@ const Checkout = props => {
             </GridColumn>
             <GridColumn width={4}>
               <OrderSummary
-                onButtonClick={() => summarySubmitFunction()}
+                onButtonClick={() => summarySubmitFunction(sectionSubmitValue)}
                 buttonText={summaryButtonCaption}
               />
             </GridColumn>

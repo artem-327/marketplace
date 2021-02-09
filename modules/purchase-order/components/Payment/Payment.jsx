@@ -8,18 +8,7 @@ import { currency } from '~/constants/index'
 
 //Components
 import {
-  Container as SemanticContainer,
-  Image,
-  Header,
-  Button,
-  Icon,
-  Grid,
   GridColumn,
-  GridRow,
-  Segment,
-  Popup,
-  Message,
-  Divider,
   Radio
 } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
@@ -35,16 +24,8 @@ import {
   DivCentered
 } from '../Checkout.styles'
 
-
 //Hooks
 import { usePrevious } from "../../../../hooks"
-
-
-
-//Services
-//import ErrorFocus from '../../../components/error-focus'
-//import {
-//} from './Checkout.services'
 
 const Payment = props => {
   // Stores previos values for compating with current value
@@ -56,8 +37,7 @@ const Payment = props => {
     isExpanded,
     sectionState,
     onChangeSubmitButton,
-
-
+    setSectionSubmitValue,
 
     payments
   } = props
@@ -80,30 +60,28 @@ const Payment = props => {
             {text => text}
           </FormattedMessage>
         ),
-        submitFunction: () => props.onSubmitClick()
+        submitFunction: (val) => props.onSubmitClick(val)
       })
+      setSectionSubmitValue(props.value)
+      setCheckedId(props.value)
     }
   }, [isExpanded])
 
-
-  //console.log('!!!!!!!!!! render Payment', cartItems)
-  //console.log('!!!!!!!!!! render props', props)
-
-  const selected = payments.find(el => el.id === 'VA-3af024f2-9833-472e-8711-2d37fa49c193') // ! !
+  const selected = payments.find(el => el.id === props.value)
 
   return (
     <RowComponent
       {...props}
       header={<FormattedMessage id='checkout.header.payment' defaultMessage='3. Payment'/>}
       onSubmitClick={() => {
-        console.log('!!!!!!!!!! Payment onSubmitClick')
-        props.onSubmitClick()
+        props.onSubmitClick(checkedId)
       }}
       submitButtonCaption={
         <FormattedMessage id='checkout.button.useThisPaymentMethod' defaultMessage='Use this Payment Method'>
           {text => text}
         </FormattedMessage>
       }
+      submitButtonDisabled={!checkedId}
       content={
         (sectionState.accepted || isExpanded)
           ? (
@@ -114,7 +92,10 @@ const Payment = props => {
                     <GridRowExpandedSelectionRow
                       key={index}
                       checked={checkedId === item.id}
-                      onClick={() => setCheckedId(item.id)}
+                      onClick={() => {
+                        setCheckedId(item.id)
+                        setSectionSubmitValue(item.id)
+                      }}
                       selection={'true'}
                     >
                       <GridColumn width={6}>
@@ -129,19 +110,21 @@ const Payment = props => {
                               {item.name}
                             </DivSectionHeader>
                             <DivSectionName>
-                              {item.id}
+                              {item.institutionName}
                             </DivSectionName>
                           </div>
                         </DivFlexRow>
                       </GridColumn>
-                      <GridColumn width={10}>
-                        <DivSectionHeader>
-                          {item.institutionName}
-                        </DivSectionHeader>
-                        <DivSectionName>
-                          ...Address...
-                        </DivSectionName>
-                      </GridColumn>
+                      {false && (
+                        <GridColumn width={10}>
+                          <DivSectionHeader>
+                            {item.institutionName}
+                          </DivSectionHeader>
+                          <DivSectionName>
+                            TBD ...Address...
+                          </DivSectionName>
+                        </GridColumn>
+                      )}
                     </GridRowExpandedSelectionRow>
                   )}
                 </GridExpandedSection>
@@ -150,10 +133,10 @@ const Payment = props => {
                   <DivSectionCollapsedRow>
                     <div>
                       <DivSectionName>
-                        {selected.name}
+                        {selected && selected.name}
                       </DivSectionName>
                       <DivSectionDescription>
-                        {selected.institutionName}
+                        {selected && selected.institutionName}
                       </DivSectionDescription>
                     </div>
                   </DivSectionCollapsedRow>

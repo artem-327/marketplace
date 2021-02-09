@@ -79,7 +79,7 @@ const ItemComponent = props => {
   */
 
 
-  console.log('!!!!!!!!!! render ItemComponent', item)
+  //console.log('!!!!!!!!!! render ItemComponent', item)
   //console.log('!!!!!!!!!! render props', props)
 
   const pkgAmount = item.pkgAmount
@@ -186,7 +186,12 @@ const ItemComponent = props => {
         </GridColumn>
         <GridColumn width={5}>
           <DivSectionName>
-            {`${props.packageWeight}${props.packageWeightUnit} ?`}
+            <FormattedNumber
+              minimumFractionDigits={0}
+              maximumFractionDigits={2}
+              value={props.packageWeight * item.packagingSize}
+            />
+            {props.packageWeightUnit}
           </DivSectionName>
         </GridColumn>
         <GridColumnLeftDivider width={4}>

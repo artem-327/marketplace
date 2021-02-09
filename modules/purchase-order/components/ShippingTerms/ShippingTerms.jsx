@@ -19,18 +19,31 @@ import {
   Segment,
   Popup,
   Message,
-  Divider
+  Divider,
+  Radio
 } from 'semantic-ui-react'
+
+// Styles
 import RowComponent from '../RowComponent/RowComponent'
 import {
   DivSectionCollapsedWrapper,
   DivSectionCollapsedRow,
+  DivSectionHeader,
   DivSectionName,
   DivSectionDescription,
-
-
-
+  GridExpandedSection,
+  GridRowExpandedSelectionRow,
+  DivFlexRow,
+  DivCentered,
+  DivRightSection
 } from '../Checkout.styles'
+
+import {
+  IconEdit
+} from './ShippingTerms.styles'
+
+
+import ShippingHandler from './ShippingHandler'
 
 
 //Hooks
@@ -42,17 +55,23 @@ import { usePrevious } from "../../../../hooks"
 //import ErrorFocus from '../../../components/error-focus'
 //import {
 //} from './Checkout.services'
+import {
+  getAddressOptions
+} from './ShippingTerms.services'
 
 const ShippingTerms = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded  = usePrevious(props.isExpanded)
-  const [edited, setEdited] = useState(false)
+
+  const [warehouseAddressSwitch, setWarehouseAddressSwitch] = useState('warehouses')
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     id, // temporary
     isExpanded,
     sectionState,
     onChangeSubmitButton,
+    setSectionSubmitValue,
 
 
     cartItems,
@@ -76,14 +95,22 @@ const ShippingTerms = props => {
             {text => text}
           </FormattedMessage>
         ),
-        submitFunction: () => props.onSubmitClick()
+        submitFunction: (val) => props.onSubmitClick(val)
       })
+      setSectionSubmitValue(props.value)
     }
   }, [isExpanded])
 
 
   //console.log('!!!!!!!!!! render ShippingTerms', cartItems)
-  //console.log('!!!!!!!!!! render props', props)
+  console.log('!!!!!!!!!! render props', props)
+
+  //console.log('!!!!!!!!!! ShippingTerms warehouseAddressSwitch', warehouseAddressSwitch)
+  //console.log('!!!!!!!!!! ShippingTerms searchValue', searchValue)
+
+  const addressOptions = getAddressOptions(
+    warehouseAddressSwitch === 'warehouses' ? props.warehouses : props.deliveryAddresses
+  )
 
   return (
     <RowComponent
@@ -104,7 +131,52 @@ const ShippingTerms = props => {
             isExpanded
               ? (
                 <div>
-                  ShippingTerms component expanded 2
+                  <ShippingHandler
+                    warehouseAddressSwitch={warehouseAddressSwitch}
+                    onSetWarehouseAddressSwitchChange={val => setWarehouseAddressSwitch(val)}
+                    searchValue={searchValue}
+                    onSetSearchValueChange={val => setSearchValue(val)}
+                  />
+
+
+                  <GridExpandedSection>
+                    {addressOptions.map((item, index) =>(
+                      <GridRowExpandedSelectionRow
+
+                        key={index}
+
+
+                        onClick={() => {
+                          console.log('!!!!!!!!!! onClick id', item.id)
+                        }}
+                        selection={'true'}
+                      >
+                        <GridColumn width={16}>
+                          <DivFlexRow>
+                            <DivCentered>
+                              <Radio
+                                checked={false}
+                              />
+                            </DivCentered>
+                            <div>
+                              <DivSectionHeader>
+                                {item.name}
+                              </DivSectionHeader>
+                              <DivSectionName>
+                                {item.description}
+                              </DivSectionName>
+                            </div>
+                            <DivRightSection>
+                              <IconEdit
+                                size={18}
+                                onClick={() => console.log('!!!!!!!!!! onClick edit', item.id)}
+                              />
+                            </DivRightSection>
+                          </DivFlexRow>
+                        </GridColumn>
+                      </GridRowExpandedSelectionRow>
+                    ))}
+                  </GridExpandedSection>
                 </div>
               ) : (
                 <DivSectionCollapsedWrapper>

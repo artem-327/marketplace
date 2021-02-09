@@ -88,6 +88,10 @@ export const DivCentered = styled.div`
   margin: auto 5px auto 0;
 `
 
+export const DivRightSection = styled.div`
+  margin: auto 5px auto auto;
+`
+
 export const GridExpandedSection = styled(Grid)`
   &.ui.grid {
     margin: 10px 0;
