@@ -1693,6 +1693,75 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    /* PUT_WAREHOUSE_EDIT_POPUP */
+
+    case AT.PUT_WAREHOUSE_EDIT_POPUP_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.PUT_WAREHOUSE_EDIT_POPUP_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.PUT_WAREHOUSE_EDIT_POPUP_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* ATTACHMENT_LINKS_TO_BRANCH */
+
+    case AT.ATTACHMENT_LINKS_TO_BRANCH_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.ATTACHMENT_LINKS_TO_BRANCH_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.ATTACHMENT_LINKS_TO_BRANCH_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* POST_NEW_WAREHOUSE_REQUEST */
+
+    case AT.POST_NEW_WAREHOUSE_REQUEST_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.POST_NEW_WAREHOUSE_REQUEST_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.POST_NEW_WAREHOUSE_REQUEST_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     default: {
       return state
     }

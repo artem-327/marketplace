@@ -2,6 +2,7 @@ import * as Yup from 'yup'
 //Services
 import { addressValidationSchema, errorMessages, phoneValidation } from '../../../../../../constants/yupValidation'
 import { getSafe } from '../../../../../../utils/functions'
+import { removeEmpty } from '../../../../../../utils/functions'
 
 const minLength = errorMessages.minLength(3)
 /**
@@ -22,7 +23,6 @@ export const formValidation = () =>
 
 /**
  * @category Settings - Location - Branches
- * @template T
  * @param {Object<string, any>} sidebarValues All values for form.
  * @return {Object<string, any>} Initial object for form.
  */
@@ -66,4 +66,50 @@ export const getInitialFormValues = sidebarValues => {
   }
 
   return initialValues
+}
+
+/**
+ * Submit form and add or edit warehouse.
+ * @method
+ * @param {Object<string, any>} values Values of form.
+ * @param {{setSubmitting: (isSubmitting: boolean) => void,
+ * putEditWarehouse: (requestData: Object<string, any>, id: number) => void,
+ * postNewWarehouseRequest: (isCreate: boolean, requestData: Object<string, any>) => void}} helperFunctions
+ * @param {number} id
+ */
+export const submitHandler = async (values, { setSubmitting, putEditWarehouse, postNewWarehouseRequest }, id) => {
+  let country = JSON.parse(values.deliveryAddress.address.country).countryId
+  let requestData = {}
+
+  requestData = {
+    deliveryAddress: {
+      ...values.deliveryAddress,
+      readyTime:
+        !values.deliveryAddress.readyTime || values.deliveryAddress.readyTime === ''
+          ? null
+          : values.deliveryAddress.readyTime,
+      closeTime:
+        !values.deliveryAddress.closeTime || values.deliveryAddress.closeTime === ''
+          ? null
+          : values.deliveryAddress.closeTime,
+      address: {
+        ...values.deliveryAddress.address,
+        country
+      }
+    },
+    taxId: values.taxId,
+    warehouse: false
+  }
+  removeEmpty(requestData)
+
+  try {
+    if (id) {
+      await putEditWarehouse(requestData, id)
+    } else {
+      await postNewWarehouseRequest(values.alsoCreate, requestData)
+    }
+  } catch {
+  } finally {
+    setSubmitting(false)
+  }
 }
