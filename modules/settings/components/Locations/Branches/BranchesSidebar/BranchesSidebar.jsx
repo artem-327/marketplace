@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withDatagrid } from '../../../../../datagrid'
 import { Formik } from 'formik'
-import { Dimmer, Loader } from 'semantic-ui-react'
+import { Dimmer, Loader, Segment } from 'semantic-ui-react'
 import { Button } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { ChevronDown } from 'react-feather'
 //Components
 import BranchesForm from './BranchesForm'
-import { PhoneNumber } from '../../../../../phoneNumber'
-import { AddressForm } from '../../../../../address-form/'
+import BasicButton from '../../../../../../components/buttons/BasicButton'
 //Services
 import { formValidation, getInitialFormValues, submitHandler } from './BranchesSidebar.services'
 import { getSafe } from '../../../../../../utils/functions'
@@ -26,58 +26,81 @@ import {
   addAttachment,
   loadFile
 } from '../../../../actions'
+import { chatWidgetVerticalMoved } from '../../../../../chatWidget/actions'
 //Styles
 import {
   CustomSegmentContent,
   CustomHighSegment,
   CustomDiv,
   CustomForm,
-  CustomButtonSubmit
+  CustomButtonSubmit,
+  FlexSidebar,
+  DivTitle,
+  FlexContent,
+  DimmerSidebarOpend
 } from './BranchesSidebar.styles'
-import { FlexSidebar, FlexContent } from '../../../../../inventory/constants/layout'
 /**
- * Sidebar shows warehouse form to edit or add new warehouse.
+ * Sidebar shows warehouse form to edit or add new branch.
  * @category Settings - Locations - Branches
  * @component
  */
 const BranchSidebar = props => {
   let initialValues = getInitialFormValues(props.sidebarValues)
-  const {
-    sidebarValues: { hasProvinces, countryId },
-    getProvinces
-  } = props
+  const { sidebarValues, getProvinces } = props
 
   useEffect(() => {
-    hasProvinces && getProvinces(countryId)
-  }, [hasProvinces, getProvinces, countryId])
+    sidebarValues && sidebarValues.hasProvinces && getProvinces(sidebarValues.countryId)
+  }, [sidebarValues, getProvinces])
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={formValidation()}
       enableReinitialize
-      onReset={props.closeSidebar}
+      onReset={() => {
+        props.closeSidebar()
+        props.chatWidgetVerticalMoved(false)
+      }}
       onSubmit={submitHandler}
       loading={props.loading}>
       {formikProps => (
         <>
           <CustomForm autoComplete='off'>
+            <DimmerSidebarOpend
+              active={props.isOpenSidebar}
+              onClickOutside={() => {
+                props.closeSidebar()
+                props.chatWidgetVerticalMoved(false)
+              }}
+              page></DimmerSidebarOpend>
             <FlexSidebar
               visible={props.isOpenSidebar}
               width='very wide'
-              style={{ width: '630px' }}
-              direction='right'
-              animation='overlay'>
+              direction='bottom'
+              animation='overlay'
+              inverted>
               <div>
                 <Dimmer inverted active={props.loading}>
                   <Loader />
                 </Dimmer>
-                <CustomHighSegment basic>
-                  {props.sidebarValues ? (
-                    <FormattedMessage id='sidebar.edit' defaultMessage='EDIT' />
-                  ) : (
-                    <FormattedMessage id='sidebar.addNew' defaultMessage='ADD NEW' />
-                  )}
+                <CustomHighSegment
+                  onClick={() => {
+                    props.closeSidebar()
+                    props.chatWidgetVerticalMoved(false)
+                  }}
+                  basic>
+                  <DivTitle>
+                    <div>
+                      {props.sidebarValues ? (
+                        <FormattedMessage id='sidebar.edit' defaultMessage='EDIT' />
+                      ) : (
+                        <FormattedMessage id='sidebar.addNew' defaultMessage='ADD NEW' />
+                      )}
+                    </div>
+                    <div>
+                      <ChevronDown />
+                    </div>
+                  </DivTitle>
                 </CustomHighSegment>
               </div>
               <FlexContent style={{ padding: '16px' }}>
@@ -86,32 +109,36 @@ const BranchSidebar = props => {
                 </CustomSegmentContent>
               </FlexContent>
               <CustomDiv>
-                <Button.Reset
-                  style={{ margin: '0 5px' }}
-                  onClick={props.closeSidebar}
+                <BasicButton
+                  noBorder
+                  onClick={() => {
+                    props.closeSidebar()
+                    props.chatWidgetVerticalMoved(false)
+                  }}
                   data-test='settings_branches_popup_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
                   </FormattedMessage>
-                </Button.Reset>
-                <CustomButtonSubmit
+                </BasicButton>
+                <BasicButton
                   onClick={() => {
-                    formikProps.validateForm().then(err => {
+                    formikProps.validateForm().then(async err => {
                       const errors = Object.keys(err)
                       if (errors.length && errors[0] !== 'isCanceled') {
                         // Errors found
                         formikProps.submitForm() // to show errors
                       } else {
                         // No errors found
-                        submitHandler(
+                        await submitHandler(
                           formikProps.values,
                           {
                             setSubmitting: formikProps.setSubmitting,
                             putEditWarehouse: props.putEditWarehouse,
                             postNewWarehouseRequest: props.postNewWarehouseRequest
                           },
-                          props.sidebarValues.id
+                          getSafe(() => props.sidebarValues.id, null)
                         )
+                        await props.chatWidgetVerticalMoved(false)
                       }
                     })
                   }}
@@ -119,7 +146,7 @@ const BranchSidebar = props => {
                   <FormattedMessage id='global.save' defaultMessage='Save'>
                     {text => text}
                   </FormattedMessage>
-                </CustomButtonSubmit>
+                </BasicButton>
               </CustomDiv>
             </FlexSidebar>
             <ErrorFocus />
@@ -139,7 +166,8 @@ const mapDispatchToProps = {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
-  loadFile
+  loadFile,
+  chatWidgetVerticalMoved
 }
 
 const mapStateToProps = state => {
@@ -165,6 +193,7 @@ BranchSidebar.propTypes = {
   removeAttachment: PropTypes.func,
   addAttachment: PropTypes.func,
   loadFile: PropTypes.func,
+  chatWidgetVerticalMoved: PropTypes.func,
   hasProvinces: PropTypes.bool,
   sidebarValues: PropTypes.object,
   country: PropTypes.string,
@@ -185,6 +214,7 @@ BranchSidebar.defaultProps = {
   removeAttachment: () => {},
   addAttachment: () => {},
   loadFile: () => {},
+  chatWidgetVerticalMoved: () => {},
   hasProvinces: false,
   sidebarValues: null,
   country: '',

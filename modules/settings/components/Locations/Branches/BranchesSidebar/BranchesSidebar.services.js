@@ -70,6 +70,7 @@ export const getInitialFormValues = sidebarValues => {
 
 /**
  * Submit form and add or edit warehouse.
+ * @category Settings - Locations - Branches
  * @method
  * @param {Object<string, any>} values Values of form.
  * @param {{setSubmitting: (isSubmitting: boolean) => void,

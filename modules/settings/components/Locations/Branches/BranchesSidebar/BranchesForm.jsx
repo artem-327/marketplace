@@ -7,9 +7,16 @@ import { Required } from '../../../../../../components/constants/layout'
 import { AddressForm } from '../../../../../address-form/'
 import { PhoneNumber } from '../../../../../phoneNumber'
 //Styles
-import { CustomSegment } from './BranchesSidebar.styles'
+import { CustomSegment, DivHeader } from './BranchesSidebar.styles'
+
+const customHeader = (
+  <DivHeader>
+    <FormattedMessage id='global.address' defaultMessage='Address' />
+  </DivHeader>
+)
+
 /**
- * Form content for edit or add warehouse.
+ * Form content for edit or add branch.
  * @category Settings - Locations - Branches
  * @component
  */
@@ -19,7 +26,7 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
 
   return (
     <>
-      <FormGroup widths='equal' style={{ marginTop: '14px' }} data-test='settings_branches_popup_name_inp'>
+      <FormGroup widths='equal' data-test='settings_branches_popup_name_inp'>
         <Input
           type='text'
           label={
@@ -43,6 +50,9 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
         required={true}
         setFieldValue={setFieldValue}
         values={values}
+        displayHeader={false}
+        customHeader={customHeader}
+        bacgroundColor={'#ffffff; !important'}
         initialZipCodes={[
           {
             key: values.zipID.toString(),
@@ -51,10 +61,10 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
           }
         ]}
       />
-
-      <Header as='h3'>
+      <DivHeader>
         <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
-      </Header>
+      </DivHeader>
+
       <CustomSegment>
         <FormGroup data-test='settings_branches_popup_contactName_inp'>
           <Input

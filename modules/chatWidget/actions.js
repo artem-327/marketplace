@@ -59,4 +59,9 @@ export function chatUnreadMessages(cnt) {
   }
 }
 
-
+export function chatWidgetVerticalMoved(isVertical) {
+  return {
+    type: AT.CHAT_WIDGET_VERTICAL,
+    payload: isVertical
+  }
+}

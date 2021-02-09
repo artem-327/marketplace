@@ -42465,7 +42465,7 @@ Floated Menu / Item
 
 .ui.menu.fixed {
   position: fixed;
-  z-index: 101;
+  z-index: 0; /*Rewrot because Sidebar in My Account - Locations - Branches - Add Warehouse is shown from bottom on the whole width of page.*/
   margin: 0em;
   width: 100%;
 }

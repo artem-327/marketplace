@@ -139,7 +139,8 @@ export const initialState = {
   isHideInactiveAccounts: false,
   institutId: null,
   isLoadingAddedAccounts: false,
-  isLoadingModal: false
+  isLoadingModal: false,
+  heightSidebar: null
 }
 
 export default function reducer(state = initialState, action) {
