@@ -343,8 +343,7 @@ class ProductSidebar extends Component {
     changedForm: false,
     attachments: [],
     loadSidebar: false,
-    popupValues: null,
-    activeIndex: null
+    popupValues: null
   }
 
   componentDidMount() {
@@ -394,10 +393,6 @@ class ProductSidebar extends Component {
         }
       })
     })
-  }
-
-  handleUnitChange(id, unitsAll, packagingTypesAll) {
-    this.filterPackagingTypes(id, unitsAll, packagingTypesAll)
   }
 
   handlerSubmit = async (values, actions) => {
@@ -604,14 +599,6 @@ class ProductSidebar extends Component {
     this.setState({ changedForm: true, attachments: docArray })
   }
 
-  handleClick = (e, titleProps) => {
-    const { index } = titleProps
-    const { activeIndex } = this.state
-    const newIndex = activeIndex === index ? -1 : index
-
-    this.setState({ activeIndex: newIndex })
-  }
-
   handleChangePackagingType = (e, value, setFieldValue, values) => {
     const { packagingTypesAll } = this.props
     const selectedPackingType = packagingTypesAll.find(type => type.id === value)
@@ -650,7 +637,7 @@ class ProductSidebar extends Component {
       datagrid
     } = this.props
 
-    const { packagingTypesReduced, activeIndex } = this.state
+    const { packagingTypesReduced } = this.state
 
     let editable = popupValues ? popupValues.cfProductOfferCount === 0 || !popupValues.cfProductOfferCount : true
 
@@ -843,7 +830,7 @@ class ProductSidebar extends Component {
                               'data-test': 'settings_product_popup_packagingUnit_drpdn',
                               onChange: (e, d) => {
                                 setFieldValue('packagingType', '')
-                                this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
+                                this.filterPackagingTypes(d.value, this.props.unitsAll, this.props.packagingTypesAll, setpackagingTypesReduced)
                               },
                               placeholder: formatMessage({
                                 id: 'productCatalog.selectUnit',

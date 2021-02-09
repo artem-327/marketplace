@@ -9,7 +9,9 @@ import { Container, Popup, Button, Input } from 'semantic-ui-react'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
 import { withDatagrid } from '../../../datagrid'
-import ProductSidebar from './ProductSidebar'
+import ProductSidebar from './ProductSidebar' // ! !
+import ProductPopup from './ProductPopupContainer'
+
 import ProductImportPopup from './ProductImportPopup'
 import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
 import Tutorial from '../../../tutorial/Tutorial'
@@ -397,7 +399,8 @@ class MyProducts extends Component {
           </div>
         </Container>
         {isOpenImportPopup && <ProductImportPopup />}
-        {isOpenPopup && <ProductSidebar />}
+        {false && <ProductSidebar />}
+        {isOpenPopup && <ProductPopup />}
       </>
     )
   }
