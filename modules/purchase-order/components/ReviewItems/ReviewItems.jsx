@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
+import { Formik } from 'formik'
 import { getSafe } from "~/utils/functions"
 import { currency } from '~/constants/index'
 
@@ -19,7 +20,8 @@ import {
   Segment,
   Popup,
   Message,
-  Divider
+  Divider,
+  Form
 } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
@@ -42,6 +44,7 @@ import ItemComponent from './ItemComponent'
 
 //Hooks
 import { usePrevious } from "../../../../hooks"
+import {handleSubmit} from "../../../velloci-register/form-services";
 
 
 
@@ -49,6 +52,9 @@ import { usePrevious } from "../../../../hooks"
 //import ErrorFocus from '../../../components/error-focus'
 //import {
 //} from './Checkout.services'
+
+// Global variable to store global state
+let selfFormikProps = {} //TODO specify type
 
 const ReviewItems = props => {
   // Stores previos values for compating with current value
@@ -106,46 +112,68 @@ const ReviewItems = props => {
         </FormattedMessage>
       }
       content={
-        (sectionState.accepted || isExpanded)
-          ? (
-            isExpanded
-              ? (
-                <GridExpandedSection>
-                  {cartItems.map(item =>
-                    <GridRow>
-                      <GridColumn>
-                        <ItemComponent item={item}/>
-                      </GridColumn>
-                    </GridRow>
-                  )}
-                </GridExpandedSection>
-              ) : (
-                <DivSectionCollapsedWrapper>
-                  {cartItems.map(item =>
-                    <DivSectionCollapsedRow>
-                      <DivSectionName>
-                        {item.productName}
-                      </DivSectionName>
-                      <DivSectionDescription>
-                        {item.pkgAmount * item.packagingSize}
-                      </DivSectionDescription>
-                      <DivSectionDescription>
-                        {item.packaging}
-                      </DivSectionDescription>
-                      <DivSectionDescription>
-                        <FormattedNumber
-                          minimumFractionDigits={2}
-                          maximumFractionDigits={2}
-                          style='currency'
-                          currency={currency}
-                          value={item.cfPriceSubtotal}
-                        />
-                      </DivSectionDescription>
-                    </DivSectionCollapsedRow>
-                  )}
-                </DivSectionCollapsedWrapper>
-              )
-          ) : null
+        <Formik
+          onSubmit={values => console.log('!!!!!!!!!! onSubmit values', values)}
+          enableReinitialize
+          validateOnChange={true}
+          initialValues={{ quantity: [3, 6]}}
+
+
+
+
+          render={formikProps => {
+            selfFormikProps = formikProps
+
+            console.log('!!!!!!!!!! formikProps values', formikProps.values)
+
+            return (
+              <Form>
+                {
+                  (sectionState.accepted || isExpanded)
+                    ? (
+                      isExpanded
+                        ? (
+                          <GridExpandedSection>
+                            {cartItems.map((item, index) =>
+                              <GridRow>
+                                <GridColumn>
+                                  <ItemComponent item={item} index={index} />
+                                </GridColumn>
+                              </GridRow>
+                            )}
+                          </GridExpandedSection>
+                        ) : (
+                          <DivSectionCollapsedWrapper>
+                            {cartItems.map(item =>
+                              <DivSectionCollapsedRow>
+                                <DivSectionName>
+                                  {item.productName}
+                                </DivSectionName>
+                                <DivSectionDescription>
+                                  {item.pkgAmount * item.packagingSize}
+                                </DivSectionDescription>
+                                <DivSectionDescription>
+                                  {item.packaging}
+                                </DivSectionDescription>
+                                <DivSectionDescription>
+                                  <FormattedNumber
+                                    minimumFractionDigits={2}
+                                    maximumFractionDigits={2}
+                                    style='currency'
+                                    currency={currency}
+                                    value={item.cfPriceSubtotal}
+                                  />
+                                </DivSectionDescription>
+                              </DivSectionCollapsedRow>
+                            )}
+                          </DivSectionCollapsedWrapper>
+                        )
+                    ) : null
+                }
+              </Form>
+            )
+          }}
+        />
       }
     />
   )

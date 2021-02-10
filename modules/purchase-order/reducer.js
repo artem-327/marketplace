@@ -66,6 +66,7 @@ export default function reducer(state = initialState, action) {
 
     /* DELIVERY_ADDRESSES_FETCH */
 
+    case AT.CHECKOUT_SEARCH_DELIVERY_ADDRESSES_PENDING:
     case AT.DELIVERY_ADDRESSES_FETCH_PENDING: {
       return {
         ...state,
@@ -73,11 +74,20 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.CHECKOUT_SEARCH_DELIVERY_ADDRESSES_FULFILLED:
     case AT.DELIVERY_ADDRESSES_FETCH_FULFILLED: {
       return {
         ...state,
         deliveryAddresses: action.payload,
         isFetching: false
+      }
+    }
+
+    case AT.CHECKOUT_SEARCH_DELIVERY_ADDRESSES_REJECTED:
+    case AT.DELIVERY_ADDRESSES_FETCH_REJECTED: {
+      return {
+        ...state,
+        isFetching: true
       }
     }
 
@@ -479,6 +489,7 @@ export default function reducer(state = initialState, action) {
 
     /* GET_WAREHOUSES */
 
+    case AT.CHECKOUT_SEARCH_WAREHOUSES_PENDING:
     case AT.GET_WAREHOUSES_PENDING: {
       return {
         ...state,
@@ -486,6 +497,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.CHECKOUT_SEARCH_WAREHOUSES_FULFILLED:
     case AT.GET_WAREHOUSES_FULFILLED: {
       return {
         ...state,
@@ -494,6 +506,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.CHECKOUT_SEARCH_WAREHOUSES_REJECTED:
     case AT.GET_WAREHOUSES_REJECTED: {
       return {
         ...state,

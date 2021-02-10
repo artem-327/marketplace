@@ -22,6 +22,8 @@ import {
   Divider
 } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
+
+// Styles
 import {
   DivSectionCollapsedWrapper,
   DivSectionCollapsedRow,
@@ -38,9 +40,14 @@ import {
   GridRowHeader,
   IconTrash2,
   DivHeader,
+  LabelBlueText,
+  DropdownQuantity,
 
 
 } from './ItemComponent.styles'
+
+// Constants
+import { OPTIONS_QUANTITY } from './ItemComponent.constants'
 
 //Hooks
 import { usePrevious } from "../../../../hooks"
@@ -58,8 +65,10 @@ const ItemComponent = props => {
   const [edited, setEdited] = useState(false)
 
   const {
+    onClickDelete,
 
 
+    index,
     item
   } = props
 
@@ -91,7 +100,7 @@ const ItemComponent = props => {
           <DivHeader>
             {item.productName}
           </DivHeader>
-          <IconTrash2 size='18' onClick={() => console.log('!!!!!!!!!! onDelete')}/>
+          <IconTrash2 size='18' onClick={() => onClickDelete(item.id)}/>
       </GridRowHeader>
       <GridRow>
         <GridColumn width={3}>
@@ -148,7 +157,9 @@ const ItemComponent = props => {
         </GridColumnLeftDivider>
         <GridColumn width={4}>
           <DivSectionName>
-            d
+            <LabelBlueText onClick={() => console.log('!!!!!!!!!! onClick blue')}>
+              <FormattedMessage id='global.view' defaultMessage='View' />
+            </LabelBlueText>
           </DivSectionName>
         </GridColumn>
       </GridRow>
@@ -160,7 +171,19 @@ const ItemComponent = props => {
         </GridColumn>
         <GridColumn width={5}>
           <DivSectionName>
-            {pkgAmount}
+            <div>
+              <DropdownQuantity
+                name={`quantity[${index}]`}
+                selection
+                inputProps={{
+                  search: true,
+                  onChange: (_, { value }) => console.log('!!!!!!!!!! onChange value', value),
+                  disabled: false
+                }}
+                options={OPTIONS_QUANTITY}
+                value={pkgAmount}
+              />
+            </div>
           </DivSectionName>
         </GridColumn>
         <GridColumnLeftDivider width={4}>

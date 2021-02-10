@@ -1,8 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { connect } from 'react-redux'
+import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, formatMessage } from 'react-intl'
 import { getSafe } from "~/utils/functions"
 import { currency } from '~/constants/index'
+import {
+  getDeliveryAddresses,
+  getWarehouses,
+  searchDeliveryAddresses,
+  searchWarehouses
+} from '../../actions'
 
 // Styles
 import {
@@ -11,8 +19,12 @@ import {
   InputSearch
 } from './ShippingHandler.styles'
 
-const ShippingHandler = props => {
+// Services
+import {
+  searchAddress
+} from './ShippingHandler.services'
 
+const ShippingHandler = props => {
   const {
     intl: { formatMessage },
     warehouseAddressSwitch,
@@ -20,6 +32,13 @@ const ShippingHandler = props => {
     searchValue,
     onSetSearchValueChange
   } = props
+
+  // This useEffect is used similar as componentDidUpdate
+  // Could by used in previous (above) useEffect, but this approach is more clear
+  useEffect(() => {
+    console.log('!!!!!!!!!! useEffect searchValue', props.searchValue)
+    searchAddress(props)
+  }, [searchValue])
 
   return (
     <DivHandlerWrapper>
@@ -68,4 +87,12 @@ ShippingHandler.defaultProps = {
   onSetSearchValueChange: () => {}
 }
 
-export default injectIntl(ShippingHandler)
+function mapStateToProps(store) {
+  return {
+
+  }
+}
+
+export default injectIntl(connect(mapStateToProps, {
+  getDeliveryAddresses, getWarehouses, searchDeliveryAddresses, searchWarehouses
+})(ShippingHandler))

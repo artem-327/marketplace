@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Trash2 } from 'react-feather'
+import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 import {
   Container as SemanticContainer,
@@ -54,6 +55,7 @@ export const GridRowHeader = styled(GridRow)`
 
 export const IconTrash2 = styled(Trash2)`  
   color: #f16844;
+  cursor: pointer;
 `
 
 export const DivHeader = styled.div`
@@ -64,4 +66,40 @@ export const DivHeader = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+`
+
+export const LabelBlueText = styled.label`
+  color: #2599d5;
+  cursor: pointer;
+`
+
+export const DropdownQuantity = styled(Dropdown)`
+  width: 123px !important;
+.ui.form .field > .selection.dropdown {
+    max-width: 65px !important;
+    min-width: 65px !important;
+}
+
+
+  &.field {
+  
+  .ui.search.dropdown,
+  .ui.search.selection.dropdown {
+    min-height: 32px;
+    height: 32px;
+    width: 65px !important;
+    min-width: 65px !important;
+    z-index: 600;
+    
+    > input.search {
+    min-height: 32px;
+    height: 32px;
+    width: 65px !important;
+    min-width: 65px !important;
+    z-index: 600;
+  }
+  }
+  
+  }
+  
 `

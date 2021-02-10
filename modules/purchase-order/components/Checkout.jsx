@@ -56,7 +56,7 @@ import {
 //Constants
 
 const Checkout = props => {
-  const [openSection, setOpenSection] = useState('shipping') // ! !
+  const [openSection, setOpenSection] = useState('review') // ! !
   const [sectionState, setSectionState] = useState({
     'review': { accepted: true, value: null },    // 1. Review Items
     'shipping': { accepted: false, value: null },  // 2. Shipping & Terms
