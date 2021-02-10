@@ -7,7 +7,7 @@ import { Required } from '../../../../../../components/constants/layout'
 import { AddressForm } from '../../../../../address-form/'
 import { PhoneNumber } from '../../../../../phoneNumber'
 //Styles
-import { CustomSegment, DivHeader } from './BranchesSidebar.styles'
+import { DivHeader, SegmentCustom } from '../../Locations.styles'
 
 const customHeader = (
   <DivHeader>
@@ -66,7 +66,7 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
         <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
       </DivHeader>
 
-      <CustomSegment>
+      <SegmentCustom>
         <FormGroup data-test='settings_branches_popup_contactName_inp'>
           <Input
             type='text'
@@ -120,7 +120,7 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
             }}
           />
         </FormGroup>
-      </CustomSegment>
+      </SegmentCustom>
 
       {!sidebarValues && (
         <FormGroup data-test='settings_branches_popup_contactName_inp'>

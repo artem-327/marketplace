@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Segment, Form, Sidebar, Dimmer } from 'semantic-ui-react'
 
-export const FlexSidebar = styled(Sidebar)`
+export const SidebarFlex = styled(Sidebar)`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -81,7 +81,7 @@ export const FlexSidebar = styled(Sidebar)`
   }
 `
 
-export const FlexContent = styled.div`
+export const DivFlexContent = styled.div`
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
@@ -89,7 +89,7 @@ export const FlexContent = styled.div`
   padding: 30px !important;
 `
 
-export const CustomSegmentContent = styled(Segment)`
+export const SegmentCustomContent = styled(Segment)`
   padding-top: 0px !important;
   width: 900px !important;
   padding: 30px !important;
@@ -116,4 +116,48 @@ export const DivIconChevronDown = styled.div`
   position: absolute;
   right: 20px;
   cursor: pointer;
+`
+
+export const DivHeader = styled.div`
+  background-color: #edeef2;
+  padding: 6px;
+  color: #404040;
+  font-size: 14px;
+  margin-top: 25px;
+`
+export const SegmentCustom = styled(Segment)`
+  background-color: #ffffff !important;
+  border: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  padding: 0px !important;
+  .field {
+    .ui.checkbox {
+      label {
+        color: #848893;
+      }
+      &.checked {
+        label {
+          color: #20273a;
+        }
+      }
+    }
+
+    .field {
+      label {
+        color: #546f93;
+      }
+    }
+
+    .phone-number {
+      .phone-code,
+      .phone-num {
+        height: 40px;
+      }
+    }
+  }
+`
+
+export const FormCustom = styled(Form)`
+  flex-grow: 0 !important;
 `

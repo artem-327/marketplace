@@ -28,13 +28,14 @@ import {
 } from '../../../../actions'
 import { chatWidgetVerticalMoved } from '../../../../../chatWidget/actions'
 //Styles
-import { CustomHighSegment, CustomDiv, CustomForm, CustomButtonSubmit, DivTitle } from './BranchesSidebar.styles'
+import { CustomHighSegment, DivTitle } from './BranchesSidebar.styles'
 import {
-  FlexSidebar,
-  FlexContent,
-  CustomSegmentContent,
+  SidebarFlex,
+  DivFlexContent,
+  SegmentCustomContent,
   DivBottomSidebar,
-  DimmerSidebarOpend
+  DimmerSidebarOpend,
+  FormCustom
 } from '../../Locations.styles'
 /**
  * Sidebar shows warehouse form to edit or add new branch.
@@ -62,7 +63,7 @@ const BranchSidebar = props => {
       loading={props.loading}>
       {formikProps => (
         <>
-          <CustomForm autoComplete='off'>
+          <FormCustom autoComplete='off'>
             <DimmerSidebarOpend
               active={props.isOpenSidebar}
               onClickOutside={() => {
@@ -70,7 +71,7 @@ const BranchSidebar = props => {
                 props.chatWidgetVerticalMoved(false)
               }}
               page></DimmerSidebarOpend>
-            <FlexSidebar
+            <SidebarFlex
               visible={props.isOpenSidebar}
               width='very wide'
               direction='bottom'
@@ -100,11 +101,11 @@ const BranchSidebar = props => {
                   </DivTitle>
                 </CustomHighSegment>
               </div>
-              <FlexContent style={{ padding: '16px' }}>
-                <CustomSegmentContent basic>
+              <DivFlexContent style={{ padding: '16px' }}>
+                <SegmentCustomContent basic>
                   <BranchesForm intl={props.intl} formikProps={formikProps} sidebarValues={props.sidebarValues} />
-                </CustomSegmentContent>
-              </FlexContent>
+                </SegmentCustomContent>
+              </DivFlexContent>
               <DivBottomSidebar>
                 <BasicButton
                   noBorder
@@ -145,9 +146,9 @@ const BranchSidebar = props => {
                   </FormattedMessage>
                 </BasicButton>
               </DivBottomSidebar>
-            </FlexSidebar>
+            </SidebarFlex>
             <ErrorFocus />
-          </CustomForm>
+          </FormCustom>
         </>
       )}
     </Formik>

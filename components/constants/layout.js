@@ -11,7 +11,7 @@ export const TopMenu = styled(Menu)`
   bottom: 0;
   left: 240px !important;
   border: 0 none !important;
-
+  z-index: 1 !important;
   &.ui.menu.fixed .item-cart {
     padding: 20px 14px;
 
@@ -30,7 +30,7 @@ export const TopMenu = styled(Menu)`
     background: #edeef2 !important;
     background-clip: content-box !important;
     text-align: center;
-
+    z-index: 100;
     /*&:before {
       content: '';
       position: absolute;

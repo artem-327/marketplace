@@ -140,7 +140,8 @@ export const initialState = {
   institutId: null,
   isLoadingAddedAccounts: false,
   isLoadingModal: false,
-  heightSidebar: null
+  heightSidebar: null,
+  attachmentFiles: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -1760,6 +1761,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.SET_ATTACHMENT_FILES: {
+      return {
+        ...state,
+        attachmentFiles: payload
       }
     }
 
