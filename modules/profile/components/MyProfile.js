@@ -13,6 +13,20 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 import UploadAttachment from '../../inventory/components/upload/UploadAttachment'
 import { getIdentity } from '../../auth/actions'
 import { ImageSearch } from '@material-ui/icons'
+import styled from 'styled-components'
+
+const DivLogoWrapper = styled.div`
+  padding: 20px;
+`
+
+const ImageSearchStyled = styled(ImageSearch)`
+  font-size: 64px !important;
+`
+
+const DivLabel = styled.div`
+  margin-bottom: 4px;
+`
+
 
 import {
   closePopup,
@@ -146,10 +160,14 @@ class MyProfile extends Component {
                     value: lang.language
                   }))}
                 />
+                <DivLabel>
+                  <FormattedMessage id='profile.avatarPicture' defaultMessage='Avatar Picture' />
+                </DivLabel>
                 <UploadAttachment
+                  acceptFiles='image/jpeg, image/png, image/gif, image/svg'
                   name='userAvatar'
                   filesLimit={1}
-                  fileMaxSize={20}
+                  fileMaxSize={2}
                   onChange={async files => {
                     if (files.length) {
                       try {
@@ -160,7 +178,7 @@ class MyProfile extends Component {
                       }
                     }
                   }}
-                  attachments={popupValues && popupValues.avatar ? [popupValues.avatar] : []}
+                  attachments={popupValues && popupValues.ownAvatar && popupValues.avatar ? [popupValues.avatar] : []}
                   removeAttachment={async () => {
                     try {
                       await deleteAvatarPicture()
@@ -170,7 +188,9 @@ class MyProfile extends Component {
                     }
                   }}
                   emptyContent={
-                    <ImageSearch />
+                    <DivLogoWrapper>
+                      <ImageSearchStyled />
+                    </DivLogoWrapper>
                   }
                   uploadedContent={
                     <div>
@@ -245,7 +265,8 @@ const mapStateToProps = state => {
           lastLoginAt:
             state.auth.identity.lastLoginAt &&
             getSafe(() => moment(state.auth.identity.lastLoginAt).toDate().toLocaleString(), null),
-          avatar: popupValues.avatar
+          avatar: popupValues.avatar,
+          ownAvatar: popupValues.ownAvatar
         }
       : null,
     // currencies: state.profile.currency && state.profile.currency.map(d => {
