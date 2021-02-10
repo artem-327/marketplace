@@ -5,7 +5,8 @@ export const initialState = {
   currency: null,
   loading: false,
   profilePopup: false,
-  changePasswordPopup: false
+  changePasswordPopup: false,
+  savingAvatarPicture: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -83,6 +84,24 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         profilePopup: false
+      }
+    }
+
+    case AT.PROFILE_DELETE_AVATAR_PICTURE_PENDING:
+    case AT.PROFILE_SAVE_AVATAR_PICTURE_PENDING: {
+      return {
+        ...state,
+        savingAvatarPicture: true
+      }
+    }
+
+    case AT.PROFILE_DELETE_AVATAR_PICTURE_REJECTED:
+    case AT.PROFILE_DELETE_AVATAR_PICTURE_FULFILLED:
+    case AT.PROFILE_SAVE_AVATAR_PICTURE_REJECTED:
+    case AT.PROFILE_SAVE_AVATAR_PICTURE_FULFILLED: {
+      return {
+        ...state,
+        savingAvatarPicture: false
       }
     }
 
