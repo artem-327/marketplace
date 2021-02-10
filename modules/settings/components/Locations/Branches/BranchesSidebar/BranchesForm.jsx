@@ -47,6 +47,7 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
 
       <AddressForm
         prefix={'deliveryAddress'}
+        noBorder
         required={true}
         setFieldValue={setFieldValue}
         values={values}
@@ -87,6 +88,7 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
         </FormGroup>
         <FormGroup widths='equal' data-test='settings_branches_popup_phoneEmail_inp'>
           <PhoneNumber
+            background='#fdfdfd !important;'
             name='deliveryAddress.contactPhone'
             values={values}
             label={

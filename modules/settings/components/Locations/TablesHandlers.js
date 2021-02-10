@@ -223,7 +223,7 @@ class TablesHandlers extends Component {
             primary
             onClick={() => {
               openSidebar()
-              currentTab === 'branches' && chatWidgetVerticalMoved(true)
+              currentTab === 'branches' || (currentTab === 'pick-up-locations' && chatWidgetVerticalMoved(true))
             }}
             data-test='settings_open_popup_btn'>
             <PlusCircle />

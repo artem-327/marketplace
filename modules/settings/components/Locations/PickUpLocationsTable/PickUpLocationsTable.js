@@ -13,6 +13,8 @@ import { getSafe } from '~/utils/functions'
 
 import confirm from '~/components/Confirmable/confirm'
 import { FormattedPhone } from '~/components/formatted-messages/'
+//Actions
+import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 
 import styled from 'styled-components'
 const DivIcons = styled.div`
@@ -158,6 +160,7 @@ class PickUpLocationsTable extends Component {
           const indexTabofSidebar = 0
           getBranch(row.id)
           openSidebar(row.rawData, indexTabofSidebar)
+          chatWidgetVerticalMoved(true)
         }
       },
       {
@@ -166,6 +169,7 @@ class PickUpLocationsTable extends Component {
           const indexTabofSidebar = 1
           getBranch(row.id)
           openSidebar(row.rawData, indexTabofSidebar)
+          chatWidgetVerticalMoved(true)
         }
       },
       {
@@ -215,7 +219,8 @@ class PickUpLocationsTable extends Component {
 const mapDispatchToProps = {
   openSidebar,
   deleteBranch,
-  getBranch
+  getBranch,
+  chatWidgetVerticalMoved
 }
 
 const mapStateToProps = (state, { datagrid }) => {

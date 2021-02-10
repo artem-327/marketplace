@@ -28,17 +28,14 @@ import {
 } from '../../../../actions'
 import { chatWidgetVerticalMoved } from '../../../../../chatWidget/actions'
 //Styles
+import { CustomHighSegment, CustomDiv, CustomForm, CustomButtonSubmit, DivTitle } from './BranchesSidebar.styles'
 import {
-  CustomSegmentContent,
-  CustomHighSegment,
-  CustomDiv,
-  CustomForm,
-  CustomButtonSubmit,
   FlexSidebar,
-  DivTitle,
   FlexContent,
+  CustomSegmentContent,
+  DivBottomSidebar,
   DimmerSidebarOpend
-} from './BranchesSidebar.styles'
+} from '../../Locations.styles'
 /**
  * Sidebar shows warehouse form to edit or add new branch.
  * @category Settings - Locations - Branches
@@ -108,7 +105,7 @@ const BranchSidebar = props => {
                   <BranchesForm intl={props.intl} formikProps={formikProps} sidebarValues={props.sidebarValues} />
                 </CustomSegmentContent>
               </FlexContent>
-              <CustomDiv>
+              <DivBottomSidebar>
                 <BasicButton
                   noBorder
                   onClick={() => {
@@ -147,7 +144,7 @@ const BranchSidebar = props => {
                     {text => text}
                   </FormattedMessage>
                 </BasicButton>
-              </CustomDiv>
+              </DivBottomSidebar>
             </FlexSidebar>
             <ErrorFocus />
           </CustomForm>

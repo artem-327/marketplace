@@ -32,7 +32,7 @@ import { AddressForm } from '~/modules/address-form/'
 
 import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
+import { HighSegment } from '~/modules/inventory/constants/layout'
 import DocumentTab from '~/components/document-tab'
 import { AlertCircle } from 'react-feather'
 import { Required } from '~/components/constants/layout'
@@ -40,7 +40,21 @@ import { removeEmpty } from '~/utils/functions'
 import { TimeInput } from '~/components/custom-formik/'
 import ErrorFocus from '~/components/error-focus'
 import { Store } from '@material-ui/icons'
-import { X as XIcon } from 'react-feather'
+import { X as XIcon, ChevronDown } from 'react-feather'
+//Actions
+import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
+//Components
+import BasicButton from '../../../../../components/buttons/BasicButton'
+
+//Styles
+import {
+  FlexSidebar,
+  FlexContent,
+  CustomSegmentContent,
+  DivBottomSidebar,
+  DimmerSidebarOpend,
+  DivIconChevronDown
+} from '../Locations.styles'
 
 const CustomButtonSubmit = styled(Button.Submit)`
   &.ui.primary.button {
@@ -175,10 +189,6 @@ const CustomDivInTitle = styled.div`
 const CustomMenu = styled(Menu)`
   padding-left: 30px !important;
   margin: 0 !important;
-`
-
-const CustomSegmentContent = styled(Segment)`
-  padding-top: 0px !important;
 `
 
 const minLength = errorMessages.minLength(3)
@@ -561,7 +571,8 @@ class PickUpLocationsSidebar extends Component {
       isOpenSidebar,
       openGlobalAddForm,
       loading,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      chatWidgetVerticalMoved
     } = this.props
 
     const { editTab } = this.state
@@ -580,19 +591,27 @@ class PickUpLocationsSidebar extends Component {
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={() => (openGlobalAddForm ? openGlobalAddForm('') : closeSidebar())}
+        onReset={() => {
+          if (openGlobalAddForm) {
+            openGlobalAddForm('')
+          } else {
+            closeSidebar()
+            chatWidgetVerticalMoved(false)
+          }
+        }}
         onSubmit={this.submitHandler}
         loading={loading}>
         {formikProps => (
           <>
             <CustomForm autoComplete='off'>
-              <FlexSidebar
-                className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
-                visible={true}
-                width='very wide'
-                style={{ width: '630px' }}
-                direction='right'
-                animation='overlay'>
+              <DimmerSidebarOpend
+                active={isOpenSidebar}
+                onClickOutside={() => {
+                  closeSidebar()
+                  chatWidgetVerticalMoved(false)
+                }}
+                page></DimmerSidebarOpend>
+              <FlexSidebar visible={true} width='very wide' inverted direction='bottom' animation='overlay'>
                 <div>
                   <Dimmer inverted active={loading || this.state.loadSidebar}>
                     <Loader />
@@ -621,6 +640,13 @@ class PickUpLocationsSidebar extends Component {
                             {formatMessage(tab.text)}
                           </Menu.Item>
                         ))}
+                        <DivIconChevronDown
+                          onClick={() => {
+                            closeSidebar()
+                            chatWidgetVerticalMoved(false)
+                          }}>
+                          <ChevronDown />
+                        </DivIconChevronDown>
                       </CustomMenu>
                     )}
                   </CustomHighSegment>
@@ -628,20 +654,23 @@ class PickUpLocationsSidebar extends Component {
                 <FlexContent style={{ padding: '16px' }}>
                   <CustomSegmentContent basic>{this.getContent(formikProps)}</CustomSegmentContent>
                 </FlexContent>
-                <CustomDiv className='bottom-buttons'>
+                <DivBottomSidebar>
                   {!openGlobalAddForm && (
-                    <Button.Reset
-                      style={{ margin: '0 5px' }}
-                      onClick={closeSidebar}
+                    <BasicButton
+                      noBorder
+                      onClick={() => {
+                        closeSidebar()
+                        chatWidgetVerticalMoved(false)
+                      }}
                       data-test='settings_warehouse_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                         {text => text}
                       </FormattedMessage>
-                    </Button.Reset>
+                    </BasicButton>
                   )}
-                  <CustomButtonSubmit
+                  <BasicButton
                     onClick={() => {
-                      formikProps.validateForm().then(err => {
+                      formikProps.validateForm().then(async err => {
                         const errors = Object.keys(err)
                         if (errors.length && errors[0] !== 'isCanceled') {
                           // Errors found
@@ -649,7 +678,8 @@ class PickUpLocationsSidebar extends Component {
                         } else {
                           // No errors found
                           this.setState({ loadSidebar: true })
-                          this.submitHandler(formikProps.values, formikProps.setSubmitting)
+                          await this.submitHandler(formikProps.values, formikProps.setSubmitting)
+                          await chatWidgetVerticalMoved(false)
                         }
                       })
                     }}
@@ -657,8 +687,8 @@ class PickUpLocationsSidebar extends Component {
                     <FormattedMessage id='global.save' defaultMessage='Save'>
                       {text => text}
                     </FormattedMessage>
-                  </CustomButtonSubmit>
-                </CustomDiv>
+                  </BasicButton>
+                </DivBottomSidebar>
               </FlexSidebar>
               <ErrorFocus />
             </CustomForm>
@@ -678,7 +708,8 @@ const mapDispatchToProps = {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
-  loadFile
+  loadFile,
+  chatWidgetVerticalMoved
 }
 
 const mapStateToProps = state => {
