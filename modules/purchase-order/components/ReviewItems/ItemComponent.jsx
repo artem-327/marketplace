@@ -21,7 +21,7 @@ import {
   Message,
   Divider
 } from 'semantic-ui-react'
-import RowComponent from '../RowComponent/RowComponent'
+import ShippingInformation from '../ShippingInformation/ShippingInformation'
 
 // Styles
 import {
@@ -40,7 +40,6 @@ import {
   GridRowHeader,
   IconTrash2,
   DivHeader,
-  LabelBlueText,
   DropdownQuantity,
 
 
@@ -157,9 +156,7 @@ const ItemComponent = props => {
         </GridColumnLeftDivider>
         <GridColumn width={4}>
           <DivSectionName>
-            <LabelBlueText onClick={() => console.log('!!!!!!!!!! onClick blue')}>
-              <FormattedMessage id='global.view' defaultMessage='View' />
-            </LabelBlueText>
+            <ShippingInformation {...props} item={item} />
           </DivSectionName>
         </GridColumn>
       </GridRow>

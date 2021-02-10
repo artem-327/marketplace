@@ -137,7 +137,7 @@ const ReviewItems = props => {
                             {cartItems.map((item, index) =>
                               <GridRow>
                                 <GridColumn>
-                                  <ItemComponent item={item} index={index} />
+                                  <ItemComponent {...props} item={item} index={index} />
                                 </GridColumn>
                               </GridRow>
                             )}

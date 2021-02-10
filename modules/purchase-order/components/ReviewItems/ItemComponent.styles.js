@@ -68,11 +68,6 @@ export const DivHeader = styled.div`
   text-overflow: ellipsis;
 `
 
-export const LabelBlueText = styled.label`
-  color: #2599d5;
-  cursor: pointer;
-`
-
 export const DropdownQuantity = styled(Dropdown)`
   width: 123px !important;
 .ui.form .field > .selection.dropdown {

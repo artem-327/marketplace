@@ -111,6 +111,7 @@ const Checkout = props => {
               <GridSections>
 
                 <ReviewItems
+                  {...props}
                   {...getComponentParameters(
                     'review',
                     openSection,
@@ -121,8 +122,6 @@ const Checkout = props => {
                     setSummarySubmitFunction,
                     setSectionSubmitValue
                   )}
-                  cartItems={cartItems}
-
                 />
 
                 <ShippingTerms
