@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
+import Router from 'next/router'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -38,8 +39,11 @@ import { usePrevious } from '../../../hooks'
 import ErrorFocus from '../../../components/error-focus'
 import { getSafe } from '../../../utils/functions'
 import {
-  getComponentParameters
-
+  getComponentParameters,
+  submitUpdateCartItem,
+  handleSummarySubmit,
+  getShippingQuotes,
+  handleSubmitOrder
 } from './Checkout.services'
 
 // Styles
@@ -54,9 +58,12 @@ import {
 
 
 //Constants
+import { FREIGHT_TYPES } from './Checkout.constants'
 
 const Checkout = props => {
-  const [openSection, setOpenSection] = useState('review') // ! !
+  const prevCartItems  = usePrevious(props.cartItems)
+
+  const [openSection, setOpenSection] = useState('review')
   const [sectionState, setSectionState] = useState({
     'review': { accepted: true, value: null },    // 1. Review Items
     'shipping': { accepted: false, value: null },  // 2. Shipping & Terms
@@ -69,37 +76,39 @@ const Checkout = props => {
 
   const {
     cartItems,
-
     payments,
-
-
-
   } = props
 
   // Similar to call componentDidMount:
-  useEffect(() => {
+  useEffect(async () => {
+    const { preFilledValues, clearPreFilledValues, getWarehouses, paymentProcessor } = props
+    props.getDeliveryAddresses()
+    props.getPayments(paymentProcessor)
+    props.getIdentity()
+    await props.getCart()
 
-
-
+    const shippingQuoteId = getSafe(() => Router.router.query.shippingQuoteId, '')
+    if (shippingQuoteId) {
+      setSectionState({
+        ...sectionState,
+        freight: { accepted: false, value: shippingQuoteId }
+      })
+    }
     // If [] is empty then is similar as componentDidMount.
   }, [])
 
+  const state = {
+    openSection,
+    setOpenSection,
+    sectionState,
+    setSectionState,
+    setSummaryButtonCaption,
+    setSummarySubmitFunction,
+    setSectionSubmitValue
+  }
 
-  /*
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {
-
-  }, [])
-  */
-
-
-
-
-  console.log('!!!!!!!!!! Checkout props', props)
-  console.log('!!!!!!!!!! Checkout sectionSubmitValue', sectionSubmitValue)
-
-  //
+  const allAccepted = sectionState.review.accepted && sectionState.shipping.accepted
+    && sectionState.payment.accepted && sectionState.freight.accepted
 
   return (
     <DivCheckoutWrapper>
@@ -112,70 +121,86 @@ const Checkout = props => {
 
                 <ReviewItems
                   {...props}
-                  {...getComponentParameters(
-                    'review',
-                    openSection,
-                    setOpenSection,
-                    sectionState,
-                    setSectionState,
-                    setSummaryButtonCaption,
-                    setSummarySubmitFunction,
-                    setSectionSubmitValue
-                  )}
+                  {...getComponentParameters({name: 'review', ...state })}
+                  onClickDelete={id => {
+                    setSectionState({
+                      ...sectionState,
+                      review: { accepted: false, value: null },
+                      freight: { accepted: false, value: null }
+                    })
+                  }}
+                  onValueChange={value => {
+                    setSectionState({
+                      ...sectionState,
+                      review: { accepted: false, value },
+                      freight: { accepted: false, value: null }
+                    })
+                  }}
+                  onSubmitClick={() => submitUpdateCartItem(props, sectionState, setSectionState, setOpenSection)}
                 />
 
                 <ShippingTerms
                   {...props}
-                  {...getComponentParameters(
-                    'shipping',
-                    openSection,
-                    setOpenSection,
-                    sectionState,
-                    setSectionState,
-                    setSummaryButtonCaption,
-                    setSummarySubmitFunction,
-                    setSectionSubmitValue
-                  )}
+                  {...getComponentParameters({name: 'shipping', ...state })}
+                  onValueChange={value => {
+                    setSectionState({
+                      ...sectionState,
+                      shipping: { accepted: false, value },
+                      freight: { accepted: false, value: null }
+                    })
+                    const address = value.fullAddress.address
+                    getShippingQuotes(props, address.country.id, address.zip.zip)
+                  }}
                 />
 
                 <Payment
-                  {...getComponentParameters(
-                    'payment',
-                    openSection,
-                    setOpenSection,
-                    sectionState,
-                    setSectionState,
-                    setSummaryButtonCaption,
-                    setSummarySubmitFunction,
-                    setSectionSubmitValue
-                  )}
+                  {...getComponentParameters({name: 'payment', ...state })}
                   payments={payments}
-
-
-
+                  onValueChange={value => {
+                    setSectionState({
+                      ...sectionState,
+                      payment: { accepted: false, value }
+                    })
+                  }}
                 />
 
                 <FreightSelection
-                  {...getComponentParameters(
-                    'freight',
-                    openSection,
-                    setOpenSection,
-                    sectionState,
-                    setSectionState,
-                    setSummaryButtonCaption,
-                    setSummarySubmitFunction,
-                    setSectionSubmitValue
-                  )}
-
-
+                  {...props}
+                  {...getComponentParameters({name: 'freight', ...state })}
+                  onValueChange={value => {
+                    setSectionState({
+                      ...sectionState,
+                      freight: { accepted: false, value }
+                    })
+                  }}
                 />
 
               </GridSections>
             </GridColumn>
             <GridColumn width={4}>
               <OrderSummary
-                onButtonClick={() => summarySubmitFunction(sectionSubmitValue)}
-                buttonText={summaryButtonCaption}
+                cart={props.cart}
+                sectionState={sectionState}
+                onButtonClick={() => {
+                  allAccepted
+                    ? handleSubmitOrder(sectionState, props)
+                    : handleSummarySubmit(
+                      summarySubmitFunction,
+                      props,
+                      sectionState,
+                      setSectionState,
+                      setOpenSection,
+                      openSection
+                    )}
+                }
+                buttonText={
+                  allAccepted
+                    ? (
+                      <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
+                        {text => text}
+                      </FormattedMessage>
+                    ) : summaryButtonCaption
+                }
               />
             </GridColumn>
           </GridRow>

@@ -11,16 +11,18 @@ const TmpBoth = props => {
 
   }, [])
 
-  const showOld = 1
+  const showOld = 0
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: showOld ? '1fr 1fr' : '' }}>
       <Checkout {...props}>
         bla
       </Checkout>
-      <div>
-        {showOld === 1 && (<PurchaseOrder {...props} />)}
-      </div>
+      {showOld === 1 && (
+        <div>
+          <PurchaseOrder {...props} />
+        </div>
+      )}
     </div>
   )
 }

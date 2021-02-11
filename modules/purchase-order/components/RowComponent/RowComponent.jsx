@@ -114,6 +114,7 @@ const RowComponent = props => {
               <GridColumn width={8} className='buttons'>
                 <DivRightButtons>
                   <Button
+                    color='blue'
                     disabled={submitButtonDisabled}
                     onClick={() => onSubmitClick()}
                   >

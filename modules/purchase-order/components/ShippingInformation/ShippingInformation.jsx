@@ -11,7 +11,7 @@ import { Header, Button, Modal, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 // Styles
-import { LabelBlueText } from './ShippingInformation.styles'
+import { ModalStyled, LabelBlueText } from './ShippingInformation.styles'
 
 //Services
 import {
@@ -66,7 +66,7 @@ const ShippingInformation = props => {
   )
 
   return (
-    <Modal
+    <ModalStyled
       open={openModal}
       size='tiny'
       onOpen={() => onHazmatPopup(item, setNmfcNumberInitOptions, setUnNumberInitOptions, setOpenModal)}
@@ -216,7 +216,7 @@ const ShippingInformation = props => {
           </Button>
           <Button
             type='button'
-            {...(edittingHazmatInfo ? { positive: true } : { color: 'blue' })}
+            color='blue'
             onClick={() => {
               if (edittingHazmatInfo) handleSubmitFcn()
               else  setEdittingHazmatInfo(!edittingHazmatInfo)
@@ -228,7 +228,7 @@ const ShippingInformation = props => {
           </Button>
         </Modal.Actions>
       </>
-    </Modal>
+    </ModalStyled>
   )
 }
 

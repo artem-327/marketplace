@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
-import { getSafe, getPrice } from "~/utils/functions"
+import { getSafe, getPrice, uniqueArrayByKey } from "~/utils/functions"
 import { currency } from '~/constants/index'
 
 //Components
@@ -46,17 +46,23 @@ import {
 } from './ItemComponent.styles'
 
 // Constants
-import { OPTIONS_QUANTITY } from './ItemComponent.constants'
+import { OPTIONS_QUANTITY, CART_ITEM_TYPES } from './ItemComponent.constants'
 
 //Hooks
 import { usePrevious } from "../../../../hooks"
 
 
 
-//Services
+// Services
+import {
+  deleteCart
+} from './ItemComponent.services'
+
 //import ErrorFocus from '../../../components/error-focus'
 //import {
 //} from './Checkout.services'
+
+
 
 const ItemComponent = props => {
   // Stores previos values for compating with current value
@@ -65,8 +71,8 @@ const ItemComponent = props => {
 
   const {
     onClickDelete,
-
-
+    onValueChange,
+    value,
     index,
     item
   } = props
@@ -86,12 +92,14 @@ const ItemComponent = props => {
   }, [isExpanded])
   */
 
-
-  //console.log('!!!!!!!!!! render ItemComponent', item)
-  //console.log('!!!!!!!!!! render props', props)
-
   const pkgAmount = item.pkgAmount
   const pricePerUOM = getPrice(pkgAmount, item.productOffer.pricingTiers)
+
+  let allOptions = value
+    ? OPTIONS_QUANTITY.concat([{ key: value, text: value.toString(), value }])
+    : OPTIONS_QUANTITY
+
+  allOptions = uniqueArrayByKey(allOptions, 'text')
 
   return (
     <GridItemDetail>
@@ -99,7 +107,13 @@ const ItemComponent = props => {
           <DivHeader>
             {item.productName}
           </DivHeader>
-          <IconTrash2 size='18' onClick={() => onClickDelete(item.id)}/>
+          <IconTrash2
+            size='18'
+            onClick={async () => {
+              const result = await deleteCart(item.id, props)
+              if (result) onClickDelete(item.id)
+            }}
+          />
       </GridRowHeader>
       <GridRow>
         <GridColumn width={3}>
@@ -170,15 +184,17 @@ const ItemComponent = props => {
           <DivSectionName>
             <div>
               <DropdownQuantity
-                name={`quantity[${index}]`}
+                name={`items[${index}].quantity`}
                 selection
                 inputProps={{
                   search: true,
-                  onChange: (_, { value }) => console.log('!!!!!!!!!! onChange value', value),
-                  disabled: false
+                  onSearchChange: (_, { searchQuery }) => onValueChange(searchQuery),
+                  onChange: (_, { value }) => onValueChange(value),
+                  disabled: item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
+                    item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
+                    item.cartItemType === CART_ITEM_TYPES.PRODUCT_OFFER_BID
                 }}
-                options={OPTIONS_QUANTITY}
-                value={pkgAmount}
+                options={allOptions}
               />
             </div>
           </DivSectionName>
@@ -244,7 +260,8 @@ function mapStateToProps(store, { item }) {
     leadTime: getSafe(() => item.productOffer.leadTime, ''),
     packageWeightUnit: getSafe(() => item.productOffer.companyProduct.packageWeightUnit.nameAbbreviation, ''),
     packageWeight: getSafe(() => item.productOffer.companyProduct.packageWeight, 0),
-    cfPaymentTerms: getSafe(() => item.productOffer.cfPaymentTerms, '')
+    cfPaymentTerms: getSafe(() => item.productOffer.cfPaymentTerms, ''),
+    cartItemType: getSafe(() => item.cartItemType, '')
   }
 }
 

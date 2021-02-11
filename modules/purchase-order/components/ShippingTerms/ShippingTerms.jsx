@@ -22,9 +22,10 @@ import {
   Divider,
   Radio
 } from 'semantic-ui-react'
+import RowComponent from '../RowComponent/RowComponent'
+import AddAddress from '../AddAddress/AddAddress'
 
 // Styles
-import RowComponent from '../RowComponent/RowComponent'
 import {
   DivSectionCollapsedWrapper,
   DivSectionCollapsedRow,
@@ -37,6 +38,8 @@ import {
   DivCentered,
   DivRightSection
 } from '../Checkout.styles'
+import { DivRightButtons } from '../RowComponent/RowComponent.styles'
+
 
 import {
   IconEdit
@@ -65,16 +68,17 @@ const ShippingTerms = props => {
 
   const [warehouseAddressSwitch, setWarehouseAddressSwitch] = useState('warehouses')
   const [searchValue, setSearchValue] = useState('')
+  const [addAddressValues, setAddAddressValues] = useState(null)
+  const [isOpenAddAddress, setIsOpenAddAddress] = useState(false)
 
   const {
-    id, // temporary
     isExpanded,
     sectionState,
     onChangeSubmitButton,
     setSectionSubmitValue,
-
-
-    cartItems,
+    onValueChange,
+    value,
+    cart
   } = props
 
   // Similar to call componentDidMount:
@@ -101,13 +105,6 @@ const ShippingTerms = props => {
     }
   }, [isExpanded])
 
-
-  //console.log('!!!!!!!!!! render ShippingTerms', cartItems)
-  console.log('!!!!!!!!!! render props', props)
-
-  //console.log('!!!!!!!!!! ShippingTerms warehouseAddressSwitch', warehouseAddressSwitch)
-  //console.log('!!!!!!!!!! ShippingTerms searchValue', searchValue)
-
   const addressOptions = getAddressOptions(
     warehouseAddressSwitch === 'warehouses' ? props.warehouses : props.deliveryAddresses
   )
@@ -116,15 +113,13 @@ const ShippingTerms = props => {
     <RowComponent
       {...props}
       header={<FormattedMessage id='checkout.header.shippingAndTerms' defaultMessage='2. Shipping & Terms'/>}
-      onSubmitClick={() => {
-        console.log('!!!!!!!!!! ShippingTerms onSubmitClick')
-        props.onSubmitClick()
-      }}
+      onSubmitClick={() => props.onSubmitClick()}
       submitButtonCaption={
         <FormattedMessage id='checkout.button.useThisAddress' defaultMessage='Use this Address'>
           {text => text}
         </FormattedMessage>
       }
+      submitButtonDisabled={!value}
       content={
         (sectionState.accepted || isExpanded)
           ? (
@@ -137,25 +132,19 @@ const ShippingTerms = props => {
                     searchValue={searchValue}
                     onSetSearchValueChange={val => setSearchValue(val)}
                   />
-
-
                   <GridExpandedSection>
-                    {addressOptions.map((item, index) =>(
+                    {addressOptions.map((item, index) => (
                       <GridRowExpandedSelectionRow
-
                         key={index}
-
-
-                        onClick={() => {
-                          console.log('!!!!!!!!!! onClick id', item.id)
-                        }}
+                        checked={value && (value.id === item.id)}
+                        onClick={() => onValueChange(item)}
                         selection={'true'}
                       >
                         <GridColumn width={16}>
                           <DivFlexRow>
                             <DivCentered>
                               <Radio
-                                checked={false}
+                                checked={value && (value.id === item.id)}
                               />
                             </DivCentered>
                             <div>
@@ -169,7 +158,10 @@ const ShippingTerms = props => {
                             <DivRightSection>
                               <IconEdit
                                 size={18}
-                                onClick={() => console.log('!!!!!!!!!! onClick edit', item.id)}
+                                onClick={() => {
+                                  setAddAddressValues(item.fullAddress)
+                                  setIsOpenAddAddress(true)
+                                }}
                               />
                             </DivRightSection>
                           </DivFlexRow>
@@ -177,20 +169,39 @@ const ShippingTerms = props => {
                       </GridRowExpandedSelectionRow>
                     ))}
                   </GridExpandedSection>
+                  <DivRightButtons>
+                    <Button
+                      basic
+                      onClick={() => {
+                        setAddAddressValues(null)
+                        setIsOpenAddAddress(true)
+                      }}
+                    >
+                      <FormattedMessage id='global.addNew' defaultMessage='Add New'>
+                        {text => text}
+                      </FormattedMessage>
+                    </Button>
+                  </DivRightButtons>
+                  {isOpenAddAddress && (
+                    <AddAddress
+                      isWarehouse
+                      popupValues={addAddressValues}
+                      onClose={() => setIsOpenAddAddress(false)}
+                    />
+                  )}
                 </div>
               ) : (
                 <DivSectionCollapsedWrapper>
                     <DivSectionCollapsedRow>
                       <div>
                         <DivSectionName>
-                          tucne jmeno
+                          {value ? value.name : ''}
                         </DivSectionName>
                         <DivSectionDescription>
-                          normalni text
+                          {value ? value.description : ''}
                         </DivSectionDescription>
                       </div>
                     </DivSectionCollapsedRow>
-
                 </DivSectionCollapsedWrapper>
               )
           ) : null

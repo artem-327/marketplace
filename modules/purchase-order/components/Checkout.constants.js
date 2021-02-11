@@ -1,0 +1,4 @@
+export const FREIGHT_TYPES = {
+  ECHO: 'ECHO_FREIGHT',
+  OWN: 'OWN_FREIGHT'
+}

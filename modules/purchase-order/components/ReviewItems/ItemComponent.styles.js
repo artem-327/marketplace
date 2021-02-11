@@ -69,32 +69,16 @@ export const DivHeader = styled.div`
 `
 
 export const DropdownQuantity = styled(Dropdown)`
-  width: 123px !important;
-.ui.form .field > .selection.dropdown {
-    max-width: 65px !important;
-    min-width: 65px !important;
-}
-
-
   &.field {
-  
-  .ui.search.dropdown,
-  .ui.search.selection.dropdown {
-    min-height: 32px;
-    height: 32px;
-    width: 65px !important;
-    min-width: 65px !important;
-    z-index: 600;
-    
-    > input.search {
-    min-height: 32px;
-    height: 32px;
-    width: 65px !important;
-    min-width: 65px !important;
-    z-index: 600;
-  }
-  }
-  
-  }
-  
+    .ui.search.dropdown,
+    .ui.search.selection.dropdown {   
+      > input.search {
+        min-height: 32px;
+        height: 32px;
+        width: 65px !important;
+        min-width: 65px !important;
+        z-index: 600;
+      }
+    }
+  }  
 `

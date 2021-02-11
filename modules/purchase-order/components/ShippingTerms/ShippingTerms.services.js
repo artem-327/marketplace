@@ -31,7 +31,6 @@ const getFullAddress = address => {
  * @return none
  */
 export const getAddressOptions = (addresses, searchValue) => {
-
   return addresses.map(val => {
 
     const address = val.warehouse
@@ -46,11 +45,12 @@ export const getAddressOptions = (addresses, searchValue) => {
         ? getSafe(() => val.cfName, '')
         : getSafe(() => val.addressName, '')
 
-
     return ({
       id: val.id,
       name,
-      description: getFullAddress(address)
+      description: getFullAddress(address),
+      fullAddress: val.warehouse ? val.deliveryAddress : val,
+      warehouse: val.warehouse
     })}
   )
 }

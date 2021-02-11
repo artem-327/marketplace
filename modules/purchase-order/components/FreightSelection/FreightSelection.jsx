@@ -19,24 +19,27 @@ import {
   Segment,
   Popup,
   Message,
-  Divider
+  Divider,
+  Radio
 } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
   DivSectionCollapsedWrapper,
   DivSectionCollapsedRow,
+  DivSectionHeader,
   DivSectionName,
   DivSectionDescription,
-
-
-
+  GridExpandedSection,
+  GridRowExpandedSelectionRow,
+  DivFlexRow,
+  DivCentered,
+  DivRightSection,
+  DivSectionSmallHeader
 } from '../Checkout.styles'
-
+import moment from 'moment'
 
 //Hooks
 import { usePrevious } from "../../../../hooks"
-
-
 
 //Services
 //import ErrorFocus from '../../../components/error-focus'
@@ -49,14 +52,13 @@ const FreightSelection = props => {
   const [edited, setEdited] = useState(false)
 
   const {
-    id, // temporary
     isExpanded,
     sectionState,
     onChangeSubmitButton,
     setSectionSubmitValue,
-
-
-
+    shippingQuotes,
+    onValueChange,
+    value
   } = props
 
   // Similar to call componentDidMount:
@@ -87,6 +89,11 @@ const FreightSelection = props => {
   //console.log('!!!!!!!!!! render FreightSelection', cartItems)
   //console.log('!!!!!!!!!! render props', props)
 
+  const freightOptions = getSafe(() => shippingQuotes.rates, [])
+
+  console.log('!!!!!!!!!! aaaaa shippingQuotes', shippingQuotes)
+  console.log('!!!!!!!!!! aaaaa freightOptions', freightOptions)
+
   return (
     <RowComponent
       {...props}
@@ -100,25 +107,91 @@ const FreightSelection = props => {
           {text => text}
         </FormattedMessage>
       }
+      submitButtonDisabled={!value}
       content={
         (sectionState.accepted || isExpanded)
           ? (
             isExpanded
               ? (
-                <div>
-                  Freight Selection component expanded 2
-                </div>
+                <GridExpandedSection>
+                  {freightOptions.map((item, index) => (
+                    <GridRowExpandedSelectionRow
+                      key={index}
+                      checked={value && (value.quoteId === item.quoteId)}
+                      onClick={() => onValueChange(item)}
+                      selection={'true'}
+                    >
+                      <GridColumn width={10}>
+                        <DivFlexRow>
+                          <DivCentered>
+                            <Radio
+                              checked={value && (value.quoteId === item.quoteId)}
+                            />
+                          </DivCentered>
+                          <div>
+                            <DivSectionHeader>
+                              {item.carrierName}
+                            </DivSectionHeader>
+                            <DivSectionName>
+                              <FormattedNumber
+                                minimumFractionDigits={2}
+                                maximumFractionDigits={2}
+                                style='currency'
+                                currency={currency}
+                                value={item.estimatedPrice}
+                              />
+                            </DivSectionName>
+                          </div>
+                        </DivFlexRow>
+                      </GridColumn>
+                      <GridColumn width={3}>
+                        <DivSectionSmallHeader>
+                          <FormattedMessage id='checkout.freight.estDelivery' defaultMessage='Est. Delivery' />
+                        </DivSectionSmallHeader>
+                        <DivSectionName>
+                          {moment(item.estimatedDeliveryDate).fromNow()}
+                        </DivSectionName>
+                      </GridColumn>
+                      {false && (
+                        <GridColumn width={2}>
+                          <DivSectionSmallHeader>
+                            <FormattedMessage id='checkout.freight.etd' defaultMessage='ETD' />
+                          </DivSectionSmallHeader>
+                          <DivSectionName>
+                            {item.quoteId /* missing in endpoint */}
+                          </DivSectionName>
+                        </GridColumn>
+                      )}
+                      <GridColumn width={3}>
+                        <DivSectionSmallHeader>
+                          <FormattedMessage id='checkout.freight.service' defaultMessage='Service' />
+                        </DivSectionSmallHeader>
+                        <DivSectionName>
+                          {item.serviceType}
+                        </DivSectionName>
+                      </GridColumn>
+                    </GridRowExpandedSelectionRow>
+                  ))}
+                </GridExpandedSection>
               ) : (
                 <DivSectionCollapsedWrapper>
                   <DivSectionCollapsedRow>
                     <DivSectionName>
-                      tucne jmeno Freight Selection
+                      {value ? value.carrierName : ''}
                     </DivSectionName>
                     <DivSectionDescription>
-                      normalni text Freight Selection
+                      <FormattedNumber
+                        minimumFractionDigits={2}
+                        maximumFractionDigits={2}
+                        style='currency'
+                        currency={currency}
+                        value={value ? value.estimatedPrice : 0}
+                      />
+                    </DivSectionDescription>
+                    <DivSectionDescription>
+                      {value ? moment(value.estimatedDeliveryDate).fromNow() : ''}
                     </DivSectionDescription>
                   </DivSectionCollapsedRow>
-
                 </DivSectionCollapsedWrapper>
               )
           ) : null

@@ -74,6 +74,15 @@ export const DivSectionHeader = styled.div`
   text-overflow: ellipsis;
 `
 
+export const DivSectionSmallHeader = styled.div`
+  padding: 0 5px;
+  font-size: 12px;
+  color: #848893;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 export const DivSectionDescription = styled.div`
   padding: 0 5px;
   color: #848893;

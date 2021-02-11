@@ -9,49 +9,27 @@ import { currency } from '~/constants/index'
 
 //Components
 import {
-  Container as SemanticContainer,
-  Image,
-  Header,
-  Button,
-  Icon,
-  Grid,
   GridColumn,
   GridRow,
-  Segment,
-  Popup,
-  Message,
-  Divider,
   Form
 } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
   GridExpandedSection,
-  DivSectionExpandedRow,
-
-
-
   DivSectionCollapsedWrapper,
   DivSectionCollapsedRow,
   DivSectionName,
-  DivSectionDescription,
-
-
-
+  DivSectionDescription
 } from '../Checkout.styles'
 
 import ItemComponent from './ItemComponent'
 
-
 //Hooks
 import { usePrevious } from "../../../../hooks"
-import {handleSubmit} from "../../../velloci-register/form-services";
 
+// Services
+import { getValidationScheme } from './ReviewItems.services'
 
-
-//Services
-//import ErrorFocus from '../../../components/error-focus'
-//import {
-//} from './Checkout.services'
 
 // Global variable to store global state
 let selfFormikProps = {} //TODO specify type
@@ -62,12 +40,11 @@ const ReviewItems = props => {
   const [edited, setEdited] = useState(false)
 
   const {
-    id, // temporary
     isExpanded,
     sectionState,
     onChangeSubmitButton,
-
-
+    onValueChange,
+    initValues,
     cartItems,
   } = props
 
@@ -89,23 +66,16 @@ const ReviewItems = props => {
             {text => text}
           </FormattedMessage>
         ),
-        submitFunction: () => props.onSubmitClick()
+        submitFunction: (val) => props.onSubmitClick(val)
       })
     }
   }, [isExpanded])
-
-
-  //console.log('!!!!!!!!!! render cartItems', cartItems)
-  //console.log('!!!!!!!!!! render props', props)
 
   return (
     <RowComponent
       {...props}
       header={<FormattedMessage id='checkout.header.reviewItems' defaultMessage='1. Review Items'/>}
-      onSubmitClick={() => {
-        console.log('!!!!!!!!!! ReviewItems onSubmitClick')
-        props.onSubmitClick()
-      }}
+      onSubmitClick={() => props.onSubmitClick()}
       submitButtonCaption={
         <FormattedMessage id='checkout.button.confirmItems' defaultMessage='Confirm Items'>
           {text => text}
@@ -113,18 +83,14 @@ const ReviewItems = props => {
       }
       content={
         <Formik
-          onSubmit={values => console.log('!!!!!!!!!! onSubmit values', values)}
+          onSubmit={values => {}}
           enableReinitialize
           validateOnChange={true}
-          initialValues={{ quantity: [3, 6]}}
-
-
-
-
+          initialValues={{items: initValues}}
+          validationSchema={getValidationScheme()}
           render={formikProps => {
             selfFormikProps = formikProps
-
-            console.log('!!!!!!!!!! formikProps values', formikProps.values)
+            const { values } = formikProps
 
             return (
               <Form>
@@ -137,7 +103,18 @@ const ReviewItems = props => {
                             {cartItems.map((item, index) =>
                               <GridRow>
                                 <GridColumn>
-                                  <ItemComponent {...props} item={item} index={index} />
+                                  <ItemComponent
+                                    {...props}
+                                    item={item}
+                                    index={index}
+                                    value={getSafe(() => values.items[index].quantity.toString(), '')}
+                                    onValueChange={(val) => {
+                                      formikProps.setFieldValue(`items[${index}].quantity`, val)
+                                      let newValues = values.items.slice()
+                                      newValues[index].quantity = val
+                                      onValueChange(newValues)
+                                    }}
+                                  />
                                 </GridColumn>
                               </GridRow>
                             )}
@@ -201,7 +178,13 @@ function mapStateToProps(store, props) {
         packagingSize: getSafe(() => item.productOffer.companyProduct.packagingSize, 1),
         packaging
       })
-    })
+    }),
+    initValues: props.cartItems.map(item => ({
+      id: item.id,
+      quantity: item.pkgAmount.toString(),
+      minPkg: item.productOffer.minPkg,
+      splitPkg: item.productOffer.splitPkg
+    }))
   }
 }
 

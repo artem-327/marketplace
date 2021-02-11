@@ -30,7 +30,6 @@ import { usePrevious } from "../../../../hooks"
 const Payment = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded  = usePrevious(props.isExpanded)
-  const [checkedId, setCheckedId] = useState('')
 
   const {
     id, // temporary
@@ -38,8 +37,9 @@ const Payment = props => {
     sectionState,
     onChangeSubmitButton,
     setSectionSubmitValue,
-
-    payments
+    onValueChange,
+    payments,
+    value
   } = props
 
   // Similar to call componentDidMount:
@@ -63,7 +63,6 @@ const Payment = props => {
         submitFunction: (val) => props.onSubmitClick(val)
       })
       setSectionSubmitValue(props.value)
-      setCheckedId(props.value)
     }
   }, [isExpanded])
 
@@ -73,15 +72,13 @@ const Payment = props => {
     <RowComponent
       {...props}
       header={<FormattedMessage id='checkout.header.payment' defaultMessage='3. Payment'/>}
-      onSubmitClick={() => {
-        props.onSubmitClick(checkedId)
-      }}
+      onSubmitClick={() => props.onSubmitClick()}
       submitButtonCaption={
         <FormattedMessage id='checkout.button.useThisPaymentMethod' defaultMessage='Use this Payment Method'>
           {text => text}
         </FormattedMessage>
       }
-      submitButtonDisabled={!checkedId}
+      submitButtonDisabled={!value}
       content={
         (sectionState.accepted || isExpanded)
           ? (
@@ -91,18 +88,15 @@ const Payment = props => {
                   {payments.map((item, index) =>
                     <GridRowExpandedSelectionRow
                       key={index}
-                      checked={checkedId === item.id}
-                      onClick={() => {
-                        setCheckedId(item.id)
-                        setSectionSubmitValue(item.id)
-                      }}
+                      checked={value === item.id}
+                      onClick={() => onValueChange(item.id)}
                       selection={'true'}
                     >
                       <GridColumn width={6}>
                         <DivFlexRow>
                           <DivCentered>
                             <Radio
-                              checked={checkedId === item.id}
+                              checked={value === item.id}
                             />
                           </DivCentered>
                           <div>

@@ -2,9 +2,10 @@
 import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import {getSafe} from "~/utils/functions"
 import { GridColumn, GridRow, Button } from 'semantic-ui-react'
+import { currency } from '~/constants/index'
 
 //Components
 //
@@ -27,12 +28,31 @@ const OrderSummary = props => {
     onButtonClick
   } = props
 
+  const priceComponent = val => (
+    val
+      ? (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={val}
+        />
+      ) : '-'
+  )
+
+  console.log('!!!!!!!!!! aaaaa props', props)
+
+  const subTotalPrice = getSafe(() => props.cart.cfPriceSubtotal, '')
+  const freightPrice = getSafe(() => props.sectionState.freight.value.estimatedPrice, '')
+
   return (
     <GridSummary>
       <GridRow>
         <GridColumn>
           <Button
             fluid
+            color='blue'
             onClick={() => onButtonClick()}>
             {buttonText}
           </Button>
@@ -40,47 +60,45 @@ const OrderSummary = props => {
       </GridRow>
       <GridRow className='bottom-border small-text'>
         <GridColumn>
-          nejeke kecy
+          links
         </GridColumn>
       </GridRow>
 
       <GridRow className='bottom-border'>
         <GridColumn className='summary'>
-          Order Summary nadp.
-        </GridColumn>
-      </GridRow>
-
-      <GridRow className='less-padding'>
-        <GridColumn width={8} className='description'>
-          sub total
-        </GridColumn>
-        <GridColumn width={8} className='right'>
-          cena
+          <FormattedMessage id='checkout.summary.orderSummary' defaultMessage='Order Summary' />
         </GridColumn>
       </GridRow>
       <GridRow className='less-padding'>
         <GridColumn width={8} className='description'>
-          freight
+          <FormattedMessage id='checkout.summary.subTotal' defaultMessage='Sub Total' />
         </GridColumn>
         <GridColumn width={8} className='right'>
-          cena
+          {priceComponent(subTotalPrice)}
+        </GridColumn>
+      </GridRow>
+      <GridRow className='less-padding'>
+        <GridColumn width={8} className='description'>
+          <FormattedMessage id='checkout.summary.freightCost' defaultMessage='Freight Cost' />
+        </GridColumn>
+        <GridColumn width={8} className='right'>
+          {priceComponent(freightPrice)}
         </GridColumn>
       </GridRow>
       <GridRow className='bottom-border'>
         <GridColumn width={8} className='description'>
-          estimated
+          <FormattedMessage id='checkout.summary.estimatedTax' defaultMessage='Estimated Tax' />
         </GridColumn>
         <GridColumn width={8} className='right'>
-          cena
+          -
         </GridColumn>
       </GridRow>
-
       <GridRow className='total'>
         <GridColumn width={8} className='total'>
-          Order total
+          <FormattedMessage id='checkout.summary.orderTotal' defaultMessage='Order Total' />
         </GridColumn>
         <GridColumn width={8} className='right bold'>
-          cena
+          {priceComponent(freightPrice ? freightPrice + subTotalPrice : '')}
         </GridColumn>
       </GridRow>
     </GridSummary>

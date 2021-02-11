@@ -1,28 +1,56 @@
-import { Grid, GridColumn, Modal, Divider, FormGroup, Segment, Sidebar, Dimmer, Loader, Form } from 'semantic-ui-react'
-import { Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
-import { Formik } from 'formik'
-import { bool, func, object } from 'prop-types'
+import { Grid, Modal } from 'semantic-ui-react'
 import styled from 'styled-components'
 
-export const CustomSegment = styled(Segment)`
-  background-color: #f8f9fb !important;
-  ${props =>
-  props.placeholder &&
-  `
-    > .grid > .divider:after {
-      height: 100% !important;
+export const ModalStyled = styled(Modal)`
+  &.ui.modal {
+    width: 100% !important;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+    .scrolling.content {
+      max-height: unset;
+      height: calc(100vh - 212px) !important;
     }
-  `}
+  
+    > .actions {
+      background: #fff;
+    }
+  }
 `
 
-export const ColumnSidebar = styled(Grid.Column)`
-  padding: 0px !important;
+export const GridStyled = styled(Grid)`
+  &.ui.grid {
+    max-width: 870px;
+    margin: 0 auto auto auto;
+    
+    > div.row {
+      padding: 7.5px 0;
+      
+      > div.column {
+        padding: 0 10px;
+      }
+    }
+  }
 `
 
-export const RowSidebar = styled(Grid.Row)`
-  padding: 0px !important;
+export const DivSectionHeader = styled.div`
+  margin: 12.5px 10px;
+  padding: 5px 11px;
+  width: 100%;
+  font-size: 14px;
+  color: #404040;
+  background-color: #edeef2;
 `
 
-export const RowSidebarAddress = styled(Grid.Row)`
-  padding-top: 0px !important;
+export const DivAddressWrapper = styled.div`
+  margin: -14px;
+  margin-top: -28px;
+  
+  > div.ui.segment {
+    border: none;
+    box-shadow: none;
+    background-color: #fff !important;
+  }
 `
