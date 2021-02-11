@@ -196,12 +196,14 @@ class UploadAttachment extends Component {
                   .catch(e => {
                     if (e.response.data.clientMessage) {
                       const docType = listDocumentTypes.find(x => x.value === parseInt(type))
-                      duplicateFiles.push({
-                        id: parseInt(e.response.data.exceptionMessage),
-                        name: files[j].name,
-                        documentType: { id: docType.value, name: docType.text },
-                        file: file
-                      })
+                      if (docType) {
+                        duplicateFiles.push({
+                          id: parseInt(e.response.data.exceptionMessage),
+                          name: files[j].name,
+                          documentType: {id: docType.value, name: docType.text},
+                          file: file
+                        })
+                      }
                     }
                     // ! ! onUploadFail(files[j].name)
                     resolve()

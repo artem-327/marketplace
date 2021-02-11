@@ -73,3 +73,20 @@ export const setPreferredLanguage = lang => ({
   type: AT.PROFILE_PREFERRED_LANGUAGE,
   payload: api.setPreferredLanguage(lang)
 })
+
+export function loadFile(attachment) {
+  return {
+    type: AT.PROFILE_LOAD_FILE,
+    payload: api.loadFile(attachment)
+  }
+}
+
+export const saveAvatarPicture = picture => ({
+  type: AT.PROFILE_SAVE_AVATAR_PICTURE,
+  payload: api.saveAvatarPicture(picture)
+})
+
+export const deleteAvatarPicture = () => ({
+  type: AT.PROFILE_DELETE_AVATAR_PICTURE,
+  payload: api.deleteAvatarPicture()
+})
