@@ -18,12 +18,6 @@ export default class ChatWidget extends Component {
     const { sidebars, isVerticalMoved } = this.props
 
     if (sidebars !== prevProps.sidebars || sidebars > 0 || isVerticalMoved !== prevProps.isVerticalMoved) {
-      //if (sidebars) chatWidget_hide()
-      //else chatWidget_showLabel()
-      console.log('sidebars')
-      console.log(sidebars)
-      console.log('isVerticalMoved')
-      console.log(isVerticalMoved)
       if (isVerticalMoved || (prevProps.isVerticalMoved && !isVerticalMoved)) chatWidget_setVerticalOffset(sidebars)
       else chatWidget_setHorizontalOffset(sidebars)
     }
