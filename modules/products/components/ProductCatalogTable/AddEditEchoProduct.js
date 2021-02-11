@@ -29,7 +29,8 @@ import {
   Icon,
   Dimmer,
   Loader,
-  Sidebar
+  Sidebar,
+  FormGroup
 } from 'semantic-ui-react'
 import TextareaAutosize from 'react-autosize-textarea'
 import { FieldArray, Field } from 'formik'
@@ -46,8 +47,44 @@ import confirm from '~/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { Required, Or } from '~/components/constants/layout'
 import { AttachmentManager } from '~/modules/attachments'
-import { UploadCloud } from 'react-feather'
+import { UploadCloud, ChevronDown } from 'react-feather'
 import ErrorFocus from '~/components/error-focus'
+//Components
+import BasicButton from '../../../../components/buttons/BasicButton'
+
+//Styles
+import { DimmerBottomSidebarOpend } from '../../../../styles/global.style-components'
+
+const SegmentCustomContent = styled(Segment)`
+  padding-top: 0px !important;
+  width: 900px !important;
+  padding: 30px !important;
+`
+
+const GridRowCustom = styled(GridRow)`
+  padding: 0px !important;
+`
+
+const DivIconChevronDown = styled.div`
+  align-self: center;
+  position: absolute;
+  right: 20px;
+  cursor: pointer;
+`
+
+const DivBottomSidebar = styled.div`
+  text-align: right;
+  z-index: 1;
+  padding: 10px 25px;
+  margin-top: 0px;
+  box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
+  background-color: #ffffff;
+`
+
+export const MenuCustom = styled(Menu)`
+  padding-left: 30px !important;
+  margin: 0 !important;
+`
 
 export const MyContainer = styled.div`
   margin: 0 15px 0 0;
@@ -61,12 +98,42 @@ export const MyContainer = styled.div`
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
-  background-color: #fbfbfb;
+  background-color: #ffffff !important;
   top: 80px !important;
   padding-bottom: 80px;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 1000 !important;
   text-align: left;
+  padding-bottom: 0px !important;
+
+  &.ui.visible.bottom.overlay.sidebar {
+    height: 89% !important;
+  }
+  .field {
+    font-size: 1em !important;
+    line-height: 1.29 !important;
+    font-weight: normal;
+    > label {
+      font-size: 1em !important;
+      color: #404040;
+    }
+    > textarea,
+    > .ui.input input,
+    > .ui.dropdown {
+      min-height: 32px;
+      font-size: 1em;
+      line-height: 1.29;
+      border: solid 1px #dee2e6;
+      background-color: #fdfdfd;
+      &.disabled {
+        opacity: 1;
+        color: #cecfd4;
+      }
+      > .default.text {
+        margin: 0 0 0 0.64285714em;
+      }
+    }
+  }
 `
 
 export const FlexTabs = styled.div`
@@ -88,6 +155,7 @@ export const FlexContent = styled.div`
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  align-self: center;
 `
 
 export const GraySegment = styled(Segment)`
@@ -95,7 +163,9 @@ export const GraySegment = styled(Segment)`
 `
 
 export const HighSegment = styled(Segment)`
-  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 1;
 `
 
 const CustomTextarea = styled(TextareaAutosize)`
@@ -711,7 +781,8 @@ class AddEditEchoProduct extends React.Component {
       closePopup,
       linkAttachment,
       listDocumentTypes,
-      datagrid
+      datagrid,
+      chatWidgetVerticalMoved
     } = this.props
 
     const { popupValues } = this.state
@@ -772,20 +843,54 @@ class AddEditEchoProduct extends React.Component {
       callback()
     } catch (err) {
       setSubmitting(false)
+    } finally {
+      chatWidgetVerticalMoved(false)
     }
   }
 
-  RowInput = ({ name, readOnly = false, id, defaultMessage, required }) => (
-    <GridRow>
-      <GridColumn width={6}>
-        <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
-      </GridColumn>
+  // RowInput = ({ name, readOnly = false, id, defaultMessage, required }) => (
+  //   <GridRow>
+  //     <GridColumn width={6}>
+  //       <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
+  //     </GridColumn>
 
-      <GridColumn width={10}>
-        <Input inputProps={{ readOnly: readOnly, id: name }} name={name} />
-      </GridColumn>
-    </GridRow>
-  )
+  //     <GridColumn width={10}>
+  //       <Input inputProps={{ readOnly: readOnly, id: name }} name={name} />
+  //     </GridColumn>
+  //   </GridRow>
+  // )
+
+  RowInput = ({
+    name,
+    id,
+    defaultMessage,
+    required = false,
+    placeholderId = 'global.enterValue',
+    readOnly = false
+  }) => {
+    const {
+      intl: { formatMessage }
+    } = this.props
+    return (
+      <Input
+        label={
+          <>
+            <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
+          </>
+        }
+        name={name}
+        inputProps={{
+          readOnly: readOnly,
+          id: name,
+          fluid: true,
+          placeholder: formatMessage({
+            id: placeholderId,
+            defaultMessage: ''
+          })
+        }}
+      />
+    )
+  }
 
   RowTextArea = ({ name, readOnly = false, id, defaultMessage }, formikProps) => (
     <GridRow>
@@ -1143,23 +1248,49 @@ class AddEditEchoProduct extends React.Component {
     const allCompanyOptions = uniqueArrayByKey(searchedCompany.concat(selectedCompanyOptions), 'key')
 
     return (
-      <Grid verticalAlign='middle'>
-        {this.RowInput({ name: 'name', id: 'global.productName', defaultMessage: 'Product Name', required: true })}
-        {this.RowInput({ name: 'code', id: 'global.productCode', defaultMessage: 'Product Code', required: true })}
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.productGroups' defaultMessage='Product Groups' />
-            <Required />
+      <Grid>
+        <GridRowCustom>
+          <GridColumn width={16}>
+            {this.RowInput({
+              name: 'name',
+              id: 'global.productName',
+              defaultMessage: 'Product Name',
+              required: true,
+              placeholderId: 'productCatalog.enterProductName'
+            })}
           </GridColumn>
-          <GridColumn width={10}>
+        </GridRowCustom>
+
+        <GridRowCustom>
+          <GridColumn width={8}>
+            {this.RowInput({
+              name: 'code',
+              id: 'global.productCode',
+              defaultMessage: 'Product Code',
+              required: true,
+              placeholderId: 'productCatalog.enterProductCode'
+            })}
+          </GridColumn>
+          <GridColumn width={8}>
             <FormikDropdown
               name='productGroup'
+              label={
+                <>
+                  <FormattedMessage id='global.productGroups' defaultMessage='Product Groups' />
+                  <Required />
+                </>
+              }
               options={allProductGroupsOptions}
               inputProps={{
                 loading: searchedProductGroupsLoading,
                 search: true,
                 icon: 'search',
+                fluid: true,
                 selection: true,
+                placeholder: formatMessage({
+                  id: 'global.typeToSearch',
+                  defaultMessage: 'Type to search'
+                }),
                 noResultsMessage: formatMessage({
                   id: 'global.startTypingToSearch',
                   defaultMessage: 'Start typing to begin search'
@@ -1169,21 +1300,29 @@ class AddEditEchoProduct extends React.Component {
               }}
             />
           </GridColumn>
-        </GridRow>
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.company' defaultMessage='Company' />
-            <Required />
-          </GridColumn>
-          <GridColumn width={10}>
+        </GridRowCustom>
+
+        <GridRowCustom>
+          <GridColumn width={8}>
             <FormikDropdown
               name='company'
               options={allCompanyOptions}
+              label={
+                <>
+                  <FormattedMessage id='global.company' defaultMessage='Company' />
+                  <Required />
+                </>
+              }
               inputProps={{
                 loading: searchedCompanyLoading,
                 search: true,
                 icon: 'search',
                 selection: true,
+                fluid: true,
+                placeholder: formatMessage({
+                  id: 'global.typeToSearch',
+                  defaultMessage: 'Type to search'
+                }),
                 noResultsMessage: formatMessage({
                   id: 'global.startTypingToSearch',
                   defaultMessage: 'Start typing to begin search'
@@ -1193,29 +1332,35 @@ class AddEditEchoProduct extends React.Component {
               }}
             />
           </GridColumn>
-        </GridRow>
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer' />
-          </GridColumn>
-          <GridColumn width={10}>
+
+          <GridColumn width={8}>
             <FormikDropdown
               name='manufacturer'
               options={searchedManufacturers}
+              label={
+                <>
+                  <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer' />
+                </>
+              }
               inputProps={{
                 'data-test': 'TODO new_inventory_manufacturer_drpdn',
                 size: 'large',
                 minCharacters: 0,
                 icon: 'search',
                 search: true,
+                fluid: true,
                 selection: true,
                 clearable: true,
+                placeholder: formatMessage({
+                  id: 'global.typeToSearch',
+                  defaultMessage: 'Type to search'
+                }),
                 loading: searchedManufacturersLoading,
                 onSearchChange: debounce((e, { searchQuery }) => searchManufacturers(searchQuery), 500)
               }}
             />
           </GridColumn>
-        </GridRow>
+        </GridRowCustom>
 
         {this.renderMixtures(formikProps)}
 
@@ -2158,7 +2303,8 @@ class AddEditEchoProduct extends React.Component {
       closePopup,
       intl: { formatMessage },
       isLoading,
-      datagrid
+      datagrid,
+      chatWidgetVerticalMoved
     } = this.props
 
     const { editTab } = this.state
@@ -2177,70 +2323,73 @@ class AddEditEchoProduct extends React.Component {
           this.formikProps = formikProps
 
           return (
-            <FlexSidebar
-              visible={true}
-              width='very wide'
-              style={{ width: '500px' }}
-              direction='right'
-              animation='overlay'>
-              <Dimmer inverted active={isLoading}>
-                <Loader />
-              </Dimmer>
-              <TabsWrapper>
+            <>
+              <DimmerBottomSidebarOpend
+                height='height: 11% !important;' // 89% height has Sidebar'
+                active={true}
+                onClickOutside={() => {
+                  closePopup()
+                  chatWidgetVerticalMoved(false)
+                }}
+                page></DimmerBottomSidebarOpend>
+              <FlexSidebar visible={true} width='very wide' direction='bottom' animation='overlay'>
+                <Dimmer inverted active={isLoading}>
+                  <Loader />
+                </Dimmer>
                 <HighSegment basic>
-                  <Menu pointing secondary>
+                  <MenuCustom pointing secondary>
                     {tabs.map((tab, i) => (
                       <Menu.Item onClick={() => this.tabChanged(i)} active={editTab === i}>
                         {formatMessage(tab.text)}
                       </Menu.Item>
                     ))}
-                  </Menu>
+                    <DivIconChevronDown
+                      onClick={() => {
+                        closePopup()
+                        chatWidgetVerticalMoved(false)
+                      }}>
+                      <ChevronDown />
+                    </DivIconChevronDown>
+                  </MenuCustom>
                 </HighSegment>
-              </TabsWrapper>
 
-              <FlexContent>
-                <Segment basic>{this.getContent(formikProps)}</Segment>
-              </FlexContent>
+                <FlexContent>
+                  <SegmentCustomContent basic>{this.getContent(formikProps)}</SegmentCustomContent>
+                </FlexContent>
 
-              <GraySegment basic style={{ position: 'relative', overflow: 'visible', margin: '0' }}>
-                <Grid>
-                  <GridRow>
-                    <GridColumnBtn computer={6} textAlign='left'>
-                      <Button
-                        size='large'
-                        inputProps={{ type: 'button' }}
-                        onClick={() => {
-                          if (this.state.changedAttachments) datagrid.loadData()
-                          closePopup()
-                        }}
-                        data-test='sidebar_inventory_cancel'>
-                        {Object.keys(touched).length || this.state.changedForm
-                          ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
-                          : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
-                      </Button>
-                    </GridColumnBtn>
-                    <GridColumnBtn computer={10} textAlign='right'>
-                      <Button.Submit
-                        disabled={!(Object.keys(touched).length || this.state.changedForm)}
-                        onClick={() =>
-                          validateForm().then(err => {
-                            if (Object.keys(err).length) {
-                              this.switchToErrors(Object.keys(err))
-                            }
-                          })
+                <DivBottomSidebar>
+                  <BasicButton
+                    noBorder
+                    inputProps={{ type: 'button' }}
+                    onClick={() => {
+                      if (this.state.changedAttachments) datagrid.loadData()
+                      closePopup()
+                    }}
+                    data-test='sidebar_inventory_cancel'>
+                    {Object.keys(touched).length || this.state.changedForm
+                      ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
+                      : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                  </BasicButton>
+
+                  <BasicButton
+                    disabled={!(Object.keys(touched).length || this.state.changedForm)}
+                    onClick={() =>
+                      validateForm().then(err => {
+                        if (Object.keys(err).length) {
+                          this.switchToErrors(Object.keys(err))
                         }
-                        primary
-                        size='large'
-                        inputProps={{ type: 'button' }}
-                        data-test='sidebar_inventory_save_new'>
-                        {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                      </Button.Submit>
-                    </GridColumnBtn>
-                  </GridRow>
-                </Grid>
-              </GraySegment>
-              <ErrorFocus />
-            </FlexSidebar>
+                      })
+                    }
+                    primary
+                    size='large'
+                    inputProps={{ type: 'button' }}
+                    data-test='sidebar_inventory_save_new'>
+                    {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                  </BasicButton>
+                </DivBottomSidebar>
+                <ErrorFocus />
+              </FlexSidebar>
+            </>
           )
         }}
       />

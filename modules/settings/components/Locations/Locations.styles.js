@@ -4,7 +4,6 @@ import { Segment, Form, Sidebar, Dimmer } from 'semantic-ui-react'
 export const SidebarFlex = styled(Sidebar)`
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
   top: 80px !important;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 1000 !important;
