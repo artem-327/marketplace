@@ -43,7 +43,16 @@ export const generateToastMarkup = (header, content) => (
     <div style={{ wordBreak: 'break-word' }}>{content}</div>
   </div>
 )
-
+/**
+ * Get safe value from any variable.
+ * @method
+ * @param {function} fn Callback returns value or throws error.
+ * @template T
+ * @param {T} [defaultValue=null] Default value is returned if the first parameter fails.
+ * @return {T | any} Returns value or default value.
+ * @example
+ * getSafe(() => europ.state.region.city.name, 'Default Name City')
+ */
 export const getSafe = (fn, defaultValue = null) => {
   try {
     let value = fn()

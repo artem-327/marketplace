@@ -61,7 +61,7 @@ import ProductSidebar from '../modules/inventory/my-products/components/ProductS
 import WantedSidebar from '../modules/wanted-board/listings/components/DetailSidebar'
 import UserEditSidebar from '../modules/settings/components/UserTable/UserEditSidebar/UserEditSidebar'
 import GuestSidebar from '../modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
-import WarehouseSidebar from '../modules/settings/components/Locations/PickUpLocationsTable/PickUpLocationsSidebar'
+import WarehouseSidebar from '../modules/settings/components/Locations/Warehouses/WarehousesSidebar/WarehousesSidebar'
 
 export const IconMinimize2 = styled(Minimize2)`
   text-align: center;

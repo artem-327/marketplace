@@ -20,7 +20,16 @@ const DatalistGroup = styled(FormGroup)`
 `
 
 const CustomSegment = styled(Segment)`
-  background-color: #f8f9fb !important;
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  ${({ noBorder }) =>
+    noBorder
+      ? `
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    padding: 0px !important;
+  `
+      : ''};
 `
 
 class AddressForm extends Component {
@@ -207,7 +216,10 @@ class AddressForm extends Component {
       required,
       searchEnabled,
       children,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      customHeader,
+      backgroundColor,
+      noBorder
     } = this.props
 
     let fields = this.asignPrefix()
@@ -226,12 +238,14 @@ class AddressForm extends Component {
               <option key={i} value={el} />
             ))}
         </datalist>
-        {displayHeader && (
-          <Header as='h3'>
-            <FormattedMessage id='global.address' defaultMessage='Address' />
-          </Header>
-        )}
-        <CustomSegment>
+        {customHeader
+          ? customHeader
+          : displayHeader && (
+              <Header as='h3'>
+                <FormattedMessage id='global.address' defaultMessage='Address' />
+              </Header>
+            )}
+        <CustomSegment noBorder={noBorder} bacgroundColor={backgroundColor}>
           {children}
           <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
             <Input
@@ -385,7 +399,9 @@ AddressForm.propTypes = {
   fixedCountries: array,
   handleChange: func,
   required: bool,
-  searchEnabled: bool
+  searchEnabled: bool,
+  customHeader: oneOfType([string, node]),
+  backgroundColor: string
 }
 
 AddressForm.defaultProps = {
@@ -423,7 +439,9 @@ AddressForm.defaultProps = {
   fixedCountries: [],
   handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!'),
   required: false,
-  searchEnabled: true
+  searchEnabled: true,
+  customHeader: '',
+  backgroundColor: '#f8f9fb !important'
 }
 
 export default injectIntl(AddressForm)

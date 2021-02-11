@@ -5,6 +5,7 @@ import ActionCell from '~/components/table/ActionCell'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { openSidebar, deleteBranch, getBranch, setPrimaryBranch } from '../../../actions'
+import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import { getIdentity } from '~/modules/auth/actions'
@@ -115,7 +116,8 @@ class BranchesTable extends Component {
       currentPrimaryBranchId,
       setPrimaryBranch,
       getIdentity,
-      isCompanyAdmin
+      isCompanyAdmin,
+      chatWidgetVerticalMoved
     } = this.props
 
     const { formatMessage } = intl
@@ -125,6 +127,7 @@ class BranchesTable extends Component {
         callback: row => {
           //getBranch(row.id)
           openSidebar(row.rawData)
+          chatWidgetVerticalMoved(true)
         }
       },
       {
@@ -171,7 +174,10 @@ class BranchesTable extends Component {
             row={row}
             getActions={this.getActions}
             content={row.addressName}
-            onContentClick={() => this.props.openSidebar(row.rawData)}
+            onContentClick={() => {
+              this.props.openSidebar(row.rawData)
+              this.props.chatWidgetVerticalMoved(true)
+            }}
           />
         )
       }
@@ -205,7 +211,8 @@ const mapDispatchToProps = {
   deleteBranch,
   getBranch,
   setPrimaryBranch,
-  getIdentity
+  getIdentity,
+  chatWidgetVerticalMoved
 }
 
 const mapStateToProps = (state, { datagrid }) => {

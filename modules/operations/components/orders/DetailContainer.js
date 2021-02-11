@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import Detail from './Detail'
 import * as Actions from '../../actions'
-import * as OrdersHelper from '~/components/helpers/Orders'
+import * as OrdersHelper from '../../../../components/helpers/Orders'
 import moment from 'moment/moment'
 import { getSafe, getFormattedAddress } from '~/utils/functions'
 import { FormattedNumber } from 'react-intl'

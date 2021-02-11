@@ -1,6 +1,11 @@
 import { Component } from 'react'
 
-import { chatWidget_hide, chatWidget_showLabel, chatWidget_setHorizontalOffset } from './chatWidgetFunctions'
+import {
+  chatWidget_hide,
+  chatWidget_showLabel,
+  chatWidget_setHorizontalOffset,
+  chatWidget_setVerticalOffset
+} from './chatWidgetFunctions'
 
 export default class ChatWidget extends Component {
   componentDidMount() {
@@ -10,12 +15,17 @@ export default class ChatWidget extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { sidebars } = this.props
+    const { sidebars, isVerticalMoved } = this.props
 
-    if (sidebars !== prevProps.sidebars || sidebars > 0) {
+    if (sidebars !== prevProps.sidebars || sidebars > 0 || isVerticalMoved !== prevProps.isVerticalMoved) {
       //if (sidebars) chatWidget_hide()
       //else chatWidget_showLabel()
-      chatWidget_setHorizontalOffset(sidebars)
+      console.log('sidebars')
+      console.log(sidebars)
+      console.log('isVerticalMoved')
+      console.log(isVerticalMoved)
+      if (isVerticalMoved || (prevProps.isVerticalMoved && !isVerticalMoved)) chatWidget_setVerticalOffset(sidebars)
+      else chatWidget_setHorizontalOffset(sidebars)
     }
   }
 

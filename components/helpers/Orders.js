@@ -129,7 +129,12 @@ export function getCreditStatus(creditStatus) {
       return 'N/A'
   }
 }
-
+/**
+ * Returns string of status or null.
+ * @method
+ * @param {number} returnStatus
+ * @returns {'Not Shipped' | 'In Transit' | 'Delivered' | null}
+ */
 export function getReturnStatus(returnStatus) {
   switch (returnStatus) {
     case 1:
@@ -139,6 +144,6 @@ export function getReturnStatus(returnStatus) {
     case 3:
       return 'Delivered'
     default:
-      return 'N/A'
+      return null
   }
 }
