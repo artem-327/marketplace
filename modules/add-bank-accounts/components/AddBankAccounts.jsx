@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
-import { Grid } from 'semantic-ui-react'
+import { Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { usePlaidLink } from 'react-plaid-link'
 import { withToastManager } from 'react-toast-notifications'
@@ -12,7 +12,10 @@ import ErrorPage from '../../errors'
 import { getVellociToken, addVellociAcount, onEventVelloci, getVellociBusinessId } from '../actions'
 //Services
 import { getSafe, generateToastMarkup } from '../../../utils/functions'
-
+/**
+ * @category Velloci - bank-accounts
+ * @component
+ */
 const AddBankAccounts = ({
   getVellociToken,
   getVellociBusinessId,
@@ -72,7 +75,13 @@ const AddBankAccounts = ({
   if ((!vellociToken && !vellociBusinessId && !loading) || error) {
     return <ErrorPage type='forbidden' status='403' logout />
   } else {
-    return <Grid verticalAlign='middle' centered></Grid>
+    return (
+      <Grid verticalAlign='middle' centered>
+        <Dimmer active={loading} inverted>
+          <Loader size='large' />
+        </Dimmer>
+      </Grid>
+    )
   }
 }
 

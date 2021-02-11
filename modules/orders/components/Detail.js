@@ -1003,7 +1003,8 @@ class Detail extends Component {
                         </List.Description>
                       </List.Content>
                     </List.Item>
-                    {order.creditStatus && (
+                    {/* Commented based on https://bluepallet.atlassian.net/browse/DT-144 */}
+                    {false && order.creditStatus && (
                       <List.Item>
                         <List.Content>
                           <List.Header as='label'>

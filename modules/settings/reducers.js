@@ -139,7 +139,9 @@ export const initialState = {
   isHideInactiveAccounts: false,
   institutId: null,
   isLoadingAddedAccounts: false,
-  isLoadingModal: false
+  isLoadingModal: false,
+  heightSidebar: null,
+  attachmentFiles: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -1690,6 +1692,82 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isLoadingModal: false
+      }
+    }
+
+    /* PUT_WAREHOUSE_EDIT_POPUP */
+
+    case AT.PUT_WAREHOUSE_EDIT_POPUP_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.PUT_WAREHOUSE_EDIT_POPUP_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.PUT_WAREHOUSE_EDIT_POPUP_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* ATTACHMENT_LINKS_TO_BRANCH */
+
+    case AT.ATTACHMENT_LINKS_TO_BRANCH_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.ATTACHMENT_LINKS_TO_BRANCH_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.ATTACHMENT_LINKS_TO_BRANCH_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* POST_NEW_WAREHOUSE_REQUEST */
+
+    case AT.POST_NEW_WAREHOUSE_REQUEST_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.POST_NEW_WAREHOUSE_REQUEST_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.POST_NEW_WAREHOUSE_REQUEST_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.SET_ATTACHMENT_FILES: {
+      return {
+        ...state,
+        attachmentFiles: payload
       }
     }
 

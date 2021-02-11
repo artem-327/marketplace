@@ -11,7 +11,7 @@ export const TopMenu = styled(Menu)`
   bottom: 0;
   left: 240px !important;
   border: 0 none !important;
-
+  z-index: 1 !important;
   &.ui.menu.fixed .item-cart {
     padding: 20px 14px;
 
@@ -30,7 +30,7 @@ export const TopMenu = styled(Menu)`
     background: #edeef2 !important;
     background-clip: content-box !important;
     text-align: center;
-
+    z-index: 100;
     /*&:before {
       content: '';
       position: absolute;
@@ -134,24 +134,22 @@ export const TopMenu = styled(Menu)`
 export const TopMenuContainer = styled(Container)`
   width: 100% !important;
   padding: 0 30px;
-  
+
   .menu.right {
-  
     > a {
-    
       > i.icons {
         width: 40px;
         height: 40px;
         margin: -9px;
         border-radius: 50%;
         padding: 9px;
-        
+
         svg {
           width: 22px;
           height: 22px;
         }
       }
-      
+
       &:hover > i.icons {
         background: #edeef2;
       }
@@ -396,7 +394,7 @@ export const LeftMenu = styled(Menu)`
       text-transform: none;
       white-space: nowrap;
       font-weight: 400 !important;
-      
+
       svg {
         color: #cecfd4;
       }
@@ -409,7 +407,6 @@ export const LeftMenu = styled(Menu)`
       &:hover svg {
         color: #20273a !important;
       }
-      
 
       &.active {
         background: #edeef2 !important;
@@ -465,7 +462,7 @@ export const LeftMenu = styled(Menu)`
       text-align: left;
       color: #20273a !important;
       line-height: 20px;
-      
+
       &:before,
       &:after {
         content: none !important;
@@ -478,7 +475,7 @@ export const LeftMenu = styled(Menu)`
       &.dropdown {
         box-sizing: border-box;
         width: 220px;
-        
+
         > .text {
           text-transform: none !important;
           font-size: 14px !important;
@@ -648,7 +645,7 @@ export const LeftMenu = styled(Menu)`
           width: 20px !important;
           height: 20px;
         }
-        
+
         > svg {
           position: absolute !important;
           top: 11px;
@@ -671,7 +668,7 @@ export const LeftMenu = styled(Menu)`
         > .text {
           color: #20273a !important;
         }
-        
+
         > .text ~ i,
         > .text ~ svg {
           color: #cecfd4 !important;
@@ -798,13 +795,11 @@ export const LeftMenu = styled(Menu)`
       .flex-wrapper > a.item {
         width: 50px !important;
       }
-      
+
       .container,
       .flex-wrapper,
       .flex-wrapper > .scrollbar-container {
-      
         > .item {
-        
           i,
           svg {
             left: 16px;
@@ -827,11 +822,9 @@ export const LeftMenu = styled(Menu)`
         .ui.form {
           min-height: 100px;
         }
-        
+
         .item.dropdown {
-        
           > .text {
-            
             > svg {
               display: none !important;
             }
@@ -858,7 +851,7 @@ export const LeftMenu = styled(Menu)`
             border-top-right-radius: 4px;
             padding: 11px 28px 11px 44px;
             background: #edeef2;
-            
+
             > svg {
               display: block !important;
             }
@@ -1043,7 +1036,7 @@ export const CopyrightContainer = styled(Container)`
   font-weight: 400;
   color: #848893;
   line-height: 14px;
-  
+
   .show-cop > & {
     height: 60px;
     padding: 23px 0;
@@ -1153,17 +1146,16 @@ export const CustomSpanReturn = styled.span`
 export const GlobalSidebars = styled.div`
   .bottom-buttons .ui.button,
   .bottom-buttons .ui.large.button,
-  .bottom-buttons .ui.large.primary.button
-  .bottom-buttons .ui.primary.button {
+  .bottom-buttons .ui.large.primary.button .bottom-buttons .ui.primary.button {
     border: solid 1px #dee2e6 !important;
     background-color: #ffffff !important;
     color: #20273a !important;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-    
+
     &:hover {
-      background-color: #f8f9fb !important
+      background-color: #f8f9fb !important;
     }
-    
+
     &.disabled {
       background-color: #ffffff !important;
       color: #cecfd4 !important;

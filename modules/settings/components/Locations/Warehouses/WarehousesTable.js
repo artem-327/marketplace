@@ -13,6 +13,8 @@ import { getSafe } from '~/utils/functions'
 
 import confirm from '~/components/Confirmable/confirm'
 import { FormattedPhone } from '~/components/formatted-messages/'
+//Actions
+import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 
 import styled from 'styled-components'
 const DivIcons = styled.div`
@@ -24,7 +26,7 @@ const DivIcons = styled.div`
   margin-left: 10px !important;
 `
 
-class PickUpLocationsTable extends Component {
+class WarehousesTable extends Component {
   constructor(props) {
     super(props)
 
@@ -148,7 +150,7 @@ class PickUpLocationsTable extends Component {
   }
 
   getActions = () => {
-    const { openSidebar, deleteBranch, intl, datagrid } = this.props
+    const { openSidebar, deleteBranch, intl, datagrid, chatWidgetVerticalMoved } = this.props
 
     const { formatMessage } = intl
     return [
@@ -156,6 +158,7 @@ class PickUpLocationsTable extends Component {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
         callback: row => {
           const indexTabofSidebar = 0
+          chatWidgetVerticalMoved(true)
           getBranch(row.id)
           openSidebar(row.rawData, indexTabofSidebar)
         }
@@ -164,6 +167,7 @@ class PickUpLocationsTable extends Component {
         text: formatMessage({ id: 'global.certificates', defaultMessage: 'Certificates' }),
         callback: row => {
           const indexTabofSidebar = 1
+          chatWidgetVerticalMoved(true)
           getBranch(row.id)
           openSidebar(row.rawData, indexTabofSidebar)
         }
@@ -215,7 +219,8 @@ class PickUpLocationsTable extends Component {
 const mapDispatchToProps = {
   openSidebar,
   deleteBranch,
-  getBranch
+  getBranch,
+  chatWidgetVerticalMoved
 }
 
 const mapStateToProps = (state, { datagrid }) => {
@@ -242,6 +247,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(
-  connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(PickUpLocationsTable)))
-)
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(WarehousesTable))))
