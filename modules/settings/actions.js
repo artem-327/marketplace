@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 import api from './api'
-import { Datagrid } from '~/modules/datagrid'
+import { Datagrid } from '../datagrid'
 
 export const removeEmpty = obj =>
   Object.entries(obj).forEach(([key, val]) => {
@@ -332,9 +332,11 @@ export function putEditWarehouse(payload, id, attachmentFiles) {
           payload: api.attachmentLinksToBranch(attachment.id, id)
         })
       })
+      Datagrid.loadDate()
+    } else {
+      Datagrid.updateRow(id, () => response)
     }
     dispatch(closeSidebar())
-    Datagrid.updateRow(id, () => response)
   }
 }
 
@@ -1298,5 +1300,12 @@ export function openUserSettingsModal(id) {
   return {
     type: AT.GET_COMPANY_USER,
     payload: api.getCompanyUser(id)
+  }
+}
+
+export function setAttachmentFiles(attachmentFiles) {
+  return {
+    type: AT.SET_ATTACHMENT_FILES,
+    payload: attachmentFiles
   }
 }

@@ -35,7 +35,7 @@ function mapStateToProps(state) {
 
     if (
       getSafe(() => state.companyProductInfo.isOpen, false) ||
-      getSafe(() => state.settings.isOpenSidebar, false) ||
+      (getSafe(() => state.settings.isOpenSidebar, false) && !getSafe(() => state.chatWidget.isVerticalMoved, false)) ||
       getSafe(() => state.cart.sidebar.isOpen, false) ||
       getSafe(() => state.companyProductInfo.isOpen, false) ||
       getSafe(() => state.companiesAdmin.isOpenSidebar, false) ||
@@ -51,7 +51,12 @@ function mapStateToProps(state) {
       openGlobalAddFormName === 'my-account-locations'
     )
       return 630
-
+    // Sidebar in My Account - Locations - Branches scroll-up from bottom to up and has 89% height of page.
+    if (getSafe(() => state.settings.isOpenSidebar, false) && getSafe(() => state.chatWidget.isVerticalMoved, false)) {
+      if (typeof window !== 'undefined' && window.innerHeight) {
+        return window.innerHeight * 0.9 // Height of Sidebar is 89% height of page
+      }
+    }
     return 0
   }
 

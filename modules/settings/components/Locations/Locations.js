@@ -16,10 +16,10 @@ import TopMenu from './TopMenu'
 import TablesHandlers from './TablesHandlers'
 import Tutorial from '~/modules/tutorial/Tutorial'
 
-import PickUpLocationsTable from './PickUpLocationsTable/PickUpLocationsTable'
-import BranchesTable from './BranchesTable/BranchesTable'
-import PickUpLocationsSidebar from './PickUpLocationsTable/PickUpLocationsSidebar'
-import BranchesSidebar from './BranchesTable/BranchesSidebar'
+import WarehousesTable from './Warehouses/WarehousesTable'
+import BranchesTable from './Branches/BranchesTable'
+import PickUpLocationsSidebar from './Warehouses/WarehousesSidebar/WarehousesSidebar'
+import BranchesSidebar from './Branches/BranchesSidebar/BranchesSidebar'
 import DeliveryLocationsTable from './DeliveryLocationsTable/DeliveryLocationsTable'
 import DeliveryLocationsSidebar from './DeliveryLocationsTable/DeliveryLocationsSidebar'
 
@@ -81,7 +81,7 @@ class Locations extends Component {
 
     const tables = {
       'delivery-locations': <DeliveryLocationsTable />,
-      'pick-up-locations': <PickUpLocationsTable />,
+      'pick-up-locations': <WarehousesTable />,
       branches: <BranchesTable />
     }
 
