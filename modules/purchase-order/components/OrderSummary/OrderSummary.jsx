@@ -8,24 +8,18 @@ import { GridColumn, GridRow, Button } from 'semantic-ui-react'
 import { currency } from '~/constants/index'
 
 //Components
-//
-
 
 //Hooks
 //import { usePrevious } from '../../../hooks'
 
-
-
 //Services
-//import ErrorFocus from '../../../components/error-focus'
-import {
-  GridSummary
-} from './OrderSummary.styles'
+import { GridSummary, LinkLabel } from './OrderSummary.styles'
 
 const OrderSummary = props => {
   const {
     buttonText,
-    onButtonClick
+    onButtonClick,
+    allAccepted
   } = props
 
   const priceComponent = val => (
@@ -40,8 +34,6 @@ const OrderSummary = props => {
         />
       ) : '-'
   )
-
-  console.log('!!!!!!!!!! aaaaa props', props)
 
   const subTotalPrice = getSafe(() => props.cart.cfPriceSubtotal, '')
   const freightPrice = getSafe(() => props.sectionState.freight.value.estimatedPrice, '')
@@ -60,10 +52,40 @@ const OrderSummary = props => {
       </GridRow>
       <GridRow className='bottom-border small-text'>
         <GridColumn>
-          links
+          {!allAccepted
+            ? (
+              <FormattedMessage
+                id='checkout.summary.byPlacingYourOrder'
+                defaultMessage='By placing your order, you agree to Echosystem’s Privacy Policy and Conditions of use}.'
+                values={{
+                  privacyPolicy: (
+                    <LinkLabel  href='https://www.google.com/search?q=PrivacyPolicy' target='_blank'>
+                      <FormattedMessage
+                        id='checkout.summary.privacyPolicy'
+                        defaultMessage='Privacy Policy'
+                      />
+                    </LinkLabel>
+                  ),
+                  conditionsOfUse: (
+                    <LinkLabel  href='https://www.google.com/search?q=ConditionsOfUse' target='_blank'>
+                      <FormattedMessage
+                        id='checkout.summary.conditionsOfUse'
+                        defaultMessage='Conditions Of Use'
+                      />
+                    </LinkLabel>
+                  ),
+                }}
+              />
+            ) : (
+              <FormattedMessage
+                id='checkout.summary.continueToFinish'
+                defaultMessage='Continue to step 4 to finish checking out.'
+                values={{ value: (<b><FormattedMessage id='checkout.summary.step4' defaultMessage='step 4' /></b>) }}
+              />
+            )
+          }
         </GridColumn>
       </GridRow>
-
       <GridRow className='bottom-border'>
         <GridColumn className='summary'>
           <FormattedMessage id='checkout.summary.orderSummary' defaultMessage='Order Summary' />

@@ -21,6 +21,7 @@ export const GridSummary = styled(Grid)`
       
       &.small-text {
         font-size: 11px;
+        line-height: 1.45;
         color: #20273a;
         padding-top: 0;
         padding-bottom: 11px;
@@ -59,4 +60,8 @@ export const GridSummary = styled(Grid)`
       }
     }
   }
+`
+
+export const LinkLabel = styled.a`
+  color: #2599d5;
 `

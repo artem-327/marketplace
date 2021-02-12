@@ -11,7 +11,7 @@ const TmpBoth = props => {
 
   }, [])
 
-  const showOld = 0
+  const showOld = 1
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: showOld ? '1fr 1fr' : '' }}>

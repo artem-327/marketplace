@@ -7,21 +7,7 @@ import { getSafe } from "~/utils/functions"
 import { currency } from '~/constants/index'
 
 //Components
-import {
-  Container as SemanticContainer,
-  Image,
-  Header,
-  Button,
-  Icon,
-  Grid,
-  GridColumn,
-  GridRow,
-  Segment,
-  Popup,
-  Message,
-  Divider,
-  Radio
-} from 'semantic-ui-react'
+import { GridColumn, Radio } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
   DivSectionCollapsedWrapper,
@@ -33,7 +19,7 @@ import {
   GridRowExpandedSelectionRow,
   DivFlexRow,
   DivCentered,
-  DivRightSection,
+  DivTopPadding,
   DivSectionSmallHeader
 } from '../Checkout.styles'
 import moment from 'moment'
@@ -41,24 +27,19 @@ import moment from 'moment'
 //Hooks
 import { usePrevious } from "../../../../hooks"
 
-//Services
-//import ErrorFocus from '../../../components/error-focus'
-//import {
-//} from './Checkout.services'
-
 const FreightSelection = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded  = usePrevious(props.isExpanded)
-  const [edited, setEdited] = useState(false)
 
   const {
     isExpanded,
+    allAccepted,
     sectionState,
-    onChangeSubmitButton,
-    setSectionSubmitValue,
     shippingQuotes,
     onValueChange,
-    value
+    setSummaryButtonCaption,
+    value,
+    orderTotal
   } = props
 
   // Similar to call componentDidMount:
@@ -70,29 +51,16 @@ const FreightSelection = props => {
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
   useEffect(() => {
-
-
     if (isExpanded && !prevIsExpanded) {
-      onChangeSubmitButton({
-        caption: (
-          <FormattedMessage id='checkout.button.useThisFreight' defaultMessage='Use this Freight'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        submitFunction: (val) => props.onSubmitClick(val)
-      })
-      setSectionSubmitValue(props.value)
+      setSummaryButtonCaption(
+        <FormattedMessage id='checkout.button.useThisFreight' defaultMessage='Use this Freight'>
+          {text => text}
+        </FormattedMessage>
+      )
     }
   }, [isExpanded])
 
-
-  //console.log('!!!!!!!!!! render FreightSelection', cartItems)
-  //console.log('!!!!!!!!!! render props', props)
-
   const freightOptions = getSafe(() => shippingQuotes.rates, [])
-
-  console.log('!!!!!!!!!! aaaaa shippingQuotes', shippingQuotes)
-  console.log('!!!!!!!!!! aaaaa freightOptions', freightOptions)
 
   return (
     <RowComponent
@@ -102,10 +70,16 @@ const FreightSelection = props => {
         console.log('!!!!!!!!!! Freight Selection onSubmitClick')
         props.onSubmitClick()
       }}
-      submitButtonCaption={
-        <FormattedMessage id='checkout.button.useThisFreight' defaultMessage='Use this Freight'>
-          {text => text}
-        </FormattedMessage>
+      submitButtonCaption={allAccepted
+        ? (
+          <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
+            {text => text}
+          </FormattedMessage>
+        ) : (
+          <FormattedMessage id='checkout.button.useThisFreight' defaultMessage='Use this Freight'>
+            {text => text}
+          </FormattedMessage>
+        )
       }
       submitButtonDisabled={!value}
       content={
@@ -195,6 +169,30 @@ const FreightSelection = props => {
                 </DivSectionCollapsedWrapper>
               )
           ) : null
+      }
+
+      bottomLeftContent={allAccepted
+        ? (
+          <DivTopPadding>
+            <FormattedMessage
+              id='checkout.summary.orderTotalValue'
+              defaultMessage={`Order Total: ${orderTotal}`}
+              values={{
+                value: (
+                  <b>
+                    <FormattedNumber
+                      minimumFractionDigits={2}
+                      maximumFractionDigits={2}
+                      style='currency'
+                      currency={currency}
+                      value={orderTotal}
+                    />
+                  </b>
+                )
+              }}
+            />
+          </DivTopPadding>
+          ) : ''
       }
     />
   )

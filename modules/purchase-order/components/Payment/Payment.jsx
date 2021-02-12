@@ -32,12 +32,11 @@ const Payment = props => {
   const prevIsExpanded  = usePrevious(props.isExpanded)
 
   const {
-    id, // temporary
     isExpanded,
+    allAccepted,
     sectionState,
-    onChangeSubmitButton,
-    setSectionSubmitValue,
     onValueChange,
+    setSummaryButtonCaption,
     payments,
     value
   } = props
@@ -51,18 +50,12 @@ const Payment = props => {
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
   useEffect(() => {
-
-
     if (isExpanded && !prevIsExpanded) {
-      onChangeSubmitButton({
-        caption: (
-          <FormattedMessage id='checkout.button.useThisPaymentMethod' defaultMessage='Use this Payment Method'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        submitFunction: (val) => props.onSubmitClick(val)
-      })
-      setSectionSubmitValue(props.value)
+      setSummaryButtonCaption(
+        <FormattedMessage id='checkout.button.useThisPaymentMethod' defaultMessage='Use this Payment Method'>
+          {text => text}
+        </FormattedMessage>
+      )
     }
   }, [isExpanded])
 
@@ -73,10 +66,16 @@ const Payment = props => {
       {...props}
       header={<FormattedMessage id='checkout.header.payment' defaultMessage='3. Payment'/>}
       onSubmitClick={() => props.onSubmitClick()}
-      submitButtonCaption={
-        <FormattedMessage id='checkout.button.useThisPaymentMethod' defaultMessage='Use this Payment Method'>
-          {text => text}
-        </FormattedMessage>
+      submitButtonCaption={allAccepted
+        ? (
+          <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
+            {text => text}
+          </FormattedMessage>
+        ) : (
+          <FormattedMessage id='checkout.button.useThisPaymentMethod' defaultMessage='Use this Payment Method'>
+            {text => text}
+          </FormattedMessage>
+        )
       }
       submitButtonDisabled={!value}
       content={

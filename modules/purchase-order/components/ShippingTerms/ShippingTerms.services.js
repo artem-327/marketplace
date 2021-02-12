@@ -30,7 +30,7 @@ const getFullAddress = address => {
  * @param {object} props - {hasLogo, useCompanyLogo, getCompanyLogo, companyId}
  * @return none
  */
-export const getAddressOptions = (addresses, searchValue) => {
+export const getAddressOptions = addresses => {
   return addresses.map(val => {
 
     const address = val.warehouse
@@ -50,7 +50,8 @@ export const getAddressOptions = (addresses, searchValue) => {
       name,
       description: getFullAddress(address),
       fullAddress: val.warehouse ? val.deliveryAddress : val,
-      warehouse: val.warehouse
+      warehouse: val.warehouse,
+      taxId: val.taxId
     })}
   )
 }

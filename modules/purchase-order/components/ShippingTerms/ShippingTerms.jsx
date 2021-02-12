@@ -61,6 +61,7 @@ import { usePrevious } from "../../../../hooks"
 import {
   getAddressOptions
 } from './ShippingTerms.services'
+import {getDeliveryAddresses, getWarehouses} from "../../actions";
 
 const ShippingTerms = props => {
   // Stores previos values for compating with current value
@@ -73,12 +74,11 @@ const ShippingTerms = props => {
 
   const {
     isExpanded,
+    allAccepted,
     sectionState,
-    onChangeSubmitButton,
-    setSectionSubmitValue,
     onValueChange,
-    value,
-    cart
+    setSummaryButtonCaption,
+    value
   } = props
 
   // Similar to call componentDidMount:
@@ -90,18 +90,12 @@ const ShippingTerms = props => {
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
   useEffect(() => {
-
-
     if (isExpanded && !prevIsExpanded) {
-      onChangeSubmitButton({
-        caption: (
-          <FormattedMessage id='checkout.button.useThisAddress' defaultMessage='Use this Address'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        submitFunction: (val) => props.onSubmitClick(val)
-      })
-      setSectionSubmitValue(props.value)
+      setSummaryButtonCaption(
+        <FormattedMessage id='checkout.button.useThisAddress' defaultMessage='Use this Address'>
+          {text => text}
+        </FormattedMessage>
+      )
     }
   }, [isExpanded])
 
@@ -114,10 +108,16 @@ const ShippingTerms = props => {
       {...props}
       header={<FormattedMessage id='checkout.header.shippingAndTerms' defaultMessage='2. Shipping & Terms'/>}
       onSubmitClick={() => props.onSubmitClick()}
-      submitButtonCaption={
-        <FormattedMessage id='checkout.button.useThisAddress' defaultMessage='Use this Address'>
-          {text => text}
-        </FormattedMessage>
+      submitButtonCaption={allAccepted
+        ? (
+          <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
+            {text => text}
+          </FormattedMessage>
+        ) : (
+          <FormattedMessage id='checkout.button.useThisAddress' defaultMessage='Use this Address'>
+            {text => text}
+          </FormattedMessage>
+        )
       }
       submitButtonDisabled={!value}
       content={
@@ -159,7 +159,7 @@ const ShippingTerms = props => {
                               <IconEdit
                                 size={18}
                                 onClick={() => {
-                                  setAddAddressValues(item.fullAddress)
+                                  setAddAddressValues(item)
                                   setIsOpenAddAddress(true)
                                 }}
                               />
@@ -184,7 +184,18 @@ const ShippingTerms = props => {
                   </DivRightButtons>
                   {isOpenAddAddress && (
                     <AddAddress
-                      isWarehouse
+                      {...props}
+                      onUpdateAddress={value => {
+                        console.log('!!!!!!!!!! onUpdateAddress value', value)
+                        onValueChange(getAddressOptions([value])[0])
+                        try {
+                          props.getDeliveryAddresses()
+                          props.getWarehouses()
+                        } catch (e) {
+                          console.error(e)
+                        }
+                      }}
+                      isWarehouse={warehouseAddressSwitch === 'warehouses'}
                       popupValues={addAddressValues}
                       onClose={() => setIsOpenAddAddress(false)}
                     />

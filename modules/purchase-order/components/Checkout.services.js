@@ -18,25 +18,73 @@ export const findSectionToOpen = (sectionState) => {
   }
 }
 
+export const checkAllAccepted = sectionState => (
+  sectionState.review.accepted && sectionState.shipping.accepted
+  && sectionState.payment.accepted && sectionState.freight.accepted
+)
+
+export const confirmSection = ({
+  openSection,
+  setOpenSection,
+  sectionState,
+  setSectionState
+}) => {
+  if (openSection) {
+
+    const newSectionState = {
+      ...sectionState,
+      [openSection]: {
+        ...sectionState[openSection],
+        accepted: true
+      }
+    }
+    const sectionToOpen = findSectionToOpen(newSectionState)
+    setSectionState(newSectionState)
+    setOpenSection(sectionToOpen)
+  }
+}
+
+export const submitButton = (props, state) => {
+  const {
+    allAccepted,
+    openSection,
+    setOpenSection,
+    sectionState,
+    setSectionState,
+    setSummaryButtonCaption
+  } = state
+
+  if (sectionState[openSection] && sectionState[openSection].value || allAccepted) {
+    if (allAccepted) {
+      console.log('!!!!!!!!!! submitButton allAccepted')
+      handleSubmitOrder(props, state)
+    } else {
+      console.log('!!!!!!!!!! submitButton !allAccepted')
+      if (openSection === 'review') submitUpdateCartItem(props, state)
+      else confirmSection(state)
+    }
+  }
+}
+
 /**
  * @param {string} name
  * // ! ! ...
  *
  * @return object Default component attributes and event handlings (isExpanded, onButtonClick, onChangeButtonClick, etc.)
  */
-export const getComponentParameters = ({
-  name,
-  openSection,
-  setOpenSection,
-  sectionState,
-  setSectionState,
-  setSummaryButtonCaption,
-  setSummarySubmitFunction,
-  setSectionSubmitValue
-}) => {
+export const getComponentParameters = (props, state) => {
+  const {
+    name,
+    allAccepted,
+    openSection,
+    setOpenSection,
+    sectionState,
+    setSectionState,
+    setSummaryButtonCaption
+  } = state
 
   return {
-    id: name, // ! ! temporary
+    id: name,
     isExpanded: openSection === name,
     sectionState: sectionState[name],
     onChangeButtonClick: () => setOpenSection(name),
@@ -44,32 +92,16 @@ export const getComponentParameters = ({
       const sectionToOpen = findSectionToOpen(sectionState)
       setOpenSection(sectionToOpen)
     },
-    onSubmitClick: () => {
-      if (name) {
-
-        const newSectionState = {
-          ...sectionState,
-          [name]: {
-            ...sectionState[name],
-            accepted: true
-          }
-        }
-        const sectionToOpen = findSectionToOpen(newSectionState)
-        setSectionState(newSectionState)
-        setOpenSection(sectionToOpen)
-      }
-    },
-    onChangeSubmitButton: value => {
-      setSummaryButtonCaption(value.caption)
-      setSummarySubmitFunction(() => value.submitFunction)
-    },
-    value: name && sectionState[name] ? sectionState[name].value : null,
-    setSectionSubmitValue: (val) => setSectionSubmitValue(val)
+    onSubmitClick: () => submitButton(props, state),
+    setSummaryButtonCaption,
+    allAccepted,
+    value: sectionState[name].value
   }
 }
 
-export const submitUpdateCartItem = async (props, sectionState, setSectionState, setOpenSection) => {
+export const submitUpdateCartItem = async (props, state) => {
   const { cartItems, updateCartItem } = props
+  const { sectionState, setSectionState, setOpenSection } = state
 
   if (sectionState.review.value) {
     await sectionState.review.value.reduce(async (acc, val, index) => {
@@ -83,32 +115,7 @@ export const submitUpdateCartItem = async (props, sectionState, setSectionState,
       }
     }, undefined)
   }
-
-  const newSectionState = {
-    ...sectionState,
-    review: {
-      ...sectionState.review,
-      accepted: true
-    }
-  }
-  const sectionToOpen = findSectionToOpen(newSectionState)
-  setSectionState(newSectionState)
-  setOpenSection(sectionToOpen)
-}
-
-export const handleSummarySubmit = async (
-  summarySubmitFunction,
-  props,
-  sectionState,
-  setSectionState,
-  setOpenSection,
-  openSection
-) => {
-  if (openSection === 'review') {
-    submitUpdateCartItem(props, sectionState, setSectionState, setOpenSection)
-  } else {
-    summarySubmitFunction(sectionState)
-  }
+  confirmSection(state)
 }
 
 export const getShippingQuotes = async (props, countryId, zip) => {
@@ -119,12 +126,14 @@ export const getShippingQuotes = async (props, countryId, zip) => {
   }
 }
 
-export const handleSubmitOrder = async (values, props) => {
-  const warehouse = values.shipping.value.warehouse
-  const freightType = values.freight.value.freightType
+export const handleSubmitOrder = async (props, state) => {
+  const { sectionState } = state
+
+  const warehouse = sectionState.shipping.value.warehouse
+  const freightType = sectionState.freight.value.freightType
   let data = {
-    ...(warehouse ? { warehouseId: values.shipping.value.id } : { deliveryAddressId: values.shipping.value.id }),
-    bankAccountId: values.payment.value,
+    ...(warehouse ? { warehouseId: sectionState.shipping.value.id } : { deliveryAddressId: sectionState.shipping.value.id }),
+    bankAccountId: sectionState.payment.value,
     freightType
   }
   // ! ! freightType === FREIGHT_TYPES.ECHO ? (data.shipmentQuoteId = shipmentQuoteId) : null
@@ -132,10 +141,10 @@ export const handleSubmitOrder = async (values, props) => {
 
   //shipmentQuoteId
 
-  //values.freight.value.quoteId
+  //sectionState.freight.value.quoteId
 
   try {
-    console.log('!!!!!!!!!! aaaaa aaaaa', data)
+    console.log('!!!!!!!!!! handleSubmitOrder data', data)
     //await props.postPurchaseOrder(data)
     //Router.push('/orders/purchase')
   } catch (e) {

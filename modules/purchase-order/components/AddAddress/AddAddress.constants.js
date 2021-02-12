@@ -16,5 +16,6 @@ export const INITIAL_VALUES = {
   liftGate: false,
   forkLift: false,
   callAhead: false,
-  deliveryNotes: ''
+  deliveryNotes: '',
+  taxId: ''   // ! ! presunout jinam pri submitu
 }

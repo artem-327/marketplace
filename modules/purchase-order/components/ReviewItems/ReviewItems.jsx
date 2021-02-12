@@ -37,13 +37,13 @@ let selfFormikProps = {} //TODO specify type
 const ReviewItems = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded  = usePrevious(props.isExpanded)
-  const [edited, setEdited] = useState(false)
 
   const {
     isExpanded,
+    allAccepted,
     sectionState,
-    onChangeSubmitButton,
     onValueChange,
+    setSummaryButtonCaption,
     initValues,
     cartItems,
   } = props
@@ -57,17 +57,12 @@ const ReviewItems = props => {
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
   useEffect(() => {
-
-
     if (isExpanded && !prevIsExpanded) {
-      onChangeSubmitButton({
-        caption: (
-          <FormattedMessage id='checkout.button.confirmItems' defaultMessage='Confirm Items'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        submitFunction: (val) => props.onSubmitClick(val)
-      })
+      setSummaryButtonCaption(
+        <FormattedMessage id='checkout.button.confirmItems' defaultMessage='Confirm Items'>
+          {text => text}
+        </FormattedMessage>
+      )
     }
   }, [isExpanded])
 
@@ -76,10 +71,16 @@ const ReviewItems = props => {
       {...props}
       header={<FormattedMessage id='checkout.header.reviewItems' defaultMessage='1. Review Items'/>}
       onSubmitClick={() => props.onSubmitClick()}
-      submitButtonCaption={
-        <FormattedMessage id='checkout.button.confirmItems' defaultMessage='Confirm Items'>
-          {text => text}
-        </FormattedMessage>
+      submitButtonCaption={allAccepted
+        ? (
+          <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
+            {text => text}
+          </FormattedMessage>
+        ) : (
+          <FormattedMessage id='checkout.button.confirmItems' defaultMessage='Confirm Items'>
+            {text => text}
+          </FormattedMessage>
+        )
       }
       content={
         <Formik
@@ -90,7 +91,7 @@ const ReviewItems = props => {
           validationSchema={getValidationScheme()}
           render={formikProps => {
             selfFormikProps = formikProps
-            const { values } = formikProps
+            const { values, errors } = formikProps
 
             return (
               <Form>
@@ -110,9 +111,10 @@ const ReviewItems = props => {
                                     value={getSafe(() => values.items[index].quantity.toString(), '')}
                                     onValueChange={(val) => {
                                       formikProps.setFieldValue(`items[${index}].quantity`, val)
+                                      formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
                                       let newValues = values.items.slice()
                                       newValues[index].quantity = val
-                                      onValueChange(newValues)
+                                      onValueChange({ value: newValues, errors })
                                     }}
                                   />
                                 </GridColumn>

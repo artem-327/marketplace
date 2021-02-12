@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import {getSafe} from "~/utils/functions"
+import { removeEmpty, getSafe } from "~/utils/functions"
 import { Formik } from 'formik'
 
 // Components
@@ -29,7 +29,9 @@ import { INITIAL_VALUES } from './AddAddress.constants'
 
 //Services
 import {
-  getValidationScheme
+  getInitValues,
+  getValidationScheme,
+  handleSubmit
 } from './AddAddress.services'
 
 //import ErrorFocus from '../../../components/error-focus'
@@ -37,11 +39,10 @@ import {
 //} from './Checkout.services'
 
 const AddAddress = props => {
-  let formikProps
-  const [tmp, setTmp] = useState(false)
-
+  let formikPropsSelf
   const {
     isWarehouse,
+    popupValues,
     intl: { formatMessage }
   } = props
 
@@ -56,21 +57,18 @@ const AddAddress = props => {
 
   }, [/* variableName */])
 
-  console.log('!!!!!!!!!! aaaaa popupValues', props.popupValues)
-
   return (
-
     <Formik
-      onSubmit={async values => {
-        //await this.handleSubmit(values)
-      }}
+      onSubmit={async values => await handleSubmit(props, formikPropsSelf, values)}
       enableReinitialize
-      initialValues={props.popupValues ? { ...INITIAL_VALUES, ...props.popupValues } : INITIAL_VALUES}
-      validationSchema={getValidationScheme}>
-
+      initialValues={popupValues
+        ? { ...INITIAL_VALUES, ...getInitValues(popupValues) }
+        : INITIAL_VALUES}
+      validationSchema={getValidationScheme}
+    >
       {formikProps => {
-        //formikProps = formikProps
-        const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting, handleSubmit } = formikProps
+        formikPropsSelf = formikProps
+        const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
         return (
           <ModalStyled
@@ -81,7 +79,7 @@ const AddAddress = props => {
           >
             <>
               <Modal.Header>
-                {props.popupValues
+                {popupValues
                   ? <FormattedMessage id='checkout.shipping.editAddress' defaultMessage='Edit Address' />
                   : <FormattedMessage id='checkout.shipping.addAddress' defaultMessage='Add New Address' />
                 }
@@ -241,8 +239,9 @@ const AddAddress = props => {
                   type='button'
                   basic
                   onClick={() => {
-                    console.log('!!!!!!!!!! save')
+                    formikProps.handleSubmit()
                   }}
+                  loading={props.isFetching}
                   data-test='checkout_add_address_save'>
                   <FormattedMessage id='global.save' defaultMessage='Save'>
                     {text => text}

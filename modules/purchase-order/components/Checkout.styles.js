@@ -101,6 +101,10 @@ export const DivRightSection = styled.div`
   margin: auto 5px auto auto;
 `
 
+export const DivTopPadding = styled.div`
+  padding-top: 10px;
+`
+
 export const GridExpandedSection = styled(Grid)`
   &.ui.grid {
     margin: 10px 0;

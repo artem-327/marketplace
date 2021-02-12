@@ -54,7 +54,8 @@ const RowComponent = props => {
     onCloseButtonClick,
     submitButtonCaption,
     onSubmitClick,
-    submitButtonDisabled
+    submitButtonDisabled,
+    bottomLeftContent
   } = props
 
   // Similar to call componentDidMount:
@@ -109,7 +110,7 @@ const RowComponent = props => {
           {isExpanded && (
             <GridRow>
               <GridColumn width={8}>
-
+                {bottomLeftContent ? bottomLeftContent : ''}
               </GridColumn>
               <GridColumn width={8} className='buttons'>
                 <DivRightButtons>
@@ -132,11 +133,13 @@ const RowComponent = props => {
 }
 
 RowComponent.propTypes = {
+  bottomLeftContent: PropTypes.any,
   submitButtonDisabled: PropTypes.bool,
   itemsCount: PropTypes.number
 }
 
 RowComponent.defaultProps = {
+  bottomLeftContent: null,
   submitButtonDisabled: false,
   itemsCount: 0
 }
