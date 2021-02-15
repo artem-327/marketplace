@@ -232,7 +232,6 @@ class WarehousesSidebar extends Component {
                             attachmentFiles,
                             setAttachmentFiles
                           })
-                          await chatWidgetVerticalMoved(false)
                         }
                       })
                     }}
