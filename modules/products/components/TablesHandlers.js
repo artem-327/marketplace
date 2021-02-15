@@ -3,15 +3,19 @@ import { connect } from 'react-redux'
 import { Header, Menu, Button, Input, Grid, GridRow, GridColumn, Dropdown } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
-
-import * as Actions from '../actions'
-import { withDatagrid } from '~/modules/datagrid'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
-import { openImportPopup } from '~/modules/settings/actions'
-import { CustomRowDiv } from '~/modules/companies/constants'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
-import ColumnSettingButton from '~/components/table/ColumnSettingButton'
+import { FormattedMessage, injectIntl } from 'react-intl'
+//Actions
+import * as Actions from '../actions'
+import { chatWidgetVerticalMoved } from '../../chatWidget/actions'
+import { openImportPopup } from '../../settings/actions'
+//Services
+import { getSafe } from '../../../utils/functions'
+//Components
+import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
+import { withDatagrid } from '../../datagrid'
+//Styles
+import { CustomRowDiv } from '../../companies/constants'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -109,7 +113,8 @@ class TablesHandlers extends Component {
       openPopup,
       intl: { formatMessage },
       openImportPopup,
-      handleFilterChange
+      handleFilterChange,
+      chatWidgetVerticalMoved
     } = this.props
 
     const item = textsTable[currentTab]
@@ -145,7 +150,14 @@ class TablesHandlers extends Component {
           ) : null}
           {item.BtnAddText && (
             <DivColumn className='column'>
-              <Button fluid primary onClick={() => openPopup()} data-test='products_open_popup_btn'>
+              <Button
+                fluid
+                primary
+                onClick={() => {
+                  openPopup()
+                  if (currentTab === 'product-catalog') chatWidgetVerticalMoved(true)
+                }}
+                data-test='products_open_popup_btn'>
                 <PlusCircle />
                 <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
               </Button>
@@ -180,4 +192,6 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openImportPopup })(injectIntl(TablesHandlers)))
+export default withDatagrid(
+  connect(mapStateToProps, { ...Actions, openImportPopup, chatWidgetVerticalMoved })(injectIntl(TablesHandlers))
+)

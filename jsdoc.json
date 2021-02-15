@@ -17,7 +17,9 @@
       "./components/buttons",
       "./modules/settings/components/UserTable",
       "./components/Confirmable",
-      "./modules/add-bank-accounts"
+      "./modules/add-bank-accounts",
+      "./styles",
+      "./modules/settings/components/Locations"
     ],
     "exclude": ["./modules/inventory/my-listings/components"]
   },

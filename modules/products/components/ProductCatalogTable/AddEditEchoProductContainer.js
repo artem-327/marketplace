@@ -1,7 +1,7 @@
 import AddEditEchoProduct from './AddEditEchoProduct'
 import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
-
+//Actions
 import {
   closePopup,
   searchCasProduct,
@@ -22,6 +22,7 @@ import {
   getDocumentTypes,
   searchCompany
 } from '~/modules/products/actions'
+import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 import { Header } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
@@ -46,7 +47,8 @@ const mapDispatchToProps = {
   getUnNumbersByString,
   searchProductGroups,
   getDocumentTypes,
-  searchCompany
+  searchCompany,
+  chatWidgetVerticalMoved
 }
 
 const mapStateToProps = ({ productsAdmin }, props) => {
