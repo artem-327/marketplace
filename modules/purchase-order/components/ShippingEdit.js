@@ -357,8 +357,6 @@ class ShippingEdit extends Component {
         : { id: 'checkout.editAddress', defaultMessage: 'Edit Address' }
     }
 
-    console.log('!!!!!!!!!! aaaaa this.props', this.props)
-
     return (
       <Formik
         onSubmit={async values => {

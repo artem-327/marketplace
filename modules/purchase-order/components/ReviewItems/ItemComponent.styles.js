@@ -11,11 +11,10 @@ export const GridItemDetail = styled(Grid)`
     background-color: #ffffff;
   
     > .row {
-      margin: 5px 0;
       padding: 0;
       
       > .column {
-        padding: 0 5px;
+        padding: 5px;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
       }
@@ -23,8 +22,8 @@ export const GridItemDetail = styled(Grid)`
   }
 `
 
-export const GridRowLessMargin = styled(GridRow)`
-  margin: 0 !important;
+export const GridColumnLessPadding = styled(GridColumn)`
+  padding: 0 5px !important;
 `
 
 export const GridColumnLeftDivider = styled(GridColumn)`

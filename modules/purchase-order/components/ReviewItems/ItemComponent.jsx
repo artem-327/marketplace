@@ -19,7 +19,7 @@ import {
   GridRowHeader,
   IconTrash2,
   DivHeader,
-  GridRowLessMargin,
+  GridColumnLessPadding,
   DivDropdownQuantityWrapper
 } from './ItemComponent.styles'
 
@@ -122,13 +122,13 @@ const ItemComponent = props => {
           </DivSectionName>
         </GridColumn>
       </GridRow>
-      <GridRowLessMargin>
+      <GridRow>
         <GridColumn width={3}>
           <DivSectionDescription>
             <FormattedMessage id='checkout.reviewItems.quantity' defaultMessage='Quantity'/>
           </DivSectionDescription>
         </GridColumn>
-        <GridColumn width={5}>
+        <GridColumnLessPadding width={5}>
           <DivSectionName>
             <DivDropdownQuantityWrapper>
               <Dropdown
@@ -146,7 +146,7 @@ const ItemComponent = props => {
               />
             </DivDropdownQuantityWrapper>
           </DivSectionName>
-        </GridColumn>
+        </GridColumnLessPadding>
         <GridColumnLeftDivider width={4}>
           <DivSectionDescription>
             <FormattedMessage id='checkout.reviewItems.leadTime' defaultMessage='Lead Time'/>
@@ -161,7 +161,7 @@ const ItemComponent = props => {
             />
           </DivSectionName>
         </GridColumn>
-      </GridRowLessMargin>
+      </GridRow>
       <GridRow>
         <GridColumn width={3}>
           <DivSectionDescription>
