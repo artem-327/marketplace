@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { FormattedMessage, injectIntl, formatMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe } from "~/utils/functions"
 import { currency } from '~/constants/index'
 import {
@@ -36,7 +36,6 @@ const ShippingHandler = props => {
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
   useEffect(() => {
-    console.log('!!!!!!!!!! useEffect searchValue', props.searchValue)
     searchAddress(props)
   }, [searchValue])
 

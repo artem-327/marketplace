@@ -1,38 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
-import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { getSafe, getPrice, uniqueArrayByKey } from "~/utils/functions"
 import { currency } from '~/constants/index'
+import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 //Components
-import {
-  Container as SemanticContainer,
-  Image,
-  Header,
-  Button,
-  Icon,
-  Grid,
-  GridColumn,
-  GridRow,
-  Segment,
-  Popup,
-  Message,
-  Divider
-} from 'semantic-ui-react'
+import { GridColumn, GridRow } from 'semantic-ui-react'
 import ShippingInformation from '../ShippingInformation/ShippingInformation'
 
 // Styles
-import {
-  DivSectionCollapsedWrapper,
-  DivSectionCollapsedRow,
-  DivSectionName,
-  DivSectionDescription,
-
-
-
-} from '../Checkout.styles'
+import { DivSectionName, DivSectionDescription } from '../Checkout.styles'
 
 import {
   GridItemDetail,
@@ -40,35 +19,19 @@ import {
   GridRowHeader,
   IconTrash2,
   DivHeader,
-  DropdownQuantity,
-
-
+  GridRowLessMargin,
+  DivDropdownQuantityWrapper
 } from './ItemComponent.styles'
 
 // Constants
 import { OPTIONS_QUANTITY, CART_ITEM_TYPES } from './ItemComponent.constants'
 
-//Hooks
-import { usePrevious } from "../../../../hooks"
-
-
-
 // Services
-import {
-  deleteCart
-} from './ItemComponent.services'
+import { deleteCart } from './ItemComponent.services'
 
-//import ErrorFocus from '../../../components/error-focus'
-//import {
-//} from './Checkout.services'
-
-
+import ErrorFocus from '../../../../components/error-focus'
 
 const ItemComponent = props => {
-  // Stores previos values for compating with current value
-
-  const [edited, setEdited] = useState(false)
-
   const {
     onClickDelete,
     onValueChange,
@@ -76,21 +39,6 @@ const ItemComponent = props => {
     index,
     item
   } = props
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
-
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  /*
-  useEffect(() => {
-
-
-  }, [isExpanded])
-  */
 
   const pkgAmount = item.pkgAmount
   const pricePerUOM = getPrice(pkgAmount, item.productOffer.pricingTiers)
@@ -102,7 +50,7 @@ const ItemComponent = props => {
   allOptions = uniqueArrayByKey(allOptions, 'text')
 
   return (
-    <GridItemDetail>
+    <GridItemDetail verticalAlign='middle'>
       <GridRowHeader>
           <DivHeader>
             {item.productName}
@@ -174,7 +122,7 @@ const ItemComponent = props => {
           </DivSectionName>
         </GridColumn>
       </GridRow>
-      <GridRow>
+      <GridRowLessMargin>
         <GridColumn width={3}>
           <DivSectionDescription>
             <FormattedMessage id='checkout.reviewItems.quantity' defaultMessage='Quantity'/>
@@ -182,8 +130,8 @@ const ItemComponent = props => {
         </GridColumn>
         <GridColumn width={5}>
           <DivSectionName>
-            <div>
-              <DropdownQuantity
+            <DivDropdownQuantityWrapper>
+              <Dropdown
                 name={`items[${index}].quantity`}
                 selection
                 inputProps={{
@@ -196,7 +144,7 @@ const ItemComponent = props => {
                 }}
                 options={allOptions}
               />
-            </div>
+            </DivDropdownQuantityWrapper>
           </DivSectionName>
         </GridColumn>
         <GridColumnLeftDivider width={4}>
@@ -213,7 +161,7 @@ const ItemComponent = props => {
             />
           </DivSectionName>
         </GridColumn>
-      </GridRow>
+      </GridRowLessMargin>
       <GridRow>
         <GridColumn width={3}>
           <DivSectionDescription>
@@ -246,11 +194,9 @@ const ItemComponent = props => {
 }
 
 ItemComponent.propTypes = {
-//  itemsCount: PropTypes.number
 }
 
 ItemComponent.defaultProps = {
-//  itemsCount: 0
 }
 
 function mapStateToProps(store, { item }) {

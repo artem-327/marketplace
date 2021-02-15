@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { removeEmpty, getSafe } from "~/utils/functions"
@@ -8,13 +8,10 @@ import { Formik } from 'formik'
 
 // Components
 import { Required } from '~/components/constants/layout'
-import { Grid, GridRow, GridColumn, Modal, Divider, FormGroup, Segment, Sidebar, Dimmer, Loader, Form } from 'semantic-ui-react'
+import { GridRow, GridColumn, Modal, Dimmer, Loader, Form } from 'semantic-ui-react'
 import { Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { AddressForm } from '~/modules/address-form'
-
-//Hooks
-//import { usePrevious } from '../../../hooks'
 
 // Styles
 import {
@@ -34,10 +31,6 @@ import {
   handleSubmit
 } from './AddAddress.services'
 
-//import ErrorFocus from '../../../components/error-focus'
-//import {
-//} from './Checkout.services'
-
 const AddAddress = props => {
   let formikPropsSelf
   const {
@@ -45,17 +38,6 @@ const AddAddress = props => {
     popupValues,
     intl: { formatMessage }
   } = props
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
-
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {
-
-  }, [/* variableName */])
 
   return (
     <Formik

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Grid, GridRow } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 
 export const GridStyled = styled(Grid)`
   &.ui.grid {

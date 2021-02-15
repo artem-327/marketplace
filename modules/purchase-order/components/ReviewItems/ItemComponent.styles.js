@@ -1,43 +1,30 @@
 import styled from 'styled-components'
 import { Trash2 } from 'react-feather'
-import { Dropdown } from 'formik-semantic-ui-fixed-validation'
-
-import {
-  Container as SemanticContainer,
-  Image,
-  Header,
-  Button,
-  Icon,
-  Grid,
-  GridColumn,
-  GridRow,
-  Segment,
-  Popup,
-  Message,
-  Divider
-} from 'semantic-ui-react'
+import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
 
 export const GridItemDetail = styled(Grid)`
   &.ui.grid {
     margin: 0;
-    padding: 17px 10px;
+    padding: 11px 10px;
     border-radius: 4px;
     border: solid 1px #dee2e6;
     background-color: #ffffff;
   
     > .row {
-      //margin: 5px 0;
-      //padding: 15px 5px;
+      margin: 5px 0;
       padding: 0;
       
       > .column {
-        padding: 5px;
+        padding: 0 5px;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
-        //padding: 0 5px;
       }
     }
   }
+`
+
+export const GridRowLessMargin = styled(GridRow)`
+  margin: 0 !important;
 `
 
 export const GridColumnLeftDivider = styled(GridColumn)`
@@ -68,17 +55,32 @@ export const DivHeader = styled.div`
   text-overflow: ellipsis;
 `
 
-export const DropdownQuantity = styled(Dropdown)`
-  &.field {
-    .ui.search.dropdown,
-    .ui.search.selection.dropdown {   
+export const DivDropdownQuantityWrapper = styled.div`
+  z-index: 600;
+
+  & > .field {
+    z-index: 601;
+    > .ui.search.dropdown,
+    > .ui.search.selection.dropdown {
+      z-index: 600 !important;
+      min-height: 32px;
+      height: 32px;
+      width: 65px;
+      min-width: 65px;
+      max-width: 65px;
+      padding: 8px 29px 6px 12px;
+       
       > input.search {
-        min-height: 32px;
-        height: 32px;
-        width: 65px !important;
-        min-width: 65px !important;
-        z-index: 600;
+        padding: 8px 29px 6px 12px;
       }
+      
+      > div.visible.menu.transition {
+        z-index: 600 !important;
+      }
+    }    
+
+    .ui.selection.dropdown > .dropdown.icon {
+      padding: 8px 11px 6px 11px;
     }
   }  
 `

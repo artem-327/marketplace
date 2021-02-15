@@ -19,7 +19,8 @@ const OrderSummary = props => {
   const {
     buttonText,
     onButtonClick,
-    allAccepted
+    allAccepted,
+    submitButtonDisabled
   } = props
 
   const priceComponent = val => (
@@ -45,6 +46,7 @@ const OrderSummary = props => {
           <Button
             fluid
             color='blue'
+            disabled={submitButtonDisabled}
             onClick={() => onButtonClick()}>
             {buttonText}
           </Button>
@@ -52,7 +54,7 @@ const OrderSummary = props => {
       </GridRow>
       <GridRow className='bottom-border small-text'>
         <GridColumn>
-          {!allAccepted
+          {allAccepted
             ? (
               <FormattedMessage
                 id='checkout.summary.byPlacingYourOrder'

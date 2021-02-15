@@ -4,23 +4,7 @@ import Router from 'next/router'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {
-  Container as SemanticContainer,
-  Header,
-  Button,
-  Icon,
-  Grid,
-  GridColumn,
-  GridRow,
-  Segment,
-  Popup,
-  Message,
-  Divider
-} from 'semantic-ui-react'
-
-
-import Logo from '~/assets/images/nav/logo-echo.svg'
-
+import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
 
 //Components
 import HeaderRow from './HeaderRow/HeaderRow'
@@ -29,11 +13,7 @@ import ReviewItems from './ReviewItems/ReviewItems'
 import ShippingTerms from './ShippingTerms/ShippingTerms'
 import Payment from './Payment/Payment'
 import FreightSelection from './FreightSelection/FreightSelection'
-
-//Hooks
-import { usePrevious } from '../../../hooks'
-
-
+import Spinner from '../../../components/Spinner/Spinner'
 
 //Services
 import ErrorFocus from '../../../components/error-focus'
@@ -52,10 +32,7 @@ import {
 import {
   DivCheckoutWrapper,
   ContainerCheckout,
-  GridSections,
-
-
-
+  GridSections
 } from './Checkout.styles'
 
 
@@ -63,27 +40,28 @@ import {
 import { FREIGHT_TYPES } from './Checkout.constants'
 
 const Checkout = props => {
-  const prevCartItems  = usePrevious(props.cartItems)
-
-  const [openSection, setOpenSection] = useState('shipping')
+  const [openSection, setOpenSection] = useState('review')
   const [sectionState, setSectionState] = useState({
-    'review': { accepted: true, value: null },    // 1. Review Items
+    'review': { accepted: false, value: null },    // 1. Review Items
     'shipping': { accepted: false, value: null },  // 2. Shipping & Terms
     'payment': { accepted: false, value: null },   // 3. Payment
     'freight': { accepted: false, value: null }    // 4. Freight Selection
   })
   const [summaryButtonCaption, setSummaryButtonCaption] = useState('')
-  const [summarySubmitFunction, setSummarySubmitFunction] = useState(() => {})
-  const [sectionSubmitValue, setSectionSubmitValue] = useState(null)
+  const [fixedFreightId, setfixedFreightId] = useState(false)
 
   const {
+    cart,
     cartItems,
     payments,
+    offerDetailIsFetching,
+    cartIsFetching,
+    purchaseHazmatEligible
   } = props
 
   // Similar to call componentDidMount:
   useEffect(async () => {
-    const { preFilledValues, clearPreFilledValues, getWarehouses, paymentProcessor } = props
+    const { paymentProcessor } = props
     props.getDeliveryAddresses()
     props.getPayments(paymentProcessor)
     props.getIdentity()
@@ -93,8 +71,18 @@ const Checkout = props => {
     if (shippingQuoteId) {
       setSectionState({
         ...sectionState,
-        freight: { accepted: false, value: shippingQuoteId }
+        freight: {
+          accepted: true,
+          value: {
+            carrierName: shippingQuoteId,
+            estimatedPrice: '',
+            estimatedDeliveryDate: '',
+            quoteId: shippingQuoteId,
+            freightType: FREIGHT_TYPES.ECHO
+          }
+        }
       })
+      setfixedFreightId(true)
     }
     // If [] is empty then is similar as componentDidMount.
   }, [])
@@ -107,12 +95,17 @@ const Checkout = props => {
     setOpenSection,
     sectionState,
     setSectionState,
-    setSummaryButtonCaption,
-    setSummarySubmitFunction
+    setSummaryButtonCaption
   }
+
+  if (cartIsFetching) return <Spinner />
 
   const orderTotal = getSafe(() => props.cart.cfPriceSubtotal, 0)
     + getSafe(() => sectionState.freight.value.estimatedPrice, 0)
+
+  let isAnyItemHazardous = cart.cartItems.some(
+    item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
+  )
 
   return (
     <DivCheckoutWrapper>
@@ -129,15 +122,14 @@ const Checkout = props => {
                     setSectionState({
                       ...sectionState,
                       review: { accepted: false, value: null },
-                      freight: { accepted: false, value: null }
+                      ...(!fixedFreightId && { freight: { accepted: false, value: null } })
                     })
                   }}
                   onValueChange={value => {
-                    console.log('!!!!!!!!!! ReviewItems onValueChange value', value)
                     setSectionState({
                       ...sectionState,
                       review: { accepted: false, ...value },
-                      freight: { accepted: false, value: null }
+                      ...(!fixedFreightId && { freight: { accepted: false, value: null } })
                     })
                   }}
                   onSubmitClick={() => submitUpdateCartItem(props, state)}
@@ -146,16 +138,16 @@ const Checkout = props => {
                   {...props}
                   {...getComponentParameters(props,{name: 'shipping', ...state })}
                   onValueChange={value => {
-
-                    console.log('!!!!!!!!!! onValueChange value', value)
-
                     setSectionState({
                       ...sectionState,
                       shipping: { accepted: false, value },
-                      freight: { accepted: false, value: null }
+                      ...(!fixedFreightId && { freight: { accepted: false, value: null } })
                     })
                     const address = value.fullAddress.address
-                    getShippingQuotes(props, address.country.id, address.zip.zip)
+
+                    if (!cart.weightLimitExceed && !fixedFreightId && !cart.palletLimitExceed) {
+                      getShippingQuotes(props, address.country.id, address.zip.zip)
+                    }
                   }}
                 />
                 <Payment
@@ -171,6 +163,8 @@ const Checkout = props => {
                 <FreightSelection
                   {...props}
                   {...getComponentParameters(props,{name: 'freight', ...state })}
+                  shippingAddress={sectionState.shipping.value}
+                  fixedFreightId={fixedFreightId}
                   orderTotal={orderTotal}
                   onValueChange={value => {
                     setSectionState({
@@ -187,6 +181,11 @@ const Checkout = props => {
                 cart={props.cart}
                 sectionState={sectionState}
                 onButtonClick={() => submitButton(props, state)}
+                submitButtonDisabled={
+                  (!purchaseHazmatEligible && isAnyItemHazardous) ||
+                  openSection === 'review' && sectionState.review.errors
+                  || offerDetailIsFetching
+                }
                 buttonText={
                   allAccepted
                     ? (

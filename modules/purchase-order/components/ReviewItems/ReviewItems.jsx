@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { Formik } from 'formik'
@@ -8,16 +8,13 @@ import { getSafe } from "~/utils/functions"
 import { currency } from '~/constants/index'
 
 //Components
-import {
-  GridColumn,
-  GridRow,
-  Form
-} from 'semantic-ui-react'
+import { GridColumn, Form } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
   GridExpandedSection,
   DivSectionCollapsedWrapper,
   DivSectionCollapsedRow,
+  GridRowReviewItems,
   DivSectionName,
   DivSectionDescription
 } from '../Checkout.styles'
@@ -46,13 +43,9 @@ const ReviewItems = props => {
     setSummaryButtonCaption,
     initValues,
     cartItems,
+    cartIsFetching,
+    offerDetailIsFetching
   } = props
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
 
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
@@ -71,6 +64,7 @@ const ReviewItems = props => {
       {...props}
       header={<FormattedMessage id='checkout.header.reviewItems' defaultMessage='1. Review Items'/>}
       onSubmitClick={() => props.onSubmitClick()}
+      submitButtonDisabled={sectionState.errors || offerDetailIsFetching}
       submitButtonCaption={allAccepted
         ? (
           <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
@@ -86,15 +80,14 @@ const ReviewItems = props => {
         <Formik
           onSubmit={values => {}}
           enableReinitialize
-          validateOnChange={true}
+          validateOnChange={false}
           initialValues={{items: initValues}}
           validationSchema={getValidationScheme()}
           render={formikProps => {
             selfFormikProps = formikProps
             const { values, errors } = formikProps
-
             return (
-              <Form>
+              <Form loading={offerDetailIsFetching || cartIsFetching}>
                 {
                   (sectionState.accepted || isExpanded)
                     ? (
@@ -102,23 +95,24 @@ const ReviewItems = props => {
                         ? (
                           <GridExpandedSection>
                             {cartItems.map((item, index) =>
-                              <GridRow>
+                              <GridRowReviewItems>
                                 <GridColumn>
                                   <ItemComponent
                                     {...props}
                                     item={item}
                                     index={index}
                                     value={getSafe(() => values.items[index].quantity.toString(), '')}
-                                    onValueChange={(val) => {
-                                      formikProps.setFieldValue(`items[${index}].quantity`, val)
-                                      formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
+                                    onValueChange={async val => {
+                                      await formikProps.setFieldValue(`items[${index}].quantity`, val)
+                                      await formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
+                                      const newErrors = await formikProps.validateForm()
                                       let newValues = values.items.slice()
                                       newValues[index].quantity = val
-                                      onValueChange({ value: newValues, errors })
+                                      onValueChange({ value: newValues, errors: !!newErrors.items })
                                     }}
                                   />
                                 </GridColumn>
-                              </GridRow>
+                              </GridRowReviewItems>
                             )}
                           </GridExpandedSection>
                         ) : (
@@ -185,7 +179,8 @@ function mapStateToProps(store, props) {
       id: item.id,
       quantity: item.pkgAmount.toString(),
       minPkg: item.productOffer.minPkg,
-      splitPkg: item.productOffer.splitPkg
+      splitPkg: item.productOffer.splitPkg,
+      pkgAvailable: item.productOffer.pkgAvailable
     }))
   }
 }

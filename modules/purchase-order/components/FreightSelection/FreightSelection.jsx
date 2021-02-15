@@ -5,9 +5,10 @@ import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { getSafe } from "~/utils/functions"
 import { currency } from '~/constants/index'
+import { AlertCircle } from 'react-feather'
 
 //Components
-import { GridColumn, Radio } from 'semantic-ui-react'
+import { GridRow, GridColumn, Radio, Icon, Button, Header, Input } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
   DivSectionCollapsedWrapper,
@@ -23,9 +24,38 @@ import {
   DivSectionSmallHeader
 } from '../Checkout.styles'
 import moment from 'moment'
+import {
+  GridStyled,
+  CustomRectangle,
+  DivTitle,
+  DivInTitle,
+  DivContent
+} from './FreightSelection.styles'
+import {
+  VerticalUnpaddedColumn,
+  StyledRow,
+  TopUnpaddedRow,
+  GridContainer,
+  VerticalUnpaddedRow,
+  BottomUnpaddedRow,
+  CustomMessage,
+  Rectangle,
+  CustomDivContent,
+  CustomDivInTitle,
+  CustomDivTitle,
+  InfoIcon
+} from '~/modules/cart/components/StyledComponents'
+
+import FreightLabel from './FreightLabel'
+
+// Services
+import { handleManualShipment } from './FreightSelection.services'
 
 //Hooks
 import { usePrevious } from "../../../../hooks"
+
+// Constants
+import { FREIGHT_TYPES } from '../Checkout.constants'
 
 const FreightSelection = props => {
   // Stores previos values for compating with current value
@@ -39,14 +69,12 @@ const FreightSelection = props => {
     onValueChange,
     setSummaryButtonCaption,
     value,
-    orderTotal
+    orderTotal,
+    fixedFreightId,
+    cart,
+    intl: { formatMessage },
+    shippingQuotesAreFetching
   } = props
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
 
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
@@ -61,15 +89,17 @@ const FreightSelection = props => {
   }, [isExpanded])
 
   const freightOptions = getSafe(() => shippingQuotes.rates, [])
+  let weightLimitStr = cart.weightLimit ? `of ${cart.weightLimit}` : ''
+  let palletLimitStr = cart.palletCountLimit ? `of ${cart.palletCountLimit}` : ''
+  let isAnyItemHazardous = cart.cartItems.some(
+    item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
+  )
 
   return (
     <RowComponent
       {...props}
       header={<FormattedMessage id='checkout.header.freightSelection' defaultMessage='4. Freight Selection'/>}
-      onSubmitClick={() => {
-        console.log('!!!!!!!!!! Freight Selection onSubmitClick')
-        props.onSubmitClick()
-      }}
+      onSubmitClick={() => props.onSubmitClick()}
       submitButtonCaption={allAccepted
         ? (
           <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
@@ -87,66 +117,193 @@ const FreightSelection = props => {
           ? (
             isExpanded
               ? (
-                <GridExpandedSection>
-                  {freightOptions.map((item, index) => (
-                    <GridRowExpandedSelectionRow
-                      key={index}
-                      checked={value && (value.quoteId === item.quoteId)}
-                      onClick={() => onValueChange(item)}
-                      selection={'true'}
-                    >
-                      <GridColumn width={10}>
-                        <DivFlexRow>
-                          <DivCentered>
-                            <Radio
-                              checked={value && (value.quoteId === item.quoteId)}
-                            />
-                          </DivCentered>
-                          <div>
-                            <DivSectionHeader>
-                              {item.carrierName}
-                            </DivSectionHeader>
+                <>
+                  {!cart.weightLimitExceed &&
+                  !cart.palletLimitExceed &&
+                  !fixedFreightId && (
+                    <GridExpandedSection>
+                      {freightOptions.map((item, index) => (
+                        <GridRowExpandedSelectionRow
+                          key={index}
+                          checked={value && (value.quoteId === item.quoteId)}
+                          onClick={() => onValueChange({ ...item, freightType: FREIGHT_TYPES.ECHO })}
+                          selection={'true'}
+                        >
+                          <GridColumn width={10}>
+                            <DivFlexRow>
+                              <DivCentered>
+                                <Radio
+                                  checked={value && (value.quoteId === item.quoteId)}
+                                />
+                              </DivCentered>
+                              <div>
+                                <DivSectionHeader>
+                                  {item.carrierName}
+                                </DivSectionHeader>
+                                <DivSectionName>
+                                  <FormattedNumber
+                                    minimumFractionDigits={2}
+                                    maximumFractionDigits={2}
+                                    style='currency'
+                                    currency={currency}
+                                    value={item.estimatedPrice}
+                                  />
+                                </DivSectionName>
+                              </div>
+                            </DivFlexRow>
+                          </GridColumn>
+                          <GridColumn width={3}>
+                            <DivSectionSmallHeader>
+                              <FormattedMessage id='checkout.freight.estDelivery' defaultMessage='Est. Delivery' />
+                            </DivSectionSmallHeader>
                             <DivSectionName>
-                              <FormattedNumber
-                                minimumFractionDigits={2}
-                                maximumFractionDigits={2}
-                                style='currency'
-                                currency={currency}
-                                value={item.estimatedPrice}
-                              />
+                              {moment(item.estimatedDeliveryDate).fromNow()}
                             </DivSectionName>
-                          </div>
-                        </DivFlexRow>
-                      </GridColumn>
-                      <GridColumn width={3}>
-                        <DivSectionSmallHeader>
-                          <FormattedMessage id='checkout.freight.estDelivery' defaultMessage='Est. Delivery' />
-                        </DivSectionSmallHeader>
-                        <DivSectionName>
-                          {moment(item.estimatedDeliveryDate).fromNow()}
-                        </DivSectionName>
-                      </GridColumn>
-                      {false && (
-                        <GridColumn width={2}>
-                          <DivSectionSmallHeader>
-                            <FormattedMessage id='checkout.freight.etd' defaultMessage='ETD' />
-                          </DivSectionSmallHeader>
-                          <DivSectionName>
-                            {item.quoteId /* missing in endpoint */}
-                          </DivSectionName>
+                          </GridColumn>
+                          {false && (
+                            <GridColumn width={2}>
+                              <DivSectionSmallHeader>
+                                <FormattedMessage id='checkout.freight.etd' defaultMessage='ETD' />
+                              </DivSectionSmallHeader>
+                              <DivSectionName>
+                                {item.quoteId /* missing in endpoint */}
+                              </DivSectionName>
+                            </GridColumn>
+                          )}
+                          <GridColumn width={3}>
+                            <DivSectionSmallHeader>
+                              <FormattedMessage id='checkout.freight.service' defaultMessage='Service' />
+                            </DivSectionSmallHeader>
+                            <DivSectionName>
+                              {item.serviceType}
+                            </DivSectionName>
+                          </GridColumn>
+                        </GridRowExpandedSelectionRow>
+                      ))}
+                    </GridExpandedSection>
+                  )}
+
+                  {(cart.weightLimitExceed || cart.palletLimitExceed) && !fixedFreightId && (
+                    <GridStyled>
+                      <GridRow>
+                        <GridColumn computer={16}>
+                          <CustomMessage warning>
+                            <CustomMessage.Header>
+                              <Icon name='warning circle' />
+                              {formatMessage({
+                                id: 'cart.weightLimitExceeded.header',
+                                defaultMessage:
+                                  'We are sorry, but no matching Shipping Quotes were provided by logistics company.'
+                              })}
+                            </CustomMessage.Header>
+                            <CustomMessage.Content>
+                              {formatMessage(
+                                {
+                                  id: cart.weightLimitExceed
+                                    ? 'cart.weightLimitExceeded.content'
+                                    : 'cart.palletLimitExceeded.content',
+                                  defaultMessage: cart.weightLimitExceed
+                                    ? `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                    : `Your order pallet exceeds pallet limit ${palletLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                },
+                                { limit: cart.weightLimitExceed ? weightLimitStr : palletLimitStr }
+                              )}
+                            </CustomMessage.Content>
+                          </CustomMessage>
                         </GridColumn>
-                      )}
-                      <GridColumn width={3}>
-                        <DivSectionSmallHeader>
-                          <FormattedMessage id='checkout.freight.service' defaultMessage='Service' />
-                        </DivSectionSmallHeader>
-                        <DivSectionName>
-                          {item.serviceType}
-                        </DivSectionName>
-                      </GridColumn>
-                    </GridRowExpandedSelectionRow>
-                  ))}
-                </GridExpandedSection>
+                      </GridRow>
+                    </GridStyled>
+                  )}
+                  {freightOptions.length === 0 &&
+                  !shippingQuotesAreFetching &&
+                  !fixedFreightId &&
+                  !cart.weightLimitExceed &&
+                  !cart.palletLimitExceed && (
+                    <GridStyled>
+                      <GridRow>
+                        <GridColumn computer={16}>
+                          <CustomRectangle>
+                            <DivTitle>
+                              <AlertCircle color='orange' size={18} />
+                              <DivInTitle>
+                                <FormattedMessage
+                                  id='cart.noShippingQuotes.processManually.title'
+                                  defaultMessage={`We are sorry, but no matching Shipping Quotes were provided by logistics company.`}
+                                />
+                              </DivInTitle>
+                            </DivTitle>
+                            <DivContent>
+                              <FormattedMessage
+                                id='cart.noShippingQuotes.processManually'
+                                defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                              />
+                            </DivContent>
+                          </CustomRectangle>
+                        </GridColumn>
+                      </GridRow>
+                    </GridStyled>
+                  )}
+
+                  {!shippingQuotesAreFetching &&
+                  !fixedFreightId &&
+                  (cart.weightLimitExceed || freightOptions.length === 0 || cart.palletLimitExceed) && (
+                    <GridStyled>
+                      <GridRow>
+                        <GridColumn computer={8}>
+                          <Button
+                            basic
+                            fluid
+                            loading={props.manualShipmentPending}
+                            type='button'
+                            onClick={() => handleManualShipment(props)}>
+                            <FormattedMessage
+                              id='cart.requestShippingQuote'
+                              defaultMessage='Request Shipping Quote'>
+                              {text => text}
+                            </FormattedMessage>
+                          </Button>
+                        </GridColumn>
+                      </GridRow>
+                    </GridStyled>
+                  )}
+
+                  {!shippingQuotesAreFetching &&
+                  (cart.weightLimitExceed || freightOptions.length === 0 || cart.palletLimitExceed) && (
+                    <GridStyled>
+                      <GridRow>
+                        <GridColumn>
+                          <Header as='h3'>
+                            <FormattedMessage
+                              id='cart.quoteReceived'
+                              defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                            />
+                          </Header>
+                        </GridColumn>
+                      </GridRow>
+                      <GridRow>
+                        <GridColumn computer={8}>
+                          <div><FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' /></div>
+                          <Input
+                            onChange={(_, { value }) => onValueChange({
+                              freightType: FREIGHT_TYPES.ECHO,
+                              carrierName: value,
+                              estimatedPrice: '',
+                              estimatedDeliveryDate: '',
+                              quoteId: value
+                            })}
+                            name='shipmentQuoteId'
+                            value={value && value.quoteId ? value.quoteId : ''}
+                            disabled={value && value.freightType === FREIGHT_TYPES.OWN}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    </GridStyled>
+                  )}
+                  <FreightLabel
+                    isOwn={value && value.freightType === FREIGHT_TYPES.OWN}
+                    onChange={val => onValueChange(val)}
+                  />
+                </>
               ) : (
                 <DivSectionCollapsedWrapper>
                   <DivSectionCollapsedRow>
@@ -154,16 +311,20 @@ const FreightSelection = props => {
                       {value ? value.carrierName : ''}
                     </DivSectionName>
                     <DivSectionDescription>
-                      <FormattedNumber
-                        minimumFractionDigits={2}
-                        maximumFractionDigits={2}
-                        style='currency'
-                        currency={currency}
-                        value={value ? value.estimatedPrice : 0}
-                      />
+                      {value && value.estimatedPrice
+                        ? (
+                          <FormattedNumber
+                            minimumFractionDigits={2}
+                            maximumFractionDigits={2}
+                            style='currency'
+                            currency={currency}
+                            value={value ? value.estimatedPrice : 0}
+                          />
+                          )
+                        : ''}
                     </DivSectionDescription>
                     <DivSectionDescription>
-                      {value ? moment(value.estimatedDeliveryDate).fromNow() : ''}
+                      {value && value.estimatedDeliveryDate ? moment(value.estimatedDeliveryDate).fromNow() : ''}
                     </DivSectionDescription>
                   </DivSectionCollapsedRow>
                 </DivSectionCollapsedWrapper>
@@ -199,17 +360,13 @@ const FreightSelection = props => {
 }
 
 FreightSelection.propTypes = {
-  //itemsCount: PropTypes.number
 }
 
 FreightSelection.defaultProps = {
-  //itemsCount: 0
 }
 
 function mapStateToProps(store, props) {
-  return {
-
-  }
+  return { }
 }
 
 export default injectIntl(connect(mapStateToProps, {  })(FreightSelection))

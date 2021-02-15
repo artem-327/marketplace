@@ -1,5 +1,4 @@
 import { debounce } from 'lodash'
-import {getDeliveryAddresses, getWarehouses} from "../../actions";
 
 /**
  * @param {object} props - { values, setValues, setFieldTouched, closeTdsModal }

@@ -64,4 +64,4 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, Actions)(TmpBoth)
+export default connect(mapStateToProps, Actions)(Checkout)

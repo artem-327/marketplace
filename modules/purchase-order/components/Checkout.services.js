@@ -48,18 +48,13 @@ export const submitButton = (props, state) => {
   const {
     allAccepted,
     openSection,
-    setOpenSection,
-    sectionState,
-    setSectionState,
-    setSummaryButtonCaption
+    sectionState
   } = state
 
   if (sectionState[openSection] && sectionState[openSection].value || allAccepted) {
     if (allAccepted) {
-      console.log('!!!!!!!!!! submitButton allAccepted')
       handleSubmitOrder(props, state)
     } else {
-      console.log('!!!!!!!!!! submitButton !allAccepted')
       if (openSection === 'review') submitUpdateCartItem(props, state)
       else confirmSection(state)
     }
@@ -79,7 +74,6 @@ export const getComponentParameters = (props, state) => {
     openSection,
     setOpenSection,
     sectionState,
-    setSectionState,
     setSummaryButtonCaption
   } = state
 
@@ -132,23 +126,18 @@ export const handleSubmitOrder = async (props, state) => {
   const warehouse = sectionState.shipping.value.warehouse
   const freightType = sectionState.freight.value.freightType
   let data = {
-    ...(warehouse ? { warehouseId: sectionState.shipping.value.id } : { deliveryAddressId: sectionState.shipping.value.id }),
+    ...(warehouse
+      ? { warehouseId: sectionState.shipping.value.id }
+      : { deliveryAddressId: sectionState.shipping.value.id }),
     bankAccountId: sectionState.payment.value,
     freightType
   }
-  // ! ! freightType === FREIGHT_TYPES.ECHO ? (data.shipmentQuoteId = shipmentQuoteId) : null
-
-
-  //shipmentQuoteId
-
-  //sectionState.freight.value.quoteId
+  freightType === FREIGHT_TYPES.ECHO ? (data.shipmentQuoteId = sectionState.freight.value.quoteId) : null
 
   try {
-    console.log('!!!!!!!!!! handleSubmitOrder data', data)
-    //await props.postPurchaseOrder(data)
-    //Router.push('/orders/purchase')
+    await props.postPurchaseOrder(data)
+    Router.push('/orders/purchase')
   } catch (e) {
     console.error(e)
   }
-
 }

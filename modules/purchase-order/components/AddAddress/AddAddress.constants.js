@@ -17,5 +17,5 @@ export const INITIAL_VALUES = {
   forkLift: false,
   callAhead: false,
   deliveryNotes: '',
-  taxId: ''   // ! ! presunout jinam pri submitu
+  taxId: ''
 }

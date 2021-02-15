@@ -7,23 +7,10 @@ import { getSafe } from "~/utils/functions"
 import { currency } from '~/constants/index'
 
 //Components
-import {
-  Container as SemanticContainer,
-  Image,
-  Header,
-  Button,
-  Icon,
-  Grid,
-  GridColumn,
-  GridRow,
-  Segment,
-  Popup,
-  Message,
-  Divider,
-  Radio
-} from 'semantic-ui-react'
+import { Button, GridColumn, Radio} from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import AddAddress from '../AddAddress/AddAddress'
+import ShippingHandler from './ShippingHandler'
 
 // Styles
 import {
@@ -39,34 +26,18 @@ import {
   DivRightSection
 } from '../Checkout.styles'
 import { DivRightButtons } from '../RowComponent/RowComponent.styles'
-
-
-import {
-  IconEdit
-} from './ShippingTerms.styles'
-
-
-import ShippingHandler from './ShippingHandler'
-
+import { IconEdit } from './ShippingTerms.styles'
 
 //Hooks
 import { usePrevious } from "../../../../hooks"
 
-
-
-//Services
-//import ErrorFocus from '../../../components/error-focus'
-//import {
-//} from './Checkout.services'
 import {
   getAddressOptions
 } from './ShippingTerms.services'
-import {getDeliveryAddresses, getWarehouses} from "../../actions";
 
 const ShippingTerms = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded  = usePrevious(props.isExpanded)
-
   const [warehouseAddressSwitch, setWarehouseAddressSwitch] = useState('warehouses')
   const [searchValue, setSearchValue] = useState('')
   const [addAddressValues, setAddAddressValues] = useState(null)
@@ -80,12 +51,6 @@ const ShippingTerms = props => {
     setSummaryButtonCaption,
     value
   } = props
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
 
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
@@ -186,7 +151,6 @@ const ShippingTerms = props => {
                     <AddAddress
                       {...props}
                       onUpdateAddress={value => {
-                        console.log('!!!!!!!!!! onUpdateAddress value', value)
                         onValueChange(getAddressOptions([value])[0])
                         try {
                           props.getDeliveryAddresses()
@@ -222,17 +186,13 @@ const ShippingTerms = props => {
 }
 
 ShippingTerms.propTypes = {
-  //itemsCount: PropTypes.number
 }
 
 ShippingTerms.defaultProps = {
-  //itemsCount: 0
 }
 
 function mapStateToProps(store, props) {
-  return {
-
-  }
+  return { }
 }
 
 export default injectIntl(connect(mapStateToProps, {  })(ShippingTerms))

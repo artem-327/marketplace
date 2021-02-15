@@ -6,45 +6,11 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import {getSafe} from "~/utils/functions"
 
 //Components
-import {
-  Container as SemanticContainer,
-  Header,
-  Button,
-  Icon,
-  Grid,
-  GridColumn,
-  GridRow,
-  Segment,
-  Popup,
-  Message,
-  Divider
-} from 'semantic-ui-react'
+import { Button, GridColumn, GridRow } from 'semantic-ui-react'
 
-import {
-  GridStyled,
-  DivRowHeader,
-  DivTopControl,
-  DivRightButtons
-
-
-
-
-} from './RowComponent.styles'
-
-
-//Hooks
-//import { usePrevious } from '../../../hooks'
-
-
-
-//Services
-//import ErrorFocus from '../../../components/error-focus'
-//import {
-//} from './Checkout.services'
+import { GridStyled, DivRowHeader, DivTopControl, DivRightButtons } from './RowComponent.styles'
 
 const RowComponent = props => {
-  const [tmp, setTmp] = useState(false)
-
   const {
     isExpanded,
     sectionState,
@@ -57,18 +23,6 @@ const RowComponent = props => {
     submitButtonDisabled,
     bottomLeftContent
   } = props
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
-
-  /*
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {
-  }, [])
-  */
 
   return (
     <GridRow>

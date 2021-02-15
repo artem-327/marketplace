@@ -2,7 +2,7 @@
 import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe } from "~/utils/functions"
 import { currency } from '~/constants/index'
 
@@ -40,11 +40,6 @@ const Payment = props => {
     payments,
     value
   } = props
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-
-  }, [])  // If [] is empty then is similar as componentDidMount.
 
 
   // This useEffect is used similar as componentDidUpdate
@@ -143,11 +138,9 @@ const Payment = props => {
 }
 
 Payment.propTypes = {
-  //itemsCount: PropTypes.number
 }
 
 Payment.defaultProps = {
-  //itemsCount: 0
 }
 
 function mapStateToProps(store, props) {

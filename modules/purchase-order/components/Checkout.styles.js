@@ -38,15 +38,6 @@ export const DivSectionCollapsedWrapper = styled.div`
   margin: -5px -10px;
 `
 
-export const DivSectionExpandedRow = styled.div`
-  display: flex;
-  flex-flow: row;
-  margin: 5px 0;
-  padding: 10px 15px;
-  border-radius: 4px;
-  border: solid 1px #dee2e6;
-`
-
 export const DivSectionCollapsedRow = styled.div`
   display: flex;
   flex-flow: row;
@@ -120,6 +111,11 @@ export const GridExpandedSection = styled(Grid)`
       }
     }
   }
+`
+
+export const GridRowReviewItems = styled(GridRow)`
+  margin: 5px 0 !important;
+  padding: 0 !important;
 `
 
 export const GridRowExpandedSelectionRow = styled(GridRow)`

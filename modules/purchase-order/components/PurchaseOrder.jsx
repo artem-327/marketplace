@@ -365,7 +365,7 @@ class PurchaseOrder extends Component {
     const { isSetShippingQuoteId } = this.state
 
     if (cartIsFetching) return <Spinner />
-    if (cart.cartItems.length === 0) Router.push('/cart')
+    //if (cart.cartItems.length === 0) Router.push('/cart')
 
     //let currency = cart.cartItems[0].productOffer.pricingTiers[0].price.currency.code
     //let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, currency)  // ! !
