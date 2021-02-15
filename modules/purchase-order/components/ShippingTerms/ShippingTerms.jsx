@@ -7,7 +7,7 @@ import { getSafe } from "~/utils/functions"
 import { currency } from '~/constants/index'
 
 //Components
-import { Button, GridColumn, Radio} from 'semantic-ui-react'
+import { Button, GridColumn, Radio, Dimmer, Loader } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import AddAddress from '../AddAddress/AddAddress'
 import ShippingHandler from './ShippingHandler'
@@ -49,7 +49,9 @@ const ShippingTerms = props => {
     sectionState,
     onValueChange,
     setSummaryButtonCaption,
-    value
+    value,
+    warehousesFetching,
+    isFetching
   } = props
 
   // This useEffect is used similar as componentDidUpdate
@@ -98,6 +100,9 @@ const ShippingTerms = props => {
                     onSetSearchValueChange={val => setSearchValue(val)}
                   />
                   <GridExpandedSection>
+                    <Dimmer inverted active={warehousesFetching || isFetching}>
+                      <Loader />
+                    </Dimmer>
                     {addressOptions.map((item, index) => (
                       <GridRowExpandedSelectionRow
                         key={index}

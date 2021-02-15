@@ -44,7 +44,8 @@ export const initialState = {
     selectedShippingQuote: null
   },
   identity: null,
-  isOpenSidebar: false
+  isOpenSidebar: false,
+  shippingQuotesAreFetching: false
 }
 
 export default function reducer(state = initialState, action) {

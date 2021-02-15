@@ -51,7 +51,7 @@ export const submitButton = (props, state) => {
     sectionState
   } = state
 
-  if (sectionState[openSection] && sectionState[openSection].value || allAccepted) {
+  if (sectionState[openSection] && sectionState[openSection].value || allAccepted || openSection === 'review') {
     if (allAccepted) {
       handleSubmitOrder(props, state)
     } else {

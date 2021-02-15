@@ -8,7 +8,7 @@ import { currency } from '~/constants/index'
 import { AlertCircle } from 'react-feather'
 
 //Components
-import { GridRow, GridColumn, Radio, Icon, Button, Header, Input } from 'semantic-ui-react'
+import { GridRow, GridColumn, Radio, Icon, Button, Header, Input, Dimmer, Loader } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
   DivSectionCollapsedWrapper,
@@ -122,6 +122,9 @@ const FreightSelection = props => {
                   !cart.palletLimitExceed &&
                   !fixedFreightId && (
                     <GridExpandedSection>
+                      <Dimmer inverted active={shippingQuotesAreFetching}>
+                        <Loader />
+                      </Dimmer>
                       {freightOptions.map((item, index) => (
                         <GridRowExpandedSelectionRow
                           key={index}
