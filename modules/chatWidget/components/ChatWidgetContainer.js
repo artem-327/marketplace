@@ -61,8 +61,6 @@ function mapStateToProps(state) {
         getSafe(() => state.productsAdmin.currentEditForm, false))
     ) {
       if (typeof window !== 'undefined' && window.innerHeight) {
-        console.log(window.innerHeight)
-        console.log(window.innerHeight * 0.9)
         return window.innerHeight * 0.9 // Height of Sidebar is 89% height of page
       }
     }

@@ -47,7 +47,7 @@ import confirm from '~/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { Required, Or } from '~/components/constants/layout'
 import { AttachmentManager } from '~/modules/attachments'
-import { UploadCloud, ChevronDown } from 'react-feather'
+import { UploadCloud, ChevronDown, Paperclip } from 'react-feather'
 import ErrorFocus from '~/components/error-focus'
 //Components
 import BasicButton from '../../../../components/buttons/BasicButton'
@@ -66,6 +66,24 @@ const DivTitleColumn = styled.div`
   font-size: 14px;
 `
 
+const DivDocumentManager = styled.div`
+  padding-bottom: 6px;
+`
+
+const PaperclipIcon = styled(Paperclip)`
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+`
+
+const DivBrowseFile = styled.div`
+  display: flex;
+  align-items: center;
+  place-content: center;
+  color: #20273a;
+  ${({ background }) => background};
+  padding: 6px;
+`
+
 const GridColumnMixtures = styled(GridColumn)`
   padding: 3px 14px !important;
 `
@@ -78,6 +96,7 @@ const GridColumnLabelTextArea = styled(GridColumn)`
 
 const GridColumnForm = styled(GridColumn)`
   padding: 6px 14px !important;
+  ${({ color }) => (color ? color : null)};
 `
 
 const DivHeader = styled.div`
@@ -215,7 +234,7 @@ const GridColumnBtn = styled(GridColumn)`
 `
 
 const DivIcon = styled.div`
-  margin-top: 8px;
+  margin-right: 8px;
 `
 
 const StyledButton = styled(Button)`
@@ -978,84 +997,81 @@ class AddEditEchoProduct extends React.Component {
     this.setState({ changedForm: true })
   }
 
-  RowDocument = (formikProps, values, popupValues, documentType) => {
+  inputDocumentRows = (formikProps, values, popupValues, documentType) => {
     return (
       <>
-        <UploadAttachment
-          {...this.props}
-          attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
-          edit={getSafe(() => popupValues.id, '')}
-          name='attachments'
-          type={documentType.toString()}
-          filesLimit={1}
-          fileMaxSize={20}
-          listDocumentTypes={this.props.listDocumentTypes}
-          onChange={files => {
-            formikProps.setFieldValue(
-              `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-              {
-                id: files.id,
-                name: files.name,
-                documentType: files.documentType,
-                isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
+        <GridRowCustom>
+          <GridColumnForm width={16} color='color: #20273a !important;'>
+            <FormattedMessage id='global.chooseExistingDocument' defaultMessage='Choose Existing Document' />
+          </GridColumnForm>
+        </GridRowCustom>
+        <GridRowCustom>
+          <GridColumnForm width={16}>
+            <AttachmentManager
+              border='none !important'
+              color='#20273a !important'
+              background='#edeef2 !important'
+              singleSelection
+              documentTypeIds={[documentType]}
+              asModal
+              returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
+            />
+          </GridColumnForm>
+        </GridRowCustom>
+        <GridRowCustom>
+          <GridColumnForm width={16} color='color: #20273a !important;'>
+            <FormattedMessage id='global.orUploadNewDocumet' defaultMessage='Or Upload New Document' />
+          </GridColumnForm>
+        </GridRowCustom>
+        <GridRowCustom>
+          <GridColumnForm width={16}>
+            <UploadAttachment
+              {...this.props}
+              attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
+              edit={getSafe(() => popupValues.id, '')}
+              name='attachments'
+              type={documentType.toString()}
+              filesLimit={1}
+              fileMaxSize={20}
+              listDocumentTypes={this.props.listDocumentTypes}
+              onChange={files => {
+                formikProps.setFieldValue(
+                  `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                  {
+                    id: files.id,
+                    name: files.name,
+                    documentType: files.documentType,
+                    isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
+                  }
+                )
+                this.setState({ changedForm: true })
+              }}
+              onRemoveFile={async id => {
+                await formikProps.setFieldValue('attachments', [])
+                const arrayAttachments = values.attachments.filter(attachment => attachment.id !== id)
+                await formikProps.setFieldValue('attachments', arrayAttachments)
+                this.setState({ changedForm: true, changedAttachments: true })
+              }}
+              data-test='settings_product_import_attachments'
+              emptyContent={
+                <DivBrowseFile background='white'>
+                  <DivIcon>
+                    <PaperclipIcon size='14' color='#20273a' />
+                  </DivIcon>
+                  <FormattedMessage id='global.browseFileHere' defaultMessage='Browse file here' />
+                </DivBrowseFile>
               }
-            )
-            this.setState({ changedForm: true })
-          }}
-          onRemoveFile={async id => {
-            await formikProps.setFieldValue('attachments', [])
-            const arrayAttachments = values.attachments.filter(attachment => attachment.id !== id)
-            await formikProps.setFieldValue('attachments', arrayAttachments)
-            this.setState({ changedForm: true, changedAttachments: true })
-          }}
-          data-test='settings_product_import_attachments'
-          emptyContent={
-            <label>
-              <DivIcon>
-                <UploadCloud size='25' color='#dee2e6' />
-              </DivIcon>
-              <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-              <br />
-              <FormattedMessage
-                id='addInventory.dragDropOr'
-                defaultMessage={'or {link} to select from computer'}
-                values={{
-                  link: (
-                    <a>
-                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                    </a>
-                  )
-                }}
-              />
-            </label>
-          }
-          uploadedContent={
-            <label>
-              <DivIcon>
-                <UploadCloud size='25' color='#dee2e6' />
-              </DivIcon>
-              <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-              <br />
-              <FormattedMessage
-                id='addInventory.dragDropOr'
-                defaultMessage={'or {link} to select from computer'}
-                values={{
-                  link: (
-                    <a>
-                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                    </a>
-                  )
-                }}
-              />
-            </label>
-          }
-        />
-        <AttachmentManager
-          singleSelection
-          documentTypeIds={[documentType]}
-          asModal
-          returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
-        />
+              uploadedContent={
+                <DivBrowseFile>
+                  <DivIcon>
+                    <PaperclipIcon size='14' color='#20273a' />
+                  </DivIcon>
+                  <FormattedMessage id='global.browseFileHere' defaultMessage='Browse file here' />
+                </DivBrowseFile>
+              }
+            />
+          </GridColumnForm>
+        </GridRowCustom>
       </>
     )
   }
@@ -1426,10 +1442,6 @@ class AddEditEchoProduct extends React.Component {
                 selection: true,
                 multiple: true,
                 fluid: true,
-                placeholder: formatMessage({
-                  id: 'global.enterManufacturerProductCodes',
-                  defaultMessage: 'Enter Manufacturer Product Codes'
-                }),
                 onAddItem: (e, { value }) => {
                   const newValue = { text: value, value: value }
                   codesList.push(newValue)
@@ -1493,25 +1505,33 @@ class AddEditEchoProduct extends React.Component {
           </GridColumn>
         </GridRowCustom>
 
-        {this.RowTwoInputs([
-          { name: 'sdsIssuedDate', id: 'global.sdsIssuedDate', defaultMessage: 'SDS Issued Date' },
-          { name: 'sdsPreparedBy', id: 'global.sdsPreparedBy', defaultMessage: 'SDS Prepared by' }
-        ])}
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowDate({ name: 'sdsIssuedDate', id: 'global.sdsIssuedDate', defaultMessage: 'SDS Issued Date' })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
+            {this.RowInput({ name: 'sdsPreparedBy', id: 'global.sdsPreparedBy', defaultMessage: 'SDS Prepared by' })}
+          </GridColumnForm>
+        </GridRowCustom>
 
-        {this.RowTwoInputs([
-          {
-            name: 'sdsRevisionDate',
-            id: 'global.sdsRevisionDate',
-            defaultMessage: 'SDS Revision Date'
-          },
-          {
-            name: 'sdsVersionNumber',
-            id: 'global.sdsVersionNumber',
-            defaultMessage: 'SDS Version Number',
-            required: false,
-            placeholderId: 'admin.sds.enterVersionNumber'
-          }
-        ])}
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowDate({
+              name: 'sdsRevisionDate',
+              id: 'global.sdsRevisionDate',
+              defaultMessage: 'SDS Revision Date'
+            })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
+            {this.RowInput({
+              name: 'sdsVersionNumber',
+              id: 'global.sdsVersionNumber',
+              defaultMessage: 'SDS Version Number',
+              required: false,
+              placeholderId: 'admin.sds.enterVersionNumber'
+            })}
+          </GridColumnForm>
+        </GridRowCustom>
 
         <GridRowCustom>
           <GridColumn width={16}>
@@ -1521,25 +1541,33 @@ class AddEditEchoProduct extends React.Component {
           </GridColumn>
         </GridRowCustom>
 
-        {this.RowTwoInputs([
-          { name: 'tdsIssuedDate', id: 'global.tdsIssuedDate', defaultMessage: 'TDS Issued Date' },
-          { name: 'tdsPreparedBy', id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared by' }
-        ])}
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowDate({ name: 'tdsIssuedDate', id: 'global.tdsIssuedDate', defaultMessage: 'TDS Issued Date' })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
+            {this.RowInput({ name: 'tdsPreparedBy', id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared by' })}
+          </GridColumnForm>
+        </GridRowCustom>
 
-        {this.RowTwoInputs([
-          {
-            name: 'tdsRevisionDate',
-            id: 'global.tdsRevisionDate',
-            defaultMessage: 'TDS Revision Date'
-          },
-          {
-            name: 'tdsVersionNumber',
-            id: 'tdsVersionNumber',
-            defaultMessage: 'TDS Version Number',
-            required: false,
-            placeholderId: 'global.enterTdsVersionNumber'
-          }
-        ])}
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowDate({
+              name: 'tdsRevisionDate',
+              id: 'global.tdsRevisionDate',
+              defaultMessage: 'TDS Revision Date'
+            })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
+            {this.RowInput({
+              name: 'tdsVersionNumber',
+              id: 'tdsVersionNumber',
+              defaultMessage: 'TDS Version Number',
+              required: false,
+              placeholderId: 'global.enterTdsVersionNumber'
+            })}
+          </GridColumnForm>
+        </GridRowCustom>
       </Grid>
     )
   }
@@ -1981,31 +2009,36 @@ class AddEditEchoProduct extends React.Component {
     let { popupValues } = this.state
 
     return (
-      <Grid verticalAlign='middle'>
-        <GridRow>
+      <Grid>
+        <GridRowCustom>
           <GridColumn width={16}>
-            <label>
+            <DivHeader>
               <FormattedMessage id='global.sdsDocument' defaultMessage='SDS Document' />
-            </label>
-            {this.RowDocument(formikProps, formikProps.values, popupValues, 3)}
+            </DivHeader>
           </GridColumn>
-        </GridRow>
-        <GridRow>
+        </GridRowCustom>
+
+        {this.inputDocumentRows(formikProps, formikProps.values, popupValues, 3)}
+
+        <GridRowCustom>
           <GridColumn width={16}>
-            <label>
+            <DivHeader>
               <FormattedMessage id='global.tdsDocument' defaultMessage='TDS Document' />
-            </label>
-            {this.RowDocument(formikProps, formikProps.values, popupValues, 11)}
+            </DivHeader>
           </GridColumn>
-        </GridRow>
-        <GridRow>
+        </GridRowCustom>
+
+        {this.inputDocumentRows(formikProps, formikProps.values, popupValues, 11)}
+
+        <GridRowCustom>
           <GridColumn width={16}>
-            <label>
+            <DivHeader>
               <FormattedMessage id='global.dhsDocument' defaultMessage='DHS Document' />
-            </label>
-            {this.RowDocument(formikProps, formikProps.values, popupValues, 12)}
+            </DivHeader>
           </GridColumn>
-        </GridRow>
+        </GridRowCustom>
+
+        {this.inputDocumentRows(formikProps, formikProps.values, popupValues, 12)}
       </Grid>
     )
   }
@@ -2037,498 +2070,159 @@ class AddEditEchoProduct extends React.Component {
       (v, i, a) => a.findIndex(t => t.key === v.key) === i
     )
 
-    switch (transportationType) {
-      case 'dot': {
-        return (
-          <Grid verticalAlign='middle'>
+    let typeUp = transportationType.toUpperCase()
+
+    return (
+      <Grid>
+        <GridRowCustom>
+          <GridColumnForm width={8}>
             {this.RowDropdown({
-              name: 'dotHazardClass',
-              id: 'global.dotHazardClass',
-              defaultMessage: 'DOT Hazard Class',
+              name: `${transportationType}HazardClass`,
+              id: `global.${transportationType}tdgHazardClass`,
+              defaultMessage: `${typeUp} Hazard Class`,
               clearable: true,
               props: {
                 options: this.props.hazardClasses
               }
             })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
             {this.RowDropdown({
-              name: 'dotPackagingGroup',
-              id: 'global.dotPackagingGroup',
-              defaultMessage: 'DOT Packaging Group',
+              name: `${transportationType}PackagingGroup`,
+              id: `global.${transportationType}tdgPackagingGroup`,
+              defaultMessage: `${typeUp} Packaging Group`,
               clearable: true,
               props: {
                 options: this.props.packagingGroups
               }
             })}
-
-            {this.RowInput({
-              name: 'dotProperShippingName',
-              id: 'global.dotProperShippingName',
-              defaultMessage: 'DOT Proper Shipping Name'
-            })}
-            {this.RowInput({
-              name: 'dotProperTechnicalName',
-              id: 'global.dotProperTechnicalName',
-              defaultMessage: 'DOT Proper Technical Name'
-            })}
+          </GridColumnForm>
+        </GridRowCustom>
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}ProperShippingName`,
+            id: `global.${transportationType}tdgProperShippingName`,
+            defaultMessage: `${typeUp} Proper Shipping Name`
+          },
+          {
+            name: `${transportationType}ProperTechnicalName`,
+            id: `global.${transportationType}tdgProperTechnicalName`,
+            defaultMessage: `${typeUp} Proper Technical Name`
+          }
+        ])}
+        <GridRowCustom>
+          <GridColumnForm width={8}>
             {this.RowUnNumberDropdown({
-              name: 'dotUnNumber',
-              id: 'global.dotUnNumber',
-              defaultMessage: 'DOT UN Number',
+              name: `${transportationType}UnNumber`,
+              id: `global.${transportationType}tdgUnNumber`,
+              defaultMessage: `${typeUp} UN Number`,
               props: {
                 options: unNumberOptions
               }
             })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
             {this.RowInput({
-              name: 'dotReportableQuantity',
-              id: 'global.dotReportableQuantity',
-              defaultMessage: 'DOT Reportable Quantity'
+              name: `${transportationType}ReportableQuantities`,
+              id: `global.${transportationType}tdgReportableQuantities`,
+              defaultMessage: `${typeUp} Reportable Quantities`
             })}
-            {this.RowInput({
-              name: 'dotEnvironmentalHazards',
-              id: 'global.dotEnvironmentalHazards',
-              defaultMessage: 'DOT Enviromental Hazards'
-            })}
-            {this.RowInput({
-              name: 'dotEmsNumbers',
-              id: 'global.dotEmsNumbers',
-              defaultMessage: 'DOT Ems Numbers'
-            })}
-            {this.RowInput({
-              name: 'dotExceptions',
-              id: 'global.dotExceptions',
-              defaultMessage: 'DOT Exceptions'
-            })}
-            {this.RowInput({
-              name: 'dotUserSpecialPrecautions',
-              id: 'global.dotUserSpecialPrecautions',
-              defaultMessage: 'DOT User Special Precautions'
-            })}
-            {this.RowInput({
-              name: 'dotMarinePollutant',
-              id: 'global.dotMarinePollutant',
-              defaultMessage: 'DOT Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'dotSevereMarinePollutant',
-              id: 'global.dotSevereMarinePollutant',
-              defaultMessage: 'DOT Severe Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'dotPackagingExceptions',
-              id: 'global.dotPackagingExceptions',
-              defaultMessage: 'DOT Packaging Exceptions'
-            })}
-            {this.RowInput({
-              name: 'dotPackagingNonBulk',
-              id: 'global.dotPackagingNonBulk',
-              defaultMessage: 'DOT Packaging Non Bulk'
-            })}
-            {this.RowInput({
-              name: 'dotPackagingBulk',
-              id: 'global.dotPackagingBulk',
-              defaultMessage: 'DOT Packaging Bulk'
-            })}
-            {this.RowInput({
-              name: 'dotPassengerQuantityLimitations',
-              id: 'global.dotPassengerQuantityLimitations',
-              defaultMessage: 'DOT Passenger Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'dotCargoAircraftQuantityLimitations',
-              id: 'global.dotCargoAircraftQuantityLimitations',
-              defaultMessage: 'DOT Cargo Aircraft Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'dotVesselStowageLocation',
-              id: 'global.dotVesselStowageLocation',
-              defaultMessage: 'DOT Vessel Stowage Location'
-            })}
-            {this.RowInput({
-              name: 'dotVesselStowageOther',
-              id: 'global.dotVesselStowageOther',
-              defaultMessage: 'DOT Vessel Stowage Other'
-            })}
-            {this.RowInput({
-              name: 'dotQuantityLimitations',
-              id: 'global.dotQuantityLimitations',
-              defaultMessage: 'DOT Quantity Limitations'
-            })}
-          </Grid>
-        )
-      }
+          </GridColumnForm>
+        </GridRowCustom>
 
-      case 'iata': {
-        return (
-          <Grid verticalAlign='middle'>
-            {this.RowDropdown({
-              name: 'iataHazardClass',
-              id: 'global.iataHazardClass',
-              defaultMessage: 'IATA Hazard Class',
-              clearable: true,
-              props: {
-                options: this.props.hazardClasses
-              }
-            })}
-            {this.RowDropdown({
-              name: 'iataPackagingGroup',
-              id: 'global.iataPackagingGroup',
-              defaultMessage: 'IATA Packaging Group',
-              clearable: true,
-              props: {
-                options: this.props.packagingGroups
-              }
-            })}
-            {this.RowInput({
-              name: 'iataProperShippingName',
-              id: 'global.iataProperShippingName',
-              defaultMessage: 'IATA Proper Shipping Name'
-            })}
-            {this.RowInput({
-              name: 'iataProperTechnicalName',
-              id: 'global.iataProperTechnicalName',
-              defaultMessage: 'IATA Proper Technical Name'
-            })}
-            {this.RowUnNumberDropdown({
-              name: 'iataUnNumber',
-              id: 'global.iataUnNumber',
-              defaultMessage: 'IATA UN Number',
-              props: {
-                options: unNumberOptions
-              }
-            })}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}EnvironmentalHazards`,
+            id: `global.${transportationType}tdgEnvironmentalHazards`,
+            defaultMessage: `${typeUp} Environmental Hazards`
+          },
+          {
+            name: `${transportationType}EmsNumbers`,
+            id: `global.${transportationType}tdgEmsNumbers`,
+            defaultMessage: `${typeUp} Ems Numbers`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}Exceptions`,
+            id: `global.${transportationType}tdgExceptions`,
+            defaultMessage: `${typeUp} Exceptions`
+          },
+          {
+            name: `${transportationType}UserSpecialPrecautions`,
+            id: `global.${transportationType}tdgUserSpecialPrecautions`,
+            defaultMessage: `${typeUp} Users Special Precautions`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}MarinePollutant`,
+            id: `global.${transportationType}tdgMarinePollutant`,
+            defaultMessage: `${typeUp} Marine Pollutant`
+          },
+          {
+            name: `${transportationType}SevereMarinePollutant`,
+            id: `global.${transportationType}tdgSevereMarinePollutant`,
+            defaultMessage: `${typeUp} Severe Marine Pollutant`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}PackagingExceptions`,
+            id: `global.${transportationType}tdgPackagingExceptions`,
+            defaultMessage: `${typeUp} Packaging Exceptions`
+          },
+          {
+            name: `${transportationType}PackagingNonBulk`,
+            id: `global.${transportationType}tdgPackagingNonBulk`,
+            defaultMessage: `${typeUp} Packaging Non Bulk`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}PackagingBulk`,
+            id: `global.${transportationType}tdgPackagingBulk`,
+            defaultMessage: `${typeUp} Packaging Bulk`
+          },
+          {
+            name: `${transportationType}PassengerQuantityLimitations`,
+            id: `global.${transportationType}tdgPassengerQuantityLimitations`,
+            defaultMessage: `${typeUp} Passanger Quantity Limitations`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}CargoAircraftQuantityLimitations`,
+            id: `global.${transportationType}tdgCargoAircraftQuantityLimitations`,
+            defaultMessage: `${typeUp} Cargo Aircraft Quantity Limitations`
+          },
+          {
+            name: `${transportationType}VesselStowageLocation`,
+            id: `global.${transportationType}tdgVesselStowageLocation`,
+            defaultMessage: `${typeUp} Vessel Stowage Location`
+          }
+        ])}
 
+        <GridRowCustom>
+          <GridColumnForm width={8}>
             {this.RowInput({
-              name: 'iataReportableQuantities',
-              id: 'global.iataReportableQuantities',
-              defaultMessage: 'IATA Reportable Quantities'
+              name: `${transportationType}VesselStowageOther`,
+              id: `global.${transportationType}tdgVesselStowageOther`,
+              defaultMessage: `${typeUp} Vessel Stowage Other`
             })}
-            {this.RowInput({
-              name: 'iataEnvironmentalHazards',
-              id: 'global.iataEnvironmentalHazards',
-              defaultMessage: 'IATA Enviromental Hazards'
-            })}
-            {this.RowInput({
-              name: 'iataEmsNumbers',
-              id: 'global.iataEmsNumbers',
-              defaultMessage: 'IATA Ems Numbers'
-            })}
-            {this.RowInput({
-              name: 'iataExceptions',
-              id: 'global.iataExceptions',
-              defaultMessage: 'IATA Exceptions'
-            })}
-            {this.RowInput({
-              name: 'iataUserSpecialPrecautions',
-              id: 'global.iataUserSpecialPrecautions',
-              defaultMessage: 'IATA User Special Precautions'
-            })}
-            {this.RowInput({
-              name: 'iataMarinePollutant',
-              id: 'global.iataMarinePollutant',
-              defaultMessage: 'IATA Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'iataSevereMarinePollutant',
-              id: 'global.iataSevereMarinePollutant',
-              defaultMessage: 'IATA Severe Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'iataPackagingExceptions',
-              id: 'global.iataPackagingExceptions',
-              defaultMessage: 'IATA Packaging Exceptions'
-            })}
-            {this.RowInput({
-              name: 'iataPackagingNonBulk',
-              id: 'global.iataPackagingNonBulk',
-              defaultMessage: 'IATA Packaging Non Bulk'
-            })}
-            {this.RowInput({
-              name: 'iataPackagingBulk',
-              id: 'global.iataPackagingBulk',
-              defaultMessage: 'IATA Packaging Bulk'
-            })}
-            {this.RowInput({
-              name: 'iataPassengerQuantityLimitations',
-              id: 'global.iataPassengerQuantityLimitations',
-              defaultMessage: 'IATA Passenger Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'iataCargoAircraftQuantityLimitations',
-              id: 'global.iataCargoAircraftQuantityLimitations',
-              defaultMessage: 'IATA Cargo Aircraft Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'iataVesselStowageLocation',
-              id: 'global.iataVesselStowageLocation',
-              defaultMessage: 'IATA Vessel Stoge Location'
-            })}
-            {this.RowInput({
-              name: 'iataVesselStowageOther',
-              id: 'global.iataVesselStowageOther',
-              defaultMessage: 'IATA Vessel Stowage Other'
-            })}
-          </Grid>
-        )
-      }
-
-      case 'imdgImo': {
-        return (
-          <Grid verticalAlign='middle'>
-            {this.RowDropdown({
-              name: 'imdgImoHazardClass',
-              id: 'global.imdgImoHazardClass',
-              defaultMessage: 'IMDG/IMO Hazard Class',
-              clearable: true,
-              props: {
-                options: this.props.hazardClasses
-              }
-            })}
-            {this.RowDropdown({
-              name: 'imdgImoPackagingGroup',
-              id: 'global.imdgImoPackagingGroup',
-              defaultMessage: 'IMDG/IMO Packaging Group',
-              clearable: true,
-              props: {
-                options: this.props.packagingGroups
-              }
-            })}
-            {this.RowInput({
-              name: 'imdgImoProperShippingName',
-              id: 'global.imdgImoProperShippingName',
-              defaultMessage: 'IMDG/IMO Proper Shipping Name'
-            })}
-            {this.RowInput({
-              name: 'imdgImoProperTechnicalName',
-              id: 'global.imdgImoProperTechnicalName',
-              defaultMessage: 'IMDG/IMO Proper Technical Name'
-            })}
-            {this.RowUnNumberDropdown({
-              name: 'imdgImoUnNumber',
-              id: 'global.imdgImoUnNumber',
-              defaultMessage: 'IMDG/IMO UN Number',
-              props: {
-                options: unNumberOptions
-              }
-            })}
-
-            {this.RowInput({
-              name: 'imdgImoReportableQuantities',
-              id: 'global.imdgImoReportableQuantities',
-              defaultMessage: 'IMDG/IMO Reportable Quantities'
-            })}
-            {this.RowInput({
-              name: 'imdgImoEnvironmentalHazards',
-              id: 'global.imdgImoEnvironmentalHazards',
-              defaultMessage: 'IMDG/IMO Enviromental Hazards'
-            })}
-            {this.RowInput({
-              name: 'imdgImoEmsNumbers',
-              id: 'global.imdgImoEmsNumbers',
-              defaultMessage: 'IMDG/IMO Ems Numbers'
-            })}
-            {this.RowInput({
-              name: 'imdgImoExceptions',
-              id: 'global.imdgImoExceptions',
-              defaultMessage: 'IMDG/IMO Exceptions'
-            })}
-            {this.RowInput({
-              name: 'imdgImoUserSpecialPrecautions',
-              id: 'global.imdgImoUserSpecialPrecautions',
-              defaultMessage: 'IMDG/IMO User Special Precautions'
-            })}
-            {this.RowInput({
-              name: 'imdgImoMarinePollutant',
-              id: 'global.imdgImoMarinePollutant',
-              defaultMessage: 'IMDG/IMO Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'imdgImoSevereMarinePollutant',
-              id: 'global.imdgImoSevereMarinePollutant',
-              defaultMessage: 'IMDG/IMO Severe Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'imdgImoPackagingExceptions',
-              id: 'global.imdgImoPackagingExceptions',
-              defaultMessage: 'IMDG/IMO Packaging Exceptions'
-            })}
-            {this.RowInput({
-              name: 'imdgImoPackagingNonBulk',
-              id: 'global.imdgImoPackagingNonBulk',
-              defaultMessage: 'IMDG/IMO Packaging Non Bulk'
-            })}
-            {this.RowInput({
-              name: 'imdgImoPackagingBulk',
-              id: 'global.imdgImoPackagingBulk',
-              defaultMessage: 'IMDG/IMO Packaging Bulk'
-            })}
-            {this.RowInput({
-              name: 'imdgImoPassengerQuantityLimitations',
-              id: 'global.imdgImoPassengerQuantityLimitations',
-              defaultMessage: 'IMDG/IMO Passenger Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'imdgImoCargoAircraftQuantityLimitations',
-              id: 'global.imdgImoCargoAircraftQuantityLimitations',
-              defaultMessage: 'IMDG/IMO Cargo Aircraft Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'imdgImoVesselStowageLocation',
-              id: 'global.imdgImoVesselStowageLocation',
-              defaultMessage: 'IMDG/IMO Vessel Stoge Location'
-            })}
-            {this.RowInput({
-              name: 'imdgImoVesselStowageOther',
-              id: 'global.imdgImoVesselStowageOther',
-              defaultMessage: 'IMDG/IMO Vessel Stowage Other'
-            })}
-          </Grid>
-        )
-      }
-
-      case 'tdg': {
-        return (
-          <Grid>
-            <GridRowCustom>
-              <GridColumnForm width={8}>
-                {this.RowDropdown({
-                  name: 'tdgHazardClass',
-                  id: 'global.tdgHazardClass',
-                  defaultMessage: 'TDG Hazard Class',
-                  clearable: true,
-                  props: {
-                    options: this.props.hazardClasses
-                  }
-                })}
-              </GridColumnForm>
-              <GridColumnForm width={8}>
-                {this.RowDropdown({
-                  name: 'tdgPackagingGroup',
-                  id: 'global.tdgPackagingGroup',
-                  defaultMessage: 'TDG Packaging Group',
-                  clearable: true,
-                  props: {
-                    options: this.props.packagingGroups
-                  }
-                })}
-              </GridColumnForm>
-            </GridRowCustom>
-            {this.RowTwoInputs([
-              {
-                name: 'tdgProperShippingName',
-                id: 'global.tdgProperShippingName',
-                defaultMessage: 'TDG Proper Shipping Name'
-              },
-              {
-                name: 'tdgProperTechnicalName',
-                id: 'global.tdgProperTechnicalName',
-                defaultMessage: 'TDG Proper Technical Name'
-              }
-            ])}
-            <GridRowCustom>
-              <GridColumnForm width={8}>
-                {this.RowUnNumberDropdown({
-                  name: 'tdgUnNumber',
-                  id: 'global.tdgUnNumber',
-                  defaultMessage: 'TDG UN Number',
-                  props: {
-                    options: unNumberOptions
-                  }
-                })}
-              </GridColumnForm>
-              <GridColumnForm width={8}>
-                {this.RowInput({
-                  name: 'tdgReportableQuantities',
-                  id: 'global.tdgReportableQuantities',
-                  defaultMessage: 'TDG Reportable Quantities'
-                })}
-              </GridColumnForm>
-            </GridRowCustom>
-
-            {this.RowTwoInputs([
-              {
-                name: 'tdgEnvironmentalHazards',
-                id: 'global.tdgEnvironmentalHazards',
-                defaultMessage: 'TDG Environmental Hazards'
-              },
-              {
-                name: 'tdgEmsNumbers',
-                id: 'global.tdgEmsNumbers',
-                defaultMessage: 'TDG Ems Numbers'
-              }
-            ])}
-            {this.RowTwoInputs([
-              {
-                name: 'tdgExceptions',
-                id: 'global.tdgExceptions',
-                defaultMessage: 'TDG Exceptions'
-              },
-              {
-                name: 'tdgUserSpecialPrecautions',
-                id: 'global.tdgUserSpecialPrecautions',
-                defaultMessage: 'TDG Users Special Precautions'
-              }
-            ])}
-            {this.RowTwoInputs([
-              {
-                name: 'tdgMarinePollutant',
-                id: 'global.tdgMarinePollutant',
-                defaultMessage: 'TDG Marine Pollutant'
-              },
-              {
-                name: 'tdgSevereMarinePollutant',
-                id: 'global.tdgSevereMarinePollutant',
-                defaultMessage: 'TDG Severe Marine Pollutant'
-              }
-            ])}
-            {this.RowTwoInputs([
-              {
-                name: 'tdgPackagingExceptions',
-                id: 'global.tdgPackagingExceptions',
-                defaultMessage: 'TDG Packaging Exceptions'
-              },
-              {
-                name: 'tdgPackagingNonBulk',
-                id: 'global.tdgPackagingNonBulk',
-                defaultMessage: 'TDG Packaging Non Bulk'
-              }
-            ])}
-            {this.RowTwoInputs([
-              {
-                name: 'tdgPackagingBulk',
-                id: 'global.tdgPackagingBulk',
-                defaultMessage: 'TDG Packaging Bulk'
-              },
-              {
-                name: 'tdgPassengerQuantityLimitations',
-                id: 'global.tdgPassengerQuantityLimitations',
-                defaultMessage: 'TDG Passanger Quantity Limitations'
-              }
-            ])}
-            {this.RowTwoInputs([
-              {
-                name: 'tdgCargoAircraftQuantityLimitations',
-                id: 'global.tdgCargoAircraftQuantityLimitations',
-                defaultMessage: 'TDG Cargo Aircraft Quantity Limitations'
-              },
-              {
-                name: 'tdgVesselStowageLocation',
-                id: 'global.tdgVesselStowageLocation',
-                defaultMessage: 'TDG Vessel Stowage Location'
-              }
-            ])}
-            <GridRowCustom>
-              <GridColumnForm width={8}>
-                {this.RowInput({
-                  name: 'tdgVesselStowageOther',
-                  id: 'global.tdgVesselStowageOther',
-                  defaultMessage: 'TDG Vessel Stowage Other'
-                })}
-              </GridColumnForm>
-            </GridRowCustom>
-          </Grid>
-        )
-      }
-    }
+          </GridColumnForm>
+          {transportationType === 'dot' && (
+            <GridColumnForm width={8}>
+              {this.RowInput({
+                name: `${transportationType}QuantityLimitations`,
+                id: `global.${transportationType}tdgQuantityLimitations`,
+                defaultMessage: `${typeUp} Quantity Limitations`
+              })}
+            </GridColumnForm>
+          )}
+        </GridRowCustom>
+      </Grid>
+    )
   }
 
   getContent = formikProps => {
