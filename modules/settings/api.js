@@ -110,14 +110,33 @@ export default {
       .then(response => response.data)
       .catch(error => console.error(error))
   },
+  postImportProductMap: (id, mapId) => {
+    return api
+      .post(`/prodex/api/imports/company-products/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}`)
+      .then(response => response.data)
+  },
   postImportCompanyGenericProductCSV: (body, id) => {
     return api
       .post(`/prodex/api/imports/company-generic-products/spreadsheet-import?temporaryFileId=${id}`, body)
       .then(response => response.data)
   },
-  postImportProductOfferCSV: (body, id) => {
+  postImportCompanyGenericProductMap: (id, mapId) => {
     return api
-      .post(`/prodex/api/imports/product-offers/spreadsheet-import?temporaryFileId=${id}`, body)
+      .post(
+        `/prodex/api/imports/company-generic-products/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}`
+      )
+      .then(response => response.data)
+  },
+  postImportProductOfferCSV: (body, id, paramBroadcast) => {
+    return api
+      .post(`/prodex/api/imports/product-offers/spreadsheet-import?temporaryFileId=${id}${paramBroadcast}`, body)
+      .then(response => response.data)
+  },
+  postImportProductOfferMap: (id, mapId, paramBroadcast) => {
+    return api
+      .post(
+        `/prodex/api/imports/product-offers/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}${paramBroadcast}`
+      )
       .then(response => response.data)
   },
   uploadCSVFile: (file, type) => {
@@ -142,6 +161,11 @@ export default {
   postImportCompaniesCSV: (body, id) => {
     return api
       .post(`/prodex/api/imports/companies/spreadsheet-import?temporaryFileId=${id}`, body)
+      .then(response => response.data)
+  },
+  postImportCompaniesMap: (id, mapId) => {
+    return api
+      .post(`/prodex/api/imports/companies/spreadsheet-import/existing?mapId=${mapId}&temporaryFileId=${id}`)
       .then(response => response.data)
   },
   getCSVMapCompanies: () => api.get('/prodex/api/imports/companies/import-maps').then(response => response.data),
@@ -214,7 +238,11 @@ export default {
   updateLogisticsAccount: (id, payload) =>
     api.put(`/prodex/api/logistics-accounts/id/${id}`, payload).then(response => response.data),
   deleteLogisticsAccount: id => api.delete(`/prodex/api/logistics-accounts/id/${id}`).then(() => id),
-  getSettings: role => api.get(`/prodex/api/settings/${role}`).then(response => response.data),
+  getSettings: role =>
+    api
+      .get(`/prodex/api/settings/${role}`)
+      .then(response => response.data)
+      .catch(err => err),
   updateSettings: (role, payload) => api.patch(`/prodex/api/settings/${role}`, payload).then(response => response.data),
   getBusinessClassifications: () => api.get('/prodex/api/business-classifications').then(response => response.data),
   dwollaGetVerificationDocumentTypes: () =>
@@ -281,5 +309,10 @@ export default {
         `/prodex/api/payments/bank-accounts/velloci/invite-to-add-bank-accounts?${id}emailAddress=${emailAddress}&name=${name}`
       )
       .then(response => response.data)
-  }
+  },
+  getCompanyUser: id =>
+    api
+      .get(`/prodex/api/settings/company-user/${id}`)
+      .then(response => response.data)
+      .catch(err => console.error(err))
 }

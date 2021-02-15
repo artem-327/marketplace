@@ -74,7 +74,6 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
       assayMin: getSafe(() => parseFloat(values.assayMin)),
       assayMax: getSafe(() => parseFloat(values.assayMax)),
       attachments: attachments.concat(additional),
-      broadcasted: getSafe(() => values.broadcasted, false),
       certOfAnalysis: getSafe(() => values.certOfAnalysis, null),
       costRecords:
         values.trackSubCosts && values.costs
@@ -122,6 +121,16 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
     }
   } else {
     params = values // ! ! az bude BE vracet pricingTiers, tak predelat zkombinovat tento radek s vytvarenim objektu vyse (prejmenovane / chybejici atributy)
+  }
+
+  if (!poId) {
+    const broadcastOption =
+      getSafe(() => values.broadcastOption, '') && values.broadcastOption.indexOf('|') >= 0
+        ? ''
+        : values.broadcastOption
+    const broadcastedTemplateId = getSafe(() => parseInt(values.broadcastOption.split('|')[1]), '')
+
+    params = { ...params, broadcastOption, broadcastedTemplateId }
   }
 
   let paramsCleaned = {}
@@ -552,5 +561,12 @@ export function deleteTdsTemplate(templateId) {
       const response = await api.deleteTdsTemplate(templateId)
       return templateId
     }
+  }
+}
+
+export function changeBroadcast(broadcastOption) {
+  return {
+    type: AT.CHANGE_BROADCAST,
+    payload: broadcastOption
   }
 }

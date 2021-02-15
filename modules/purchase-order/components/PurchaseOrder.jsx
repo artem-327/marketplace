@@ -127,7 +127,7 @@ class PurchaseOrder extends Component {
     submitting: false,
     addressId: 'deliveryAddressId',
     shippingQuotes: [],
-    selectedAddress: '',
+    selectedAddress: null,
     isSetShippingQuoteId: false
   }
   componentDidMount = async () => {
@@ -636,7 +636,6 @@ class PurchaseOrder extends Component {
                           </Header>
                         </VerticalUnpaddedColumn>
                       </StyledRow>
-
                       <Payment
                         dispatch={dispatch}
                         billingInfo={billingInfo}

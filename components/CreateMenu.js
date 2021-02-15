@@ -116,8 +116,8 @@ class CreateMenu extends Component {
               <FormattedMessage id='createMenu.newListing' defaultMessage='New Listing' />
             </Dropdown.Item>
           )}
-
-          {(isCompanyAdmin || isMerchant) && (
+          {/* Temporary comented based on https://bluepallet.atlassian.net/browse/DT-88 */}
+          {false && (isCompanyAdmin || isMerchant) && (
             <Dropdown.Item
               onClick={() => {
                 openGlobalAddForm('wanted-board-listings')

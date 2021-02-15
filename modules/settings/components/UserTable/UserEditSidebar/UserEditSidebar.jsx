@@ -15,27 +15,27 @@ import {
   handlerSubmitUserEditPopup,
   getCompanyDetails,
   getUsersDataRequest
-} from '../../actions'
-import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../companies/actions'
-import { getIdentity } from '~/modules/auth/actions'
+} from '../../../actions'
+import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../../companies/actions'
+import { getIdentity } from '../../../../auth/actions'
 //Components
-import { Required } from '~/components/constants/layout'
-import { withDatagrid } from '~/modules/datagrid'
-import confirm from '~/components/Confirmable/confirm'
-import { PhoneNumber } from '~/modules/phoneNumber'
-import ErrorFocus from '~/components/error-focus'
+import { Required } from '../../../../../components/constants/layout'
+import { withDatagrid } from '../../../../datagrid'
+import confirm from '../../../../../components/Confirmable/confirm'
+import { PhoneNumber } from '../../../../phoneNumber'
+import ErrorFocus from '../../../../../components/error-focus'
 //Services
-import { getSafe } from '~/utils/functions'
-import { removeEmpty, uniqueArrayByKey } from '~/utils/functions'
+import { getSafe } from '../../../../../utils/functions'
+import { removeEmpty, uniqueArrayByKey } from '../../../../../utils/functions'
 import {
   userFormValidation,
   getHomeBranchesOptions,
   getBranchesOptions,
   getInitialFormValues,
   handleSellMarketSegmentsChange
-} from './services'
+} from './UserEditSidebar.services'
 //Constants
-import { currencyId } from '~/constants/index'
+import { currencyId } from '../../../../../constants/index'
 //Styles
 import {
   SidebarFlex,
@@ -45,9 +45,12 @@ import {
   FormStyled,
   SegmentStyled,
   GridColumnWError
-} from './styles'
-
-class UsersSidebar extends Component {
+} from './UserEditSidebar.styles'
+/**
+ * @category Settings - Users
+ * @component
+ */
+class UserEditSidebar extends Component {
   state = {
     sidebarValues: null,
     branches: [],
@@ -637,4 +640,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UsersSidebar)))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserEditSidebar)))

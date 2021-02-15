@@ -5,14 +5,28 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validati
 import * as Yup from 'yup'
 import moment from 'moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
 import { getLanguages } from '~/modules/settings/actions'
-
 import { getSafe } from '~/utils/functions'
-
 import { FormattedDateTime } from '~/components/formatted-messages/'
 import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 import { PhoneNumber } from '~/modules/phoneNumber'
+import UploadAttachment from '../../inventory/components/upload/UploadAttachment'
+import { getIdentity } from '../../auth/actions'
+import { ImageSearch } from '@material-ui/icons'
+import styled from 'styled-components'
+
+const DivLogoWrapper = styled.div`
+  padding: 20px;
+`
+
+const ImageSearchStyled = styled(ImageSearch)`
+  font-size: 64px !important;
+`
+
+const DivLabel = styled.div`
+  margin-bottom: 4px;
+`
+
 
 import {
   closePopup,
@@ -20,14 +34,18 @@ import {
   getCurrencies,
   updateMyProfile,
   openChangePasswordPopup,
-  setPreferredLanguage
+  setPreferredLanguage,
+  loadFile,
+  saveAvatarPicture,
+  deleteAvatarPicture
 } from '../actions'
 
 const initialFormValues = {
   name: '',
   email: '',
   phone: '',
-  jobTitle: ''
+  jobTitle: '',
+  userAvatar: null
   // 'preferredCurrency': '',
 }
 
@@ -56,7 +74,11 @@ class MyProfile extends Component {
       languages,
       languagesFetching,
       tutorialCompleted,
-      setPreferredLanguage
+      setPreferredLanguage,
+      loadFile,
+      saveAvatarPicture,
+      deleteAvatarPicture,
+      getIdentity,
     } = this.props
 
     return (
@@ -138,6 +160,49 @@ class MyProfile extends Component {
                     value: lang.language
                   }))}
                 />
+                <DivLabel>
+                  <FormattedMessage id='profile.avatarPicture' defaultMessage='Avatar Picture' />
+                </DivLabel>
+                <UploadAttachment
+                  acceptFiles='image/jpeg, image/png, image/gif, image/svg'
+                  name='userAvatar'
+                  filesLimit={1}
+                  fileMaxSize={2}
+                  onChange={async files => {
+                    if (files.length) {
+                      try {
+                        await saveAvatarPicture(files[0])
+                        getIdentity()
+                      } catch (error) {
+                        console.error(error)
+                      }
+                    }
+                  }}
+                  attachments={popupValues && popupValues.ownAvatar && popupValues.avatar ? [popupValues.avatar] : []}
+                  removeAttachment={async () => {
+                    try {
+                      await deleteAvatarPicture()
+                      getIdentity()
+                    } catch (error) {
+                      console.error(error)
+                    }
+                  }}
+                  emptyContent={
+                    <DivLogoWrapper>
+                      <ImageSearchStyled />
+                    </DivLogoWrapper>
+                  }
+                  uploadedContent={
+                    <div>
+                      {popupValues && (
+                        <img
+                          src={popupValues.avatar}
+                        />
+                      )}
+                    </div>
+                  }
+                />
+
                 <FormattedMessage id='profile.lastLoginAt' defaultMessage='Last login at:' />{' '}
                 {popupValues && popupValues.lastLoginAt}
                 <div style={{ textAlign: 'right' }}>
@@ -178,7 +243,11 @@ const mapDispatchToProps = {
   updateMyProfile,
   openChangePasswordPopup,
   getLanguages,
-  setPreferredLanguage
+  setPreferredLanguage,
+  loadFile,
+  getIdentity,
+  saveAvatarPicture,
+  deleteAvatarPicture
 }
 
 const mapStateToProps = state => {
@@ -195,7 +264,9 @@ const mapStateToProps = state => {
           language: getSafe(() => popupValues.preferredLanguage.language),
           lastLoginAt:
             state.auth.identity.lastLoginAt &&
-            getSafe(() => moment(state.auth.identity.lastLoginAt).toDate().toLocaleString(), null)
+            getSafe(() => moment(state.auth.identity.lastLoginAt).toDate().toLocaleString(), null),
+          avatar: popupValues.avatar,
+          ownAvatar: popupValues.ownAvatar
         }
       : null,
     // currencies: state.profile.currency && state.profile.currency.map(d => {

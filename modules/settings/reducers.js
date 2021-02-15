@@ -138,7 +138,8 @@ export const initialState = {
   sidebarValues: null,
   isHideInactiveAccounts: false,
   institutId: null,
-  isLoadingAddedAccounts: false
+  isLoadingAddedAccounts: false,
+  isLoadingModal: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1661,6 +1662,34 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopupDeleteInstitution: true,
         institutId: payload
+      }
+    }
+
+    /* GET_COMPANY_USER */
+
+    case AT.GET_COMPANY_USER_PENDING: {
+      return {
+        ...state,
+        isLoadingModal: true
+      }
+    }
+
+    case AT.GET_COMPANY_USER_FULFILLED: {
+      return {
+        ...state,
+        loaded: false,
+        isLoadingModal: false,
+        isOpenPopup: true,
+        editTrig: !state.editTrig,
+        popupValues: payload,
+        editedId: payload ? payload.id : null
+      }
+    }
+
+    case AT.GET_COMPANY_USER_REJECTED: {
+      return {
+        ...state,
+        isLoadingModal: false
       }
     }
 

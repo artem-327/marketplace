@@ -24,7 +24,8 @@ import {
   ItemDescriptionGrid,
   Item,
   DescriptionValue,
-  TotalRow
+  TotalRow,
+  CartButtonGroup
 } from './StyledComponents'
 
 const CART_ITEM_TYPES = {
@@ -248,7 +249,7 @@ export default class Cart extends Component {
                 : getSafe(() => cart.cartItems, []).map((item, i) => this.renderCartItem(item, i))}
             </ContentSegment>
           </CartColumn>
-          <SummaryColumn mobile={14} tablet={6} computer={5}>
+          <SummaryColumn mobile={14} tablet={7} computer={5}>
             <Segment loading={cartIsFetching}>
               <Grid>
                 <StyledRow bottomShadow>
@@ -330,19 +331,19 @@ export default class Cart extends Component {
 
             <Grid>
               <GridRow>
-                <GridColumn computer={9}>
-                  {itemsCount !== 0 && (
-                    <Button fluid onClick={this.handleContinueShopping}>
-                      <Icon name='shopping bag' />
-                      {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
+                <GridColumn computer={16}>
+                  <CartButtonGroup fluid>
+                    {itemsCount !== 0 && (
+                      <Button onClick={this.handleContinueShopping}>
+                        <Icon name='shopping bag' />
+                        {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
+                      </Button>
+                    )}
+                    <Button primary disabled={itemsCount === 0 || cartIsFetching} onClick={this.handleContinue}>
+                      {formatMessage({ id: 'cart.proceedToCheckout', defaultMessage: 'Proceed to Checkout' })}
+                      <Icon name='arrow right' />
                     </Button>
-                  )}
-                </GridColumn>
-                <GridColumn computer={7}>
-                  <Button fluid primary disabled={itemsCount === 0 || cartIsFetching} onClick={this.handleContinue}>
-                    {formatMessage({ id: 'cart.proceedToCheckout', defaultMessage: 'Proceed to Checkout' })}
-                    <Icon name='arrow right' />
-                  </Button>
+                  </CartButtonGroup>
                 </GridColumn>
               </GridRow>
             </Grid>
