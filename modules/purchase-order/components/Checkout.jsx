@@ -30,7 +30,8 @@ import {
 
 // Styles
 import {
-  DivCheckoutWrapper,
+  ContainerMain,
+  DivScrollableContent,
   ContainerCheckout,
   GridSections
 } from './Checkout.styles'
@@ -108,8 +109,9 @@ const Checkout = props => {
   )
 
   return (
-    <DivCheckoutWrapper>
+    <ContainerMain fluid>
       <HeaderRow itemsCount={cartItems.length} />
+      <DivScrollableContent>
       <ContainerCheckout>
         <Grid>
           <GridRow>
@@ -199,7 +201,8 @@ const Checkout = props => {
           </GridRow>
         </Grid>
       </ContainerCheckout>
-    </DivCheckoutWrapper>
+      </DivScrollableContent>
+    </ContainerMain>
   )
 }
 

@@ -99,7 +99,7 @@ const ShippingTerms = props => {
                     searchValue={searchValue}
                     onSetSearchValueChange={val => setSearchValue(val)}
                   />
-                  <GridExpandedSection>
+                  <GridExpandedSection maxHeight='605px'>
                     <Dimmer inverted active={warehousesFetching || isFetching}>
                       <Loader />
                     </Dimmer>

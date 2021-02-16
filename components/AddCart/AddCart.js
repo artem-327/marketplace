@@ -1890,7 +1890,7 @@ class AddCart extends Component {
                 </Menu.Item>
               ))}
             </Menu>
-            {this.getContent()}
+            {isOpen ? this.getContent() : null}
           </>
         )}
       </Sidebar>
