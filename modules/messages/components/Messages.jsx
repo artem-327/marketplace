@@ -74,7 +74,7 @@ class Messages extends Component {
       (exceptionErrorJSON &&
         getSafe(() => exceptionErrorJSON.description, '') &&
         getSafe(() => exceptionErrorJSON.error_type, '') === 'DUPLICATE_ITEM') ||
-      exceptionMessage.indexOf('DUPLICATE_ITEM') >= 0
+      getSafe(() => exceptionMessage.indexOf('DUPLICATE_ITEM'), -1) >= 0
         ? getSafe(() => exceptionErrorJSON.description, 'This institution has already been added.')
         : null
     const url = getSafe(() => config.url, '')
