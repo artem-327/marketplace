@@ -1,4 +1,5 @@
 import { FormattedMessage } from 'react-intl'
+import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 export const tabs = [
   { text: { id: 'global.ep.edit', defaultMessage: 'Edit' }, key: 'edit' },
@@ -205,6 +206,9 @@ export const defaultValues = {
 export const echoRowActions = callback => {
   return tabs.map((tab, i) => ({
     text: <FormattedMessage {...tab.text}>{text => text}</FormattedMessage>,
-    callback: row => callback(row, i)
+    callback: row => {
+      callback(row, i)
+      chatWidgetVerticalMoved(true)
+    }
   }))
 }

@@ -129,7 +129,7 @@ export const DivFlexContent = styled.div`
   }
 `
 /**
- * @category style-component
+ * @category styled-components
  * @style
  * @example
  * <DivBottomButtons>

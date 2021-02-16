@@ -29,7 +29,8 @@ import {
   Icon,
   Dimmer,
   Loader,
-  Sidebar
+  Sidebar,
+  FormGroup
 } from 'semantic-ui-react'
 import TextareaAutosize from 'react-autosize-textarea'
 import { FieldArray, Field } from 'formik'
@@ -46,8 +47,89 @@ import confirm from '~/components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
 import { Required, Or } from '~/components/constants/layout'
 import { AttachmentManager } from '~/modules/attachments'
-import { UploadCloud } from 'react-feather'
+import { UploadCloud, ChevronDown, Paperclip } from 'react-feather'
 import ErrorFocus from '~/components/error-focus'
+//Components
+import BasicButton from '../../../../components/buttons/BasicButton'
+
+//Styles
+import { DimmerBottomSidebarOpend } from '../../../../styles/global.style-components'
+
+const SegmentCustomContent = styled(Segment)`
+  padding-top: 0px !important;
+  width: 900px !important;
+  padding: 30px !important;
+`
+
+const DivTitleColumn = styled.div`
+  color: #000000de;
+  font-size: 14px;
+`
+
+const DivDocumentManager = styled.div`
+  padding-bottom: 6px;
+`
+
+const PaperclipIcon = styled(Paperclip)`
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+`
+
+const DivBrowseFile = styled.div`
+  display: flex;
+  align-items: center;
+  place-content: center;
+  color: #20273a;
+  ${({ background }) => background};
+  padding: 6px;
+`
+
+const GridColumnMixtures = styled(GridColumn)`
+  padding: 3px 14px !important;
+`
+
+const GridColumnLabelTextArea = styled(GridColumn)`
+  padding: 3px 0px !important;
+  color: #000000de !important;
+  font-size: 14px;
+`
+
+const GridColumnForm = styled(GridColumn)`
+  padding: 6px 14px !important;
+  ${({ color }) => (color ? color : null)};
+`
+
+const DivHeader = styled.div`
+  background-color: #edeef2;
+  padding: 10px;
+  color: #404040;
+  font-size: 14px;
+`
+
+const GridRowCustom = styled(GridRow)`
+  padding: 0px !important;
+`
+
+const DivIconChevronDown = styled.div`
+  align-self: center;
+  position: absolute;
+  right: 20px;
+  cursor: pointer;
+`
+
+const DivBottomSidebar = styled.div`
+  text-align: right;
+  z-index: 1;
+  padding: 10px 25px;
+  margin-top: 0px;
+  box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
+  background-color: #ffffff;
+`
+
+export const MenuCustom = styled(Menu)`
+  padding-left: 30px !important;
+  margin: 0 !important;
+`
 
 export const MyContainer = styled.div`
   margin: 0 15px 0 0;
@@ -61,12 +143,42 @@ export const MyContainer = styled.div`
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
-  background-color: #fbfbfb;
+  background-color: #ffffff !important;
   top: 80px !important;
   padding-bottom: 80px;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 1000 !important;
   text-align: left;
+  padding-bottom: 0px !important;
+
+  &.ui.visible.bottom.overlay.sidebar {
+    height: 89% !important;
+  }
+  .field {
+    font-size: 1em !important;
+    line-height: 1.29 !important;
+    font-weight: normal;
+    > label {
+      font-size: 1em !important;
+      color: #404040;
+    }
+    > textarea,
+    > .ui.input input,
+    > .ui.dropdown {
+      min-height: 32px;
+      font-size: 1em;
+      line-height: 1.29;
+      border: solid 1px #dee2e6;
+      background-color: #fdfdfd;
+      &.disabled {
+        opacity: 1;
+        color: #cecfd4;
+      }
+      > .default.text {
+        margin: 0 0 0 0.64285714em;
+      }
+    }
+  }
 `
 
 export const FlexTabs = styled.div`
@@ -88,6 +200,7 @@ export const FlexContent = styled.div`
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  align-self: center;
 `
 
 export const GraySegment = styled(Segment)`
@@ -95,11 +208,14 @@ export const GraySegment = styled(Segment)`
 `
 
 export const HighSegment = styled(Segment)`
-  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 1;
 `
 
 const CustomTextarea = styled(TextareaAutosize)`
   resize: vertical !important;
+  background-color: #fdfdfd !important;
 `
 
 const CustomGridColumn = styled(GridColumn)`
@@ -118,7 +234,7 @@ const GridColumnBtn = styled(GridColumn)`
 `
 
 const DivIcon = styled.div`
-  margin-top: 8px;
+  margin-right: 8px;
 `
 
 const StyledButton = styled(Button)`
@@ -711,7 +827,8 @@ class AddEditEchoProduct extends React.Component {
       closePopup,
       linkAttachment,
       listDocumentTypes,
-      datagrid
+      datagrid,
+      chatWidgetVerticalMoved
     } = this.props
 
     const { popupValues } = this.state
@@ -772,27 +889,73 @@ class AddEditEchoProduct extends React.Component {
       callback()
     } catch (err) {
       setSubmitting(false)
+    } finally {
+      chatWidgetVerticalMoved(false)
     }
   }
 
-  RowInput = ({ name, readOnly = false, id, defaultMessage, required }) => (
-    <GridRow>
-      <GridColumn width={6}>
-        <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
-      </GridColumn>
+  // RowInput = ({ name, readOnly = false, id, defaultMessage, required }) => (
+  //   <GridRow>
+  //     <GridColumn width={6}>
+  //       <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
+  //     </GridColumn>
 
-      <GridColumn width={10}>
-        <Input inputProps={{ readOnly: readOnly, id: name }} name={name} />
-      </GridColumn>
-    </GridRow>
-  )
+  //     <GridColumn width={10}>
+  //       <Input inputProps={{ readOnly: readOnly, id: name }} name={name} />
+  //     </GridColumn>
+  //   </GridRow>
+  // )
+
+  RowInput = ({ name, id, defaultMessage, required = false, placeholderId = 'global.empty', readOnly = false }) => {
+    const {
+      intl: { formatMessage }
+    } = this.props
+    return (
+      <Input
+        label={
+          <>
+            <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
+          </>
+        }
+        name={name}
+        inputProps={{
+          readOnly: readOnly,
+          id: name,
+          fluid: true,
+          placeholder: formatMessage({
+            id: placeholderId,
+            defaultMessage: ''
+          })
+        }}
+      />
+    )
+  }
+
+  RowTwoInputs = arrayInputs => {
+    const {
+      intl: { formatMessage }
+    } = this.props
+    return (
+      <GridRowCustom>
+        {arrayInputs.map(
+          ({ name, id, defaultMessage, required = false, placeholderId = 'global.empty', readOnly = false }) => (
+            <GridColumnForm width={8}>
+              {this.RowInput({ name, id, defaultMessage, required, placeholderId, readOnly })}
+            </GridColumnForm>
+          )
+        )}
+      </GridRowCustom>
+    )
+  }
 
   RowTextArea = ({ name, readOnly = false, id, defaultMessage }, formikProps) => (
-    <GridRow>
-      <CustomGridColumn width={6}>
-        <FormattedMessage id={id} defaultMessage={defaultMessage} />
-      </CustomGridColumn>
-      <GridColumn width={10}>
+    <GridRowCustom>
+      <GridColumnForm width={16}>
+        <GridRow>
+          <GridColumnLabelTextArea>
+            <FormattedMessage id={id} defaultMessage={defaultMessage} />
+          </GridColumnLabelTextArea>
+        </GridRow>
         <CustomTextarea
           defaultValue={formikProps && formikProps.initialValues && formikProps.initialValues[name]}
           rows={2}
@@ -803,32 +966,20 @@ class AddEditEchoProduct extends React.Component {
             this.setState({ changedForm: true })
           }}
         />
-      </GridColumn>
-    </GridRow>
-  )
-
-  RowPhone = ({ name, readOnly = false, id, defaultMessage, props }) => (
-    <GridRow>
-      <GridColumn width={6}>
-        <FormattedMessage id={id} defaultMessage={defaultMessage} />
-      </GridColumn>
-
-      <GridColumn width={10}>
-        <PhoneNumber name={name} {...props} label={null} />
-      </GridColumn>
-    </GridRow>
+      </GridColumnForm>
+    </GridRowCustom>
   )
 
   RowDate = ({ name, readOnly = false, id, defaultMessage, clearable = true }) => (
-    <GridRow>
-      <GridColumn width={6}>
-        <FormattedMessage id={id} defaultMessage={defaultMessage} />
-      </GridColumn>
-
-      <GridColumn width={10}>
-        <DateInput inputProps={{ maxDate: moment(), id: name, clearable: clearable }} name={name} />
-      </GridColumn>
-    </GridRow>
+    <DateInput
+      inputProps={{ maxDate: moment(), id: name, clearable: clearable }}
+      name={name}
+      label={
+        <>
+          <FormattedMessage id={id} defaultMessage={defaultMessage} />
+        </>
+      }
+    />
   )
 
   attachDocumentsUploadAttachment = (newDocument, values, setFieldValue) => {
@@ -846,131 +997,114 @@ class AddEditEchoProduct extends React.Component {
     this.setState({ changedForm: true })
   }
 
-  RowDocument = (formikProps, values, popupValues, documentType) => {
+  inputDocumentRows = (formikProps, values, popupValues, documentType) => {
     return (
       <>
-        <UploadAttachment
-          {...this.props}
-          attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
-          edit={getSafe(() => popupValues.id, '')}
-          name='attachments'
-          type={documentType.toString()}
-          filesLimit={1}
-          fileMaxSize={20}
-          listDocumentTypes={this.props.listDocumentTypes}
-          onChange={files => {
-            formikProps.setFieldValue(
-              `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-              {
-                id: files.id,
-                name: files.name,
-                documentType: files.documentType,
-                isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
+        <GridRowCustom>
+          <GridColumnForm width={16} color='color: #20273a !important;'>
+            <FormattedMessage id='global.chooseExistingDocument' defaultMessage='Choose Existing Document' />
+          </GridColumnForm>
+        </GridRowCustom>
+        <GridRowCustom>
+          <GridColumnForm width={16}>
+            <AttachmentManager
+              border='none !important'
+              color='#20273a !important'
+              background='#edeef2 !important'
+              singleSelection
+              documentTypeIds={[documentType]}
+              asModal
+              returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
+            />
+          </GridColumnForm>
+        </GridRowCustom>
+        <GridRowCustom>
+          <GridColumnForm width={16} color='color: #20273a !important;'>
+            <FormattedMessage id='global.orUploadNewDocumet' defaultMessage='Or Upload New Document' />
+          </GridColumnForm>
+        </GridRowCustom>
+        <GridRowCustom>
+          <GridColumnForm width={16}>
+            <UploadAttachment
+              {...this.props}
+              attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
+              edit={getSafe(() => popupValues.id, '')}
+              name='attachments'
+              type={documentType.toString()}
+              filesLimit={1}
+              fileMaxSize={20}
+              listDocumentTypes={this.props.listDocumentTypes}
+              onChange={files => {
+                formikProps.setFieldValue(
+                  `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                  {
+                    id: files.id,
+                    name: files.name,
+                    documentType: files.documentType,
+                    isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
+                  }
+                )
+                this.setState({ changedForm: true })
+              }}
+              onRemoveFile={async id => {
+                await formikProps.setFieldValue('attachments', [])
+                const arrayAttachments = values.attachments.filter(attachment => attachment.id !== id)
+                await formikProps.setFieldValue('attachments', arrayAttachments)
+                this.setState({ changedForm: true, changedAttachments: true })
+              }}
+              data-test='settings_product_import_attachments'
+              emptyContent={
+                <DivBrowseFile background='white'>
+                  <DivIcon>
+                    <PaperclipIcon size='14' color='#20273a' />
+                  </DivIcon>
+                  <FormattedMessage id='global.browseFileHere' defaultMessage='Browse file here' />
+                </DivBrowseFile>
               }
-            )
-            this.setState({ changedForm: true })
-          }}
-          onRemoveFile={async id => {
-            await formikProps.setFieldValue('attachments', [])
-            const arrayAttachments = values.attachments.filter(attachment => attachment.id !== id)
-            await formikProps.setFieldValue('attachments', arrayAttachments)
-            this.setState({ changedForm: true, changedAttachments: true })
-          }}
-          data-test='settings_product_import_attachments'
-          emptyContent={
-            <label>
-              <DivIcon>
-                <UploadCloud size='25' color='#dee2e6' />
-              </DivIcon>
-              <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-              <br />
-              <FormattedMessage
-                id='addInventory.dragDropOr'
-                defaultMessage={'or {link} to select from computer'}
-                values={{
-                  link: (
-                    <a>
-                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                    </a>
-                  )
-                }}
-              />
-            </label>
-          }
-          uploadedContent={
-            <label>
-              <DivIcon>
-                <UploadCloud size='25' color='#dee2e6' />
-              </DivIcon>
-              <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
-              <br />
-              <FormattedMessage
-                id='addInventory.dragDropOr'
-                defaultMessage={'or {link} to select from computer'}
-                values={{
-                  link: (
-                    <a>
-                      <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                    </a>
-                  )
-                }}
-              />
-            </label>
-          }
-        />
-        <AttachmentManager
-          singleSelection
-          documentTypeIds={[documentType]}
-          asModal
-          returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
-        />
+              uploadedContent={
+                <DivBrowseFile>
+                  <DivIcon>
+                    <PaperclipIcon size='14' color='#20273a' />
+                  </DivIcon>
+                  <FormattedMessage id='global.browseFileHere' defaultMessage='Browse file here' />
+                </DivBrowseFile>
+              }
+            />
+          </GridColumnForm>
+        </GridRowCustom>
       </>
     )
   }
 
   RowDropdown = ({ name, readOnly = false, id, defaultMessage, props, clearable = false }) => (
-    <GridRow>
-      <GridColumn width={6}>
-        <FormattedMessage id={id} defaultMessage={defaultMessage} />
-      </GridColumn>
-
-      <GridColumn width={10}>
-        <FormikDropdown
-          selection
-          fluid
-          name={name}
-          {...props}
-          inputProps={{ disabled: readOnly, clearable: clearable }}
-          options={props.options}
-        />
-      </GridColumn>
-    </GridRow>
+    <FormikDropdown
+      selection
+      fluid
+      label={<FormattedMessage id={id} defaultMessage={defaultMessage} />}
+      name={name}
+      {...props}
+      inputProps={{ disabled: readOnly, clearable: clearable }}
+      options={props.options}
+    />
   )
 
   RowUnNumberDropdown = ({ name, readOnly = false, id, defaultMessage, props }) => (
-    <GridRow>
-      <GridColumn width={6}>
-        <FormattedMessage id={id} defaultMessage={defaultMessage} />
-      </GridColumn>
-
-      <GridColumn width={10}>
-        <FormikDropdown
-          selection
-          fluid
-          name={name}
-          {...props}
-          inputProps={{
-            disabled: readOnly,
-            loading: this.props.unNumbersFetching,
-            clearable: true,
-            search: true,
-            onSearchChange: this.handleUnNumberSearchChange,
-            onChange: (_, { value }) => this.handleUnNumberChange(value, props.options)
-          }}
-          options={props.options}
-        />
-      </GridColumn>
-    </GridRow>
+    <FormikDropdown
+      selection
+      fluid
+      label={<FormattedMessage id={id} defaultMessage={defaultMessage} />}
+      name={name}
+      {...props}
+      inputProps={{
+        disabled: readOnly,
+        loading: this.props.unNumbersFetching,
+        clearable: true,
+        search: true,
+        onSearchChange: this.handleUnNumberSearchChange,
+        onChange: (_, { value }) => this.handleUnNumberChange(value, props.options)
+      }}
+      options={props.options}
+    />
   )
 
   renderMixtures = formikProps => {
@@ -993,54 +1127,66 @@ class AddEditEchoProduct extends React.Component {
 
     return (
       <>
-        <GridRow>
+        <GridRowCustom>
           <GridColumn width={16}>
-            <FormattedMessage id='global.mixtures' defaultMessage='Mixtures' />
+            <DivHeader>
+              <FormattedMessage id='global.mixtures' defaultMessage='Mixtures' />
+            </DivHeader>
           </GridColumn>
-        </GridRow>
-        <GridRow style={{ alignItems: 'flex-end', 'padding-bottom': '0.5rem' }}>
-          <GridColumn width={3}>
-            <Header as='h5'>
+        </GridRowCustom>
+        <GridRowCustom>
+          <GridColumnMixtures width={2}>
+            <DivTitleColumn>
               <FormattedMessage id='admin.proprietary' defaultMessage='Proprietary?' />
-            </Header>
-          </GridColumn>
-          <GridColumn width={5}>
-            <Header as='h5'>
+            </DivTitleColumn>
+          </GridColumnMixtures>
+          <GridColumnMixtures width={6}>
+            <DivTitleColumn>
               <FormattedMessage id='global.elementName' defaultMessage='Element Name' />
               <Required />
               <Or />
               <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' />
               <Required />
-            </Header>
-          </GridColumn>
-          <GridColumn width={3}>
-            <Header as='h5'>
+            </DivTitleColumn>
+          </GridColumnMixtures>
+          <GridColumnMixtures width={3}>
+            <DivTitleColumn>
               <FormattedMessage id='global.assayMin' defaultMessage='Assay Min?' />
-            </Header>
-          </GridColumn>
-          <GridColumn width={3}>
-            <Header as='h5'>
+            </DivTitleColumn>
+          </GridColumnMixtures>
+          <GridColumnMixtures width={3}>
+            <DivTitleColumn>
               <FormattedMessage id='global.assayMax' defaultMessage='Assay Max?' />
-            </Header>
-          </GridColumn>
-          <GridColumn width={2}></GridColumn>
-        </GridRow>
+            </DivTitleColumn>
+          </GridColumnMixtures>
+          <GridColumnMixtures width={2}></GridColumnMixtures>
+        </GridRowCustom>
         <FieldArray
           name='elements'
           render={arrayHelpers => (
             <>
               {values.elements && values.elements.length
                 ? values.elements.map((element, index) => (
-                    <GridRow style={{ alignItems: 'flex-end', 'padding-bottom': '0.5rem' }}>
-                      <GridColumn width={3} data-test='admin_product_popup_proprietary' textAlign='center'>
+                    <GridRowCustom>
+                      <GridColumnMixtures
+                        width={2}
+                        data-test='admin_product_popup_proprietary'
+                        textAlign='center'
+                        verticalAlign='middle'>
                         <Checkbox name={`elements[${index}].proprietary`} />
-                      </GridColumn>
-                      <GridColumn width={5}>
+                      </GridColumnMixtures>
+                      <GridColumnMixtures width={6}>
                         {values.elements[index].proprietary ? (
                           <Input
                             name={`elements[${index}].name`}
                             defaultValue={''}
-                            inputProps={{ 'data-test': `admin_product_popup_element_${index}_name` }}
+                            inputProps={{
+                              'data-test': `admin_product_popup_element_${index}_name`,
+                              placeholder: formatMessage({
+                                id: 'global.typeToSearch',
+                                defaultMessage: 'Type to search'
+                              })
+                            }}
                           />
                         ) : (
                           <FormikDropdown
@@ -1068,6 +1214,10 @@ class AddEditEchoProduct extends React.Component {
                               search: true,
                               selection: true,
                               clearable: true,
+                              placeholder: formatMessage({
+                                id: 'global.typeToSearch',
+                                defaultMessage: 'Type to search'
+                              }),
                               loading: this.state.isLoading,
                               onSearchChange: this.handleSearchChange,
                               dataindex: index
@@ -1077,14 +1227,32 @@ class AddEditEchoProduct extends React.Component {
                             }
                           />
                         )}
-                      </GridColumn>
-                      <GridColumn width={3} data-test='admin_product_popup_assayMin_inp'>
-                        <Input type='number' name={`elements[${index}].assayMin`} />
-                      </GridColumn>
-                      <GridColumn width={3} data-test='admin_product_popup_assayMax_inp'>
-                        <Input type='number' name={`elements[${index}].assayMax`} />
-                      </GridColumn>
-                      <GridColumn width={2}>
+                      </GridColumnMixtures>
+                      <GridColumnMixtures width={3} data-test='admin_product_popup_assayMin_inp'>
+                        <Input
+                          type='number'
+                          name={`elements[${index}].assayMin`}
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'global.zero',
+                              defaultMessage: '0'
+                            })
+                          }}
+                        />
+                      </GridColumnMixtures>
+                      <GridColumnMixtures width={3} data-test='admin_product_popup_assayMax_inp'>
+                        <Input
+                          type='number'
+                          name={`elements[${index}].assayMax`}
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'global.zero',
+                              defaultMessage: '0'
+                            })
+                          }}
+                        />
+                      </GridColumnMixtures>
+                      <GridColumnMixtures width={2}>
                         {index ? (
                           <StyledButton
                             icon
@@ -1099,13 +1267,13 @@ class AddEditEchoProduct extends React.Component {
                         ) : (
                           ''
                         )}
-                      </GridColumn>
-                    </GridRow>
+                      </GridColumnMixtures>
+                    </GridRowCustom>
                   ))
                 : ''}
-              <GridRow>
-                <GridColumn width={14}></GridColumn>
-                <GridColumn width={2} textAlign='center'>
+              <GridRowCustom>
+                <GridColumnMixtures width={14}></GridColumnMixtures>
+                <GridColumnMixtures width={2}>
                   <StyledButton
                     icon
                     color='green'
@@ -1116,8 +1284,8 @@ class AddEditEchoProduct extends React.Component {
                     data-test='settings_product_popup_add_btn'>
                     <Icon name='plus' />
                   </StyledButton>
-                </GridColumn>
-              </GridRow>
+                </GridColumnMixtures>
+              </GridRowCustom>
             </>
           )}
         />
@@ -1143,23 +1311,49 @@ class AddEditEchoProduct extends React.Component {
     const allCompanyOptions = uniqueArrayByKey(searchedCompany.concat(selectedCompanyOptions), 'key')
 
     return (
-      <Grid verticalAlign='middle'>
-        {this.RowInput({ name: 'name', id: 'global.productName', defaultMessage: 'Product Name', required: true })}
-        {this.RowInput({ name: 'code', id: 'global.productCode', defaultMessage: 'Product Code', required: true })}
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.productGroups' defaultMessage='Product Groups' />
-            <Required />
-          </GridColumn>
-          <GridColumn width={10}>
+      <Grid>
+        <GridRowCustom>
+          <GridColumnForm width={16}>
+            {this.RowInput({
+              name: 'name',
+              id: 'global.productName',
+              defaultMessage: 'Product Name',
+              required: true,
+              placeholderId: 'productCatalog.enterProductName'
+            })}
+          </GridColumnForm>
+        </GridRowCustom>
+
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowInput({
+              name: 'code',
+              id: 'global.productCode',
+              defaultMessage: 'Product Code',
+              required: true,
+              placeholderId: 'productCatalog.enterProductCode'
+            })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
             <FormikDropdown
               name='productGroup'
+              label={
+                <>
+                  <FormattedMessage id='global.productGroups' defaultMessage='Product Groups' />
+                  <Required />
+                </>
+              }
               options={allProductGroupsOptions}
               inputProps={{
                 loading: searchedProductGroupsLoading,
                 search: true,
                 icon: 'search',
+                fluid: true,
                 selection: true,
+                placeholder: formatMessage({
+                  id: 'global.typeToSearch',
+                  defaultMessage: 'Type to search'
+                }),
                 noResultsMessage: formatMessage({
                   id: 'global.startTypingToSearch',
                   defaultMessage: 'Start typing to begin search'
@@ -1168,22 +1362,30 @@ class AddEditEchoProduct extends React.Component {
                 onChange: (_, { value }) => this.handleProductGroupsChange(value, allProductGroupsOptions)
               }}
             />
-          </GridColumn>
-        </GridRow>
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.company' defaultMessage='Company' />
-            <Required />
-          </GridColumn>
-          <GridColumn width={10}>
+          </GridColumnForm>
+        </GridRowCustom>
+
+        <GridRowCustom>
+          <GridColumnForm width={8}>
             <FormikDropdown
               name='company'
               options={allCompanyOptions}
+              label={
+                <>
+                  <FormattedMessage id='global.company' defaultMessage='Company' />
+                  <Required />
+                </>
+              }
               inputProps={{
                 loading: searchedCompanyLoading,
                 search: true,
                 icon: 'search',
                 selection: true,
+                fluid: true,
+                placeholder: formatMessage({
+                  id: 'global.typeToSearch',
+                  defaultMessage: 'Type to search'
+                }),
                 noResultsMessage: formatMessage({
                   id: 'global.startTypingToSearch',
                   defaultMessage: 'Start typing to begin search'
@@ -1192,56 +1394,54 @@ class AddEditEchoProduct extends React.Component {
                 onChange: (_, { value }) => this.handleCompanyChange(value, allProductGroupsOptions)
               }}
             />
-          </GridColumn>
-        </GridRow>
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer' />
-          </GridColumn>
-          <GridColumn width={10}>
+          </GridColumnForm>
+
+          <GridColumnForm width={8}>
             <FormikDropdown
               name='manufacturer'
               options={searchedManufacturers}
+              label={
+                <>
+                  <FormattedMessage id='global.manufacturer' defaultMessage='Manufacturer' />
+                </>
+              }
               inputProps={{
                 'data-test': 'TODO new_inventory_manufacturer_drpdn',
                 size: 'large',
                 minCharacters: 0,
                 icon: 'search',
                 search: true,
+                fluid: true,
                 selection: true,
                 clearable: true,
+                placeholder: formatMessage({
+                  id: 'global.typeToSearch',
+                  defaultMessage: 'Type to search'
+                }),
                 loading: searchedManufacturersLoading,
                 onSearchChange: debounce((e, { searchQuery }) => searchManufacturers(searchQuery), 500)
               }}
             />
-          </GridColumn>
-        </GridRow>
+          </GridColumnForm>
+        </GridRowCustom>
 
-        {this.renderMixtures(formikProps)}
-
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.published' defaultMessage='Published' />
-          </GridColumn>
-          <GridColumn width={10}>
-            <Checkbox name='isPublished' />
-          </GridColumn>
-        </GridRow>
-
-        <GridRow>
-          <GridColumn width={6}>
-            <FormattedMessage id='global.mfrProductCodes' defaultMessage='Manufacturer Product Codes' />
-          </GridColumn>
-          <GridColumn width={10}>
+        <GridRowCustom>
+          <GridColumnForm width={8}>
             <FormikDropdown
               name='mfrProductCodes'
               options={codesList}
+              label={
+                <>
+                  <FormattedMessage id='global.mfrProductCodes' defaultMessage='Manufacturer Product Codes' />
+                </>
+              }
               inputProps={{
                 allowAdditions: true,
                 additionLabel: formatMessage({ id: 'global.dropdown.add', defaultMessage: 'Add ' }),
                 search: true,
                 selection: true,
                 multiple: true,
+                fluid: true,
                 onAddItem: (e, { value }) => {
                   const newValue = { text: value, value: value }
                   codesList.push(newValue)
@@ -1253,66 +1453,159 @@ class AddEditEchoProduct extends React.Component {
                 )
               }}
             />
-          </GridColumn>
-        </GridRow>
-        {this.RowInput({
-          name: 'emergencyCompanyName',
-          id: 'global.emergencyCompanyName',
-          defaultMessage: 'Emergency Company Name'
-        })}
-        {this.RowInput({
-          name: 'emergencyContactName',
-          id: 'global.emergencyContactName',
-          defaultMessage: 'Emergency Contact Name'
-        })}
-        {this.RowPhone({
-          name: 'emergencyPhone',
-          id: 'global.emergencyPhone',
-          defaultMessage: 'Emergency Phone',
-          props: formikProps
-        })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
+            <PhoneNumber
+              background='#fdfdfd !important;'
+              name='emergencyPhone'
+              label={
+                <>
+                  <FormattedMessage id='global.emergencyPhone' defaultMessage='Emergency Phone' />
+                </>
+              }
+            />
+          </GridColumnForm>
+        </GridRowCustom>
 
-        <Header as='h3'>
-          <FormattedMessage id='global.sds' defaultMessage='SDS' />
-        </Header>
-        {this.RowDate({ name: 'sdsIssuedDate', id: 'global.sdsIssuedDate', defaultMessage: 'SDS Issued Date' })}
-        {this.RowInput({ name: 'sdsPreparedBy', id: 'global.sdsPreparedBy', defaultMessage: 'SDS Prepared by' })}
-        {this.RowDate({ name: 'sdsRevisionDate', id: 'global.sdsRevisionDate', defaultMessage: 'SDS Revision Date' })}
-        {this.RowInput({
-          name: 'sdsVersionNumber',
-          id: 'global.sdsVersionNumber',
-          defaultMessage: 'SDS Version Number'
-        })}
-        <Header as='h3'>
-          <FormattedMessage id='global.tds' defaultMessage='TDS' />
-        </Header>
-        {this.RowDate({ name: 'tdsIssuedDate', id: 'global.tdsIssuedDate', defaultMessage: 'TDS Issued Date' })}
-        {this.RowInput({ name: 'tdsPreparedBy', id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared by' })}
-        {this.RowDate({ name: 'tdsRevisionDate', id: 'global.tdsRevisionDate', defaultMessage: 'TDS Revision Date' })}
-        {this.RowInput({ name: 'tdsVersionNumber', id: 'tdsVersionNumber', defaultMessage: 'TDS Version Number' })}
+        {this.RowTwoInputs([
+          {
+            name: 'emergencyCompanyName',
+            id: 'global.emergencyCompanyName',
+            defaultMessage: 'Emergency Company Name',
+            required: false,
+            placeholderId: 'global.enterEmergencyCompanyName'
+          },
+          {
+            name: 'emergencyContactName',
+            id: 'global.emergencyContactName',
+            defaultMessage: 'Emergency Contact Name',
+            required: false,
+            placeholderId: 'global.enterEmergencyContactName'
+          }
+        ])}
+
+        <GridRowCustom>
+          <GridColumnForm width={1}>
+            <Checkbox name='isPublished' />
+          </GridColumnForm>
+          <GridColumnForm width={15}>
+            <DivTitleColumn>
+              <FormattedMessage id='global.published' defaultMessage='Published' />
+            </DivTitleColumn>
+          </GridColumnForm>
+        </GridRowCustom>
+
+        {this.renderMixtures(formikProps)}
+
+        <GridRowCustom>
+          <GridColumn width={16}>
+            <DivHeader>
+              <FormattedMessage id='global.sds' defaultMessage='SDS' />
+            </DivHeader>
+          </GridColumn>
+        </GridRowCustom>
+
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowDate({ name: 'sdsIssuedDate', id: 'global.sdsIssuedDate', defaultMessage: 'SDS Issued Date' })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
+            {this.RowInput({ name: 'sdsPreparedBy', id: 'global.sdsPreparedBy', defaultMessage: 'SDS Prepared by' })}
+          </GridColumnForm>
+        </GridRowCustom>
+
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowDate({
+              name: 'sdsRevisionDate',
+              id: 'global.sdsRevisionDate',
+              defaultMessage: 'SDS Revision Date'
+            })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
+            {this.RowInput({
+              name: 'sdsVersionNumber',
+              id: 'global.sdsVersionNumber',
+              defaultMessage: 'SDS Version Number',
+              required: false,
+              placeholderId: 'admin.sds.enterVersionNumber'
+            })}
+          </GridColumnForm>
+        </GridRowCustom>
+
+        <GridRowCustom>
+          <GridColumn width={16}>
+            <DivHeader>
+              <FormattedMessage id='global.tds' defaultMessage='TDS' />
+            </DivHeader>
+          </GridColumn>
+        </GridRowCustom>
+
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowDate({ name: 'tdsIssuedDate', id: 'global.tdsIssuedDate', defaultMessage: 'TDS Issued Date' })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
+            {this.RowInput({ name: 'tdsPreparedBy', id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared by' })}
+          </GridColumnForm>
+        </GridRowCustom>
+
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowDate({
+              name: 'tdsRevisionDate',
+              id: 'global.tdsRevisionDate',
+              defaultMessage: 'TDS Revision Date'
+            })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
+            {this.RowInput({
+              name: 'tdsVersionNumber',
+              id: 'tdsVersionNumber',
+              defaultMessage: 'TDS Version Number',
+              required: false,
+              placeholderId: 'global.enterTdsVersionNumber'
+            })}
+          </GridColumnForm>
+        </GridRowCustom>
       </Grid>
     )
   }
 
   renderInfo = formikProps => {
     return (
-      <Grid verticalAlign='middle'>
-        {this.RowInput({ name: 'appearance', id: 'global.appearance', defaultMessage: 'Appearance' })}
-        {this.RowInput({
-          name: 'aspirationHazard',
-          id: 'global.aspirationHazard',
-          defaultMessage: 'Aspiration Hazard'
-        })}
-        {this.RowInput({
-          name: 'autoIgnitionTemperature',
-          id: 'global.autoIgnitionTemperature',
-          defaultMessage: 'Auto Ignition Temperature'
-        })}
-        {this.RowInput({
-          name: 'boilingPointRange',
-          id: 'global.boilingPointRange',
-          defaultMessage: 'Boiling Point/Range'
-        })}
+      <Grid>
+        {this.RowTwoInputs([
+          { name: 'appearance', id: 'global.appearance', defaultMessage: 'Appearance' },
+          {
+            name: 'aspirationHazard',
+            id: 'global.aspirationHazard',
+            defaultMessage: 'Aspiration Hazard'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          { name: 'appearance', id: 'global.appearance', defaultMessage: 'Appearance' },
+          {
+            name: 'aspirationHazard',
+            id: 'global.aspirationHazard',
+            defaultMessage: 'Aspiration Hazard'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'autoIgnitionTemperature',
+            id: 'global.autoIgnitionTemperature',
+            defaultMessage: 'Auto Ignition Temperature'
+          },
+          {
+            name: 'boilingPointRange',
+            id: 'global.boilingPointRange',
+            defaultMessage: 'Boiling Point/Range'
+          }
+        ])}
+
         {this.RowTextArea(
           {
             name: 'conditionsToAvoid',
@@ -1321,62 +1614,85 @@ class AddEditEchoProduct extends React.Component {
           },
           formikProps
         )}
-        {this.RowInput({
-          name: 'optionalCriticalTemperature',
-          id: 'global.optionalCriticalTemperature',
-          defaultMessage: 'Critical Temperature'
-        })}
-        {this.RowInput({
-          name: 'decompositionTemperature',
-          id: 'global.decompositionTemperature',
-          defaultMessage: 'Decomposition Temperature'
-        })}
-        {this.RowInput({
-          name: 'developmentalEffects',
-          id: 'global.developmentalEffects',
-          defaultMessage: 'Developmental Effects'
-        })}
-        {this.RowInput({
-          name: 'endocrineDisruptorInformation',
-          id: 'global.endocrineDisruptorInformation',
-          defaultMessage: 'Endocrine Disruptor Information'
-        })}
-        {this.RowInput({
-          name: 'evaporationPoint',
-          id: 'global.evaporationPoint',
-          defaultMessage: 'Evaporation Point'
-        })}
+
+        {this.RowTwoInputs([
+          {
+            name: 'decompositionTemperature',
+            id: 'global.decompositionTemperature',
+            defaultMessage: 'Decomposition Temperature'
+          },
+          {
+            name: 'optionalCriticalTemperature',
+            id: 'global.optionalCriticalTemperature',
+            defaultMessage: 'Critical Temperature'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'endocrineDisruptorInformation',
+            id: 'global.endocrineDisruptorInformation',
+            defaultMessage: 'Endocrine Disruptor Information'
+          },
+          {
+            name: 'developmentalEffects',
+            id: 'global.developmentalEffects',
+            defaultMessage: 'Developmental Effects'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'flammabilityOrExplosiveLower',
+            id: 'global.flammabilityOrExplosiveLower',
+            defaultMessage: 'Flammability or Explosive Lower'
+          },
+          {
+            name: 'evaporationPoint',
+            id: 'global.evaporationPoint',
+            defaultMessage: 'Evaporation Point'
+          }
+        ])}
+
         {this.RowTextArea({ name: 'eyeContact', id: 'global.eyeContact', defaultMessage: 'Eye Contact' }, formikProps)}
-        {this.RowInput({
-          name: 'flammabilityOrExplosiveLower',
-          id: 'global.flammabilityOrExplosiveLower',
-          defaultMessage: 'Flammability or Explosive Lower'
-        })}
-        {this.RowInput({
-          name: 'flammabilityOrExplosiveUpper',
-          id: 'global.flammabilityOrExplosiveUpper',
-          defaultMessage: 'Flammability or Explosive Upper'
-        })}
-        {this.RowInput({
-          name: 'flammabilitySolidGas',
-          id: 'global.flammabilitySolidGas',
-          defaultMessage: 'Flammability (solid, gas)'
-        })}
-        {this.RowInput({ name: 'flashPoint', id: 'global.flashPoint', defaultMessage: 'Flash Point' })}
-        {this.RowInput({
-          name: 'optionalFlowTime',
-          id: 'global.optionalFlowTime',
-          defaultMessage: 'Flow Time'
-        })}
-        {this.RowInput({
-          name: 'optionalGasDensity',
-          id: 'global.optionalGasDensity',
-          defaultMessage: 'Gas Desity'
-        })}
+
+        {this.RowTwoInputs([
+          {
+            name: 'flammabilitySolidGas',
+            id: 'global.flammabilitySolidGas',
+            defaultMessage: 'Flammability (solid, gas)'
+          },
+          {
+            name: 'flammabilityOrExplosiveUpper',
+            id: 'global.flammabilityOrExplosiveUpper',
+            defaultMessage: 'Flammability or Explosive Upper'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'optionalFlowTime',
+            id: 'global.optionalFlowTime',
+            defaultMessage: 'Flow Time'
+          },
+          { name: 'flashPoint', id: 'global.flashPoint', defaultMessage: 'Flash Point' }
+        ])}
+
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowInput({
+              name: 'optionalGasDensity',
+              id: 'global.optionalGasDensity',
+              defaultMessage: 'Gas Desity'
+            })}
+          </GridColumnForm>
+        </GridRowCustom>
+
         {this.RowTextArea(
           { name: 'generalAdvice', id: 'global.generalAdvice', defaultMessage: 'General Advice' },
           formikProps
         )}
+
         {this.RowTextArea(
           {
             name: 'hazardStatement',
@@ -1385,47 +1701,64 @@ class AddEditEchoProduct extends React.Component {
           },
           formikProps
         )}
-        {this.RowInput({
-          name: 'hazardousDecompositionProducts',
-          id: 'global.hazardousDecompositionProducts',
-          defaultMessage: 'Hazardous Decomposition Products'
-        })}
-        {this.RowInput({
-          name: 'hazardousPolymerization',
-          id: 'global.hazardousPolymerization',
-          defaultMessage: 'Hazardous Polymerization'
-        })}
-        {this.RowInput({
-          name: 'hazardousReactions',
-          id: 'global.hazardousReactions',
-          defaultMessage: 'Hazardous Reactions'
-        })}
-        {this.RowInput({
-          name: 'optionalHeatOfCombustion',
-          id: 'global.optionalHeatOfCombustion',
-          defaultMessage: 'Heat Of Combustion'
-        })}
-        {this.RowInput({
-          name: 'hmisChronicHealthHazard',
-          id: 'global.hmisChronicHealthHazard',
-          defaultMessage: 'HMIS Chronic Health Hazard'
-        })}
-        {this.RowInput({
-          name: 'hmisFlammability',
-          id: 'global.hmisFlammability',
-          defaultMessage: 'HMIS Flammability'
-        })}
-        {this.RowInput({
-          name: 'hmisHealthHazard',
-          id: 'global.hmisHealthHazard',
-          defaultMessage: 'HMIS Health Hazard'
-        })}
-        {this.RowInput({
-          name: 'hmisPhysicalHazard',
-          id: 'global.hmisPhysicalHazard',
-          defaultMessage: 'HMIS Physical Hazard'
-        })}
-        {this.RowInput({ name: 'hnoc', id: 'global.hnoc', defaultMessage: 'HNOC' })}
+
+        {this.RowTwoInputs([
+          {
+            name: 'hazardousDecompositionProducts',
+            id: 'global.hazardousDecompositionProducts',
+            defaultMessage: 'Hazardous Decomposition Products'
+          },
+          {
+            name: 'hazardousPolymerization',
+            id: 'global.hazardousPolymerization',
+            defaultMessage: 'Hazardous Polymerization'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'hazardousReactions',
+            id: 'global.hazardousReactions',
+            defaultMessage: 'Hazardous Reactions'
+          },
+          {
+            name: 'optionalHeatOfCombustion',
+            id: 'global.optionalHeatOfCombustion',
+            defaultMessage: 'Heat Of Combustion'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'hmisChronicHealthHazard',
+            id: 'global.hmisChronicHealthHazard',
+            defaultMessage: 'HMIS Chronic Health Hazard'
+          },
+          {
+            name: 'hmisFlammability',
+            id: 'global.hmisFlammability',
+            defaultMessage: 'HMIS Flammability'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'hmisHealthHazard',
+            id: 'global.hmisHealthHazard',
+            defaultMessage: 'HMIS Health Hazard'
+          },
+          {
+            name: 'hmisPhysicalHazard',
+            id: 'global.hmisPhysicalHazard',
+            defaultMessage: 'HMIS Physical Hazard'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          { name: 'hnoc', id: 'global.hnoc', defaultMessage: 'HNOC' },
+          { name: 'labelElements', id: 'global.labelElements', defaultMessage: 'Label Elements' }
+        ])}
+
         {this.RowTextArea(
           {
             name: 'incompatibleMaterials',
@@ -1434,72 +1767,105 @@ class AddEditEchoProduct extends React.Component {
           },
           formikProps
         )}
+
         {this.RowTextArea({ name: 'ingestion', id: 'global.ingestion', defaultMessage: 'Ingestion' }, formikProps)}
+
         {this.RowTextArea({ name: 'inhalation', id: 'global.inhalation', defaultMessage: 'Inhalation' }, formikProps)}
-        {this.RowInput({ name: 'irritation', id: 'global.irritation', defaultMessage: 'Irritation' })}
-        {this.RowInput({ name: 'labelElements', id: 'global.labelElements', defaultMessage: 'Label Elements' })}
-        {this.RowInput({
-          name: 'meltingPointRange',
-          id: 'global.meltingPointRange',
-          defaultMessage: 'Melting Point/Range'
-        })}
-        {this.RowInput({ name: 'mexicoGrade', id: 'global.mexicoGrade', defaultMessage: 'Mexico-Grade' })}
-        {this.RowInput({
-          name: 'molecularFormula',
-          id: 'global.molecularFormula',
-          defaultMessage: 'Molecular Formula'
-        })}
-        {this.RowInput({ name: 'molecularWeight', id: 'global.molecularWeight', defaultMessage: 'Molecular Weight' })}
-        {this.RowInput({
-          name: 'mostImportantSymptomsAndEffects',
-          id: 'global.mostImportantSymptomsAndEffects',
-          defaultMessage: 'Most Important Symptoms and Effects'
-        })}
-        {this.RowInput({
-          name: 'mutagenicEffects',
-          id: 'global.mutagenicEffects',
-          defaultMessage: 'Mutagenic Effects'
-        })}
-        {this.RowInput({ name: 'nfpaFireHazard', id: 'global.nfpaFireHazard', defaultMessage: 'NFPA Fire Hazard' })}
-        {this.RowInput({
-          name: 'nfpaHealthHazard',
-          id: 'global.nfpaHealthHazard',
-          defaultMessage: 'NFPA Health Hazard'
-        })}
-        {this.RowInput({
-          name: 'nfpaReactivityHazard',
-          id: 'global.nfpaReactivityHazard',
-          defaultMessage: 'NFPA Reactivity Hazard'
-        })}
-        {this.RowInput({
-          name: 'nfpaSpecialHazard',
-          id: 'global.nfpaSpecialHazard',
-          defaultMessage: 'NFPA Special Hazard'
-        })}
-        {this.RowInput({
-          name: 'notesToPhysician',
-          id: 'global.notesToPhysician',
-          defaultMessage: 'Notes to Physician'
-        })}
-        {this.RowInput({ name: 'odor', id: 'global.odor', defaultMessage: 'Odor' })}
-        {this.RowInput({ name: 'odorThreshold', id: 'global.odorThreshold', defaultMessage: 'Odor Threshold' })}
-        {this.RowInput({
-          name: 'oshaDefinedHazards',
-          id: 'global.oshaDefinedHazards',
-          defaultMessage: 'OSHA Defined Hazards'
-        })}
-        {this.RowInput({
-          name: 'otherAdverseEffects',
-          id: 'global.otherAdverseEffects',
-          defaultMessage: 'Other Adverse Effects'
-        })}
-        {this.RowInput({
-          name: 'partitionCoefficient',
-          id: 'global.partitionCoefficient',
-          defaultMessage: 'Partition Coefficient'
-        })}
-        {this.RowInput({ name: 'ph', id: 'global.ph', defaultMessage: 'pH' })}
-        {this.RowInput({ name: 'physicalState', id: 'global.physicalState', defaultMessage: 'Physical State' })}
+
+        {this.RowTwoInputs([
+          { name: 'mexicoGrade', id: 'global.mexicoGrade', defaultMessage: 'Mexico-Grade' },
+          { name: 'irritation', id: 'global.irritation', defaultMessage: 'Irritation' }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'molecularWeight',
+            id: 'global.molecularWeight',
+            defaultMessage: 'Molecular Weight'
+          },
+          {
+            name: 'meltingPointRange',
+            id: 'global.meltingPointRange',
+            defaultMessage: 'Melting Point/Range'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'mutagenicEffects',
+            id: 'global.mutagenicEffects',
+            defaultMessage: 'Mutagenic Effects'
+          },
+          {
+            name: 'molecularFormula',
+            id: 'global.molecularFormula',
+            defaultMessage: 'Molecular Formula'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          { name: 'nfpaFireHazard', id: 'global.nfpaFireHazard', defaultMessage: 'NFPA Fire Hazard' },
+          {
+            name: 'mostImportantSymptomsAndEffects',
+            id: 'global.mostImportantSymptomsAndEffects',
+            defaultMessage: 'Most Important Symptoms and Effects'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'nfpaHealthHazard',
+            id: 'global.nfpaHealthHazard',
+            defaultMessage: 'NFPA Health Hazard'
+          },
+          {
+            name: 'nfpaReactivityHazard',
+            id: 'global.nfpaReactivityHazard',
+            defaultMessage: 'NFPA Reactivity Hazard'
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: 'nfpaSpecialHazard',
+            id: 'global.nfpaSpecialHazard',
+            defaultMessage: 'NFPA Special Hazard'
+          },
+          {
+            name: 'notesToPhysician',
+            id: 'global.notesToPhysician',
+            defaultMessage: 'Notes to Physician'
+          }
+        ])}
+        {this.RowTwoInputs([
+          { name: 'odor', id: 'global.odor', defaultMessage: 'Odor' },
+          { name: 'odorThreshold', id: 'global.odorThreshold', defaultMessage: 'Odor Threshold' }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: 'oshaDefinedHazards',
+            id: 'global.oshaDefinedHazards',
+            defaultMessage: 'OSHA Defined Hazards'
+          },
+          {
+            name: 'otherAdverseEffects',
+            id: 'global.otherAdverseEffects',
+            defaultMessage: 'Other Adverse Effects'
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: 'partitionCoefficient',
+            id: 'global.partitionCoefficient',
+            defaultMessage: 'Partition Coefficient'
+          },
+          { name: 'ph', id: 'global.ph', defaultMessage: 'pH' }
+        ])}
+        <GridRowCustom>
+          <GridColumnForm width={8}>
+            {this.RowInput({ name: 'physicalState', id: 'global.physicalState', defaultMessage: 'Physical State' })}
+          </GridColumnForm>
+        </GridRowCustom>
+
         {this.RowTextArea(
           {
             name: 'precautionaryStatements',
@@ -1508,69 +1874,89 @@ class AddEditEchoProduct extends React.Component {
           },
           formikProps
         )}
-        {this.RowInput({
-          name: 'productLc50Inhalation',
-          id: 'global.productLc50Inhalation',
-          defaultMessage: 'Product LC50 Inhalation'
-        })}
-        {this.RowInput({
-          name: 'productLd50Dermal',
-          id: 'global.productLd50Dermal',
-          defaultMessage: 'Product LD50 Dermal'
-        })}
-        {this.RowInput({ name: 'productLd50Oral', id: 'global.productLd50Oral', defaultMessage: 'Product LD50 Oral' })}
-        {this.RowInput({ name: 'reactiveHazard', id: 'global.reactiveHazard', defaultMessage: 'Reactive Hazard' })}
-        {this.RowInput({
-          name: 'optionalRecommendedRestrictions',
-          id: 'global.optionalRecommendedRestrictions',
-          defaultMessage: 'Recommended Restrictions'
-        })}
+
+        {this.RowTwoInputs([
+          {
+            name: 'productLc50Inhalation',
+            id: 'global.productLc50Inhalation',
+            defaultMessage: 'Product LC50 Inhalation'
+          },
+          {
+            name: 'productLd50Dermal',
+            id: 'global.productLd50Dermal',
+            defaultMessage: 'Product LD50 Dermal'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          { name: 'productLd50Oral', id: 'global.productLd50Oral', defaultMessage: 'Product LD50 Oral' },
+          { name: 'reactiveHazard', id: 'global.reactiveHazard', defaultMessage: 'Reactive Hazard' }
+        ])}
 
         {this.RowTextArea(
           { name: 'recommendedUse', id: 'global.recommendedUse', defaultMessage: 'Recommended Use' },
           formikProps
         )}
-        {this.RowInput({
-          name: 'optionalRelativeDensity',
-          id: 'global.optionalRelativeDensity',
-          defaultMessage: 'Relative Density'
-        })}
-        {this.RowInput({
-          name: 'reproductiveEffects',
-          id: 'global.reproductiveEffects',
-          defaultMessage: 'Reproductive Effects'
-        })}
-        {this.RowInput({ name: 'sensitization', id: 'global.sensitization', defaultMessage: 'Sensitization' })}
-        {this.RowInput({ name: 'optionalSchedule', id: 'global.optionalSchedule', defaultMessage: 'Schedule' })}
 
-        {this.RowInput({ name: 'signalWord', id: 'global.signalWord', defaultMessage: 'Signal Word' })}
+        {this.RowTwoInputs([
+          {
+            name: 'optionalRecommendedRestrictions',
+            id: 'global.optionalRecommendedRestrictions',
+            defaultMessage: 'Recommended Restrictions'
+          },
+          {
+            name: 'optionalRelativeDensity',
+            id: 'global.optionalRelativeDensity',
+            defaultMessage: 'Relative Density'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'reproductiveEffects',
+            id: 'global.reproductiveEffects',
+            defaultMessage: 'Reproductive Effects'
+          },
+          { name: 'sensitization', id: 'global.sensitization', defaultMessage: 'Sensitization' }
+        ])}
+
+        {this.RowTwoInputs([
+          { name: 'optionalSchedule', id: 'global.optionalSchedule', defaultMessage: 'Schedule' },
+          { name: 'signalWord', id: 'global.signalWord', defaultMessage: 'Signal Word' }
+        ])}
+
         {this.RowTextArea(
           { name: 'skinContact', id: 'global.skinContact', defaultMessage: 'Skin Contact' },
           formikProps
         )}
-        {this.RowInput({ name: 'solubility', id: 'global.solubility', defaultMessage: 'Solubility' })}
-        {this.RowInput({ name: 'specificGravity', id: 'global.specificGravity', defaultMessage: 'Specific Gravity' })}
-        {this.RowInput({
-          name: 'optionalSpecificVolume',
-          id: 'global.optionalSpecificVolume',
-          defaultMessage: 'Specific Volume'
-        })}
-        {this.RowInput({ name: 'stability', id: 'global.stability', defaultMessage: 'Stability' })}
-        {this.RowInput({
-          name: 'stotRepeatedExposure',
-          id: 'global.stotRepeatedExposure',
-          defaultMessage: 'STOT- Repeated Exposure'
-        })}
-        {this.RowInput({
-          name: 'stotSingleExposure',
-          id: 'global.stotSingleExposure',
-          defaultMessage: 'STOT- Single Exposure'
-        })}
-        {this.RowInput({
-          name: 'supplementalInformation',
-          id: 'global.supplementalInformation',
-          defaultMessage: 'Supplemental Information'
-        })}
+
+        {this.RowTwoInputs([
+          { name: 'solubility', id: 'global.solubility', defaultMessage: 'Solubility' },
+          { name: 'specificGravity', id: 'global.specificGravity', defaultMessage: 'Specific Gravity' }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'optionalSpecificVolume',
+            id: 'global.optionalSpecificVolume',
+            defaultMessage: 'Specific Volume'
+          },
+          { name: 'stability', id: 'global.stability', defaultMessage: 'Stability' }
+        ])}
+
+        {this.RowTwoInputs([
+          {
+            name: 'stotRepeatedExposure',
+            id: 'global.stotRepeatedExposure',
+            defaultMessage: 'STOT- Repeated Exposure'
+          },
+          {
+            name: 'stotSingleExposure',
+            id: 'global.stotSingleExposure',
+            defaultMessage: 'STOT- Single Exposure'
+          }
+        ])}
+
         {this.RowTextArea(
           {
             name: 'symptomsEffects',
@@ -1579,25 +1965,42 @@ class AddEditEchoProduct extends React.Component {
           },
           formikProps
         )}
-        {this.RowInput({
-          name: 'optionalSynonyms',
-          id: 'global.optionalSynonyms',
-          defaultMessage: 'Synonyms'
-        })}
-        {this.RowInput({ name: 'teratogenicity', id: 'global.teratogenicity', defaultMessage: 'Teratogenicity' })}
-        {this.RowInput({
-          name: 'usesAdvisedAgainst',
-          id: 'global.usesAdvisedAgainst',
-          defaultMessage: 'Uses Advised against'
-        })}
-        {this.RowInput({ name: 'vaporDensity', id: 'global.vaporDensity', defaultMessage: 'Vapor Density' })}
-        {this.RowInput({ name: 'vaporPressure', id: 'global.vaporPressure', defaultMessage: 'Vapor Pressure' })}
-        {this.RowInput({ name: 'viscosity', id: 'global.viscosity', defaultMessage: 'Viscosity' })}
-        {this.RowInput({
-          name: 'wasteDisposalMethods',
-          id: 'global.wasteDisposalMethods',
-          defaultMessage: 'Waste Disposal Methods'
-        })}
+
+        {this.RowTwoInputs([
+          {
+            name: 'supplementalInformation',
+            id: 'global.supplementalInformation',
+            defaultMessage: 'Supplemental Information'
+          },
+          {
+            name: 'optionalSynonyms',
+            id: 'global.optionalSynonyms',
+            defaultMessage: 'Synonyms'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          { name: 'teratogenicity', id: 'global.teratogenicity', defaultMessage: 'Teratogenicity' },
+          {
+            name: 'usesAdvisedAgainst',
+            id: 'global.usesAdvisedAgainst',
+            defaultMessage: 'Uses Advised against'
+          }
+        ])}
+
+        {this.RowTwoInputs([
+          { name: 'vaporDensity', id: 'global.vaporDensity', defaultMessage: 'Vapor Density' },
+          { name: 'vaporPressure', id: 'global.vaporPressure', defaultMessage: 'Vapor Pressure' }
+        ])}
+
+        {this.RowTwoInputs([
+          { name: 'viscosity', id: 'global.viscosity', defaultMessage: 'Viscosity' },
+          {
+            name: 'wasteDisposalMethods',
+            id: 'global.wasteDisposalMethods',
+            defaultMessage: 'Waste Disposal Methods'
+          }
+        ])}
       </Grid>
     )
   }
@@ -1606,31 +2009,36 @@ class AddEditEchoProduct extends React.Component {
     let { popupValues } = this.state
 
     return (
-      <Grid verticalAlign='middle'>
-        <GridRow>
+      <Grid>
+        <GridRowCustom>
           <GridColumn width={16}>
-            <label>
+            <DivHeader>
               <FormattedMessage id='global.sdsDocument' defaultMessage='SDS Document' />
-            </label>
-            {this.RowDocument(formikProps, formikProps.values, popupValues, 3)}
+            </DivHeader>
           </GridColumn>
-        </GridRow>
-        <GridRow>
+        </GridRowCustom>
+
+        {this.inputDocumentRows(formikProps, formikProps.values, popupValues, 3)}
+
+        <GridRowCustom>
           <GridColumn width={16}>
-            <label>
+            <DivHeader>
               <FormattedMessage id='global.tdsDocument' defaultMessage='TDS Document' />
-            </label>
-            {this.RowDocument(formikProps, formikProps.values, popupValues, 11)}
+            </DivHeader>
           </GridColumn>
-        </GridRow>
-        <GridRow>
+        </GridRowCustom>
+
+        {this.inputDocumentRows(formikProps, formikProps.values, popupValues, 11)}
+
+        <GridRowCustom>
           <GridColumn width={16}>
-            <label>
+            <DivHeader>
               <FormattedMessage id='global.dhsDocument' defaultMessage='DHS Document' />
-            </label>
-            {this.RowDocument(formikProps, formikProps.values, popupValues, 12)}
+            </DivHeader>
           </GridColumn>
-        </GridRow>
+        </GridRowCustom>
+
+        {this.inputDocumentRows(formikProps, formikProps.values, popupValues, 12)}
       </Grid>
     )
   }
@@ -1638,21 +2046,19 @@ class AddEditEchoProduct extends React.Component {
   renderTransportation = formikProps => {
     return (
       <>
-        <Grid verticalAlign='middle'>
-          <GridRow>
-            <GridColumn computer={6}>
-              <FormattedMessage id='global.filter' defaultMessage='Filter' />
-            </GridColumn>
-            <GridColumn computer={10}>
+        <Grid>
+          <GridRowCustom>
+            <GridColumnForm computer={16}>
               <Dropdown
                 selection
+                label={<FormattedMessage id='global.filter' defaultMessage='Filter' />}
                 fluid
                 options={transportationTypes}
                 value={this.state.transportationType}
                 onChange={(_, { value }) => this.setState({ transportationType: value })}
               />
-            </GridColumn>
-          </GridRow>
+            </GridColumnForm>
+          </GridRowCustom>
         </Grid>
         {this.renderTransportationContent(formikProps, this.state.transportationType)}
       </>
@@ -1664,468 +2070,159 @@ class AddEditEchoProduct extends React.Component {
       (v, i, a) => a.findIndex(t => t.key === v.key) === i
     )
 
-    switch (transportationType) {
-      case 'dot': {
-        return (
-          <Grid verticalAlign='middle'>
+    let typeUp = transportationType.toUpperCase()
+
+    return (
+      <Grid>
+        <GridRowCustom>
+          <GridColumnForm width={8}>
             {this.RowDropdown({
-              name: 'dotHazardClass',
-              id: 'global.dotHazardClass',
-              defaultMessage: 'DOT Hazard Class',
+              name: `${transportationType}HazardClass`,
+              id: `global.${transportationType}tdgHazardClass`,
+              defaultMessage: `${typeUp} Hazard Class`,
               clearable: true,
               props: {
                 options: this.props.hazardClasses
               }
             })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
             {this.RowDropdown({
-              name: 'dotPackagingGroup',
-              id: 'global.dotPackagingGroup',
-              defaultMessage: 'DOT Packaging Group',
+              name: `${transportationType}PackagingGroup`,
+              id: `global.${transportationType}tdgPackagingGroup`,
+              defaultMessage: `${typeUp} Packaging Group`,
               clearable: true,
               props: {
                 options: this.props.packagingGroups
               }
             })}
-
-            {this.RowInput({
-              name: 'dotProperShippingName',
-              id: 'global.dotProperShippingName',
-              defaultMessage: 'DOT Proper Shipping Name'
-            })}
-            {this.RowInput({
-              name: 'dotProperTechnicalName',
-              id: 'global.dotProperTechnicalName',
-              defaultMessage: 'DOT Proper Technical Name'
-            })}
+          </GridColumnForm>
+        </GridRowCustom>
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}ProperShippingName`,
+            id: `global.${transportationType}tdgProperShippingName`,
+            defaultMessage: `${typeUp} Proper Shipping Name`
+          },
+          {
+            name: `${transportationType}ProperTechnicalName`,
+            id: `global.${transportationType}tdgProperTechnicalName`,
+            defaultMessage: `${typeUp} Proper Technical Name`
+          }
+        ])}
+        <GridRowCustom>
+          <GridColumnForm width={8}>
             {this.RowUnNumberDropdown({
-              name: 'dotUnNumber',
-              id: 'global.dotUnNumber',
-              defaultMessage: 'DOT UN Number',
+              name: `${transportationType}UnNumber`,
+              id: `global.${transportationType}tdgUnNumber`,
+              defaultMessage: `${typeUp} UN Number`,
               props: {
                 options: unNumberOptions
               }
             })}
+          </GridColumnForm>
+          <GridColumnForm width={8}>
             {this.RowInput({
-              name: 'dotReportableQuantity',
-              id: 'global.dotReportableQuantity',
-              defaultMessage: 'DOT Reportable Quantity'
+              name: `${transportationType}ReportableQuantities`,
+              id: `global.${transportationType}tdgReportableQuantities`,
+              defaultMessage: `${typeUp} Reportable Quantities`
             })}
-            {this.RowInput({
-              name: 'dotEnvironmentalHazards',
-              id: 'global.dotEnvironmentalHazards',
-              defaultMessage: 'DOT Enviromental Hazards'
-            })}
-            {this.RowInput({
-              name: 'dotEmsNumbers',
-              id: 'global.dotEmsNumbers',
-              defaultMessage: 'DOT Ems Numbers'
-            })}
-            {this.RowInput({
-              name: 'dotExceptions',
-              id: 'global.dotExceptions',
-              defaultMessage: 'DOT Exceptions'
-            })}
-            {this.RowInput({
-              name: 'dotUserSpecialPrecautions',
-              id: 'global.dotUserSpecialPrecautions',
-              defaultMessage: 'DOT User Special Precautions'
-            })}
-            {this.RowInput({
-              name: 'dotMarinePollutant',
-              id: 'global.dotMarinePollutant',
-              defaultMessage: 'DOT Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'dotSevereMarinePollutant',
-              id: 'global.dotSevereMarinePollutant',
-              defaultMessage: 'DOT Severe Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'dotPackagingExceptions',
-              id: 'global.dotPackagingExceptions',
-              defaultMessage: 'DOT Packaging Exceptions'
-            })}
-            {this.RowInput({
-              name: 'dotPackagingNonBulk',
-              id: 'global.dotPackagingNonBulk',
-              defaultMessage: 'DOT Packaging Non Bulk'
-            })}
-            {this.RowInput({
-              name: 'dotPackagingBulk',
-              id: 'global.dotPackagingBulk',
-              defaultMessage: 'DOT Packaging Bulk'
-            })}
-            {this.RowInput({
-              name: 'dotPassengerQuantityLimitations',
-              id: 'global.dotPassengerQuantityLimitations',
-              defaultMessage: 'DOT Passenger Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'dotCargoAircraftQuantityLimitations',
-              id: 'global.dotCargoAircraftQuantityLimitations',
-              defaultMessage: 'DOT Cargo Aircraft Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'dotVesselStowageLocation',
-              id: 'global.dotVesselStowageLocation',
-              defaultMessage: 'DOT Vessel Stowage Location'
-            })}
-            {this.RowInput({
-              name: 'dotVesselStowageOther',
-              id: 'global.dotVesselStowageOther',
-              defaultMessage: 'DOT Vessel Stowage Other'
-            })}
-            {this.RowInput({
-              name: 'dotQuantityLimitations',
-              id: 'global.dotQuantityLimitations',
-              defaultMessage: 'DOT Quantity Limitations'
-            })}
-          </Grid>
-        )
-      }
+          </GridColumnForm>
+        </GridRowCustom>
 
-      case 'iata': {
-        return (
-          <Grid verticalAlign='middle'>
-            {this.RowDropdown({
-              name: 'iataHazardClass',
-              id: 'global.iataHazardClass',
-              defaultMessage: 'IATA Hazard Class',
-              clearable: true,
-              props: {
-                options: this.props.hazardClasses
-              }
-            })}
-            {this.RowDropdown({
-              name: 'iataPackagingGroup',
-              id: 'global.iataPackagingGroup',
-              defaultMessage: 'IATA Packaging Group',
-              clearable: true,
-              props: {
-                options: this.props.packagingGroups
-              }
-            })}
-            {this.RowInput({
-              name: 'iataProperShippingName',
-              id: 'global.iataProperShippingName',
-              defaultMessage: 'IATA Proper Shipping Name'
-            })}
-            {this.RowInput({
-              name: 'iataProperTechnicalName',
-              id: 'global.iataProperTechnicalName',
-              defaultMessage: 'IATA Proper Technical Name'
-            })}
-            {this.RowUnNumberDropdown({
-              name: 'iataUnNumber',
-              id: 'global.iataUnNumber',
-              defaultMessage: 'IATA UN Number',
-              props: {
-                options: unNumberOptions
-              }
-            })}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}EnvironmentalHazards`,
+            id: `global.${transportationType}tdgEnvironmentalHazards`,
+            defaultMessage: `${typeUp} Environmental Hazards`
+          },
+          {
+            name: `${transportationType}EmsNumbers`,
+            id: `global.${transportationType}tdgEmsNumbers`,
+            defaultMessage: `${typeUp} Ems Numbers`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}Exceptions`,
+            id: `global.${transportationType}tdgExceptions`,
+            defaultMessage: `${typeUp} Exceptions`
+          },
+          {
+            name: `${transportationType}UserSpecialPrecautions`,
+            id: `global.${transportationType}tdgUserSpecialPrecautions`,
+            defaultMessage: `${typeUp} Users Special Precautions`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}MarinePollutant`,
+            id: `global.${transportationType}tdgMarinePollutant`,
+            defaultMessage: `${typeUp} Marine Pollutant`
+          },
+          {
+            name: `${transportationType}SevereMarinePollutant`,
+            id: `global.${transportationType}tdgSevereMarinePollutant`,
+            defaultMessage: `${typeUp} Severe Marine Pollutant`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}PackagingExceptions`,
+            id: `global.${transportationType}tdgPackagingExceptions`,
+            defaultMessage: `${typeUp} Packaging Exceptions`
+          },
+          {
+            name: `${transportationType}PackagingNonBulk`,
+            id: `global.${transportationType}tdgPackagingNonBulk`,
+            defaultMessage: `${typeUp} Packaging Non Bulk`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}PackagingBulk`,
+            id: `global.${transportationType}tdgPackagingBulk`,
+            defaultMessage: `${typeUp} Packaging Bulk`
+          },
+          {
+            name: `${transportationType}PassengerQuantityLimitations`,
+            id: `global.${transportationType}tdgPassengerQuantityLimitations`,
+            defaultMessage: `${typeUp} Passanger Quantity Limitations`
+          }
+        ])}
+        {this.RowTwoInputs([
+          {
+            name: `${transportationType}CargoAircraftQuantityLimitations`,
+            id: `global.${transportationType}tdgCargoAircraftQuantityLimitations`,
+            defaultMessage: `${typeUp} Cargo Aircraft Quantity Limitations`
+          },
+          {
+            name: `${transportationType}VesselStowageLocation`,
+            id: `global.${transportationType}tdgVesselStowageLocation`,
+            defaultMessage: `${typeUp} Vessel Stowage Location`
+          }
+        ])}
 
+        <GridRowCustom>
+          <GridColumnForm width={8}>
             {this.RowInput({
-              name: 'iataReportableQuantities',
-              id: 'global.iataReportableQuantities',
-              defaultMessage: 'IATA Reportable Quantities'
+              name: `${transportationType}VesselStowageOther`,
+              id: `global.${transportationType}tdgVesselStowageOther`,
+              defaultMessage: `${typeUp} Vessel Stowage Other`
             })}
-            {this.RowInput({
-              name: 'iataEnvironmentalHazards',
-              id: 'global.iataEnvironmentalHazards',
-              defaultMessage: 'IATA Enviromental Hazards'
-            })}
-            {this.RowInput({
-              name: 'iataEmsNumbers',
-              id: 'global.iataEmsNumbers',
-              defaultMessage: 'IATA Ems Numbers'
-            })}
-            {this.RowInput({
-              name: 'iataExceptions',
-              id: 'global.iataExceptions',
-              defaultMessage: 'IATA Exceptions'
-            })}
-            {this.RowInput({
-              name: 'iataUserSpecialPrecautions',
-              id: 'global.iataUserSpecialPrecautions',
-              defaultMessage: 'IATA User Special Precautions'
-            })}
-            {this.RowInput({
-              name: 'iataMarinePollutant',
-              id: 'global.iataMarinePollutant',
-              defaultMessage: 'IATA Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'iataSevereMarinePollutant',
-              id: 'global.iataSevereMarinePollutant',
-              defaultMessage: 'IATA Severe Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'iataPackagingExceptions',
-              id: 'global.iataPackagingExceptions',
-              defaultMessage: 'IATA Packaging Exceptions'
-            })}
-            {this.RowInput({
-              name: 'iataPackagingNonBulk',
-              id: 'global.iataPackagingNonBulk',
-              defaultMessage: 'IATA Packaging Non Bulk'
-            })}
-            {this.RowInput({
-              name: 'iataPackagingBulk',
-              id: 'global.iataPackagingBulk',
-              defaultMessage: 'IATA Packaging Bulk'
-            })}
-            {this.RowInput({
-              name: 'iataPassengerQuantityLimitations',
-              id: 'global.iataPassengerQuantityLimitations',
-              defaultMessage: 'IATA Passenger Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'iataCargoAircraftQuantityLimitations',
-              id: 'global.iataCargoAircraftQuantityLimitations',
-              defaultMessage: 'IATA Cargo Aircraft Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'iataVesselStowageLocation',
-              id: 'global.iataVesselStowageLocation',
-              defaultMessage: 'IATA Vessel Stoge Location'
-            })}
-            {this.RowInput({
-              name: 'iataVesselStowageOther',
-              id: 'global.iataVesselStowageOther',
-              defaultMessage: 'IATA Vessel Stowage Other'
-            })}
-          </Grid>
-        )
-      }
-
-      case 'imdgImo': {
-        return (
-          <Grid verticalAlign='middle'>
-            {this.RowDropdown({
-              name: 'imdgImoHazardClass',
-              id: 'global.imdgImoHazardClass',
-              defaultMessage: 'IMDG/IMO Hazard Class',
-              clearable: true,
-              props: {
-                options: this.props.hazardClasses
-              }
-            })}
-            {this.RowDropdown({
-              name: 'imdgImoPackagingGroup',
-              id: 'global.imdgImoPackagingGroup',
-              defaultMessage: 'IMDG/IMO Packaging Group',
-              clearable: true,
-              props: {
-                options: this.props.packagingGroups
-              }
-            })}
-            {this.RowInput({
-              name: 'imdgImoProperShippingName',
-              id: 'global.imdgImoProperShippingName',
-              defaultMessage: 'IMDG/IMO Proper Shipping Name'
-            })}
-            {this.RowInput({
-              name: 'imdgImoProperTechnicalName',
-              id: 'global.imdgImoProperTechnicalName',
-              defaultMessage: 'IMDG/IMO Proper Technical Name'
-            })}
-            {this.RowUnNumberDropdown({
-              name: 'imdgImoUnNumber',
-              id: 'global.imdgImoUnNumber',
-              defaultMessage: 'IMDG/IMO UN Number',
-              props: {
-                options: unNumberOptions
-              }
-            })}
-
-            {this.RowInput({
-              name: 'imdgImoReportableQuantities',
-              id: 'global.imdgImoReportableQuantities',
-              defaultMessage: 'IMDG/IMO Reportable Quantities'
-            })}
-            {this.RowInput({
-              name: 'imdgImoEnvironmentalHazards',
-              id: 'global.imdgImoEnvironmentalHazards',
-              defaultMessage: 'IMDG/IMO Enviromental Hazards'
-            })}
-            {this.RowInput({
-              name: 'imdgImoEmsNumbers',
-              id: 'global.imdgImoEmsNumbers',
-              defaultMessage: 'IMDG/IMO Ems Numbers'
-            })}
-            {this.RowInput({
-              name: 'imdgImoExceptions',
-              id: 'global.imdgImoExceptions',
-              defaultMessage: 'IMDG/IMO Exceptions'
-            })}
-            {this.RowInput({
-              name: 'imdgImoUserSpecialPrecautions',
-              id: 'global.imdgImoUserSpecialPrecautions',
-              defaultMessage: 'IMDG/IMO User Special Precautions'
-            })}
-            {this.RowInput({
-              name: 'imdgImoMarinePollutant',
-              id: 'global.imdgImoMarinePollutant',
-              defaultMessage: 'IMDG/IMO Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'imdgImoSevereMarinePollutant',
-              id: 'global.imdgImoSevereMarinePollutant',
-              defaultMessage: 'IMDG/IMO Severe Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'imdgImoPackagingExceptions',
-              id: 'global.imdgImoPackagingExceptions',
-              defaultMessage: 'IMDG/IMO Packaging Exceptions'
-            })}
-            {this.RowInput({
-              name: 'imdgImoPackagingNonBulk',
-              id: 'global.imdgImoPackagingNonBulk',
-              defaultMessage: 'IMDG/IMO Packaging Non Bulk'
-            })}
-            {this.RowInput({
-              name: 'imdgImoPackagingBulk',
-              id: 'global.imdgImoPackagingBulk',
-              defaultMessage: 'IMDG/IMO Packaging Bulk'
-            })}
-            {this.RowInput({
-              name: 'imdgImoPassengerQuantityLimitations',
-              id: 'global.imdgImoPassengerQuantityLimitations',
-              defaultMessage: 'IMDG/IMO Passenger Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'imdgImoCargoAircraftQuantityLimitations',
-              id: 'global.imdgImoCargoAircraftQuantityLimitations',
-              defaultMessage: 'IMDG/IMO Cargo Aircraft Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'imdgImoVesselStowageLocation',
-              id: 'global.imdgImoVesselStowageLocation',
-              defaultMessage: 'IMDG/IMO Vessel Stoge Location'
-            })}
-            {this.RowInput({
-              name: 'imdgImoVesselStowageOther',
-              id: 'global.imdgImoVesselStowageOther',
-              defaultMessage: 'IMDG/IMO Vessel Stowage Other'
-            })}
-          </Grid>
-        )
-      }
-
-      case 'tdg': {
-        return (
-          <Grid verticalAlign='middle'>
-            {this.RowDropdown({
-              name: 'tdgHazardClass',
-              id: 'global.tdgHazardClass',
-              defaultMessage: 'TDG Hazard Class',
-              clearable: true,
-              props: {
-                options: this.props.hazardClasses
-              }
-            })}
-            {this.RowDropdown({
-              name: 'tdgPackagingGroup',
-              id: 'global.tdgPackagingGroup',
-              defaultMessage: 'TDG Packaging Group',
-              clearable: true,
-              props: {
-                options: this.props.packagingGroups
-              }
-            })}
-            {this.RowInput({
-              name: 'tdgProperShippingName',
-              id: 'global.tdgProperShippingName',
-              defaultMessage: 'TDG Proper Shipping Name'
-            })}
-            {this.RowInput({
-              name: 'tdgProperTechnicalName',
-              id: 'global.tdgProperTechnicalName',
-              defaultMessage: 'TDG Proper Technical Name'
-            })}
-            {this.RowUnNumberDropdown({
-              name: 'tdgUnNumber',
-              id: 'global.tdgUnNumber',
-              defaultMessage: 'TDG UN Number',
-              props: {
-                options: unNumberOptions
-              }
-            })}
-
-            {this.RowInput({
-              name: 'tdgReportableQuantities',
-              id: 'global.tdgReportableQuantities',
-              defaultMessage: 'TDG Reportable Quantities'
-            })}
-            {this.RowInput({
-              name: 'tdgEnvironmentalHazards',
-              id: 'global.tdgEnvironmentalHazards',
-              defaultMessage: 'TDG Environmental Hazards'
-            })}
-            {this.RowInput({
-              name: 'tdgEmsNumbers',
-              id: 'global.tdgEmsNumbers',
-              defaultMessage: 'TDG Ems Numbers'
-            })}
-            {this.RowInput({
-              name: 'tdgExceptions',
-              id: 'global.tdgExceptions',
-              defaultMessage: 'TDG Exceptions'
-            })}
-            {this.RowInput({
-              name: 'tdgUserSpecialPrecautions',
-              id: 'global.tdgUserSpecialPrecautions',
-              defaultMessage: 'TDG Users Special Precautions'
-            })}
-            {this.RowInput({
-              name: 'tdgMarinePollutant',
-              id: 'global.tdgMarinePollutant',
-              defaultMessage: 'TDG Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'tdgSevereMarinePollutant',
-              id: 'global.tdgSevereMarinePollutant',
-              defaultMessage: 'TDG Severe Marine Pollutant'
-            })}
-            {this.RowInput({
-              name: 'tdgPackagingExceptions',
-              id: 'global.tdgPackagingExceptions',
-              defaultMessage: 'TDG Packaging Exceptions'
-            })}
-            {this.RowInput({
-              name: 'tdgPackagingNonBulk',
-              id: 'global.tdgPackagingNonBulk',
-              defaultMessage: 'TDG Packaging Non Bulk'
-            })}
-            {this.RowInput({
-              name: 'tdgPackagingBulk',
-              id: 'global.tdgPackagingBulk',
-              defaultMessage: 'TDG Packaging Bulk'
-            })}
-            {this.RowInput({
-              name: 'tdgPassengerQuantityLimitations',
-              id: 'global.tdgPassengerQuantityLimitations',
-              defaultMessage: 'TDG Passanger Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'tdgCargoAircraftQuantityLimitations',
-              id: 'global.tdgCargoAircraftQuantityLimitations',
-              defaultMessage: 'TDG Cargo Aircraft Quantity Limitations'
-            })}
-            {this.RowInput({
-              name: 'tdgVesselStowageLocation',
-              id: 'global.tdgVesselStowageLocation',
-              defaultMessage: 'TDG Vessel Stowage Location'
-            })}
-            {this.RowInput({
-              name: 'tdgVesselStowageOther',
-              id: 'global.tdgVesselStowageOther',
-              defaultMessage: 'TDG Vessel Stowage Other'
-            })}
-          </Grid>
-        )
-      }
-    }
+          </GridColumnForm>
+          {transportationType === 'dot' && (
+            <GridColumnForm width={8}>
+              {this.RowInput({
+                name: `${transportationType}QuantityLimitations`,
+                id: `global.${transportationType}tdgQuantityLimitations`,
+                defaultMessage: `${typeUp} Quantity Limitations`
+              })}
+            </GridColumnForm>
+          )}
+        </GridRowCustom>
+      </Grid>
+    )
   }
 
   getContent = formikProps => {
@@ -2158,7 +2255,8 @@ class AddEditEchoProduct extends React.Component {
       closePopup,
       intl: { formatMessage },
       isLoading,
-      datagrid
+      datagrid,
+      chatWidgetVerticalMoved
     } = this.props
 
     const { editTab } = this.state
@@ -2177,70 +2275,73 @@ class AddEditEchoProduct extends React.Component {
           this.formikProps = formikProps
 
           return (
-            <FlexSidebar
-              visible={true}
-              width='very wide'
-              style={{ width: '500px' }}
-              direction='right'
-              animation='overlay'>
-              <Dimmer inverted active={isLoading}>
-                <Loader />
-              </Dimmer>
-              <TabsWrapper>
+            <>
+              <DimmerBottomSidebarOpend
+                height='height: 11% !important;' // 89% height has Sidebar'
+                active={true}
+                onClickOutside={() => {
+                  closePopup()
+                  chatWidgetVerticalMoved(false)
+                }}
+                page></DimmerBottomSidebarOpend>
+              <FlexSidebar visible={true} width='very wide' direction='bottom' animation='overlay'>
+                <Dimmer inverted active={isLoading}>
+                  <Loader />
+                </Dimmer>
                 <HighSegment basic>
-                  <Menu pointing secondary>
+                  <MenuCustom pointing secondary>
                     {tabs.map((tab, i) => (
                       <Menu.Item onClick={() => this.tabChanged(i)} active={editTab === i}>
                         {formatMessage(tab.text)}
                       </Menu.Item>
                     ))}
-                  </Menu>
+                    <DivIconChevronDown
+                      onClick={() => {
+                        closePopup()
+                        chatWidgetVerticalMoved(false)
+                      }}>
+                      <ChevronDown />
+                    </DivIconChevronDown>
+                  </MenuCustom>
                 </HighSegment>
-              </TabsWrapper>
 
-              <FlexContent>
-                <Segment basic>{this.getContent(formikProps)}</Segment>
-              </FlexContent>
+                <FlexContent>
+                  <SegmentCustomContent basic>{this.getContent(formikProps)}</SegmentCustomContent>
+                </FlexContent>
 
-              <GraySegment basic style={{ position: 'relative', overflow: 'visible', margin: '0' }}>
-                <Grid>
-                  <GridRow>
-                    <GridColumnBtn computer={6} textAlign='left'>
-                      <Button
-                        size='large'
-                        inputProps={{ type: 'button' }}
-                        onClick={() => {
-                          if (this.state.changedAttachments) datagrid.loadData()
-                          closePopup()
-                        }}
-                        data-test='sidebar_inventory_cancel'>
-                        {Object.keys(touched).length || this.state.changedForm
-                          ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
-                          : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
-                      </Button>
-                    </GridColumnBtn>
-                    <GridColumnBtn computer={10} textAlign='right'>
-                      <Button.Submit
-                        disabled={!(Object.keys(touched).length || this.state.changedForm)}
-                        onClick={() =>
-                          validateForm().then(err => {
-                            if (Object.keys(err).length) {
-                              this.switchToErrors(Object.keys(err))
-                            }
-                          })
+                <DivBottomSidebar>
+                  <BasicButton
+                    noBorder
+                    inputProps={{ type: 'button' }}
+                    onClick={() => {
+                      if (this.state.changedAttachments) datagrid.loadData()
+                      closePopup()
+                    }}
+                    data-test='sidebar_inventory_cancel'>
+                    {Object.keys(touched).length || this.state.changedForm
+                      ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
+                      : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                  </BasicButton>
+
+                  <BasicButton
+                    disabled={!(Object.keys(touched).length || this.state.changedForm)}
+                    onClick={() =>
+                      validateForm().then(err => {
+                        if (Object.keys(err).length) {
+                          this.switchToErrors(Object.keys(err))
                         }
-                        primary
-                        size='large'
-                        inputProps={{ type: 'button' }}
-                        data-test='sidebar_inventory_save_new'>
-                        {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                      </Button.Submit>
-                    </GridColumnBtn>
-                  </GridRow>
-                </Grid>
-              </GraySegment>
-              <ErrorFocus />
-            </FlexSidebar>
+                      })
+                    }
+                    primary
+                    size='large'
+                    inputProps={{ type: 'button' }}
+                    data-test='sidebar_inventory_save_new'>
+                    {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                  </BasicButton>
+                </DivBottomSidebar>
+                <ErrorFocus />
+              </FlexSidebar>
+            </>
           )
         }}
       />

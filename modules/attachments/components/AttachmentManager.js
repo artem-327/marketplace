@@ -35,9 +35,9 @@ const CustomGridColumn = styled(GridColumn)`
 `
 
 const CustomButton = styled(Button)`
-  color: #2599d5 !important;
-  background-color: #ddf1fc !important;
-  border: solid 1px #2599d5 !important;
+  color: ${({ color }) => (color ? color : '#2599d5 !important')};
+  background-color: ${({ background }) => (background ? background : '#ddf1fc !important')};
+  border: ${({ border }) => (border ? border : 'solid 1px #2599d5 !important')};
   border-radius: 3px !important;
   display: flex !important;
   align-items: center !important;
@@ -145,12 +145,24 @@ class AttachmentClass extends Component {
   }
 
   render() {
-    const { asModal, documentTypes, documentTypeIds, lockedFileTypes, singleSelection } = this.props
+    const {
+      asModal,
+      documentTypes,
+      documentTypeIds,
+      lockedFileTypes,
+      singleSelection,
+      background,
+      color,
+      border
+    } = this.props
     if (!asModal) return this.getContent()
 
     return (
       <>
         <CustomButton
+          border={border}
+          color={color}
+          background={background}
           fluid
           type='button'
           onClick={() => {

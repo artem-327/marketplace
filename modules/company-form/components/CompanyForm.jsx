@@ -591,6 +591,7 @@ class CompanyForm extends Component {
             <GridRow>
               <GridColumn>
                 <UploadAttachment
+                  acceptFiles='image/jpeg, image/png, image/gif, image/svg'
                   {...this.props}
                   attachments={this.props.companyLogo ? [this.props.companyLogo] : []}
                   name={`companyLogo`}

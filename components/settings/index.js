@@ -80,6 +80,13 @@ const FormSpaced = styled(Form)`
   }
 `
 
+const StyledHeader = styled(Header)`
+  &:first-child,
+  .dimmer:first-child + & {
+    margin-top: 0 !important;
+  }
+`
+
 const StyledSegment = styled(Segment)`
   margin-bottom: 45px !important;
 
@@ -89,6 +96,7 @@ const StyledSegment = styled(Segment)`
     overflow: hidden;
     display: flex;
     flex-flow: column;
+    min-height: 112px;
     margin-bottom: 15px !important;
   }
 `
@@ -302,9 +310,9 @@ class Settings extends Component {
                 ? systemSettings.map(group => {
                     return (
                       <>
-                        <Header size='medium' as='h2'>
+                        <StyledHeader as='h2' className='ui medium header'>
                           {group.name}
-                        </Header>
+                        </StyledHeader>
                         <StyledSegment>
                           <PScroll>
                             <>

@@ -18,11 +18,13 @@ BasicButton.propTypes = {
   /**
    * No borders around the Button.
    */
-  noBorder: PropTypes.bool
+  noBorder: PropTypes.bool,
+  children: PropTypes.any
 }
 
 BasicButton.defaultProps = {
-  noBorder: false
+  noBorder: false,
+  children: null
 }
 
 export default BasicButton

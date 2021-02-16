@@ -9,6 +9,7 @@ import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
 
 const StyledDropdown = styled(Dropdown)`
+  background: ${({ background }) => (background ? background : '#ffffff;')};
   min-width: 80px !important;
   margin-right: 10px;
   cursor: pointer !important;
@@ -18,7 +19,6 @@ const StyledDropdown = styled(Dropdown)`
   outline: 0;
   min-width: 14em;
   min-height: 2.71428571em;
-  background: #ffffff;
   display: inline-block;
   padding: 0.78571429em 0.4em 0.78571429em 0.2em;
   color: rgba(0, 0, 0, 0.87);
@@ -46,6 +46,7 @@ const StyledDropdown = styled(Dropdown)`
 `
 
 const StyledInputMask = styled(InputMask)`
+  background: ${({ background }) => (background ? background : '#ffffff;')};
   .default.text {
     font-weight: normal;
   }
@@ -71,7 +72,10 @@ function splitPhoneNumber(phone, phoneCountryCodes) {
     return { phoneCountryCode: '', phoneNumber: phone }
   }
 }
-
+/**
+ *
+ * @component
+ */
 export default class PhoneNumber extends Component {
   state = {
     phoneCountryCode: '',
@@ -223,7 +227,8 @@ export default class PhoneNumber extends Component {
       touched,
       isSubmitting,
       disabled,
-      placeholder
+      placeholder,
+      background
     } = this.props
 
     let { phoneCountryCode, phoneNumber } = this.state
@@ -237,6 +242,7 @@ export default class PhoneNumber extends Component {
               {label && <label>{label}</label>}
               <span style={{ display: 'flex' }} className='phone-number'>
                 <StyledDropdown
+                  background={background}
                   name={name + 'CountryCode'}
                   className='phone-code'
                   options={phoneCountryCodes}
@@ -247,6 +253,7 @@ export default class PhoneNumber extends Component {
                   value={phoneCountryCode}
                 />
                 <StyledInputMask
+                  background={background}
                   name={name}
                   className='phone-num'
                   beforeMaskedStateChange={this.beforeMaskedStateChange}
@@ -283,7 +290,8 @@ PhoneNumber.propTypes = {
   touched: object,
   disabled: bool,
   clearable: bool,
-  placeholder: string
+  placeholder: string,
+  background: string
 }
 
 PhoneNumber.defaultProps = {
@@ -299,5 +307,6 @@ PhoneNumber.defaultProps = {
   touched: {},
   disabled: false,
   clearable: false,
-  placeholder: null
+  placeholder: null,
+  background: null
 }
