@@ -97,3 +97,12 @@ export const clearPreFilledValues = () => ({ type: AT.CLEAR_PRE_FILLED_VALUES, p
 
 export const openSidebarAddress = () => ({ type: AT.OPEN_SIDEBAR_ADDRESS, payload: null })
 export const closeSidebarAddress = () => ({ type: AT.CLOSE_SIDEBAR_ADDRESS, payload: null })
+
+export const searchDeliveryAddresses = val => ({
+  type: AT.CHECKOUT_SEARCH_DELIVERY_ADDRESSES,
+  payload: api.searchDeliveryAddresses(val)
+})
+export const searchWarehouses = val => ({
+  type: AT.CHECKOUT_SEARCH_WAREHOUSES,
+  payload: api.searchWarehouses(val)
+})

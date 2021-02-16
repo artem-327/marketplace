@@ -10,10 +10,12 @@ class CheckoutPage extends Component {
       intl: { formatMessage }
     } = this.props
 
+    // ! ! Layout
+    // ! ! div
     return (
-      <Layout title={formatMessage({ id: 'cart.checkout', defaultMessage: 'Checkout' })}>
+      <div title={formatMessage({ id: 'cart.checkout', defaultMessage: 'Checkout' })}>
         <PurchaseOrder />
-      </Layout>
+      </div>
     )
   }
 }
