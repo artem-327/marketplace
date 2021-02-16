@@ -88,6 +88,7 @@ const FreightSelection = props => {
   let isAnyItemHazardous = cart.cartItems.some(
     item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
   )
+  const isOwn = value && value.freightType === FREIGHT_TYPES.OWN
 
   return (
     <RowComponent
@@ -119,16 +120,17 @@ const FreightSelection = props => {
                     <GridRowExpandedSelectionRow
                       key={index}
                       checked={value && value.quoteId === item.quoteId}
-                      onClick={() => onValueChange({ ...item, freightType: FREIGHT_TYPES.ECHO })}
-                      selection={'true'}>
+                      onClick={() => !isOwn && onValueChange({ ...item, freightType: FREIGHT_TYPES.ECHO })}
+                      selection={isOwn ? '' : 'true'}
+                    >
                       <GridColumn width={10}>
                         <DivFlexRow>
                           <DivCentered>
-                            <Radio checked={value && value.quoteId === item.quoteId} />
+                            <Radio checked={value && value.quoteId === item.quoteId} disabled={isOwn} />
                           </DivCentered>
                           <div>
-                            <DivSectionHeader>{item.carrierName}</DivSectionHeader>
-                            <DivSectionName>
+                            <DivSectionHeader disabled={isOwn}>{item.carrierName}</DivSectionHeader>
+                            <DivSectionName disabled={isOwn}>
                               <FormattedNumber
                                 minimumFractionDigits={2}
                                 maximumFractionDigits={2}
@@ -144,21 +146,21 @@ const FreightSelection = props => {
                         <DivSectionSmallHeader>
                           <FormattedMessage id='checkout.freight.estDelivery' defaultMessage='Est. Delivery' />
                         </DivSectionSmallHeader>
-                        <DivSectionName>{moment(item.estimatedDeliveryDate).fromNow()}</DivSectionName>
+                        <DivSectionName disabled={isOwn}>{moment(item.estimatedDeliveryDate).fromNow()}</DivSectionName>
                       </GridColumn>
                       {false && (
                         <GridColumn width={2}>
                           <DivSectionSmallHeader>
                             <FormattedMessage id='checkout.freight.etd' defaultMessage='ETD' />
                           </DivSectionSmallHeader>
-                          <DivSectionName>{item.quoteId /* missing in endpoint */}</DivSectionName>
+                          <DivSectionName disabled={isOwn}>{item.quoteId /* missing in endpoint */}</DivSectionName>
                         </GridColumn>
                       )}
                       <GridColumn width={3}>
                         <DivSectionSmallHeader>
                           <FormattedMessage id='checkout.freight.service' defaultMessage='Service' />
                         </DivSectionSmallHeader>
-                        <DivSectionName>{item.serviceType}</DivSectionName>
+                        <DivSectionName disabled={isOwn}>{item.serviceType}</DivSectionName>
                       </GridColumn>
                     </GridRowExpandedSelectionRow>
                   ))}
@@ -277,14 +279,14 @@ const FreightSelection = props => {
                           }
                           name='shipmentQuoteId'
                           value={value && value.quoteId ? value.quoteId : ''}
-                          disabled={value && value.freightType === FREIGHT_TYPES.OWN}
+                          disabled={isOwn}
                         />
                       </GridColumn>
                     </GridRow>
                   </GridStyled>
                 )}
               <FreightLabel
-                isOwn={value && value.freightType === FREIGHT_TYPES.OWN}
+                isOwn={isOwn}
                 onChange={val => onValueChange(val)}
               />
             </>

@@ -54,12 +54,12 @@ const OrderSummary = props => {
               defaultMessage='By placing your order, you agree to Echosystem’s Privacy Policy and Conditions of use}.'
               values={{
                 privacyPolicy: (
-                  <LinkLabel href='https://www.google.com/search?q=PrivacyPolicy' target='_blank'>
+                  <LinkLabel href='https://www.echosystem.com/privacy-policy' target='_blank'>
                     <FormattedMessage id='checkout.summary.privacyPolicy' defaultMessage='Privacy Policy' />
                   </LinkLabel>
                 ),
                 conditionsOfUse: (
-                  <LinkLabel href='https://www.google.com/search?q=ConditionsOfUse' target='_blank'>
+                  <LinkLabel href='https://www.echosystem.com/terms-of-service' target='_blank'>
                     <FormattedMessage id='checkout.summary.conditionsOfUse' defaultMessage='Conditions Of Use' />
                   </LinkLabel>
                 )

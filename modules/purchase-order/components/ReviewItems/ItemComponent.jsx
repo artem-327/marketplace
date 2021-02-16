@@ -38,10 +38,7 @@ const ItemComponent = props => {
   const pricePerUOM = getPrice(pkgAmount, item.productOffer.pricingTiers)
 
   let allOptions = value ? OPTIONS_QUANTITY.concat([{ key: value, text: value.toString(), value }]) : OPTIONS_QUANTITY
-
   allOptions = uniqueArrayByKey(allOptions, 'text')
-  console.log('value')
-  console.log(value)
 
   return (
     <GridItemDetail verticalAlign='middle'>

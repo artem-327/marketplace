@@ -57,6 +57,7 @@ export const DivSectionName = styled.div`
   color: #20273a;
   white-space: nowrap;
   text-overflow: ellipsis;
+  ${({ disabled }) => disabled ? 'color: #848893;' : ''}
 `
 
 export const DivSectionHeader = styled.div`
@@ -66,6 +67,7 @@ export const DivSectionHeader = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  ${({ disabled }) => disabled ? 'color: #848893;' : ''}
 `
 
 export const DivSectionSmallHeader = styled.div`

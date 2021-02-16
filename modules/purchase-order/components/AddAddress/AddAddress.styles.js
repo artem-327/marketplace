@@ -8,6 +8,7 @@ export const ModalStyled = styled(Modal)`
 
     .scrolling.content {
       max-height: unset;
+      height: calc(95vh - 212px) !important;
     }
 
     > .actions {
