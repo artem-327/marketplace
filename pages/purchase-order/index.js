@@ -1,6 +1,5 @@
 import { Component } from 'react'
 import securePage from '~/hocs/securePage'
-import Layout from 'components/Layout'
 import { PurchaseOrder } from '~/modules/purchase-order'
 import { injectIntl } from 'react-intl'
 
@@ -10,12 +9,8 @@ class CheckoutPage extends Component {
       intl: { formatMessage }
     } = this.props
 
-    // ! ! Layout
-    // ! ! div
     return (
-      <div title={formatMessage({ id: 'cart.checkout', defaultMessage: 'Checkout' })}>
-        <PurchaseOrder />
-      </div>
+      <PurchaseOrder />
     )
   }
 }

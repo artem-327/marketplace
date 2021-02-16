@@ -430,11 +430,26 @@ export default function reducer(state = initialState, action) {
     }
 
     /* DELETE_CART_ITEM */
+    case AT.DELETE_CART_ITEM_PENDING: {
+      return {
+        ...state,
+        cartIsFetching: true
+      }
+    }
+
+    case AT.DELETE_CART_ITEM_REJECTED: {
+      return {
+        ...state,
+        cartIsFetching: false
+      }
+    }
+
     case AT.DELETE_CART_ITEM_FULFILLED: {
       return {
         ...state,
         cart: action.payload.data,
-        cartItemsCount: action.payload.data.cartItems.length
+        cartItemsCount: action.payload.data.cartItems.length,
+        cartIsFetching: false
       }
     }
 
