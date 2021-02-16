@@ -12,11 +12,11 @@ import {
   createLogisticsAccount,
   updateLogisticsAccount,
   getLogisticsAccounts
-} from '~/modules/settings/actions'
+} from '../../../actions'
 import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 //Components
-import { Required } from '~/components/constants/layout'
-import ErrorFocus from '~/components/error-focus'
+import { Required } from '../../../../../components/constants/layout'
+import ErrorFocus from '../../../../../components/error-focus'
 import BasicButton from '../../../../../components/buttons/BasicButton'
 //Services
 import { getInitialValues, getValidationSchema, submitForm } from './LogisticsSidebar.services'
@@ -107,10 +107,12 @@ const LogisticsSidebar = props => {
               {sidebarValues ? (
                 <Input
                   name='providerIdentifierName'
-                  label={formatMessage({
-                    id: 'logistics.label.logisticsProvider',
-                    defaultMessage: 'Logistics Provider'
-                  })}
+                  label={
+                    <>
+                      {formatMessage({ id: 'logistics.label.logisticsProvider', defaultMessage: 'Logistics Provider' })}
+                      <Required />
+                    </>
+                  }
                   inputProps={{
                     readOnly: true
                   }}
@@ -123,10 +125,12 @@ const LogisticsSidebar = props => {
                     text: `${provider.name} (${provider.identifier.value})`,
                     value: JSON.stringify(provider.identifier)
                   }))}
-                  label={formatMessage({
-                    id: 'logistics.label.logisticsProvider',
-                    defaultMessage: 'Logistics Provider'
-                  })}
+                  label={
+                    <>
+                      {formatMessage({ id: 'logistics.label.logisticsProvider', defaultMessage: 'Logistics Provider' })}
+                      <Required />
+                    </>
+                  }
                   inputProps={{
                     search: true,
                     'data-test': 'settings_logistics_provider_drpdn',
