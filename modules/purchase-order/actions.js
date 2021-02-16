@@ -106,3 +106,8 @@ export const searchWarehouses = val => ({
   type: AT.CHECKOUT_SEARCH_WAREHOUSES,
   payload: api.searchWarehouses(val)
 })
+
+export const setIsOpenAddAddress = isOpen => ({
+  type: AT.SET_IS_OPEN_MODAL,
+  payload: isOpen
+})

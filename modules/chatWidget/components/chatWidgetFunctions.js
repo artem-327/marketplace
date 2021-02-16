@@ -40,8 +40,8 @@ export const ChatWidget_create = (identity, props) => {
 }
 
 const chatWidget_updateIdentity = identity => {
-  zE(function() {
-    $zopim(function() {
+  zE(function () {
+    $zopim(function () {
       $zopim.livechat.setLanguage(identity.lang)
       $zopim.livechat.setName(identity.name)
       $zopim.livechat.setEmail(identity.email)
@@ -50,8 +50,8 @@ const chatWidget_updateIdentity = identity => {
 }
 
 const chatWidget_scriptLoaded = (identity, hide) => {
-  zE(function() {
-    $zopim(function() {
+  zE(function () {
+    $zopim(function () {
       if (hide) $zopim.livechat.window.hide()
       $zopim.livechat.setStatus('online')
       $zopim.livechat.button.show()
@@ -61,8 +61,8 @@ const chatWidget_scriptLoaded = (identity, hide) => {
 }
 
 const chatWidget_onConnected = identity => {
-  zE(function() {
-    $zopim(function() {
+  zE(function () {
+    $zopim(function () {
       $zopim.livechat.setLanguage(identity.lang)
       $zopim.livechat.setName(identity.name)
       $zopim.livechat.setEmail(identity.email)
@@ -76,18 +76,18 @@ const chatWidget_onChatStart = () => {}
 const chatWidget_onChatEnd = () => {}
 
 const chatWidget_addCallBack = (identity, props) => {
-  zE(function() {
-    $zopim(function() {
-      $zopim.livechat.setOnConnected(function() {
+  zE(function () {
+    $zopim(function () {
+      $zopim.livechat.setOnConnected(function () {
         chatWidget_onConnected(identity)
       })
-      $zopim.livechat.setOnUnreadMsgs(function(cnt) {
+      $zopim.livechat.setOnUnreadMsgs(function (cnt) {
         props.chatUnreadMessages(cnt)
       })
-      $zopim.livechat.setOnChatStart(function() {
+      $zopim.livechat.setOnChatStart(function () {
         chatWidget_onChatStart()
       })
-      $zopim.livechat.setOnChatEnd(function() {
+      $zopim.livechat.setOnChatEnd(function () {
         chatWidget_onChatEnd()
       })
     })
@@ -96,8 +96,8 @@ const chatWidget_addCallBack = (identity, props) => {
 
 export const chatWidget_hide = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
-    zE(function() {
-      $zopim(function() {
+    zE(function () {
+      $zopim(function () {
         $zopim.livechat.hideAll()
       })
     })
@@ -106,8 +106,8 @@ export const chatWidget_hide = () => {
 
 export const chatWidget_showLabel = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
-    zE(function() {
-      $zopim(function() {
+    zE(function () {
+      $zopim(function () {
         $zopim.livechat.button.show()
       })
     })
@@ -116,8 +116,8 @@ export const chatWidget_showLabel = () => {
 
 export const chatWidget_show = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
-    zE(function() {
-      $zopim(function() {
+    zE(function () {
+      $zopim(function () {
         $zopim.livechat.window.show()
       })
     })
@@ -127,8 +127,8 @@ export const chatWidget_show = () => {
 export const chatWidget_toggle = () => {
   // Not used, $zopim.livechat.window.getDisplay() not working correctly in current widget version
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
-    zE(function() {
-      $zopim(function() {
+    zE(function () {
+      $zopim(function () {
         $zopim.livechat.window.getDisplay() // after 3rd call getDisplay() returns true even the window is hidden (?)
           ? $zopim.livechat.window.hide()
           : $zopim.livechat.window.show()
@@ -139,8 +139,8 @@ export const chatWidget_toggle = () => {
 
 export const chatWidget_EndSession = () => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
-    zE(function() {
-      $zopim(function() {
+    zE(function () {
+      $zopim(function () {
         $zopim.livechat.endChat()
       })
     })
@@ -150,8 +150,8 @@ export const chatWidget_EndSession = () => {
 export const chatWidget_isChatting = () => {
   let result = false
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
-    zE(function() {
-      $zopim(function() {
+    zE(function () {
+      $zopim(function () {
         result = $zopim.livechat.isChatting()
       })
     })
@@ -170,11 +170,21 @@ export const chatWidget_isConnected = () => {
   else return true
 }
 
-export const chatWidget_setHorizontalOffset = (offset) => {
+export const chatWidget_setHorizontalOffset = offset => {
   if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
-    zE(function() {
-      $zopim(function() {
-        $zopim.livechat.button.setOffsetHorizontal(offset);
+    zE(function () {
+      $zopim(function () {
+        $zopim.livechat.button.setOffsetHorizontal(offset)
+      })
+    })
+  }
+}
+
+export const chatWidget_setVerticalOffset = offset => {
+  if (typeof window !== 'undefined' && typeof window.zE !== 'undefined' && typeof window.$zopim !== 'undefined') {
+    zE(function () {
+      $zopim(function () {
+        $zopim.livechat.button.setOffsetVertical(offset)
       })
     })
   }

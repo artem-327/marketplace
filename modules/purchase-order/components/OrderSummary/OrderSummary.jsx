@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
-import {getSafe} from "~/utils/functions"
+import { getSafe } from '~/utils/functions'
 import { GridColumn, GridRow, Button } from 'semantic-ui-react'
 import { currency } from '~/constants/index'
 
@@ -14,27 +14,25 @@ import { currency } from '~/constants/index'
 
 //Services
 import { GridSummary, LinkLabel } from './OrderSummary.styles'
-
+/**
+ * @category Purchase Order - Checkout
+ * @component
+ */
 const OrderSummary = props => {
-  const {
-    buttonText,
-    onButtonClick,
-    allAccepted,
-    submitButtonDisabled
-  } = props
+  const { buttonText, onButtonClick, allAccepted, submitButtonDisabled, loading } = props
 
-  const priceComponent = val => (
-    val
-      ? (
-        <FormattedNumber
-          minimumFractionDigits={2}
-          maximumFractionDigits={2}
-          style='currency'
-          currency={currency}
-          value={val}
-        />
-      ) : '-'
-  )
+  const priceComponent = val =>
+    val ? (
+      <FormattedNumber
+        minimumFractionDigits={2}
+        maximumFractionDigits={2}
+        style='currency'
+        currency={currency}
+        value={val}
+      />
+    ) : (
+      '-'
+    )
 
   const subTotalPrice = getSafe(() => props.cart.cfPriceSubtotal, '')
   const freightPrice = getSafe(() => props.sectionState.freight.value.estimatedPrice, '')
@@ -43,49 +41,43 @@ const OrderSummary = props => {
     <GridSummary>
       <GridRow>
         <GridColumn>
-          <Button
-            fluid
-            color='blue'
-            disabled={submitButtonDisabled}
-            onClick={() => onButtonClick()}>
+          <Button fluid loading={loading} color='blue' disabled={submitButtonDisabled} onClick={() => onButtonClick()}>
             {buttonText}
           </Button>
         </GridColumn>
       </GridRow>
       <GridRow className='bottom-border small-text'>
         <GridColumn>
-          {allAccepted
-            ? (
-              <FormattedMessage
-                id='checkout.summary.byPlacingYourOrder'
-                defaultMessage='By placing your order, you agree to Echosystem’s Privacy Policy and Conditions of use}.'
-                values={{
-                  privacyPolicy: (
-                    <LinkLabel  href='https://www.google.com/search?q=PrivacyPolicy' target='_blank'>
-                      <FormattedMessage
-                        id='checkout.summary.privacyPolicy'
-                        defaultMessage='Privacy Policy'
-                      />
-                    </LinkLabel>
-                  ),
-                  conditionsOfUse: (
-                    <LinkLabel  href='https://www.google.com/search?q=ConditionsOfUse' target='_blank'>
-                      <FormattedMessage
-                        id='checkout.summary.conditionsOfUse'
-                        defaultMessage='Conditions Of Use'
-                      />
-                    </LinkLabel>
-                  ),
-                }}
-              />
-            ) : (
-              <FormattedMessage
-                id='checkout.summary.continueToFinish'
-                defaultMessage='Continue to step 4 to finish checking out.'
-                values={{ value: (<b><FormattedMessage id='checkout.summary.step4' defaultMessage='step 4' /></b>) }}
-              />
-            )
-          }
+          {allAccepted ? (
+            <FormattedMessage
+              id='checkout.summary.byPlacingYourOrder'
+              defaultMessage='By placing your order, you agree to Echosystem’s Privacy Policy and Conditions of use}.'
+              values={{
+                privacyPolicy: (
+                  <LinkLabel href='https://www.google.com/search?q=PrivacyPolicy' target='_blank'>
+                    <FormattedMessage id='checkout.summary.privacyPolicy' defaultMessage='Privacy Policy' />
+                  </LinkLabel>
+                ),
+                conditionsOfUse: (
+                  <LinkLabel href='https://www.google.com/search?q=ConditionsOfUse' target='_blank'>
+                    <FormattedMessage id='checkout.summary.conditionsOfUse' defaultMessage='Conditions Of Use' />
+                  </LinkLabel>
+                )
+              }}
+            />
+          ) : (
+            <FormattedMessage
+              id='checkout.summary.continueToFinish'
+              defaultMessage='Continue to step 4 to finish checking out.'
+              values={{
+                value: (
+                  <b>
+                    <FormattedMessage id='checkout.summary.step4' defaultMessage='step 4' />
+                  </b>
+                )
+              }}
+            />
+          )}
         </GridColumn>
       </GridRow>
       <GridRow className='bottom-border'>
@@ -131,12 +123,14 @@ const OrderSummary = props => {
 
 OrderSummary.propTypes = {
   buttonText: PropTypes.any,
-  onButtonClick: PropTypes.func
+  onButtonClick: PropTypes.func,
+  loading: PropTypes.bool
 }
 
 OrderSummary.defaultProps = {
   buttonText: 'Missing buttonText value!',
-  onButtonClick: () => {}
+  onButtonClick: () => {},
+  loading: false
 }
 
 export default injectIntl(OrderSummary)
