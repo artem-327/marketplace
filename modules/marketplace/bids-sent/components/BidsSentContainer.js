@@ -4,6 +4,7 @@ import moment from 'moment/moment'
 
 import { withDatagrid } from '~/modules/datagrid'
 import BidsSent from './BidsSent'
+// ! ! import BidsSent from './BidsSentOld'
 import * as Actions from '../../actions'
 import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'

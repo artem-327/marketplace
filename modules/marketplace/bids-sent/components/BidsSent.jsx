@@ -2,7 +2,7 @@
 import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-
+import BidsRowDetail from '../../components/BidsRowDetail'
 import { Container, Input, Image } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexGrid from '~/components/table'
@@ -37,7 +37,7 @@ import {
   setInitFilters,
   handleFilterChangeInputSearch,
   getRows,
-  getRowDetail
+  handleUpdateFinished
 } from './BidsSent.services'
 
 const BidsSent = props => {
@@ -75,6 +75,20 @@ const BidsSent = props => {
   const { datagrid, intl, loading, isOpenPopup } = props
   let { formatMessage } = intl
   const rows = getRows(state, props)
+
+  const getRowDetail = ({ row }, state, props) => {
+    return (
+      <BidsRowDetail
+        initValues={state.rowDetailState}
+        popupValues={row}
+        onUnmount={values => state.setRowDetailState(values)}
+        onClose={() => {
+          state.setExpandedRowIds([])
+          handleUpdateFinished(state, props)
+        }}
+      />
+    )
+  }
 
   return (
     <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>

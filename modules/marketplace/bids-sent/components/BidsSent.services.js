@@ -1,4 +1,3 @@
-import BidsRowDetail from '../../components/BidsRowDetail'
 import { Container, Input, Image } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import ProdexGrid from '~/components/table'
@@ -56,7 +55,7 @@ const handleRowClick = (row, state, props)=> {
   }
 }
 
-const handleUpdateFinished = (state, props) => {
+export const handleUpdateFinished = (state, props) => {
   if (getSafe(() => Router.router.query.id, 0)) {
     Router.push(Router.router.pathname)
     setInitFilters(state, props)
@@ -236,18 +235,4 @@ const getActions = (row, state, props) => {
   rowActions.push(buttonDelete)
 
   return rowActions
-}
-
-export const getRowDetail = ({ row }, state, props) => {
-  return (
-    <BidsRowDetail
-      initValues={state.rowDetailState}
-      popupValues={row}
-      onUnmount={values => state.setRowDetailState(values)}
-      onClose={() => {
-        state.setExpandedRowIds([])
-        handleUpdateFinished(state, props)
-      }}
-    />
-  )
 }

@@ -19,7 +19,80 @@ import { getSafe } from '~/utils/functions'
 class BidsSent extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      columns: [
+        {
+          name: 'name',
+          title: <div></div>,
+          width: 310,
+          //sortPath: 'ProductOffer.companyProduct.intProductName',
+          allowReordering: false
+        },
+        {
+          name: 'description',
+          title: <div></div>,
+          caption: (
+            <FormattedMessage id='marketplace.description' defaultMessage='Description'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 600,
+          maxWidth: 2000
+        },
+        {
+          name: 'createdAt',
+          title: <div></div>,
+          caption: (
+            <FormattedMessage id='marketplace.createdAt' defaultMessage='Created At'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 150
+          //sortPath: 'ProductOffer.pkgAvailable'
+        }
+      ],
+      //pageNumber: 0,
+      expandedRowIds: [],
+      filterValues: {
+        searchInput: ''
+      },
+      rowDetailState: null
+    }
+  }
 
+  componentDidMount() {
+    const { datagrid } = this.props
+
+    const initId = parseInt(getSafe(() => Router.router.query.id, 0))
+    if (initId) {
+      datagrid.setSearch({ initId }, true, 'pageFilters')
+      this.setState({ expandedRowIds: [initId] })
+    } else {
+      this.setInitFilters()
+    }
+  }
+
+  componentWillUnmount() {
+    const { isOpenPopup, closePopup } = this.props
+    if (!getSafe(() => Router.router.query.id, 0)) {
+      this.props.handleVariableSave('tableHandlersFiltersBidsSent', this.state.filterValues)
+    }
+    if (isOpenPopup) closePopup()
+  }
+
+  setInitFilters = () => {
+    const { tableHandlersFiltersBidsSent, datagrid } = this.props
+
+    if (tableHandlersFiltersBidsSent) {
+      this.setState({ filterValues: tableHandlersFiltersBidsSent }, () => {
+        const filter = {
+          ...this.state.filterValues
+        }
+        datagrid.setSearch(filter, true, 'pageFilters')
+      })
+    } else {
+      datagrid.setSearch(this.state.filterValues, true, 'pageFilters')
+    }
   }
 
   handleFilterChangeInputSearch = (e, data) => {
