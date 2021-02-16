@@ -4,7 +4,13 @@ import { Image, Button, Grid, Popup } from 'semantic-ui-react'
 export const DivHeaderRow = styled.div`
   display: flex;
   flex-flow: row;
+  position: fixed;
+  width: auto;
   height: 80px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   justify-content: space-between;
   padding: 0 130px;
   box-shadow: 0 1px 0 0 #dee2e6;

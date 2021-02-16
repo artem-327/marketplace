@@ -78,7 +78,7 @@ const Payment = props => {
           ? (
             isExpanded
               ? (
-                <GridExpandedSection>
+                <GridExpandedSection maxHeight='605px'>
                   {payments.map((item, index) =>
                     <GridRowExpandedSelectionRow
                       key={index}

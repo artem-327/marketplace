@@ -6,15 +6,30 @@ import {
   GridRow
 } from 'semantic-ui-react'
 
-export const DivCheckoutWrapper = styled.div`
+export const ContainerMain = styled(SemanticContainer)`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background-color: #f5f7fa;
-  height: 100%;
-  min-height: 100%;
+`
+
+export const DivScrollableContent = styled.div`
+  position: fixed;
+  top: 80px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 `
 
 export const ContainerCheckout = styled(SemanticContainer)`
-  padding: 30px;
-  height: calc(100vh - 80px);
+  padding: 30px 0;
 `
 
 export const GridSections = styled(Grid)`
@@ -91,10 +106,14 @@ export const DivTopPadding = styled.div`
 
 export const GridExpandedSection = styled(Grid)`
   &.ui.grid {
-    margin: 10px 0;
+    margin: 10px -20px;
+    padding: 0;    
+    overflow-x: hidden;
+    overflow-y: auto;
+    ${props => (props.maxHeight ? 'max-height: ' + props.maxHeight + ';' : '')}
   
     > .row {
-      margin: 2.5px 0;
+      margin: 2.5px 20px;
       padding: 15px 5px;
       
       > .column {
@@ -107,7 +126,7 @@ export const GridExpandedSection = styled(Grid)`
 `
 
 export const GridRowReviewItems = styled(GridRow)`
-  margin: 5px 0 !important;
+  margin: 5px 15px !important;
   padding: 0 !important;
 `
 
