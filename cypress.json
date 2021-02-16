@@ -10,5 +10,6 @@
   "video": false,
   "requestTimeout": 30000,
   "defaultCommandTimeout": 10000,
+  "screenshotOnRunFailure": false,
   "numTestsKeptInMemory": 0
 }
