@@ -14,6 +14,7 @@ import Payment from './Payment/Payment'
 import FreightSelection from './FreightSelection/FreightSelection'
 import Spinner from '../../../components/Spinner/Spinner'
 import ChatWidget from '../../chatWidget/components/ChatWidgetContainer'
+import { Messages } from '../../messages'
 
 //Services
 import ErrorFocus from '../../../components/error-focus'
@@ -111,6 +112,7 @@ const Checkout = props => {
       <Head>
         <title>{formatMessage({ id: 'checkout.titlePage', defaultMessage: 'Echosystem / Checkout' })}</title>
       </Head>
+      <Messages />
       <ContainerMain fluid>
         <HeaderRow itemsCount={cartItems.length} />
         <DivScrollableContent>
