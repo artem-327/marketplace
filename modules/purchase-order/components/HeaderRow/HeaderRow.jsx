@@ -21,20 +21,19 @@ import {
   PopupGrid,
   ButtonHeader
 } from './HeaderRow.styles'
-
+/**
+ * @category Purchase Order - Checkout
+ * @component
+ */
 const HeaderRow = props => {
   const [isPopupOpen, setIsPopupOpen] = useState(false)
 
-  const {
-    itemsCount,
-    hasLogo,
-    useCompanyLogo
-  } = props
+  const { itemsCount, hasLogo, useCompanyLogo } = props
 
   // Similar to call componentDidMount:
   useEffect(() => {
     if (hasLogo && getSafe(() => props.useCompanyLogo.value === 'TRUE', false)) loadCompanyLogo(props)
-  }, [])  // If [] is empty then is similar as componentDidMount.
+  }, []) // If [] is empty then is similar as componentDidMount.
 
   return (
     <DivHeaderRow>
@@ -43,11 +42,7 @@ const HeaderRow = props => {
         trigger={
           <DivImageWrapper>
             <LogoImage
-              src={
-                hasLogo && getSafe(() => useCompanyLogo.value === 'TRUE', false)
-                  ? getCompanyLogo(props)
-                  : Logo
-              }
+              src={hasLogo && getSafe(() => useCompanyLogo.value === 'TRUE', false) ? getCompanyLogo(props) : Logo}
             />
           </DivImageWrapper>
         }
@@ -69,9 +64,7 @@ const HeaderRow = props => {
 
               <GridRow>
                 <GridColumn width={8}>
-                  <ButtonHeader
-                    fluid
-                    onClick={() => setIsPopupOpen(false)}>
+                  <ButtonHeader fluid onClick={() => setIsPopupOpen(false)}>
                     <FormattedMessage id='checkout.header.button.stayInCheckout' defaultMessage='Stay in Checkout'>
                       {text => text}
                     </FormattedMessage>
@@ -98,7 +91,7 @@ const HeaderRow = props => {
       <DivHeaderRowText>
         <FormattedMessage
           id='checkout.header.items'
-          defaultMessage={`Checkout (${itemsCount} Items)`}
+          defaultMessage={`Checkout (${itemsCount} items)`}
           values={{ value: itemsCount }}
         />
       </DivHeaderRowText>
@@ -107,7 +100,10 @@ const HeaderRow = props => {
 }
 
 HeaderRow.propTypes = {
-  itemsCount: PropTypes.number
+  itemsCount: PropTypes.number,
+  hasLogo: PropTypes.bool,
+  companyLogo: PropTypes.object,
+  useCompanyLogo: PropTypes.object
 }
 
 HeaderRow.defaultProps = {
@@ -118,9 +114,8 @@ function mapStateToProps(store) {
   return {
     hasLogo: getSafe(() => store.auth.identity.company.hasLogo, false),
     companyLogo: getSafe(() => store.businessTypes.companyLogo, null),
-    useCompanyLogo: getSafe(() =>
-      store.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false)
+    useCompanyLogo: getSafe(() => store.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false)
   }
 }
 
-export default injectIntl(connect(mapStateToProps, { getCompanyLogo })(HeaderRow))
+export default connect(mapStateToProps, { getCompanyLogo })(HeaderRow)

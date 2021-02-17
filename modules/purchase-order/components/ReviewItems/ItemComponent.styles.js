@@ -9,13 +9,12 @@ export const GridItemDetail = styled(Grid)`
     border-radius: 4px;
     border: solid 1px #dee2e6;
     background-color: #ffffff;
-  
+
     > .row {
       padding: 0;
-      
+
       > .column {
         padding: 5px;
-        overflow: hidden !important;
         text-overflow: ellipsis !important;
       }
     }
@@ -39,7 +38,7 @@ export const GridRowHeader = styled(GridRow)`
   margin-bottom: 8px;
 `
 
-export const IconTrash2 = styled(Trash2)`  
+export const IconTrash2 = styled(Trash2)`
   color: #f16844;
   cursor: pointer;
 `
@@ -58,6 +57,9 @@ export const DivDropdownQuantityWrapper = styled.div`
   z-index: 600;
 
   & > .field {
+    > .ui.input {
+      width: 65px !important;
+    }
     z-index: 601;
     > .ui.search.dropdown,
     > .ui.search.selection.dropdown {
@@ -68,18 +70,18 @@ export const DivDropdownQuantityWrapper = styled.div`
       min-width: 65px;
       max-width: 65px;
       padding: 8px 29px 6px 12px;
-       
+
       > input.search {
         padding: 8px 29px 6px 12px;
       }
-      
+
       > div.visible.menu.transition {
         z-index: 600 !important;
       }
-    }    
+    }
 
     .ui.selection.dropdown > .dropdown.icon {
       padding: 8px 11px 6px 11px;
     }
-  }  
+  }
 `

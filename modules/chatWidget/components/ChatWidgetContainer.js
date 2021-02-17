@@ -52,6 +52,13 @@ function mapStateToProps(state) {
     )
       return 630
 
+    // Modal in Purchase order - Checkout - Address scroll-up from bottom to up of the page.
+    if (getSafe(() => state.cart.isOpenModal, false) && getSafe(() => state.chatWidget.isVerticalMoved, false)) {
+      if (typeof window !== 'undefined' && window.innerHeight) {
+        return window.innerHeight * 0.89 // Height of Modal is 88% height of page
+      }
+    }
+
     return 0
   }
 

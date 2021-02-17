@@ -45,7 +45,9 @@ export const initialState = {
   },
   identity: null,
   isOpenSidebar: false,
-  shippingQuotesAreFetching: false
+  shippingQuotesAreFetching: false,
+  loading: false,
+  isOpenModal: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -205,7 +207,7 @@ export default function reducer(state = initialState, action) {
           id: acc.id || acc.account_public_id,
           name: acc.name || acc.display_name,
           status: acc.status,
-          type: acc.bankAccountType || acc.account_type,  // Nebo: acc.type || acc.account_type ?
+          type: acc.bankAccountType || acc.account_type, // Nebo: acc.type || acc.account_type ?
           institutionName: acc.bankName || acc.institution_name
         })),
         isFetching: false
@@ -615,6 +617,36 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         cartItemsCount: action.payload
+      }
+    }
+
+    /* POST_PURCHASE_ORDER */
+
+    case AT.POST_PURCHASE_ORDER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.POST_PURCHASE_ORDER_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.POST_PURCHASE_ORDER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.SET_IS_OPEN_MODAL: {
+      return {
+        ...state,
+        isOpenModal: action.payload
       }
     }
 

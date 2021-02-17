@@ -2,7 +2,8 @@ import * as AT from './action-types'
 
 export const initialState = {
   supportChatEnabled: false,
-  initialized: false
+  initialized: false,
+  isVerticalMoved: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -50,6 +51,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         supportChatEnabled: false
+      }
+    }
+
+    case AT.CHAT_WIDGET_VERTICAL: {
+      return {
+        ...state,
+        isVerticalMoved: payload
       }
     }
 

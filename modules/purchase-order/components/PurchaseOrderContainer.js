@@ -2,7 +2,9 @@ import { connect } from 'react-redux'
 import PurchaseOrder from './PurchaseOrder'
 import TmpBoth from './TmpBoth'
 import Checkout from './Checkout'
+//Actions
 import * as Actions from '../actions'
+import { chatWidgetVerticalMoved } from '../../chatWidget/actions'
 
 import { getSafe } from '~/utils/functions'
 
@@ -60,8 +62,10 @@ function mapStateToProps(store) {
     shippingQuotes: getSafe(() => store.cart.shippingQuotes, {}),
     purchaseHazmatEligible: getSafe(() => store.auth.identity.company.purchaseHazmatEligible),
     cartItems: getSafe(() => store.cart.cart.cartItems, []),
-    isOpenSidebar: getSafe(() => store.cart.isOpenSidebar, false)
+    isOpenSidebar: getSafe(() => store.cart.isOpenSidebar, false),
+    loading: getSafe(() => store.cart.loading, false),
+    isOpenModal: getSafe(() => store.cart.isOpenModal, false)
   }
 }
 
-export default connect(mapStateToProps, Actions)(Checkout)
+export default connect(mapStateToProps, { ...Actions, chatWidgetVerticalMoved })(Checkout)
