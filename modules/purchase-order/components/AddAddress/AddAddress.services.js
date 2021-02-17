@@ -1,7 +1,6 @@
 import * as Yup from 'yup'
 import { addressValidationSchema, errorMessages, phoneValidation } from '~/constants/yupValidation'
-import { removeEmpty, getSafe } from "~/utils/functions"
-
+import { removeEmpty, getSafe } from '~/utils/functions'
 
 export const getValidationScheme = Yup.lazy(values => {
   return Yup.object().shape({
@@ -16,7 +15,7 @@ export const getValidationScheme = Yup.lazy(values => {
 export const getInitValues = values => {
   const address = values.fullAddress.address
 
-  return ({
+  return {
     ...values.fullAddress,
     taxId: values.taxId,
     addressName: values.name,
@@ -26,9 +25,14 @@ export const getInitValues = values => {
       zip: address.zip.zip,
       province: getSafe(() => address.province.id)
     }
-  })
+  }
 }
-
+/**
+ * @category Purchase Order - Checkout
+ * @method
+ * @param {Object} props
+ * @param {Object} formikProps
+ */
 export const handleSubmit = async (props, formikProps) => {
   const { onClose, onUpdateAddress, isWarehouse, popupValues } = props
   const { values } = formikProps
@@ -69,13 +73,13 @@ export const handleSubmit = async (props, formikProps) => {
 
     let response
     if (isWarehouse) {
-      if(popupValues) {
+      if (popupValues) {
         response = await props.updateWarehouse(payload, popupValues.id)
       } else {
         response = await props.postNewWarehouse(true, payload)
       }
     } else {
-      if(popupValues) {
+      if (popupValues) {
         response = await props.updateDeliveryAddress(payload, popupValues.id)
       } else {
         response = await props.postNewDeliveryAddress(payload)

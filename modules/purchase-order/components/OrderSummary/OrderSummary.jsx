@@ -41,7 +41,12 @@ const OrderSummary = props => {
     <GridSummary>
       <GridRow>
         <GridColumn>
-          <Button fluid loading={loading} color='blue' disabled={submitButtonDisabled} onClick={() => onButtonClick()}>
+          <Button
+            fluid
+            loading={loading}
+            color='blue'
+            disabled={submitButtonDisabled || loading}
+            onClick={() => onButtonClick()}>
             {buttonText}
           </Button>
         </GridColumn>

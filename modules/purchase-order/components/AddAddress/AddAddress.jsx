@@ -34,7 +34,11 @@ const AddAddress = props => {
 
   return (
     <Formik
-      onSubmit={async values => await handleSubmit(props, formikPropsSelf, values)}
+      onSubmit={async values => {
+        await handleSubmit(props, formikPropsSelf)
+        setIsOpenAddAddress(false)
+        chatWidgetVerticalMoved(false)
+      }}
       enableReinitialize
       initialValues={popupValues ? { ...INITIAL_VALUES, ...getInitValues(popupValues) } : INITIAL_VALUES}
       validationSchema={getValidationScheme}>
@@ -206,11 +210,7 @@ const AddAddress = props => {
                 <Button
                   type='button'
                   basic
-                  onClick={() => {
-                    formikProps.handleSubmit()
-                    setIsOpenAddAddress(false)
-                    chatWidgetVerticalMoved(false)
-                  }}
+                  onClick={() => formikProps.handleSubmit()}
                   loading={props.isFetching}
                   data-test='checkout_add_address_save'>
                   <FormattedMessage id='global.save' defaultMessage='Save'>
