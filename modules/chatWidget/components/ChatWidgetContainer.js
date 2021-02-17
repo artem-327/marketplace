@@ -3,7 +3,6 @@ import ChatWidget from './ChatWidget'
 import * as Actions from '../actions'
 import { injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
-import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 
 function mapStateToProps(state) {
@@ -64,6 +63,14 @@ function mapStateToProps(state) {
         return window.innerHeight * 0.9 // Height of Sidebar is 89% height of page
       }
     }
+
+    // Modal in Purchase order - Checkout - Address scroll-up from bottom to up of the page.
+    if (getSafe(() => state.cart.isOpenModal, false) && getSafe(() => state.chatWidget.isVerticalMoved, false)) {
+      if (typeof window !== 'undefined' && window.innerHeight) {
+        return window.innerHeight * 0.89 // Height of Modal is 88% height of page
+      }
+    }
+
     return 0
   }
 

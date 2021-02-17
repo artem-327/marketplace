@@ -5,14 +5,14 @@ import { getLocationString, addFirstTier } from '~/utils/functions'
 export const initialState = {
   offerDetail: {},
   orderDetail: {},
-  cart: {},
+  cart: { cartItems: [] },
   cartItemsCount: 0,
   deliveryAddresses: [],
   payments: [],
   isFetching: true,
-  cartIsFetching: true,
+  cartIsFetching: false,
   orderDetailIsFetching: true,
-  offerDetailIsFetching: true,
+  offerDetailIsFetching: false,
   isPurchasing: false,
   branchesAreFetching: false,
   warehousesFetching: false,
@@ -44,7 +44,10 @@ export const initialState = {
     selectedShippingQuote: null
   },
   identity: null,
-  isOpenSidebar: false
+  isOpenSidebar: false,
+  shippingQuotesAreFetching: false,
+  loading: false,
+  isOpenModal: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -66,6 +69,7 @@ export default function reducer(state = initialState, action) {
 
     /* DELIVERY_ADDRESSES_FETCH */
 
+    case AT.CHECKOUT_SEARCH_DELIVERY_ADDRESSES_PENDING:
     case AT.DELIVERY_ADDRESSES_FETCH_PENDING: {
       return {
         ...state,
@@ -73,11 +77,20 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.CHECKOUT_SEARCH_DELIVERY_ADDRESSES_FULFILLED:
     case AT.DELIVERY_ADDRESSES_FETCH_FULFILLED: {
       return {
         ...state,
         deliveryAddresses: action.payload,
         isFetching: false
+      }
+    }
+
+    case AT.CHECKOUT_SEARCH_DELIVERY_ADDRESSES_REJECTED:
+    case AT.DELIVERY_ADDRESSES_FETCH_REJECTED: {
+      return {
+        ...state,
+        isFetching: true
       }
     }
 
@@ -193,7 +206,9 @@ export default function reducer(state = initialState, action) {
         payments: action.payload.map(acc => ({
           id: acc.id || acc.account_public_id,
           name: acc.name || acc.display_name,
-          status: acc.status
+          status: acc.status,
+          type: acc.bankAccountType || acc.account_type, // Nebo: acc.type || acc.account_type ?
+          institutionName: acc.bankName || acc.institution_name
         })),
         isFetching: false
       }
@@ -417,11 +432,26 @@ export default function reducer(state = initialState, action) {
     }
 
     /* DELETE_CART_ITEM */
+    case AT.DELETE_CART_ITEM_PENDING: {
+      return {
+        ...state,
+        cartIsFetching: true
+      }
+    }
+
+    case AT.DELETE_CART_ITEM_REJECTED: {
+      return {
+        ...state,
+        cartIsFetching: false
+      }
+    }
+
     case AT.DELETE_CART_ITEM_FULFILLED: {
       return {
         ...state,
         cart: action.payload.data,
-        cartItemsCount: action.payload.data.cartItems.length
+        cartItemsCount: action.payload.data.cartItems.length,
+        cartIsFetching: false
       }
     }
 
@@ -477,6 +507,7 @@ export default function reducer(state = initialState, action) {
 
     /* GET_WAREHOUSES */
 
+    case AT.CHECKOUT_SEARCH_WAREHOUSES_PENDING:
     case AT.GET_WAREHOUSES_PENDING: {
       return {
         ...state,
@@ -484,6 +515,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.CHECKOUT_SEARCH_WAREHOUSES_FULFILLED:
     case AT.GET_WAREHOUSES_FULFILLED: {
       return {
         ...state,
@@ -492,6 +524,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.CHECKOUT_SEARCH_WAREHOUSES_REJECTED:
     case AT.GET_WAREHOUSES_REJECTED: {
       return {
         ...state,
@@ -584,6 +617,36 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         cartItemsCount: action.payload
+      }
+    }
+
+    /* POST_PURCHASE_ORDER */
+
+    case AT.POST_PURCHASE_ORDER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.POST_PURCHASE_ORDER_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.POST_PURCHASE_ORDER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.SET_IS_OPEN_MODAL: {
+      return {
+        ...state,
+        isOpenModal: action.payload
       }
     }
 
