@@ -3,7 +3,7 @@ import * as inventoryAT from '~/modules/inventory/action-types'
 import Link from 'next/link'
 
 import { defaultTabs } from './contants'
-
+import { getSafe } from '../../utils/functions'
 import { currency } from '~/constants/index'
 import { FormattedMessage } from 'react-intl'
 
@@ -141,7 +141,8 @@ export const initialState = {
   isLoadingAddedAccounts: false,
   isLoadingModal: false,
   heightSidebar: null,
-  attachmentFiles: []
+  attachmentFiles: [],
+  isThirdPartyConnectionException: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -546,8 +547,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA_PENDING: {
-      // ! ! pending
-      return { ...state, loading: true }
+      return { ...state, loading: true, isThirdPartyConnectionException: false }
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA_FULFILLED: {
@@ -561,8 +561,18 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         bankAccountsRows: bankAccountsData,
-        country: newCountryFormat
+        country: newCountryFormat,
+        isThirdPartyConnectionException: false
         // currency: newCurrencyFormat
+      }
+    }
+
+    case AT.GET_BANK_ACCOUNTS_DATA_REJECTED: {
+      return {
+        ...state,
+        loading: true,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 
@@ -1008,7 +1018,8 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_BANK_ACCOUNT_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
+        isThirdPartyConnectionException: false
       }
     }
 
@@ -1016,13 +1027,22 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        bankAccountsRows: state.bankAccountsRows.filter(account => account.id !== payload)
+        bankAccountsRows: state.bankAccountsRows.filter(account => account.id !== payload),
+        isThirdPartyConnectionException: false
+      }
+    }
+
+    case AT.DELETE_BANK_ACCOUNT_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 
     case AT.DWOLLA_SET_PREFERRED_REJECTED:
-    case AT.DWOLLA_SET_PREFERRED_FULFILLED:
-    case AT.DELETE_BANK_ACCOUNT_REJECTED: {
+    case AT.DWOLLA_SET_PREFERRED_FULFILLED: {
       return {
         ...state,
         loading: false
@@ -1107,7 +1127,8 @@ export default function reducer(state = initialState, action) {
     case AT.GET_LOGISTICS_ACCOUNTS_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
+        isThirdPartyConnectionException: false
       }
     }
 
@@ -1115,14 +1136,17 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        logisticsAccounts: payload
+        logisticsAccounts: payload,
+        isThirdPartyConnectionException: false
       }
     }
 
     case AT.GET_LOGISTICS_ACCOUNTS_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 
@@ -1151,22 +1175,49 @@ export default function reducer(state = initialState, action) {
     }
 
     /* CREATE_LOGISTICS_ACCOUNT */
+    case AT.CREATE_LOGISTICS_ACCOUNT_PENDING: {
+      return {
+        ...state,
+        isThirdPartyConnectionException: false
+      }
+    }
+    case AT.CREATE_LOGISTICS_ACCOUNT_REJECTED: {
+      return {
+        ...state,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
+      }
+    }
 
     case AT.CREATE_LOGISTICS_ACCOUNT_FULFILLED: {
       return {
-        ...state
+        ...state,
+        isThirdPartyConnectionException: false
         //logisticsAccounts: [].concat([payload], state.logisticsAccounts)  // ! ! not working now (missing response)
       }
     }
 
     /* UPDATE_LOGSITICS_ACCOUNT */
-
+    case AT.UPDATE_LOGISTICS_ACCOUNT_PENDING: {
+      return {
+        ...state,
+        isThirdPartyConnectionException: false
+      }
+    }
+    case AT.UPDATE_LOGISTICS_ACCOUNT_REJECTED: {
+      return {
+        ...state,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
+      }
+    }
     case AT.UPDATE_LOGISTICS_ACCOUNT_FULFILLED: {
       let logisticsAccounts = state.logisticsAccounts.slice()
       logisticsAccounts[state.logisticsAccounts.findIndex(el => el.id === payload.id)] = payload
       return {
         ...state,
-        logisticsAccounts
+        logisticsAccounts,
+        isThirdPartyConnectionException: false
       }
     }
 
@@ -1175,7 +1226,8 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_LOGISTICS_ACCOUNT_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
+        isThirdPartyConnectionException: false
       }
     }
 
@@ -1183,14 +1235,17 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        logisticsAccounts: state.logisticsAccounts.filter(el => el.id !== payload)
+        logisticsAccounts: state.logisticsAccounts.filter(el => el.id !== payload),
+        isThirdPartyConnectionException: false
       }
     }
 
     case AT.DELETE_LOGISTICS_ACCOUNT_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 
@@ -1554,7 +1609,8 @@ export default function reducer(state = initialState, action) {
     case AT.VELLOCI_GET_TOKEN_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
+        isThirdPartyConnectionException: false
       }
     }
 
@@ -1562,14 +1618,17 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        vellociToken: payload
+        vellociToken: payload,
+        isThirdPartyConnectionException: false
       }
     }
 
     case AT.VELLOCI_GET_TOKEN_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 
@@ -1585,21 +1644,25 @@ export default function reducer(state = initialState, action) {
     case AT.DELETE_INSTITUTION_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
+        isThirdPartyConnectionException: false
       }
     }
 
     case AT.DELETE_INSTITUTION_FULFILLED: {
       return {
         ...state,
-        loading: false
+        loading: false,
+        isThirdPartyConnectionException: false
       }
     }
 
     case AT.DELETE_INSTITUTION_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 
@@ -1609,7 +1672,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isLoadingAddedAccounts: true,
-        loading: true
+        loading: true,
+        isThirdPartyConnectionException: false
       }
     }
 
@@ -1617,7 +1681,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isLoadingAddedAccounts: false,
-        loading: false
+        loading: false,
+        isThirdPartyConnectionException: false
       }
     }
 
@@ -1625,7 +1690,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isLoadingAddedAccounts: false,
-        loading: false
+        loading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 
@@ -1641,21 +1708,25 @@ export default function reducer(state = initialState, action) {
     case AT.INVITE_TO_ADD_BANK_ACCOUNTS_PENDING: {
       return {
         ...state,
-        loading: true
+        loading: true,
+        isThirdPartyConnectionException: false
       }
     }
 
     case AT.INVITE_TO_ADD_BANK_ACCOUNTS_FULFILLED: {
       return {
         ...state,
-        loading: false
+        loading: false,
+        isThirdPartyConnectionException: false
       }
     }
 
     case AT.INVITE_TO_ADD_BANK_ACCOUNTS_REJECTED: {
       return {
         ...state,
-        loading: false
+        loading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 
@@ -1768,6 +1839,30 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         attachmentFiles: payload
+      }
+    }
+
+    /* VELLOCI_ON_EVENT */
+
+    case AT.VELLOCI_ON_EVENT_PENDING: {
+      return {
+        ...state,
+        isThirdPartyConnectionException: false
+      }
+    }
+
+    case AT.VELLOCI_ON_EVENT_FULFILLED: {
+      return {
+        ...state,
+        isThirdPartyConnectionException: false
+      }
+    }
+
+    case AT.VELLOCI_ON_EVENT_REJECTED: {
+      return {
+        ...state,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 

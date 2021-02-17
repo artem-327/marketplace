@@ -1140,6 +1140,7 @@
   "login.incorrect": "Incorrect username or password",
   "login.welcomeBack": "Welcome back!",
   "payments.notAvailableAddOne": "You have no Bank Account specified. To continue, please {addBankAccount} first.",
+  "payments.bankAccountCannnotRetrived": "Bank accounts cannot be retrieved at the moment. Please try again later.",
   "payments.addBankAccount": "Add Bank Account",
   "registration.header": "Header",
   "registration.firstName": "Your First Name",

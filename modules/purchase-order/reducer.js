@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import { getLocationString, addFirstTier } from '~/utils/functions'
+import { getLocationString, addFirstTier, getSafe } from '../../utils/functions'
 
 export const initialState = {
   offerDetail: {},
@@ -47,7 +47,8 @@ export const initialState = {
   isOpenSidebar: false,
   shippingQuotesAreFetching: false,
   loading: false,
-  isOpenModal: false
+  isOpenModal: false,
+  isThirdPartyConnectionException: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -197,7 +198,8 @@ export default function reducer(state = initialState, action) {
     case AT.PAYMENTS_FETCH_PENDING: {
       return {
         ...state,
-        isFetching: true
+        isFetching: true,
+        isThirdPartyConnectionException: false
       }
     }
     case AT.PAYMENTS_FETCH_FULFILLED: {
@@ -210,16 +212,20 @@ export default function reducer(state = initialState, action) {
           type: acc.bankAccountType || acc.account_type, // Nebo: acc.type || acc.account_type ?
           institutionName: acc.bankName || acc.institution_name
         })),
-        isFetching: false
+        isFetching: false,
+        isThirdPartyConnectionException: false
       }
     }
 
     case AT.PAYMENTS_FETCH_REJECTED: {
-      return {
-        ...state,
-        payments: [],
-        isFetching: false
-      }
+      if (getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION')
+        return {
+          ...state,
+          payments: [],
+          isFetching: false,
+          isThirdPartyConnectionException:
+            getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
+        }
     }
 
     /* OFFER_FETCH */

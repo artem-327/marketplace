@@ -360,7 +360,8 @@ class PurchaseOrder extends Component {
       purchaseHazmatEligible,
       isOpenSidebar,
       closeSidebarAddress,
-      openSidebarAddress
+      openSidebarAddress,
+      isThirdPartyConnectionException
     } = this.props
     const { isSetShippingQuoteId } = this.state
 
@@ -637,6 +638,7 @@ class PurchaseOrder extends Component {
                         </VerticalUnpaddedColumn>
                       </StyledRow>
                       <Payment
+                        isThirdPartyConnectionException={isThirdPartyConnectionException}
                         dispatch={dispatch}
                         billingInfo={billingInfo}
                         selectedPayment={shipping.selectedPayment}

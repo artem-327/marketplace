@@ -377,7 +377,8 @@ class TablesHandlers extends Component {
       paymentProcessor,
       vellociBusinessId,
       vellociToken,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      isThirdPartyConnectionException
     } = this.props
 
     const filterValue = this.state[currentTab]
@@ -602,7 +603,7 @@ class TablesHandlers extends Component {
                     trigger={
                       <div>
                         <PlaidButton
-                          disabled={!vellociToken || !vellociBusinessId}
+                          disabled={!vellociToken || !vellociBusinessId || isThirdPartyConnectionException}
                           token={vellociToken}
                           publicKey={vellociBusinessId}
                           onExit={this.onExit}
@@ -617,14 +618,22 @@ class TablesHandlers extends Component {
                   />
                 )}
                 {(bankAccTab && bankAccounts.addButton && paymentProcessor !== 'VELLOCI') || !bankAccTab ? (
-                  <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
+                  <Button
+                    primary
+                    onClick={() => openSidebar()}
+                    data-test='settings_open_popup_btn'
+                    disabled={currentTab === 'logistics' && isThirdPartyConnectionException}>
                     <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
                 ) : null}
               </div>
               {bankAccTab ? (
                 <div className='column'>
-                  <BasicButton type='button' onClick={() => openPopup()} data-test='settings_open_popup_send_link_btn'>
+                  <BasicButton
+                    type='button'
+                    onClick={() => openPopup()}
+                    data-test='settings_open_popup_send_link_btn'
+                    disabled={isThirdPartyConnectionException}>
                     <>
                       <Link2 />
                       <FormattedMessage id={textsTable[currentTab].SendLink}>{text => text}</FormattedMessage>
@@ -696,7 +705,8 @@ const mapStateToProps = state => {
     filter,
     ...rest,
     vellociBusinessId: getSafe(() => company.vellociBusinessId, ''),
-    vellociToken: getSafe(() => state.settings.vellociToken, '')
+    vellociToken: getSafe(() => state.settings.vellociToken, ''),
+    isThirdPartyConnectionException: getSafe(() => state.settings.isThirdPartyConnectionException, false)
   }
 }
 
