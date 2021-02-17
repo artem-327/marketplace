@@ -189,7 +189,8 @@ const Checkout = props => {
                     submitButtonDisabled={
                       (!purchaseHazmatEligible && isAnyItemHazardous) ||
                       (openSection === 'review' && sectionState.review.errors) ||
-                      offerDetailIsFetching
+                      offerDetailIsFetching ||
+                      cartItems.length < 1
                     }
                     buttonText={
                       allAccepted ? (

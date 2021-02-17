@@ -63,7 +63,7 @@ const ReviewItems = props => {
       {...props}
       header={<FormattedMessage id='checkout.header.reviewItems' defaultMessage='1. Review Items' />}
       onSubmitClick={() => props.onSubmitClick()}
-      submitButtonDisabled={sectionState.errors || offerDetailIsFetching}
+      submitButtonDisabled={sectionState.errors || offerDetailIsFetching || cartItems.length < 1}
       submitButtonCaption={
         allAccepted ? (
           <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
