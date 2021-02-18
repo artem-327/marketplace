@@ -233,6 +233,7 @@
   "navigation.admin.associations": "Associations",
   "navigation.admin.logistics": "Logistics",
   "navigation.admin.admin-settings": "Admin Settings",
+  "navigation.myTradeCriteria": "My Trade Criteria",
   "dwolla.controllerTitlePopup": "Please read below for the definition of Controller in this context.",
   "dwolla.paymentPoweredBy": "Echo Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Account Administrator Information",
@@ -2671,6 +2672,7 @@
   "title.settings.users": "Users",
   "title.settings.warehouses": "Warehouses",
   "title.settings.locations": "Locations",
+  "title.settings.tradeCriteria": "Trade Criteria",
   "title.inventory.myListings": "My Listings",
   "title.inventory.myProducts": "My Products",
   "title.inventory.globalPriceBook": "Global Price Book",
@@ -3119,5 +3121,9 @@
   "confirm.deactivateBankAccount": "Deactivate Bank Account",
   "confirm.deactivate": "Do you really want to deactivate {item}?",
   "addBankAccounts.successfully.title": "Success!",
-  "addBankAccounts.successfully.content": "Bank accounts were succesfully added."
+  "addBankAccounts.successfully.content": "Bank accounts were succesfully added.",
+  "settings.tradeCriteria.description": "Trade Criteria are critical business factors that TradePass will use to pre-evaluate your potential customers and partners. Using proprietary technology, TradePass will verify these customers/partners exceed, meet, or are below your threshold for conducting business.",
+  "settings.tradeCriteria.selectPaymentTerms": "Select your Payment Terms",
+  "settings.tradeCriteria.daysBeyond.subLabel": "What Days Beyond Term (DBT) are you comfortable with your customers/partners having?",
+  "settings.tradeCriteria.daysBeyond.titleLabel": "Days Beyond Term"
 }

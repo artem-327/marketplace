@@ -16,7 +16,7 @@ class Tabs extends Component {
   }
 
   componentDidMount() {
-    const { isProductCatalogAdmin, isUserAdmin, tabsNames, isCompanyAdmin } = this.props
+    const { isProductCatalogAdmin, isUserAdmin, tabsNames, isCompanyAdmin, isClientCompanyAdmin } = this.props
 
     let newTabs
     // array of tabsNames converted to Map
