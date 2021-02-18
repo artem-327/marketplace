@@ -127,7 +127,7 @@ class BranchesTable extends Component {
         callback: row => {
           //getBranch(row.id)
           openSidebar(row.rawData)
-          chatWidgetVerticalMoved(true)
+          chatWidgetVerticalMoved(false)
         }
       },
       {
@@ -176,7 +176,7 @@ class BranchesTable extends Component {
             content={row.addressName}
             onContentClick={() => {
               this.props.openSidebar(row.rawData)
-              this.props.chatWidgetVerticalMoved(true)
+              this.props.chatWidgetVerticalMoved(false)
             }}
           />
         )
