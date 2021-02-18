@@ -42,7 +42,8 @@ const initialState = {
   documentTypesFetching: false,
   listDocumentTypes: [],
   loadingRelatedDocuments: false,
-  tableHandlersFilters: null
+  tableHandlersFilters: null,
+  isThirdPartyConnectionException: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -195,7 +196,8 @@ export default function reducer(state = initialState, action) {
     case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_PENDING:
       return {
         ...state,
-        bankAccountsLoading: true
+        bankAccountsLoading: true,
+        isThirdPartyConnectionException: false
       }
     case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_FULFILLED:
       return {
@@ -219,13 +221,16 @@ export default function reducer(state = initialState, action) {
             value: bankAccount.account_public_id
           }
         }),
-        bankAccountsLoading: false
+        bankAccountsLoading: false,
+        isThirdPartyConnectionException: false
       }
     case AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS_REJECTED:
     case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_REJECTED:
       return {
         ...state,
-        bankAccountsLoading: false
+        bankAccountsLoading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     case AT.ORDER_GET_LOTS_FULFILLED:
       // prepare lots for used product offers
