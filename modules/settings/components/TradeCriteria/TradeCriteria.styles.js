@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Grid } from 'semantic-ui-react'
 
 export const GridTradeCriteria = styled(Grid)`
-  padding: 30px !important;
+  padding: 30px 30px 10px 30px !important;
   margin: 15px 30px 30px 30px !important;
   border-radius: 4px !important;
   border: solid 1px #dee2e6 !important;
@@ -34,6 +34,23 @@ export const GridColumn = styled(Grid.Column)`
   .ui.selection.dropdown {
     background: #fdfdfd !important;
   }
+`
+
+export const GridRow = styled(Grid.Row)`
+  padding-bottom: 0px !important;
+`
+
+export const GridRowBottom = styled(Grid.Row)`
+  .ui.grid > &.row {
+    width: calc(100% + 60px) !important;
+  }
+
+  margin-top: 30px !important;
+  margin-left: -30px !important;
+  margin-right: -30px !important;
+  border-top: solid 1px #dee2e6 !important;
+  padding-bottom: 0px !important;
+  padding-right: 20px !important;
 `
 
 export const DivTitleLabel = styled.div`

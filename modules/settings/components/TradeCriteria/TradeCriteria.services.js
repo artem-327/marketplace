@@ -1,6 +1,7 @@
 import * as Yup from 'yup'
 //Services
 import { getSafe, removeEmpty } from '../../../../utils/functions'
+import { errorMessages } from '../../../../constants/yupValidation'
 
 /**
  * @category Settings - Trade Criteria
@@ -26,28 +27,9 @@ export const getInitialFormValues = () => {
  */
 export const formValidation = () =>
   Yup.object().shape({
-    daysBeyondTerm: Yup.string(),
-    aggregateInsurance: Yup.string(),
-    creditRisk: Yup.string(),
-    violations: Yup.string(),
-    socialPresence: Yup.string()
+    daysBeyondTerm: Yup.string().required(errorMessages.requiredMessage),
+    aggregateInsurance: Yup.string().required(errorMessages.requiredMessage),
+    creditRisk: Yup.string().required(errorMessages.requiredMessage),
+    violations: Yup.string().required(errorMessages.requiredMessage),
+    socialPresence: Yup.string().required(errorMessages.requiredMessage)
   })
-
-/**
- * Submit form..
- * @category Settings - Trade Criteria
- * @method
- * @param {Object<string, any>} values Values of form.
- * @param {{setSubmitting: (isSubmitting: boolean) => void,
- * postTradeCriteria: (requestData: Object<string, any>) => void,
- * }} helperFunctions
- */
-export const submitHandler = async (values, { setSubmitting, postTradeCriteria }) => {
-  try {
-    await postTradeCriteria(values)
-  } catch (err) {
-    console.error(err)
-  } finally {
-    setSubmitting(false)
-  }
-}

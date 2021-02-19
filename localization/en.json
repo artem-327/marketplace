@@ -3125,5 +3125,17 @@
   "settings.tradeCriteria.description": "Trade Criteria are critical business factors that TradePass will use to pre-evaluate your potential customers and partners. Using proprietary technology, TradePass will verify these customers/partners exceed, meet, or are below your threshold for conducting business.",
   "settings.tradeCriteria.selectPaymentTerms": "Select your Payment Terms",
   "settings.tradeCriteria.daysBeyond.subLabel": "What Days Beyond Term (DBT) are you comfortable with your customers/partners having?",
-  "settings.tradeCriteria.daysBeyond.titleLabel": "Days Beyond Term"
+  "settings.tradeCriteria.daysBeyond.titleLabel": "Days Beyond Term",
+  "settings.tradeCriteria.aggregateInsurance.titleLabel": "Aggregate Insurance",
+  "settings.tradeCriteria.aggregateInsurance.subLabel": "What total amount of Insurance Coverage do you prefer your customers/partners carry?",
+  "settings.tradeCriteria.aggregateInsurance.placeholder": "Select Aggregate Insurance",
+  "settings.tradeCriteria.creditRisk.titleLabel": "Credit Risk",
+  "settings.tradeCriteria.creditRisk.subLabel": "What credit profile is your company comfortable doing business with?",
+  "settings.tradeCriteria.creditRisk.placeholder": "Select Credit Risk",
+  "settings.tradeCriteria.violations.titleLabel": "Violations",
+  "settings.tradeCriteria.violations.subLabel": "How many public violations (including lawsuits, liens, bankruptcy filings) is your company comfortable with in a customer/partner?",
+  "settings.tradeCriteria.violations.placeholder": "Select Presence Violations",
+  "settings.tradeCriteria.socialPresence.titleLabel": "Social Presence",
+  "settings.tradeCriteria.socialPresence.subLabel": "Websites and social media is often an indicator of a companies integrity. How many social accounts do you  prefer your customers/partners have?",
+  "settings.tradeCriteria.socialPresence.placeholder": "Select Social Presence"
 }
