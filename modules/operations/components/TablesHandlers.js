@@ -16,6 +16,7 @@ import * as Actions from '../actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe, uniqueArrayByKey } from '~/utils/functions'
+import { PlusCircle } from 'react-feather'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
 const PositionHeaderSettings = styled.div`
@@ -44,6 +45,18 @@ const CustomRowDiv = styled.div`
   input,
   .ui.dropdown {
     height: 40px;
+  }
+  
+  .ui.button.primary {
+    background: rgb(37, 153, 213);
+    
+    svg {
+      width: 18px;
+      height: 20px;
+      margin-right: 10px;
+      vertical-align: top;
+      color: inherit;
+    }
   }
 `
 
@@ -524,6 +537,7 @@ class TablesHandlers extends Component {
                     {item.BtnAddText && (
                       <DivColumn className='column'>
                         <Button fluid primary onClick={() => openPopup()} data-test='operations_open_popup_btn'>
+                          <PlusCircle />
                           <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
                         </Button>
                       </DivColumn>
