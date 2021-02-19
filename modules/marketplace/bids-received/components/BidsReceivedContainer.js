@@ -1,7 +1,4 @@
-import { FormattedNumber } from 'react-intl'
 import { connect } from 'react-redux'
-import moment from 'moment/moment'
-
 import { getLocationString } from '~/services'
 import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'

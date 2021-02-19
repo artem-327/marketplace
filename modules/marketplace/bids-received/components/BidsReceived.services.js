@@ -3,17 +3,16 @@ import ActionCell from '~/components/table/ActionCell'
 import { debounce } from 'lodash'
 import RowDescription from '../../components/RowDescription'
 import moment from 'moment'
-import confirm from '~/components/Confirmable/confirm'
 import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
 import Router from 'next/router'
 import { getSafe } from '~/utils/functions'
 
 export const setInitFilters = (state, props) => {
-  const { tableHandlersFiltersBidsSent, datagrid } = props
+  const { tableHandlersFiltersBidsReceived, datagrid } = props
 
-  if (tableHandlersFiltersBidsSent) {
-    state.setFilterValues(tableHandlersFiltersBidsSent)
-    datagrid.setSearch(tableHandlersFiltersBidsSent, true, 'pageFilters')
+  if (tableHandlersFiltersBidsReceived) {
+    state.setFilterValues(tableHandlersFiltersBidsReceived)
+    datagrid.setSearch(tableHandlersFiltersBidsReceived, true, 'pageFilters')
 
   } else {
     datagrid.setSearch(state.filterValues, true, 'pageFilters')
@@ -137,30 +136,13 @@ const getActions = (row, state, props) => {
     isMerchant,
     isCompanyAdmin,
     intl: { formatMessage },
-    deleteOffer,
     acceptOffer,
     rejectOffer,
-    addOfferToCart,
     datagrid
   } = props
-  const { expandedRowIds } = state
   const rowActions = []
   const { cfHistoryLastStatus, cfHistoryLastType } = row
 
-  const buttonPurchase = {
-    text: formatMessage({
-      id: 'marketplace.purchase',
-      defaultMessage: 'Purchase'
-    }),
-    callback: async () => {
-      try {
-        const { value } = await addOfferToCart(row.id)
-        Router.push('/cart')
-      } catch (e) {
-        console.error(e)
-      }
-    }
-  }
   const buttonAccept = {
     text: formatMessage({
       id: 'marketplace.accept',
@@ -198,48 +180,11 @@ const getActions = (row, state, props) => {
     }),
     callback: () => state.setExpandedRowIds([row.id])
   }
-  const buttonDelete = {
-    text: formatMessage({
-      id: 'marketplace.delete',
-      defaultMessage: 'Delete'
-    }),
-    callback: row => {
-      confirm(
-        formatMessage({
-          id: 'marketplace.confirm.deleteBid.Header',
-          defaultMessage: 'Delete Bid'
-        }),
-        formatMessage(
-          {
-            id: 'marketplace.confirm.deleteBid.Content',
-            defaultMessage: 'Do you really want to remove Bid?'
-          },
-          { item: row.chemicalName }
-        )
-      ).then(async () => {
-        try {
-          await deleteOffer(row.id)
-          if (expandedRowIds[0] === row.id) {
-            state.setExpandedRowIds([])
-          }
-          datagrid.removeRow(row.id)
-          handleUpdateFinished(state, props)
-        } catch (e) {
-          console.error(e)
-        }
-      })
-    }
-  }
 
-  if (cfHistoryLastStatus === 'ACCEPTED') {
-    rowActions.push(buttonPurchase)
-  } else if (cfHistoryLastStatus === 'NEW' && cfHistoryLastType === 'NORMAL') {
-    rowActions.push(buttonReject)
-  } else if (cfHistoryLastStatus === 'NEW' && cfHistoryLastType === 'COUNTER') {
+  if (cfHistoryLastStatus === 'NEW' && cfHistoryLastType === 'NORMAL') {
     rowActions.push(buttonAccept)
     rowActions.push(buttonReject)
     rowActions.push(buttonCounter)
   }
-  rowActions.push(buttonDelete)
   return rowActions
 }

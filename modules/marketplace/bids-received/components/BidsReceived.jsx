@@ -6,7 +6,7 @@ import { debounce } from 'lodash'
 import Router from 'next/router'
 
 // Constants
-import { COLUMNS } from './BidsSent.constants'
+import { COLUMNS } from './BidsReceived.constants'
 
 // Components
 import BidsRowDetail from '../../components/BidsRowDetail'
@@ -14,19 +14,22 @@ import { Container, Input } from 'semantic-ui-react'
 import ProdexGrid from '~/components/table'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import Tutorial from '~/modules/tutorial/Tutorial'
-import MakeOfferPopup from '../../listings/components/MakeOfferPopup'
 
 // Styles
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 
 // Services
-import { setInitFilters, handleFilterChangeInputSearch, getRows, handleUpdateFinished } from './BidsSent.services'
+import { setInitFilters, handleFilterChangeInputSearch, getRows, handleUpdateFinished } from './BidsReceived.services'
 import { getSafe } from '~/utils/functions'
 
-const BidsSent = props => {
+const BidsReceived = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
   const [filterValues, setFilterValues] = useState({ searchInput: '' })
   const [rowDetailState, setRowDetailState] = useState(null)
+
+  const {
+
+  } = props
 
   const state = { expandedRowIds, setExpandedRowIds, filterValues, setFilterValues, rowDetailState, setRowDetailState }
 
@@ -45,13 +48,13 @@ const BidsSent = props => {
     return () => {
       const { isOpenPopup, closePopup } = props
       if (!getSafe(() => Router.router.query.id, 0)) {
-        props.handleVariableSave('tableHandlersFiltersBidsSent', filterValues)
+        props.handleVariableSave('tableHandlersFiltersBidsReceived', filterValues)
       }
       if (isOpenPopup) closePopup()
     }
   }, [])  // If [] is empty then is similar as componentDidMount.
 
-  const { datagrid, intl, loading, isOpenPopup } = props
+  const { datagrid, intl, loading } = props
   let { formatMessage } = intl
   const rows = getRows(state, props)
 
@@ -65,6 +68,7 @@ const BidsSent = props => {
           state.setExpandedRowIds([])
           handleUpdateFinished(state, props)
         }}
+        seller
       />
     )
   }
@@ -95,7 +99,7 @@ const BidsSent = props => {
 
       <div className='flex stretched table-detail-rows-wrapper'>
         <ProdexGrid
-          tableName='marketplace_bids_sent_grid'
+          tableName='marketplace_bids_received_grid'
           {...datagrid.tableProps}
           loading={datagrid.loading || loading}
           rows={rows}
@@ -110,16 +114,15 @@ const BidsSent = props => {
           estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
         />
       </div>
-      {isOpenPopup && <MakeOfferPopup />}
     </Container>
 
   )
 }
 
-BidsSent.propTypes = {
+BidsReceived.propTypes = {
 }
 
-BidsSent.defaultProps = {
+BidsReceived.defaultProps = {
 }
 
-export default injectIntl(BidsSent)
+export default injectIntl(BidsReceived)
