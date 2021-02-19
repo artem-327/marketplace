@@ -26,7 +26,11 @@ import {
   DivTitleLabel,
   GridRowBottom
 } from './TradeCriteria.styles'
-
+/**
+ * Form for save Trade Criteria of company.
+ * @category Settings - Trade Criteria
+ * @components
+ */
 const TradeCriteria = props => {
   return (
     <>
