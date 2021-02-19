@@ -491,7 +491,7 @@ class Navigation extends Component {
             icon={<Settings size={22} />}
             text={
               <>
-                <FormattedMessage id='navigation.myAccount' defaultMessage='My Account' />
+                <FormattedMessage id='navigation.myTradePass' defaultMessage='My TradePass' />
                 {settings ? <ChevronUp /> : <ChevronDown />}
               </>
             }
