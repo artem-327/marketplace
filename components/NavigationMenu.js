@@ -517,7 +517,7 @@ class Navigation extends Component {
                       to='/settings/system-settings'
                       tab='system-settings'
                       dataTest='navigation_settings_system_settings_drpdn'>
-                      {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Settings' })}
+                      {formatMessage({ id: 'navigation.Settings', defaultMessage: 'Settings' })}
                     </Dropdown.Item>
                   </>
                 ) : null}
