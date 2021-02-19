@@ -25,6 +25,7 @@ import LogisticsSidebar from './LogisticsTable/LogisticsSidebar'
 import SystemSettings from '~/components/settings'
 
 import DocumentsTable from './Documents/DocumentManagerTable'
+import TradeCriteria from './TradeCriteria/TradeCriteria'
 import DocumentManagerSidebar from './Documents/DocumentManagerSidebar'
 
 import ClientCompanyTable from './ClientCompany/Table'
@@ -455,6 +456,8 @@ class Settings extends Component {
 
     if (currentTab === 'locations') {
       return <Locations />
+    } else if (currentTab === 'trade-criteria') {
+      return <TradeCriteria />
     } else {
       return (
         !this.state.wrongUrl && (

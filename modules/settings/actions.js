@@ -1309,3 +1309,12 @@ export function setAttachmentFiles(attachmentFiles) {
     payload: attachmentFiles
   }
 }
+
+export function postTradeCriteria(body) {
+  console.log('body')
+  console.log(body)
+  return {
+    type: AT.POST_TRADE_CRITERIA,
+    payload: api.postTradeCriteria(body)
+  }
+}

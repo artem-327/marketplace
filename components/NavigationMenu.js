@@ -519,6 +519,13 @@ class Navigation extends Component {
                       dataTest='navigation_settings_system_settings_drpdn'>
                       {formatMessage({ id: 'navigation.Settings', defaultMessage: 'Settings' })}
                     </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings/trade-criteria'
+                      tab='trade-criteria'
+                      dataTest='navigation_settings_my_trade_criteria_drpdn'>
+                      {formatMessage({ id: 'navigation.myTradeCriteria', defaultMessage: 'My Trade Criteria' })}
+                    </Dropdown.Item>
                   </>
                 ) : null}
                 {isCompanyAdmin || isUserAdmin || isClientCompanyAdmin ? (
