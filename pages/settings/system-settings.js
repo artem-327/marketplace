@@ -19,7 +19,7 @@ class Index extends Component {
       {
         tab: formatMessage({
           id: 'title.settings.system-settings',
-          defaultMessage: 'Company Settings'
+          defaultMessage: 'Settings'
         })
       }
     )
