@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { Formik } from 'formik'
-import { getSafe } from "~/utils/functions"
+import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 
 //Components
@@ -22,18 +22,17 @@ import {
 import ItemComponent from './ItemComponent'
 
 //Hooks
-import { usePrevious } from "../../../../hooks"
+import { usePrevious } from '../../../../hooks'
 
 // Services
 import { getValidationScheme } from './ReviewItems.services'
-
 
 // Global variable to store global state
 let selfFormikProps = {} //TODO specify type
 
 const ReviewItems = props => {
   // Stores previos values for compating with current value
-  const prevIsExpanded  = usePrevious(props.isExpanded)
+  const prevIsExpanded = usePrevious(props.isExpanded)
 
   const {
     isExpanded,
@@ -62,11 +61,11 @@ const ReviewItems = props => {
   return (
     <RowComponent
       {...props}
-      header={<FormattedMessage id='checkout.header.reviewItems' defaultMessage='1. Review Items'/>}
+      header={<FormattedMessage id='checkout.header.reviewItems' defaultMessage='1. Review Items' />}
       onSubmitClick={() => props.onSubmitClick()}
-      submitButtonDisabled={sectionState.errors || offerDetailIsFetching}
-      submitButtonCaption={allAccepted
-        ? (
+      submitButtonDisabled={sectionState.errors || offerDetailIsFetching || cartItems.length < 1}
+      submitButtonCaption={
+        allAccepted ? (
           <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
             {text => text}
           </FormattedMessage>
@@ -81,68 +80,58 @@ const ReviewItems = props => {
           onSubmit={values => {}}
           enableReinitialize
           validateOnChange={false}
-          initialValues={{items: initValues}}
+          initialValues={{ items: initValues }}
           validationSchema={getValidationScheme()}
           render={formikProps => {
             selfFormikProps = formikProps
             const { values, errors } = formikProps
             return (
               <Form loading={offerDetailIsFetching || cartIsFetching}>
-                {
-                  (sectionState.accepted || isExpanded)
-                    ? (
-                      isExpanded
-                        ? (
-                          <GridExpandedSection>
-                            {cartItems.map((item, index) =>
-                              <GridRowReviewItems>
-                                <GridColumn>
-                                  <ItemComponent
-                                    {...props}
-                                    item={item}
-                                    index={index}
-                                    value={getSafe(() => values.items[index].quantity.toString(), '')}
-                                    onValueChange={async val => {
-                                      await formikProps.setFieldValue(`items[${index}].quantity`, val)
-                                      await formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
-                                      const newErrors = await formikProps.validateForm()
-                                      let newValues = values.items.slice()
-                                      newValues[index].quantity = val
-                                      onValueChange({ value: newValues, errors: !!newErrors.items })
-                                    }}
-                                  />
-                                </GridColumn>
-                              </GridRowReviewItems>
-                            )}
-                          </GridExpandedSection>
-                        ) : (
-                          <DivSectionCollapsedWrapper>
-                            {cartItems.map(item =>
-                              <DivSectionCollapsedRow>
-                                <DivSectionName>
-                                  {item.productName}
-                                </DivSectionName>
-                                <DivSectionDescription>
-                                  {item.pkgAmount * item.packagingSize}
-                                </DivSectionDescription>
-                                <DivSectionDescription>
-                                  {item.packaging}
-                                </DivSectionDescription>
-                                <DivSectionDescription>
-                                  <FormattedNumber
-                                    minimumFractionDigits={2}
-                                    maximumFractionDigits={2}
-                                    style='currency'
-                                    currency={currency}
-                                    value={item.cfPriceSubtotal}
-                                  />
-                                </DivSectionDescription>
-                              </DivSectionCollapsedRow>
-                            )}
-                          </DivSectionCollapsedWrapper>
-                        )
-                    ) : null
-                }
+                {sectionState.accepted || isExpanded ? (
+                  isExpanded ? (
+                    <GridExpandedSection>
+                      {cartItems.map((item, index) => (
+                        <GridRowReviewItems>
+                          <GridColumn>
+                            <ItemComponent
+                              {...props}
+                              item={item}
+                              index={index}
+                              value={getSafe(() => values.items[index].quantity.toString(), '')}
+                              onValueChange={async val => {
+                                await formikProps.setFieldValue(`items[${index}].quantity`, val)
+                                await formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
+                                const newErrors = await formikProps.validateForm()
+                                let newValues = values.items.slice()
+                                newValues[index].quantity = val
+                                onValueChange({ value: newValues, errors: !!newErrors.items })
+                              }}
+                            />
+                          </GridColumn>
+                        </GridRowReviewItems>
+                      ))}
+                    </GridExpandedSection>
+                  ) : (
+                    <DivSectionCollapsedWrapper>
+                      {cartItems.map(item => (
+                        <DivSectionCollapsedRow>
+                          <DivSectionName>{item.productName}</DivSectionName>
+                          <DivSectionDescription>{item.pkgAmount * item.packagingSize}</DivSectionDescription>
+                          <DivSectionDescription>{item.packaging}</DivSectionDescription>
+                          <DivSectionDescription>
+                            <FormattedNumber
+                              minimumFractionDigits={2}
+                              maximumFractionDigits={2}
+                              style='currency'
+                              currency={currency}
+                              value={item.cfPriceSubtotal}
+                            />
+                          </DivSectionDescription>
+                        </DivSectionCollapsedRow>
+                      ))}
+                    </DivSectionCollapsedWrapper>
+                  )
+                ) : null}
               </Form>
             )
           }}
@@ -167,13 +156,13 @@ function mapStateToProps(store, props) {
       const packagingUnit = getSafe(() => item.productOffer.companyProduct.packagingUnit.nameAbbreviation, '')
       const packaging = `${packagingUnit} ${packagingType}`
 
-      return ({
+      return {
         ...item,
         productName: getSafe(() => item.productOffer.companyProduct.intProductName, ''),
         pkgAmount: item.pkgAmount,
         packagingSize: getSafe(() => item.productOffer.companyProduct.packagingSize, 1),
         packaging
-      })
+      }
     }),
     initValues: props.cartItems.map(item => ({
       id: item.id,
@@ -185,4 +174,4 @@ function mapStateToProps(store, props) {
   }
 }
 
-export default injectIntl(connect(mapStateToProps, {  })(ReviewItems))
+export default injectIntl(connect(mapStateToProps, {})(ReviewItems))

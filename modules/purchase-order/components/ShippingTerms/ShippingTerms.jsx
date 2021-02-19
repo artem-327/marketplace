@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
-import { getSafe } from "~/utils/functions"
+import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 
 //Components
@@ -29,19 +29,16 @@ import { DivRightButtons } from '../RowComponent/RowComponent.styles'
 import { IconEdit } from './ShippingTerms.styles'
 
 //Hooks
-import { usePrevious } from "../../../../hooks"
+import { usePrevious } from '../../../../hooks'
 
-import {
-  getAddressOptions
-} from './ShippingTerms.services'
+import { getAddressOptions } from './ShippingTerms.services'
 
 const ShippingTerms = props => {
   // Stores previos values for compating with current value
-  const prevIsExpanded  = usePrevious(props.isExpanded)
+  const prevIsExpanded = usePrevious(props.isExpanded)
   const [warehouseAddressSwitch, setWarehouseAddressSwitch] = useState('warehouses')
   const [searchValue, setSearchValue] = useState('')
   const [addAddressValues, setAddAddressValues] = useState(null)
-  const [isOpenAddAddress, setIsOpenAddAddress] = useState(false)
 
   const {
     isExpanded,
@@ -51,7 +48,10 @@ const ShippingTerms = props => {
     setSummaryButtonCaption,
     value,
     warehousesFetching,
-    isFetching
+    isFetching,
+    isOpenModal,
+    chatWidgetVerticalMoved,
+    setIsOpenAddAddress
   } = props
 
   // This useEffect is used similar as componentDidUpdate
@@ -73,10 +73,10 @@ const ShippingTerms = props => {
   return (
     <RowComponent
       {...props}
-      header={<FormattedMessage id='checkout.header.shippingAndTerms' defaultMessage='2. Shipping & Terms'/>}
+      header={<FormattedMessage id='checkout.header.shippingAndTerms' defaultMessage='2. Shipping & Terms' />}
       onSubmitClick={() => props.onSubmitClick()}
-      submitButtonCaption={allAccepted
-        ? (
+      submitButtonCaption={
+        allAccepted ? (
           <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
             {text => text}
           </FormattedMessage>
@@ -88,116 +88,105 @@ const ShippingTerms = props => {
       }
       submitButtonDisabled={!value}
       content={
-        (sectionState.accepted || isExpanded)
-          ? (
-            isExpanded
-              ? (
+        sectionState.accepted || isExpanded ? (
+          isExpanded ? (
+            <div>
+              <ShippingHandler
+                warehouseAddressSwitch={warehouseAddressSwitch}
+                onSetWarehouseAddressSwitchChange={val => setWarehouseAddressSwitch(val)}
+                searchValue={searchValue}
+                onSetSearchValueChange={val => setSearchValue(val)}
+              />
+              <GridExpandedSection overflow={'overflow: auto;'} maxHeight='605px'>
+                <Dimmer inverted active={warehousesFetching || isFetching}>
+                  <Loader />
+                </Dimmer>
+                {addressOptions.map((item, index) => (
+                  <GridRowExpandedSelectionRow
+                    key={index}
+                    checked={value && value.id === item.id}
+                    onClick={() => onValueChange(item)}
+                    selection={'true'}>
+                    <GridColumn width={16}>
+                      <DivFlexRow>
+                        <DivCentered>
+                          <Radio checked={value && value.id === item.id} />
+                        </DivCentered>
+                        <div>
+                          <DivSectionHeader>{item.name}</DivSectionHeader>
+                          <DivSectionName>{item.description}</DivSectionName>
+                        </div>
+                        <DivRightSection>
+                          <IconEdit
+                            size={18}
+                            onClick={() => {
+                              setAddAddressValues(item)
+                              setIsOpenAddAddress(true)
+                              chatWidgetVerticalMoved(true)
+                            }}
+                          />
+                        </DivRightSection>
+                      </DivFlexRow>
+                    </GridColumn>
+                  </GridRowExpandedSelectionRow>
+                ))}
+              </GridExpandedSection>
+              <DivRightButtons>
+                <Button
+                  basic
+                  onClick={() => {
+                    setAddAddressValues(null)
+                    setIsOpenAddAddress(true)
+                    chatWidgetVerticalMoved(true)
+                  }}>
+                  <FormattedMessage id='global.addNew' defaultMessage='Add New'>
+                    {text => text}
+                  </FormattedMessage>
+                </Button>
+              </DivRightButtons>
+              {isOpenModal && (
+                <AddAddress
+                  {...props}
+                  onUpdateAddress={value => {
+                    onValueChange(getAddressOptions([value])[0])
+                    try {
+                      props.getDeliveryAddresses()
+                      props.getWarehouses()
+                    } catch (e) {
+                      console.error(e)
+                    }
+                  }}
+                  isWarehouse={warehouseAddressSwitch === 'warehouses'}
+                  popupValues={addAddressValues}
+                  onClose={() => {
+                    setIsOpenAddAddress(false)
+                    chatWidgetVerticalMoved(false)
+                  }}
+                />
+              )}
+            </div>
+          ) : (
+            <DivSectionCollapsedWrapper>
+              <DivSectionCollapsedRow>
                 <div>
-                  <ShippingHandler
-                    warehouseAddressSwitch={warehouseAddressSwitch}
-                    onSetWarehouseAddressSwitchChange={val => setWarehouseAddressSwitch(val)}
-                    searchValue={searchValue}
-                    onSetSearchValueChange={val => setSearchValue(val)}
-                  />
-                  <GridExpandedSection maxHeight='605px'>
-                    <Dimmer inverted active={warehousesFetching || isFetching}>
-                      <Loader />
-                    </Dimmer>
-                    {addressOptions.map((item, index) => (
-                      <GridRowExpandedSelectionRow
-                        key={index}
-                        checked={value && (value.id === item.id)}
-                        onClick={() => onValueChange(item)}
-                        selection={'true'}
-                      >
-                        <GridColumn width={16}>
-                          <DivFlexRow>
-                            <DivCentered>
-                              <Radio
-                                checked={value && (value.id === item.id)}
-                              />
-                            </DivCentered>
-                            <div>
-                              <DivSectionHeader>
-                                {item.name}
-                              </DivSectionHeader>
-                              <DivSectionName>
-                                {item.description}
-                              </DivSectionName>
-                            </div>
-                            <DivRightSection>
-                              <IconEdit
-                                size={18}
-                                onClick={() => {
-                                  setAddAddressValues(item)
-                                  setIsOpenAddAddress(true)
-                                }}
-                              />
-                            </DivRightSection>
-                          </DivFlexRow>
-                        </GridColumn>
-                      </GridRowExpandedSelectionRow>
-                    ))}
-                  </GridExpandedSection>
-                  <DivRightButtons>
-                    <Button
-                      basic
-                      onClick={() => {
-                        setAddAddressValues(null)
-                        setIsOpenAddAddress(true)
-                      }}
-                    >
-                      <FormattedMessage id='global.addNew' defaultMessage='Add New'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
-                  </DivRightButtons>
-                  {isOpenAddAddress && (
-                    <AddAddress
-                      {...props}
-                      onUpdateAddress={value => {
-                        onValueChange(getAddressOptions([value])[0])
-                        try {
-                          props.getDeliveryAddresses()
-                          props.getWarehouses()
-                        } catch (e) {
-                          console.error(e)
-                        }
-                      }}
-                      isWarehouse={warehouseAddressSwitch === 'warehouses'}
-                      popupValues={addAddressValues}
-                      onClose={() => setIsOpenAddAddress(false)}
-                    />
-                  )}
+                  <DivSectionName>{value ? value.name : ''}</DivSectionName>
+                  <DivSectionDescription>{value ? value.description : ''}</DivSectionDescription>
                 </div>
-              ) : (
-                <DivSectionCollapsedWrapper>
-                    <DivSectionCollapsedRow>
-                      <div>
-                        <DivSectionName>
-                          {value ? value.name : ''}
-                        </DivSectionName>
-                        <DivSectionDescription>
-                          {value ? value.description : ''}
-                        </DivSectionDescription>
-                      </div>
-                    </DivSectionCollapsedRow>
-                </DivSectionCollapsedWrapper>
-              )
-          ) : null
+              </DivSectionCollapsedRow>
+            </DivSectionCollapsedWrapper>
+          )
+        ) : null
       }
     />
   )
 }
 
-ShippingTerms.propTypes = {
-}
+ShippingTerms.propTypes = {}
 
-ShippingTerms.defaultProps = {
-}
+ShippingTerms.defaultProps = {}
 
 function mapStateToProps(store, props) {
-  return { }
+  return {}
 }
 
-export default injectIntl(connect(mapStateToProps, {  })(ShippingTerms))
+export default injectIntl(connect(mapStateToProps, {})(ShippingTerms))

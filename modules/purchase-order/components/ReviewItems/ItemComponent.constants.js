@@ -1,5 +1,5 @@
 /**
- * @constant {{key: number, text: string, value: number or empty string}[]} Options for quantity dropdown.
+ * @constant {{key: number, text: string, value: string | number}[]} Options for quantity dropdown.
  */
 export const OPTIONS_QUANTITY = [
   { key: 1, text: '1', value: '1' },

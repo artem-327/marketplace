@@ -1,10 +1,6 @@
 import styled from 'styled-components'
 
-import {
-  Container as SemanticContainer,
-  Grid,
-  GridRow
-} from 'semantic-ui-react'
+import { Container as SemanticContainer, Grid, GridRow } from 'semantic-ui-react'
 
 export const ContainerMain = styled(SemanticContainer)`
   position: fixed;
@@ -35,7 +31,7 @@ export const ContainerCheckout = styled(SemanticContainer)`
 export const GridSections = styled(Grid)`
   &.ui.grid {
     margin: -7.5px -5px;
-  
+
     > .row {
       padding: 2.5px 0;
     }
@@ -60,8 +56,8 @@ export const DivSectionName = styled.div`
   padding: 0 5px;
   color: #20273a;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
+  ${({ disabled }) => disabled ? 'color: #848893;' : ''}
 `
 
 export const DivSectionHeader = styled.div`
@@ -71,6 +67,7 @@ export const DivSectionHeader = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  ${({ disabled }) => disabled ? 'color: #848893;' : ''}
 `
 
 export const DivSectionSmallHeader = styled.div`
@@ -105,20 +102,17 @@ export const DivTopPadding = styled.div`
 `
 
 export const GridExpandedSection = styled(Grid)`
+  ${({ overflow }) => overflow}
   &.ui.grid {
     margin: 10px -20px;
-    padding: 0;    
-    overflow-x: hidden;
-    overflow-y: auto;
+    padding: 0;
     ${props => (props.maxHeight ? 'max-height: ' + props.maxHeight + ';' : '')}
-  
+
     > .row {
       margin: 2.5px 20px;
       padding: 15px 5px;
-      
+
       > .column {
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
         padding: 0 5px;
       }
     }
@@ -132,9 +126,9 @@ export const GridRowReviewItems = styled(GridRow)`
 
 export const GridRowExpandedSelectionRow = styled(GridRow)`
   border-radius: 4px;
-  ${props => (props.checked 
-    ? 'border: solid 1px #2599d5; background-color: #ddf1fc;'
-    : 'border: solid 1px #dee2e6; background-color: #f8f9fb;'
-  )}
+  ${props =>
+    props.checked
+      ? 'border: solid 1px #2599d5; background-color: #ddf1fc;'
+      : 'border: solid 1px #dee2e6; background-color: #f8f9fb;'}
   ${props => (props.selection ? 'cursor: pointer;' : '')}
 `

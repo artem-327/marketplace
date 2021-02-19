@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { removeEmpty, getSafe } from "~/utils/functions"
+import { removeEmpty, getSafe } from '~/utils/functions'
 import { Formik } from 'formik'
 
 // Components
@@ -14,57 +14,47 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 import { AddressForm } from '~/modules/address-form'
 
 // Styles
-import {
-  ModalStyled,
-  GridStyled,
-  DivSectionHeader,
-  DivAddressWrapper
-} from './AddAddress.styles'
+import { ModalStyled, GridStyled, DivSectionHeader, DivAddressWrapper } from './AddAddress.styles'
 
 // Constants
 import { INITIAL_VALUES } from './AddAddress.constants'
 
 //Services
-import {
-  getInitValues,
-  getValidationScheme,
-  handleSubmit
-} from './AddAddress.services'
+import { getInitValues, getValidationScheme, handleSubmit } from './AddAddress.services'
 
 const AddAddress = props => {
   let formikPropsSelf
   const {
     isWarehouse,
     popupValues,
-    intl: { formatMessage }
+    intl: { formatMessage },
+    chatWidgetVerticalMoved,
+    setIsOpenAddAddress
   } = props
 
   return (
     <Formik
-      onSubmit={async values => await handleSubmit(props, formikPropsSelf, values)}
+      onSubmit={async values => {
+        await handleSubmit(props, formikPropsSelf)
+        setIsOpenAddAddress(false)
+        chatWidgetVerticalMoved(false)
+      }}
       enableReinitialize
-      initialValues={popupValues
-        ? { ...INITIAL_VALUES, ...getInitValues(popupValues) }
-        : INITIAL_VALUES}
-      validationSchema={getValidationScheme}
-    >
+      initialValues={popupValues ? { ...INITIAL_VALUES, ...getInitValues(popupValues) } : INITIAL_VALUES}
+      validationSchema={getValidationScheme}>
       {formikProps => {
         formikPropsSelf = formikProps
         const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
         return (
-          <ModalStyled
-            open={true}
-            onClose={() => props.onClose()}
-            closeOnDimmerClick={false}
-            closeIcon
-          >
+          <ModalStyled open={true} onClose={() => props.onClose()} closeOnDimmerClick={false} closeIcon>
             <>
               <Modal.Header>
-                {popupValues
-                  ? <FormattedMessage id='checkout.shipping.editAddress' defaultMessage='Edit Address' />
-                  : <FormattedMessage id='checkout.shipping.addAddress' defaultMessage='Add New Address' />
-                }
+                {popupValues ? (
+                  <FormattedMessage id='checkout.shipping.editAddress' defaultMessage='Edit Address' />
+                ) : (
+                  <FormattedMessage id='checkout.shipping.addAddress' defaultMessage='Add New Address' />
+                )}
               </Modal.Header>
               <Modal.Content scrolling>
                 <Form>
@@ -113,32 +103,32 @@ const AddAddress = props => {
                     </GridRow>
                     <GridRow>
                       <GridColumn width={8}>
-                          <PhoneNumber
-                            name='contactPhone'
-                            values={values}
-                            label={
-                              <>
-                                <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
-                                <Required />
-                              </>
-                            }
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            errors={errors}
-                            touched={touched}
-                            isSubmitting={isSubmitting}
-                          />
+                        <PhoneNumber
+                          name='contactPhone'
+                          values={values}
+                          label={
+                            <>
+                              <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
+                              <Required />
+                            </>
+                          }
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          errors={errors}
+                          touched={touched}
+                          isSubmitting={isSubmitting}
+                        />
                       </GridColumn>
                       <GridColumn width={8}>
-                          <Input
-                            label={
-                              <>
-                                <FormattedMessage id='global.email' defaultMessage='E-mail Address' />
-                                <Required />
-                              </>
-                            }
-                            name='contactEmail'
-                          />
+                        <Input
+                          label={
+                            <>
+                              <FormattedMessage id='global.email' defaultMessage='E-mail Address' />
+                              <Required />
+                            </>
+                          }
+                          name='contactEmail'
+                        />
                       </GridColumn>
                     </GridRow>
                     <DivSectionHeader>
@@ -216,13 +206,11 @@ const AddAddress = props => {
                   </GridStyled>
                 </Form>
               </Modal.Content>
-              <Modal.Actions style={{ bottom: '10px'}}>
+              <Modal.Actions style={{ bottom: '10px' }}>
                 <Button
                   type='button'
                   basic
-                  onClick={() => {
-                    formikProps.handleSubmit()
-                  }}
+                  onClick={() => formikProps.handleSubmit()}
                   loading={props.isFetching}
                   data-test='checkout_add_address_save'>
                   <FormattedMessage id='global.save' defaultMessage='Save'>
@@ -240,18 +228,20 @@ const AddAddress = props => {
 
 AddAddress.propTypes = {
   selectedAddress: PropTypes.object,
-  savedShippingPreferences: PropTypes.bool
+  savedShippingPreferences: PropTypes.bool,
+  chatWidgetVerticalMoved: PropTypes.func,
+  setIsOpenAddAddress: PropTypes.func
 }
 
 AddAddress.defaultProps = {
   selectedAddress: null,
-  savedShippingPreferences: false
+  savedShippingPreferences: false,
+  chatWidgetVerticalMoved: () => {},
+  setIsOpenAddAddress: () => {}
 }
 
 function mapStateToProps(store) {
-  return {
-
-  }
+  return {}
 }
 
-export default injectIntl(connect(mapStateToProps, {  })(AddAddress))
+export default injectIntl(connect(mapStateToProps, {})(AddAddress))
