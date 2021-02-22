@@ -941,6 +941,7 @@
   "global.pracing": "PRACING",
   "global.document": "DOCUMENT",
   "global.specifications": "Specifications",
+  "global.testMethods": "Test Methods",
   "global.property": "Property",
   "global.palletPkgMin": "Pallet Pkg Min",
   "global.palletPkgMax": "Pallet Pkg Max",
