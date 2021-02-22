@@ -2,6 +2,7 @@ import * as AT from './action-types'
 import * as api from './api'
 import { updateIdentity } from '~/modules/auth/actions'
 import { Datagrid } from '~/modules/datagrid'
+import { getSafe } from '../../utils/functions'
 
 import Router from 'next/router'
 
@@ -390,10 +391,16 @@ export const takeOverCompanyFinish = () => {
   }
 }
 
-export const reviewRequest = companyId => {
-  return {
-    type: AT.ADMIN_REVIEW_REQUESTED,
-    payload: api.reviewRequest(companyId)
+export const reviewRequest = (row, datagrid) => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.ADMIN_REVIEW_REQUESTED,
+      payload: await api.reviewRequest(row.id)
+    })
+    datagrid.updateRow(row.id, () => ({
+      ...row,
+      reviewRequested: !row.reviewRequested
+    }))
   }
 }
 

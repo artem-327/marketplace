@@ -151,6 +151,9 @@ class CompaniesTable extends Component {
     return rows.map(row => {
       return {
         ...row,
+        associations: (
+          <ArrayToFirstItem values={row.associations ? row.associations.map(r => r.name) : []} />
+        ),
         companyName: (
           <ActionCell
             row={row}
@@ -172,7 +175,7 @@ class CompaniesTable extends Component {
             key={`review${row.id}`}
             toggle={true}
             defaultChecked={row.reviewRequested}
-            onClick={() => this.props.reviewRequest(row.id)}
+            onClick={() => this.props.reviewRequest(row, this.props.datagrid)}
             data-test={`admin_company_table_${row.id}_chckb`}
           />
         ),
@@ -315,9 +318,7 @@ const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
       ...c,
       companyName: getSafe(() => c.name, ''),
       dba: getSafe(() => c.dba, ''),
-      associations: (
-        <ArrayToFirstItem values={getSafe(() => c.associations, '') ? c.associations.map(r => r.name) : []} />
-      ),
+      associations: getSafe(() => c.associations, ''),
       hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
       hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified',
       hasVellociAccount: getSafe(() => c.vellociAccountStatus, false) === 'active',
