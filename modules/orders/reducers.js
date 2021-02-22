@@ -196,8 +196,7 @@ export default function reducer(state = initialState, action) {
     case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_PENDING:
       return {
         ...state,
-        bankAccountsLoading: true,
-        isThirdPartyConnectionException: false
+        bankAccountsLoading: true
       }
     case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_FULFILLED:
       return {
@@ -221,8 +220,7 @@ export default function reducer(state = initialState, action) {
             value: bankAccount.account_public_id
           }
         }),
-        bankAccountsLoading: false,
-        isThirdPartyConnectionException: false
+        bankAccountsLoading: false
       }
     case AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS_REJECTED:
     case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_REJECTED:

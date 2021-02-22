@@ -198,8 +198,7 @@ export default function reducer(state = initialState, action) {
     case AT.PAYMENTS_FETCH_PENDING: {
       return {
         ...state,
-        isFetching: true,
-        isThirdPartyConnectionException: false
+        isFetching: true
       }
     }
     case AT.PAYMENTS_FETCH_FULFILLED: {
@@ -212,20 +211,18 @@ export default function reducer(state = initialState, action) {
           type: acc.bankAccountType || acc.account_type, // Nebo: acc.type || acc.account_type ?
           institutionName: acc.bankName || acc.institution_name
         })),
-        isFetching: false,
-        isThirdPartyConnectionException: false
+        isFetching: false
       }
     }
 
     case AT.PAYMENTS_FETCH_REJECTED: {
-      if (getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION')
-        return {
-          ...state,
-          payments: [],
-          isFetching: false,
-          isThirdPartyConnectionException:
-            getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
-        }
+      return {
+        ...state,
+        payments: [],
+        isFetching: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
+      }
     }
 
     /* OFFER_FETCH */

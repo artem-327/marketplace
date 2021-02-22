@@ -44,7 +44,11 @@ class LogisticsTable extends Component {
     }
   }
   componentDidMount() {
-    this.props.getLogisticsAccounts()
+    try {
+      this.props.getLogisticsAccounts()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   getActions = () => {
@@ -95,34 +99,52 @@ class LogisticsTable extends Component {
   getRows = () => {
     const { logisticsAccounts, loading, filterValue, editedId } = this.props
 
-    return logisticsAccounts.map(acc => {
-      return {
-        ...acc,
-        stringName: acc.provider.name,
-        username: <ArrayToFirstItem values={acc.accountInfos && acc.accountInfos.map(d => d.username)} />,
-        logisticsProviderNameForSearch: acc.provider.name,
-        usernameForSearch: acc.accountInfos && acc.accountInfos.map(d => d.username),
-        logisticsProviderName: (
-          <ActionCell
-            row={acc}
-            getActions={this.getActions}
-            content={acc.provider.name}
-            onContentClick={() => {
-              this.props.openSidebar(acc)
-              this.props.chatWidgetVerticalMoved(true)
-            }}
-          />
-        )
-      }
-    })
+    return getSafe(() => logisticsAccounts.length, false)
+      ? logisticsAccounts.map(acc => {
+          return {
+            ...acc,
+            stringName: acc.provider.name,
+            username: <ArrayToFirstItem values={acc.accountInfos && acc.accountInfos.map(d => d.username)} />,
+            logisticsProviderNameForSearch: acc.provider.name,
+            usernameForSearch: acc.accountInfos && acc.accountInfos.map(d => d.username),
+            logisticsProviderName: (
+              <ActionCell
+                row={acc}
+                getActions={this.getActions}
+                content={acc.provider.name}
+                onContentClick={() => {
+                  this.props.openSidebar(acc)
+                  this.props.chatWidgetVerticalMoved(true)
+                }}
+              />
+            )
+          }
+        })
+      : []
   }
 
   render() {
-    const { loading, filterValue, editedId } = this.props
+    const {
+      loading,
+      filterValue,
+      editedId,
+      intl: { formatMessage },
+      isThirdPartyConnectionException
+    } = this.props
 
     return (
       <div className='flex stretched listings-wrapper'>
         <ProdexTable
+          messages={
+            isThirdPartyConnectionException
+              ? {
+                  noData: formatMessage({
+                    id: 'settings.logistics.difficulties',
+                    defaultMessage: 'Logistics cannots be rettrived at the moment. Please try again later.'
+                  })
+                }
+              : null
+          }
           tableName='settings_logistics_table'
           columns={this.state.columns}
           filterValue={filterValue}
@@ -151,14 +173,22 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = ({
-  settings: { loading, logisticsAccounts, deleteLogisticsAccount, logisticsFilter, editedId }
+  settings: {
+    loading,
+    logisticsAccounts,
+    deleteLogisticsAccount,
+    logisticsFilter,
+    editedId,
+    isThirdPartyConnectionException
+  }
 }) => {
   return {
     loading,
     editedId,
     logisticsAccounts,
     deleteLogisticsAccount,
-    filterValue: logisticsFilter
+    filterValue: logisticsFilter,
+    isThirdPartyConnectionException
   }
 }
 

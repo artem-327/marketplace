@@ -7,7 +7,7 @@ import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 
 //Components
-import { GridColumn, Radio } from 'semantic-ui-react'
+import { Grid, GridColumn, Radio } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
   DivSectionCollapsedWrapper,
@@ -28,7 +28,16 @@ const Payment = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded = usePrevious(props.isExpanded)
 
-  const { isExpanded, allAccepted, sectionState, onValueChange, setSummaryButtonCaption, payments, value } = props
+  const {
+    isExpanded,
+    allAccepted,
+    sectionState,
+    onValueChange,
+    setSummaryButtonCaption,
+    payments,
+    value,
+    isThirdPartyConnectionException
+  } = props
 
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
@@ -65,31 +74,42 @@ const Payment = props => {
         sectionState.accepted || isExpanded ? (
           isExpanded ? (
             <GridExpandedSection overflow={'overflow: auto;'} maxHeight='605px'>
-              {payments.map((item, index) => (
-                <GridRowExpandedSelectionRow
-                  key={index}
-                  checked={value === item.id}
-                  onClick={() => onValueChange(item.id)}
-                  selection={'true'}>
-                  <GridColumn width={6}>
-                    <DivFlexRow>
-                      <DivCentered>
-                        <Radio checked={value === item.id} />
-                      </DivCentered>
-                      <div>
-                        <DivSectionHeader>{item.name}</DivSectionHeader>
-                        <DivSectionName>{item.institutionName}</DivSectionName>
-                      </div>
-                    </DivFlexRow>
-                  </GridColumn>
-                  {false && (
-                    <GridColumn width={10}>
-                      <DivSectionHeader>{item.institutionName}</DivSectionHeader>
-                      <DivSectionName>TBD ...Address...</DivSectionName>
+              {!getSafe(() => payments.length, false) && isThirdPartyConnectionException ? (
+                <Grid.Row>
+                  <Grid.Column textAlign='center'>
+                    <FormattedMessage
+                      id='payments.bankAccountCannnotRetrived'
+                      defaultMessage='Bank accounts cannot be retrieved at the moment. Please try again later.'
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+              ) : (
+                payments.map((item, index) => (
+                  <GridRowExpandedSelectionRow
+                    key={index}
+                    checked={value === item.id}
+                    onClick={() => onValueChange(item.id)}
+                    selection={'true'}>
+                    <GridColumn width={6}>
+                      <DivFlexRow>
+                        <DivCentered>
+                          <Radio checked={value === item.id} />
+                        </DivCentered>
+                        <div>
+                          <DivSectionHeader>{item.name}</DivSectionHeader>
+                          <DivSectionName>{item.institutionName}</DivSectionName>
+                        </div>
+                      </DivFlexRow>
                     </GridColumn>
-                  )}
-                </GridRowExpandedSelectionRow>
-              ))}
+                    {false && (
+                      <GridColumn width={10}>
+                        <DivSectionHeader>{item.institutionName}</DivSectionHeader>
+                        <DivSectionName>TBD ...Address...</DivSectionName>
+                      </GridColumn>
+                    )}
+                  </GridRowExpandedSelectionRow>
+                ))
+              )}
             </GridExpandedSection>
           ) : (
             <DivSectionCollapsedWrapper>
