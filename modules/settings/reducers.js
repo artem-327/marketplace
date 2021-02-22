@@ -1866,6 +1866,29 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    /* POST_TRADE_CRITERIA */
+
+    case AT.POST_TRADE_CRITERIA_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.POST_TRADE_CRITERIA_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.POST_TRADE_CRITERIA_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     default: {
       return state
     }

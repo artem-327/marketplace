@@ -151,7 +151,7 @@ const PScroll = styled(PerfectScrollbar)`
   }
 `
 /**
- * @category Settings - Company Settings
+ * @category Settings - Settings
  * @component
  */
 class Settings extends Component {

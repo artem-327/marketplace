@@ -491,7 +491,7 @@ class Navigation extends Component {
             icon={<Settings size={22} />}
             text={
               <>
-                <FormattedMessage id='navigation.myAccount' defaultMessage='My Account' />
+                <FormattedMessage id='navigation.myTradePass' defaultMessage='My TradePass' />
                 {settings ? <ChevronUp /> : <ChevronDown />}
               </>
             }
@@ -517,7 +517,14 @@ class Navigation extends Component {
                       to='/settings/system-settings'
                       tab='system-settings'
                       dataTest='navigation_settings_system_settings_drpdn'>
-                      {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Settings' })}
+                      {formatMessage({ id: 'navigation.Settings', defaultMessage: 'Settings' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings/trade-criteria'
+                      tab='trade-criteria'
+                      dataTest='navigation_settings_my_trade_criteria_drpdn'>
+                      {formatMessage({ id: 'navigation.myTradeCriteria', defaultMessage: 'My Trade Criteria' })}
                     </Dropdown.Item>
                   </>
                 ) : null}

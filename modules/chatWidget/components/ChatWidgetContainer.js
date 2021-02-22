@@ -52,7 +52,7 @@ function mapStateToProps(state) {
       openGlobalAddFormName === 'my-account-locations'
     )
       return 630
-    // Sidebar in My Account - Locations - Branches scroll-up from bottom to up and has 89% height of page.
+    // Sidebar in My TradePass - Locations - Branches scroll-up from bottom to up and has 89% height of page.
     if (
       getSafe(() => state.chatWidget.isVerticalMoved, false) &&
       (getSafe(() => state.settings.isOpenSidebar, false) ||
