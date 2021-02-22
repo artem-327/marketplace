@@ -20,7 +20,7 @@ import BankAccountsUploadDocPopup from './BankAccountsTable/BankAccountsUploadDo
 import TablesHandlers from './TablesHandlers'
 
 import LogisticsTable from './LogisticsTable/LogisticsTable'
-import LogisticsSidebar from './LogisticsTable/LogisticsSidebar'
+import LogisticsSidebar from './LogisticsTable/LogisticsSidebar/LogisticsSidebar'
 
 import SystemSettings from '~/components/settings'
 
