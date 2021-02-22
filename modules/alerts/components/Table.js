@@ -16,6 +16,7 @@ import { ChevronUp, ChevronDown } from 'react-feather'
 import GenericProductRequest from './DetailMessages/GenericProductRequest'
 import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest'
 import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo'
+import { UserImage, UserName, UserCompany } from './layout'
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
@@ -66,17 +67,19 @@ class Table extends Component {
   state = {
     columns: [
       {
+        name: 'user',
+        title: <div></div>,
+        //sortPath: '',
+        width: 200
+      },
+      {
         name: 'notification',
-        title: (
-          <FormattedMessage id='alerts.column.notification' defaultMessage='Notification'>
-            {text => text}
-          </FormattedMessage>
-        ),
+        title: <div></div>,
         sortPath: 'Message.text',
         width: 720,
         maxWidth: 2000
       },
-      {
+      /*{
         name: 'notificationType',
         title: (
           <FormattedMessage id='alerts.column.notificationType' defaultMessage='Notification Type'>
@@ -85,37 +88,13 @@ class Table extends Component {
         ),
         //sortPath: '',
         width: 200
-      },
-      {
-        name: 'nameOfUser',
-        title: (
-          <FormattedMessage id='alerts.column.nameOfUser' defaultMessage='Name Of User'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        //sortPath: '',
-        width: 200
-      },
-      {
-        name: 'usersCompany',
-        title: (
-          <FormattedMessage id='alerts.column.usersCompany' defaultMessage="User's Company">
-            {text => text}
-          </FormattedMessage>
-        ),
-        //sortPath: '',
-        width: 200
-      },
+      },*/
       {
         name: 'time',
-        title: (
-          <FormattedMessage id='alerts.column.time' defaultMessage='Time'>
-            {text => text}
-          </FormattedMessage>
-        ),
+        title: <div></div>,
         sortPath: 'Message.createdAt',
         width: 160
-      },
+      }/*,
       {
         name: 'expand',
         title: <div></div>,
@@ -126,7 +105,7 @@ class Table extends Component {
         ),
         align: 'center',
         width: 50
-      }
+      }*/
     ],
     expandedRowIds: []
   }
@@ -191,6 +170,13 @@ class Table extends Component {
       const open = this.state.expandedRowIds.some(id => id === r.id)
       return {
         ...r,
+        user: (
+          <>
+            {getSafe(() => r.sender.avatar, false) && <UserImage><img src={r.sender.avatar} /></UserImage>}
+            <UserName as='h3'>{r.nameOfUser}</UserName>
+            <UserCompany as='h4'>{r.usersCompany}</UserCompany>
+          </>
+        ),
         clsName: read + (selected ? ' selected' : '') + (open ? ' open' : ''),
         notification: this.notificationText(r.rawData),
         time: r.createdAt ? (
@@ -305,13 +291,13 @@ class Table extends Component {
   }
 
   render() {
-    const { intl, datagrid, markSeenSending, menuStatusFilter, selectedRows } = this.props
+    const { intl, datagrid, markSeenSending, menuStatusFilter, selectedRows, isAdmin } = this.props
     const { formatMessage } = intl
     const { columns, expandedRowIds } = this.state
 
     return (
       <Fragment>
-        {selectedRows.length ? (
+        {selectedRows.length && !isAdmin ? (
           <NotificationsCount>
             {selectedRows.length === 1 ? (
               <FormattedMessage
@@ -345,7 +331,7 @@ class Table extends Component {
           </NotificationsCount>
         ) : null}
 
-        <div className='flex stretched table-detail-rows-wrapper'>
+        <div className='flex stretched table-detail-rows-wrapper notifications-wrapper'>
           <ProdexTable
             tableName={`operations_tag_${menuStatusFilter}`}
             {...datagrid.tableProps}
@@ -378,6 +364,7 @@ const mapStateToProps = (state, { datagrid }) => {
   const { alerts } = state
   return {
     ...alerts,
+    isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
     rows: datagrid.rows.map(r => {
       return {
         ...r,

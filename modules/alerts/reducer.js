@@ -1,12 +1,12 @@
 import * as AT from './action-types'
 
 export const initialState = {
-  topMenuTab: '',
+  topMenuTab: null,
   markSeenSending: false,
   loadingCategories: false,
   categories: [],
   tableHandlersFilters: null,
-  countUnseen: 0,
+  countUnseen: 0
 }
 
 export default function reducers(state = initialState, action) {
@@ -76,6 +76,13 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         [payload.variable]: payload.value
+      }
+    }
+
+    case AT.ALERTS_SET_TYPE: {
+      return {
+        ...state,
+        type: payload
       }
     }
 
