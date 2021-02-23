@@ -234,6 +234,11 @@
   "navigation.admin.logistics": "Logistics",
   "navigation.admin.admin-settings": "Admin Settings",
   "navigation.myTradeCriteria": "My Trade Criteria",
+  "navigation.myNetworkAll": "All ({value})",
+  "navigation.myNetworkActive": "Active ({value})",
+  "navigation.myNetworkPending": "Pending ({value})",
+  "navigation.myNetworkRequested": "Requested ({value})",
+  "navigation.myNetwork": "My Network",
   "dwolla.controllerTitlePopup": "Please read below for the definition of Controller in this context.",
   "dwolla.paymentPoweredBy": "Echo Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Account Administrator Information",
@@ -3138,5 +3143,7 @@
   "settings.tradeCriteria.violations.placeholder": "Select Presence Violations",
   "settings.tradeCriteria.socialPresence.titleLabel": "Social Presence",
   "settings.tradeCriteria.socialPresence.subLabel": "Websites and social media is often an indicator of a companies integrity. How many social accounts do you  prefer your customers/partners have?",
-  "settings.tradeCriteria.socialPresence.placeholder": "Select Social Presence"
+  "settings.tradeCriteria.socialPresence.placeholder": "Select Social Presence",
+  "myNetworks.search": "Search your connection",
+  "myNetworks.filterByType": "Filter by type"
 }

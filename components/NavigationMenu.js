@@ -1,7 +1,10 @@
 import { Component } from 'react'
 import Link from 'next/link'
 import Router, { withRouter } from 'next/router'
-
+//Actions
+import { filterNetworkStatus } from '../modules/my-network/actions' //TODO
+//Constants
+import { NETWORK_STATUS } from '../modules/my-network/constants'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { withAuth } from '~/hocs'
 import { injectIntl, FormattedMessage } from 'react-intl'
@@ -23,7 +26,8 @@ import {
   Disc,
   Coffee,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Globe
 } from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { defaultTabs as operationsDefaultTabs, orderOperatorTabs } from '~/modules/operations/constants'
@@ -99,7 +103,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/listings', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/holds', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/bids-sent', false) ||
-      getSafe(() => Router.router.pathname === '/marketplace/bids-received', false)
+      getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
+    myNetwork: getSafe(() => Router.router.pathname === '/my-network', false)
   }
 
   componentDidMount() {
@@ -244,7 +249,8 @@ class Navigation extends Component {
       isClientCompanyAdmin,
       isClientCompanyManager,
       companiesTabsNames,
-      productsTabsNames
+      productsTabsNames,
+      filterNetworkStatus
     } = this.props
 
     const {
@@ -258,7 +264,8 @@ class Navigation extends Component {
       manageGuests,
       inventory,
       marketplace,
-      wantedBoard
+      wantedBoard,
+      myNetwork
     } = this.state
 
     const MenuLink = withRouter(({ router: { pathname }, to, children, tab, className, dataTest }) => {
@@ -275,6 +282,11 @@ class Navigation extends Component {
         </Link>
       )
     })
+
+    const allNetworks = 12 //TODO
+    const activeNetworks = 11 //TODO
+    const pendingNetworks = 10 //TODO
+    const requestedNetworks = 9 //TODO
 
     const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
       isCompanyAdmin: null,
@@ -376,6 +388,75 @@ class Navigation extends Component {
             </PerfectScrollbar>
           </Dropdown.Menu>
         </DropdownItem>
+
+        <DropdownItem
+          icon={<Globe size={22} />}
+          text={
+            <>
+              <FormattedMessage id='navigation.myNetwork' defaultMessage='My Network' />
+              {myNetwork ? <ChevronUp /> : <ChevronDown />}
+            </>
+          }
+          className={myNetwork ? 'opened' : null}
+          opened={myNetwork}
+          onClick={() => this.toggleOpened('myNetwork', '/my-network')}
+          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+          refId={'myNetwork'}
+          data-test='navigation_menu_my_network_drpdn'>
+          <Dropdown.Menu data-test='navigation_menu_my_Network_menu'>
+            <PerfectScrollbar>
+              <Dropdown.Item as={MenuLink} to='/my-network' dataTest='navigation_menu_my_Network_all_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkAll',
+                    defaultMessage: 'All ({value})'
+                  },
+                  { value: allNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/my-network'
+                onClick={() => filterNetworkStatus(NETWORK_STATUS.ACTIVE)}
+                dataTest='navigation_menu_my_network_active_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkActive',
+                    defaultMessage: 'Active ({value})'
+                  },
+                  { value: activeNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/my-network'
+                onClick={() => filterNetworkStatus(NETWORK_STATUS.PENDING)}
+                dataTest='navigation_menu_my_network_pending_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkPending',
+                    defaultMessage: 'Pending ({value})'
+                  },
+                  { value: pendingNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/my-network'
+                onClick={() => filterNetworkStatus(NETWORK_STATUS.REQUESTED)}
+                dataTest='navigation_menu_my_network_requested_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkRequested',
+                    defaultMessage: 'Requested ({value})'
+                  },
+                  { value: requestedNetworks }
+                )}
+              </Dropdown.Item>
+            </PerfectScrollbar>
+          </Dropdown.Menu>
+        </DropdownItem>
+
         {/* Temporary hide based on https://bluepallet.atlassian.net/browse/DT-88*/}
         {false && (
           <DropdownItem

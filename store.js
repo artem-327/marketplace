@@ -43,6 +43,7 @@ import exportInventory from '~/modules/export-inventory/reducer'
 import dashboard from '~/modules/dashboard/reducer'
 import vellociRegister from '~/modules/velloci-register/reducer'
 import addBankAccounts from './modules/add-bank-accounts/reducer'
+import myNetwork from './modules/my-network/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -88,7 +89,8 @@ const reducer = combineReducers({
   manageGuests,
   dashboard,
   vellociRegister,
-  addBankAccounts
+  addBankAccounts,
+  myNetwork
 })
 
 const rootReducer = (state, action) => {
