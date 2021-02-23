@@ -57,7 +57,7 @@ const BranchSidebar = props => {
       enableReinitialize
       onReset={() => {
         props.closeSidebar()
-        props.chatWidgetVerticalMoved(false)
+        props.chatWidgetVerticalMoved(true)
       }}
       onSubmit={submitHandler}
       loading={props.loading}>
@@ -68,7 +68,7 @@ const BranchSidebar = props => {
               active={props.isOpenSidebar}
               onClickOutside={() => {
                 props.closeSidebar()
-                props.chatWidgetVerticalMoved(false)
+                props.chatWidgetVerticalMoved(true)
               }}
               page></DimmerSidebarOpend>
             <SidebarFlex
@@ -84,7 +84,7 @@ const BranchSidebar = props => {
                 <CustomHighSegment
                   onClick={() => {
                     props.closeSidebar()
-                    props.chatWidgetVerticalMoved(false)
+                    props.chatWidgetVerticalMoved(true)
                   }}
                   basic>
                   <DivTitle>
@@ -111,7 +111,7 @@ const BranchSidebar = props => {
                   noBorder
                   onClick={() => {
                     props.closeSidebar()
-                    props.chatWidgetVerticalMoved(false)
+                    props.chatWidgetVerticalMoved(true)
                   }}
                   data-test='settings_branches_popup_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -136,7 +136,7 @@ const BranchSidebar = props => {
                           },
                           getSafe(() => props.sidebarValues.id, null)
                         )
-                        await props.chatWidgetVerticalMoved(false)
+                        await props.chatWidgetVerticalMoved(true)
                       }
                     })
                   }}

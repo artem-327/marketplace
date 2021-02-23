@@ -15,8 +15,8 @@ function mapStateToProps(state) {
         getSafe(() => state.admin.currentAddDwolla, false)) &&
       getSafe(() => state.admin.currentTab.name, '')
 
-    if (getSafe(() => state.settings.isOpenSidebar, false) && !getSafe(() => state.chatWidget.isVerticalMoved, false)) {
-      return 0
+    if (getSafe(() => state.settings.isOpenSidebar, false) && getSafe(() => state.chatWidget.isVerticalMoved, false)) {
+      return 60
     }
 
     if (
@@ -40,6 +40,7 @@ function mapStateToProps(state) {
 
     if (
       getSafe(() => state.companyProductInfo.isOpen, false) ||
+      (getSafe(() => state.settings.isOpenSidebar, false) && !getSafe(() => state.chatWidget.isVerticalMoved, false)) ||
       getSafe(() => state.cart.sidebar.isOpen, false) ||
       getSafe(() => state.companyProductInfo.isOpen, false) ||
       getSafe(() => state.companiesAdmin.isOpenSidebar, false) ||

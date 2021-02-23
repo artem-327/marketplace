@@ -142,7 +142,7 @@ class WarehousesSidebar extends Component {
             openGlobalAddForm('')
           } else {
             closeSidebar()
-            chatWidgetVerticalMoved(false)
+            chatWidgetVerticalMoved(true)
           }
         }}
         onSubmit={this.submitHandler}
@@ -154,7 +154,7 @@ class WarehousesSidebar extends Component {
                 active={isOpenSidebar}
                 onClickOutside={() => {
                   closeSidebar()
-                  chatWidgetVerticalMoved(false)
+                  chatWidgetVerticalMoved(true)
                 }}
                 page></DimmerSidebarOpend>
               <SidebarFlex visible={true} width='very wide' inverted direction='bottom' animation='overlay'>
@@ -189,7 +189,7 @@ class WarehousesSidebar extends Component {
                         <DivIconChevronDown
                           onClick={() => {
                             closeSidebar()
-                            chatWidgetVerticalMoved(false)
+                            chatWidgetVerticalMoved(true)
                           }}>
                           <ChevronDown />
                         </DivIconChevronDown>
@@ -206,7 +206,7 @@ class WarehousesSidebar extends Component {
                       noBorder
                       onClick={() => {
                         closeSidebar()
-                        chatWidgetVerticalMoved(false)
+                        chatWidgetVerticalMoved(true)
                       }}
                       data-test='settings_warehouse_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -232,7 +232,7 @@ class WarehousesSidebar extends Component {
                             attachmentFiles,
                             setAttachmentFiles
                           })
-                          await chatWidgetVerticalMoved(false)
+                          await chatWidgetVerticalMoved(true)
                         }
                       })
                     }}
