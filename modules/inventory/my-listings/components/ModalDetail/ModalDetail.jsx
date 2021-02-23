@@ -1525,7 +1525,8 @@ class ModalDetail extends Component {
                                                   placeholder: formatMessage({
                                                     id: 'addInventory.writeExternalNotesHere',
                                                     defaultMessage: 'Write external notes here'
-                                                  })
+                                                  }),
+                                                  className: 'fluid'
                                                 }}
                                               />
                                             </FormField>
@@ -1544,7 +1545,8 @@ class ModalDetail extends Component {
                                                   placeholder: formatMessage({
                                                     id: 'addInventory.writeInternalNotesHere',
                                                     defaultMessage: 'Write internal notes here'
-                                                  })
+                                                  }),
+                                                  className: 'fluid'
                                                 }}
                                               />
                                             </FormField>
