@@ -21,6 +21,8 @@ import { PlaidLink } from 'react-plaid-link'
 import api from '~/api'
 //Components
 import BasicButton from '../../../components/buttons/BasicButton'
+//Actions
+import { chatWidgetVerticalMoved } from '../../chatWidget/actions'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -377,7 +379,8 @@ class TablesHandlers extends Component {
       paymentProcessor,
       vellociBusinessId,
       vellociToken,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      chatWidgetVerticalMoved
     } = this.props
 
     const filterValue = this.state[currentTab]
@@ -617,7 +620,13 @@ class TablesHandlers extends Component {
                   />
                 )}
                 {(bankAccTab && bankAccounts.addButton && paymentProcessor !== 'VELLOCI') || !bankAccTab ? (
-                  <Button primary onClick={() => openSidebar()} data-test='settings_open_popup_btn'>
+                  <Button
+                    primary
+                    onClick={() => {
+                      openSidebar()
+                      currentTab === 'logistics' && chatWidgetVerticalMoved(true)
+                    }}
+                    data-test='settings_open_popup_btn'>
                     <PlusCircle />
                     <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
                   </Button>
@@ -702,5 +711,9 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(
-  withToastManager(connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast })(injectIntl(TablesHandlers)))
+  withToastManager(
+    connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast, chatWidgetVerticalMoved })(
+      injectIntl(TablesHandlers)
+    )
+  )
 )

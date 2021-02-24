@@ -60,7 +60,7 @@ const LogisticsSidebar = props => {
       initialValues={getInitialValues(sidebarValues)}
       onReset={() => {
         closeSidebar()
-        chatWidgetVerticalMoved(true)
+        chatWidgetVerticalMoved(false)
       }}
       onSubmit={async (values, { setSubmitting }) => {
         await submitForm(values, sidebarValues, {
@@ -76,7 +76,7 @@ const LogisticsSidebar = props => {
         active={true}
         onClickOutside={() => {
           closeSidebar()
-          chatWidgetVerticalMoved(true)
+          chatWidgetVerticalMoved(false)
         }}
         page></DimmerSidebarOpend>
       <SidebarFlex visible={isOpenSidebar} direction='bottom' animation='overlay'>
@@ -84,7 +84,7 @@ const LogisticsSidebar = props => {
           <CustomHighSegment
             onClick={() => {
               closeSidebar()
-              chatWidgetVerticalMoved(true)
+              chatWidgetVerticalMoved(false)
             }}
             basic>
             <DivTitle>
@@ -187,7 +187,7 @@ const LogisticsSidebar = props => {
             noBorder
             onClick={() => {
               closeSidebar()
-              chatWidgetVerticalMoved(true)
+              chatWidgetVerticalMoved(false)
             }}
             data-test='settings_logistics_sidebar_reset_btn'>
             <FormattedMessage id='global.cancel' defaultMessage='Cancel'>

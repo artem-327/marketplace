@@ -89,6 +89,6 @@ export const submitForm = async (values, sidebarValues, actions) => {
   } finally {
     setSubmitting(false)
     closeSidebar()
-    await chatWidgetVerticalMoved(true)
+    await chatWidgetVerticalMoved(false)
   }
 }
