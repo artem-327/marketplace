@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import { getLocationString, addFirstTier } from '~/utils/functions'
+import { getLocationString, addFirstTier, getSafe } from '../../utils/functions'
 
 export const initialState = {
   offerDetail: {},
@@ -47,7 +47,8 @@ export const initialState = {
   isOpenSidebar: false,
   shippingQuotesAreFetching: false,
   loading: false,
-  isOpenModal: false
+  isOpenModal: false,
+  isThirdPartyConnectionException: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -218,7 +219,9 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         payments: [],
-        isFetching: false
+        isFetching: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
     }
 

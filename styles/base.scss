@@ -88,21 +88,22 @@ a.ui.button {
   }
 
   &.primary {
-    background: #84c225;
+    background: #00c7f9;
+    font-weight: 500;
     color: #ffffff;
 
     &:hover {
-      background-color: #76b519;
+      background-color: #282828;
       color: #ffffff;
     }
 
     &:focus {
-      background-color: #6ba80f;
+      background-color: #00c7f9;
       color: #ffffff;
     }
 
     &[disabled] {
-      background-color: #d4eab3;
+      background-color: #b2eefd;
       color: #ffffff;
     }
 
@@ -222,12 +223,12 @@ a.ui.button {
     color: #848893 !important;
 
     &:hover {
-      background-color: #f8f9fb !important;
+      background-color: #edeef2 !important;
       color: #20273a !important;
     }
 
     &:focus {
-      background-color: #edeef2 !important;
+      background-color: #dee2e6 !important;
       color: #20273a !important;
     }
 

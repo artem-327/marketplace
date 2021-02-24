@@ -44,7 +44,8 @@ class ReinitiateTransfer extends Component {
       intl: { formatMessage },
       bankAccounts,
       bankAccountsLoading,
-      orderId
+      orderId,
+      isThirdPartyConnectionException
     } = this.props
     const { allowTransfer } = this.state
 
@@ -137,7 +138,8 @@ function mapStateToProps(state) {
     orderId: state.orders.detail.id,
     bankAccounts: state.orders.bankAccounts,
     bankAccountsLoading: state.orders.bankAccountsLoading,
-    paymentProcessor: getSafe(() => state.auth.identity.company.paymentProcessor, '')
+    paymentProcessor: getSafe(() => state.auth.identity.company.paymentProcessor, ''),
+    isThirdPartyConnectionException: getSafe(() => state.orders.isThirdPartyConnectionException, '')
   }
 }
 
