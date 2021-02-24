@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react'
 
 export const CustomButton = styled(Button)`
   box-shadow: none !important;
-  border: ${props => (props.noBorder ? 'none !important' : 'solid 1px #dee2e6 !important;')};
+  border: ${props => (props.noBorder ? 'none !important' : 'solid 1px #dee2e6 !important')};
   color: #20273a !important;
   background-color: #ffffff !important;
   height: 40px !important;

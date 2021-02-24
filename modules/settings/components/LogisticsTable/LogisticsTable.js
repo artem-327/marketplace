@@ -140,7 +140,7 @@ class LogisticsTable extends Component {
               ? {
                   noData: formatMessage({
                     id: 'settings.logistics.difficulties',
-                    defaultMessage: 'Logistics cannots be rettrived at the moment. Please try again later.'
+                    defaultMessage: 'Logistics cannot be retrived at the moment. Please try again later.'
                   })
                 }
               : null
