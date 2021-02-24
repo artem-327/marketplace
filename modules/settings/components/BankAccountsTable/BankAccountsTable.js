@@ -483,7 +483,8 @@ class BankAccountsTable extends Component {
       closePopup,
       deleteInstitution,
       institutId,
-      reloadBankAccounts
+      reloadBankAccounts,
+      isThirdPartyConnectionException
     } = this.props
     const { formatMessage } = intl
     return (
@@ -498,6 +499,16 @@ class BankAccountsTable extends Component {
         {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
           <div className='flex stretched settings_bankaccounts listings-wrapper'>
             <ProdexTable
+              messages={
+                isThirdPartyConnectionException
+                  ? {
+                      noData: formatMessage({
+                        id: 'payments.bankAccountCannnotRetrieved',
+                        defaultMessage: 'Bank accounts cannot be retrieved at the moment. Please try again later.'
+                      })
+                    }
+                  : null
+              }
               isBankTable
               tableName='settings_bankaccounts'
               rows={this.getRows(myRows)}
@@ -812,7 +823,8 @@ const mapStateToProps = state => {
     isHideInactiveAccounts: state.settings.isHideInactiveAccounts,
     institutId: state.settings.institutId,
     isOpenPopupDeleteInstitution: state.settings.isOpenPopupDeleteInstitution,
-    isLoadingAddedAccounts: state.settings.isLoadingAddedAccounts
+    isLoadingAddedAccounts: state.settings.isLoadingAddedAccounts,
+    isThirdPartyConnectionException: state.settings.isThirdPartyConnectionException
   }
 }
 

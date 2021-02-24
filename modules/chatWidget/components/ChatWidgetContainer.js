@@ -15,6 +15,17 @@ function mapStateToProps(state) {
         getSafe(() => state.admin.currentAddDwolla, false)) &&
       getSafe(() => state.admin.currentTab.name, '')
 
+    // Vertical movement chat widget above buttons in Sidebars.
+    if (
+      getSafe(() => state.chatWidget.isVerticalMoved, false) &&
+      (getSafe(() => state.settings.isOpenSidebar, false) ||
+        getSafe(() => state.productsAdmin.currentAddForm, false) ||
+        getSafe(() => state.productsAdmin.currentEditForm, false) ||
+        getSafe(() => state.cart.isOpenModal, false))
+    ) {
+      return 60
+    }
+
     if (
       getSafe(() => state.wantedBoard.openSidebar, false) ||
       getSafe(() => state.wantedBoard.editWindowOpen, false) ||
@@ -52,24 +63,6 @@ function mapStateToProps(state) {
       openGlobalAddFormName === 'my-account-locations'
     )
       return 630
-    // Sidebar in My TradePass - Locations - Branches scroll-up from bottom to up and has 89% height of page.
-    if (
-      getSafe(() => state.chatWidget.isVerticalMoved, false) &&
-      (getSafe(() => state.settings.isOpenSidebar, false) ||
-        getSafe(() => state.productsAdmin.currentAddForm, false) ||
-        getSafe(() => state.productsAdmin.currentEditForm, false))
-    ) {
-      if (typeof window !== 'undefined' && window.innerHeight) {
-        return window.innerHeight * 0.9 // Height of Sidebar is 89% height of page
-      }
-    }
-
-    // Modal in Purchase order - Checkout - Address scroll-up from bottom to up of the page.
-    if (getSafe(() => state.cart.isOpenModal, false) && getSafe(() => state.chatWidget.isVerticalMoved, false)) {
-      if (typeof window !== 'undefined' && window.innerHeight) {
-        return window.innerHeight * 0.89 // Height of Modal is 88% height of page
-      }
-    }
 
     return 0
   }

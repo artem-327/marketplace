@@ -597,7 +597,7 @@ class Detail extends Component {
 
       this.setState({ isOpenManager: false, attachmentRows })
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
