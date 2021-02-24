@@ -53,7 +53,8 @@ const Checkout = props => {
     cartIsFetching,
     purchaseHazmatEligible,
     intl: { formatMessage },
-    loading
+    loading,
+    isThirdPartyConnectionException
   } = props
 
   // Similar to call componentDidMount:
@@ -156,6 +157,7 @@ const Checkout = props => {
                     />
                     <Payment
                       {...getComponentParameters(props, { name: 'payment', ...state })}
+                      isThirdPartyConnectionException={isThirdPartyConnectionException}
                       payments={payments}
                       onValueChange={value => {
                         setSectionState({

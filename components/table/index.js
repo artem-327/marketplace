@@ -316,6 +316,7 @@ const DetailTableCells = props => {
 }
 const NoDataTableCells = props => {
   const isEchoCode = getSafe(() => props.tableColumn.column.name === 'echoCode', false)
+
   const modifiedProps = {
     ...props,
     colSpan: props.colSpan - (isEchoCode ? 2 : 1)
@@ -456,7 +457,10 @@ class _Table extends Component {
     isOpenColumnSettingModal: pt.bool,
     isBankTable: pt.bool,
     estimatedRowHeight: pt.number,
-    defaultHiddenColumns: pt.array
+    defaultHiddenColumns: pt.array,
+    messages: pt.shape({
+      noData: pt.string
+    })
   }
 
   static defaultProps = {
@@ -496,7 +500,8 @@ class _Table extends Component {
     toggleColumnSettingModal: () => {},
     isOpenColumnSettingModal: false,
     isBankTable: false,
-    estimatedRowHeight: 0
+    estimatedRowHeight: 0,
+    messages: null
   }
 
   constructor(props) {
@@ -1014,6 +1019,7 @@ class _Table extends Component {
       toggleColumnSettingModal,
       estimatedRowHeight,
       isBankTable,
+      messages,
       ...restProps
     } = this.props
     const {
@@ -1119,7 +1125,7 @@ class _Table extends Component {
                   return treeDataType && rowChildActions ? TreeTableCells(props, rowChildActions) : TableCells(props)
                 }}
                 noDataCellComponent={NoDataTableCells}
-                messages={MESSAGES}
+                messages={messages ? messages : MESSAGES}
                 rowComponent={props => {
                   return <Row onClick={onRowClick} {...props} />
                 }}
@@ -1130,7 +1136,7 @@ class _Table extends Component {
                 height='auto'
                 cellComponent={TableCells}
                 noDataCellComponent={NoDataTableCells}
-                messages={MESSAGES}
+                messages={messages ? messages : MESSAGES}
                 rowComponent={props => <Row onClick={onRowClick} {...props} />}
               />
             )}

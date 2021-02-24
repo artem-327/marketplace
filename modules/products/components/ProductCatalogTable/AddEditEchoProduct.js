@@ -388,7 +388,7 @@ class AddEditEchoProduct extends React.Component {
       if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
       if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
 
     if (this.props.addForm) {

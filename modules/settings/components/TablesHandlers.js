@@ -105,6 +105,9 @@ const CustomRowDiv = styled.div`
       &:active {
         background-color: #0d82bc;
       }
+      &[disabled] {
+        opacity: 0.3 !important;
+      }
     }
   }
 `
@@ -151,7 +154,7 @@ const PlaidButton = styled(PlaidLink)`
   box-shadow: none !important;
   border: solid 1px #dee2e6 !important;
   color: #20273a !important;
-  background-color: ${props => (props.disabled ? '#bde0f2 !important' : '#ffffff !important')};
+  opacity: ${props => (props.disabled ? '0.3 !important' : '1 !important')};
   height: 40px !important;
   border-radius: 3px !important;
   font-weight: 500 !important;
@@ -380,6 +383,7 @@ class TablesHandlers extends Component {
       vellociBusinessId,
       vellociToken,
       intl: { formatMessage },
+      isThirdPartyConnectionException,
       chatWidgetVerticalMoved
     } = this.props
 
@@ -595,17 +599,17 @@ class TablesHandlers extends Component {
                 {bankAccTab && bankAccounts.addButton && paymentProcessor === 'VELLOCI' && (
                   <Popup
                     size='small'
-                    disabled={vellociToken || vellociBusinessId}
+                    disabled={vellociToken && vellociBusinessId && !isThirdPartyConnectionException}
                     header={
                       <FormattedMessage
                         id='settings.velloci.difficulties'
-                        defaultMessage='Velloci is experiencing some difficulties, please try again later'
+                        defaultMessage='Velloci is experiencing some difficulties, please try again later.'
                       />
                     }
                     trigger={
                       <div>
                         <PlaidButton
-                          disabled={!vellociToken || !vellociBusinessId}
+                          disabled={!vellociToken || !vellociBusinessId || isThirdPartyConnectionException}
                           token={vellociToken}
                           publicKey={vellociBusinessId}
                           onExit={this.onExit}
@@ -620,27 +624,58 @@ class TablesHandlers extends Component {
                   />
                 )}
                 {(bankAccTab && bankAccounts.addButton && paymentProcessor !== 'VELLOCI') || !bankAccTab ? (
-                  <Button
-                    primary
-                    onClick={() => {
-                      openSidebar()
-                      currentTab === 'logistics' && chatWidgetVerticalMoved(true)
-                    }}
-                    data-test='settings_open_popup_btn'>
-                    <PlusCircle />
-                    <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
-                  </Button>
+                  <Popup
+                    size='small'
+                    disabled={!(currentTab === 'logistics' && isThirdPartyConnectionException)}
+                    header={
+                      <FormattedMessage
+                        id='settings.logistics.difficulties'
+                        defaultMessage='Logistics cannot be retrieved at the moment. Please try again later.'
+                      />
+                    }
+                    trigger={
+                      <div>
+                        <Button
+                          primary
+                          onClick={() => {
+                            openSidebar()
+                            currentTab === 'logistics' && chatWidgetVerticalMoved(true)
+                          }}
+                          data-test='settings_open_popup_btn'
+                          disabled={currentTab === 'logistics' && isThirdPartyConnectionException}>
+                          <PlusCircle />
+                          <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
+                        </Button>
+                      </div>
+                    }
+                  />
                 ) : null}
               </div>
               {bankAccTab ? (
-                <div className='column'>
-                  <BasicButton type='button' onClick={() => openPopup()} data-test='settings_open_popup_send_link_btn'>
-                    <>
-                      <Link2 />
-                      <FormattedMessage id={textsTable[currentTab].SendLink}>{text => text}</FormattedMessage>
-                    </>
-                  </BasicButton>
-                </div>
+                <Popup
+                  size='small'
+                  disabled={vellociToken && vellociBusinessId && !isThirdPartyConnectionException}
+                  header={
+                    <FormattedMessage
+                      id='settings.velloci.difficulties'
+                      defaultMessage='Velloci is experiencing some difficulties, please try again later.'
+                    />
+                  }
+                  trigger={
+                    <div className='column'>
+                      <BasicButton
+                        type='button'
+                        onClick={() => openPopup()}
+                        data-test='settings_open_popup_send_link_btn'
+                        disabled={isThirdPartyConnectionException}>
+                        <>
+                          <Link2 />
+                          <FormattedMessage id={textsTable[currentTab].SendLink}>{text => text}</FormattedMessage>
+                        </>
+                      </BasicButton>
+                    </div>
+                  }
+                />
               ) : null}
             </>
           )}
@@ -706,7 +741,8 @@ const mapStateToProps = state => {
     filter,
     ...rest,
     vellociBusinessId: getSafe(() => company.vellociBusinessId, ''),
-    vellociToken: getSafe(() => state.settings.vellociToken, '')
+    vellociToken: getSafe(() => state.settings.vellociToken, ''),
+    isThirdPartyConnectionException: getSafe(() => state.settings.isThirdPartyConnectionException, false)
   }
 }
 
