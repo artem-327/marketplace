@@ -64,7 +64,8 @@ function mapStateToProps(store) {
     cartItems: getSafe(() => store.cart.cart.cartItems, []),
     isOpenSidebar: getSafe(() => store.cart.isOpenSidebar, false),
     loading: getSafe(() => store.cart.loading, false),
-    isOpenModal: getSafe(() => store.cart.isOpenModal, false)
+    isOpenModal: getSafe(() => store.cart.isOpenModal, false),
+    isThirdPartyConnectionException: getSafe(() => store.cart.isThirdPartyConnectionException, false)
   }
 }
 

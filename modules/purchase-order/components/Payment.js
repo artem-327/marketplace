@@ -8,13 +8,13 @@ import styled from 'styled-components'
 
 export default class Payment extends Component {
   render() {
-    let { payments, billingInfo, companyName } = this.props
+    let { payments, billingInfo, companyName, isThirdPartyConnectionException } = this.props
 
     return (
       <>
         <GridRow>
           <GridColumn computer={payments && payments.length === 0 ? 16 : 8} tablet={16}>
-            {payments.length === 0 ? (
+            {payments.length === 0 && !isThirdPartyConnectionException ? (
               <>
                 <FormattedMessage
                   id='payments.notAvailableAddOne'
@@ -31,6 +31,11 @@ export default class Payment extends Component {
                   }}
                 />
               </>
+            ) : payments.length === 0 && isThirdPartyConnectionException ? (
+              <FormattedMessage
+                id='payments.bankAccountCannnotRetrieved'
+                defaultMessage='Bank accounts cannot be retrieved at the moment. Please try again later.'
+              />
             ) : (
               <Dropdown
                 options={payments.map(payment => ({
