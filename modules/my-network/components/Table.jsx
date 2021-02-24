@@ -1,7 +1,7 @@
 import { useState } from 'react'
 //Components
 import ProdexTable from '../../../components/table'
-import DetailRow from '../../../components/detail-row'
+import DetailRow from './DetailRow/DetailRow'
 
 //Constants
 import { COLUMNS } from '../constants'
