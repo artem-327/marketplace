@@ -12,11 +12,11 @@ import styled from 'styled-components'
 import { Label, Popup, Checkbox } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 import { FormattedDateTime } from '~/components/formatted-messages/'
-import { ChevronUp, ChevronDown } from 'react-feather'
+import { ChevronUp, ChevronDown, Check } from 'react-feather'
 import GenericProductRequest from './DetailMessages/GenericProductRequest'
 import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest'
 import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo'
-import { UserImage, UserName, UserCompany } from './layout'
+import { UserImage, UserName, UserCompany, CheckIcon } from './layout'
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
@@ -75,7 +75,7 @@ class Table extends Component {
       {
         name: 'notification',
         title: <div></div>,
-        sortPath: 'Message.text',
+        //sortPath: 'Message.text',
         width: 720,
         maxWidth: 2000
       },
@@ -94,7 +94,11 @@ class Table extends Component {
         title: <div></div>,
         sortPath: 'Message.createdAt',
         width: 160
-      }/*,
+      },
+      {
+        name: 'timeGroup',
+        disabled: true
+      } /*,
       {
         name: 'expand',
         title: <div></div>,
@@ -137,6 +141,11 @@ class Table extends Component {
           if (!row.read) this.handleClickOnUnread(row)
         }}>
         {ReactHtmlParser(row.text)}
+        {this.props.isAdmin && row.read && (
+          <CheckIcon>
+            <Check />
+          </CheckIcon>
+        )}
       </StyledNotification>
     )
   }
@@ -168,16 +177,21 @@ class Table extends Component {
       const read = r.read ? 'read' : 'unread'
       const selected = this.props.selectedRows.some(id => id === r.id)
       const open = this.state.expandedRowIds.some(id => id === r.id)
+      const recent = moment(r.createdAt).isSame(moment(), 'day') || moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
       return {
         ...r,
         user: (
           <>
-            {getSafe(() => r.sender.avatar, false) && <UserImage><img src={r.sender.avatar} /></UserImage>}
+            {getSafe(() => r.sender.avatar, false) && (
+              <UserImage>
+                <img src={r.sender.avatar} />
+              </UserImage>
+            )}
             <UserName as='h3'>{r.nameOfUser}</UserName>
             <UserCompany as='h4'>{r.usersCompany}</UserCompany>
           </>
         ),
-        clsName: read + (selected ? ' selected' : '') + (open ? ' open' : ''),
+        clsName: read + (selected ? ' selected' : '') + (open ? ' open' : '') + (recent ? ' recent' : ''),
         notification: this.notificationText(r.rawData),
         time: r.createdAt ? (
           <Popup
@@ -189,13 +203,28 @@ class Table extends Component {
               opacity: '0.9'
             }}
             header={
-              <div style={{ color: '#cecfd4', fontSize: '12px' }}>{moment(r.createdAt).toDate().toLocaleString()}</div>
+              <div style={{ color: '#cecfd4', fontSize: '12px' }}>
+                {moment(r.createdAt)
+                  .toDate()
+                  .toLocaleString()}
+              </div>
             }
             trigger={<div style={{ color: r.read ? '#848893' : '#20273a' }}>{moment(r.createdAt).fromNow()}</div>}
           />
         ) : (
           'N/A'
         ),
+        timeGroup: r.createdAt
+          ? moment(r.createdAt).isSame(moment(), 'day')
+            ? 'Today'
+            : moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
+            ? 'Yesterday'
+            : moment(r.createdAt).isSame(moment(), 'week')
+            ? 'This Week'
+            : moment(r.createdAt).isSame(moment(), 'month')
+            ? 'This Month'
+            : 'Older'
+          : '',
         expand: r.info ? (
           open ? (
             <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
@@ -241,7 +270,7 @@ class Table extends Component {
       getCountUnseen()
       getCategories()
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
@@ -257,7 +286,7 @@ class Table extends Component {
       getCountUnseen()
       getCategories()
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
@@ -336,8 +365,26 @@ class Table extends Component {
             tableName={`operations_tag_${menuStatusFilter}`}
             {...datagrid.tableProps}
             loading={datagrid.loading || markSeenSending}
+            groupBy={['timeGroup']}
+            getChildGroups={rows =>
+              _(rows)
+                .groupBy('timeGroup')
+                .map(v => {
+                  return {
+                    key: `${v[0].timeGroup}`,
+                    childRows: v,
+                    groupLength: v.length
+                  }
+                })
+                .value()
+            }
+            renderGroupLabel={
+              ({ row: { value }, groupLength }) => null
+            }
+            hideGroupCheckboxes={true}
             columns={columns}
             isToggleCellComponent={true}
+            isBankTable={true}
             rowDetailType={true}
             rows={this.getRows()}
             rowDetail={this.getRowDetail}
@@ -353,6 +400,11 @@ class Table extends Component {
               this.props.onSelectionChange(selectedRows)
             }}
             estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
+            defaultSorting={{
+              columnName: 'time',
+              sortPath: 'Message.createdAt',
+              direction: 'DESC'
+            }}
           />
         </div>
       </Fragment>

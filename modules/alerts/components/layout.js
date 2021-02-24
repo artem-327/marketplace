@@ -111,3 +111,20 @@ export const UserCompany = styled(Header)`
     color: #848893;
   }
 `
+
+export const CheckIcon = styled.div`
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  border-radius: 50%;
+  padding: 1px;
+  background: #84c225;
+  vertical-align: -3px;
+  color: #fff;
+  
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+`

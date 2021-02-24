@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Input, Dropdown } from 'semantic-ui-react'
+import { Button, Input, Dropdown, Popup } from 'semantic-ui-react'
+import BasicButton from '../../../components/buttons/BasicButton'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 
@@ -10,6 +11,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { Drafts, Mail, DeleteForever } from '@material-ui/icons'
+import { Trash2 } from 'react-feather'
 
 const CustomDiv = styled.div`
   display: flex;
@@ -212,6 +214,7 @@ class TablesHandlers extends Component {
 
   render() {
     const {
+      isAdmin,
       intl: { formatMessage },
       currentTab,
       selectedRows
@@ -235,49 +238,101 @@ class TablesHandlers extends Component {
               onChange={this.handleFilterChangeInputSearch}
             />
           </div>
+          {isAdmin && (
+            <div className='column'>
+              {filterValue && filterValue.switchButtonsValue === 'unread' ? (
+                <BasicButton
+                  className='font-medium'
+                  active={filterValue && filterValue.switchButtonsValue === 'unread'}
+                  onClick={() => this.handleButtonsChange('unread')}>
+                  {formatMessage({ id: 'alerts.button.unread', defaultMessage: 'Unread' })}
+                </BasicButton>
+              ) : (
+                <BasicButton
+                  active={!filterValue || !filterValue.switchButtonsValue}
+                  onClick={() => this.handleButtonsChange('')}>
+                  {formatMessage({ id: 'alerts.button.all', defaultMessage: 'All' })}
+                </BasicButton>
+              )}
+            </div>
+          )}
         </div>
         <div>
-          <div className='column'>
-            <MoreDropdown
-              className='ui dropdown-menu pointing'
-              icon={null}
-              text={formatMessage({ id: 'alerts.dropdown.more', defaultMessage: 'More ...' })}>
-              <Dropdown.Menu data-test='notifications_menu_more_drpdn'>
-                <Dropdown.Item disabled={!selectedRows.length} onClick={() => this.handleMarkAsSeen()}>
-                  <Drafts className={'menu-icon'} />
-                  <FormattedMessage id='alerts.dropdown.markAsRead' defaultMessage='Mark as read' />
-                </Dropdown.Item>
-                <Dropdown.Item disabled={!selectedRows.length} onClick={() => this.handleMarkAsUnseen()}>
-                  <Drafts className={'menu-icon'} />
-                  <FormattedMessage id='alerts.dropdown.markAsUnread' defaultMessage='Mark as unread' />
-                </Dropdown.Item>
-                <Dropdown.Item disabled={!selectedRows.length} onClick={() => this.handleDelete()}>
-                  <Drafts className={'menu-icon'} />
-                  <FormattedMessage id='alerts.dropdown.delete' defaultMessage='Delete' />
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </MoreDropdown>
-          </div>
-          <div className='column' style={{ marginRight: '9px' }}>
-            <StyledButtonsGroup>
-              <Button
-                active={!filterValue || !filterValue.switchButtonsValue}
-                onClick={() => this.handleButtonsChange('')}>
-                {formatMessage({ id: 'alerts.button.all', defaultMessage: 'All' })}
-              </Button>
-              <Button
-                active={filterValue && filterValue.switchButtonsValue === 'read'}
-                onClick={() => this.handleButtonsChange('read')}>
-                {formatMessage({ id: 'alerts.button.read', defaultMessage: 'Read' })}
-              </Button>
-              <Button
-                active={filterValue && filterValue.switchButtonsValue === 'unread'}
-                onClick={() => this.handleButtonsChange('unread')}>
-                {formatMessage({ id: 'alerts.button.unread', defaultMessage: 'Unread' })}
-              </Button>
-            </StyledButtonsGroup>
-          </div>
-          <ColumnSettingButton divide={true} />
+          {isAdmin && (
+            <div className='column'>
+              <Popup
+                content={<FormattedMessage id='alerts.dropdown.markAsRead' defaultMessage='Mark as Read' />}
+                trigger={
+                  <BasicButton
+                    icon={<Mail />}
+                    className={!selectedRows.length && 'disabled-style'}
+                    onClick={() => selectedRows.length && this.handleMarkAsSeen()}
+                  />
+                }
+                position='top center'
+                inverted
+                size='tiny'
+              />
+              <Popup
+                content={<FormattedMessage id='alerts.dropdown.delete' defaultMessage='Delete' />}
+                trigger={
+                  <BasicButton
+                    icon={<Trash2 />}
+                    className={!selectedRows.length && 'disabled-style'}
+                    onClick={() => selectedRows.length && this.handleDelete()}
+                  />
+                }
+                position='top center'
+                inverted
+                size='tiny'
+              />
+            </div>
+          )}
+          {!isAdmin && (
+            <>
+              <div className='column'>
+                <MoreDropdown
+                  className='ui dropdown-menu pointing'
+                  icon={null}
+                  text={formatMessage({ id: 'alerts.dropdown.more', defaultMessage: 'More ...' })}>
+                  <Dropdown.Menu data-test='notifications_menu_more_drpdn'>
+                    <Dropdown.Item disabled={!selectedRows.length} onClick={() => this.handleMarkAsSeen()}>
+                      <Drafts className={'menu-icon'} />
+                      <FormattedMessage id='alerts.dropdown.markAsRead' defaultMessage='Mark as Read' />
+                    </Dropdown.Item>
+                    <Dropdown.Item disabled={!selectedRows.length} onClick={() => this.handleMarkAsUnseen()}>
+                      <Drafts className={'menu-icon'} />
+                      <FormattedMessage id='alerts.dropdown.markAsUnread' defaultMessage='Mark as Unread' />
+                    </Dropdown.Item>
+                    <Dropdown.Item disabled={!selectedRows.length} onClick={() => this.handleDelete()}>
+                      <Drafts className={'menu-icon'} />
+                      <FormattedMessage id='alerts.dropdown.delete' defaultMessage='Delete' />
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </MoreDropdown>
+              </div>
+              <div className='column' style={{ marginRight: '9px' }}>
+                <StyledButtonsGroup>
+                  <Button
+                    active={!filterValue || !filterValue.switchButtonsValue}
+                    onClick={() => this.handleButtonsChange('')}>
+                    {formatMessage({ id: 'alerts.button.all', defaultMessage: 'All' })}
+                  </Button>
+                  <Button
+                    active={filterValue && filterValue.switchButtonsValue === 'read'}
+                    onClick={() => this.handleButtonsChange('read')}>
+                    {formatMessage({ id: 'alerts.button.read', defaultMessage: 'Read' })}
+                  </Button>
+                  <Button
+                    active={filterValue && filterValue.switchButtonsValue === 'unread'}
+                    onClick={() => this.handleButtonsChange('unread')}>
+                    {formatMessage({ id: 'alerts.button.unread', defaultMessage: 'Unread' })}
+                  </Button>
+                </StyledButtonsGroup>
+              </div>
+              <ColumnSettingButton divide={true} />
+            </>
+          )}
         </div>
       </CustomDiv>
     )

@@ -2143,6 +2143,44 @@ i.file {
             background-color: #e8f7ff !important;
           }
         }
+
+        & > td.p-0:first-child {
+          display: table-cell !important;
+          width: 0 !important;
+        }
+
+        &.open {
+
+          + tr td:nth-child(n):before {
+            background-color: #edeef2 !important;
+          }
+
+          &.recent + tr td:nth-child(n):before {
+            background-color: #fff !important;
+          }
+        }
+
+        &.recent {
+
+          > td,
+          &.open + tr > td {
+            background-color: #ffffff !important;
+          }
+        }
+
+        &.group-row > td {
+          border-color: transparent !important;
+          padding: 12px 0 2px !important;
+          background: transparent !important;
+        }
+
+        &.group-row > td,
+        &.group-row > td * {
+          text-transform: uppercase;
+          font-size: 12px !important;
+          font-weight: 400 !important;
+          color: #848893 !important;
+        }
       }
     }
 

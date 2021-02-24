@@ -1002,6 +1002,7 @@ class _Table extends Component {
       highlightRow,
       showSelectionColumn,
       hideCheckboxes,
+      hideGroupCheckboxes,
       editingRowId,
       normalWidth,
       removeFlexClass,
@@ -1243,6 +1244,7 @@ class _Table extends Component {
                     rowSelection={rowSelection}
                     hideActions={groupActions ? false : true}
                     hideCheckboxes={hideCheckboxes}
+                    hideGroupCheckboxes={hideGroupCheckboxes}
                     onSelectionChange={this.handleGroupSelectionChange}
                     actionsDropdown={rowActionsCellFormatter({
                       column: { actions: groupActions ? groupActions(props.row) : null },
