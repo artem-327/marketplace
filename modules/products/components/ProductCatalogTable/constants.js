@@ -206,9 +206,6 @@ export const defaultValues = {
 export const echoRowActions = callback => {
   return tabs.map((tab, i) => ({
     text: <FormattedMessage {...tab.text}>{text => text}</FormattedMessage>,
-    callback: row => {
-      callback(row, i)
-      chatWidgetVerticalMoved(true)
-    }
+    callback: row => callback(row, i)
   }))
 }

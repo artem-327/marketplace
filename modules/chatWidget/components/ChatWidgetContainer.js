@@ -33,16 +33,6 @@ function mapStateToProps(state) {
     )
       return 430
 
-    if (
-      adminTab === 'Product Catalog' ||
-      (getSafe(() => state.productsAdmin.currentEditForm, false) &&
-        !getSafe(() => state.chatWidget.isVerticalMoved, false)) ||
-      (getSafe(() => state.productsAdmin.currentAddForm, false) &&
-        !getSafe(() => state.chatWidget.isVerticalMoved, false)) ||
-      getSafe(() => state.cart.isOpenSidebar, false)
-    )
-      return 500
-
     const settingsTab = getSafe(() => state.settings.currentTab.type, '')
 
     if (
