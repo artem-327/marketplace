@@ -126,6 +126,10 @@ export const FlexModal = styled(Modal)`
       padding: 10px !important;
       border-radius: 4px !important;
       width: -webkit-fill-available !important;
+      // firefox fix
+      &.fluid {
+        width: 100%;
+      }
     }
     > .ui.input input,
     > .ui.dropdown {
