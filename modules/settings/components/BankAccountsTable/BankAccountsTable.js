@@ -503,7 +503,7 @@ class BankAccountsTable extends Component {
                 isThirdPartyConnectionException
                   ? {
                       noData: formatMessage({
-                        id: 'payments.bankAccountCannnotRetrived',
+                        id: 'payments.bankAccountCannnotRetrieved',
                         defaultMessage: 'Bank accounts cannot be retrieved at the moment. Please try again later.'
                       })
                     }

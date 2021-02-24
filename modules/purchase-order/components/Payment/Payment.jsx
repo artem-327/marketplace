@@ -78,7 +78,7 @@ const Payment = props => {
                 <Grid.Row>
                   <Grid.Column textAlign='center'>
                     <FormattedMessage
-                      id='payments.bankAccountCannnotRetrived'
+                      id='payments.bankAccountCannnotRetrieved'
                       defaultMessage='Bank accounts cannot be retrieved at the moment. Please try again later.'
                     />
                   </Grid.Column>

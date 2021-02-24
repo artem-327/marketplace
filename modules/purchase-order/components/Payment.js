@@ -33,7 +33,7 @@ export default class Payment extends Component {
               </>
             ) : payments.length === 0 && isThirdPartyConnectionException ? (
               <FormattedMessage
-                id='payments.bankAccountCannnotRetrived'
+                id='payments.bankAccountCannnotRetrieved'
                 defaultMessage='Bank accounts cannot be retrieved at the moment. Please try again later.'
               />
             ) : (
