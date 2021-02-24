@@ -2660,7 +2660,7 @@
   "filter.searchProductsInventory": "Chemical, CAS, Trade",
   "filter.searchProductGroup": "Search Product Group",
   "filter.searchCasProduct": "Search CAS Product",
-  "title.settings": "Settings - {tab}",
+  "title.settings": "My TradePass - {tab}",
   "title.settings.bank-accounts": "Bank Accounts",
   "title.settings.branches": "Branches",
   "title.settings.company-details": "Company Details",
