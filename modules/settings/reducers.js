@@ -1138,8 +1138,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_LOGISTICS_ACCOUNTS_REJECTED: {
-      console.log('action')
-      console.log(action)
       return {
         ...state,
         loading: false,
