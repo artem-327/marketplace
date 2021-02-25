@@ -30,6 +30,7 @@ const Cell = ({
   checked,
   indeterminate,
   hideCheckboxes,
+  hideGroupCheckboxes,
   hideActions,
   isBankTable,
   ...restProps
@@ -40,7 +41,7 @@ const Cell = ({
   return (
     <>
       <td className='p-0'></td>
-      {rowSelection && !hideCheckboxes && (
+      {rowSelection && !hideCheckboxes && !hideGroupCheckboxes && (
         <td className='text-center'>
           <GroupCheckbox
             checked={checked}
@@ -57,12 +58,12 @@ const Cell = ({
       {hideActions ? (
         <td
           className={'dx-g-bs4-cursor-pointer'}
-          colSpan={colSpan - (rowSelection && !hideCheckboxes ? 5 : 4)}
+          colSpan={colSpan - (rowSelection && !hideCheckboxes ? 5 : 4) + (isBankTable ? 2 : 0) + (hideGroupCheckboxes ? 1 : 0)}
           onClick={handleClick}>
           {actionsDropdown}
         </td>
       ) : (
-        <td className={'actions'} colSpan={colSpan - (rowSelection && !hideCheckboxes ? 5 : 4)}>
+        <td className={'actions'} colSpan={colSpan - (rowSelection && !hideCheckboxes ? 5 : 4) + (isBankTable ? 2 : 0) + (hideGroupCheckboxes ? 1 : 0)}>
           {actionsDropdown}
         </td>
       )}

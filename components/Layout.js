@@ -57,7 +57,7 @@ import ErrorComponent from '../components/error'
 import moment from 'moment'
 
 import ModalDetailContainer from '../modules/inventory/my-listings/components/ModalDetail/ModalDetailContainer'
-import ProductSidebar from '../modules/inventory/my-products/components/ProductSidebar'
+import ProductPopup from '../modules/inventory/my-products/components/ProductPopupContainer'
 import WantedSidebar from '../modules/wanted-board/listings/components/DetailSidebar'
 import UserEditSidebar from '../modules/settings/components/UserTable/UserEditSidebar/UserEditSidebar'
 import GuestSidebar from '../modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
@@ -559,7 +559,7 @@ class Layout extends Component {
         <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }} />
         <GlobalSidebars>
           {openGlobalAddFormName === 'inventory-my-products' && (
-            <ProductSidebar openGlobalAddForm={openGlobalAddForm} />
+            <ProductPopup openGlobalAddForm={openGlobalAddForm} />
           )}
           {openGlobalAddFormName === 'inventory-my-listings' && (
             <ModalDetailContainer openGlobalAddForm={openGlobalAddForm} />

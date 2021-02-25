@@ -889,11 +889,10 @@ class AddEditEchoProduct extends React.Component {
       }
 
       setSubmitting(false)
+      chatWidgetVerticalMoved(false)
       callback()
     } catch (err) {
       setSubmitting(false)
-    } finally {
-      chatWidgetVerticalMoved(false)
     }
   }
 
@@ -2079,7 +2078,7 @@ class AddEditEchoProduct extends React.Component {
           <GridColumnForm width={8}>
             {this.RowDropdown({
               name: `${transportationType}HazardClass`,
-              id: `global.${transportationType}tdgHazardClass`,
+              id: `global.${transportationType}HazardClass`,
               defaultMessage: `${typeUp} Hazard Class`,
               clearable: true,
               props: {
@@ -2090,7 +2089,7 @@ class AddEditEchoProduct extends React.Component {
           <GridColumnForm width={8}>
             {this.RowDropdown({
               name: `${transportationType}PackagingGroup`,
-              id: `global.${transportationType}tdgPackagingGroup`,
+              id: `global.${transportationType}PackagingGroup`,
               defaultMessage: `${typeUp} Packaging Group`,
               clearable: true,
               props: {
@@ -2102,12 +2101,12 @@ class AddEditEchoProduct extends React.Component {
         {this.RowTwoInputs([
           {
             name: `${transportationType}ProperShippingName`,
-            id: `global.${transportationType}tdgProperShippingName`,
+            id: `global.${transportationType}ProperShippingName`,
             defaultMessage: `${typeUp} Proper Shipping Name`
           },
           {
             name: `${transportationType}ProperTechnicalName`,
-            id: `global.${transportationType}tdgProperTechnicalName`,
+            id: `global.${transportationType}ProperTechnicalName`,
             defaultMessage: `${typeUp} Proper Technical Name`
           }
         ])}
@@ -2115,7 +2114,7 @@ class AddEditEchoProduct extends React.Component {
           <GridColumnForm width={8}>
             {this.RowUnNumberDropdown({
               name: `${transportationType}UnNumber`,
-              id: `global.${transportationType}tdgUnNumber`,
+              id: `global.${transportationType}UnNumber`,
               defaultMessage: `${typeUp} UN Number`,
               props: {
                 options: unNumberOptions
@@ -2124,9 +2123,14 @@ class AddEditEchoProduct extends React.Component {
           </GridColumnForm>
           <GridColumnForm width={8}>
             {this.RowInput({
-              name: `${transportationType}ReportableQuantities`,
-              id: `global.${transportationType}tdgReportableQuantities`,
-              defaultMessage: `${typeUp} Reportable Quantities`
+              name:
+                transportationType === 'dot' ? 'dotReportableQuantity' : `${transportationType}ReportableQuantities`,
+              id:
+                transportationType === 'dot'
+                  ? 'global.dotReportableQuantity'
+                  : `global.${transportationType}ReportableQuantities`,
+              defaultMessage:
+                transportationType === 'dot' ? 'DOT Reportable Quantity' : `${typeUp} Reportable Quantities`
             })}
           </GridColumnForm>
         </GridRowCustom>
@@ -2134,72 +2138,72 @@ class AddEditEchoProduct extends React.Component {
         {this.RowTwoInputs([
           {
             name: `${transportationType}EnvironmentalHazards`,
-            id: `global.${transportationType}tdgEnvironmentalHazards`,
+            id: `global.${transportationType}EnvironmentalHazards`,
             defaultMessage: `${typeUp} Environmental Hazards`
           },
           {
             name: `${transportationType}EmsNumbers`,
-            id: `global.${transportationType}tdgEmsNumbers`,
+            id: `global.${transportationType}EmsNumbers`,
             defaultMessage: `${typeUp} Ems Numbers`
           }
         ])}
         {this.RowTwoInputs([
           {
             name: `${transportationType}Exceptions`,
-            id: `global.${transportationType}tdgExceptions`,
+            id: `global.${transportationType}Exceptions`,
             defaultMessage: `${typeUp} Exceptions`
           },
           {
             name: `${transportationType}UserSpecialPrecautions`,
-            id: `global.${transportationType}tdgUserSpecialPrecautions`,
+            id: `global.${transportationType}UserSpecialPrecautions`,
             defaultMessage: `${typeUp} Users Special Precautions`
           }
         ])}
         {this.RowTwoInputs([
           {
             name: `${transportationType}MarinePollutant`,
-            id: `global.${transportationType}tdgMarinePollutant`,
+            id: `global.${transportationType}MarinePollutant`,
             defaultMessage: `${typeUp} Marine Pollutant`
           },
           {
             name: `${transportationType}SevereMarinePollutant`,
-            id: `global.${transportationType}tdgSevereMarinePollutant`,
+            id: `global.${transportationType}SevereMarinePollutant`,
             defaultMessage: `${typeUp} Severe Marine Pollutant`
           }
         ])}
         {this.RowTwoInputs([
           {
             name: `${transportationType}PackagingExceptions`,
-            id: `global.${transportationType}tdgPackagingExceptions`,
+            id: `global.${transportationType}PackagingExceptions`,
             defaultMessage: `${typeUp} Packaging Exceptions`
           },
           {
             name: `${transportationType}PackagingNonBulk`,
-            id: `global.${transportationType}tdgPackagingNonBulk`,
+            id: `global.${transportationType}PackagingNonBulk`,
             defaultMessage: `${typeUp} Packaging Non Bulk`
           }
         ])}
         {this.RowTwoInputs([
           {
             name: `${transportationType}PackagingBulk`,
-            id: `global.${transportationType}tdgPackagingBulk`,
+            id: `global.${transportationType}PackagingBulk`,
             defaultMessage: `${typeUp} Packaging Bulk`
           },
           {
             name: `${transportationType}PassengerQuantityLimitations`,
-            id: `global.${transportationType}tdgPassengerQuantityLimitations`,
+            id: `global.${transportationType}PassengerQuantityLimitations`,
             defaultMessage: `${typeUp} Passanger Quantity Limitations`
           }
         ])}
         {this.RowTwoInputs([
           {
             name: `${transportationType}CargoAircraftQuantityLimitations`,
-            id: `global.${transportationType}tdgCargoAircraftQuantityLimitations`,
+            id: `global.${transportationType}CargoAircraftQuantityLimitations`,
             defaultMessage: `${typeUp} Cargo Aircraft Quantity Limitations`
           },
           {
             name: `${transportationType}VesselStowageLocation`,
-            id: `global.${transportationType}tdgVesselStowageLocation`,
+            id: `global.${transportationType}VesselStowageLocation`,
             defaultMessage: `${typeUp} Vessel Stowage Location`
           }
         ])}
@@ -2208,7 +2212,7 @@ class AddEditEchoProduct extends React.Component {
           <GridColumnForm width={8}>
             {this.RowInput({
               name: `${transportationType}VesselStowageOther`,
-              id: `global.${transportationType}tdgVesselStowageOther`,
+              id: `global.${transportationType}VesselStowageOther`,
               defaultMessage: `${typeUp} Vessel Stowage Other`
             })}
           </GridColumnForm>
@@ -2216,7 +2220,7 @@ class AddEditEchoProduct extends React.Component {
             <GridColumnForm width={8}>
               {this.RowInput({
                 name: `${transportationType}QuantityLimitations`,
-                id: `global.${transportationType}tdgQuantityLimitations`,
+                id: `global.${transportationType}QuantityLimitations`,
                 defaultMessage: `${typeUp} Quantity Limitations`
               })}
             </GridColumnForm>
@@ -2317,6 +2321,7 @@ class AddEditEchoProduct extends React.Component {
                     onClick={() => {
                       if (this.state.changedAttachments) datagrid.loadData()
                       closePopup()
+                      chatWidgetVerticalMoved(false)
                     }}
                     data-test='sidebar_inventory_cancel'>
                     {Object.keys(touched).length || this.state.changedForm

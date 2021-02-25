@@ -9,6 +9,7 @@ import * as Actions from '../../actions'
 import { withDatagrid } from '../../../datagrid'
 //Styles
 import { StyledMenu, CircularLabel } from './HighMenu.styles'
+import {getSafe} from "../../../../utils/functions";
 
 /**
  * Show menu items in header Notification.
@@ -37,7 +38,7 @@ class HighMenu extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.categories !== this.props.categories) {
+    if (JSON.stringify(prevProps.categories) !== JSON.stringify(this.props.categories)) {
       this.updateCategories(this.props.categories)
     }
   }
@@ -111,18 +112,19 @@ class HighMenu extends Component {
   }
 
   loadData(category) {
-    this.props.loadData(category)
+    const { isAdmin, topMenuTab } = this.props
+    this.props.loadData(isAdmin ? topMenuTab : category)
     if (this.props.onDatagridUpdate) this.props.onDatagridUpdate([])
   }
 
   render() {
-    const { topMenuTab } = this.props
+    const { topMenuTab, isAdmin } = this.props
 
     const { categories, menuItems, menuSpace } = this.state
 
     const activeIndex = categories.findIndex(cat => cat.category === topMenuTab)
 
-    return (
+    return isAdmin ? null : (
       <Container fluid style={{ padding: '0 32px' }}>
         <div ref={this.refMenu}>
           <StyledMenu pointing secondary activeIndex={activeIndex}>
@@ -176,6 +178,7 @@ class HighMenu extends Component {
 const mapStateToProps = state => {
   const { alerts } = state
   return {
+    isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
     topMenuTab: alerts.topMenuTab,
     /**
      * Categories from api/messaging-center/message-categories
