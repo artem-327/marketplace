@@ -7,6 +7,7 @@ import { withAuth } from '~/hocs'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
 import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
+import { loadData as switchAlertsCategory } from '~/modules/alerts/actions'
 import { getSafe } from '~/utils/functions'
 import {
   Layers,
@@ -28,6 +29,7 @@ import {
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { defaultTabs as operationsDefaultTabs, orderOperatorTabs } from '~/modules/operations/constants'
 import { defaultTabs as adminDefaultTabs } from '~/modules/admin/config'
+import { NavCircle } from '../modules/alerts/components/layout'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -99,7 +101,9 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/listings', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/holds', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/bids-sent', false) ||
-      getSafe(() => Router.router.pathname === '/marketplace/bids-received', false)
+      getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
+    alerts:
+      getSafe(() => Router.router.pathname === '/alerts', false)
   }
 
   componentDidMount() {
@@ -244,7 +248,8 @@ class Navigation extends Component {
       isClientCompanyAdmin,
       isClientCompanyManager,
       companiesTabsNames,
-      productsTabsNames
+      productsTabsNames,
+      alertTab
     } = this.props
 
     const {
@@ -258,7 +263,8 @@ class Navigation extends Component {
       manageGuests,
       inventory,
       marketplace,
-      wantedBoard
+      wantedBoard,
+      alerts
     } = this.state
 
     const MenuLink = withRouter(({ router: { pathname }, to, children, tab, className, dataTest }) => {
@@ -731,12 +737,70 @@ class Navigation extends Component {
             </DropdownItem>
           </>
         )}
-        <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
+        {isAdmin ? (
           <>
-            <Bell size={22} />
-            {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+            <DropdownItem
+              icon={<Bell size={22} />}
+              text={
+                <>
+                  <FormattedMessage id='navigation.alerts' defaultMessage='Notifications' />
+                  {alerts ? <ChevronUp /> : <ChevronDown />}
+                </>
+              }
+              className={alerts ? 'opened' : null}
+              open={alerts.toString()}
+              onClick={(data, e) => {
+                this.toggleOpened(
+                  'alerts',
+                  '/alerts'
+                )}
+              }
+              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+              refId={'alerts'}
+              data-test='navigation_menu_alerts_drpdn'>
+              <Dropdown.Menu data-test='navigation_menu_alerts_menu'>
+                <PerfectScrollbar>
+                  <Dropdown.Item
+                    key={0}
+                    as={Menu.Item}
+                    active={alertTab === null}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      this.props.switchAlertsCategory(null)
+                    }}
+                    dataTest={'navigation_alerts_all_drpdn'}>
+                    {formatMessage({ id: `navigation.alerts.allNotifications`, defaultMessage: 'All Notifications' })}
+                  </Dropdown.Item>
+                  {this.props.alertsCats.map((tab, i) => {
+                    let categoryConstant = tab.category.replaceAll('_', '')
+                    categoryConstant = categoryConstant.charAt(0).toLowerCase() + categoryConstant.slice(1)
+                    return (
+                      <Dropdown.Item
+                        key={i+1}
+                        as={Menu.Item}
+                        active={alertTab === tab.category}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          this.props.switchAlertsCategory(tab.category)
+                        }}
+                        dataTest={`navigation_alerts_${tab.category}_drpdn`}>
+                        {tab.newMessages ? (<NavCircle circular>{tab.newMessages}</NavCircle>) : null}
+                        {formatMessage({ id: `navigation.alerts.${categoryConstant}`, defaultMessage: `${tab.category}` })}
+                      </Dropdown.Item>
+                    )
+                  })}
+                </PerfectScrollbar>
+              </Dropdown.Menu>
+            </DropdownItem>
           </>
-        </MenuLink>
+        ) : (
+          <MenuLink to='/alerts' dataTest='navigation_menu_admin_alerts'>
+            <>
+              <Bell size={22} />
+              {formatMessage({ id: 'navigation.alerts', defaultMessage: 'Notifications' })}
+            </>
+          </MenuLink>
+        )}
       </div>
     )
   }
@@ -755,11 +819,14 @@ export default withAuth(
         collapsedMenu: store.layout.collapsedMenu,
         isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
         companiesTabsNames: store.companiesAdmin.tabsNames,
-        productsTabsNames: store.productsAdmin.tabsNames
+        productsTabsNames: store.productsAdmin.tabsNames,
+        alertTab: store.alerts.topMenuTab,
+        alertsCats: store.alerts.categories
       }),
       {
         triggerSystemSettingsModal,
-        tabChanged
+        tabChanged,
+        switchAlertsCategory
       }
     )(injectIntl(Navigation))
   )

@@ -12,10 +12,11 @@ import styled from 'styled-components'
 import { Label, Popup, Checkbox } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 import { FormattedDateTime } from '~/components/formatted-messages/'
-import { ChevronUp, ChevronDown } from 'react-feather'
+import { ChevronUp, ChevronDown, Check } from 'react-feather'
 import GenericProductRequest from './DetailMessages/GenericProductRequest'
 import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest'
 import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo'
+import { UserImage, UserName, UserCompany, CheckIcon } from './layout'
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
@@ -64,17 +65,19 @@ const NotificationsCount = styled.div`
 
 class Table extends Component {
   state = {
-    columns: [
+    adminColumns: [
+      {
+        name: 'user',
+        title: <div></div>,
+        width: 200,
+        disabled: false
+      },
       {
         name: 'notification',
-        title: (
-          <FormattedMessage id='alerts.column.notification' defaultMessage='Notification'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        sortPath: 'Message.text',
+        title: <div></div>,
         width: 720,
-        maxWidth: 2000
+        maxWidth: 2000,
+        disabled: false
       },
       {
         name: 'notificationType',
@@ -84,7 +87,8 @@ class Table extends Component {
           </FormattedMessage>
         ),
         //sortPath: '',
-        width: 200
+        width: 200,
+        disabled: true
       },
       {
         name: 'nameOfUser',
@@ -94,7 +98,8 @@ class Table extends Component {
           </FormattedMessage>
         ),
         //sortPath: '',
-        width: 200
+        width: 200,
+        disabled: true
       },
       {
         name: 'usersCompany',
@@ -104,17 +109,19 @@ class Table extends Component {
           </FormattedMessage>
         ),
         //sortPath: '',
-        width: 200
+        width: 200,
+        disabled: true
       },
       {
         name: 'time',
-        title: (
-          <FormattedMessage id='alerts.column.time' defaultMessage='Time'>
-            {text => text}
-          </FormattedMessage>
-        ),
+        title: <div></div>,
         sortPath: 'Message.createdAt',
-        width: 160
+        width: 160,
+        disabled: false
+      },
+      {
+        name: 'timeGroup',
+        disabled: true
       },
       {
         name: 'expand',
@@ -125,7 +132,88 @@ class Table extends Component {
           </FormattedMessage>
         ),
         align: 'center',
-        width: 50
+        width: 50,
+        disabled: true
+      }
+    ],
+    standardColumns: [
+      {
+        name: 'user',
+        title: <div></div>,
+        width: 200,
+        disabled: true
+      },
+      {
+        name: 'notification',
+        title: (
+          <FormattedMessage id='alerts.column.notification' defaultMessage='Notification'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        sortPath: 'Message.text',
+        width: 720,
+        maxWidth: 2000,
+        disabled: false
+      },
+      {
+        name: 'notificationType',
+        title: (
+          <FormattedMessage id='alerts.column.notificationType' defaultMessage='Notification Type'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        //sortPath: '',
+        width: 200,
+        disabled: false
+      },
+      {
+        name: 'nameOfUser',
+        title: (
+          <FormattedMessage id='alerts.column.nameOfUser' defaultMessage='Name Of User'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        //sortPath: '',
+        width: 200,
+        disabled: false
+      },
+      {
+        name: 'usersCompany',
+        title: (
+          <FormattedMessage id='alerts.column.usersCompany' defaultMessage="User's Company">
+            {text => text}
+          </FormattedMessage>
+        ),
+        //sortPath: '',
+        width: 200,
+        disabled: false
+      },
+      {
+        name: 'time',
+        title: (
+          <FormattedMessage id='alerts.column.time' defaultMessage='Time'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        sortPath: 'Message.createdAt',
+        width: 160,
+        disabled: false
+      },
+      {
+        name: 'timeGroup',
+        disabled: true
+      },
+      {
+        name: 'expand',
+        title: <div></div>,
+        caption: (
+          <FormattedMessage id='alerts.column.expand' defaultMessage='Expand'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        align: 'center',
+        width: 50,
+        disabled: false
       }
     ],
     expandedRowIds: []
@@ -158,6 +246,11 @@ class Table extends Component {
           if (!row.read) this.handleClickOnUnread(row)
         }}>
         {ReactHtmlParser(row.text)}
+        {this.props.isAdmin && row.read && (
+          <CheckIcon>
+            <Check />
+          </CheckIcon>
+        )}
       </StyledNotification>
     )
   }
@@ -189,9 +282,22 @@ class Table extends Component {
       const read = r.read ? 'read' : 'unread'
       const selected = this.props.selectedRows.some(id => id === r.id)
       const open = this.state.expandedRowIds.some(id => id === r.id)
+      const recent =
+        moment(r.createdAt).isSame(moment(), 'day') || moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
       return {
         ...r,
-        clsName: read + (selected ? ' selected' : '') + (open ? ' open' : ''),
+        user: (
+          <>
+            {getSafe(() => r.sender.avatar, false) && (
+              <UserImage>
+                <img src={r.sender.avatar} />
+              </UserImage>
+            )}
+            <UserName as='h3'>{r.nameOfUser}</UserName>
+            <UserCompany as='h4'>{r.usersCompany}</UserCompany>
+          </>
+        ),
+        clsName: read + (selected ? ' selected' : '') + (open ? ' open' : '') + (recent ? ' recent' : ''),
         notification: this.notificationText(r.rawData),
         time: r.createdAt ? (
           <Popup
@@ -203,13 +309,28 @@ class Table extends Component {
               opacity: '0.9'
             }}
             header={
-              <div style={{ color: '#cecfd4', fontSize: '12px' }}>{moment(r.createdAt).toDate().toLocaleString()}</div>
+              <div style={{ color: '#cecfd4', fontSize: '12px' }}>
+                {moment(r.createdAt)
+                  .toDate()
+                  .toLocaleString()}
+              </div>
             }
-            trigger={<div style={{ color: r.read ? '#848893' : '#20273a' }}>{moment(r.createdAt).fromNow()}</div>}
+            trigger={<div style={{ color: r.read || this.props.isAdmin ? '#848893' : '#20273a' }}>{moment(r.createdAt).fromNow()}</div>}
           />
         ) : (
           'N/A'
         ),
+        timeGroup: r.createdAt
+          ? moment(r.createdAt).isSame(moment(), 'day')
+            ? 'Today'
+            : moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
+            ? 'Yesterday'
+            : moment(r.createdAt).isSame(moment(), 'week')
+            ? 'This Week'
+            : moment(r.createdAt).isSame(moment(), 'month')
+            ? 'This Month'
+            : 'Older'
+          : '',
         expand: r.info ? (
           open ? (
             <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
@@ -255,7 +376,7 @@ class Table extends Component {
       getCountUnseen()
       getCategories()
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
@@ -271,7 +392,7 @@ class Table extends Component {
       getCountUnseen()
       getCategories()
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
@@ -305,13 +426,13 @@ class Table extends Component {
   }
 
   render() {
-    const { intl, datagrid, markSeenSending, menuStatusFilter, selectedRows } = this.props
+    const { intl, datagrid, markSeenSending, selectedRows, isAdmin } = this.props
     const { formatMessage } = intl
-    const { columns, expandedRowIds } = this.state
+    const { adminColumns, standardColumns, expandedRowIds } = this.state
 
     return (
       <Fragment>
-        {selectedRows.length ? (
+        {selectedRows.length && !isAdmin ? (
           <NotificationsCount>
             {selectedRows.length === 1 ? (
               <FormattedMessage
@@ -345,30 +466,65 @@ class Table extends Component {
           </NotificationsCount>
         ) : null}
 
-        <div className='flex stretched table-detail-rows-wrapper'>
-          <ProdexTable
-            tableName={`operations_tag_${menuStatusFilter}`}
-            {...datagrid.tableProps}
-            loading={datagrid.loading || markSeenSending}
-            columns={columns}
-            isToggleCellComponent={true}
-            rowDetailType={true}
-            rows={this.getRows()}
-            rowDetail={this.getRowDetail}
-            expandedRowIds={expandedRowIds}
-            onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-            rowSelection={true}
-            lockSelection={false}
-            showSelectAll={false}
-            toggleCellComponent={this.toggleCellComponent}
-            isToggleCellComponent={true}
-            selectedRows={selectedRows}
-            onSelectionChange={selectedRows => {
-              this.props.onSelectionChange(selectedRows)
-            }}
-            estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
-          />
-        </div>
+        {isAdmin !== 0 && ( // necessary to be sure that isAdmin is properly set before rendering table blocks
+          <div
+            className={`flex stretched table-detail-rows-wrapper notifications-wrapper${
+              isAdmin ? ' notifications-admin-wrapper' : ''
+            }`}>
+            <ProdexTable
+              tableName={`operations_tag_${isAdmin ? 'admin' : 'standard'}`}
+              {...datagrid.tableProps}
+              loading={datagrid.loading || markSeenSending}
+              columnReordering={!isAdmin}
+              groupBy={isAdmin ? ['timeGroup'] : []}
+              getChildGroups={
+                isAdmin
+                  ? rows => {
+                      return _(rows)
+                        .groupBy('timeGroup')
+                        .map(v => {
+                          return {
+                            key: `${v[0].timeGroup}`,
+                            childRows: v,
+                            groupLength: v.length
+                          }
+                        })
+                        .value()
+                    }
+                  : []
+              }
+              renderGroupLabel={({ row: { value }, groupLength }) => null}
+              hideGroupCheckboxes={true}
+              columns={isAdmin ? adminColumns : standardColumns}
+              isToggleCellComponent={true}
+              isBankTable={isAdmin}
+              rowDetailType={true}
+              rows={this.getRows()}
+              rowDetail={this.getRowDetail}
+              expandedRowIds={expandedRowIds}
+              onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
+              rowSelection={true}
+              lockSelection={false}
+              showSelectAll={false}
+              toggleCellComponent={this.toggleCellComponent}
+              isToggleCellComponent={true}
+              selectedRows={selectedRows}
+              onSelectionChange={selectedRows => {
+                this.props.onSelectionChange(selectedRows)
+              }}
+              estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
+              defaultSorting={
+                isAdmin
+                  ? {
+                      columnName: 'time',
+                      sortPath: 'Message.createdAt',
+                      direction: 'DESC'
+                    }
+                  : {}
+              }
+            />
+          </div>
+        )}
       </Fragment>
     )
   }
@@ -378,6 +534,7 @@ const mapStateToProps = (state, { datagrid }) => {
   const { alerts } = state
   return {
     ...alerts,
+    isAdmin: getSafe(() => state.auth.identity.isAdmin, 0),
     rows: datagrid.rows.map(r => {
       return {
         ...r,

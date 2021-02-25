@@ -56,16 +56,20 @@ class Alerts extends Component {
   })
 
   render() {
-    const { isOpenPopupOperations } = this.props
+    const { isOpenPopupOperations, isAdmin } = this.props
 
     return (
       <>
         {<Tutorial isTutorial={false} isBusinessVerification={true} />}
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
           <div id='page' className='flex stretched scrolling'>
-            <Container fluid>
+            {isAdmin ? (
               <HighMenu onDatagridUpdate={selection => this.setState({ selectedRows: selection })} />
-            </Container>
+            ) : (
+              <Container fluid>
+                <HighMenu onDatagridUpdate={selection => this.setState({ selectedRows: selection })} />
+              </Container>
+            )}
 
             <Container fluid style={{ padding: '20px 30px' }}>
               <TablesHandlers
@@ -89,6 +93,7 @@ class Alerts extends Component {
 }
 
 const mapStateToProps = ({ auth, operations }) => ({
+  isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
   tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
   isOpenPopupOperations: operations.isOpenPopup
 })
