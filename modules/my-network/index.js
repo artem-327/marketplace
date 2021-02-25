@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage } from 'react-intl'
-import { Container, Input, Grid, Dropdown } from 'semantic-ui-react'
+import { injectIntl } from 'react-intl'
 //Components
 import Table from './components/Table'
 import { withDatagrid, DatagridProvider } from '../datagrid'

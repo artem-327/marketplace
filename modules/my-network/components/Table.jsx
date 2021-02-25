@@ -30,6 +30,71 @@ const Table = props => {
         connectionStatus: 'Active',
         eligibilityCriteria: [1, 1, 2, 3, 5],
         date: '01/12/2021'
+      },
+
+      {
+        id: 4,
+        member: 'AAA',
+        connectionStatus: 'Declined',
+        eligibilityCriteria: [1, 1, 2, 3, 5],
+        date: '01/12/2021'
+      },
+      {
+        id: 5,
+        member: 'BBB',
+        connectionStatus: 'Pending',
+        eligibilityCriteria: [1, 1, 2, 3, 5],
+        date: '01/12/2021'
+      },
+      {
+        id: 6,
+        member: 'CCC',
+        connectionStatus: 'Active',
+        eligibilityCriteria: [1, 1, 2, 3, 5],
+        date: '01/12/2021'
+      },
+      {
+        id: 7,
+        member: 'AAA',
+        connectionStatus: 'Declined',
+        eligibilityCriteria: [1, 1, 2, 3, 5],
+        date: '01/12/2021'
+      },
+      {
+        id: 8,
+        member: 'BBB',
+        connectionStatus: 'Pending',
+        eligibilityCriteria: [1, 1, 2, 3, 5],
+        date: '01/12/2021'
+      },
+      {
+        id: 9,
+        member: 'CCC',
+        connectionStatus: 'Active',
+        eligibilityCriteria: [1, 1, 2, 3, 5],
+        date: '01/12/2021'
+      },
+
+      {
+        id: 10,
+        member: 'AAA',
+        connectionStatus: 'Declined',
+        eligibilityCriteria: [1, 1, 2, 3, 5],
+        date: '01/12/2021'
+      },
+      {
+        id: 11,
+        member: 'BBB',
+        connectionStatus: 'Pending',
+        eligibilityCriteria: [1, 1, 2, 3, 5],
+        date: '01/12/2021'
+      },
+      {
+        id: 12,
+        member: 'CCC',
+        connectionStatus: 'Active',
+        eligibilityCriteria: [1, 1, 2, 3, 5],
+        date: '01/12/2021'
       }
     ]
   }

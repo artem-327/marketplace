@@ -6,7 +6,7 @@ import { getSafe } from '~/utils/functions'
 
 import { StyledGrid, TableSegment, StyledList, DetailMessage, ColumnDetail } from './styles'
 
-function Header({ row, attributes }) {
+function Header({ row, attributes, padding }) {
   return (
     <GridRow>
       <ColumnDetail width={16}>
@@ -31,12 +31,14 @@ function Header({ row, attributes }) {
 
 Header.propTypes = {
   row: PropTypes.object,
-  attributes: PropTypes.array
+  attributes: PropTypes.array,
+  padding: PropTypes.string
 }
 
 Header.defaultProps = {
   row: {},
-  attributes: []
+  attributes: [],
+  padding: null
 }
 
 export default Header
