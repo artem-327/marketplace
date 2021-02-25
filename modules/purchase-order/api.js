@@ -53,3 +53,8 @@ export const postNewWarehouse = (createWarehouse, payload) =>
     .then(response => response.data)
 export const updateWarehouse = (payload, id) =>
   api.put(`/prodex/api/branches/${id}`, payload).then(response => response.data)
+
+export const searchDeliveryAddresses = val =>
+  api.get(`/prodex/api/delivery-addresses/search?pattern=${val}`).then(response => response.data)
+export const searchWarehouses = val =>
+  api.get(`/prodex/api/branches/warehouses/search?pattern=${val}`).then(response => response.data)

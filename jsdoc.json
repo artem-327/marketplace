@@ -19,7 +19,8 @@
       "./components/Confirmable",
       "./modules/add-bank-accounts",
       "./styles",
-      "./modules/settings/components/Locations"
+      "./modules/settings/components/Locations",
+      "./modules/settings/components/TradeCriteria"
     ],
     "exclude": ["./modules/inventory/my-listings/components"]
   },

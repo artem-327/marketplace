@@ -14,7 +14,7 @@ class Index extends Component {
     const titleName = formatMessage(
       {
         id: 'title.settings',
-        defaultMessage: 'Settings - {tab}'
+        defaultMessage: 'My TradePass - {tab}'
       },
       {
         tab: formatMessage({

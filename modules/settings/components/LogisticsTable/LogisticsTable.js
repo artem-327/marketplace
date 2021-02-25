@@ -11,6 +11,7 @@ import ProdexTable from '~/components/table'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { withDatagrid } from '~/modules/datagrid'
 import ActionCell from '~/components/table/ActionCell'
+import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 class LogisticsTable extends Component {
   constructor(props) {
@@ -43,12 +44,17 @@ class LogisticsTable extends Component {
     }
   }
   componentDidMount() {
-    this.props.getLogisticsAccounts()
+    try {
+      this.props.getLogisticsAccounts()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   getActions = () => {
     const {
       openSidebar,
+      chatWidgetVerticalMoved,
       intl: { formatMessage },
       deleteLogisticsAccount,
       datagrid
@@ -57,7 +63,10 @@ class LogisticsTable extends Component {
     return [
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => openSidebar(row)
+        callback: row => {
+          openSidebar(row)
+          chatWidgetVerticalMoved(true)
+        }
       },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -90,31 +99,52 @@ class LogisticsTable extends Component {
   getRows = () => {
     const { logisticsAccounts, loading, filterValue, editedId } = this.props
 
-    return logisticsAccounts.map(acc => {
-      return {
-        ...acc,
-        stringName: acc.provider.name,
-        username: <ArrayToFirstItem values={acc.accountInfos && acc.accountInfos.map(d => d.username)} />,
-        logisticsProviderNameForSearch: acc.provider.name,
-        usernameForSearch: acc.accountInfos && acc.accountInfos.map(d => d.username),
-        logisticsProviderName: (
-          <ActionCell
-            row={acc}
-            getActions={this.getActions}
-            content={acc.provider.name}
-            onContentClick={() => this.props.openSidebar(acc)}
-          />
-        )
-      }
-    })
+    return getSafe(() => logisticsAccounts.length, false)
+      ? logisticsAccounts.map(acc => {
+          return {
+            ...acc,
+            stringName: acc.provider.name,
+            username: <ArrayToFirstItem values={acc.accountInfos && acc.accountInfos.map(d => d.username)} />,
+            logisticsProviderNameForSearch: acc.provider.name,
+            usernameForSearch: acc.accountInfos && acc.accountInfos.map(d => d.username),
+            logisticsProviderName: (
+              <ActionCell
+                row={acc}
+                getActions={this.getActions}
+                content={acc.provider.name}
+                onContentClick={() => {
+                  this.props.openSidebar(acc)
+                  this.props.chatWidgetVerticalMoved(true)
+                }}
+              />
+            )
+          }
+        })
+      : []
   }
 
   render() {
-    const { loading, filterValue, editedId } = this.props
+    const {
+      loading,
+      filterValue,
+      editedId,
+      intl: { formatMessage },
+      isThirdPartyConnectionException
+    } = this.props
 
     return (
       <div className='flex stretched listings-wrapper'>
         <ProdexTable
+          messages={
+            isThirdPartyConnectionException
+              ? {
+                  noData: formatMessage({
+                    id: 'settings.logistics.difficulties',
+                    defaultMessage: 'Logistics cannot be retrieved at the moment. Please try again later.'
+                  })
+                }
+              : null
+          }
           tableName='settings_logistics_table'
           columns={this.state.columns}
           filterValue={filterValue}
@@ -138,18 +168,27 @@ LogisticsTable.defaultProps = {
 const mapDispatchToProps = {
   openSidebar,
   getLogisticsAccounts,
-  deleteLogisticsAccount
+  deleteLogisticsAccount,
+  chatWidgetVerticalMoved
 }
 
 const mapStateToProps = ({
-  settings: { loading, logisticsAccounts, deleteLogisticsAccount, logisticsFilter, editedId }
+  settings: {
+    loading,
+    logisticsAccounts,
+    deleteLogisticsAccount,
+    logisticsFilter,
+    editedId,
+    isThirdPartyConnectionException
+  }
 }) => {
   return {
     loading,
     editedId,
     logisticsAccounts,
     deleteLogisticsAccount,
-    filterValue: logisticsFilter
+    filterValue: logisticsFilter,
+    isThirdPartyConnectionException
   }
 }
 

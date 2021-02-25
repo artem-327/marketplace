@@ -742,7 +742,7 @@ class Orders extends Component {
           isOpenManager: false
         }))
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     } else if (type === 'item') {
       try {
@@ -777,7 +777,7 @@ class Orders extends Component {
           isOpenManager: false
         }))
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
   }

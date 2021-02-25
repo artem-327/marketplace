@@ -314,5 +314,6 @@ export default {
     api
       .get(`/prodex/api/settings/company-user/${id}`)
       .then(response => response.data)
-      .catch(err => console.error(err))
+      .catch(err => console.error(err)),
+  postTradeCriteria: body => api.post('/prodex/api/trade-criteria', body).then(response => response.data)
 }

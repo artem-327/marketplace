@@ -132,10 +132,14 @@ class PurchaseOrder extends Component {
   }
   componentDidMount = async () => {
     const { preFilledValues, clearPreFilledValues, getWarehouses, paymentProcessor } = this.props
-    this.props.getDeliveryAddresses()
-    this.props.getPayments(paymentProcessor)
-    this.props.getIdentity()
-    await this.props.getCart()
+    try {
+      this.props.getDeliveryAddresses()
+      this.props.getPayments(paymentProcessor)
+      this.props.getIdentity()
+      await this.props.getCart()
+    } catch (error) {
+      console.error(error)
+    }
 
     if (preFilledValues) {
       const warehouses = await getWarehouses()
@@ -360,12 +364,13 @@ class PurchaseOrder extends Component {
       purchaseHazmatEligible,
       isOpenSidebar,
       closeSidebarAddress,
-      openSidebarAddress
+      openSidebarAddress,
+      isThirdPartyConnectionException
     } = this.props
     const { isSetShippingQuoteId } = this.state
 
     if (cartIsFetching) return <Spinner />
-    if (cart.cartItems.length === 0) Router.push('/cart')
+    //if (cart.cartItems.length === 0) Router.push('/cart')
 
     //let currency = cart.cartItems[0].productOffer.pricingTiers[0].price.currency.code
     //let currency = getSafe(() => cartItems[0].productOffer.pricingTiers[0].pricePerUOM.currency.code, currency)  // ! !
@@ -637,6 +642,7 @@ class PurchaseOrder extends Component {
                         </VerticalUnpaddedColumn>
                       </StyledRow>
                       <Payment
+                        isThirdPartyConnectionException={isThirdPartyConnectionException}
                         dispatch={dispatch}
                         billingInfo={billingInfo}
                         selectedPayment={shipping.selectedPayment}

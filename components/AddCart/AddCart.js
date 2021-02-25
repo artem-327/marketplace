@@ -1302,6 +1302,9 @@ class AddCart extends Component {
               <Table.HeaderCell>
                 <FormattedMessage id='global.specifications' defaultMessage='Specifications' />
               </Table.HeaderCell>
+              <Table.HeaderCell>
+                <FormattedMessage id='global.testMethods' defaultMessage='Test Methods' />
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -1309,6 +1312,7 @@ class AddCart extends Component {
               <Table.Row key={index}>
                 <Table.Cell>{getSafe(() => element.property, '')}</Table.Cell>
                 <Table.Cell>{getSafe(() => element.specifications, '')}</Table.Cell>
+                <Table.Cell>{getSafe(() => element.testMethods, '')}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
@@ -1890,7 +1894,7 @@ class AddCart extends Component {
                 </Menu.Item>
               ))}
             </Menu>
-            {this.getContent()}
+            {isOpen ? this.getContent() : null}
           </>
         )}
       </Sidebar>

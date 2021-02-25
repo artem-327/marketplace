@@ -3,7 +3,6 @@ import ChatWidget from './ChatWidget'
 import * as Actions from '../actions'
 import { injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
-import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 
 function mapStateToProps(state) {
@@ -15,6 +14,17 @@ function mapStateToProps(state) {
         getSafe(() => state.admin.currentAddForm, false) ||
         getSafe(() => state.admin.currentAddDwolla, false)) &&
       getSafe(() => state.admin.currentTab.name, '')
+
+    // Vertical movement chat widget above buttons in Sidebars.
+    if (
+      getSafe(() => state.chatWidget.isVerticalMoved, false) &&
+      (getSafe(() => state.settings.isOpenSidebar, false) ||
+        getSafe(() => state.productsAdmin.currentAddForm, false) ||
+        getSafe(() => state.productsAdmin.currentEditForm, false) ||
+        getSafe(() => state.cart.isOpenModal, false))
+    ) {
+      return 60
+    }
 
     if (
       getSafe(() => state.wantedBoard.openSidebar, false) ||
@@ -53,17 +63,7 @@ function mapStateToProps(state) {
       openGlobalAddFormName === 'my-account-locations'
     )
       return 630
-    // Sidebar in My Account - Locations - Branches scroll-up from bottom to up and has 89% height of page.
-    if (
-      getSafe(() => state.chatWidget.isVerticalMoved, false) &&
-      (getSafe(() => state.settings.isOpenSidebar, false) ||
-        getSafe(() => state.productsAdmin.currentAddForm, false) ||
-        getSafe(() => state.productsAdmin.currentEditForm, false))
-    ) {
-      if (typeof window !== 'undefined' && window.innerHeight) {
-        return window.innerHeight * 0.9 // Height of Sidebar is 89% height of page
-      }
-    }
+
     return 0
   }
 

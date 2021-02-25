@@ -383,10 +383,13 @@ class AddEditEchoProduct extends React.Component {
       listDocumentTypes,
       getDocumentTypes
     } = this.props
-
-    if (hazardClasses.length === 0) getHazardClassesDataRequest()
-    if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
-    if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
+    try {
+      if (hazardClasses.length === 0) getHazardClassesDataRequest()
+      if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
+      if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
+    } catch (error) {
+      console.error(error)
+    }
 
     if (this.props.addForm) {
       // Sidebar just opened - Add
@@ -957,10 +960,10 @@ class AddEditEchoProduct extends React.Component {
           </GridColumnLabelTextArea>
         </GridRow>
         <CustomTextarea
-          defaultValue={formikProps && formikProps.initialValues && formikProps.initialValues[name]}
           rows={2}
           name={name}
           id={name}
+          value={formikProps.values[name]}
           onChange={e => {
             formikProps.setFieldValue(name, e.target.value)
             this.setState({ changedForm: true })
@@ -1463,6 +1466,13 @@ class AddEditEchoProduct extends React.Component {
                   <FormattedMessage id='global.emergencyPhone' defaultMessage='Emergency Phone' />
                 </>
               }
+              values={formikProps.values}
+              setFieldValue={formikProps.setFieldValue}
+              setFieldTouched={formikProps.setFieldTouched}
+              errors={formikProps.errors}
+              touched={formikProps.touched}
+              isSubmitting={formikProps.isSubmitting}
+              clearable
             />
           </GridColumnForm>
         </GridRowCustom>
@@ -1575,15 +1585,6 @@ class AddEditEchoProduct extends React.Component {
   renderInfo = formikProps => {
     return (
       <Grid>
-        {this.RowTwoInputs([
-          { name: 'appearance', id: 'global.appearance', defaultMessage: 'Appearance' },
-          {
-            name: 'aspirationHazard',
-            id: 'global.aspirationHazard',
-            defaultMessage: 'Aspiration Hazard'
-          }
-        ])}
-
         {this.RowTwoInputs([
           { name: 'appearance', id: 'global.appearance', defaultMessage: 'Appearance' },
           {
