@@ -8,8 +8,9 @@ import ActionCell from '~/components/table/ActionCell'
 import { getSafe } from '~/utils/functions'
 import { downloadAttachment } from '~/modules/inventory/actions'
 import { Button, Dropdown, Icon } from 'semantic-ui-react'
-
+//Actions
 import * as Actions from '../../actions'
+import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 import moment from 'moment/moment'
 import { getLocaleDateFormat } from '~/components/date-format'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
@@ -158,11 +159,15 @@ class ProductCatalogTable extends Component {
       intl: { formatMessage },
       openEditEchoProduct,
       openEditEchoAltNamesPopup,
-      deleteCompanyGenericProduct
+      deleteCompanyGenericProduct,
+      chatWidgetVerticalMoved
     } = this.props
 
     return [
-      ...echoRowActions((row, i) => openEditEchoProduct(row.id, i, true)),
+      ...echoRowActions((row, i) => {
+        openEditEchoProduct(row.id, i, true)
+        chatWidgetVerticalMoved(true)
+      }),
       {
         text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }),
         callback: () => openEditEchoAltNamesPopup(row)
@@ -374,5 +379,5 @@ const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, downloadAttachment })(injectIntl(ProductCatalogTable))
+  connect(mapStateToProps, { ...Actions, downloadAttachment, chatWidgetVerticalMoved })(injectIntl(ProductCatalogTable))
 )
