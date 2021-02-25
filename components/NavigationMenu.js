@@ -752,7 +752,7 @@ class Navigation extends Component {
               onClick={(data, e) => {
                 this.toggleOpened(
                   'alerts',
-                  isAdmin ? '/alerts' : '/alerts'
+                  '/alerts'
                 )}
               }
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
