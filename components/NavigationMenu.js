@@ -103,12 +103,7 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/bids-sent', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
     alerts:
-      getSafe(() => Router.router.pathname === '/alerts', false) || // TODO: remove line
-      getSafe(() => Router.router.pathname === '/alerts/all', false) ||
-      getSafe(() => Router.router.pathname === '/alerts/shipping-quote-requests', false) ||
-      getSafe(() => Router.router.pathname === '/alerts/product-requests', false) /*||
-      getSafe(() => Router.router.pathname === '/alerts/certification-approval', false) ||
-      getSafe(() => Router.router.pathname === '/alerts/order-disputes', false)*/
+      getSafe(() => Router.router.pathname === '/alerts', false)
   }
 
   componentDidMount() {

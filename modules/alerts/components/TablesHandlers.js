@@ -113,7 +113,7 @@ class TablesHandlers extends Component {
       this.handleFiltersValue({ category: currentTab })
     }
 
-    datagrid.clear()
+    !isAdmin && datagrid.clear()
 
     if (tableHandlersFilters) {
       this.setState(tableHandlersFilters)
@@ -144,7 +144,7 @@ class TablesHandlers extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.currentTab !== prevProps.currentTab) {
       const { currentTab } = this.props
-      this.props.datagrid.clear()
+      !this.props.isAdmin && this.props.datagrid.clear()
       const filter = this.state[currentTab]
       if (filter) {
         this.handleFiltersValue({ ...filter, category: currentTab })
@@ -240,7 +240,7 @@ class TablesHandlers extends Component {
           </div>
           {isAdmin && (
             <div className='column'>
-              {filterValue && filterValue.switchButtonsValue === 'unread' ? (
+              {!filterValue || filterValue.switchButtonsValue !== 'unread' ? (
                 <BasicButton
                   className='font-medium'
                   active={filterValue && filterValue.switchButtonsValue === 'unread'}

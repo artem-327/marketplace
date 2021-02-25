@@ -1862,11 +1862,22 @@ i.file {
     border-collapse: separate;
     background: transparent !important;
 
+    .notifications-admin-wrapper & {
+
+      colgroup > col:first-child {
+        width: 0 !important;
+      }
+    }
+
     thead,
     &[class*='table-head'] {
       border-collapse: separate;
       border-top-left-radius: 4px;
       border-top-right-radius: 4px;
+
+      .notifications-admin-wrapper & {
+        display: none !important;
+      }
 
       tr {
         th {
@@ -2119,13 +2130,19 @@ i.file {
         }
       }
 
-      .notifications-wrapper & {
+      .notifications-admin-wrapper & {
 
         td {
           border-color: #dee2e6 !important;
           background-color: #edeef2 !important;
           vertical-align: middle !important;
           color: #20273a !important;
+        }
+
+        > td:not(.p-0):first-child,
+        > td.p-0:first-child + td {
+          padding-left: 15px !important;
+          padding-right: 5px !important;
         }
 
         &:first-child:last-child td.not-found {
@@ -2135,19 +2152,6 @@ i.file {
           font-weight: 400;
           color: #848893 !important;
           line-height: 17px !important;
-        }
-
-        &.selected {
-
-          td {
-            border-color: #2599d5 !important;
-            background-color: #e8f7ff !important;
-          }
-        }
-
-        & > td.p-0:first-child {
-          display: table-cell !important;
-          width: 0 !important;
         }
 
         &.open {
@@ -2167,6 +2171,38 @@ i.file {
           &.open + tr > td {
             background-color: #ffffff !important;
           }
+        }
+
+        &.selected {
+
+          > td {
+            border-color: #2599d5 !important;
+            background-color: #e8f7ff !important;
+
+            &:not(.p-0):first-child,
+            &.p-0:first-child + td {
+              box-shadow: inset 4px 0 0 0 #2599d5;;
+            }
+          }
+
+          &.open {
+
+            > td {
+              background-color: #e8f7ff !important;
+            }
+
+            + tr > td:nth-child(n),
+            + tr > td:nth-child(n):before {
+              border-color: #2599d5 !important;
+              box-shadow: inset 4px 0 0 0 #2599d5;
+              background-color: #e8f7ff !important;
+            }
+          }
+        }
+
+        & > td.p-0:first-child {
+          display: table-cell !important;
+          width: 0 !important;
         }
 
         &.group-row > td {

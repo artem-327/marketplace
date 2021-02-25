@@ -20,7 +20,7 @@ export const CustomButton = styled(Button)`
   
   &.icon {
     width: 40px;
-    min-width: 40px;
+    min-width: 40px !important;
     height: 40px;
     padding: 9px !important;
     text-align: center;
