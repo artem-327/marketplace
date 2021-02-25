@@ -118,7 +118,8 @@ class WarehousesSidebar extends Component {
       attachmentFiles,
       setAttachmentFiles,
       postNewWarehouseRequest,
-      putEditWarehouse
+      putEditWarehouse,
+      datagrid
     } = this.props
 
     const { editTab } = this.state
@@ -230,7 +231,8 @@ class WarehousesSidebar extends Component {
                             postNewWarehouseRequest,
                             openGlobalAddForm,
                             attachmentFiles,
-                            setAttachmentFiles
+                            setAttachmentFiles,
+                            datagrid
                           })
                           await chatWidgetVerticalMoved(false)
                         }
