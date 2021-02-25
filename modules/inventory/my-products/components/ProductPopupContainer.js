@@ -77,7 +77,8 @@ const mapStateToProps = ({ settings, simpleAdd, auth }) => {
     palletWeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.weight), ''),
     palletLengthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.length), ''),
     palletWidthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.width), ''),
-    palletHeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.height), '')
+    palletHeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.height), ''),
+    palletWeightUnitInitFromSettings: 7 // 7 = pounds, lb
   }
 }
 

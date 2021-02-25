@@ -1,471 +1,80 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
-
-import filter from 'lodash/filter'
-import escapeRegExp from 'lodash/escapeRegExp'
-import debounce from 'lodash/debounce'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { AddBox } from '@material-ui/icons'
-
-import {
-  Modal,
-  FormGroup,
-  FormField,
-  Popup,
-  Grid,
-  GridRow,
-  GridColumn,
-  Divider,
-  Icon,
-  Form,
-  Segment,
-  Dimmer,
-  Loader,
-  Accordion
-} from 'semantic-ui-react'
 import { Formik } from 'formik'
 
-import { CompanyProductMixtures } from '~/components/shared-components/'
-import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
-import { DisabledButtonWrapped } from '~/utils/components'
-import confirm from '~/components/Confirmable/confirm'
-import { Required } from '~/components/constants/layout'
-
+// Components
+import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Dimmer, Loader } from 'semantic-ui-react'
 import { Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
-import * as Yup from 'yup'
-
-import { UnitOfPackaging } from '~/components/formatted-messages'
-import { errorMessages } from '~/constants/yupValidation'
+import BasicButton from '../../../../components/buttons/BasicButton'
 import { AttachmentManager } from '~/modules/attachments'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
-import styled from 'styled-components'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
-import { UploadCloud, ChevronDown, X as XIcon } from 'react-feather'
+import { X as XIcon } from 'react-feather'
 import ErrorFocus from '~/components/error-focus'
-import { palletDimensions } from '~/modules/settings/contants'
 import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
+import { Required } from '~/components/constants/layout'
+import { AddBox } from '@material-ui/icons'
+import { CompanyProductMixtures } from '~/components/shared-components/'
+import { DisabledButtonWrapped } from '~/utils/components'
 
-const CustomForm = styled(Form)`
-  flex-grow: 0 !important;
-  .ui.dropdown > .default.text {
-    margin: 0 !important;
-  }
-`
+// Styles
+import {
+  FormStyled,
+  SegmentHigh,
+  DivBottomButtons,
+  DivIcon,
+  IconClose,
+  UploadCloudIcon,
+  GridStyled,
+  DivTitleSegment,
+  GridRowLabel,
+  GridColumnFlex,
+  DivCheckboxWrapper
+} from './ProductPopup.styles'
 
-const CustomHighSegment = styled(Segment)`
-  margin: 0 0 1px 0 !important;
-  padding: 16px 30px !important;
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: 500;
-  color: #20273a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
-  border: unset !important;
-  display: flex;
-  flex-direction: row;
+// Constants
+import { COLUMNS } from './ProductPopup.constants'
+import { palletDimensions } from '~/modules/settings/contants'
 
-  svg {
-    font-size: 18px;
-    vertical-align: middle;
-  }
-
-  svg.title-icon {
-    margin-left: 15px;
-    color: #cecfd4;
-  }
-
-  svg.close-icon {
-    right: 0;
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-  }
-`
-
-const BottomButtons = styled.div`
-  text-align: right;
-  z-index: 1;
-  padding: 10px 25px;
-  margin-top: 0px;
-  box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
-  .ui.button {
-    margin: 0 5px;
-  }
-`
-
-const CustomButtonSubmit = styled(Button.Submit)`
-  &.ui.primary.button {
-    background-color: #2599d5;
-    color: #fff;
-
-    &:hover {
-      background-color: #188ec9;
-    }
-
-    &:active {
-      background-color: #0d82bc;
-    }
-  }
-`
-
-export const DivIcon = styled.div`
-  display: block;
-  height: 20px;
-  position: relative;
-`
-
-const CloseIcon = styled(Icon)`
-  position: absolute;
-  top: -10px;
-  right: -10px;
-`
-
-const StyledUploadIcon = styled(UploadCloud)`
-  width: 48px;
-  height: 40px;
-  object-fit: contain;
-  color: #dee2e6;
-`
-
-const StyledGrid = styled(Grid)`
-  margin: -10px;
-  > .row {
-    padding: 7.5px 0 !important;
-    .column {
-      padding: 0 10px !important;
-    }
-  }
-
-  .field {
-    .ui.checkbox {
-      label {
-        color: #848893;
-      }
-      &.checked {
-        label {
-          color: #20273a;
-        }
-      }
-    }
-  }
-`
-
-const DivTitleSegment = styled.div`
-  margin: 0 0 1px 0 !important;
-  padding: 16px 30px !important;
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: 500;
-  color: #848893;
-  height: 50px;
-  background-color: #f8f9fb;
-  margin-right: -26px !important;
-  margin-left: -26px !important;
-`
-
-const columns = [
-  {
-    name: 'name',
-    title: (
-      <FormattedMessage id='global.name' defaultMessage='Name'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 270
-  },
-  {
-    name: 'documentTypeName',
-    title: (
-      <FormattedMessage id='global.docType' defaultMessage='Document Type'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 270
-  }
-]
-
-const formValidation = () =>
-  Yup.lazy(values => {
-    const palletParamsRequired = values.palletSaleOnly || checkPalletParamsRequired(values) ? true : false
-    return Yup.object().shape({
-      intProductName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-      intProductCode: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
-      packagingSize: Yup.number(errorMessages.invalidNumber)
-        .typeError(errorMessages.mustBeNumber)
-        .required(errorMessages.requiredMessage)
-        .positive(errorMessages.positive),
-      packagingUnit: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
-      packagingType: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
-      nmfcNumber: Yup.number().required(errorMessages.requiredMessage),
-      freightClass: Yup.number(errorMessages.invalidNumber).required(errorMessages.requiredMessage),
-      packageWeight: Yup.number()
-        .typeError(errorMessages.mustBeNumber)
-        .required(errorMessages.requiredMessage)
-        .positive(errorMessages.positive),
-      palletSaleOnly: Yup.boolean(),
-      packageWeightUnit: Yup.number()
-        .typeError(errorMessages.mustBeNumber)
-        .required(errorMessages.requiredMessage)
-        .positive(errorMessages.positive),
-      /*
-      packagesPerPallet: Yup.number()
-        .typeError(errorMessages.mustBeNumber)
-        .positive(errorMessages.positive)
-        .integer(errorMessages.integer),
-      */
-      packagingWidth: Yup.number().when('palletSaleOnly', {
-        is: false,
-        then: Yup.number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive)
-      }),
-
-      packagingHeight: Yup.number().when('palletSaleOnly', {
-        is: false,
-        then: Yup.number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive)
-      }),
-      packagingLength: Yup.number().when('palletSaleOnly', {
-        is: false,
-        then: Yup.number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive)
-      }),
-      ...(palletParamsRequired && {
-        palletMinPkgs: Yup.number()
-          .min(1, errorMessages.minimum(1))
-          .test('int', errorMessages.integer, val => {
-            return val % 1 === 0
-          })
-          .required(errorMessages.requiredMessage),
-        palletMaxPkgs: Yup.number()
-          .test('int', errorMessages.integer, val => {
-            return val % 1 === 0
-          })
-          .min(
-            values.palletMinPkgs ? values.palletMinPkgs : 1,
-            errorMessages.minimum(values.palletMinPkgs ? values.palletMinPkgs : 1)
-          )
-          .required(errorMessages.requiredMessage),
-        palletWeight: Yup.number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive),
-        palletLength: Yup.number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive),
-        palletWidth: Yup.number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive),
-        palletHeight: Yup.number()
-          .typeError(errorMessages.mustBeNumber)
-          .required(errorMessages.requiredMessage)
-          .positive(errorMessages.positive)
-      }),
-      companyGenericProduct: Yup.number()
-        .typeError(errorMessages.mustBeNumber)
-        .required(errorMessages.requiredMessage)
-        .positive(errorMessages.positive)
-    })
-  })
-
-const checkPalletParamsRequired = v => {
-  return !!(v.palletMinPkgs || v.palletMaxPkgs || v.palletWeight || v.palletLength || v.palletWidth || v.palletHeight)
-}
-
-const filterPackagingTypes = (id, unitsAll, packagingTypesAll, setpackagingTypesReduced) => {
-  if (!unitsAll) return
-  const unit = unitsAll.find(unit => unit.id === id)
-  if (!unit) return
-  const measureType = unit.measureType
-  if (!measureType) return
-
-  const packagingTypesReduced = packagingTypesAll.filter(p => p.measureType && p.measureType.id === measureType.id)
-
-  setpackagingTypesReduced(
-    packagingTypesReduced.map((type, id) => {
-      return {
-        key: id,
-        text: <UnitOfPackaging value={type.name} />,
-        value: type.id
-      }
-    })
-  )
-}
-
-const handlerSubmit = async (values, actions, props, attachments, setLoadSidebar) => {
-  const {
-    popupValues,
-    handleSubmitProductEditPopup,
-    handleSubmitProductAddPopup,
-    datagrid,
-    closePopup,
-    openGlobalAddForm
-  } = props
-  delete values.casProducts
-
-  const packagingDimensions = !getSafe(() => values.palletSaleOnly, false)
-    ? {
-      packagingLength: Number(values.packagingLength),
-      packagingHeight: Number(values.packagingHeight),
-      packagingWidth: Number(values.packagingWidth)
-    }
-    : null
-
-  const palletDimensions = {}
-  const propsToInclude = [
-    'palletWeight',
-    'palletLength',
-    'palletWidth',
-    'palletHeight',
-    'palletMinPkgs',
-    'palletMaxPkgs'
-  ]
-  propsToInclude.forEach(prop => (values[prop] ? (palletDimensions[prop] = Number(values[prop])) : null))
-
-  let formValues = {
-    intProductName: values.intProductName,
-    intProductCode: values.intProductCode,
-    packagingUnit: values.packagingUnit,
-    packagingType: values.packagingType,
-    nmfcNumber: values.nmfcNumber,
-    stackable: values.stackable,
-    freightClass: values.freightClass,
-    packageWeightUnit: values.packageWeightUnit,
-    companyGenericProduct:
-      values.companyGenericProduct === null || values.companyGenericProduct === ''
-        ? null
-        : values.companyGenericProduct,
-    freezeProtect: values.freezeProtect,
-    hazardous: values.hazardous,
-    palletSaleOnly: values.palletSaleOnly,
-    inciName: values.inciName === null || values.inciName === '' ? null : values.inciName,
-    packagingSize: Number(values.packagingSize),
-    packageWeight: Number(values.packageWeight),
-    /*
-    packagesPerPallet:
-      values.packagesPerPallet === null || values.packagesPerPallet === '' ? null : Number(values.packagesPerPallet),
-    */
-    ...packagingDimensions,
-    ...palletDimensions
-  }
-
-  try {
-    if (popupValues) {
-      await handleSubmitProductEditPopup(formValues, popupValues.id, attachments)
-    } else {
-      await handleSubmitProductAddPopup(formValues, attachments)
-    }
-    if (!!openGlobalAddForm) {
-      openGlobalAddForm('')
-    } else {
-      datagrid.loadData()
-      closePopup()
-    }
-  } catch (e) {
-    console.error(e)
-  } finally {
-    actions.setSubmitting(false)
-    setLoadSidebar(false)
-  }
-}
-
-const getInitialFormValues = (props) => {
-  const {
-    popupValues,
-    palletWeightInitFromSettings,
-    palletHeightInitFromSettings,
-    palletWidthInitFromSettings,
-    palletLengthInitFromSettings
-  } = props
-
-  if (!popupValues) {
-    return {
-      companyGenericProduct: null,
-      freezeProtect: false,
-      freightClass: '',
-      hazardous: false,
-      palletSaleOnly: true,
-      inciName: '',
-      intProductCode: '',
-      intProductName: '',
-      nmfcNumber: '',
-      packageWeight: '',
-      packageWeightUnit: '',
-      packagingHeight: '',
-      packagingLength: '',
-      packagingWidth: '',
-      packagingSize: '',
-      packagingType: '',
-      packagingUnit: '',
-      palletMinPkgs: '',
-      palletMaxPkgs: '',
-      palletWeight: getSafe(() => palletWeightInitFromSettings, ''),
-      palletLength: getSafe(() => palletLengthInitFromSettings, ''),
-      palletWidth: getSafe(() => palletWidthInitFromSettings, ''),
-      palletHeight: getSafe(() => palletHeightInitFromSettings, ''),
-      stackable: false,
-      //packagesPerPallet: '',  // Not in ednpoint anymore?
-      documents: {
-        documentType: null,
-        attachments: []
-      }
-    }
-  } else {
-    const palletSaleOnly =
-      popupValues && popupValues.palletSaleOnly
-        ? popupValues.palletSaleOnly
-        : popupValues && popupValues.palletSaleOnly === false
-        ? popupValues.palletSaleOnly
-        : true
-
-    return {
-      ...popupValues,
-      casProducts: getDesiredCasProductsProps(getSafe(() => popupValues.companyGenericProduct.elements, [])),
-      companyGenericProduct: getSafe(() => popupValues.companyGenericProduct.id, ''),
-      nmfcNumber: getSafe(() => popupValues.nmfcNumber.id, ''),
-      packageWeightUnit: getSafe(() => popupValues.packageWeightUnit.id, ''),
-      packagingUnit: getSafe(() => popupValues.packagingUnit.id, ''),
-      packagingType: getSafe(() => popupValues.packagingType.id, ''),
-      packagingWidth: getSafe(() => popupValues.packagingWidth, ''),
-      palletSaleOnly: getSafe(() => palletSaleOnly, true),
-      packagingHeight: getSafe(() => popupValues.packagingHeight, ''),
-      packagingLength: getSafe(() => popupValues.packagingLength, ''),
-      palletMinPkgs: getSafe(() => popupValues.palletMinPkgs, ''),
-      palletMaxPkgs: getSafe(() => popupValues.palletMaxPkgs, ''),
-      palletWeight: popupValues && typeof popupValues.palletWeight !== 'undefined' ? popupValues.palletWeight : '',
-      palletLength: popupValues && typeof popupValues.palletLength !== 'undefined' ? popupValues.palletLength : '',
-      palletWidth: popupValues && typeof popupValues.palletWidth !== 'undefined' ? popupValues.palletWidth : '',
-      palletHeight: popupValues && typeof popupValues.palletHeight !== 'undefined' ? popupValues.palletHeight : '',
-      documents: {
-        documentType: null,
-        attachments: []
-      }
-    }
-  }
-}
-
-
-
-
+// Services
+import {
+  formValidation,
+  checkPalletParamsRequired,
+  filterPackagingTypes,
+  getInitialFormValues,
+  handlerSubmit,
+  handleSearchChange,
+  handleSearchNmfcNumberChange,
+  handleChangeDocumentType,
+  attachDocumentsManager,
+  attachDocumentsUploadAttachment,
+  handleChangePackagingType
+} from './ProductPopup.services'
+import confirm from '~/components/Confirmable/confirm'
+import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 
 const ProductPopup = props => {
-  const [value, setValue] = useState('')
   const [openUpload, setOpenUpload] = useState(false)
   const [documentType, setDocumentType] = useState(null)
-  const [changedForm, setChangedForm] = useState(false)
   const [attachments, setAttachments] = useState([])
   const [loadSidebar, setLoadSidebar] = useState(false)
   const [packagingTypesReduced, setpackagingTypesReduced] = useState([])
+
+  const state = {
+    openUpload,
+    setOpenUpload,
+    documentType,
+    setDocumentType,
+    attachments,
+    setAttachments,
+    loadSidebar,
+    setLoadSidebar,
+    packagingTypesReduced,
+    setpackagingTypesReduced
+  }
 
   // Similar to call componentDidMount:
   useEffect(() => {
@@ -484,75 +93,12 @@ const ProductPopup = props => {
         linked: true
       }))
       setAttachments(attachments)
-      setChangedForm(true)
 
       if (props.popupValues.packagingUnit) {
         filterPackagingTypes(popupValues.packagingUnit.id, props.unitsAll, props.packagingTypesAll, setpackagingTypesReduced)
       } else setpackagingTypesReduced(props.packagingType)
     }
   }, [])  // If [] is empty then is similar as componentDidMount.
-
-
-  const handleSearchChange = debounce(searchQuery => {
-    setValue(searchQuery)
-    props.searchCompanyGenericProduct(searchQuery)
-  }, 250)
-
-  const handleSearchNmfcNumberChange = debounce(searchQuery => {
-    props.getNmfcNumbersByString(searchQuery)
-  }, 250)
-
-  const handleChangeDocumentType = (e, name, value) => {
-    setOpenUpload(true)
-    setDocumentType(value)
-  }
-
-  const attachDocumentsManager = (newDocuments, values, setFieldValue) => {
-    const newDocArray = newDocuments.map(att => ({
-      id: att.id,
-      name: att.name,
-      documentType: att.documentType.name,
-      linked: false
-    }))
-    const docArray = uniqueArrayByKey(attachments.concat(newDocArray), 'id')
-    setChangedForm(true)
-    setAttachments(docArray)
-  }
-
-  const attachDocumentsUploadAttachment = (att, values, setFieldValue) => {
-    const newDocArray = [
-      {
-        id: att.id,
-        name: att.name,
-        documentType: att.documentType.name,
-        linked: false
-      }
-    ]
-    const docArray = uniqueArrayByKey(attachments.concat(newDocArray), 'id')
-    setChangedForm(true)
-    setAttachments(docArray)
-  }
-
-  const handleChangePackagingType = (e, value, setFieldValue, values) => {
-    const { packagingTypesAll } = props
-    const selectedPackingType = packagingTypesAll.find(type => type.id === value)
-
-    const elementsToInclude = ['palletPkgMax', 'palletPkgMin']
-    elementsToInclude.forEach(element => {
-      if (selectedPackingType && selectedPackingType[element]) {
-        switch (element) {
-          case 'palletPkgMin':
-            !values.palletMinPkgs && setFieldValue('palletMinPkgs', selectedPackingType[element])
-          case 'palletPkgMax':
-            !values.palletMaxPkgs && setFieldValue('palletMaxPkgs', selectedPackingType[element])
-          default:
-            return
-        }
-      }
-    })
-  }
-
-
 
   const {
     closePopup,
@@ -572,9 +118,7 @@ const ProductPopup = props => {
     datagrid
   } = props
 
-
   let editable = popupValues ? popupValues.cfProductOfferCount === 0 || !popupValues.cfProductOfferCount : true
-
   let allCompanyGenericProduct = uniqueArrayByKey(
     companyGenericProduct.concat(
       getSafe(() => popupValues.companyGenericProduct) ? popupValues.companyGenericProduct : []
@@ -583,7 +127,6 @@ const ProductPopup = props => {
   )
 
   return (
-
     <Formik
       initialValues={getInitialFormValues(props)}
       validationSchema={formValidation()}
@@ -592,56 +135,49 @@ const ProductPopup = props => {
       onSubmit={(values, actions) => handlerSubmit(values, actions, props, attachments, setLoadSidebar)}
       loading={loading}
     >
-
       {formikProps => {
         let { setFieldValue, values } = formikProps
         let casProducts = getSafe(() => values.casProducts, [])
         const palletParamsRequired = checkPalletParamsRequired(values)
-        const selectedWeightUnit = values.packageWeightUnit
-          ? packageWeightUnits.find(el => el.value === values.packageWeightUnit)
-          : null
+
         return (
-
-
-
           <Modal
-            open={true}
-            closeIcon={true}
-            onClose={() => closePopup()}
-          >
-            <CustomForm>
+            open={true}>
+            <FormStyled>
               <Dimmer inverted active={loading || loadSidebar}>
                 <Loader />
               </Dimmer>
-              <CustomHighSegment>
-                {openGlobalAddForm ? (
-                  <>
-                    <div>
-                        <span>
-                          <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
-                        </span>
-                      <AddBox className='title-icon' />
-                    </div>
-                    <div style={{ position: 'absolute', right: '20px' }}>
-                      <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
-                    </div>
-                  </>
-                ) : popupValues ? (
-                  <FormattedMessage id='global.editCompanyProduct' defaultMessage='Edit Company Product' />
-                ) : (
-                  <FormattedMessage id='global.addCompanyProduct' defaultMessage='Add Company Product' />
-                )}
-              </CustomHighSegment>
-              <FlexContent style={{ padding: '30px' }}>
-                <StyledGrid>
-                  <GridRow>
-                    <div style={{ margin: '0 10px 6px' }}>
+              <SegmentHigh>
+                <>
+                  <div>
+                      <span>
+                        {openGlobalAddForm || !popupValues ? (
+                            <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
+                          ) : (
+                            <FormattedMessage id='global.editProduct' defaultMessage='Edit Product' />
+                          )}
+                      </span>
+                    <AddBox className='title-icon' />
+                  </div>
+                  <div style={{ position: 'absolute', right: '20px' }}>
+                    <XIcon
+                      onClick={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
+                      className='close-icon'
+                    />
+                  </div>
+                </>
+              </SegmentHigh>
+              <FlexContent>
+                <GridStyled>
+                  <GridRowLabel>
                       <FormattedMessage
-                        id='settings.associatedCompanyGenericProduct'
-                        defaultMessage='What is the Company Generic Product that you would like to map to?'
+                        id='productCatalog.selectProduct'
+                        defaultMessage='Select Product'
                       />
                       <Required />
-                    </div>
+                  </GridRowLabel>
+
+                  <GridRow>
                     <GridColumn width={10}>
                       <Dropdown
                         name='companyGenericProduct'
@@ -663,10 +199,10 @@ const ProductPopup = props => {
                                 getSafe(() => allCompanyGenericProduct.find(el => el.id === value).elements, [])
                               )
                             ),
-                          onSearchChange: (_, { searchQuery }) => handleSearchChange(searchQuery),
+                          onSearchChange: (_, { searchQuery }) => handleSearchChange(searchQuery, props),
                           placeholder: formatMessage({
-                            id: 'productCatalog.enterProductName',
-                            defaultMessage: 'Enter Product Name'
+                            id: 'productCatalog.typeToSearch',
+                            defaultMessage: 'Type to Search...'
                           })
                         }}
                       />
@@ -697,7 +233,7 @@ const ProductPopup = props => {
                         name='intProductName'
                         label={
                           <>
-                            <FormattedMessage id='global.intProductName' defaultMessage='Internal Product Name' />
+                            <FormattedMessage id='global.productName' defaultMessage='Product Name' />
                             <Required />
                           </>
                         }
@@ -717,7 +253,7 @@ const ProductPopup = props => {
                         name='intProductCode'
                         label={
                           <>
-                            <FormattedMessage id='global.intProductCode' defaultMessage='Internal Product Code' />
+                            <FormattedMessage id='global.productCode' defaultMessage='Product Code' />
                             <Required />
                           </>
                         }
@@ -733,7 +269,7 @@ const ProductPopup = props => {
                   <GridRow>
                     <GridColumn>
                       <DivTitleSegment>
-                        <FormattedMessage id='global.packaging' defaultMessage='PACKAGING' />
+                        <FormattedMessage id='global.packaging' defaultMessage='Packaging' />
                       </DivTitleSegment>
                     </GridColumn>
                   </GridRow>
@@ -803,7 +339,7 @@ const ProductPopup = props => {
                                   defaultMessage: 'Select Type'
                                 }),
                                 onChange: (e, { value }) => {
-                                  handleChangePackagingType(e, value, setFieldValue, values)
+                                  handleChangePackagingType(e, value, setFieldValue, values, props)
                                 }
                               }}
                             />
@@ -831,7 +367,7 @@ const ProductPopup = props => {
                   <GridRow>
                     <GridColumn>
                       <DivTitleSegment>
-                        <FormattedMessage id='global.freight' defaultMessage='FREIGHT' />
+                        <FormattedMessage id='global.freight' defaultMessage='Freight' />
                       </DivTitleSegment>
                     </GridColumn>
                   </GridRow>
@@ -878,7 +414,7 @@ const ProductPopup = props => {
                           search: val => val,
                           selection: true,
                           loading: nmfcNumbersFetching,
-                          onSearchChange: (_, { searchQuery }) => handleSearchNmfcNumberChange(searchQuery),
+                          onSearchChange: (_, { searchQuery }) => handleSearchNmfcNumberChange(searchQuery, props),
                           placeholder: formatMessage({
                             id: 'productCatalog.selectNmfcCode',
                             defaultMessage: 'Select NMFC Code'
@@ -915,22 +451,28 @@ const ProductPopup = props => {
                   </GridRow>
 
                   <GridRow>
-                    <GridColumn style={{ display: 'flex' }}>
-                      <Checkbox
-                        label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
-                        name='stackable'
-                        inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
-                      />
-                      <Checkbox
-                        label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
-                        name='hazardous'
-                        inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
-                      />
-                      <Checkbox
-                        label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
-                        name='freezeProtect'
-                      />
-                    </GridColumn>
+                    <GridColumnFlex>
+                      <DivCheckboxWrapper>
+                        <Checkbox
+                          label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
+                          name='stackable'
+                          inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
+                        />
+                      </DivCheckboxWrapper>
+                      <DivCheckboxWrapper>
+                        <Checkbox
+                          label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
+                          name='hazardous'
+                          inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
+                        />
+                      </DivCheckboxWrapper>
+                      <DivCheckboxWrapper>
+                        <Checkbox
+                          label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
+                          name='freezeProtect'
+                        />
+                      </DivCheckboxWrapper>
+                    </GridColumnFlex>
                   </GridRow>
 
                   {!values.palletSaleOnly ? (
@@ -940,7 +482,7 @@ const ProductPopup = props => {
                           <DivTitleSegment>
                             <FormattedMessage
                               id='global.packagingDimensions'
-                              defaultMessage='PACKAGING DIMENSIONS'
+                              defaultMessage='Packaging Dimensions'
                             />
                           </DivTitleSegment>
                         </GridColumn>
@@ -1005,7 +547,7 @@ const ProductPopup = props => {
                   <GridRow>
                     <GridColumn>
                       <DivTitleSegment>
-                        <FormattedMessage id='global.document' defaultMessage='DOCUMENT' />
+                        <FormattedMessage id='global.document' defaultMessage='Document' />
                       </DivTitleSegment>
                     </GridColumn>
                   </GridRow>
@@ -1015,14 +557,16 @@ const ProductPopup = props => {
                         <GridColumn>
                           <div style={{ marginBottom: '6px' }}>
                             <FormattedMessage
-                              id='global.existingDocumentsTitle'
-                              defaultMessage='Existing Documents'
+                              id='productCatalog.chooseExistingDocument'
+                              defaultMessage='Choose Existing Document'
                             />
                           </div>
                           <AttachmentManager
+                            color='#20273a'
+                            background='#edeef2'
+                            border='none'
                             asModal
-                            returnSelectedRows={rows => attachDocumentsManager(rows, values, setFieldValue)}
-                            label={'bla'}
+                            returnSelectedRows={rows => attachDocumentsManager(rows, values, setFieldValue, state)}
                           />
                         </GridColumn>
                       </GridRow>
@@ -1039,11 +583,14 @@ const ProductPopup = props => {
                                 defaultMessage: 'Choose document type'
                               }),
                               onChange: (e, { name, value }) => {
-                                handleChangeDocumentType(e, name, value)
+                                handleChangeDocumentType(e, name, value, state)
                               }
                             }}
                             label={
-                              <FormattedMessage id='global.uploadDocumentTitle' defaultMessage='Upload Document' />
+                              <FormattedMessage
+                                id='productCatalog.orUploadNewDocument'
+                                defaultMessage='Or Upload New Document'
+                              />
                             }
                           />
                         </GridColumn>
@@ -1060,7 +607,7 @@ const ProductPopup = props => {
                             <DivIcon
                               onClick={() => setOpenUpload(!openUpload)}
                             >
-                              <CloseIcon name='close' color='grey' />
+                              <IconClose name='close' color='grey' />
                             </DivIcon>
                           }
                           hideAttachments
@@ -1070,13 +617,13 @@ const ProductPopup = props => {
                           type={documentType}
                           fileMaxSize={20}
                           onChange={files => {
-                            attachDocumentsUploadAttachment(files, values, setFieldValue)
+                            attachDocumentsUploadAttachment(files, values, setFieldValue, state)
                           }}
                           data-test='settings_product_catalog_attachments_drop'
                           emptyContent={
                             <div style={{ margin: '25px' }}>
                               <div>
-                                <StyledUploadIcon />
+                                <UploadCloudIcon />
                               </div>
                               {formatMessage({ id: 'addInventory.dragDrop' })}
                               <br />
@@ -1124,7 +671,7 @@ const ProductPopup = props => {
                           virtual={false}
                           tableName='company_product_documents'
                           onTableReady={() => {}}
-                          columns={columns}
+                          columns={COLUMNS}
                           normalWidth={true}
                           rows={attachments
                             .map(row => ({
@@ -1214,22 +761,22 @@ const ProductPopup = props => {
                       </GridColumn>
                     </GridRow>
                   )}
-                </StyledGrid>
+                </GridStyled>
               </FlexContent>
 
-              <BottomButtons className='bottom-buttons'>
+              <DivBottomButtons className='bottom-buttons'>
                 {!openGlobalAddForm && (
-                  <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
+                  <BasicButton noBorder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
-                  </Button.Reset>
+                  </BasicButton>
                 )}
                 <Popup
                   disabled={editable}
                   trigger={
                     <DisabledButtonWrapped>
-                      <CustomButtonSubmit
+                      <BasicButton
                         disabled={!editable}
                         data-test='settings_product_popup_submit_btn'
                         onClick={() => {
@@ -1248,7 +795,7 @@ const ProductPopup = props => {
                         <FormattedMessage id='global.send' defaultMessage='Send'>
                           {text => text}
                         </FormattedMessage>
-                      </CustomButtonSubmit>
+                      </BasicButton>
                     </DisabledButtonWrapped>
                   }
                   content={
@@ -1259,22 +806,14 @@ const ProductPopup = props => {
                     </FormattedMessage>
                   }
                 />
-              </BottomButtons>
+              </DivBottomButtons>
               <ErrorFocus />
-            </CustomForm>
+            </FormStyled>
           </Modal>
         )
       }}
     </Formik>
   )
-}
-
-ProductPopup.ProductPopup = {
-
-}
-
-ProductPopup.defaultProps ={
-
 }
 
 export default ProductPopup
