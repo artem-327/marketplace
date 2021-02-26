@@ -189,7 +189,7 @@ class Settings extends Component {
           if (el.frontendConfig) {
             let parsed = JSON.parse(el.frontendConfig)
             if (getSafe(() => parsed.validation, false)) {
-              tmp[el.name] = Yup.object().shape({
+              tmp[el.code] = Yup.object().shape({
                 value: Yup.object().shape({ visible: toYupSchema(parsed.validation, el.type) })
               })
             }
@@ -293,6 +293,7 @@ class Settings extends Component {
       <Formik
         initialValues={initialValues}
         enableReinitialize
+        validateOnChange={true}
         validationSchema={this.state.validationSchema}
         render={formikProps => {
           let { values, resetForm } = formikProps
