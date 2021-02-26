@@ -288,13 +288,13 @@ class Table extends Component {
         ...r,
         user: (
           <>
-            {getSafe(() => r.sender.avatar, false) && (
+            {getSafe(() => r.info.requestedBy.avatar, false) && (
               <UserImage>
-                <img src={r.sender.avatar} />
+                <img src={r.info.requestedBy.avatar} />
               </UserImage>
             )}
             <UserName as='h3'>{r.nameOfUser}</UserName>
-            <UserCompany as='h4'>{r.usersCompany}</UserCompany>
+            <UserCompany as='h4'>{getSafe(() => r.info.requestedBy.company.cfDisplayName, false) || getSafe(() => r.info.buyerCompanyName, false)}</UserCompany>
           </>
         ),
         clsName: read + (selected ? ' selected' : '') + (open ? ' open' : '') + (recent ? ' recent' : ''),
