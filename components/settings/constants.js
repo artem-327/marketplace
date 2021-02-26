@@ -24,9 +24,7 @@ const supportedValidation = {
     value ? chain.concat(chain.required(errorMessages.requiredMessage)) : chain.concat(chain.nullable())
 }
 
-const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
-  .transform(value => (isNaN(value) ? undefined : value))
-  .typeError(errorMessages.mustBeNumber)
+const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber).typeError(errorMessages.mustBeNumber)
 
 export const dataTypes = {
   STRING: Yup.string(errorMessages.invalidString),
