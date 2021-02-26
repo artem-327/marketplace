@@ -301,7 +301,7 @@ export const attachDocumentsManager = (newDocuments, values, setFieldValue, stat
     documentType: att.documentType.name,
     linked: false
   }))
-  const docArray = uniqueArrayByKey(attachments.concat(newDocArray), 'id')
+  const docArray = uniqueArrayByKey(state.attachments.concat(newDocArray), 'id')
   state.setAttachments(docArray)
 }
 
@@ -314,7 +314,7 @@ export const attachDocumentsUploadAttachment = (att, values, setFieldValue, stat
       linked: false
     }
   ]
-  const docArray = uniqueArrayByKey(attachments.concat(newDocArray), 'id')
+  const docArray = uniqueArrayByKey(state.attachments.concat(newDocArray), 'id')
   state.setAttachments(docArray)
 }
 
