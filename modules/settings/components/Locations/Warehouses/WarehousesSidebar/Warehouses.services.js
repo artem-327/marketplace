@@ -89,7 +89,8 @@ export const getInitialFormValues = sidebarValues => {
  *    openGlobalAddForm: Function,
  *    attachmentFiles: Array,
  *    setAttachmentFiles: Function,
- *    setSubmitting: Function}} helpers Object with sidebarValues and helper functions.
+ *    setSubmitting: Function,
+ *    datagrid: Object}} helpers Object with sidebarValues and helper functions.
  */
 export const submitHandler = async (values, helpers) => {
   const {
@@ -99,7 +100,8 @@ export const submitHandler = async (values, helpers) => {
     openGlobalAddForm,
     attachmentFiles,
     setAttachmentFiles,
-    setSubmitting
+    setSubmitting,
+    datagrid
   } = helpers
   let country = JSON.parse(values.deliveryAddress.address.country).countryId
   let requestData = {}
@@ -127,7 +129,7 @@ export const submitHandler = async (values, helpers) => {
 
   try {
     if (sidebarValues) {
-      await putEditWarehouse(requestData, sidebarValues.id, attachmentFiles)
+      await putEditWarehouse(requestData, sidebarValues.id, attachmentFiles, datagrid)
     } else {
       await postNewWarehouseRequest(true, requestData, attachmentFiles)
     }

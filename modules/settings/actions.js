@@ -318,7 +318,7 @@ export function handleFiltersValue(value) {
 }
 
 //////////////////////
-export function putEditWarehouse(payload, id, attachmentFiles) {
+export function putEditWarehouse(payload, id, attachmentFiles, warehousesDatagrid) {
   return async dispatch => {
     const response = await api.putWarehouse(id, payload)
     await dispatch({
@@ -332,9 +332,18 @@ export function putEditWarehouse(payload, id, attachmentFiles) {
           payload: api.attachmentLinksToBranch(attachment.id, id)
         })
       })
-      Datagrid.loadDate()
+      if (typeof warehousesDatagrid !== 'undefined')
+        warehousesDatagrid.updateRow(id, () => ({
+          ...response,
+          attachments: response.attachments.concat(attachmentFiles)
+        }))
+      else
+        Datagrid.loadData()
     } else {
-      Datagrid.updateRow(id, () => response)
+      if (typeof warehousesDatagrid !== 'undefined')
+        warehousesDatagrid.updateRow(id, () => response)
+      else
+        Datagrid.updateRow(id, () => response)
     }
     dispatch(closeSidebar())
   }
