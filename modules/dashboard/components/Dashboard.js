@@ -1368,7 +1368,7 @@ class Dashboard extends Component {
           </Grid.Row>
         ) : null}
 
-        {(!isAdmin && !isClientCompany) || takeover ? (
+        {false && ((!isAdmin && !isClientCompany) || takeover) ? ( /* 'false' added in task DT-271 */
           <Grid.Row>
             {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
               <Grid.Column width={5}>
