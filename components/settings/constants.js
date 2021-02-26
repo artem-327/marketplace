@@ -24,7 +24,9 @@ const supportedValidation = {
     value ? chain.concat(chain.required(errorMessages.requiredMessage)) : chain.concat(chain.nullable())
 }
 
-const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber).typeError(errorMessages.mustBeNumber)
+const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
+  .transform(value => (isNaN(value) ? null : value))
+  .typeError(errorMessages.mustBeNumber)
 
 export const dataTypes = {
   STRING: Yup.string(errorMessages.invalidString),
@@ -46,12 +48,25 @@ export const getRole = accessRights => {
 
 export const typeToComponent = (type, options = {}) => {
   switch (type) {
+    case 'NUMBER':
+      return (
+        <Input
+          {...getSafe(() => options.props, {})}
+          fieldProps={{ className: 'price-input' }}
+          inputProps={{
+            type: 'number',
+            step: 1,
+            ...getSafe(() => options.inputProps, {})
+          }}
+        />
+      )
     case 'INTEGER':
       return (
         <Input
           {...getSafe(() => options.props, {})}
           fieldProps={{ className: 'price-input' }}
           inputProps={{
+            type: 'number',
             step: 1,
             ...getSafe(() => options.inputProps, {})
           }}
@@ -63,6 +78,7 @@ export const typeToComponent = (type, options = {}) => {
           {...getSafe(() => options.props, {})}
           fieldProps={{ className: 'price-input' }}
           inputProps={{
+            type: 'number',
             step: 0.001,
             ...getSafe(() => options.inputProps, {})
           }}
