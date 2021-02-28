@@ -54,6 +54,16 @@ const CustomDiv = styled.div`
   padding: 30px;
 `
 
+const DivThirdExceptions = styled.div`
+  border-radius: 4px;
+  text-align: center;
+  border: solid 1px #2599d5;
+  background-color: #ffffff;
+  padding: 30px;
+  height: 80px !important;
+  flex-grow: 0 !important;
+`
+
 const SpanText = styled.span`
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
@@ -496,7 +506,17 @@ class BankAccountsTable extends Component {
           institutId={institutId}
           reloadBankAccounts={reloadBankAccounts}
         />
-        {bankAccounts.bankAccountList && !bankAccounts.documentOwner && (
+
+        {isThirdPartyConnectionException && (
+          <DivThirdExceptions>
+            <FormattedMessage
+              id='payments.bankAccountCannnotRetrieved'
+              defaultMessage='Bank accounts cannot be retrieved at the moment. Please try again later.'>
+              {text => text}
+            </FormattedMessage>
+          </DivThirdExceptions>
+        )}
+        {!isThirdPartyConnectionException && bankAccounts.bankAccountList && !bankAccounts.documentOwner ? (
           <div className='flex stretched settings_bankaccounts listings-wrapper'>
             <ProdexTable
               messages={
@@ -569,9 +589,9 @@ class BankAccountsTable extends Component {
               renderGroupLabel={({ row: { value }, groupLength }) => null}
             />
           </div>
-        )}
+        ) : null}
 
-        {(bankAccounts.accountStatus || bankAccounts.documentStatus) && (
+        {!isThirdPartyConnectionException && (bankAccounts.accountStatus || bankAccounts.documentStatus) && (
           <Container style={{ padding: '0 0 28px 0' }}>
             {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
               <>
@@ -778,40 +798,44 @@ const mapStateToProps = state => {
     accountStatus,
     documentRequired,
     loading: state.settings.loading,
-    myRows: state.settings.bankAccountsRows.map(r => ({
-      ...r,
-      id: r.account_public_id || r.id,
-      rawData: r,
-      ...(paymentProcessor === 'DWOLLA'
-        ? {
-            id: r.account_public_id || r.id,
-            name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
-            statusLabel: displayStatus(r, preferredBankAccountId),
-            accountName: r.name || r.display_name, // this is for search
-            bankAccountType: r.account_type
-              ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
-              : r.bankAccountType
-              ? r.bankAccountType
-              : '',
-            bankName: r.institution_name || r.bankName,
-            displayName: r.name
-          }
-        : {
-            id: r.account_public_id || r.id,
-            name: (
-              <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.display_name}</div>
-            ),
-            bankAccountType: r.account_type
-              ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
-              : r.bankAccountType
-              ? r.bankAccountType
-              : '',
-            bankName: r.institution_name || r.bankName,
-            statusLabel: displayStatus(r, preferredBankAccountId),
-            accountName: r.name || r.display_name || r.bankName, // this is for search
-            displayName: r.display_name
-          })
-    })),
+    myRows: getSafe(() => state.settings.bankAccountsRows.length, false)
+      ? state.settings.bankAccountsRows.map(r => ({
+          ...r,
+          id: r.account_public_id || r.id,
+          rawData: r,
+          ...(paymentProcessor === 'DWOLLA'
+            ? {
+                id: r.account_public_id || r.id,
+                name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>,
+                statusLabel: displayStatus(r, preferredBankAccountId),
+                accountName: r.name || r.display_name, // this is for search
+                bankAccountType: r.account_type
+                  ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
+                  : r.bankAccountType
+                  ? r.bankAccountType
+                  : '',
+                bankName: r.institution_name || r.bankName,
+                displayName: r.name
+              }
+            : {
+                id: r.account_public_id || r.id,
+                name: (
+                  <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {r.display_name}
+                  </div>
+                ),
+                bankAccountType: r.account_type
+                  ? r.account_type.charAt(0).toUpperCase() + r.account_type.replace('_', ' ').slice(1)
+                  : r.bankAccountType
+                  ? r.bankAccountType
+                  : '',
+                bankName: r.institution_name || r.bankName,
+                statusLabel: displayStatus(r, preferredBankAccountId),
+                accountName: r.name || r.display_name || r.bankName, // this is for search
+                displayName: r.display_name
+              })
+        }))
+      : [],
     preferredBankAccountId,
     filterValue: state.settings['bank-accountsFilter'],
     confirmMessage: state.settings.confirmMessage,
