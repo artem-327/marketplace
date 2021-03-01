@@ -1,63 +1,48 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Dimmer, Loader, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Person } from '@material-ui/icons'
-import { X as XIcon } from 'react-feather'
 import get from 'lodash/get'
-//Actions
-import {
-  closeSidebar,
-  postNewUserRequest,
-  handlerSubmitUserEditPopup,
-  getCompanyDetails,
-  getUsersDataRequest
-} from '../../../actions'
-import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../../companies/actions'
-import { getIdentity } from '../../../../auth/actions'
-//Components
-import { Required } from '../../../../../components/constants/layout'
-import { withDatagrid } from '../../../../datagrid'
-import { PhoneNumber } from '../../../../phoneNumber'
-import ErrorFocus from '../../../../../components/error-focus'
-//Services
-import { getSafe } from '../../../../../utils/functions'
-import { removeEmpty, uniqueArrayByKey } from '../../../../../utils/functions'
+import { getSafe } from '~/utils/functions'
+
+// Components
+import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Dimmer, Loader, Grid, GridRow, GridColumn, Checkbox, FormField } from 'semantic-ui-react'
+import { CheckboxWithValue } from '~/components/custom-formik'
+import { PhoneNumber } from '~/modules/phoneNumber'
+import { Required } from '~/components/constants/layout'
+import { withDatagrid } from '~/modules/datagrid'
+import ErrorFocus from '~/components/error-focus'
+
+// Actions
+import { closePopup, addNewUser, editUser } from '../../../actions'
+import { searchSellMarketSegments, searchBuyMarketSegments } from '~/modules/companies/actions'
+import { getIdentity } from '~/modules/auth/actions'
+
+// Services
 import {
   userFormValidation,
   getHomeBranchesOptions,
   getBranchesOptions,
   getInitialFormValues,
-  handleSellMarketSegmentsChange,
+  switchUser,
   submitUser,
   handleSellMarketSegmentsSearchChange,
   handleBuyMarketSegmentsSearchChange,
+  handleSellMarketSegmentsChange,
   handleBuyMarketSegmentsChange,
-  switchUser,
   generateCheckboxes
-} from './UserEditSidebar.services'
-//Constants
-import { currencyId } from '../../../../../constants/index'
-//Styles
-import {
-  SidebarFlex,
-  DivHighSegment,
-  DivFlexContent,
-  DivBottomButtons,
-  FormStyled,
-  SegmentStyled,
-  GridColumnWError
-} from './UserEditSidebar.styles'
-/**
- * @category Settings - Users
- * @component
- */
-const UserEditSidebar = props => {
+} from './UsersAddEdit.services'
+import { uniqueArrayByKey } from '~/utils/functions'
+
+// Styles
+import { CustomForm, GridColumnWError, CustomSegment } from './UsersAddEdit.styles'
+import { FlexSidebar, FlexContent, HighSegment } from '~/modules/admin/constants/layout'
+import { BottomButtons } from '../../../constants'
+
+const UsersAddEdit = props => {
   const {
-    closeSidebar,
-    userRoles,
+    closePopup,
     clientCompanyRoles,
     isClientCompany,
     currencies,
@@ -67,18 +52,17 @@ const UserEditSidebar = props => {
     searchedSellMarketSegments,
     searchedBuyMarketSegmentsLoading,
     searchedBuyMarketSegments,
-    isCompanyAdmin,
-    openGlobalAddForm
+    isCompanyAdmin
   } = props
 
-  const [sidebarValues, setSidebarValues] = useState(null)
+  const [popupValues, setPopupValues] = useState(null)
   const [branches, setBranches] = useState([])
   const [selectedSellMarketSegmentsOptions, setSelectedSellMarketSegmentsOptions] = useState([])
   const [selectedBuyMarketSegmentsOptions, setSelectedBuyMarketSegmentsOptions] = useState([])
 
   const state = {
-    sidebarValues,
-    setSidebarValues,
+    popupValues,
+    setPopupValues,
     branches,
     setBranches,
     selectedSellMarketSegmentsOptions,
@@ -87,27 +71,26 @@ const UserEditSidebar = props => {
     setSelectedBuyMarketSegmentsOptions
   }
 
-// Similar to call componentDidMount:
-  useEffect(async () => {
-    const { companyId, sidebarValues, isCompanyAdmin, openGlobalAddForm, getUsersDataRequest } = props
+  // Similar to call componentDidMount:
+  useEffect(() => {
+    const { companyId, isCompanyAdmin, companyEditValues } = props
     if (companyId !== null) {
-      const { value } = await props.getCompanyDetails(companyId)
       let branches = uniqueArrayByKey(
-        (sidebarValues && sidebarValues.homeBranch ? getHomeBranchesOptions([sidebarValues.homeBranch]) : [])
-          .concat(sidebarValues && sidebarValues.additionalBranches
-            ? getBranchesOptions(sidebarValues.additionalBranches)
-            : [],
-          value && value.branches ? getBranchesOptions(value.branches) : []
-        ),
+        (companyEditValues && companyEditValues.primaryBranch
+            ? getHomeBranchesOptions([companyEditValues.primaryBranch])
+            : []
+        ).concat(companyEditValues.branches ? getBranchesOptions(companyEditValues.branches) : []),
         'key'
       )
       setBranches(branches)
     }
-    if (props.sidebarValues) {
-      switchUser(props.sidebarValues, state)
+
+    if (props.popupValues) {
+      switchUser(props.popupValues, state)
     } else {
-      setSidebarValues(null)
+      setPopupValues(null)
     }
+
     /*Commented by https://pm.artio.net/issues/34033#note-14 */
     /*
     if (isCompanyAdmin) {
@@ -115,7 +98,6 @@ const UserEditSidebar = props => {
       this.props.searchBuyMarketSegments('')
     }
     */
-    if (!!openGlobalAddForm) getUsersDataRequest()
   }, [])  // If [] is empty then is similar as componentDidMount.
 
   const allSellMarketSegmentsOptions = uniqueArrayByKey(
@@ -128,10 +110,10 @@ const UserEditSidebar = props => {
   )
 
   return (
-    <FormStyled
+    <CustomForm
       autoComplete='off'
       enableReinitialize
-      initialValues={getInitialFormValues(sidebarValues)}
+      initialValues={getInitialFormValues(popupValues)}
       validationSchema={userFormValidation()}
       onSubmit={(values, actions) => submitUser(values, actions, props, state)}>
       {formikProps => {
@@ -140,8 +122,7 @@ const UserEditSidebar = props => {
         let errorRoles = get(errors, 'roles', null)
 
         return (
-          <SidebarFlex
-            className={openGlobalAddForm ? 'full-screen-sidebar' : ''}
+          <FlexSidebar
             visible={true}
             width='very wide'
             style={{ width: '630px' }}
@@ -151,28 +132,14 @@ const UserEditSidebar = props => {
               <Loader />
             </Dimmer>
 
-            <DivHighSegment basic>
-              {openGlobalAddForm ? (
-                <>
-                  <div>
-                    <span>
-                      <FormattedMessage id='createMenu.addUser' defaultMessage='Add User' />
-                    </span>
-                    <Person className='title-icon' />
-                  </div>
-                  <div style={{ position: 'absolute', right: '20px' }}>
-                    <XIcon onClick={() => openGlobalAddForm('')} className='close-icon' />
-                  </div>
-                </>
-              ) : sidebarValues ? (
-                formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
-              ) : (
-                formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })
-              )}
-            </DivHighSegment>
+            <HighSegment basic>
+              {popupValues
+                ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
+                : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })}
+            </HighSegment>
 
-            <DivFlexContent>
-              <SegmentStyled>
+            <FlexContent>
+              <CustomSegment>
                 <Grid>
                   <GridRow>
                     <GridColumn width={8} data-test='settings_users_popup_name_inp'>
@@ -235,14 +202,14 @@ const UserEditSidebar = props => {
                         touched={touched}
                         isSubmitting={isSubmitting}
                         placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
-                        clearable={true}
+                        clearable
                       />
                     </GridColumn>
                   </GridRow>
                 </Grid>
-              </SegmentStyled>
+              </CustomSegment>
 
-              <SegmentStyled>
+              <CustomSegment>
                 <Grid>
                   <GridRow>
                     <GridColumn width={8}>
@@ -283,7 +250,7 @@ const UserEditSidebar = props => {
                       />
                     </GridColumn>
                   </GridRow>
-                  {/*Comemnted by https://pm.artio.net/issues/34033#note-14 */}
+                  {/*Comemnted by https://pm.artio.net/issues/34033#note-9 */}
                   {false && (
                     <GridRow>
                       <GridColumn width={8}>
@@ -315,9 +282,7 @@ const UserEditSidebar = props => {
                             }),
                             onSearchChange: (_, data) => handleSellMarketSegmentsSearchChange(_, data, props),
                             onChange: (_, { value }) =>
-                              setSelectedSellMarketSegmentsOptions(
-                                handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
-                              )
+                              handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions, state)
                           }}
                         />
                       </GridColumn>
@@ -326,8 +291,8 @@ const UserEditSidebar = props => {
                           label={
                             <>
                               {formatMessage({
-                                id: 'global.buyMarketSegments',
-                                defaultMessage: 'Buy Market Segment'
+                                id: 'global.purchaseMarketSegments',
+                                defaultMessage: 'Purchase Market Segments'
                               })}
                             </>
                           }
@@ -357,9 +322,8 @@ const UserEditSidebar = props => {
                     </GridRow>
                   )}
                 </Grid>
-              </SegmentStyled>
-
-              <SegmentStyled>
+              </CustomSegment>
+              <CustomSegment>
                 <Grid>
                   <GridRow style={{ paddingBottom: '2.5px' }}>
                     <GridColumnWError className={errorRoles ? 'error' : ''}>
@@ -370,12 +334,7 @@ const UserEditSidebar = props => {
                     </GridColumnWError>
                   </GridRow>
                   <GridRow style={{ paddingBottom: '0' }}>
-                    {generateCheckboxes(
-                      isClientCompany ? clientCompanyRoles : userRoles,
-                      values,
-                      'roles',
-                      errorRoles
-                    )}
+                    {generateCheckboxes(clientCompanyRoles, values, 'roles', errorRoles)}
                   </GridRow>
                   <GridRow style={{ paddingTop: '0', marginTop: '-5px' }}>
                     <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
@@ -384,57 +343,53 @@ const UserEditSidebar = props => {
                       {JSON.stringify(values, null, 2)}
                     </pre>*/}
                 </Grid>
-              </SegmentStyled>
-            </DivFlexContent>
+              </CustomSegment>
+            </FlexContent>
 
-            <DivBottomButtons className='bottom-buttons'>
+            <BottomButtons>
               <div style={{ textAlign: 'right' }}>
-                {!openGlobalAddForm && (
-                  <Button className='light' onClick={closeSidebar} data-test='settings_users_popup_reset_btn'>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                )}
+                <Button className='light' onClick={closePopup} data-test='settings_users_popup_reset_btn'>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                    {text => text}
+                  </FormattedMessage>
+                </Button>
                 <Button.Submit className='secondary' data-test='settings_users_popup_submit_btn'>
                   <FormattedMessage id='global.save' defaultMessage='Save'>
                     {text => text}
                   </FormattedMessage>
                 </Button.Submit>
               </div>
-            </DivBottomButtons>
+            </BottomButtons>
             <ErrorFocus />
-          </SidebarFlex>
+          </FlexSidebar>
         )
       }}
-    </FormStyled>
+    </CustomForm>
   )
 }
 
 const mapDispatchToProps = {
-  closeSidebar,
-  postNewUserRequest,
-  handlerSubmitUserEditPopup,
-  getCompanyDetails,
+  closePopup,
+  addNewUser,
+  editUser,
   searchSellMarketSegments,
   searchBuyMarketSegments,
-  getIdentity,
-  getUsersDataRequest
+  getIdentity
 }
 
 const mapStateToProps = state => {
-  const { settings, companiesAdmin, auth } = state
+  const { settings, companiesAdmin, manageGuests, auth } = state
 
   return {
-    currentUserId: getSafe(() => auth.identity.id, null),
+    currentUserId: getSafe(() => auth.identity.id, false),
     isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false),
-    companyId: getSafe(() => state.auth.identity.company.id, null),
-    isClientCompany: getSafe(() => state.auth.identity.company.isClientCompany, false),
-    editTrig: settings.editTrig,
-    updating: settings.updating,
-    userRoles: settings.roles,
-    clientCompanyRoles: settings.clientCompanyRoles,
-    sidebarValues: settings.sidebarValues,
+    companyId: getSafe(() => manageGuests.companyEditValues.id, null),
+    isClientCompany: getSafe(() => auth.identity.company.isClientCompany, false),
+    companyEditValues: manageGuests.companyEditValues,
+    editTrig: manageGuests.editTrig,
+    updating: manageGuests.updating,
+    clientCompanyRoles: manageGuests.clientCompanyRoles,
+    popupValues: manageGuests.popupValues,
     searchedSellMarketSegments: getSafe(() => companiesAdmin.searchedSellMarketSegments, []).map(d => ({
       key: d.id,
       text: d.name,
@@ -450,4 +405,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UserEditSidebar)))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UsersAddEdit)))
