@@ -570,7 +570,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_BANK_ACCOUNTS_DATA_REJECTED: {
       return {
         ...state,
-        loading: true,
+        loading: false,
         isThirdPartyConnectionException:
           getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }

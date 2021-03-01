@@ -189,7 +189,7 @@ class Settings extends Component {
           if (el.frontendConfig) {
             let parsed = JSON.parse(el.frontendConfig)
             if (getSafe(() => parsed.validation, false)) {
-              tmp[el.name] = Yup.object().shape({
+              tmp[el.code] = Yup.object().shape({
                 value: Yup.object().shape({ visible: toYupSchema(parsed.validation, el.type) })
               })
             }
@@ -201,7 +201,7 @@ class Settings extends Component {
     return { validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }), systemSettings }
   }
 
-  handleSubmit = async ({ values }) => {
+  handleSubmit = async values => {
     // Original = false => value is inherited from above; no value is set at current level
     // Globally, if !edit && !original then secretly send EMPTY_SETTING to BE
     // Original = true => Value was set at current level or contains EMPTY_SETTING
@@ -294,6 +294,9 @@ class Settings extends Component {
         initialValues={initialValues}
         enableReinitialize
         validationSchema={this.state.validationSchema}
+        onSubmit={async (values, { setSubmitting }) => {
+          this.handleSubmit(values)
+        }}
         render={formikProps => {
           let { values, resetForm } = formikProps
           this.resetForm = resetForm
@@ -397,23 +400,8 @@ class Settings extends Component {
                         <Button
                           loading={loading}
                           onClick={async () => {
+                            this.setState({ clickedButton: true }, () => !allDisabled && formikProps.handleSubmit())
                             formikProps.resetForm(values)
-
-                            let errors = await formikProps.validateForm()
-                            let errorFields = Object.keys(getSafe(() => errors[role], {}))
-
-                            if (errorFields.length > 0) {
-                              errorFields.forEach(group => {
-                                group.forEach(field =>
-                                  formikProps.setFieldTouched(`${role}.${group.code}.${field}.value.visible`)
-                                )
-                              })
-                            } else {
-                              this.setState(
-                                { clickedButton: true },
-                                () => !allDisabled && this.handleSubmit(formikProps)
-                              )
-                            }
                           }}
                           primary
                           disabled={allDisabled}>
