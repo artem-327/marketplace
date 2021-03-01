@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
-
-import { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   closePopup,
@@ -14,32 +12,15 @@ import {
   searchBuyMarketSegments
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import {
-  Sidebar,
-  Dimmer,
-  Loader,
-  Grid,
-  GridRow,
-  GridColumn,
-  Checkbox,
-  FormField,
-  FormGroup,
-  Segment
-} from 'semantic-ui-react'
+import { Dimmer, Loader, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { CheckboxWithValue } from '~/components/custom-formik'
-import { Field as FormikField } from 'formik'
-import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { errorMessages, phoneValidation } from '~/constants/yupValidation'
-//import { currency } from '~/constants/index'
 import { currencyId } from '~/constants/index'
 import { PhoneNumber } from '~/modules/phoneNumber'
-import styled from 'styled-components'
-import { debounce } from 'lodash'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
 import { removeEmpty } from '~/utils/functions'
-import confirm from '~/components/Confirmable/confirm'
 import { uniqueArrayByKey } from '~/utils/functions'
 import get from 'lodash/get'
 import { getSafe } from '~/utils/functions'
@@ -65,8 +46,6 @@ import {
 import {
   FlexSidebar, HighSegment, FlexContent, GridColumnWError, CustomSegment
 } from './UsersSidebar.styles'
-
-
 
 const UsersSidebar = props => {
   const {
