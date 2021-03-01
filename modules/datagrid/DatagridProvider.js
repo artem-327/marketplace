@@ -19,7 +19,7 @@ const initialState = {
   rows: [],
   allLoaded: false,
   loading: true,
-  query: {},
+  query: null,
   datagridParams: {
     orFilters: [],
     filters: [],
@@ -60,7 +60,7 @@ class DatagridProvider extends Component {
         this.refreshTable,
         getSafe(() => this.props.refreshInterval, 60000)
       )
-    this.setState({ savedFilters: {} })
+    this.setState({ savedFilters: {}, query: getSafe(() => this.props.apiConfig.params, null) })
   }
 
   refreshTable = () => {
@@ -108,6 +108,7 @@ class DatagridProvider extends Component {
   }
 
   loadNextPage = async (overPage = 0) => {
+    console.log('loadNextPage')
     if (!this.props.apiConfig) return
 
     const { datagridParams, query, refreshTable, allLoaded } = this.state
@@ -136,15 +137,23 @@ class DatagridProvider extends Component {
       datagridParams.sortDirection = datagridParams.sortDirection.toUpperCase()
     }
 
+    let dataOrParams =
+      apiConfig.method === 'GET' && query
+        ? { params: { ...query, pageNumber } }
+        : {
+            data: {
+              ...datagridParams,
+              pageNumber
+            }
+          }
+    console.log('dataOrParams')
+    console.log(dataOrParams)
+
     try {
       const response = await api.request({
         url: this.apiConfig && this.apiConfig.url ? this.apiConfig.url : apiConfig.url,
         method: apiConfig.method || 'POST',
-        params: query,
-        data: {
-          ...datagridParams,
-          pageNumber
-        }
+        ...dataOrParams
       })
       if (
         (this.apiConfig && this.apiConfig.url && this.apiConfig.url !== response.config.url) ||
@@ -368,7 +377,10 @@ class DatagridProvider extends Component {
   }
 
   setQuery = (query, reload = true) => {
-    this.setState({ query }, () => reload && this.loadData())
+    this.setState(
+      prevState => ({ query: { ...prevState.query, ...query } }),
+      () => reload && this.loadData()
+    )
   }
 
   setSearch = (value, reload = true, filterId = null) => {
@@ -441,6 +453,8 @@ class DatagridProvider extends Component {
       loadedAllData,
       isUpdatedRow
     } = this.state
+
+    console.log('render')
 
     return (
       <DatagridContext.Provider

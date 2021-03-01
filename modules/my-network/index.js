@@ -1,102 +1,33 @@
 import { useState } from 'react'
-import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
 //Components
-import Table from './components/Table'
-import { withDatagrid, DatagridProvider } from '../datagrid'
+import TableContainer from './components/TableContainer'
+import { DatagridProvider } from '../datagrid'
 import Tutorial from '../tutorial/Tutorial'
-//Services
-import { getSafe } from '../../utils/functions'
-//Constants
-import { NETWORK_TYPES } from './constants'
+import TableHandler from './components/TableHandler'
 //Styles
-import { ContainerCustom, InputSearch, DropdownType } from './MyNetwork.styles'
+import { ContainerCustom } from './MyNetwork.styles'
 
 const MyNetwork = props => {
-  const [searchValue, setSearchValue] = useState('')
-  const [networkStatus, setNetworkStatus] = useState('')
-
   const getApiConfig = () => ({
-    url: '/prodex/api/tradepass/connections', //tradepass/connections
-    searchToFilter: v => {
-      let filters = { or: [], and: [] }
-      if (v && v.searchInput) {
-        filters.or.push({
-          operator: 'LIKE',
-          path: 'Message.text',
-          values: [`%${v.searchInput}%`]
-        })
-      }
-      if (v && v.switchButtonsValue !== '') {
-        switch (v.switchButtonsValue) {
-          case 'read':
-            filters.and.push({
-              operator: 'EQUALS',
-              path: 'Message.isRead',
-              values: ['TRUE']
-            })
-            break
-          case 'unread':
-            filters.and.push({
-              operator: 'EQUALS',
-              path: 'Message.isRead',
-              values: ['FALSE']
-            })
-            break
-        }
-      }
-      if (v && v.category) {
-        filters.and.push({
-          operator: 'EQUALS',
-          path: 'Message.category',
-          values: [v.category]
-        })
-      }
-      return filters
+    method: 'GET',
+    url: '/prodex/api/tradepass/connections******', //FIXME
+    params: {
+      pageSize: 50,
+      sortBy: 'DATE',
+      sortDir: 'DESC'
     }
   })
 
   return (
     <>
       {<Tutorial isTutorial={false} isBusinessVerification={true} />}
-      <DatagridProvider apiConfig={getApiConfig()} preserveFilters skipInitLoad>
+      <DatagridProvider apiConfig={getApiConfig()} preserveFilters={true} skipInitLoad={false}>
         <div id='page' className='flex stretched scrolling'>
           <ContainerCustom fluid>
-            <InputSearch
-              fluid
-              icon='search'
-              name='searchInput'
-              value={searchValue}
-              placeholder={props.intl.formatMessage({
-                id: 'myNetworks.search',
-                defaultMessage: 'Search your connection'
-              })}
-              onChange={(event, data) => {
-                setSearchValue(data.value)
-                props.datagrid.setSearch(data.value, true)
-              }}
-            />
-
-            <DropdownType
-              name='networkStatus'
-              value={networkStatus}
-              placeholder={props.intl.formatMessage({
-                id: 'myNetworks.filterByType',
-                defaultMessage: 'Filter by type'
-              })}
-              selection
-              options={NETWORK_TYPES}
-              onChange={(event, data) => {
-                setNetworkStatus(data.value)
-                props.datagrid.setSearch(data.value, true)
-              }}
-            />
+            <TableHandler />
           </ContainerCustom>
-
           <ContainerCustom fluid paddingTop={0} className='flex stretched'>
-            <Table
-              loading={false} //TODO
-            />
+            <TableContainer />
           </ContainerCustom>
         </div>
       </DatagridProvider>
@@ -104,12 +35,8 @@ const MyNetwork = props => {
   )
 }
 
-const mapStateToProps = ({ myNetwork }) => ({
-  myNetwork
-})
-
 MyNetwork.propTypes = {}
 
 MyNetwork.defaultProps = {}
 
-export default withDatagrid(connect(mapStateToProps)(injectIntl(MyNetwork)))
+export default MyNetwork

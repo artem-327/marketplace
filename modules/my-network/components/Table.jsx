@@ -8,96 +8,6 @@ import { COLUMNS } from '../constants'
 
 const Table = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
-  const getRows = () => {
-    return [
-      {
-        id: 1,
-        member: 'AAA',
-        connectionStatus: 'Declined',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-      {
-        id: 2,
-        member: 'BBB',
-        connectionStatus: 'Pending',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-      {
-        id: 3,
-        member: 'CCC',
-        connectionStatus: 'Active',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-
-      {
-        id: 4,
-        member: 'AAA',
-        connectionStatus: 'Declined',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-      {
-        id: 5,
-        member: 'BBB',
-        connectionStatus: 'Pending',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-      {
-        id: 6,
-        member: 'CCC',
-        connectionStatus: 'Active',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-      {
-        id: 7,
-        member: 'AAA',
-        connectionStatus: 'Declined',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-      {
-        id: 8,
-        member: 'BBB',
-        connectionStatus: 'Pending',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-      {
-        id: 9,
-        member: 'CCC',
-        connectionStatus: 'Active',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-
-      {
-        id: 10,
-        member: 'AAA',
-        connectionStatus: 'Declined',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-      {
-        id: 11,
-        member: 'BBB',
-        connectionStatus: 'Pending',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      },
-      {
-        id: 12,
-        member: 'CCC',
-        connectionStatus: 'Active',
-        eligibilityCriteria: [1, 1, 2, 3, 5],
-        date: '01/12/2021'
-      }
-    ]
-  }
 
   const getRowDetail = ({ row }) => {
     return <DetailRow row={row} />
@@ -109,8 +19,8 @@ const Table = props => {
         <ProdexTable
           tableName='my_network'
           columns={COLUMNS}
-          loading={props.loading}
-          rows={getRows()}
+          //loading={props.loadingDatagrid}
+          rows={props.rows}
           rowDetailType={true}
           rowDetail={getRowDetail}
           onRowClick={(_, row) => {
@@ -124,8 +34,6 @@ const Table = props => {
           }}
           expandedRowIds={expandedRowIds}
           onExpandedRowIdsChange={expandedRowIds => setExpandedRowIds(expandedRowIds)}
-          // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
-          defaultSorting={{ columnName: 'member', direction: 'desc' }}
           estimatedRowHeight={1000}
         />
       </div>
