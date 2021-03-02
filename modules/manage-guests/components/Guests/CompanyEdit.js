@@ -17,7 +17,7 @@ import { StyledContainer } from '../../constants'
 
 import GuestCompanyInfo from './GuestCompanyInfo/GuestCompanyInfo'
 import UsersTable from './Users/UsersTable'
-import UsersSidebar from './Users/UsersSidebar'
+import UsersAddEdit from './Users/UsersAddEdit'
 //import AddEditGuestCompanySidebar from './Guests/AddEditGuestCompanySidebar'
 import DocumentManagerTable from './DocumentManager/DocumentManagerTable'
 import DocumentManagerSidebar from './DocumentManager/DocumentManagerSidebar'
@@ -104,7 +104,7 @@ class ManageGuests extends Component {
 
     const popupForm = {
       //guests: <AddEditGuestCompanySidebar />,
-      users: <UsersSidebar />,
+      users: <UsersAddEdit />,
       'document-manager': <DocumentManagerSidebar />
     }
 

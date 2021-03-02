@@ -41,7 +41,7 @@ export default function reducer(state = initialState, action) {
     case AT.COMPANIES_OPEN_POPUP: {
       return {
         ...state,
-        isOpenSidebar: true,
+        isOpenSidebar: payload.currentTab,
         editTrig: !state.editTrig,
         popupValues: payload.data,
         editedId: payload.data ? payload.data.id : null
