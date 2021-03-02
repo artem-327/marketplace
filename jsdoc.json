@@ -20,7 +20,8 @@
       "./modules/add-bank-accounts",
       "./styles",
       "./modules/settings/components/Locations",
-      "./modules/settings/components/TradeCriteria"
+      "./modules/settings/components/TradeCriteria",
+      "./modules/my-network"
     ],
     "exclude": ["./modules/inventory/my-listings/components"]
   },

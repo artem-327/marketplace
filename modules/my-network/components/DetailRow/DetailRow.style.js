@@ -1,5 +1,6 @@
 import { Grid, Segment, List, GridColumn, Table, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
+import { InfoIcon } from '../../../../styles/global.style-components'
 
 export const SegmentGroupHeader = styled(Segment.Group)`
   margin: 0;
@@ -58,4 +59,20 @@ export const DivEmpty = styled.div`
 
 export const GridColumnDetail = styled(Grid.Column)`
   padding: 0px !important;
+`
+
+export const DivCircle = styled.div`
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  border: solid 10px #fce1da;
+  background-color: #f16844;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const DivModal = styled.div`
+  text-align: -webkit-center !important;
 `

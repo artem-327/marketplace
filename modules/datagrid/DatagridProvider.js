@@ -61,6 +61,7 @@ class DatagridProvider extends Component {
         getSafe(() => this.props.refreshInterval, 60000)
       )
     this.setState({ savedFilters: {}, query: getSafe(() => this.props.apiConfig.params, null) })
+    if (getSafe(() => this.props.apiConfig.params, false)) this.loadData()
   }
 
   refreshTable = () => {
@@ -82,11 +83,9 @@ class DatagridProvider extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      prevProps.apiConfig &&
-      prevProps.apiConfig.url &&
       this.props.apiConfig &&
       this.props.apiConfig.url &&
-      prevProps.apiConfig.url !== this.props.apiConfig.url
+      getSafe(() => prevProps.apiConfig.url, '') !== this.props.apiConfig.url
     ) {
       this.props.cleanRenderCopyright()
       if (this.props.preserveFilters) {

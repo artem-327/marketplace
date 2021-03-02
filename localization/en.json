@@ -3174,5 +3174,9 @@
   "myNetworks.detailRow.certificateInsurance": "Certificate of Insurance",
   "myNetworks.detailRow.linkedBankAccounts": "Linked Bank Accounts",
   "myNetworks.detailRow.articlesIncorporation": "Articles of Incorporation",
-  "myNetworks.detailRow.tradeOrganization": "Trade Organization"
+  "myNetworks.detailRow.tradeOrganization": "Trade Organization",
+  "myNetworks.detailRow.disconnect": "Disconnect",
+  "myNetworks.detailRow.reject": "Reject",
+  "myNetworks.detailRow.accept": "Accept",
+  "myNetworks.detailRow.modal.content": "Disconnecting will remove this company from your Network. You can request to connect again at anytime."
 }

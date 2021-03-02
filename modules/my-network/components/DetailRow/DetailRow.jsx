@@ -10,11 +10,24 @@ import Header from './Header'
 //Styles
 import { StyledGrid } from '../../../../components/detail-row/styles'
 import { DivTitleTradeCriteria, GridColumnDetail } from './DetailRow.style'
+//Constants
+import { BUTTON_PROPS } from '../../constants'
 
-const DetailRow = props => {
+/**
+ * @category My Network
+ * @component
+ */
+const DetailRow = ({ row }) => {
   return (
     <StyledGrid>
-      <Header logo='URL:LOGO' transactions={47} averageValue={14149} button={{ text: 'Disconect' }} />
+      <Header
+        id={row.id}
+        logo='URL:LOGO'
+        transactions={47}
+        averageValue={14149}
+        buttonsProps={BUTTON_PROPS[row.status]}
+        buttonActionsDetailRow={row.buttonActionsDetailRow}
+      />
       <Grid.Row>
         <GridColumnDetail>
           <DivTitleTradeCriteria>

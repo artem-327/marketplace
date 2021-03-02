@@ -1,9 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Segment, Button } from 'semantic-ui-react'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 
 //Components
+import confirm from '../../../../components/Confirmable/confirm'
+import BasicButton from '../../../../components/buttons/BasicButton'
 //Styles
 import { ColumnDetail } from '../../../../components/detail-row/styles'
 import {
@@ -14,23 +16,33 @@ import {
   DivAvarageValue,
   DivValue,
   DivPadding,
-  GridColumnDetail
+  GridColumnDetail,
+  DivCircle,
+  DivModal
 } from './DetailRow.style'
+import { InfoIcon } from '../../../../styles/global.style-components'
 //Constants
 import { currency } from '../../../../constants'
+//Services
+import { getSafe } from '../../../../utils/functions'
 
-const Header = props => {
+/**
+ *
+ * @category My Network
+ * @component
+ */
+const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsDetailRow, id, intl }) => {
   return (
     <Grid.Row>
       <GridColumnDetail>
         <SegmentGroupHeader horizontal>
-          <SegmentCustom textAlign='left'>{props.logo}</SegmentCustom>
+          <SegmentCustom textAlign='left'>{logo}</SegmentCustom>
           <SegmentCustom textAlign='center'>
             <DivCollectionStat>
               <DivTransactions>
                 <DivPadding>
                   <FormattedMessage id='myNetworks.detailRow.transactions' defaultMessage='Transactions' />
-                  <DivValue>{props.transactions}</DivValue>
+                  <DivValue>{transactions}</DivValue>
                 </DivPadding>
               </DivTransactions>
               <DivAvarageValue>
@@ -41,7 +53,7 @@ const Header = props => {
                       minimumFractionDigits={0}
                       maximumFractionDigits={0}
                       style='currency'
-                      value={props.averageValue}
+                      value={averageValue}
                       currency={currency}
                     />
                   </DivValue>
@@ -50,7 +62,54 @@ const Header = props => {
             </DivCollectionStat>
           </SegmentCustom>
           <SegmentCustom textAlign='right'>
-            <Button>{props.button.text}</Button>
+            {getSafe(() => buttonsProps.length, false)
+              ? buttonsProps.map((button, i) => (
+                  <BasicButton
+                    key={i}
+                    data-test={`my_network_detail_row_${button.action}_btn`}
+                    textColor={button.color}
+                    background={button.background}
+                    onClick={() => {
+                      if (button.action === 'disconnect') {
+                        confirm(
+                          <DivModal>
+                            <DivCircle>
+                              <InfoIcon size='22' color='#ffffff' />
+                            </DivCircle>
+                          </DivModal>,
+                          <DivModal>
+                            {intl.formatMessage({
+                              id: 'myNetworks.detailRow.modal.content',
+                              defaultMessage:
+                                'Disconnecting will remove this company from your Network. You can request to connect again at anytime.'
+                            })}
+                          </DivModal>,
+                          {
+                            cancelText: intl.formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' }),
+                            proceedText: intl.formatMessage({ id: 'global.confirm', defaultMessage: 'Confirm' })
+                          },
+                          true //Basic Modal
+                        ).then(
+                          async () => {
+                            // confirm
+                            try {
+                              await buttonActionsDetailRow(button.action, id)
+                            } catch (e) {
+                              console.error(e)
+                            }
+                          },
+                          () => {
+                            // cancel
+                          }
+                        )
+                      } else {
+                        buttonActionsDetailRow(button.action, id)
+                      }
+                    }}>
+                    <FormattedMessage id={button.textId} defaultMessage='' />
+                  </BasicButton>
+                ))
+              : null}
           </SegmentCustom>
         </SegmentGroupHeader>
       </GridColumnDetail>
@@ -61,19 +120,33 @@ const Header = props => {
 Header.propTypes = {
   logo: PropTypes.string,
   transactions: PropTypes.number,
+  id: PropTypes.number,
   averageValue: PropTypes.number,
-  button: PropTypes.shape({
-    text: PropTypes.string
-  })
+  buttonsProps: PropTypes.arrayOf(
+    PropTypes.shape({
+      textId: PropTypes.string,
+      color: PropTypes.string,
+      background: PropTypes.string,
+      action: PropTypes.string
+    })
+  ),
+  buttonActionsDetailRow: PropTypes.func
 }
 
 Header.defaultProps = {
   logo: '',
   transactions: 0,
   averageValue: 0,
-  button: {
-    text: 'Disconect'
-  }
+  id: null,
+  buttonsProps: [
+    {
+      textId: '',
+      color: '',
+      background: '',
+      action: ''
+    }
+  ],
+  buttonActionsDetailRow: () => {}
 }
 
-export default Header
+export default injectIntl(Header)

@@ -6,11 +6,14 @@ import Tutorial from '../tutorial/Tutorial'
 import TableHandler from './components/TableHandler'
 //Styles
 import { ContainerCustom } from './MyNetwork.styles'
-
+/**
+ * @category My Network
+ * @component
+ */
 const MyNetwork = props => {
   const getApiConfig = () => ({
     method: 'GET',
-    url: '/prodex/api/tradepass/connections******', //FIXME
+    url: '/prodex/api/tradepass/connections****', //FIXME
     params: {
       pageSize: 50,
       sortBy: 'DATE',

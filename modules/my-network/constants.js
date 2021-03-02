@@ -102,6 +102,58 @@ export const COLORS = {
 }
 
 /**
+ * @constant {Object<string, array>}
+ */
+export const BUTTON_PROPS = {
+  PENDING: [
+    {
+      textId: 'myNetworks.detailRow.reject',
+      color: '#ffffff !important',
+      background: '#f16844 !important',
+      action: 'reject'
+    },
+    {
+      textId: 'myNetworks.detailRow.accept',
+      color: '#ffffff !important',
+      background: '#84c225 !important',
+      action: 'accept'
+    }
+  ],
+  REQUESTED: [
+    {
+      textId: 'myNetworks.detailRow.disconnect',
+      color: '#ffffff !important',
+      background: '#5e5e5e !important',
+      action: 'disconnect'
+    }
+  ],
+  CONNECTED: [
+    {
+      textId: 'myNetworks.detailRow.disconect',
+      color: '#ffffff !important',
+      background: '#5e5e5e !important',
+      action: 'disconect'
+    }
+  ],
+  DECLINED: [
+    {
+      textId: 'myNetworks.detailRow.disconect',
+      color: '#ffffff !important',
+      background: '#5e5e5e !important',
+      action: 'disconect'
+    }
+  ],
+  DISCONNECTED: [
+    {
+      textId: 'myNetworks.detailRow.disconect',
+      color: '#ffffff !important',
+      background: '#5e5e5e !important',
+      action: 'disconect'
+    }
+  ]
+}
+
+/**
  * @constant {{
  *    ALL: 'ALL',
  *    ACTIVE: 'ACTIVE',

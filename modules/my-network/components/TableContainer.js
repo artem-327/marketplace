@@ -9,7 +9,7 @@ import { getSafe } from '../../../utils/functions'
 import { getLocaleDateFormat } from '../../../components/date-format'
 
 //Actions
-import { filterStatusNetwork } from '../actions'
+import { buttonActionsDetailRow } from '../actions'
 //Constants
 import { STATUSES, COLORS, mockRows } from '../constants'
 //Styles
@@ -41,7 +41,7 @@ const getDate = date => {
 }
 
 const mapDispatchToProps = {
-  filterStatusNetwork
+  buttonActionsDetailRow
 }
 
 const mapStateToProps = (state, { datagrid }) => {
@@ -57,7 +57,8 @@ const mapStateToProps = (state, { datagrid }) => {
             member: <b>{getSafe(() => row.connectedCompany.cfDisplayName, '')}</b>,
             connectionStatus: getStatusLabel(row.status),
             eligibilityCriteria: getCriteriaLabel(row.criteria),
-            date: getDate(row.updatedAt || row.createdAt)
+            date: getDate(row.updatedAt || row.createdAt),
+            buttonActionsDetailRow: buttonActionsDetailRow
           }
         })
       : []

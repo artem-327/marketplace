@@ -11,6 +11,7 @@ import { ContainerCustom, InputSearch, DropdownType } from '../MyNetwork.styles'
 import { NETWORK_TYPES } from '../constants'
 
 /**
+ * Shows input and dropdown for search connection or filter by type of connectin
  * @category My Network
  * @component
  */
