@@ -12,16 +12,16 @@ export function udpateEnabled(id, enabled) {
   }
 }
 
-export function openSidebar(data) {
+export function openSidebar(data, currentTab) {
   return {
     type: AT.COMPANIES_OPEN_POPUP,
-    payload: { data }
+    payload: { data, currentTab }
   }
 }
 
 export function openEditCompany(id, formData) {
   return async dispatch => {
-    dispatch(openSidebar(formData))
+    dispatch(openSidebar(formData, 'companies'))
     // const data = await api.getCompany(id)
     // dispatch(openSidebar(data))
   }

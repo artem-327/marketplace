@@ -138,7 +138,7 @@ class UsersTable extends Component {
     return [
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => openSidebar(row.rawData)
+        callback: row => openSidebar(row.rawData, 'users')
         // hidden: row => this.props.currentUserId === row.id
       },
       /* #34139
@@ -208,7 +208,7 @@ class UsersTable extends Component {
                 row.name
               )
             }
-            onContentClick={() => this.props.openSidebar(row.rawData)}
+            onContentClick={() => this.props.openSidebar(row.rawData, 'users')}
           />
         )
       }

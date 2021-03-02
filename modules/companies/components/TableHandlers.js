@@ -198,7 +198,11 @@ class TablesHandlers extends Component {
               </div>
             )}
             <div className='column'>
-              <Button size='large' data-test='companies_table_add_btn' primary onClick={() => openSidebar()}>
+              <Button
+                size='large'
+                data-test='companies_table_add_btn'
+                primary onClick={() => openSidebar(null, currentTab)}
+              >
                 <PlusCircle />
                 <FormattedMessage id={item.BtnAddText} defaultMessage='Add'>
                   {text => `${text} `}

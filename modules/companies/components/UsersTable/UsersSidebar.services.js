@@ -284,7 +284,7 @@ export const generateCheckboxes = (data, values, groupName = null, error) => {
   let columnLeft = []
   let columnRight = []
 
-  var getCheckbox = (el, isearchCompany) => {
+  const getCheckbox = (el, i) => {
     let name = el.name.replace(/ /g, '').replace(/\//g, '').replace(/-/g, '')
     let path = `${group}${name}`
 
