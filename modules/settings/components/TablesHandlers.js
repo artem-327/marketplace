@@ -638,7 +638,7 @@ class TablesHandlers extends Component {
                         <Button
                           primary
                           onClick={() => {
-                            openSidebar()
+                            openSidebar(null, currentTab)
                             currentTab === 'logistics' && chatWidgetVerticalMoved(true)
                           }}
                           data-test='settings_open_popup_btn'

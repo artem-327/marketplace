@@ -136,7 +136,7 @@ class UsersTable extends Component {
     return [
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => openSidebar(row)
+        callback: row => openSidebar(row, 'users')
       },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -169,7 +169,7 @@ class UsersTable extends Component {
             row={row}
             getActions={this.getActions}
             content={row.name}
-            onContentClick={() => this.props.openSidebar(row)}
+            onContentClick={() => this.props.openSidebar(row, 'users')}
           />
         )
       }

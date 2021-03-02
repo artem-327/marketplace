@@ -97,7 +97,7 @@ const WiderSidebar = styled(FlexSidebar)`
     align-self: flex-start !important;
   }
 
-  [class*='SegmentShowOnly'] > .grid > .row > .column:first-child {
+  [class*='SegmentShowOnly'] > .grid > .row > .column.align-textarea:first-child {
     align-self: flex-start !important;
     padding: 11px 0 !important;
   }
@@ -273,7 +273,7 @@ class CompanyProductInfo extends Component {
     if (typeof value === 'undefined') value = ''
     return (
       <GridRow>
-        <GridColumn width={7}>
+        <GridColumn width={7} className='align-textarea'>
           <FormattedMessage id={id} defaultMessage={defaultMessage} />
           {required === true ? <Required /> : null}
         </GridColumn>
