@@ -49,7 +49,7 @@ export const initialState = {
   systemSettingsModalOpen: false,
   sysSettingsUpdating: false,
   tabsNames: defaultTabs,
-  locationsTab: 'delivery-locations',
+  locationsTab: 'my-customers',
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
   currentEditForm: null,

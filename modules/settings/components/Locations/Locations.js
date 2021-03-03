@@ -20,8 +20,8 @@ import WarehousesTable from './Warehouses/WarehousesTable'
 import BranchesTable from './Branches/BranchesTable'
 import PickUpLocationsSidebar from './Warehouses/WarehousesSidebar/WarehousesSidebar'
 import BranchesSidebar from './Branches/BranchesSidebar/BranchesSidebar'
-import DeliveryLocationsTable from './DeliveryLocationsTable/DeliveryLocationsTable'
-import DeliveryLocationsSidebar from './DeliveryLocationsTable/DeliveryLocationsSidebar'
+import MyCustomers from './MyCustomers/MyCustomers'
+// ! ! import DeliveryLocationsSidebar from './DeliveryLocationsTable/DeliveryLocationsSidebar'
 
 const SettingsGrid = styled(Grid)`
   flex-direction: column !important;
@@ -80,13 +80,13 @@ class Locations extends Component {
     const { activeTab, isOpenPopup, isUserAdmin, isOpenSidebar } = this.props
 
     const tables = {
-      'delivery-locations': <DeliveryLocationsTable />,
+      'my-customers': <MyCustomers />,
       'pick-up-locations': <WarehousesTable />,
       branches: <BranchesTable />
     }
 
     const popupForm = {
-      'delivery-locations': <DeliveryLocationsSidebar />,
+      //! !'my-customers': <DeliveryLocationsSidebar />,
       'pick-up-locations': <PickUpLocationsSidebar />,
       branches: <BranchesSidebar />
     }
@@ -103,7 +103,7 @@ class Locations extends Component {
     const { activeTab } = this.props
 
     const datagridApiMap = {
-      'delivery-locations': {
+      'my-customers': {
         url: '/prodex/api/delivery-addresses/datagrid',
         searchToFilter: v =>
           v && v.searchInput
