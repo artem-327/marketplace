@@ -192,7 +192,7 @@ class Holds extends Component {
       rowActions.push(buttonBuy)
     } else if (
       (isCompanyAdmin || isProductOfferManager || isClientCompanyAdmin) &&
-      filterValue.holdDropdown === 'Requsted Holds'
+      filterValue.holdDropdown === 'Requested Holds'
     ) {
       rowActions.push(buttonApprove)
       rowActions.push(buttonReject)
@@ -316,8 +316,8 @@ class Holds extends Component {
                     },
                     {
                       key: 2,
-                      value: 'Requsted Holds',
-                      text: 'Requsted Holds'
+                      value: 'Requested Holds',
+                      text: 'Requested Holds'
                     }
                   ]}
                   value={filterValue.holdDropdown}
@@ -325,7 +325,7 @@ class Holds extends Component {
                   onChange={(event, data) => {
                     if (data.value === 'My Holds') {
                       toggleHolds('my')
-                    } else if (data.value === 'Requsted Holds') {
+                    } else if (data.value === 'Requested Holds') {
                       toggleHolds('foreign')
                     }
                     this.handleFilterChange(event, data)

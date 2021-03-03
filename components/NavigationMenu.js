@@ -376,9 +376,11 @@ class Navigation extends Component {
                 dataTest='navigation_menu_marketplace_bids_received_drpdn'>
                 {formatMessage({ id: 'navigation.marketplaceBidsReceived', defaultMessage: 'Bids Received' })}
               </Dropdown.Item>
-              <Dropdown.Item as={MenuLink} to='/marketplace/holds' dataTest='navigation_menu_marketplace_holds_drpdn'>
-                {formatMessage({ id: 'navigation.marketplaceHolds', defaultMessage: 'Holds' })}
-              </Dropdown.Item>
+              {/* DT-293 temporary disabled */ false && (
+                <Dropdown.Item as={MenuLink} to='/marketplace/holds' dataTest='navigation_menu_marketplace_holds_drpdn'>
+                  {formatMessage({ id: 'navigation.marketplaceHolds', defaultMessage: 'Holds' })}
+                </Dropdown.Item>
+              )}
             </PerfectScrollbar>
           </Dropdown.Menu>
         </DropdownItem>
