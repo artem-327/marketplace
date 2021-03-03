@@ -65,8 +65,8 @@ class ProductImportPopup extends Component {
   }
 
   async componentDidMount() {
-    const { broadcastTemplates, getTemplates, formatMessage } = this.props
-    if (broadcastTemplates && !broadcastTemplates.length) {
+    const { broadcastTemplates, getTemplates, formatMessage, companies, companyGenericProduct } = this.props
+    if (broadcastTemplates && !broadcastTemplates.length && !companies && !companyGenericProduct) {
       await getTemplates()
     }
   }
@@ -400,7 +400,7 @@ const mapDispatchToProps = {
   changeBroadcast
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, { companies, companyGenericProduct }) => {
   return {
     csvFileId: state.settings.fileCSVId,
     CSV: state.settings.CSV,
@@ -422,7 +422,9 @@ const mapStateToProps = state => {
     },
     csvWithoutHeader: state.settings.csvWithoutHeader,
     broadcastTemplates: getSafe(() => state.broadcast.templates, []),
-    broadcastOption: getSafe(() => state.simpleAdd.broadcastOption, null)
+    broadcastOption: getSafe(() => state.simpleAdd.broadcastOption, null),
+    companies: getSafe(() => companies, false),
+    companyGenericProduct: getSafe(() => companyGenericProduct, false)
   }
 }
 
