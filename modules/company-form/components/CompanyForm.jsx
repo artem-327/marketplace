@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { FormGroup, FormField, Popup, Image, Dropdown, Grid, GridRow, GridColumn, Button } from 'semantic-ui-react'
-import { Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { Input, Checkbox, Dropdown as FixedDropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { withToastManager } from 'react-toast-notifications'
@@ -444,23 +444,53 @@ class CompanyForm extends Component {
           <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
         </FormGroup>
 
-        <FormGroup widths='equal' data-test='company_form_tinCin_inp'>
-          <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
-          <Input
-            label={
-              <Popup
-                content={
-                  <FormattedMessage id='company.tooltip.orEin' defaultMessage='or Employer Identification Number' />
+        <FormGroup data-test='company_form_tinCin_inp'>
+          <FormField width={6}>
+            <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
+          </FormField>
+          <FormField width={6}>
+            <Input
+              label={
+                <Popup
+                  content={
+                    <FormattedMessage id='company.tooltip.orEin' defaultMessage='or Employer Identification Number' />
+                  }
+                  trigger={
+                    <label>
+                      <FormattedMessage id='company.tin' defaultMessage='Tax Identification Number' />
+                    </label>
+                  }
+                />
+              }
+              name='tin'
+            />
+          </FormField>
+          <FormField width={4}>
+            <FixedDropdown
+              name='tinType'
+              label={
+                <label>
+                  <FormattedMessage id='company.tinType' defaultMessage='TIN Type' />
+                  <Required />
+                </label>
+              }
+              fluid
+              selection
+              options={[
+                {
+                  text: formatMessage({ id: 'company.tinType.ein', defaultMessage: 'EIN' }),
+                  value: 'ein'
+                },
+                {
+                  text: formatMessage({ id: 'company.tinType.ssn', defaultMessage: 'SSN' }),
+                  value: 'ssn'
                 }
-                trigger={
-                  <label>
-                    <FormattedMessage id='company.tin' defaultMessage='Tax Identification Number' />
-                  </label>
-                }
-              />
-            }
-            name='tin'
-          />
+              ]}
+              inputProps={{
+                'data-test': 'form_tin_type_drpdn',
+              }}
+            />
+          </FormField>
         </FormGroup>
 
         <FormGroup widths='equal' data-test='company_form_websiteUrlPhone_inp'>

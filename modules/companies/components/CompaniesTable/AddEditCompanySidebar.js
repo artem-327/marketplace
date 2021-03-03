@@ -100,7 +100,8 @@ const initialFormValues = {
       }
     },
     warehouse: false
-  }
+  },
+  tinType: ''
 }
 
 class AddEditCompanySidebar extends Component {
@@ -136,6 +137,7 @@ class AddEditCompanySidebar extends Component {
 
       let validation = Yup.object().shape({
         name: Yup.string().trim().min(2, minLength).required(minLength),
+        tinType: Yup.string().required(errorMessages.requiredMessage),
         website: websiteValidationNotRequired(),
         phone: phoneValidation(10),
 
@@ -326,6 +328,7 @@ class AddEditCompanySidebar extends Component {
                 name: getSafe(() => values.name, ''),
                 phone: getSafe(() => values.phone, ''),
                 tin: getSafe(() => values.tin, ''),
+                tinType: getSafe(() => values.tinType, ''),
                 website: getSafe(() => values.website, ''),
                 purchaseHazmatEligible: getSafe(() => values.purchaseHazmatEligible, false)
               }
