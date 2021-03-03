@@ -1,93 +1,5 @@
 import { FormattedMessage } from 'react-intl'
 
-//REMOVE
-export const mockRows = [
-  {
-    id: 1,
-    connectedCompany: { cfDisplayName: 'AAAAAA' },
-    status: 'REQUESTED',
-    criteria: {
-      AGGREGATE_INSURANCE: {
-        criteria_match: 'green',
-        criteria_expected: '1,000,000 - 2,500,000'
-      },
-      DAYS_BEYOND: {
-        criteria_match: 'green',
-        criteria_expected: '60'
-      },
-      CREDIT_RISK: {
-        criteria_match: 'red',
-        criteria_expected: '40-60'
-      },
-      VIOLATIONS: {
-        criteria_match: 'green',
-        criteria_expected: '4'
-      },
-      SOCIAL_PRESENCE: {
-        criteria_match: 'yellow',
-        criteria_expected: 'Website + 1 Social'
-      }
-    },
-    updatedAt: '2021-02-24T06:43:28-08:00'
-  },
-  {
-    id: 2,
-    connectedCompany: { cfDisplayName: 'BBBBBB' },
-    status: 'PENDING',
-    criteria: {
-      AGGREGATE_INSURANCE: {
-        criteria_match: 'red',
-        criteria_expected: '1,000,000 - 2,500,000'
-      },
-      DAYS_BEYOND: {
-        criteria_match: 'green',
-        criteria_expected: '60'
-      },
-      CREDIT_RISK: {
-        criteria_match: 'green',
-        criteria_expected: '40-60'
-      },
-      VIOLATIONS: {
-        criteria_match: 'green',
-        criteria_expected: '4'
-      },
-      SOCIAL_PRESENCE: {
-        criteria_match: 'green',
-        criteria_expected: 'Website + 1 Social'
-      }
-    },
-    updatedAt: '2021-01-24T06:43:28-08:00'
-  },
-  {
-    id: 3,
-    connectedCompany: { cfDisplayName: 'CCCCCCC' },
-    status: 'CONNECTED',
-    criteria: {
-      AGGREGATE_INSURANCE: {
-        criteria_match: 'red',
-        criteria_expected: '1,000,000 - 2,500,000'
-      },
-      DAYS_BEYOND: {
-        criteria_match: 'green',
-        criteria_expected: '60'
-      },
-      CREDIT_RISK: {
-        criteria_match: 'green',
-        criteria_expected: '40-60'
-      },
-      VIOLATIONS: {
-        criteria_match: 'green',
-        criteria_expected: '4'
-      },
-      SOCIAL_PRESENCE: {
-        criteria_match: 'green',
-        criteria_expected: 'Website + 1 Social'
-      }
-    },
-    updatedAt: '2021-01-23T06:43:28-08:00'
-  }
-]
-
 /**
  * @constant {{
  *    red: '#f16844',
@@ -100,6 +12,17 @@ export const COLORS = {
   yellow: '#ffb85d',
   green: '#84c225'
 }
+
+/**
+ * @constant {Array<string>}
+ */
+export const ATTRIBUTES_TRADE_CRITERIA = [
+  'aggregateInsurance',
+  'daysBeyond',
+  'creditRisk',
+  'violations',
+  'socialPresence'
+]
 
 /**
  * @constant {Object<string, array>}
@@ -137,18 +60,18 @@ export const BUTTON_PROPS = {
   ],
   DECLINED: [
     {
-      textId: 'myNetworks.detailRow.disconect',
+      textId: 'global.remove',
       color: '#ffffff !important',
-      background: '#5e5e5e !important',
-      action: 'disconect'
+      background: '#f16844 !important',
+      action: 'remove'
     }
   ],
   DISCONNECTED: [
     {
-      textId: 'myNetworks.detailRow.disconect',
+      textId: 'global.remove',
       color: '#ffffff !important',
-      background: '#5e5e5e !important',
-      action: 'disconect'
+      background: '#f16844 !important',
+      action: 'remove'
     }
   ]
 }
@@ -183,6 +106,19 @@ export const STATUSES = {
   CONNECTED: 'CONNECTED',
   DECLINED: 'DECLINED',
   DISCONNECTED: 'DISCONNECTED'
+}
+
+/**
+ * @constant {{
+ *    PENDING: 'pending',
+ *    REQUESTED: 'requested',
+ *    CONNECTED: 'active'
+ *}}
+ */
+export const CONNECTIONS_STATUSES = {
+  PENDING: 'pending',
+  REQUESTED: 'requested',
+  CONNECTED: 'active'
 }
 
 /**

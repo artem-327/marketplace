@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 //Components
 import ProdexTable from '../../../components/table'
 import DetailRow from './DetailRow/DetailRow'
-
 //Constants
-import { COLUMNS } from '../constants'
+import { COLUMNS, CONNECTIONS_STATUSES } from '../constants'
+//Hooks
+import { usePrevious } from '../../../hooks'
 
 /**
  * Table of connections.
@@ -13,6 +14,12 @@ import { COLUMNS } from '../constants'
  */
 const Table = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
+  const { loadingDatagrid, rows, connectionsStatuses, statuses } = props
+  const prevLoadingDatagrid = usePrevious(loadingDatagrid)
+
+  useEffect(() => {
+    if (prevLoadingDatagrid && !loadingDatagrid) connectionsStatuses(statuses)
+  }, [prevLoadingDatagrid, loadingDatagrid, statuses, connectionsStatuses])
 
   const getRowDetail = ({ row }) => {
     return <DetailRow row={row} />
@@ -23,8 +30,8 @@ const Table = props => {
       <ProdexTable
         tableName='my_network'
         columns={COLUMNS}
-        //loading={props.loadingDatagrid}
-        rows={props.rows}
+        loading={loadingDatagrid}
+        rows={rows}
         rowDetailType={true}
         rowDetail={getRowDetail}
         onRowClick={(_, row) => {

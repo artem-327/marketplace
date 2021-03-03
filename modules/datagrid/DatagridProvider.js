@@ -453,8 +453,6 @@ class DatagridProvider extends Component {
       isUpdatedRow
     } = this.state
 
-    console.log('render')
-
     return (
       <DatagridContext.Provider
         value={{

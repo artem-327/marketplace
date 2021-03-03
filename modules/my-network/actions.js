@@ -5,22 +5,27 @@ export const filterStatusNetwork = networkStatus => ({
   type: AT.FILTER_NETWORK_STATUS,
   payload: networkStatus
 })
-//TODO
+
 export const disconnect = id => ({
   type: AT.DISCONNECT,
   payload: api.disconnect(id)
 })
-//TODO
+
 export const reject = id => ({
   type: AT.REJECT,
   payload: api.reject(id)
 })
-//TODO
+
 export const accept = id => ({
   type: AT.ACCEPT,
   payload: api.accept(id)
 })
-//TODO
+
+export const remove = id => ({
+  type: AT.REMOVE,
+  payload: api.remove(id)
+})
+
 export const buttonActionsDetailRow = (action, id) => {
   switch (action) {
     case 'disconnect':
@@ -32,7 +37,15 @@ export const buttonActionsDetailRow = (action, id) => {
     case 'accept':
       accept(id)
       break
+    case 'remove':
+      remove(id)
+      break
     default:
       break
   }
 }
+
+export const connectionsStatuses = statuses => ({
+  type: AT.CONNECTIONS_STATUSES,
+  payload: statuses
+})

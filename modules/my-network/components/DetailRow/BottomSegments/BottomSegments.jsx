@@ -2,28 +2,24 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Grid } from 'semantic-ui-react'
 //Components
-import LegalSegment from './LegalSegment'
-import MarketingSegment from './MarketingSegment'
-import VerifiedSegment from './VerifiedSegment'
+import ColumnSegment from './ColumnSegment'
 //Styles
 import { SegmentGroupHeader, GridColumnDetail } from '../DetailRow.style'
 /**
  * Segments shows Legal Data, Merketing Data and Verified Data
  * @component
  */
-const BottomSegmentData = props => {
-  return (
-    <Grid.Row>
-      <GridColumnDetail>
-        <SegmentGroupHeader horizontal noneBorder>
-          <LegalSegment legalData={props.legalData} />
-          <MarketingSegment marketingData={props.marketingData} />
-          <VerifiedSegment verifiedData={props.verifiedData} />
-        </SegmentGroupHeader>
-      </GridColumnDetail>
-    </Grid.Row>
-  )
-}
+const BottomSegmentData = props => (
+  <Grid.Row>
+    <GridColumnDetail>
+      <SegmentGroupHeader horizontal noneBorder>
+        {Object.keys(props).map(key => {
+          return <ColumnSegment data={props[key]} titleId={key} />
+        })}
+      </SegmentGroupHeader>
+    </GridColumnDetail>
+  </Grid.Row>
+)
 
 BottomSegmentData.propTypes = {
   legalData: PropTypes.object,

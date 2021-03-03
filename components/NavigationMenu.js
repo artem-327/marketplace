@@ -254,8 +254,15 @@ class Navigation extends Component {
       companiesTabsNames,
       productsTabsNames,
       filterNetworkStatus,
-      alertTab
+      alertTab,
+      requestedNetworks,
+      pendingNetworks,
+      activeNetworks,
+      allNetworks
     } = this.props
+
+    console.log('allNetworks')
+    console.log(allNetworks)
 
     const {
       dropdowns,
@@ -287,11 +294,6 @@ class Navigation extends Component {
         </Link>
       )
     })
-
-    const allNetworks = 12 //TODO
-    const activeNetworks = 11 //TODO
-    const pendingNetworks = 10 //TODO
-    const requestedNetworks = 9 //TODO
 
     const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
       isCompanyAdmin: null,
@@ -890,18 +892,22 @@ export default withAuth(
     connect(
       (store, { navigationPS }) => ({
         navigationPS: navigationPS,
-        auth: store.auth,
-        tabsNames: store.settings.tabsNames,
+        auth: store?.auth,
+        tabsNames: store?.settings?.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isOrderOperator: getSafe(() => store.auth.identity.isOrderOperator, false),
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
         isClientCompanyManager: getSafe(() => store.auth.identity.isClientCompanyManager, false),
-        collapsedMenu: store.layout.collapsedMenu,
+        collapsedMenu: store?.layout?.collapsedMenu,
         isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
-        companiesTabsNames: store.companiesAdmin.tabsNames,
-        productsTabsNames: store.productsAdmin.tabsNames,
-        alertTab: store.alerts.topMenuTab,
-        alertsCats: store.alerts.categories
+        companiesTabsNames: store?.companiesAdmin?.tabsNames,
+        productsTabsNames: store?.productsAdmin?.tabsNames,
+        alertTab: store?.alerts?.topMenuTab,
+        alertsCats: store?.alerts?.categories,
+        allNetworks: store?.myNetwork?.all,
+        activeNetworks: store?.myNetwork?.active,
+        pendingNetworks: store?.myNetwork?.pending,
+        requestedNetworks: store?.myNetwork?.requested
       }),
       {
         triggerSystemSettingsModal,
