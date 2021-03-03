@@ -432,7 +432,7 @@ class Listings extends Component {
     if (isMerchant || isCompanyAdmin || isClientCompanyAdmin) {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
-      rowActions.push(buttonRequestHold)
+      /* DT-293 temporary disabled rowActions.push(buttonRequestHold) */
       rowActions.push(buttonMakeAnOffer)
     } else {
       rowActions.push(buttonInfo)
