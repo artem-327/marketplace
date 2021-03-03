@@ -798,14 +798,16 @@ class AddCart extends Component {
                   </Button>
                 ) : !isEdit ? (
                   <>
-                    <Button
-                      primary
-                      onClick={() => this.props.sidebarChanged({ isOpen: true, isHoldRequest: true })}
-                      data-test='add_cart_create_order_btn'>
-                      <FormattedMessage id='hold.hold' defaultMessage='Hold'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
+                    {/* DT-293 temporary disabled */ false && (
+                      <Button
+                        primary
+                        onClick={() => this.props.sidebarChanged({ isOpen: true, isHoldRequest: true })}
+                        data-test='add_cart_create_order_btn'>
+                        <FormattedMessage id='hold.hold' defaultMessage='Hold'>
+                          {text => text}
+                        </FormattedMessage>
+                      </Button>
+                    )}
                     <Button
                       disabled={!canProceed}
                       primary

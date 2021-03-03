@@ -482,12 +482,14 @@ class Layout extends Component {
                     className='item-cart'>
                     <NotificationsIcon />
                   </Menu.Item>
-                  <Menu.Item
-                    onClick={() => Router.push('/marketplace/holds')}
-                    data-test='navigation_marketplace'
-                    className='item-cart'>
-                    <HoldIcon />
-                  </Menu.Item>
+                  {/* DT-293 temporary disabled */ false && (
+                    <Menu.Item
+                      onClick={() => Router.push('/marketplace/holds')}
+                      data-test='navigation_marketplace'
+                      className='item-cart'>
+                      <HoldIcon />
+                    </Menu.Item>
+                  )}
                   {(isClientCompanyManager ||
                     isCompanyAdmin ||
                     isMerchant ||
