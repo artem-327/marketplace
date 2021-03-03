@@ -22,7 +22,6 @@ export const TableSegment = styled(Segment)`
   background-color: #f5f7fa !important;
 
   &.ui.segment {
-    padding: 10px 15px;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
   }

@@ -36,8 +36,7 @@ import {
   Rectangle,
   CustomDivContent,
   CustomDivInTitle,
-  CustomDivTitle,
-  InfoIcon
+  CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
 
 import FreightLabel from './FreightLabel'
@@ -121,8 +120,7 @@ const FreightSelection = props => {
                       key={index}
                       checked={value && value.quoteId === item.quoteId}
                       onClick={() => !isOwn && onValueChange({ ...item, freightType: FREIGHT_TYPES.ECHO })}
-                      selection={isOwn ? '' : 'true'}
-                    >
+                      selection={isOwn ? '' : 'true'}>
                       <GridColumn width={10}>
                         <DivFlexRow>
                           <DivCentered>
@@ -285,10 +283,7 @@ const FreightSelection = props => {
                     </GridRow>
                   </GridStyled>
                 )}
-              <FreightLabel
-                isOwn={isOwn}
-                onChange={val => onValueChange(val)}
-              />
+              <FreightLabel isOwn={isOwn} onChange={val => onValueChange(val)} />
             </>
           ) : (
             <DivSectionCollapsedWrapper>

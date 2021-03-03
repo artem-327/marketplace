@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { CustomButton } from './styles'
+import { CustomButton } from './BasicButton.styles'
 /**
  * Basic Button from Semantic UI React.
  * @component
@@ -19,12 +19,16 @@ BasicButton.propTypes = {
    * No borders around the Button.
    */
   noBorder: PropTypes.bool,
+  textColor: PropTypes.string,
+  background: PropTypes.string,
   children: PropTypes.any
 }
 
 BasicButton.defaultProps = {
   noBorder: false,
-  children: null
+  children: null,
+  textColor: '#20273a !important',
+  background: '#ffffff !important'
 }
 
 export default BasicButton

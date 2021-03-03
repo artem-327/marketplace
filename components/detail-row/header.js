@@ -6,7 +6,7 @@ import { getSafe } from '~/utils/functions'
 
 import { StyledGrid, TableSegment, StyledList, DetailMessage, ColumnDetail } from './styles'
 
-function Header({ row, attributes }) {
+function Header({ row, attributes, as }) {
   return (
     <GridRow>
       <ColumnDetail width={16}>
@@ -18,7 +18,7 @@ function Header({ row, attributes }) {
                   <List.Header as='label'>
                     <FormattedMessage id={`detailRow.${attr}`} defaultMessage='Title' />
                   </List.Header>
-                  <List.Description as='span'>{getSafe(() => row[attr], '')}</List.Description>
+                  <List.Description as={as}>{getSafe(() => row[attr], '')}</List.Description>
                 </List.Content>
               </List.Item>
             ))}
@@ -31,12 +31,14 @@ function Header({ row, attributes }) {
 
 Header.propTypes = {
   row: PropTypes.object,
-  attributes: PropTypes.array
+  attributes: PropTypes.array,
+  as: PropTypes.string
 }
 
 Header.defaultProps = {
   row: {},
-  attributes: []
+  attributes: [],
+  as: 'span'
 }
 
 export default Header

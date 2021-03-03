@@ -139,21 +139,24 @@ export const getLocaleDateFormat = () => {
   return formats[navigator.language.slice(0, 2)] || 'MM/DD/YYYY'
 }
 
-/*
-    Parametr is string date short format from getLocaleDateFormat(). For exampl: '21. 6. 2019'
-    If pass parametr {
-      Returns:
-          success: '2019-06-21T00:00:00+02:00'
-          failed: 'Invalid date'
-          success but wrong date or warning in console: 
-              'Deprecation warning: value provided is not in a recognized RFC2822 or ISO format. ...' 
-              It means probably used wrong date format.
-    } 
-    If not pass parametr {
-      Returns current string ISO date: 
-        success: '2019-12-31T12:10:07+01:00'
-    }
-*/
+/**
+ *    Parametr is string date short format from getLocaleDateFormat(). For exampl: '21. 6. 2019'
+ *    If pass parametr {
+ *      Returns:
+ *          success: '2019-06-21T00:00:00+02:00'
+ *          failed: 'Invalid date'
+ *          success but wrong date or warning in console:
+ *              'Deprecation warning: value provided is not in a recognized RFC2822 or ISO format. ...'
+ *              It means probably used wrong date format.
+ *    }
+ *    If not pass parametr {
+ *      Returns current string ISO date:
+ *        success: '2019-12-31T12:10:07+01:00'
+ *    }
+ * @method
+ * @param {string} stringDate For exampl: '21. 6. 2019'
+ * @return {string} Returns string ISO date. For exampl: '2019-06-21T00:00:00+02:00'
+ */
 export const getStringISODate = (stringDate = '') => {
   if (typeof navigator === 'undefined') {
     return

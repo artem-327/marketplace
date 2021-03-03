@@ -1,7 +1,10 @@
 import { Component } from 'react'
 import Link from 'next/link'
 import Router, { withRouter } from 'next/router'
-
+//Actions
+import { filterNetworkStatus } from '../modules/my-network/actions' //TODO
+//Constants
+import { NETWORK_STATUS } from '../modules/my-network/constants'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { withAuth } from '~/hocs'
 import { injectIntl, FormattedMessage } from 'react-intl'
@@ -24,7 +27,8 @@ import {
   Disc,
   Coffee,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Globe
 } from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { defaultTabs as operationsDefaultTabs, orderOperatorTabs } from '~/modules/operations/constants'
@@ -102,8 +106,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/holds', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/bids-sent', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
-    alerts:
-      getSafe(() => Router.router.pathname === '/alerts', false)
+    myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
+    alerts: getSafe(() => Router.router.pathname === '/alerts', false)
   }
 
   componentDidMount() {
@@ -249,8 +253,16 @@ class Navigation extends Component {
       isClientCompanyManager,
       companiesTabsNames,
       productsTabsNames,
-      alertTab
+      filterNetworkStatus,
+      alertTab,
+      requestedNetworks,
+      pendingNetworks,
+      activeNetworks,
+      allNetworks
     } = this.props
+
+    console.log('allNetworks')
+    console.log(allNetworks)
 
     const {
       dropdowns,
@@ -264,6 +276,7 @@ class Navigation extends Component {
       inventory,
       marketplace,
       wantedBoard,
+      myNetwork,
       alerts
     } = this.state
 
@@ -384,6 +397,75 @@ class Navigation extends Component {
             </PerfectScrollbar>
           </Dropdown.Menu>
         </DropdownItem>
+
+        <DropdownItem
+          icon={<Globe size={22} />}
+          text={
+            <>
+              <FormattedMessage id='navigation.myNetwork' defaultMessage='My Network' />
+              {myNetwork ? <ChevronUp /> : <ChevronDown />}
+            </>
+          }
+          className={myNetwork ? 'opened' : null}
+          opened={myNetwork}
+          onClick={() => this.toggleOpened('myNetwork', '/my-network')}
+          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+          refId={'myNetwork'}
+          data-test='navigation_menu_my_network_drpdn'>
+          <Dropdown.Menu data-test='navigation_menu_my_Network_menu'>
+            <PerfectScrollbar>
+              <Dropdown.Item as={MenuLink} to='/my-network' dataTest='navigation_menu_my_Network_all_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkAll',
+                    defaultMessage: 'All ({value})'
+                  },
+                  { value: allNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/my-network'
+                onClick={() => filterNetworkStatus(NETWORK_STATUS.ACTIVE)}
+                dataTest='navigation_menu_my_network_active_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkActive',
+                    defaultMessage: 'Active ({value})'
+                  },
+                  { value: activeNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/my-network'
+                onClick={() => filterNetworkStatus(NETWORK_STATUS.PENDING)}
+                dataTest='navigation_menu_my_network_pending_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkPending',
+                    defaultMessage: 'Pending ({value})'
+                  },
+                  { value: pendingNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/my-network'
+                onClick={() => filterNetworkStatus(NETWORK_STATUS.REQUESTED)}
+                dataTest='navigation_menu_my_network_requested_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkRequested',
+                    defaultMessage: 'Requested ({value})'
+                  },
+                  { value: requestedNetworks }
+                )}
+              </Dropdown.Item>
+            </PerfectScrollbar>
+          </Dropdown.Menu>
+        </DropdownItem>
+
         {/* Temporary hide based on https://bluepallet.atlassian.net/browse/DT-88*/}
         {false && (
           <DropdownItem
@@ -752,11 +834,8 @@ class Navigation extends Component {
               className={alerts ? 'opened' : null}
               open={alerts.toString()}
               onClick={(data, e) => {
-                this.toggleOpened(
-                  'alerts',
-                  '/alerts'
-                )}
-              }
+                this.toggleOpened('alerts', '/alerts')
+              }}
               refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
               refId={'alerts'}
               data-test='navigation_menu_alerts_drpdn'>
@@ -766,7 +845,7 @@ class Navigation extends Component {
                     key={0}
                     as={Menu.Item}
                     active={alertTab === null}
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation()
                       this.props.switchAlertsCategory(null)
                     }}
@@ -778,16 +857,19 @@ class Navigation extends Component {
                     categoryConstant = categoryConstant.charAt(0).toLowerCase() + categoryConstant.slice(1)
                     return (
                       <Dropdown.Item
-                        key={i+1}
+                        key={i + 1}
                         as={Menu.Item}
                         active={alertTab === tab.category}
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation()
                           this.props.switchAlertsCategory(tab.category)
                         }}
                         dataTest={`navigation_alerts_${tab.category}_drpdn`}>
-                        {tab.newMessages ? (<NavCircle circular>{tab.newMessages}</NavCircle>) : null}
-                        {formatMessage({ id: `navigation.alerts.${categoryConstant}`, defaultMessage: `${tab.category}` })}
+                        {tab.newMessages ? <NavCircle circular>{tab.newMessages}</NavCircle> : null}
+                        {formatMessage({
+                          id: `navigation.alerts.${categoryConstant}`,
+                          defaultMessage: `${tab.category}`
+                        })}
                       </Dropdown.Item>
                     )
                   })}
@@ -812,18 +894,22 @@ export default withAuth(
     connect(
       (store, { navigationPS }) => ({
         navigationPS: navigationPS,
-        auth: store.auth,
-        tabsNames: store.settings.tabsNames,
+        auth: store?.auth,
+        tabsNames: store?.settings?.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isOrderOperator: getSafe(() => store.auth.identity.isOrderOperator, false),
         isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
         isClientCompanyManager: getSafe(() => store.auth.identity.isClientCompanyManager, false),
-        collapsedMenu: store.layout.collapsedMenu,
+        collapsedMenu: store?.layout?.collapsedMenu,
         isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
-        companiesTabsNames: store.companiesAdmin.tabsNames,
-        productsTabsNames: store.productsAdmin.tabsNames,
-        alertTab: store.alerts.topMenuTab,
-        alertsCats: store.alerts.categories
+        companiesTabsNames: store?.companiesAdmin?.tabsNames,
+        productsTabsNames: store?.productsAdmin?.tabsNames,
+        alertTab: store?.alerts?.topMenuTab,
+        alertsCats: store?.alerts?.categories,
+        allNetworks: store?.myNetwork?.all,
+        activeNetworks: store?.myNetwork?.active,
+        pendingNetworks: store?.myNetwork?.pending,
+        requestedNetworks: store?.myNetwork?.requested
       }),
       {
         triggerSystemSettingsModal,
