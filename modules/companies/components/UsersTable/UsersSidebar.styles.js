@@ -12,12 +12,55 @@ export const CustomSegment = styled(Segment)`
   background-color: #f8f9fb !important;
 `
 
-export const ModalContentFixed = styled(Modal.Content)`
- @supports (-webkit-touch-callout: none) {
-   & {
-     white-space:nowrap;
-     overflow: scroll;
-     -webkit-overflow-scrolling: touch;  
-   }
- }
+export const ModalFixed = styled(Modal)`
+  display: flex;
+  flex-flow: column;
+  
+  > .content {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-flow: column;
+    
+    > .ps {
+      flex-grow: 1;
+      flex-shrink: 1;
+      position: relative;
+      overflow: hidden;
+      margin: -1.5rem;
+      padding: 1.5em;
+
+      > .ps__rail-y {
+        position: absolute !important;
+        /*top: 2px !important;*/
+        right: 0 !important;
+        /*bottom: 2px !important;*/
+        opacity: 0.2;
+        overflow: hidden !important;
+        width: 10px !important;
+        height: calc(100% - 4px) !important;
+        margin-top: 2px !important;
+
+        .ps__thumb-y {
+          position: absolute;
+          width: 6px;
+          margin: 0 auto;
+          border-radius: 0;
+          background: #20273a;
+        }
+      }
+      
+      & > .ps__rail-y:hover,
+      &.ps--scrolling-y > .ps__rail-y {
+        opacity: 0.5;
+      }
+    }
+  }
+  
+  > .header,
+  > .actions {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
 `
