@@ -133,7 +133,7 @@ export const NETWORK_TYPES = [
   {
     key: 'ALL',
     text: 'All',
-    value: ''
+    value: 'ALL'
   },
   {
     key: 'ACTIVE',

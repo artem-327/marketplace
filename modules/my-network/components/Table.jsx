@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react'
+import axios from 'axios'
+import { Image } from 'semantic-ui-react'
+
 //Components
 import ProdexTable from '../../../components/table'
 import DetailRow from './DetailRow/DetailRow'
+import api from '../../../api'
+
 //Constants
 import { COLUMNS, CONNECTIONS_STATUSES } from '../constants'
 //Hooks
@@ -25,13 +30,56 @@ const Table = props => {
     return <DetailRow row={row} />
   }
 
+  const loadCompanyLogo = async (hasLogo, idCompany) => {
+    let companyLogo = null
+    try {
+      if (hasLogo) {
+        companyLogo = await props.getCompanyLogo(idCompany)
+
+        console.log('companyLogo')
+        console.log(companyLogo)
+      }
+    } catch (error) {
+      console.error(error)
+      return
+    }
+
+    if (companyLogo) {
+      const file = new Blob([companyLogo], { type: companyLogo?.type })
+      let fileURL = URL.createObjectURL(file)
+
+      return fileURL
+    }
+
+    return ''
+  }
+
+  const getRows = rows => {
+    return rows.map(row => {
+      return {
+        ...row,
+        member: (
+          <div>
+            <Image
+              verticalAlign='middle'
+              size='mini'
+              spaced={true}
+              src={loadCompanyLogo(row?.hasLogo, row?.connectedCompany?.id)}
+            />
+            <b>{row?.connectedCompany?.name}</b>
+          </div>
+        )
+      }
+    })
+  }
+
   return (
     <div className='flex stretched table-detail-rows-wrapper'>
       <ProdexTable
         tableName='my_network'
         columns={COLUMNS}
         loading={loadingDatagrid}
-        rows={rows}
+        rows={getRows(rows)}
         rowDetailType={true}
         rowDetail={getRowDetail}
         onRowClick={(_, row) => {

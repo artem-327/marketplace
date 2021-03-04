@@ -1,13 +1,10 @@
-import React from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Segment, Button } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-
 //Components
 import confirm from '../../../../components/Confirmable/confirm'
 import BasicButton from '../../../../components/buttons/BasicButton'
 //Styles
-import { ColumnDetail } from '../../../../components/detail-row/styles'
 import {
   SegmentGroupHeader,
   SegmentCustom,

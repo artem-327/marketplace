@@ -376,10 +376,14 @@ class DatagridProvider extends Component {
   }
 
   setQuery = (query, reload = true) => {
-    this.setState(
-      prevState => ({ query: { ...prevState.query, ...query } }),
-      () => reload && this.loadData()
-    )
+    let newQuery = this.state.query
+
+    if (query?.status === 'ALL') {
+      delete newQuery.status
+      delete query.status
+    }
+    newQuery = { ...newQuery, ...query }
+    this.setState({ query: newQuery }, () => reload && this.loadData())
   }
 
   setSearch = (value, reload = true, filterId = null) => {
@@ -419,7 +423,7 @@ class DatagridProvider extends Component {
     })
   }
 
-  onTableReady = (params = {}) => {
+  onTableReady = (params = { pageNumber: 0 }) => {
     if (this.props.skipInitLoad) {
       this.setState(s => ({
         ready: true,

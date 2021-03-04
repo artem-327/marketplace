@@ -2,13 +2,13 @@ import { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { debounce } from 'lodash'
-
 //Components
 import { withDatagrid } from '../../datagrid'
 //Styles
 import { ContainerCustom, InputSearch, DropdownType } from '../MyNetwork.styles'
 //Constants
 import { NETWORK_TYPES } from '../constants'
+import { Key } from 'react-feather'
 
 /**
  * Shows input and dropdown for search connection or filter by type of connectin
@@ -58,7 +58,11 @@ const TableHandler = props => {
   )
 }
 
-TableHandler.propTypes = {}
-TableHandler.defaultProps = {}
+TableHandler.propTypes = {
+  datagrid: PropTypes.object
+}
+TableHandler.defaultProps = {
+  datagrid: null
+}
 
 export default withDatagrid(injectIntl(TableHandler))

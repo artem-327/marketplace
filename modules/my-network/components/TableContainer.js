@@ -1,5 +1,9 @@
 import { connect } from 'react-redux'
 import { FormattedNumber } from 'react-intl'
+import { Image } from 'semantic-ui-react'
+import api from '../../../api'
+import axios from 'axios'
+
 //Components
 import Table from './Table'
 //HOC
@@ -8,10 +12,12 @@ import { withDatagrid } from '../../datagrid'
 import { getStatusLabel, getCriteriaLabel, getStatuses, getDate, getTradeCriteriaValues } from '../MyNetwork.services'
 //Actions
 import { buttonActionsDetailRow, connectionsStatuses } from '../actions'
+import { getCompanyLogo } from '../../company-form/actions'
 
 const mapDispatchToProps = {
   buttonActionsDetailRow,
-  connectionsStatuses
+  connectionsStatuses,
+  getCompanyLogo
 }
 
 const mapStateToProps = (state, { datagrid }) => {
