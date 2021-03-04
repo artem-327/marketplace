@@ -253,7 +253,7 @@ class Settings extends Component {
               try {
                 const { updateCompany } = this.props
                 const requestBody = {}
-                const propsToInclude = ['cin', 'dba', 'dunsNumber', 'enabled', 'name', 'phone', 'tin', 'website']
+                const propsToInclude = ['cin', 'dba', 'dunsNumber', 'enabled', 'name', 'phone', 'tin', 'tinType', 'website']
                 propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
 
                 await updateCompany(values.id, {

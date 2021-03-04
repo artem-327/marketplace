@@ -23,7 +23,7 @@ import { initialValues, validationSchema } from '../constants/validation'
 
 import { withToastManager } from 'react-toast-notifications'
 
-import Logo from '~/assets/images/login/logo-login.png'
+import Logo from '~/assets/images/login/logo-bluepallet.png'
 
 class Password extends Component {
   render() {
