@@ -45,7 +45,7 @@ import { removeEmpty, uniqueArrayByKey, getSafe } from '~/utils/functions'
 import { withDatagrid } from '~/modules/datagrid'
 
 // Styles
-import { GridColumnWError, CustomSegment} from './UsersSidebar.styles'
+import { GridColumnWError, CustomSegment, ModalContentFixed } from './UsersSidebar.styles'
 
 const UsersSidebar = props => {
   const {
@@ -141,7 +141,7 @@ const UsersSidebar = props => {
               <Loader />
             </Dimmer>
 
-            <Modal.Content scrolling>
+            <ModalContentFixed scrolling>
               <Form>
                 <CustomSegment>
                   <Grid>
@@ -398,7 +398,7 @@ const UsersSidebar = props => {
                   </Grid>
                 </CustomSegment>
               </Form>
-            </Modal.Content>
+            </ModalContentFixed>
 
             <Modal.Actions>
               <Button className='light' onClick={closePopup} data-test='admin_users_popup_reset_btn'>
