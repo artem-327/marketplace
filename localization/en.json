@@ -1039,6 +1039,7 @@
   "import.companies.primaryUserName": "Primary User Name",
   "import.companies.primaryUserPhone": "Primary User Phone",
   "import.companies.tin": "TIN",
+  "import.companies.tinType": "TIN Type",
   "import.companies.website": "Website",
   "company.legalCompanyName": "Legal Company Name",
   "company.dba": "Doing Business As",
