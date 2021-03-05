@@ -383,8 +383,8 @@ export const LeftMenu = styled(Menu)`
 
     .scrollbar-container > img {
       object-fit: contain;
-      height: 36px;
-      margin: 22px auto;
+      height: 56px;
+      margin: 12px auto;
     }
 
     .container > a.item,
@@ -1053,8 +1053,8 @@ export const FlexContainer = styled.div`
   flex: 1 1 auto;
 `
 export const LogoImage = styled(Image)`
-  width: 80px;
-  margin: 22px auto;
+  width: 168px;
+  margin: 12px auto;
 `
 export const CircularLabel = styled(Label)`
   position: absolute;

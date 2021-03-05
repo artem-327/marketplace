@@ -9,7 +9,7 @@ import { getSafe } from '~/utils/functions'
 import * as val from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
 
-import Logo from '~/assets/images/login/logo-login.png'
+import Logo from '~/assets/images/login/logo-bluepallet.png'
 
 const LoginSegment = styled(Segment)`
   position: relative;

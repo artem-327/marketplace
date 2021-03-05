@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
 import { GridColumn, GridRow } from 'semantic-ui-react'
-import Logo from '~/assets/images/nav/logo-echo.svg'
+import Logo from '~/assets/images/nav/logo-bluepallet.png'
 
 //Services
 import { getSafe } from '../../../../utils/functions'
