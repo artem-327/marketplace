@@ -1,13 +1,12 @@
-import { Grid, Segment, List, GridColumn, Table, Button } from 'semantic-ui-react'
+import { Grid, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
-import { InfoIcon } from '../../../../styles/global.style-components'
 
 export const SegmentGroupHeader = styled(Segment.Group)`
-  margin: 0;
+  margin: 0 !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
-  align-items: center !important;
   ${({ noneBorder }) => noneBorder && 'border: none !important'};
+  ${({ alignItems }) => alignItems && alignItems};
 `
 
 export const SegmentCustom = styled(Segment)`
@@ -61,6 +60,14 @@ export const GridColumnDetail = styled(Grid.Column)`
   padding: 0px !important;
 `
 
+export const GridRowBottomSegment = styled(Grid.Row)`
+  padding: 20px 0px !important;
+`
+
+export const SegmentBottom = styled(Segment)`
+  padding-top: 0px !important;
+`
+
 export const DivCircle = styled.div`
   width: 100px;
   height: 100px;
@@ -75,4 +82,26 @@ export const DivCircle = styled.div`
 
 export const DivModal = styled.div`
   text-align: -webkit-center !important;
+`
+
+export const DivIconCollapse = styled.div`
+  padding-top: 6px;
+`
+
+export const DivCollapseText = styled.div`
+  margin-top: -6px;
+`
+
+export const DivCollapse = styled.div`
+  cursor: pointer;
+  color: #848893;
+  font-size: 12px;
+  width: max-content;
+  height: 36px;
+  border-top: solid 1px #dee2e6;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: calc(100% + 30px) !important;
+  margin-left: -15px !important;
+  margin-right: -15px !important;
 `

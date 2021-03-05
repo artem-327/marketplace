@@ -31,7 +31,7 @@ import { getSafe } from '../../../../utils/functions'
 const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsDetailRow, id, intl }) => (
   <Grid.Row>
     <GridColumnDetail>
-      <SegmentGroupHeader horizontal>
+      <SegmentGroupHeader horizontal alignItems={'align-items: center !important'}>
         <SegmentCustom textAlign='left'>{logo}</SegmentCustom>
         <SegmentCustom textAlign='center'>
           <DivCollectionStat>

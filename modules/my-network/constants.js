@@ -1,5 +1,144 @@
 import { FormattedMessage } from 'react-intl'
 
+//REMOVE
+export const mockRows = [
+  {
+    connectionId: 1,
+    connectedCompany: {
+      id: 255,
+      name: 'AAAAAA',
+      tin: '12345',
+      phone: 123456,
+      inBusinessSince: 1987,
+      numberOfEmployees: 245,
+      website: 'www.aaa.cz',
+      socialFacebook: 'www.facebook.com',
+      socialInstagram: 'www.socialInstagram.com',
+      socialLinkedin: 'www.socialLinkedin.com',
+      socialTwitter: 'www.socialTwitter.com',
+      connectionsCount: 'www.connectionsCount.com',
+      articlesIncorporation: true,
+      certificateInsurance: true,
+      paymentProcessor: true,
+      dunsNumber: true
+    },
+    status: 'REQUESTED',
+    criteria: {
+      aggregateInsurance: {
+        match: 'green',
+        actualValue: '1,000,000 - 2,500,000'
+      },
+      daysBeyond: {
+        match: 'green',
+        actualValue: '60'
+      },
+      creditRisk: {
+        match: 'red',
+        actualValue: '40-60'
+      },
+      violations: {
+        match: 'green',
+        actualValue: '4'
+      },
+      socialPresence: {
+        match: 'yellow',
+        actualValue: 'Website + 1 Social'
+      }
+    },
+    updatedAt: '2021-02-24T06:43:28-08:00'
+  },
+  {
+    connectionId: 2,
+    connectedCompany: {
+      id: 255,
+      name: 'BBBBB',
+      tin: '12345',
+      phone: 123456,
+      inBusinessSince: 1987,
+      numberOfEmployees: 245,
+      website: 'www.aaa.cz',
+      socialFacebook: 'www.facebook.com',
+      socialInstagram: 'www.socialInstagram.com',
+      socialLinkedin: 'www.socialLinkedin.com',
+      socialTwitter: 'www.socialTwitter.com',
+      connectionsCount: 'www.connectionsCount.com',
+      articlesIncorporation: true,
+      certificateInsurance: true,
+      paymentProcessor: true,
+      dunsNumber: true
+    },
+    status: 'PENDING',
+    criteria: {
+      aggregateInsurance: {
+        match: 'red',
+        actualValue: '1,000,000 - 2,500,000'
+      },
+      daysBeyond: {
+        match: 'green',
+        actualValue: '60'
+      },
+      creditRisk: {
+        match: 'green',
+        actualValue: '40-60'
+      },
+      violations: {
+        match: 'green',
+        actualValue: '4'
+      },
+      socialPresence: {
+        match: 'green',
+        actualValue: 'Website + 1 Social'
+      }
+    },
+    updatedAt: '2021-01-24T06:43:28-08:00'
+  },
+  {
+    connectionId: 3,
+    connectedCompany: {
+      id: 255,
+      name: 'CCCCCCCCC',
+      tin: '12345',
+      phone: 123456,
+      inBusinessSince: 1987,
+      numberOfEmployees: 245,
+      website: 'www.aaa.cz',
+      socialFacebook: 'www.facebook.com',
+      socialInstagram: 'www.socialInstagram.com',
+      socialLinkedin: 'www.socialLinkedin.com',
+      socialTwitter: 'www.socialTwitter.com',
+      connectionsCount: 'www.connectionsCount.com',
+      articlesIncorporation: true,
+      certificateInsurance: true,
+      paymentProcessor: true,
+      dunsNumber: true
+    },
+    status: 'CONNECTED',
+    criteria: {
+      aggregateInsurance: {
+        match: 'red',
+        actualValue: '1,000,000 - 2,500,000'
+      },
+      daysBeyond: {
+        match: 'green',
+        actualValue: '60'
+      },
+      creditRisk: {
+        match: 'green',
+        actualValue: '40-60'
+      },
+      violations: {
+        match: 'green',
+        actualValue: '4'
+      },
+      socialPresence: {
+        match: 'green',
+        actualValue: 'Website + 1 Social'
+      }
+    },
+    updatedAt: '2021-01-23T06:43:28-08:00'
+  }
+]
+
 /**
  * @constant {{
  *    red: '#f16844',

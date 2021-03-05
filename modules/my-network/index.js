@@ -12,7 +12,7 @@ import { ContainerCustom } from './MyNetwork.styles'
 const MyNetwork = props => {
   const getApiConfig = () => ({
     method: 'GET',
-    url: '/prodex/api/tradepass/connections', //FIXME
+    url: '/prodex/api/tradepass/connections1', //FIXME
     params: {
       pageSize: 50,
       sortBy: 'DATE',

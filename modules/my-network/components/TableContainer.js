@@ -1,11 +1,9 @@
 import { connect } from 'react-redux'
 import { FormattedNumber } from 'react-intl'
 import { Image } from 'semantic-ui-react'
-import api from '../../../api'
-import axios from 'axios'
-
 //Components
 import Table from './Table'
+import Logo from '../../../assets/images/nav/logo-bluepallet.png' //DELETE
 //HOC
 import { withDatagrid } from '../../datagrid'
 //Services
@@ -14,25 +12,36 @@ import { getStatusLabel, getCriteriaLabel, getStatuses, getDate, getTradeCriteri
 import { buttonActionsDetailRow, connectionsStatuses } from '../actions'
 import { getCompanyLogo } from '../../company-form/actions'
 
+//Constants
+import { mockRows } from '../constants'
+
 const mapDispatchToProps = {
   buttonActionsDetailRow,
   connectionsStatuses,
   getCompanyLogo
 }
 
-const mapStateToProps = (state, { datagrid }) => {
-  const { rows } = datagrid
+const mapStateToProps = ({ myNetwork }, { datagrid }) => {
+  //const { rows } = datagrid //FIXME
 
   return {
     datagrid,
     loadingDatagrid: datagrid.loading,
-    statuses: getStatuses(rows),
-    rows: rows?.length
-      ? rows.map(row => {
+    statuses: getStatuses(mockRows),
+    rows: mockRows?.length
+      ? mockRows.map((row, i) => {
           return {
             ...row,
             id: row?.connectionId,
-            member: <b>{row?.connectedCompany?.name}</b>,
+            member: (
+              <div key={i}>
+                {/*FIXME row?.connectedCompany?.logo */}
+                <Image verticalAlign='middle' size='mini' spaced={true} src={Logo} />
+
+                <b>{row?.connectedCompany?.name}</b>
+              </div>
+            ),
+            logo: <Image verticalAlign='middle' size='small' spaced={true} src={Logo} />, //FIXME row?.connectedCompany?.logo
             connectionStatus: getStatusLabel(row?.status),
             eligibilityCriteria: getCriteriaLabel(row?.criteria),
             date: getDate(row?.updatedAt),

@@ -3,21 +3,21 @@ import { Grid } from 'semantic-ui-react'
 //Components
 import ColumnSegment from './ColumnSegment'
 //Styles
-import { SegmentGroupHeader, GridColumnDetail } from '../DetailRow.style'
+import { SegmentGroupHeader, GridColumnDetail, GridRowBottomSegment } from '../DetailRow.style'
 /**
  * Segments shows Legal Data, Merketing Data and Verified Data
  * @component
  */
 const BottomSegmentData = props => (
-  <Grid.Row>
+  <GridRowBottomSegment>
     <GridColumnDetail>
       <SegmentGroupHeader horizontal noneBorder>
-        {Object.keys(props).map(key => {
-          return <ColumnSegment data={props[key]} titleId={key} />
+        {Object.keys(props).map((key, i) => {
+          return <ColumnSegment key={i} data={props[key]} titleId={key} />
         })}
       </SegmentGroupHeader>
     </GridColumnDetail>
-  </Grid.Row>
+  </GridRowBottomSegment>
 )
 
 BottomSegmentData.propTypes = {

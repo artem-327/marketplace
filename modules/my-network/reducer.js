@@ -24,10 +24,10 @@ export default function reducer(state = initialState, action) {
     case AT.CONNECTIONS_STATUSES: {
       return {
         ...state,
-        all: payload.all,
-        active: payload.active,
-        pending: payload.pending,
-        requested: payload.requested
+        all: payload?.all,
+        active: payload?.active,
+        pending: payload?.pending,
+        requested: payload?.requested
       }
     }
 
