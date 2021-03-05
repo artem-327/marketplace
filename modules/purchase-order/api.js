@@ -7,8 +7,8 @@ export const getCartCountItems = () =>
     .then(response => response.data)
     .catch(error => console.error(error))
 export const deleteCart = () => api.delete(`/prodex/api/cart`)
-export const addCartItem = ({ productOffer, pkgAmount }) =>
-  api.post('/prodex/api/cart/items', { productOffer, pkgAmount }).then(response => response.data)
+export const addCartItem = ({ productOffer, pkgAmount, sellerId }) =>
+  api.post('/prodex/api/cart/items', { productOffer, pkgAmount, sellerId }).then(response => response.data)
 export const deleteCartItem = cartItemId => api.delete(`/prodex/api/cart/items/${cartItemId}`)
 export const updateCartItem = ({ cartItemId, pkgAmount }) =>
   api.patch(`/prodex/api/cart/items/${cartItemId}?pkgAmount=${pkgAmount}`).then(response => response.data)
