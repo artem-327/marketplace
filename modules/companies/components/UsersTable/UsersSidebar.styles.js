@@ -29,7 +29,7 @@ export const ModalFixed = styled(Modal)`
       position: relative;
       overflow: hidden;
       margin: -1.5rem;
-      padding: 1.5em;
+      padding: 1.5em 1.5em 0.5em; // part of Safari fix
 
       > .ps__rail-y {
         position: absolute !important;
@@ -39,14 +39,14 @@ export const ModalFixed = styled(Modal)`
         opacity: 0.2;
         overflow: hidden !important;
         width: 10px !important;
-        height: calc(100% - 4px) !important;
-        margin-top: 2px !important;
+        height: 100% !important;
+        padding: 0 2px !important;
 
         .ps__thumb-y {
           position: absolute;
           width: 6px;
           margin: 0 auto;
-          border-radius: 0;
+          border-radius: 3px;
           background: #20273a;
         }
       }
@@ -54,6 +54,15 @@ export const ModalFixed = styled(Modal)`
       & > .ps__rail-y:hover,
       &.ps--scrolling-y > .ps__rail-y {
         opacity: 0.5;
+      }
+      
+      // part of Safari fix
+      &:after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1em;
+        opacity: 0.01;
       }
     }
   }
