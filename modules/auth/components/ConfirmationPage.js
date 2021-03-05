@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import * as val from 'yup'
 import Router from 'next/router'
 import { Required } from '~/components/constants/layout'
-import Logo from '~/assets/images/login/logo-login.png'
+import Logo from '~/assets/images/login/logo-bluepallet.png'
 
 import { addressValidationSchema, errorMessages, einValidation, phoneValidation } from '~/constants/yupValidation'
 
