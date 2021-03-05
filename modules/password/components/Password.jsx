@@ -10,10 +10,12 @@ import Router from 'next/router'
 import { setPassword } from '../api'
 
 import {
-  LoginSegment,
   LogoWrapper,
+  LoginContainer,
+  LoginSegment,
   LoginHeader,
   LogoImage,
+  LogoIcon,
   StyledForm,
   BottomMargedRow,
   LoginField,
@@ -24,6 +26,7 @@ import { initialValues, validationSchema } from '../constants/validation'
 import { withToastManager } from 'react-toast-notifications'
 
 import Logo from '~/assets/images/login/logo-bluepallet.png'
+import Icon from '~/assets/images/login/icon-bluepallet.png'
 
 class Password extends Component {
   render() {
@@ -36,84 +39,90 @@ class Password extends Component {
     let header = <FormattedMessage id={`verification.${forgottenPassword ? 'provideSecurityCode' : 'verification'}`} />
 
     return (
-      <LoginSegment raised padded='very'>
+      <>
         <LogoWrapper>
           <LogoImage src={Logo} />
         </LogoWrapper>
+        <LoginContainer>
+          <LoginSegment raised padded='very'>
+            <LoginHeader as='h1'>
+              <LogoIcon src={Icon} />
+              {hello}
+            </LoginHeader>
 
-        <LoginHeader as='h1'>{hello}</LoginHeader>
+            <StyledForm
+              validateOnChange={true}
+              initialValues={initialValues(forgottenPassword)}
+              validationSchema={validationSchema()}
+              onSubmit={async (values, { setSubmitting }) => {
+                try {
+                  await setPassword({
+                    email: values.email.trim(),
+                    newPassword: values.password,
+                    securityCode: values.securityCode
+                    // ...(values.termsOfAgreement && { approveTOS: true })
+                  })
 
-        <StyledForm
-          validateOnChange={true}
-          initialValues={initialValues(forgottenPassword)}
-          validationSchema={validationSchema()}
-          onSubmit={async (values, { setSubmitting }) => {
-            try {
-              await setPassword({
-                email: values.email.trim(),
-                newPassword: values.password,
-                securityCode: values.securityCode
-                // ...(values.termsOfAgreement && { approveTOS: true })
-              })
+                  Router.push('/auth/login')
+                } catch (_) {
+                } finally {
+                  setSubmitting(false)
+                }
+              }}
+              enableReinitialize={true}>
+              {_ => {
+                return (
+                  <>
+                    <Grid columns={1}>
+                      <BottomMargedRow>
+                        <GridColumn textAlign='center'>
+                          <Header as='h3'>{header}</Header>
+                        </GridColumn>
+                      </BottomMargedRow>
+                    </Grid>
 
-              Router.push('/auth/login')
-            } catch (_) {
-            } finally {
-              setSubmitting(false)
-            }
-          }}
-          enableReinitialize={true}>
-          {_ => {
-            return (
-              <>
-                <Grid columns={1}>
-                  <BottomMargedRow>
-                    <GridColumn textAlign='center'>
-                      <Header as='h3'>{header}</Header>
-                    </GridColumn>
-                  </BottomMargedRow>
-                </Grid>
+                    <LoginField>
+                      <Input
+                        name='securityCode'
+                        label={formatMessage({ id: 'verification.labels.securityCode', defaultMessage: 'Security Code' })}
+                      />
+                    </LoginField>
+                    <LoginField>
+                      <Input
+                        name='email'
+                        label={formatMessage({ id: 'verification.labels.email', defaultMessage: 'E-mail Address' })}
+                      />
+                    </LoginField>
+                    <LoginField>
+                      <Input
+                        inputProps={{ type: 'password' }}
+                        name='password'
+                        label={formatMessage({ id: 'verification.labels.password', defaultMessage: 'Password' })}
+                      />
+                    </LoginField>
+                    <LoginField>
+                      <Input
+                        inputProps={{ type: 'password' }}
+                        name='passwordConfirm'
+                        label={formatMessage({
+                          id: 'verification.labels.passwordConfirm',
+                          defaultMessage: 'Password Confirmation'
+                        })}
+                      />
+                    </LoginField>
 
-                <LoginField>
-                  <Input
-                    name='securityCode'
-                    label={formatMessage({ id: 'verification.labels.securityCode', defaultMessage: 'Security Code' })}
-                  />
-                </LoginField>
-                <LoginField>
-                  <Input
-                    name='email'
-                    label={formatMessage({ id: 'verification.labels.email', defaultMessage: 'E-mail Address' })}
-                  />
-                </LoginField>
-                <LoginField>
-                  <Input
-                    inputProps={{ type: 'password' }}
-                    name='password'
-                    label={formatMessage({ id: 'verification.labels.password', defaultMessage: 'Password' })}
-                  />
-                </LoginField>
-                <LoginField>
-                  <Input
-                    inputProps={{ type: 'password' }}
-                    name='passwordConfirm'
-                    label={formatMessage({
-                      id: 'verification.labels.passwordConfirm',
-                      defaultMessage: 'Password Confirmation'
-                    })}
-                  />
-                </LoginField>
-
-                <LoginButton size='big' fluid>
-                  <FormattedMessage id='global.continue' defaultMessage='Continue'>
-                    {text => text}
-                  </FormattedMessage>
-                </LoginButton>
-              </>
-            )
-          }}
-        </StyledForm>
-      </LoginSegment>
+                    <LoginButton size='big' fluid>
+                      <FormattedMessage id='global.continue' defaultMessage='Continue'>
+                        {text => text}
+                      </FormattedMessage>
+                    </LoginButton>
+                  </>
+                )
+              }}
+            </StyledForm>
+          </LoginSegment>
+        </LoginContainer>
+      </>
     )
   }
 }
