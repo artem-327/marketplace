@@ -59,7 +59,7 @@ export const search = id => {
     await dispatch({
       type: AT.SEARCH_PENDING
     })
-    api
+    await api
       .search(id)
       .then(
         async response =>
