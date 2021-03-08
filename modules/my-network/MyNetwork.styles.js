@@ -48,3 +48,7 @@ export const DivTextValueTradeCriteria = styled.div`
   font-weight: bold;
   margin-right: 6px;
 `
+
+export const DivButon = styled.div`
+  width: -webkit-fill-available;
+`

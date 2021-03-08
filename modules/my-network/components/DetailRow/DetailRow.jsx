@@ -1,26 +1,35 @@
-import React from 'react'
 import PropTypes from 'prop-types'
-import { Grid } from 'semantic-ui-react'
+import { Grid, Image } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
+import { ChevronsUp } from 'react-feather'
 //Components
 import BottomSegments from './BottomSegments/BottomSegments'
 import TradeCriteria from '../../../../components/detail-row/header'
 import Header from './Header'
 //Styles
 import { StyledGrid } from '../../../../components/detail-row/styles'
-import { DivTitleTradeCriteria, GridColumnDetail } from './DetailRow.style'
+import {
+  DivTitleTradeCriteria,
+  GridColumnDetail,
+  DivCollapse,
+  DivIconCollapse,
+  DivCollapseText,
+  DivTradePassLogo
+} from './DetailRow.style'
 //Constants
 import { BUTTON_PROPS, ATTRIBUTES_TRADE_CRITERIA } from '../../constants'
+//Images
+import Logo from '../../../../assets/images/network/trade-pass-logo-bw.png'
 
 /**
  * @category My Network
  * @component
  */
-const DetailRow = ({ row }) => (
+const DetailRow = ({ row, expandRow }) => (
   <StyledGrid>
     <Header
       id={row.id}
-      logo='URL:LOGO'
+      logo={row.logo}
       transactions={47}
       averageValue={14149}
       buttonsProps={BUTTON_PROPS[row.status]}
@@ -35,6 +44,17 @@ const DetailRow = ({ row }) => (
     </Grid.Row>
     <TradeCriteria as='div' row={row.tradeCriteria} attributes={ATTRIBUTES_TRADE_CRITERIA} />
     <BottomSegments legalData={row.legalData} marketingData={row.marketingData} verifiedData={row.verifiedData} />
+    <DivCollapse onClick={expandRow}>
+      <div>
+        <DivIconCollapse>
+          <ChevronsUp size='18' />
+        </DivIconCollapse>
+        <DivCollapseText>Collapse</DivCollapseText>
+      </div>
+      <DivTradePassLogo>
+        <Image src={Logo} />
+      </DivTradePassLogo>
+    </DivCollapse>
   </StyledGrid>
 )
 

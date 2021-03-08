@@ -1,23 +1,14 @@
 import { Component } from 'react'
 import Link from 'next/link'
 import Router, { withRouter } from 'next/router'
-//Actions
-import { filterNetworkStatus } from '../modules/my-network/actions' //TODO
-//Constants
-import { NETWORK_STATUS } from '../modules/my-network/constants'
-import { Menu, Dropdown, Icon } from 'semantic-ui-react'
-import { withAuth } from '~/hocs'
+import { Menu, Dropdown } from 'semantic-ui-react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import { tabChanged, triggerSystemSettingsModal } from '~/modules/settings/actions'
-import { loadData as switchAlertsCategory } from '~/modules/alerts/actions'
-import { getSafe } from '~/utils/functions'
 import {
   Layers,
   Settings,
   ShoppingBag,
   Grid,
-  Sliders,
   FileText,
   Bell,
   Briefcase,
@@ -31,9 +22,22 @@ import {
   Globe
 } from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { defaultTabs as operationsDefaultTabs, orderOperatorTabs } from '~/modules/operations/constants'
-import { defaultTabs as adminDefaultTabs } from '~/modules/admin/config'
+
+//Constants
+import { NETWORK_STATUS } from '../modules/my-network/constants'
+import { defaultTabs as operationsDefaultTabs, orderOperatorTabs } from '../modules/operations/constants'
+//HOCS
+import { withAuth } from '../hocs'
+//Components
+import { tabChanged, triggerSystemSettingsModal } from '../modules/settings/actions'
+import { loadData as switchAlertsCategory } from '../modules/alerts/actions'
+import { defaultTabs as adminDefaultTabs } from '../modules/admin/config'
 import { NavCircle } from '../modules/alerts/components/layout'
+import { Datagrid } from '../modules/datagrid'
+//Services
+import { getSafe } from '../utils/functions'
+//Styles
+import { DivNavItem } from './NavigationMenu.styles'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -185,6 +189,7 @@ class Navigation extends Component {
       wantedBoard: false,
       inventory: false,
       marketplace: false,
+      myNetwork: false,
       [type]: !typeState,
       currentType: type
     })
@@ -253,7 +258,6 @@ class Navigation extends Component {
       isClientCompanyManager,
       companiesTabsNames,
       productsTabsNames,
-      filterNetworkStatus,
       alertTab,
       requestedNetworks,
       pendingNetworks,
@@ -291,6 +295,23 @@ class Navigation extends Component {
         </Link>
       )
     })
+
+    const DivItem = ({ children, dataTest, networkStatus, pointer }) => {
+      return (
+        <DivNavItem
+          pointer={pointer}
+          data-test={dataTest}
+          onClick={async e => {
+            e.stopPropagation()
+            if (typeof networkStatus === 'function') {
+              await networkStatus()
+            }
+            this.setState({ myNetwork: true })
+          }}>
+          {children}
+        </DivNavItem>
+      )
+    }
 
     const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
       isCompanyAdmin: null,
@@ -416,7 +437,11 @@ class Navigation extends Component {
           data-test='navigation_menu_my_network_drpdn'>
           <Dropdown.Menu data-test='navigation_menu_my_Network_menu'>
             <PerfectScrollbar>
-              <Dropdown.Item as={MenuLink} to='/my-network' dataTest='navigation_menu_my_Network_all_drpdn'>
+              <Dropdown.Item
+                as={DivItem}
+                pointer={true}
+                dataTest='navigation_menu_my_Network_all_drpdn'
+                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ALL })}>
                 {formatMessage(
                   {
                     id: 'navigation.myNetworkAll',
@@ -426,9 +451,9 @@ class Navigation extends Component {
                 )}
               </Dropdown.Item>
               <Dropdown.Item
-                as={MenuLink}
-                to='/my-network'
-                onClick={() => filterNetworkStatus(NETWORK_STATUS.ACTIVE)}
+                as={DivItem}
+                pointer={true}
+                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ACTIVE })}
                 dataTest='navigation_menu_my_network_active_drpdn'>
                 {formatMessage(
                   {
@@ -439,9 +464,9 @@ class Navigation extends Component {
                 )}
               </Dropdown.Item>
               <Dropdown.Item
-                as={MenuLink}
-                to='/my-network'
-                onClick={() => filterNetworkStatus(NETWORK_STATUS.PENDING)}
+                as={DivItem}
+                pointer={true}
+                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.PENDING })}
                 dataTest='navigation_menu_my_network_pending_drpdn'>
                 {formatMessage(
                   {
@@ -452,9 +477,8 @@ class Navigation extends Component {
                 )}
               </Dropdown.Item>
               <Dropdown.Item
-                as={MenuLink}
-                to='/my-network'
-                onClick={() => filterNetworkStatus(NETWORK_STATUS.REQUESTED)}
+                as={DivItem}
+                //networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.REQUESTED })}
                 dataTest='navigation_menu_my_network_requested_drpdn'>
                 {formatMessage(
                   {
@@ -895,7 +919,7 @@ export default withAuth(
   withRouter(
     connect(
       (store, { navigationPS }) => ({
-        navigationPS: navigationPS,
+        navigationPS,
         auth: store?.auth,
         tabsNames: store?.settings?.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),

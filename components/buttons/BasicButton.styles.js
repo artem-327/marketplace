@@ -7,6 +7,7 @@ export const CustomButton = styled(Button)`
   border: ${props => (props.noBorder ? 'none !important' : 'solid 1px #dee2e6 !important')};
   color: ${props => (props.textColor ? props.textColor : '#20273a !important')};
   background-color: ${props => (props.background ? props.background : '#ffffff !important')};
+  float: ${({ float }) => (float ? float : null)};
   height: 40px !important;
   border-radius: 3px !important;
   font-weight: 500 !important;

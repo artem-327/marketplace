@@ -49,3 +49,31 @@ export const connectionsStatuses = statuses => ({
   type: AT.CONNECTIONS_STATUSES,
   payload: statuses
 })
+
+export const triggerModal = () => ({
+  type: AT.TRIGGER_MODAL
+})
+
+export const search = id => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SEARCH_PENDING
+    })
+    await api
+      .search(id)
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.SEARCH_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.SEARCH_REJECTED,
+            error: err
+          })
+      )
+  }
+}

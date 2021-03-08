@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import ProdexTable from '../../../components/table'
 import DetailRow from './DetailRow/DetailRow'
 //Constants
-import { COLUMNS, CONNECTIONS_STATUSES } from '../constants'
+import { COLUMNS } from '../constants'
 //Hooks
 import { usePrevious } from '../../../hooks'
 
@@ -14,15 +14,27 @@ import { usePrevious } from '../../../hooks'
  */
 const Table = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
-  const { loadingDatagrid, rows, connectionsStatuses, statuses } = props
+  const { loadingDatagrid, rows, connectionsStatuses, statuses, getLogo } = props
   const prevLoadingDatagrid = usePrevious(loadingDatagrid)
 
   useEffect(() => {
-    if (prevLoadingDatagrid && !loadingDatagrid) connectionsStatuses(statuses)
+    if (prevLoadingDatagrid && !loadingDatagrid) {
+      connectionsStatuses(statuses)
+    }
   }, [prevLoadingDatagrid, loadingDatagrid, statuses, connectionsStatuses])
 
+  const expandRow = row => {
+    let ids = expandedRowIds.slice()
+    if (ids.includes(row.id)) {
+      setExpandedRowIds(ids.filter(id => id !== row.id))
+    } else {
+      ids.push(row.id)
+      setExpandedRowIds(ids)
+    }
+  }
+
   const getRowDetail = ({ row }) => {
-    return <DetailRow row={row} />
+    return <DetailRow row={row} expandRow={() => expandRow(row)} />
   }
 
   return (
@@ -34,15 +46,7 @@ const Table = props => {
         rows={rows}
         rowDetailType={true}
         rowDetail={getRowDetail}
-        onRowClick={(_, row) => {
-          let ids = expandedRowIds.slice()
-          if (ids.includes(row.id)) {
-            setExpandedRowIds(ids.filter(id => id !== row.id))
-          } else {
-            ids.push(row.id)
-            setExpandedRowIds(ids)
-          }
-        }}
+        onRowClick={(_, row) => expandRow(row)}
         expandedRowIds={expandedRowIds}
         onExpandedRowIdsChange={expandedRowIds => setExpandedRowIds(expandedRowIds)}
         estimatedRowHeight={1000}

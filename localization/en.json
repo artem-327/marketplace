@@ -984,6 +984,8 @@
   "global.chooseExistingDocument": "Choose Existing Document",
   "global.orUploadNewDocumet": "Or Upload New Document",
   "global.browseFileHere": "Browse file here",
+  "global.invite": "Invite",
+  "global.search": "Search",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
@@ -3189,5 +3191,9 @@
   "myNetworks.detailRow.disconnect": "Disconnect",
   "myNetworks.detailRow.reject": "Reject",
   "myNetworks.detailRow.accept": "Accept",
-  "myNetworks.detailRow.modal.content": "Disconnecting will remove this company from your Network. You can request to connect again at anytime."
+  "myNetworks.detailRow.modal.content": "Disconnecting will remove this company from your Network. You can request to connect again at anytime.",
+  "myNetworks.inviteModal.title": "TradePass ID",
+  "myNetworks.inviteModal.placeholder": "Enter TradePass ID",
+  "myNetworks.inviteModal.errorLabel": "No member was found in this TradePass ID",
+  "myNetworks.inviteModal.content": "Sending an invite to a member will allow that member to see your TradePass and allow that member to add you to their network."
 }

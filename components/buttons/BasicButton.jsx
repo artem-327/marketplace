@@ -21,6 +21,7 @@ BasicButton.propTypes = {
   noBorder: PropTypes.bool,
   textColor: PropTypes.string,
   background: PropTypes.string,
+  floatRight: PropTypes.string,
   children: PropTypes.any
 }
 
@@ -28,6 +29,7 @@ BasicButton.defaultProps = {
   noBorder: false,
   children: null,
   textColor: '#20273a !important',
+  floatRight: null,
   background: '#ffffff !important'
 }
 
