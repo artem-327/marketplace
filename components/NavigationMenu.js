@@ -281,21 +281,14 @@ class Navigation extends Component {
       alerts
     } = this.state
 
-    const MenuLink = withRouter(({ router: { pathname }, to, children, tab, className, dataTest, networkStatus }) => {
+    const MenuLink = withRouter(({ router: { pathname }, to, children, tab, className, dataTest }) => {
       return (
         <Link href={to}>
           <Menu.Item
             as='a'
             data-test={dataTest}
             active={pathname === to}
-            onClick={async e => {
-              if (typeof networkStatus === 'function') {
-                await networkStatus()
-                this.setState({ myNetwork: true })
-              } else {
-                this.settingsLink(e, to, tab)
-              }
-            }}
+            onClick={async e => this.settingsLink(e, to, tab)}
             className={className}>
             {children}
           </Menu.Item>
