@@ -7,6 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Person } from '@material-ui/icons'
 import get from 'lodash/get'
 import { Formik } from 'formik'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 //Actions
 import {
@@ -47,6 +48,7 @@ import {
   SegmentStyled,
   GridColumnWError
 } from './UserEditSidebar.styles'
+import { ModalFixed } from '../../../../companies/components/UsersTable/UsersSidebar.styles'
 /**
  * @category Settings - Users
  * @component
@@ -136,7 +138,7 @@ const UserEditSidebar = props => {
         let errorRoles = get(errors, 'roles', null)
 
         return (
-          <Modal
+          <ModalFixed
             open
             size='small'
             closeIcon={!!openGlobalAddForm}
@@ -159,221 +161,223 @@ const UserEditSidebar = props => {
               </DivHighSegment>
             </Modal.Header>
             <Modal.Content scrolling>
-              <Form>
-                <SegmentStyled>
-                  <Grid>
-                    <GridRow>
-                      <GridColumn width={8} data-test='settings_users_popup_name_inp'>
-                        <Input
-                          type='text'
-                          label={
-                            <>
-                              {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
-                              <Required />
-                            </>
-                          }
-                          name='name'
-                          inputProps={{
-                            placeholder: formatMessage({ id: 'global.enterName', defaultMessage: 'Enter Name' })
-                          }}
-                        />
-                      </GridColumn>
-                      <GridColumn width={8} data-test='settings_users_popup_title_inp'>
-                        <Input
-                          type='text'
-                          label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
-                          name='jobTitle'
-                          inputProps={{
-                            placeholder: formatMessage({
-                              id: 'global.enterJobTitle',
-                              defaultMessage: 'Enter Job Title'
-                            })
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
+              <PerfectScrollbar>
+                <Form>
+                  <SegmentStyled>
+                    <Grid>
+                      <GridRow>
+                        <GridColumn width={8} data-test='settings_users_popup_name_inp'>
+                          <Input
+                            type='text'
+                            label={
+                              <>
+                                {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                                <Required />
+                              </>
+                            }
+                            name='name'
+                            inputProps={{
+                              placeholder: formatMessage({ id: 'global.enterName', defaultMessage: 'Enter Name' })
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn width={8} data-test='settings_users_popup_title_inp'>
+                          <Input
+                            type='text'
+                            label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
+                            name='jobTitle'
+                            inputProps={{
+                              placeholder: formatMessage({
+                                id: 'global.enterJobTitle',
+                                defaultMessage: 'Enter Job Title'
+                              })
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
 
-                    <GridRow>
-                      <GridColumn width={8} data-test='settings_users_popup_email_inp'>
-                        <Input
-                          type='text'
-                          label={
-                            <>
-                              {formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
-                              <Required />
-                            </>
-                          }
-                          name='email'
-                          inputProps={{
-                            placeholder: formatMessage({
-                              id: 'global.enterEmailAddress',
-                              defaultMessage: 'Enter Email Address'
-                            })
-                          }}
-                        />
-                      </GridColumn>
-                      <GridColumn width={8} data-test='settings_users_popup_Phone_inp'>
-                        <PhoneNumber
-                          name='phone'
-                          values={values}
-                          label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          errors={errors}
-                          touched={touched}
-                          isSubmitting={isSubmitting}
-                          placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
-                          clearable={true}
-                        />
-                      </GridColumn>
-                    </GridRow>
-                  </Grid>
-                </SegmentStyled>
+                      <GridRow>
+                        <GridColumn width={8} data-test='settings_users_popup_email_inp'>
+                          <Input
+                            type='text'
+                            label={
+                              <>
+                                {formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
+                                <Required />
+                              </>
+                            }
+                            name='email'
+                            inputProps={{
+                              placeholder: formatMessage({
+                                id: 'global.enterEmailAddress',
+                                defaultMessage: 'Enter Email Address'
+                              })
+                            }}
+                          />
+                        </GridColumn>
+                        <GridColumn width={8} data-test='settings_users_popup_Phone_inp'>
+                          <PhoneNumber
+                            name='phone'
+                            values={values}
+                            label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                            setFieldValue={setFieldValue}
+                            setFieldTouched={setFieldTouched}
+                            errors={errors}
+                            touched={touched}
+                            isSubmitting={isSubmitting}
+                            placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
+                            clearable={true}
+                          />
+                        </GridColumn>
+                      </GridRow>
+                    </Grid>
+                  </SegmentStyled>
 
-                <SegmentStyled>
-                  <Grid>
-                    <GridRow>
-                      <GridColumn width={8}>
-                        <Dropdown
-                          label={
-                            <>
-                              {formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
-                              <Required />
-                            </>
-                          }
-                          name='homeBranch'
-                          options={branches}
-                          inputProps={{
-                            placeholder: formatMessage({
-                              id: 'global.selectHomeBranch',
-                              defaultMessage: 'Select Home Branch'
-                            }),
-                            'data-test': 'settings_users_popup_homeBranch_drpdn'
-                          }}
-                        />
-                      </GridColumn>
-                      <GridColumn width={8}>
-                        <Dropdown
-                          label={formatMessage({
-                            id: 'global.additionalBranches',
-                            defaultMessage: 'Additional Branches'
-                          })}
-                          name='additionalBranches'
-                          options={branches}
-                          inputProps={{
-                            placeholder: formatMessage({
-                              id: 'global.selectAdditionalHomeBranch',
-                              defaultMessage: 'Select Additional Home Branch'
-                            }),
-                            'data-test': 'settings_users_popup_additionalBranches_drpdn',
-                            multiple: true
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
-                    {/*Comemnted by https://pm.artio.net/issues/34033#note-14 */}
-                    {false && (
+                  <SegmentStyled>
+                    <Grid>
                       <GridRow>
                         <GridColumn width={8}>
                           <Dropdown
                             label={
                               <>
-                                {formatMessage({
-                                  id: 'global.sellMarketSegments',
-                                  defaultMessage: 'Sell Market Segment'
-                                })}
+                                {formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
+                                <Required />
                               </>
                             }
-                            name='sellMarketSegments'
-                            options={allSellMarketSegmentsOptions}
+                            name='homeBranch'
+                            options={branches}
                             inputProps={{
-                              loading: searchedSellMarketSegmentsLoading,
-                              search: true,
-                              icon: 'search',
-                              selection: true,
-                              multiple: true,
-                              disabled: !values.homeBranch || !isCompanyAdmin,
                               placeholder: formatMessage({
-                                id: 'global.selectSellMarketSegments',
-                                defaultMessage: 'Select Sell Market Segments'
+                                id: 'global.selectHomeBranch',
+                                defaultMessage: 'Select Home Branch'
                               }),
-                              noResultsMessage: formatMessage({
-                                id: 'global.startTypingToSearch',
-                                defaultMessage: 'Start typing to begin search'
-                              }),
-                              onSearchChange: (_, data) => handleSellMarketSegmentsSearchChange(_, data, props),
-                              onChange: (_, { value }) =>
-                                setSelectedSellMarketSegmentsOptions(
-                                  handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
-                                )
+                              'data-test': 'settings_users_popup_homeBranch_drpdn'
                             }}
                           />
                         </GridColumn>
                         <GridColumn width={8}>
                           <Dropdown
-                            label={
-                              <>
-                                {formatMessage({
-                                  id: 'global.buyMarketSegments',
-                                  defaultMessage: 'Buy Market Segment'
-                                })}
-                              </>
-                            }
-                            name='buyMarketSegments'
-                            options={allBuyMarketSegmentsOptions}
+                            label={formatMessage({
+                              id: 'global.additionalBranches',
+                              defaultMessage: 'Additional Branches'
+                            })}
+                            name='additionalBranches'
+                            options={branches}
                             inputProps={{
-                              loading: searchedBuyMarketSegmentsLoading,
-                              search: true,
-                              icon: 'search',
-                              selection: true,
-                              multiple: true,
-                              disabled: !values.homeBranch || !isCompanyAdmin,
                               placeholder: formatMessage({
-                                id: 'global.selectBuyMarketSegments',
-                                defaultMessage: 'Select Buy Market Segment'
+                                id: 'global.selectAdditionalHomeBranch',
+                                defaultMessage: 'Select Additional Home Branch'
                               }),
-                              noResultsMessage: formatMessage({
-                                id: 'global.startTypingToSearch',
-                                defaultMessage: 'Start typing to begin search'
-                              }),
-                              onSearchChange: (_, data) => handleBuyMarketSegmentsSearchChange(_, data, props),
-                              onChange: (_, { value }) =>
-                                handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions, state)
+                              'data-test': 'settings_users_popup_additionalBranches_drpdn',
+                              multiple: true
                             }}
                           />
                         </GridColumn>
                       </GridRow>
-                    )}
-                  </Grid>
-                </SegmentStyled>
-
-                <SegmentStyled>
-                  <Grid>
-                    <GridRow style={{ paddingBottom: '2.5px' }}>
-                      <GridColumnWError className={errorRoles ? 'error' : ''}>
-                        <FormattedMessage id='global.roles' defaultMessage='Roles'>
-                          {text => text}
-                        </FormattedMessage>
-                        <Required />
-                      </GridColumnWError>
-                    </GridRow>
-                    <GridRow style={{ paddingBottom: '0' }}>
-                      {generateCheckboxes(
-                        isClientCompany ? clientCompanyRoles : userRoles,
-                        values,
-                        'roles',
-                        errorRoles
+                      {/*Comemnted by https://pm.artio.net/issues/34033#note-14 */}
+                      {false && (
+                        <GridRow>
+                          <GridColumn width={8}>
+                            <Dropdown
+                              label={
+                                <>
+                                  {formatMessage({
+                                    id: 'global.sellMarketSegments',
+                                    defaultMessage: 'Sell Market Segment'
+                                  })}
+                                </>
+                              }
+                              name='sellMarketSegments'
+                              options={allSellMarketSegmentsOptions}
+                              inputProps={{
+                                loading: searchedSellMarketSegmentsLoading,
+                                search: true,
+                                icon: 'search',
+                                selection: true,
+                                multiple: true,
+                                disabled: !values.homeBranch || !isCompanyAdmin,
+                                placeholder: formatMessage({
+                                  id: 'global.selectSellMarketSegments',
+                                  defaultMessage: 'Select Sell Market Segments'
+                                }),
+                                noResultsMessage: formatMessage({
+                                  id: 'global.startTypingToSearch',
+                                  defaultMessage: 'Start typing to begin search'
+                                }),
+                                onSearchChange: (_, data) => handleSellMarketSegmentsSearchChange(_, data, props),
+                                onChange: (_, { value }) =>
+                                  setSelectedSellMarketSegmentsOptions(
+                                    handleSellMarketSegmentsChange(value, allSellMarketSegmentsOptions)
+                                  )
+                              }}
+                            />
+                          </GridColumn>
+                          <GridColumn width={8}>
+                            <Dropdown
+                              label={
+                                <>
+                                  {formatMessage({
+                                    id: 'global.buyMarketSegments',
+                                    defaultMessage: 'Buy Market Segment'
+                                  })}
+                                </>
+                              }
+                              name='buyMarketSegments'
+                              options={allBuyMarketSegmentsOptions}
+                              inputProps={{
+                                loading: searchedBuyMarketSegmentsLoading,
+                                search: true,
+                                icon: 'search',
+                                selection: true,
+                                multiple: true,
+                                disabled: !values.homeBranch || !isCompanyAdmin,
+                                placeholder: formatMessage({
+                                  id: 'global.selectBuyMarketSegments',
+                                  defaultMessage: 'Select Buy Market Segment'
+                                }),
+                                noResultsMessage: formatMessage({
+                                  id: 'global.startTypingToSearch',
+                                  defaultMessage: 'Start typing to begin search'
+                                }),
+                                onSearchChange: (_, data) => handleBuyMarketSegmentsSearchChange(_, data, props),
+                                onChange: (_, { value }) =>
+                                  handleBuyMarketSegmentsChange(value, allBuyMarketSegmentsOptions, state)
+                              }}
+                            />
+                          </GridColumn>
+                        </GridRow>
                       )}
-                    </GridRow>
-                    <GridRow style={{ paddingTop: '0', marginTop: '-5px' }}>
-                      <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
-                    </GridRow>
-                    {/*<pre>
-                        {JSON.stringify(values, null, 2)}
-                      </pre>*/}
-                  </Grid>
-                </SegmentStyled>
-              </Form>
+                    </Grid>
+                  </SegmentStyled>
+
+                  <SegmentStyled>
+                    <Grid>
+                      <GridRow style={{ paddingBottom: '2.5px' }}>
+                        <GridColumnWError className={errorRoles ? 'error' : ''}>
+                          <FormattedMessage id='global.roles' defaultMessage='Roles'>
+                            {text => text}
+                          </FormattedMessage>
+                          <Required />
+                        </GridColumnWError>
+                      </GridRow>
+                      <GridRow style={{ paddingBottom: '0' }}>
+                        {generateCheckboxes(
+                          isClientCompany ? clientCompanyRoles : userRoles,
+                          values,
+                          'roles',
+                          errorRoles
+                        )}
+                      </GridRow>
+                      <GridRow style={{ paddingTop: '0', marginTop: '-5px' }}>
+                        <GridColumn>{errorRoles && <span className='sui-error-message'>{errorRoles}</span>}</GridColumn>
+                      </GridRow>
+                      {/*<pre>
+                          {JSON.stringify(values, null, 2)}
+                        </pre>*/}
+                    </Grid>
+                  </SegmentStyled>
+                </Form>
+              </PerfectScrollbar>
             </Modal.Content>
 
             <Modal.Actions>
@@ -395,7 +399,7 @@ const UserEditSidebar = props => {
               </Button>
             </Modal.Actions>
             <ErrorFocus />
-          </Modal>
+          </ModalFixed>
         )
       }}
     </Formik>
