@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { withRouter } from 'next/router'
-import { Segment, Image, Button, Message, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
+import { Segment, Image, Button, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -8,75 +8,13 @@ import ConfirmationPage from '~/modules/auth/components/ConfirmationPage'
 import { getSafe } from '~/utils/functions'
 import * as val from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
+import { LogoWrapper, LoginContainer, LoginSegment, InstructionsDiv, LoginHeader, StyledMessage, LogoImage, LogoIcon, LoginField, StyledInput, ToggleLabel, VersionWrapper } from '../../password/constants/layout'
 
 import Logo from '~/assets/images/login/logo-bluepallet.png'
-
-const LoginSegment = styled(Segment)`
-  position: relative;
-  width: 400px;
-  margin: 100px auto 0 !important;
-  border: 0 none !important;
-  padding: 40px !important;
-  box-shadow: 0 0 0 3000px #1b3454 !important;
-`
-
-const LogoWrapper = styled(Segment)`
-  position: absolute !important;
-  top: -125px;
-  left: 26px;
-  right: 26px;
-  width: 348px;
-  max-width: 348px;
-  margin: 0 !important;
-  border: 0 none !important;
-  padding: 0 !important;
-  background: transparent !important;
-  box-shadow: 0 0 0 0 transparent !important;
-`
-
-const LogoImage = styled(Image)`
-  width: 100%;
-  height: auto;
-`
+import Icon from '~/assets/images/login/icon-bluepallet.png'
 
 const StyledForm = styled(Form)`
   margin-bottom: 15px;
-`
-
-const ToggleLabel = styled.label`
-  color: #4183c4;
-  cursor: pointer;
-`
-
-const InstructionsDiv = styled.div`
-  margin-bottom: 15px;
-  text-align: justify;
-  font-size: 0.9rem;
-`
-
-const LoginHeader = styled.div`
-  position: relative;
-  margin: -31px 0 1.8571429rem -40px;
-  padding: 0 0 4px 40px;
-  text-decoration: none !important;
-  font-size: 1.7857143em;
-  font-weight: 400;
-  line-height: 2.44;
-
-  &:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    display: block;
-    width: 103px;
-    height: 4px;
-    background: #1b3454;
-  }
-`
-
-const LoginField = styled(Form.Field)`
-  margin-bottom: 1rem !important;
 `
 
 const LoginButton = styled(Button)`
@@ -143,112 +81,112 @@ class LoginForm extends Component {
             <ConfirmationPage />
           </>
         ) : (
-          <LoginSegment loading={isLoading} raised padded='very'>
+          <>
             <LogoWrapper>
               <LogoImage src={Logo} />
             </LogoWrapper>
+            <LoginContainer>
+              <LoginSegment loading={isLoading} raised padded='very'>
+                <LoginHeader as='h1'>
+                  <LogoIcon src={Icon} />
+                  <FormattedMessage id='login.loginPage' defaultMessage='Login Page' />
+                </LoginHeader>
 
-            <LoginHeader as='h1'>
-              <FormattedMessage id='login.welcomeBack' defaultMessage='Welcome back!' />
-            </LoginHeader>
+                {message ? (
+                  <StyledMessage error content={message} />
+                ) : (
+                  router.query.auto && <StyledMessage info content={'You have been automatically logged out.'} />
+                )}
 
-            <StyledForm
-              initialValues={initialValues}
-              validateOnChange={true}
-              validationSchema={this.state.resetPassword ? resetScheme : validationScheme}
-              onSubmit={async (values, actions) => {
-                const { username, password } = values
-                const { login, resetPasswordRequest } = this.props
+                <StyledForm
+                  initialValues={initialValues}
+                  validateOnChange={true}
+                  validationSchema={this.state.resetPassword ? resetScheme : validationScheme}
+                  onSubmit={async (values, actions) => {
+                    const { username, password } = values
+                    const { login, resetPasswordRequest } = this.props
 
-                let inputsState = {
-                  passwordError: this.state.resetPassword ? false : password.length < 3,
-                  usernameError: username.length < 3
-                }
+                    let inputsState = {
+                      passwordError: this.state.resetPassword ? false : password.length < 3,
+                      usernameError: username.length < 3
+                    }
 
-                try {
-                  if (!inputsState.passwordError && !inputsState.usernameError) {
-                    if (this.state.resetPassword) await resetPasswordRequest(username)
-                    else await login(username.trim(), password)
-                  } else {
-                    this.setState(inputsState)
-                    actions.setSubmitting(false)
-                  }
-                } catch {
-                  actions.setSubmitting(false)
-                }
-              }}>
-              {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
-                return (
-                  <>
-                    <InstructionsDiv>
-                      {this.state.resetPassword && <FormattedMessage id='auth.resetPasswordInstructions' />}
-                    </InstructionsDiv>
+                    try {
+                      if (!inputsState.passwordError && !inputsState.usernameError) {
+                        if (this.state.resetPassword) await resetPasswordRequest(username)
+                        else await login(username.trim(), password)
+                      } else {
+                        this.setState(inputsState)
+                        actions.setSubmitting(false)
+                      }
+                    } catch {
+                      // design for Bad Credentials
+                      actions.setFieldError('username', ' ')
+                      actions.setFieldError('password', ' ')
+                      actions.setSubmitting(false)
+                    }
+                  }}>
+                  {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+                    return (
+                      <>
+                        <InstructionsDiv>
+                          {this.state.resetPassword && <FormattedMessage id='auth.resetPasswordInstructions' />}
+                        </InstructionsDiv>
 
-                    <LoginField error={usernameError} data-test='login_username_inp'>
-                      <label>
-                        <FormattedMessage id='auth.username' defaultMessage='Username' />
-                      </label>
-                      <Input
-                        name='username'
-                        inputProps={{ placeholder: formatMessage({ id: 'auth.username', defaultMessage: 'Password' }) }}
-                      />
-                    </LoginField>
-                    {!this.state.resetPassword && (
-                      <LoginField error={passwordError} data-test='login_password_inp'>
-                        <label>
-                          <FormattedMessage id='auth.password' defaultMessage='Password' />
-                        </label>
-                        <Input
-                          name='password'
-                          inputProps={{
-                            placeholder: formatMessage({ id: 'auth.password', defaultMessage: 'Password' }),
-                            type: 'password'
-                          }}
-                        />
-                      </LoginField>
-                    )}
-                    <LoginButton type='submit' primary fluid size='large' data-test='login_submit_btn'>
-                      {this.state.resetPassword ? (
-                        <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password'>
-                          {text => text}
-                        </FormattedMessage>
-                      ) : (
-                        <FormattedMessage id='auth.login' defaultMessage='Log in'>
-                          {text => text}
-                        </FormattedMessage>
-                      )}
-                    </LoginButton>
-                  </>
-                )
-              }}
-            </StyledForm>
+                        <LoginField error={usernameError} data-test='login_username_inp'>
+                          <label>
+                            <FormattedMessage id='auth.username' defaultMessage='Username' />
+                          </label>
+                          <Input
+                            name='username'
+                            inputProps={{ placeholder: formatMessage({ id: 'auth.username', defaultMessage: 'Password' }) }}
+                          />
+                        </LoginField>
+                        {!this.state.resetPassword && (
+                          <LoginField error={passwordError} data-test='login_password_inp'>
+                            <label>
+                              <FormattedMessage id='auth.password' defaultMessage='Password' />
+                            </label>
+                            <Input
+                              name='password'
+                              inputProps={{
+                                placeholder: formatMessage({ id: 'auth.password', defaultMessage: 'Password' }),
+                                type: 'password'
+                              }}
+                            />
+                          </LoginField>
+                        )}
+                        <ToggleLabel onClick={this.toggleResetPassword} data-test='login_reset_toggle_btn'>
+                          {this.state.resetPassword ? (
+                            <FormattedMessage id='auth.cancelPasswordReset' defaultMessage='Password Reset Cancel'>
+                              {text => text}
+                            </FormattedMessage>
+                          ) : (
+                            <FormattedMessage id='auth.resetMyPassword' defaultMessage='Password Reset'>
+                              {text => text}
+                            </FormattedMessage>
+                          )}
+                        </ToggleLabel>
+                        <LoginButton type='submit' primary fluid size='large' data-test='login_submit_btn' disabled={values.username === '' || (!this.state.resetPassword && values.password === '')}>
+                          {this.state.resetPassword ? (
+                            <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password'>
+                              {text => text}
+                            </FormattedMessage>
+                          ) : (
+                            <FormattedMessage id='auth.login' defaultMessage='Log in'>
+                              {text => text}
+                            </FormattedMessage>
+                          )}
+                        </LoginButton>
+                      </>
+                    )
+                  }}
+                </StyledForm>
 
-            {message ? (
-              <Message error content={message} />
-            ) : (
-              router.query.auto && <Message info content={'You have been automatically logged out.'} />
-            )}
-
-            <Grid>
-              <GridRow>
-                <AutoColumn>
-                  <ToggleLabel onClick={this.toggleResetPassword} data-test='login_reset_toggle_btn'>
-                    {this.state.resetPassword ? (
-                      <FormattedMessage id='auth.cancelPasswordReset' defaultMessage='Password Reset Cancel'>
-                        {text => text}
-                      </FormattedMessage>
-                    ) : (
-                      <FormattedMessage id='auth.resetMyPassword' defaultMessage='Password Reset'>
-                        {text => text}
-                      </FormattedMessage>
-                    )}
-                  </ToggleLabel>
-                </AutoColumn>
-
-                <AutoColumn textAlign='right'>{version && `v${version}`}</AutoColumn>
-              </GridRow>
-            </Grid>
-          </LoginSegment>
+                <VersionWrapper>{version && `v${version}`}</VersionWrapper>
+              </LoginSegment>
+            </LoginContainer>
+          </>
         )}
       </>
     )

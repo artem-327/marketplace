@@ -5,7 +5,10 @@ import Layout from '~/components/LayoutUnauthorized'
 // import '~/styles/login.scss'
 
 const Container = styled.div`
-  padding: 60px 0;
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+  padding: 0;
 `
 class Login extends Component {
   render() {
