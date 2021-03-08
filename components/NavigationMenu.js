@@ -288,7 +288,7 @@ class Navigation extends Component {
             as='a'
             data-test={dataTest}
             active={pathname === to}
-            onClick={async e => this.settingsLink(e, to, tab)}
+            onClick={async e => await this.settingsLink(e, to, tab)}
             className={className}>
             {children}
           </Menu.Item>
