@@ -7,7 +7,10 @@ export const initialState = {
   all: 0,
   active: 0,
   pending: 0,
-  requested: 0
+  requested: 0,
+  isOpenModal: false,
+  companyNetworkConnection: null,
+  isError: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -28,6 +31,39 @@ export default function reducer(state = initialState, action) {
         active: payload?.active,
         pending: payload?.pending,
         requested: payload?.requested
+      }
+    }
+
+    case AT.TRIGGER_MODAL: {
+      return {
+        ...state,
+        isError: state.isOpenModal ? false : state.isError,
+        loading: state.isOpenModal ? false : state.loading,
+        companyNetworkConnection: state.isOpenModal ? null : state.companyNetworkConnection,
+        isOpenModal: !state.isOpenModal
+      }
+    }
+
+    case AT.SEARCH_PENDING: {
+      return {
+        ...state,
+        loading: true,
+        isError: false
+      }
+    }
+    case AT.SEARCH_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        companyNetworkConnection: payload,
+        isError: false
+      }
+    }
+    case AT.SEARCH_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        isError: true
       }
     }
 
