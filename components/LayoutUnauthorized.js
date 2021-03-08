@@ -5,7 +5,7 @@ import { Messages } from '~/modules/messages'
 import { injectIntl } from 'react-intl'
 
 const Layout = ({ children, intl: { formatMessage } }) => (
-  <Container style={{ paddingTop: 40 }}>
+  <Container fluid>
     <Head>
       <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })}</title>
       <meta charSet='utf-8' />
