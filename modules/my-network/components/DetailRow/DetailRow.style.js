@@ -90,6 +90,8 @@ export const DivIconCollapse = styled.div`
 
 export const DivCollapseText = styled.div`
   margin-top: -6px;
+  display: flex;
+  justify-content: center;
 `
 
 export const DivCollapse = styled.div`
@@ -104,4 +106,10 @@ export const DivCollapse = styled.div`
   width: calc(100% + 30px) !important;
   margin-left: -15px !important;
   margin-right: -15px !important;
+`
+
+export const DivTradePassLogo = styled.div`
+  float: right;
+  margin-top: -30px;
+  padding-right: 20px;
 `

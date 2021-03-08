@@ -36,6 +36,8 @@ import { NavCircle } from '../modules/alerts/components/layout'
 import { Datagrid } from '../modules/datagrid'
 //Services
 import { getSafe } from '../utils/functions'
+//Styles
+import { DivNavItem } from './NavigationMenu.styles'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -290,8 +292,9 @@ class Navigation extends Component {
               if (typeof networkStatus === 'function') {
                 await networkStatus()
                 this.setState({ myNetwork: true })
+              } else {
+                this.settingsLink(e, to, tab)
               }
-              this.settingsLink(e, to, tab)
             }}
             className={className}>
             {children}
@@ -299,6 +302,23 @@ class Navigation extends Component {
         </Link>
       )
     })
+
+    const DivItem = ({ children, dataTest, networkStatus, pointer }) => {
+      return (
+        <DivNavItem
+          pointer={pointer}
+          data-test={dataTest}
+          onClick={async e => {
+            e.stopPropagation()
+            if (typeof networkStatus === 'function') {
+              await networkStatus()
+            }
+            this.setState({ myNetwork: true })
+          }}>
+          {children}
+        </DivNavItem>
+      )
+    }
 
     const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
       isCompanyAdmin: null,
@@ -425,8 +445,8 @@ class Navigation extends Component {
           <Dropdown.Menu data-test='navigation_menu_my_Network_menu'>
             <PerfectScrollbar>
               <Dropdown.Item
-                as={MenuLink}
-                to='/my-network'
+                as={DivItem}
+                pointer={true}
                 dataTest='navigation_menu_my_Network_all_drpdn'
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ALL })}>
                 {formatMessage(
@@ -438,8 +458,8 @@ class Navigation extends Component {
                 )}
               </Dropdown.Item>
               <Dropdown.Item
-                as={MenuLink}
-                to='/my-network'
+                as={DivItem}
+                pointer={true}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ACTIVE })}
                 dataTest='navigation_menu_my_network_active_drpdn'>
                 {formatMessage(
@@ -451,8 +471,8 @@ class Navigation extends Component {
                 )}
               </Dropdown.Item>
               <Dropdown.Item
-                as={MenuLink}
-                to='/my-network'
+                as={DivItem}
+                pointer={true}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.PENDING })}
                 dataTest='navigation_menu_my_network_pending_drpdn'>
                 {formatMessage(
@@ -464,9 +484,8 @@ class Navigation extends Component {
                 )}
               </Dropdown.Item>
               <Dropdown.Item
-                as={MenuLink}
-                to='/my-network'
-                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.REQUESTED })}
+                as={DivItem}
+                //networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.REQUESTED })}
                 dataTest='navigation_menu_my_network_requested_drpdn'>
                 {formatMessage(
                   {

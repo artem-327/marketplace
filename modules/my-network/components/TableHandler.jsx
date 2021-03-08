@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { debounce } from 'lodash'
@@ -22,6 +22,14 @@ const TableHandler = props => {
     debounce((val, key) => props.datagrid.setQuery({ [key]: val }), 500),
     []
   )
+
+  const status = props?.datagrid?.query?.status
+
+  useEffect(() => {
+    if (status !== networkStatus) {
+      setNetworkStatus(status)
+    }
+  }, [status, networkStatus, setNetworkStatus])
 
   return (
     <>

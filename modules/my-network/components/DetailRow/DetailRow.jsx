@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Grid } from 'semantic-ui-react'
+import { Grid, Image } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { ChevronsUp } from 'react-feather'
 //Components
@@ -13,10 +13,13 @@ import {
   GridColumnDetail,
   DivCollapse,
   DivIconCollapse,
-  DivCollapseText
+  DivCollapseText,
+  DivTradePassLogo
 } from './DetailRow.style'
 //Constants
 import { BUTTON_PROPS, ATTRIBUTES_TRADE_CRITERIA } from '../../constants'
+//Images
+import Logo from '../../../../assets/images/network/trade-pass-logo-bw.png'
 
 /**
  * @category My Network
@@ -48,6 +51,9 @@ const DetailRow = ({ row, expandRow }) => (
         </DivIconCollapse>
         <DivCollapseText>Collapse</DivCollapseText>
       </div>
+      <DivTradePassLogo>
+        <Image src={Logo} />
+      </DivTradePassLogo>
     </DivCollapse>
   </StyledGrid>
 )
