@@ -160,3 +160,10 @@ export const SegmentCustom = styled(Segment)`
 export const FormCustom = styled(Form)`
   flex-grow: 0 !important;
 `
+
+export const SegmentCertifications = styled(Segment)`
+  .ui.dropdown {
+    width: 80px !important;
+    min-width: 80px !important;
+  }
+`

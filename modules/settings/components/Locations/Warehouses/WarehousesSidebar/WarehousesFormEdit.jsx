@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { Header, FormGroup } from 'semantic-ui-react'
-import { Input, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
+import { Input, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
 //Components
 import { Required } from '../../../../../../components/constants/layout'
@@ -8,7 +8,7 @@ import { AddressForm } from '../../../../../address-form'
 import { PhoneNumber } from '../../../../../phoneNumber'
 import { TimeInput } from '../../../../../../components/custom-formik'
 //Styles
-import { DivHeader, SegmentCustom } from '../../Locations.styles'
+import { DivHeader, SegmentCustom, SegmentCertifications } from '../../Locations.styles'
 
 const customHeader = (
   <DivHeader>
@@ -121,6 +121,44 @@ const WarehousesFormEdit = ({ intl, formikProps, sidebarValues }) => {
           />
         </FormGroup>
       </SegmentCustom>
+
+      <DivHeader>
+        <FormattedMessage id='settings.certifications' defaultMessage='Certifications' />
+      </DivHeader>
+      <SegmentCertifications>
+        <FormGroup data-test='settings_warehouse_popup_certifications_dea_drpdn'>
+          <Dropdown
+            label={formatMessage({ id: 'settings.certifications.isCertifiedToDEA', defaultMessage: 'Is this location certified to receive DEA List I chemicals?' })}
+            name='deaListReceiveFlag'
+            options={[
+              {
+                text: formatMessage({id: 'global.no', defaultMessage: 'No'}),
+                value: false
+              },
+              {
+                text: formatMessage({id: 'global.yes', defaultMessage: 'Yes'}),
+                value: true
+              }
+            ]}
+          />
+        </FormGroup>
+        <FormGroup data-test='settings_warehouse_popup_certifications_tax_drpdn'>
+          <Dropdown
+            label={formatMessage({ id: 'settings.certifications.taxExemptPurchase', defaultMessage: 'Will this location receive tax exempt purchases? (not applicable for AK, OR, MT, VT or DE)' })}
+            name='taxExemptReceiveFlag'
+            options={[
+              {
+                text: formatMessage({id: 'global.no', defaultMessage: 'No'}),
+                value: false
+              },
+              {
+                text: formatMessage({id: 'global.yes', defaultMessage: 'Yes'}),
+                value: true
+              }
+            ]}
+          />
+        </FormGroup>
+      </SegmentCertifications>
 
       <DivHeader>
         <FormattedMessage id='global.additionalInfo' defaultMessage='Additional Info' />

@@ -46,6 +46,8 @@ export const getInitialFormValues = sidebarValues => {
   const initialValues = {
     //name: r.name,
     taxId: getSafe(() => sidebarValues.taxId, ''),
+    deaListReceiveFlag: getSafe(() => sidebarValues.deaListReceiveFlag, false),
+    taxExemptReceiveFlag: getSafe(() => sidebarValues.taxExemptReceiveFlag, false),
     //warehouse: getSafe(() => sidebarValues.warehouse, false),
     deliveryAddress: {
       address: {
@@ -107,6 +109,8 @@ export const submitHandler = async (values, helpers) => {
   let requestData = {}
 
   requestData = {
+    deaListReceiveFlag: values.deaListReceiveFlag,
+    taxExemptReceiveFlag: values.taxExemptReceiveFlag,
     deliveryAddress: {
       ...values.deliveryAddress,
       readyTime:
