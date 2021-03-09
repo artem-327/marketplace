@@ -1,13 +1,18 @@
 import { useState } from 'react'
 import { Modal, Dimmer, Loader, Input } from 'semantic-ui-react'
-import { func, bool, array } from 'prop-types'
+import { func, bool, array, object } from 'prop-types'
 import { Trash2 } from 'react-feather'
 import { injectIntl, FormattedMessage } from 'react-intl'
 // Components
 import BasicButton from '../../../../components/buttons/BasicButton'
+import DetailRow from '../DetailRow/DetailRow'
 //Styles
 import { ModalCustom, DivConent, DivError } from './InviteModal.styles'
-
+/**
+ * Modal allow connect between companies.
+ * @category My Network
+ * @component
+ */
 const InviteModal = props => {
   const [value, setValue] = useState('')
   const {
@@ -16,12 +21,14 @@ const InviteModal = props => {
     onClose,
     search,
     isError,
-    loading
+    loading,
+    detailCompany,
+    buttonActionsDetailRow
   } = props
 
   return (
     <ModalCustom
-      size='tiny'
+      size={detailCompany ? 'large' : 'tiny'}
       open={open}
       onClose={() => {
         onClose()
@@ -35,59 +42,69 @@ const InviteModal = props => {
         <FormattedMessage id='myNetworks.inviteModal.title' defaultMessage='TradePass ID' />
       </Modal.Header>
       <Modal.Content>
-        <DivConent>
-          <FormattedMessage
-            id='myNetworks.inviteModal.content'
-            defaultMessage='Sending an invite to a member will allow that member to see your TradePass and allow that member to add you to their network.'
-          />
-        </DivConent>
-        <Input
-          fluid
-          error={isError}
-          placeholder={formatMessage({
-            id: 'myNetworks.inviteModal.placeholder',
-            defaultMessage: 'Enter TradePass ID'
-          })}
-          value={value}
-          onChange={(e, data) => setValue(data?.value)}
-          type='text'
-        />
-        {isError && (
-          <DivError>
-            <FormattedMessage
-              id='myNetworks.inviteModal.errorLabel'
-              defaultMessage='No member was found in this TradePass ID'
+        {detailCompany ? (
+          <>
+            <DetailRow row={detailCompany} buttonActionsDetailRow={buttonActionsDetailRow} />
+          </>
+        ) : (
+          <>
+            <DivConent>
+              <FormattedMessage
+                id='myNetworks.inviteModal.content'
+                defaultMessage='Sending an invite to a member will allow that member to see your TradePass and allow that member to add you to their network.'
+              />
+            </DivConent>
+            <Input
+              fluid
+              error={isError}
+              placeholder={formatMessage({
+                id: 'myNetworks.inviteModal.placeholder',
+                defaultMessage: 'Enter TradePass ID'
+              })}
+              value={value}
+              onChange={(e, data) => setValue(data?.value)}
+              type='text'
             />
-          </DivError>
+            {isError && (
+              <DivError>
+                <FormattedMessage
+                  id='myNetworks.inviteModal.errorLabel'
+                  defaultMessage='No member was found in this TradePass ID'
+                />
+              </DivError>
+            )}
+          </>
         )}
       </Modal.Content>
-      <Modal.Actions>
-        <BasicButton
-          noBorder
-          onClick={() => {
-            onClose()
-            setValue('')
-          }}>
-          <b>
-            <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
-          </b>
-        </BasicButton>
-        <BasicButton
-          noBorder
-          textColor='#ffffff !important'
-          background='#00c7f9 !important'
-          onClick={() => {
-            try {
-              search(value)
-            } catch (err) {
-              console.error(err)
-            }
-          }}>
-          <b>
-            <FormattedMessage id='global.search' defaultMessage='Search' />
-          </b>
-        </BasicButton>
-      </Modal.Actions>
+      {!detailCompany && (
+        <Modal.Actions>
+          <BasicButton
+            noBorder
+            onClick={() => {
+              onClose()
+              setValue('')
+            }}>
+            <b>
+              <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+            </b>
+          </BasicButton>
+          <BasicButton
+            noBorder
+            textColor='#ffffff !important'
+            background='#00c7f9 !important'
+            onClick={() => {
+              try {
+                search(value)
+              } catch (err) {
+                console.error(err)
+              }
+            }}>
+            <b>
+              <FormattedMessage id='global.search' defaultMessage='Search' />
+            </b>
+          </BasicButton>
+        </Modal.Actions>
+      )}
     </ModalCustom>
   )
 }
@@ -97,7 +114,9 @@ InviteModal.propTypes = {
   isError: bool,
   loading: bool,
   onClose: func,
-  search: func
+  search: func,
+  detailCompany: object,
+  buttonActionsDetailRow: func
 }
 
 InviteModal.defaultProps = {
@@ -105,7 +124,9 @@ InviteModal.defaultProps = {
   isError: false,
   loading: false,
   onClose: () => {},
-  search: () => {}
+  search: () => {},
+  detailCompany: null,
+  buttonActionsDetailRow: () => {}
 }
 
 export default injectIntl(InviteModal)

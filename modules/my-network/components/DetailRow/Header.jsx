@@ -70,7 +70,7 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
                       confirm(
                         <DivModal>
                           <DivCircle>
-                            <InfoIcon size='22' color='#ffffff' />
+                            <InfoIcon size='28' color='#ffffff' />
                           </DivCircle>
                         </DivModal>,
                         <DivModal>
@@ -113,9 +113,9 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
 )
 
 Header.propTypes = {
-  logo: PropTypes.string,
+  logo: PropTypes.string || PropTypes.object,
   transactions: PropTypes.number,
-  id: PropTypes.number,
+  id: PropTypes.number || PropTypes.string,
   averageValue: PropTypes.number,
   buttonsProps: PropTypes.arrayOf(
     PropTypes.shape({

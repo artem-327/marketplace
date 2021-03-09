@@ -25,15 +25,15 @@ import Logo from '../../../../assets/images/network/trade-pass-logo-bw.png'
  * @category My Network
  * @component
  */
-const DetailRow = ({ row, expandRow }) => (
+const DetailRow = ({ row, expandRow = null, buttonActionsDetailRow = null }) => (
   <StyledGrid>
     <Header
-      id={row.id}
-      logo={row.logo}
-      transactions={47}
-      averageValue={14149}
-      buttonsProps={BUTTON_PROPS[row.status]}
-      buttonActionsDetailRow={row.buttonActionsDetailRow}
+      id={row?.id}
+      logo={row?.logo}
+      transactions={row?.transactions}
+      averageValue={row?.averageValue}
+      buttonsProps={BUTTON_PROPS[row?.status || 'INVITE']}
+      buttonActionsDetailRow={buttonActionsDetailRow}
     />
     <Grid.Row>
       <GridColumnDetail>
@@ -42,28 +42,34 @@ const DetailRow = ({ row, expandRow }) => (
         </DivTitleTradeCriteria>
       </GridColumnDetail>
     </Grid.Row>
-    <TradeCriteria as='div' row={row.tradeCriteria} attributes={ATTRIBUTES_TRADE_CRITERIA} />
-    <BottomSegments legalData={row.legalData} marketingData={row.marketingData} verifiedData={row.verifiedData} />
-    <DivCollapse onClick={expandRow}>
-      <div>
-        <DivIconCollapse>
-          <ChevronsUp size='18' />
-        </DivIconCollapse>
-        <DivCollapseText>Collapse</DivCollapseText>
-      </div>
-      <DivTradePassLogo>
-        <Image src={Logo} />
-      </DivTradePassLogo>
-    </DivCollapse>
+    <TradeCriteria as='div' row={row?.tradeCriteria} attributes={ATTRIBUTES_TRADE_CRITERIA} />
+    <BottomSegments legalData={row?.legalData} marketingData={row?.marketingData} verifiedData={row?.verifiedData} />
+    {expandRow && (
+      <DivCollapse onClick={expandRow}>
+        <div>
+          <DivIconCollapse>
+            <ChevronsUp size='18' />
+          </DivIconCollapse>
+          <DivCollapseText>Collapse</DivCollapseText>
+        </div>
+        <DivTradePassLogo>
+          <Image src={Logo} />
+        </DivTradePassLogo>
+      </DivCollapse>
+    )}
   </StyledGrid>
 )
 
 DetailRow.propTypes = {
-  row: PropTypes.object
+  row: PropTypes.object,
+  expandRow: PropTypes.func,
+  buttonActionsDetailRow: PropTypes.func
 }
 
 DetailRow.defaultProps = {
-  row: null
+  row: null,
+  expandRow: null,
+  buttonActionsDetailRow: null
 }
 
 export default DetailRow

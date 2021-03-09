@@ -1,4 +1,6 @@
 import moment from 'moment'
+import { FormattedNumber } from 'react-intl'
+import { Image } from 'semantic-ui-react'
 //Styles
 import {
   DivStatusLabel,
@@ -8,9 +10,13 @@ import {
   DivTextValueTradeCriteria
 } from './MyNetwork.styles'
 //Constants
-import { STATUSES, COLORS, CONNECTIONS_STATUSES } from './constants'
+import { COLORS, CONNECTIONS_STATUSES } from './constants'
 //Services
 import { getLocaleDateFormat } from '../../components/date-format'
+//Components
+import Logo from '../../assets/images/nav/logo-bluepallet.png' //DELETE
+//Actions
+import { buttonActionsDetailRow, connectionsStatuses } from './actions'
 
 /**
  * @category My Network
@@ -34,8 +40,8 @@ export const getCriteriaLabel = criteria => {
   const criteriaKeys = Object.keys(criteria)
   return (
     <DivCircles>
-      {criteriaKeys.map(key => {
-        return <DivCircle background={COLORS[criteria[key]?.match] ?? '#f8f9fb'} />
+      {criteriaKeys.map((key, i) => {
+        return <DivCircle key={i} background={COLORS[criteria[key]?.match] ?? '#f8f9fb'} />
       })}
     </DivCircles>
   )
@@ -94,4 +100,62 @@ export const getStatuses = rows => {
   }
   rows.forEach(row => result[CONNECTIONS_STATUSES[row?.status]]++)
   return result
+}
+/**
+ * @category My Network
+ * @method
+ * @param {object} row
+ * @returns {object} Returns object detail row.
+ */
+export const getRowDetail = row => {
+  if (!row) return
+  return {
+    ...row,
+    id: row?.connectionId || row?.connectedCompany?.tradepassId || 'VB-6ddb6003-fac2-4961-b897-1cfbdd85c16e', //FIXME
+    member: (
+      <div key={row?.connectionId || row?.connectedCompany?.id}>
+        {/*FIXME row?.connectedCompany?.logo */}
+        <Image verticalAlign='middle' size='mini' spaced={true} src={Logo} />
+
+        <b>{row?.connectedCompany?.name}</b>
+      </div>
+    ),
+    logo: <Image verticalAlign='middle' size='small' spaced={true} src={Logo} />, //FIXME row?.connectedCompany?.logo
+    address: row?.connectedCompany?.primaryAddress, //FIXME prepare address for detail
+    transactions: row?.connectedCompany?.transactionsCount || 0,
+    averageValue: row?.connectedCompany?.averageTransactionValue || 0,
+    connectionStatus: getStatusLabel(row?.status || row?.connectedCompany?.status),
+    eligibilityCriteria: getCriteriaLabel(row?.criteria || row?.connectedCompany?.criteria),
+    date: getDate(row?.updatedAt || row?.connectedCompany?.updatedAt),
+    buttonActionsDetailRow: buttonActionsDetailRow,
+    tradeCriteria: getTradeCriteriaValues(row?.criteria || row?.connectedCompany?.criteria),
+    legalData: {
+      legalBusinessName: row?.connectedCompany?.name,
+      ein: row?.connectedCompany?.tin,
+      telephoneNumber: row?.connectedCompany?.phone,
+      inBusinessSince: row?.connectedCompany?.inBusinessSince,
+      numberOfEmployees: (
+        <FormattedNumber
+          minimumFractionDigits={0}
+          maximumFractionDigits={0}
+          value={row?.connectedCompany?.numberOfEmployees || 0}
+        />
+      )
+    },
+    marketingData: {
+      website: row?.connectedCompany?.website,
+      facebookHandle: row?.connectedCompany?.socialFacebook,
+      instagramHandle: row?.connectedCompany?.socialInstagram,
+      linkedInHandle: row?.connectedCompany?.socialLinkedin,
+      twitterHandle: row?.connectedCompany?.socialTwitter,
+      tradePassConnection: row?.connectedCompany?.connectionsCount || 0
+    },
+    verifiedData: {
+      articlesIncorporation: row?.connectedCompany?.articlesOfIncorporation === 'VERIFIED' ? 'Verified' : 'Unverified',
+      certificateInsurance: row?.connectedCompany?.certificateOfInsurance === 'VERIFIED' ? 'Verified' : 'Unverified',
+      linkedBankAccounts: row?.connectedCompany?.linkedBankAccount === 'VERIFIED' ? 'Verified' : 'Unverified',
+      tradeOrganization:
+        row?.connectedCompany?.tradeOrganizations?.map(org => org?.short_name)?.toString() || 'Unverified'
+    }
+  }
 }

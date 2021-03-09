@@ -212,6 +212,20 @@ export const BUTTON_PROPS = {
       background: '#f16844 !important',
       action: 'remove'
     }
+  ],
+  INVITE: [
+    {
+      textId: 'global.cancel',
+      color: '#20273a !important',
+      background: '#ffffff !important',
+      action: 'cancel'
+    },
+    {
+      textId: 'global.invite',
+      color: '#ffffff !important',
+      background: '#00c7f9 !important',
+      action: 'invite'
+    }
   ]
 }
 
@@ -244,7 +258,8 @@ export const STATUSES = {
   REQUESTED: 'REQUESTED',
   CONNECTED: 'CONNECTED',
   DECLINED: 'DECLINED',
-  DISCONNECTED: 'DISCONNECTED'
+  DISCONNECTED: 'DISCONNECTED',
+  INVITE: 'INVITE'
 }
 
 /**

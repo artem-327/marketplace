@@ -13,7 +13,9 @@ import { ContainerCustom, InputSearch, DropdownType, DivButon } from '../MyNetwo
 import { NETWORK_TYPES } from '../constants'
 import { Key } from 'react-feather'
 //Actions
-import { triggerModal, search } from '../actions'
+import { triggerModal, search, buttonActionsDetailRow } from '../actions'
+//Services
+import { getRowDetail } from '../MyNetwork.services'
 
 /**
  * Shows input and dropdown for search connection or filter by type of connectin
@@ -73,6 +75,8 @@ const TableHandler = props => {
         search={props?.search}
         isError={props?.isError}
         loading={props?.loading}
+        detailCompany={props?.detailCompany}
+        buttonActionsDetailRow={props?.buttonActionsDetailRow}
       />
       <DivButon>
         <BasicButton float='right !important' onClick={() => props?.triggerModal()}>
@@ -103,7 +107,10 @@ TableHandler.defaultProps = {
 const mapStateToProps = ({ myNetwork }) => ({
   isOpenModal: myNetwork?.isOpenModal,
   isError: myNetwork?.isError,
-  loading: myNetwork?.loading
+  loading: myNetwork?.loading,
+  detailCompany: getRowDetail(myNetwork?.companyNetworkConnection)
 })
 
-export default withDatagrid(connect(mapStateToProps, { triggerModal, search })(injectIntl(TableHandler)))
+export default withDatagrid(
+  connect(mapStateToProps, { triggerModal, search, buttonActionsDetailRow })(injectIntl(TableHandler))
+)

@@ -14,7 +14,7 @@ import { usePrevious } from '../../../hooks'
  */
 const Table = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
-  const { loadingDatagrid, rows, connectionsStatuses, statuses, getLogo } = props
+  const { loadingDatagrid, rows, connectionsStatuses, statuses, buttonActionsDetailRow } = props
   const prevLoadingDatagrid = usePrevious(loadingDatagrid)
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const Table = props => {
   }
 
   const getRowDetail = ({ row }) => {
-    return <DetailRow row={row} expandRow={() => expandRow(row)} />
+    return <DetailRow row={row} expandRow={() => expandRow(row)} buttonActionsDetailRow={buttonActionsDetailRow} />
   }
 
   return (
