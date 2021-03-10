@@ -278,6 +278,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_CARRIER_PENDING:
     case AT.ADMIN_DELETE_LOGISTICS_PROVIDER_PENDING:
     case AT.ADMIN_DELETE_USER_PENDING:
     case AT.ADMIN_ADD_ATTACHMENT_PENDING:
@@ -389,6 +390,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_CARRIER_FULFILLED:
     case AT.ADMIN_DELETE_LOGISTICS_PROVIDER_FULFILLED:
     case AT.ADMIN_DELETE_USER_FULFILLED:
     case AT.ADMIN_ADD_ATTACHMENT_FULFILLED:
@@ -401,6 +403,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_CARRIER_REJECTED:
     case AT.ADMIN_DELETE_LOGISTICS_PROVIDER_REJECTED:
     case AT.ADMIN_DELETE_USER_REJECTED:
     case AT.ADMIN_ADD_ATTACHMENT_REJECTED:
@@ -654,6 +657,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_POST_NEW_CARRIER_PENDING:
+    case AT.ADMIN_EDIT_CARRIER_PENDING:
     case AT.ADMIN_POST_NEW_LOGISTICS_PROVIDER_PENDING:
     case AT.ADMIN_EDIT_LOGISTICS_PROVIDER_PENDING:
     case AT.ADMIN_EDIT_USER_PENDING:
@@ -661,6 +666,10 @@ export default function reducer(state = initialState, action) {
       return { ...state, updating: true }
     }
 
+    case AT.ADMIN_POST_NEW_CARRIER_FULFILLED:
+    case AT.ADMIN_POST_NEW_CARRIER_REJECTED:
+    case AT.ADMIN_EDIT_CARRIER_FULFILLED:
+    case AT.ADMIN_EDIT_CARRIER_REJECTED:
     case AT.ADMIN_POST_NEW_LOGISTICS_PROVIDER_FULFILLED:
     case AT.ADMIN_POST_NEW_LOGISTICS_PROVIDER_REJECTED:
     case AT.ADMIN_EDIT_LOGISTICS_PROVIDER_FULFILLED:
