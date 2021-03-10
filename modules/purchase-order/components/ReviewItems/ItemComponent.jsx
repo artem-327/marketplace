@@ -170,12 +170,19 @@ const ItemComponent = props => {
         </GridColumn>
         <GridColumn width={5}>
           <DivSectionName>
-            <FormattedNumber
-              minimumFractionDigits={0}
-              maximumFractionDigits={2}
-              value={props.packageWeight * item.packagingSize}
-            />
-            {props.packageWeightUnit}
+            {isNaN(parseInt(value))
+              ? 'N/A'
+              : (
+                <>
+                <FormattedNumber
+                  minimumFractionDigits={0}
+                  maximumFractionDigits={2}
+                  value={item.packagingSize * parseInt(value)}
+                />
+                {props.packageWeightUnit}
+                </>
+              )
+            }
           </DivSectionName>
         </GridColumn>
         <GridColumnLeftDivider width={4}>
