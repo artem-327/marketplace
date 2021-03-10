@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Header, FormGroup } from 'semantic-ui-react'
+import { Header, FormGroup, Image } from 'semantic-ui-react'
 import { Input, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
 //Components
@@ -7,8 +7,20 @@ import { Required } from '../../../../../../components/constants/layout'
 import { AddressForm } from '../../../../../address-form'
 import { PhoneNumber } from '../../../../../phoneNumber'
 import { TimeInput } from '../../../../../../components/custom-formik'
+import UploadAttachment from '../../../../../inventory/components/upload/UploadAttachment'
+import RedIcon from '../../../../../../assets/images/orders/list-red.png'
+//Services
+import { getSafe } from '../../../../../../utils/functions'
 //Styles
-import { DivHeader, SegmentCustom, SegmentCertifications } from '../../Locations.styles'
+import {
+  DivHeader,
+  SegmentCustom,
+  SegmentCertifications,
+  HorizontalRule,
+  DivBrowseFile,
+  DivIcon,
+  ImageResized
+} from '../../Locations.styles'
 
 const customHeader = (
   <DivHeader>
@@ -21,10 +33,20 @@ const customHeader = (
  * @category Settings - Locations - Warehouses
  * @component
  */
-const WarehousesFormEdit = ({ intl, formikProps, sidebarValues }) => {
+const WarehousesFormEdit = ({
+  intl,
+  formikProps,
+  sidebarValues,
+  addAttachment,
+  loadFile,
+  removeAttachment,
+  attachmentFiles,
+  setAttachmentFiles
+}) => {
   const { formatMessage } = intl
   const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
-
+  const deaDocumentType = 17
+  const taxExemptionType = 13
   return (
     <>
       <FormGroup widths='equal' data-test='settings_warehouse_popup_name_inp'>
@@ -128,36 +150,185 @@ const WarehousesFormEdit = ({ intl, formikProps, sidebarValues }) => {
       <SegmentCertifications>
         <FormGroup data-test='settings_warehouse_popup_certifications_dea_drpdn'>
           <Dropdown
-            label={formatMessage({ id: 'settings.certifications.isCertifiedToDEA', defaultMessage: 'Is this location certified to receive DEA List I chemicals?' })}
+            label={formatMessage({
+              id: 'settings.certifications.isCertifiedToDEA',
+              defaultMessage: 'Is this location certified to receive DEA List I chemicals?'
+            })}
             name='deaListReceiveFlag'
             options={[
               {
-                text: formatMessage({id: 'global.no', defaultMessage: 'No'}),
+                text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
                 value: false
               },
               {
-                text: formatMessage({id: 'global.yes', defaultMessage: 'Yes'}),
+                text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
                 value: true
               }
             ]}
           />
         </FormGroup>
+        {values.deaListReceiveFlag && (
+          <>
+            <p>
+              <FormattedMessage
+                id='settings.certifications.dea.paragraph'
+                defaultMessage='Any location receiving chemicals published on the DEA List I must provide the appropriate certifications before an order can be placed.  You may upload the certifications below for verification.'
+              />
+            </p>
+            <UploadAttachment
+              {...sidebarValues}
+              attachments={formikProps.values.attachments.filter(
+                att => getSafe(() => att.documentType.id, 0) === deaDocumentType
+              )}
+              addAttachment={addAttachment}
+              loadFile={loadFile}
+              //removeAttachment={removeAttachment}
+              hideAttachments={true}
+              edit={getSafe(() => sidebarValues.id, '')}
+              name='attachments'
+              type={deaDocumentType.toString()}
+              filesLimit={1}
+              fileMaxSize={20}
+              //listDocumentTypes={this.props.listDocumentTypes}
+              noWrapperStyles
+              onChange={files => {
+                formikProps.setFieldValue(
+                  `attachments[${
+                    formikProps.values.attachments && formikProps.values.attachments.length
+                      ? formikProps.values.attachments.length
+                      : 0
+                  }]`,
+                  {
+                    id: files.id,
+                    name: files.name,
+                    documentType: files.documentType,
+                    isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
+                  }
+                )
+                setAttachmentFiles(attachmentFiles.concat([files]))
+              }}
+              onRemoveFile={async id => {
+                await formikProps.setFieldValue(
+                  'attachments',
+                  formikProps.values.reduce((filteredAttachments, att) => {
+                    if (att.documentType !== deaDocumentType) filteredAttachments.push(att)
+
+                    return filteredAttachments
+                  }, [])
+                )
+              }}
+              data-test='settings_warehouse_popup_certifications_dea_file'
+              emptyContent={
+                <DivBrowseFile background='white'>
+                  <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  <DivIcon>
+                    <ImageResized src={RedIcon} />
+                  </DivIcon>
+                </DivBrowseFile>
+              }
+              uploadedContent={
+                <DivBrowseFile>
+                  <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  <DivIcon>
+                    <ImageResized src={RedIcon} />
+                  </DivIcon>
+                </DivBrowseFile>
+              }
+            />
+          </>
+        )}
+        <HorizontalRule />
         <FormGroup data-test='settings_warehouse_popup_certifications_tax_drpdn'>
           <Dropdown
-            label={formatMessage({ id: 'settings.certifications.taxExemptPurchase', defaultMessage: 'Will this location receive tax exempt purchases? (not applicable for AK, OR, MT, VT or DE)' })}
+            label={formatMessage({
+              id: 'settings.certifications.taxExemptPurchase',
+              defaultMessage:
+                'Will this location receive tax exempt purchases? (not applicable for AK, OR, MT, VT or DE)'
+            })}
             name='taxExemptReceiveFlag'
             options={[
               {
-                text: formatMessage({id: 'global.no', defaultMessage: 'No'}),
+                text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
                 value: false
               },
               {
-                text: formatMessage({id: 'global.yes', defaultMessage: 'Yes'}),
+                text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
                 value: true
               }
             ]}
           />
         </FormGroup>
+        {values.taxExemptReceiveFlag && (
+          <>
+            <p>
+              <FormattedMessage
+                id='settings.certifications.dea.paragraph'
+                defaultMessage='Any location receiving chemicals published on the DEA List I must provide the appropriate certifications before an order can be placed.  You may upload the certifications below for verification.'
+              />
+            </p>
+            <UploadAttachment
+              {...sidebarValues}
+              attachments={formikProps.values.attachments.filter(
+                att => getSafe(() => att.documentType.id, 0) === taxExemptionType
+              )}
+              addAttachment={addAttachment}
+              loadFile={loadFile}
+              //removeAttachment={removeAttachment}
+              hideAttachments={true}
+              edit={getSafe(() => sidebarValues.id, '')}
+              name='attachments'
+              type={taxExemptionType.toString()}
+              filesLimit={1}
+              fileMaxSize={20}
+              //listDocumentTypes={this.props.listDocumentTypes}
+              noWrapperStyles
+              onChange={files => {
+                formikProps.setFieldValue(
+                  `attachments[${
+                    formikProps.values.attachments && formikProps.values.attachments.length
+                      ? formikProps.values.attachments.length
+                      : 0
+                  }]`,
+                  {
+                    id: files.id,
+                    name: files.name,
+                    documentType: files.documentType,
+                    isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
+                  }
+                )
+                setAttachmentFiles(attachmentFiles.concat([files]))
+              }}
+              onRemoveFile={async id => {
+                console.log('RESET')
+                await formikProps.setFieldValue(
+                  'attachments',
+                  formikProps.values.reduce((filteredAttachments, att) => {
+                    if (att.documentType !== taxExemptionType) filteredAttachments.push(att)
+
+                    return filteredAttachments
+                  }, [])
+                )
+              }}
+              data-test='settings_warehouse_popup_certifications_dea_file'
+              emptyContent={
+                <DivBrowseFile background='white'>
+                  <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  <DivIcon>
+                    <ImageResized src={RedIcon} />
+                  </DivIcon>
+                </DivBrowseFile>
+              }
+              uploadedContent={
+                <DivBrowseFile>
+                  <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  <DivIcon>
+                    <ImageResized src={RedIcon} />
+                  </DivIcon>
+                </DivBrowseFile>
+              }
+            />
+          </>
+        )}
       </SegmentCertifications>
 
       <DivHeader>
@@ -239,13 +410,17 @@ const WarehousesFormEdit = ({ intl, formikProps, sidebarValues }) => {
 WarehousesFormEdit.propTypes = {
   intl: PropTypes.object,
   formikProps: PropTypes.object,
-  sidebarValues: PropTypes.object
+  sidebarValues: PropTypes.object,
+  addAttachment: PropTypes.func,
+  loadFile: PropTypes.func
 }
 
 WarehousesFormEdit.defaultProps = {
   intl: {},
   formikProps: {},
-  sidebarValues: null
+  sidebarValues: null,
+  addAttachment: () => {},
+  loadFile: () => {}
 }
 
 export default WarehousesFormEdit

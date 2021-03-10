@@ -56,9 +56,10 @@ const WarehousesFormCertificates = ({ formikProps, helperProps }) => {
       <DocumentTab
         listDocumentTypes={[
           { key: 14, text: 'Resale Certificate', value: 14 },
-          { key: 13, text: 'Sales Tax Exemption Certificate', value: 13 }
+          { key: 13, text: 'Sales Tax Exemption Certificate', value: 13 },
+          { key: 17, text: 'DEA', value: 17 }
         ]}
-        documentTypeIds={[13, 14]}
+        documentTypeIds={[13, 14, 17]}
         lockedFileTypes={true}
         values={values}
         setFieldValue={setFieldValue}

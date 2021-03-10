@@ -80,7 +80,18 @@ class WarehousesSidebar extends Component {
     switch (editTab) {
       case 0: {
         // Edit
-        return <WarehousesFormEdit intl={intl} sidebarValues={sidebarValues} formikProps={formikProps} />
+        return (
+          <WarehousesFormEdit
+            intl={intl}
+            sidebarValues={sidebarValues}
+            formikProps={formikProps}
+            addAttachment={addAttachment}
+            loadFile={loadFile}
+            removeAttachment={removeAttachment}
+            attachmentFiles={attachmentFiles}
+            setAttachmentFiles={setAttachmentFiles}
+          />
+        )
       }
 
       case 1: {
