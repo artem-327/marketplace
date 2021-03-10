@@ -6,6 +6,8 @@ import DetailRow from './DetailRow/DetailRow'
 import { COLUMNS } from '../constants'
 //Hooks
 import { usePrevious } from '../../../hooks'
+//Services
+import { getStatuses } from '../MyNetwork.services'
 
 /**
  * Table of connections.
@@ -14,14 +16,14 @@ import { usePrevious } from '../../../hooks'
  */
 const Table = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
-  const { loadingDatagrid, rows, connectionsStatuses, statuses, getLogo } = props
+  const { loadingDatagrid, rows, connectionsStatuses, statuses, buttonActionsDetailRow } = props
   const prevLoadingDatagrid = usePrevious(loadingDatagrid)
 
   useEffect(() => {
-    if (prevLoadingDatagrid && !loadingDatagrid) {
-      connectionsStatuses(statuses)
+    if (prevLoadingDatagrid && !loadingDatagrid && rows) {
+      connectionsStatuses(getStatuses(rows))
     }
-  }, [prevLoadingDatagrid, loadingDatagrid, statuses, connectionsStatuses])
+  }, [prevLoadingDatagrid, loadingDatagrid, rows, connectionsStatuses])
 
   const expandRow = row => {
     let ids = expandedRowIds.slice()
@@ -34,7 +36,7 @@ const Table = props => {
   }
 
   const getRowDetail = ({ row }) => {
-    return <DetailRow row={row} expandRow={() => expandRow(row)} />
+    return <DetailRow row={row} expandRow={() => expandRow(row)} buttonActionsDetailRow={buttonActionsDetailRow} />
   }
 
   return (

@@ -55,7 +55,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        companyNetworkConnection: payload,
+        companyNetworkConnection: { connectedCompany: payload }, //connectedCompany is a attribute helper for better map all values via method getRowDetail
         isError: false
       }
     }

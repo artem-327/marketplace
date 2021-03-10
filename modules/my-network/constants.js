@@ -172,13 +172,15 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.reject',
       color: '#ffffff !important',
       background: '#f16844 !important',
-      action: 'reject'
+      action: 'reject',
+      confirmId: 'myNetworks.detailRow.modal.reject'
     },
     {
       textId: 'myNetworks.detailRow.accept',
       color: '#ffffff !important',
       background: '#84c225 !important',
-      action: 'accept'
+      action: 'accept',
+      confirmId: 'myNetworks.detailRow.modal.accept'
     }
   ],
   REQUESTED: [
@@ -186,15 +188,17 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.disconnect',
       color: '#ffffff !important',
       background: '#5e5e5e !important',
-      action: 'disconnect'
+      action: 'disconnect',
+      confirmId: 'myNetworks.detailRow.modal.disconnect'
     }
   ],
   CONNECTED: [
     {
-      textId: 'myNetworks.detailRow.disconect',
+      textId: 'myNetworks.detailRow.disconnect',
       color: '#ffffff !important',
       background: '#5e5e5e !important',
-      action: 'disconect'
+      action: 'disconnect',
+      confirmId: 'myNetworks.detailRow.modal.disconnect'
     }
   ],
   DECLINED: [
@@ -202,7 +206,8 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
-      action: 'remove'
+      action: 'remove',
+      confirmId: 'myNetworks.detailRow.modal.remove'
     }
   ],
   DISCONNECTED: [
@@ -210,7 +215,23 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
-      action: 'remove'
+      action: 'remove',
+      confirmId: 'myNetworks.detailRow.modal.remove'
+    }
+  ],
+  INVITE: [
+    {
+      textId: 'global.cancel',
+      color: '#20273a !important',
+      background: '#ffffff !important',
+      action: 'cancel'
+    },
+    {
+      textId: 'global.invite',
+      color: '#ffffff !important',
+      background: '#00c7f9 !important',
+      action: 'invite',
+      confirmId: 'myNetworks.detailRow.modal.invite'
     }
   ]
 }
@@ -244,7 +265,8 @@ export const STATUSES = {
   REQUESTED: 'REQUESTED',
   CONNECTED: 'CONNECTED',
   DECLINED: 'DECLINED',
-  DISCONNECTED: 'DISCONNECTED'
+  DISCONNECTED: 'DISCONNECTED',
+  INVITE: 'INVITE'
 }
 
 /**

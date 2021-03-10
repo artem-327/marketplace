@@ -73,7 +73,7 @@ export const DivCircle = styled.div`
   height: 100px;
   border-radius: 50px;
   border: solid 10px #fce1da;
-  background-color: #f16844;
+  background-color: ${({ background }) => (background ? background : '#f16844')};
   color: #fff;
   display: flex;
   align-items: center;
