@@ -10,7 +10,6 @@ import {
   userSwitchEnableDisable,
   openSidebar,
   getUserRoles,
-  getClientCompanyRoles,
   getAdminRoles
 } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
@@ -125,7 +124,6 @@ class UsersTable extends Component {
   componentDidMount() {
     this.props.getUsersMe()
     if (!this.props.userRoles.length) this.props.getUserRoles()
-    if (!this.props.clientCompanyRoles.length) this.props.getClientCompanyRoles()
     if (!this.props.adminRoles.length) this.props.getAdminRoles()
   }
 
@@ -200,7 +198,6 @@ const mapDispatchToProps = {
   userSwitchEnableDisable,
   openSidebar,
   getUserRoles,
-  getClientCompanyRoles,
   getAdminRoles
 }
 
@@ -269,7 +266,6 @@ const mapStateToProps = (state, { datagrid }) => {
     loading: state.companiesAdmin.loading,
     editedId: state.companiesAdmin.editedId,
     userRoles: state.companiesAdmin.userRoles,
-    clientCompanyRoles: state.companiesAdmin.clientCompanyRoles.map(d => d.id),
     adminRoles: state.companiesAdmin.adminRoles.map(d => d.id)
   }
 }

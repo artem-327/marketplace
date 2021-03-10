@@ -76,8 +76,6 @@ class CreateMenu extends Component {
     const { identity, openGlobalAddForm, openGlobalAddFormName } = this.props
 
     const {
-      isClientCompanyAdmin,
-      isClientCompanyManager,
       isCompanyAdmin,
       isMerchant,
       isProductCatalogAdmin,
@@ -97,7 +95,7 @@ class CreateMenu extends Component {
           </span>
         }>
         <Dropdown.Menu data-test='navigation_menu_create_drpdn'>
-          {!isClientCompanyAdmin && (isCompanyAdmin || isProductCatalogAdmin) && (
+          {(isCompanyAdmin || isProductCatalogAdmin) && (
             <Dropdown.Item
               onClick={() => {
                 openGlobalAddForm('inventory-my-products')
@@ -107,7 +105,7 @@ class CreateMenu extends Component {
             </Dropdown.Item>
           )}
 
-          {!isClientCompanyAdmin && (isCompanyAdmin || isMerchant || isProductOfferManager) && (
+          {(isCompanyAdmin || isMerchant || isProductOfferManager) && (
             <Dropdown.Item
               onClick={() => {
                 openGlobalAddForm('inventory-my-listings')
@@ -134,16 +132,6 @@ class CreateMenu extends Component {
               }}>
               <Person className={'menu-icon'} />
               <FormattedMessage id='createMenu.newUser' defaultMessage='New User' />
-            </Dropdown.Item>
-          )}
-
-          {(isCompanyAdmin || isClientCompanyManager) && (
-            <Dropdown.Item
-              onClick={async () => {
-                openGlobalAddForm('manage-guests-guests')
-              }}>
-              <FolderShared className={'menu-icon'} />
-              <FormattedMessage id='createMenu.newGuest' defaultMessage='New Guest' />
             </Dropdown.Item>
           )}
 

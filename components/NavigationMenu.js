@@ -90,9 +90,6 @@ class Navigation extends Component {
     companies:
       getSafe(() => Router.router.pathname === '/companies/companies', false) ||
       getSafe(() => Router.router.pathname === '/companies/users', false),
-    manageGuests:
-      getSafe(() => Router.router.pathname === '/manage-guests/guests', false) ||
-      getSafe(() => Router.router.pathname === '/manage-guests/chat', false),
     wantedBoard:
       getSafe(() => Router.router.pathname === '/wanted-board/listings', false) ||
       getSafe(() => Router.router.pathname === '/wanted-board/bids-sent', false) ||
@@ -181,7 +178,6 @@ class Navigation extends Component {
       operations: false,
       products: false,
       companies: false,
-      manageGuests: false,
       wantedBoard: false,
       inventory: false,
       marketplace: false,
@@ -249,8 +245,6 @@ class Navigation extends Component {
       intl: { formatMessage },
       router: { pathname, asPath },
       collapsedMenu,
-      isClientCompanyAdmin,
-      isClientCompanyManager,
       companiesTabsNames,
       productsTabsNames,
       filterNetworkStatus,
@@ -269,7 +263,6 @@ class Navigation extends Component {
       operations,
       products,
       companies,
-      manageGuests,
       inventory,
       marketplace,
       wantedBoard,
@@ -301,7 +294,6 @@ class Navigation extends Component {
 
     const operationsTabs = !isAdmin && isOrderOperator ? orderOperatorTabs : operationsDefaultTabs
 
-    const { isClientCompany } = getSafe(() => company, { isClientCompany: false })
     return (!isAdmin && !isEchoOperator && !isOrderOperator) || takeover ? (
       <div className='flex-wrapper'>
         <MenuLink to='/dashboard' dataTest='navigation_menu_admin_dashboard'>
@@ -310,47 +302,46 @@ class Navigation extends Component {
             {formatMessage({ id: 'navigation.dashboard', defaultMessage: 'Dashboard' })}
           </>
         </MenuLink>
-        {!isClientCompany && (
-          <DropdownItem
-            icon={<Layers size={22} />}
-            text={
-              <>
-                <FormattedMessage id='navigation.inventory' defaultMessage='Inventory' />
-                {inventory ? <ChevronUp /> : <ChevronDown />}
-              </>
-            }
-            className={inventory ? 'opened' : null}
-            opened={inventory}
-            onClick={() => this.toggleOpened('inventory', '/inventory/my-listings')}
-            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-            refId={'inventory'}
-            data-test='navigation_menu_inventory_drpdn'>
-            <Dropdown.Menu data-test='navigation_menu_inventory_menu'>
-              <PerfectScrollbar>
+
+        <DropdownItem
+          icon={<Layers size={22} />}
+          text={
+            <>
+              <FormattedMessage id='navigation.inventory' defaultMessage='Inventory' />
+              {inventory ? <ChevronUp /> : <ChevronDown />}
+            </>
+          }
+          className={inventory ? 'opened' : null}
+          opened={inventory}
+          onClick={() => this.toggleOpened('inventory', '/inventory/my-listings')}
+          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+          refId={'inventory'}
+          data-test='navigation_menu_inventory_drpdn'>
+          <Dropdown.Menu data-test='navigation_menu_inventory_menu'>
+            <PerfectScrollbar>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/inventory/my-listings'
+                dataTest='navigation_menu_inventory_my_listings_drpdn'>
+                {formatMessage({ id: 'navigation.inventoryMyListings', defaultMessage: 'My Listings' })}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/inventory/my-products'
+                dataTest='navigation_menu_inventory_my_products_drpdn'>
+                {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
+              </Dropdown.Item>
+              {isCompanyAdmin && (
                 <Dropdown.Item
                   as={MenuLink}
-                  to='/inventory/my-listings'
-                  dataTest='navigation_menu_inventory_my_listings_drpdn'>
-                  {formatMessage({ id: 'navigation.inventoryMyListings', defaultMessage: 'My Listings' })}
+                  to='/inventory/global-price-book'
+                  dataTest='navigation_menu_inventory_global_price_book_drpdn'>
+                  {formatMessage({ id: 'navigation.inventoryGlobalPriceBook', defaultMessage: 'Global Price Book' })}
                 </Dropdown.Item>
-                <Dropdown.Item
-                  as={MenuLink}
-                  to='/inventory/my-products'
-                  dataTest='navigation_menu_inventory_my_products_drpdn'>
-                  {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
-                </Dropdown.Item>
-                {isCompanyAdmin && (
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/inventory/global-price-book'
-                    dataTest='navigation_menu_inventory_global_price_book_drpdn'>
-                    {formatMessage({ id: 'navigation.inventoryGlobalPriceBook', defaultMessage: 'Global Price Book' })}
-                  </Dropdown.Item>
-                )}
-              </PerfectScrollbar>
-            </Dropdown.Menu>
-          </DropdownItem>
-        )}
+              )}
+            </PerfectScrollbar>
+          </Dropdown.Menu>
+        </DropdownItem>
 
         <DropdownItem
           icon={<ShoppingBag size={22} />}
@@ -480,33 +471,26 @@ class Navigation extends Component {
             }
             className={wantedBoard ? 'opened' : null}
             opened={wantedBoard}
-            onClick={() =>
-              this.toggleOpened(
-                'wantedBoard',
-                !isClientCompany ? '/wanted-board/listings' : '/wanted-board/bids-received'
-              )
-            }
+            onClick={() => this.toggleOpened('wantedBoard', '/wanted-board/listings')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'wantedBoard'}
             data-test='navigation_menu_wanted_board_drpdn'>
             <Dropdown.Menu data-test='navigation_menu_manage_wanted_board_menu'>
               <PerfectScrollbar>
-                {!isClientCompany && (
-                  <>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/wanted-board/listings'
-                      dataTest='navigation_wanted_board_listings_drpdn'>
-                      {formatMessage({ id: 'navigation.wantedBoardListings', defaultMessage: 'Listings' })}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/wanted-board/bids-sent'
-                      dataTest='navigation_wanted_board_bids_sent_drpdn'>
-                      {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
-                    </Dropdown.Item>
-                  </>
-                )}
+                <>
+                  <Dropdown.Item
+                    as={MenuLink}
+                    to='/wanted-board/listings'
+                    dataTest='navigation_wanted_board_listings_drpdn'>
+                    {formatMessage({ id: 'navigation.wantedBoardListings', defaultMessage: 'Listings' })}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    as={MenuLink}
+                    to='/wanted-board/bids-sent'
+                    dataTest='navigation_wanted_board_bids_sent_drpdn'>
+                    {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
+                  </Dropdown.Item>
+                </>
                 <Dropdown.Item
                   as={MenuLink}
                   to='/wanted-board/bids-received'
@@ -527,17 +511,15 @@ class Navigation extends Component {
           }
           className={orders ? 'opened' : null}
           opened={orders.toString()}
-          onClick={() => this.toggleOpened('orders', !isClientCompany ? '/orders/sales' : '/orders/purchase')}
+          onClick={() => this.toggleOpened('orders', '/orders/sales')}
           refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
           refId={'orders'}
           data-test='navigation_orders_drpdn'>
           <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
             <PerfectScrollbar>
-              {!isClientCompany && (
-                <Dropdown.Item as={MenuLink} to='/orders/sales' dataTest='navigation_orders_sales_orders_drpdn'>
-                  {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
-                </Dropdown.Item>
-              )}
+              <Dropdown.Item as={MenuLink} to='/orders/sales' dataTest='navigation_orders_sales_orders_drpdn'>
+                {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+              </Dropdown.Item>
               <Dropdown.Item as={MenuLink} to='/orders/purchase' dataTest='navigation_orders_purchase_orders_drpdn'>
                 {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
               </Dropdown.Item>
@@ -545,40 +527,7 @@ class Navigation extends Component {
           </Dropdown.Menu>
         </DropdownItem>
 
-        {isCompanyAdmin || isClientCompanyManager ? (
-          <DropdownItem
-            icon={<Coffee size={22} />}
-            text={
-              <>
-                <FormattedMessage id='navigation.manageGuests' defaultMessage='Guests' />
-                {manageGuests ? <ChevronUp /> : <ChevronDown />}
-              </>
-            }
-            className={manageGuests ? 'opened' : null}
-            opened={manageGuests}
-            onClick={() => this.toggleOpened('manageGuests', '/manage-guests/guests')}
-            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-            refId={'manageGuests'}
-            data-test='navigation_menu_manage_guests_drpdn'>
-            <Dropdown.Menu data-test='navigation_menu_manage_guests_drpdn_menu'>
-              <PerfectScrollbar>
-                <Dropdown.Item
-                  as={MenuLink}
-                  to='/manage-guests/guests'
-                  dataTest='navigation_manage_guests_guests_drpdn'>
-                  {formatMessage({ id: 'navigation.guests', defaultMessage: 'Guests' })}
-                </Dropdown.Item>
-                {false && (
-                  <Dropdown.Item as={MenuLink} to='/manage-guests/chat' dataTest='navigation_manage_guests_chat_drpdn'>
-                    {formatMessage({ id: 'navigation.chat', defaultMessage: 'Chat' })}
-                  </Dropdown.Item>
-                )}
-              </PerfectScrollbar>
-            </Dropdown.Menu>
-          </DropdownItem>
-        ) : null}
-
-        {(isCompanyAdmin || isUserAdmin || isClientCompanyAdmin) && (
+        {(isCompanyAdmin || isUserAdmin) && (
           <DropdownItem
             icon={<Settings size={22} />}
             text={
@@ -595,7 +544,7 @@ class Navigation extends Component {
             data-test='navigation_menu_settings_drpdn'>
             <Dropdown.Menu data-test='navigation_menu_settings_drpdn_menu'>
               <PerfectScrollbar>
-                {isCompanyAdmin || isClientCompanyAdmin ? (
+                {isCompanyAdmin ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}
@@ -620,7 +569,7 @@ class Navigation extends Component {
                     </Dropdown.Item>
                   </>
                 ) : null}
-                {isCompanyAdmin || isUserAdmin || isClientCompanyAdmin ? (
+                {isCompanyAdmin || isUserAdmin ? (
                   <Dropdown.Item
                     as={MenuLink}
                     to='/settings/users'
@@ -629,7 +578,7 @@ class Navigation extends Component {
                     {formatMessage({ id: 'navigation.users', defaultMessage: 'Users' })}
                   </Dropdown.Item>
                 ) : null}
-                {isCompanyAdmin || isClientCompanyAdmin ? (
+                {isCompanyAdmin ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}
@@ -640,7 +589,7 @@ class Navigation extends Component {
                     </Dropdown.Item>
                   </>
                 ) : null}
-                {(isCompanyAdmin && !isClientCompany) || isClientCompanyAdmin ? (
+                {isCompanyAdmin ? (
                   <>
                     <Dropdown.Item
                       as={MenuLink}
@@ -900,8 +849,6 @@ export default withAuth(
         tabsNames: store?.settings?.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isOrderOperator: getSafe(() => store.auth.identity.isOrderOperator, false),
-        isClientCompanyAdmin: getSafe(() => store.auth.identity.isClientCompanyAdmin, false),
-        isClientCompanyManager: getSafe(() => store.auth.identity.isClientCompanyManager, false),
         collapsedMenu: store?.layout?.collapsedMenu,
         isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
         companiesTabsNames: store?.companiesAdmin?.tabsNames,

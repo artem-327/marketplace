@@ -139,7 +139,7 @@ class Holds extends Component {
   }
 
   getActions = () => {
-    const { intl, isMerchant, isCompanyAdmin, isProductOfferManager, isClientCompanyAdmin } = this.props
+    const { intl, isMerchant, isCompanyAdmin, isProductOfferManager } = this.props
     let filterValue = {
       searchInput: '',
       holdDropdown: 'My Holds'
@@ -187,11 +187,11 @@ class Holds extends Component {
     }
     let rowActions = []
 
-    if ((isCompanyAdmin || isMerchant || isClientCompanyAdmin) && filterValue.holdDropdown === 'My Holds') {
+    if ((isCompanyAdmin || isMerchant) && filterValue.holdDropdown === 'My Holds') {
       rowActions.push(buttonCancel)
       rowActions.push(buttonBuy)
     } else if (
-      (isCompanyAdmin || isProductOfferManager || isClientCompanyAdmin) &&
+      (isCompanyAdmin || isProductOfferManager) &&
       filterValue.holdDropdown === 'Requested Holds'
     ) {
       rowActions.push(buttonApprove)

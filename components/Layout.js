@@ -60,7 +60,6 @@ import ModalDetailContainer from '../modules/inventory/my-listings/components/Mo
 import ProductPopup from '../modules/inventory/my-products/components/ProductPopupContainer'
 import WantedSidebar from '../modules/wanted-board/listings/components/DetailSidebar'
 import UserEditSidebar from '../modules/settings/components/UserTable/UserEditSidebar/UserEditSidebar'
-import GuestSidebar from '../modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
 import WarehouseSidebar from '../modules/settings/components/Locations/Warehouses/WarehousesSidebar/WarehousesSidebar'
 
 export const IconMinimize2 = styled(Minimize2)`
@@ -73,18 +72,6 @@ const ReturnToAdmin = styled(LogOut)`
   margin-left: 10px;
   vertical-align: bottom;
 `
-
-const clientCompanyRoutes = {
-  restrictedRoutes: [
-    '/inventory',
-    '/orders/sales',
-    '/inventory/my-products',
-    '/settings/global-broadcast',
-    '/wanted-board/listings',
-    '/wanted-board/bids-sent'
-  ],
-  redirectTo: '/marketplace/listings'
-}
 
 class Layout extends Component {
   state = {
@@ -202,7 +189,6 @@ class Layout extends Component {
     ) {
       this.cleanCopyrightState()
     }
-    this.handleRouteChange(this.props.router.route)
   }
 
   componentDidUpdate(prevProps) {
@@ -259,23 +245,6 @@ class Layout extends Component {
 
     if (showCopyright || copyrightClassName !== '') {
       this.cleanCopyrightState()
-      // this.handleRouteChange // will be called due to state change automatically
-    } else {
-      this.handleRouteChange(url)
-    }
-  }
-
-  handleRouteChange = url => {
-    const { auth } = this.props
-    let clientCompany = getSafe(() => auth.identity.clientCompany, false)
-
-    if (clientCompany) {
-      clientCompanyRoutes.restrictedRoutes.forEach(route => {
-        if (url.startsWith(route)) {
-          Router.push(clientCompanyRoutes.redirectTo)
-          return
-        }
-      })
     }
   }
 
@@ -312,7 +281,6 @@ class Layout extends Component {
     } = this.props
 
     const {
-      isClientCompanyManager,
       isCompanyAdmin,
       isMerchant,
       isProductCatalogAdmin,
@@ -490,8 +458,7 @@ class Layout extends Component {
                       <HoldIcon />
                     </Menu.Item>
                   )}
-                  {(isClientCompanyManager ||
-                    isCompanyAdmin ||
+                  {(isCompanyAdmin ||
                     isMerchant ||
                     isProductCatalogAdmin ||
                     isProductOfferManager ||
@@ -568,7 +535,6 @@ class Layout extends Component {
           )}
           {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'my-account-users' && <UserEditSidebar openGlobalAddForm={openGlobalAddForm} />}
-          {openGlobalAddFormName === 'manage-guests-guests' && <GuestSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'my-account-locations' && (
             <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />
           )}
