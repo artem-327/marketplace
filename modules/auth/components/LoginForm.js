@@ -75,8 +75,7 @@ class LoginForm extends Component {
 
     return (
       <>
-        {getSafe(() => identity.company.reviewRequested, false) &&
-        (getSafe(() => identity.isCompanyAdmin, false) || getSafe(() => identity.isClientCompanyAdmin, false)) ? (
+        {getSafe(() => identity.company.reviewRequested, false) && getSafe(() => identity.isCompanyAdmin, false) ? (
           <>
             <ConfirmationPage />
           </>

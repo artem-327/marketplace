@@ -287,7 +287,6 @@ function mapStateToProps(state, ownProps) {
     isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
     isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
     isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
-    isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false),
     isThirdPartyConnectionException: getSafe(() => orders.isThirdPartyConnectionException, false)
   }
 }

@@ -606,16 +606,14 @@ class CompanyForm extends Component {
               data-test='company_form_enabled_chckb'
             />
           )}
-          {!this.props.isClientCompany && (
-            <Checkbox
-              label={formatMessage({
-                id: 'company.purchaseHazmatEligible ',
-                defaultMessage: 'Purchase Hazardous Materials'
-              })}
-              name='purchaseHazmatEligible'
-              data-test='company_form_purchaseHazmatEligible_chckb'
-            />
-          )}
+          <Checkbox
+            label={formatMessage({
+              id: 'company.purchaseHazmatEligible ',
+              defaultMessage: 'Purchase Hazardous Materials'
+            })}
+            name='purchaseHazmatEligible'
+            data-test='company_form_purchaseHazmatEligible_chckb'
+          />
         </FormGroup>
       </>
     )

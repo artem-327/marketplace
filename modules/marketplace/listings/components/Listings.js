@@ -396,7 +396,6 @@ class Listings extends Component {
     const {
       isMerchant,
       isCompanyAdmin,
-      isClientCompanyAdmin,
       openPopup,
       intl: { formatMessage }
     } = this.props
@@ -429,7 +428,7 @@ class Listings extends Component {
       }),
       callback: () => openPopup(row.rawData)
     }
-    if (isMerchant || isCompanyAdmin || isClientCompanyAdmin) {
+    if (isMerchant || isCompanyAdmin) {
       rowActions.push(buttonInfo)
       rowActions.push(buttonBuy)
       /* DT-293 temporary disabled rowActions.push(buttonRequestHold) */

@@ -159,11 +159,6 @@ export const getUserRoles = () => ({
   payload: api.getUserRoles()
 })
 
-export const getClientCompanyRoles = () => ({
-  type: AT.COMPANIES_GET_CLIENT_COMPANY_ROLES,
-  payload: api.getClientCompanyRoles()
-})
-
 export const getAdminRoles = () => ({
   type: AT.COMPANIES_GET_ADMIN_ROLES,
   payload: api.getAdminRoles()

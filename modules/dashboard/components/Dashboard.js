@@ -661,7 +661,6 @@ class Dashboard extends Component {
       top10Buyers,
       isAdmin,
       takeover,
-      isClientCompany,
       dailyStats,
       intl: { formatMessage }
     } = this.props
@@ -669,10 +668,6 @@ class Dashboard extends Component {
     const statsTabs = {
       companyGenericProductsCount: [
         formatMessage({ id: 'dashboard.companyGenericProductsCount', defaultMessage: '# of Company Generic Products' }),
-        false
-      ],
-      clientCompaniesCount: [
-        formatMessage({ id: 'dashboard.guestCompaniesCount', defaultMessage: '# of Guest Companies' }),
         false
       ],
       companiesCount: [formatMessage({ id: 'dashboard.companiesCount', defaultMessage: '# of Companies' }), false],
@@ -1002,7 +997,7 @@ class Dashboard extends Component {
     ]
 
     const panes =
-      isAdmin && !takeover ? adminMenuTabs : isClientCompany ? companyPurchasesTab : companySalesPurchasesTabs
+      isAdmin && !takeover ? adminMenuTabs : companySalesPurchasesTabs
 
     const quickFilters = [
       formatMessage({ id: 'dashboard.dateFilter.lastDay', defaultMessage: 'Last day' }),
@@ -1164,33 +1159,16 @@ class Dashboard extends Component {
           </Grid.Column>
         </Grid.Row>
 
-        {isClientCompany && (
-          <Grid.Row>
-            <Grid.Column width={5}>
-              <SummaryRectangle
-                onClickUrl={'/settings/users'}
-                icon={<User />}
-                data={usersCount}
-                title='Users'
-                titleId='dashboard.totalUsersCount.title'
-                styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(230, 243, 211)' }}
-              />
-            </Grid.Column>
-          </Grid.Row>
-        )}
-
         {isAdmin && !takeover && (
           <>
             <Grid.Row style={{ paddingBottom: '6px' }}>
               <Grid.Column width={5}>
                 <SummaryRectangle
-                  onClickUrl={isAdmin && !takeover ? '/companies/companies' : '/manage-guests/guests'}
+                  onClickUrl={'/companies/companies'}
                   icon={<Coffee />}
                   data={companiesCount}
-                  title={isAdmin && !takeover ? 'Companies' : 'Guests'}
-                  titleId={
-                    isAdmin && !takeover ? 'dashboard.totalCompanies.title' : 'dashboard.totalGuestCompanies.title'
-                  }
+                  title={'Companies'}
+                  titleId={'dashboard.totalCompanies.title'}
                   styleCircle={{ backgroundColor: '#2599d5', border: 'solid 5px rgb(211, 235, 247)' }}
                 />
               </Grid.Column>
@@ -1243,19 +1221,9 @@ class Dashboard extends Component {
           </>
         )}
 
-        {!isAdmin && !isClientCompany && (
+        {!isAdmin && (
           <>
             <Grid.Row style={{ paddingBottom: '6px' }}>
-              <Grid.Column width={5}>
-                <SummaryRectangle
-                  onClickUrl={'/manage-guests/guests'}
-                  icon={<Coffee />}
-                  data={companiesCount}
-                  title={'Guest'}
-                  titleId={'dashboard.totalGuestCompanies.title'}
-                  styleCircle={{ backgroundColor: '#2599d5', border: 'solid 5px rgb(211, 235, 247)' }}
-                />
-              </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={'/inventory/my-products'}
@@ -1368,7 +1336,7 @@ class Dashboard extends Component {
           </Grid.Row>
         ) : null}
 
-        {false && ((!isAdmin && !isClientCompany) || takeover) ? ( /* 'false' added in task DT-271 */
+        {false && (!isAdmin || takeover) ? ( /* 'false' added in task DT-271 */
           <Grid.Row>
             {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
               <Grid.Column width={5}>
@@ -1430,8 +1398,7 @@ Dashboard.propTypes = {
   top10Buyers: array,
   totalSumOfSalesMonthly: array,
   isAdmin: bool,
-  takeover: bool,
-  isClientCompany: bool
+  takeover: bool
 }
 
 Dashboard.defaultProps = {
@@ -1451,8 +1418,7 @@ Dashboard.defaultProps = {
   top10Buyers: [],
   totalSumOfSalesMonthly: [],
   isAdmin: false,
-  takeover: false,
-  isClientCompany: false
+  takeover: false
 }
 
 export default injectIntl(Dashboard)

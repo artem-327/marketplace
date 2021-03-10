@@ -108,7 +108,6 @@ export const switchUser = async (props, state) => {
     state.setSelectedCompany(company ? [company] : [])
     state.setSelectedSellMarketSegmentsOptions(selectedSellMarketSegmentsOptions)
     state.setSelectedBuyMarketSegmentsOptions(selectedBuyMarketSegmentsOptions)
-    state.setIsClientCompany(popupValues.company.isClientCompany)
     state.setPopupValues({
       ...popupValues,
       homeBranch: user.value.homeBranch,
@@ -122,7 +121,6 @@ export const switchUser = async (props, state) => {
     state.setSelectedCompany([])
     state.setSelectedSellMarketSegmentsOptions(selectedSellMarketSegmentsOptions)
     state.setSelectedBuyMarketSegmentsOptions(selectedBuyMarketSegmentsOptions)
-    state.setIsClientCompany(false)
     state.setPopupValues({
       ...popupValues,
       homeBranch: user.value.homeBranch,
@@ -208,8 +206,7 @@ export const getInitialFormValues = popupValues => {
       phone: '',
       roles: [],
       buyMarketSegments: [],
-      sellMarketSegments: [],
-      isClientCompany: false
+      sellMarketSegments: []
     }
 }
 

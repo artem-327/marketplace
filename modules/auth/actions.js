@@ -101,8 +101,6 @@ export function login(username, password) {
         // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
         // user is first login as companyAdmin then redirect to settings
 
-        const isClientCompanyAdmin = identity.roles.map(r => r.id).indexOf(67) > -1
-
         if (
           identity &&
           identity.isCompanyAdmin &&
@@ -123,8 +121,6 @@ export function login(username, password) {
         ) {
           isAdmin
             ? Router.push('/dashboard')
-            : isClientCompanyAdmin
-            ? Router.push('/marketplace/listings')
             : Router.push(urlPage)
         }
 

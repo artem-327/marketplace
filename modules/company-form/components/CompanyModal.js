@@ -122,7 +122,7 @@ class CompanyModal extends Component {
 
       let validation = Yup.object().shape({
         name: Yup.string().trim().min(2, minLength).required(minLength),
-        website: this.props.isClientCompany ? websiteValidationNotRequired() : websiteValidation(),
+        website: websiteValidation(),
 
         mailingBranch: Yup.lazy(() => {
           if (mailingBranchRequired)
@@ -207,9 +207,7 @@ class CompanyModal extends Component {
       header,
       postCompanyLogo,
       deleteCompanyLogo,
-      isClientCompany,
-      onSubmit,
-      closePopupClientCompany
+      onSubmit
     } = this.props
 
     const { selectLogo, removeLogo } = this
@@ -257,14 +255,12 @@ class CompanyModal extends Component {
             }
 
             let data = await onSubmit(payload, isEdit)
-            if (!isClientCompany) {
-              if (companyLogo) postCompanyLogo(data.id, companyLogo)
-              else if (!companyLogo && getSafe(() => popupValues.hasLogo, false)) deleteCompanyLogo(data.id)
-              if (isEdit) Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!companyLogo }))
-              else {
-                Datagrid.clear()
-                Datagrid.loadData()
-              }
+            if (companyLogo) postCompanyLogo(data.id, companyLogo)
+            else if (!companyLogo && getSafe(() => popupValues.hasLogo, false)) deleteCompanyLogo(data.id)
+            if (isEdit) Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!companyLogo }))
+            else {
+              Datagrid.clear()
+              Datagrid.loadData()
             }
           } catch (err) {
             actions.setSubmitting(false)
@@ -279,7 +275,7 @@ class CompanyModal extends Component {
           return (
             <Modal
               closeIcon
-              onClose={() => (isClientCompany ? closePopupClientCompany() : closePopup())}
+              onClose={() => closePopup()}
               open
               centered={false}
               size='small'>
@@ -302,7 +298,6 @@ class CompanyModal extends Component {
                         errors={errors}
                         touched={touched}
                         isSubmitting={isSubmitting}
-                        isClientCompany={this.props.isClientCompany}
                       />
                       {!popupValues && (
                         <>
@@ -485,7 +480,7 @@ class CompanyModal extends Component {
               <Modal.Actions>
                 <Button
                   data-test='admin_popup_company_cancel_btn'
-                  onClick={() => (isClientCompany ? closePopupClientCompany() : closePopup())}>
+                  onClick={() => closePopup()}>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
                   </FormattedMessage>
@@ -537,18 +532,14 @@ CompanyModal.propTypes = {
     id: string,
     defaultMessage: string
   }),
-  isClientCompany: bool,
-  onSubmit: func.isRequired,
-  closePopupClientCompany: func
+  onSubmit: func.isRequired
 }
 
 CompanyModal.defaultProps = {
   header: {
     id: 'global.company',
     defaultMessage: 'Company'
-  },
-  isClientCompany: false,
-  closePopupClientCompany: () => {}
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CompanyModal))

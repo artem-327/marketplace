@@ -203,8 +203,7 @@ const mapStateToProps = ({ settings, auth }) => {
     activeTab: settings.locationsTab,
     isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
-    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
-    isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false)
+    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false)
   }
 }
 

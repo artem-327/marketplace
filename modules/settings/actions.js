@@ -401,11 +401,10 @@ export function getUsersDataRequest() {
     dispatch({
       type: AT.GET_USERS_DATA,
       async payload() {
-        const [users, branches, roles, clientCompanyRoles, currentUser] = await Promise.all([
+        const [users, branches, roles, currentUser] = await Promise.all([
           api.getUsers(),
           api.getBranches(),
           api.getRoles(),
-          api.getClientCompanyRoles(),
           api.getCurrentUser()
         ])
         dispatch({
@@ -415,10 +414,6 @@ export function getUsersDataRequest() {
         dispatch({
           type: AT.GET_ROLES_DATA,
           payload: roles
-        })
-        dispatch({
-          type: AT.SETTINGS_GET_CLIENT_COMPANY_ROLES_DATA,
-          payload: clientCompanyRoles
         })
         dispatch({
           type: AT.GET_CURRENT_USER_DATA_FULFILLED,
@@ -1146,43 +1141,6 @@ export const getBranch = branchId => ({
   type: AT.GET_BRANCH,
   payload: api.getBranch(branchId)
 })
-
-export const createClientCompany = payload => {
-  return async dispatch => {
-    const response = await api.createClientCompany(payload)
-    dispatch({
-      type: AT.CREATE_CLIENT_COMPANY,
-      payload: response
-    })
-    Datagrid.loadData()
-    dispatch(closePopup())
-    return response.data
-  }
-}
-export const updateClientCompany = (payload, id) => {
-  return async dispatch => {
-    const response = await api.updateClientCompany(payload, id)
-    dispatch({
-      type: AT.UPDATE_CLIENT_COMPANY,
-      payload: response
-    })
-    Datagrid.updateRow(id, () => response)
-    dispatch(closePopup())
-    return response.data
-  }
-}
-
-export const deleteClientCompany = id => {
-  return async dispatch => {
-    const response = await api.deleteClientCompany(id)
-    dispatch({
-      type: AT.DELETE_CLIENT_COMPANY,
-      payload: response
-    })
-    Datagrid.loadData()
-    return
-  }
-}
 
 export const addVerificationDocumentsOwner = (attachment, id, docType) => {
   return {

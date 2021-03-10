@@ -20,7 +20,6 @@ export const initialState = {
   usersRows: [],
   userEditRoles: false,
   roles: [],
-  clientCompanyRoles: [],
   warehousesRows: [],
   branchesRows: [],
   branchesAll: [],
@@ -398,13 +397,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         roles: action.payload
-      }
-    }
-
-    case AT.SETTINGS_GET_CLIENT_COMPANY_ROLES_DATA: {
-      return {
-        ...state,
-        clientCompanyRoles: action.payload
       }
     }
 

@@ -3,7 +3,6 @@ export const defaultTabs = [
   { name: 'Users', id: 1, type: 'users' },
   { name: 'Trade Criteria', id: 16, type: 'trade-criteria' },
   { name: 'Locations', id: 2, type: 'locations' },
-  { name: 'Guest Companies', id: 6, type: 'guest-companies' },
   //{ name: 'Credit Cards', id: 7, type: 'credit-cards' },
   { name: 'Bank Accounts', id: 8, type: 'bank-accounts' },
   { name: 'Logistics', id: 13, type: 'logistics' },
