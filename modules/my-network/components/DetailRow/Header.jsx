@@ -62,22 +62,21 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
             ? buttonsProps.map((button, i) => (
                 <BasicButton
                   key={i}
-                  data-test={`my_network_detail_row_${button.action}_btn`}
-                  textColor={button.color}
-                  background={button.background}
+                  data-test={`my_network_detail_row_${button?.action}_btn`}
+                  textColor={button?.color}
+                  background={button?.background}
                   onClick={() => {
-                    if (button.action === 'disconnect') {
+                    if (button?.action !== 'cancel') {
                       confirm(
                         <DivModal>
-                          <DivCircle>
+                          <DivCircle background={button?.color}>
                             <InfoIcon size='28' color='#ffffff' />
                           </DivCircle>
                         </DivModal>,
                         <DivModal>
                           {intl.formatMessage({
-                            id: 'myNetworks.detailRow.modal.content',
-                            defaultMessage:
-                              'Disconnecting will remove this company from your Network. You can request to connect again at anytime.'
+                            id: `${button?.confirmId}`,
+                            defaultMessage: `Do you want to ${button?.action} this connection?`
                           })}
                         </DivModal>,
                         {
@@ -89,7 +88,7 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
                         async () => {
                           // confirm
                           try {
-                            await buttonActionsDetailRow(button.action, id)
+                            await buttonActionsDetailRow(button?.action, id)
                           } catch (e) {
                             console.error(e)
                           }
@@ -99,10 +98,10 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
                         }
                       )
                     } else {
-                      buttonActionsDetailRow(button.action, id)
+                      buttonActionsDetailRow(button?.action, id)
                     }
                   }}>
-                  <FormattedMessage id={button.textId} defaultMessage='' />
+                  <FormattedMessage id={button?.textId} defaultMessage='' />
                 </BasicButton>
               ))
             : null}
