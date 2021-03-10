@@ -30,6 +30,8 @@ import * as Actions from '../actions'
 
 import LogisticsTable from './LogisticsTable/LogisticsTable'
 import AddEditLogisticProvider from './LogisticsTable/AddEditLogisticProvider'
+import Carriers from './Carriers/Carriers'
+import AddEditCarrier from './Carriers/AddEditCarrier'
 
 import styled from 'styled-components'
 
@@ -55,6 +57,7 @@ const tables = {
   'nmfc-numbers': <NmfcTable />,
   associations: <DataTable currentTab={'associations'} />,
   logistics: <LogisticsTable />,
+  carriers: <Carriers />,
   'admin-settings': (
     <FixyWrapper>
       <AdminSegment basic padded='very'>
@@ -116,6 +119,11 @@ const datagridConfig = {
     url: '/prodex/api/logistics-providers/stored/datagrid',
     searchToFilter: v =>
       v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  carriers: {
+    url: '/prodex/api/logistics-carriers/stored/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'LogisticsCarrier.code', values: [`%${v.searchInput}%`] }] : []
   }
 }
 
@@ -128,7 +136,8 @@ const editForms = {
   conditions: <EditPopup1Parameter currentTab={'conditions'} />,
   'nmfc-numbers': <NmfcPopup />,
   associations: <EditPopup1Parameter currentTab={'associations'} />,
-  logistics: <AddEditLogisticProvider />
+  logistics: <AddEditLogisticProvider />,
+  carriers: <AddEditCarrier />
 }
 
 const addForms = {
@@ -140,7 +149,8 @@ const addForms = {
   conditions: <AddNewPopup1Parameter currentTab={'conditions'} />,
   'nmfc-numbers': <NmfcPopup />,
   associations: <AddNewPopup1Parameter currentTab={'associations'} />,
-  logistics: <AddEditLogisticProvider />
+  logistics: <AddEditLogisticProvider />,
+  carriers: <AddEditCarrier />
 }
 
 const addDwollaForms = {

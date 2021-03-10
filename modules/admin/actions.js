@@ -614,3 +614,18 @@ export const deleteLogisticsProvider = id => ({
   type: AT.ADMIN_DELETE_LOGISTICS_PROVIDER,
   payload: api.deleteLogisticsProvider(id)
 })
+
+export const postNewCarrier = data => ({
+  type: AT.ADMIN_POST_NEW_CARRIER,
+  payload: api.postNewCarrier(data)
+})
+
+export const updateCarrier = (id, data) => ({
+  type: AT.ADMIN_EDIT_CARRIER,
+  payload: api.updateCarrier(id, data)
+})
+
+export const deleteCarrier = id => ({
+  type: AT.ADMIN_DELETE_CARRIER,
+  payload: api.deleteCarrier(id)
+})

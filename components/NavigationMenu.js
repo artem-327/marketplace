@@ -79,6 +79,7 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/admin/nmfc-numbers', false) ||
       getSafe(() => Router.router.pathname === '/admin/associations', false) ||
       getSafe(() => Router.router.pathname === '/admin/logistics', false) ||
+      getSafe(() => Router.router.pathname === '/admin/carriers', false) ||
       getSafe(() => Router.router.pathname === '/admin/admin-settings', false),
     operations:
       getSafe(() => Router.router.pathname === '/operations/shipping-quotes', false) ||
