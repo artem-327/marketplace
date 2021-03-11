@@ -1,4 +1,7 @@
-
+/**
+ * @category Purchase Order
+ * @constant
+ */
 export const INITIAL_VALUES = {
   addressName: '',
   contactPhone: '',
