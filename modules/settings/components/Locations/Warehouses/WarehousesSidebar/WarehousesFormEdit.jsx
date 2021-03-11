@@ -48,7 +48,7 @@ const WarehousesFormEdit = ({ intl, formikProps, sidebarValues }) => {
 
       <AddressForm
         prefix={'deliveryAddress'}
-        noBorder
+        noborder
         displayHeader={false}
         customHeader={customHeader}
         required={true}

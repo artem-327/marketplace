@@ -1,4 +1,3 @@
-import { useState } from 'react'
 //Components
 import TableContainer from './components/TableContainer'
 import { DatagridProvider } from '../datagrid'
@@ -13,7 +12,7 @@ import { ContainerCustom } from './MyNetwork.styles'
 const MyNetwork = props => {
   const getApiConfig = () => ({
     method: 'GET',
-    url: '/prodex/api/tradepass/connections', //FIXME
+    url: '/prodex/api/tradepass/connections',
     params: {
       pageSize: 50,
       sortBy: 'DATE',

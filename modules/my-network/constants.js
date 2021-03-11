@@ -1,5 +1,144 @@
 import { FormattedMessage } from 'react-intl'
 
+//REMOVE
+export const mockRows = [
+  {
+    connectionId: 1,
+    connectedCompany: {
+      id: 255,
+      name: 'AAAAAA',
+      tin: '12345',
+      phone: 123456,
+      inBusinessSince: 1987,
+      numberOfEmployees: 245,
+      website: 'www.aaa.cz',
+      socialFacebook: 'www.facebook.com',
+      socialInstagram: 'www.socialInstagram.com',
+      socialLinkedin: 'www.socialLinkedin.com',
+      socialTwitter: 'www.socialTwitter.com',
+      connectionsCount: 'www.connectionsCount.com',
+      articlesIncorporation: true,
+      certificateInsurance: true,
+      paymentProcessor: true,
+      dunsNumber: true
+    },
+    status: 'REQUESTED',
+    criteria: {
+      aggregateInsurance: {
+        match: 'green',
+        actualValue: '1,000,000 - 2,500,000'
+      },
+      daysBeyond: {
+        match: 'green',
+        actualValue: '60'
+      },
+      creditRisk: {
+        match: 'red',
+        actualValue: '40-60'
+      },
+      violations: {
+        match: 'green',
+        actualValue: '4'
+      },
+      socialPresence: {
+        match: 'yellow',
+        actualValue: 'Website + 1 Social'
+      }
+    },
+    updatedAt: '2021-02-24T06:43:28-08:00'
+  },
+  {
+    connectionId: 2,
+    connectedCompany: {
+      id: 255,
+      name: 'BBBBB',
+      tin: '12345',
+      phone: 123456,
+      inBusinessSince: 1987,
+      numberOfEmployees: 245,
+      website: 'www.aaa.cz',
+      socialFacebook: 'www.facebook.com',
+      socialInstagram: 'www.socialInstagram.com',
+      socialLinkedin: 'www.socialLinkedin.com',
+      socialTwitter: 'www.socialTwitter.com',
+      connectionsCount: 'www.connectionsCount.com',
+      articlesIncorporation: true,
+      certificateInsurance: true,
+      paymentProcessor: true,
+      dunsNumber: true
+    },
+    status: 'PENDING',
+    criteria: {
+      aggregateInsurance: {
+        match: 'red',
+        actualValue: '1,000,000 - 2,500,000'
+      },
+      daysBeyond: {
+        match: 'green',
+        actualValue: '60'
+      },
+      creditRisk: {
+        match: 'green',
+        actualValue: '40-60'
+      },
+      violations: {
+        match: 'green',
+        actualValue: '4'
+      },
+      socialPresence: {
+        match: 'green',
+        actualValue: 'Website + 1 Social'
+      }
+    },
+    updatedAt: '2021-01-24T06:43:28-08:00'
+  },
+  {
+    connectionId: 3,
+    connectedCompany: {
+      id: 255,
+      name: 'CCCCCCCCC',
+      tin: '12345',
+      phone: 123456,
+      inBusinessSince: 1987,
+      numberOfEmployees: 245,
+      website: 'www.aaa.cz',
+      socialFacebook: 'www.facebook.com',
+      socialInstagram: 'www.socialInstagram.com',
+      socialLinkedin: 'www.socialLinkedin.com',
+      socialTwitter: 'www.socialTwitter.com',
+      connectionsCount: 'www.connectionsCount.com',
+      articlesIncorporation: true,
+      certificateInsurance: true,
+      paymentProcessor: true,
+      dunsNumber: true
+    },
+    status: 'CONNECTED',
+    criteria: {
+      aggregateInsurance: {
+        match: 'red',
+        actualValue: '1,000,000 - 2,500,000'
+      },
+      daysBeyond: {
+        match: 'green',
+        actualValue: '60'
+      },
+      creditRisk: {
+        match: 'green',
+        actualValue: '40-60'
+      },
+      violations: {
+        match: 'green',
+        actualValue: '4'
+      },
+      socialPresence: {
+        match: 'green',
+        actualValue: 'Website + 1 Social'
+      }
+    },
+    updatedAt: '2021-01-23T06:43:28-08:00'
+  }
+]
+
 /**
  * @constant {{
  *    red: '#f16844',
@@ -33,13 +172,15 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.reject',
       color: '#ffffff !important',
       background: '#f16844 !important',
-      action: 'reject'
+      action: 'reject',
+      confirmId: 'myNetworks.detailRow.modal.reject'
     },
     {
       textId: 'myNetworks.detailRow.accept',
       color: '#ffffff !important',
       background: '#84c225 !important',
-      action: 'accept'
+      action: 'accept',
+      confirmId: 'myNetworks.detailRow.modal.accept'
     }
   ],
   REQUESTED: [
@@ -47,15 +188,17 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.disconnect',
       color: '#ffffff !important',
       background: '#5e5e5e !important',
-      action: 'disconnect'
+      action: 'disconnect',
+      confirmId: 'myNetworks.detailRow.modal.disconnect'
     }
   ],
   CONNECTED: [
     {
-      textId: 'myNetworks.detailRow.disconect',
+      textId: 'myNetworks.detailRow.disconnect',
       color: '#ffffff !important',
       background: '#5e5e5e !important',
-      action: 'disconect'
+      action: 'disconnect',
+      confirmId: 'myNetworks.detailRow.modal.disconnect'
     }
   ],
   DECLINED: [
@@ -63,7 +206,8 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
-      action: 'remove'
+      action: 'remove',
+      confirmId: 'myNetworks.detailRow.modal.remove'
     }
   ],
   DISCONNECTED: [
@@ -71,7 +215,23 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
-      action: 'remove'
+      action: 'remove',
+      confirmId: 'myNetworks.detailRow.modal.remove'
+    }
+  ],
+  INVITE: [
+    {
+      textId: 'global.cancel',
+      color: '#20273a !important',
+      background: '#ffffff !important',
+      action: 'cancel'
+    },
+    {
+      textId: 'global.invite',
+      color: '#ffffff !important',
+      background: '#00c7f9 !important',
+      action: 'invite',
+      confirmId: 'myNetworks.detailRow.modal.invite'
     }
   ]
 }
@@ -105,7 +265,8 @@ export const STATUSES = {
   REQUESTED: 'REQUESTED',
   CONNECTED: 'CONNECTED',
   DECLINED: 'DECLINED',
-  DISCONNECTED: 'DISCONNECTED'
+  DISCONNECTED: 'DISCONNECTED',
+  INVITE: 'INVITE'
 }
 
 /**
@@ -133,7 +294,7 @@ export const NETWORK_TYPES = [
   {
     key: 'ALL',
     text: 'All',
-    value: ''
+    value: 'ALL'
   },
   {
     key: 'ACTIVE',

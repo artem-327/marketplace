@@ -309,5 +309,14 @@ export default {
       .get(`/prodex/api/settings/company-user/${id}`)
       .then(response => response.data)
       .catch(err => console.error(err)),
-  postTradeCriteria: body => api.post('/prodex/api/trade-criteria', body).then(response => response.data)
+  patchTradeCriteria: body =>
+    api
+      .patch('/prodex/api/settings/company', body)
+      .then(response => response.data)
+      .catch(err => err),
+  getTradeCriteria: () =>
+    api
+      .get('/prodex/api/settings/company?groups=TRADEPASS')
+      .then(response => response.data)
+      .catch(err => err)
 }

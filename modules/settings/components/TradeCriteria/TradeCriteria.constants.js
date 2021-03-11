@@ -174,62 +174,62 @@ export const SOCIAL_PRESENCE = [
  * @constant
  *
  */
-export const DROPDOWNS = [
-  {
+export const DROPDOWNS = {
+  COMPANY_TP_CRITERIA_DAY_BEYOND_TERM: {
     idTitle: 'settings.tradeCriteria.daysBeyond.titleLabel',
     textTitle: 'Days Beyond Term',
     idSubTitle: 'settings.tradeCriteria.daysBeyond.subLabel',
     textSubTitle: 'What Days Beyond Term (DBT) are you comfortable with your customers/partners having?',
-    name: 'daysBeyondTerm',
+    name: 'COMPANY_TP_CRITERIA_DAY_BEYOND_TERM',
     options: DAYS_BEYOND,
     idPlaceholder: 'settings.tradeCriteria.selectPaymentTerms',
     textPlaceholder: 'Select your Payment Terms',
     dataTest: 'settings_trade_criteria_days_beyond_drpdn'
   },
-  {
+  COMPANY_TP_CRITERIA_AGGREGATE_INSURANCE: {
     idTitle: 'settings.tradeCriteria.aggregateInsurance.titleLabel',
     textTitle: 'Aggregate Insurance',
     idSubTitle: 'settings.tradeCriteria.aggregateInsurance.subLabel',
     textSubTitle: 'What total amount of Insurance Coverage do you prefer your customers/partners carry?',
-    name: 'aggregateInsurance',
+    name: 'COMPANY_TP_CRITERIA_AGGREGATE_INSURANCE',
     options: AGGREGATE_INSURANCE,
     idPlaceholder: 'settings.tradeCriteria.aggregateInsurance.placeholder',
     textPlaceholder: 'Select Aggregate Insurance',
     dataTest: 'settings_trade_criteria_aggregate_insurance_drpdn'
   },
-  {
+  COMPANY_TP_CRITERIA_CREDIT_RISK: {
     idTitle: 'settings.tradeCriteria.creditRisk.titleLabel',
     textTitle: 'Credit Risk',
     idSubTitle: 'settings.tradeCriteria.creditRisk.subLabel',
     textSubTitle: 'What credit profile is your company comfortable doing business with?',
-    name: 'creditRisk',
+    name: 'COMPANY_TP_CRITERIA_CREDIT_RISK',
     options: CREDIT_RISK,
     idPlaceholder: 'settings.tradeCriteria.creditRisk.placeholder',
     textPlaceholder: 'Select Credit Risk',
     dataTest: 'settings_trade_criteria_credit_risk_drpdn'
   },
-  {
+  COMPANY_TP_CRITERIA_VIOLATIONS: {
     idTitle: 'settings.tradeCriteria.violations.titleLabel',
     textTitle: 'Violations',
     idSubTitle: 'settings.tradeCriteria.violations.subLabel',
     textSubTitle:
       'How many public violations (including lawsuits, liens, bankruptcy filings) is your company comfortable with in a customer/partner?',
-    name: 'violations',
+    name: 'COMPANY_TP_CRITERIA_VIOLATIONS',
     options: VIOLATIONS,
     idPlaceholder: 'settings.tradeCriteria.violations.placeholder',
     textPlaceholder: 'Select Presence Violations',
     dataTest: 'settings_trade_criteria_violations_drpdn'
   },
-  {
+  COMPANY_TP_CRITERIA_SOCIAL_PRESENCE: {
     idTitle: 'settings.tradeCriteria.socialPresence.titleLabel',
     textTitle: 'Social Presence',
     idSubTitle: 'settings.tradeCriteria.socialPresence.subLabel',
     textSubTitle:
       'Websites and social media is often an indicator of a companies integrity. How many social accounts do you  prefer your customers/partners have?',
-    name: 'socialPresence',
+    name: 'COMPANY_TP_CRITERIA_SOCIAL_PRESENCE',
     options: SOCIAL_PRESENCE,
     idPlaceholder: 'settings.tradeCriteria.socialPresence.placeholder',
     textPlaceholder: 'Select Social Presence',
     dataTest: 'settings_trade_criteria_social_presence_drpdn'
   }
-]
+}

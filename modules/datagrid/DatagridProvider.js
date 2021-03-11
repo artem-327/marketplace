@@ -147,6 +147,7 @@ class DatagridProvider extends Component {
           }
     console.log('dataOrParams')
     console.log(dataOrParams)
+    dataOrParams?.params?.status === 'ALL' && delete dataOrParams.params.status
 
     try {
       const response = await api.request({
@@ -376,10 +377,11 @@ class DatagridProvider extends Component {
   }
 
   setQuery = (query, reload = true) => {
-    this.setState(
-      prevState => ({ query: { ...prevState.query, ...query } }),
-      () => reload && this.loadData()
-    )
+    let newQuery = this.state.query
+
+    newQuery = { ...newQuery, ...query }
+    this.setState({ query: newQuery })
+    reload && this.loadData()
   }
 
   setSearch = (value, reload = true, filterId = null) => {
@@ -419,7 +421,7 @@ class DatagridProvider extends Component {
     })
   }
 
-  onTableReady = (params = {}) => {
+  onTableReady = (params = { pageNumber: 0 }) => {
     if (this.props.skipInitLoad) {
       this.setState(s => ({
         ready: true,
@@ -450,7 +452,8 @@ class DatagridProvider extends Component {
       datagridParams: { filters },
       savedFilters,
       loadedAllData,
-      isUpdatedRow
+      isUpdatedRow,
+      query
     } = this.state
 
     return (
@@ -462,6 +465,7 @@ class DatagridProvider extends Component {
           filters,
           savedFilters,
           isUpdatedRow,
+          query,
           autoRefresh: this.props.autoRefresh,
           removeRow: this.removeRowById,
           updateRow: this.updateRow,
