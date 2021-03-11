@@ -662,6 +662,7 @@ class Dashboard extends Component {
       isAdmin,
       takeover,
       dailyStats,
+      totalCompanyPartners,
       intl: { formatMessage }
     } = this.props
 
@@ -996,8 +997,7 @@ class Dashboard extends Component {
       }
     ]
 
-    const panes =
-      isAdmin && !takeover ? adminMenuTabs : companySalesPurchasesTabs
+    const panes = isAdmin && !takeover ? adminMenuTabs : companySalesPurchasesTabs
 
     const quickFilters = [
       formatMessage({ id: 'dashboard.dateFilter.lastDay', defaultMessage: 'Last day' }),
@@ -1226,6 +1226,16 @@ class Dashboard extends Component {
             <Grid.Row style={{ paddingBottom: '6px' }}>
               <Grid.Column width={5}>
                 <SummaryRectangle
+                  onClickUrl={'/my-network'}
+                  icon={<Coffee />}
+                  data={totalCompanyPartners}
+                  title={'Partners'}
+                  titleId={'dashboard.totalPartnersCompanies.title'}
+                  styleCircle={{ backgroundColor: '#2599d5', border: 'solid 5px rgb(211, 235, 247)' }}
+                />
+              </Grid.Column>
+              <Grid.Column width={5}>
+                <SummaryRectangle
                   onClickUrl={'/inventory/my-products'}
                   icon={<Package />}
                   data={companyProductsCount}
@@ -1336,7 +1346,7 @@ class Dashboard extends Component {
           </Grid.Row>
         ) : null}
 
-        {false && (!isAdmin || takeover) ? ( /* 'false' added in task DT-271 */
+        {false && (!isAdmin || takeover) /* 'false' added in task DT-271 */ ? (
           <Grid.Row>
             {top10CompanyProductsByQuantitySales && top10CompanyProductsByQuantitySales.length ? (
               <Grid.Column width={5}>
