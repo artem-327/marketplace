@@ -63,6 +63,13 @@ import UserEditSidebar from '../modules/settings/components/UserTable/UserEditSi
 import GuestSidebar from '../modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
 import WarehouseSidebar from '../modules/settings/components/Locations/Warehouses/WarehousesSidebar/WarehousesSidebar'
 
+//Components
+import InviteModal from '../modules/my-network/components/InviteModal/InviteModal'
+//Actions
+import { search, buttonActionsDetailRow, triggerModal } from '../modules/my-network/actions'
+//Services
+import { getRowDetail } from '../modules/my-network/MyNetwork.services'
+
 export const IconMinimize2 = styled(Minimize2)`
   text-align: center;
   padding-right: 10px;
@@ -170,9 +177,7 @@ class Layout extends Component {
   }
 
   loadCompanyLogo = async () => {
-    if (
-      this.props.hasLogo && this.props.useCompanyLogo && this.props.getCompanyLogo
-    ) {
+    if (this.props.hasLogo && this.props.useCompanyLogo && this.props.getCompanyLogo) {
       await this.props.getCompanyLogo(this.props.companyId)
     }
   }
@@ -308,7 +313,14 @@ class Layout extends Component {
       isOrderOperator,
       renderCopyright,
       openGlobalAddForm,
-      openGlobalAddFormName
+      openGlobalAddFormName,
+      search,
+      isError,
+      loadingNetworkConnection,
+      inviteDetailCompany,
+      buttonActionsDetailRow,
+      isOpenInviteModal,
+      triggerModal
     } = this.props
 
     const {
@@ -372,13 +384,7 @@ class Layout extends Component {
           <LeftMenuContainer fluid>
             <PerfectScrollbar ref={this.navigationPS}>
               <LogoImage
-                src={
-                  !collapsedMenu
-                    ? hasLogo && useCompanyLogo
-                      ? this.getCompanyLogo()
-                      : Logo
-                    : LogoSmall
-                }
+                src={!collapsedMenu ? (hasLogo && useCompanyLogo ? this.getCompanyLogo() : Logo) : LogoSmall}
               />
 
               <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
@@ -482,14 +488,16 @@ class Layout extends Component {
                     className='item-cart'>
                     <NotificationsIcon />
                   </Menu.Item>
-                  {/* DT-293 temporary disabled */ false && (
-                    <Menu.Item
-                      onClick={() => Router.push('/marketplace/holds')}
-                      data-test='navigation_marketplace'
-                      className='item-cart'>
-                      <HoldIcon />
-                    </Menu.Item>
-                  )}
+                  {
+                    /* DT-293 temporary disabled */ false && (
+                      <Menu.Item
+                        onClick={() => Router.push('/marketplace/holds')}
+                        data-test='navigation_marketplace'
+                        className='item-cart'>
+                        <HoldIcon />
+                      </Menu.Item>
+                    )
+                  }
                   {(isClientCompanyManager ||
                     isCompanyAdmin ||
                     isMerchant ||
@@ -560,9 +568,7 @@ class Layout extends Component {
 
         <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }} />
         <GlobalSidebars>
-          {openGlobalAddFormName === 'inventory-my-products' && (
-            <ProductPopup openGlobalAddForm={openGlobalAddForm} />
-          )}
+          {openGlobalAddFormName === 'inventory-my-products' && <ProductPopup openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'inventory-my-listings' && (
             <ModalDetailContainer openGlobalAddForm={openGlobalAddForm} />
           )}
@@ -571,6 +577,18 @@ class Layout extends Component {
           {openGlobalAddFormName === 'manage-guests-guests' && <GuestSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'my-account-locations' && (
             <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'my-network-connection' && (
+            <InviteModal
+              open={isOpenInviteModal}
+              onClose={triggerModal}
+              openGlobalAddForm={openGlobalAddForm}
+              search={search}
+              isError={isError}
+              loading={loadingNetworkConnection}
+              detailCompany={inviteDetailCompany}
+              buttonActionsDetailRow={buttonActionsDetailRow}
+            />
           )}
         </GlobalSidebars>
       </MainContainer>
@@ -588,7 +606,10 @@ const mapDispatchToProps = {
   toggleMenu,
   getCompanyLogo,
   openGlobalAddForm,
-  setMainContainer
+  setMainContainer,
+  search,
+  buttonActionsDetailRow,
+  triggerModal
 }
 
 const mapStateToProps = state => {
@@ -602,25 +623,25 @@ const mapStateToProps = state => {
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover:
-      getSafe(() => !!state.auth.identity.company.id, false)
-      && getSafe(() => state.auth.identity.isAdmin, false),
+      getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
     phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, []),
     companyId: getSafe(() => state.auth.identity.company.id, false),
     hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),
     companyLogo: getSafe(() => state.businessTypes.companyLogo, null),
     useCompanyLogo:
-      getSafe(() =>
-        state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO').value, 'false')
-        .toLowerCase() === 'true',
+      getSafe(
+        () => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO').value,
+        'false'
+      ).toLowerCase() === 'true',
     avatar: getSafe(() => state.auth.identity.avatar, null),
     gravatarSrc: getSafe(() => state.auth.identity.gravatarSrc, null),
     useGravatar:
-      getSafe(() =>
-        state.auth.identity.settings.find(set => set.key === 'USER_USE_GRAVATAR').value, 'false')
-        .toLowerCase() === 'true',
+      getSafe(
+        () => state.auth.identity.settings.find(set => set.key === 'USER_USE_GRAVATAR').value,
+        'false'
+      ).toLowerCase() === 'true',
     companyName: getSafe(() => state.auth.identity.company.name, false),
-    isEchoOperator:
-      getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
     isOrderOperator: getSafe(() => state.auth.identity.isOrderOperator, false),
     renderCopyright: getSafe(() => state.settings.renderCopyright, false),
     adminTab: getSafe(() => state.admin.currentTab.id, null),
@@ -631,7 +652,11 @@ const mapStateToProps = state => {
     adminLoading: state.admin.loading,
     cartLoading: state.cart.cartIsFetching,
     settingsLoading: state.settings.loading,
-    wantedBoardLoading: state.wantedBoard.loading
+    wantedBoardLoading: state.wantedBoard.loading,
+    isError: state?.myNetwork?.isError,
+    loadingNetworkConnection: state?.myNetwork?.loading,
+    inviteDetailCompany: getRowDetail(state?.myNetwork?.companyNetworkConnection),
+    isOpenInviteModal: state?.myNetwork?.isOpenModal
   }
 }
 

@@ -109,22 +109,22 @@ export const getStatuses = rows => {
  */
 export const getRowDetail = row => {
   if (!row) return
+  let address = row?.connectedCompany?.primaryAddress
   return {
     ...row,
-    id: row?.connectionId || row?.connectedCompany?.tradepassId || 'VB-6ddb6003-fac2-4961-b897-1cfbdd85c16e', //FIXME
+    id: row?.connectionId || row?.connectedCompany?.tradepassId,
     member: (
-      <div key={row?.connectionId || row?.connectedCompany?.id}>
-        {/*FIXME row?.connectedCompany?.logo */}
-        <Image verticalAlign='middle' size='mini' spaced={true} src={Logo} />
+      <div key={row?.connectionId || row?.connectedCompany?.tradepassId}>
+        <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.logo} />
 
         <b>{row?.connectedCompany?.name}</b>
       </div>
     ),
-    logo: <Image verticalAlign='middle' size='small' spaced={true} src={Logo} />, //FIXME row?.connectedCompany?.logo
-    address: row?.connectedCompany?.primaryAddress, //FIXME prepare address for detail
+    logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.logo} />,
+    address: `${address?.streetAddress} ${address?.city}, ${address?.province?.abbreviation} ${address?.country?.code}`,
     transactions: row?.connectedCompany?.transactionsCount || 0,
     averageValue: row?.connectedCompany?.averageTransactionValue || 0,
-    connectionStatus: getStatusLabel(row?.status || row?.connectedCompany?.status),
+    connectionStatus: getStatusLabel(row?.status),
     eligibilityCriteria: getCriteriaLabel(row?.criteria || row?.connectedCompany?.criteria),
     date: getDate(row?.updatedAt || row?.connectedCompany?.updatedAt),
     buttonActionsDetailRow: buttonActionsDetailRow,
