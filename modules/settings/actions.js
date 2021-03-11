@@ -1039,6 +1039,28 @@ export function addAttachment(attachment, type, expirationDate) {
   }
 }
 
+export function addDeaAttachment(attachment, branchId) {
+  return {
+    type: AT.SETTINGS_ADD_DEA_ATTACHMENT,
+    async payload() {
+      const data = await api.addDeaAttachment(attachment, branchId)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
+  }
+}
+
+export function addTaxExemptAttachment(attachment, branchId) {
+  return {
+    type: AT.SETTINGS_ADD_TAX_EXEMPT_ATTACHMENT,
+    async payload() {
+      const data = await api.addTaxExemptAttachment(attachment, branchId)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
+  }
+}
+
 export function removeAttachmentLink(isLot, itemId, aId) {
   return {
     type: AT.SETTINGS_REMOVE_ATTACHMENT_LINK,

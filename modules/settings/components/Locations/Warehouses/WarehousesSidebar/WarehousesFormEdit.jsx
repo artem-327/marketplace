@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import { Header, FormGroup, Image } from 'semantic-ui-react'
 import { Input, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
 //Components
 import { Required } from '../../../../../../components/constants/layout'
 import { AddressForm } from '../../../../../address-form'
@@ -9,8 +10,10 @@ import { PhoneNumber } from '../../../../../phoneNumber'
 import { TimeInput } from '../../../../../../components/custom-formik'
 import UploadAttachment from '../../../../../inventory/components/upload/UploadAttachment'
 import RedIcon from '../../../../../../assets/images/orders/list-red.png'
+import GreenIcon from '../../../../../../assets/images/orders/list-green.png'
 //Services
 import { getSafe } from '../../../../../../utils/functions'
+import { addCertificateAttachment } from './Warehouses.services'
 //Styles
 import {
   DivHeader,
@@ -38,15 +41,20 @@ const WarehousesFormEdit = ({
   formikProps,
   sidebarValues,
   addAttachment,
+  addDeaAttachment,
+  addTaxExemptAttachment,
   loadFile,
   removeAttachment,
   attachmentFiles,
-  setAttachmentFiles
+  setAttachmentFiles,
+  listDocumentTypes,
+  toastManager
 }) => {
   const { formatMessage } = intl
   const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
   const deaDocumentType = 17
   const taxExemptionType = 13
+  const fileMaxSize = 20
   return (
     <>
       <FormGroup widths='equal' data-test='settings_warehouse_popup_name_inp'>
@@ -180,8 +188,6 @@ const WarehousesFormEdit = ({
               attachments={formikProps.values.attachments.filter(
                 att => getSafe(() => att.documentType.id, 0) === deaDocumentType
               )}
-              addAttachment={addAttachment}
-              loadFile={loadFile}
               //removeAttachment={removeAttachment}
               hideAttachments={true}
               edit={getSafe(() => sidebarValues.id, '')}
@@ -192,20 +198,11 @@ const WarehousesFormEdit = ({
               //listDocumentTypes={this.props.listDocumentTypes}
               noWrapperStyles
               onChange={files => {
-                formikProps.setFieldValue(
-                  `attachments[${
-                    formikProps.values.attachments && formikProps.values.attachments.length
-                      ? formikProps.values.attachments.length
-                      : 0
-                  }]`,
-                  {
-                    id: files.id,
-                    name: files.name,
-                    documentType: files.documentType,
-                    isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
-                  }
-                )
-                setAttachmentFiles(attachmentFiles.concat([files]))
+                addCertificateAttachment(files, sidebarValues.id, listDocumentTypes, toastManager, formikProps, {
+                  loadFile,
+                  addAttachment: addDeaAttachment
+                })
+                formikProps.setFieldValue('deaListCertificateFile', files[0].name)
               }}
               onRemoveFile={async id => {
                 await formikProps.setFieldValue(
@@ -220,17 +217,21 @@ const WarehousesFormEdit = ({
               data-test='settings_warehouse_popup_certifications_dea_file'
               emptyContent={
                 <DivBrowseFile background='white'>
-                  <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  {formikProps.values.deaListCertificateFile ? formikProps.values.deaListCertificateFile : (
+                    <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  )}
                   <DivIcon>
-                    <ImageResized src={RedIcon} />
+                    <ImageResized src={sidebarValues.deaListReceive ? GreenIcon : RedIcon} />
                   </DivIcon>
                 </DivBrowseFile>
               }
               uploadedContent={
                 <DivBrowseFile>
-                  <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  {formikProps.values.deaListCertificateFile ? formikProps.values.deaListCertificateFile : (
+                    <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  )}
                   <DivIcon>
-                    <ImageResized src={RedIcon} />
+                    <ImageResized src={sidebarValues.deaListReceive ? GreenIcon : RedIcon} />
                   </DivIcon>
                 </DivBrowseFile>
               }
@@ -271,35 +272,23 @@ const WarehousesFormEdit = ({
               attachments={formikProps.values.attachments.filter(
                 att => getSafe(() => att.documentType.id, 0) === taxExemptionType
               )}
-              addAttachment={addAttachment}
-              loadFile={loadFile}
               //removeAttachment={removeAttachment}
               hideAttachments={true}
               edit={getSafe(() => sidebarValues.id, '')}
               name='attachments'
               type={taxExemptionType.toString()}
               filesLimit={1}
-              fileMaxSize={20}
+              fileMaxSize={fileMaxSize}
               //listDocumentTypes={this.props.listDocumentTypes}
               noWrapperStyles
               onChange={files => {
-                formikProps.setFieldValue(
-                  `attachments[${
-                    formikProps.values.attachments && formikProps.values.attachments.length
-                      ? formikProps.values.attachments.length
-                      : 0
-                  }]`,
-                  {
-                    id: files.id,
-                    name: files.name,
-                    documentType: files.documentType,
-                    isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
-                  }
-                )
-                setAttachmentFiles(attachmentFiles.concat([files]))
+                addCertificateAttachment(files, sidebarValues.id, listDocumentTypes, toastManager, formikProps, {
+                  loadFile,
+                  addAttachment: addTaxExemptAttachment
+                })
+                formikProps.setFieldValue('taxExemptCertificateFile', files[0].name)
               }}
               onRemoveFile={async id => {
-                console.log('RESET')
                 await formikProps.setFieldValue(
                   'attachments',
                   formikProps.values.reduce((filteredAttachments, att) => {
@@ -312,17 +301,21 @@ const WarehousesFormEdit = ({
               data-test='settings_warehouse_popup_certifications_dea_file'
               emptyContent={
                 <DivBrowseFile background='white'>
-                  <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  {formikProps.values.taxExemptCertificateFile ? formikProps.values.taxExemptCertificateFile : (
+                    <FormattedMessage id='settings.certifications.taxExempt.fileText' defaultMessage='State Exempt Certificate' />
+                  )}
                   <DivIcon>
-                    <ImageResized src={RedIcon} />
+                    <ImageResized src={sidebarValues.taxExemptReceive ? GreenIcon : RedIcon} />
                   </DivIcon>
                 </DivBrowseFile>
               }
               uploadedContent={
                 <DivBrowseFile>
-                  <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
+                  {formikProps.values.taxExemptCertificateFile ? formikProps.values.taxExemptCertificateFile : (
+                    <FormattedMessage id='settings.certifications.taxExempt.fileText' defaultMessage='State Exempt Certificate' />
+                  )}
                   <DivIcon>
-                    <ImageResized src={RedIcon} />
+                    <ImageResized src={sidebarValues.taxExemptReceive ? GreenIcon : RedIcon} />
                   </DivIcon>
                 </DivBrowseFile>
               }
@@ -423,4 +416,4 @@ WarehousesFormEdit.defaultProps = {
   loadFile: () => {}
 }
 
-export default WarehousesFormEdit
+export default withToastManager(WarehousesFormEdit)

@@ -7,7 +7,7 @@ import {
   validateTime,
   phoneValidation
 } from '../../../../../../constants/yupValidation'
-import { getSafe, removeEmpty } from '../../../../../../utils/functions'
+import {generateToastMarkup, getSafe, removeEmpty} from '../../../../../../utils/functions'
 
 const minLength = errorMessages.minLength(3)
 /**
@@ -46,8 +46,12 @@ export const getInitialFormValues = sidebarValues => {
   const initialValues = {
     //name: r.name,
     taxId: getSafe(() => sidebarValues.taxId, ''),
-    deaListReceiveFlag: getSafe(() => sidebarValues.deaListReceiveFlag, false),
-    taxExemptReceiveFlag: getSafe(() => sidebarValues.taxExemptReceiveFlag, false),
+    deaListReceive: getSafe(() => sidebarValues.deaListReceive, false),
+    deaListReceiveFlag: getSafe(() => sidebarValues.deaListReceive, false) || getSafe(() => sidebarValues.deaListReceiveVerify, false),
+    deaListCertificateFile: getSafe(() => sidebarValues.deaListCertificateFile.name, null),
+    taxExemptReceive: getSafe(() => sidebarValues.taxExemptReceive, false),
+    taxExemptReceiveFlag: getSafe(() => sidebarValues.taxExemptReceive, false) || getSafe(() => sidebarValues.taxExemptReceiveVerify, false),
+    taxExemptCertificateFile: getSafe(() => sidebarValues.taxExemptCertificateFile.name, null),
     //warehouse: getSafe(() => sidebarValues.warehouse, false),
     deliveryAddress: {
       address: {
@@ -142,5 +146,60 @@ export const submitHandler = async (values, helpers) => {
   } finally {
     setSubmitting(false)
     setAttachmentFiles([])
+  }
+}
+
+export const addCertificateAttachment = async (files, branchId, listDocumentTypes, toastManager, formikProps, actions) => {
+  const { loadFile, addAttachment } = actions
+  if (loadFile && addAttachment) {
+    ;(async function loop(j) {
+      if (j < files.length)
+        await new Promise((resolve, reject) => {
+          loadFile(files[j])
+            .then(file => {
+              addAttachment(file.value, branchId)
+                .then(aId => {
+                  const addedFile = aId.value.data
+                  formikProps.setFieldValue(
+                    `attachments[${
+                      formikProps.values.attachments && formikProps.values.attachments.length
+                        ? formikProps.values.attachments.length
+                        : 0
+                    }]`,
+                    {
+                      id: addedFile.id,
+                      name: addedFile.name,
+                      documentType: addedFile.documentType,
+                      isLinkedFromDocumentManager: getSafe(() => addedFile.isLinkedFromDocumentManager, false)
+                    }
+                  )
+                  //setAttachmentFiles(attachmentFiles.concat([addedFile]))
+                  resolve()
+                })
+                .catch(e => {
+                  console.error(e)
+                  resolve()
+                })
+            })
+            .catch(e => {
+              console.error(e)
+              const fileName = files[j].name
+              toastManager.add(
+                generateToastMarkup(
+                  <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
+                  <FormattedMessage
+                    id='errors.fileNotUploaded.content'
+                    defaultMessage={`File ${fileName} was not uploaded due to an error`}
+                    values={{ name: fileName }}
+                  />
+                ),
+                {
+                  appearance: 'error'
+                }
+              )
+              resolve()
+            })
+        })
+    })(0)
   }
 }
