@@ -1408,7 +1408,8 @@ Dashboard.propTypes = {
   top10Buyers: array,
   totalSumOfSalesMonthly: array,
   isAdmin: bool,
-  takeover: bool
+  takeover: bool,
+  totalCompanyPartners: number
 }
 
 Dashboard.defaultProps = {
@@ -1428,7 +1429,8 @@ Dashboard.defaultProps = {
   top10Buyers: [],
   totalSumOfSalesMonthly: [],
   isAdmin: false,
-  takeover: false
+  takeover: false,
+  totalCompanyPartners: 0
 }
 
 export default injectIntl(Dashboard)
