@@ -47,7 +47,7 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
 
       <AddressForm
         prefix={'deliveryAddress'}
-        noBorder
+        noborder
         required={true}
         setFieldValue={setFieldValue}
         values={values}

@@ -8,7 +8,7 @@ import ConfirmDialog from './ConfirmDialog'
  * @param {string | Node} title Title of confirm modal.
  * @param {string | Node} confirmation Content of confirm modal.
  * @param {{cancelText: string, proceedText: string}} [options={cancelText: 'No', proceedText: 'Yes'}] Text for Cancel and Confirm Buttons.
- * @param {boolean} [basicModal] True shows basic modal without background color and all attributes wiil be in center.
+ * @param {boolean} [basicmodal] True shows basic modal without background color and all attributes wiil be in center.
  * @returns {Promise<string>}
  * @example
  *  confirm(
@@ -35,7 +35,7 @@ export default function ConfirmComponent(
   title,
   confirmation,
   options = { cancelText: 'No', proceedText: 'Yes' },
-  basicModal
+  basicmodal
 ) {
-  return confirm({ title, confirmation, options })
+  return confirm({ title, confirmation, options, basicmodal })
 }

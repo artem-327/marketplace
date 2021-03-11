@@ -28,9 +28,6 @@ import DocumentsTable from './Documents/DocumentManagerTable'
 import TradeCriteria from './TradeCriteria/TradeCriteria'
 import DocumentManagerSidebar from './Documents/DocumentManagerSidebar'
 
-import ClientCompanyTable from './ClientCompany/Table'
-import ClientCompanyPopup from './ClientCompany/Popup'
-
 import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
@@ -127,8 +124,7 @@ class Settings extends Component {
       tabChanged,
       currentTab,
       isUserAdmin,
-      isProductCatalogAdmin,
-      isClientCompanyAdmin
+      isProductCatalogAdmin
     } = this.props
     // array of tabsNames converted to Map
     let tabsNamesMap = new Map()
@@ -136,7 +132,7 @@ class Settings extends Component {
       tabsNamesMap.set(tabsNames[i].type, tabsNames[i])
     }
 
-    if (!(isCompanyAdmin || isClientCompanyAdmin)) {
+    if (!isCompanyAdmin) {
       if (isUserAdmin) {
         if (
           isProductCatalogAdmin &&
@@ -169,9 +165,9 @@ class Settings extends Component {
   }
 
   redirectPage = async queryTab => {
-    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, isClientCompanyAdmin } = this.props
+    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin } = this.props
     const tab = getSafe(() => queryTab.type, '')
-    if (!isCompanyAdmin && !isClientCompanyAdmin && tab !== 'system-settings') {
+    if (!isCompanyAdmin && tab !== 'system-settings') {
       if ((isUserAdmin && tab === 'users') || (isProductCatalogAdmin && tab === 'products')) {
         this.setState({ wrongUrl: false })
       } else if (!isProductCatalogAdmin && !isUserAdmin) {
@@ -200,7 +196,6 @@ class Settings extends Component {
       addTab,
       tabsNames,
       getIdentity,
-      isClientCompanyAdmin,
       renderCopyright,
       currentTab
     } = this.props
@@ -211,11 +206,11 @@ class Settings extends Component {
       console.error(error)
     }
 
-    if (isCompanyAdmin || isClientCompanyAdmin) addTab(companyDetailsTab)
+    if (isCompanyAdmin) addTab(companyDetailsTab)
 
     let queryTab =
       tabsNames.find(tab => tab.type === currentTab) ||
-      (isCompanyAdmin || isClientCompanyAdmin
+      (isCompanyAdmin
         ? companyDetailsTab
         : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
 
@@ -330,7 +325,6 @@ class Settings extends Component {
       users: <UsersTable />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
-      'guest-companies': <ClientCompanyTable />,
       logistics: <LogisticsTable />,
       'system-settings': (
         <FixyWrapper>
@@ -353,7 +347,6 @@ class Settings extends Component {
         />
       ),
       'credit-cards': <CreditCardsPopup />,
-      'guest-companies': <ClientCompanyPopup />,
       'bank-accounts': (
         <SendLinkPopup
           isOpenPopup={isOpenPopup}
@@ -409,11 +402,6 @@ class Settings extends Component {
                 // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
               ]
             : []
-      },
-      'guest-companies': {
-        url: '/prodex/api/companies/client/datagrid',
-        searchToFilter: v =>
-          v && v.searchInput ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }] : []
       },
       // 'bank-accounts': null,
       // 'credit-cards': null,
@@ -493,7 +481,6 @@ const mapStateToProps = ({ settings, auth }) => {
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
     documentsOwner: getSafe(() => settings.documentsOwner, []),
-    isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false),
     companyId: getSafe(() => auth.identity.company.id, false),
     companyName: getSafe(() => auth.identity.company.name, false),
     hasLogo: getSafe(() => auth.identity.company.hasLogo, false)

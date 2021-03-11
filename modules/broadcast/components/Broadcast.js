@@ -362,7 +362,6 @@ class Broadcast extends Component {
         'anonymous',
         'associations',
         'elements',
-        'clientCompany',
         'broadcast',
         'expanded',
         'id',
@@ -616,8 +615,7 @@ class Broadcast extends Component {
           selection
           loading={associationsFetching}
           options={[
-            { key: 'ALL', text: 'Partners', value: 'ALL' },
-            { key: 'Guests', text: 'Guests', value: 'Guests' }
+            { key: 'ALL', text: 'Partners', value: 'ALL' }
           ].concat(options)}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
@@ -904,8 +902,7 @@ class Broadcast extends Component {
                         selection
                         loading={associationsFetching}
                         options={[
-                          { key: 'ALL', text: 'Partners', value: 'ALL' },
-                          { key: 'Guests', text: 'Guests', value: 'Guests' }
+                          { key: 'ALL', text: 'Partners', value: 'ALL' }
                         ].concat(options)}
                         onChange={(_e, { value }) => this.setState({ associationFilter: value })}
                       />
@@ -1463,7 +1460,6 @@ Broadcast.propTypes = {
   asModal: bool,
   additionalGridProps: object,
   hideFobPrice: bool,
-  asModal: bool,
   isOpenTemplateModal: bool,
   saveSidebar: number,
   detailValues: object,
@@ -1474,7 +1470,6 @@ Broadcast.defaultProps = {
   asModal: false,
   additionalGridProps: {},
   hideFobPrice: false,
-  asModal: false,
   isOpenTemplateModal: false,
   saveSidebar: 0,
   detailValues: {},

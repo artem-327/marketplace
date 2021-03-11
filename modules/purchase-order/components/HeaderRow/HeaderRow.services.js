@@ -8,7 +8,7 @@ import Logo from '~/assets/images/nav/logo-echo.svg'
  */
 export const loadCompanyLogo = async props => {
   if (props.hasLogo && getSafe(() => props.useCompanyLogo.value === 'true', false) && props.getCompanyLogo) {
-    await props.getCompanyLogo(this.props.companyId)
+    await props.getCompanyLogo(props.companyId)
   }
 }
 /**

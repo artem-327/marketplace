@@ -36,8 +36,6 @@ export default {
   getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
   getRoles: () => api.get('/prodex/api/roles?type=COMPANY_COMPATIBLE').then(response => response.data),
-  getClientCompanyRoles: () =>
-    api.get('/prodex/api/roles?type=CLIENT_COMPANY_COMPATIBLE').then(response => response.data),
   userSwitchEnableDisable: id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`),
   getCurrentUser: () => api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () => api.get('/prodex/api/branches/warehouses').then(response => response.data),
@@ -265,10 +263,6 @@ export default {
   getBranch: branchId => api.get(`/prodex/api/branches/${branchId}`),
   removeAttachmentLinkToBranch: (attachmentId, branchId) =>
     api.delete(`/prodex/api/attachment-links/to-branch?attachmentId=${attachmentId}&branchId=${branchId}`),
-  createClientCompany: payload => api.post('/prodex/api/companies/client', payload).then(response => response.data),
-  updateClientCompany: (payload, id) =>
-    api.put(`/prodex/api/companies/client/${id}`, payload).then(response => response.data),
-  deleteClientCompany: id => api.delete(`/prodex/api/companies/client/${id}`).then(response => response.data),
   addVerificationDocumentsOwner: (attachment, id, docType) => {
     const formData = new FormData()
     formData.append('file', attachment)
@@ -315,5 +309,14 @@ export default {
       .get(`/prodex/api/settings/company-user/${id}`)
       .then(response => response.data)
       .catch(err => console.error(err)),
-  postTradeCriteria: body => api.post('/prodex/api/trade-criteria', body).then(response => response.data)
+  patchTradeCriteria: body =>
+    api
+      .patch('/prodex/api/settings/company', body)
+      .then(response => response.data)
+      .catch(err => err),
+  getTradeCriteria: () =>
+    api
+      .get('/prodex/api/settings/company?groups=TRADEPASS')
+      .then(response => response.data)
+      .catch(err => err)
 }

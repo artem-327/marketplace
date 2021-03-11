@@ -1,13 +1,10 @@
-import React from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Segment, Button } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-
 //Components
 import confirm from '../../../../components/Confirmable/confirm'
 import BasicButton from '../../../../components/buttons/BasicButton'
 //Styles
-import { ColumnDetail } from '../../../../components/detail-row/styles'
 import {
   SegmentGroupHeader,
   SegmentCustom,
@@ -34,7 +31,7 @@ import { getSafe } from '../../../../utils/functions'
 const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsDetailRow, id, intl }) => (
   <Grid.Row>
     <GridColumnDetail>
-      <SegmentGroupHeader horizontal>
+      <SegmentGroupHeader horizontal alignItems={'align-items: center !important'}>
         <SegmentCustom textAlign='left'>{logo}</SegmentCustom>
         <SegmentCustom textAlign='center'>
           <DivCollectionStat>
@@ -65,22 +62,21 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
             ? buttonsProps.map((button, i) => (
                 <BasicButton
                   key={i}
-                  data-test={`my_network_detail_row_${button.action}_btn`}
-                  textColor={button.color}
-                  background={button.background}
+                  data-test={`my_network_detail_row_${button?.action}_btn`}
+                  textcolor={button?.color}
+                  background={button?.background}
                   onClick={() => {
-                    if (button.action === 'disconnect') {
+                    if (button?.action !== 'cancel') {
                       confirm(
                         <DivModal>
-                          <DivCircle>
-                            <InfoIcon size='22' color='#ffffff' />
+                          <DivCircle background={button?.color}>
+                            <InfoIcon size='28' color='#ffffff' />
                           </DivCircle>
                         </DivModal>,
                         <DivModal>
                           {intl.formatMessage({
-                            id: 'myNetworks.detailRow.modal.content',
-                            defaultMessage:
-                              'Disconnecting will remove this company from your Network. You can request to connect again at anytime.'
+                            id: `${button?.confirmId}`,
+                            defaultMessage: `Do you want to ${button?.action} this connection?`
                           })}
                         </DivModal>,
                         {
@@ -92,7 +88,7 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
                         async () => {
                           // confirm
                           try {
-                            await buttonActionsDetailRow(button.action, id)
+                            await buttonActionsDetailRow(button?.action, id)
                           } catch (e) {
                             console.error(e)
                           }
@@ -102,10 +98,10 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
                         }
                       )
                     } else {
-                      buttonActionsDetailRow(button.action, id)
+                      buttonActionsDetailRow(button?.action, id)
                     }
                   }}>
-                  <FormattedMessage id={button.textId} defaultMessage='' />
+                  <FormattedMessage id={button?.textId} defaultMessage='' />
                 </BasicButton>
               ))
             : null}
@@ -116,9 +112,9 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
 )
 
 Header.propTypes = {
-  logo: PropTypes.string,
+  logo: PropTypes.string || PropTypes.object,
   transactions: PropTypes.number,
-  id: PropTypes.number,
+  id: PropTypes.number || PropTypes.string,
   averageValue: PropTypes.number,
   buttonsProps: PropTypes.arrayOf(
     PropTypes.shape({

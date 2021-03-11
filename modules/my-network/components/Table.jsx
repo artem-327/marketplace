@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react'
 import ProdexTable from '../../../components/table'
 import DetailRow from './DetailRow/DetailRow'
 //Constants
-import { COLUMNS, CONNECTIONS_STATUSES } from '../constants'
+import { COLUMNS } from '../constants'
 //Hooks
 import { usePrevious } from '../../../hooks'
+//Services
+import { getStatuses } from '../MyNetwork.services'
 
 /**
  * Table of connections.
@@ -14,15 +16,27 @@ import { usePrevious } from '../../../hooks'
  */
 const Table = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
-  const { loadingDatagrid, rows, connectionsStatuses, statuses } = props
+  const { loadingDatagrid, rows, connectionsStatuses, statuses, buttonActionsDetailRow } = props
   const prevLoadingDatagrid = usePrevious(loadingDatagrid)
 
   useEffect(() => {
-    if (prevLoadingDatagrid && !loadingDatagrid) connectionsStatuses(statuses)
-  }, [prevLoadingDatagrid, loadingDatagrid, statuses, connectionsStatuses])
+    if (prevLoadingDatagrid && !loadingDatagrid && rows) {
+      connectionsStatuses(getStatuses(rows))
+    }
+  }, [prevLoadingDatagrid, loadingDatagrid, rows, connectionsStatuses])
+
+  const expandRow = row => {
+    let ids = expandedRowIds.slice()
+    if (ids.includes(row.id)) {
+      setExpandedRowIds(ids.filter(id => id !== row.id))
+    } else {
+      ids.push(row.id)
+      setExpandedRowIds(ids)
+    }
+  }
 
   const getRowDetail = ({ row }) => {
-    return <DetailRow row={row} />
+    return <DetailRow row={row} expandRow={() => expandRow(row)} buttonActionsDetailRow={buttonActionsDetailRow} />
   }
 
   return (
@@ -34,15 +48,7 @@ const Table = props => {
         rows={rows}
         rowDetailType={true}
         rowDetail={getRowDetail}
-        onRowClick={(_, row) => {
-          let ids = expandedRowIds.slice()
-          if (ids.includes(row.id)) {
-            setExpandedRowIds(ids.filter(id => id !== row.id))
-          } else {
-            ids.push(row.id)
-            setExpandedRowIds(ids)
-          }
-        }}
+        onRowClick={(_, row) => expandRow(row)}
         expandedRowIds={expandedRowIds}
         onExpandedRowIdsChange={expandedRowIds => setExpandedRowIds(expandedRowIds)}
         estimatedRowHeight={1000}

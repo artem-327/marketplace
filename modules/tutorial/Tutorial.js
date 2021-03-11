@@ -170,21 +170,10 @@ class Tutorial extends Component {
 
   componentDidMount() {
     const { tutorialTab } = this.state
-    const { isCompanyAdmin, isClientCompanyAdmin, isProductCatalogAdmin, isProductOfferManager, isAdmin } = this.props
+    const { isCompanyAdmin, isProductCatalogAdmin, isProductOfferManager, isAdmin } = this.props
     if (!isCompanyAdmin) {
       let tutorials = []
       let urls = []
-      if (isClientCompanyAdmin) {
-        tutorials.push('locations', 'users', 'pickup', 'marketplace', 'registerAccount', 'addAccount')
-        urls.push(
-          '/settings/locations',
-          '/settings/users',
-          '/settings/locations',
-          '/settings/global-broadcast',
-          '/settings/bank-accounts',
-          '/settings/bank-accounts'
-        )
-      }
       if (isProductCatalogAdmin) {
         tutorials.push('products')
         urls.push('/inventory/my-products')
@@ -330,7 +319,6 @@ class Tutorial extends Component {
       marginOrders,
       marginWantedBoard,
       isMerchant,
-      isClientCompanyManager,
       isOrderProcessing,
       isAdmin,
       isCompanyAdmin,
@@ -350,7 +338,7 @@ class Tutorial extends Component {
     const theme = {
       margin
     }
-    if ((!isCompanyAdmin && (isMerchant || isClientCompanyManager || isOrderProcessing)) || isLoading) {
+    if (((isMerchant || isOrderProcessing)) || isLoading) {
       return null
     } else if (!isLoading && tutorialTab && !isBusinessVerification && isTutorial) {
       return (
@@ -429,9 +417,7 @@ const mapStateToProps = state => {
   return {
     vellociBusinessId: getSafe(() => company.vellociBusinessId, false),
     name: getSafe(() => state.auth.identity.name, ''),
-    isClientCompanyAdmin: getSafe(() => state.auth.identity.isClientCompanyAdmin, false),
     isMerchant: getSafe(() => state.auth.identity.isMerchant, false),
-    isClientCompanyManager: getSafe(() => state.auth.identity.isClientCompanyManager, false),
     isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
     isProductCatalogAdmin: getSafe(() => state.auth.identity.isProductCatalogAdmin, false),
     isProductOfferManager: getSafe(() => state.auth.identity.isProductOfferManager, false),
