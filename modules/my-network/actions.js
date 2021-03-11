@@ -1,5 +1,6 @@
 import * as AT from './action-types'
 import api from './api'
+import { Datagrid } from '../datagrid'
 
 export const filterStatusNetwork = networkStatus => ({
   type: AT.FILTER_NETWORK_STATUS,
@@ -26,22 +27,41 @@ export const remove = id => ({
   payload: api.remove(id)
 })
 
+export const invite = id => ({
+  type: AT.INVITE,
+  payload: api.invite(id)
+})
+
+export const triggerModal = () => ({
+  type: AT.TRIGGER_MODAL
+})
+
 export const buttonActionsDetailRow = (action, id) => {
-  switch (action) {
-    case 'disconnect':
-      disconnect(id)
-      break
-    case 'reject':
-      reject(id)
-      break
-    case 'accept':
-      accept(id)
-      break
-    case 'remove':
-      remove(id)
-      break
-    default:
-      break
+  return async dispatch => {
+    switch (action) {
+      case 'disconnect':
+        await dispatch(disconnect(id))
+        break
+      case 'reject':
+        await dispatch(reject(id))
+        break
+      case 'accept':
+        await accept(reject(id))
+        break
+      case 'remove':
+        await dispatch(remove(id))
+        break
+      case 'cancel':
+        await dispatch(triggerModal())
+        break
+      case 'invite':
+        await dispatch(invite(id))
+        await dispatch(triggerModal())
+        break
+      default:
+        break
+    }
+    Datagrid.loadData()
   }
 }
 
@@ -49,3 +69,27 @@ export const connectionsStatuses = statuses => ({
   type: AT.CONNECTIONS_STATUSES,
   payload: statuses
 })
+
+export const search = id => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SEARCH_PENDING
+    })
+    await api
+      .search(id)
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.SEARCH_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.SEARCH_REJECTED,
+            error: err
+          })
+      )
+  }
+}

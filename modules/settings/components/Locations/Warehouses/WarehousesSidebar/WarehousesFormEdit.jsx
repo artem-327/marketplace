@@ -78,7 +78,7 @@ const WarehousesFormEdit = ({
 
       <AddressForm
         prefix={'deliveryAddress'}
-        noBorder
+        noborder
         displayHeader={false}
         customHeader={customHeader}
         required={true}

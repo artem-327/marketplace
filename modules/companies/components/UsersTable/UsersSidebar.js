@@ -52,7 +52,6 @@ const UsersSidebar = props => {
   const {
     closePopup,
     userRoles,
-    clientCompanyRoles,
     adminRoles,
     currencies,
     intl: { formatMessage },
@@ -68,7 +67,6 @@ const UsersSidebar = props => {
   } = props
 
   const [selectedCompany, setSelectedCompany] = useState([])
-  const [isClientCompany, setIsClientCompany] = useState(null)
   const [popupValues, setPopupValues] = useState(null)
   const [branches, setBranches] = useState([])
   const [selectedSellMarketSegmentsOptions, setSelectedSellMarketSegmentsOptions] = useState([])
@@ -77,8 +75,6 @@ const UsersSidebar = props => {
   const state = {
     selectedCompany,
     setSelectedCompany,
-    isClientCompany,
-    setIsClientCompany,
     popupValues,
     setPopupValues,
     branches,
@@ -241,16 +237,12 @@ const UsersSidebar = props => {
                                 if (company) {
                                   let newRoles = values.roles.slice()
                                   newRoles = newRoles.filter(role => adminRoles.every(d => role !== d.id))
-                                  if (company.isClientCompany && isClientCompany !== company.isClientCompany) {
-                                    newRoles = newRoles.filter(role => !clientCompanyRoles.every(d => role !== d.id))
-                                  }
                                   setFieldValue('roles', newRoles)
                                   if (company.primaryBranch) homeBranch = company.primaryBranch.id
                                 }
 
                                 setBranches(company ? getBranchesOptions(company.branches) : [])
                                 setSelectedCompany(value ? companiesAll.find(d => d.id === value) : [])
-                                setIsClientCompany(company && company.isClientCompany)
                                 setFieldValue('homeBranch', homeBranch)
                                 setFieldValue('additionalBranches', [])
                               },
@@ -384,7 +376,7 @@ const UsersSidebar = props => {
                       </GridRow>
                       <GridRow>
                         {generateCheckboxes(
-                          values.company !== '' ? (isClientCompany ? clientCompanyRoles : userRoles) : adminRoles,
+                          values.company !== '' ? userRoles : adminRoles,
                           values,
                           'roles',
                           errorRoles
@@ -440,7 +432,6 @@ const mapStateToProps = state => {
     editTrig: companiesAdmin.editTrig,
     updating: companiesAdmin.updating,
     userRoles: companiesAdmin.userRoles,
-    clientCompanyRoles: companiesAdmin.clientCompanyRoles,
     adminRoles: companiesAdmin.adminRoles,
     popupValues: companiesAdmin.popupValues,
     isSuperAdmin: companiesAdmin.currentUser && companiesAdmin.currentUser.roles.findIndex(d => d.id === 1) !== -1,

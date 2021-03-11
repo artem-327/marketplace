@@ -12,8 +12,8 @@ function Header({ row, attributes, as }) {
       <ColumnDetail width={16}>
         <TableSegment>
           <StyledList divided relaxed horizontal size='large'>
-            {attributes.map(attr => (
-              <List.Item>
+            {attributes.map((attr, i) => (
+              <List.Item key={i}>
                 <List.Content>
                   <List.Header as='label'>
                     <FormattedMessage id={`detailRow.${attr}`} defaultMessage='Title' />

@@ -228,3 +228,9 @@ export const postNewLogisticsProvider = body =>
 export const updateLogisticsProvider = (id, body) =>
   api.patch(`/prodex/api/logistics-providers/stored/${id}`, body).then(response => response.data)
 export const deleteLogisticsProvider = id => api.delete(`/prodex/api/logistics-providers/stored/${id}`).then(() => id)
+
+export const postNewCarrier = body =>
+  api.post('/prodex/api/logistics-carriers/stored', body).then(response => response.data)
+export const updateCarrier = (id, body) =>
+  api.patch(`/prodex/api/logistics-carriers/stored/${id}`, body).then(response => response.data)
+export const deleteCarrier = id => api.delete(`/prodex/api/logistics-carriers/stored/${id}`).then(() => id)

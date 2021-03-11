@@ -187,10 +187,6 @@ const textsTable = {
     BtnAddText: 'settings.tables.deliveryAddresses.buttonAdd',
     SearchText: 'settings.tables.deliveryAddresses.search'
   },
-  'guest-companies': {
-    BtnAddText: 'settings.tables.guestCompanies.buttonAdd',
-    SearchText: 'settings.tables.guestCompanies.search'
-  },
   logistics: {
     BtnAddText: 'settings.tables.logistics.buttonAdd',
     SearchText: 'settings.tables.logistics.search'
@@ -223,9 +219,6 @@ class TablesHandlers extends Component {
       'bank-accounts': {
         searchInput: ''
       },*/
-      'guest-companies': {
-        searchInput: ''
-      },
       /*
       'logistics': {
         searchInput: ''

@@ -94,7 +94,6 @@ function mapStateToProps(store, { datagrid }) {
   }
   return {
     ...store.wantedBoard,
-    clientCompany: getSafe(() => store.auth.identity.clientCompany, false),
     isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
     isCompanyAdmin: getSafe(() => store.auth.identity.isCompanyAdmin, false),
     editedId: store.wantedBoard.editWindowOpen === 'bids-received' ? store.wantedBoard.editedId : null,

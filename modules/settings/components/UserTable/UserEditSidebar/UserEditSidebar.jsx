@@ -57,8 +57,6 @@ const UserEditSidebar = props => {
   const {
     closeSidebar,
     userRoles,
-    clientCompanyRoles,
-    isClientCompany,
     currencies,
     intl: { formatMessage },
     updating,
@@ -362,7 +360,7 @@ const UserEditSidebar = props => {
                       </GridRow>
                       <GridRow style={{ paddingBottom: '0' }}>
                         {generateCheckboxes(
-                          isClientCompany ? clientCompanyRoles : userRoles,
+                          userRoles,
                           values,
                           'roles',
                           errorRoles
@@ -424,11 +422,9 @@ const mapStateToProps = state => {
     currentUserId: getSafe(() => auth.identity.id, null),
     isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false),
     companyId: getSafe(() => state.auth.identity.company.id, null),
-    isClientCompany: getSafe(() => state.auth.identity.company.isClientCompany, false),
     editTrig: settings.editTrig,
     updating: settings.updating,
     userRoles: settings.roles,
-    clientCompanyRoles: settings.clientCompanyRoles,
     sidebarValues: settings.sidebarValues,
     searchedSellMarketSegments: getSafe(() => companiesAdmin.searchedSellMarketSegments, []).map(d => ({
       key: d.id,
