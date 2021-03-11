@@ -63,7 +63,7 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
                 <BasicButton
                   key={i}
                   data-test={`my_network_detail_row_${button?.action}_btn`}
-                  textColor={button?.color}
+                  textcolor={button?.color}
                   background={button?.background}
                   onClick={() => {
                     if (button?.action !== 'cancel') {

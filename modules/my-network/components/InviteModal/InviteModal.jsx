@@ -79,7 +79,7 @@ const InviteModal = props => {
       {!detailCompany && (
         <Modal.Actions>
           <BasicButton
-            noBorder
+            noborder
             onClick={() => {
               onClose()
               setValue('')
@@ -89,8 +89,8 @@ const InviteModal = props => {
             </b>
           </BasicButton>
           <BasicButton
-            noBorder
-            textColor='#ffffff !important'
+            noborder
+            textcolor='#ffffff !important'
             background='#00c7f9 !important'
             onClick={() => {
               try {
