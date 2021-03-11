@@ -21,6 +21,7 @@
       "./styles",
       "./modules/settings/components/Locations",
       "./modules/settings/components/TradeCriteria",
+      "./modules/purchase-order/components/AddAddress",
       "./modules/my-network",
       "./components/date-format"
     ],
