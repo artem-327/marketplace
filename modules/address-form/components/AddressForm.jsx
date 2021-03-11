@@ -21,8 +21,8 @@ const DatalistGroup = styled(FormGroup)`
 
 const CustomSegment = styled(Segment)`
   background-color: ${({ backgroundColor }) => backgroundColor};
-  ${({ noBorder }) =>
-    noBorder
+  ${({ noborder }) =>
+    noborder
       ? `
     border: none !important;
     -webkit-box-shadow: none !important;
@@ -219,7 +219,7 @@ class AddressForm extends Component {
       intl: { formatMessage },
       customHeader,
       backgroundColor,
-      noBorder
+      noborder
     } = this.props
 
     let fields = this.asignPrefix()
@@ -245,7 +245,7 @@ class AddressForm extends Component {
                 <FormattedMessage id='global.address' defaultMessage='Address' />
               </Header>
             )}
-        <CustomSegment noBorder={noBorder} bacgroundColor={backgroundColor}>
+        <CustomSegment noborder={noborder} bacgroundColor={backgroundColor}>
           {children}
           <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
             <Input

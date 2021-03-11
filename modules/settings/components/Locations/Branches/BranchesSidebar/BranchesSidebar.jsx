@@ -108,7 +108,7 @@ const BranchSidebar = props => {
               </DivFlexContent>
               <DivBottomSidebar>
                 <BasicButton
-                  noBorder
+                  noborder
                   onClick={() => {
                     props.closeSidebar()
                     props.chatWidgetVerticalMoved(false)

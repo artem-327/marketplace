@@ -78,7 +78,7 @@ const SendLinkPopup = ({
               <ModalActions>
                 <BasicButton
                   type='button'
-                  noBorder
+                  noborder
                   onClick={() => closePopup()}
                   data-test='settings_bank_account_send_link_popup_cancel_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>

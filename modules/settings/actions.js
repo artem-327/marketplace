@@ -337,13 +337,10 @@ export function putEditWarehouse(payload, id, attachmentFiles, warehousesDatagri
           ...response,
           attachments: response.attachments.concat(attachmentFiles)
         }))
-      else
-        Datagrid.loadData()
+      else Datagrid.loadData()
     } else {
-      if (typeof warehousesDatagrid !== 'undefined')
-        warehousesDatagrid.updateRow(id, () => response)
-      else
-        Datagrid.updateRow(id, () => response)
+      if (typeof warehousesDatagrid !== 'undefined') warehousesDatagrid.updateRow(id, () => response)
+      else Datagrid.updateRow(id, () => response)
     }
     dispatch(closeSidebar())
   }
@@ -1277,11 +1274,16 @@ export function setAttachmentFiles(attachmentFiles) {
   }
 }
 
-export function postTradeCriteria(body) {
-  console.log('body')
-  console.log(body)
+export function patchTradeCriteria(body) {
   return {
-    type: AT.POST_TRADE_CRITERIA,
-    payload: api.postTradeCriteria(body)
+    type: AT.PATCH_TRADE_CRITERIA,
+    payload: api.patchTradeCriteria(body)
+  }
+}
+
+export function getTradeCriteria() {
+  return {
+    type: AT.GET_TRADE_CRITERIA,
+    payload: api.getTradeCriteria()
   }
 }

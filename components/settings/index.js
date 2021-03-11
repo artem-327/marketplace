@@ -167,7 +167,8 @@ class Settings extends Component {
   async componentDidMount() {
     let { role } = this.props
     let settings = await api.getSettings(role)
-    let { systemSettings, validationSchema } = this.parseData(settings)
+    let settingsWithoutTradepass = settings?.filter(s => s.code !== 'TRADEPASS')
+    let { systemSettings, validationSchema } = this.parseData(settingsWithoutTradepass)
 
     this.setState({
       fetching: false,

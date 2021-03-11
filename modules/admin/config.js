@@ -11,6 +11,7 @@ export const defaultTabs = [
   { name: 'NMFC Numbers', id: 14, type: 'nmfc-numbers' },
   { name: 'Associations', id: 15, type: 'associations' },
   { name: 'Logistics', id: 16, type: 'logistics' },
+  { name: 'Carriers', id: 17, type: 'carriers' },
   { name: 'Admin Settings', id: 11, type: 'admin-settings' }
 ]
 
@@ -613,6 +614,15 @@ export const config = {
       </FormattedMessage>
     ),
     searchText: 'admin.searchLogisticsProvider',
+  },
+  carriers: {
+    tableName: 'admin_carriers',
+    addEditText: (
+      <FormattedMessage id='global.carriers' defaultMessage='Carriers'>
+        {text => text}
+      </FormattedMessage>
+    ),
+    searchText: 'admin.searchCarrier',
   },
 
   'admin-settings': {

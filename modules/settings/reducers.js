@@ -141,7 +141,8 @@ export const initialState = {
   isLoadingModal: false,
   heightSidebar: null,
   attachmentFiles: [],
-  isThirdPartyConnectionException: false
+  isThirdPartyConnectionException: false,
+  tradeCriteria: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -1838,23 +1839,64 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    /* POST_TRADE_CRITERIA */
+    /* PATCH_TRADE_CRITERIA */
 
-    case AT.POST_TRADE_CRITERIA_PENDING: {
+    case AT.PATCH_TRADE_CRITERIA_PENDING: {
       return {
         ...state,
         loading: true
       }
     }
 
-    case AT.POST_TRADE_CRITERIA_FULFILLED: {
+    case AT.PATCH_TRADE_CRITERIA_FULFILLED: {
+      let tradeCriteria = state?.tradeCriteria
+      if (payload?.settingGroups?.length) {
+        payload?.settingGroups?.forEach(p => {
+          if (p?.code === 'TRADEPASS') {
+            tradeCriteria = p?.settings
+          }
+        })
+      }
+      return {
+        ...state,
+        loading: false,
+        tradeCriteria
+      }
+    }
+
+    case AT.PATCH_TRADE_CRITERIA_REJECTED: {
       return {
         ...state,
         loading: false
       }
     }
 
-    case AT.POST_TRADE_CRITERIA_REJECTED: {
+    /* GET_TRADE_CRITERIA */
+
+    case AT.GET_TRADE_CRITERIA_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.GET_TRADE_CRITERIA_FULFILLED: {
+      let tradeCriteria = null
+      if (payload?.length) {
+        payload?.forEach(p => {
+          if (p?.code === 'TRADEPASS') {
+            tradeCriteria = p?.settings
+          }
+        })
+      }
+      return {
+        ...state,
+        loading: false,
+        tradeCriteria
+      }
+    }
+
+    case AT.GET_TRADE_CRITERIA_REJECTED: {
       return {
         ...state,
         loading: false

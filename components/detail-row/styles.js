@@ -38,6 +38,7 @@ export const StyledList = styled(List)`
     }
 
     > .item {
+      text-align: left !important;
       padding: 0px 10px !important;
       max-width: fit-content !important;
 
@@ -67,7 +68,7 @@ export const DetailMessage = styled.div`
 `
 
 export const ColumnDetail = styled(GridColumn)`
-  padding-left: 0px !important;
+  padding: 0px !important;
 `
 
 export const DivTable = styled.div`
