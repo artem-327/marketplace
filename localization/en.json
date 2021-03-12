@@ -1866,6 +1866,7 @@
   "createMenu.newUser": "New User",
   "createMenu.newGuest": "New Guest",
   "createMenu.newWarehouse": "New Warehouse",
+  "createMenu.newConnection": "New Connection",
   "createMenu.addProduct": "Add Product",
   "createMenu.addWanted": "Add Wanted",
   "createMenu.addUser": "Add User",

@@ -1,12 +1,14 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../utils/functions'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Dropdown } from 'semantic-ui-react'
-import { Plus } from 'react-feather'
+import { Plus, Globe } from 'react-feather'
 import { AddBox, Widgets, Inbox, Person, FolderShared, Store } from '@material-ui/icons'
-import { openGlobalAddForm } from '~/modules/layout/actions'
+//Actions
+import { openGlobalAddForm } from '../modules/layout/actions'
+import { triggerModal } from '../modules/my-network/actions'
 
 export const IconPlus = styled(Plus)`
   text-align: center;
@@ -73,7 +75,7 @@ export const CreateDropdown = styled(Dropdown)`
 
 class CreateMenu extends Component {
   render() {
-    const { identity, openGlobalAddForm, openGlobalAddFormName } = this.props
+    const { identity, openGlobalAddForm, openGlobalAddFormName, triggerModal } = this.props
 
     const {
       isClientCompanyAdmin,
@@ -148,13 +150,23 @@ class CreateMenu extends Component {
           )}
 
           {isCompanyAdmin && (
-            <Dropdown.Item
-              onClick={async () => {
-                openGlobalAddForm('my-account-locations')
-              }}>
-              <Store className={'menu-icon'} />
-              <FormattedMessage id='createMenu.newWarehouse' defaultMessage='New Warehouse' />
-            </Dropdown.Item>
+            <>
+              <Dropdown.Item
+                onClick={async () => {
+                  openGlobalAddForm('my-account-locations')
+                }}>
+                <Store className={'menu-icon'} />
+                <FormattedMessage id='createMenu.newWarehouse' defaultMessage='New Warehouse' />
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={async () => {
+                  openGlobalAddForm('my-network-connection')
+                  triggerModal()
+                }}>
+                <Globe className={'menu-icon'} />
+                <FormattedMessage id='createMenu.newConection' defaultMessage='New Connection' />
+              </Dropdown.Item>
+            </>
           )}
         </Dropdown.Menu>
       </CreateDropdown>
@@ -171,6 +183,7 @@ const stateToProps = state => {
 
 export default injectIntl(
   connect(stateToProps, {
-    openGlobalAddForm
+    openGlobalAddForm,
+    triggerModal
   })(CreateMenu)
 )

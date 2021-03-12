@@ -61,7 +61,7 @@ export const buttonActionsDetailRow = (action, id) => {
       default:
         break
     }
-    Datagrid.loadData()
+    Datagrid?.loadData()
   }
 }
 
