@@ -293,6 +293,11 @@
   "dwolla.document.explanatory.li22": "Sales/Use Tax License",
   "dwolla.document.explanatory.li23": "Business License",
   "dwolla.document.explanatory.li24": "Certificate of Good Standing",
+  "casProduct.addCasProduct": "Add CAS Product",
+  "casProduct.editCasProduct": "Edit CAS Product",
+  "casProduct.enterCasNumber": "Enter CAS Number",
+  "casProduct.enterCasName": "Enter CAS Name",
+
   "casProduct.epaSection302EhsTPQ": "Section 302 (EHS) TPQ",
   "casProduct.epaSection304EhsRQ": "Section 304 (EHS) RQ",
   "casProduct.epaCerclaRq": "CERCLA RQ",

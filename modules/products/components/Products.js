@@ -11,7 +11,9 @@ import ProductCatalogTable from './ProductCatalogTable/Table'
 import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopup'
 import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEchoProductPopup'
 import ProductImportPopup from '~/modules/inventory/my-products/components/ProductImportPopup'
+// ! !  to be deleted
 import AddEditCasProductsPopup from './CasProductsTable/AddEditCasProductsPopup'
+import CasProductsSidebar from './CasProductsTable/CasProductsSidebar'
 import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
 import ProductGroupsTable from './ProductGroups/ProductGroupsTable'
 import ProductGroupsPopup from './ProductGroups/ProductGroupsPopup'
@@ -39,11 +41,13 @@ class Products extends Component {
     }
 
     const addForms = {
+      //'cas-products': <CasProductsSidebar />,
       'cas-products': <AddEditCasProductsPopup />,
       'product-groups': <ProductGroupsPopup />
     }
 
     const editForms = {
+      //'cas-products': <CasProductsSidebar />,
       'cas-products': <AddEditCasProductsPopup />,
       'product-groups': <ProductGroupsPopup />
     }
