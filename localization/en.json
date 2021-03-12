@@ -2752,6 +2752,7 @@
   "order.detail.documents.dropdown.all": "Select All",
   "order.detail.backToOrders": "Back to Orders",
   "order.detail.buyerCompanyEin": "Buyer Company EIN",
+  "order.detail.companyEin": "Company EIN",
   "order.detail.sellerCompanyEin": "Seller Company EIN",
   "order.detail.addTrackingCode": "Add tracking code",
   "settings.warehouse.certificates.message.title": "This state/province already has certificate documents uploaded",
