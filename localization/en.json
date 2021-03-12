@@ -2472,7 +2472,7 @@
   "carrier.code": "Code",
   "carrier.name": "Name",
   "carrier.blindShipmentSupport": "Blind Shipment Support",
-  "carrier.price": "Price",
+  "carrier.priceMarkup": "Price Markup",
   "carrier.enterCode": "Enter Code",
   "carrier.enterName": "Enter Name",
   "carrier.selectBlindShipmentSupport": "Select option",
