@@ -72,7 +72,13 @@ export const getInitialFormValues = sidebarValues => {
         preferredCurrency: currencyId,
         roles: sidebarValues.roles.map(d => d.id),
         sellMarketSegments: getSafe(() => sidebarValues.sellMarketSegments, []).map(d => d.id),
-        buyMarketSegments: getSafe(() => sidebarValues.buyMarketSegments, []).map(d => d.id)
+        buyMarketSegments: getSafe(() => sidebarValues.buyMarketSegments, []).map(d => d.id),
+        dailyPurchaseLimit: sidebarValues?.dailyPurchaseLimit,
+        monthlyPurchaseLimit: sidebarValues?.monthlyPurchaseLimit,
+        orderPurchaseLimit: sidebarValues?.orderPurchaseLimit,
+        regulatoryDeaListAuthorized: sidebarValues?.regulatoryDeaListAuthorized,
+        regulatoryDhsCoiAuthorized: sidebarValues?.regulatoryDhsCoiAuthorized,
+        regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized
       }
     : {
         name: '',
@@ -85,7 +91,13 @@ export const getInitialFormValues = sidebarValues => {
         phone: '',
         roles: [],
         buyMarketSegments: [],
-        sellMarketSegments: []
+        sellMarketSegments: [],
+        dailyPurchaseLimit: null,
+        monthlyPurchaseLimit: null,
+        orderPurchaseLimit: null,
+        regulatoryDeaListAuthorized: false,
+        regulatoryDhsCoiAuthorized: false,
+        regulatoryHazmatAuthorized: false
       }
 }
 
@@ -272,7 +284,6 @@ export const submitUser = async (values, actions, props, state) => {
     }
     if (openGlobalAddForm) openGlobalAddForm('')
     else closeSidebar()
-
   } catch {}
   actions.setSubmitting(false)
   return sendSuccess
@@ -301,6 +312,3 @@ export const handleSellMarketSegmentsSearchChange = debounce((_, { searchQuery }
 export const handleBuyMarketSegmentsSearchChange = debounce((_, { searchQuery }, props) => {
   props.searchBuyMarketSegments(searchQuery)
 }, 250)
-
-
-

@@ -1,7 +1,6 @@
 import styled from 'styled-components'
-import { Sidebar, GridColumn, Segment } from 'semantic-ui-react'
+import { Sidebar, GridColumn, Segment, GridRow } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui-fixed-validation'
-
 
 /**
  * @css padding: 1.071428571em 2.142857143em;
@@ -45,6 +44,8 @@ export const DivHighSegment = styled.div`
  * @css (&.column.error)   color: #9f3a38;
  */
 export const GridColumnWError = styled(GridColumn)`
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
   &.column.error {
     color: #9f3a38;
   }
@@ -54,4 +55,26 @@ export const GridColumnWError = styled(GridColumn)`
  */
 export const SegmentStyled = styled(Segment)`
   background-color: #f8f9fb !important;
+`
+
+export const SpanNotify = styled.span`
+  font-size: 14px;
+  font-style: italic;
+  color: #848893;
+`
+
+export const HighSegment = styled(Segment)`
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 1;
+`
+
+export const GridColumnRoles = styled(GridColumn)`
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+`
+
+export const GridRowRoles = styled(GridRow)`
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
 `

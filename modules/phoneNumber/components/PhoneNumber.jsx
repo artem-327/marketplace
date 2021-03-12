@@ -228,7 +228,8 @@ export default class PhoneNumber extends Component {
       isSubmitting,
       disabled,
       placeholder,
-      background
+      background,
+      width
     } = this.props
 
     let { phoneCountryCode, phoneNumber } = this.state
@@ -238,7 +239,7 @@ export default class PhoneNumber extends Component {
         name={name}
         render={() => {
           return (
-            <FormField error={!!error}>
+            <FormField width={width} error={!!error}>
               {label && <label>{label}</label>}
               <span style={{ display: 'flex' }} className='phone-number'>
                 <StyledDropdown
