@@ -1128,7 +1128,8 @@ class ModalDetail extends Component {
                                               onChange: this.onChange,
                                               'data-test': 'add_inventory_whoShouldSee',
                                               fluid: true,
-                                              closeOnChange: true
+                                              closeOnChange: true,
+                                              loading: isLoadingBroadcast
                                             }}
                                             options={optionsSeeOffer.map((option, optIndex) => {
                                               return {

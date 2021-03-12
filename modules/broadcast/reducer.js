@@ -19,7 +19,8 @@ import {
   openModalCompanyInfo,
   closeModalCompanyInfo,
   getCompanyInfo,
-  getAssociations
+  getAssociations,
+  broadcastChange
 } from './actions'
 
 const initialState = {
@@ -271,6 +272,24 @@ export default typeToReducer(
       return {
         ...state,
         associationsFetching: false
+      }
+    },
+    [broadcastChange.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [broadcastChange.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [broadcastChange.rejected]: state => {
+      return {
+        ...state,
+        loading: false
       }
     }
   },
