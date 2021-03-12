@@ -35,7 +35,7 @@ const ConfirmDeleteInstitution = ({ isOpenPopup, closePopup, deleteInstitution, 
       <ModalActions>
         <BasicButton
           type='button'
-          noBorder
+          noborder
           inverted
           onClick={() => closePopup()}
           data-test='settings_account_confirm_delete_institution_cancel_btn'>

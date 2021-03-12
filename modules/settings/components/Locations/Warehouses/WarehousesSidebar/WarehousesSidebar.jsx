@@ -204,7 +204,7 @@ class WarehousesSidebar extends Component {
                 <DivBottomSidebar>
                   {!openGlobalAddForm && (
                     <BasicButton
-                      noBorder
+                      noborder
                       onClick={() => {
                         closeSidebar()
                         chatWidgetVerticalMoved(false)

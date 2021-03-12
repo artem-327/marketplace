@@ -184,7 +184,7 @@ const LogisticsSidebar = props => {
         </DivFlexContent>
         <DivBottomSidebar>
           <BasicButton
-            noBorder
+            noborder
             onClick={() => {
               closeSidebar()
               chatWidgetVerticalMoved(false)
