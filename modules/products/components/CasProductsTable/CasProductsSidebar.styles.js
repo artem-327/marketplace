@@ -49,7 +49,7 @@ export const DivFlexContent = styled.div`
   overflow-x: hidden;
   overflow-y: auto;
   align-self: center;
-  padding: 30px !important;
+  padding: 0 30px 30px !important;
 `
 
 export const DivBottomSidebar = styled.div`
@@ -69,6 +69,6 @@ export const SegmentCustomContent = styled(Segment)`
   padding-top: 0px !important;
   margin-bottom: auto !important;
   width: 900px !important;
-  padding: 30px !important;
+  padding: 25px 30px !important;
   background-color: #ffffff !important;
 `

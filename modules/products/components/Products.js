@@ -41,14 +41,14 @@ class Products extends Component {
     }
 
     const addForms = {
-      //'cas-products': <CasProductsSidebar />,
-      'cas-products': <AddEditCasProductsPopup />,
+      'cas-products': <CasProductsSidebar />,
+      //'cas-products': <AddEditCasProductsPopup />,
       'product-groups': <ProductGroupsPopup />
     }
 
     const editForms = {
-      //'cas-products': <CasProductsSidebar />,
-      'cas-products': <AddEditCasProductsPopup />,
+      'cas-products': <CasProductsSidebar />,
+      //'cas-products': <AddEditCasProductsPopup />,
       'product-groups': <ProductGroupsPopup />
     }
 

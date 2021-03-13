@@ -35,24 +35,12 @@ import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest } from
 import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 const CasProductsSidebar = props => {
-  const [tmp, set ] = useState(false)
-
-  const {
-    popupValues
-  } = props
+  const { popupValues } = props
 
   // Similar to call componentDidMount:
   useEffect(() => {
     props.chatWidgetVerticalMoved(true)
   }, [])  // If [] is empty then is similar as componentDidMount.
-
-
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {
-
-  }, [/* variableName */])
-
 
   return (
     <Formik
@@ -115,7 +103,7 @@ const CasProductsSidebar = props => {
               </DivFlexContent>
               <DivBottomSidebar>
                 <BasicButton
-                  noBorder
+                  noborder
                   onClick={() => {
                     props.closeAddPopup()
                     props.chatWidgetVerticalMoved(false)

@@ -24,12 +24,21 @@ export const formValidation = () =>
  * @return {Object<string, any>} Initial object for form.
  */
 export const getInitialFormValues = sidebarValues => {
-  return {
-    ...INIT_VALUES,
+  let initValues = { ...INIT_VALUES, propertiesFilter: 'all' }
+  const initValuesKeys = Object.keys(INIT_VALUES)
 
-    //...sidebarValues,
-    propertiesFilter: 'all'
+  if (sidebarValues) {
+    Object.entries(sidebarValues).forEach(([key, val]) => {
+      if (initValuesKeys.some(k => k === key)) {
+        if (typeof val === 'string' || typeof val === 'boolean') {
+          initValues[key] = val
+        } else if (Array.isArray(val)) {
+          initValues[key] = val.map(arr => arr.id)
+        }
+      }
+    })
   }
+  return (initValues)
 }
 
 /**
@@ -45,17 +54,17 @@ export const getInitialFormValues = sidebarValues => {
 export const submitHandler = async (values, { setSubmitting }, props) => {
   const { popupValues, updateCasProductRequest, postNewCasProductRequest, datagrid } = props
 
-  //removeEmpty(requestData)
   try {
 
     console.log('!!!!!!!!!! submitHandler props', props)
     console.log('!!!!!!!!!! submitHandler values', values)
 
-    let payload = values.slice()
+    let payload = { ...values }
 
     delete payload.propertiesFilter
     removeEmpty(payload)
 
+    console.log('!!!!!!!!!! submitHandler payload', payload)
 
 
     if (popupValues) {
