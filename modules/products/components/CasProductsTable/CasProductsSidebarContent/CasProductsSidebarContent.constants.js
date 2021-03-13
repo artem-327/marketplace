@@ -139,6 +139,10 @@ export const GROUP_OTHERS = [
   [['Auto Ignition Temperature', 'autoIgnitionTemperature'], ['Decomposition Temperature', 'decompositionTemperature']],
   [['Viscosity', 'viscosity'], ['Molecular Formula', 'molecularFormula']],
   [['Molecular Weight', 'molecularWeight'], ['Recommended Use', 'recommendedUses']],
+
+  [['Hazard Classes', 'hazardClasses', 'array'], []],
+
+
   [['Uses Advised Against', 'usesAdvisedAgainst'], []]
 ]
 

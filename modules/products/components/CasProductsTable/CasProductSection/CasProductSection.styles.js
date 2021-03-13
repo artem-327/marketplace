@@ -31,6 +31,20 @@ export const GridStyled = styled(Grid)`
   }
 `
 
+export const GridDropdownOptions = styled(Grid)`
+  &.ui.grid {
+    margin: 0;
+
+    > div.row {
+      padding: 0;
+
+      > div.column {
+        padding: 0 5px;
+      }
+    }
+  }
+`
+
 export const CheckboxStyled = styled(Checkbox)`
   margin: auto 0;
 `

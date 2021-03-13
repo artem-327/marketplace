@@ -11,14 +11,13 @@ import { Input, Button, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-
 import { Required } from '../../../../../components/constants/layout'
 import CasProductSection from '../CasProductSection/CasProductSection'
 
-// Hooks
-//import { usePrevious } from '../../../hooks'
-
 // Styles
-import { GridStyled
-} from './CasProductsSidebarContent.styles'
+import { GridStyled } from './CasProductsSidebarContent.styles'
 
+// Actions
+import { getHazardClassesDataRequest } from '../../../actions'
 
+// Constants
 import {
   GROUP_EPA,
   GROUP_RIGHT_TO_KNOW,
@@ -32,16 +31,15 @@ import {
 } from './CasProductsSidebarContent.constants'
 
 const CasProductsSidebarContent = props => {
-  const [tmp, set ] = useState(false)
-
   const {
     intl: { formatMessage },
     formikProps
   } = props
-  const { values, propertiesFilter } = formikProps
+  const { values } = formikProps
 
   // Similar to call componentDidMount:
   useEffect(() => {
+    props.getHazardClassesDataRequest()
   }, [])  // If [] is empty then is similar as componentDidMount.
 
 
@@ -187,5 +185,4 @@ function mapStateToProps(store) {
   }
 }
 
-export default injectIntl(CasProductsSidebarContent)
-//export default injectIntl(connect(mapStateToProps, {  })(CasProductsSidebar))
+export default injectIntl(connect(mapStateToProps, { getHazardClassesDataRequest })(CasProductsSidebarContent))
