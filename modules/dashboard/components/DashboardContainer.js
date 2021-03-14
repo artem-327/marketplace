@@ -78,6 +78,7 @@ function mapStateToProps(store) {
         ? getSafe(() => data.totalBroadcastedProductOffersValue, 0)
         : getSafe(() => data.companyTotalSales, 0),
     companiesCount: getSafe(() => data.totalCompaniesCount, 0),
+    totalCompanyPartners: data?.totalCompanyPartners ?? 0, //CHECK if BE sends this atribute already
     companyProductsCount:
       isAdmin && !takeover
         ? getSafe(() => data.totalCompanyProductsCount, 0)
