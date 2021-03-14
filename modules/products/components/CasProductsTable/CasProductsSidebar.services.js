@@ -1,7 +1,6 @@
 import * as Yup from 'yup'
 // Services
 import { errorMessages } from '../../../../constants/yupValidation'
-import { getSafe } from '../../../../utils/functions'
 import { removeEmpty } from '../../../../utils/functions'
 
 // Constants
@@ -9,7 +8,7 @@ import { INIT_VALUES } from './CasProductsSidebarContent/CasProductsSidebarConte
 
 /**
  * Validation of form.
- * @category Settings - Location - Branches
+ * @category Products - Add/Edit CAS Product
  * @method
  */
 export const formValidation = () =>
@@ -19,7 +18,7 @@ export const formValidation = () =>
   })
 
 /**
- * @category Settings - Location - Branches
+ * @category Products - Add/Edit CAS Product
  * @param {Object<string, any>} sidebarValues All values for form.
  * @return {Object<string, any>} Initial object for form.
  */
@@ -43,39 +42,28 @@ export const getInitialFormValues = sidebarValues => {
 
 /**
  * Submit form and add or edit warehouse.
- * @category Settings - Locations - Branches
+ * @category Products - Add/Edit CAS Product
  * @method
  * @param {Object<string, any>} values Values of form.
- * @param {{setSubmitting: (isSubmitting: boolean) => void,
- * putEditWarehouse: (requestData: Object<string, any>, id: number) => void,
- * postNewWarehouseRequest: (isCreate: boolean, requestData: Object<string, any>) => void}} helperFunctions
+ * @param {Object<any>} props Input props (popupValues, updateCasProductRequest, postNewCasProductRequest, datagrid).
  * @param {number} id
  */
 export const submitHandler = async (values, { setSubmitting }, props) => {
   const { popupValues, updateCasProductRequest, postNewCasProductRequest, datagrid } = props
-
   try {
-
-    console.log('!!!!!!!!!! submitHandler props', props)
-    console.log('!!!!!!!!!! submitHandler values', values)
-
     let payload = { ...values }
 
     delete payload.propertiesFilter
     removeEmpty(payload)
-
-    console.log('!!!!!!!!!! submitHandler payload', payload)
-
-
     if (popupValues) {
-      //const { value } = await updateCasProductRequest(popupValues.id, payload)
-      //datagrid.updateRow(row.id, () => value)
+      const { value } = await updateCasProductRequest(popupValues.id, payload)
+      datagrid.updateRow(popupValues.id, () => value)
     } else {
-      //await postNewCasProductRequest(payload)
-      //datagrid.loadData()
+      await postNewCasProductRequest(payload)
+      datagrid.loadData()
     }
     props.chatWidgetVerticalMoved(false)
-    //props.closeAddPopup()
+    props.closeAddPopup()
   } catch (e) {
     console.error(e)
   } finally {

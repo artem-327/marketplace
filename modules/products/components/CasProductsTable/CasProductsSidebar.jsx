@@ -12,9 +12,7 @@ import { ChevronDown } from 'react-feather'
 import ErrorFocus from '../../../../components/error-focus'
 import BasicButton from '../../../../components/buttons/BasicButton'
 import CasProductsSidebarContent from './CasProductsSidebarContent/CasProductsSidebarContent'
-
-// Hooks
-//import { usePrevious } from '../../../hooks'
+import { withDatagrid } from '../../../datagrid'
 
 // Styles
 import {
@@ -35,7 +33,7 @@ import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest } from
 import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 const CasProductsSidebar = props => {
-  const { popupValues } = props
+  const { popupValues, updating } = props
 
   // Similar to call componentDidMount:
   useEffect(() => {
@@ -71,7 +69,7 @@ const CasProductsSidebar = props => {
               animation='overlay'
               inverted>
               <div>
-                <Dimmer inverted active={false}>
+                <Dimmer inverted active={updating}>
                   <Loader />
                 </Dimmer>
                 <CustomHighSegment
@@ -137,23 +135,20 @@ const CasProductsSidebar = props => {
   )
 }
 
-CasProductsSidebar.propTypes = {
-  itemsCount: PropTypes.number
-}
+CasProductsSidebar.propTypes = {}
 
-CasProductsSidebar.defaultProps = {
-  itemsCount: 0
-}
+CasProductsSidebar.defaultProps = {}
 
 function mapStateToProps(store) {
   return {
-    popupValues: store.productsAdmin.popupValues
+    popupValues: store.productsAdmin.popupValues,
+    updating: store.productsAdmin.updating
   }
 }
 
-export default injectIntl(connect(mapStateToProps, {
+export default withDatagrid(injectIntl(connect(mapStateToProps, {
   chatWidgetVerticalMoved,
   closeAddPopup,
   postNewCasProductRequest,
   updateCasProductRequest
-})(CasProductsSidebar))
+})(CasProductsSidebar)))

@@ -82,37 +82,72 @@ export const INIT_VALUES = {
   viscosity: ''
 }
 
+const EPA_302_EHS_TPQ_OPTIONS = ['10', '500', '500/10000', '1000', '1000/10000', '10000', 'NA']
+const EPA_304_EHS_RQ_OPTIONS = ['1', '10', '100', '500', '1000', '5000', 'NA']
+const EPA_TSCA_OPTIONS = ['Active', 'Inactive', 'NA']
+const DHS_RELEASE_MINIMUM_CONCENTRATION_OPTIONS = ['1', 'ACG', '80', '37', '50', '20', 'NA']
+const DHS_RELEASE_SCREENING_THRESHOLD_Q_OPTIONS = ['1', '10', '100', '500', '1000', '2500', '5000', 'NA']
+const DHS_THEFT_SCREENING_THRESHOLD_Q_OPTIONS = ['45', '500', 'NA']
+const DHS_SABOTAGE_MINIMUM_CONCENTRATION_OPTIONS = ['ACG', 'NA']
+const DHS_SABOTAGE_SCREENING_THRESHOLD_Q_OPTIONS = ['APA', 'NA']
+const CA_PROP_65_TYPE_OF_TOXICITY_OPTIONS = ['Developmental', 'Cancer', 'Female', 'Male']
+const CA_PROP_65_LISTING_MECHANISM_OPTIONS = ['FR', 'AB', 'SQE', 'LC']
+
 export const GROUP_EPA = [
-  [['CAA 112(r) TQ', 'epaCaa112TTq'], ['Section 302 (EHS) TPQ', 'epaSection302EhsTPQ']],
-  [['FIFRA', 'epaFifra', false], ['Section 304 (EHS) RQ', 'epaSection304EhsRQ']],
-  [['TSCA', 'epaTsca'], ['CERCLA RQ', 'epaCerclaRq']],
-  [['TSCA 12(b)', 'epaTsca12b', false], ['Section 313 (TRI)', 'epaSection313Tri', false]],
-  [['Safer Choice', 'epaSaferChoice', false], []]
+  [['CAA 112(r) TQ', 'epaCaa112TTq'], ['Section 302 (EHS) TPQ', 'epaSection302EhsTPQ', EPA_302_EHS_TPQ_OPTIONS]],
+  [['FIFRA', 'epaFifra', []], ['Section 304 (EHS) RQ', 'epaSection304EhsRQ', EPA_304_EHS_RQ_OPTIONS]],
+  [['TSCA', 'epaTsca', EPA_TSCA_OPTIONS], ['CERCLA RQ', 'epaCerclaRq']],
+  [['TSCA 12(b)', 'epaTsca12b', []], ['Section 313 (TRI)', 'epaSection313Tri', []]],
+  [['Safer Choice', 'epaSaferChoice', []], []]
 ]
 
 export const GROUP_RIGHT_TO_KNOW = [
-  [['Pennslyvania', 'rtkPennslyvania', false], ['Massachusettes', 'rtkMassachusettes', false]],
-  [['Illinois', 'rtkIllinois', false], ['New Jersey', 'rtkNewJersey', false]],
-  [['Rhode Island', 'rtkRhodeIsland', false], []]
+  [['Pennslyvania', 'rtkPennslyvania', []], ['Massachusettes', 'rtkMassachusettes', []]],
+  [['Illinois', 'rtkIllinois', []], ['New Jersey', 'rtkNewJersey', []]],
+  [['Rhode Island', 'rtkRhodeIsland', []], []]
 ]
 
 export const GROUP_DHS_COI = [
-  [['Security Issue: Release - Toxic', 'dhsSecurityIssueReleaseToxic', false], ['Release: Minimum Concentration', 'dhsReleaseMinimumConcentration']],
-  [['Security Issue: Release - Flammables', 'dhsSecurityIssueReleaseFlammables', false], ['Release: Screening Threshold Quantities', 'dhsReleaseScreeningThresholdQuantities']],
-  [['Security Issue: Release - Explosives', 'dhsSecurityIssueReleaseExplosives', false], ['Theft: Minimum Concentration', 'dhsTheftMinimumConcentration']],
-  [['Security Issue: Theft - CW/CWP', 'dhsSecurityIssueTheftCWCWP', false], ['Theft: Screening Threshold Quantities', 'dhsTheftScreeningThresholdQuantities']],
-  [['Security Issue: Theft - WME', 'dhsSecurityIssueTheftWME', false], ['Sabotage: Minimum Concentration', 'dhsSabotageMinimumConcentrationPercent']],
-  [['Security Issue: Theft - EXP/IEDP', 'dhsSecurityIssueTheftEXPIEDP', false], ['Sabotage: Screening Threshold Quantities', 'dhsSabotageScreeningThresholdQuantities']],
-  [['Security Issue: Sabotage/Contamination', 'dhsSecurityIssueSabotageContamination', false], [] /* // ! ! ['DHS COI', 'aaaaaaaaaa']*/]
+  [
+    ['Security Issue: Release - Toxic', 'dhsSecurityIssueReleaseToxic', []],
+    ['Release: Minimum Concentration', 'dhsReleaseMinimumConcentration', DHS_RELEASE_MINIMUM_CONCENTRATION_OPTIONS]
+  ],
+  [
+    ['Security Issue: Release - Flammables', 'dhsSecurityIssueReleaseFlammables', []],
+    ['Release: Screening Threshold Quantities', 'dhsReleaseScreeningThresholdQuantities', DHS_RELEASE_SCREENING_THRESHOLD_Q_OPTIONS]
+  ],
+  [
+    ['Security Issue: Release - Explosives', 'dhsSecurityIssueReleaseExplosives', []],
+    ['Theft: Minimum Concentration', 'dhsTheftMinimumConcentration']
+  ],
+  [
+    ['Security Issue: Theft - CW/CWP', 'dhsSecurityIssueTheftCWCWP', []],
+    ['Theft: Screening Threshold Quantities', 'dhsTheftScreeningThresholdQuantities', DHS_THEFT_SCREENING_THRESHOLD_Q_OPTIONS]
+  ],
+  [
+    ['Security Issue: Theft - WME', 'dhsSecurityIssueTheftWME', []],
+    ['Sabotage: Minimum Concentration', 'dhsSabotageMinimumConcentrationPercent', DHS_SABOTAGE_MINIMUM_CONCENTRATION_OPTIONS]
+  ],
+  [
+    ['Security Issue: Theft - EXP/IEDP', 'dhsSecurityIssueTheftEXPIEDP', []],
+    ['Sabotage: Screening Threshold Quantities', 'dhsSabotageScreeningThresholdQuantities', DHS_SABOTAGE_SCREENING_THRESHOLD_Q_OPTIONS]
+  ],
+  [['Security Issue: Sabotage/Contamination', 'dhsSecurityIssueSabotageContamination', []], [] /* ['DHS COI', 'aaaaaaaaaa']*/]
 ]
 
 export const GROUP_CA_PROP_65 = [
-  [['Date Listed', 'caprop65DateListed'], ['Type of Toxicity', 'caprop65TypeofToxicity']],
-  [['NSRL or MADL (µg/day)', 'caprop65NSRLorMADL'], ['Listing Mechanism', 'caprop65ListingMechanism']]
+  [
+    ['Date Listed', 'caprop65DateListed'],
+    ['Type of Toxicity', 'caprop65TypeofToxicity', CA_PROP_65_TYPE_OF_TOXICITY_OPTIONS]
+  ],
+  [
+    ['NSRL or MADL (µg/day)', 'caprop65NSRLorMADL'],
+    ['Listing Mechanism', 'caprop65ListingMechanism', CA_PROP_65_LISTING_MECHANISM_OPTIONS]
+  ]
 ]
 
 export const GROUP_DEA = [
-  [['List I', 'deaListI', false], ['List II', 'deaListII', false]],
+  [['List I', 'deaListI', []], ['List II', 'deaListII', []]],
   [['DEA Code', 'deaDeaCode']]
 ]
 
@@ -121,10 +156,10 @@ export const GROUP_REACH = [
 ]
 
 export const GROUP_INTERNATIONAL = [
-  [['ENCS', 'internationalENCS', false], ['DSL', 'internationalDSL', false]],
-  [['AICS', 'internationalAICS', false], ['NDSL', 'internationalNDSL', false]],
-  [['IECSC', 'internationalIECSC', false], ['EINECS', 'internationalEINECS', false]],
-  [['KECL', 'internationalKECL', false], ['PICCS', 'internationalPICCS', false]]
+  [['ENCS', 'internationalENCS', []], ['DSL', 'internationalDSL', []]],
+  [['AICS', 'internationalAICS', []], ['NDSL', 'internationalNDSL', []]],
+  [['IECSC', 'internationalIECSC', []], ['EINECS', 'internationalEINECS', []]],
+  [['KECL', 'internationalKECL', []], ['PICCS', 'internationalPICCS', []]]
 ]
 
 export const GROUP_OTHERS = [
@@ -133,19 +168,21 @@ export const GROUP_OTHERS = [
   [['pH', 'ph'], ['Melting Point/Range', 'meltingPointRange']],
   [['Boiling Point/Range', 'boilingPointRange'], ['Flash Point', 'flashPoint']],
   [['Evaporation Point', 'evaporationPoint'], ['Flammability (solid, gas)', 'flammabilitySolidGas']],
-  [['Flammability or Explosive Upper', 'flammabilityOrExplosiveUpper'], ['Flammability or Explosive Lower', 'flammabilityOrExplosiveLower']],
+  [
+    ['Flammability or Explosive Upper', 'flammabilityOrExplosiveUpper'],
+    ['Flammability or Explosive Lower', 'flammabilityOrExplosiveLower']
+  ],
   [['Vapor Pressure', 'vaporPressure'], ['Vapor Density', 'vaporDensity']],
   [['Solubility', 'solubility'], ['Partition Coefficient', 'partitionCoefficient']],
   [['Auto Ignition Temperature', 'autoIgnitionTemperature'], ['Decomposition Temperature', 'decompositionTemperature']],
   [['Viscosity', 'viscosity'], ['Molecular Formula', 'molecularFormula']],
   [['Molecular Weight', 'molecularWeight'], ['Recommended Use', 'recommendedUses']],
-
-  [['Hazard Classes', 'hazardClasses', 'array'], []],
-
-
-  [['Uses Advised Against', 'usesAdvisedAgainst'], []]
+  [['Uses Advised Against', 'usesAdvisedAgainst'], ['Hazard Classes', 'hazardClasses', 'hazard']],
+  [['Critical Temperature', 'criticalTemperature'], ['Flow Time (ISO 2431)', 'flowTimeIso2431']],
+  [['Gas Density', 'gasDensity'], ['Heat Of Combustion', 'heatOfCombustion']],
+  [['Relative Density', 'relativeDensity'], ['Specific Gravity', 'specificGravity']],
+  [['Specific Volume', 'specificVolume'], []]
 ]
-
 
 export const PROPERTIES_FILTER = [
   {
@@ -194,21 +231,3 @@ export const PROPERTIES_FILTER = [
     value: 'all'
   }
 ]
-
-/* // ! !
-  caprop65: false,  // prepinac
-  reach: false,   // prepinac
-
-
-
-
-
-  criticalTemperature: '',
-  flowTimeIso2431: '',
-  gasDensity: '',
-  hazardClasses: [],
-  heatOfCombustion: '',
-  relativeDensity: '',
-  specificGravity: '',
-  specificVolume: '',
-*/

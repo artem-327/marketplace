@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 
 // Components
-import { FormGroup, GridRow, Grid, GridColumn } from 'semantic-ui-react'
+import { GridRow, GridColumn } from 'semantic-ui-react'
 import { Input, Button, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Required } from '../../../../../components/constants/layout'
 import CasProductSection from '../CasProductSection/CasProductSection'
@@ -41,16 +41,6 @@ const CasProductsSidebarContent = props => {
   useEffect(() => {
     props.getHazardClassesDataRequest()
   }, [])  // If [] is empty then is similar as componentDidMount.
-
-
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {
-
-  }, [/* variableName */])
-
-  console.log('!!!!!!!!!! CasProductsSidebarContent values', values)
-
 
   const filter = values.propertiesFilter
 
@@ -171,18 +161,12 @@ const CasProductsSidebarContent = props => {
   )
 }
 
-CasProductsSidebarContent.propTypes = {
-  itemsCount: PropTypes.number
-}
+CasProductsSidebarContent.propTypes = {}
 
-CasProductsSidebarContent.defaultProps = {
-  itemsCount: 0
-}
+CasProductsSidebarContent.defaultProps = {}
 
 function mapStateToProps(store) {
-  return {
-
-  }
+  return {}
 }
 
 export default injectIntl(connect(mapStateToProps, { getHazardClassesDataRequest })(CasProductsSidebarContent))

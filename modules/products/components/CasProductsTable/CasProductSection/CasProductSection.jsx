@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 
 // Components
-import { Grid, GridRow, GridColumn, Popup } from 'semantic-ui-react'
+import { GridRow, GridColumn } from 'semantic-ui-react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 // Styles
@@ -16,8 +16,6 @@ import {
   GridDropdownOptions,
   CheckboxStyled
 } from './CasProductSection.styles'
-
-// 1! ! import {SmallerTextColumn, StyledGrid} from "../../../../filter/constants/layout";
 
 const CasProductSection = props => {
   const {
@@ -30,7 +28,6 @@ const CasProductSection = props => {
 
   const toggleValue = getSafe(() => formikProps.values[toggle], true)
 
-  // ! ! defaultMessage={item[0]}
   return (
     <div>
       <DivHeaderRow>
@@ -56,32 +53,41 @@ const CasProductSection = props => {
                 if (!item.length) return (null)
                 const type = getSafe(() => item[2], '')
 
-                if (type === false) {
-                  return (  // Boolean type field
+                if (Array.isArray(type)) {
+                  const inputProps = getSafe(() => item[3], {})
+
+                  return (  // Array type field
                     <GridColumn key={itemIndex}>
                       <Dropdown
-                        label={<FormattedMessage id={`casProduct.${item[1]}`} defaultMessage={'! ! ! ! ' + item[0]} />}
-                        options={[
-                          {
-                            id: 0,
-                            text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
-                            value: true
-                          },
-                          { id: 1,
-                            text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
-                            value: false
-                          }
-                        ]}
+                        label={<FormattedMessage id={`casProduct.${item[1]}`} defaultMessage={item[0]} />}
+                        options={
+                          type.length
+                            ? type.map(el => ({ id: el, text: el, value: el }))
+                            : [
+                                {
+                                  id: 0,
+                                  text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
+                                  value: true
+                                },
+                                { id: 1,
+                                  text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
+                                  value: false
+                                }
+                              ]
+                        }
                         name={item[1]}
-                        inputProps={{ 'data-test': 'cas_product_sidebar_properties_filter_drpdn' }}
+                        inputProps={{
+                          ...inputProps,
+                          'data-test': 'cas_product_sidebar_properties_filter_drpdn'
+                        }}
                       />
                     </GridColumn>
                   )
-                } else if (type === 'array') {
+                } else if (type === 'hazard') {
                   return (
                     <GridColumn key={itemIndex}>
                       <Dropdown
-                        label={<FormattedMessage id={`casProduct.${item[1]}`} defaultMessage={'! ! ! ! ' + item[0]} />}
+                        label={<FormattedMessage id={`casProduct.${item[1]}`} defaultMessage={item[0]} />}
                         options={hazardClasses.map(el => ({
                           id: el.id,
                           value: el.id,
@@ -112,7 +118,7 @@ const CasProductSection = props => {
                     <GridColumn data-test={`cas_product_sidebar_${item[1]}_inp`} key={itemIndex}>
                       <Input
                         type='text'
-                        label={<FormattedMessage id={`casProduct.${item[1]}`} defaultMessage={'! ! ! ! ' + item[0]} />}
+                        label={<FormattedMessage id={`casProduct.${item[1]}`} defaultMessage={item[0]} />}
                         name={item[1]}
                       />
                     </GridColumn>
@@ -128,27 +134,24 @@ const CasProductSection = props => {
 }
 
 CasProductSection.propTypes = {
-  /*
-  items
-  label
-  */
-  itemsCount: PropTypes.number
+  items: PropTypes.array,
+  toggle: PropTypes.string,
+  hazardClasses: PropTypes.array,
+  formikProps: PropTypes.object,
+  label: PropTypes.any
 }
 
 CasProductSection.defaultProps = {
-  itemsCount: 0
+  items: [],
+  toggle: '',
+  hazardClasses: [],
+  formikProps: {},
+  label: ''
 }
 
 function mapStateToProps(store) {
   return {
     hazardClasses: store.productsAdmin.hazardClasses
-      /* ! !
-      .map(el => ({
-      id: el.id,
-      value: el.id, // {id: 10, description: "Explosive: Division Not Specified", classCode: "1"}
-      text: el.classCode
-    }))
-    */
   }
 }
 
