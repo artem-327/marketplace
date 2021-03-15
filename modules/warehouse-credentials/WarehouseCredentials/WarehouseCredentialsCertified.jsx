@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Dimmer, Loader } from 'semantic-ui-react'
-import { func, bool, array, string } from 'prop-types'
+import { func, bool, array } from 'prop-types'
 import { withDatagrid } from '~/modules/datagrid'
 // Services
 import { injectIntl, FormattedMessage } from 'react-intl'
@@ -13,29 +13,26 @@ import {
 } from '../../settings/actions'
 import { getSafe } from '../../../utils/functions'
 // Constants
-import { certifiedColumns, pendingColumns } from './WarehouseCredentials.constants'
+import { certifiedColumns as columns } from './WarehouseCredentials.constants'
 // Styles
 
 
-const WarehouseCredentialsContainer = props => {
+const WarehouseCredentialsCertified = props => {
 
   const {
     datagrid,
     intl: { formatMessage },
-    rows,
-    type
+    rows
   } = props
-
-  console.log(rows)
 
   return (
     <>
       <div className='flex stretched warehouse-credentials-wrapper listings-wrapper' style={{ padding: '10px 30px' }}>
-        {type !== '' && rows.length &&
+        {rows.length &&
           <ProdexTable
             {...datagrid.tableProps}
             tableName='warehouse_credentials_grid'
-            columns={type === 'pending' ? pendingColumns : certifiedColumns}
+            columns={columns}
             rows={rows}
             hideCheckboxes
             loading={datagrid.loading}
@@ -51,39 +48,24 @@ const mapDispatchToProps = {
   putEditWarehouse
 }
 
-const mapStateToProps = (state, { datagrid, type }) => {
-  console.log('XXX')
-  console.log('TYPE2', type)
+const mapStateToProps = (state, { datagrid }) => {
+  console.log('CERTIFIED')
   console.log('ROWS', datagrid.rows.length, datagrid.rows)
-  if (type === 'pending') {
-    return {
-      rows: false && datagrid.rows.length ? datagrid.rows.map(r => {
-        return {
-          user: r.name,
-          description: r.name,
-          date: r.createdAt
-        }
-      }) : []
-    }
-  } else {
-    return {
-      rows: datagrid.rows.length ? datagrid.rows.map(r => {
-        return {
-          warehouseName: r.name
-        }
-      }) : []
-    }
+  return {
+    rows: datagrid.rows.length ? datagrid.rows.map(r => {
+      return {
+        warehouseName: r.name
+      }
+    }) : []
   }
 }
 
-WarehouseCredentialsContainer.propTypes = {
-  type: string,
+WarehouseCredentialsCertified.propTypes = {
   rows: array
 }
 
-WarehouseCredentialsContainer.defaultProps = {
-  type: '',
+WarehouseCredentialsCertified.defaultProps = {
   rows: []
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(WarehouseCredentialsContainer)))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(WarehouseCredentialsCertified)))

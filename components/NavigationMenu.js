@@ -111,7 +111,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
     myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
     alerts: getSafe(() => Router.router.pathname === '/alerts', false),
-    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials', false)
+    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/all', false),
+    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false)
   }
 
   componentDidMount() {
@@ -812,7 +813,7 @@ class Navigation extends Component {
           className={credentials ? 'opened' : null}
           open={credentials.toString()}
           onClick={(data, e) => {
-            this.toggleOpened('credentials', '/warehouse-credentials')
+            this.toggleOpened('credentials', '/warehouse-credentials/all')
           }}
           refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
           refId={'credentials'}
@@ -822,12 +823,14 @@ class Navigation extends Component {
                 <Dropdown.Item
                   key={0}
                   as={Menu.Item}
+                  to={`/warehouse-credentials/all`}
                   dataTest={'navigation_credentials_all_drpdn'}>
                   {formatMessage({ id: 'navigation.credentials.all', defaultMessage: 'All' })}
                 </Dropdown.Item>
                 <Dropdown.Item
                   key={0}
                   as={Menu.Item}
+                  to={`/warehouse-credentials/pending`}
                   dataTest={'navigation_credentials_pending_drpdn'}>
                   {formatMessage({ id: 'navigation.credentials.pending', defaultMessage: 'Pending' })}
                 </Dropdown.Item>
