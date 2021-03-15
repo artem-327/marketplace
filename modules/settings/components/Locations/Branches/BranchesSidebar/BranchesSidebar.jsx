@@ -71,14 +71,9 @@ const BranchSidebar = props => {
                 props.chatWidgetVerticalMoved(false)
               }}
               page></DimmerSidebarOpend>
-            <SidebarFlex
-              visible={props.isOpenSidebar}
-              width='very wide'
-              direction='bottom'
-              animation='overlay'
-              inverted>
+            <SidebarFlex visible={props.isOpenSidebar} width='very wide' direction='bottom' animation='overlay'>
               <div>
-                <Dimmer inverted active={props.loading}>
+                <Dimmer active={props.loading}>
                   <Loader />
                 </Dimmer>
                 <CustomHighSegment
@@ -194,8 +189,8 @@ BranchSidebar.propTypes = {
   chatWidgetVerticalMoved: PropTypes.func,
   hasProvinces: PropTypes.bool,
   sidebarValues: PropTypes.object,
-  country: PropTypes.string,
-  countries: PropTypes.string,
+  country: PropTypes.array,
+  countries: PropTypes.array,
   provincesDropDown: PropTypes.array,
   company: PropTypes.number,
   isOpenSidebar: PropTypes.bool,

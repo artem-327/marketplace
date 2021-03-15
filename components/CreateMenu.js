@@ -8,7 +8,6 @@ import { Plus, Globe } from 'react-feather'
 import { AddBox, Widgets, Inbox, Person, FolderShared, Store } from '@material-ui/icons'
 //Actions
 import { openGlobalAddForm } from '../modules/layout/actions'
-import { triggerModal } from '../modules/my-network/actions'
 
 export const IconPlus = styled(Plus)`
   text-align: center;
@@ -158,14 +157,6 @@ class CreateMenu extends Component {
                 <Store className={'menu-icon'} />
                 <FormattedMessage id='createMenu.newWarehouse' defaultMessage='New Warehouse' />
               </Dropdown.Item>
-              <Dropdown.Item
-                onClick={async () => {
-                  openGlobalAddForm('my-network-connection')
-                  triggerModal()
-                }}>
-                <Globe className={'menu-icon'} />
-                <FormattedMessage id='createMenu.newConection' defaultMessage='New Connection' />
-              </Dropdown.Item>
             </>
           )}
         </Dropdown.Menu>
@@ -183,7 +174,6 @@ const stateToProps = state => {
 
 export default injectIntl(
   connect(stateToProps, {
-    openGlobalAddForm,
-    triggerModal
+    openGlobalAddForm
   })(CreateMenu)
 )
