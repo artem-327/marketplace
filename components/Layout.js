@@ -63,13 +63,6 @@ import UserEditSidebar from '../modules/settings/components/UserTable/UserEditSi
 import GuestSidebar from '../modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
 import WarehouseSidebar from '../modules/settings/components/Locations/Warehouses/WarehousesSidebar/WarehousesSidebar'
 
-//Components
-import InviteModal from '../modules/my-network/components/InviteModal/InviteModal'
-//Actions
-import { search, buttonActionsDetailRow, triggerModal } from '../modules/my-network/actions'
-//Services
-import { getRowDetail } from '../modules/my-network/MyNetwork.services'
-
 export const IconMinimize2 = styled(Minimize2)`
   text-align: center;
   padding-right: 10px;
@@ -313,14 +306,7 @@ class Layout extends Component {
       isOrderOperator,
       renderCopyright,
       openGlobalAddForm,
-      openGlobalAddFormName,
-      search,
-      isError,
-      loadingNetworkConnection,
-      inviteDetailCompany,
-      buttonActionsDetailRow,
-      isOpenInviteModal,
-      triggerModal
+      openGlobalAddFormName
     } = this.props
 
     const {
@@ -578,18 +564,6 @@ class Layout extends Component {
           {openGlobalAddFormName === 'my-account-locations' && (
             <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />
           )}
-          {openGlobalAddFormName === 'my-network-connection' && (
-            <InviteModal
-              open={isOpenInviteModal}
-              onClose={triggerModal}
-              openGlobalAddForm={openGlobalAddForm}
-              search={search}
-              isError={isError}
-              loading={loadingNetworkConnection}
-              detailCompany={inviteDetailCompany}
-              buttonActionsDetailRow={buttonActionsDetailRow}
-            />
-          )}
         </GlobalSidebars>
       </MainContainer>
     )
@@ -606,10 +580,7 @@ const mapDispatchToProps = {
   toggleMenu,
   getCompanyLogo,
   openGlobalAddForm,
-  setMainContainer,
-  search,
-  buttonActionsDetailRow,
-  triggerModal
+  setMainContainer
 }
 
 const mapStateToProps = state => {
@@ -652,11 +623,7 @@ const mapStateToProps = state => {
     adminLoading: state.admin.loading,
     cartLoading: state.cart.cartIsFetching,
     settingsLoading: state.settings.loading,
-    wantedBoardLoading: state.wantedBoard.loading,
-    isError: state?.myNetwork?.isError,
-    loadingNetworkConnection: state?.myNetwork?.loading,
-    inviteDetailCompany: getRowDetail(state?.myNetwork?.companyNetworkConnection),
-    isOpenInviteModal: state?.myNetwork?.isOpenModal
+    wantedBoardLoading: state.wantedBoard.loading
   }
 }
 
