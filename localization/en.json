@@ -986,6 +986,7 @@
   "global.browseFileHere": "Browse file here",
   "global.invite": "Invite",
   "global.search": "Search",
+  "global.na": "N/A",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
@@ -2264,6 +2265,13 @@
   "settings.user.setAsCompPrimUser": "Set as Company Primary User",
   "settings.assignUserRoles": "Assign User Roles",
   "settings.user.userSettings": "User Settings",
+  "settings.user.purchaseAuthorization": "Purchase Authorization",
+  "settings.user.orderPurchaseLimit": "Order Purchase Limit",
+  "settings.user.dailyPurchaseLimit": "Daily Purchase Limit",
+  "settings.user.mounthlyPurchaseLimit": "Monthly Purchase Limit",
+  "settings.user.regulatoryDhsCoiAuthorized": "Authorized to purchase DHS Chemicals of Interest",
+  "settings.user.regulatoryHazmatAuthorized": "Authorized to purchase Hazardous Chemicals",
+  "settings.user.regulatoryDeaListAuthorized": "Authorized to purchase DEA Regulated List I and II Substances",
   "settings.editAlternativeNames": "Edit Alternative Names",
   "settings.editRoles": "Edit Roles",
   "settings.dwollaOnlyForUSA": "Dwolla is only supported for companies located in USA.",
@@ -3235,5 +3243,6 @@
   "myNetworks.inviteModal.title": "TradePass ID",
   "myNetworks.inviteModal.placeholder": "Enter TradePass ID",
   "myNetworks.inviteModal.errorLabel": "No member was found in this TradePass ID",
-  "myNetworks.inviteModal.content": "Sending an invite to a member will allow that member to see your TradePass and allow that member to add you to their network."
+  "myNetworks.inviteModal.content": "Sending an invite to a member will allow that member to see your TradePass and allow that member to add you to their network.",
+  "settings.user.purchaseAuthorized.notify": "User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted"
 }
