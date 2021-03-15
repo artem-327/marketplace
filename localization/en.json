@@ -3241,5 +3241,6 @@
   "myNetworks.inviteModal.title": "TradePass ID",
   "myNetworks.inviteModal.placeholder": "Enter TradePass ID",
   "myNetworks.inviteModal.errorLabel": "No member was found in this TradePass ID",
-  "myNetworks.inviteModal.content": "Sending an invite to a member will allow that member to see your TradePass and allow that member to add you to their network."
+  "myNetworks.inviteModal.content": "Sending an invite to a member will allow that member to see your TradePass and allow that member to add you to their network.",
+  "settings.user.purchaseAuthorized.notify": "User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted"
 }

@@ -57,10 +57,12 @@ import {
   DivHighSegment,
   SegmentStyled,
   GridColumnWError,
-  SpanNotify,
+  DivNotify,
   HighSegment,
   GridColumnRoles,
-  GridRowRoles
+  GridRowRoles,
+  DivHeaderCustom,
+  DivLabel
 } from './UserEditSidebar.styles'
 import { ModalFixed } from '../../../../companies/components/UsersTable/UsersSidebar.styles'
 import {
@@ -180,6 +182,7 @@ const UserEditSidebar = props => {
                   onClick={() => {
                     !!openGlobalAddForm && openGlobalAddForm('')
                     closeSidebar()
+                    chatWidgetVerticalMoved(false)
                   }}>
                   <DivTitle>
                     <div>
@@ -389,9 +392,16 @@ const UserEditSidebar = props => {
                           {JSON.stringify(values, null, 2)}
                         </pre>*/}
                     </Grid>
+
+                    <DivHeaderCustom>
+                      <FormattedMessage
+                        id='settings.user.purchaseAuthorization'
+                        defaultMessage='Purchase Authorization'
+                      />
+                    </DivHeaderCustom>
+
                     <FormGroup>
                       <Input
-                        type='number'
                         fieldProps={{ width: 5 }}
                         label={
                           <>
@@ -399,11 +409,11 @@ const UserEditSidebar = props => {
                               id: 'settings.user.orderPurchaseLimit',
                               defaultMessage: 'Order Purchase Limit'
                             })}
-                            <Required />
                           </>
                         }
                         name='orderPurchaseLimit'
                         inputProps={{
+                          type: 'number',
                           label: '$',
                           'data-test': 'settings_users_popup_order_purchase_limit_inp',
                           placeholder: formatMessage({ id: 'global.na', defaultMessage: 'N/A' })
@@ -411,7 +421,6 @@ const UserEditSidebar = props => {
                       />
 
                       <Input
-                        type='number'
                         fieldProps={{ width: 6 }}
                         label={
                           <>
@@ -419,11 +428,11 @@ const UserEditSidebar = props => {
                               id: 'settings.user.dailyPurchaseLimit',
                               defaultMessage: 'Daily Purchase Limit'
                             })}
-                            <Required />
                           </>
                         }
                         name='dailyPurchaseLimit'
                         inputProps={{
+                          type: 'number',
                           label: '$',
                           'data-test': 'settings_users_popup_daily_purchase_limit_inp',
                           placeholder: formatMessage({ id: 'global.na', defaultMessage: 'N/A' })
@@ -431,7 +440,6 @@ const UserEditSidebar = props => {
                       />
 
                       <Input
-                        type='number'
                         fieldProps={{ width: 5 }}
                         label={
                           <>
@@ -439,34 +447,28 @@ const UserEditSidebar = props => {
                               id: 'settings.user.monthlyPurchaseLimit',
                               defaultMessage: 'Monthly Purchase Limit'
                             })}
-                            <Required />
                           </>
                         }
                         name='monthlyPurchaseLimit'
                         inputProps={{
+                          type: 'number',
                           label: '$',
                           'data-test': 'settings_users_popup_monthly_purchase_limit_inp',
                           placeholder: formatMessage({ id: 'global.na', defaultMessage: 'N/A' })
                         }}
                       />
                     </FormGroup>
-                    <DivHeader>
+
+                    <DivLabel>
                       <FormattedMessage
-                        id='settings.user.purchaseAuthorization'
-                        defaultMessage='Purchase Authorization'
+                        id='settings.user.regulatoryDeaListAuthorized'
+                        defaultMessage='Authorized to purchase DEA Regulated List I and II Substances'
                       />
-                    </DivHeader>
+                    </DivLabel>
                     <FormGroup>
-                      <div>
-                        {formatMessage({
-                          id: 'settings.user.regulatoryDeaListAuthorized',
-                          defaultMessage: 'Authorized to purchase DEA Regulated List I and II Substances'
-                        })}
-                        <Required />
-                      </div>
                       <Dropdown
                         name='regulatoryDeaListAuthorized'
-                        fieldProps={{ width: 3 }}
+                        fieldProps={{ width: 2 }}
                         options={[
                           { key: 0, text: 'No', value: false },
                           { key: 1, text: 'Yes', value: true }
@@ -475,28 +477,25 @@ const UserEditSidebar = props => {
                           'data-test': 'settings_users_popup_regulatory_dea_list_authorized_drpdn'
                         }}
                       />
-                      {values?.regulatoryDeaListAuthorized && (
-                        <SpanNotify>
-                          <FormattedMessage
-                            id='settings.user.regulatoryDeaListAuthorized.notify'
-                            defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
-                          />
-                        </SpanNotify>
-                      )}
                     </FormGroup>
+                    <DivNotify>
+                      {values?.regulatoryDeaListAuthorized && (
+                        <FormattedMessage
+                          id='settings.user.purchaseAuthorized.notify'
+                          defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
+                        />
+                      )}
+                    </DivNotify>
 
+                    <DivLabel>
+                      <FormattedMessage
+                        id='settings.user.regulatoryDhsCoiAuthorized'
+                        defaultMessage='Authorized to purchase DHS Chemicals of Interest'
+                      />
+                    </DivLabel>
                     <FormGroup>
                       <Dropdown
-                        label={
-                          <>
-                            {formatMessage({
-                              id: 'settings.user.regulatoryDhsCoiAuthorized',
-                              defaultMessage: 'Authorized to purchase DHS Chemicals of Interest'
-                            })}
-                            <Required />
-                          </>
-                        }
-                        fieldProps={{ width: 3 }}
+                        fieldProps={{ width: 2 }}
                         name='regulatoryDhsCoiAuthorized'
                         options={[
                           { key: 0, text: 'No', value: false },
@@ -507,18 +506,24 @@ const UserEditSidebar = props => {
                         }}
                       />
                     </FormGroup>
+                    <DivNotify>
+                      {values?.regulatoryDhsCoiAuthorized && (
+                        <FormattedMessage
+                          id='settings.user.purchaseAuthorized.notify'
+                          defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
+                        />
+                      )}
+                    </DivNotify>
+
+                    <DivLabel>
+                      <FormattedMessage
+                        id='settings.user.regulatoryHazmatAuthorized'
+                        defaultMessage='Authorized to purchase Hazardous Chemicals'
+                      />
+                    </DivLabel>
                     <FormGroup>
                       <Dropdown
-                        label={
-                          <>
-                            {formatMessage({
-                              id: 'settings.user.regulatoryHazmatAuthorized',
-                              defaultMessage: 'Authorized to purchase Hazardous Chemicals'
-                            })}
-                            <Required />
-                          </>
-                        }
-                        fieldProps={{ width: 3 }}
+                        fieldProps={{ width: 2 }}
                         name='regulatoryHazmatAuthorized'
                         options={[
                           { key: 0, text: 'No', value: false },
@@ -535,7 +540,13 @@ const UserEditSidebar = props => {
 
               <DivBottomSidebar>
                 {!openGlobalAddForm && (
-                  <Button className='light' onClick={closeSidebar} data-test='settings_users_popup_reset_btn'>
+                  <Button
+                    className='light'
+                    onClick={() => {
+                      closeSidebar()
+                      chatWidgetVerticalMoved(false)
+                    }}
+                    data-test='settings_users_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>

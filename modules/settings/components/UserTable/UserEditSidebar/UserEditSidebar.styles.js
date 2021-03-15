@@ -1,7 +1,14 @@
 import styled from 'styled-components'
 import { Sidebar, GridColumn, Segment, GridRow } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui-fixed-validation'
-
+import {
+  SidebarFlex,
+  DivFlexContent,
+  SegmentCustomContent,
+  DivBottomSidebar,
+  DimmerSidebarOpend,
+  DivHeader
+} from '../../Locations/Locations.styles'
 /**
  * @css padding: 1.071428571em 2.142857143em;
  * @css font-size: 14px;
@@ -57,10 +64,14 @@ export const SegmentStyled = styled(Segment)`
   background-color: #f8f9fb !important;
 `
 
-export const SpanNotify = styled.span`
+export const DivNotify = styled.div`
   font-size: 14px;
   font-style: italic;
   color: #848893;
+  border-bottom: solid 1px #dee2e6;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  margin-top: -10px !important;
 `
 
 export const HighSegment = styled(Segment)`
@@ -77,4 +88,13 @@ export const GridColumnRoles = styled(GridColumn)`
 export const GridRowRoles = styled(GridRow)`
   padding-top: 0px !important;
   padding-bottom: 0px !important;
+`
+
+export const DivHeaderCustom = styled(DivHeader)`
+  margin-bottom: 20px !important;
+  margin-top: 0px !important;
+`
+
+export const DivLabel = styled.div`
+  margin-bottom: 5px !important;
 `
