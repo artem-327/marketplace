@@ -5,20 +5,25 @@ import { CustomButton } from './BasicButton.styles'
  * @component
  * @see {@link https://react.semantic-ui.com/elements/button/} Button - Semantic UI React
  * @example
- * return (<CustomButton noborder={true} >
+ * return (<CustomButton noBorder={true} >
  *   Cancel
  * </CustomButton>
  * )
  */
 const BasicButton = props => {
-  return <CustomButton {...props}>{props.children}</CustomButton>
+  const { noBorder, ...rest } = props
+  return (
+    <CustomButton $noBorder={noBorder} {...rest}>
+      {props.children}
+    </CustomButton>
+  )
 }
 
 BasicButton.propTypes = {
   /**
    * No borders around the Button.
    */
-  noborder: PropTypes.bool,
+  noBorder: PropTypes.bool,
   textcolor: PropTypes.string,
   background: PropTypes.string,
   floatright: PropTypes.string,
@@ -26,7 +31,7 @@ BasicButton.propTypes = {
 }
 
 BasicButton.defaultProps = {
-  noborder: false,
+  noBorder: false,
   children: null,
   textcolor: '#20273a !important',
   floatright: null,
