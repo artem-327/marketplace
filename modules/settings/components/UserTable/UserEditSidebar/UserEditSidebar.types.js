@@ -13,6 +13,12 @@
  * @property {array} roles
  * @property {array} buyMarketSegments
  * @property {array} sellMarketSegments
+ * @property {number} orderPurchaseLimit
+ * @property {number} monthlyPurchaseLimit
+ * @property {number} dailyPurchaseLimit
+ * @property {boolean} regulatoryHazmatAuthorized
+ * @property {boolean} regulatoryDhsCoiAuthorized
+ * @property {boolean} regulatoryDeaListAuthorized
  *
  */
 
