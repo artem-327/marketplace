@@ -1,27 +1,24 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
-import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { removeEmpty, getSafe } from '~/utils/functions'
 import { Formik } from 'formik'
-
-// Components
-import { Required } from '~/components/constants/layout'
 import { GridRow, GridColumn, Modal, Dimmer, Loader, Form } from 'semantic-ui-react'
+// Components
+import { Required } from '../../../../components/constants/layout'
 import { Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
-import { PhoneNumber } from '~/modules/phoneNumber'
-import { AddressForm } from '~/modules/address-form'
-
+import { PhoneNumber } from '../../../phoneNumber'
+import { AddressForm } from '../../../address-form'
 // Styles
 import { ModalStyled, GridStyled, DivSectionHeader, DivAddressWrapper } from './AddAddress.styles'
-
 // Constants
 import { INITIAL_VALUES } from './AddAddress.constants'
-
 //Services
 import { getInitValues, getValidationScheme, handleSubmit } from './AddAddress.services'
 
+/**
+ * @category Purchase Order
+ * @component
+ */
 const AddAddress = props => {
   let formikPropsSelf
   const {
@@ -34,7 +31,9 @@ const AddAddress = props => {
 
   return (
     <Formik
-      onSubmit={async values => await handleSubmit(props, formikPropsSelf, values)}
+      onSubmit={async () =>
+        await handleSubmit({ ...props, setIsOpenAddAddress, chatWidgetVerticalMoved }, formikPropsSelf)
+      }
       enableReinitialize
       initialValues={popupValues ? { ...INITIAL_VALUES, ...getInitValues(popupValues) } : INITIAL_VALUES}
       validationSchema={getValidationScheme}>
@@ -43,7 +42,7 @@ const AddAddress = props => {
         const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
         return (
-          <ModalStyled open={true} onClose={() => props.onClose()} closeOnDimmerClick={false} closeIcon>
+          <ModalStyled open={true} onClose={() => props.setIsOpenAddAddress()} closeOnDimmerClick={false} closeIcon>
             <>
               <Modal.Header>
                 {popupValues ? (
@@ -208,8 +207,6 @@ const AddAddress = props => {
                   basic
                   onClick={() => {
                     formikProps.handleSubmit()
-                    setIsOpenAddAddress(false)
-                    chatWidgetVerticalMoved(false)
                   }}
                   loading={props.isFetching}
                   data-test='checkout_add_address_save'>
