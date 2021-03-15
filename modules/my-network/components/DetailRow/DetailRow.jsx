@@ -25,7 +25,7 @@ import Logo from '../../../../assets/images/network/trade-pass-logo-bw.png'
  * @category My Network
  * @component
  */
-const DetailRow = ({ row, expandRow = null, buttonActionsDetailRow = null }) => (
+const DetailRow = ({ row, expandRow = null, buttonActionsDetailRow = null, openGlobalAddForm }) => (
   <StyledGrid>
     <Header
       id={row?.id}
@@ -34,6 +34,8 @@ const DetailRow = ({ row, expandRow = null, buttonActionsDetailRow = null }) => 
       averageValue={row?.averageValue}
       buttonsProps={BUTTON_PROPS[row?.status || 'INVITE']}
       buttonActionsDetailRow={buttonActionsDetailRow}
+      address={row?.address}
+      openGlobalAddForm={openGlobalAddForm}
     />
     <Grid.Row>
       <GridColumnDetail>
@@ -63,13 +65,15 @@ const DetailRow = ({ row, expandRow = null, buttonActionsDetailRow = null }) => 
 DetailRow.propTypes = {
   row: PropTypes.object,
   expandRow: PropTypes.func,
-  buttonActionsDetailRow: PropTypes.func
+  buttonActionsDetailRow: PropTypes.func,
+  openGlobalAddForm: PropTypes.func
 }
 
 DetailRow.defaultProps = {
   row: null,
   expandRow: null,
-  buttonActionsDetailRow: null
+  buttonActionsDetailRow: null,
+  openGlobalAddForm: null
 }
 
 export default DetailRow

@@ -764,7 +764,7 @@ const ProductPopup = props => {
 
               <DivBottomButtons className='bottom-buttons'>
                 {!openGlobalAddForm && (
-                  <BasicButton noborder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
+                  <BasicButton noBorder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>

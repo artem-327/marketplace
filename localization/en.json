@@ -1842,6 +1842,7 @@
   "createMenu.newWanted": "New Wanted",
   "createMenu.newUser": "New User",
   "createMenu.newWarehouse": "New Warehouse",
+  "createMenu.newConnection": "New Connection",
   "createMenu.addProduct": "Add Product",
   "createMenu.addWanted": "Add Wanted",
   "createMenu.addUser": "Add User",
