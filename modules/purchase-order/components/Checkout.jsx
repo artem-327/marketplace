@@ -188,6 +188,7 @@ const Checkout = props => {
                     cart={props.cart}
                     sectionState={sectionState}
                     onButtonClick={() => submitButton(props, state)}
+                    isNotHazardousPermissions={!purchaseHazmatEligible && isAnyItemHazardous}
                     submitButtonDisabled={
                       (!purchaseHazmatEligible && isAnyItemHazardous) ||
                       (openSection === 'review' && sectionState.review.errors) ||
