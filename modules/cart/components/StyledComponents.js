@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-import { Header, GridColumn, GridRow, Grid, Segment, Message, ButtonGroup } from 'semantic-ui-react'
-import { AlertCircle } from 'react-feather'
+import { Header, GridColumn, GridRow, Grid, Segment, Message, Button, ButtonGroup } from 'semantic-ui-react'
+import { AlertCircle, ShoppingBag, Trash2, Edit2 } from 'react-feather'
 
 export const GridContainer = styled(Grid)`
   .row:not(.default-padded) {
@@ -34,6 +34,47 @@ export const SummaryGrid = styled(Grid)`
   }
 `
 
+export const GridStyled = styled(Grid)`
+  &.ui.grid {
+    margin: 0;
+
+    > .row {
+      padding: 16px 0;
+
+      > .column {
+        padding: 0 20px;
+      }
+    }
+  }
+`
+
+export const DivHeader = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.29;
+  color: #20273a;
+`
+
+export const StyledGridRow = styled(GridRow)`
+  &.row {
+    ${props => props.padding ? `padding: ${props.padding} !important;` : ''}
+  }
+`
+
+export const DivNormalText = styled.div`
+  font-size: 14px;
+  line-height: 1.29;
+  color: #20273a;
+`
+
+export const DivButtonContent = styled.div`
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #20273a;
+`
+
+
 export const CapitalizedText = styled.span`
   text-transform: capitalize;
 `
@@ -45,10 +86,11 @@ export const BottomUnpaddedRow = styled(GridRow)`
   padding-bottom: 0px !important;
 `
 
-export const CustomHeader = styled(Header)`
-  font-size: 18px;
+export const CustomHeader = styled.div`
+  font-size: 16px;
   font-weight: 500;
   color: #20273a;
+  margin-bottom: 5px;
 `
 
 export const CartColumn = styled(GridColumn)`
@@ -104,9 +146,19 @@ export const CartButtonGroup = styled(ButtonGroup)`
     }
   }
 `
+
+export const ButtonStyled = styled(Button)`
+  &.ui.button {
+    width: 100%;
+    border-radius: 3px !important;
+    margin: 0;
+  }
+`
+
 export const ContentSegment = styled(Segment)`
-  padding-top: 0px;
-  padding-bottom: 0px;
+  &.ui.segment {
+    padding: 0;
+  }
 `
 
 export const VerticalUnpaddedColumn = styled(GridColumn)`
@@ -121,9 +173,9 @@ export const VerticalUnpaddedRow = styled(GridRow)`
 `
 
 export const StyledRow = styled(GridRow)`
-  box-shadow: ${props => (props.bottomShadow ? '0 1px 0 0 #dee2e6' : '0 0 0 0')};
-  margin-top: ${props => (props.topMarged ? '5px' : '0px')} !important;
-  ${props => (props.verticallyUnpadded ? 'padding-bottom: 0px !important; padding-top: 0px !important;' : '')};
+  box-shadow: ${props => (props.bottomshadow ? '0 1px 0 0 #dee2e6' : '0 0 0 0')};
+  margin-top: ${props => (props.topmarged ? '5px' : '0px')} !important;
+  ${props => (props.verticallyunpadded ? 'padding-bottom: 0px !important; padding-top: 0px !important;' : '')};
 `
 
 export const BottomUnpaddedColumn = styled(GridColumn)`
@@ -131,21 +183,30 @@ export const BottomUnpaddedColumn = styled(GridColumn)`
 `
 
 export const ItemDescriptionGrid = styled(Grid)`
-  border-radius: 4px;
-  border: solid 1px #dee2e6;
-  background-color: #f8f9fb;
-  margin: 0 !important;
-  > .row {
-    padding: 0 !important;
-  }
-  > .row .column span {
-    float: right;
+  &.ui.grid {
+    border-radius: 4px;
+    border: solid 1px #dee2e6;
+    background-color: #f8f9fb;
+    margin: 0 20px;
+    padding: 11px 0 !important;
+    
+    > .row {
+      padding: 0 !important;
+      
+      > .column {
+        padding: 5px 20px;
+      }
+    }
+
+    > .row .column span {
+      float: right;
+    }
   }
 `
 
 export const Item = styled.div`
-  box-shadow: ${props => (props.bottomShadow ? '0 1px 0 0 #dee2e6 !important' : '0 0 0 0')};
-  padding-bottom: 30px;
+  box-shadow: ${props => (props.bottomshadow ? '0 1px 0 0 #dee2e6 !important' : '0 0 0 0')};
+  padding-bottom: 20px;
 `
 
 export const DescriptionValue = styled.span`
@@ -154,8 +215,16 @@ export const DescriptionValue = styled.span`
 `
 
 export const TotalRow = styled(GridRow)`
-  background-color: #f8f9fb;
-  border-top: 1px solid #dee2e6;
+  &.row {
+    padding: 14px 0 !important;
+    background-color: #f8f9fb;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+  }
+`
+
+export const DivTotalHeader = styled.div`
+  font-weight: bold;
 `
 
 export const TotalPriceRow = styled(GridRow)`
@@ -248,4 +317,51 @@ export const CustomDivInTitle = styled.div`
 export const InfoIcon = styled(AlertCircle)`
   transform: rotate(180deg);
   color: #2599d5;
+`
+
+export const IconShoppingBag = styled(ShoppingBag)`
+  font-size: 18px;
+  width: 18px;
+  height: 20px;
+  margin-right: 9px; 
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  text-align: center;
+  color: #20273a;
+`
+
+export const DivIconsWrapper = styled.div`
+  margin-left: auto;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+`
+
+export const DivIconRectangle = styled.div`
+  width: 32px;
+  height: 32px;
+  margin: 0 0 0 5px;
+  padding: 5px 7px 7px;
+  border-radius: 3px;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  ${props => !props.disabled ? 'cursor: pointer;' : ''}
+`
+
+export const IconTrash2 = styled(Trash2)`
+  font-size: 18px;
+  width: 18px;
+  height: 20px;
+  text-align: center;
+  color: #f16844;
+`
+
+export const IconEdit2 = styled(Edit2)`
+  font-size: 18px;
+  width: 18px;
+  height: 20px;
+  text-align: center;
+  color: ${props => props.disabled ? '#848893' : '#20273a'};
 `

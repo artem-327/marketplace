@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
-import { Grid, GridColumn, Segment, GridRow, Header, Button, Icon } from 'semantic-ui-react'
+import { Grid, GridColumn, Button } from 'semantic-ui-react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Router from 'next/router'
 //Components
@@ -17,11 +17,15 @@ import {
   ContentSegment,
   VerticalUnpaddedColumn,
   StyledRow,
-  TopUnpaddedRow,
-  BottomUnpaddedRow,
-  DescriptionValue,
   TotalRow,
-  CartButtonGroup
+  ButtonStyled,
+  GridStyled,
+  DivHeader,
+  StyledGridRow,
+  DivNormalText,
+  DivTotalHeader,
+  DivButtonContent,
+  IconShoppingBag,
 } from './StyledComponents'
 
 const Cart = props => {
@@ -43,92 +47,72 @@ const Cart = props => {
       <Grid>
         <CartColumn mobile={14} tablet={9} computer={9}>
           <ContentSegment loading={cartIsFetching}>
-            <Grid>
-              <StyledRow bottomShadow>
-                <VerticalUnpaddedColumn>
-                  <Header as='h2'>
-                    <FormattedMessage
-                      id='cart.totalItems'
-                      defaultMessage={`TOTAL ITEMS: ${itemsCount}`}
-                      values={{ count: itemsCount }}
-                    />
-                  </Header>
-                </VerticalUnpaddedColumn>
-              </StyledRow>
-            </Grid>
             {itemsCount === 0 && !cartIsFetching
               ? (
-                <Grid verticalAlign='middle'>
-                  <GridRow>
+                <GridStyled verticalAlign='middle'>
+                  <StyledGridRow padding='213px 0 7px'>
                     <GridColumn computer={16} textAlign='center'>
-                      {formatMessage({ id: 'cart.empty', defaultMessage: 'Your cart is empty.' })} <br /> <br />
+                      {formatMessage({ id: 'cart.empty', defaultMessage: 'Your cart is empty.' })}
+                    </GridColumn>
+                  </StyledGridRow>
+                  <StyledGridRow padding='7px 0 213px'>
+                    <GridColumn computer={16} textAlign='center'>
                       <Button basic onClick={() => Router.push('/marketplace/listings')}>
-                        <Icon name='shopping bag' />
-                        {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
+                        <DivButtonContent>
+                          <IconShoppingBag/>
+                          {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
+                        </DivButtonContent>
                       </Button>
                     </GridColumn>
-                  </GridRow>
-                </Grid>
+                  </StyledGridRow>
+                </GridStyled>
               )
-              : getSafe(() => cart.cartItems, []).map((item, i) => (
-                <CartItem
-                  key={i}
-                  item={item}
-                  index={i}
-                  cart={cart}
-                />
-              ))}
+              : (
+                <>
+                <GridStyled>
+                  <StyledRow bottomshadow>
+                    <VerticalUnpaddedColumn>
+                      <DivHeader>
+                        <FormattedMessage
+                          id='cart.totalItems'
+                          defaultMessage={`Total Items: ${itemsCount}`}
+                          values={{ count: itemsCount }}
+                        />
+                      </DivHeader>
+                    </VerticalUnpaddedColumn>
+                  </StyledRow>
+                </GridStyled>
+                  {getSafe(() => cart.cartItems, []).map((item, i) => (
+                    <CartItem
+                      key={i}
+                      item={item}
+                      index={i}
+                      cart={cart}
+                    />
+                    ))
+                  }
+                </>
+              )
+            }
           </ContentSegment>
         </CartColumn>
         <SummaryColumn mobile={14} tablet={7} computer={5}>
-          <Segment loading={cartIsFetching}>
-            <Grid>
-              <StyledRow bottomShadow>
+          <ContentSegment loading={cartIsFetching}>
+            <GridStyled>
+              <StyledRow bottomshadow>
                 <VerticalUnpaddedColumn>
-                  <Header as='h2'>
+                  <DivHeader>
                     <FormattedMessage id='cart.summary' defaultMessage='Summary' />
-                  </Header>
+                  </DivHeader>
                 </VerticalUnpaddedColumn>
               </StyledRow>
 
-              <BottomUnpaddedRow columns={2}>
+              <StyledGridRow padding='16px 0 5px' columns={2}>
                 <VerticalUnpaddedColumn>
                   <FormattedMessage id='cart.subtotal' defaultMessage='Subtotal' />
                 </VerticalUnpaddedColumn>
                 <VerticalUnpaddedColumn textAlign='right'>
-                  <FormattedNumber
-                    minimumFractionDigits={2}
-                    maximumFractionDigits={2}
-                    style='currency'
-                    currency={currency}
-                    value={cart.cfPriceSubtotal}
-                  />
-                </VerticalUnpaddedColumn>
-              </BottomUnpaddedRow>
-
-              <TopUnpaddedRow columns={2}>
-                <VerticalUnpaddedColumn>
-                  <FormattedMessage id='cart.estimatedTax' defaultMessage='Estimated Tax' />
-                </VerticalUnpaddedColumn>
-                <VerticalUnpaddedColumn textAlign='right'>
-                  <FormattedNumber
-                    minimumFractionDigits={2}
-                    maximumFractionDigits={2}
-                    style='currency'
-                    currency={currency}
-                    value={0}
-                  />
-                </VerticalUnpaddedColumn>
-              </TopUnpaddedRow>
-              <TotalRow columns={2}>
-                <VerticalUnpaddedColumn>
-                  <DescriptionValue bold>
-                    <FormattedMessage id='cart.total' defaultMessage='Total' />
-                  </DescriptionValue>
-                </VerticalUnpaddedColumn>
-
-                <VerticalUnpaddedColumn textAlign='right'>
-                  <DescriptionValue bold>
+                  <DivNormalText>
                     <FormattedNumber
                       minimumFractionDigits={2}
                       maximumFractionDigits={2}
@@ -136,34 +120,73 @@ const Cart = props => {
                       currency={currency}
                       value={cart.cfPriceSubtotal}
                     />
-                  </DescriptionValue>
+                  </DivNormalText>
+                </VerticalUnpaddedColumn>
+              </StyledGridRow>
+
+              <StyledGridRow padding='5px 0 16px' columns={2}>
+                <VerticalUnpaddedColumn>
+                  <FormattedMessage id='cart.estimatedTax' defaultMessage='Estimated Tax' />
+                </VerticalUnpaddedColumn>
+                <VerticalUnpaddedColumn textAlign='right'>
+                  <DivNormalText>
+                    <FormattedNumber
+                      minimumFractionDigits={2}
+                      maximumFractionDigits={2}
+                      style='currency'
+                      currency={currency}
+                      value={0}
+                    />
+                  </DivNormalText>
+                </VerticalUnpaddedColumn>
+              </StyledGridRow>
+              <TotalRow columns={2}>
+                <VerticalUnpaddedColumn>
+                  <DivTotalHeader>
+                    <FormattedMessage id='cart.total' defaultMessage='Total' />
+                  </DivTotalHeader>
+                </VerticalUnpaddedColumn>
+
+                <VerticalUnpaddedColumn textAlign='right'>
+                  <DivHeader>
+                    <FormattedNumber
+                      minimumFractionDigits={2}
+                      maximumFractionDigits={2}
+                      style='currency'
+                      currency={currency}
+                      value={cart.cfPriceSubtotal}
+                    />
+                  </DivHeader>
                 </VerticalUnpaddedColumn>
               </TotalRow>
-            </Grid>
-          </Segment>
 
-          <Grid>
-            <GridRow>
-              <GridColumn computer={16}>
-                <CartButtonGroup fluid>
-                  {itemsCount !== 0 && (
-                    <Button onClick={() => Router.push('/marketplace/listings')}>
-                      <Icon name='shopping bag' />
-                      {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
-                    </Button>
-                  )}
-                  <Button
-                    primary
-                    disabled={itemsCount === 0 || cartIsFetching}
-                    onClick={() => Router.push('/purchase-order')}
-                  >
-                    {formatMessage({ id: 'cart.proceedToCheckout', defaultMessage: 'Proceed to Checkout' })}
-                    <Icon name='arrow right' />
-                  </Button>
-                </CartButtonGroup>
-              </GridColumn>
-            </GridRow>
-          </Grid>
+              {itemsCount !== 0 && (
+                <>
+                  <StyledGridRow padding='20px 0 5px'>
+                    <GridColumn computer={16}>
+                      <ButtonStyled basic onClick={() => Router.push('/marketplace/listings')}>
+                        <DivHeader>
+                          {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
+                        </DivHeader>
+                      </ButtonStyled>
+                    </GridColumn>
+                  </StyledGridRow>
+                  <StyledGridRow padding='5px 0 20px'>
+                    <GridColumn computer={16}>
+                        <ButtonStyled
+                          primary
+                          fuid
+                          disabled={itemsCount === 0 || cartIsFetching}
+                          onClick={() => Router.push('/purchase-order')}
+                        >
+                          {formatMessage({ id: 'cart.proceedToCheckout', defaultMessage: 'Proceed to Checkout' })}
+                        </ButtonStyled>
+                    </GridColumn>
+                  </StyledGridRow>
+                </>
+              )}
+            </GridStyled>
+          </ContentSegment>
         </SummaryColumn>
       </Grid>
       {getSafe(() => sidebar.id, false) ? <AddCart isEdit={true} /> : null}

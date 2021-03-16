@@ -3,26 +3,28 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
-import { Grid, GridColumn, GridRow, Button, Icon } from 'semantic-ui-react'
+import { GridColumn, GridRow } from 'semantic-ui-react'
 import moment from 'moment'
 import confirm from '~/components/Confirmable/confirm'
 import { currency } from '~/constants/index'
 import { getLocaleDateFormat } from '~/components/date-format'
 
 // Styles
-import { // ! !
-} from './CartItem.styles'
 import {
   CapitalizedText,
   CustomHeader,
   ItemDescriptionGrid,
   Item,
   DescriptionValue,
+  GridStyled,
+  StyledGridRow,
+  DivIconsWrapper,
+  DivIconRectangle,
+  IconTrash2,
+  IconEdit2,
 } from '../StyledComponents'
 
 // Services
-import { // ! !
-} from './CartItem.services'
 import { sidebarChanged, getProductOffer, deleteCartItem } from '../../../purchase-order/actions'
 
 // Constants
@@ -48,41 +50,38 @@ const CartItem = props => {
     props.sidebarChanged({ isOpen: true, id, pkgAmount })
   }
 
+  const editDisabled =
+    item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
+    item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
+    item.cartItemType === CART_ITEM_TYPES.PRODUCT_OFFER_BID
+
   return (
-    <Item key={index} bottomShadow={index !== cart.cartItems.length - 1}>
-      <Grid>
-        <GridRow>
+    <Item key={index} bottomshadow={index !== cart.cartItems.length - 1}>
+      <GridStyled>
+        <StyledGridRow padding='11px 0 7px'>
           <GridColumn largeScreen={8}>
-            <CustomHeader as='h2'>{item.productOffer.companyProduct.companyGenericProduct.name}</CustomHeader>
+            <CustomHeader>{item.productOffer.companyProduct.companyGenericProduct.name}</CustomHeader>
             <FormattedMessage id='cart.manufacturer' defaultMessage='Manufacturer:' />{' '}
             {getSafe(() => item.productOffer.companyProduct.companyGenericProduct.manufacturer.name, '')}
           </GridColumn>
           <GridColumn textAlign='right' largeScreen={8}>
-            <Button
-              negative
-              basic
-              onClick={() =>
-                confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?').then(() =>
-                  deleteCartItem(item.id)
-                )
-              }>
-              <Icon name='trash alternate outline' />
-              {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
-            </Button>
-            <Button
-              disabled={
-                item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
-                item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
-                item.cartItemType === CART_ITEM_TYPES.PRODUCT_OFFER_BID
-              }
-              basic
-              onClick={() => editCart(item)}>
-              <Icon name='edit outline' />
-              {formatMessage({ id: 'global.edit', defaultMessage: 'Edit' })}
-            </Button>
+            <DivIconsWrapper>
+              <DivIconRectangle>
+                <IconTrash2
+                  onClick={() =>
+                    confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?').then(() =>
+                      deleteCartItem(item.id)
+                    )
+                  }
+                />
+              </DivIconRectangle>
+              <DivIconRectangle disabled={editDisabled}>
+                <IconEdit2 disabled={editDisabled} onClick={() => editDisabled ? {} : editCart(item)}/>
+              </DivIconRectangle>
+            </DivIconsWrapper>
           </GridColumn>
-        </GridRow>
-      </Grid>
+        </StyledGridRow>
+      </GridStyled>
       <ItemDescriptionGrid columns={2} divided>
         <GridRow>
           <GridColumn>
@@ -147,7 +146,7 @@ const CartItem = props => {
         <GridRow>
           <GridColumn>
             <FormattedMessage id='cart.totalPerItem' defaultMessage='Total per Item:' />{' '}
-            <DescriptionValue bold>
+            <DescriptionValue>
               <FormattedNumber
                 minimumFractionDigits={2}
                 maximumFractionDigits={2}
@@ -173,14 +172,6 @@ const CartItem = props => {
       </ItemDescriptionGrid>
     </Item>
   )
-}
-
-CartItem.propTypes = {
-  //! !itemsCount: PropTypes.number
-}
-
-CartItem.defaultProps = {
-  //! ! itemsCount: 0
 }
 
 function mapStateToProps(store) {
