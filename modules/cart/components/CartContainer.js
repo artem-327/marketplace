@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import Cart from './Cart'
 import { injectIntl } from 'react-intl'
 
-import { getCart, sidebarChanged, getProductOffer, deleteCartItem } from '~/modules/purchase-order/actions'
+import { getCart } from '~/modules/purchase-order/actions'
 
 const mapStateToProps = store => {
   return {
@@ -13,8 +13,6 @@ const mapStateToProps = store => {
   }
 }
 
-const mapDispatchToProps = {
-  getCart, deleteCartItem, sidebarChanged, getProductOffer
-}
+const mapDispatchToProps = { getCart }
 
 export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Cart))
