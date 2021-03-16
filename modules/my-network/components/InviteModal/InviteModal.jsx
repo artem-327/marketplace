@@ -32,7 +32,7 @@ const InviteModal = props => {
       size={detailCompany ? 'large' : 'tiny'}
       open={open}
       onClose={() => {
-        openGlobalAddForm('')
+        typeof openGlobalAddForm === 'function' && openGlobalAddForm('')
         onClose()
         setValue('')
       }}
@@ -87,7 +87,7 @@ const InviteModal = props => {
           <BasicButton
             noBorder
             onClick={() => {
-              openGlobalAddForm('')
+              typeof openGlobalAddForm === 'function' && openGlobalAddForm('')
               onClose()
               setValue('')
             }}>

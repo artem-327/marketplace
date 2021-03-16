@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Grid, Segment } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 //Styles
 import { DivTitleBottomSegment, DivValue, GridColumnDetail, SegmentBottom } from '../DetailRow.style'
@@ -16,6 +16,7 @@ const ColumnSegment = ({ data, titleId }) => (
         </DivTitleBottomSegment>
       </GridColumnDetail>
     </Grid.Row>
+
     {Object.keys(data).map((key, i) => {
       return (
         <Grid.Row key={i}>

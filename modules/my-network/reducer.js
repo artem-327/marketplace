@@ -10,7 +10,9 @@ export const initialState = {
   requested: 0,
   isOpenModal: false,
   companyNetworkConnection: null,
-  isError: false
+  isError: false,
+  loadingDetailRow: false,
+  detailRow: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -64,6 +66,27 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         isError: true
+      }
+    }
+
+    case AT.GET_CONNECTION_PENDING: {
+      return {
+        ...state,
+        loadingDetailRow: true
+      }
+    }
+    case AT.GET_CONNECTION_FULFILLED: {
+      return {
+        ...state,
+        loadingDetailRow: false,
+        detailRow: payload
+      }
+    }
+
+    case AT.GET_CONNECTION_REJECTED: {
+      return {
+        ...state,
+        loadingDetailRow: false
       }
     }
 

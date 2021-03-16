@@ -109,7 +109,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/bids-sent', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
     myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
-    alerts: getSafe(() => Router.router.pathname === '/alerts', false)
+    alerts: getSafe(() => Router.router.pathname === '/alerts', false),
+    activeNetworkStatus: 'ALL'
   }
 
   componentDidMount() {
@@ -290,17 +291,18 @@ class Navigation extends Component {
       )
     })
 
-    const DivItem = ({ children, dataTest, networkStatus, pointer }) => {
+    const DivItem = ({ children, dataTest, networkStatus, pointer, status }) => {
       return (
         <DivNavItem
           pointer={pointer}
           data-test={dataTest}
+          $highlighted={status === this.state.activeNetworkStatus}
           onClick={async e => {
             e.stopPropagation()
             if (typeof networkStatus === 'function') {
               await networkStatus()
             }
-            this.setState({ myNetwork: true })
+            this.setState({ myNetwork: true, activeNetworkStatus: status })
           }}>
           {children}
         </DivNavItem>
@@ -433,6 +435,7 @@ class Navigation extends Component {
                 as={DivItem}
                 pointer={true}
                 dataTest='navigation_menu_my_Network_all_drpdn'
+                status={NETWORK_STATUS.ALL}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ALL })}>
                 {formatMessage(
                   {
@@ -445,6 +448,7 @@ class Navigation extends Component {
               <Dropdown.Item
                 as={DivItem}
                 pointer={true}
+                status={NETWORK_STATUS.ACTIVE}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ACTIVE })}
                 dataTest='navigation_menu_my_network_active_drpdn'>
                 {formatMessage(
@@ -458,6 +462,7 @@ class Navigation extends Component {
               <Dropdown.Item
                 as={DivItem}
                 pointer={true}
+                status={NETWORK_STATUS.PENDING}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.PENDING })}
                 dataTest='navigation_menu_my_network_pending_drpdn'>
                 {formatMessage(
@@ -466,18 +471,6 @@ class Navigation extends Component {
                     defaultMessage: 'Pending ({value})'
                   },
                   { value: pendingNetworks }
-                )}
-              </Dropdown.Item>
-              <Dropdown.Item
-                as={DivItem}
-                //networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.REQUESTED })}
-                dataTest='navigation_menu_my_network_requested_drpdn'>
-                {formatMessage(
-                  {
-                    id: 'navigation.myNetworkRequested',
-                    defaultMessage: 'Requested ({value})'
-                  },
-                  { value: requestedNetworks }
                 )}
               </Dropdown.Item>
             </PerfectScrollbar>
@@ -882,7 +875,7 @@ export default withAuth(
         alertsCats: store?.alerts?.categories,
         allNetworks: store?.myNetwork?.all,
         activeNetworks: store?.myNetwork?.active,
-        pendingNetworks: store?.myNetwork?.pending,
+        pendingNetworks: store?.myNetwork?.pending + getSafe(() => store?.myNetwork?.requested, 0),
         requestedNetworks: store?.myNetwork?.requested
       }),
       {

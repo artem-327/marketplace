@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import { Grid } from 'semantic-ui-react'
 //Components
 import ColumnSegment from './ColumnSegment'
 //Styles
@@ -11,7 +10,7 @@ import { SegmentGroupHeader, GridColumnDetail, GridRowBottomSegment } from '../D
 const BottomSegmentData = props => (
   <GridRowBottomSegment>
     <GridColumnDetail>
-      <SegmentGroupHeader horizontal noneBorder>
+      <SegmentGroupHeader horizontal $noneBorder>
         {Object.keys(props).map((key, i) => {
           return <ColumnSegment key={i} data={props[key]} titleId={key} />
         })}

@@ -172,15 +172,15 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.reject',
       color: '#ffffff !important',
       background: '#f16844 !important',
-      borderColor: '#fce1da',
+      borderColor: '#fce1da !important',
       action: 'reject',
       confirmId: 'myNetworks.detailRow.modal.reject'
     },
     {
       textId: 'myNetworks.detailRow.accept',
       color: '#ffffff !important',
-      background: '##84c225 !important',
-      borderColor: '#f1ffdb ',
+      background: '#84c225 !important',
+      borderColor: '#f1ffdb !important',
       action: 'accept',
       confirmId: 'myNetworks.detailRow.modal.accept'
     }
@@ -210,7 +210,7 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
-      borderColor: '#fce1da',
+      borderColor: '#fce1da !important',
       action: 'remove',
       confirmId: 'myNetworks.detailRow.modal.remove'
     }
@@ -220,7 +220,7 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
-      borderColor: '#fce1da',
+      borderColor: '#fce1da !important',
       action: 'remove',
       confirmId: 'myNetworks.detailRow.modal.remove'
     }

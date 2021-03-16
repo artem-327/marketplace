@@ -26,5 +26,10 @@ export default {
     api
       .post(`/prodex/api/tradepass/connection?tradepassId=${id}`)
       .then(res => res.data)
+      .catch(err => console.error(err)),
+  getConnection: id =>
+    api
+      .get(`/prodex/api/tradepass/connection/${id}`)
+      .then(res => res.data)
       .catch(err => console.error(err))
 }

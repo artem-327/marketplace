@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Grid, Image } from 'semantic-ui-react'
+import { Grid, Image, Segment, Loader, Dimmer } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { ChevronsUp } from 'react-feather'
 //Components
@@ -14,7 +14,8 @@ import {
   DivCollapse,
   DivIconCollapse,
   DivCollapseText,
-  DivTradePassLogo
+  DivTradePassLogo,
+  GridRowLoadingBottomSegment
 } from './DetailRow.style'
 //Constants
 import { BUTTON_PROPS, ATTRIBUTES_TRADE_CRITERIA } from '../../constants'
@@ -25,7 +26,13 @@ import Logo from '../../../../assets/images/network/trade-pass-logo-bw.png'
  * @category My Network
  * @component
  */
-const DetailRow = ({ row, expandRow = null, buttonActionsDetailRow = null, openGlobalAddForm }) => (
+const DetailRow = ({
+  row,
+  expandRow = null,
+  buttonActionsDetailRow = null,
+  openGlobalAddForm,
+  loadingDetailRow = false
+}) => (
   <StyledGrid>
     <Header
       id={row?.id}
@@ -45,7 +52,18 @@ const DetailRow = ({ row, expandRow = null, buttonActionsDetailRow = null, openG
       </GridColumnDetail>
     </Grid.Row>
     <TradeCriteria as='div' row={row?.tradeCriteria} attributes={ATTRIBUTES_TRADE_CRITERIA} />
-    <BottomSegments legalData={row?.legalData} marketingData={row?.marketingData} verifiedData={row?.verifiedData} />
+    {loadingDetailRow ? (
+      <GridRowLoadingBottomSegment>
+        <Dimmer active inverted>
+          <Loader size='large'>
+            <FormattedMessage id='global.loading' defaultMessage='Loading' />
+          </Loader>
+        </Dimmer>
+        <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+      </GridRowLoadingBottomSegment>
+    ) : (
+      <BottomSegments legalData={row?.legalData} marketingData={row?.marketingData} verifiedData={row?.verifiedData} />
+    )}
     {expandRow && (
       <DivCollapse onClick={expandRow}>
         <div>
@@ -66,14 +84,16 @@ DetailRow.propTypes = {
   row: PropTypes.object,
   expandRow: PropTypes.func,
   buttonActionsDetailRow: PropTypes.func,
-  openGlobalAddForm: PropTypes.func
+  openGlobalAddForm: PropTypes.func,
+  loadingDetailRow: PropTypes.bool
 }
 
 DetailRow.defaultProps = {
   row: null,
   expandRow: null,
   buttonActionsDetailRow: null,
-  openGlobalAddForm: null
+  openGlobalAddForm: null,
+  loadingDetailRow: false
 }
 
 export default DetailRow
