@@ -21,7 +21,7 @@ function mapStateToProps(state) {
     // Vertical movement chat widget above buttons in Sidebars.
     if (
       getSafe(() => state.chatWidget.isVerticalMoved, false) &&
-      (getSafe(() => state.settings.isOpenSidebar, false) && (settingsOpenSidebar !== 'users') ||
+      (getSafe(() => state.settings.isOpenSidebar, false) ||
         getSafe(() => state.productsAdmin.currentAddForm, false) ||
         getSafe(() => state.productsAdmin.currentEditForm, false) ||
         getSafe(() => state.cart.isOpenModal, false))
@@ -40,9 +40,9 @@ function mapStateToProps(state) {
 
     if (
       getSafe(() => state.companyProductInfo.isOpen, false) ||
-      (getSafe(() => state.settings.isOpenSidebar, false)
-        && !getSafe(() => state.chatWidget.isVerticalMoved, false)
-        && (settingsOpenSidebar !== 'users')) ||
+      (getSafe(() => state.settings.isOpenSidebar, false) &&
+        !getSafe(() => state.chatWidget.isVerticalMoved, false) &&
+        settingsOpenSidebar !== 'users') ||
       getSafe(() => state.cart.sidebar.isOpen, false) ||
       getSafe(() => state.companyProductInfo.isOpen, false) ||
       adminCompaniesFormName === 'companies' ||

@@ -2,8 +2,8 @@ import { Modal, Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 export const ModalCustom = styled(Modal)`
-  ${({ basicmodal }) =>
-    basicmodal
+  ${({ $basicModal }) =>
+    $basicModal
       ? `
 &.ui.modal > .header {
   border-bottom: none !important;

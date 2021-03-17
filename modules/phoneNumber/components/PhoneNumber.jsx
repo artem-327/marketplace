@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { string, object, bool, func } from 'prop-types'
+import { string, object, bool, func, number } from 'prop-types'
 import { Field } from 'formik'
 import { FormField, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
@@ -228,7 +228,8 @@ export default class PhoneNumber extends Component {
       isSubmitting,
       disabled,
       placeholder,
-      background
+      background,
+      width
     } = this.props
 
     let { phoneCountryCode, phoneNumber } = this.state
@@ -238,7 +239,7 @@ export default class PhoneNumber extends Component {
         name={name}
         render={() => {
           return (
-            <FormField error={!!error}>
+            <FormField width={width} error={!!error}>
               {label && <label>{label}</label>}
               <span style={{ display: 'flex' }} className='phone-number'>
                 <StyledDropdown
@@ -291,7 +292,8 @@ PhoneNumber.propTypes = {
   disabled: bool,
   clearable: bool,
   placeholder: string,
-  background: string
+  background: string,
+  width: number
 }
 
 PhoneNumber.defaultProps = {
@@ -308,5 +310,6 @@ PhoneNumber.defaultProps = {
   disabled: false,
   clearable: false,
   placeholder: null,
-  background: null
+  background: null,
+  width: null
 }

@@ -72,7 +72,13 @@ export const getInitialFormValues = sidebarValues => {
         preferredCurrency: currencyId,
         roles: sidebarValues.roles.map(d => d.id),
         sellMarketSegments: getSafe(() => sidebarValues.sellMarketSegments, []).map(d => d.id),
-        buyMarketSegments: getSafe(() => sidebarValues.buyMarketSegments, []).map(d => d.id)
+        buyMarketSegments: getSafe(() => sidebarValues.buyMarketSegments, []).map(d => d.id),
+        dailyPurchaseLimit: sidebarValues?.dailyPurchaseLimit,
+        monthlyPurchaseLimit: sidebarValues?.monthlyPurchaseLimit,
+        orderPurchaseLimit: sidebarValues?.orderPurchaseLimit,
+        regulatoryDeaListAuthorized: sidebarValues?.regulatoryDeaListAuthorized,
+        regulatoryDhsCoiAuthorized: sidebarValues?.regulatoryDhsCoiAuthorized,
+        regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized
       }
     : {
         name: '',
@@ -85,7 +91,13 @@ export const getInitialFormValues = sidebarValues => {
         phone: '',
         roles: [],
         buyMarketSegments: [],
-        sellMarketSegments: []
+        sellMarketSegments: [],
+        dailyPurchaseLimit: null,
+        monthlyPurchaseLimit: null,
+        orderPurchaseLimit: null,
+        regulatoryDeaListAuthorized: false,
+        regulatoryDhsCoiAuthorized: false,
+        regulatoryHazmatAuthorized: false
       }
 }
 
@@ -228,7 +240,6 @@ export const switchUser = async (sidebarValues, state) => {
  * @param {object} actions Formik object - actions
  * @param {object} props object with all props (actions, init data, ...)
  * @param {object} state object with state / set state Hook functions
- * @return {none}
  */
 export const submitUser = async (values, actions, props, state) => {
   const {
@@ -238,20 +249,34 @@ export const submitUser = async (values, actions, props, state) => {
     datagrid,
     currentUserId,
     getIdentity,
-    openGlobalAddForm
+    openGlobalAddForm,
+    chatWidgetVerticalMoved
   } = props
   const { sidebarValues } = state
   let sendSuccess = false
+  let signedDate = new Date()
+  let regulatoryDeaListSignedDate = signedDate.toISOString()
+  let regulatoryDhsCoiSignedDate = signedDate.toISOString()
 
   const data = {
-    additionalBranches: values.additionalBranches,
-    email: values.email,
-    homeBranch: values.homeBranch,
-    jobTitle: values.jobTitle,
-    name: values.name,
-    phone: values.phone,
+    additionalBranches: values?.additionalBranches,
+    email: values?.email,
+    homeBranch: values?.homeBranch,
+    jobTitle: values?.jobTitle,
+    name: values?.name,
+    phone: values?.phone,
     preferredCurrency: currencyId,
-    roles: values.roles
+    roles: values?.roles,
+    regulatoryDeaListAuthorized: values?.regulatoryDeaListAuthorized,
+    regulatoryDeaListSignedDate,
+    regulatoryDhsCoiAuthorized: values?.regulatoryDhsCoiAuthorized,
+    regulatoryDhsCoiSignedDate,
+    regulatoryHazmatAuthorized: values?.regulatoryHazmatAuthorized
+    // Uncommented when BE is prepared to accept these 3 number fields
+    // dailyPurchaseLimit: !isNaN(parseInt(values?.dailyPurchaseLimit)) ? parseInt(values?.dailyPurchaseLimit) : '',
+    // orderPurchaseLimit: !isNaN(parseInt(values?.orderPurchaseLimit)) ? parseInt(values?.orderPurchaseLimit) : '',
+    // monthlyPurchaseLimit: !isNaN(parseInt(values?.monthlyPurchaseLimit)) ? parseInt(values?.monthlyPurchaseLimit) : ''
+
     /*Commented by https://pm.artio.net/issues/34033#note-14 */
     //sellMarketSegments: values.sellMarketSegments,
     //buyMarketSegments: values.buyMarketSegments
@@ -270,9 +295,12 @@ export const submitUser = async (values, actions, props, state) => {
       !openGlobalAddForm && datagrid.loadData()
       sendSuccess = true
     }
-    if (openGlobalAddForm) openGlobalAddForm('')
-    else closeSidebar()
-
+    if (openGlobalAddForm) {
+      openGlobalAddForm('')
+    } else {
+      closeSidebar()
+      chatWidgetVerticalMoved(false)
+    }
   } catch {}
   actions.setSubmitting(false)
   return sendSuccess
@@ -301,6 +329,3 @@ export const handleSellMarketSegmentsSearchChange = debounce((_, { searchQuery }
 export const handleBuyMarketSegmentsSearchChange = debounce((_, { searchQuery }, props) => {
   props.searchBuyMarketSegments(searchQuery)
 }, 250)
-
-
-

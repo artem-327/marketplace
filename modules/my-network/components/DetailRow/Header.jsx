@@ -28,11 +28,24 @@ import { getSafe } from '../../../../utils/functions'
  * @category My Network
  * @component
  */
-const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsDetailRow, id, intl }) => (
+const Header = ({
+  logo,
+  transactions,
+  averageValue,
+  buttonsProps,
+  buttonActionsDetailRow,
+  id,
+  address,
+  openGlobalAddForm,
+  intl
+}) => (
   <Grid.Row>
     <GridColumnDetail>
       <SegmentGroupHeader horizontal alignItems={'align-items: center !important'}>
-        <SegmentCustom textAlign='left'>{logo}</SegmentCustom>
+        <SegmentCustom textAlign='left'>
+          {logo}
+          <div>{address}</div>
+        </SegmentCustom>
         <SegmentCustom textAlign='center'>
           <DivCollectionStat>
             <DivTransactions>
@@ -69,7 +82,7 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
                     if (button?.action !== 'cancel') {
                       confirm(
                         <DivModal>
-                          <DivCircle background={button?.color}>
+                          <DivCircle background={button?.background} borderColor={button?.borderColor}>
                             <InfoIcon size='28' color='#ffffff' />
                           </DivCircle>
                         </DivModal>,
@@ -89,6 +102,7 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
                           // confirm
                           try {
                             await buttonActionsDetailRow(button?.action, id)
+                            typeof openGlobalAddForm === 'function' && openGlobalAddForm('')
                           } catch (e) {
                             console.error(e)
                           }
@@ -98,6 +112,7 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
                         }
                       )
                     } else {
+                      typeof openGlobalAddForm === 'function' && openGlobalAddForm('')
                       buttonActionsDetailRow(button?.action, id)
                     }
                   }}>
@@ -112,7 +127,7 @@ const Header = ({ logo, transactions, averageValue, buttonsProps, buttonActionsD
 )
 
 Header.propTypes = {
-  logo: PropTypes.string || PropTypes.object,
+  logo: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   transactions: PropTypes.number,
   id: PropTypes.number || PropTypes.string,
   averageValue: PropTypes.number,
@@ -124,11 +139,12 @@ Header.propTypes = {
       action: PropTypes.string
     })
   ),
-  buttonActionsDetailRow: PropTypes.func
+  buttonActionsDetailRow: PropTypes.func,
+  openGlobalAddForm: PropTypes.func,
+  address: PropTypes.string
 }
-
 Header.defaultProps = {
-  logo: '',
+  logo: null,
   transactions: 0,
   averageValue: 0,
   id: null,
@@ -140,7 +156,9 @@ Header.defaultProps = {
       action: ''
     }
   ],
-  buttonActionsDetailRow: () => {}
+  buttonActionsDetailRow: () => {},
+  openGlobalAddForm: null,
+  address: ''
 }
 
 export default injectIntl(Header)

@@ -172,13 +172,15 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.reject',
       color: '#ffffff !important',
       background: '#f16844 !important',
+      borderColor: '#fce1da',
       action: 'reject',
       confirmId: 'myNetworks.detailRow.modal.reject'
     },
     {
       textId: 'myNetworks.detailRow.accept',
       color: '#ffffff !important',
-      background: '#84c225 !important',
+      background: '##84c225 !important',
+      borderColor: '#f1ffdb ',
       action: 'accept',
       confirmId: 'myNetworks.detailRow.modal.accept'
     }
@@ -188,6 +190,7 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.disconnect',
       color: '#ffffff !important',
       background: '#5e5e5e !important',
+      borderColor: '#cecece !important',
       action: 'disconnect',
       confirmId: 'myNetworks.detailRow.modal.disconnect'
     }
@@ -197,6 +200,7 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.disconnect',
       color: '#ffffff !important',
       background: '#5e5e5e !important',
+      borderColor: '#cecece !important',
       action: 'disconnect',
       confirmId: 'myNetworks.detailRow.modal.disconnect'
     }
@@ -206,6 +210,7 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
+      borderColor: '#fce1da',
       action: 'remove',
       confirmId: 'myNetworks.detailRow.modal.remove'
     }
@@ -215,6 +220,7 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
+      borderColor: '#fce1da',
       action: 'remove',
       confirmId: 'myNetworks.detailRow.modal.remove'
     }
@@ -230,6 +236,7 @@ export const BUTTON_PROPS = {
       textId: 'global.invite',
       color: '#ffffff !important',
       background: '#00c7f9 !important',
+      borderColor: '#d2f6ff !important',
       action: 'invite',
       confirmId: 'myNetworks.detailRow.modal.invite'
     }

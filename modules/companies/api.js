@@ -42,7 +42,6 @@ export async function getAddressSearch(body) {
 export const reRegisterP44 = id => api.patch(`/prodex/api/shipment/${id}/re-register`).then(response => response.data)
 
 export const getUserRoles = () => api.get('/prodex/api/roles?type=COMPANY_COMPATIBLE').then(response => response.data)
-  .then(response => response.data)
 export const getAdminRoles = () => api.get('/prodex/api/roles?type=ONLY_ADMIN').then(response => response.data)
 
 export const getUser = id => api.get(`/prodex/api/users/id/${id}`).then(response => response.data)
