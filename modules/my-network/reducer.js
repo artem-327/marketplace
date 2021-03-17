@@ -5,9 +5,11 @@ export const initialState = {
   loading: false,
   networkStatus: NETWORK_STATUS.ALL,
   all: 0,
-  active: 0,
+  connected: 0,
   pending: 0,
   requested: 0,
+  declined: 0,
+  disconnected: 0,
   isOpenModal: false,
   companyNetworkConnection: null,
   isError: false,
@@ -30,9 +32,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         all: payload?.all,
-        active: payload?.active,
+        connected: payload?.connected,
         pending: payload?.pending,
-        requested: payload?.requested
+        requested: payload?.requested,
+        declined: payload?.declined,
+        disconnected: payload?.disconnected
       }
     }
 

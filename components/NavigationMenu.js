@@ -255,9 +255,10 @@ class Navigation extends Component {
       companiesTabsNames,
       productsTabsNames,
       alertTab,
-      requestedNetworks,
       pendingNetworks,
-      activeNetworks,
+      connectedNetworks,
+      declinedNetworks,
+      disconnectedNetworks,
       allNetworks
     } = this.props
 
@@ -456,7 +457,7 @@ class Navigation extends Component {
                     id: 'navigation.myNetworkActive',
                     defaultMessage: 'Active ({value})'
                   },
-                  { value: activeNetworks }
+                  { value: connectedNetworks }
                 )}
               </Dropdown.Item>
               <Dropdown.Item
@@ -471,6 +472,34 @@ class Navigation extends Component {
                     defaultMessage: 'Pending ({value})'
                   },
                   { value: pendingNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={DivItem}
+                pointer={true}
+                status={NETWORK_STATUS.DECLINED}
+                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DECLINED })}
+                dataTest='navigation_menu_my_network_declined_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkDeclined',
+                    defaultMessage: 'Declined ({value})'
+                  },
+                  { value: declinedNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={DivItem}
+                pointer={true}
+                status={NETWORK_STATUS.DISCONNECTED}
+                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DISCONNECTED })}
+                dataTest='navigation_menu_my_network_disconnected_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkDisconnected',
+                    defaultMessage: 'Disconnected ({value})'
+                  },
+                  { value: disconnectedNetworks }
                 )}
               </Dropdown.Item>
             </PerfectScrollbar>
@@ -874,9 +903,10 @@ export default withAuth(
         alertTab: store?.alerts?.topMenuTab,
         alertsCats: store?.alerts?.categories,
         allNetworks: store?.myNetwork?.all,
-        activeNetworks: store?.myNetwork?.active,
+        connectedNetworks: store?.myNetwork?.connected,
         pendingNetworks: store?.myNetwork?.pending + getSafe(() => store?.myNetwork?.requested, 0),
-        requestedNetworks: store?.myNetwork?.requested
+        declinedNetworks: store?.myNetwork?.declined,
+        disconnectedNetworks: store?.myNetwork?.disconnected
       }),
       {
         triggerSystemSettingsModal,

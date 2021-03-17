@@ -17,8 +17,7 @@ import {
 import { COLORS, CONNECTIONS_STATUSES } from './constants'
 //Services
 import { getLocaleDateFormat } from '../../components/date-format'
-//Components
-import Logo from '../../assets/images/nav/logo-bluepallet.png' //DELETE
+
 //Actions
 import { buttonActionsDetailRow, connectionsStatuses } from './actions'
 
@@ -93,18 +92,22 @@ export const getDate = date => {
  * @param {object[]} rows
  * @return {{
  *   all: number,
- *   active: number,
- *   pending: number,
- *   requested: number
+ *   connected: number,
+ *  pending: number,
+ *  requested: number,
+ *  declined: number,
+ *  disconnected: number
  * }}
  */
 export const getStatuses = rows => {
   if (!rows.length) return
   let result = {
     all: rows.length || 0,
-    active: 0,
+    connected: 0,
     pending: 0,
-    requested: 0
+    requested: 0,
+    declined: 0,
+    disconnected: 0
   }
   rows.forEach(row => result[CONNECTIONS_STATUSES[row?.status]]++)
   return result

@@ -245,26 +245,31 @@ export const BUTTON_PROPS = {
 
 /**
  * @constant {{
- *    ALL: 'ALL',
- *    ACTIVE: 'ACTIVE',
- *    PENDING: 'PENDING',
- *    REQUESTED: 'REQUESTED'
+ *   ALL: 'ALL',
+ *   ACTIVE: 'ACTIVE',
+ *   PENDING: 'PENDING',
+ *   DECLINED: 'DECLINED',
+ *   DISCONNECTED: 'DISCONNECTED',
+ *   REQUESTED: 'REQUESTED'
  *}}
  */
 export const NETWORK_STATUS = {
   ALL: 'ALL',
   ACTIVE: 'ACTIVE',
   PENDING: 'PENDING',
+  DECLINED: 'DECLINED',
+  DISCONNECTED: 'DISCONNECTED',
   REQUESTED: 'REQUESTED'
 }
 
 /**
  * @constant {{
  *    PENDING: 'PENDING',
- *    REQUESTED: 'REQUESTED',
- *    CONNECTED: 'CONNECTED',
- *    DECLINED: 'DECLINED',
- *    DISCONNECTED: 'DISCONNECTED'
+ *   REQUESTED: 'REQUESTED',
+ *   CONNECTED: 'CONNECTED',
+ *   DECLINED: 'DECLINED',
+ *   DISCONNECTED: 'DISCONNECTED',
+ *   INVITE: 'INVITE'
  *}}
  */
 export const STATUSES = {
@@ -280,13 +285,17 @@ export const STATUSES = {
  * @constant {{
  *    PENDING: 'pending',
  *    REQUESTED: 'requested',
- *    CONNECTED: 'active'
+ *    CONNECTED: 'connected',
+ *    DECLINED: 'declined',
+ *    DISCONNECTED: 'disconnected'
  *}}
  */
 export const CONNECTIONS_STATUSES = {
   PENDING: 'pending',
   REQUESTED: 'requested',
-  CONNECTED: 'active'
+  CONNECTED: 'connected',
+  DECLINED: 'declined',
+  DISCONNECTED: 'disconnected'
 }
 
 /**
