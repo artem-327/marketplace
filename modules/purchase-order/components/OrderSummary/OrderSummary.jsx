@@ -37,11 +37,6 @@ const OrderSummary = props => {
   const subTotalPrice = getSafe(() => props.cart.cfPriceSubtotal, '')
   const freightPrice = getSafe(() => props.sectionState.freight.value.estimatedPrice, '')
 
-  console.log('submitButtonDisabled')
-  console.log(submitButtonDisabled)
-  console.log('isNotHazardousPermissions')
-  console.log(isNotHazardousPermissions)
-
   return (
     <GridSummary>
       <Popup
