@@ -13,7 +13,7 @@ import {
 } from '../../settings/actions'
 import { getSafe } from '../../../utils/functions'
 // Constants
-import { certifiedColumns as columns } from './WarehouseCredentials.constants'
+import { columns } from './WarehouseCredentials.constants'
 // Styles
 
 

@@ -7,6 +7,9 @@ import { getSafe } from '~/utils/functions'
 import { StyledGrid, TableSegment, StyledList, DetailMessage, ColumnDetail } from './styles'
 
 function Header({ row, attributes, as }) {
+  if (!attributes.length)
+    return false
+
   return (
     <GridRow>
       <ColumnDetail width={16}>
