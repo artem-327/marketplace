@@ -128,7 +128,7 @@ export const DivBodyRowDetail = styled.div`
   display: block;
   width: 100%;
   border-top: 1px solid #dee2e6;
-  padding: 9px;
+  padding: 1em 1em 0;
 `
 
 export const CustomButton = styled(Button)`

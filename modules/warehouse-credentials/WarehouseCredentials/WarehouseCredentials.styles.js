@@ -1,5 +1,22 @@
 import styled from 'styled-components'
-import { Form, Label } from 'semantic-ui-react'
+import { Form, Header, Label } from 'semantic-ui-react'
+import { ChevronDown, ChevronUp } from 'react-feather'
+
+export const IconDown = styled(ChevronDown)`
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  vertical-align: -4px;
+  color: #848893;
+`
+
+export const IconUp = styled(ChevronUp)`
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  vertical-align: -4px;
+  color: #848893;
+`
 
 export const CertificationLabel = styled(Label)`
   position: relative;
@@ -29,10 +46,24 @@ export const CertificationLabel = styled(Label)`
   }
 `
 
+export const CertHeader = styled(Header)`
+  margin: 0 -1rem !important;
+  border-top: 1px solid #dee2e6 !important;
+  padding: 10px 1em !important;
+  font-size: 1em !important;
+  font-weight: 700 !important;
+  line-height: 1.42857 !important;
+  
+  &:first-child {
+    border-top: 0 none !important;
+    padding-top: 0 !important;
+  }
+`
+
 export const Warehouse = styled.div`
   position: relative;
   float: left;
-  width: calc((100% - 0.5em) / 2);
+  width: calc((100% - 1em) / 2);
   height: 60px;
   margin: 0 0 15px;
   border: 1px solid #dee2e6;
@@ -62,7 +93,7 @@ export const Warehouse = styled.div`
   
   + div {
     float: right;
-    width: calc((100% - 0.5em) / 2) !important;
+    width: calc((100% - 1em) / 2) !important;
   }
 `
 
@@ -78,7 +109,6 @@ export const FileName = styled.div`
   font-size: 14px;
   color: #20273a;
   line-height: 18px;
-  cursor: pointer;
   
   > svg {
     position: absolute;
@@ -91,6 +121,7 @@ export const FileName = styled.div`
     &.download {
       left: auto;
       right: 12px;
+      display: none;
       width: 18px;
       color: #2599d5;
     }
@@ -102,7 +133,18 @@ export const FileName = styled.div`
     font-size: 12px;
     color: #848893;
     line-height: 16px;
+  }
+  
+  &.clickable {
     cursor: pointer;
+    
+    > svg.download {
+      display: block;
+    }
+    
+    > label {
+      cursor: pointer;
+    }
   }
 `
 
@@ -133,5 +175,14 @@ export const FormArea = styled(Form)`
         width: 0;
       }
     }
+  }
+`
+
+export const ButtonGroup = styled.div`
+  padding: 10px 0 1em;
+  text-align: right;
+  
+  button {
+    margin: 0 0 0 1rem !important;
   }
 `

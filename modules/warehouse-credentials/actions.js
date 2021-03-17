@@ -4,10 +4,14 @@ import moment from 'moment'
 import { Datagrid } from '~/modules/datagrid'
 
 export function approveDeaListCertificate(branchId, values) {
+  const approveData = {
+    deaListCertificateIssueDate: moment(values.issueDate).format('YYYY-MM-DD') + 'T00:00:00Z',
+    deaListCertificateExpireDate: moment(values.expDate).format('YYYY-MM-DD') + 'T00:00:00Z'
+  }
   return {
     type: AT.WAREHOUSE_CREDENTIALS_DEA_APPROVE,
     async payload() {
-      const data = await api.approveDeaListCertificate(branchId, values)
+      const data = await api.approveDeaListCertificate(branchId, approveData)
       Datagrid && Datagrid.loadData()
       return data
     }
