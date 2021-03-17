@@ -36,7 +36,7 @@ export const DivCircle = styled.div`
 
 export const DivCircles = styled.div`
   display: flex;
-  height: inherit;
+  height: 100%;
 `
 
 export const DivValueTradeCriteria = styled.div`
@@ -50,5 +50,21 @@ export const DivTextValueTradeCriteria = styled.div`
 `
 
 export const DivButon = styled.div`
-  width: -webkit-fill-available;
+  width: inherit;
+`
+
+export const BMember = styled.b`
+  vertical-align: middle;
+`
+
+export const DivMember = styled.div`
+  height: 100%;
+`
+
+export const SpanDate = styled.span`
+  vertical-align: middle;
+`
+
+export const DivDate = styled.div`
+  height: 100%;
 `

@@ -55,7 +55,7 @@ const TableHandler = props => {
         }}
       />
 
-      <DropdownType
+      {/* <DropdownType
         name='networkStatus'
         value={networkStatus}
         placeholder={props?.intl?.formatMessage({
@@ -68,7 +68,7 @@ const TableHandler = props => {
           setNetworkStatus(data?.value)
           props?.datagrid?.setQuery({ status: data?.value })
         }}
-      />
+      /> */}
       <InviteModal
         onClose={props?.triggerModal}
         open={props?.isOpenModal}

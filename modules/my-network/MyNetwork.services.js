@@ -7,14 +7,17 @@ import {
   DivCircle,
   DivCircles,
   DivValueTradeCriteria,
-  DivTextValueTradeCriteria
+  DivTextValueTradeCriteria,
+  BMember,
+  DivMember,
+  SpanDate,
+  DivDate
 } from './MyNetwork.styles'
 //Constants
 import { COLORS, CONNECTIONS_STATUSES } from './constants'
 //Services
 import { getLocaleDateFormat } from '../../components/date-format'
-//Components
-import Logo from '../../assets/images/nav/logo-bluepallet.png' //DELETE
+
 //Actions
 import { buttonActionsDetailRow, connectionsStatuses } from './actions'
 
@@ -76,7 +79,11 @@ export const getTradeCriteriaValues = criteria => {
  */
 export const getDate = date => {
   if (!date) return null
-  return moment(date).format(getLocaleDateFormat())
+  return (
+    <DivDate>
+      <SpanDate>{moment(date).format(getLocaleDateFormat())}</SpanDate>
+    </DivDate>
+  )
 }
 
 /**
@@ -85,18 +92,22 @@ export const getDate = date => {
  * @param {object[]} rows
  * @return {{
  *   all: number,
- *   active: number,
- *   pending: number,
- *   requested: number
+ *   connected: number,
+ *  pending: number,
+ *  requested: number,
+ *  declined: number,
+ *  disconnected: number
  * }}
  */
 export const getStatuses = rows => {
   if (!rows.length) return
   let result = {
     all: rows.length || 0,
-    active: 0,
+    connected: 0,
     pending: 0,
-    requested: 0
+    requested: 0,
+    declined: 0,
+    disconnected: 0
   }
   rows.forEach(row => result[CONNECTIONS_STATUSES[row?.status]]++)
   return result
@@ -105,20 +116,24 @@ export const getStatuses = rows => {
  * @category My Network
  * @method
  * @param {object} row
+ * @param {object} detailRow
  * @returns {object} Returns object detail row.
  */
-export const getRowDetail = row => {
+export const getRowDetail = (row, detailRow) => {
   if (!row) return
-  let address = row?.connectedCompany?.primaryAddress
+
+  let r = typeof row?.connectionId !== 'undefined' && detailRow?.connectionId === row?.connectionId ? detailRow : row
+  let address = r?.connectedCompany?.primaryAddress
+
   return {
     ...row,
     id: row?.connectionId || row?.connectedCompany?.tradepassId,
     member: (
-      <div key={row?.connectionId || row?.connectedCompany?.tradepassId}>
+      <DivMember key={row?.connectionId || row?.connectedCompany?.tradepassId}>
         <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.logo} />
 
-        <b>{row?.connectedCompany?.name}</b>
-      </div>
+        <BMember>{row?.connectedCompany?.name}</BMember>
+      </DivMember>
     ),
     logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.logo} />,
     address: `${address?.streetAddress} ${address?.city}, ${address?.province?.abbreviation} ${address?.country?.code}`,
@@ -130,32 +145,36 @@ export const getRowDetail = row => {
     buttonActionsDetailRow: buttonActionsDetailRow,
     tradeCriteria: getTradeCriteriaValues(row?.criteria || row?.connectedCompany?.criteria),
     legalData: {
-      legalBusinessName: row?.connectedCompany?.name,
-      ein: row?.connectedCompany?.tin,
-      telephoneNumber: row?.connectedCompany?.phone,
-      inBusinessSince: row?.connectedCompany?.inBusinessSince,
-      numberOfEmployees: (
-        <FormattedNumber
-          minimumFractionDigits={0}
-          maximumFractionDigits={0}
-          value={row?.connectedCompany?.numberOfEmployees || 0}
-        />
-      )
+      legalBusinessName: r?.connectedCompany?.name,
+      ein: r?.connectedCompany?.tin,
+      telephoneNumber: r?.connectedCompany?.phone,
+      inBusinessSince: r?.connectedCompany?.inBusinessSince,
+      numberOfEmployees: r?.connectedCompany?.numberOfEmployees
+        ? {
+            numberOfEmployees: (
+              <FormattedNumber
+                minimumFractionDigits={0}
+                maximumFractionDigits={0}
+                value={r?.connectedCompany?.numberOfEmployees || 0}
+              />
+            )
+          }
+        : null
     },
     marketingData: {
-      website: row?.connectedCompany?.website,
-      facebookHandle: row?.connectedCompany?.socialFacebook,
-      instagramHandle: row?.connectedCompany?.socialInstagram,
-      linkedInHandle: row?.connectedCompany?.socialLinkedin,
-      twitterHandle: row?.connectedCompany?.socialTwitter,
-      tradePassConnection: row?.connectedCompany?.connectionsCount || 0
+      website: r?.connectedCompany?.website,
+      facebookHandle: r?.connectedCompany?.socialFacebook,
+      instagramHandle: r?.connectedCompany?.socialInstagram,
+      linkedInHandle: r?.connectedCompany?.socialLinkedin,
+      twitterHandle: r?.connectedCompany?.socialTwitter,
+      tradePassConnection: r?.connectedCompany?.connectionsCount || 0
     },
     verifiedData: {
-      articlesIncorporation: row?.connectedCompany?.articlesOfIncorporation === 'VERIFIED' ? 'Verified' : 'Unverified',
-      certificateInsurance: row?.connectedCompany?.certificateOfInsurance === 'VERIFIED' ? 'Verified' : 'Unverified',
-      linkedBankAccounts: row?.connectedCompany?.linkedBankAccount === 'VERIFIED' ? 'Verified' : 'Unverified',
+      articlesIncorporation: r?.connectedCompany?.articlesOfIncorporation === 'VERIFIED' ? 'Verified' : 'Unverified',
+      certificateInsurance: r?.connectedCompany?.certificateOfInsurance === 'VERIFIED' ? 'Verified' : 'Unverified',
+      linkedBankAccounts: r?.connectedCompany?.linkedBankAccount === 'VERIFIED' ? 'Verified' : 'Unverified',
       tradeOrganization:
-        row?.connectedCompany?.tradeOrganizations?.map(org => org?.short_name)?.toString() || 'Unverified'
+        r?.connectedCompany?.tradeOrganizations?.map(org => org?.short_name)?.toString() || 'Unverified'
     }
   }
 }

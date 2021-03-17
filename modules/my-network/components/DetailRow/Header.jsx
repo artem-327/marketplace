@@ -41,7 +41,7 @@ const Header = ({
 }) => (
   <Grid.Row>
     <GridColumnDetail>
-      <SegmentGroupHeader horizontal alignItems={'align-items: center !important'}>
+      <SegmentGroupHeader horizontal $alignItems={'align-items: center !important'}>
         <SegmentCustom textAlign='left'>
           {logo}
           <div>{address}</div>
@@ -129,7 +129,7 @@ const Header = ({
 Header.propTypes = {
   logo: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   transactions: PropTypes.number,
-  id: PropTypes.number || PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   averageValue: PropTypes.number,
   buttonsProps: PropTypes.arrayOf(
     PropTypes.shape({

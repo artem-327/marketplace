@@ -5,12 +5,16 @@ export const initialState = {
   loading: false,
   networkStatus: NETWORK_STATUS.ALL,
   all: 0,
-  active: 0,
+  connected: 0,
   pending: 0,
   requested: 0,
+  declined: 0,
+  disconnected: 0,
   isOpenModal: false,
   companyNetworkConnection: null,
-  isError: false
+  isError: false,
+  loadingDetailRow: false,
+  detailRow: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -28,9 +32,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         all: payload?.all,
-        active: payload?.active,
-        pending: payload?.pending,
-        requested: payload?.requested
+        connected: payload.connected || 0,
+        pending: payload.pending || 0,
+        requested: payload.requested || 0,
+        declined: payload.declined || 0,
+        disconnected: payload.disconnected || 0
       }
     }
 
@@ -64,6 +70,27 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         isError: true
+      }
+    }
+
+    case AT.GET_CONNECTION_PENDING: {
+      return {
+        ...state,
+        loadingDetailRow: true
+      }
+    }
+    case AT.GET_CONNECTION_FULFILLED: {
+      return {
+        ...state,
+        loadingDetailRow: false,
+        detailRow: payload
+      }
+    }
+
+    case AT.GET_CONNECTION_REJECTED: {
+      return {
+        ...state,
+        loadingDetailRow: false
       }
     }
 
