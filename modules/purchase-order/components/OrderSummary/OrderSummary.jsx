@@ -19,7 +19,15 @@ import { GridSummary, LinkLabel } from './OrderSummary.styles'
  * @component
  */
 const OrderSummary = props => {
-  const { buttonText, onButtonClick, allAccepted, submitButtonDisabled, loading, isNotHazardousPermissions } = props
+  const {
+    buttonText,
+    onButtonClick,
+    allAccepted,
+    submitButtonDisabled,
+    loading,
+    subTotalPrice,
+    isNotHazardousPermissions
+  } = props
 
   const priceComponent = val =>
     val ? (
@@ -34,13 +42,7 @@ const OrderSummary = props => {
       '-'
     )
 
-  const subTotalPrice = getSafe(() => props.cart.cfPriceSubtotal, '')
-  const freightPrice = getSafe(() => props.sectionState.freight.value.estimatedPrice, '')
-
-  console.log('submitButtonDisabled')
-  console.log(submitButtonDisabled)
-  console.log('isNotHazardousPermissions')
-  console.log(isNotHazardousPermissions)
+  const freightPrice = getSafe(() => props.sectionState.freight.value.cfEstimatedSubtotal, '')
 
   return (
     <GridSummary>
