@@ -11,6 +11,7 @@ export const INIT_VALUES = {
   caprop65TypeofToxicity: '',
   casIndexName: '',
   casNumber: '',
+  cfChemicalOfInterest: false,
   criticalTemperature: '',
   deaDeaCode: '',
   deaListI: false,

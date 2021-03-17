@@ -53,8 +53,51 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
   try {
     let payload = { ...values }
 
+    if (!payload.cfChemicalOfInterest) {
+      [
+        'dhsSecurityIssueReleaseToxic', 'dhsReleaseMinimumConcentration',
+        'dhsSecurityIssueReleaseFlammables', 'dhsReleaseScreeningThresholdQuantities',
+        'dhsSecurityIssueReleaseExplosives', 'dhsTheftMinimumConcentration',
+        'dhsSecurityIssueTheftCWCWP', 'dhsTheftScreeningThresholdQuantities',
+        'dhsSecurityIssueTheftWME', 'dhsSabotageMinimumConcentrationPercent',
+        'dhsSecurityIssueTheftEXPIEDP', 'dhsSabotageScreeningThresholdQuantities',
+        'dhsSecurityIssueSabotageContamination'
+      ]
+        .forEach(el => {
+          if (popupValues && popupValues[el]) {
+            payload[el] = popupValues[el]
+          } else {
+            delete payload[el]
+          }
+        })
+    }
+
+    if (!payload.caprop65) {
+      ['caprop65DateListed', 'caprop65ListingMechanism', 'caprop65NSRLorMADL', 'caprop65TypeofToxicity']
+        .forEach(el => {
+          if (popupValues && popupValues[el]) {
+            payload[el] = popupValues[el]
+          } else {
+            delete payload[el]
+          }
+        })
+    }
+
+    if (!payload.reach) {
+      ['reachExposureScenario', 'reachSumi']
+        .forEach(el => {
+          if (popupValues && popupValues[el]) {
+            payload[el] = popupValues[el]
+          } else {
+            delete payload[el]
+          }
+        })
+    }
+
     delete payload.propertiesFilter
+    delete payload.cfChemicalOfInterest
     removeEmpty(payload)
+
     if (popupValues) {
       const { value } = await updateCasProductRequest(popupValues.id, payload)
       datagrid.updateRow(popupValues.id, () => value)

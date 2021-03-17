@@ -115,6 +115,7 @@ const CasProductsSidebarContent = props => {
         <CasProductSection
           label={<FormattedMessage id='global.regulatoryDhsCoi' defaultMessage='DHS COI' />}
           items={GROUP_DHS_COI}
+          toggle={'cfChemicalOfInterest'}
           formikProps={formikProps}
         />
       )}
