@@ -78,16 +78,9 @@ export function postNewCasProductRequest(values) {
 }
 
 export function updateCasProductRequest(id, values) {
-  return async dispatch => {
-    const editedCasProduct = await api.updateCasProduct(id, values)
-    await dispatch({
-      type: AT.PRODUCTS_UPDATE_CAS_PRODUCT,
-      payload: editedCasProduct
-    })
-    dispatch(closePopup())
-    Datagrid.updateRow(id, () => ({ ...values, id: id }))
-    // Reload CAS Product list using filters
-    // dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
+  return {
+    type: AT.PRODUCTS_UPDATE_CAS_PRODUCT,
+    payload: api.updateCasProduct(id, values)
   }
 }
 
