@@ -134,7 +134,7 @@ const FreightSelection = props => {
                                 maximumFractionDigits={2}
                                 style='currency'
                                 currency={currency}
-                                value={item.estimatedPrice}
+                                value={item.cfEstimatedSubtotal}
                               />
                             </DivSectionName>
                           </div>
@@ -270,7 +270,7 @@ const FreightSelection = props => {
                             onValueChange({
                               freightType: FREIGHT_TYPES.ECHO,
                               carrierName: value,
-                              estimatedPrice: '',
+                              cfEstimatedSubtotal: '',
                               estimatedDeliveryDate: '',
                               quoteId: value
                             })
@@ -290,13 +290,13 @@ const FreightSelection = props => {
               <DivSectionCollapsedRow>
                 <DivSectionName>{value ? value.carrierName : ''}</DivSectionName>
                 <DivSectionDescription>
-                  {value && value.estimatedPrice ? (
+                  {value && value.cfEstimatedSubtotal ? (
                     <FormattedNumber
                       minimumFractionDigits={2}
                       maximumFractionDigits={2}
                       style='currency'
                       currency={currency}
-                      value={value ? value.estimatedPrice : 0}
+                      value={value ? value.cfEstimatedSubtotal : 0}
                     />
                   ) : (
                     ''
