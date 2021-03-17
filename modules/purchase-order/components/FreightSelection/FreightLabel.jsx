@@ -57,7 +57,7 @@ const FreightLabel = props => {
                   freightType: FREIGHT_TYPES.OWN,
                   carrierName:
                     <FormattedMessage id='cart.usingOwnFreight' defaultMessage='You are using your own freight' />,
-                  estimatedPrice: '',
+                  cfEstimatedSubtotal: '',
                   estimatedDeliveryDate: '',
                   quoteId: ''
                 })}

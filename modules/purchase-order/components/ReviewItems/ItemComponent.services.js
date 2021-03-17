@@ -1,5 +1,6 @@
 import confirm from '~/components/Confirmable/confirm'
 import Router from 'next/router'
+import { getSafe, getPrice } from '~/utils/functions'
 
 
 export const deleteCart = async (id, props) => {
@@ -34,4 +35,10 @@ export const deleteCart = async (id, props) => {
     }
     return (false)
   }
+}
+
+export const getTotalPrice = (quantity, item) => {
+  return isNaN(parseInt(quantity))
+    ? 0
+    : getPrice(parseInt(quantity), item.productOffer.pricingTiers) * quantity * item.packagingSize
 }
