@@ -316,7 +316,7 @@ export default {
       .catch(err => err),
   getTradeCriteria: () =>
     api
-      .get('/prodex/api/settings/company?groups=TRADEPASS')
+      .get('/prodex/api/settings/company?groups=TRADEPASS_CRITERIA')
       .then(response => response.data)
       .catch(err => err)
 }
