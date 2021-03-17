@@ -29,7 +29,7 @@ function Content({ items, attributes, separatedRows, hiddenDetailContentHeader, 
           }
           <DivBodyTable separatedRows={separatedRows}>
             {items.map((item, index) => (
-              <DivBodyRowTable isLastRow={index === items.length - 1} separatedRows={separatedRows} canWrap={item.opened} onClick={() => onDetailRowClick(item.id)}>
+              <DivBodyRowTable isLastRow={index === items.length - 1} separatedRows={separatedRows} canWrap={item.opened} onClick={() => onDetailRowClick(item.id)} className={item.opened ? 'opened' : 'closed'}>
                 {attributes.map(attr => (
                   <DivBodyColumnTable widthProp={attr.width}>{item[attr.name]}</DivBodyColumnTable>
                 ))}

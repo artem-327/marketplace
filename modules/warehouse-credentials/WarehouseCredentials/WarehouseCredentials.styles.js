@@ -128,7 +128,7 @@ export const FileName = styled.div`
   }
   
   > label {
-    display: block;
+    display: block !important;
     margin: 0;
     font-size: 12px;
     color: #848893;

@@ -2155,10 +2155,25 @@ i.file {
           [class="row"] {
             padding: 0 !important;
           }
+
+          div.opened,
+          div.closed {
+            font-weight: 700 !important;
+
+            > div:nth-child(2) {
+              font-weight: 400 !important;
+            }
+          }
+
+          div.closed {
+            background-color: #edeef2 !important;
+            color: #848893 !important;
+          }
         }
 
         &[class] > td {
           overflow: visible !important;
+          font-weight: 700 !important;
 
           &[class]:not(.p-0):after {
             content: "";
