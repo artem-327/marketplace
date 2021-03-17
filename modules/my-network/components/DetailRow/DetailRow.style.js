@@ -72,7 +72,7 @@ export const DivCircle = styled.div`
   width: 100px;
   height: 100px;
   border-radius: 50px;
-  border: solid 10px #fce1da;
+  border: ${({ borderColor }) => (borderColor ? `solid 10px ${borderColor}` : 'solid 10px #fff')};
   background-color: ${({ background }) => (background ? background : '#f16844')};
   color: #fff;
   display: flex;
