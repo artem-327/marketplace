@@ -32,11 +32,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         all: payload?.all,
-        connected: payload?.connected,
-        pending: payload?.pending,
-        requested: payload?.requested,
-        declined: payload?.declined,
-        disconnected: payload?.disconnected
+        connected: payload.connected || 0,
+        pending: payload.pending || 0,
+        requested: payload.requested || 0,
+        declined: payload.declined || 0,
+        disconnected: payload.disconnected || 0
       }
     }
 
