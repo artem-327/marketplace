@@ -88,7 +88,7 @@ a.ui.button {
   }
 
   &.primary {
-    background: #00c7f9;
+    background: #2085d0;
     font-weight: 500;
     color: #ffffff;
 
@@ -98,12 +98,12 @@ a.ui.button {
     }
 
     &:focus {
-      background-color: #00c7f9;
+      background-color: #2085d0;
       color: #ffffff;
     }
 
     &[disabled] {
-      background-color: #b2eefd;
+      background-color: #bcdaf1;
       color: #ffffff;
     }
 
