@@ -83,6 +83,17 @@ class Messages extends Component {
       clientMessage = errorTypeDuplicateItem
     }
 
+    if (
+      exceptionErrorJSON &&
+      (getSafe(() => exceptionErrorJSON.description, '') ||
+        getSafe(() => exceptionMessage.indexOf('description'), -1) >= 0) &&
+      (getSafe(() => exceptionErrorJSON.error_type, '') === 'DATA_VALIDATION' ||
+        getSafe(() => exceptionMessage.indexOf('DATA_VALIDATION'), -1) >= 0)
+    ) {
+      const dataValidation = exceptionMessage.split('description={')[1].split('}')[0]
+      clientMessage = `${clientMessage} ${dataValidation}`
+    }
+
     const isPaymentEndpoint = url.startsWith('/prodex/api/payments')
     const dwollaValidationError =
       isPaymentEndpoint &&
