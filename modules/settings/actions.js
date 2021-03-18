@@ -625,12 +625,12 @@ export function getStoredCSV(data) {
 
 export function postNewUserRequest(payload, userSettings) {
   return async dispatch => {
-    const user = api.postNewUser(payload)
-    dispatch({
+    const user = await api.postNewUser(payload)
+    await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
       payload: user
     })
-    dispatch(updateSettingsCompanyUser(user.id, userSettings))
+    await dispatch(updateSettingsCompanyUser(user.id, userSettings))
   }
 }
 
