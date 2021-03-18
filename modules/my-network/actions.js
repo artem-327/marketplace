@@ -9,7 +9,7 @@ export const filterStatusNetwork = networkStatus => ({
 
 export const disconnect = id => ({
   type: AT.DISCONNECT,
-  payload: api.remove(id)
+  payload: api.disconnect(id)
 })
 
 export const reject = id => ({
