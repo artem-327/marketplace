@@ -27,9 +27,7 @@ import {
 import { OPTIONS_QUANTITY, CART_ITEM_TYPES } from './ItemComponent.constants'
 
 // Services
-import { deleteCart } from './ItemComponent.services'
-
-import ErrorFocus from '../../../../components/error-focus'
+import { deleteCart, getTotalPrice } from './ItemComponent.services'
 
 const ItemComponent = props => {
   const { onClickDelete, onValueChange, value, index, item } = props
@@ -50,7 +48,7 @@ const ItemComponent = props => {
           size='18'
           onClick={async () => {
             const result = await deleteCart(item.id, props)
-            if (result) onClickDelete(item.id)
+            if (result) onClickDelete(index)
           }}
         />
       </GridRowHeader>
@@ -129,8 +127,16 @@ const ItemComponent = props => {
                   selection
                   inputProps={{
                     search: true,
-                    onSearchChange: (_, { searchQuery }) => onValueChange(searchQuery),
-                    onChange: (_, { value }) => onValueChange(value),
+                    onSearchChange: (_, { searchQuery }) =>
+                      onValueChange({
+                        val: searchQuery,
+                        price: getTotalPrice(searchQuery, item)
+                      }),
+                    onChange: (_, { value }) =>
+                      onValueChange({
+                        val: value,
+                        price: getTotalPrice(value, item)
+                      }),
                     disabled:
                       item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
                       item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
@@ -143,7 +149,11 @@ const ItemComponent = props => {
                   name={`items[${index}].quantity`}
                   selection
                   inputProps={{
-                    onChange: (_, { value }) => onValueChange(value),
+                    onChange: (_, { value }) =>
+                      onValueChange({
+                        val: value,
+                        price: getTotalPrice(value, item)
+                      }),
                     disabled:
                       item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
                       item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||

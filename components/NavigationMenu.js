@@ -112,7 +112,8 @@ class Navigation extends Component {
     myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
     alerts: getSafe(() => Router.router.pathname === '/alerts', false),
     credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/all', false),
-    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false)
+    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false),
+    activeNetworkStatus: 'ALL'
   }
 
   componentDidMount() {
@@ -257,9 +258,10 @@ class Navigation extends Component {
       companiesTabsNames,
       productsTabsNames,
       alertTab,
-      requestedNetworks,
       pendingNetworks,
-      activeNetworks,
+      connectedNetworks,
+      declinedNetworks,
+      disconnectedNetworks,
       allNetworks
     } = this.props
 
@@ -294,17 +296,18 @@ class Navigation extends Component {
       )
     })
 
-    const DivItem = ({ children, dataTest, networkStatus, pointer }) => {
+    const DivItem = ({ children, dataTest, networkStatus, pointer, status }) => {
       return (
         <DivNavItem
           pointer={pointer}
           data-test={dataTest}
+          $highlighted={status === this.state.activeNetworkStatus}
           onClick={async e => {
             e.stopPropagation()
             if (typeof networkStatus === 'function') {
               await networkStatus()
             }
-            this.setState({ myNetwork: true })
+            this.setState({ myNetwork: true, activeNetworkStatus: status })
           }}>
           {children}
         </DivNavItem>
@@ -437,6 +440,7 @@ class Navigation extends Component {
                 as={DivItem}
                 pointer={true}
                 dataTest='navigation_menu_my_Network_all_drpdn'
+                status={NETWORK_STATUS.ALL}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ALL })}>
                 {formatMessage(
                   {
@@ -449,6 +453,7 @@ class Navigation extends Component {
               <Dropdown.Item
                 as={DivItem}
                 pointer={true}
+                status={NETWORK_STATUS.ACTIVE}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ACTIVE })}
                 dataTest='navigation_menu_my_network_active_drpdn'>
                 {formatMessage(
@@ -456,12 +461,13 @@ class Navigation extends Component {
                     id: 'navigation.myNetworkActive',
                     defaultMessage: 'Active ({value})'
                   },
-                  { value: activeNetworks }
+                  { value: connectedNetworks }
                 )}
               </Dropdown.Item>
               <Dropdown.Item
                 as={DivItem}
                 pointer={true}
+                status={NETWORK_STATUS.PENDING}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.PENDING })}
                 dataTest='navigation_menu_my_network_pending_drpdn'>
                 {formatMessage(
@@ -474,14 +480,30 @@ class Navigation extends Component {
               </Dropdown.Item>
               <Dropdown.Item
                 as={DivItem}
-                //networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.REQUESTED })}
-                dataTest='navigation_menu_my_network_requested_drpdn'>
+                pointer={true}
+                status={NETWORK_STATUS.DECLINED}
+                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DECLINED })}
+                dataTest='navigation_menu_my_network_declined_drpdn'>
                 {formatMessage(
                   {
-                    id: 'navigation.myNetworkRequested',
-                    defaultMessage: 'Requested ({value})'
+                    id: 'navigation.myNetworkDeclined',
+                    defaultMessage: 'Declined ({value})'
                   },
-                  { value: requestedNetworks }
+                  { value: declinedNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={DivItem}
+                pointer={true}
+                status={NETWORK_STATUS.DISCONNECTED}
+                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DISCONNECTED })}
+                dataTest='navigation_menu_my_network_disconnected_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkDisconnected',
+                    defaultMessage: 'Disconnected ({value})'
+                  },
+                  { value: disconnectedNetworks }
                 )}
               </Dropdown.Item>
             </PerfectScrollbar>
@@ -922,9 +944,10 @@ export default withAuth(
         alertTab: store?.alerts?.topMenuTab,
         alertsCats: store?.alerts?.categories,
         allNetworks: store?.myNetwork?.all,
-        activeNetworks: store?.myNetwork?.active,
-        pendingNetworks: store?.myNetwork?.pending,
-        requestedNetworks: store?.myNetwork?.requested
+        connectedNetworks: store?.myNetwork?.connected,
+        pendingNetworks: store?.myNetwork?.pending + getSafe(() => store?.myNetwork?.requested, 0),
+        declinedNetworks: store?.myNetwork?.declined,
+        disconnectedNetworks: store?.myNetwork?.disconnected
       }),
       {
         triggerSystemSettingsModal,

@@ -5,8 +5,8 @@ export const SegmentGroupHeader = styled(Segment.Group)`
   margin: 0 !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
-  ${({ noneBorder }) => noneBorder && 'border: none !important'};
-  ${({ alignItems }) => alignItems && alignItems};
+  ${({ $noneBorder }) => $noneBorder && 'border: none !important'};
+  ${({ $alignItems }) => $alignItems && $alignItems};
 `
 
 export const SegmentCustom = styled(Segment)`
@@ -64,6 +64,10 @@ export const GridRowBottomSegment = styled(Grid.Row)`
   padding: 20px 0px !important;
 `
 
+export const GridRowLoadingBottomSegment = styled(Grid.Row)`
+  margin-top: 20px !important;
+`
+
 export const SegmentBottom = styled(Segment)`
   padding-top: 0px !important;
 `
@@ -72,7 +76,7 @@ export const DivCircle = styled.div`
   width: 100px;
   height: 100px;
   border-radius: 50px;
-  border: solid 10px #fce1da;
+  border: ${({ borderColor }) => (borderColor ? `solid 10px ${borderColor}` : 'solid 10px #fff')};
   background-color: ${({ background }) => (background ? background : '#f16844')};
   color: #fff;
   display: flex;
@@ -81,7 +85,8 @@ export const DivCircle = styled.div`
 `
 
 export const DivModal = styled.div`
-  text-align: -webkit-center !important;
+  display: flex;
+  justify-content: center;
 `
 
 export const DivIconCollapse = styled.div`

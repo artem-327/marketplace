@@ -1852,7 +1852,7 @@ export default function reducer(state = initialState, action) {
       let tradeCriteria = state?.tradeCriteria
       if (payload?.settingGroups?.length) {
         payload?.settingGroups?.forEach(p => {
-          if (p?.code === 'TRADEPASS') {
+          if (p?.code === 'TRADEPASS_CRITERIA') {
             tradeCriteria = p?.settings
           }
         })
@@ -1884,7 +1884,7 @@ export default function reducer(state = initialState, action) {
       let tradeCriteria = null
       if (payload?.length) {
         payload?.forEach(p => {
-          if (p?.code === 'TRADEPASS') {
+          if (p?.code === 'TRADEPASS_CRITERIA') {
             tradeCriteria = p?.settings
           }
         })

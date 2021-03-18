@@ -6,7 +6,7 @@ import { withDatagrid } from '../../datagrid'
 //Services
 import { getStatuses, getRowDetail } from '../MyNetwork.services'
 //Actions
-import { buttonActionsDetailRow, connectionsStatuses } from '../actions'
+import { buttonActionsDetailRow, connectionsStatuses, getConnection } from '../actions'
 import { getCompanyLogo } from '../../company-form/actions'
 
 //Constants
@@ -15,7 +15,8 @@ import { mockRows } from '../constants'
 const mapDispatchToProps = {
   buttonActionsDetailRow,
   connectionsStatuses,
-  getCompanyLogo
+  getCompanyLogo,
+  getConnection
 }
 
 const mapStateToProps = ({ myNetwork }, { datagrid }) => {
@@ -25,8 +26,9 @@ const mapStateToProps = ({ myNetwork }, { datagrid }) => {
     datagrid,
     loadingDatagrid: datagrid.loading,
     statuses: getStatuses(mockRows),
-    rows: rows?.length ? rows.map(row => getRowDetail(row)) : [],
-    inviteDetailCompany: getRowDetail(myNetwork?.companyNetworkConnection)
+    rows: rows?.length ? rows.map(row => getRowDetail(row, myNetwork?.detailRow)) : [],
+    inviteDetailCompany: getRowDetail(myNetwork?.companyNetworkConnection),
+    loadingDetailRow: myNetwork?.loadingDetailRow
   }
 }
 

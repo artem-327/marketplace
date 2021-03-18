@@ -2316,7 +2316,7 @@ class AddEditEchoProduct extends React.Component {
 
                 <DivBottomSidebar>
                   <BasicButton
-                    noborder
+                    noBorder
                     inputProps={{ type: 'button' }}
                     onClick={() => {
                       if (this.state.changedAttachments) datagrid.loadData()

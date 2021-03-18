@@ -40,7 +40,6 @@ const ReviewItems = props => {
     sectionState,
     onValueChange,
     setSummaryButtonCaption,
-    initValues,
     cartItems,
     cartIsFetching,
     offerDetailIsFetching
@@ -80,11 +79,12 @@ const ReviewItems = props => {
           onSubmit={values => {}}
           enableReinitialize
           validateOnChange={false}
-          initialValues={{ items: initValues }}
+          initialValues={{ items: props.value }}
           validationSchema={getValidationScheme()}
           render={formikProps => {
             selfFormikProps = formikProps
             const { values, errors } = formikProps
+
             return (
               <Form loading={offerDetailIsFetching || cartIsFetching}>
                 {sectionState.accepted || isExpanded ? (
@@ -98,12 +98,14 @@ const ReviewItems = props => {
                               item={item}
                               index={index}
                               value={getSafe(() => values.items[index].quantity.toString(), '')}
-                              onValueChange={async val => {
+                              onValueChange={async ({ val, price }) => {
                                 await formikProps.setFieldValue(`items[${index}].quantity`, val)
+                                await formikProps.setFieldValue(`items[${index}].price`, price)
                                 await formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
                                 const newErrors = await formikProps.validateForm()
                                 let newValues = values.items.slice()
                                 newValues[index].quantity = val
+                                newValues[index].price = price
                                 onValueChange({ value: newValues, errors: !!newErrors.items })
                               }}
                             />
@@ -163,14 +165,7 @@ function mapStateToProps(store, props) {
         packagingSize: getSafe(() => item.productOffer.companyProduct.packagingSize, 1),
         packaging
       }
-    }),
-    initValues: props.cartItems.map(item => ({
-      id: item.id,
-      quantity: item.pkgAmount.toString(),
-      minPkg: item.productOffer.minPkg,
-      splitPkg: item.productOffer.splitPkg,
-      pkgAvailable: item.productOffer.pkgAvailable
-    }))
+    })
   }
 }
 

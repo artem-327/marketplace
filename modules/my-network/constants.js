@@ -172,6 +172,7 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.reject',
       color: '#ffffff !important',
       background: '#f16844 !important',
+      borderColor: '#fce1da !important',
       action: 'reject',
       confirmId: 'myNetworks.detailRow.modal.reject'
     },
@@ -179,6 +180,7 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.accept',
       color: '#ffffff !important',
       background: '#84c225 !important',
+      borderColor: '#f1ffdb !important',
       action: 'accept',
       confirmId: 'myNetworks.detailRow.modal.accept'
     }
@@ -188,6 +190,7 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.disconnect',
       color: '#ffffff !important',
       background: '#5e5e5e !important',
+      borderColor: '#cecece !important',
       action: 'disconnect',
       confirmId: 'myNetworks.detailRow.modal.disconnect'
     }
@@ -197,6 +200,7 @@ export const BUTTON_PROPS = {
       textId: 'myNetworks.detailRow.disconnect',
       color: '#ffffff !important',
       background: '#5e5e5e !important',
+      borderColor: '#cecece !important',
       action: 'disconnect',
       confirmId: 'myNetworks.detailRow.modal.disconnect'
     }
@@ -206,6 +210,7 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
+      borderColor: '#fce1da !important',
       action: 'remove',
       confirmId: 'myNetworks.detailRow.modal.remove'
     }
@@ -215,6 +220,7 @@ export const BUTTON_PROPS = {
       textId: 'global.remove',
       color: '#ffffff !important',
       background: '#f16844 !important',
+      borderColor: '#fce1da !important',
       action: 'remove',
       confirmId: 'myNetworks.detailRow.modal.remove'
     }
@@ -230,6 +236,7 @@ export const BUTTON_PROPS = {
       textId: 'global.invite',
       color: '#ffffff !important',
       background: '#00c7f9 !important',
+      borderColor: '#d2f6ff !important',
       action: 'invite',
       confirmId: 'myNetworks.detailRow.modal.invite'
     }
@@ -238,26 +245,31 @@ export const BUTTON_PROPS = {
 
 /**
  * @constant {{
- *    ALL: 'ALL',
- *    ACTIVE: 'ACTIVE',
- *    PENDING: 'PENDING',
- *    REQUESTED: 'REQUESTED'
+ *   ALL: 'ALL',
+ *   ACTIVE: 'ACTIVE',
+ *   PENDING: 'PENDING',
+ *   DECLINED: 'DECLINED',
+ *   DISCONNECTED: 'DISCONNECTED',
+ *   REQUESTED: 'REQUESTED'
  *}}
  */
 export const NETWORK_STATUS = {
   ALL: 'ALL',
   ACTIVE: 'ACTIVE',
   PENDING: 'PENDING',
+  DECLINED: 'DECLINED',
+  DISCONNECTED: 'DISCONNECTED',
   REQUESTED: 'REQUESTED'
 }
 
 /**
  * @constant {{
  *    PENDING: 'PENDING',
- *    REQUESTED: 'REQUESTED',
- *    CONNECTED: 'CONNECTED',
- *    DECLINED: 'DECLINED',
- *    DISCONNECTED: 'DISCONNECTED'
+ *   REQUESTED: 'REQUESTED',
+ *   CONNECTED: 'CONNECTED',
+ *   DECLINED: 'DECLINED',
+ *   DISCONNECTED: 'DISCONNECTED',
+ *   INVITE: 'INVITE'
  *}}
  */
 export const STATUSES = {
@@ -273,13 +285,17 @@ export const STATUSES = {
  * @constant {{
  *    PENDING: 'pending',
  *    REQUESTED: 'requested',
- *    CONNECTED: 'active'
+ *    CONNECTED: 'connected',
+ *    DECLINED: 'declined',
+ *    DISCONNECTED: 'disconnected'
  *}}
  */
 export const CONNECTIONS_STATUSES = {
   PENDING: 'pending',
   REQUESTED: 'requested',
-  CONNECTED: 'active'
+  CONNECTED: 'connected',
+  DECLINED: 'declined',
+  DISCONNECTED: 'disconnected'
 }
 
 /**

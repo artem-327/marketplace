@@ -46,7 +46,7 @@ export const buttonActionsDetailRow = (action, id) => {
         await dispatch(reject(id))
         break
       case 'accept':
-        await accept(reject(id))
+        await dispatch(accept(id))
         break
       case 'remove':
         await dispatch(remove(id))
@@ -61,7 +61,7 @@ export const buttonActionsDetailRow = (action, id) => {
       default:
         break
     }
-    Datagrid.loadData()
+    Datagrid?.loadData()
   }
 }
 
@@ -93,3 +93,8 @@ export const search = id => {
       )
   }
 }
+
+export const getConnection = id => ({
+  type: AT.GET_CONNECTION,
+  payload: api.getConnection(id)
+})
