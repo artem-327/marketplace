@@ -19,7 +19,8 @@ import {
   Coffee,
   ChevronDown,
   ChevronUp,
-  Globe
+  Globe,
+  Menu as MenuIcon
 } from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -110,6 +111,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
     myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
     alerts: getSafe(() => Router.router.pathname === '/alerts', false),
+    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/all', false),
+    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false),
     activeNetworkStatus: 'ALL'
   }
 
@@ -274,7 +277,8 @@ class Navigation extends Component {
       marketplace,
       wantedBoard,
       myNetwork,
-      alerts
+      alerts,
+      credentials
     } = this.state
 
     const MenuLink = withRouter(({ router: { pathname }, to, children, tab, className, dataTest }) => {
@@ -818,6 +822,43 @@ class Navigation extends Component {
               </Dropdown.Menu>
             </DropdownItem>
           </>
+        )}
+        {isAdmin && (
+          <DropdownItem
+            icon={<MenuIcon size={22} />}
+            text={
+              <>
+                <FormattedMessage id='navigation.credentials' defaultMessage='Warehouse Credentials' />
+                {credentials ? <ChevronUp /> : <ChevronDown />}
+              </>
+            }
+          className={credentials ? 'opened' : null}
+          open={credentials.toString()}
+          onClick={(data, e) => {
+            this.toggleOpened('credentials', '/warehouse-credentials/all')
+          }}
+          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+          refId={'credentials'}
+          data-test='navigation_menu_credentials_drpdn'>
+            <Dropdown.Menu data-test='navigation_menu_credentials_menu'>
+              <PerfectScrollbar>
+                <Dropdown.Item
+                  key={0}
+                  as={MenuLink}
+                  to={`/warehouse-credentials/all`}
+                  dataTest={'navigation_credentials_all_drpdn'}>
+                  {formatMessage({ id: 'navigation.credentials.all', defaultMessage: 'All' })}
+                </Dropdown.Item>
+                <Dropdown.Item
+                  key={0}
+                  as={MenuLink}
+                  to={`/warehouse-credentials/pending`}
+                  dataTest={'navigation_credentials_pending_drpdn'}>
+                  {formatMessage({ id: 'navigation.credentials.pending', defaultMessage: 'Pending' })}
+                </Dropdown.Item>
+              </PerfectScrollbar>
+            </Dropdown.Menu>
+          </DropdownItem>
         )}
         {isAdmin ? (
           <>
