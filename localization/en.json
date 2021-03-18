@@ -2986,7 +2986,7 @@
   "dashboard.totalBroadcastedValueWithoutMilion.title": "Broadcasted",
   "dashboard.totalUsersCount.title": "Users",
   "dashboard.totalProductOffers.title": "Product Offers",
-  "dasboard.sales.graph.title": "Total Sum Of Sales Monthly",
+  "dasboard.sales.graph.title": "Sales Activity",
   "dasboard.companyPurchase.graph.title": "Purchase Activity",
   "dasboard.companySales.graph.title": "Sales Activity",
   "dasboard.sales.graph.subtitle": "in thousand dollars",
