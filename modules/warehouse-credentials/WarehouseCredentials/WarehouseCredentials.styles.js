@@ -33,9 +33,9 @@ export const CertificationLabel = styled(Label)`
   font-style: normal;
   color: #848893 !important;
   line-height: 1.33 !important;
-  
+
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     top: 2px;
     left: 2px;
@@ -53,7 +53,7 @@ export const CertHeader = styled(Header)`
   font-size: 1em !important;
   font-weight: 700 !important;
   line-height: 1.42857 !important;
-  
+
   &:first-child {
     border-top: 0 none !important;
     padding-top: 0 !important;
@@ -73,7 +73,7 @@ export const Warehouse = styled.div`
   font-size: 14px;
   color: #20273a;
   line-height: 18px;
-  
+
   > svg {
     position: absolute;
     top: 21px;
@@ -82,7 +82,7 @@ export const Warehouse = styled.div`
     height: 18px;
     color: #20273a;
   }
-  
+
   > label {
     display: block;
     margin: 0;
@@ -90,7 +90,7 @@ export const Warehouse = styled.div`
     color: #848893;
     line-height: 16px;
   }
-  
+
   + div {
     float: right;
     width: calc((100% - 1em) / 2) !important;
@@ -109,7 +109,7 @@ export const FileName = styled.div`
   font-size: 14px;
   color: #20273a;
   line-height: 18px;
-  
+
   > svg {
     position: absolute;
     top: 21px;
@@ -117,7 +117,7 @@ export const FileName = styled.div`
     width: 18px;
     height: 18px;
     color: #20273a;
-    
+
     &.download {
       left: auto;
       right: 12px;
@@ -126,7 +126,7 @@ export const FileName = styled.div`
       color: #2599d5;
     }
   }
-  
+
   > label {
     display: block !important;
     margin: 0;
@@ -134,14 +134,14 @@ export const FileName = styled.div`
     color: #848893;
     line-height: 16px;
   }
-  
+
   &.clickable {
     cursor: pointer;
-    
+
     > svg.download {
       display: block;
     }
-    
+
     > label {
       cursor: pointer;
     }
@@ -158,18 +158,18 @@ export const FormArea = styled(Form)`
     display: flex;
     flex-flow: column;
     width: 0;
-    
+
     > * {
       flex-grow: 0 !important;
       flex-basis: auto !important;
     }
-    
+
     div {
       flex: 1 0 50px;
       display: flex;
       flex-flow: row nowrap;
       width: 100%;
-      
+
       input {
         flex: 1 0 50px;
         width: 0;
@@ -181,7 +181,7 @@ export const FormArea = styled(Form)`
 export const ButtonGroup = styled.div`
   padding: 10px 0 1em;
   text-align: right;
-  
+
   button {
     margin: 0 0 0 1rem !important;
   }

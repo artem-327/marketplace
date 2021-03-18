@@ -5,7 +5,9 @@ export function approveDeaListCertificate(branchId, values) {
 }
 
 export function approveTaxExemptCertificate(branchId, values) {
-  return api.patch(`/prodex/api/branches/approveTaxExemptCertificate/${branchId}`, values).then(response => response.data)
+  return api
+    .patch(`/prodex/api/branches/approveTaxExemptCertificate/${branchId}`, values)
+    .then(response => response.data)
 }
 
 export function denyDeaListCertificate(branchId) {

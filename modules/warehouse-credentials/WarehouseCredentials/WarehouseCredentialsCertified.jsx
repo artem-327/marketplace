@@ -7,18 +7,13 @@ import { withDatagrid } from '~/modules/datagrid'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import ProdexTable from '../../../components/table'
 import { groupActions } from '../../company-product-info/constants'
-import {
-  postNewWarehouseRequest,
-  putEditWarehouse
-} from '../../settings/actions'
+import { postNewWarehouseRequest, putEditWarehouse } from '../../settings/actions'
 import { getSafe } from '../../../utils/functions'
 // Constants
 import { columns } from './WarehouseCredentials.constants'
 // Styles
 
-
 const WarehouseCredentialsCertified = props => {
-
   const {
     datagrid,
     intl: { formatMessage },
@@ -28,7 +23,7 @@ const WarehouseCredentialsCertified = props => {
   return (
     <>
       <div className='flex stretched warehouse-credentials-wrapper listings-wrapper' style={{ padding: '10px 30px' }}>
-        {rows.length &&
+        {rows.length && (
           <ProdexTable
             {...datagrid.tableProps}
             tableName='warehouse_credentials_grid'
@@ -37,7 +32,7 @@ const WarehouseCredentialsCertified = props => {
             hideCheckboxes
             loading={datagrid.loading}
           />
-        }
+        )}
       </div>
     </>
   )
@@ -52,11 +47,13 @@ const mapStateToProps = (state, { datagrid }) => {
   console.log('CERTIFIED')
   console.log('ROWS', datagrid.rows.length, datagrid.rows)
   return {
-    rows: datagrid.rows.length ? datagrid.rows.map(r => {
-      return {
-        warehouseName: r.name
-      }
-    }) : []
+    rows: datagrid.rows.length
+      ? datagrid.rows.map(r => {
+          return {
+            warehouseName: r.name
+          }
+        })
+      : []
   }
 }
 

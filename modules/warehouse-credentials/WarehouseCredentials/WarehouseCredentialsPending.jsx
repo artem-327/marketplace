@@ -4,10 +4,15 @@ import { func, bool, array, string } from 'prop-types'
 import { withDatagrid } from '~/modules/datagrid'
 import { Formik } from 'formik'
 import moment from 'moment'
-import { approveDeaListCertificate, approveTaxExemptCertificate, denyDeaListCertificate, denyTaxExemptCertificate } from '../actions'
+import {
+  approveDeaListCertificate,
+  approveTaxExemptCertificate,
+  denyDeaListCertificate,
+  denyTaxExemptCertificate
+} from '../actions'
 // Components
 import DetailRow from '../../../components/detail-row'
-import { Popup, FormGroup} from 'semantic-ui-react'
+import { Popup, FormGroup } from 'semantic-ui-react'
 import BasicButton from '../../../components/buttons/BasicButton'
 import { Input } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '../../../components/custom-formik'
@@ -16,10 +21,7 @@ import { Download, FileText, Map } from 'react-feather'
 // Services
 import { injectIntl, FormattedMessage } from 'react-intl'
 import ProdexTable from '../../../components/table'
-import {
-  postNewWarehouseRequest,
-  putEditWarehouse
-} from '../../settings/actions'
+import { postNewWarehouseRequest, putEditWarehouse } from '../../settings/actions'
 import { downloadAttachment } from '../../inventory/actions'
 import { getSafe, getMimeType, getFormattedAddress } from '../../../utils/functions'
 // Constants
@@ -27,11 +29,18 @@ import { columns, CONTENT_SUBCOLUMNS, INITIAL_VALUES, VALIDATION_SCHEME } from '
 import { UserCompany, UserImage, UserName } from '../../alerts/components/layout'
 import { groupActions } from '../../company-product-info/constants'
 // Styles
-import { IconDown, IconUp, CertificationLabel, CertHeader, Warehouse, FileName, FormArea, ButtonGroup } from './WarehouseCredentials.styles'
-
+import {
+  IconDown,
+  IconUp,
+  CertificationLabel,
+  CertHeader,
+  Warehouse,
+  FileName,
+  FormArea,
+  ButtonGroup
+} from './WarehouseCredentials.styles'
 
 class WarehouseCredentialsPending extends Component {
-
   state = {
     expandedRowIds: [],
     expandedSubrowIds: []
@@ -96,7 +105,11 @@ class WarehouseCredentialsPending extends Component {
                 .toLocaleString()}
             </div>
           }
-          trigger={<div style={{ color: r.read || this.props.isAdmin ? '#848893' : '#20273a' }}>{moment(r.createdAt).fromNow()}</div>}
+          trigger={
+            <div style={{ color: r.read || this.props.isAdmin ? '#848893' : '#20273a' }}>
+              {moment(r.createdAt).fromNow()}
+            </div>
+          }
         />
       ) : (
         'N/A'
@@ -105,11 +118,7 @@ class WarehouseCredentialsPending extends Component {
         ...branch,
         branchName: (
           <>
-            {expandedSubrowIds.includes(branch.id) ? (
-              <IconUp />
-            ) : (
-              <IconDown />
-            )}
+            {expandedSubrowIds.includes(branch.id) ? <IconUp /> : <IconDown />}
             {branch.deliveryAddress.cfName}
             {branch.deaListReceiveVerify && <CertificationLabel>DEA</CertificationLabel>}
             {branch.epaReceiveVerify && <CertificationLabel>EPA</CertificationLabel>}
@@ -135,7 +144,7 @@ class WarehouseCredentialsPending extends Component {
         separatedRows={true}
         renderSubDetail={this.renderSubDetail}
         hiddenDetailContentHeader={true}
-        onDetailRowClick={(branchId) => {
+        onDetailRowClick={branchId => {
           let ids = this.state.expandedSubrowIds.slice()
           if (ids.includes(branchId)) {
             this.setState({ expandedSubrowIds: ids.filter(id => id !== branchId) })
@@ -148,15 +157,16 @@ class WarehouseCredentialsPending extends Component {
     )
   }
 
-  renderSubDetail = (branch) => {
-    const { intl: { formatMessage }} = this.props
+  renderSubDetail = branch => {
+    const {
+      intl: { formatMessage }
+    } = this.props
     return (
       <Formik
         onSubmit={async (values, actions) => {}}
         enableReinitialize
         initialValues={INITIAL_VALUES}
-        validationSchema={VALIDATION_SCHEME}
-      >
+        validationSchema={VALIDATION_SCHEME}>
         {formikProps => {
           const { submitForm, validateForm, setFieldTouched, setFieldError } = formikProps
 
@@ -167,10 +177,12 @@ class WarehouseCredentialsPending extends Component {
                   <CertHeader>
                     <FormattedMessage id='warehouseCredentials.deaCertificate' defaultMessage='DEA Certificate' />
                   </CertHeader>
-                  <FileName onClick={(e) => {
-                    if (getSafe(() => branch.deaListCertificateFile.name, ''))
-                      this.downloadAttachment(branch.deaListCertificateFile.name, branch.deaListCertificateFile.id)
-                  }} className={getSafe(() => branch.deaListCertificateFile.name, '') && 'clickable'}>
+                  <FileName
+                    onClick={e => {
+                      if (getSafe(() => branch.deaListCertificateFile.name, ''))
+                        this.downloadAttachment(branch.deaListCertificateFile.name, branch.deaListCertificateFile.id)
+                    }}
+                    className={getSafe(() => branch.deaListCertificateFile.name, '') && 'clickable'}>
                     <FileText />
                     <label>
                       <FormattedMessage id='warehouseCredentials.fileName' defaultMessage='File Name' />
@@ -205,28 +217,34 @@ class WarehouseCredentialsPending extends Component {
                       <BasicButton noborder onClick={() => this.props.denyDeaListCertificate(branch.id)}>
                         <FormattedMessage id='global.deny' defaultMessage='Deny' />
                       </BasicButton>
-                      <BasicButton onClick={() => validateForm()
-                        .then(r => {
-                          const formPart = 'dea'
-                          // stop when errors found
-                          if (
-                            Object.keys(r).length &&
-                            Object.keys(r).includes(formPart)
-                          ) {
-                            Object.keys(r[formPart]).forEach((key, index) => {
-                              // setFieldTouched is necessary to show error when Formik has defined validation scheme
-                              setFieldTouched(`${formPart}.${key}`, true)
-                              setFieldError(`${formPart}.${key}`, formatMessage({ id: r[formPart][key].props.id, defaultMessage: r[formPart][key].props.defaultMessage }))
-                            })
-                            //submitForm() // show errors
-                            return false
-                          }
+                      <BasicButton
+                        onClick={() =>
+                          validateForm()
+                            .then(r => {
+                              const formPart = 'dea'
+                              // stop when errors found
+                              if (Object.keys(r).length && Object.keys(r).includes(formPart)) {
+                                Object.keys(r[formPart]).forEach((key, index) => {
+                                  // setFieldTouched is necessary to show error when Formik has defined validation scheme
+                                  setFieldTouched(`${formPart}.${key}`, true)
+                                  setFieldError(
+                                    `${formPart}.${key}`,
+                                    formatMessage({
+                                      id: r[formPart][key].props.id,
+                                      defaultMessage: r[formPart][key].props.defaultMessage
+                                    })
+                                  )
+                                })
+                                //submitForm() // show errors
+                                return false
+                              }
 
-                          this.props.approveDeaListCertificate(branch.id, formikProps.values[formPart])
-                        })
-                        .catch(e => {
-                          console.log('CATCH', e)
-                        })}>
+                              this.props.approveDeaListCertificate(branch.id, formikProps.values[formPart])
+                            })
+                            .catch(e => {
+                              console.log('CATCH', e)
+                            })
+                        }>
                         <FormattedMessage id='global.approve' defaultMessage='Approve' />
                       </BasicButton>
                     </ButtonGroup>
@@ -236,7 +254,10 @@ class WarehouseCredentialsPending extends Component {
               {branch.taxExemptReceiveVerify && (
                 <>
                   <CertHeader>
-                    <FormattedMessage id='warehouseCredentials.taxExemptCertificate' defaultMessage='Tax Exempt Certificate' />
+                    <FormattedMessage
+                      id='warehouseCredentials.taxExemptCertificate'
+                      defaultMessage='Tax Exempt Certificate'
+                    />
                   </CertHeader>
                   <Warehouse>
                     <Map />
@@ -251,10 +272,15 @@ class WarehouseCredentialsPending extends Component {
                       province: getSafe(() => branch.deliveryAddress.address.province.name, false)
                     })}
                   </Warehouse>
-                  <FileName onClick={(e) => {
-                    if (getSafe(() => branch.taxExemptCertificateFile.name, ''))
-                      this.downloadAttachment(branch.taxExemptCertificateFile.name, branch.taxExemptCertificateFile.id)
-                  }} className={getSafe(() => branch.taxExemptCertificateFile.name, '') && 'clickable'}>
+                  <FileName
+                    onClick={e => {
+                      if (getSafe(() => branch.taxExemptCertificateFile.name, ''))
+                        this.downloadAttachment(
+                          branch.taxExemptCertificateFile.name,
+                          branch.taxExemptCertificateFile.id
+                        )
+                    }}
+                    className={getSafe(() => branch.taxExemptCertificateFile.name, '') && 'clickable'}>
                     <FileText />
                     <label>
                       <FormattedMessage id='warehouseCredentials.fileName' defaultMessage='File Name' />
@@ -298,28 +324,34 @@ class WarehouseCredentialsPending extends Component {
                       <BasicButton noborder onClick={() => this.props.denyTaxExemptCertificate(branch.id)}>
                         <FormattedMessage id='global.deny' defaultMessage='Deny' />
                       </BasicButton>
-                      <BasicButton onClick={() => validateForm()
-                        .then(r => {
-                          const formPart = 'taxExempt'
-                          // stop when errors found
-                          if (
-                            Object.keys(r).length &&
-                            Object.keys(r).includes(formPart)
-                          ) {
-                            Object.keys(r[formPart]).forEach((key, index) => {
-                              // setFieldTouched is necessary to show error when Formik has defined validation scheme
-                              setFieldTouched(`${formPart}.${key}`, true)
-                              setFieldError(`${formPart}.${key}`, formatMessage({ id: r[formPart][key].props.id, defaultMessage: r[formPart][key].props.defaultMessage }))
-                            })
-                            //submitForm() // show errors
-                            return false
-                          }
+                      <BasicButton
+                        onClick={() =>
+                          validateForm()
+                            .then(r => {
+                              const formPart = 'taxExempt'
+                              // stop when errors found
+                              if (Object.keys(r).length && Object.keys(r).includes(formPart)) {
+                                Object.keys(r[formPart]).forEach((key, index) => {
+                                  // setFieldTouched is necessary to show error when Formik has defined validation scheme
+                                  setFieldTouched(`${formPart}.${key}`, true)
+                                  setFieldError(
+                                    `${formPart}.${key}`,
+                                    formatMessage({
+                                      id: r[formPart][key].props.id,
+                                      defaultMessage: r[formPart][key].props.defaultMessage
+                                    })
+                                  )
+                                })
+                                //submitForm() // show errors
+                                return false
+                              }
 
-                          this.props.approveTaxExemptCertificate(branch.id, formikProps.values[formPart])
-                        })
-                        .catch(e => {
-                          console.log('CATCH', e)
-                        })}>
+                              this.props.approveTaxExemptCertificate(branch.id, formikProps.values[formPart])
+                            })
+                            .catch(e => {
+                              console.log('CATCH', e)
+                            })
+                        }>
                         <FormattedMessage id='global.approve' defaultMessage='Approve' />
                       </BasicButton>
                     </ButtonGroup>
@@ -335,12 +367,8 @@ class WarehouseCredentialsPending extends Component {
 
   toggleCellComponent = ({ expanded, tableRow, row, style, ...restProps }) => {
     return (
-      <td data-test="warehouse_toggle_column" className={`warehouse_opener ${expanded ? 'opened' : 'closed'}`}>
-        {expanded ? (
-          <IconUp />
-        ) : (
-          <IconDown />
-        )}
+      <td data-test='warehouse_toggle_column' className={`warehouse_opener ${expanded ? 'opened' : 'closed'}`}>
+        {expanded ? <IconUp /> : <IconDown />}
       </td>
     )
   }
@@ -354,7 +382,7 @@ class WarehouseCredentialsPending extends Component {
 
     return (
       <>
-        <div className='flex stretched warehouse-credentials-wrapper' style={{padding: '10px 30px'}}>
+        <div className='flex stretched warehouse-credentials-wrapper' style={{ padding: '10px 30px' }}>
           <ProdexTable
             {...datagrid.tableProps}
             tableName='warehouse_credentials_grid'

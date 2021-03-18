@@ -12,9 +12,7 @@ export const columns = [
   }
 ]
 
-export const CONTENT_SUBCOLUMNS = [
-  { name: 'branchName', width: '100%' }
-]
+export const CONTENT_SUBCOLUMNS = [{ name: 'branchName', width: '100%' }]
 
 export const INITIAL_VALUES = {
   dea: {
