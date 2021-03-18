@@ -844,14 +844,14 @@ class Navigation extends Component {
               <PerfectScrollbar>
                 <Dropdown.Item
                   key={0}
-                  as={Menu.Item}
+                  as={MenuLink}
                   to={`/warehouse-credentials/all`}
                   dataTest={'navigation_credentials_all_drpdn'}>
                   {formatMessage({ id: 'navigation.credentials.all', defaultMessage: 'All' })}
                 </Dropdown.Item>
                 <Dropdown.Item
                   key={0}
-                  as={Menu.Item}
+                  as={MenuLink}
                   to={`/warehouse-credentials/pending`}
                   dataTest={'navigation_credentials_pending_drpdn'}>
                   {formatMessage({ id: 'navigation.credentials.pending', defaultMessage: 'Pending' })}
