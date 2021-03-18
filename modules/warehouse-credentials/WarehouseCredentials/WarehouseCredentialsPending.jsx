@@ -242,7 +242,7 @@ class WarehouseCredentialsPending extends Component {
                               this.props.approveDeaListCertificate(branch.id, formikProps.values[formPart])
                             })
                             .catch(e => {
-                              console.log('CATCH', e)
+                              console.error(e)
                             })
                         }>
                         <FormattedMessage id='global.approve' defaultMessage='Approve' />
@@ -349,7 +349,7 @@ class WarehouseCredentialsPending extends Component {
                               this.props.approveTaxExemptCertificate(branch.id, formikProps.values[formPart])
                             })
                             .catch(e => {
-                              console.log('CATCH', e)
+                              console.error(e)
                             })
                         }>
                         <FormattedMessage id='global.approve' defaultMessage='Approve' />

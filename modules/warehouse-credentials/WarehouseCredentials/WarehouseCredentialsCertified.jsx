@@ -44,8 +44,6 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
-  console.log('CERTIFIED')
-  console.log('ROWS', datagrid.rows.length, datagrid.rows)
   return {
     rows: datagrid.rows.length
       ? datagrid.rows.map(r => {
