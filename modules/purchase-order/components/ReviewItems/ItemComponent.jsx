@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { getSafe, getPrice, uniqueArrayByKey } from '~/utils/functions'
 import { currency } from '~/constants/index'
 import { Dropdown, Input } from 'formik-semantic-ui-fixed-validation'
+import { useEffect, useState } from 'react'
 
 //Components
 import { GridColumn, GridRow } from 'semantic-ui-react'
@@ -27,20 +28,46 @@ import {
 import { OPTIONS_QUANTITY, CART_ITEM_TYPES } from './ItemComponent.constants'
 
 // Services
-import { deleteCart } from './ItemComponent.services'
+import { deleteCart, getTotalPrice } from './ItemComponent.services'
 
-import ErrorFocus from '../../../../components/error-focus'
+// Global variable to store ref to input
+let inputRef = null
 
 const ItemComponent = props => {
-  const { onClickDelete, onValueChange, value, index, item } = props
+  const [isQuantityDropdownType, setIsQuantityDropdownType] = useState(true)
+  const [focusOnInput, setFocusOnInput] = useState(false)
+
+  const {
+    onClickDelete,
+    onValueChange,
+    value,
+    index,
+    item,
+    cfPackageWeightSi,
+    cfPalletWeightSi,
+    palletMaxPkgs,
+    packagingWeightUnitSi,
+    packagingSize
+  } = props
 
   const pkgAmount = item.pkgAmount
-  const pricePerUOM = isNaN(parseInt(value))
+  const quantity = parseInt(value)
+
+  const pricePerUOM = isNaN(quantity)
     ? getPrice(pkgAmount, item.productOffer.pricingTiers)
-    : getPrice(parseInt(value), item.productOffer.pricingTiers)
+    : getPrice(quantity, item.productOffer.pricingTiers)
 
   let allOptions = value ? OPTIONS_QUANTITY.concat([{ key: value, text: value.toString(), value }]) : OPTIONS_QUANTITY
   allOptions = uniqueArrayByKey(allOptions, 'text')
+
+  const grossWeight = isNaN(quantity)
+    ? 'N/A'
+    : (quantity * cfPackageWeightSi + palletMaxPkgs ? (cfPalletWeightSi * (quantity / palletMaxPkgs)) : 0) * 2.20462262
+
+  if (focusOnInput) {
+    setFocusOnInput(false)
+    if (inputRef) inputRef.focus()
+  }
 
   return (
     <GridItemDetail verticalAlign='middle'>
@@ -50,7 +77,7 @@ const ItemComponent = props => {
           size='18'
           onClick={async () => {
             const result = await deleteCart(item.id, props)
-            if (result) onClickDelete(item.id)
+            if (result) onClickDelete(index)
           }}
         />
       </GridRowHeader>
@@ -80,7 +107,7 @@ const ItemComponent = props => {
         </GridColumn>
         <GridColumn width={5}>
           <DivSectionName>
-            {isNaN(parseInt(value))
+            {isNaN(quantity)
               ? 'N/A'
               : (
                 <FormattedNumber
@@ -88,7 +115,7 @@ const ItemComponent = props => {
                   maximumFractionDigits={2}
                   style='currency'
                   currency={currency}
-                  value={parseInt(value) * pricePerUOM * item.packagingSize}
+                  value={quantity * pricePerUOM * item.packagingSize}
                 />
               )
             }
@@ -123,14 +150,30 @@ const ItemComponent = props => {
         <GridColumnLessPadding width={5}>
           <DivSectionName>
             <DivDropdownQuantityWrapper>
-              {parseInt(value) < 9 ? (
+              {isQuantityDropdownType ? (
                 <Dropdown
                   name={`items[${index}].quantity`}
                   selection
                   inputProps={{
                     search: true,
-                    onSearchChange: (_, { searchQuery }) => onValueChange(searchQuery),
-                    onChange: (_, { value }) => onValueChange(value),
+                    onSearchChange: (_, { searchQuery }) => {
+                      onValueChange({
+                        val: searchQuery,
+                        price: getTotalPrice(searchQuery, item),
+                        validate: true
+                      })
+                    },
+                    onChange: (_, { value }) => {
+                      onValueChange({
+                        val: value,
+                        price: getTotalPrice(value, item),
+                        validate: value !== ''
+                      })
+                      if (value === '') {
+                        setIsQuantityDropdownType(false)
+                        setFocusOnInput(true)
+                      }
+                    },
                     disabled:
                       item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
                       item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
@@ -143,7 +186,13 @@ const ItemComponent = props => {
                   name={`items[${index}].quantity`}
                   selection
                   inputProps={{
-                    onChange: (_, { value }) => onValueChange(value),
+                    ref: input => inputRef = input,
+                    onChange: (_, { value }) =>
+                      onValueChange({
+                        val: value,
+                        price: getTotalPrice(value, item),
+                        validate: true
+                      }),
                     disabled:
                       item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
                       item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
@@ -177,16 +226,16 @@ const ItemComponent = props => {
         </GridColumn>
         <GridColumn width={5}>
           <DivSectionName>
-            {isNaN(parseInt(value))
+            {isNaN(quantity)
               ? 'N/A'
               : (
                 <>
-                <FormattedNumber
-                  minimumFractionDigits={0}
-                  maximumFractionDigits={2}
-                  value={item.packagingSize * parseInt(value)}
-                />
-                {props.packagingUnit}
+                  <FormattedNumber
+                    minimumFractionDigits={0}
+                    maximumFractionDigits={2}
+                    value={grossWeight}
+                  />
+                  lb
                 </>
               )
             }
@@ -217,6 +266,11 @@ function mapStateToProps(store, { item }) {
     packagingUnit: getSafe(() => item.productOffer.companyProduct.packagingUnit.nameAbbreviation, ''),
     packageWeightUnit: getSafe(() => item.productOffer.companyProduct.packageWeightUnit.nameAbbreviation, ''),
     packageWeight: getSafe(() => item.productOffer.companyProduct.packageWeight, 0),
+    cfPackageWeightSi: getSafe(() => item.productOffer.companyProduct.cfPackageWeightSi, 0),
+    cfPalletWeightSi: getSafe(() => item.productOffer.companyProduct.cfPalletWeightSi, 0),
+    palletMaxPkgs: getSafe(() => item.productOffer.companyProduct.palletMaxPkgs, 0),
+    packagingWeightUnitSi: getSafe(() => item.productOffer.companyProduct.packagingUnit.ratioToBaseSiUnit, 1),
+    packagingSize: getSafe(() => item.productOffer.companyProduct.packagingSize, 0),
     cfPaymentTerms: getSafe(() => item.productOffer.cfPaymentTerms, ''),
     cartItemType: getSafe(() => item.cartItemType, '')
   }
