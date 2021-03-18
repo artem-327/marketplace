@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { getSafe } from '~/utils/functions'
-import { GridColumn, GridRow, Button } from 'semantic-ui-react'
+import { GridColumn, GridRow, Button, Popup } from 'semantic-ui-react'
 import { currency } from '~/constants/index'
 
 //Components
@@ -19,7 +19,15 @@ import { GridSummary, LinkLabel } from './OrderSummary.styles'
  * @component
  */
 const OrderSummary = props => {
-  const { buttonText, onButtonClick, allAccepted, submitButtonDisabled, loading } = props
+  const {
+    buttonText,
+    onButtonClick,
+    allAccepted,
+    submitButtonDisabled,
+    loading,
+    subTotalPrice,
+    isNotHazardousPermissions
+  } = props
 
   const priceComponent = val =>
     val ? (
@@ -34,18 +42,36 @@ const OrderSummary = props => {
       '-'
     )
 
-  const subTotalPrice = getSafe(() => props.cart.cfPriceSubtotal, '')
   const freightPrice = getSafe(() => props.sectionState.freight.value.estimatedPrice, '')
 
   return (
     <GridSummary>
-      <GridRow>
-        <GridColumn>
-          <Button fluid loading={loading} color='blue' disabled={submitButtonDisabled} onClick={() => onButtonClick()}>
-            {buttonText}
-          </Button>
-        </GridColumn>
-      </GridRow>
+      <Popup
+        trigger={
+          <GridRow>
+            <GridColumn>
+              <Button
+                fluid
+                loading={loading}
+                color='blue'
+                disabled={submitButtonDisabled}
+                onClick={() => onButtonClick()}>
+                {buttonText}
+              </Button>
+            </GridColumn>
+          </GridRow>
+        }
+        content={
+          <div>
+            <FormattedMessage
+              id='cart.purchaseOrder.purchaseHazmatEligible'
+              defaultMessage='You are not authorized to purchase this hazardous item.'
+            />
+          </div>
+        }
+        disabled={!isNotHazardousPermissions && !submitButtonDisabled}
+      />
+
       <GridRow className='bottom-border small-text'>
         <GridColumn>
           {allAccepted ? (

@@ -16,15 +16,12 @@ import Spinner from '../../../components/Spinner/Spinner'
 import ChatWidget from '../../chatWidget/components/ChatWidgetContainer'
 
 //Services
-import ErrorFocus from '../../../components/error-focus'
 import { getSafe } from '../../../utils/functions'
 import {
   getComponentParameters,
   submitButton,
   submitUpdateCartItem,
   getShippingQuotes,
-  handleSubmitOrder,
-  confirmSection,
   checkAllAccepted
 } from './Checkout.services'
 
@@ -37,7 +34,7 @@ import { FREIGHT_TYPES } from './Checkout.constants'
 const Checkout = props => {
   const [openSection, setOpenSection] = useState('review')
   const [sectionState, setSectionState] = useState({
-    review: { accepted: false, value: null }, // 1. Review Items
+    review: { accepted: false, value: [] }, // 1. Review Items
     shipping: { accepted: false, value: null }, // 2. Shipping & Terms
     payment: { accepted: false, value: null }, // 3. Payment
     freight: { accepted: false, value: null } // 4. Freight Selection
@@ -64,7 +61,19 @@ const Checkout = props => {
       props.getDeliveryAddresses()
       props.getPayments(paymentProcessor)
       props.getIdentity()
-      await props.getCart()
+      const { value } = await props.getCart()
+      const initVal = value.cartItems.map(item => ({
+        id: item.id,
+        quantity: item.pkgAmount.toString(),
+        minPkg: item.productOffer.minPkg,
+        splitPkg: item.productOffer.splitPkg,
+        pkgAvailable: item.productOffer.pkgAvailable,
+        price: item.cfPriceSubtotal
+      }))
+      setSectionState({
+        ...sectionState,
+        review: { accepted: false, value: initVal }
+      })
     }
 
     fetchCheckout()
@@ -107,6 +116,9 @@ const Checkout = props => {
     item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
   )
 
+  let subTotalPrice = 0
+  sectionState.review.value.forEach(item => subTotalPrice += item.price)
+
   return (
     <>
       <Head>
@@ -123,10 +135,12 @@ const Checkout = props => {
                     <ReviewItems
                       {...props}
                       {...getComponentParameters(props, { name: 'review', ...state })}
-                      onClickDelete={id => {
+                      onClickDelete={index => {
+                        let newValue = sectionState.review.value.slice()
+                        newValue.splice(index, 1)
                         setSectionState({
                           ...sectionState,
-                          review: { accepted: false, value: null },
+                          review: { accepted: false, value: newValue },
                           ...(!fixedFreightId && { freight: { accepted: false, value: null } })
                         })
                       }}
@@ -185,9 +199,11 @@ const Checkout = props => {
                   <OrderSummary
                     loading={loading}
                     allAccepted={allAccepted}
+                    subTotalPrice={subTotalPrice}
                     cart={props.cart}
                     sectionState={sectionState}
                     onButtonClick={() => submitButton(props, state)}
+                    isNotHazardousPermissions={!purchaseHazmatEligible && isAnyItemHazardous}
                     submitButtonDisabled={
                       (!purchaseHazmatEligible && isAnyItemHazardous) ||
                       (openSection === 'review' && sectionState.review.errors) ||
