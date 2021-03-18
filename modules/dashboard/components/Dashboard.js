@@ -859,7 +859,7 @@ class Dashboard extends Component {
             {graphType === 0 ? (
               <LineGraph
                 data={companySumOfSalesMonthly}
-                title='Company Sum Of Sales Monthly'
+                title='Sales Activity'
                 titleId='dasboard.companySales.graph.title'
                 subTitle='in thousand dollars'
                 subTitleId='dasboard.sales.graph.subtitle'
@@ -867,7 +867,7 @@ class Dashboard extends Component {
             ) : (
               <BarGraph
                 data={companySumOfSalesMonthly}
-                title='Company Sum Of Sales Monthly'
+                title='Sales Activity'
                 titleId='dasboard.companySales.graph.title'
                 subTitle='in thousand dollars'
                 subTitleId='dasboard.sales.graph.subtitle'
@@ -889,16 +889,16 @@ class Dashboard extends Component {
             {graphType === 0 ? (
               <LineGraph
                 data={companySumOfPurchasesMonthly}
-                title='Company Sum Of Sales Monthly'
-                titleId='dasboard.companySales.graph.title'
+                title='Purchase Activity'
+                titleId='dasboard.companyPurchase.graph.title'
                 subTitle='in thousand dollars'
                 subTitleId='dasboard.sales.graph.subtitle'
               />
             ) : (
               <BarGraph
                 data={companySumOfPurchasesMonthly}
-                title='Company Sum Of Sales Monthly'
-                titleId='dasboard.companySales.graph.title'
+                title='Purchase Activity'
+                titleId='dasboard.companyPurchase.graph.title'
                 subTitle='in thousand dollars'
                 subTitleId='dasboard.sales.graph.subtitle'
               />
@@ -952,16 +952,16 @@ class Dashboard extends Component {
             {graphType === 0 ? (
               <LineGraph
                 data={companySumOfPurchasesMonthly}
-                title='Company Sum Of Sales Monthly'
-                titleId='dasboard.companySales.graph.title'
+                title='Purchase Activity'
+                titleId='dasboard.companyPurchase.graph.title'
                 subTitle='in thousand dollars'
                 subTitleId='dasboard.sales.graph.subtitle'
               />
             ) : (
               <BarGraph
                 data={companySumOfPurchasesMonthly}
-                title='Company Sum Of Sales Monthly'
-                titleId='dasboard.companySales.graph.title'
+                title='Purchase Activity'
+                titleId='dasboard.companyPurchase.graph.title'
                 subTitle='in thousand dollars'
                 subTitleId='dasboard.sales.graph.subtitle'
               />
