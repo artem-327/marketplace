@@ -18,13 +18,11 @@ import {
   Disc,
   Coffee,
   ChevronDown,
-  ChevronUp,
-  Globe
+  ChevronUp
 } from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 //Constants
-import { NETWORK_STATUS } from '../modules/my-network/constants'
 import { defaultTabs as operationsDefaultTabs, orderOperatorTabs } from '../modules/operations/constants'
 //HOCS
 import { withAuth } from '../hocs'
@@ -36,8 +34,6 @@ import { NavCircle } from '../modules/alerts/components/layout'
 import { Datagrid } from '../modules/datagrid'
 //Services
 import { getSafe } from '../utils/functions'
-//Styles
-import { DivNavItem } from './NavigationMenu.styles'
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -111,7 +107,6 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/holds', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/bids-sent', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
-    myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
     alerts: getSafe(() => Router.router.pathname === '/alerts', false)
   }
 
@@ -278,7 +273,6 @@ class Navigation extends Component {
       inventory,
       marketplace,
       wantedBoard,
-      myNetwork,
       alerts
     } = this.state
 
@@ -296,23 +290,6 @@ class Navigation extends Component {
         </Link>
       )
     })
-
-    const DivItem = ({ children, dataTest, networkStatus, pointer }) => {
-      return (
-        <DivNavItem
-          pointer={pointer}
-          data-test={dataTest}
-          onClick={async e => {
-            e.stopPropagation()
-            if (typeof networkStatus === 'function') {
-              await networkStatus()
-            }
-            this.setState({ myNetwork: true })
-          }}>
-          {children}
-        </DivNavItem>
-      )
-    }
 
     const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
       isCompanyAdmin: null,
@@ -418,77 +395,6 @@ class Navigation extends Component {
                   </Dropdown.Item>
                 )
               }
-            </PerfectScrollbar>
-          </Dropdown.Menu>
-        </DropdownItem>
-
-        <DropdownItem
-          icon={<Globe size={22} />}
-          text={
-            <>
-              <FormattedMessage id='navigation.myNetwork' defaultMessage='My Network' />
-              {myNetwork ? <ChevronUp /> : <ChevronDown />}
-            </>
-          }
-          className={myNetwork ? 'opened' : null}
-          opened={myNetwork}
-          onClick={() => this.toggleOpened('myNetwork', '/my-network')}
-          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-          refId={'myNetwork'}
-          data-test='navigation_menu_my_network_drpdn'>
-          <Dropdown.Menu data-test='navigation_menu_my_Network_menu'>
-            <PerfectScrollbar>
-              <Dropdown.Item
-                as={DivItem}
-                pointer={true}
-                dataTest='navigation_menu_my_Network_all_drpdn'
-                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ALL })}>
-                {formatMessage(
-                  {
-                    id: 'navigation.myNetworkAll',
-                    defaultMessage: 'All ({value})'
-                  },
-                  { value: allNetworks }
-                )}
-              </Dropdown.Item>
-              <Dropdown.Item
-                as={DivItem}
-                pointer={true}
-                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ACTIVE })}
-                dataTest='navigation_menu_my_network_active_drpdn'>
-                {formatMessage(
-                  {
-                    id: 'navigation.myNetworkActive',
-                    defaultMessage: 'Active ({value})'
-                  },
-                  { value: activeNetworks }
-                )}
-              </Dropdown.Item>
-              <Dropdown.Item
-                as={DivItem}
-                pointer={true}
-                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.PENDING })}
-                dataTest='navigation_menu_my_network_pending_drpdn'>
-                {formatMessage(
-                  {
-                    id: 'navigation.myNetworkPending',
-                    defaultMessage: 'Pending ({value})'
-                  },
-                  { value: pendingNetworks }
-                )}
-              </Dropdown.Item>
-              <Dropdown.Item
-                as={DivItem}
-                //networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.REQUESTED })}
-                dataTest='navigation_menu_my_network_requested_drpdn'>
-                {formatMessage(
-                  {
-                    id: 'navigation.myNetworkRequested',
-                    defaultMessage: 'Requested ({value})'
-                  },
-                  { value: requestedNetworks }
-                )}
-              </Dropdown.Item>
             </PerfectScrollbar>
           </Dropdown.Menu>
         </DropdownItem>
@@ -635,13 +541,6 @@ class Navigation extends Component {
                       tab='system-settings'
                       dataTest='navigation_settings_system_settings_drpdn'>
                       {formatMessage({ id: 'navigation.Settings', defaultMessage: 'Settings' })}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/settings/trade-criteria'
-                      tab='trade-criteria'
-                      dataTest='navigation_settings_my_trade_criteria_drpdn'>
-                      {formatMessage({ id: 'navigation.myTradeCriteria', defaultMessage: 'My Trade Criteria' })}
                     </Dropdown.Item>
                   </>
                 ) : null}
@@ -932,11 +831,7 @@ export default withAuth(
         companiesTabsNames: store?.companiesAdmin?.tabsNames,
         productsTabsNames: store?.productsAdmin?.tabsNames,
         alertTab: store?.alerts?.topMenuTab,
-        alertsCats: store?.alerts?.categories,
-        allNetworks: store?.myNetwork?.all,
-        activeNetworks: store?.myNetwork?.active,
-        pendingNetworks: store?.myNetwork?.pending,
-        requestedNetworks: store?.myNetwork?.requested
+        alertsCats: store?.alerts?.categories
       }),
       {
         triggerSystemSettingsModal,

@@ -21,7 +21,6 @@
       "./styles",
       "./modules/settings/components/Locations",
       "./modules/settings/components/TradeCriteria",
-      "./modules/my-network",
       "./components/date-format"
     ],
     "exclude": ["./modules/inventory/my-listings/components"]

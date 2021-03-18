@@ -23,9 +23,7 @@ import LogisticsTable from './LogisticsTable/LogisticsTable'
 import LogisticsSidebar from './LogisticsTable/LogisticsSidebar/LogisticsSidebar'
 
 import SystemSettings from '~/components/settings'
-
 import DocumentsTable from './Documents/DocumentManagerTable'
-import TradeCriteria from './TradeCriteria/TradeCriteria'
 import DocumentManagerSidebar from './Documents/DocumentManagerSidebar'
 
 import ClientCompanyTable from './ClientCompany/Table'
@@ -115,6 +113,8 @@ const CustomGridColumn = styled(Grid.Column)`
 
 class Settings extends Component {
   state = {
+    companyLogo: null,
+    shouldUpdateLogo: false,
     wrongUrl: true
   }
 
@@ -229,6 +229,92 @@ class Settings extends Component {
     if (isOpenSidebar) closeSidebar()
   }
 
+  selectLogo = (logo, isNew = true) => {
+    this.setState({ companyLogo: logo, shouldUpdateLogo: isNew })
+  }
+
+  removeLogo = () => {
+    this.setState({ companyLogo: null, shouldUpdateLogo: true })
+  }
+
+  companyDetails = () => {
+    let { postCompanyLogo, deleteCompanyLogo, companyId, hasLogo } = this.props
+    const { selectLogo, removeLogo } = this
+    const { companyLogo, shouldUpdateLogo } = this.state
+
+    return (
+      <TopMargedGrid relaxed='very' centered>
+        <GridColumn computer={12}>
+          <Form
+            initialValues={this.props.company}
+            validationSchema={validationSchema}
+            onSubmit={async (values, { setSubmitting }) => {
+              try {
+                const { updateCompany } = this.props
+                const requestBody = {}
+                const propsToInclude = [
+                  'cin',
+                  'dba',
+                  'dunsNumber',
+                  'enabled',
+                  'name',
+                  'phone',
+                  'tin',
+                  'tinType',
+                  'website'
+                ]
+                propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
+
+                await updateCompany(values.id, {
+                  ...requestBody,
+                  businessType: values.businessType ? values.businessType.id : null
+                })
+                if (shouldUpdateLogo) {
+                  if (companyLogo) {
+                    await postCompanyLogo(values.id, companyLogo)
+                  } else {
+                    await deleteCompanyLogo(values.id)
+                  }
+                }
+              } catch (err) {
+                console.error(err)
+              } finally {
+                setSubmitting(false)
+              }
+            }}>
+            {({ values, errors, setFieldValue, setFieldTouched, touched, isSubmitting }) => {
+              return (
+                <Segment basic>
+                  <CompanyForm
+                    selectLogo={selectLogo}
+                    removeLogo={removeLogo}
+                    companyLogo={this.state.companyLogo}
+                    values={values}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                    errors={errors}
+                    touched={touched}
+                    isSubmitting={isSubmitting}
+                    companyId={companyId}
+                    hasLogo={hasLogo}
+                  />
+                  <Grid>
+                    <GridColumn floated='right' computer={4}>
+                      <Button.Submit fluid data-test='company_details_submit_btn'>
+                        <FormattedMessage id='global.save'>{text => text}</FormattedMessage>
+                      </Button.Submit>
+                    </GridColumn>
+                  </Grid>
+                  <ErrorFocus />
+                </Segment>
+              )
+            }}
+          </Form>
+        </GridColumn>
+      </TopMargedGrid>
+    )
+  }
+
   renderContent = () => {
     const {
       action,
@@ -249,7 +335,7 @@ class Settings extends Component {
     } = this.props
 
     const tables = {
-      'company-details': <CompanyDetailsPage />,
+      'company-details': this.companyDetails(),
       users: <UsersTable />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
@@ -379,8 +465,6 @@ class Settings extends Component {
 
     if (currentTab === 'locations') {
       return <Locations />
-    } else if (currentTab === 'trade-criteria') {
-      return <TradeCriteria />
     } else {
       return (
         !this.state.wrongUrl && (
