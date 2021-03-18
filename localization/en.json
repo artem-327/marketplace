@@ -1330,6 +1330,7 @@
   "myInventory.tooltipProductStatus": "Shows if Product offer's Generic Product is published and offer is visible on the Marketplace",
   "myInventory.acceptBids": "Accept bids on offer?",
   "myInventory.whoShouldSee": "Who should see this offer?",
+  "myInventory.listingShare": "Enable Listing Share for this offer?",
   "filter.warehouse": "Warehouse",
   "filter.incomplete": "Incomplete",
   "filter.chemicalProductName": "Chemical / Product Name",
