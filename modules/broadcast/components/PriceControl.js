@@ -96,10 +96,15 @@ export default class PriceControl extends Component {
           foundAllNodes = copyTreeData.all(
             n => n.model.id === item.model.rule.id && n.model.type === item.model.rule.type
           )
+
           foundAllNodes.forEach(nod => {
             nod.walk(no => {
               if (!getSafe(() => no.model.rule, '') && !no.model.priceOverride && !no.model.hidden) {
-                no.model.rule = { ...no.model, ...asignValues(values, no.model) }
+                no.model.rule = {
+                  ...no.model,
+                  priceAddition: values?.priceAddition,
+                  priceMultiplier: values?.priceMultiplier
+                }
                 if (getSafe(() => no.model.rule.elements.length, 0) > 0) {
                   Object.keys(values).forEach(key => {
                     changeInModel(no.model.rule.elements, { key, value: values[key] })
@@ -135,7 +140,7 @@ export default class PriceControl extends Component {
         })
         // Value for company will be displayed in company input when we write value to the elements
         if (idCompanies.length) {
-          idCompanies = _.uniqBy(idCompanies)
+          idCompanies = _.uniqBy(idCompanies, 'id')
           //write changes to the correct elements (parent = company of branche)
           idCompanies.forEach(id => {
             changeInElements(item.model.rule.elements, values, id)
