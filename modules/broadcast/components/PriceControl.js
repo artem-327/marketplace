@@ -140,7 +140,7 @@ export default class PriceControl extends Component {
         })
         // Value for company will be displayed in company input when we write value to the elements
         if (idCompanies.length) {
-          idCompanies = _.uniqBy(idCompanies)
+          idCompanies = _.uniqBy(idCompanies, 'id')
           //write changes to the correct elements (parent = company of branche)
           idCompanies.forEach(id => {
             changeInElements(item.model.rule.elements, values, id)
