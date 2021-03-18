@@ -193,11 +193,12 @@ class UsersTable extends Component {
           const { value } = await setPrimaryUser(this.props.currentCompanyId, row.id)
         },
         hidden: row => !row.isCompanyAdmin || this.props.currentCompanyId === null
-      },
-      {
-        text: <FormattedMessage id='settings.user.userSettings' defaultMessage='User Settings' />,
-        callback: row => this.props.openPopup(row)
       }
+      //commented based on https://bluepallet.atlassian.net/browse/DT-199?focusedCommentId=11080
+      // {
+      //   text: <FormattedMessage id='settings.user.userSettings' defaultMessage='User Settings' />,
+      //   callback: row => this.props.openPopup(row)
+      // }
     ]
   }
 
