@@ -439,7 +439,7 @@ export default class ShippingQuotes extends Component {
                     <FormattedNumber
                       style='currency'
                       currency={currency}
-                      value={getSafe(() => sQuote.shipmentRate.estimatedPrice, 0)}
+                      value={getSafe(() => sQuote.shipmentRate.cfEstimatedSubtotal, 0)}
                     />
                   </Table.Cell>
                 </Table.Row>

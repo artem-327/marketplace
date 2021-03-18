@@ -35,7 +35,7 @@ const OrderSummary = props => {
     )
 
   const subTotalPrice = getSafe(() => props.cart.cfPriceSubtotal, '')
-  const freightPrice = getSafe(() => props.sectionState.freight.value.estimatedPrice, '')
+  const freightPrice = getSafe(() => props.sectionState.freight.value.cfEstimatedSubtotal, '')
 
   return (
     <GridSummary>
