@@ -10,6 +10,7 @@ import { currency } from '~/constants/index'
 //Components
 import { GridColumn, Form } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
+
 import {
   GridExpandedSection,
   DivSectionCollapsedWrapper,
@@ -40,7 +41,6 @@ const ReviewItems = props => {
     sectionState,
     onValueChange,
     setSummaryButtonCaption,
-    initValues,
     cartItems,
     cartIsFetching,
     offerDetailIsFetching
@@ -80,31 +80,43 @@ const ReviewItems = props => {
           onSubmit={values => {}}
           enableReinitialize
           validateOnChange={false}
-          initialValues={{ items: initValues }}
+          initialValues={{ items: props.value }}
           validationSchema={getValidationScheme()}
           render={formikProps => {
             selfFormikProps = formikProps
-            const { values, errors } = formikProps
+            const { values, errors, submitForm } = formikProps
             return (
               <Form loading={offerDetailIsFetching || cartIsFetching}>
                 {sectionState.accepted || isExpanded ? (
                   isExpanded ? (
                     <GridExpandedSection>
                       {cartItems.map((item, index) => (
-                        <GridRowReviewItems>
+                        <GridRowReviewItems key={index}>
                           <GridColumn>
                             <ItemComponent
                               {...props}
                               item={item}
                               index={index}
                               value={getSafe(() => values.items[index].quantity.toString(), '')}
-                              onValueChange={async val => {
+                              onValueChange={async ({ val, price, validate }) => {
                                 await formikProps.setFieldValue(`items[${index}].quantity`, val)
-                                await formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
-                                const newErrors = await formikProps.validateForm()
+                                await formikProps.setFieldValue(`items[${index}].price`, price)
+
                                 let newValues = values.items.slice()
                                 newValues[index].quantity = val
-                                onValueChange({ value: newValues, errors: !!newErrors.items })
+                                newValues[index].price = price
+                                let newErrors = {}
+                                if (validate) {
+                                  await formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
+                                  formikProps.validateForm().then(err => {
+                                    newErrors = err
+                                    if (newErrors) {
+                                      submitForm() // to show errors
+                                    }
+                                    onValueChange({value: newValues, errors: !!newErrors.items || val === ''})
+                                  })
+                                }
+                                onValueChange({value: newValues, errors: !!newErrors.items || val === ''})
                               }}
                             />
                           </GridColumn>
@@ -163,14 +175,7 @@ function mapStateToProps(store, props) {
         packagingSize: getSafe(() => item.productOffer.companyProduct.packagingSize, 1),
         packaging
       }
-    }),
-    initValues: props.cartItems.map(item => ({
-      id: item.id,
-      quantity: item.pkgAmount.toString(),
-      minPkg: item.productOffer.minPkg,
-      splitPkg: item.productOffer.splitPkg,
-      pkgAvailable: item.productOffer.pkgAvailable
-    }))
+    })
   }
 }
 
