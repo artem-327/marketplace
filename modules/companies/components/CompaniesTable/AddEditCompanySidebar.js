@@ -101,7 +101,8 @@ const initialFormValues = {
     },
     warehouse: false
   },
-  tinType: ''
+  tinType: '',
+  type: ''
 }
 
 class AddEditCompanySidebar extends Component {
@@ -332,6 +333,7 @@ class AddEditCompanySidebar extends Component {
                 website: getSafe(() => values.website, ''),
                 purchaseHazmatEligible: getSafe(() => values.purchaseHazmatEligible, false)
               }
+              if (values.type) newValues['type'] = values.type
 
               const data = await updateCompany(popupValues.id, newValues)
               if (this.state.shouldUpdateLogo) {
@@ -366,6 +368,7 @@ class AddEditCompanySidebar extends Component {
                 if (country) payload[branch].deliveryAddress.address.country = country
               })
 
+              if (!payload.type) delete payload.type
               delete payload.enabled
               if (!payload.businessType) delete payload.businessType
               if (this.state.companyLogo) {
@@ -415,6 +418,23 @@ class AddEditCompanySidebar extends Component {
                 </HighSegment>
                 <FlexContent>
                   <Accordion exclusive={false}>
+                    <Dropdown
+                      label={<FormattedMessage id='company.companyType' defaultMessage='Company Type' />}
+                      options={[
+                        {
+                          id: 0,
+                          text: formatMessage({ id: 'company.regular', defaultMessage: 'Regular' }),
+                          value: 'REGULAR'
+                        },
+                        {
+                          id: 1,
+                          text: formatMessage({ id: 'company.broker', defaultMessage: 'Broker' }),
+                          value: 'BROKER'
+                        }
+                      ]}
+                      name='type'
+                      inputProps={{ 'data-test': 'admin_popup_company_company_type_drpdn' }}
+                    />
                     <CompanyForm
                       admin={true}
                       selectLogo={selectLogo}
@@ -680,7 +700,8 @@ class AddEditCompanySidebar extends Component {
               <ErrorFocus />
             </Form>
           )
-        }}></Formik>
+        }}>
+      </Formik>
     )
   }
 }
