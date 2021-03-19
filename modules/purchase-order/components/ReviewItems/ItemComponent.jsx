@@ -62,7 +62,7 @@ const ItemComponent = props => {
 
   const grossWeight = isNaN(quantity)
     ? 'N/A'
-    : (quantity * cfPackageWeightSi + palletMaxPkgs ? (cfPalletWeightSi * (quantity / palletMaxPkgs)) : 0) * 2.20462262
+    : (quantity * cfPackageWeightSi + (palletMaxPkgs ? (cfPalletWeightSi * (quantity / palletMaxPkgs)) : 0)) * 2.20462262
 
   if (focusOnInput) {
     setFocusOnInput(false)
