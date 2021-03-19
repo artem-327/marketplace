@@ -93,109 +93,108 @@ const ListingDetail = props => {
   }
 
   return (
-    <StyledGrid>
-      <GridRowBottomSegment>
-        <GridColumnDetail>
-          <SegmentGroupHeader horizontal $noneBorder>
-            <SegmentHeader textAlign='left'>
-              <Grid.Row>
-                <GridColumnDetail>
-                  <FormattedMessage id={`sharedListings.detailRow.seller`} defaultMessage='SELLER' />
-                </GridColumnDetail>
-              </Grid.Row>
-              <Grid.Row>
-                <GridColumnDetail textAlign='center' verticalAlign='middle'>
-                  <DivRectangle>
-                    <Image verticalAlign='middle' src={Logo} />
-                  </DivRectangle>
-                </GridColumnDetail>
-                <GridColumnDetail>
-                  <DivName> {row?.companyProduct?.intProductName}</DivName>
-                  <DivAddress>{address}</DivAddress>
-                  <DivButtons>
-                    <BasicButtonCustom
-                      fluid
-                      onClick={() => console.log('click message seller')}
-                      data-test='shared_listings_message_seller_btn'>
-                      <DivTextButton>
-                        <DivMail>
-                          <Mail size='14' color='black' />
-                        </DivMail>
-                        <span>
-                          <FormattedMessage
-                            id='sharedListings.detailRow.messageSeller'
-                            defaultMessage='Message Seller'
-                          />
-                        </span>
-                      </DivTextButton>
-                    </BasicButtonCustom>
-                    <BasicButtonCustom
-                      fluid
-                      onClick={() => console.log('click trade pass')}
-                      data-test='shared_listings_trade_pass_btn'>
-                      <FormattedMessage id='sharedListings.detailRow.tradePass' defaultMessage='Trade Pass' />
-                    </BasicButtonCustom>
-                  </DivButtons>
-                </GridColumnDetail>
-              </Grid.Row>
-            </SegmentHeader>
-
-            <SegmentHeader textAlign='left'>
-              <Grid.Row>
-                <GridColumnDetail>
-                  <FormattedMessage id={`sharedListings.detailRow.pricing`} defaultMessage='PRICING' />
-                </GridColumnDetail>
-              </Grid.Row>
-
-              <Grid.Row>
-                <GridColumnDetail width={16}>
-                  <TableSegment>
-                    <StyledList divided relaxed horizontal size='large'>
-                      {row?.priceColumns?.map((p, i) => (
-                        <List.Item key={i}>
-                          <List.Content>
-                            <List.Header as='label'>
-                              <FormattedMessage
-                                id={`detailRow.pricing.${row?.companyProduct?.packagingType?.name}`}
-                                defaultMessage='{titleNumbers} bag'
-                                values={{ titleNumbers: p.titleNumbers }}
-                              />
-                            </List.Header>
-                            <List.Description as='span'>{getSafe(() => p.value, '')}</List.Description>
-                          </List.Content>
-                        </List.Item>
-                      ))}
-                    </StyledList>
-                  </TableSegment>
-                </GridColumnDetail>
-              </Grid.Row>
-              <Grid.Row>
-                <GridColumnDetail width={8}>
-                  <Input
-                    label='%'
-                    labelPosition='right'
-                    name='markup'
-                    placeholder={intl.formatMessage({ id: 'sharedListings.detailRow.enterMarkup' })}
-                    onChange={(e, data) => setMarkup(data.value)}
-                    value={markup}
-                  />
-                </GridColumnDetail>
-                <GridColumnDetail width={8}>
-                  <BasicButton
-                    noBorder
-                    textcolor='#ffffff !important'
-                    background='#00c7f9 !important'
+    <>
+      <SegmentGroupHeader horizontal $noneBorder>
+        <SegmentHeader textAlign='left'>
+          <StyledGrid>
+            <Grid.Row>
+              <GridColumnDetail>
+                <FormattedMessage id={`sharedListings.detailRow.seller`} defaultMessage='SELLER' />
+              </GridColumnDetail>
+            </Grid.Row>
+            <Grid.Row>
+              <GridColumnDetail width={4} textAlign='center' verticalAlign='middle'>
+                <DivRectangle>
+                  <Image verticalAlign='middle' src={Logo} />
+                </DivRectangle>
+              </GridColumnDetail>
+              <GridColumnDetail width={12}>
+                <DivName> {row?.companyProduct?.intProductName}</DivName>
+                <DivAddress>{address}</DivAddress>
+                <DivButtons>
+                  <BasicButtonCustom
                     fluid
-                    onClick={() => console.log('click save')}
-                    data-test='shared_listings_markup_save_btn'>
-                    <FormattedMessage id='global.save' defaultMessage='Save' />
-                  </BasicButton>
-                </GridColumnDetail>
-              </Grid.Row>
-            </SegmentHeader>
-          </SegmentGroupHeader>
-        </GridColumnDetail>
-      </GridRowBottomSegment>
+                    onClick={() => console.log('click message seller')}
+                    data-test='shared_listings_message_seller_btn'>
+                    <DivTextButton>
+                      <DivMail>
+                        <Mail size='14' color='black' />
+                      </DivMail>
+                      <span>
+                        <FormattedMessage id='sharedListings.detailRow.messageSeller' defaultMessage='Message Seller' />
+                      </span>
+                    </DivTextButton>
+                  </BasicButtonCustom>
+                  <BasicButtonCustom
+                    fluid
+                    onClick={() => console.log('click trade pass')}
+                    data-test='shared_listings_trade_pass_btn'>
+                    <FormattedMessage id='sharedListings.detailRow.tradePass' defaultMessage='Trade Pass' />
+                  </BasicButtonCustom>
+                </DivButtons>
+              </GridColumnDetail>
+            </Grid.Row>
+          </StyledGrid>
+        </SegmentHeader>
+
+        <SegmentHeader textAlign='left'>
+          <StyledGrid>
+            <Grid.Row>
+              <GridColumnDetail>
+                <FormattedMessage id={`sharedListings.detailRow.pricing`} defaultMessage='PRICING' />
+              </GridColumnDetail>
+            </Grid.Row>
+
+            <Grid.Row>
+              <GridColumnDetail width={16}>
+                <TableSegment>
+                  <StyledList divided relaxed horizontal size='large'>
+                    {row?.priceColumns?.map((p, i) => (
+                      <List.Item key={i}>
+                        <List.Content>
+                          <List.Header as='label'>
+                            <FormattedMessage
+                              id={`detailRow.pricing.${row?.companyProduct?.packagingType?.name}`}
+                              defaultMessage='{titleNumbers} bag'
+                              values={{ titleNumbers: p.titleNumbers }}
+                            />
+                          </List.Header>
+                          <List.Description as='span'>{getSafe(() => p.value, '')}</List.Description>
+                        </List.Content>
+                      </List.Item>
+                    ))}
+                  </StyledList>
+                </TableSegment>
+              </GridColumnDetail>
+            </Grid.Row>
+            <Grid.Row>
+              <GridColumnDetail width={8}>
+                <Input
+                  fluid
+                  label='%'
+                  labelPosition='right'
+                  name='markup'
+                  placeholder={intl.formatMessage({ id: 'sharedListings.detailRow.enterMarkup' })}
+                  onChange={(e, data) => setMarkup(data.value)}
+                  value={markup}
+                />
+              </GridColumnDetail>
+              <GridColumnDetail width={8}>
+                <BasicButton
+                  noBorder
+                  textcolor='#ffffff !important'
+                  background='#00c7f9 !important'
+                  fluid
+                  onClick={() => console.log('click save')}
+                  data-test='shared_listings_markup_save_btn'>
+                  <FormattedMessage id='global.save' defaultMessage='Save' />
+                </BasicButton>
+              </GridColumnDetail>
+            </Grid.Row>
+          </StyledGrid>
+        </SegmentHeader>
+      </SegmentGroupHeader>
+
       <DivCollapse
         onClick={() => {
           let ids = expandedRowIds.slice()
@@ -212,7 +211,7 @@ const ListingDetail = props => {
         </div>
         <DivTradePassLogo>Close</DivTradePassLogo>
       </DivCollapse>
-    </StyledGrid>
+    </>
   )
 
   return (

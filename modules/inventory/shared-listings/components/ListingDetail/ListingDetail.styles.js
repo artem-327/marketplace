@@ -57,7 +57,6 @@ export const DivButtons = styled.div`
   font-size: 14px;
   padding-top: 8px;
   display: flex;
-  min-width: 400px;
 `
 
 export const BasicButtonCustom = styled(BasicButton)`
