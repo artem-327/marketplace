@@ -2,6 +2,7 @@ import * as Yup from 'yup'
 import { debounce } from 'lodash'
 import { GridColumn, Checkbox, FormField } from 'semantic-ui-react'
 import { Field as FormikField } from 'formik'
+import { isEmpty } from 'lodash'
 //Services
 import { getSafe, removeEmpty } from '../../../../../utils/functions'
 import { errorMessages, phoneValidation } from '../../../../../constants/yupValidation'
@@ -42,7 +43,7 @@ export const getHomeBranchesOptions = branches =>
  * Gets branches where warehouse === false for dropdown options.
  * @category Settings - Users
  * @method
- * @param {{id: number, deliveryAddress: {cfName: string}}[]} branches
+ * @param {{id: number, deliveryAddress: {cfName: string}, warehouse: boolean}[]} branches
  * @return {{key: number, value: number, text: string}[]} Array objects for dropdown options.
  */
 export const getBranchesOptions = branches => {
@@ -61,24 +62,30 @@ export const getBranchesOptions = branches => {
  * @return {TInitialValues} Object fields for form.
  */
 export const getInitialFormValues = sidebarValues => {
-  return sidebarValues
+  return !isEmpty(sidebarValues)
     ? {
-        additionalBranches: sidebarValues.additionalBranches.map(d => d.id),
-        email: sidebarValues.email,
-        homeBranch: sidebarValues.homeBranch ? sidebarValues.homeBranch.id : '',
-        jobTitle: sidebarValues.jobTitle,
-        name: sidebarValues.name,
-        phone: sidebarValues.phone,
+        additionalBranches: sidebarValues?.additionalBranches?.map(d => d?.id),
+        email: sidebarValues?.email,
+        homeBranch: sidebarValues?.homeBranch ? sidebarValues?.homeBranch?.id : '',
+        jobTitle: sidebarValues?.jobTitle,
+        name: sidebarValues?.name,
+        phone: sidebarValues?.phone,
         preferredCurrency: currencyId,
-        roles: sidebarValues.roles.map(d => d.id),
-        sellMarketSegments: getSafe(() => sidebarValues.sellMarketSegments, []).map(d => d.id),
-        buyMarketSegments: getSafe(() => sidebarValues.buyMarketSegments, []).map(d => d.id),
-        dailyPurchaseLimit: sidebarValues?.dailyPurchaseLimit,
-        monthlyPurchaseLimit: sidebarValues?.monthlyPurchaseLimit,
-        orderPurchaseLimit: sidebarValues?.orderPurchaseLimit,
+        roles: sidebarValues?.roles?.map(d => d?.id),
+        sellMarketSegments: getSafe(() => sidebarValues?.sellMarketSegments, [])?.map(d => d?.id),
+        buyMarketSegments: getSafe(() => sidebarValues?.buyMarketSegments, [])?.map(d => d?.id),
         regulatoryDeaListAuthorized: sidebarValues?.regulatoryDeaListAuthorized,
         regulatoryDhsCoiAuthorized: sidebarValues?.regulatoryDhsCoiAuthorized,
-        regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized
+        regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized,
+        dailyPurchaseLimit: !isNaN(parseInt(sidebarValues?.dailyPurchaseLimit?.value))
+          ? parseInt(sidebarValues?.dailyPurchaseLimit?.value)
+          : null,
+        orderPurchaseLimit: !isNaN(parseInt(sidebarValues?.orderPurchaseLimit?.value))
+          ? parseInt(sidebarValues?.orderPurchaseLimit?.value)
+          : null,
+        monthlyPurchaseLimit: !isNaN(parseInt(sidebarValues?.monthlyPurchaseLimit?.value))
+          ? parseInt(sidebarValues?.monthlyPurchaseLimit?.value)
+          : null
       }
     : {
         name: '',
@@ -92,12 +99,12 @@ export const getInitialFormValues = sidebarValues => {
         roles: [],
         buyMarketSegments: [],
         sellMarketSegments: [],
-        dailyPurchaseLimit: null,
-        monthlyPurchaseLimit: null,
-        orderPurchaseLimit: null,
         regulatoryDeaListAuthorized: false,
         regulatoryDhsCoiAuthorized: false,
-        regulatoryHazmatAuthorized: false
+        regulatoryHazmatAuthorized: false,
+        dailyPurchaseLimit: null,
+        orderPurchaseLimit: null,
+        monthlyPurchaseLimit: null
       }
 }
 
@@ -105,7 +112,7 @@ export const getInitialFormValues = sidebarValues => {
  * Handles Sell Market Segment dropdown change.
  * @category Settings - Users
  * @method
- * @param {number} value
+ * @param {array} value
  * @param {{value: number}[]} options
  * @return {array} Array objects for dropdown options.
  */
@@ -115,10 +122,10 @@ export const handleSellMarketSegmentsChange = (value, options) => options.filter
  * Handles Buy Market Segment dropdown change.
  * @category Settings - Users
  * @method
- * @param {number} value
+ * @param {array} value
  * @param {{value: number}[]} options
  * @param {object} state object with state / set state Hook functions
- * @return {array} Array objects for dropdown options.
+ * @return {void}
  */
 export const handleBuyMarketSegmentsChange = (value, options, state) => {
   const newOptions = options.filter(el => value.some(v => el.value === v))
@@ -195,7 +202,7 @@ export const generateCheckboxes = (data, values, groupName = null, error) => {
  * @method
  * @param {object} sidebarValues
  * @param {object} state object with state / set state Hook functions
- * @return {none}
+ * @return {void}
  */
 export const switchUser = async (sidebarValues, state) => {
   let selectedSellMarketSegmentsOptions = []
@@ -250,7 +257,8 @@ export const submitUser = async (values, actions, props, state) => {
     currentUserId,
     getIdentity,
     openGlobalAddForm,
-    chatWidgetVerticalMoved
+    chatWidgetVerticalMoved,
+    userSettings
   } = props
   const { sidebarValues } = state
   let sendSuccess = false
@@ -272,26 +280,38 @@ export const submitUser = async (values, actions, props, state) => {
     regulatoryDhsCoiAuthorized: values?.regulatoryDhsCoiAuthorized,
     regulatoryDhsCoiSignedDate,
     regulatoryHazmatAuthorized: values?.regulatoryHazmatAuthorized
-    // Uncommented when BE is prepared to accept these 3 number fields
-    // dailyPurchaseLimit: !isNaN(parseInt(values?.dailyPurchaseLimit)) ? parseInt(values?.dailyPurchaseLimit) : '',
-    // orderPurchaseLimit: !isNaN(parseInt(values?.orderPurchaseLimit)) ? parseInt(values?.orderPurchaseLimit) : '',
-    // monthlyPurchaseLimit: !isNaN(parseInt(values?.monthlyPurchaseLimit)) ? parseInt(values?.monthlyPurchaseLimit) : ''
-
     /*Commented by https://pm.artio.net/issues/34033#note-14 */
     //sellMarketSegments: values.sellMarketSegments,
     //buyMarketSegments: values.buyMarketSegments
+  }
+
+  const settingsData = {
+    settings: [
+      {
+        id: userSettings?.dailyPurchaseLimit?.id,
+        value: values?.dailyPurchaseLimit?.toString() || 'EMPTY_SETTING'
+      },
+      {
+        id: userSettings?.monthlyPurchaseLimit?.id,
+        value: values?.monthlyPurchaseLimit?.toString() || 'EMPTY_SETTING'
+      },
+      {
+        id: userSettings?.orderPurchaseLimit?.id,
+        value: values?.orderPurchaseLimit?.toString() || 'EMPTY_SETTING'
+      }
+    ]
   }
 
   removeEmpty(data)
 
   try {
     if (sidebarValues) {
-      const { value } = await handlerSubmitUserEditPopup(sidebarValues.id, data)
+      const { value } = await handlerSubmitUserEditPopup(sidebarValues.id, data, settingsData)
       !openGlobalAddForm && datagrid.updateRow(sidebarValues.id, () => value)
       sendSuccess = true
       if (currentUserId === sidebarValues.id) getIdentity()
     } else {
-      await postNewUserRequest(data)
+      await postNewUserRequest(data, settingsData)
       !openGlobalAddForm && datagrid.loadData()
       sendSuccess = true
     }
@@ -301,7 +321,9 @@ export const submitUser = async (values, actions, props, state) => {
       closeSidebar()
       chatWidgetVerticalMoved(false)
     }
-  } catch {}
+  } catch (err) {
+    console.error(err)
+  }
   actions.setSubmitting(false)
   return sendSuccess
 }
