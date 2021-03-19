@@ -9,71 +9,47 @@ import { getSafe } from '~/utils/functions'
 import ProdexTable from '../../../../components/table'
 import Tutorial from '../../../tutorial/Tutorial'
 import ListingDetail from './ListingDetail/ListingDetail'
-
+import TableHandler from './TableHandler'
 
 // Hooks
 //import { usePrevious } from '../../../hooks'
 
 // Styles
-import {
-  IconDown,
-  IconUp,
-
-} from './SharedListings.styles'
+import { IconDown, IconUp } from './SharedListings.styles'
 
 // Services
-import {
-  getRows
-} from './SharedListings.services'
+import { getRows } from './SharedListings.services'
 
 // Constants
-import {
-  COLUMNS
-} from './SharedListings.constants'
+import { COLUMNS } from './SharedListings.constants'
 
 const SharedListings = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
 
-
-  const {
-    datagrid,
-    rows,
-
-  } = props
+  const { datagrid, rows, intl } = props
 
   const state = {
-    expandedRowIds, setExpandedRowIds
+    expandedRowIds,
+    setExpandedRowIds
   }
 
   // Similar to call componentDidMount:
-  useEffect(() => {
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
+  useEffect(() => {}, []) // If [] is empty then is similar as componentDidMount.
 
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {
-
-  }, [/* variableName */])
-
-
+  useEffect(() => {}, [
+    /* variableName */
+  ])
 
   const getRowDetail = (row, props, state) => {
     // ! ! predat potrebne props
-    return (
-      <ListingDetail
-        row={row.rawData}
-        parentState={state}
-
-      />
-    )
+    return <ListingDetail row={row.rawData} parentState={state} />
   }
 
   return (
     <>
-      <div>
-        table handlers
-      </div>
+      <TableHandler intl={intl} datagrid={datagrid} />
       <div className='flex stretched inventory-wrapper listings-wrapper' style={{ padding: '10px 30px' }}>
         <ProdexTable
           {...datagrid.tableProps}
@@ -112,7 +88,7 @@ const SharedListings = props => {
           toggleCellComponent={null}
           estimatedRowHeight={1500}
         />
-        </div>
+      </div>
     </>
   )
 }
@@ -121,8 +97,6 @@ SharedListings.propTypes = {
   //PropTypes.number
 }
 
-SharedListings.defaultProps = {
-
-}
+SharedListings.defaultProps = {}
 
 export default injectIntl(SharedListings)

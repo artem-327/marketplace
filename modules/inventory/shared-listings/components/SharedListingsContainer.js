@@ -6,8 +6,11 @@ import { withDatagrid } from '~/modules/datagrid'
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
 import { getSafe, getLocationString } from '~/utils/functions'
-import SharedListings from "./SharedListings"
-import moment from "../../my-listings/components/MyListingsContainer";
+import SharedListings from './SharedListings'
+import moment from '../../my-listings/components/MyListingsContainer'
+
+//Services
+import { getPriceColumns } from './SharedListings.services'
 
 function mapStateToProps(store, { datagrid }) {
   return {
@@ -46,11 +49,13 @@ function mapStateToProps(store, { datagrid }) {
               {qtyPart && `/ ${qtyPart}`}{' '}
             </>
           )
-      } catch (e) { console.error(e) }
+      } catch (e) {
+        console.error(e)
+      }
 
       return {
         ...po,
-        rawData: po,
+        rawData: { ...po, priceColumns: getPriceColumns(po) },
         groupProductName: getSafe(() => po.companyProduct.intProductName, 'Unmapped'),
         // Datagrid columns
         expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
@@ -63,6 +68,7 @@ function mapStateToProps(store, { datagrid }) {
         available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
         quantity: getSafe(() => po.quantity, ''),
         location: getLocationString(po),
+
         cost: po.costPerUOM ? (
           <FormattedNumber
             minimumFractionDigits={3}
@@ -80,6 +86,4 @@ function mapStateToProps(store, { datagrid }) {
   }
 }
 
-export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, getTemplates })(SharedListings)
-)
+export default withDatagrid(connect(mapStateToProps, { ...Actions, getTemplates })(SharedListings))

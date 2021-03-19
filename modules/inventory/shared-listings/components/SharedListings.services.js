@@ -1,14 +1,14 @@
-import moment from "../../my-listings/components/MyListings";
+import moment from '../../my-listings/components/MyListings'
 import ActionCell from '../../../../components/table/ActionCell'
 import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Dropdown, Grid, Input } from 'semantic-ui-react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { Warning } from '@material-ui/icons'
 import { FormattedUnit } from '../../../../components/formatted-messages'
-
-import {
-  CapitalizedText,
-
-} from './SharedListings.styles'
+import Router from 'next/router'
+//Constants
+import { currency } from '../../../../constants/index'
+//Components
+import { CapitalizedText } from './SharedListings.styles'
 
 const getActions = props => {
   const {
@@ -22,7 +22,7 @@ const getActions = props => {
         id: 'inventory.broadcast',
         defaultMessage: 'Price Book'
       }),
-      callback: row => console.log('!!!!!!!!!! Open Action Price Book', row)
+      callback: row => Router.push('/inventory/global-price-book')
     }
   ]
 }
@@ -45,10 +45,8 @@ export const getRows = (rows, props) => {
   } = props
   let title
 
-
   return rows.map((r, index) => {
     const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
-
 
     let productStatusText = null
     switch (r.cfStatus) {
@@ -79,7 +77,6 @@ export const getRows = (rows, props) => {
           row={r}
           getActions={() => getActions(props)}
           content={r.productName}
-
           rightAlignedContent={
             r.expired || productStatusText ? (
               <Popup
@@ -117,6 +114,34 @@ export const getRows = (rows, props) => {
         </>
       ),
       quantity: r.qtyPart && r.quantity ? <FormattedUnit unit={r.qtyPart} separator=' ' value={r.quantity} /> : 'N/A'
+    }
+  })
+}
+
+/**
+ * @category Shared Listings
+ * @method
+ * @param {object} row
+ * @returns {{titleNumbers: string, value: JSX.Element}[]}
+ */
+export const getPriceColumns = row => {
+  if (!row) return
+  return row?.pricingTiers?.map((p, i) => {
+    return {
+      titleNumbers:
+        i === 0 ? `0 - ${p.quantityFrom}` : `${row?.pricingTiers[i - 1].quantityFrom + 1} - ${p.quantityFrom}`,
+      value: (
+        <span>
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={p?.pricePerUOM}
+          />
+          {`/${row?.companyProduct?.packagingUnit?.nameAbbreviation}`}
+        </span>
+      )
     }
   })
 }
