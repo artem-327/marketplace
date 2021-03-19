@@ -187,12 +187,12 @@ export const BUTTON_PROPS = {
   ],
   REQUESTED: [
     {
-      textId: 'myNetworks.detailRow.disconnect',
+      textId: 'global.remove',
       color: '#ffffff !important',
-      background: '#5e5e5e !important',
-      borderColor: '#cecece !important',
-      action: 'disconnect',
-      confirmId: 'myNetworks.detailRow.modal.disconnect'
+      background: '#f16844 !important',
+      borderColor: '#fce1da !important',
+      action: 'remove',
+      confirmId: 'myNetworks.detailRow.modal.remove'
     }
   ],
   CONNECTED: [
