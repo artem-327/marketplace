@@ -43,7 +43,8 @@ import {
 class WarehouseCredentialsPending extends Component {
   state = {
     expandedRowIds: [],
-    expandedSubrowIds: []
+    expandedSubrowIds: [],
+    formikData: {}
   }
 
   componentDidMount() {
@@ -68,6 +69,19 @@ class WarehouseCredentialsPending extends Component {
     element.download = documentName
     document.body.appendChild(element) // Required for this to work in FireFox
     element.click()
+  }
+
+  handleChange = (e, branchId, { name, value }) => {
+    let { formikData } = this.state
+    const parts = name.split(".")
+    if (!formikData[branchId])
+      formikData[branchId] = {}
+    if (!formikData[branchId][parts[0]])
+      formikData[branchId][parts[0]] = {}
+
+    formikData[branchId][parts[0]][parts[1]] = value
+
+    //this.setState({ formikData })
   }
 
   getRows = () => {
@@ -157,15 +171,42 @@ class WarehouseCredentialsPending extends Component {
     )
   }
 
+  mergeInitialValues = (initialValues, stateValues) => {
+    let mergedValues = {}
+    for (let mainAttr in initialValues) {
+      mergedValues[mainAttr] = {}
+      if (stateValues[mainAttr]) {
+        for (let subAttr in initialValues[mainAttr]) {
+          if (stateValues[mainAttr][subAttr]) {
+            mergedValues[mainAttr][subAttr] = stateValues[mainAttr][subAttr]
+          } else {
+            mergedValues[mainAttr][subAttr] = initialValues[mainAttr][subAttr]
+          }
+        }
+      } else {
+        mergedValues[mainAttr] = initialValues[mainAttr]
+      }
+    }
+
+    return mergedValues
+  }
+
   renderSubDetail = branch => {
     const {
       intl: { formatMessage }
     } = this.props
+    const { formikData } = this.state
+    let stateData = {}
+    if (`${branch.id}` in formikData)
+      stateData = formikData[branch.id]
+
+    const mergedValues = this.mergeInitialValues(INITIAL_VALUES, stateData)
+
     return (
       <Formik
         onSubmit={async (values, actions) => {}}
         enableReinitialize
-        initialValues={INITIAL_VALUES}
+        initialValues={mergedValues}
         validationSchema={VALIDATION_SCHEME}>
         {formikProps => {
           const { submitForm, validateForm, setFieldTouched, setFieldError } = formikProps
@@ -193,7 +234,7 @@ class WarehouseCredentialsPending extends Component {
                   <FormArea>
                     <FormGroup widths='equal'>
                       <DateInput
-                        inputProps={{ maxDate: moment(), id: 'deaIssueDate', clearable: true }}
+                        inputProps={{ maxDate: moment(), id: 'deaIssueDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
                         name='dea.issueDate'
                         label={
                           <>
@@ -203,7 +244,7 @@ class WarehouseCredentialsPending extends Component {
                         }
                       />
                       <DateInput
-                        inputProps={{ minDate: moment().add(1, 'days'), id: 'deaExpDate', clearable: true }}
+                        inputProps={{ minDate: moment().add(1, 'days'), id: 'deaExpDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
                         name='dea.expDate'
                         label={
                           <>
@@ -214,7 +255,7 @@ class WarehouseCredentialsPending extends Component {
                       />
                     </FormGroup>
                     <ButtonGroup>
-                      <BasicButton noborder onClick={() => this.props.denyDeaListCertificate(branch.id)}>
+                      <BasicButton $noBorder onClick={() => this.props.denyDeaListCertificate(branch.id)}>
                         <FormattedMessage id='global.deny' defaultMessage='Deny' />
                       </BasicButton>
                       <BasicButton
@@ -297,10 +338,11 @@ class WarehouseCredentialsPending extends Component {
                             <Required />
                           </>
                         }
+                        inputProps={{ onChange: (e, data) => this.handleChange(e, branch.id, data) }}
                         name='taxExempt.certificateNumber'
                       />
                       <DateInput
-                        inputProps={{ maxDate: moment(), id: 'taxExemptIssueDate', clearable: true }}
+                        inputProps={{ maxDate: moment(), id: 'taxExemptIssueDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
                         name='taxExempt.issueDate'
                         label={
                           <>
@@ -310,7 +352,7 @@ class WarehouseCredentialsPending extends Component {
                         }
                       />
                       <DateInput
-                        inputProps={{ minDate: moment().add(1, 'days'), id: 'taxExemptExpireDate', clearable: true }}
+                        inputProps={{ minDate: moment().add(1, 'days'), id: 'taxExemptExpireDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
                         name='taxExempt.expDate'
                         label={
                           <>
@@ -321,7 +363,7 @@ class WarehouseCredentialsPending extends Component {
                       />
                     </FormGroup>
                     <ButtonGroup>
-                      <BasicButton noborder onClick={() => this.props.denyTaxExemptCertificate(branch.id)}>
+                      <BasicButton $noBorder onClick={() => this.props.denyTaxExemptCertificate(branch.id)}>
                         <FormattedMessage id='global.deny' defaultMessage='Deny' />
                       </BasicButton>
                       <BasicButton
