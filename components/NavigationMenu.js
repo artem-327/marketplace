@@ -103,6 +103,7 @@ class Navigation extends Component {
     inventory:
       getSafe(() => Router.router.pathname === '/inventory/my-listings', false) ||
       getSafe(() => Router.router.pathname === '/inventory/my-products', false) ||
+      getSafe(() => Router.router.pathname === '/inventory/shared-listings', false) ||
       getSafe(() => Router.router.pathname === '/inventory/global-price-book', false),
     marketplace:
       getSafe(() => Router.router.pathname === '/marketplace/listings', false) ||
@@ -111,8 +112,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
     myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
     alerts: getSafe(() => Router.router.pathname === '/alerts', false),
-    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/all', false),
-    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false),
+    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/all', false) ||
+      getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false),
     activeNetworkStatus: 'ALL'
   }
 
@@ -359,6 +360,12 @@ class Navigation extends Component {
                 to='/inventory/my-products'
                 dataTest='navigation_menu_inventory_my_products_drpdn'>
                 {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/inventory/shared-listings'
+                dataTest='navigation_menu_inventory_shared_listings_drpdn'>
+                {formatMessage({ id: 'navigation.inventorySharedListings', defaultMessage: 'Shared Listings' })}
               </Dropdown.Item>
               {isCompanyAdmin && (
                 <Dropdown.Item
