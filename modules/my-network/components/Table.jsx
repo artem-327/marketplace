@@ -49,7 +49,7 @@ const Table = props => {
     } else {
       if (row.connectedCompany.id === 1) {
         showBluePallet()
-        //return false
+        return false
       }
       ids.push(row.id)
       setExpandedRowIds(ids)
