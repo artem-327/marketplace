@@ -3309,5 +3309,8 @@
   "sharedListings.detailRow.tradePass": "Trade Pass",
   "detailRow.pricing.bag": "{titleNumbers} bag",
   "detailRow.pricing.markup": "Markup",
-  "sharedListings.detailRow.enterMarkup": "Enter Markup"
+  "sharedListings.detailRow.enterMarkup": "Enter Markup",
+  "sharedListings.detailRow.tabInfo": "Info",
+  "sharedListings.detailRow.purchaseInfo": "Purchase Info",
+  "sharedListings.detailRow.productInfo": "Product Info"
 }
