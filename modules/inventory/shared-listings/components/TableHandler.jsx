@@ -1,8 +1,12 @@
 import { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
+import { injectIntl } from 'react-intl'
+
 //Styles
 import { InputSearch, DropdownType, DivTableHandler } from './SharedListings.styles'
+//Components
+import SearchByNamesAndTags from '../../../search'
 
 const TableHandler = props => {
   const [searchValue, setSearchValue] = useState('')
@@ -14,7 +18,16 @@ const TableHandler = props => {
 
   return (
     <DivTableHandler>
-      <InputSearch
+      <SearchByNamesAndTags
+        onChange={data => {
+          console.log('data')
+          console.log(data)
+          props?.datagrid?.setSearch(data, true, 'pageFilters')
+        }}
+        //initFilterState={getSafe(() => myListingsFilters.SearchByNamesAndTags, null)}
+        filterApply={false}
+      />
+      {/* <InputSearch
         fluid
         icon='search'
         name='searchInput'
@@ -27,7 +40,7 @@ const TableHandler = props => {
           setSearchValue(data?.value)
           debounceSetQuery(data?.value) //FIXME prepare value for setSearch in datagrid
         }}
-      />
+      /> */}
       <DropdownType
         name='location'
         value={location}
@@ -65,4 +78,4 @@ const TableHandler = props => {
 
 TableHandler.propTypes = {}
 
-export default TableHandler
+export default injectIntl(TableHandler)

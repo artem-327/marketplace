@@ -11,18 +11,12 @@ import { currency } from '../../../../constants/index'
 import { CapitalizedText } from './SharedListings.styles'
 
 const getActions = props => {
-  const {
-    intl: { formatMessage },
-    datagrid
-  } = props
+  const { datagrid, triggerPriceBookModal } = props
 
   return [
     {
-      text: formatMessage({
-        id: 'inventory.broadcast',
-        defaultMessage: 'Price Book'
-      }),
-      callback: row => Router.push('/inventory/global-price-book')
+      text: 'Price Book',
+      callback: row => triggerPriceBookModal(true, row.id)
     }
   ]
 }
@@ -35,7 +29,6 @@ export const getRows = (rows, props) => {
     modalDetailTrigger,
     toastManager,
     closePricingEditPopup,
-    intl: { formatMessage },
     broadcastTemplates,
     isProductInfoOpen,
     closePopup,
@@ -46,7 +39,7 @@ export const getRows = (rows, props) => {
   let title
 
   return rows.map((r, index) => {
-    const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
+    //const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
     let productStatusText = null
     switch (r.cfStatus) {

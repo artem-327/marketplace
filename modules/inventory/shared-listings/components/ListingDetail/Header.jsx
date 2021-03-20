@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { memo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Image, Input, List } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
@@ -9,38 +9,19 @@ import BasicButton from '../../../../../components/buttons/BasicButton'
 
 // Styles
 import {
-  DivDetailWrapper,
-  GridStyled,
-  GridRowButton,
   DivRectangle,
   DivName,
   DivAddress,
   DivButtons,
   BasicButtonCustom,
   DivMail,
-  DivTextButton,
-  UpperCaseText
+  DivTextButton
 } from './ListingDetail.styles'
-import {
-  StyledGrid,
-  TableSegment,
-  StyledList,
-  DetailMessage,
-  ColumnDetail
-} from '../../../../../components/detail-row/styles'
+import { StyledGrid, TableSegment, StyledList } from '../../../../../components/detail-row/styles'
 import {
   SegmentGroupHeader,
   GridColumnDetail,
-  GridRowBottomSegment,
-  DivTitleBottomSegment,
-  DivValue,
-  SegmentBottom as SegmentHeader,
-  DivTitleTradeCriteria,
-  DivCollapse,
-  DivIconCollapse,
-  DivCollapseText,
-  DivTradePassLogo,
-  GridRowLoadingBottomSegment
+  SegmentBottom as SegmentHeader
 } from '../../../../my-network/components/DetailRow/DetailRow.style'
 import { getSafe } from '../../../../../utils/functions'
 
@@ -48,7 +29,7 @@ import { getSafe } from '../../../../../utils/functions'
  * @category Inventory - Shared Listings
  * @component
  */
-const Header = ({ row, intl }) => {
+const Header = ({ row }) => {
   const [markup, setMarkup] = useState('')
 
   let address = row?.warehouse?.deliveryAddress?.address?.city //MOVE to mapStateToProps and services
@@ -139,7 +120,7 @@ const Header = ({ row, intl }) => {
                 label='%'
                 labelPosition='right'
                 name='markup'
-                placeholder={intl.formatMessage({ id: 'sharedListings.detailRow.enterMarkup' })}
+                placeholder={'Enter Markup'}
                 onChange={(e, data) => setMarkup(data.value)}
                 value={markup}
               />
@@ -164,4 +145,8 @@ const Header = ({ row, intl }) => {
 
 Header.propTypes = {}
 
-export default Header
+function areEqual(prevProps, nextProps) {
+  return prevProps?.row?.id === nextProps?.row?.id
+}
+
+export default memo(Header, areEqual)

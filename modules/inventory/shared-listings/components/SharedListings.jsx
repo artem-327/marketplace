@@ -2,7 +2,6 @@
 import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 
 // Components
@@ -10,6 +9,8 @@ import ProdexTable from '../../../../components/table'
 import Tutorial from '../../../tutorial/Tutorial'
 import ListingDetail from './ListingDetail/ListingDetail'
 import TableHandler from './TableHandler'
+import { Broadcast } from '../../../broadcast'
+import ModalPriceBook from './ModalPriceBook/ModalPriceBook'
 
 // Hooks
 //import { usePrevious } from '../../../hooks'
@@ -26,30 +27,27 @@ import { COLUMNS } from './SharedListings.constants'
 const SharedListings = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
 
-  const { datagrid, rows, intl } = props
+  const { datagrid, rows, activeTab, setActiveTab, isOpenPriceBookModal, triggerPriceBookModal, rowIdPriceBook } = props
 
   const state = {
     expandedRowIds,
     setExpandedRowIds
   }
 
-  // Similar to call componentDidMount:
-  useEffect(() => {}, []) // If [] is empty then is similar as componentDidMount.
-
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {}, [
-    /* variableName */
-  ])
-
   const getRowDetail = (row, props, state) => {
     // ! ! predat potrebne props
-    return <ListingDetail row={row.rawData} parentState={state} />
+    return <ListingDetail row={row.rawData} parentState={state} activeTab={activeTab} setActiveTab={setActiveTab} />
   }
 
   return (
     <>
-      <TableHandler intl={intl} datagrid={datagrid} />
+      <ModalPriceBook
+        isOpenPriceBookModal={isOpenPriceBookModal}
+        triggerPriceBookModal={triggerPriceBookModal}
+        rowIdPriceBook={rowIdPriceBook}
+      />
+
+      <TableHandler datagrid={datagrid} />
       <div className='flex stretched inventory-wrapper listings-wrapper' style={{ padding: '10px 30px' }}>
         <ProdexTable
           {...datagrid.tableProps}
@@ -75,12 +73,12 @@ const SharedListings = props => {
           }
           renderGroupLabel={({ row: { value }, groupLength }) => null}
           onRowClick={(_, row) => {
+            setActiveTab(0)
             let ids = expandedRowIds.slice()
             if (ids.includes(row.id)) {
-              setExpandedRowIds(ids.filter(id => id !== row.id))
+              setExpandedRowIds([])
             } else {
-              ids.push(row.id)
-              setExpandedRowIds(ids)
+              setExpandedRowIds([row.id])
             }
           }}
           expandedRowIds={expandedRowIds}
@@ -99,4 +97,4 @@ SharedListings.propTypes = {
 
 SharedListings.defaultProps = {}
 
-export default injectIntl(SharedListings)
+export default SharedListings

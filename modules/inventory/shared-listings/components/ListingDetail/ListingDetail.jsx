@@ -1,15 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { memo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { Grid, Tab, Menu } from 'semantic-ui-react'
 import { ChevronsUp } from 'react-feather'
 
 // Components
 //import ErrorFocus from '../../../components/error-focus'
 import Header from './Header'
-import InfoTab from './Tabs/InfoTab'
+import Tabs from './Tabs/Tabs'
 // Hooks
 //import { usePrevious } from '../../../hooks'
 
@@ -17,7 +14,6 @@ import InfoTab from './Tabs/InfoTab'
 import { TabPane } from './ListingDetail.styles'
 import { StyledGrid } from '../../../../../components/detail-row/styles'
 import {
-  GridColumnDetail,
   DivCollapse,
   DivIconCollapse,
   DivCollapseText,
@@ -30,101 +26,22 @@ import {
 const ListingDetail = props => {
   const [tmp, set] = useState(false)
 
-  const [activeTab, setActiveTab] = useState(0)
-
-  const { parentState, row, intl } = props
+  const { parentState, row, setActiveTab, activeTab } = props
 
   const { expandedRowIds, setExpandedRowIds } = parentState
 
-  // Similar to call componentDidMount:
-  useEffect(() => {}, []) // If [] is empty then is similar as componentDidMount.
-
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {}, [
-    /* variableName */
-  ])
-
   console.log('!!!!!!!!!! ListingDetail props', props)
-
-  const panes = [
-    {
-      menuItem: (
-        <Menu.Item key='info' onClick={() => setActiveTab(0)}>
-          {intl.formatMessage({ id: 'sharedListings.detailRow.tabInfo', defaultMessage: 'Info' })}
-        </Menu.Item>
-      ),
-      render: () => (
-        <TabPane key='info' attached={false}>
-          <InfoTab />
-        </TabPane>
-      )
-    },
-    {
-      menuItem: (
-        <Menu.Item key='info' onClick={() => setActiveTab(1)}>
-          {intl.formatMessage({ id: 'global.tds', defaultMessage: 'TDS' })}
-        </Menu.Item>
-      ),
-      render: () => (
-        <TabPane key='info' attached={false}>
-          Ahoj
-        </TabPane>
-      )
-    },
-    {
-      menuItem: (
-        <Menu.Item key='info' onClick={() => setActiveTab(2)}>
-          {intl.formatMessage({ id: 'global.sds', defaultMessage: 'SDS' })}
-        </Menu.Item>
-      ),
-      render: () => (
-        <TabPane key='info' attached={false}>
-          Ahoj
-        </TabPane>
-      )
-    },
-    {
-      menuItem: (
-        <Menu.Item key='info' onClick={() => setActiveTab(3)}>
-          {intl.formatMessage({ id: 'global.documents', defaultMessage: 'Documents' })}
-        </Menu.Item>
-      ),
-      render: () => (
-        <TabPane key='info' attached={false}>
-          Ahoj
-        </TabPane>
-      )
-    },
-    {
-      menuItem: (
-        <Menu.Item key='info' onClick={() => setActiveTab(4)}>
-          {intl.formatMessage({ id: 'global.notes', defaultMessage: 'Notes' })}
-        </Menu.Item>
-      ),
-      render: () => (
-        <TabPane key='info' attached={false}>
-          Ahoj
-        </TabPane>
-      )
-    }
-  ]
 
   return (
     <>
-      <Header row={row} intl={intl} />
-      <StyledGrid>
-        <Grid.Row>
-          <GridColumnDetail>
-            <Tab menu={{ secondary: true, pointing: true }} activeIndex={activeTab} panes={panes} />
-          </GridColumnDetail>
-        </Grid.Row>
-      </StyledGrid>
+      <Header row={row} />
+      <Tabs id={row.id} activeTab={activeTab} setActiveTab={setActiveTab} />
       <DivCollapse
         onClick={() => {
           let ids = expandedRowIds.slice()
           if (ids.includes(row.id)) {
-            setExpandedRowIds(ids.filter(id => id !== row.id))
+            setActiveTab(0)
+            setExpandedRowIds([])
           }
         }}
         data-test='shared_listings_detail_close_btn'>
@@ -146,9 +63,9 @@ ListingDetail.propTypes = {
 
 ListingDetail.defaultProps = {}
 
-function mapStateToProps(store) {
-  return {}
+function areEqual(prevProps, nextProps) {
+  return prevProps?.row?.id === nextProps?.row?.id && prevProps?.activeTab === nextProps?.activeTab
 }
 
 //export default injectIntl(ListingDetail)
-export default injectIntl(connect(mapStateToProps, {})(ListingDetail))
+export default memo(ListingDetail, areEqual)
