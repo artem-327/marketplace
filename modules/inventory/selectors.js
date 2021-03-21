@@ -2,19 +2,29 @@ import { createSelector } from 'reselect'
 import { getSafe, getLocationString } from '../../utils/functions'
 import { FormattedNumber } from 'react-intl'
 import moment from 'moment'
+import { Image } from 'semantic-ui-react'
 //Constants
-import { currency } from '~/constants/index'
+import { currency } from '../../constants/index'
 //Services
 import { getPriceColumns } from './shared-listings/components/SharedListings.services'
+//Styles
+import { DivSeller, ImageInRow, SpanSellerName } from './shared-listings/components/SharedListings.styles'
 
 const getDatagridRows = props => props?.datagrid?.rows
+export const getBroadcastTemplates = state => state?.broadcast?.templates
 
 export const makeGetDatagridRows = () => {
   return createSelector([getDatagridRows], rows => {
-    console.log('Memoized makeGetDatagridRows')
     return rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       let price
+      let address = po?.warehouse?.deliveryAddress?.address?.city //MOVE to mapStateToProps and services
+
+      if (po?.warehouse?.deliveryAddress?.address?.province?.abbreviation) {
+        address = `${address}, ${po?.warehouse?.deliveryAddress?.address?.province?.abbreviation}`
+      } else {
+        address = `${address}, ${po?.warehouse?.deliveryAddress?.address?.country?.code}`
+      }
       try {
         if (po.pricingTiers.length > 1)
           price = (
@@ -51,12 +61,20 @@ export const makeGetDatagridRows = () => {
 
       return {
         ...po,
-        rawData: { ...po, priceColumns: getPriceColumns(po) },
+        rawData: { ...po, address, priceColumns: getPriceColumns(po) },
         groupProductName: getSafe(() => po.companyProduct.intProductName, 'Unmapped'),
         // Datagrid columns
         expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
         productName: getSafe(() => po.companyProduct.intProductName, 'N/A'),
-        seller: getSafe(() => po.owner.cfDisplayName, 'N/A'),
+
+        seller: (
+          <DivSeller key={po.id}>
+            <Image verticalAlign='middle' size='mini' spaced={true} src={po?.createdBy?.company?.base64Logo} />
+            <SpanSellerName>{po?.owner?.cfDisplayName}</SpanSellerName>
+          </DivSeller>
+        ),
+
+        //seller: getSafe(() => po.owner.cfDisplayName, 'N/A'),
         packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
         packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
         packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
@@ -80,9 +98,4 @@ export const makeGetDatagridRows = () => {
       }
     })
   })
-}
-
-export const getBroadcastTemplates = state => {
-  console.log('Not memoized getBroadcastTemplates')
-  return state?.broadcast?.templates
 }

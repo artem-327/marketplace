@@ -10,7 +10,7 @@ import { TabPane } from '../ListingDetail.styles'
 //Components
 import InfoTab from './InfoTab'
 
-const Tabs = ({ id, activeTab, setActiveTab }) => {
+const Tabs = ({ row, activeTab, setActiveTab }) => {
   const panes = [
     {
       menuItem: (
@@ -20,7 +20,7 @@ const Tabs = ({ id, activeTab, setActiveTab }) => {
       ),
       render: () => (
         <TabPane key='info' attached={false}>
-          <InfoTab id={id} />
+          <InfoTab row={row} />
         </TabPane>
       )
     },
@@ -85,9 +85,10 @@ const Tabs = ({ id, activeTab, setActiveTab }) => {
 }
 
 Tabs.propTypes = {}
+Tabs.defaultProps = {}
 
 function areEqual(prevProps, nextProps) {
-  return prevProps?.id === nextProps?.id && prevProps?.actionTab === nextProps?.actionTab
+  return prevProps?.row?.id === nextProps?.row?.id && prevProps?.actionTab === nextProps?.actionTab
 }
 
 const MemoTabs = memo(Tabs, areEqual)

@@ -28,15 +28,15 @@ const SharedListings = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
 
   const [values, setValues] = useState({
-    header: { // ! ! hodit to asi do .constants.js ?
+    header: {
+      // ! ! hodit to asi do .constants.js ?
       pricingTabIndex: 0,
-      markup: 0
+      markup: ''
     },
     tabs: {
       activeTab: 0
     }
   })
-
 
   const { datagrid, rows, activeTab, setActiveTab, isOpenPriceBookModal, triggerPriceBookModal, rowIdPriceBook } = props
 
@@ -46,12 +46,7 @@ const SharedListings = props => {
   }
 
   const getRowDetail = (row, props, state) => {
-    return <ListingDetail
-      row={row.rawData}
-      parentState={state}
-      values={values}
-      onChange={data => setValues(data)}
-    />
+    return <ListingDetail row={row.rawData} parentState={state} values={values} onChange={data => setValues(data)} />
   }
 
   return (
@@ -91,6 +86,11 @@ const SharedListings = props => {
             setActiveTab(0)
             let ids = expandedRowIds.slice()
             if (ids.includes(row.id)) {
+              setValues(prevValues => ({
+                ...prevValues,
+                header: { ...prevValues.header, markup: '' },
+                tabs: { activeTab: 0 }
+              }))
               setExpandedRowIds([])
             } else {
               setExpandedRowIds([row.id])

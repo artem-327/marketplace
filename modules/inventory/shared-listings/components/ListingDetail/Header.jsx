@@ -1,10 +1,9 @@
-import { memo, useState } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Image, Input, List } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { Mail } from 'react-feather'
 // Components
-import Logo from '../../../../../assets/images/login/logo-bluepallet.png'
 import BasicButton from '../../../../../components/buttons/BasicButton'
 
 // Styles
@@ -31,14 +30,14 @@ import { getSafe } from '../../../../../utils/functions'
  */
 const Header = props => {
   const { row, values, onChange } = props
+  const ref = useRef(null)
 
-  let address = row?.warehouse?.deliveryAddress?.address?.city //MOVE to mapStateToProps and services
+  useEffect(() => {
+    if (values?.markup) {
+      if (typeof ref !== 'undefined') ref.current.focus()
+    }
+  }, [values?.markup])
 
-  if (row?.warehouse?.deliveryAddress?.address?.province?.abbreviation) {
-    address = `${address}, ${row?.warehouse?.deliveryAddress?.address?.province?.abbreviation}`
-  } else {
-    address = `${address}, ${row?.warehouse?.deliveryAddress?.address?.country?.code}`
-  }
   return (
     <SegmentGroupHeader horizontal $noneBorder>
       <SegmentHeader textAlign='left'>
@@ -51,12 +50,12 @@ const Header = props => {
           <Grid.Row>
             <GridColumnDetail width={4} textAlign='center' verticalAlign='middle'>
               <DivRectangle>
-                <Image verticalAlign='middle' src={Logo} />
+                <Image verticalAlign='middle' src={row?.createdBy?.company?.base64Logo} />
               </DivRectangle>
             </GridColumnDetail>
             <GridColumnDetail width={12}>
               <DivName> {row?.companyProduct?.intProductName}</DivName>
-              <DivAddress>{address}</DivAddress>
+              <DivAddress>{row?.address}</DivAddress>
               <DivButtons>
                 <BasicButtonCustom
                   fluid
@@ -116,13 +115,16 @@ const Header = props => {
           <Grid.Row>
             <GridColumnDetail width={8}>
               <Input
+                ref={ref}
                 fluid
                 label='%'
                 labelPosition='right'
                 name='markup'
                 placeholder={'Enter Markup'}
-                onChange={(e, data) => onChange({ ...values, markup: data.value })}
-                value={values.markup}
+                onChange={(e, data) => {
+                  onChange({ ...values, markup: data.value })
+                }}
+                value={values?.markup}
               />
             </GridColumnDetail>
             <GridColumnDetail width={8}>
@@ -131,7 +133,7 @@ const Header = props => {
                 textcolor='#ffffff !important'
                 background='#00c7f9 !important'
                 fluid
-                onClick={() => console.log('click save')}
+                onClick={() => console.log('click save and value is: ', values?.markup)}
                 data-test='shared_listings_markup_save_btn'>
                 <FormattedMessage id='global.save' defaultMessage='Save' />
               </BasicButton>
@@ -146,7 +148,7 @@ const Header = props => {
 Header.propTypes = {}
 
 function areEqual(prevProps, nextProps) {
-  return prevProps?.row?.id === nextProps?.row?.id
+  return prevProps?.row?.id === nextProps?.row?.id && prevProps?.values?.markup === nextProps?.values?.markup
 }
 
 export default memo(Header, areEqual)

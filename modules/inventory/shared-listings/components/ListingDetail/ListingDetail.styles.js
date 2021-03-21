@@ -95,5 +95,14 @@ export const SegmentGroupTab = styled(SegmentGroupHeader)`
 export const GridColumnTitleSection = styled(Grid.Column)`
   background-color: #edeef2 !important;
   color: #404040 !important;
-  padding: 4px 1important;
+  padding: 4px !important;
+`
+
+export const GridRowTabField = styled(Grid.Row)`
+  border-bottom: solid 1px #dee2e6 !important;
+  padding: 8px 0px !important;
+`
+
+export const GridColumnTabFieldValue = styled(Grid.Column)`
+  color: #20273a !important;
 `

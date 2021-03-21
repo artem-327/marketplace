@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import { Input, Dropdown } from 'semantic-ui-react'
+import { Input, Dropdown, Image } from 'semantic-ui-react'
 
 export const IconDown = styled(ChevronDown)`
   width: 16px;
@@ -50,4 +50,17 @@ export const DivTableHandlerColumn = styled.div`
   .ui.dropdown {
     height: 40px;
   }
+`
+
+export const DivSeller = styled.div`
+  height: 100%;
+`
+
+export const SpanSellerName = styled.span`
+  vertical-align: middle;
+`
+
+export const ImageInRow = styled(Image)`
+  width: 40px !important;
+  height: 30px !important;
 `
