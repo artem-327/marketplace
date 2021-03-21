@@ -48,6 +48,7 @@ export const initialState = {
   myProductsUnmappedValue: 'ALL',
   myListingsFilters: null,
   myProductsFilters: null,
+  sharedListingsFilters: null,
   tdsTemplatesLoading: false,
   tdsTemplates: [],
   broadcastOption: GLOBAL_RULES,

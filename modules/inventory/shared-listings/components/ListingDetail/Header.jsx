@@ -29,8 +29,8 @@ import { getSafe } from '../../../../../utils/functions'
  * @category Inventory - Shared Listings
  * @component
  */
-const Header = ({ row }) => {
-  const [markup, setMarkup] = useState('')
+const Header = props => {
+  const { row, values, onChange } = props
 
   let address = row?.warehouse?.deliveryAddress?.address?.city //MOVE to mapStateToProps and services
 
@@ -121,8 +121,8 @@ const Header = ({ row }) => {
                 labelPosition='right'
                 name='markup'
                 placeholder={'Enter Markup'}
-                onChange={(e, data) => setMarkup(data.value)}
-                value={markup}
+                onChange={(e, data) => onChange({ ...values, markup: data.value })}
+                value={values.markup}
               />
             </GridColumnDetail>
             <GridColumnDetail width={8}>

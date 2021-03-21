@@ -1,6 +1,7 @@
 import SharedListingsContainer from './components/SharedListingsContainer'
 import { DatagridProvider } from '~/modules/datagrid'
-//preserveFilters skipInitLoad
+import { getSafe } from '~/utils/functions'
+
 const SharedListings = () => (
   <>
     <DatagridProvider
@@ -8,8 +9,13 @@ const SharedListings = () => (
         url: '/prodex/api/product-offers/shared-listings/datagrid',
         searchToFilter: v => {
           let filters = { or: [], and: [] }
-          if (v && v.filterName && v.filterName.length > 0) {
-            v.filterName.forEach(
+          const filterName = getSafe(() => v.SearchByNamesAndTags.filters.filterName, [])
+          const filterTags = getSafe(() => v.SearchByNamesAndTags.filters.filterTags, [])
+
+          // TODO - add location filter
+
+          if (filterName.length > 0) {
+            filterName.forEach(
               name =>
                 (filters.or = filters.or.concat([
                   { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
@@ -17,8 +23,8 @@ const SharedListings = () => (
                 ]))
             )
           }
-          if (v && v.filterTags && v.filterTags.length > 0) {
-            filters.and = v.filterTags.map(idTag => {
+          if (filterTags.length > 0) {
+            filters.and = filterTags.map(idTag => {
               return {
                 operator: 'EQUALS',
                 path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
@@ -29,6 +35,8 @@ const SharedListings = () => (
           return filters
         }
       }}
+      preserveFilters
+      skipInitLoad
     >
       <SharedListingsContainer />
     </DatagridProvider>

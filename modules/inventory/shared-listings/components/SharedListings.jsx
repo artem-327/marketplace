@@ -27,6 +27,17 @@ import { COLUMNS } from './SharedListings.constants'
 const SharedListings = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
 
+  const [values, setValues] = useState({
+    header: { // ! ! hodit to asi do .constants.js ?
+      pricingTabIndex: 0,
+      markup: 0
+    },
+    tabs: {
+      activeTab: 0
+    }
+  })
+
+
   const { datagrid, rows, activeTab, setActiveTab, isOpenPriceBookModal, triggerPriceBookModal, rowIdPriceBook } = props
 
   const state = {
@@ -35,8 +46,12 @@ const SharedListings = props => {
   }
 
   const getRowDetail = (row, props, state) => {
-    // ! ! predat potrebne props
-    return <ListingDetail row={row.rawData} parentState={state} activeTab={activeTab} setActiveTab={setActiveTab} />
+    return <ListingDetail
+      row={row.rawData}
+      parentState={state}
+      values={values}
+      onChange={data => setValues(data)}
+    />
   }
 
   return (

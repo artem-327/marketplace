@@ -24,23 +24,28 @@ import {
 //import {} from './ListingDetail.services'
 
 const ListingDetail = props => {
-  const [tmp, set] = useState(false)
-
-  const { parentState, row, setActiveTab, activeTab } = props
-
+  const { values, onChange } = props
+  const { parentState, row } = props
   const { expandedRowIds, setExpandedRowIds } = parentState
-
-  console.log('!!!!!!!!!! ListingDetail props', props)
 
   return (
     <>
-      <Header row={row} />
-      <Tabs id={row.id} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Header
+        row={row}
+        values={values.header}
+        onChange={data => onChange({ ...values, header: data })}
+      />
+      <Tabs
+        id={row.id}
+        activeTab={values.tabs.activeTab}
+        setActiveTab={data => onChange({ ...values, tabs: { activeTab: data } })
+        }
+      />
       <DivCollapse
         onClick={() => {
           let ids = expandedRowIds.slice()
           if (ids.includes(row.id)) {
-            setActiveTab(0)
+            onChange({ ...values, tabs: { activeTab: data }})
             setExpandedRowIds([])
           }
         }}

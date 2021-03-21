@@ -32,5 +32,22 @@ export const DropdownType = styled(Dropdown)`
 
 export const DivTableHandler = styled.div`
   display: flex;
-  padding: 20px 30px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 20px 25px;
+`
+
+export const DivCustomSearchNameTags = styled.div`
+  margin: 5px;
+  .column {
+    width: 370px;
+    padding-top: 0 !important;
+  }
+`
+
+export const DivTableHandlerColumn = styled.div`
+  margin: 5px;
+  .ui.dropdown {
+    height: 40px;
+  }
 `
