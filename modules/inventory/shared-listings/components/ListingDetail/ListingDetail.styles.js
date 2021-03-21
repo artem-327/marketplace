@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Header, GridColumn, GridRow, Grid, Segment, Message, Button, ButtonGroup, Tab } from 'semantic-ui-react'
+import { ChevronLeft, ChevronRight } from 'react-feather'
 //Components
 import BasicButton from '../../../../../components/buttons/BasicButton'
 //Styles
@@ -105,4 +106,30 @@ export const GridRowTabField = styled(Grid.Row)`
 
 export const GridColumnTabFieldValue = styled(Grid.Column)`
   color: #20273a !important;
+`
+
+export const ChevronLeftStyled = styled(ChevronLeft)`
+  position: absolute;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  border-radius: 12px;
+  margin: -12px;
+  left: 0;
+  top: 32px;
+  color: #cecfd4;
+  padding: 2.5px;
+  ${props => (props.clickable === 'true' ? 'cursor: pointer; color: #20273a;' : '')}
+`
+
+export const ChevronRightStyled = styled(ChevronRight)`
+  position: absolute;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  border-radius: 12px;
+  margin: -12px;
+  right: 0;
+  top: 32px;
+  color: #cecfd4;
+  padding: 2.5px;
+  ${props => (props.clickable === 'true' ? 'cursor: pointer; color: #20273a;' : '')}
 `

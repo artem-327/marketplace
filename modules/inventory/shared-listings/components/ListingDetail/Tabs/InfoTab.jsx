@@ -77,9 +77,9 @@ const InfoTab = ({ row }) => {
               <FormattedMessage id={`global.manufacturer`} defaultMessage='Manufacturer' />
             </Grid.Column>
             <GridColumnTabFieldValue width={11}>
-              {row?.createdBy?.company?.cfDisplayName}
+              {row?.owner?.cfDisplayName}
               <span style={{ color: 'red', fontSize: '10px' }}>
-                FIXME is it that field?: row.createdBy.company.cfDisplayName
+                FIXME is it that field?: row.owner.cfDisplayName
               </span>
             </GridColumnTabFieldValue>
           </GridRowTabField>

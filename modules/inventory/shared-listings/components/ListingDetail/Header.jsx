@@ -14,7 +14,9 @@ import {
   DivButtons,
   BasicButtonCustom,
   DivMail,
-  DivTextButton
+  DivTextButton,
+  ChevronLeftStyled,
+  ChevronRightStyled
 } from './ListingDetail.styles'
 import { StyledGrid, TableSegment, StyledList } from '../../../../../components/detail-row/styles'
 import {
@@ -38,6 +40,12 @@ const Header = props => {
     }
   }, [values?.markup])
 
+  const priceColumnsLength = row?.priceColumns?.length
+  const { pricingTabIndex } = values
+  const priceColumns = priceColumnsLength > 4
+    ? row.priceColumns.slice(pricingTabIndex, pricingTabIndex + 4)
+    : row.priceColumns
+
   return (
     <SegmentGroupHeader horizontal $noneBorder>
       <SegmentHeader textAlign='left'>
@@ -50,7 +58,7 @@ const Header = props => {
           <Grid.Row>
             <GridColumnDetail width={4} textAlign='center' verticalAlign='middle'>
               <DivRectangle>
-                <Image verticalAlign='middle' src={row?.createdBy?.company?.base64Logo} />
+                <Image verticalAlign='middle' src={row?.owner?.base64Logo} />
               </DivRectangle>
             </GridColumnDetail>
             <GridColumnDetail width={12}>
@@ -94,7 +102,7 @@ const Header = props => {
             <GridColumnDetail width={16}>
               <TableSegment>
                 <StyledList divided relaxed horizontal size='large'>
-                  {row?.priceColumns?.map((p, i) => (
+                  {priceColumns.map((p, i) => (
                     <List.Item key={i}>
                       <List.Content>
                         <List.Header as='label'>
@@ -110,6 +118,28 @@ const Header = props => {
                   ))}
                 </StyledList>
               </TableSegment>
+              {priceColumnsLength > 4 && (
+                <ChevronLeftStyled
+                  size={24}
+                  onClick={() => {
+                    if (pricingTabIndex > 0) {
+                      onChange({ ...values, pricingTabIndex: pricingTabIndex - 1 })
+                    }
+                  }}
+                  clickable={(pricingTabIndex > 0).toString()}
+                />
+              )}
+              {priceColumnsLength > 4 && (
+                <ChevronRightStyled
+                  size={24}
+                  onClick={() => {
+                    if (pricingTabIndex < (priceColumnsLength - 4)) {
+                      onChange({ ...values, pricingTabIndex: pricingTabIndex + 1 })
+                    }
+                  }}
+                  clickable={(pricingTabIndex < (priceColumnsLength - 4)).toString()}
+                />
+              )}
             </GridColumnDetail>
           </Grid.Row>
           <Grid.Row>
