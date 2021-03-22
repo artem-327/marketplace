@@ -14,7 +14,8 @@ export const initialState = {
   companyNetworkConnection: null,
   isError: false,
   loadingDetailRow: false,
-  detailRow: null
+  detailRow: null,
+  bluePalletModal: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -91,6 +92,20 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loadingDetailRow: false
+      }
+    }
+
+    case AT.BLUE_PALLET_SHOW: {
+      return {
+        ...state,
+        bluePalletModal: true
+      }
+    }
+
+    case AT.BLUE_PALLET_HIDE: {
+      return {
+        ...state,
+        bluePalletModal: false
       }
     }
 
