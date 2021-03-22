@@ -21,7 +21,7 @@ import TablesHandlers from './TablesHandlers'
 import { debounce } from 'lodash'
 import DetailRow from '~/components/detail-row'
 //Constants
-import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from '~/modules/orders/constants'
+import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from '../constants'
 
 const StyledModal = styled(Modal)`
   > .header {

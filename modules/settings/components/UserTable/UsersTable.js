@@ -10,7 +10,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import confirm from '~/components/Confirmable/confirm'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
-
+//Actions
 import {
   getUsersDataRequest,
   openSidebar,
@@ -24,6 +24,7 @@ import {
   setPrimaryUser,
   openUserSettingsModal
 } from '../../actions'
+import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 import { Checkbox, Popup, Icon } from 'semantic-ui-react'
 import ActionCell from '~/components/table/ActionCell'
@@ -132,13 +133,24 @@ class UsersTable extends Component {
   }
 
   getActions = () => {
-    const { openSidebar, intl, deleteUser, resendWelcomeEmail, setPrimaryUser, datagrid } = this.props
+    const {
+      openSidebar,
+      intl,
+      deleteUser,
+      resendWelcomeEmail,
+      setPrimaryUser,
+      datagrid,
+      chatWidgetVerticalMoved
+    } = this.props
 
     const { formatMessage } = intl
     return [
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => openSidebar(row.rawData, 'users')
+        callback: row => {
+          openSidebar(row.rawData, 'users')
+          chatWidgetVerticalMoved(true)
+        }
         // hidden: row => this.props.currentUserId === row.id
       },
       /* #34139
@@ -181,11 +193,12 @@ class UsersTable extends Component {
           const { value } = await setPrimaryUser(this.props.currentCompanyId, row.id)
         },
         hidden: row => !row.isCompanyAdmin || this.props.currentCompanyId === null
-      },
-      {
-        text: <FormattedMessage id='settings.user.userSettings' defaultMessage='User Settings' />,
-        callback: row => this.props.openPopup(row)
       }
+      //commented based on https://bluepallet.atlassian.net/browse/DT-199?focusedCommentId=11080
+      // {
+      //   text: <FormattedMessage id='settings.user.userSettings' defaultMessage='User Settings' />,
+      //   callback: row => this.props.openPopup(row)
+      // }
     ]
   }
 
@@ -251,7 +264,8 @@ const mapDispatchToProps = {
   userSwitchEnableDisable,
   resendWelcomeEmail,
   setPrimaryUser,
-  openUserSettingsModal
+  openUserSettingsModal,
+  chatWidgetVerticalMoved
 }
 
 const userEnableDisableStatus = (r, currentUserId) => {

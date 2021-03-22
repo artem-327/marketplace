@@ -20,7 +20,6 @@ export const initialState = {
   reRegisterP44Pending: false,
   currentUser: null,
   userRoles: [],
-  clientCompanyRoles: [],
   adminRoles: [],
   searchedCompanies: [],
   searchedCompaniesLoading: false,
@@ -154,13 +153,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         userRoles: action.payload
-      }
-    }
-
-    case AT.COMPANIES_GET_CLIENT_COMPANY_ROLES_FULFILLED: {
-      return {
-        ...state,
-        clientCompanyRoles: action.payload
       }
     }
 

@@ -28,12 +28,10 @@ import DocumentsTable from './Documents/DocumentManagerTable'
 import TradeCriteria from './TradeCriteria/TradeCriteria'
 import DocumentManagerSidebar from './Documents/DocumentManagerSidebar'
 
-import ClientCompanyTable from './ClientCompany/Table'
-import ClientCompanyPopup from './ClientCompany/Popup'
-
 import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
+import CompanyDetailsPage from './CompanyDetailsPage/CompanyDetailsPage'
 
 import Router from 'next/router'
 
@@ -114,8 +112,6 @@ const CustomGridColumn = styled(Grid.Column)`
 
 class Settings extends Component {
   state = {
-    companyLogo: null,
-    shouldUpdateLogo: false,
     wrongUrl: true
   }
 
@@ -127,8 +123,7 @@ class Settings extends Component {
       tabChanged,
       currentTab,
       isUserAdmin,
-      isProductCatalogAdmin,
-      isClientCompanyAdmin
+      isProductCatalogAdmin
     } = this.props
     // array of tabsNames converted to Map
     let tabsNamesMap = new Map()
@@ -136,7 +131,7 @@ class Settings extends Component {
       tabsNamesMap.set(tabsNames[i].type, tabsNames[i])
     }
 
-    if (!(isCompanyAdmin || isClientCompanyAdmin)) {
+    if (!isCompanyAdmin) {
       if (isUserAdmin) {
         if (
           isProductCatalogAdmin &&
@@ -169,9 +164,9 @@ class Settings extends Component {
   }
 
   redirectPage = async queryTab => {
-    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, isClientCompanyAdmin } = this.props
+    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin } = this.props
     const tab = getSafe(() => queryTab.type, '')
-    if (!isCompanyAdmin && !isClientCompanyAdmin && tab !== 'system-settings') {
+    if (!isCompanyAdmin && tab !== 'system-settings') {
       if ((isUserAdmin && tab === 'users') || (isProductCatalogAdmin && tab === 'products')) {
         this.setState({ wrongUrl: false })
       } else if (!isProductCatalogAdmin && !isUserAdmin) {
@@ -200,7 +195,6 @@ class Settings extends Component {
       addTab,
       tabsNames,
       getIdentity,
-      isClientCompanyAdmin,
       renderCopyright,
       currentTab
     } = this.props
@@ -211,11 +205,11 @@ class Settings extends Component {
       console.error(error)
     }
 
-    if (isCompanyAdmin || isClientCompanyAdmin) addTab(companyDetailsTab)
+    if (isCompanyAdmin) addTab(companyDetailsTab)
 
     let queryTab =
       tabsNames.find(tab => tab.type === currentTab) ||
-      (isCompanyAdmin || isClientCompanyAdmin
+      (isCompanyAdmin
         ? companyDetailsTab
         : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
 
@@ -228,82 +222,6 @@ class Settings extends Component {
     const { isOpenPopup, isOpenSidebar, closePopup, closeSidebar } = this.props
     if (isOpenPopup) closePopup()
     if (isOpenSidebar) closeSidebar()
-  }
-
-  selectLogo = (logo, isNew = true) => {
-    this.setState({ companyLogo: logo, shouldUpdateLogo: isNew })
-  }
-
-  removeLogo = () => {
-    this.setState({ companyLogo: null, shouldUpdateLogo: true })
-  }
-
-  companyDetails = () => {
-    let { postCompanyLogo, deleteCompanyLogo, companyId, hasLogo } = this.props
-    const { selectLogo, removeLogo } = this
-    const { companyLogo, shouldUpdateLogo } = this.state
-
-    return (
-      <TopMargedGrid relaxed='very' centered>
-        <GridColumn computer={12}>
-          <Form
-            initialValues={this.props.company}
-            validationSchema={validationSchema}
-            onSubmit={async (values, { setSubmitting }) => {
-              try {
-                const { updateCompany } = this.props
-                const requestBody = {}
-                const propsToInclude = ['cin', 'dba', 'dunsNumber', 'enabled', 'name', 'phone', 'tin', 'website']
-                propsToInclude.forEach(prop => (values[prop] ? (requestBody[prop] = values[prop]) : null))
-
-                await updateCompany(values.id, {
-                  ...requestBody,
-                  businessType: values.businessType ? values.businessType.id : null
-                })
-                if (shouldUpdateLogo) {
-                  if (companyLogo) {
-                    await postCompanyLogo(values.id, companyLogo)
-                  } else {
-                    await deleteCompanyLogo(values.id)
-                  }
-                }
-              } catch (err) {
-                console.error(err)
-              } finally {
-                setSubmitting(false)
-              }
-            }}>
-            {({ values, errors, setFieldValue, setFieldTouched, touched, isSubmitting }) => {
-              return (
-                <Segment basic>
-                  <CompanyForm
-                    selectLogo={selectLogo}
-                    removeLogo={removeLogo}
-                    companyLogo={this.state.companyLogo}
-                    values={values}
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                    errors={errors}
-                    touched={touched}
-                    isSubmitting={isSubmitting}
-                    companyId={companyId}
-                    hasLogo={hasLogo}
-                  />
-                  <Grid>
-                    <GridColumn floated='right' computer={4}>
-                      <Button.Submit fluid data-test='company_details_submit_btn'>
-                        <FormattedMessage id='global.save'>{text => text}</FormattedMessage>
-                      </Button.Submit>
-                    </GridColumn>
-                  </Grid>
-                  <ErrorFocus />
-                </Segment>
-              )
-            }}
-          </Form>
-        </GridColumn>
-      </TopMargedGrid>
-    )
   }
 
   renderContent = () => {
@@ -326,11 +244,10 @@ class Settings extends Component {
     } = this.props
 
     const tables = {
-      'company-details': this.companyDetails(),
+      'company-details': <CompanyDetailsPage />,
       users: <UsersTable />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
-      'guest-companies': <ClientCompanyTable />,
       logistics: <LogisticsTable />,
       'system-settings': (
         <FixyWrapper>
@@ -353,7 +270,6 @@ class Settings extends Component {
         />
       ),
       'credit-cards': <CreditCardsPopup />,
-      'guest-companies': <ClientCompanyPopup />,
       'bank-accounts': (
         <SendLinkPopup
           isOpenPopup={isOpenPopup}
@@ -409,11 +325,6 @@ class Settings extends Component {
                 // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
               ]
             : []
-      },
-      'guest-companies': {
-        url: '/prodex/api/companies/client/datagrid',
-        searchToFilter: v =>
-          v && v.searchInput ? [{ operator: 'LIKE', path: 'ClientCompany.name', values: [`%${v.searchInput}%`] }] : []
       },
       // 'bank-accounts': null,
       // 'credit-cards': null,
@@ -493,7 +404,6 @@ const mapStateToProps = ({ settings, auth }) => {
     isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
     tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
     documentsOwner: getSafe(() => settings.documentsOwner, []),
-    isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false),
     companyId: getSafe(() => auth.identity.company.id, false),
     companyName: getSafe(() => auth.identity.company.name, false),
     hasLogo: getSafe(() => auth.identity.company.hasLogo, false)

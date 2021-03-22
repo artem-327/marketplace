@@ -19,7 +19,7 @@ import {
 import { Container, Menu, Dropdown, Icon, Image, FormField, Popup, Dimmer } from 'semantic-ui-react'
 import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
-import Logo from '../assets/images/nav/logo-echo.svg'
+import Logo from '../assets/images/nav/logo-bluepallet.png'
 import LogoSmall from '../assets/images/nav/logo4x.png'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
@@ -60,8 +60,14 @@ import ModalDetailContainer from '../modules/inventory/my-listings/components/Mo
 import ProductPopup from '../modules/inventory/my-products/components/ProductPopupContainer'
 import WantedSidebar from '../modules/wanted-board/listings/components/DetailSidebar'
 import UserEditSidebar from '../modules/settings/components/UserTable/UserEditSidebar/UserEditSidebar'
-import GuestSidebar from '../modules/manage-guests/components/Guests/AddEditGuestCompanySidebar'
 import WarehouseSidebar from '../modules/settings/components/Locations/Warehouses/WarehousesSidebar/WarehousesSidebar'
+
+//Components
+import InviteModal from '../modules/my-network/components/InviteModal/InviteModal'
+//Actions
+import { search, buttonActionsDetailRow, triggerModal } from '../modules/my-network/actions'
+//Services
+import { getRowDetail } from '../modules/my-network/MyNetwork.services'
 
 export const IconMinimize2 = styled(Minimize2)`
   text-align: center;
@@ -73,18 +79,6 @@ const ReturnToAdmin = styled(LogOut)`
   margin-left: 10px;
   vertical-align: bottom;
 `
-
-const clientCompanyRoutes = {
-  restrictedRoutes: [
-    '/inventory',
-    '/orders/sales',
-    '/inventory/my-products',
-    '/settings/global-broadcast',
-    '/wanted-board/listings',
-    '/wanted-board/bids-sent'
-  ],
-  redirectTo: '/marketplace/listings'
-}
 
 class Layout extends Component {
   state = {
@@ -170,9 +164,7 @@ class Layout extends Component {
   }
 
   loadCompanyLogo = async () => {
-    if (
-      this.props.hasLogo && this.props.useCompanyLogo && this.props.getCompanyLogo
-    ) {
+    if (this.props.hasLogo && this.props.useCompanyLogo && this.props.getCompanyLogo) {
       await this.props.getCompanyLogo(this.props.companyId)
     }
   }
@@ -202,7 +194,6 @@ class Layout extends Component {
     ) {
       this.cleanCopyrightState()
     }
-    this.handleRouteChange(this.props.router.route)
   }
 
   componentDidUpdate(prevProps) {
@@ -259,23 +250,6 @@ class Layout extends Component {
 
     if (showCopyright || copyrightClassName !== '') {
       this.cleanCopyrightState()
-      // this.handleRouteChange // will be called due to state change automatically
-    } else {
-      this.handleRouteChange(url)
-    }
-  }
-
-  handleRouteChange = url => {
-    const { auth } = this.props
-    let clientCompany = getSafe(() => auth.identity.clientCompany, false)
-
-    if (clientCompany) {
-      clientCompanyRoutes.restrictedRoutes.forEach(route => {
-        if (url.startsWith(route)) {
-          Router.push(clientCompanyRoutes.redirectTo)
-          return
-        }
-      })
     }
   }
 
@@ -308,17 +282,17 @@ class Layout extends Component {
       isOrderOperator,
       renderCopyright,
       openGlobalAddForm,
-      openGlobalAddFormName
+      openGlobalAddFormName,
+      search,
+      isError,
+      loadingNetworkConnection,
+      inviteDetailCompany,
+      buttonActionsDetailRow,
+      isOpenInviteModal,
+      triggerModal
     } = this.props
 
-    const {
-      isClientCompanyManager,
-      isCompanyAdmin,
-      isMerchant,
-      isProductCatalogAdmin,
-      isProductOfferManager,
-      isUserAdmin
-    } = identity
+    const { isCompanyAdmin, isMerchant, isProductCatalogAdmin, isProductOfferManager, isUserAdmin } = identity
 
     let icon = Icon && (
       <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'>
@@ -372,13 +346,7 @@ class Layout extends Component {
           <LeftMenuContainer fluid>
             <PerfectScrollbar ref={this.navigationPS}>
               <LogoImage
-                src={
-                  !collapsedMenu
-                    ? hasLogo && useCompanyLogo
-                      ? this.getCompanyLogo()
-                      : Logo
-                    : LogoSmall
-                }
+                src={!collapsedMenu ? (hasLogo && useCompanyLogo ? this.getCompanyLogo() : Logo) : LogoSmall}
               />
 
               <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
@@ -482,18 +450,17 @@ class Layout extends Component {
                     className='item-cart'>
                     <NotificationsIcon />
                   </Menu.Item>
-                  <Menu.Item
-                    onClick={() => Router.push('/marketplace/holds')}
-                    data-test='navigation_marketplace'
-                    className='item-cart'>
-                    <HoldIcon />
-                  </Menu.Item>
-                  {(isClientCompanyManager ||
-                    isCompanyAdmin ||
-                    isMerchant ||
-                    isProductCatalogAdmin ||
-                    isProductOfferManager ||
-                    isUserAdmin) && (
+                  {
+                    /* DT-293 temporary disabled */ false && (
+                      <Menu.Item
+                        onClick={() => Router.push('/marketplace/holds')}
+                        data-test='navigation_marketplace'
+                        className='item-cart'>
+                        <HoldIcon />
+                      </Menu.Item>
+                    )
+                  }
+                  {(isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager || isUserAdmin) && (
                     <Menu.Item>
                       <CreateMenu />
                     </Menu.Item>
@@ -558,17 +525,26 @@ class Layout extends Component {
 
         <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }} />
         <GlobalSidebars>
-          {openGlobalAddFormName === 'inventory-my-products' && (
-            <ProductPopup openGlobalAddForm={openGlobalAddForm} />
-          )}
+          {openGlobalAddFormName === 'inventory-my-products' && <ProductPopup openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'inventory-my-listings' && (
             <ModalDetailContainer openGlobalAddForm={openGlobalAddForm} />
           )}
           {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'my-account-users' && <UserEditSidebar openGlobalAddForm={openGlobalAddForm} />}
-          {openGlobalAddFormName === 'manage-guests-guests' && <GuestSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'my-account-locations' && (
             <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'my-network-connection' && (
+            <InviteModal
+              open={isOpenInviteModal}
+              onClose={triggerModal}
+              openGlobalAddForm={openGlobalAddForm}
+              search={search}
+              isError={isError}
+              loading={loadingNetworkConnection}
+              detailCompany={inviteDetailCompany}
+              buttonActionsDetailRow={buttonActionsDetailRow}
+            />
           )}
         </GlobalSidebars>
       </MainContainer>
@@ -586,7 +562,10 @@ const mapDispatchToProps = {
   toggleMenu,
   getCompanyLogo,
   openGlobalAddForm,
-  setMainContainer
+  setMainContainer,
+  search,
+  buttonActionsDetailRow,
+  triggerModal
 }
 
 const mapStateToProps = state => {
@@ -600,25 +579,25 @@ const mapStateToProps = state => {
     isOpen: getSafe(() => !state.auth.identity.tosAgreementDate, false),
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover:
-      getSafe(() => !!state.auth.identity.company.id, false)
-      && getSafe(() => state.auth.identity.isAdmin, false),
+      getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
     phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, []),
     companyId: getSafe(() => state.auth.identity.company.id, false),
     hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),
     companyLogo: getSafe(() => state.businessTypes.companyLogo, null),
     useCompanyLogo:
-      getSafe(() =>
-        state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO').value, 'false')
-        .toLowerCase() === 'true',
+      getSafe(
+        () => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO').value,
+        'false'
+      ).toLowerCase() === 'true',
     avatar: getSafe(() => state.auth.identity.avatar, null),
     gravatarSrc: getSafe(() => state.auth.identity.gravatarSrc, null),
     useGravatar:
-      getSafe(() =>
-        state.auth.identity.settings.find(set => set.key === 'USER_USE_GRAVATAR').value, 'false')
-        .toLowerCase() === 'true',
+      getSafe(
+        () => state.auth.identity.settings.find(set => set.key === 'USER_USE_GRAVATAR').value,
+        'false'
+      ).toLowerCase() === 'true',
     companyName: getSafe(() => state.auth.identity.company.name, false),
-    isEchoOperator:
-      getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
     isOrderOperator: getSafe(() => state.auth.identity.isOrderOperator, false),
     renderCopyright: getSafe(() => state.settings.renderCopyright, false),
     adminTab: getSafe(() => state.admin.currentTab.id, null),
@@ -629,7 +608,11 @@ const mapStateToProps = state => {
     adminLoading: state.admin.loading,
     cartLoading: state.cart.cartIsFetching,
     settingsLoading: state.settings.loading,
-    wantedBoardLoading: state.wantedBoard.loading
+    wantedBoardLoading: state.wantedBoard.loading,
+    isError: state?.myNetwork?.isError,
+    loadingNetworkConnection: state?.myNetwork?.loading,
+    inviteDetailCompany: getRowDetail(state?.myNetwork?.companyNetworkConnection),
+    isOpenInviteModal: state?.myNetwork?.isOpenModal
   }
 }
 

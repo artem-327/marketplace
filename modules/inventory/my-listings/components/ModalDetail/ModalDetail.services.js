@@ -2,10 +2,18 @@ import moment from 'moment'
 import * as val from 'yup'
 import { injectIntl, FormattedMessage } from 'react-intl'
 //Services
-import { getStringISODate } from '../../../../../components/date-format'
+import { getStringISODate, getLocaleDateFormat } from '../../../../../components/date-format'
 import { errorMessages, dateValidation } from '../../../../../constants/yupValidation'
 import { getSafe } from '../../../../../utils/functions'
-
+/**
+ * Validates divisibleBy in form
+ * @category Inventory - My Listings
+ * @method
+ * @param {object}
+ * @param {string}
+ * @param {function}
+ * @return {boolean}
+ */
 val.addMethod(val.number, 'divisibleBy', function (ref, message) {
   return this.test({
     name: 'divisibleBy',
@@ -22,7 +30,15 @@ val.addMethod(val.number, 'divisibleBy', function (ref, message) {
     }
   })
 })
-
+/**
+ * Validates uniqueProperty in form
+ * @category Inventory - My Listings
+ * @method
+ * @param {object}
+ * @param {string}
+ * @param {function}
+ * @return {boolean}
+ */
 val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
   return this.test('uniqueProperty', message, function (value) {
     if (!value || !value[propertyName]) {
@@ -45,7 +61,11 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
     return true
   })
 })
-
+/**
+ * Validates form inputs
+ * @category Inventory - My Listings
+ * @method
+ */
 export const validationScheme = val.lazy(values => {
   let minimumQuantity = getSafe(() => values.edit.minimum, 0) > 0 ? values.edit.minimum - 1 : 0
   if (values.edit.costPerUOM === '') values.edit.costPerUOM = null
@@ -154,3 +174,81 @@ export const validationScheme = val.lazy(values => {
     })
   })
 })
+
+/**
+ * Gets all editable values for form
+ * @category Inventory - My Listings
+ * @method
+ * @param {object} detailValues
+ * @returns {object}
+ */
+export const getEditValues = detailValues => {
+  let tdsFields = null
+  //Convert tdsFields string array of objects to array
+  if (getSafe(() => detailValues.tdsFields, '')) {
+    let newJson = detailValues.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
+    newJson = newJson.replace(/'/g, '"')
+    tdsFields = JSON.parse(newJson)
+  }
+
+  return {
+    edit: {
+      condition: getSafe(() => detailValues.condition, null),
+      conditionNotes: getSafe(() => detailValues.conditionNotes, ''),
+      conforming: getSafe(() => detailValues.conforming, true),
+      costPerUOM: getSafe(() => detailValues.costPerUOM, null),
+      externalNotes: getSafe(() => detailValues.externalNotes, ''),
+      fobPrice: getSafe(() => detailValues.pricingTiers[0].pricePerUOM, ''),
+      broadcastOption: getSafe(
+        () =>
+          detailValues.broadcastTemplateResponse
+            ? detailValues.broadcastOption + '|' + detailValues.broadcastTemplateResponse.id
+            : detailValues.broadcastOption,
+        ''
+      ),
+      inStock: getSafe(() => detailValues.inStock, false),
+      internalNotes: getSafe(() => detailValues.internalNotes, ''),
+      leadTime: getSafe(() => detailValues.leadTime, 1),
+      lotNumber: getSafe(() => detailValues.lotNumber, ''),
+      lotExpirationDate:
+        detailValues && detailValues.lotExpirationDate
+          ? moment(detailValues.lotExpirationDate).format(getLocaleDateFormat())
+          : '',
+      lotManufacturedDate:
+        detailValues && detailValues.lotManufacturedDate
+          ? moment(detailValues.lotManufacturedDate).format(getLocaleDateFormat())
+          : '',
+      minimum: getSafe(() => detailValues.minPkg, 1),
+      origin: getSafe(() => detailValues.origin.id, null),
+      pkgAvailable: getSafe(() => detailValues.pkgAvailable, ''),
+      product: getSafe(() => detailValues.companyProduct.id, null),
+      productCondition: getSafe(() => detailValues.condition.id, null),
+      productForm: getSafe(() => detailValues.form.id, null),
+      productGrades: getSafe(() => detailValues.grades.map(grade => grade.id), []),
+      splits: getSafe(() => detailValues.splitPkg, 1),
+      doesExpire: getSafe(() => detailValues.validityDate.length > 0, false),
+      expirationDate:
+        detailValues && detailValues.validityDate
+          ? moment(detailValues.validityDate).format(getLocaleDateFormat())
+          : '',
+      warehouse: getSafe(() => detailValues.warehouse.id, null),
+      tdsFields: getSafe(() => tdsFields, [{ property: '', specifications: '' }]),
+      shared: getSafe(() => detailValues.shared, false)
+    },
+    priceTiers: {
+      priceTiers: getSafe(() => detailValues.pricingTiers.length, 0),
+      pricingTiers: getSafe(
+        () =>
+          detailValues.pricingTiers.map(priceTier => ({
+            price: priceTier.pricePerUOM,
+            quantityFrom: priceTier.quantityFrom
+          })),
+        []
+      )
+    },
+    documents: {
+      documentType: getSafe(() => detailValues.documentType, null),
+      attachments: getSafe(() => detailValues.attachments.map(att => ({ ...att, linked: true })), [])
+    }
+  }
+}

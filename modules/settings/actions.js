@@ -136,10 +136,21 @@ export function openEditPopup(rows) {
     payload: rows
   }
 }
-export function handlerSubmitUserEditPopup(id, payload) {
+
+export function updateSettingsCompanyUser(id, request) {
   return {
-    type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-    payload: api.patchUser(id, payload)
+    type: AT.UPDATE_SETTINGS_COMPANY_USER,
+    payload: api.updateSettingsCompanyUser(id, request)
+  }
+}
+
+export function handlerSubmitUserEditPopup(id, payload, userSettings) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+      payload: api.patchUser(id, payload)
+    })
+    await dispatch(updateSettingsCompanyUser(id, userSettings))
   }
 }
 
@@ -337,13 +348,10 @@ export function putEditWarehouse(payload, id, attachmentFiles, warehousesDatagri
           ...response,
           attachments: response.attachments.concat(attachmentFiles)
         }))
-      else
-        Datagrid.loadData()
+      else Datagrid.loadData()
     } else {
-      if (typeof warehousesDatagrid !== 'undefined')
-        warehousesDatagrid.updateRow(id, () => response)
-      else
-        Datagrid.updateRow(id, () => response)
+      if (typeof warehousesDatagrid !== 'undefined') warehousesDatagrid.updateRow(id, () => response)
+      else Datagrid.updateRow(id, () => response)
     }
     dispatch(closeSidebar())
   }
@@ -401,11 +409,10 @@ export function getUsersDataRequest() {
     dispatch({
       type: AT.GET_USERS_DATA,
       async payload() {
-        const [users, branches, roles, clientCompanyRoles, currentUser] = await Promise.all([
+        const [users, branches, roles, currentUser] = await Promise.all([
           api.getUsers(),
           api.getBranches(),
           api.getRoles(),
-          api.getClientCompanyRoles(),
           api.getCurrentUser()
         ])
         dispatch({
@@ -415,10 +422,6 @@ export function getUsersDataRequest() {
         dispatch({
           type: AT.GET_ROLES_DATA,
           payload: roles
-        })
-        dispatch({
-          type: AT.SETTINGS_GET_CLIENT_COMPANY_ROLES_DATA,
-          payload: clientCompanyRoles
         })
         dispatch({
           type: AT.GET_CURRENT_USER_DATA_FULFILLED,
@@ -620,10 +623,14 @@ export function getStoredCSV(data) {
   }
 }
 
-export function postNewUserRequest(payload) {
-  return {
-    type: AT.POST_NEW_USER_REQUEST,
-    payload: api.postNewUser(payload)
+export function postNewUserRequest(payload, userSettings) {
+  return async dispatch => {
+    const user = await api.postNewUser(payload)
+    await dispatch({
+      type: AT.POST_NEW_USER_REQUEST,
+      payload: user
+    })
+    await dispatch(updateSettingsCompanyUser(user.id, userSettings))
   }
 }
 
@@ -1095,7 +1102,10 @@ export const resetSettings = () => ({ type: AT.RESET_SETTINGS, payload: true })
 
 // export const getSettings = role => ({ type: AT.GET_SETTINGS, payload: api.getSettings(role) })
 
-// export const updateSettings = (role, payload) => ({ type: AT.UPDATE_SETTINGS, payload: api.updateSettings(role, payload) })
+// export const updateSettings = (role, payload) => ({
+//   type: AT.UPDATE_SETTINGS,
+//   payload: api.updateSettings(role, payload)
+// })
 
 export const triggerSystemSettingsModal = (force = null) => ({ type: AT.TRIGGER_SYSTEM_SETTINGS_MODAL, payload: force })
 
@@ -1146,43 +1156,6 @@ export const getBranch = branchId => ({
   type: AT.GET_BRANCH,
   payload: api.getBranch(branchId)
 })
-
-export const createClientCompany = payload => {
-  return async dispatch => {
-    const response = await api.createClientCompany(payload)
-    dispatch({
-      type: AT.CREATE_CLIENT_COMPANY,
-      payload: response
-    })
-    Datagrid.loadData()
-    dispatch(closePopup())
-    return response.data
-  }
-}
-export const updateClientCompany = (payload, id) => {
-  return async dispatch => {
-    const response = await api.updateClientCompany(payload, id)
-    dispatch({
-      type: AT.UPDATE_CLIENT_COMPANY,
-      payload: response
-    })
-    Datagrid.updateRow(id, () => response)
-    dispatch(closePopup())
-    return response.data
-  }
-}
-
-export const deleteClientCompany = id => {
-  return async dispatch => {
-    const response = await api.deleteClientCompany(id)
-    dispatch({
-      type: AT.DELETE_CLIENT_COMPANY,
-      payload: response
-    })
-    Datagrid.loadData()
-    return
-  }
-}
 
 export const addVerificationDocumentsOwner = (attachment, id, docType) => {
   return {
@@ -1307,7 +1280,7 @@ export function openPopupDeleteInstitutions(institutionId) {
 
 export function openUserSettingsModal(id) {
   return {
-    type: AT.GET_COMPANY_USER,
+    type: AT.OPEN_USER_SETTINGS_MODAL,
     payload: api.getCompanyUser(id)
   }
 }
@@ -1319,11 +1292,23 @@ export function setAttachmentFiles(attachmentFiles) {
   }
 }
 
-export function postTradeCriteria(body) {
-  console.log('body')
-  console.log(body)
+export function patchTradeCriteria(body) {
   return {
-    type: AT.POST_TRADE_CRITERIA,
-    payload: api.postTradeCriteria(body)
+    type: AT.PATCH_TRADE_CRITERIA,
+    payload: api.patchTradeCriteria(body)
+  }
+}
+
+export function getTradeCriteria() {
+  return {
+    type: AT.GET_TRADE_CRITERIA,
+    payload: api.getTradeCriteria()
+  }
+}
+
+export function getCompanyUser(id) {
+  return {
+    type: AT.GET_COMPANY_USER,
+    payload: api.getCompanyUser(id)
   }
 }

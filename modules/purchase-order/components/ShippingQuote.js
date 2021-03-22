@@ -106,7 +106,7 @@ export default class ShippingQuote extends Component {
             maximumFractionDigits={2}
             style='currency'
             currency={currency}
-            value={rate.estimatedPrice}
+            value={rate.cfEstimatedSubtotal}
           />
         ),
         deliveryTime,

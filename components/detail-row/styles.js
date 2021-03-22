@@ -22,7 +22,6 @@ export const TableSegment = styled(Segment)`
   background-color: #f5f7fa !important;
 
   &.ui.segment {
-    padding: 10px 15px;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
   }
@@ -39,6 +38,7 @@ export const StyledList = styled(List)`
     }
 
     > .item {
+      text-align: left !important;
       padding: 0px 10px !important;
       max-width: fit-content !important;
 
@@ -68,7 +68,7 @@ export const DetailMessage = styled.div`
 `
 
 export const ColumnDetail = styled(GridColumn)`
-  padding-left: 0px !important;
+  padding: 0px !important;
 `
 
 export const DivTable = styled.div`
@@ -101,12 +101,18 @@ export const DivBodyTable = styled.div`
   color: #20273a;
   font-size: 14px;
   border-radius: 4px;
-  border: solid 1px #dee2e6;
+  border: ${props => (props.separatedRows ? '0 none' : 'solid 1px #dee2e6')};
 `
 export const DivBodyRowTable = styled.div`
   width: 100%;
   display: flex;
-  border-bottom: ${props => (props.isLastRow ? 'none' : 'solid 1px #dee2e6;')};
+  flex-flow: row ${props => (props.canWrap ? 'wrap' : 'nowrap')};
+  margin: ${props => (props.separatedRows ? '2px 0' : '0')};
+  border-width: ${props => (props.separatedRows ? '1px' : props.isLastRow ? '0' : '0 0 1px')};
+  //border-bottom: ${props => (props.isLastRow ? 'none' : 'solid 1px #dee2e6;')};
+  border-style: solid;
+  border-color: #dee2e6;
+  border-radius: ${props => (props.separatedRows ? '4px' : '0')};
 `
 
 export const DivBodyColumnTable = styled.div`
@@ -116,6 +122,13 @@ export const DivBodyColumnTable = styled.div`
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
+`
+
+export const DivBodyRowDetail = styled.div`
+  display: block;
+  width: 100%;
+  border-top: 1px solid #dee2e6;
+  padding: 1em 1em 0;
 `
 
 export const CustomButton = styled(Button)`

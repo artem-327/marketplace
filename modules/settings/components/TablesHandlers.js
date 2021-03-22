@@ -187,10 +187,6 @@ const textsTable = {
     BtnAddText: 'settings.tables.deliveryAddresses.buttonAdd',
     SearchText: 'settings.tables.deliveryAddresses.search'
   },
-  'guest-companies': {
-    BtnAddText: 'settings.tables.guestCompanies.buttonAdd',
-    SearchText: 'settings.tables.guestCompanies.search'
-  },
   logistics: {
     BtnAddText: 'settings.tables.logistics.buttonAdd',
     SearchText: 'settings.tables.logistics.search'
@@ -223,9 +219,6 @@ class TablesHandlers extends Component {
       'bank-accounts': {
         searchInput: ''
       },*/
-      'guest-companies': {
-        searchInput: ''
-      },
       /*
       'logistics': {
         searchInput: ''
@@ -639,7 +632,7 @@ class TablesHandlers extends Component {
                           primary
                           onClick={() => {
                             openSidebar(null, currentTab)
-                            currentTab === 'logistics' && chatWidgetVerticalMoved(true)
+                            if (currentTab === 'logistics' || currentTab === 'users') chatWidgetVerticalMoved(true)
                           }}
                           data-test='settings_open_popup_btn'
                           disabled={currentTab === 'logistics' && isThirdPartyConnectionException}>

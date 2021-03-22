@@ -15,7 +15,6 @@ import ordersSaga from '~/modules/orders/saga'
 import settings from '~/modules/settings/reducers'
 import admin from '~/modules/admin/reducers'
 import profile from '~/modules/profile/reducers'
-import manageGuests from '~/modules/manage-guests/reducers'
 import marketplace from '~/modules/marketplace/reducer'
 import filter, { initialState as filterInit } from '~/modules/filter/reducer'
 import chatWidget from '~/modules/chatWidget/reducer'
@@ -43,6 +42,7 @@ import exportInventory from '~/modules/export-inventory/reducer'
 import dashboard from '~/modules/dashboard/reducer'
 import vellociRegister from '~/modules/velloci-register/reducer'
 import addBankAccounts from './modules/add-bank-accounts/reducer'
+import myNetwork from './modules/my-network/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -85,10 +85,10 @@ const reducer = combineReducers({
   documentTypes,
   marketSegments,
   exportInventory,
-  manageGuests,
   dashboard,
   vellociRegister,
-  addBankAccounts
+  addBankAccounts,
+  myNetwork
 })
 
 const rootReducer = (state, action) => {

@@ -5,7 +5,10 @@ import Layout from '~/components/LayoutUnauthorized'
 import { Password } from '~/modules/password'
 
 const Container = styled.div`
-  padding: 60px 0;
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+  padding: 0;
 `
 
 export default class Login extends Component {

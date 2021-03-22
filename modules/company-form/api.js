@@ -2,6 +2,8 @@ import * as AT from './action-types'
 import api from '~/api'
 
 export const getBusinessTypes = () => api.get('/prodex/api/business-types').then(response => response.data)
+export const getIndustryTypes = () => api.get('/prodex/api/companies/industry-type').then(response => response.data)
+
 export const getCompanyLogo = companyId =>
   api.get(`/prodex/api/companies/id/${companyId}/logo`, { responseType: 'blob' })
 export const postCompanyLogo = (companyId, companyLogo) => {
@@ -20,3 +22,8 @@ export const deleteCompanyLogo = companyId => api.delete(`/prodex/api/companies/
 
 export const getAssociations = dataGrid =>
   api.post(`/prodex/api/associations/datagrid/`, dataGrid).then(response => response.data)
+
+export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`).then(response => response.data)
+
+export const getDocsDatagridFilter = filter =>
+    api.post('/prodex/api/attachments/datagrid', filter).then(response => response.data)

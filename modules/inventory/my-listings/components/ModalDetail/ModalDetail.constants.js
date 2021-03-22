@@ -3,6 +3,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { DivIconOptions } from '../../../constants/layout'
 
 /**
+ * @category Inventory - My Listings
  * @constant {{key: number, text: JSX.Element, value: boolean}[]} OPTIONS_YES_NO Options for dropdown.
  */
 export const OPTIONS_YES_NO = [
@@ -18,6 +19,7 @@ export const OPTIONS_YES_NO = [
   }
 ]
 /**
+ * @category Inventory - My Listings
  * @constant {{key: number, text: JSX.Element, value: boolean}[]} LIST_CONFORMING Options for dropdown.
  */
 export const LIST_CONFORMING = [
@@ -34,19 +36,23 @@ export const LIST_CONFORMING = [
 ]
 
 /**
+ * @category Inventory - My Listings
  * @type {'GLOBAL_RULES'}
  */
 export const GLOBAL_RULES = 'GLOBAL_RULES'
 /**
+ * @category Inventory - My Listings
  * @type {'NO_BROADCAST'}
  */
 const NO_BROADCAST = 'NO_BROADCAST'
 /**
+ * @category Inventory - My Listings
  * @type {'CLIENT_COMPANIES'}
  */
 const CLIENT_COMPANIES = 'CLIENT_COMPANIES'
 
 /**
+ * @category Inventory - My Listings
  * @constant {{icon: JSX.Element, title: JSX.Element, subtitleId: string, subtitleText: string, value: CLIENT_COMPANIES | NO_BROADCAST | GLOBAL_RULES}[] } OPTIONS_BROADCAST  Options for dropdown "Who should see this offer?"
  */
 export const OPTIONS_BROADCAST = [
@@ -95,32 +101,6 @@ export const OPTIONS_BROADCAST = [
       <DivIconOptions>
         <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
           <g fill='none' fill-rule='evenodd'>
-            <path
-              d='M0 0L24 0 24 24 0 24z'
-              transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
-            />
-            <path
-              fill='#848893'
-              fill-rule='nonzero'
-              d='M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z'
-              transform='translate(-1125 -507) translate(1105 295) translate(0 29) translate(20 183)'
-            />
-          </g>
-        </svg>
-      </DivIconOptions>
-    ),
-    title: <FormattedMessage id='myInventory.guests' defaultMessage='Guests' />,
-    subtitleId: 'myInventory.guestsSubtitle',
-    subtitleText: 'Your invited Guests',
-    value: CLIENT_COMPANIES,
-    id: null,
-    tmp: null
-  },
-  {
-    icon: (
-      <DivIconOptions>
-        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
-          <g fill='none' fill-rule='evenodd'>
             <g>
               <path
                 d='M0 0L24 0 24 24 0 24z'
@@ -152,6 +132,7 @@ export const OPTIONS_BROADCAST = [
 ]
 
 /**
+ * @category Inventory - My Listings
  * @constant {{
  *   edit: {
  *     broadcasted: true,
@@ -189,7 +170,8 @@ export const OPTIONS_BROADCAST = [
  *   documents: {
  *     documentType: null,
  *     attachments: []
- *   }
+ *   },
+ * shared: false
  * }} INIT_VALUES Initial values for form.
  */
 export const INIT_VALUES = {
@@ -229,5 +211,6 @@ export const INIT_VALUES = {
   documents: {
     documentType: null,
     attachments: []
-  }
+  },
+  shared: false
 }

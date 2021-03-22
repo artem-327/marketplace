@@ -21,7 +21,6 @@ function mapStateToProps(store) {
   return {
     isAdmin,
     takeover,
-    isClientCompany: getSafe(() => store.auth.identity.company.isClientCompany, false),
     companySumOfPurchasesMonthly: getSafe(() => data.companySumOfPurchasesMonthly, '')
       ? Object.entries(data.companySumOfPurchasesMonthly)
           .map(([name, value]) => ({
@@ -78,10 +77,8 @@ function mapStateToProps(store) {
       isAdmin && !takeover
         ? getSafe(() => data.totalBroadcastedProductOffersValue, 0)
         : getSafe(() => data.companyTotalSales, 0),
-    companiesCount:
-      isAdmin && !takeover
-        ? getSafe(() => data.totalCompaniesCount, 0)
-        : getSafe(() => data.companyClientCompaniesCount, 0),
+    companiesCount: getSafe(() => data.totalCompaniesCount, 0),
+    totalCompanyPartners: data?.totalCompanyPartners ?? 0, //CHECK if BE sends this atribute already
     companyProductsCount:
       isAdmin && !takeover
         ? getSafe(() => data.totalCompanyProductsCount, 0)

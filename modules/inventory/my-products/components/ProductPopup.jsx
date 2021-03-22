@@ -80,8 +80,7 @@ const ProductPopup = props => {
   useEffect(() => {
     props.getProductsCatalogRequest()
 
-    if (props.popupValues && props.popupValues.nmfcNumber)
-      props.addNmfcNumber(props.popupValues.nmfcNumber)
+    if (props.popupValues && props.popupValues.nmfcNumber) props.addNmfcNumber(props.popupValues.nmfcNumber)
 
     if (props.documentTypes.length === 0) props.getDocumentTypes()
 
@@ -95,10 +94,15 @@ const ProductPopup = props => {
       setAttachments(attachments)
 
       if (props.popupValues.packagingUnit) {
-        filterPackagingTypes(popupValues.packagingUnit.id, props.unitsAll, props.packagingTypesAll, setpackagingTypesReduced)
+        filterPackagingTypes(
+          popupValues.packagingUnit.id,
+          props.unitsAll,
+          props.packagingTypesAll,
+          setpackagingTypesReduced
+        )
       } else setpackagingTypesReduced(props.packagingType)
     }
-  }, [])  // If [] is empty then is similar as componentDidMount.
+  }, []) // If [] is empty then is similar as componentDidMount.
 
   const {
     closePopup,
@@ -133,16 +137,14 @@ const ProductPopup = props => {
       enableReinitialize
       onReset={() => (openGlobalAddForm ? openGlobalAddForm('') : closePopup())}
       onSubmit={(values, actions) => handlerSubmit(values, actions, props, attachments, setLoadSidebar)}
-      loading={loading}
-    >
+      loading={loading}>
       {formikProps => {
         let { setFieldValue, values } = formikProps
         let casProducts = getSafe(() => values.casProducts, [])
         const palletParamsRequired = checkPalletParamsRequired(values)
 
         return (
-          <Modal
-            open={true}>
+          <Modal open={true}>
             <FormStyled>
               <Dimmer inverted active={loading || loadSidebar}>
                 <Loader />
@@ -150,18 +152,18 @@ const ProductPopup = props => {
               <SegmentHigh>
                 <>
                   <div>
-                      <span>
-                        {openGlobalAddForm || !popupValues ? (
-                            <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
-                          ) : (
-                            <FormattedMessage id='global.editProduct' defaultMessage='Edit Product' />
-                          )}
-                      </span>
+                    <span>
+                      {openGlobalAddForm || !popupValues ? (
+                        <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
+                      ) : (
+                        <FormattedMessage id='global.editProduct' defaultMessage='Edit Product' />
+                      )}
+                    </span>
                     <AddBox className='title-icon' />
                   </div>
                   <div style={{ position: 'absolute', right: '20px' }}>
                     <XIcon
-                      onClick={() => openGlobalAddForm ? openGlobalAddForm('') : closePopup()}
+                      onClick={() => (openGlobalAddForm ? openGlobalAddForm('') : closePopup())}
                       className='close-icon'
                     />
                   </div>
@@ -170,11 +172,8 @@ const ProductPopup = props => {
               <FlexContent>
                 <GridStyled>
                   <GridRowLabel>
-                      <FormattedMessage
-                        id='productCatalog.selectProduct'
-                        defaultMessage='Select Product'
-                      />
-                      <Required />
+                    <FormattedMessage id='productCatalog.selectProduct' defaultMessage='Select Product' />
+                    <Required />
                   </GridRowLabel>
 
                   <GridRow>
@@ -301,7 +300,12 @@ const ProductPopup = props => {
                           'data-test': 'settings_product_popup_packagingUnit_drpdn',
                           onChange: (e, d) => {
                             setFieldValue('packagingType', '')
-                            filterPackagingTypes(d.value, props.unitsAll, props.packagingTypesAll, setpackagingTypesReduced)
+                            filterPackagingTypes(
+                              d.value,
+                              props.unitsAll,
+                              props.packagingTypesAll,
+                              setpackagingTypesReduced
+                            )
                           },
                           placeholder: formatMessage({
                             id: 'productCatalog.selectUnit',
@@ -480,10 +484,7 @@ const ProductPopup = props => {
                       <GridRow>
                         <GridColumn>
                           <DivTitleSegment>
-                            <FormattedMessage
-                              id='global.packagingDimensions'
-                              defaultMessage='Packaging Dimensions'
-                            />
+                            <FormattedMessage id='global.packagingDimensions' defaultMessage='Packaging Dimensions' />
                           </DivTitleSegment>
                         </GridColumn>
                       </GridRow>
@@ -570,8 +571,7 @@ const ProductPopup = props => {
                           />
                         </GridColumn>
                       </GridRow>
-                      <GridRow
-                        style={{ paddingBottom: '12.5px !important', marginTop: '12.5px !important' }}>
+                      <GridRow style={{ paddingBottom: '12.5px !important', marginTop: '12.5px !important' }}>
                         <GridColumn>
                           <Dropdown
                             name='documents.documentType'
@@ -604,9 +604,7 @@ const ProductPopup = props => {
                         <UploadAttachment
                           {...props}
                           header={
-                            <DivIcon
-                              onClick={() => setOpenUpload(!openUpload)}
-                            >
+                            <DivIcon onClick={() => setOpenUpload(!openUpload)}>
                               <IconClose name='close' color='grey' />
                             </DivIcon>
                           }
@@ -788,7 +786,7 @@ const ProductPopup = props => {
                             } else {
                               // No errors found
                               setLoadSidebar(true)
-                              handlerSubmit(formikProps.values, formikProps,  props, attachments, setLoadSidebar)
+                              handlerSubmit(formikProps.values, formikProps, props, attachments, setLoadSidebar)
                             }
                           })
                         }}>

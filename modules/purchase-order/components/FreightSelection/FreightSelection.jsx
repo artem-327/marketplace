@@ -36,8 +36,7 @@ import {
   Rectangle,
   CustomDivContent,
   CustomDivInTitle,
-  CustomDivTitle,
-  InfoIcon
+  CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
 
 import FreightLabel from './FreightLabel'
@@ -121,8 +120,7 @@ const FreightSelection = props => {
                       key={index}
                       checked={value && value.quoteId === item.quoteId}
                       onClick={() => !isOwn && onValueChange({ ...item, freightType: FREIGHT_TYPES.ECHO })}
-                      selection={isOwn ? '' : 'true'}
-                    >
+                      selection={isOwn ? '' : 'true'}>
                       <GridColumn width={10}>
                         <DivFlexRow>
                           <DivCentered>
@@ -136,7 +134,7 @@ const FreightSelection = props => {
                                 maximumFractionDigits={2}
                                 style='currency'
                                 currency={currency}
-                                value={item.estimatedPrice}
+                                value={item.cfEstimatedSubtotal}
                               />
                             </DivSectionName>
                           </div>
@@ -272,7 +270,7 @@ const FreightSelection = props => {
                             onValueChange({
                               freightType: FREIGHT_TYPES.ECHO,
                               carrierName: value,
-                              estimatedPrice: '',
+                              cfEstimatedSubtotal: '',
                               estimatedDeliveryDate: '',
                               quoteId: value
                             })
@@ -285,23 +283,20 @@ const FreightSelection = props => {
                     </GridRow>
                   </GridStyled>
                 )}
-              <FreightLabel
-                isOwn={isOwn}
-                onChange={val => onValueChange(val)}
-              />
+              <FreightLabel isOwn={isOwn} onChange={val => onValueChange(val)} />
             </>
           ) : (
             <DivSectionCollapsedWrapper>
               <DivSectionCollapsedRow>
                 <DivSectionName>{value ? value.carrierName : ''}</DivSectionName>
                 <DivSectionDescription>
-                  {value && value.estimatedPrice ? (
+                  {value && value.cfEstimatedSubtotal ? (
                     <FormattedNumber
                       minimumFractionDigits={2}
                       maximumFractionDigits={2}
                       style='currency'
                       currency={currency}
-                      value={value ? value.estimatedPrice : 0}
+                      value={value ? value.cfEstimatedSubtotal : 0}
                     />
                   ) : (
                     ''

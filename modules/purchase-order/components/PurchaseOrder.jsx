@@ -44,8 +44,7 @@ import {
   Rectangle,
   CustomDivContent,
   CustomDivInTitle,
-  CustomDivTitle,
-  InfoIcon
+  CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
 import '../styles/PurchaseOrder.scss'
 import styled from 'styled-components'

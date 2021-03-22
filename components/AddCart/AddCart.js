@@ -283,9 +283,9 @@ class AddCart extends Component {
   }
 
   createOrder = async holdButton => {
-    const { addCartItem, createHold } = this.props
-    let { sidebar } = this.props
-    let { pkgAmount, id, isHoldRequest } = sidebar
+    const { addCartItem, createHold, offer, sidebar } = this.props
+    const { pkgAmount, id, isHoldRequest } = sidebar
+    const { sellerId } = offer
 
     try {
       if (isHoldRequest || holdButton) {
@@ -298,7 +298,7 @@ class AddCart extends Component {
         this.props.sidebarChanged({ isOpen: false, isHoldRequest: false })
         Router.push('/marketplace/holds')
       } else {
-        await addCartItem({ productOffer: id, pkgAmount })
+        await addCartItem({ productOffer: id, pkgAmount, sellerId })
         Router.push('/cart')
       }
     } catch (error) {
@@ -798,14 +798,18 @@ class AddCart extends Component {
                   </Button>
                 ) : !isEdit ? (
                   <>
-                    <Button
-                      primary
-                      onClick={() => this.props.sidebarChanged({ isOpen: true, isHoldRequest: true })}
-                      data-test='add_cart_create_order_btn'>
-                      <FormattedMessage id='hold.hold' defaultMessage='Hold'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button>
+                    {
+                      /* DT-293 temporary disabled */ false && (
+                        <Button
+                          primary
+                          onClick={() => this.props.sidebarChanged({ isOpen: true, isHoldRequest: true })}
+                          data-test='add_cart_create_order_btn'>
+                          <FormattedMessage id='hold.hold' defaultMessage='Hold'>
+                            {text => text}
+                          </FormattedMessage>
+                        </Button>
+                      )
+                    }
                     <Button
                       disabled={!canProceed}
                       primary

@@ -1,12 +1,14 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../utils/functions'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Dropdown } from 'semantic-ui-react'
-import { Plus } from 'react-feather'
+import { Plus, Globe } from 'react-feather'
 import { AddBox, Widgets, Inbox, Person, FolderShared, Store } from '@material-ui/icons'
-import { openGlobalAddForm } from '~/modules/layout/actions'
+//Actions
+import { openGlobalAddForm } from '../modules/layout/actions'
+import { triggerModal } from '../modules/my-network/actions'
 
 export const IconPlus = styled(Plus)`
   text-align: center;
@@ -73,11 +75,9 @@ export const CreateDropdown = styled(Dropdown)`
 
 class CreateMenu extends Component {
   render() {
-    const { identity, openGlobalAddForm, openGlobalAddFormName } = this.props
+    const { identity, openGlobalAddForm, openGlobalAddFormName, triggerModal } = this.props
 
     const {
-      isClientCompanyAdmin,
-      isClientCompanyManager,
       isCompanyAdmin,
       isMerchant,
       isProductCatalogAdmin,
@@ -97,7 +97,7 @@ class CreateMenu extends Component {
           </span>
         }>
         <Dropdown.Menu data-test='navigation_menu_create_drpdn'>
-          {!isClientCompanyAdmin && (isCompanyAdmin || isProductCatalogAdmin) && (
+          {(isCompanyAdmin || isProductCatalogAdmin) && (
             <Dropdown.Item
               onClick={() => {
                 openGlobalAddForm('inventory-my-products')
@@ -107,7 +107,7 @@ class CreateMenu extends Component {
             </Dropdown.Item>
           )}
 
-          {!isClientCompanyAdmin && (isCompanyAdmin || isMerchant || isProductOfferManager) && (
+          {(isCompanyAdmin || isMerchant || isProductOfferManager) && (
             <Dropdown.Item
               onClick={() => {
                 openGlobalAddForm('inventory-my-listings')
@@ -137,24 +137,24 @@ class CreateMenu extends Component {
             </Dropdown.Item>
           )}
 
-          {(isCompanyAdmin || isClientCompanyManager) && (
-            <Dropdown.Item
-              onClick={async () => {
-                openGlobalAddForm('manage-guests-guests')
-              }}>
-              <FolderShared className={'menu-icon'} />
-              <FormattedMessage id='createMenu.newGuest' defaultMessage='New Guest' />
-            </Dropdown.Item>
-          )}
-
           {isCompanyAdmin && (
-            <Dropdown.Item
-              onClick={async () => {
-                openGlobalAddForm('my-account-locations')
-              }}>
-              <Store className={'menu-icon'} />
-              <FormattedMessage id='createMenu.newWarehouse' defaultMessage='New Warehouse' />
-            </Dropdown.Item>
+            <>
+              <Dropdown.Item
+                onClick={async () => {
+                  openGlobalAddForm('my-account-locations')
+                }}>
+                <Store className={'menu-icon'} />
+                <FormattedMessage id='createMenu.newWarehouse' defaultMessage='New Warehouse' />
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={async () => {
+                  openGlobalAddForm('my-network-connection')
+                  triggerModal()
+                }}>
+                <Globe className={'menu-icon'} />
+                <FormattedMessage id='createMenu.newConection' defaultMessage='New Connection' />
+              </Dropdown.Item>
+            </>
           )}
         </Dropdown.Menu>
       </CreateDropdown>
@@ -171,6 +171,7 @@ const stateToProps = state => {
 
 export default injectIntl(
   connect(stateToProps, {
-    openGlobalAddForm
+    openGlobalAddForm,
+    triggerModal
   })(CreateMenu)
 )

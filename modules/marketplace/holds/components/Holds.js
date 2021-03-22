@@ -139,7 +139,7 @@ class Holds extends Component {
   }
 
   getActions = () => {
-    const { intl, isMerchant, isCompanyAdmin, isProductOfferManager, isClientCompanyAdmin } = this.props
+    const { intl, isMerchant, isCompanyAdmin, isProductOfferManager } = this.props
     let filterValue = {
       searchInput: '',
       holdDropdown: 'My Holds'
@@ -187,12 +187,12 @@ class Holds extends Component {
     }
     let rowActions = []
 
-    if ((isCompanyAdmin || isMerchant || isClientCompanyAdmin) && filterValue.holdDropdown === 'My Holds') {
+    if ((isCompanyAdmin || isMerchant) && filterValue.holdDropdown === 'My Holds') {
       rowActions.push(buttonCancel)
       rowActions.push(buttonBuy)
     } else if (
-      (isCompanyAdmin || isProductOfferManager || isClientCompanyAdmin) &&
-      filterValue.holdDropdown === 'Requsted Holds'
+      (isCompanyAdmin || isProductOfferManager) &&
+      filterValue.holdDropdown === 'Requested Holds'
     ) {
       rowActions.push(buttonApprove)
       rowActions.push(buttonReject)
@@ -316,8 +316,8 @@ class Holds extends Component {
                     },
                     {
                       key: 2,
-                      value: 'Requsted Holds',
-                      text: 'Requsted Holds'
+                      value: 'Requested Holds',
+                      text: 'Requested Holds'
                     }
                   ]}
                   value={filterValue.holdDropdown}
@@ -325,7 +325,7 @@ class Holds extends Component {
                   onChange={(event, data) => {
                     if (data.value === 'My Holds') {
                       toggleHolds('my')
-                    } else if (data.value === 'Requsted Holds') {
+                    } else if (data.value === 'Requested Holds') {
                       toggleHolds('foreign')
                     }
                     this.handleFilterChange(event, data)

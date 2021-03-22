@@ -27,15 +27,15 @@ import {
 import { OPTIONS_QUANTITY, CART_ITEM_TYPES } from './ItemComponent.constants'
 
 // Services
-import { deleteCart } from './ItemComponent.services'
-
-import ErrorFocus from '../../../../components/error-focus'
+import { deleteCart, getTotalPrice } from './ItemComponent.services'
 
 const ItemComponent = props => {
   const { onClickDelete, onValueChange, value, index, item } = props
 
   const pkgAmount = item.pkgAmount
-  const pricePerUOM = getPrice(pkgAmount, item.productOffer.pricingTiers)
+  const pricePerUOM = isNaN(parseInt(value))
+    ? getPrice(pkgAmount, item.productOffer.pricingTiers)
+    : getPrice(parseInt(value), item.productOffer.pricingTiers)
 
   let allOptions = value ? OPTIONS_QUANTITY.concat([{ key: value, text: value.toString(), value }]) : OPTIONS_QUANTITY
   allOptions = uniqueArrayByKey(allOptions, 'text')
@@ -48,7 +48,7 @@ const ItemComponent = props => {
           size='18'
           onClick={async () => {
             const result = await deleteCart(item.id, props)
-            if (result) onClickDelete(item.id)
+            if (result) onClickDelete(index)
           }}
         />
       </GridRowHeader>
@@ -78,13 +78,18 @@ const ItemComponent = props => {
         </GridColumn>
         <GridColumn width={5}>
           <DivSectionName>
-            <FormattedNumber
-              minimumFractionDigits={2}
-              maximumFractionDigits={2}
-              style='currency'
-              currency={currency}
-              value={pkgAmount * pricePerUOM * item.packagingSize}
-            />
+            {isNaN(parseInt(value))
+              ? 'N/A'
+              : (
+                <FormattedNumber
+                  minimumFractionDigits={2}
+                  maximumFractionDigits={2}
+                  style='currency'
+                  currency={currency}
+                  value={parseInt(value) * pricePerUOM * item.packagingSize}
+                />
+              )
+            }
             {' ('}
             <FormattedNumber
               minimumFractionDigits={3}
@@ -93,7 +98,7 @@ const ItemComponent = props => {
               currency={currency}
               value={pricePerUOM}
             />
-            {`/${props.packageWeightUnit})`}
+            {`/${props.packagingUnit})`}
           </DivSectionName>
         </GridColumn>
         <GridColumnLeftDivider width={4}>
@@ -122,8 +127,16 @@ const ItemComponent = props => {
                   selection
                   inputProps={{
                     search: true,
-                    onSearchChange: (_, { searchQuery }) => onValueChange(searchQuery),
-                    onChange: (_, { value }) => onValueChange(value),
+                    onSearchChange: (_, { searchQuery }) =>
+                      onValueChange({
+                        val: searchQuery,
+                        price: getTotalPrice(searchQuery, item)
+                      }),
+                    onChange: (_, { value }) =>
+                      onValueChange({
+                        val: value,
+                        price: getTotalPrice(value, item)
+                      }),
                     disabled:
                       item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
                       item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
@@ -136,7 +149,11 @@ const ItemComponent = props => {
                   name={`items[${index}].quantity`}
                   selection
                   inputProps={{
-                    onChange: (_, { value }) => onValueChange(value),
+                    onChange: (_, { value }) =>
+                      onValueChange({
+                        val: value,
+                        price: getTotalPrice(value, item)
+                      }),
                     disabled:
                       item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
                       item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
@@ -170,12 +187,19 @@ const ItemComponent = props => {
         </GridColumn>
         <GridColumn width={5}>
           <DivSectionName>
-            <FormattedNumber
-              minimumFractionDigits={0}
-              maximumFractionDigits={2}
-              value={props.packageWeight * item.packagingSize}
-            />
-            {props.packageWeightUnit}
+            {isNaN(parseInt(value))
+              ? 'N/A'
+              : (
+                <>
+                <FormattedNumber
+                  minimumFractionDigits={0}
+                  maximumFractionDigits={2}
+                  value={item.packagingSize * parseInt(value)}
+                />
+                {props.packagingUnit}
+                </>
+              )
+            }
           </DivSectionName>
         </GridColumn>
         <GridColumnLeftDivider width={4}>
@@ -200,6 +224,7 @@ function mapStateToProps(store, { item }) {
     minPkg: getSafe(() => item.productOffer.minPkg, 1),
     splitPkg: getSafe(() => item.productOffer.splitPkg, 1),
     leadTime: getSafe(() => item.productOffer.leadTime, ''),
+    packagingUnit: getSafe(() => item.productOffer.companyProduct.packagingUnit.nameAbbreviation, ''),
     packageWeightUnit: getSafe(() => item.productOffer.companyProduct.packageWeightUnit.nameAbbreviation, ''),
     packageWeight: getSafe(() => item.productOffer.companyProduct.packageWeight, 0),
     cfPaymentTerms: getSafe(() => item.productOffer.cfPaymentTerms, ''),

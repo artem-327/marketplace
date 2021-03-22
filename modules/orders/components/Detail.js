@@ -848,8 +848,7 @@ class Detail extends Component {
       editReturnTrackingCode,
       isOrderProcessing,
       isCompanyAdmin,
-      isAdmin,
-      isClientCompanyAdmin
+      isAdmin
     } = this.props
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -896,18 +895,6 @@ class Detail extends Component {
               <ArrowLeft />
               <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
             </a>
-            <div className='field'>
-              <div>
-                {ordersType === 'Sales' ? (
-                  <FormattedMessage id='order.detail.buyerCompanyEin' defaultMessage='Buyer Company EIN' />
-                ) : (
-                  <FormattedMessage id='order.detail.sellerCompanyEin' defaultMessage='Seller Company EIN' />
-                )}
-              </div>
-              <div>
-                <strong>{order.companyEin}</strong>
-              </div>
-            </div>
           </TopRow>
           <OrderSegment loading={isDetailFetching || Object.keys(order).length === 0}>
             <Grid verticalAlign='middle'>
@@ -1129,7 +1116,7 @@ class Detail extends Component {
           ) : (
             <>
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
-              {isAdmin || isCompanyAdmin || isOrderProcessing || isClientCompanyAdmin ? (
+              {isAdmin || isCompanyAdmin || isOrderProcessing ? (
                 <>
                   <ActionsRequired order={order} ordersType={ordersType} />
                   {openedAssignLots ? <AssignLots /> : null}
@@ -1173,11 +1160,9 @@ class Detail extends Component {
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.paymentAddress}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
-                            {order.paymentType} <FormattedMessage id='order.phone' defaultMessage='Phone' />
+                            <FormattedMessage id='order.detail.companyEin' defaultMessage='Company EIN' />
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>
-                            <FormattedPhone value={order.paymentPhone} />
-                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.companyEin}</GridDataColumn>
                         </GridData>
                       </GridColumn>
                       <GridColumn>
@@ -1190,6 +1175,12 @@ class Detail extends Component {
                             {order.paymentType} <FormattedMessage id='order.contact' defaultMessage='Contact' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.paymentContact}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            {order.paymentType} <FormattedMessage id='order.phone' defaultMessage='Phone' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>
+                            <FormattedPhone value={order.paymentPhone} />
+                          </GridDataColumn>
                         </GridData>
                       </GridColumn>
                     </GridRow>

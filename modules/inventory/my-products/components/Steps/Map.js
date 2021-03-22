@@ -277,7 +277,9 @@ const simpleCompaniesList = {
     'primaryBranchDeliveryAddressContactEmailMapper',
     'primaryBranchDeliveryAddressContactNameMapper',
     'primaryBranchDeliveryAddressContactPhoneMapper',
-    'primaryBranchIsWarehouseMapper'
+    'primaryBranchDeliveryAddressNameMapper',
+    'primaryBranchIsWarehouseMapper',
+    'tinTypeMapper'
   ],
   optional: [
     'businessTypeMapper',
@@ -291,7 +293,6 @@ const simpleCompaniesList = {
     'primaryBranchDeliveryAddressDeliveryNotesMapper',
     'primaryBranchDeliveryAddressForkLiftMapper',
     'primaryBranchDeliveryAddressLiftGateMapper',
-    'primaryBranchDeliveryAddressNameMapper',
     'primaryBranchDeliveryAddressReadyTimeMapper',
     'primaryBranchTaxIdMapper',
     'primaryUserEmailMapper',

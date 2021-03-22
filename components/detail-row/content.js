@@ -9,27 +9,31 @@ import {
   DivBodyTable,
   DivBodyRowTable,
   DivBodyColumnTable,
+  DivBodyRowDetail,
   ColumnDetail
 } from './styles'
 
-function Content({ items, attributes }) {
+function Content({ items, attributes, separatedRows, hiddenDetailContentHeader, renderSubDetail, onDetailRowClick }) {
   return (
     <GridRow>
       <ColumnDetail width={16}>
         <DivTable>
-          <DivHeaderTable>
-            {attributes.map(attr => (
-              <DivHeaderColumnTable widthProp={attr.width}>
-                <FormattedMessage id={`detailRow.${attr.name}`} defaultMessage='Title' />
-              </DivHeaderColumnTable>
-            ))}
-          </DivHeaderTable>
-          <DivBodyTable>
+          {!hiddenDetailContentHeader &&
+            <DivHeaderTable>
+              {attributes.map(attr => (
+                <DivHeaderColumnTable widthProp={attr.width}>
+                  <FormattedMessage id={`detailRow.${attr.name}`} defaultMessage='Title' />
+                </DivHeaderColumnTable>
+              ))}
+            </DivHeaderTable>
+          }
+          <DivBodyTable separatedRows={separatedRows}>
             {items.map((item, index) => (
-              <DivBodyRowTable isLastRow={index === items.length - 1}>
+              <DivBodyRowTable isLastRow={index === items.length - 1} separatedRows={separatedRows} canWrap={item.opened} onClick={() => onDetailRowClick(item.id)} className={item.opened ? 'opened' : 'closed'}>
                 {attributes.map(attr => (
                   <DivBodyColumnTable widthProp={attr.width}>{item[attr.name]}</DivBodyColumnTable>
                 ))}
+                {item.opened && <DivBodyRowDetail onClick={(e) => e.stopPropagation() }>{renderSubDetail(item)}</DivBodyRowDetail>}
               </DivBodyRowTable>
             ))}
           </DivBodyTable>
@@ -41,12 +45,20 @@ function Content({ items, attributes }) {
 
 Content.propTypes = {
   items: PropTypes.object,
-  attributes: PropTypes.array
+  attributes: PropTypes.array,
+  separatedRows: PropTypes.bool,
+  hiddenDetailContentHeader: PropTypes.bool,
+  renderSubDetail: PropTypes.func,
+  onDetailRowClick: PropTypes.func
 }
 
 Content.defaultProps = {
   items: {},
-  attributes: []
+  attributes: [],
+  separatedRows: false,
+  hiddenDetailContentHeader: false,
+  renderSubDetail: () => {},
+  onDetailRowClick: () => {}
 }
 
 export default Content

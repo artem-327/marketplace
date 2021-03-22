@@ -362,7 +362,6 @@ class Broadcast extends Component {
         'anonymous',
         'associations',
         'elements',
-        'clientCompany',
         'broadcast',
         'expanded',
         'id',
@@ -615,10 +614,7 @@ class Broadcast extends Component {
           value={this.state.associationFilter}
           selection
           loading={associationsFetching}
-          options={[
-            { key: 'ALL', text: 'Partners', value: 'ALL' },
-            { key: 'Guests', text: 'Guests', value: 'Guests' }
-          ].concat(options)}
+          options={[{ key: 'ALL', text: 'Partners', value: 'ALL' }].concat(options)}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
       </FieldInHeaderTable>
@@ -863,7 +859,6 @@ class Broadcast extends Component {
                         <InputSearch
                           name='search'
                           icon='search'
-                          iconPosition='right'
                           value={this.state.filterSearch}
                           onChange={this.handleSearchChange}
                           placeholder={formatMessage({
@@ -903,10 +898,7 @@ class Broadcast extends Component {
                         value={this.state.associationFilter}
                         selection
                         loading={associationsFetching}
-                        options={[
-                          { key: 'ALL', text: 'Partners', value: 'ALL' },
-                          { key: 'Guests', text: 'Guests', value: 'Guests' }
-                        ].concat(options)}
+                        options={[{ key: 'ALL', text: 'Partners', value: 'ALL' }].concat(options)}
                         onChange={(_e, { value }) => this.setState({ associationFilter: value })}
                       />
                     </GridColumnFiltersModal>
@@ -1019,7 +1011,6 @@ class Broadcast extends Component {
                       <InputSearch
                         name='search'
                         icon='search'
-                        iconPosition='right'
                         value={this.state.filterSearch}
                         onChange={this.handleSearchChange}
                         placeholder={formatMessage({
@@ -1463,7 +1454,6 @@ Broadcast.propTypes = {
   asModal: bool,
   additionalGridProps: object,
   hideFobPrice: bool,
-  asModal: bool,
   isOpenTemplateModal: bool,
   saveSidebar: number,
   detailValues: object,
@@ -1474,7 +1464,6 @@ Broadcast.defaultProps = {
   asModal: false,
   additionalGridProps: {},
   hideFobPrice: false,
-  asModal: false,
   isOpenTemplateModal: false,
   saveSidebar: 0,
   detailValues: {},

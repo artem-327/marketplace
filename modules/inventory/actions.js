@@ -117,7 +117,8 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
       splitPkg: parseInt(values.splits),
       validityDate: values.expirationDate ? moment(values.expirationDate).utc(values.expirationDate).format() : null,
       warehouse: parseInt(values.warehouse),
-      tdsFields: getSafe(() => values.tdsFields, '')
+      tdsFields: getSafe(() => values.tdsFields, ''),
+      shared: getSafe(() => values.shared, '')
     }
   } else {
     params = values // ! ! az bude BE vracet pricingTiers, tak predelat zkombinovat tento radek s vytvarenim objektu vyse (prejmenovane / chybejici atributy)

@@ -7,6 +7,7 @@ export const initialState = {
   popupValues: null,
   tabsNames: defaultTabs,
   loading: false,
+  updating: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
   companyProductUnmappedOnly: false,
@@ -143,6 +144,22 @@ export default function reducers(state = initialState, action) {
         currentAddForm: null,
         currentEditForm: null,
         currentEdit2Form: null
+      }
+    }
+    case AT.PRODUCTS_POST_NEW_CAS_PRODUCT_PENDING:
+    case AT.PRODUCTS_UPDATE_CAS_PRODUCT_PENDING: {
+      return {
+        ...state,
+        updating: true
+      }
+    }
+    case AT.PRODUCTS_POST_NEW_CAS_PRODUCT_REJECTED:
+    case AT.PRODUCTS_POST_NEW_CAS_PRODUCT_FULFILLED:
+    case AT.PRODUCTS_UPDATE_CAS_PRODUCT_REJECTED:
+    case AT.PRODUCTS_UPDATE_CAS_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        updating: false
       }
     }
     case AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES_PENDING:
