@@ -133,3 +133,8 @@ export const ChevronRightStyled = styled(ChevronRight)`
   padding: 2.5px;
   ${props => (props.clickable === 'true' ? 'cursor: pointer; color: #20273a;' : '')}
 `
+
+export const SegmentDetailRow = styled(Segment)`
+  padding-top: 0px !important;
+  min-width: 50% !important;
+`

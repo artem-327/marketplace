@@ -9,6 +9,7 @@ import { GridColumnDetail } from '../../../../../my-network/components/DetailRow
 import { TabPane } from '../ListingDetail.styles'
 //Components
 import InfoTab from './InfoTab'
+import TDSTab from './TDSTab'
 
 const Tabs = ({ row, activeTab, setActiveTab }) => {
   const panes = [
@@ -32,7 +33,7 @@ const Tabs = ({ row, activeTab, setActiveTab }) => {
       ),
       render: () => (
         <TabPane key='tds' attached={false}>
-          Ahoj
+          <TDSTab row={row} />
         </TabPane>
       )
     },

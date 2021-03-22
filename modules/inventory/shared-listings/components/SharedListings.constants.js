@@ -20,7 +20,7 @@ export const COLUMNS = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 180
+    width: 200
     // ! ! sortPath: 'ProductOffer.cfPricePerUOM'
   },
   {
@@ -39,7 +39,7 @@ export const COLUMNS = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 130,
+    width: 150,
     sortPath: 'ProductOffer.quantity'
   },
   {
@@ -49,7 +49,7 @@ export const COLUMNS = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 130,
+    width: 150,
     align: 'right',
     sortPath: 'ProductOffer.quantity'
   },
@@ -60,7 +60,7 @@ export const COLUMNS = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 130,
+    width: 150,
     sortPath: 'ProductOffer.warehouse.warehouse'
   },
   {
@@ -70,7 +70,7 @@ export const COLUMNS = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 100,
+    width: 150,
     align: 'right'
   },
   {

@@ -21,7 +21,8 @@ export const makeGetDatagridRows = () => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       let price
       let address = po?.warehouse?.deliveryAddress?.address?.city //MOVE to mapStateToProps and services
-
+      const companyProduct = getSafe(() => po.companyProduct, null)
+      const companyGenericProduct = getSafe(() => po.companyProduct.companyGenericProduct, null)
       if (po?.warehouse?.deliveryAddress?.address?.province?.abbreviation) {
         address = `${address}, ${po?.warehouse?.deliveryAddress?.address?.province?.abbreviation}`
       } else {
@@ -59,9 +60,23 @@ export const makeGetDatagridRows = () => {
         console.error(e)
       }
 
+      let tdsFields = null
+      //Convert tdsFields string array of objects to array
+      if (getSafe(() => po.tdsFields, '')) {
+        let newJson = po.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
+        newJson = newJson.replace(/'/g, '"')
+        tdsFields = JSON.parse(newJson)
+      }
+
       return {
         ...po,
-        rawData: { ...po, address, priceColumns: getPriceColumns(po) },
+
+        rawData: {
+          ...po,
+          elementsTdsFields: { elements: getSafe(() => tdsFields, [{ property: '', specifications: '' }]) },
+          address,
+          priceColumns: getPriceColumns(po)
+        },
         groupProductName: getSafe(() => po.companyProduct.intProductName, 'Unmapped'),
         seller: (
           <DivSeller key={po.id}>

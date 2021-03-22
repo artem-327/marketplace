@@ -16,14 +16,11 @@ import {
   DivMail,
   DivTextButton,
   ChevronLeftStyled,
-  ChevronRightStyled
+  ChevronRightStyled,
+  SegmentDetailRow
 } from './ListingDetail.styles'
 import { StyledGrid, TableSegment, StyledList } from '../../../../../components/detail-row/styles'
-import {
-  SegmentGroupHeader,
-  GridColumnDetail,
-  SegmentBottom as SegmentHeader
-} from '../../../../my-network/components/DetailRow/DetailRow.style'
+import { SegmentGroupHeader, GridColumnDetail } from '../../../../my-network/components/DetailRow/DetailRow.style'
 import { getSafe } from '../../../../../utils/functions'
 
 /**
@@ -42,13 +39,12 @@ const Header = props => {
 
   const priceColumnsLength = row?.priceColumns?.length
   const { pricingTabIndex } = values
-  const priceColumns = priceColumnsLength > 4
-    ? row.priceColumns.slice(pricingTabIndex, pricingTabIndex + 4)
-    : row.priceColumns
+  const priceColumns =
+    priceColumnsLength > 4 ? row.priceColumns.slice(pricingTabIndex, pricingTabIndex + 4) : row.priceColumns
 
   return (
     <SegmentGroupHeader horizontal $noneBorder>
-      <SegmentHeader textAlign='left'>
+      <SegmentDetailRow textAlign='left'>
         <StyledGrid>
           <Grid.Row>
             <GridColumnDetail>
@@ -88,9 +84,9 @@ const Header = props => {
             </GridColumnDetail>
           </Grid.Row>
         </StyledGrid>
-      </SegmentHeader>
+      </SegmentDetailRow>
 
-      <SegmentHeader textAlign='left'>
+      <SegmentDetailRow textAlign='left'>
         <StyledGrid>
           <Grid.Row>
             <GridColumnDetail>
@@ -133,11 +129,11 @@ const Header = props => {
                 <ChevronRightStyled
                   size={24}
                   onClick={() => {
-                    if (pricingTabIndex < (priceColumnsLength - 4)) {
+                    if (pricingTabIndex < priceColumnsLength - 4) {
                       onChange({ ...values, pricingTabIndex: pricingTabIndex + 1 })
                     }
                   }}
-                  clickable={(pricingTabIndex < (priceColumnsLength - 4)).toString()}
+                  clickable={(pricingTabIndex < priceColumnsLength - 4).toString()}
                 />
               )}
             </GridColumnDetail>
@@ -170,7 +166,7 @@ const Header = props => {
             </GridColumnDetail>
           </Grid.Row>
         </StyledGrid>
-      </SegmentHeader>
+      </SegmentDetailRow>
     </SegmentGroupHeader>
   )
 }

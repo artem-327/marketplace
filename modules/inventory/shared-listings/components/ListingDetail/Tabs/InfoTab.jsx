@@ -12,7 +12,8 @@ import {
   SegmentGroupTab,
   GridColumnTitleSection,
   GridRowTabField,
-  GridColumnTabFieldValue
+  GridColumnTabFieldValue,
+  SegmentDetailRow
 } from '../ListingDetail.styles'
 /**
  * @category Inventory - Shared Listings
@@ -23,7 +24,7 @@ const InfoTab = ({ row }) => {
   console.log(row)
   return (
     <SegmentGroupTab horizontal $noneBorder>
-      <SegmentBottom textAlign='left'>
+      <SegmentDetailRow textAlign='left'>
         <StyledGrid>
           <Grid.Row>
             <GridColumnTitleSection>
@@ -32,36 +33,36 @@ const InfoTab = ({ row }) => {
           </Grid.Row>
 
           <GridRowTabField>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <FormattedMessage id={`cart.minimumPackges`} defaultMessage='Minimum Package' />
             </Grid.Column>
-            <GridColumnTabFieldValue width={11}>{row?.minPkg}</GridColumnTabFieldValue>
+            <GridColumnTabFieldValue width={10}>{row?.minPkg}</GridColumnTabFieldValue>
           </GridRowTabField>
 
           <GridRowTabField>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <FormattedMessage id={`cart.split`} defaultMessage='Split' />
             </Grid.Column>
-            <GridColumnTabFieldValue width={11}>{row?.splitPkg}</GridColumnTabFieldValue>
+            <GridColumnTabFieldValue width={10}>{row?.splitPkg}</GridColumnTabFieldValue>
           </GridRowTabField>
 
           <GridRowTabField>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <FormattedMessage id={`global.paymentTerms`} defaultMessage='Payment Terms' />
             </Grid.Column>
-            <GridColumnTabFieldValue width={11}>{row?.paymentTerms}</GridColumnTabFieldValue>
+            <GridColumnTabFieldValue width={10}>{row?.paymentTerms}</GridColumnTabFieldValue>
           </GridRowTabField>
 
           <GridRowTabField>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <FormattedMessage id={`global.leadTime`} defaultMessage='Lead Time' />
             </Grid.Column>
-            <GridColumnTabFieldValue width={11}>{row?.leadTime}</GridColumnTabFieldValue>
+            <GridColumnTabFieldValue width={10}>{row?.leadTime}</GridColumnTabFieldValue>
           </GridRowTabField>
         </StyledGrid>
-      </SegmentBottom>
+      </SegmentDetailRow>
 
-      <SegmentBottom textAlign='left'>
+      <SegmentDetailRow textAlign='left'>
         <StyledGrid>
           <Grid.Row>
             <GridColumnTitleSection>
@@ -73,66 +74,45 @@ const InfoTab = ({ row }) => {
           </Grid.Row>
 
           <GridRowTabField>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <FormattedMessage id={`global.manufacturer`} defaultMessage='Manufacturer' />
             </Grid.Column>
-            <GridColumnTabFieldValue width={11}>
-              {row?.owner?.cfDisplayName}
-              <span style={{ color: 'red', fontSize: '10px' }}>
-                FIXME is it that field?: row.owner.cfDisplayName
-              </span>
+            <GridColumnTabFieldValue width={10}>
+              {row?.companyProduct?.companyGenericProduct?.manufacturer?.name}
             </GridColumnTabFieldValue>
           </GridRowTabField>
 
           <GridRowTabField>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <FormattedMessage id={`global.origin`} defaultMessage='Country of Origin' />
             </Grid.Column>
-            <GridColumnTabFieldValue width={11}>
-              {row?.createdBy?.homeBranch?.deliveryAddress?.address?.country?.name}
-              <span style={{ color: 'red', fontSize: '10px' }}>
-                FIXME is it that field?: row.createdBy.homeBranch.deliveryAddress.address.country.name
-              </span>
-            </GridColumnTabFieldValue>
+            <GridColumnTabFieldValue width={10}>{row?.origin?.name}</GridColumnTabFieldValue>
           </GridRowTabField>
 
           <GridRowTabField>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <FormattedMessage id={`global.condition`} defaultMessage='Condition' />
             </Grid.Column>
-            <GridColumnTabFieldValue width={11}>
-              {row?.conforming ? 'Conforming' : 'N/A'}
-              <span style={{ color: 'red', fontSize: '10px' }}>FIXME is it that field?: row.conforming</span>
-            </GridColumnTabFieldValue>
+            <GridColumnTabFieldValue width={10}>{row?.conforming ? 'Conforming' : 'N/A'}</GridColumnTabFieldValue>
           </GridRowTabField>
 
           <GridRowTabField>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <FormattedMessage id={`global.expirationDate`} defaultMessage='Expiration Date' />
             </Grid.Column>
-            <GridColumnTabFieldValue width={11}>
-              {row?.companyProduct?.expirationDate
-                ? moment(row?.companyProduct?.expirationDate).format(getLocaleDateFormat())
-                : 'N/A'}
-              <span style={{ color: 'red', fontSize: '10px' }}>
-                FIXME is it that field?: row.companyProduct.expirationDate
-              </span>
+            <GridColumnTabFieldValue width={10}>
+              {row?.lotExpirationDate ? moment(row?.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A'}
             </GridColumnTabFieldValue>
           </GridRowTabField>
 
           <GridRowTabField>
-            <Grid.Column width={5}>
+            <Grid.Column width={6}>
               <FormattedMessage id={`global.form`} defaultMessage='Form' />
             </Grid.Column>
-            <GridColumnTabFieldValue width={11}>
-              {row?.companyProduct?.form?.name}
-              <span style={{ color: 'red', fontSize: '10px' }}>
-                FIXME is it that field?: row.companyProduct.form.name
-              </span>
-            </GridColumnTabFieldValue>
+            <GridColumnTabFieldValue width={10}>{row?.form?.name}</GridColumnTabFieldValue>
           </GridRowTabField>
         </StyledGrid>
-      </SegmentBottom>
+      </SegmentDetailRow>
     </SegmentGroupTab>
   )
 }
@@ -141,7 +121,7 @@ InfoTab.propTypes = {}
 InfoTab.defaultProps = {}
 
 function areEqual(prevProps, nextProps) {
-  return prevProps?.id === nextProps?.id
+  return prevProps?.row?.id === nextProps?.row?.id
 }
 
 const MemoInfoTab = memo(InfoTab, areEqual)
