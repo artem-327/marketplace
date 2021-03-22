@@ -858,6 +858,7 @@ class Detail extends Component {
     const valColumn = 16 - keyColumn
 
     const test = true
+    const { counterOrderId } = order
 
     return (
       <div id='page' className='auto-scrolling'>
@@ -1118,7 +1119,7 @@ class Detail extends Component {
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
               {isAdmin || isCompanyAdmin || isOrderProcessing ? (
                 <>
-                  <ActionsRequired order={order} ordersType={ordersType} />
+                  {counterOrderId ? <ActionsRequired order={order} ordersType={ordersType} /> : null}
                   {openedAssignLots ? <AssignLots /> : null}
                   {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
                   {openedEnterTrackingIdShip ? <EnterTrackingIdShip /> : null}
