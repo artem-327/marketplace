@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { getSafe } from '~/utils/functions'
+import { injectIntl, FormattedMessage } from 'react-intl'
 
 // Components
 import ProdexTable from '../../../../components/table'
@@ -38,12 +39,28 @@ const SharedListings = props => {
     }
   })
 
-  const { datagrid, rows, activeTab, setActiveTab, isOpenPriceBookModal, triggerPriceBookModal, rowIdPriceBook } = props
+  const {
+    datagrid,
+    rows,
+    activeTab,
+    setActiveTab,
+    isOpenPriceBookModal,
+    getTemplates,
+    broadcastTemplates,
+    triggerPriceBookModal,
+    rowIdPriceBook
+  } = props
 
   const state = {
     expandedRowIds,
     setExpandedRowIds
   }
+
+  useEffect(() => {
+    if (broadcastTemplates && !broadcastTemplates.length) {
+      getTemplates()
+    }
+  }, [])
 
   const getRowDetail = (row, props, state) => {
     return <ListingDetail row={row.rawData} parentState={state} values={values} onChange={data => setValues(data)} />
@@ -112,4 +129,4 @@ SharedListings.propTypes = {
 
 SharedListings.defaultProps = {}
 
-export default SharedListings
+export default injectIntl(SharedListings)

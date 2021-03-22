@@ -20,7 +20,7 @@ export const COLUMNS = [
         {text => text}
       </FormattedMessage>
     ),
-    width: 180,
+    width: 180
     // ! ! sortPath: 'ProductOffer.cfPricePerUOM'
   },
   {
@@ -43,7 +43,7 @@ export const COLUMNS = [
     sortPath: 'ProductOffer.quantity'
   },
   {
-    name: 'quantity',
+    name: 'quantityShared',
     title: (
       <FormattedMessage id='sharedListings.quantity' defaultMessage='Quantity'>
         {text => text}

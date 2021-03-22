@@ -1,7 +1,8 @@
 import { connect } from 'react-redux'
 //Actions
 import * as Actions from '../../actions'
-import { getTemplates } from '../../../broadcast/actions'
+import { getTemplates, broadcastChange } from '../../../broadcast/actions'
+
 //HOC
 import { withDatagrid } from '../../../datagrid'
 //Components
@@ -23,4 +24,10 @@ const makeMapStateToProps = () => {
   return mapStateToProps
 }
 
-export default withDatagrid(connect(makeMapStateToProps, { ...Actions, getTemplates })(SharedListings))
+const mapDispatchToProps = {
+  ...Actions,
+  getTemplates,
+  broadcastChange
+}
+
+export default withDatagrid(connect(makeMapStateToProps, mapDispatchToProps)(SharedListings))

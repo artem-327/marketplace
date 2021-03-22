@@ -31,30 +31,36 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
     }
   }
 })
-export const broadcastChange = createAsyncAction('BROADCAST_CHANGE', async (row, option, template, datagrid) => {
-  let editedRow = {
-    ...row,
-    warehouse: {
-      deliveryAddress: {
-        cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse.deliveryAddress.cfName
-      }
-    },
-    broadcastOption: option,
-    broadcastTemplateResponse: template
+export const broadcastChange = createAsyncAction(
+  'BROADCAST_CHANGE',
+  async (row, option, template, datagrid, isUpdateWarehouse = true) => {
+    let warehouse = isUpdateWarehouse
+      ? {
+          warehouse: {
+            deliveryAddress: {
+              cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse.deliveryAddress.cfName
+            }
+          }
+        }
+      : null
+
+    let editedRow = {
+      ...row,
+      ...warehouse,
+      broadcastOption: option,
+      broadcastTemplateResponse: template
+    }
+    datagrid.updateRow(row.id, () => ({
+      ...row,
+      ...warehouse,
+      isBroadcastLoading: true
+    }))
+    await api.broadcastChange(row.id, option, template ? template.id : null)
+    datagrid.updateRow(row.id, () => ({ ...editedRow, isBroadcastLoading: false }))
+    return editedRow
   }
-  datagrid.updateRow(row.id, () => ({
-    ...row,
-    warehouse: {
-      deliveryAddress: {
-        cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse.deliveryAddress.cfName
-      }
-    },
-    isBroadcastLoading: true
-  }))
-  await api.broadcastChange(row.id, option, template ? template.id : null)
-  datagrid.updateRow(row.id, () => ({ ...editedRow, isBroadcastLoading: false }))
-  return editedRow
-})
+)
+
 export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, datagrid) => {
   if (row && row.id) {
     datagrid &&

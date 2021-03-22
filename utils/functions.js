@@ -192,12 +192,12 @@ export const getFormattedAddress = address => {
 
 export function getLocationString(productOffer) {
   try {
-    var location = productOffer.warehouse.deliveryAddress.address
+    var location = productOffer?.warehouse?.deliveryAddress?.address
   } catch (e) {
     return ''
   }
 
-  return `${location.province ? `${location.province.abbreviation},` : ''} ${location.country.name}`
+  return `${location?.province ? `${location?.province?.abbreviation},` : ''} ${location?.country?.name}`
 }
 
 export function addFirstTier(productOffer) {
@@ -266,7 +266,8 @@ export function getMimeType(documentName) {
       return 'application/x-rar-compressed'
     case 'xml':
       return 'application/xml'
-    default:get
+    default:
+      get
       return 'text/plain'
   }
 }
