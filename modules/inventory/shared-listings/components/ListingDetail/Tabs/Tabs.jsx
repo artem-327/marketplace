@@ -10,6 +10,9 @@ import { TabPane } from '../ListingDetail.styles'
 //Components
 import InfoTab from './InfoTab'
 import TDSTab from './TDSTab'
+import SDSTab from './SDSTab'
+import DocumentsTab from './DocumentsTab'
+import NotesTab from './NotesTab'
 
 const Tabs = ({ row, activeTab, setActiveTab }) => {
   const panes = [
@@ -45,7 +48,7 @@ const Tabs = ({ row, activeTab, setActiveTab }) => {
       ),
       render: () => (
         <TabPane key='sds' attached={false}>
-          Ahoj
+          <SDSTab row={row} />
         </TabPane>
       )
     },
@@ -57,7 +60,7 @@ const Tabs = ({ row, activeTab, setActiveTab }) => {
       ),
       render: () => (
         <TabPane key='documents' attached={false}>
-          Ahoj
+          <DocumentsTab row={row} />
         </TabPane>
       )
     },
@@ -69,7 +72,7 @@ const Tabs = ({ row, activeTab, setActiveTab }) => {
       ),
       render: () => (
         <TabPane key='notes' attached={false}>
-          Ahoj
+          <NotesTab row={row} />
         </TabPane>
       )
     }

@@ -1,10 +1,60 @@
 import { memo } from 'react'
 import PropTypes from 'prop-types'
-//Services
-import { getTdsElements } from '../../../../../company-product-info/components/CompanyProductInfo.services'
+import { GridColumn, GridRow } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+
+//Styles
+import {
+  DivTableWrapper,
+  GridStyledTds,
+  GridColumnCustom,
+  DivTdsTableHeader,
+  DivTdsPropertyText,
+  DivNormalText
+} from '../ListingDetail.styles'
 
 const TDSTab = ({ row }) => {
-  return <div>{getTdsElements(row?.elementsTdsFields)}</div>
+  let elementsTdsFields = row?.elementsTdsFields?.elements ? row?.elementsTdsFields?.elements : []
+  elementsTdsFields = elementsTdsFields.filter(el => el.property !== '' && el.specifications !== '')
+
+  return (
+    <DivTableWrapper>
+      {elementsTdsFields.length > 0 && (
+        <>
+          <GridStyledTds>
+            <GridRow>
+              <GridColumnCustom width={2} value='padding: 0 12px 0 0 !important;'>
+                <DivTdsTableHeader>
+                  <FormattedMessage id='global.property' defaultMessage='Property'/>
+                </DivTdsTableHeader>
+              </GridColumnCustom>
+              <GridColumn width={14}>
+                <DivTdsTableHeader>
+                  <FormattedMessage id='global.specifications' defaultMessage='Specifications'/>
+                </DivTdsTableHeader>
+              </GridColumn>
+            </GridRow>
+          </GridStyledTds>
+          <GridStyledTds bordered='true'>
+            {elementsTdsFields.map((el, index) => (
+              <GridRow key={index}>
+                <GridColumn width={2}>
+                  <DivTdsPropertyText>
+                    {el.property}
+                  </DivTdsPropertyText>
+                </GridColumn>
+                <GridColumn width={14}>
+                  <DivNormalText>
+                    {el.specifications}
+                  </DivNormalText>
+                </GridColumn>
+              </GridRow>
+            ))}
+          </GridStyledTds>
+        </>
+      )}
+    </DivTableWrapper>
+  )
 }
 
 TDSTab.propTypes = {}

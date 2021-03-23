@@ -380,6 +380,10 @@
   "casProduct.specificGravity": "Specific Gravity",
   "casProduct.specificVolume": "Specific Volume",
   "casProduct.selectOption": "Select Option",
+  "casProduct.manufacturer": "Manufacturer",
+  "casProduct.manufacturerProductCode": "Manufacturer Product Code",
+  "casProduct.emergencyPhone": "Emergency Number",
+  "casProduct.esin": "ESIN",
   "global.reset": "Reset",
   "global.placeholder.taxId": "Enter Tax ID",
   "global.placeholder.deliveryNotes": "Write delivery notes here",
@@ -3312,5 +3316,13 @@
   "sharedListings.detailRow.enterMarkup": "Enter Markup",
   "sharedListings.detailRow.tabInfo": "Info",
   "sharedListings.detailRow.purchaseInfo": "Purchase Info",
-  "sharedListings.detailRow.productInfo": "Product Information"
+  "sharedListings.detailRow.fileName": "File Name",
+  "sharedListings.detailRow.docType": "Doc. Type",
+  "sharedListings.detailRow.expDate": "Exp. Date",
+  "sharedListings.detailRow.productInfo": "Product Info",
+  "sharedListings.detailRow.properties": "Properties",
+  "sharedListings.detailRow.elementName": "Element Name",
+  "sharedListings.detailRow.casNumber": "CAS Number",
+  "sharedListings.detailRow.assay": "Assay",
+  "sharedListings.detailRow.productInformation": "Product Information"
 }

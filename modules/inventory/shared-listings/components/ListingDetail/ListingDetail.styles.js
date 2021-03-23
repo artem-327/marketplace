@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Header, GridColumn, GridRow, Grid, Segment, Message, Button, ButtonGroup, Tab } from 'semantic-ui-react'
-import { ChevronLeft, ChevronRight } from 'react-feather'
+import { ChevronLeft, ChevronRight, FileText, Download } from 'react-feather'
 //Components
 import BasicButton from '../../../../../components/buttons/BasicButton'
 //Styles
@@ -96,7 +96,7 @@ export const SegmentGroupTab = styled(SegmentGroupHeader)`
 export const GridColumnTitleSection = styled(Grid.Column)`
   background-color: #edeef2 !important;
   color: #404040 !important;
-  padding: 4px !important;
+  padding: 5px 9px !important;
 `
 
 export const GridRowTabField = styled(Grid.Row)`
@@ -137,4 +137,151 @@ export const ChevronRightStyled = styled(ChevronRight)`
 export const SegmentDetailRow = styled(Segment)`
   padding-top: 0px !important;
   min-width: 50% !important;
+`
+
+export const DivTableWrapper = styled.div`
+  padding: 20px 15px;
+`
+
+export const GridStyledTds = styled(Grid)`
+  &.ui.grid {
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    
+    ${props => (props.bordered === 'true' 
+     ? 'border-radius: 4px; border: solid 1px #dee2e6;' 
+     : ''
+    )}
+    
+    background-color: #ffffff;
+
+    > .row {
+      background-color: rgba(240, 240, 240, 0);    
+      padding: 10px 0;
+      margin: 0;
+
+      > .column {
+        padding: 0 12px;
+      }
+    }
+    
+    > .row:not(:last-child) {
+      ${props => (props.bordered === 'true' ? 'border-bottom: solid 1px #dee2e6;' : '')}
+    }
+  }
+`
+
+export const DivTdsTableHeader = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+  color: #848893;
+  text-transform: uppercase;
+`
+
+export const DivTdsPropertyText = styled.div`
+  font-weight: 500;
+  color: #20273a;
+`
+
+export const DivNormalText = styled.div`
+  color: #20273a;
+`
+
+export const GridColumnCustom = styled(GridColumn)`
+  &.column {
+    ${props => (props.value? props.value : '')}
+  }
+`
+
+export const GridStyledNotes = styled(Grid)`
+  &.ui.grid {
+    text-align: left;
+    margin: 0;
+    padding: 0;    
+    background-color: #ffffff;
+
+    > .row {
+      padding: 10px 0;
+      margin: 5px 0;
+      border-radius: 3px;
+      border: solid 1px #dee2e6;
+      background-color: #ffffff;
+
+      > .column {
+        padding: 0 19px;
+      }
+    }
+  }
+`
+
+export const GridStyledDocuments = styled(Grid)`
+  &.ui.grid {
+    text-align: left;
+    margin: 0;
+    padding: 0;    
+    background-color: #ffffff;
+
+    > .row {
+      padding: 10px 0;
+      margin: 2px 0;
+      border-radius: 3px;
+      border: solid 1px #dee2e6;
+      background-color: #f8f9fb;
+
+      > .column {
+        padding: 0 19px;
+        
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+  }
+`
+
+export const DivCentered = styled.div`
+  margin: auto 0 auto 0;
+`
+
+export const IconFileText = styled(FileText)`  
+  color: #20273a;
+  margin: 2px 6px 0 0;
+`
+
+export const DivDocumentsColumn = styled.div`
+  padding: 0 10px;
+  ${props => (props.value? props.value : '')}
+`
+
+export const IconDownload = styled(Download)`  
+  color: #2599d5;
+  margin: 2px 0 0 10px;
+  cursor: pointer;
+`
+
+export const DivFlexRow = styled.div`
+  display: flex;
+  flex-flow: row;
+`
+
+export const DivGreyHeader = styled.div`
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #848893;
+`
+
+export const DivSdsProductName = styled.div`
+  border-radius: 4px;
+  border: solid 1px #dee2e6;
+  background-color: #f8f9fb;
+  padding: 12px 15px;
+  margin: 10px -5px 0;
+`
+
+export const DivBoldText = styled.div`
+  font-size: 14px;
+  font-weight: bold;
+  color: #20273a;
 `

@@ -267,7 +267,6 @@ export function getMimeType(documentName) {
     case 'xml':
       return 'application/xml'
     default:
-      get
       return 'text/plain'
   }
 }
