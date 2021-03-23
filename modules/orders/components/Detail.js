@@ -1119,7 +1119,7 @@ class Detail extends Component {
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
               {isAdmin || isCompanyAdmin || isOrderProcessing ? (
                 <>
-                  {counterOrderId ? <ActionsRequired order={order} ordersType={ordersType} /> : null}
+                  {!counterOrderId ? <ActionsRequired order={order} ordersType={ordersType} /> : null}
                   {openedAssignLots ? <AssignLots /> : null}
                   {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
                   {openedEnterTrackingIdShip ? <EnterTrackingIdShip /> : null}
