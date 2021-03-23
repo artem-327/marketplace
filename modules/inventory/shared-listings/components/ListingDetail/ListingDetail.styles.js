@@ -286,7 +286,7 @@ export const DivBoldText = styled.div`
 export const TabDetailRow = styled(Tab)`
   .ui.secondary.menu:not(.vertical) {
     padding-left: 25px !important;
-    margin: -35px -15px 10px -15px !important;
+    margin: -15px -15px 10px -15px !important;
     border-bottom: solid 1px #dee2e6 !important;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;

@@ -62,7 +62,7 @@ const Header = props => {
               <DivName> {row?.companyProduct?.intProductName}</DivName>
               <DivAddress>{row?.address}</DivAddress>
               <DivButtons>
-                <BasicButtonCustom
+                {/* <BasicButtonCustom
                   fluid
                   onClick={() => console.log('click message seller')}
                   data-test='shared_listings_message_seller_btn'>
@@ -80,7 +80,7 @@ const Header = props => {
                   onClick={() => console.log('click trade pass')}
                   data-test='shared_listings_trade_pass_btn'>
                   <FormattedMessage id='sharedListings.detailRow.tradePass' defaultMessage='Trade Pass' />
-                </BasicButtonCustom>
+                </BasicButtonCustom> */}
               </DivButtons>
             </GridColumnDetail>
           </Grid.Row>
@@ -139,7 +139,7 @@ const Header = props => {
               )}
             </GridColumnDetail>
           </Grid.Row>
-          <Grid.Row>
+          {/* <Grid.Row>
             <GridColumnDetail width={8} $colorText='#404040'>
               <FormattedMessage id='detailRow.pricing.markup' defaultMessage='Markup' />
             </GridColumnDetail>
@@ -170,7 +170,7 @@ const Header = props => {
                 <FormattedMessage id='global.save' defaultMessage='Save' />
               </BasicButton>
             </GridColumnDetail>
-          </Grid.Row>
+          </Grid.Row> */}
         </StyledGrid>
       </SegmentDetailRow>
     </SegmentGroupHeader>
