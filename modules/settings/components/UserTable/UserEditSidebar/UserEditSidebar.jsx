@@ -16,7 +16,8 @@ import {
   postNewUserRequest,
   handlerSubmitUserEditPopup,
   getCompanyDetails,
-  getUsersDataRequest
+  getUsersDataRequest,
+  getCompanyUser
 } from '../../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../../companies/actions'
 import { getIdentity } from '../../../../auth/actions'
@@ -90,7 +91,8 @@ const UserEditSidebar = props => {
     searchedBuyMarketSegments,
     isCompanyAdmin,
     openGlobalAddForm,
-    chatWidgetVerticalMoved
+    chatWidgetVerticalMoved,
+    userSettings
   } = props
 
   const [sidebarValues, setSidebarValues] = useState(null)
@@ -110,20 +112,28 @@ const UserEditSidebar = props => {
   }
 
   // Similar to call componentDidMount:
-  useEffect(async () => {
-    const { companyId, sidebarValues, isCompanyAdmin, openGlobalAddForm, getUsersDataRequest } = props
-    if (companyId !== null) {
-      const { value } = await props.getCompanyDetails(companyId)
-      let branches = uniqueArrayByKey(
-        (sidebarValues && sidebarValues.homeBranch ? getHomeBranchesOptions([sidebarValues.homeBranch]) : []).concat(
-          sidebarValues && sidebarValues.additionalBranches ? getBranchesOptions(sidebarValues.additionalBranches) : [],
-          value && value.branches ? getBranchesOptions(value.branches) : []
-        ),
-        'key'
-      )
-      setBranches(branches)
+  useEffect(() => {
+    const { companyId, sidebarValues, isCompanyAdmin, openGlobalAddForm, getUsersDataRequest, getCompanyUser } = props
+
+    const fetchData = async () => {
+      if (sidebarValues?.id && !userSettings) await getCompanyUser(sidebarValues?.id)
+      if (companyId !== null) {
+        const { value } = await props.getCompanyDetails(companyId)
+        let branches = uniqueArrayByKey(
+          (sidebarValues && sidebarValues.homeBranch ? getHomeBranchesOptions([sidebarValues.homeBranch]) : []).concat(
+            sidebarValues && sidebarValues.additionalBranches
+              ? getBranchesOptions(sidebarValues.additionalBranches)
+              : [],
+            value && value.branches ? getBranchesOptions(value.branches) : []
+          ),
+          'key'
+        )
+        setBranches(branches)
+      }
     }
-    if (props.sidebarValues) {
+    fetchData()
+
+    if (sidebarValues) {
       switchUser(props.sidebarValues, state)
     } else {
       setSidebarValues(null)
@@ -151,7 +161,7 @@ const UserEditSidebar = props => {
     <Formik
       autoComplete='off'
       enableReinitialize
-      initialValues={getInitialFormValues(sidebarValues)}
+      initialValues={getInitialFormValues({ ...sidebarValues, ...userSettings })}
       validationSchema={userFormValidation()}
       onSubmit={(values, actions) => submitUser(values, actions, props, state)}>
       {formikProps => {
@@ -576,7 +586,8 @@ const mapDispatchToProps = {
   searchBuyMarketSegments,
   getIdentity,
   getUsersDataRequest,
-  chatWidgetVerticalMoved
+  chatWidgetVerticalMoved,
+  getCompanyUser
 }
 
 const mapStateToProps = state => {
@@ -589,7 +600,8 @@ const mapStateToProps = state => {
     editTrig: settings.editTrig,
     updating: settings.updating,
     userRoles: settings.roles,
-    sidebarValues: settings.sidebarValues,
+    userSettings: settings?.userSettings,
+    sidebarValues: settings?.sidebarValues,
     searchedSellMarketSegments: getSafe(() => companiesAdmin.searchedSellMarketSegments, []).map(d => ({
       key: d.id,
       text: d.name,

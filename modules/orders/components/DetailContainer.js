@@ -71,6 +71,7 @@ function prepareDetail(data, type) {
     contactNumber: data.sellerCompanyContactPhone ? data.sellerCompanyContactPhone : 'N/A',
     createdBy: data.buyerName ? data.buyerName : 'N/A',
     creditStatus: OrdersHelper.getCreditStatus(data.creditReviewStatus),
+    counterOrderId: getSafe(() => data.counterOrderId, 0),
     deliveryDate:
       typeof data.deliveryDate !== 'undefined' ? moment(data.deliveryDate).toDate().toLocaleString() : 'N/A',
     echoFee: (

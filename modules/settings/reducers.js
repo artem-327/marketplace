@@ -142,7 +142,8 @@ export const initialState = {
   heightSidebar: null,
   attachmentFiles: [],
   isThirdPartyConnectionException: false,
-  tradeCriteria: null
+  tradeCriteria: null,
+  userSettings: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -1713,16 +1714,16 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    /* GET_COMPANY_USER */
+    /* OPEN_USER_SETTINGS_MODAL */
 
-    case AT.GET_COMPANY_USER_PENDING: {
+    case AT.OPEN_USER_SETTINGS_MODAL_PENDING: {
       return {
         ...state,
         isLoadingModal: true
       }
     }
 
-    case AT.GET_COMPANY_USER_FULFILLED: {
+    case AT.OPEN_USER_SETTINGS_MODAL_FULFILLED: {
       return {
         ...state,
         loaded: false,
@@ -1734,10 +1735,95 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_COMPANY_USER_REJECTED: {
+    case AT.OPEN_USER_SETTINGS_MODAL_REJECTED: {
       return {
         ...state,
         isLoadingModal: false
+      }
+    }
+
+    /* GET_COMPANY_USER */
+
+    case AT.GET_COMPANY_USER_PENDING: {
+      return {
+        ...state,
+        updating: true
+      }
+    }
+
+    case AT.GET_COMPANY_USER_FULFILLED: {
+      let userSettings = { orderPurchaseLimit: null, monthlyPurchaseLimit: null, dailyPurchaseLimit: null }
+      if (payload?.length) {
+        payload?.forEach(p => {
+          if (p?.code === 'OTHER_SETTINGS') {
+            p?.settings?.forEach(s => {
+              if (s.code === 'USER_ORDER_PURCHASE_LIMIT') {
+                userSettings.orderPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+              }
+              if (s.code === 'USER_MONTHLY_PURCHASE_LIMIT') {
+                userSettings.monthlyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+              }
+              if (s.code === 'USER_DAILY_PURCHASE_LIMIT') {
+                userSettings.dailyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+              }
+            })
+          }
+        })
+      }
+      return {
+        ...state,
+        userSettings,
+        updating: false
+      }
+    }
+
+    case AT.GET_COMPANY_USER_REJECTED: {
+      return {
+        ...state,
+        updating: false
+      }
+    }
+
+    /* UPDATE_SETTINGS_COMPANY_USER */
+
+    case AT.UPDATE_SETTINGS_COMPANY_USER_PENDING: {
+      return {
+        ...state,
+        updating: true
+      }
+    }
+
+    case AT.UPDATE_SETTINGS_COMPANY_USER_FULFILLED: {
+      let userSettings = { orderPurchaseLimit: null, monthlyPurchaseLimit: null, dailyPurchaseLimit: null }
+      if (payload?.settingGroups?.length) {
+        payload?.settingGroups?.forEach(p => {
+          if (p?.code === 'OTHER_SETTINGS') {
+            p?.settings?.forEach(s => {
+              if (s.code === 'USER_ORDER_PURCHASE_LIMIT') {
+                userSettings.orderPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+              }
+              if (s.code === 'USER_MONTHLY_PURCHASE_LIMIT') {
+                userSettings.monthlyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+              }
+              if (s.code === 'USER_DAILY_PURCHASE_LIMIT') {
+                userSettings.dailyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+              }
+            })
+          }
+        })
+      }
+
+      return {
+        ...state,
+        userSettings,
+        updating: false
+      }
+    }
+
+    case AT.UPDATE_SETTINGS_COMPANY_USER_REJECTED: {
+      return {
+        ...state,
+        updating: false
       }
     }
 

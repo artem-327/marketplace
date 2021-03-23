@@ -24,7 +24,8 @@ const Table = props => {
     buttonActionsDetailRow,
     getConnection,
     loadingDetailRow,
-    datagrid
+    datagrid,
+    showBluePallet
   } = props
   const prevLoadingDatagrid = usePrevious(loadingDatagrid)
   const query = datagrid?.query
@@ -46,6 +47,10 @@ const Table = props => {
     if (ids.includes(row.id)) {
       setExpandedRowIds(ids.filter(id => id !== row.id))
     } else {
+      if (row.connectedCompany.id === 1) {
+        showBluePallet()
+        return false
+      }
       ids.push(row.id)
       setExpandedRowIds(ids)
       await getConnection(row.id)
