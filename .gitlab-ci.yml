@@ -1,6 +1,8 @@
 before_script:
   - docker -D info
   - docker system prune -f
+  - docker system prune --volumes
+  - docker rmi --force $(docker images -q --no-trunc)
   - cd cypress/
   - set e+x
   - docker build -t cypress/artio .
