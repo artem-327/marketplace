@@ -125,11 +125,14 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
   }
 
   if (!poId) {
-    const broadcastOption =
-      getSafe(() => values.broadcastOption, '') && values.broadcastOption.indexOf('|') >= 0
-        ? ''
-        : values.broadcastOption
-    const broadcastedTemplateId = getSafe(() => parseInt(values.broadcastOption.split('|')[1]), '')
+    const broadcastOption = values?.broadcastOption.includes('BROADCAST_TEMPLATE')
+      ? 'BROADCAST_TEMPLATE'
+      : values?.broadcastOption
+      ? values?.broadcastOption
+      : ''
+    const broadcastedTemplateId = !isNaN(parseInt(values.broadcastOption.split('|')[1]))
+      ? parseInt(values.broadcastOption.split('|')[1])
+      : ''
 
     params = { ...params, broadcastOption, broadcastedTemplateId }
   }
