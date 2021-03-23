@@ -7,10 +7,10 @@ import moment from 'moment/moment'
 
 //Services
 import { downloadFile } from '../ListingDetail.services'
-import { downloadAttachment } from '../../../../../inventory/actions'
 import { getSafe } from '../../../../../../utils/functions'
 import { getLocaleDateFormat } from '../../../../../../components/date-format'
-
+//Actions
+import { downloadAttachment } from '../../../../../inventory/actions'
 //Styles
 import {
   DivTableWrapper,
@@ -36,15 +36,13 @@ const DocumentsTab = props => {
             <GridColumn width={16}>
               <DivFlexRow>
                 <DivCentered>
-                  <IconFileText size={18}/>
+                  <IconFileText size={18} />
                 </DivCentered>
                 <DivDocumentsColumn>
                   <DivGreyHeader>
                     <FormattedMessage id={`sharedListings.detailRow.fileName`} defaultMessage='File Name' />
                   </DivGreyHeader>
-                  <DivNormalText>
-                    {file.name}
-                  </DivNormalText>
+                  <DivNormalText>{file.name}</DivNormalText>
                 </DivDocumentsColumn>
               </DivFlexRow>
               <DivFlexRow>
@@ -52,9 +50,7 @@ const DocumentsTab = props => {
                   <DivGreyHeader>
                     <FormattedMessage id={`sharedListings.detailRow.docType`} defaultMessage='Doc. Type' />
                   </DivGreyHeader>
-                  <DivNormalText>
-                    {getSafe(() => file.documentType.name, '')}
-                  </DivNormalText>
+                  <DivNormalText>{getSafe(() => file.documentType.name, '')}</DivNormalText>
                 </DivDocumentsColumn>
                 <DivDocumentsColumn value='width: 100px;'>
                   <DivGreyHeader>
@@ -65,10 +61,7 @@ const DocumentsTab = props => {
                   </DivNormalText>
                 </DivDocumentsColumn>
                 <DivCentered>
-                  <IconDownload
-                    size={18}
-                    onClick={() => downloadFile(file.name, file.id, props)}
-                  />
+                  <IconDownload size={18} onClick={() => downloadFile(file.name, file.id, props)} />
                 </DivCentered>
               </DivFlexRow>
             </GridColumn>

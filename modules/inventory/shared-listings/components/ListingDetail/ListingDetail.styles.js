@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Header, GridColumn, GridRow, Grid, Segment, Message, Button, ButtonGroup, Tab } from 'semantic-ui-react'
+import { Header, GridColumn, GridRow, Grid, Segment, Message, Button, ButtonGroup, Tab, Input } from 'semantic-ui-react'
 import { ChevronLeft, ChevronRight, FileText, Download } from 'react-feather'
 //Components
 import BasicButton from '../../../../../components/buttons/BasicButton'
@@ -41,7 +41,6 @@ export const DivRectangle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 20px;
 `
 
 export const DivName = styled.div`
@@ -64,6 +63,7 @@ export const DivButtons = styled.div`
 
 export const BasicButtonCustom = styled(BasicButton)`
   border-radius: 20px !important;
+  margin-left: 0px !important;
 `
 
 export const DivMail = styled.div`
@@ -135,12 +135,12 @@ export const ChevronRightStyled = styled(ChevronRight)`
 `
 
 export const SegmentDetailRow = styled(Segment)`
-  padding-top: 0px !important;
+  padding: 0px 10px 0px 10px !important;
   min-width: 50% !important;
 `
 
 export const DivTableWrapper = styled.div`
-  padding: 20px 15px;
+  padding: 0px 15px;
 `
 
 export const GridStyledTds = styled(Grid)`
@@ -148,16 +148,13 @@ export const GridStyledTds = styled(Grid)`
     text-align: left;
     margin: 0;
     padding: 0;
-    
-    ${props => (props.bordered === 'true' 
-     ? 'border-radius: 4px; border: solid 1px #dee2e6;' 
-     : ''
-    )}
-    
+
+    ${props => (props.bordered === 'true' ? 'border-radius: 4px; border: solid 1px #dee2e6;' : '')}
+
     background-color: #ffffff;
 
     > .row {
-      background-color: rgba(240, 240, 240, 0);    
+      background-color: rgba(240, 240, 240, 0);
       padding: 10px 0;
       margin: 0;
 
@@ -165,7 +162,7 @@ export const GridStyledTds = styled(Grid)`
         padding: 0 12px;
       }
     }
-    
+
     > .row:not(:last-child) {
       ${props => (props.bordered === 'true' ? 'border-bottom: solid 1px #dee2e6;' : '')}
     }
@@ -190,7 +187,7 @@ export const DivNormalText = styled.div`
 
 export const GridColumnCustom = styled(GridColumn)`
   &.column {
-    ${props => (props.value? props.value : '')}
+    ${props => (props.value ? props.value : '')}
   }
 `
 
@@ -198,7 +195,7 @@ export const GridStyledNotes = styled(Grid)`
   &.ui.grid {
     text-align: left;
     margin: 0;
-    padding: 0;    
+    padding: 0;
     background-color: #ffffff;
 
     > .row {
@@ -219,7 +216,7 @@ export const GridStyledDocuments = styled(Grid)`
   &.ui.grid {
     text-align: left;
     margin: 0;
-    padding: 0;    
+    padding: 0;
     background-color: #ffffff;
 
     > .row {
@@ -231,7 +228,7 @@ export const GridStyledDocuments = styled(Grid)`
 
       > .column {
         padding: 0 19px;
-        
+
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -244,17 +241,17 @@ export const DivCentered = styled.div`
   margin: auto 0 auto 0;
 `
 
-export const IconFileText = styled(FileText)`  
+export const IconFileText = styled(FileText)`
   color: #20273a;
   margin: 2px 6px 0 0;
 `
 
 export const DivDocumentsColumn = styled.div`
   padding: 0 10px;
-  ${props => (props.value? props.value : '')}
+  ${props => (props.value ? props.value : '')}
 `
 
-export const IconDownload = styled(Download)`  
+export const IconDownload = styled(Download)`
   color: #2599d5;
   margin: 2px 0 0 10px;
   cursor: pointer;
@@ -284,4 +281,27 @@ export const DivBoldText = styled.div`
   font-size: 14px;
   font-weight: bold;
   color: #20273a;
+`
+
+export const TabDetailRow = styled(Tab)`
+  .ui.secondary.menu:not(.vertical) {
+    padding-left: 25px !important;
+    margin: -35px -15px 10px -15px !important;
+    border-bottom: solid 1px #dee2e6 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    .item.active {
+      border-color: #dee2e6 !important;
+    }
+  }
+`
+
+export const GridRowTab = styled(Grid.Row)`
+  padding-bottom: 30px !important;
+`
+
+export const InputMarkup = styled(Input)`
+  &.ui.fluid.input > input {
+    background: #fdfdfd !important;
+  }
 `

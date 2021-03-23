@@ -17,7 +17,8 @@ import {
   DivTextButton,
   ChevronLeftStyled,
   ChevronRightStyled,
-  SegmentDetailRow
+  SegmentDetailRow,
+  InputMarkup
 } from './ListingDetail.styles'
 import { StyledGrid, TableSegment, StyledList } from '../../../../../components/detail-row/styles'
 import { SegmentGroupHeader, GridColumnDetail } from '../../../../my-network/components/DetailRow/DetailRow.style'
@@ -52,12 +53,12 @@ const Header = props => {
             </GridColumnDetail>
           </Grid.Row>
           <Grid.Row>
-            <GridColumnDetail width={4} textAlign='center' verticalAlign='middle'>
+            <GridColumnDetail width={5} textAlign='center' verticalAlign='middle'>
               <DivRectangle>
-                <Image verticalAlign='middle' src={row?.owner?.base64Logo} />
+                <Image verticalAlign='middle' src={row?.owner?.base64Logo} fluid rounded size='tiny' />
               </DivRectangle>
             </GridColumnDetail>
-            <GridColumnDetail width={12}>
+            <GridColumnDetail width={11}>
               <DivName> {row?.companyProduct?.intProductName}</DivName>
               <DivAddress>{row?.address}</DivAddress>
               <DivButtons>
@@ -139,8 +140,13 @@ const Header = props => {
             </GridColumnDetail>
           </Grid.Row>
           <Grid.Row>
+            <GridColumnDetail width={8} $colorText='#404040'>
+              <FormattedMessage id='detailRow.pricing.markup' defaultMessage='Markup' />
+            </GridColumnDetail>
+          </Grid.Row>
+          <Grid.Row>
             <GridColumnDetail width={8}>
-              <Input
+              <InputMarkup
                 ref={ref}
                 fluid
                 label='%'

@@ -1,15 +1,14 @@
-import React from 'react'
+import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 
-import { FormattedAssay, FormattedPhone } from '../../../../../../components/formatted-messages'
+//Styles
 import { StyledGrid } from '../../../../../../components/detail-row/styles'
 import {
   SegmentGroupTab,
   GridColumnTitleSection,
   GridRowTabField,
-  GridColumnTabFieldValue,
   SegmentDetailRow,
   DivSdsProductName,
   DivGreyHeader,
@@ -17,59 +16,22 @@ import {
   GridStyledTds,
   GridColumnCustom,
   DivTdsTableHeader,
-  DivTdsPropertyText,
-
+  DivTdsPropertyText
 } from '../ListingDetail.styles'
-import {getSafe} from "../../../../../../utils/functions";
-
-const getProperty = (property, product) => {
-  let value = getSafe(() => product[property[1]], '')
-
-  if (property.length > 2) {
-    if (property[2] === 'phone') {
-      value = <FormattedPhone value={value} />
-    }
-  }
-
-  return (
-    <>
-      <Grid.Column width={6}>
-        <FormattedMessage id={`casProduct.${property[1]}`} defaultMessage={property[0]} />
-      </Grid.Column>
-      <GridColumnTabFieldValue width={10}>
-        {value}
-      </GridColumnTabFieldValue>
-    </>
-  )
-}
-
-const leftProperties = [
-  ['Manufacturer', 'manufacturer'],
-  ['Manufacturer Product Code', 'manufacturerProductCode'],
-  ['Emergency Number', 'emergencyPhone', 'phone'],
-  ['ESIN', 'esin']
-]
-
-const rightProperties = [
-  ['Physical State', 'physicalState'],
-  ['Appearance', 'appearance'],
-  ['Odor', 'odor'],
-  ['Odor Threshold', 'odorThreshold'],
-  ['pH', 'ph'],
-  ['Melting Point/Range', 'meltingPointRange'],
-  ['Boiling Point/Range', 'boilingPointRange'],
-  ['Flash Point', 'flashPoint'],
-  ['Evaporation Point', 'evaporationPoint'],
-  ['Flammability (solid, gas)', 'flammabilitySolidGas']
-]
+import { getSafe } from '../../../../../../utils/functions'
+//Services
+import { FormattedAssay } from '../../../../../../components/formatted-messages'
+import { getProperty } from '../ListingDetail.services'
+//Constants
+import { rightProperties, leftProperties } from '../ListingDetail.constants'
 
 const SDSTab = ({ row }) => {
   let product = getSafe(() => row.companyProduct.companyGenericProduct, {})
   const mixtures = getSafe(() => product.elements, [])
 
   product.manufacturer = getSafe(() => product.company.cfDisplayName, 'N/A')
-  product.manufacturerProductCode = getSafe(() => product.code, 'N/A')  // ! ! Nevim co presne tady?
-  product.esin = getSafe(() => product.esin, 'N/A')  // ! ! Nevim co presne tady?
+  product.manufacturerProductCode = getSafe(() => product.code, 'N/A') // ! ! Nevim co presne tady?
+  product.esin = getSafe(() => product.esin, 'N/A') // ! ! Nevim co presne tady?
 
   return (
     <SegmentGroupTab horizontal $noneBorder>
@@ -86,9 +48,7 @@ const SDSTab = ({ row }) => {
                 <DivGreyHeader>
                   <FormattedMessage id={`sharedListings.detailRow.productInfo`} defaultMessage='Product Info' />
                 </DivGreyHeader>
-                <DivBoldText>
-                  {getSafe(() => row.companyProduct.intProductName, '')}
-                </DivBoldText>
+                <DivBoldText>{getSafe(() => row.companyProduct.intProductName, '')}</DivBoldText>
               </DivSdsProductName>
             </Grid.Column>
           </Grid.Row>
@@ -105,17 +65,17 @@ const SDSTab = ({ row }) => {
                 <Grid.Row>
                   <GridColumnCustom width={10} value='padding: 0 12px 0 0 !important;'>
                     <DivTdsTableHeader>
-                      <FormattedMessage id='sharedListings.detailRow.elementName' defaultMessage='Element Name'/>
+                      <FormattedMessage id='sharedListings.detailRow.elementName' defaultMessage='Element Name' />
                     </DivTdsTableHeader>
                   </GridColumnCustom>
                   <Grid.Column width={4}>
                     <DivTdsTableHeader>
-                      <FormattedMessage id='sharedListings.detailRow.casNumber' defaultMessage='CAS Number'/>
+                      <FormattedMessage id='sharedListings.detailRow.casNumber' defaultMessage='CAS Number' />
                     </DivTdsTableHeader>
                   </Grid.Column>
                   <Grid.Column width={2}>
                     <DivTdsTableHeader>
-                      <FormattedMessage id='sharedListings.detailRow.assay' defaultMessage='Assay'/>
+                      <FormattedMessage id='sharedListings.detailRow.assay' defaultMessage='Assay' />
                     </DivTdsTableHeader>
                   </Grid.Column>
                 </Grid.Row>
@@ -124,14 +84,10 @@ const SDSTab = ({ row }) => {
                 {mixtures.map((el, index) => (
                   <Grid.Row key={index}>
                     <Grid.Column width={10}>
-                      <DivTdsPropertyText>
-                        {getSafe(() => el.displayName, '')}
-                      </DivTdsPropertyText>
+                      <DivTdsPropertyText>{getSafe(() => el.displayName, '')}</DivTdsPropertyText>
                     </Grid.Column>
                     <Grid.Column width={4}>
-                      <DivTdsPropertyText>
-                        {getSafe(() => el.casProduct.casNumber, '')}
-                      </DivTdsPropertyText>
+                      <DivTdsPropertyText>{getSafe(() => el.casProduct.casNumber, '')}</DivTdsPropertyText>
                     </Grid.Column>
                     <Grid.Column width={2}>
                       <DivTdsPropertyText>
@@ -145,9 +101,7 @@ const SDSTab = ({ row }) => {
           </Grid.Row>
 
           {leftProperties.map((el, index) => (
-            <GridRowTabField key={index}>
-              {getProperty(el, product)}
-            </GridRowTabField>
+            <GridRowTabField key={index}>{getProperty(el, product)}</GridRowTabField>
           ))}
         </StyledGrid>
       </SegmentDetailRow>
@@ -159,9 +113,7 @@ const SDSTab = ({ row }) => {
             </GridColumnTitleSection>
           </Grid.Row>
           {rightProperties.map((el, index) => (
-            <GridRowTabField key={index}>
-              {getProperty(el, product)}
-            </GridRowTabField>
+            <GridRowTabField key={index}>{getProperty(el, product)}</GridRowTabField>
           ))}
         </StyledGrid>
       </SegmentDetailRow>
@@ -170,5 +122,12 @@ const SDSTab = ({ row }) => {
 }
 
 SDSTab.propTypes = {}
+SDSTab.defaultProps = {}
 
-export default SDSTab
+function areEqual(prevProps, nextProps) {
+  return prevProps?.row?.id === nextProps?.row?.id
+}
+
+const MemoSDSTab = memo(SDSTab, areEqual)
+
+export default MemoSDSTab

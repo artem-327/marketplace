@@ -20,9 +20,8 @@ export const makeGetDatagridRows = () => {
     return rows.map(po => {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       let price
-      let address = po?.warehouse?.deliveryAddress?.address?.city //MOVE to mapStateToProps and services
-      const companyProduct = getSafe(() => po.companyProduct, null)
-      const companyGenericProduct = getSafe(() => po.companyProduct.companyGenericProduct, null)
+      let address = po?.warehouse?.deliveryAddress?.address?.city
+
       if (po?.warehouse?.deliveryAddress?.address?.province?.abbreviation) {
         address = `${address}, ${po?.warehouse?.deliveryAddress?.address?.province?.abbreviation}`
       } else {

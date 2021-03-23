@@ -6,7 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 //Styles
 import { StyledGrid } from '../../../../../../components/detail-row/styles'
 import { GridColumnDetail } from '../../../../../my-network/components/DetailRow/DetailRow.style'
-import { TabPane } from '../ListingDetail.styles'
+import { TabPane, TabDetailRow, GridRowTab } from '../ListingDetail.styles'
 //Components
 import InfoTab from './InfoTab'
 import TDSTab from './TDSTab'
@@ -79,11 +79,11 @@ const Tabs = ({ row, activeTab, setActiveTab }) => {
   ]
   return (
     <StyledGrid>
-      <Grid.Row>
+      <GridRowTab>
         <GridColumnDetail>
-          <Tab menu={{ secondary: true, pointing: true }} activeIndex={activeTab} panes={panes} />
+          <TabDetailRow menu={{ secondary: true, pointing: true }} activeIndex={activeTab} panes={panes} />
         </GridColumnDetail>
-      </Grid.Row>
+      </GridRowTab>
     </StyledGrid>
   )
 }

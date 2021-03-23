@@ -137,7 +137,7 @@ export const getRows = (rows, props) => {
           scrolling
           header={formatMessage({ id: 'myInventory.whoShouldSee', defaultMessage: 'Who should see this offer?' })}
           pointing='top right'
-          value={r?.resellerBroadcastOption?.key || 'GLOBAL_RULES'} //FIXME when BE works with custom template. 500 server error ehn I call prodex/api/product-offers/174/broadcast-option?broadcastTemplateId=36&option=BROADCAST_TEMPLATE
+          value={r?.resellerBroadcastOption?.key || 'GLOBAL_RULES'} //FIXME when BE works with custom template. 500 server error when I call prodex/api/product-offers/174/broadcast-option?broadcastTemplateId=36&option=BROADCAST_TEMPLATE
           //r.broadcastTemplateResponse ? r.broadcastOption + '|' + r.broadcastTemplateResponse.id : r.broadcastOption
           loading={!!r.isBroadcastLoading}
           closeOnChange

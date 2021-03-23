@@ -25,12 +25,12 @@ const TDSTab = ({ row }) => {
             <GridRow>
               <GridColumnCustom width={2} value='padding: 0 12px 0 0 !important;'>
                 <DivTdsTableHeader>
-                  <FormattedMessage id='global.property' defaultMessage='Property'/>
+                  <FormattedMessage id='global.property' defaultMessage='Property' />
                 </DivTdsTableHeader>
               </GridColumnCustom>
               <GridColumn width={14}>
                 <DivTdsTableHeader>
-                  <FormattedMessage id='global.specifications' defaultMessage='Specifications'/>
+                  <FormattedMessage id='global.specifications' defaultMessage='Specifications' />
                 </DivTdsTableHeader>
               </GridColumn>
             </GridRow>
@@ -39,14 +39,10 @@ const TDSTab = ({ row }) => {
             {elementsTdsFields.map((el, index) => (
               <GridRow key={index}>
                 <GridColumn width={2}>
-                  <DivTdsPropertyText>
-                    {el.property}
-                  </DivTdsPropertyText>
+                  <DivTdsPropertyText>{el.property}</DivTdsPropertyText>
                 </GridColumn>
                 <GridColumn width={14}>
-                  <DivNormalText>
-                    {el.specifications}
-                  </DivNormalText>
+                  <DivNormalText>{el.specifications}</DivNormalText>
                 </GridColumn>
               </GridRow>
             ))}

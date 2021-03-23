@@ -1,4 +1,11 @@
-import { getMimeType } from '../../../../../utils/functions'
+import { Grid } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+//Components
+import { FormattedPhone } from '../../../../../components/formatted-messages'
+//Services
+import { getMimeType, getSafe } from '../../../../../utils/functions'
+//Styles
+import { GridColumnTabFieldValue } from './ListingDetail.styles'
 
 const prepareLinkToAttachment = async (documentName, documentId, props) => {
   let downloadedFile = await props.downloadAttachment(documentId)
@@ -21,4 +28,29 @@ export const downloadFile = async (documentName, documentId, props) => {
   } catch (e) {
     console.error(e)
   }
+}
+/**
+ * @category Shared Listings
+ * @method
+ * @param {array} property
+ * @param {object} product
+ * @returns {JSX.Element}
+ */
+export const getProperty = (property, product) => {
+  let value = getSafe(() => product[property[1]], '')
+
+  if (property.length > 2) {
+    if (property[2] === 'phone') {
+      value = <FormattedPhone value={value} />
+    }
+  }
+
+  return (
+    <>
+      <Grid.Column width={6}>
+        <FormattedMessage id={`casProduct.${property[1]}`} defaultMessage={property[0]} />
+      </Grid.Column>
+      <GridColumnTabFieldValue width={10}>{value}</GridColumnTabFieldValue>
+    </>
+  )
 }

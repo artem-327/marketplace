@@ -54,6 +54,12 @@ export const DivTableHandlerColumn = styled.div`
 
 export const DivSeller = styled.div`
   height: 100%;
+  .ui.mini.images .image,
+  .ui.mini.images img,
+  .ui.mini.images svg,
+  .ui.mini.image {
+    width: 20px !important;
+  }
 `
 
 export const SpanSellerName = styled.span`
