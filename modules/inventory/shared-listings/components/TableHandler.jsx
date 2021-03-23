@@ -13,12 +13,10 @@ import {
   DivTableHandler,
   DivCustomSearchNameTags,
   DivTableHandlerColumn
-
 } from './SharedListings.styles'
 //Components
 import SearchByNamesAndTags from '../../../search'
-import {getSafe} from "../../../../utils/functions";
-
+import { getSafe } from '../../../../utils/functions'
 
 class TableHandler extends Component {
   state = {
@@ -58,26 +56,17 @@ class TableHandler extends Component {
   }, 300)
 
   SearchByNamesAndTagsChanged = data => {
-    this.setState(
-      { SearchByNamesAndTags: data },
-      () => {
-        this.handleFiltersValue(this.state)
-      }
-    )
+    this.setState({ SearchByNamesAndTags: data }, () => {
+      this.handleFiltersValue(this.state)
+    })
   }
 
   handleLocationChanged = data => {
-    this.setState(
-      { location: data?.value },
-      () =>
-        this.handleFiltersValue(this.state)
-      )
+    this.setState({ location: data?.value }, () => this.handleFiltersValue(this.state))
   }
 
   render() {
-    const {
-      sharedListingsFilters
-    } = this.props
+    const { sharedListingsFilters } = this.props
 
     const { location } = this.state
 
@@ -104,7 +93,7 @@ class TableHandler extends Component {
           }}
         /> */}
         </DivCustomSearchNameTags>
-        <DivTableHandlerColumn>
+        {/* <DivTableHandlerColumn>
           <DropdownType
             name='location'
             value={location}
@@ -133,7 +122,7 @@ class TableHandler extends Component {
             ]}
             onChange={(event, data) => this.handleLocationChanged(data)}
           />
-        </DivTableHandlerColumn>
+        </DivTableHandlerColumn> */}
       </DivTableHandler>
     )
   }
