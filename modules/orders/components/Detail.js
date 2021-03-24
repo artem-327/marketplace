@@ -1245,12 +1245,13 @@ class Detail extends Component {
                                     </TableRowData>
                                   </Table.Header>
                                   <Table.Body>
-                                    <TableRowData>
+                                    {/* Commented based on https://bluepallet.atlassian.net/browse/DT-333 */}
+                                    {/* <TableRowData>
                                       <Table.Cell>
                                         <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' />
                                       </Table.Cell>
                                       <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
-                                    </TableRowData>
+                                    </TableRowData> */}
                                   </Table.Body>
                                   <Table.Footer>
                                     <TableRowData>
