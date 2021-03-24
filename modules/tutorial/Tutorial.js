@@ -385,7 +385,7 @@ class Tutorial extends Component {
                 </FormattedMessage>
               </Content>
               <DivBottomBusinessVerification>
-                <CustomBeginNowButton type='button' onClick={e => Router.push('/velloci-register')}>
+                <CustomBeginNowButton type='button' onClick={e => Router.push('/onboarding')}>
                   <FormattedMessage id='tutorial.businessVerification.beginNow' defaultMessage='Begin now' />
                 </CustomBeginNowButton>
                 <DivEstimated>
