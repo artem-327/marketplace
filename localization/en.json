@@ -2876,6 +2876,7 @@
   "order.detail.documents.dropdown": "Select Type",
   "order.detail.documents.dropdown.all": "Select All",
   "order.detail.backToOrders": "Back to Orders",
+  "order.detail.viewLinkedOrder": "View Linked Order",
   "order.detail.buyerCompanyEin": "Buyer Company EIN",
   "order.detail.companyEin": "Company EIN",
   "order.detail.sellerCompanyEin": "Seller Company EIN",
