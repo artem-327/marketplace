@@ -962,6 +962,7 @@
   "global.counter": "Counter",
   "global.returnReview": "Return to review",
   "global.packageWeight": "Gross Weight Per Package",
+  "global.infoPackageWeight": "The total weight of the contents and it's packaging",
   "global.weightUnit": "Weight Unit",
   "global.packagesPerPallet": "Packages per Pallet",
   "global.palletMinPkgs": "Pallet Min Pkgs",
