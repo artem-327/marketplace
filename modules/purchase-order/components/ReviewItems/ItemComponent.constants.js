@@ -11,7 +11,7 @@ export const OPTIONS_QUANTITY = [
   { key: 7, text: '7', value: '7' },
   { key: 8, text: '8', value: '8' },
   { key: 9, text: '9', value: '9' },
-  { key: 10, text: '10+', value: '' }
+  { key: '10+', text: '10+', value: '' }
 ]
 
 /**
