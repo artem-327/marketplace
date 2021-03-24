@@ -1128,7 +1128,8 @@ class ModalDetail extends Component {
                                               onChange: this.onChange,
                                               'data-test': 'add_inventory_whoShouldSee',
                                               fluid: true,
-                                              closeOnChange: true
+                                              closeOnChange: true,
+                                              loading: isLoadingBroadcast
                                             }}
                                             options={optionsSeeOffer.map((option, optIndex) => {
                                               return {
@@ -1149,12 +1150,12 @@ class ModalDetail extends Component {
                                                   />
                                                 ),
                                                 onClick: () => {
-                                                  getSafe(() => detailValues.id, false) &&
+                                                  getSafe(() => this.state.detailValues.id, false) &&
                                                     onClickBroadcast(
-                                                      detailValues,
+                                                      this.state.detailValues,
                                                       option.value,
                                                       broadcastChange,
-                                                      datagrid,
+                                                      this.props.datagrid,
                                                       option.id ? { id: option.id, name: option.tmp } : null
                                                     )
                                                   setFieldValue('edit.broadcastOption', option.value)
@@ -1983,19 +1984,21 @@ class ModalDetail extends Component {
                                       cancelText: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
                                       proceedText: formatMessage({ id: 'global.new', defaultMessage: 'New' })
                                     }
-                                  )
-                                    .then(() => {
+                                  ).then(
+                                    () => {
                                       this.setState(state => ({
                                         ...state,
-                                        detailValues: { ...state.detailValues, id: null }
-                                      }))
-                                    })
-                                    .catch(() => {
+                                        initValues: INIT_VALUES,
+                                        detailValues: null
+                                      })) // confirm (New)
+                                    },
+                                    () => {
                                       this.setState(state => ({
                                         ...state,
                                         detailValues: { ...state.detailValues, id: data.id }
-                                      }))
-                                    })
+                                      })) // cancel (Edit)
+                                    }
+                                  )
                                 }
                               }
                             })
