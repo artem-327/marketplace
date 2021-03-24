@@ -78,7 +78,10 @@ class MyProfile extends Component {
       loadFile,
       saveAvatarPicture,
       deleteAvatarPicture,
+      getUserMeData,
       getIdentity,
+      savingAvatarPicture,
+      profileLoading
     } = this.props
 
     return (
@@ -92,6 +95,7 @@ class MyProfile extends Component {
             validationSchema={formValidation}
             initialValues={popupValues ? popupValues : initialFormValues}
             onReset={closePopup}
+            loading={true}
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 let {
@@ -110,6 +114,7 @@ class MyProfile extends Component {
                 if (values.language) {
                   await setPreferredLanguage(languages.find(lan => lan.language === values.language).language)
                 }
+                getIdentity()
                 closePopup()
               } catch (e) {
                 console.error(e)
@@ -168,10 +173,12 @@ class MyProfile extends Component {
                   name='userAvatar'
                   filesLimit={1}
                   fileMaxSize={2}
+                  loading={savingAvatarPicture || (profileLoading && !isSubmitting)}
                   onChange={async files => {
                     if (files.length) {
                       try {
                         await saveAvatarPicture(files[0])
+                        getUserMeData()
                         getIdentity()
                       } catch (error) {
                         console.error(error)
@@ -182,6 +189,7 @@ class MyProfile extends Component {
                   removeAttachment={async () => {
                     try {
                       await deleteAvatarPicture()
+                      getUserMeData()
                       getIdentity()
                     } catch (error) {
                       console.error(error)
@@ -251,8 +259,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  const popupValues = state.auth.identity
-
+  const popupValues = state.profile.usersMe
   return {
     popupValues: popupValues
       ? {
@@ -279,7 +286,9 @@ const mapStateToProps = state => {
     changePasswordPopup: state.profile.changePasswordPopup,
     languages: state.settings.languages,
     languagesFetching: state.settings.languagesFetching,
-    tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
+    tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false),
+    savingAvatarPicture: state.profile.savingAvatarPicture,
+    profileLoading: state.profile.loading
   }
 }
 
