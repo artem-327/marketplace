@@ -95,7 +95,6 @@ class MyProfile extends Component {
             validationSchema={formValidation}
             initialValues={popupValues ? popupValues : initialFormValues}
             onReset={closePopup}
-            loading={true}
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 let {
