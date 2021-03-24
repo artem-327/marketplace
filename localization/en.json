@@ -3152,7 +3152,7 @@
   "velloci.ownerInformation.controlPerson": "CONTROL PERSON",
   "velloci.ownerInformation.noOne25Content": "In that case, there may not be a beneficial owner listed.",
   "velloci.ownerInformation.noOne25Title": "What if no one owns greater than 25%?",
-  "velloci.ownerInformation.otherBeneficialOwner": "Are there any other beneficial owner?",
+  "velloci.ownerInformation.otherBeneficialOwner": "Are there any other Beneficial Owners?",
   "velloci.ownerInformation.completeNow": "COMPLETE NOW OR EMAIL BENEFICIAL OWNERS",
   "velloci.ownerInformation.wouldComplete": "Would you like to complete this form for the remaining beneficial owners or email them a link to complete?",
   "velloci.ownerInformation.needInfo": "Here is the info you'll need:",
