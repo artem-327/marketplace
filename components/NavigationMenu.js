@@ -61,6 +61,7 @@ class Navigation extends Component {
     settings:
       getSafe(() => Router.router.pathname === '/settings/company-details', false) ||
       getSafe(() => Router.router.pathname === '/settings/system-settings', false) ||
+      getSafe(() => Router.router.pathname === '/settings/trade-criteria', false) ||
       getSafe(() => Router.router.pathname === '/settings/users', false) ||
       getSafe(() => Router.router.pathname === '/settings/locations', false) ||
       getSafe(() => Router.router.pathname === '/settings/bank-accounts', false) ||
