@@ -498,7 +498,7 @@ class TablesHandlers extends Component {
               <CustomButton
                 fluid
                 onClick={() => {
-                  paymentProcessor === 'DWOLLA' ? Router.push('/dwolla-register') : Router.push('/velloci-register')
+                  paymentProcessor === 'DWOLLA' ? Router.push('/dwolla-register') : Router.push('/onboarding')
                 }}
                 data-test={
                   paymentProcessor === 'DWOLLA'

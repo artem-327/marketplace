@@ -401,11 +401,10 @@ class QuickEditPricingPopup extends Component {
       expirationDate: rawData.validityDate,
       warehouse: getSafe(() => rawData.warehouse.id, null)
     }
-    const attachmentFiles = rawData.attachments.map(d => ({ id: d.id }))
     removeEmpty(payload)
 
     try {
-      data = await addProductOffer(payload, rawData.id, false, isGrouped, attachmentFiles)
+      data = await addProductOffer(payload, rawData.id, false, isGrouped)
       datagrid.updateRow(data.id, () => data)
       sendSuccess = true
     } catch (e) {
