@@ -116,7 +116,7 @@ function CompanyVerification() {
         <ColumnTextCenter>
           <FormattedMessage
             id='velloci.companyVerification.infoText'
-            defaultMessage='Thank you for taking the time to register your business with EchoSystem. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.'
+            defaultMessage='Thank you for taking the time to register your business with BluePallet. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.'
             values={{
               email: (
                 <CustomA href={`mailto: ${SUPPORT_EMAIL}`}>
