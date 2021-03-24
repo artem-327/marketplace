@@ -25,6 +25,8 @@ import { Required } from '~/components/constants/layout'
 
 import { SegmentShowOnly, BottonButtonsShowOnly } from '../constants/layout'
 import ErrorFocus from '~/components/error-focus'
+//Services
+import { getTdsElements } from './CompanyProductInfo.services'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -209,36 +211,6 @@ class CompanyProductInfo extends Component {
                 <Table.Cell>{element.proprietary ? element.name : element.casProduct.casIndexName}</Table.Cell>
                 <Table.Cell>{element.proprietary ? '' : element.casProduct.casNumber}</Table.Cell>
                 <Table.Cell>{formatAssay(element.assayMin, element.assayMax)}</Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-      </>
-    )
-  }
-
-  getTdsElements = ({ elements }) => {
-    return (
-      <>
-        <GridRow className='table-name'>
-          <GridColumn width={16}></GridColumn>
-        </GridRow>
-        <Table celled table>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>
-                <FormattedMessage id='global.property' defaultMessage='Property' />
-              </Table.HeaderCell>
-              <Table.HeaderCell>
-                <FormattedMessage id='global.specifications' defaultMessage='Specifications' />
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {elements.map((element, index) => (
-              <Table.Row>
-                <Table.Cell>{getSafe(() => element.property, '')}</Table.Cell>
-                <Table.Cell>{getSafe(() => element.specifications, '')}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
@@ -971,7 +943,7 @@ class CompanyProductInfo extends Component {
         // Tds
         return (
           <Grid verticalAlign='middle'>
-            {this.getTdsElements({
+            {getTdsElements({
               elements: getSafe(() => values.companyGenericProduct.tdsFields, [])
             })}
           </Grid>

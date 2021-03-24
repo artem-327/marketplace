@@ -63,9 +63,9 @@ export const onClickBroadcast = (row, value, broadcastChange, datagrid, template
       break
     default:
       if (value.indexOf('|') >= 0) {
-        broadcastChange(row, value.substr(0, value.indexOf('|')), template, datagrid)
+        broadcastChange(row, value.substr(0, value.indexOf('|')), template, datagrid, false)
       } else {
-        broadcastChange(row, value, template, datagrid)
+        broadcastChange(row, value, template, datagrid, false)
       }
       break
   }

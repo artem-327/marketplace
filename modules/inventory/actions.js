@@ -2,7 +2,8 @@ import * as AT from './action-types'
 import * as api from './api'
 import moment from 'moment'
 import { getSafe } from '~/utils/functions'
-
+//Actions
+import { openBroadcast } from '../broadcast/actions'
 // import { createAsyncAction } from 'redux-promise-middleware-actions'
 
 // import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
@@ -572,5 +573,24 @@ export function changeBroadcast(broadcastOption) {
   return {
     type: AT.CHANGE_BROADCAST,
     payload: broadcastOption
+  }
+}
+
+export function setActiveTab(tab) {
+  return {
+    type: AT.SET_ACTIVE_TAB,
+    payload: tab
+  }
+}
+
+export function triggerPriceBookModal(isOpen, rowIdPriceBook) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.TRIGGER_PRICE_BOOK_MODAL,
+      payload: { isOpen, rowIdPriceBook }
+    })
+    if (rowIdPriceBook && isOpen) {
+      await dispatch(openBroadcast({ id: rowIdPriceBook }))
+    }
   }
 }
