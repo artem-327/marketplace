@@ -64,7 +64,7 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/settings/users', false) ||
       getSafe(() => Router.router.pathname === '/settings/locations', false) ||
       getSafe(() => Router.router.pathname === '/settings/bank-accounts', false) ||
-      getSafe(() => Router.router.pathname === '/settings/logistics', false) ||
+      // getSafe(() => Router.router.pathname === '/settings/logistics', false) ||
       getSafe(() => Router.router.pathname === '/settings/documents', false),
     orders:
       getSafe(() => Router.router.pathname === '/orders/sales', false) ||
@@ -112,7 +112,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
     myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
     alerts: getSafe(() => Router.router.pathname === '/alerts', false),
-    credentials: getSafe(() => Router.router.pathname === '/warehouse-credentials/all', false) ||
+    credentials:
+      getSafe(() => Router.router.pathname === '/warehouse-credentials/all', false) ||
       getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false),
     activeNetworkStatus: 'ALL'
   }
@@ -656,13 +657,14 @@ class Navigation extends Component {
                       dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
-                    <Dropdown.Item
+                    {/* Commented based on https://bluepallet.atlassian.net/browse/DT-227 */}
+                    {/* <Dropdown.Item
                       as={MenuLink}
                       to='/settings/logistics'
                       tab='logistics'
                       dataTest='navigation_settings_logistics_drpdn'>
                       {formatMessage({ id: 'navigation.logistics', defaultMessage: 'Logistics' })}
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings/documents'
@@ -839,14 +841,14 @@ class Navigation extends Component {
                 {credentials ? <ChevronUp /> : <ChevronDown />}
               </>
             }
-          className={credentials ? 'opened' : null}
-          open={credentials.toString()}
-          onClick={(data, e) => {
-            this.toggleOpened('credentials', '/warehouse-credentials/all')
-          }}
-          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-          refId={'credentials'}
-          data-test='navigation_menu_credentials_drpdn'>
+            className={credentials ? 'opened' : null}
+            open={credentials.toString()}
+            onClick={(data, e) => {
+              this.toggleOpened('credentials', '/warehouse-credentials/all')
+            }}
+            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+            refId={'credentials'}
+            data-test='navigation_menu_credentials_drpdn'>
             <Dropdown.Menu data-test='navigation_menu_credentials_menu'>
               <PerfectScrollbar>
                 <Dropdown.Item
