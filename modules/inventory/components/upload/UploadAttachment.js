@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import ReactDropzone from 'react-dropzone'
-import { Table, TableCell, Modal, Button } from 'semantic-ui-react'
+import { Table, TableCell, Modal, Button, Dimmer, Loader } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import { FieldArray } from 'formik'
 //Components
@@ -341,7 +341,7 @@ class UploadAttachment extends Component {
   }
 
   render() {
-    let { attachments, disabled, filesLimit, toastManager, hideAttachments } = this.props
+    let { attachments, disabled, filesLimit, toastManager, hideAttachments, loading } = this.props
     let hasFile = attachments && attachments.length !== 0
 
     const limitMsg = generateToastMarkup(
@@ -403,7 +403,12 @@ class UploadAttachment extends Component {
                     }
                   }}
                   onDropRejected={this.onDropRejected}>
-                  {hasFile ? this.props.uploadedContent : <div>{this.props.emptyContent}</div>}
+                  <>
+                    <Dimmer inverted active={loading}>
+                      <Loader />
+                    </Dimmer>
+                    {hasFile ? this.props.uploadedContent : <div>{this.props.emptyContent}</div>}
+                  </>
                 </ReactDropzone>
               ) : (
                 ''
@@ -449,7 +454,8 @@ UploadAttachment.propTypes = {
   uploadClass: PropTypes.string,
   uploadedClass: PropTypes.string,
   acceptFiles: PropTypes.string,
-  listDocumentTypes: PropTypes.array
+  listDocumentTypes: PropTypes.array,
+  loading: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
