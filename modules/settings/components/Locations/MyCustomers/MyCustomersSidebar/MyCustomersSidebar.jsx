@@ -11,6 +11,8 @@ import { ChevronDown } from 'react-feather'
 // Components
 import BasicButton from '../../../../../../components/buttons/BasicButton'
 import { AddressForm } from '~/modules/address-form'
+import { PhoneNumber } from '../../../../../phoneNumber'
+import { Required } from "../../../../../../components/constants/layout"
 
 // Services
 import { formValidation, getInitialFormValues, submitHandler } from './MyCustomersSidebar.services'
@@ -37,21 +39,10 @@ import {
 
 
 } from '../MyCustomers.styles'
-/*
-import {
-  SidebarFlex,
-  DivFlexContent,
-  SegmentCustomContent,
-  DivBottomSidebar,
-  DimmerSidebarOpend,
-  FormCustom
-} from '../../Locations.styles'
-*/
+import { CustomHighSegment } from "../../Branches/BranchesSidebar/BranchesSidebar.styles"
 
 // Constants
 import { INITIAL_VALUES } from './MyCustomersSidebar.constants'
-import {CustomHighSegment} from "../../Branches/BranchesSidebar/BranchesSidebar.styles";
-import {Required} from "../../../../../../components/constants/layout";
 
 const MyCustomersSidebar = props => {
 
@@ -61,10 +52,11 @@ const MyCustomersSidebar = props => {
   } = props
 
   console.log('!!!!!!!!!! aaaaa props', props)
+  console.log('INITIAL', {...getInitialFormValues(sidebarValues)})
 
   return (
     <Formik
-      initialValues={{ ...INITIAL_VALUES, ...getInitialFormValues(sidebarValues)}}
+      initialValues={{ ...INITIAL_VALUES, billToAddress: { ...getInitialFormValues(sidebarValues), hasProvinces: null }}}
       validationSchema={formValidation()}
       enableReinitialize
       onReset={() => {
@@ -76,8 +68,6 @@ const MyCustomersSidebar = props => {
 
       {formikProps => {
         const { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting, handleSubmit } = formikProps
-
-        console.log('!!!!!!!!!! render values', values)
 
         return (
           <Form autoComplete='off'>
@@ -108,9 +98,9 @@ const MyCustomersSidebar = props => {
                   <DivTitle>
                     <div>
                       {props.sidebarValues ? (
-                        <FormattedMessage id='sidebar.edit' defaultMessage='Edit' />
+                        <FormattedMessage id='sidebar.edit' defaultMessage='Edit Customer' />
                       ) : (
-                        <FormattedMessage id='sidebar.addNew' defaultMessage='Add New' />
+                        <FormattedMessage id='sidebar.addCustomer' defaultMessage='Add Customer' />
                       )}
                     </div>
                     <div><ChevronDown /></div>
@@ -122,7 +112,7 @@ const MyCustomersSidebar = props => {
                 <SegmentCustomContent basic>
 
                   <DivSectionHeader>
-                    <FormattedMessage id='global.address' defaultMessage='Address' />
+                    <FormattedMessage id='global.billTo' defaultMessage='Bill to' />
                   </DivSectionHeader>
 
                   <FormGroup widths='equal' data-test='settings_branches_popup_name_inp'>
@@ -130,41 +120,101 @@ const MyCustomersSidebar = props => {
                       type='text'
                       label={
                         <>
-                          <FormattedMessage id='settings.branchName' defaultMessage='Branch Name' />
+                          <FormattedMessage id='settings.customerName' defaultMessage='Customer Name' />
                           <Required />
                         </>
                       }
-                      name='addressName'
+                      name='name'
                       inputProps={{
                         placeholder: formatMessage({
-                          id: 'settings.warehouses.enterBranchName',
-                          defaultMessage: 'Enter Branch Name'
+                          id: 'settings.customers.customerName',
+                          defaultMessage: 'Enter Customer Name'
+                        })
+                      }}
+                    />
+                    <Input
+                      type='text'
+                      label={
+                        <>
+                          <FormattedMessage id='settings.companyName' defaultMessage='Company Name' />
+                          <Required />
+                        </>
+                      }
+                      name='billToAddress.addressName'
+                      inputProps={{
+                        placeholder: formatMessage({
+                          id: 'settings.customers.enterCompanyName',
+                          defaultMessage: 'Enter Company Name'
                         })
                       }}
                     />
                   </FormGroup>
 
-
-
-
-
-                  <DivSectionHeader>
-                    <FormattedMessage id='global.address' defaultMessage='Address' />
-                  </DivSectionHeader>
-
-
                   <AddressForm
                     noBorder
                     required
+                    prefix={'billToAddress'}
                     displayHeader={false}
                     values={values}
                     setFieldValue={setFieldValue}
                   />
 
+                  <DivSectionHeader>
+                    <FormattedMessage id='global.contactInfo' defaultMessage='Contact Info' />
+                  </DivSectionHeader>
 
+                  <FormGroup widths='equal' data-test='settings_branches_popup_name_inp'>
+                    <Input
+                      type='text'
+                      label={
+                        <>
+                          <FormattedMessage id='settings.contactName' defaultMessage='Contact Name' />
+                          <Required />
+                        </>
+                      }
+                      name='billToAddress.contactName'
+                      inputProps={{
+                        placeholder: formatMessage({
+                          id: 'settings.customers.enterCompanyName',
+                          defaultMessage: 'Enter Contact Name'
+                        })
+                      }}
+                    />
+                  </FormGroup>
 
-
-
+                  <FormGroup widths='equal' data-test='settings_customers_popup_phone_inp'>
+                    <PhoneNumber
+                      name='billToAddress.contactPhone'
+                      values={values}
+                      label={
+                        <>
+                          <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
+                          <Required />
+                        </>
+                      }
+                      setFieldValue={setFieldValue}
+                      setFieldTouched={setFieldTouched}
+                      errors={errors}
+                      touched={touched}
+                      isSubmitting={isSubmitting}
+                    />
+                    <Input
+                      type='email'
+                      label={
+                        <>
+                          <FormattedMessage id='settings.contactEmail' defaultMessage='Email Address' />
+                          <Required />
+                        </>
+                      }
+                      name='billToAddress.contactEmail'
+                      inputProps={{
+                        placeholder: formatMessage({
+                          id: 'settings.customers.enterEmailAddress',
+                          defaultMessage: 'Enter Email Address'
+                        })
+                      }}
+                    />
+                  </FormGroup>
 
 
 
@@ -188,6 +238,7 @@ const MyCustomersSidebar = props => {
                   onClick={() => {
                     formikProps.validateForm().then(async err => {
                       const errors = Object.keys(err)
+
                       if (errors.length && errors[0] !== 'isCanceled') {
                         // Errors found
                         formikProps.submitForm() // to show errors
@@ -197,8 +248,8 @@ const MyCustomersSidebar = props => {
                           formikProps.values,
                           {
                             //setSubmitting: formikProps.setSubmitting,
-                            //putEditWarehouse: props.putEditWarehouse,
-                            //postNewWarehouseRequest: props.postNewWarehouseRequest
+                            editCustomer: props.editCustomer,
+                            addCustomer: props.addCustomer
                           },
                           getSafe(() => props.sidebarValues.id, null)
                         )

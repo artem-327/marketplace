@@ -1312,3 +1312,40 @@ export function getCompanyUser(id) {
     payload: api.getCompanyUser(id)
   }
 }
+
+export function addCustomer(customerData) {
+  return {
+    type: AT.POST_CUSTOMER,
+    payload: api.addCustomer(customerData)
+  }
+}
+
+export function updateCustomer(customerId, customerData) {
+  return {
+    type: AT.PATCH_CUSTOMER,
+    payload: api.updateCustomer(customerId, customerData)
+  }
+}
+
+export function openCustomerWarehouse(row = null, datagrid = null, openTab = null) {
+  return {
+    type: AT.OPEN_CUSTOMER_WAREHOUSE,
+    payload: { data: row, datagrid, openTab }
+  }
+}
+
+export function addCustomerWarehouse(customerId, warehouse) {
+  console.log('ADD')
+  return {
+    type: AT.POST_CUSTOMER_WAREHOUSE,
+    payload: api.addCustomerWarehouse(customerId, warehouse)
+  }
+}
+
+export function updateCustomerWarehouse(customerId, warehouseId, warehouse) {
+  console.log('UPDATE')
+  return {
+    type: AT.PATCH_CUSTOMER_WAREHOUSE,
+    payload: api.updateCustomerWarehouse(customerId, warehouseId, warehouse)
+  }
+}

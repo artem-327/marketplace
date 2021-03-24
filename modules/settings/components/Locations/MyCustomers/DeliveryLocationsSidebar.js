@@ -3,24 +3,33 @@ import { connect } from 'react-redux'
 import { withDatagrid } from '~/modules/datagrid'
 import { Formik } from 'formik'
 import { Header, FormGroup, Dimmer, Loader, Segment, Form } from 'semantic-ui-react'
-import { closeSidebar, updateDeliveryAddresses, createDeliveryAddress } from '../../../actions'
+import { closeSidebar, updateCustomerWarehouse, addCustomerWarehouse } from '../../../actions'
+import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 import { Input, Checkbox, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
-
+import { Datagrid } from '../../../../datagrid'
 import { addressValidationSchema, errorMessages, validateTime, phoneValidation } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form/'
 
 import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
+import { HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
 import { Required } from '~/components/constants/layout'
 import { removeEmpty } from '~/utils/functions'
 import { TimeInput } from '~/components/custom-formik/'
 import ErrorFocus from '~/components/error-focus'
+// Styles
+import {
+  SidebarFlex,
+  DivFlexContent,
+  SegmentCustomContent,
+  DivBottomSidebar
+} from './MyCustomers.styles'
+import { CustomHighSegment } from "../Branches/BranchesSidebar/BranchesSidebar.styles"
 
 const CustomButtonSubmit = styled(Button.Submit)`
   background-color: #2599d5 !important;
@@ -61,15 +70,7 @@ const CustomForm = styled(Form)`
   flex-grow: 0 !important;
 `
 
-const CustomDiv = styled.div`
-  text-align: right;
-  z-index: 1;
-  padding: 10px 25px;
-  margin-top: 0px;
-  box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
-`
-
-const CustomHighSegment = styled(HighSegment)`
+/*const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
   padding: 16px 30px !important;
   text-transform: uppercase;
@@ -79,11 +80,7 @@ const CustomHighSegment = styled(HighSegment)`
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6 !important;
   background-color: #ffffff;
   z-index: 1;
-`
-
-const CustomSegmentContent = styled(Segment)`
-  padding-top: 0px !important;
-`
+`*/
 
 const minLength = errorMessages.minLength(3)
 
@@ -104,7 +101,7 @@ class DeliveryLocationsSidebar extends Component {
   }
 
   submitHandler = async (values, setSubmitting) => {
-    const { sidebarValues, updateDeliveryAddresses, createDeliveryAddress } = this.props
+    const { sidebarValues, customerWarehousesDatagrid, updateCustomerWarehouse, addCustomerWarehouse } = this.props
     const { attachmentFiles } = this.state
     let country = JSON.parse(values.address.country).countryId
 
@@ -127,11 +124,18 @@ class DeliveryLocationsSidebar extends Component {
     removeEmpty(requestData)
 
     try {
-      if (sidebarValues) {
-        await updateDeliveryAddresses(sidebarValues.id, requestData)
+      const ids = sidebarValues.id.split("_")
+      let responseData = null
+      if (ids[1]) {
+        responseData = await updateCustomerWarehouse(ids[0], ids[1], requestData)
       } else {
-        await createDeliveryAddress(requestData)
+        responseData = await addCustomerWarehouse(ids[0], requestData)
       }
+      console.log('Datagrid', customerWarehousesDatagrid)
+      console.log('ID', ids[0])
+      console.log('responseData', responseData)
+      console.log('Datagrid', customerWarehousesDatagrid)
+      customerWarehousesDatagrid.updateRow(ids[0], () => responseData.value)
     } catch {
     } finally {
       setSubmitting(false)
@@ -331,6 +335,7 @@ class DeliveryLocationsSidebar extends Component {
   render() {
     const {
       closeSidebar,
+      chatWidgetVerticalMoved,
       sidebarValues,
       loading,
       intl: { formatMessage }
@@ -343,18 +348,20 @@ class DeliveryLocationsSidebar extends Component {
         initialValues={initialValues}
         validationSchema={formValidation()}
         enableReinitialize
-        onReset={closeSidebar}
+        onReset={() => {chatWidgetVerticalMoved
+          closeSidebar()
+          chatWidgetVerticalMoved(false)
+        }}
         onSubmit={this.submitHandler}
         loading={loading}>
         {formikProps => {
           return (
             <>
               <CustomForm autoComplete='off'>
-                <FlexSidebar
+                <SidebarFlex
                   visible={true}
                   width='very wide'
-                  style={{ width: '630px' }}
-                  direction='right'
+                  direction='bottom'
                   animation='overlay'>
                   <div>
                     <Dimmer inverted active={loading || this.state.loadSidebar}>
@@ -368,13 +375,16 @@ class DeliveryLocationsSidebar extends Component {
                       )}
                     </CustomHighSegment>
                   </div>
-                  <FlexContent style={{ padding: '16px' }}>
-                    <CustomSegmentContent basic>{this.renderEdit(formikProps)}</CustomSegmentContent>
-                  </FlexContent>
-                  <CustomDiv>
+                  <DivFlexContent>
+                    <SegmentCustomContent basic>{this.renderEdit(formikProps)}</SegmentCustomContent>
+                  </DivFlexContent>
+                  <DivBottomSidebar>
                     <Button.Reset
                       style={{ margin: '0 5px' }}
-                      onClick={closeSidebar}
+                      onClick={() => {
+                        closeSidebar()
+                        chatWidgetVerticalMoved(false)
+                      }}
                       data-test='settings_branches_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                         {text => text}
@@ -399,8 +409,8 @@ class DeliveryLocationsSidebar extends Component {
                         {text => text}
                       </FormattedMessage>
                     </CustomButtonSubmit>
-                  </CustomDiv>
-                </FlexSidebar>
+                  </DivBottomSidebar>
+                </SidebarFlex>
                 <ErrorFocus />
               </CustomForm>
             </>
@@ -412,8 +422,9 @@ class DeliveryLocationsSidebar extends Component {
 }
 
 const mapDispatchToProps = {
-  updateDeliveryAddresses,
-  createDeliveryAddress,
+  updateCustomerWarehouse,
+  addCustomerWarehouse,
+  chatWidgetVerticalMoved,
   closeSidebar
 }
 
@@ -426,7 +437,8 @@ const mapStateToProps = state => {
     provincesDropDown: state.settings.provincesDropDown,
     company: getSafe(() => state.auth.identity.company.id, null),
     isOpenSidebar: state.settings.isOpenSidebar,
-    loading: state.settings.loading
+    loading: state.settings.loading,
+    customerWarehousesDatagrid: state.settings.customerWarehousesDatagrid
   }
 }
 

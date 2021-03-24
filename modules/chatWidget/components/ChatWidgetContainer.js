@@ -22,6 +22,7 @@ function mapStateToProps(state) {
     if (
       getSafe(() => state.chatWidget.isVerticalMoved, false) &&
       (getSafe(() => state.settings.isOpenSidebar, false) ||
+        getSafe(() => state.settings.isOpenSubSidebar, false) ||
         getSafe(() => state.productsAdmin.currentAddForm, false) ||
         getSafe(() => state.productsAdmin.currentEditForm, false) ||
         getSafe(() => state.cart.isOpenModal, false))

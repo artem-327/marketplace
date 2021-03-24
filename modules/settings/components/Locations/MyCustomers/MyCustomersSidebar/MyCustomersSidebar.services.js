@@ -12,13 +12,16 @@ const minLength = errorMessages.minLength(3)
  */
 export const formValidation = () =>
   Yup.object().shape({
-    address: addressValidationSchema(),
-    addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-    contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
-    contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
-    contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
-    readyTime: validateTime(),
-    closeTime: validateTime()
+    name: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+    billToAddress: Yup.object().shape({
+      address: addressValidationSchema(),
+      addressName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+      contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+      contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
+      contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
+      /*readyTime: validateTime(),
+      closeTime: validateTime()*/
+    })
   })
 
 /**
@@ -70,6 +73,32 @@ export const getInitialFormValues = sidebarValues => {
  * postNewWarehouseRequest: (isCreate: boolean, requestData: Object<string, any>) => void}} helperFunctions
  * @param {number} id
  */
-export const submitHandler = async (values, props) => {
-  console.log('!!!!!!!!!! submitHandler')
+export const submitHandler = async (values, actions, customerId) => {
+  let customerData = {
+    ...values,
+    billToAddress: {
+      ...values.billToAddress,
+      address: {
+        ...values.billToAddress.address,
+        country: getSafe(() => JSON.parse(values.billToAddress.address.country).countryId, null),
+        province: getSafe(() => values.billToAddress.address.province.provinceId, null)
+      }
+    },
+    warehouseAddresses: values.warehouseAddresses ? values.warehouseAddresses.map(warAddr => ({
+      ...warAddr,
+      address: {
+        ...warAddr.address,
+        country: getSafe(() => JSON.parse(warAddr.address.country).countryId, null),
+        province: getSafe(() => warAddr.address.province.provinceId, null)
+      }
+    })) : null
+  }
+
+  removeEmpty(customerData)
+
+  if (customerId) {
+    actions.editCustomer(customerId, customerData)
+  } else {
+    actions.addCustomer(customerData)
+  }
 }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+import { getSafe, getFormattedPhone } from '~/utils/functions'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import ActionCell from '~/components/table/ActionCell'
@@ -13,6 +13,7 @@ import ActionCell from '~/components/table/ActionCell'
 import { COLUMNS } from './MyCustomers.constants'
 
 // Components
+import BasicButton from '../../../../../components/buttons/BasicButton'
 //import ErrorFocus from '../../../components/error-focus'
 
 
@@ -20,30 +21,37 @@ import { COLUMNS } from './MyCustomers.constants'
 //import { usePrevious } from '../../../hooks'
 
 // Styles
-import {
-} from './MyCustomers.styles'
+import { CustomerName, SubrowButtons } from './MyCustomers.styles'
 
 // Services
 import {
 } from './MyCustomers.services'
 import * as Actions from '../../../actions'
+import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 
 
 
-export const getRows = rows => {
+export const getRows = (rows, countryCodes, actions) => {
   return rows.map(row => {
-
-
-
-    const warehouses = row.id & 1 ? rows.map(war => { // ! ! tmp values
-
+    const warehouses = getSafe(() => row.warehouseAddresses.length > 0, false) ? row.warehouseAddresses.map(war => {
       return ({
-        id: row.id + '_' + war.id,
+        id: `${row.id}_${war.id}`,
         clsName: 'tree-table nested-row',
-
-        name: 'war name ' + war.id, // ! ! tmp
+        actions,
+        name: war.addressName,
+        streetAddress: war?.address?.streetAddress,
+        city: war?.address?.city,
+        provinceName: war?.address?.province?.name,
+        countryName: war?.address?.country?.name,
+        contactName: war?.contactName,
+        contactEmail: war?.contactEmail,
+        phoneFormatted: getFormattedPhone(war?.contactPhone, countryCodes)
       })
-    }) : []
+    }) : [{
+      id: `${row.id}_0`,
+      clsName: 'tree-table empty-row hidden-row',
+      actions
+    }]
 
     /*
     if (warehouses.length) {
@@ -73,17 +81,15 @@ export const getRows = rows => {
 
       id: row.id,
       name: (
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <div style={{ width: '100%', right: '0' }}>
+        <CustomerName>
+          <div>
             {row.id + ' strasne dlouhe jmeno ktere se nevejde do sloupce'}
           </div>
           <div>
             ikony
           </div>
-        </div>
+        </CustomerName>
       ),
-
-
       warehouses
     }
   })
@@ -91,11 +97,19 @@ export const getRows = rows => {
 
 
 const getRowDetail = ({ row }) => {
+  const { actions } = row
+  console.log('AAA', actions)
   return (
     <div>
-      <div style={{ marginLeft: 'auto' }}>
-        'Add New' button
-      </div>
+      <SubrowButtons>
+        <BasicButton floatRight={true}
+                     onClick={() => {
+                       actions.openCustomerWarehouse({ id: row.id.split("_")[0] }, actions.datagrid)
+                       actions.chatWidgetVerticalMoved(true)
+                     }}>
+          <FormattedMessage id='global.addNew' defaultMessage='Add New' />
+        </BasicButton>
+      </SubrowButtons>
     </div>
   )
 }
@@ -108,7 +122,7 @@ const MyCustomers = props => {
   const {
     datagrid,
     loading,
-
+    countryCodes,
 
 
   } = props
@@ -124,8 +138,6 @@ const MyCustomers = props => {
 
   }, [/* variableName */])
 
-  console.log('!!!!!!!!!! aaaaa expandedRowIds', expandedRowIds)
-
   return (
     <div className='flex stretched tree-wrapper'>
       <ProdexGrid
@@ -133,7 +145,7 @@ const MyCustomers = props => {
         {...datagrid.tableProps}
         loading={datagrid.loading || loading}
         columns={COLUMNS}
-        rows={getRows(datagrid.rows)}
+        rows={getRows(datagrid.rows, countryCodes, {openCustomerWarehouse: props.openCustomerWarehouse, chatWidgetVerticalMoved: props.chatWidgetVerticalMoved, datagrid})}
         rowSelection={false}
         showSelectionColumn={false}
         treeDataType={true}
@@ -149,7 +161,7 @@ const MyCustomers = props => {
           return row ? row.warehouses : rootRows
         }}
         onRowClick={(_, row) => {
-          if (row.root && row.warehouses.length) {
+          if (row.root && getSafe(() => row.warehouses.length, 0)) {
             if (expandedRowIds.includes(row.id)) {
               setExpandedRowIds([])
             }
@@ -171,9 +183,9 @@ const MyCustomers = props => {
 
 function mapStateToProps(store) {
   return {
-
+    countryCodes: store.phoneNumber.phoneCountryCodes
   }
 }
 
 //export default injectIntl(MyCustomers)
-export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(MyCustomers)))
+export default withDatagrid(injectIntl(connect(mapStateToProps, { ...Actions, chatWidgetVerticalMoved })(MyCustomers)))

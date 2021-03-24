@@ -124,6 +124,9 @@ const ModalHeader = styled(Modal.Header)`
 `
 
 const TableRow = styled(Table.Row)`
+  &.hidden-row {
+    display: none !important;
+  }
   .ui.dropdown .menu > .item:hover {
     background: #2599d5 !important;
     color: #ffffff !important;

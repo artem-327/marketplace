@@ -21,7 +21,7 @@ import BranchesTable from './Branches/BranchesTable'
 import PickUpLocationsSidebar from './Warehouses/WarehousesSidebar/WarehousesSidebar'
 import BranchesSidebar from './Branches/BranchesSidebar/BranchesSidebar'
 import MyCustomers from './MyCustomers/MyCustomers'
-// ! ! import DeliveryLocationsSidebar from './DeliveryLocationsTable/DeliveryLocationsSidebar'
+import DeliveryLocationsSidebar from './MyCustomers/DeliveryLocationsSidebar'
 import MyCustomersSidebar from './MyCustomers/MyCustomersSidebar/MyCustomersSidebar'
 
 const SettingsGrid = styled(Grid)`
@@ -78,7 +78,7 @@ class Locations extends Component {
   }
 
   renderContent = () => {
-    const { activeTab, isOpenPopup, isUserAdmin, isOpenSidebar } = this.props
+    const { activeTab, isOpenPopup, isUserAdmin, isOpenSidebar, isOpenSubSidebar } = this.props
 
     const tables = {
       'my-customers': <MyCustomers />,
@@ -87,14 +87,14 @@ class Locations extends Component {
     }
 
     const popupForm = {
-      'my-customers': <MyCustomersSidebar />,
+      'my-customers': isOpenSubSidebar ? <DeliveryLocationsSidebar/> : <MyCustomersSidebar />,
       'pick-up-locations': <PickUpLocationsSidebar />,
       branches: <BranchesSidebar />
     }
 
     return (
       <>
-        {(isOpenPopup || isOpenSidebar) && popupForm[activeTab]}
+        {(isOpenPopup || isOpenSidebar || isOpenSubSidebar) && popupForm[activeTab]}
         {tables[activeTab] || <p>This page is still under construction</p>}
       </>
     )
@@ -105,13 +105,13 @@ class Locations extends Component {
 
     const datagridApiMap = {
       'my-customers': {
-        url: '/prodex/api/delivery-addresses/datagrid',
+        url: '/prodex/api/customers/datagrid',
         searchToFilter: v =>
           v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
-                  path: 'DeliveryAddress.address.streetAddress',
+                  path: 'Customer.name',
                   values: [`%${v.searchInput}%`]
                 }
               ]

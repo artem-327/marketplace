@@ -54,6 +54,10 @@ export const SidebarFlex = styled(Sidebar)`
   text-align: left;
   font-size: 14px;
   background-color: #f8f9fb !important;
+  
+  &.ui.sidebar.bottom {
+    max-height: calc(100vh - 100px) !important;
+  }
 `
 
 export const DivFlexContent = styled.div`
@@ -87,4 +91,32 @@ export const DivSectionHeader = styled.div`
   font-size: 14px;
   color: #404040;
   background-color: #edeef2;
+`
+
+export const CustomerName = styled.div`
+  overflow: hidden;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: 100%;
+  
+  > div:first-child {
+    flex-grow: 0
+    flex-shrink: 1;
+    overflow: hidden;
+    width: auto;
+    text-overflow: ellipsis;
+  }
+  
+  > div:last-child {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+`
+
+export const SubrowButtons = styled.div`
+  display: block;
+  width: calc(100% + 10px);
+  margin: 0 -5px;
+  text-align: right;
 `

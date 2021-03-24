@@ -123,6 +123,7 @@ export const initialState = {
   csvImportError: null,
   tabClicked: false,
   isOpenSidebar: false,
+  isOpenSubSidebar: false,
   openTab: 0,
   documentsOwner: [],
   csvWithoutHeader: false,
@@ -143,7 +144,8 @@ export const initialState = {
   attachmentFiles: [],
   isThirdPartyConnectionException: false,
   tradeCriteria: null,
-  userSettings: null
+  userSettings: null,
+  customerWarehousesDatagrid: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -169,6 +171,18 @@ export default function reducer(state = initialState, action) {
         isOpenPopupDeleteInstitution: false
       }
     }
+    case AT.OPEN_CUSTOMER_WAREHOUSE: {
+      return {
+        ...state,
+        loaded: false,
+        isOpenSubSidebar: true,
+        editTrig: !state.editTrig,
+        openTab: action.payload.openTab,
+        sidebarValues: action.payload.data,
+        editedId: payload.data ? payload.data.id : null,
+        customerWarehousesDatagrid: payload.datagrid
+      }
+    }
     case AT.OPEN_SIDEBAR: {
       return {
         ...state,
@@ -184,9 +198,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isOpenSidebar: false,
+        isOpenSubSidebar: false,
         openTab: null,
         sidebarValues: null,
-        editedId: null
+        editedId: null,
+        customerWarehousesDatagrid: null
       }
     }
     case AT.OPEN_DWOLLA_POPUP: {
