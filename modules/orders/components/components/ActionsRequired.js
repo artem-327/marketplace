@@ -242,15 +242,13 @@ class ActionsRequired extends Component {
 
     const textForConforming = !sellEligible ? 'order.confirm.sellElligible.notTrue' : 'order.confirm.accept.decline'
 
-    const requestCreditButton = orderCreditHistoryOpen
-      ? {
-          buttonType: 'primary',
-          className: 'outline',
-          onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
-          dataTest: 'orders_detail_requestCredit_btn',
-          text: 'order.requestCredit'
-        }
-      : null
+    const disputeButton = {
+      //ADD condition ? orderCreditHistoryOpen ?
+      buttonType: 'basic',
+      onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
+      dataTest: 'orders_detail_dispute_btn',
+      text: 'order.dispute'
+    }
 
     return (
       <>
@@ -391,6 +389,7 @@ class ActionsRequired extends Component {
               : null}
             {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
               ? this.renderSegment(null, 11, null, 'order.shipFailed.description', [
+                  disputeButton, //!!REMOVE
                   {
                     buttonType: 'primary',
                     onClick: () => openPopupName('openedPurchaseOrderShipping'),
@@ -412,21 +411,21 @@ class ActionsRequired extends Component {
               : null}
             {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 0 // Confirmed && Pending
               ? this.renderSegment(null, 10, null, 'order.delivered.description', [
-                  requestCreditButton,
+                  disputeButton,
                   {
                     buttonType: 'primary',
                     onClick: this.acceptDelivery,
                     dataTest: 'orders_detail_accept_btn',
                     text: 'global.accept',
                     loading: isSending && !openedPopup
-                  },
-                  {
-                    buttonType: 'danger',
-                    className: 'outline',
-                    onClick: () => openPopupName('openedPurchaseRejectDelivery'),
-                    dataTest: 'orders_detail_reject_btn',
-                    text: 'global.reject'
                   }
+                  // {
+                  //   buttonType: 'danger',
+                  //   className: 'outline',
+                  //   onClick: () => openPopupName('openedPurchaseRejectDelivery'),
+                  //   dataTest: 'orders_detail_reject_btn',
+                  //   text: 'global.reject'
+                  // }
                 ])
               : null}
             {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 2

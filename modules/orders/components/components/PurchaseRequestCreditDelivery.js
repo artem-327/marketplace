@@ -12,7 +12,10 @@ import { generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import { getSafe } from '~/utils/functions'
-
+//Styles
+import { PaperclipIcon } from '../../../company-form/components/AddCertifications/AddCertifications.styles'
+//Components
+import BasicButton from '../../../../components/buttons/BasicButton'
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
@@ -140,7 +143,7 @@ class PurchaseRequestCreditDelivery extends Component {
             <Loader />
           </Dimmer>
           <Modal.Header>
-            <FormattedMessage id='order.requestCreditPopUpHeader' defaultMessage='REQUEST CREDIT' />
+            <FormattedMessage id='order.openDispute' defaultMessage='Open Dispute' />
           </Modal.Header>
           <ModalBody>
             <Modal.Description>
@@ -160,10 +163,10 @@ class PurchaseRequestCreditDelivery extends Component {
                           <Grid.Column width={16}>
                             <StrongTitle>
                               <FormattedMessage
-                                id='order.requestingCredit'
-                                defaultMessage={'Requesting a credit of '}
+                                id='order.dispute.selectReason'
+                                defaultMessage='Please select the reason for disputing this order'
                               />
-                              <CreditInput>
+                              {/* <CreditInput>
                                 <Input
                                   name='credit'
                                   inputProps={{
@@ -174,7 +177,7 @@ class PurchaseRequestCreditDelivery extends Component {
                                   }}
                                 />
                               </CreditInput>
-                              <FormattedMessage id='order.requestingCreditBecause' defaultMessage={' because'} />
+                              <FormattedMessage id='order.requestingCreditBecause' defaultMessage={' because'} /> */}
                             </StrongTitle>
                             <FormGroup grouped>
                               {reasons.map(reason => (
@@ -194,9 +197,14 @@ class PurchaseRequestCreditDelivery extends Component {
                                 required={this.state.reason === 7}
                                 onChange={(e, { value, name }) => this.handleChange(e, value, name, setFieldValue)}
                                 name='reasonText'
+                                placeholder={formatMessage({
+                                  id: 'order.dispute.enterReasonHere',
+                                  defaultMessage: 'Enter reason here...'
+                                })}
                                 label={formatMessage({
-                                  id: 'order.reject.EnterReasonHere',
-                                  defaultMessage: 'Enter reason here'
+                                  id: 'order.dispute.pleaseProvide',
+                                  defaultMessage:
+                                    'Please provide as much information as you can about this dispute and how you would like it resolved.'
                                 })}
                               />
                               <UploadAttachment
@@ -213,14 +221,10 @@ class PurchaseRequestCreditDelivery extends Component {
                                 data-test='detail_request_credit_attachments'
                                 emptyContent={
                                   <label>
+                                    <PaperclipIcon size='14' color='#20273a' />
                                     <FormattedMessage
-                                      id='addInventory.dragDrop'
-                                      defaultMessage={'Drag and drop to add file here'}
-                                    />
-                                    <br />
-                                    <FormattedMessage
-                                      id='addInventory.dragDropOr'
-                                      defaultMessage={'or {link} to select from computer'}
+                                      id='order.dispute.dragAndDrop'
+                                      defaultMessage={'Drag and drop or {link} to upload files'}
                                       values={{
                                         link: (
                                           <a>
@@ -234,13 +238,8 @@ class PurchaseRequestCreditDelivery extends Component {
                                 uploadedContent={
                                   <label>
                                     <FormattedMessage
-                                      id='addInventory.dragDrop'
-                                      defaultMessage={'Drag and drop to add file here'}
-                                    />
-                                    <br />
-                                    <FormattedMessage
-                                      id='addInventory.dragDropOr'
-                                      defaultMessage={'or {link} to select from computer'}
+                                      id='order.dispute.dragAndDrop'
+                                      defaultMessage={'Drag and drop or {link} to upload files'}
                                       values={{
                                         link: (
                                           <a>
@@ -258,8 +257,8 @@ class PurchaseRequestCreditDelivery extends Component {
                         <Grid.Row>
                           <Grid.Column width={10}></Grid.Column>
                           <Grid.Column floated='right' width={3}>
-                            <Button
-                              basic
+                            <BasicButton
+                              noBorder
                               fluid
                               onClick={() => {
                                 resetForm()
@@ -268,14 +267,14 @@ class PurchaseRequestCreditDelivery extends Component {
                               <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
-                            </Button>
+                            </BasicButton>
                           </Grid.Column>
                           <Grid.Column floated='right' width={3}>
-                            <Button primary fluid type='submit'>
+                            <BasicButton fluid type='submit'>
                               <FormattedMessage id='global.confirm' defaultMessage='Confirm' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
-                            </Button>
+                            </BasicButton>
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
