@@ -236,7 +236,7 @@ class AddCart extends Component {
     casProductIndex: 0
   }
   componentDidMount() {
-    // this.props.getProductOffer(this.props.id, this.props.isEdit)
+    // this.props.getProductOffer(this.props.id, null, this.props.isEdit)
     // if (this.props.isEdit) this.props.getOrderDetail(this.props.orderId)
     this.setState({ offer: this.formatData(), activeTab: this.props.openInfo ? 1 : 0 }) // Buy tab
   }

@@ -13,7 +13,7 @@ export const deleteCartItem = cartItemId => api.delete(`/prodex/api/cart/items/$
 export const updateCartItem = ({ cartItemId, pkgAmount }) =>
   api.patch(`/prodex/api/cart/items/${cartItemId}?pkgAmount=${pkgAmount}`).then(response => response.data)
 export const getCartItem = cartItemId => api.get(`/prodex/api/cart/items/${cartItemId}`)
-export const getProductOffer = id => api.get(`/prodex/api/product-offers/${id}/`).then(response => response.data)
+export const getProductOffer = params => api.get(`/prodex/api/product-offers/${params}`).then(response => response.data)
 export const postNewDeliveryAddress = address =>
   api.post('/prodex/api/delivery-addresses', address).then(response => response.data)
 export const updateDeliveryAddress = (address, id) =>

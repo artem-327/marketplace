@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Dimmer, Loader } from 'semantic-ui-react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 //Components
 import { Broadcast } from '../../../../broadcast'
@@ -29,4 +29,4 @@ const ModalPriceBook = props => {
 
 ModalPriceBook.propTypes = {}
 
-export default ModalPriceBook
+export default injectIntl(ModalPriceBook)
