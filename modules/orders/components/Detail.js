@@ -492,7 +492,8 @@ class Detail extends Component {
     openDocumentsPopup: false,
     openDocumentsAttachments: [],
     documentsPopupProduct: '',
-    orderItemId: null
+    orderItemId: null,
+    changedTypeOrder: false
   }
 
   constructor(props) {
@@ -512,7 +513,7 @@ class Detail extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { order } = this.props
+    const { order, listDocumentTypes } = this.props
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     let dataCells = document.querySelectorAll('.data-list dd')
     for (let i = 0; i < dataCells.length; i++) {
@@ -542,6 +543,18 @@ class Detail extends Component {
       getSafe(() => order.returnShippingTrackingCode, '')
     ) {
       this.setState({ returnShippingTrackingCode: order.returnShippingTrackingCode })
+    }
+
+    if (!prevState?.changedTypeOrder && this.state?.changedTypeOrder) {
+      let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
+      this.props.loadDetail(endpointType, this.props.router.query.id)
+
+      if (listDocumentTypes && !listDocumentTypes.length) this.props.getDocumentTypes()
+      this.setState({
+        shippingTrackingCode: getSafe(() => order.shippingTrackingCode, ''),
+        returnShippingTrackingCode: getSafe(() => order.returnShippingTrackingCode, ''),
+        changedTypeOrder: false
+      })
     }
   }
 
@@ -899,7 +912,10 @@ class Detail extends Component {
             </a>
             {counterOrderId && (
               <a
-                onClick={() => router.push(`/orders/detail?type=${oppositeOrderType}&id=${counterOrderId}`)}
+                onClick={async () => {
+                  await router.push(`/orders/detail?type=${oppositeOrderType}&id=${counterOrderId}`)
+                  this.setState({ changedTypeOrder: true })
+                }}
                 style={{ cursor: 'pointer' }}
                 data-test='orders_detail_view_linked_order_btn'>
                 <Link2 />
