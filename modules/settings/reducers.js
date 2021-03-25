@@ -1096,6 +1096,8 @@ export default function reducer(state = initialState, action) {
 
     /* DELETE BRANCH */
 
+    case AT.DELETE_CUSTOMER_PENDING:
+    case AT.DELETE_CUSTOMER_WAREHOUSE_PENDING:
     case AT.DELETE_BRANCH_PENDING: {
       return {
         ...state,
@@ -1103,6 +1105,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DELETE_CUSTOMER_FULFILLED:
+    case AT.DELETE_CUSTOMER_WAREHOUSE_FULFILLED:
     case AT.DELETE_BRANCH_FULFILLED: {
       return {
         ...state,
@@ -1110,6 +1114,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DELETE_CUSTOMER_REJECTED:
+    case AT.DELETE_CUSTOMER_WAREHOUSE_REJECTED:
     case AT.DELETE_BRANCH_REJECTED: {
       return {
         ...state,
@@ -1551,6 +1557,10 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.POST_CUSTOMER_PENDING:
+    case AT.PATCH_CUSTOMER_PENDING:
+    case AT.POST_CUSTOMER_WAREHOUSE_PENDING:
+    case AT.PATCH_CUSTOMER_WAREHOUSE_PENDING:
     case AT.POST_NEW_USER_REQUEST_PENDING:
     case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_PENDING:
     case AT.SETTINGS_GET_COMPANY_DETAILS_PENDING: {
@@ -1560,6 +1570,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.POST_CUSTOMER_FULFILLED:
+    case AT.POST_CUSTOMER_REJECTED:
+    case AT.PATCH_CUSTOMER_FULFILLED:
+    case AT.PATCH_CUSTOMER_REJECTED:
+    case AT.POST_CUSTOMER_WAREHOUSE_FULFILLED:
+    case AT.POST_CUSTOMER_WAREHOUSE_REJECTED:
+    case AT.PATCH_CUSTOMER_WAREHOUSE_FULFILLED:
+    case AT.PATCH_CUSTOMER_WAREHOUSE_REJECTED:
     case AT.POST_NEW_USER_REQUEST_FULFILLED:
     case AT.POST_NEW_USER_REQUEST_REJECTED:
     case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_FULFILLED:

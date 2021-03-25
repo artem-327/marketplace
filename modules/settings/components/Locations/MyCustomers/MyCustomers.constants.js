@@ -4,7 +4,7 @@ export const COLUMNS = [
   {
     name: 'name',
     title: (
-      <FormattedMessage id='settings.pickupLocation' defaultMessage='Warehouse'>
+      <FormattedMessage id='global.name' defaultMessage='Name'>
         {text => text}
       </FormattedMessage>
     ),

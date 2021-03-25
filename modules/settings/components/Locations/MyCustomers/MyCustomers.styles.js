@@ -1,8 +1,11 @@
 import styled from 'styled-components'
 
-import { Sidebar, Segment, GridColumn, Icon, Grid, Modal, Dropdown, FormField, Header, Dimmer } from 'semantic-ui-react'
+import { Sidebar, Segment, GridColumn, Icon, Grid, Modal, Dropdown, FormField, Header, Dimmer, Form } from 'semantic-ui-react'
 import { TextArea } from 'formik-semantic-ui-fixed-validation'
 
+export const FormCustom = styled(Form)`
+  flex-grow: 0 !important;
+`
 
 export const SegmentTopSidebar = styled(Segment)`
   margin: 0 !important;
@@ -48,15 +51,14 @@ export const DimmerStyled = styled(Dimmer)`
 export const SidebarFlex = styled(Sidebar)`
   display: flex;
   flex-direction: column;
-  top: 80px !important;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 1000 !important;
   text-align: left;
   font-size: 14px;
   background-color: #f8f9fb !important;
   
-  &.ui.sidebar.bottom {
-    max-height: calc(100vh - 100px) !important;
+  &.ui.bottom.sidebar{
+    height: 89% !important;
   }
 `
 

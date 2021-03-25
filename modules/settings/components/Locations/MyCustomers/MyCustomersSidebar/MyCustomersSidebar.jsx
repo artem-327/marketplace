@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withDatagrid } from '../../../../../datagrid'
 import { Formik } from 'formik'
-import { Dimmer, Loader, Segment, Form, FormGroup } from 'semantic-ui-react'
+import { Dimmer, Loader, Segment, Form, FormGroup, Divider } from 'semantic-ui-react'
 import { Button, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { ChevronDown } from 'react-feather'
@@ -25,6 +25,7 @@ import { chatWidgetVerticalMoved } from '../../../../../chatWidget/actions'
 
 // Styles
 import {
+  FormCustom,
   SidebarFlex,
   SegmentTopSidebar,
   DivTitle,
@@ -42,8 +43,8 @@ import {
 import { CustomHighSegment } from "../../Branches/BranchesSidebar/BranchesSidebar.styles"
 
 // Constants
-import { INITIAL_VALUES } from './MyCustomersSidebar.constants'
-
+import { INITIAL_VALUES, INIT_VALUES_WAREHOUSE } from './MyCustomersSidebar.constants'
+//INIT_VALUES_WAREHOUSE
 const MyCustomersSidebar = props => {
 
   const {
@@ -51,17 +52,18 @@ const MyCustomersSidebar = props => {
     sidebarValues
   } = props
 
-  console.log('!!!!!!!!!! aaaaa props', props)
-  console.log('INITIAL', {...getInitialFormValues(sidebarValues)})
-
   return (
     <Formik
-      initialValues={{ ...INITIAL_VALUES, billToAddress: { ...getInitialFormValues(sidebarValues), hasProvinces: null }}}
+      initialValues={{
+        ...INITIAL_VALUES,
+        ...getInitialFormValues(sidebarValues),
+        ...(sidebarValues === null && { warehouseAddresses: [INIT_VALUES_WAREHOUSE]})
+      }}
       validationSchema={formValidation()}
       enableReinitialize
       onReset={() => {
+        props.chatWidgetVerticalMoved(false)
         props.closeSidebar()
-        //! ! props.chatWidgetVerticalMoved(false)
       }}
       onSubmit={submitHandler}
       loading={props.loading}>
@@ -69,13 +71,15 @@ const MyCustomersSidebar = props => {
       {formikProps => {
         const { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting, handleSubmit } = formikProps
 
+        console.log('!!!!!!!!!! aaaaa values', values)
+
         return (
-          <Form autoComplete='off'>
+          <FormCustom autoComplete='off'>
             <DimmerStyled>
               active={true}
               onClickOutside={() => {
-              props.closeSidebar()
-              //! !props.chatWidgetVerticalMoved(false)
+                props.chatWidgetVerticalMoved(false)
+                props.closeSidebar()
             }}
             </DimmerStyled>
             <SidebarFlex
@@ -86,13 +90,13 @@ const MyCustomersSidebar = props => {
               inverted
             >
               <div>
-                <Dimmer inverted active={props.loading}>
+                <Dimmer inverted active={props.updating}>
                   <Loader />
                 </Dimmer>
                 <CustomHighSegment
                   onClick={() => {
+                    props.chatWidgetVerticalMoved(false)
                     props.closeSidebar()
-                    //! ! props.chatWidgetVerticalMoved(false)
                   }}
                   basic>
                   <DivTitle>
@@ -215,19 +219,127 @@ const MyCustomersSidebar = props => {
                       }}
                     />
                   </FormGroup>
+                  {!sidebarValues && (
+                    <>
+                      <DivSectionHeader>
+                        <FormattedMessage id='global.warehouse' defaultMessage='Warehouse' />
+                      </DivSectionHeader>
+                      {values.warehouseAddresses.map((war, index) => {
+                        return (
+                          <div key={index}>
+                            {index > 0 && (<Divider />)}
+                            <FormGroup widths='equal' data-test='add_warehouse_sidebar_name_inp'>
+                              <Input
+                                type='text'
+                                label={
+                                  <>
+                                    <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name' />
+                                    <Required />
+                                  </>
+                                }
+                                name={`warehouseAddresses[${index}].addressName`}
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'settings.customers.enterWarehouseName',
+                                    defaultMessage: 'Enter Warehouse Name'
+                                  })
+                                }}
+                              />
+                            </FormGroup>
+                            <AddressForm
+                              noBorder
+                              required
+                              prefix={`warehouseAddresses[${index}]`}
+                              displayHeader={false}
+                              values={values}
+                              setFieldValue={setFieldValue}
+                            />
+                            <FormGroup widths='equal' data-test='settings_branches_popup_name_inp'>
+                              <Input
+                                type='text'
+                                label={
+                                  <>
+                                    <FormattedMessage id='settings.contactName' defaultMessage='Contact Name' />
+                                    <Required />
+                                  </>
+                                }
+                                name={`warehouseAddresses[${index}].contactName`}
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'settings.customers.enterCompanyName',
+                                    defaultMessage: 'Enter Contact Name'
+                                  })
+                                }}
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal' data-test='settings_customers_popup_phone_inp'>
+                              <PhoneNumber
+                                name={`warehouseAddresses[${index}].contactPhone`}
+                                values={values}
+                                label={
+                                  <>
+                                    <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
+                                    <Required />
+                                  </>
+                                }
+                                setFieldValue={setFieldValue}
+                                setFieldTouched={setFieldTouched}
+                                errors={errors}
+                                touched={touched}
+                                isSubmitting={isSubmitting}
+                              />
+                              <Input
+                                type='email'
+                                label={
+                                  <>
+                                    <FormattedMessage id='settings.contactEmail' defaultMessage='Email Address' />
+                                    <Required />
+                                  </>
+                                }
+                                name={`warehouseAddresses[${index}].contactEmail`}
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'settings.customers.enterEmailAddress',
+                                    defaultMessage: 'Enter Email Address'
+                                  })
+                                }}
+                              />
+                            </FormGroup>
+                          </div>
+                        )})
+                      }
+                      <BasicButton
+                        onClick={() => {
+                          let newWarehouseAddresses = values.warehouseAddresses
+                          newWarehouseAddresses.push(INIT_VALUES_WAREHOUSE)
+                          setFieldValue('warehouseAddresses', newWarehouseAddresses)
 
 
+                          /*
+                          To delete warehouse from array:
 
+                          let newWarehouseAddresses = values.warehouseAddresses.slice()
+                          newWarehouseAddresses.splice(index, 1)
+                          setFieldValue('warehouseAddresses', newWarehouseAddresses)
 
+                           */
 
+                        }}
+                        data-test='settings_locations_sidebar_addWarehouse_btn'>
+                        <FormattedMessage id='settings.AddWarehouse' defaultMessage='Add Warehouse'>
+                          {text => text}
+                        </FormattedMessage>
+                      </BasicButton>
+                    </>
+                  )}
                 </SegmentCustomContent>
               </DivFlexContent>
               <DivBottomSidebar>
                 <BasicButton
                   noBorder
                   onClick={() => {
+                    props.chatWidgetVerticalMoved(false)
                     props.closeSidebar()
-                    // ! ! props.chatWidgetVerticalMoved(false)
                   }}
                   data-test='settings_branches_popup_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -244,16 +356,9 @@ const MyCustomersSidebar = props => {
                         formikProps.submitForm() // to show errors
                       } else {
                         // No errors found
-                        await submitHandler(
-                          formikProps.values,
-                          {
-                            //setSubmitting: formikProps.setSubmitting,
-                            editCustomer: props.editCustomer,
-                            addCustomer: props.addCustomer
-                          },
-                          getSafe(() => props.sidebarValues.id, null)
-                        )
-                        //! !await props.chatWidgetVerticalMoved(false)
+                        await submitHandler(values, formikProps, props)
+                        props.chatWidgetVerticalMoved(false)
+                        props.closeSidebar()
                       }
                     })
                   }}
@@ -264,7 +369,7 @@ const MyCustomersSidebar = props => {
                 </BasicButton>
               </DivBottomSidebar>
             </SidebarFlex>
-          </Form>
+          </FormCustom>
         )
       }}
     </Formik>
@@ -273,8 +378,9 @@ const MyCustomersSidebar = props => {
 
 const mapStateToProps = state => {
   return {
-
+    sidebarValues: state.settings.sidebarValues,
+    updating: state.settings.updating
   }
 }
 
-export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(MyCustomersSidebar)))
+export default withDatagrid(injectIntl(connect(mapStateToProps, { ...Actions, chatWidgetVerticalMoved })(MyCustomersSidebar)))

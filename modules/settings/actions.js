@@ -1327,10 +1327,17 @@ export function updateCustomer(customerId, customerData) {
   }
 }
 
-export function openCustomerWarehouse(row = null, datagrid = null, openTab = null) {
+export function deleteCustomer(id) {
+  return {
+    type: AT.DELETE_CUSTOMER,
+    payload: api.deleteCustomer(id)
+  }
+}
+
+export function openCustomerWarehouse(customerIdName = null, warehouseRow = null, datagrid = null, openTab = null) {
   return {
     type: AT.OPEN_CUSTOMER_WAREHOUSE,
-    payload: { data: row, datagrid, openTab }
+    payload: { data: { customerIdName, warehouseRow }, datagrid, openTab }
   }
 }
 
@@ -1347,5 +1354,12 @@ export function updateCustomerWarehouse(customerId, warehouseId, warehouse) {
   return {
     type: AT.PATCH_CUSTOMER_WAREHOUSE,
     payload: api.updateCustomerWarehouse(customerId, warehouseId, warehouse)
+  }
+}
+
+export function deleteCustomerWarehouse(customerId, warehouseId) {
+  return {
+    type: AT.DELETE_CUSTOMER_WAREHOUSE,
+    payload: api.deleteCustomerWarehouse(customerId, warehouseId)
   }
 }

@@ -21,6 +21,22 @@ export const formValidation = () =>
       contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
       /*readyTime: validateTime(),
       closeTime: validateTime()*/
+
+      warehouseAddresses: Yup.array().of(
+        Yup.object().shape({
+          addressName: Yup.string()
+            .trim()
+            .min(2, errorMessages.minLength(1))
+            .required(errorMessages.requiredMessage),
+          address: addressValidationSchema(),
+          contactName: Yup.string()
+            .trim()
+            .min(2, errorMessages.minLength(1))
+            .required(errorMessages.requiredMessage),
+          contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
+          contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
+        })
+      )
     })
   })
 
@@ -30,35 +46,69 @@ export const formValidation = () =>
  * @return {Object<string, any>} Initial object for form.
  */
 export const getInitialFormValues = sidebarValues => {
-  const provinceId = getSafe(() => sidebarValues.address.province.id, '')
-  const countryId = getSafe(() => sidebarValues.address.country.id, null)
-  const hasProvinces = getSafe(() => sidebarValues.address.country.hasProvinces, false)
-  const zip = getSafe(() => sidebarValues.address.zip.zip, '')
-  const zipID = getSafe(() => sidebarValues.address.zip.id, '')
+  const provinceId = getSafe(() => sidebarValues.billToAddress.address.province.id, '')
+  const countryId = getSafe(() => sidebarValues.billToAddress.address.country.id, null)
+  const hasProvinces = getSafe(() => sidebarValues.billToAddress.address.country.hasProvinces, false)
+  const zip = getSafe(() => sidebarValues.billToAddress.address.zip.zip, '')
+  const zipID = getSafe(() => sidebarValues.billToAddress.address.zip.id, '')
 
   const initialValues = {
-    address: {
-      streetAddress: getSafe(() => sidebarValues.address.streetAddress, ''),
-      city: getSafe(() => sidebarValues.address.city, ''),
-      province: provinceId,
-      country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
-      zip
+    billToAddress: {
+      address: {
+        streetAddress: getSafe(() => sidebarValues.billToAddress.address.streetAddress, ''),
+        city: getSafe(() => sidebarValues.billToAddress.address.city, ''),
+        province: provinceId,
+        country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
+        zip
+      },
+      addressName: getSafe(() => sidebarValues.billToAddress.addressName, ''),
+      callAhead: getSafe(() => sidebarValues.billToAddress.callAhead, false),
+      closeTime: getSafe(() => sidebarValues.billToAddress.closeTime, ''),
+      contactEmail: getSafe(() => sidebarValues.billToAddress.contactEmail, ''),
+      contactName: getSafe(() => sidebarValues.billToAddress.contactName, ''),
+      contactPhone: getSafe(() => sidebarValues.billToAddress.contactPhone, ''),
+      deliveryNotes: getSafe(() => sidebarValues.billToAddress.deliveryNotes, ''),
+      forkLift: getSafe(() => sidebarValues.billToAddress.forkLift, false),
+      liftGate: getSafe(() => sidebarValues.billToAddress.liftGate, false),
+      readyTime: getSafe(() => sidebarValues.billToAddress.readyTime, ''),
     },
-    addressName: getSafe(() => sidebarValues.addressName, ''),
-    callAhead: getSafe(() => sidebarValues.callAhead, false),
-    closeTime: getSafe(() => sidebarValues.closeTime, ''),
-    contactEmail: getSafe(() => sidebarValues.contactEmail, ''),
-    contactName: getSafe(() => sidebarValues.contactName, ''),
-    contactPhone: getSafe(() => sidebarValues.contactPhone, ''),
-    deliveryNotes: getSafe(() => sidebarValues.deliveryNotes, ''),
-    forkLift: getSafe(() => sidebarValues.forkLift, false),
-    liftGate: getSafe(() => sidebarValues.liftGate, false),
-    readyTime: getSafe(() => sidebarValues.readyTime, ''),
+    name: getSafe(() => sidebarValues.name, ''),
 
-    zipID,
-    countryId,
-    hasProvinces,
-    province: getSafe(() => sidebarValues.address.province, '')
+
+    // ! ! temporary for testing
+    /*
+    warehouseAddresses: getSafe(() => sidebarValues.warehouseAddresses, []).map(war => {
+      const wProvinceId = getSafe(() => war.address.province.id, '')
+      const wCountryId = getSafe(() => war.address.country.id, null)
+      const wHasProvinces = getSafe(() => war.address.country.hasProvinces, false)
+      const wZip = getSafe(() => war.address.zip.zip, '')
+
+      return ({
+        addressName: getSafe(() => war.addressName, ''),
+        callAhead: getSafe(() => war.callAhead, false),
+        closeTime: getSafe(() => war.closeTime, ''),
+        contactEmail: getSafe(() => war.contactEmail, ''),
+        contactName: getSafe(() => war.contactName, ''),
+        contactPhone: getSafe(() => war.contactPhone, ''),
+        deliveryNotes: getSafe(() => war.deliveryNotes, ''),
+        forkLift: getSafe(() => war.forkLift, false),
+        liftGate: getSafe(() => war.liftGate, false),
+        readyTime: getSafe(() => war.readyTime, ''),
+        address: {
+          streetAddress: getSafe(() => war.address.streetAddress, ''),
+          city: getSafe(() => war.address.city, ''),
+          province: wProvinceId,
+          country: wCountryId ? JSON.stringify({ countryId: wCountryId, hasProvinces: wHasProvinces }) : '',
+          zip: wZip
+        }
+      })
+    })
+    */
+
+    //zipID,
+    //countryId,
+    //hasProvinces,
+    //province: getSafe(() => sidebarValues.address.province, '')
   }
   return initialValues
 }
@@ -73,32 +123,41 @@ export const getInitialFormValues = sidebarValues => {
  * postNewWarehouseRequest: (isCreate: boolean, requestData: Object<string, any>) => void}} helperFunctions
  * @param {number} id
  */
-export const submitHandler = async (values, actions, customerId) => {
+export const submitHandler = async (values, { setSubmitting }, props) => {
+  const { sidebarValues, updateCustomer, addCustomer, datagrid } = props
   let customerData = {
     ...values,
     billToAddress: {
       ...values.billToAddress,
       address: {
         ...values.billToAddress.address,
-        country: getSafe(() => JSON.parse(values.billToAddress.address.country).countryId, null),
-        province: getSafe(() => values.billToAddress.address.province.provinceId, null)
+        country: getSafe(() => JSON.parse(values.billToAddress.address.country).countryId, null)
       }
     },
-    warehouseAddresses: values.warehouseAddresses ? values.warehouseAddresses.map(warAddr => ({
+    warehouseAddresses: values.warehouseAddresses.length ? values.warehouseAddresses.map(warAddr => ({
       ...warAddr,
       address: {
         ...warAddr.address,
-        country: getSafe(() => JSON.parse(warAddr.address.country).countryId, null),
-        province: getSafe(() => warAddr.address.province.provinceId, null)
+        country: getSafe(() => JSON.parse(warAddr.address.country).countryId, null)
       }
     })) : null
   }
-
   removeEmpty(customerData)
 
-  if (customerId) {
-    actions.editCustomer(customerId, customerData)
-  } else {
-    actions.addCustomer(customerData)
+  console.log('!!!!!!!!!! submitHandler props', props)
+  console.log('!!!!!!!!!! submitHandler customerData', customerData)
+
+  try {
+    if (sidebarValues) {
+      const {value} = await updateCustomer(sidebarValues.id, customerData)
+      datagrid.updateRow(sidebarValues.id, () => value)
+    } else {
+      const {value} = await addCustomer(customerData)
+      datagrid.loadData()
+    }
+  } catch (e) {
+    console.error(e)
+  } finally {
+    setSubmitting(false)
   }
 }

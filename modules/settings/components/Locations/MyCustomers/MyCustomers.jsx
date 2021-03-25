@@ -14,6 +14,7 @@ import { COLUMNS } from './MyCustomers.constants'
 
 // Components
 import BasicButton from '../../../../../components/buttons/BasicButton'
+
 //import ErrorFocus from '../../../components/error-focus'
 
 
@@ -29,16 +30,114 @@ import {
 import * as Actions from '../../../actions'
 import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 
+import confirm from '~/components/Confirmable/confirm'
 
+const getWarehouseActions = (row, war, props) => {
+  const { datagrid, intl, openCustomerWarehouse, deleteCustomerWarehouse } = props
+  const { formatMessage } = intl
 
-export const getRows = (rows, countryCodes, actions) => {
+  return [
+    {
+      text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+      callback: () => {
+        openCustomerWarehouse(
+          { customerId: row.id, customerName: row.name },
+          { ...war, rawData: war },
+          props.datagrid
+        )
+        props.chatWidgetVerticalMoved(true)
+      }
+    },
+    {
+      text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+      callback: () =>
+        confirm(
+          formatMessage({ id: 'confirm.deleteWarehouse.title', defaultMessage: 'Delete Warehouse?' }),
+          formatMessage(
+            {
+              id: 'confirm.deleteWarehouse.content',
+              defaultMessage: `Do you really want to delete '${war.addressName}' Warehouse?`
+            },
+            { name: war.addressName }
+          )
+        ).then(async () => {
+          try {
+            await deleteCustomerWarehouse(row.id, war.id)
+            datagrid.loadData()
+            //datagrid.removeRow(war.id) // ! ! tohle nefunguje, musely by se prekopat data v rows
+          } catch (e) {
+            console.error(e)
+          }
+        })
+    }
+  ]
+}
+
+const getCustomersActions = (row, props) => {
+  const { datagrid, intl, openSidebar, deleteCustomer } = props
+  const { formatMessage } = intl
+
+  return [
+    {
+      text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+      callback: () => {
+        openSidebar(row)
+        props.chatWidgetVerticalMoved(true)
+      }
+    },
+    {
+      text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+      callback: () =>
+        confirm(
+          formatMessage({ id: 'confirm.deleteCustomer.title', defaultMessage: 'Delete Customer?' }),
+          formatMessage(
+            {
+              id: 'confirm.deleteCustomer.content',
+              defaultMessage: `Do you really want to delete '${row.name}' Customer?`
+            },
+            { name: row.name }
+          )
+        ).then(async () => {
+          try {
+            await deleteCustomer(row.id)
+            datagrid.loadData()
+            datagrid.removeRow(row.id)
+          } catch (e) {
+            console.error(e)
+          }
+        })
+    }
+  ]
+}
+
+export const getRows = (rows, props) => {
+  const { countryCodes, actions } = props // ?
+
   return rows.map(row => {
     const warehouses = getSafe(() => row.warehouseAddresses.length > 0, false) ? row.warehouseAddresses.map(war => {
       return ({
         id: `${row.id}_${war.id}`,
+        rawData: war,
         clsName: 'tree-table nested-row',
-        actions,
-        name: war.addressName,
+        actions, // ?
+        customerId: row.id,
+        customerName: row.name,
+        //name: war.addressName,
+        name: (
+          <ActionCell
+            row={row}
+            getActions={() => getWarehouseActions(row, war, props)}
+            content={war.addressName}
+            onContentClick={() => {
+              props.openCustomerWarehouse(
+                { customerId: row.id, customerName: row.name },
+                { ...war, rawData: war },
+                props.datagrid
+              )
+              props.chatWidgetVerticalMoved(true)
+            }}
+          />
+        ),
         streetAddress: war?.address?.streetAddress,
         city: war?.address?.city,
         provinceName: war?.address?.province?.name,
@@ -53,59 +152,43 @@ export const getRows = (rows, countryCodes, actions) => {
       actions
     }]
 
-    /*
-    if (warehouses.length) {
-      warehouses.push({
-        id: row.id + '__0',
-        clsName: 'tree-table nested-row button-row',
-
-        name: (
-          <div style={{ width: '100%', right: '0' }}>
-            'Add New button
-          </div>
-        )
-
-      })
-    }
-    */
-
     return {
       //...row,
       clsName: 'tree-table root-row',
       rawData: row,
       root: true,
-
-      treeRoot: true, // ?
-      offer: false,   // ?
-
-
+      treeRoot: true,
       id: row.id,
       name: (
-        <CustomerName>
-          <div>
-            {row.id + ' strasne dlouhe jmeno ktere se nevejde do sloupce'}
-          </div>
-          <div>
-            ikony
-          </div>
-        </CustomerName>
+        <ActionCell
+          row={row}
+          getActions={() => getCustomersActions(row, props)}
+          content={row.name}
+          onContentClick={e => {
+            e.stopPropagation()
+            e.preventDefault()
+            props.openSidebar(row)
+            props.chatWidgetVerticalMoved(true)
+          }}
+        />
       ),
+      customerId: row.id,
+      customerName: row.name,
       warehouses
     }
   })
 }
 
-
-const getRowDetail = ({ row }) => {
-  const { actions } = row
-  console.log('AAA', actions)
+const getRowDetail = (row, props) => {
+  console.log('AAA row', row)
+  console.log('AAA props', props)
   return (
     <div>
       <SubrowButtons>
         <BasicButton floatRight={true}
                      onClick={() => {
-                       actions.openCustomerWarehouse({ id: row.id.split("_")[0] }, actions.datagrid)
-                       actions.chatWidgetVerticalMoved(true)
+                       props.openCustomerWarehouse(row, null, props.datagrid)
+                       props.chatWidgetVerticalMoved(true)
                      }}>
           <FormattedMessage id='global.addNew' defaultMessage='Add New' />
         </BasicButton>
@@ -115,7 +198,6 @@ const getRowDetail = ({ row }) => {
 }
 
 const MyCustomers = props => {
-  const [tmp, set ] = useState(false) // ! !
   const [expandedRowIds, setExpandedRowIds] = useState([])
   const [expandedRowIdsSecondary, setExpandedRowIdsSecondary] = useState([])
 
@@ -123,8 +205,6 @@ const MyCustomers = props => {
     datagrid,
     loading,
     countryCodes,
-
-
   } = props
 
   // Similar to call componentDidMount:
@@ -145,13 +225,13 @@ const MyCustomers = props => {
         {...datagrid.tableProps}
         loading={datagrid.loading || loading}
         columns={COLUMNS}
-        rows={getRows(datagrid.rows, countryCodes, {openCustomerWarehouse: props.openCustomerWarehouse, chatWidgetVerticalMoved: props.chatWidgetVerticalMoved, datagrid})}
+        rows={getRows(datagrid.rows, props)}
         rowSelection={false}
         showSelectionColumn={false}
         treeDataType={true}
         tableTreeColumn={'name'}
 
-        rowDetail={getRowDetail}
+        rowDetail={({ row })=> getRowDetail(row, props)}
         rowDetailTypeSecondary={true}
         hideGroupCheckboxes={true}
         isToggleCellComponent={false}
@@ -183,7 +263,8 @@ const MyCustomers = props => {
 
 function mapStateToProps(store) {
   return {
-    countryCodes: store.phoneNumber.phoneCountryCodes
+    countryCodes: store.phoneNumber.phoneCountryCodes,
+    loading: store.settings.loading
   }
 }
 

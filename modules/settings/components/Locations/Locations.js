@@ -21,8 +21,8 @@ import BranchesTable from './Branches/BranchesTable'
 import PickUpLocationsSidebar from './Warehouses/WarehousesSidebar/WarehousesSidebar'
 import BranchesSidebar from './Branches/BranchesSidebar/BranchesSidebar'
 import MyCustomers from './MyCustomers/MyCustomers'
-import DeliveryLocationsSidebar from './MyCustomers/DeliveryLocationsSidebar'
 import MyCustomersSidebar from './MyCustomers/MyCustomersSidebar/MyCustomersSidebar'
+import WarehouseSidebar from './MyCustomers/WarehouseSidebar/WarehouseSidebar'
 
 const SettingsGrid = styled(Grid)`
   flex-direction: column !important;
@@ -87,7 +87,7 @@ class Locations extends Component {
     }
 
     const popupForm = {
-      'my-customers': isOpenSubSidebar ? <DeliveryLocationsSidebar/> : <MyCustomersSidebar />,
+      'my-customers': isOpenSubSidebar ? <WarehouseSidebar/> : <MyCustomersSidebar />,
       'pick-up-locations': <PickUpLocationsSidebar />,
       branches: <BranchesSidebar />
     }

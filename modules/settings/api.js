@@ -334,6 +334,7 @@ export default {
       .patch(`/prodex/api/customers/${customerId}`, customerData)
       .then(response => response.data)
       .catch(err => err),
+  deleteCustomer: id => api.delete(`/prodex/api/customers/${id}`),
   addCustomerWarehouse: (customerId, warehouse) =>
     api
       .post(`/prodex/api/customers/warehouses?customerId=${customerId}`, warehouse)
@@ -343,5 +344,7 @@ export default {
     api
       .patch(`/prodex/api/customers/warehouses?customerId=${customerId}&warehouseId=${warehouseId}`, warehouse)
       .then(response => response.data)
-      .catch(err => err)
+      .catch(err => err),
+  deleteCustomerWarehouse: (customerId, warehouseId) =>
+    api.delete(`/prodex/api/customers/warehouses?customerId=${customerId}&warehouseId=${warehouseId}`)
 }
