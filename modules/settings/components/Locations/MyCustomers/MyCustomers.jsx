@@ -111,7 +111,7 @@ const getCustomersActions = (row, props) => {
 }
 
 export const getRows = (rows, props) => {
-  const { countryCodes, actions } = props // ?
+  const { countryCodes, actions, expandedRowIds } = props // ?
 
   return rows.map(row => {
     const warehouses = getSafe(() => row.warehouseAddresses.length > 0, false) ? row.warehouseAddresses.map(war => {
@@ -154,7 +154,7 @@ export const getRows = (rows, props) => {
 
     return {
       //...row,
-      clsName: 'tree-table root-row',
+      clsName: `tree-table root-row${expandedRowIds.includes(row.id) ? ' opened' : ''}`,
       rawData: row,
       root: true,
       treeRoot: true,
@@ -219,13 +219,13 @@ const MyCustomers = props => {
   }, [/* variableName */])
 
   return (
-    <div className='flex stretched customers-warehouses-wrapper tree-wrapper'>
+    <div className={`flex stretched customers-warehouses-wrapper tree-wrapper${expandedRowIds.length ? ' opened-rows' : ''}`}>
       <ProdexGrid
         tableName='locations_my_customers'
         {...datagrid.tableProps}
         loading={datagrid.loading || loading}
         columns={COLUMNS}
-        rows={getRows(datagrid.rows, props)}
+        rows={getRows(datagrid.rows, { ...props, expandedRowIds })}
         rowSelection={false}
         showSelectionColumn={false}
         treeDataType={true}

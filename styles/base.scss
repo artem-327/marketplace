@@ -1884,6 +1884,13 @@ i.file {
         display: none !important;
       }
 
+      .customers-warehouses-wrapper & {
+
+        tr th {
+          box-shadow: 0 0 0 4px #f8f9fb !important;
+        }
+      }
+
       tr {
         th {
           box-sizing: content-box;
@@ -2290,6 +2297,7 @@ i.file {
           padding-top: 7px !important;
           padding-bottom: 15px !important;
           background: #fff !important;
+          box-shadow: 0 20px 20px -8px rgba(0, 0, 0, 0.15);
 
           &:after {
             content: "";
@@ -2351,6 +2359,22 @@ i.file {
               display: none !important;
             }
           }
+        }
+      }
+
+      .customers-warehouses-wrapper.opened-rows & {
+
+        &.root-row td {
+          background-color: #edeef2 !important;
+        }
+
+        &.root-row.opened td {
+          background-color: #fff !important;
+        }
+
+        &.root-row td.p-0,
+        &.root-row.opened td.p-0 {
+          background-color: transparent !important;
         }
       }
 
