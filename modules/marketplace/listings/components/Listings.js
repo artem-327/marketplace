@@ -384,12 +384,12 @@ class Listings extends Component {
   }
 
   tableRowClicked = (clickedId, isHoldRequest = false, openInfo = false) => {
+    const poId = parseInt(clickedId.split('_')[0])
     const { getProductOffer, sidebarChanged, isProductInfoOpen, closePopup } = this.props
-    let { isOpen, id } = this.props.sidebar
-    getProductOffer(clickedId)
+    getProductOffer(poId)
 
     if (isProductInfoOpen) closePopup()
-    sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
+    sidebarChanged({ isOpen: true, id: poId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
   getActions = row => {
