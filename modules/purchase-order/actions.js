@@ -2,10 +2,11 @@ import * as AT from './action-types'
 import * as api from './api'
 import { generateQueryString } from '~/utils/functions'
 
-export const getProductOffer = (id, isEdit = false) => ({
+export const getProductOffer = (id, sellerId = null, isEdit = false) => ({
   type: AT.OFFER_FETCH,
   async payload() {
-    let productOffer = await api.getProductOffer(id)
+    const params = sellerId ? `${id}?sellerId=${sellerId}` : `${id}`
+    let productOffer = await api.getProductOffer(params)
 
     return {
       productOffer,

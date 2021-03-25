@@ -21,7 +21,7 @@ import {
   DivIconsWrapper,
   DivIconRectangle,
   IconTrash2,
-  IconEdit2,
+  IconEdit2
 } from '../StyledComponents'
 
 // Services
@@ -46,7 +46,7 @@ const CartItem = props => {
 
   const editCart = cartItem => {
     let { id, pkgAmount } = cartItem
-    props.getProductOffer(cartItem.productOffer.id, true)
+    props.getProductOffer(cartItem?.productOffer?.id, cartItem?.productOffer?.sellerId, true)
     props.sidebarChanged({ isOpen: true, id, pkgAmount })
   }
 
@@ -76,7 +76,7 @@ const CartItem = props => {
                 />
               </DivIconRectangle>
               <DivIconRectangle disabled={editDisabled}>
-                <IconEdit2 disabled={editDisabled} onClick={() => editDisabled ? {} : editCart(item)}/>
+                <IconEdit2 disabled={editDisabled} onClick={() => (editDisabled ? {} : editCart(item))} />
               </DivIconRectangle>
             </DivIconsWrapper>
           </GridColumn>
