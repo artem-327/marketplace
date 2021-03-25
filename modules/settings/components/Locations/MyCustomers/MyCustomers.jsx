@@ -219,7 +219,7 @@ const MyCustomers = props => {
   }, [/* variableName */])
 
   return (
-    <div className='flex stretched tree-wrapper'>
+    <div className='flex stretched customers-warehouses-wrapper tree-wrapper'>
       <ProdexGrid
         tableName='locations_my_customers'
         {...datagrid.tableProps}
