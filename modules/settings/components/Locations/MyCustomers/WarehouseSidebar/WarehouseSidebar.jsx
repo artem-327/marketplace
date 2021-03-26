@@ -135,7 +135,13 @@ const WarehouseSidebar = props => {
                     noBorder
                     required
                     displayHeader={false}
-                    values={values}
+                    values={{
+                      ...values,
+                      address: {
+                        ...values.address,
+                        zip: JSON.stringify(values.address.zip)
+                      }
+                    }}
                     setFieldValue={setFieldValue}
                   />
                   <FormGroup widths='equal' data-test='settings_branches_popup_name_inp'>
