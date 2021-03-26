@@ -10,7 +10,7 @@ import { ChevronDown } from 'react-feather'
 
 // Components
 import BasicButton from '../../../../../../components/buttons/BasicButton'
-import { AddressForm } from '~/modules/address-form'
+import { AddressForm } from '../../../../../address-form'
 import { PhoneNumber } from '../../../../../phoneNumber'
 import { Required } from "../../../../../../components/constants/layout"
 
@@ -30,17 +30,20 @@ import {
   SegmentTopSidebar,
   DivTitle,
   DimmerStyled,
-
   DivSectionHeader,
-
   DivFlexContent,
   SegmentCustomContent,
-  DivBottomSidebar,
-
-
-
+  DivBottomSidebar
 } from '../MyCustomers.styles'
 import { CustomHighSegment } from "../../Branches/BranchesSidebar/BranchesSidebar.styles"
+import {
+  DivBottomButton,
+  BasicButtonStyled,
+  DivIconWrapper,
+  Trash2Icon,
+  DivRowFlex,
+  DivInputWrapper
+} from './MyCustomersSidebar.styles'
 
 // Constants
 import { INITIAL_VALUES, INIT_VALUES_WAREHOUSE } from './MyCustomersSidebar.constants'
@@ -62,8 +65,8 @@ const MyCustomersSidebar = props => {
       validationSchema={formValidation()}
       enableReinitialize
       onReset={() => {
-        props.chatWidgetVerticalMoved(false)
         props.closeSidebar()
+        props.chatWidgetVerticalMoved(false)
       }}
       onSubmit={submitHandler}
       loading={props.loading}>
@@ -71,17 +74,16 @@ const MyCustomersSidebar = props => {
       {formikProps => {
         const { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting, handleSubmit } = formikProps
 
-        console.log('!!!!!!!!!! aaaaa values', values)
-
         return (
           <FormCustom autoComplete='off'>
-            <DimmerStyled>
+            <DimmerStyled
               active={true}
               onClickOutside={() => {
-                props.chatWidgetVerticalMoved(false)
                 props.closeSidebar()
-            }}
-            </DimmerStyled>
+                props.chatWidgetVerticalMoved(false)
+              }}
+              page
+            />
             <SidebarFlex
               visible={true}
               width='very wide'
@@ -95,8 +97,8 @@ const MyCustomersSidebar = props => {
                 </Dimmer>
                 <CustomHighSegment
                   onClick={() => {
-                    props.chatWidgetVerticalMoved(false)
                     props.closeSidebar()
+                    props.chatWidgetVerticalMoved(false)
                   }}
                   basic>
                   <DivTitle>
@@ -228,24 +230,37 @@ const MyCustomersSidebar = props => {
                         return (
                           <div key={index}>
                             {index > 0 && (<Divider />)}
-                            <FormGroup widths='equal' data-test='add_warehouse_sidebar_name_inp'>
-                              <Input
-                                type='text'
-                                label={
-                                  <>
-                                    <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name' />
-                                    <Required />
-                                  </>
-                                }
-                                name={`warehouseAddresses[${index}].addressName`}
-                                inputProps={{
-                                  placeholder: formatMessage({
-                                    id: 'settings.customers.enterWarehouseName',
-                                    defaultMessage: 'Enter Warehouse Name'
-                                  })
-                                }}
-                              />
-                            </FormGroup>
+                            <DivRowFlex>
+                              <DivInputWrapper>
+                                <Input
+                                  type='text'
+                                  label={
+                                    <>
+                                      <FormattedMessage id='settings.warehouseName' defaultMessage='Warehouse Name' />
+                                      <Required />
+                                    </>
+                                  }
+                                  name={`warehouseAddresses[${index}].addressName`}
+                                  inputProps={{
+                                    placeholder: formatMessage({
+                                      id: 'settings.customers.enterWarehouseName',
+                                      defaultMessage: 'Enter Warehouse Name'
+                                    })
+                                  }}
+                                />
+                              </DivInputWrapper>
+                              {index > 0 && (
+                                <DivIconWrapper>
+                                  <Trash2Icon
+                                    onClick={() => {
+                                      let newWarehouseAddresses = values.warehouseAddresses.slice()
+                                      newWarehouseAddresses.splice(index, 1)
+                                      setFieldValue('warehouseAddresses', newWarehouseAddresses)
+                                    }}
+                                  />
+                                </DivIconWrapper>
+                              )}
+                            </DivRowFlex>
                             <AddressForm
                               noBorder
                               required
@@ -308,28 +323,19 @@ const MyCustomersSidebar = props => {
                           </div>
                         )})
                       }
-                      <BasicButton
-                        onClick={() => {
-                          let newWarehouseAddresses = values.warehouseAddresses
-                          newWarehouseAddresses.push(INIT_VALUES_WAREHOUSE)
-                          setFieldValue('warehouseAddresses', newWarehouseAddresses)
-
-
-                          /*
-                          To delete warehouse from array:
-
-                          let newWarehouseAddresses = values.warehouseAddresses.slice()
-                          newWarehouseAddresses.splice(index, 1)
-                          setFieldValue('warehouseAddresses', newWarehouseAddresses)
-
-                           */
-
-                        }}
-                        data-test='settings_locations_sidebar_addWarehouse_btn'>
-                        <FormattedMessage id='settings.AddWarehouse' defaultMessage='Add Warehouse'>
-                          {text => text}
-                        </FormattedMessage>
-                      </BasicButton>
+                      <DivBottomButton>
+                        <BasicButtonStyled
+                          onClick={() => {
+                            let newWarehouseAddresses = values.warehouseAddresses
+                            newWarehouseAddresses.push(INIT_VALUES_WAREHOUSE)
+                            setFieldValue('warehouseAddresses', newWarehouseAddresses)
+                          }}
+                          data-test='settings_locations_sidebar_addWarehouse_btn'>
+                          <FormattedMessage id='settings.AddWarehouse' defaultMessage='Add Warehouse'>
+                            {text => text}
+                          </FormattedMessage>
+                        </BasicButtonStyled>
+                      </DivBottomButton>
                     </>
                   )}
                 </SegmentCustomContent>
@@ -338,8 +344,8 @@ const MyCustomersSidebar = props => {
                 <BasicButton
                   noBorder
                   onClick={() => {
-                    props.chatWidgetVerticalMoved(false)
                     props.closeSidebar()
+                    props.chatWidgetVerticalMoved(false)
                   }}
                   data-test='settings_branches_popup_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -357,8 +363,6 @@ const MyCustomersSidebar = props => {
                       } else {
                         // No errors found
                         await submitHandler(values, formikProps, props)
-                        props.chatWidgetVerticalMoved(false)
-                        props.closeSidebar()
                       }
                     })
                   }}

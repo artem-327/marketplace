@@ -20,7 +20,6 @@ import { Required } from '../../../../../../components/constants/layout'
 import ErrorFocus from '../../../../../../components/error-focus'
 import BasicButton from '../../../../../../components/buttons/BasicButton'
 
-
 // Styles
 import {
   FormCustom,
@@ -60,8 +59,6 @@ const WarehouseSidebar = props => {
       loading={false}>
       {formikProps => {
         const { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting } = formikProps
-
-        console.log('!!!!!!!!!! aaaaa values', values)
 
         return (
           <FormCustom autoComplete='off'>
