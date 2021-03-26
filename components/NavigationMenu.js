@@ -19,7 +19,8 @@ import {
   Coffee,
   ChevronDown,
   ChevronUp,
-  Globe
+  Globe,
+  Menu as MenuIcon
 } from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -60,10 +61,11 @@ class Navigation extends Component {
     settings:
       getSafe(() => Router.router.pathname === '/settings/company-details', false) ||
       getSafe(() => Router.router.pathname === '/settings/system-settings', false) ||
+      getSafe(() => Router.router.pathname === '/settings/trade-criteria', false) ||
       getSafe(() => Router.router.pathname === '/settings/users', false) ||
       getSafe(() => Router.router.pathname === '/settings/locations', false) ||
       getSafe(() => Router.router.pathname === '/settings/bank-accounts', false) ||
-      getSafe(() => Router.router.pathname === '/settings/logistics', false) ||
+      // getSafe(() => Router.router.pathname === '/settings/logistics', false) ||
       getSafe(() => Router.router.pathname === '/settings/documents', false),
     orders:
       getSafe(() => Router.router.pathname === '/orders/sales', false) ||
@@ -102,6 +104,7 @@ class Navigation extends Component {
     inventory:
       getSafe(() => Router.router.pathname === '/inventory/my-listings', false) ||
       getSafe(() => Router.router.pathname === '/inventory/my-products', false) ||
+      getSafe(() => Router.router.pathname === '/inventory/shared-listings', false) ||
       getSafe(() => Router.router.pathname === '/inventory/global-price-book', false),
     marketplace:
       getSafe(() => Router.router.pathname === '/marketplace/listings', false) ||
@@ -109,7 +112,11 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/marketplace/bids-sent', false) ||
       getSafe(() => Router.router.pathname === '/marketplace/bids-received', false),
     myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
-    alerts: getSafe(() => Router.router.pathname === '/alerts', false)
+    alerts: getSafe(() => Router.router.pathname === '/alerts', false),
+    credentials:
+      getSafe(() => Router.router.pathname === '/warehouse-credentials/all', false) ||
+      getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false),
+    activeNetworkStatus: 'ALL'
   }
 
   componentDidMount() {
@@ -254,9 +261,10 @@ class Navigation extends Component {
       companiesTabsNames,
       productsTabsNames,
       alertTab,
-      requestedNetworks,
       pendingNetworks,
-      activeNetworks,
+      connectedNetworks,
+      declinedNetworks,
+      disconnectedNetworks,
       allNetworks
     } = this.props
 
@@ -272,7 +280,8 @@ class Navigation extends Component {
       marketplace,
       wantedBoard,
       myNetwork,
-      alerts
+      alerts,
+      credentials
     } = this.state
 
     const MenuLink = withRouter(({ router: { pathname }, to, children, tab, className, dataTest }) => {
@@ -290,17 +299,18 @@ class Navigation extends Component {
       )
     })
 
-    const DivItem = ({ children, dataTest, networkStatus, pointer }) => {
+    const DivItem = ({ children, dataTest, networkStatus, pointer, status }) => {
       return (
         <DivNavItem
           pointer={pointer}
           data-test={dataTest}
+          $highlighted={status === this.state.activeNetworkStatus}
           onClick={async e => {
             e.stopPropagation()
             if (typeof networkStatus === 'function') {
               await networkStatus()
             }
-            this.setState({ myNetwork: true })
+            this.setState({ myNetwork: true, activeNetworkStatus: status })
           }}>
           {children}
         </DivNavItem>
@@ -352,6 +362,12 @@ class Navigation extends Component {
                 to='/inventory/my-products'
                 dataTest='navigation_menu_inventory_my_products_drpdn'>
                 {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={MenuLink}
+                to='/inventory/shared-listings'
+                dataTest='navigation_menu_inventory_shared_listings_drpdn'>
+                {formatMessage({ id: 'navigation.inventorySharedListings', defaultMessage: 'Shared Listings' })}
               </Dropdown.Item>
               {isCompanyAdmin && (
                 <Dropdown.Item
@@ -433,6 +449,7 @@ class Navigation extends Component {
                 as={DivItem}
                 pointer={true}
                 dataTest='navigation_menu_my_Network_all_drpdn'
+                status={NETWORK_STATUS.ALL}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ALL })}>
                 {formatMessage(
                   {
@@ -445,6 +462,7 @@ class Navigation extends Component {
               <Dropdown.Item
                 as={DivItem}
                 pointer={true}
+                status={NETWORK_STATUS.ACTIVE}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ACTIVE })}
                 dataTest='navigation_menu_my_network_active_drpdn'>
                 {formatMessage(
@@ -452,12 +470,13 @@ class Navigation extends Component {
                     id: 'navigation.myNetworkActive',
                     defaultMessage: 'Active ({value})'
                   },
-                  { value: activeNetworks }
+                  { value: connectedNetworks }
                 )}
               </Dropdown.Item>
               <Dropdown.Item
                 as={DivItem}
                 pointer={true}
+                status={NETWORK_STATUS.PENDING}
                 networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.PENDING })}
                 dataTest='navigation_menu_my_network_pending_drpdn'>
                 {formatMessage(
@@ -470,14 +489,30 @@ class Navigation extends Component {
               </Dropdown.Item>
               <Dropdown.Item
                 as={DivItem}
-                //networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.REQUESTED })}
-                dataTest='navigation_menu_my_network_requested_drpdn'>
+                pointer={true}
+                status={NETWORK_STATUS.DECLINED}
+                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DECLINED })}
+                dataTest='navigation_menu_my_network_declined_drpdn'>
                 {formatMessage(
                   {
-                    id: 'navigation.myNetworkRequested',
-                    defaultMessage: 'Requested ({value})'
+                    id: 'navigation.myNetworkDeclined',
+                    defaultMessage: 'Declined ({value})'
                   },
-                  { value: requestedNetworks }
+                  { value: declinedNetworks }
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                as={DivItem}
+                pointer={true}
+                status={NETWORK_STATUS.DISCONNECTED}
+                networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DISCONNECTED })}
+                dataTest='navigation_menu_my_network_disconnected_drpdn'>
+                {formatMessage(
+                  {
+                    id: 'navigation.myNetworkDisconnected',
+                    defaultMessage: 'Disconnected ({value})'
+                  },
+                  { value: disconnectedNetworks }
                 )}
               </Dropdown.Item>
             </PerfectScrollbar>
@@ -623,13 +658,14 @@ class Navigation extends Component {
                       dataTest='navigation_settings_bank_accounts_drpdn'>
                       {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                     </Dropdown.Item>
-                    <Dropdown.Item
+                    {/* Commented based on https://bluepallet.atlassian.net/browse/DT-227 */}
+                    {/* <Dropdown.Item
                       as={MenuLink}
                       to='/settings/logistics'
                       tab='logistics'
                       dataTest='navigation_settings_logistics_drpdn'>
                       {formatMessage({ id: 'navigation.logistics', defaultMessage: 'Logistics' })}
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings/documents'
@@ -797,6 +833,43 @@ class Navigation extends Component {
             </DropdownItem>
           </>
         )}
+        {isAdmin && (
+          <DropdownItem
+            icon={<MenuIcon size={22} />}
+            text={
+              <>
+                <FormattedMessage id='navigation.credentials' defaultMessage='Warehouse Credentials' />
+                {credentials ? <ChevronUp /> : <ChevronDown />}
+              </>
+            }
+            className={credentials ? 'opened' : null}
+            open={credentials.toString()}
+            onClick={(data, e) => {
+              this.toggleOpened('credentials', '/warehouse-credentials/all')
+            }}
+            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+            refId={'credentials'}
+            data-test='navigation_menu_credentials_drpdn'>
+            <Dropdown.Menu data-test='navigation_menu_credentials_menu'>
+              <PerfectScrollbar>
+                <Dropdown.Item
+                  key={0}
+                  as={MenuLink}
+                  to={`/warehouse-credentials/all`}
+                  dataTest={'navigation_credentials_all_drpdn'}>
+                  {formatMessage({ id: 'navigation.credentials.all', defaultMessage: 'All' })}
+                </Dropdown.Item>
+                <Dropdown.Item
+                  key={0}
+                  as={MenuLink}
+                  to={`/warehouse-credentials/pending`}
+                  dataTest={'navigation_credentials_pending_drpdn'}>
+                  {formatMessage({ id: 'navigation.credentials.pending', defaultMessage: 'Pending' })}
+                </Dropdown.Item>
+              </PerfectScrollbar>
+            </Dropdown.Menu>
+          </DropdownItem>
+        )}
         {isAdmin ? (
           <>
             <DropdownItem
@@ -881,9 +954,10 @@ export default withAuth(
         alertTab: store?.alerts?.topMenuTab,
         alertsCats: store?.alerts?.categories,
         allNetworks: store?.myNetwork?.all,
-        activeNetworks: store?.myNetwork?.active,
-        pendingNetworks: store?.myNetwork?.pending,
-        requestedNetworks: store?.myNetwork?.requested
+        connectedNetworks: store?.myNetwork?.connected,
+        pendingNetworks: store?.myNetwork?.pending + getSafe(() => store?.myNetwork?.requested, 0),
+        declinedNetworks: store?.myNetwork?.declined,
+        disconnectedNetworks: store?.myNetwork?.disconnected
       }),
       {
         triggerSystemSettingsModal,

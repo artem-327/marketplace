@@ -192,12 +192,12 @@ export const getFormattedAddress = address => {
 
 export function getLocationString(productOffer) {
   try {
-    var location = productOffer.warehouse.deliveryAddress.address
+    var location = productOffer?.warehouse?.deliveryAddress?.address
   } catch (e) {
     return ''
   }
 
-  return `${location.province ? `${location.province.abbreviation},` : ''} ${location.country.name}`
+  return `${location?.province ? `${location?.province?.abbreviation},` : ''} ${location?.country?.name}`
 }
 
 export function addFirstTier(productOffer) {
@@ -227,5 +227,46 @@ export function getPricing(offerDetail, quantity) {
     }
 
     return { quantityFrom: offerDetail.minPkg, price: tiers[0].pricePerUOM }
+  }
+}
+
+export function getMimeType(documentName) {
+  const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+  switch (documentExtension) {
+    case 'doc':
+      return 'application/msword'
+    case 'docx':
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    case 'ppt':
+      return 'application/vnd.ms-powerpoint'
+    case 'pptx':
+      return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    case 'xls':
+      return 'application/vnd.ms-excel'
+    case 'xlsx':
+      return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    case 'gif':
+      return 'image/gif'
+    case 'png':
+      return 'image/png'
+    case 'jpg':
+    case 'jpeg':
+      return 'image/jpeg'
+    case 'svg':
+      return 'image/svg'
+    case 'pdf':
+      return 'application/pdf'
+    case '7z':
+      return 'application/x-7z-compressed'
+    case 'zip':
+      return 'application/zip'
+    case 'tar':
+      return 'application/x-tar'
+    case 'rar':
+      return 'application/x-rar-compressed'
+    case 'xml':
+      return 'application/xml'
+    default:
+      return 'text/plain'
   }
 }

@@ -1,7 +1,6 @@
 import * as Yup from 'yup'
 import { addressValidationSchema, errorMessages, phoneValidation } from '~/constants/yupValidation'
-import { removeEmpty, getSafe } from "~/utils/functions"
-
+import { removeEmpty, getSafe } from '~/utils/functions'
 
 export const getValidationScheme = Yup.lazy(values => {
   return Yup.object().shape({
@@ -12,11 +11,16 @@ export const getValidationScheme = Yup.lazy(values => {
     address: addressValidationSchema()
   })
 })
-
+/**
+ * @category Purchase Order
+ * @method
+ * @param {Object<string, any>} values Values for initial address form.
+ * @returns {Object<string, any>} Returns object for initial address form.
+ */
 export const getInitValues = values => {
   const address = values.fullAddress.address
 
-  return ({
+  return {
     ...values.fullAddress,
     taxId: values.taxId,
     addressName: values.name,
@@ -26,11 +30,17 @@ export const getInitValues = values => {
       zip: address.zip.zip,
       province: getSafe(() => address.province.id)
     }
-  })
+  }
 }
-
+/**
+ * Creates new delivery address.
+ * @category Purchase Order
+ * @method
+ * @param {Object<string, any>} props
+ * @param {Object<string, any>} formikProps
+ */
 export const handleSubmit = async (props, formikProps) => {
-  const { onClose, onUpdateAddress, isWarehouse, popupValues } = props
+  const { onUpdateAddress, isWarehouse, popupValues, setIsOpenAddAddress, chatWidgetVerticalMoved } = props
   const { values } = formikProps
 
   let payload = {}
@@ -69,13 +79,13 @@ export const handleSubmit = async (props, formikProps) => {
 
     let response
     if (isWarehouse) {
-      if(popupValues) {
+      if (popupValues) {
         response = await props.updateWarehouse(payload, popupValues.id)
       } else {
         response = await props.postNewWarehouse(true, payload)
       }
     } else {
-      if(popupValues) {
+      if (popupValues) {
         response = await props.updateDeliveryAddress(payload, popupValues.id)
       } else {
         response = await props.postNewDeliveryAddress(payload)
@@ -83,9 +93,10 @@ export const handleSubmit = async (props, formikProps) => {
     }
 
     if (response.value) {
-      onUpdateAddress(response.value)
-      onClose()
+      await onUpdateAddress(response.value)
     }
+    setIsOpenAddAddress(false)
+    chatWidgetVerticalMoved(false)
   } catch (e) {
     console.error(e)
   } finally {

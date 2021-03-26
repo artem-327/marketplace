@@ -70,12 +70,7 @@ const AddEditCarrier = props => {
                   <GridColumn width={6}>
                   <PriceInput
                     name='priceMarkup'
-                    label={
-                      <>
-                        {formatMessage({ id: 'carrier.price', defaultMessage: 'Price'})}
-                        <Required />
-                      </>
-                    }
+                    label={formatMessage({ id: 'carrier.priceMarkup', defaultMessage: 'Price Markup'})}
                     inputProps={{
                       placeholder: formatMessage({ id: 'carrier.enterPrice', label: 'Enter Price' }),
                       min: 0.001,

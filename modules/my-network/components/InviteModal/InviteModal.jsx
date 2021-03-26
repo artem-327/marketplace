@@ -23,7 +23,8 @@ const InviteModal = props => {
     isError,
     loading,
     detailCompany,
-    buttonActionsDetailRow
+    buttonActionsDetailRow,
+    openGlobalAddForm
   } = props
 
   return (
@@ -31,6 +32,7 @@ const InviteModal = props => {
       size={detailCompany ? 'large' : 'tiny'}
       open={open}
       onClose={() => {
+        typeof openGlobalAddForm === 'function' && openGlobalAddForm('')
         onClose()
         setValue('')
       }}
@@ -44,7 +46,11 @@ const InviteModal = props => {
       <Modal.Content>
         {detailCompany ? (
           <>
-            <DetailRow row={detailCompany} buttonActionsDetailRow={buttonActionsDetailRow} />
+            <DetailRow
+              row={detailCompany}
+              buttonActionsDetailRow={buttonActionsDetailRow}
+              openGlobalAddForm={openGlobalAddForm}
+            />
           </>
         ) : (
           <>
@@ -79,8 +85,9 @@ const InviteModal = props => {
       {!detailCompany && (
         <Modal.Actions>
           <BasicButton
-            noborder
+            noBorder
             onClick={() => {
+              typeof openGlobalAddForm === 'function' && openGlobalAddForm('')
               onClose()
               setValue('')
             }}>
@@ -89,12 +96,12 @@ const InviteModal = props => {
             </b>
           </BasicButton>
           <BasicButton
-            noborder
+            noBorder
             textcolor='#ffffff !important'
             background='#00c7f9 !important'
-            onClick={() => {
+            onClick={async () => {
               try {
-                search(value)
+                await search(value)
               } catch (err) {
                 console.error(err)
               }
@@ -116,7 +123,8 @@ InviteModal.propTypes = {
   onClose: func,
   search: func,
   detailCompany: object,
-  buttonActionsDetailRow: func
+  buttonActionsDetailRow: func,
+  openGlobalAddForm: func
 }
 
 InviteModal.defaultProps = {
@@ -126,7 +134,8 @@ InviteModal.defaultProps = {
   onClose: () => {},
   search: () => {},
   detailCompany: null,
-  buttonActionsDetailRow: () => {}
+  buttonActionsDetailRow: () => {},
+  openGlobalAddForm: null
 }
 
 export default injectIntl(InviteModal)

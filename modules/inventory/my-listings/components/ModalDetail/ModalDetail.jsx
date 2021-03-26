@@ -34,9 +34,9 @@ import { SelectTemplates } from '../ModalsTds/ModalsTds.styles'
 import ErrorFocus from '../../../../../components/error-focus'
 
 //Services
-import { validationScheme } from './ModalDetail.services'
+import { validationScheme, getEditValues } from './ModalDetail.services'
 import { getSafe, generateToastMarkup, uniqueArrayByKey } from '../../../../../utils/functions'
-import { getLocaleDateFormat, getStringISODate } from '../../../../../components/date-format'
+import { getStringISODate } from '../../../../../components/date-format'
 import { onClickBroadcast } from '../../MyListings.services'
 
 //Styles
@@ -73,7 +73,10 @@ import {
 //Constants
 import { INIT_VALUES, OPTIONS_YES_NO, LIST_CONFORMING, OPTIONS_BROADCAST } from './ModalDetail.constants'
 import { INDEX_TAB_PRICE_BOOK } from '../../MyListings.constants'
-
+/**
+ * @component
+ * @category Inventory - My Listings
+ */
 class ModalDetail extends Component {
   state = {
     tabs: ['edit', 'tds', 'documents', 'priceBook', 'priceTiers'],
@@ -145,7 +148,7 @@ class ModalDetail extends Component {
     this.setState(
       {
         detailValues: data.value.data,
-        initValues: { ...INIT_VALUES, ...this.getEditValues(data.value.data) }
+        initValues: { ...INIT_VALUES, ...getEditValues(data.value.data) }
       },
       () => this.resetForm()
     )
@@ -406,7 +409,10 @@ class ModalDetail extends Component {
       })
     }
 
-    await new Promise(resolve => this.setState({ edited: false }, resolve))
+    await new Promise(resolve => {
+      this.setState({ edited: false })
+      resolve()
+    })
 
     setSubmitting(false)
     let props = {}
@@ -457,7 +463,7 @@ class ModalDetail extends Component {
 
         this.setState({
           detailValues: { ...data, id: isEdit ? data.id : null },
-          initValues: { ...INIT_VALUES, ...this.getEditValues(data) },
+          initValues: { ...INIT_VALUES, ...getEditValues(data) },
           edited: false
         })
         sendSuccess = true
@@ -481,7 +487,7 @@ class ModalDetail extends Component {
               !openGlobalAddForm && datagrid.updateRow(entityId, () => po.value)
               this.setState({
                 detailValues: po.value,
-                initValues: { ...INIT_VALUES, ...this.getEditValues(po.value) },
+                initValues: { ...INIT_VALUES, ...getEditValues(po.value) },
                 edited: false
               })
               sendSuccess = true
@@ -621,77 +627,7 @@ class ModalDetail extends Component {
     }
   }
   hasEdited = values => {
-    return !_.isEqual(this.getEditValues(this.state.detailValues), values)
-  }
-
-  getEditValues = detailValues => {
-    let tdsFields = null
-    //Convert tdsFields string array of objects to array
-    if (getSafe(() => detailValues.tdsFields, '')) {
-      let newJson = detailValues.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
-      newJson = newJson.replace(/'/g, '"')
-      tdsFields = JSON.parse(newJson)
-    }
-
-    return {
-      edit: {
-        condition: getSafe(() => detailValues.condition, null),
-        conditionNotes: getSafe(() => detailValues.conditionNotes, ''),
-        conforming: getSafe(() => detailValues.conforming, true),
-        costPerUOM: getSafe(() => detailValues.costPerUOM, null),
-        externalNotes: getSafe(() => detailValues.externalNotes, ''),
-        fobPrice: getSafe(() => detailValues.pricingTiers[0].pricePerUOM, ''),
-        broadcastOption: getSafe(
-          () =>
-            detailValues.broadcastTemplateResponse
-              ? detailValues.broadcastOption + '|' + detailValues.broadcastTemplateResponse.id
-              : detailValues.broadcastOption,
-          ''
-        ),
-        inStock: getSafe(() => detailValues.inStock, false),
-        internalNotes: getSafe(() => detailValues.internalNotes, ''),
-        leadTime: getSafe(() => detailValues.leadTime, 1),
-        lotNumber: getSafe(() => detailValues.lotNumber, ''),
-        lotExpirationDate:
-          detailValues && detailValues.lotExpirationDate
-            ? moment(detailValues.lotExpirationDate).format(getLocaleDateFormat())
-            : '',
-        lotManufacturedDate:
-          detailValues && detailValues.lotManufacturedDate
-            ? moment(detailValues.lotManufacturedDate).format(getLocaleDateFormat())
-            : '',
-        minimum: getSafe(() => detailValues.minPkg, 1),
-        origin: getSafe(() => detailValues.origin.id, null),
-        pkgAvailable: getSafe(() => detailValues.pkgAvailable, ''),
-        product: getSafe(() => detailValues.companyProduct.id, null),
-        productCondition: getSafe(() => detailValues.condition.id, null),
-        productForm: getSafe(() => detailValues.form.id, null),
-        productGrades: getSafe(() => detailValues.grades.map(grade => grade.id), []),
-        splits: getSafe(() => detailValues.splitPkg, 1),
-        doesExpire: getSafe(() => detailValues.validityDate.length > 0, false),
-        expirationDate:
-          detailValues && detailValues.validityDate
-            ? moment(detailValues.validityDate).format(getLocaleDateFormat())
-            : '',
-        warehouse: getSafe(() => detailValues.warehouse.id, null),
-        tdsFields: getSafe(() => tdsFields, [{ property: '', specifications: '' }])
-      },
-      priceTiers: {
-        priceTiers: getSafe(() => detailValues.pricingTiers.length, 0),
-        pricingTiers: getSafe(
-          () =>
-            detailValues.pricingTiers.map(priceTier => ({
-              price: priceTier.pricePerUOM,
-              quantityFrom: priceTier.quantityFrom
-            })),
-          []
-        )
-      },
-      documents: {
-        documentType: getSafe(() => detailValues.documentType, null),
-        attachments: getSafe(() => detailValues.attachments.map(att => ({ ...att, linked: true })), [])
-      }
-    }
+    return !_.isEqual(getEditValues(this.state.detailValues), values)
   }
 
   handleChangeProduct = (e, value, setFieldValue) => {
@@ -1192,7 +1128,8 @@ class ModalDetail extends Component {
                                               onChange: this.onChange,
                                               'data-test': 'add_inventory_whoShouldSee',
                                               fluid: true,
-                                              closeOnChange: true
+                                              closeOnChange: true,
+                                              loading: isLoadingBroadcast
                                             }}
                                             options={optionsSeeOffer.map((option, optIndex) => {
                                               return {
@@ -1213,18 +1150,36 @@ class ModalDetail extends Component {
                                                   />
                                                 ),
                                                 onClick: () => {
-                                                  getSafe(() => detailValues.id, false) &&
+                                                  getSafe(() => this.state.detailValues.id, false) &&
                                                     onClickBroadcast(
-                                                      detailValues,
+                                                      this.state.detailValues,
                                                       option.value,
                                                       broadcastChange,
-                                                      datagrid,
+                                                      this.props.datagrid,
                                                       option.id ? { id: option.id, name: option.tmp } : null
                                                     )
                                                   setFieldValue('edit.broadcastOption', option.value)
                                                 }
                                               }
                                             })}
+                                          />
+                                        </FormField>
+                                      </GridColumn>
+                                      <GridColumn width={8}>
+                                        <FormField width={8}>
+                                          <FormattedMessage
+                                            id='myInventory.listingShare'
+                                            defaultMessage='Enable Listing Share for this offer?'>
+                                            {text => <label>{text}</label>}
+                                          </FormattedMessage>
+                                          <Dropdown
+                                            name='edit.shared'
+                                            options={OPTIONS_YES_NO}
+                                            inputProps={{
+                                              onChange: this.onChange,
+                                              'data-test': 'add_inventory_shared',
+                                              fluid: true
+                                            }}
                                           />
                                         </FormField>
                                       </GridColumn>
@@ -2029,19 +1984,21 @@ class ModalDetail extends Component {
                                       cancelText: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
                                       proceedText: formatMessage({ id: 'global.new', defaultMessage: 'New' })
                                     }
-                                  )
-                                    .then(() => {
+                                  ).then(
+                                    () => {
                                       this.setState(state => ({
                                         ...state,
-                                        detailValues: { ...state.detailValues, id: null }
-                                      }))
-                                    })
-                                    .catch(() => {
+                                        initValues: INIT_VALUES,
+                                        detailValues: null
+                                      })) // confirm (New)
+                                    },
+                                    () => {
                                       this.setState(state => ({
                                         ...state,
                                         detailValues: { ...state.detailValues, id: data.id }
-                                      }))
-                                    })
+                                      })) // cancel (Edit)
+                                    }
+                                  )
                                 }
                               }
                             })

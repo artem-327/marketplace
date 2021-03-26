@@ -14,6 +14,7 @@ export const errorMessages = {
   mustBeInFuture: <FormattedMessage id='validation.dateInFuture' defaultMessage='Date must be in future' />,
   mustBeInPast: <FormattedMessage id='validation.dateInPast' defaultMessage='Date must be in past' />,
   dateNotInPast: <FormattedMessage id='validation.dateNotInPast' defaultMessage='Date must not be in past' />,
+  dateNotInFuture: <FormattedMessage id='validation.dateNotInFuture' defaultMessage='Date must not be in future' />,
   invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
   invalidEmail: <FormattedMessage id='validation.invalidEmail' defaultMessage='Invalid e-mail address' />,
   invalidDate: <FormattedMessage id='validation.invalidDate' defaultMessage='Invalid date' />,

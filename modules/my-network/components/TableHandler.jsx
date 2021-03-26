@@ -7,13 +7,14 @@ import { debounce } from 'lodash'
 import { withDatagrid } from '../../datagrid'
 import BasicButton from '../../../components/buttons/BasicButton'
 import InviteModal from './InviteModal/InviteModal'
+import BluePalletModal from './BluePalletModal/BluePalletModal'
 //Styles
 import { ContainerCustom, InputSearch, DropdownType, DivButon } from '../MyNetwork.styles'
 //Constants
 import { NETWORK_TYPES } from '../constants'
 import { Key } from 'react-feather'
 //Actions
-import { triggerModal, search, buttonActionsDetailRow } from '../actions'
+import { triggerModal, search, buttonActionsDetailRow, hideBluePallet } from '../actions'
 //Services
 import { getRowDetail } from '../MyNetwork.services'
 
@@ -55,7 +56,7 @@ const TableHandler = props => {
         }}
       />
 
-      <DropdownType
+      {/* <DropdownType
         name='networkStatus'
         value={networkStatus}
         placeholder={props?.intl?.formatMessage({
@@ -68,7 +69,7 @@ const TableHandler = props => {
           setNetworkStatus(data?.value)
           props?.datagrid?.setQuery({ status: data?.value })
         }}
-      />
+      /> */}
       <InviteModal
         onClose={props?.triggerModal}
         open={props?.isOpenModal}
@@ -78,6 +79,12 @@ const TableHandler = props => {
         detailCompany={props?.detailCompany}
         buttonActionsDetailRow={props?.buttonActionsDetailRow}
       />
+      {
+        props?.bluePalletModal &&
+        <BluePalletModal
+          onClose={props?.hideBluePallet}
+        />
+      }
       <DivButon>
         <BasicButton float='right !important' onClick={() => props?.triggerModal()}>
           <FormattedMessage id='global.invite' defaultMessage='Invite' />
@@ -108,9 +115,10 @@ const mapStateToProps = ({ myNetwork }) => ({
   isOpenModal: myNetwork?.isOpenModal,
   isError: myNetwork?.isError,
   loading: myNetwork?.loading,
-  detailCompany: getRowDetail(myNetwork?.companyNetworkConnection)
+  detailCompany: getRowDetail(myNetwork?.companyNetworkConnection),
+  bluePalletModal: myNetwork?.bluePalletModal
 })
 
 export default withDatagrid(
-  connect(mapStateToProps, { triggerModal, search, buttonActionsDetailRow })(injectIntl(TableHandler))
+  connect(mapStateToProps, { triggerModal, search, buttonActionsDetailRow, hideBluePallet })(injectIntl(TableHandler))
 )

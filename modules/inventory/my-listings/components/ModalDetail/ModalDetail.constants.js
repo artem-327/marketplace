@@ -3,6 +3,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { DivIconOptions } from '../../../constants/layout'
 
 /**
+ * @category Inventory - My Listings
  * @constant {{key: number, text: JSX.Element, value: boolean}[]} OPTIONS_YES_NO Options for dropdown.
  */
 export const OPTIONS_YES_NO = [
@@ -18,6 +19,7 @@ export const OPTIONS_YES_NO = [
   }
 ]
 /**
+ * @category Inventory - My Listings
  * @constant {{key: number, text: JSX.Element, value: boolean}[]} LIST_CONFORMING Options for dropdown.
  */
 export const LIST_CONFORMING = [
@@ -34,19 +36,23 @@ export const LIST_CONFORMING = [
 ]
 
 /**
+ * @category Inventory - My Listings
  * @type {'GLOBAL_RULES'}
  */
 export const GLOBAL_RULES = 'GLOBAL_RULES'
 /**
+ * @category Inventory - My Listings
  * @type {'NO_BROADCAST'}
  */
 const NO_BROADCAST = 'NO_BROADCAST'
 /**
+ * @category Inventory - My Listings
  * @type {'CLIENT_COMPANIES'}
  */
 const CLIENT_COMPANIES = 'CLIENT_COMPANIES'
 
 /**
+ * @category Inventory - My Listings
  * @constant {{icon: JSX.Element, title: JSX.Element, subtitleId: string, subtitleText: string, value: CLIENT_COMPANIES | NO_BROADCAST | GLOBAL_RULES}[] } OPTIONS_BROADCAST  Options for dropdown "Who should see this offer?"
  */
 export const OPTIONS_BROADCAST = [
@@ -126,6 +132,7 @@ export const OPTIONS_BROADCAST = [
 ]
 
 /**
+ * @category Inventory - My Listings
  * @constant {{
  *   edit: {
  *     broadcasted: true,
@@ -163,7 +170,8 @@ export const OPTIONS_BROADCAST = [
  *   documents: {
  *     documentType: null,
  *     attachments: []
- *   }
+ *   },
+ * shared: false
  * }} INIT_VALUES Initial values for form.
  */
 export const INIT_VALUES = {
@@ -203,5 +211,6 @@ export const INIT_VALUES = {
   documents: {
     documentType: null,
     attachments: []
-  }
+  },
+  shared: false
 }

@@ -16,27 +16,56 @@ import { getStatuses } from '../MyNetwork.services'
  */
 const Table = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
-  const { loadingDatagrid, rows, connectionsStatuses, statuses, buttonActionsDetailRow } = props
+  const {
+    loadingDatagrid,
+    rows,
+    connectionsStatuses,
+    statuses,
+    buttonActionsDetailRow,
+    getConnection,
+    loadingDetailRow,
+    datagrid,
+    showBluePallet
+  } = props
   const prevLoadingDatagrid = usePrevious(loadingDatagrid)
+  const query = datagrid?.query
 
   useEffect(() => {
-    if (prevLoadingDatagrid && !loadingDatagrid && rows) {
+    if (
+      prevLoadingDatagrid &&
+      !loadingDatagrid &&
+      rows.length &&
+      (typeof query?.status === 'undefined' || query?.status === 'ALL') &&
+      (typeof query?.companyName === 'undefined' || query?.companyName === '')
+    ) {
       connectionsStatuses(getStatuses(rows))
     }
-  }, [prevLoadingDatagrid, loadingDatagrid, rows, connectionsStatuses])
+  }, [query, loadingDatagrid, prevLoadingDatagrid, rows, connectionsStatuses])
 
-  const expandRow = row => {
+  const expandRow = async row => {
     let ids = expandedRowIds.slice()
     if (ids.includes(row.id)) {
       setExpandedRowIds(ids.filter(id => id !== row.id))
     } else {
+      if (row.connectedCompany.id === 1) {
+        showBluePallet()
+        return false
+      }
       ids.push(row.id)
       setExpandedRowIds(ids)
+      await getConnection(row.id)
     }
   }
 
   const getRowDetail = ({ row }) => {
-    return <DetailRow row={row} expandRow={() => expandRow(row)} buttonActionsDetailRow={buttonActionsDetailRow} />
+    return (
+      <DetailRow
+        row={row}
+        expandRow={() => expandRow(row)}
+        buttonActionsDetailRow={buttonActionsDetailRow}
+        loadingDetailRow={loadingDetailRow}
+      />
+    )
   }
 
   return (

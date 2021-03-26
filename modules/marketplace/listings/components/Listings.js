@@ -316,7 +316,7 @@ class Listings extends Component {
           onContentClick={e => {
             e.stopPropagation()
             e.preventDefault()
-            this.tableRowClicked(r.id)
+            this.tableRowClicked(r.id, r?.sellerId)
           }}
           rightAlignedContent={
             r.expired || r.condition ? (
@@ -383,13 +383,13 @@ class Listings extends Component {
     }))
   }
 
-  tableRowClicked = (clickedId, isHoldRequest = false, openInfo = false) => {
+  tableRowClicked = (clickedId, sellerId = null, isHoldRequest = false, openInfo = false) => {
+    const poId = parseInt(clickedId.split('_')[0])
     const { getProductOffer, sidebarChanged, isProductInfoOpen, closePopup } = this.props
-    let { isOpen, id } = this.props.sidebar
-    getProductOffer(clickedId)
+    getProductOffer(poId, sellerId)
 
     if (isProductInfoOpen) closePopup()
-    sidebarChanged({ isOpen: true, id: clickedId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
+    sidebarChanged({ isOpen: true, id: poId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
   getActions = row => {
@@ -405,21 +405,21 @@ class Listings extends Component {
         id: 'marketplace.info',
         defaultMessage: 'Info'
       }),
-      callback: () => this.tableRowClicked(row.id, false, true)
+      callback: () => this.tableRowClicked(row.id, row?.sellerId, false, true)
     }
     const buttonRequestHold = {
       text: formatMessage({
         id: 'hold.requestHold',
         defaultMessage: 'Request Hold'
       }),
-      callback: () => this.tableRowClicked(row.id, true)
+      callback: () => this.tableRowClicked(row.id, row?.sellerId, true)
     }
     const buttonBuy = {
       text: formatMessage({
         id: 'marketplace.buy',
         defaultMessage: 'Buy Product Offer'
       }),
-      callback: () => this.tableRowClicked(row.id)
+      callback: () => this.tableRowClicked(row.id, row?.sellerId)
     }
     const buttonMakeAnOffer = {
       text: formatMessage({
@@ -536,7 +536,7 @@ class Listings extends Component {
             /*onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
-                this.tableRowClicked(row.id, false, true)
+                this.tableRowClicked(row.id, row?.sellerId, false, true)
               }
             }}*/
             data-test='marketplace_listings_row_action'

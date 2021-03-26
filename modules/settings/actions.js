@@ -136,10 +136,21 @@ export function openEditPopup(rows) {
     payload: rows
   }
 }
-export function handlerSubmitUserEditPopup(id, payload) {
+
+export function updateSettingsCompanyUser(id, request) {
   return {
-    type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-    payload: api.patchUser(id, payload)
+    type: AT.UPDATE_SETTINGS_COMPANY_USER,
+    payload: api.updateSettingsCompanyUser(id, request)
+  }
+}
+
+export function handlerSubmitUserEditPopup(id, payload, userSettings) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+      payload: api.patchUser(id, payload)
+    })
+    await dispatch(updateSettingsCompanyUser(id, userSettings))
   }
 }
 
@@ -612,10 +623,14 @@ export function getStoredCSV(data) {
   }
 }
 
-export function postNewUserRequest(payload) {
-  return {
-    type: AT.POST_NEW_USER_REQUEST,
-    payload: api.postNewUser(payload)
+export function postNewUserRequest(payload, userSettings) {
+  return async dispatch => {
+    const user = await api.postNewUser(payload)
+    await dispatch({
+      type: AT.POST_NEW_USER_REQUEST,
+      payload: user
+    })
+    await dispatch(updateSettingsCompanyUser(user.id, userSettings))
   }
 }
 
@@ -1109,7 +1124,10 @@ export const resetSettings = () => ({ type: AT.RESET_SETTINGS, payload: true })
 
 // export const getSettings = role => ({ type: AT.GET_SETTINGS, payload: api.getSettings(role) })
 
-// export const updateSettings = (role, payload) => ({ type: AT.UPDATE_SETTINGS, payload: api.updateSettings(role, payload) })
+// export const updateSettings = (role, payload) => ({
+//   type: AT.UPDATE_SETTINGS,
+//   payload: api.updateSettings(role, payload)
+// })
 
 export const triggerSystemSettingsModal = (force = null) => ({ type: AT.TRIGGER_SYSTEM_SETTINGS_MODAL, payload: force })
 
@@ -1284,7 +1302,7 @@ export function openPopupDeleteInstitutions(institutionId) {
 
 export function openUserSettingsModal(id) {
   return {
-    type: AT.GET_COMPANY_USER,
+    type: AT.OPEN_USER_SETTINGS_MODAL,
     payload: api.getCompanyUser(id)
   }
 }
@@ -1307,5 +1325,12 @@ export function getTradeCriteria() {
   return {
     type: AT.GET_TRADE_CRITERIA,
     payload: api.getTradeCriteria()
+  }
+}
+
+export function getCompanyUser(id) {
+  return {
+    type: AT.GET_COMPANY_USER,
+    payload: api.getCompanyUser(id)
   }
 }

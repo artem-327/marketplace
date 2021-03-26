@@ -338,7 +338,7 @@ class Tutorial extends Component {
     const theme = {
       margin
     }
-    if (((isMerchant || isOrderProcessing)) || isLoading) {
+    if (isMerchant || isOrderProcessing || isLoading) {
       return null
     } else if (!isLoading && tutorialTab && !isBusinessVerification && isTutorial) {
       return (
@@ -380,12 +380,12 @@ class Tutorial extends Component {
               <Content>
                 <FormattedMessage
                   id='tutorial.businessVerification.content'
-                  defaultMessage='EchoSystem is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, EchoSystem must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'>
+                  defaultMessage='BluePallet is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, BluePallet must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'>
                   {text => text}
                 </FormattedMessage>
               </Content>
               <DivBottomBusinessVerification>
-                <CustomBeginNowButton type='button' onClick={e => Router.push('/velloci-register')}>
+                <CustomBeginNowButton type='button' onClick={e => Router.push('/onboarding')}>
                   <FormattedMessage id='tutorial.businessVerification.beginNow' defaultMessage='Begin now' />
                 </CustomBeginNowButton>
                 <DivEstimated>

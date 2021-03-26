@@ -26,7 +26,7 @@ export const COLUMNS = [
   {
     name: 'priceMarkup',
     title: (
-      <FormattedMessage id='carrier.price' defaultMessage='Price'>
+      <FormattedMessage id='carrier.priceMarkup' defaultMessage='Price Markup'>
         {text => text}
       </FormattedMessage>
     ),

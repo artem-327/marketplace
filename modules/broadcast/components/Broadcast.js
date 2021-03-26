@@ -451,7 +451,8 @@ class Broadcast extends Component {
     return tree
   }
 
-  setHidden = (predicate, hidden, elements = this.props.data.elements) => {
+  setHidden = (predicate, hidden, elements = this.props?.data?.elements) => {
+    if (!elements) return
     for (let i = 0; i < elements.length; i++) {
       if (predicate(elements[i])) {
         elements[i].hidden = hidden
@@ -614,9 +615,7 @@ class Broadcast extends Component {
           value={this.state.associationFilter}
           selection
           loading={associationsFetching}
-          options={[
-            { key: 'ALL', text: 'Partners', value: 'ALL' }
-          ].concat(options)}
+          options={[{ key: 'ALL', text: 'Partners', value: 'ALL' }].concat(options)}
           onChange={(_e, { value }) => this.setState({ associationFilter: value })}
         />
       </FieldInHeaderTable>
@@ -774,7 +773,8 @@ class Broadcast extends Component {
       templateSaving,
       associationsFetching,
       associations,
-      close
+      close,
+      styleMarginBottom
     } = this.props
 
     let totalCompanies = _.uniqBy(
@@ -861,7 +861,6 @@ class Broadcast extends Component {
                         <InputSearch
                           name='search'
                           icon='search'
-                          iconPosition='right'
                           value={this.state.filterSearch}
                           onChange={this.handleSearchChange}
                           placeholder={formatMessage({
@@ -901,9 +900,7 @@ class Broadcast extends Component {
                         value={this.state.associationFilter}
                         selection
                         loading={associationsFetching}
-                        options={[
-                          { key: 'ALL', text: 'Partners', value: 'ALL' }
-                        ].concat(options)}
+                        options={[{ key: 'ALL', text: 'Partners', value: 'ALL' }].concat(options)}
                         onChange={(_e, { value }) => this.setState({ associationFilter: value })}
                       />
                     </GridColumnFiltersModal>
@@ -1016,7 +1013,6 @@ class Broadcast extends Component {
                       <InputSearch
                         name='search'
                         icon='search'
-                        iconPosition='right'
                         value={this.state.filterSearch}
                         onChange={this.handleSearchChange}
                         placeholder={formatMessage({
@@ -1171,7 +1167,7 @@ class Broadcast extends Component {
             </GridRowTable>
           </StretchedGrid>
           {asModal && (
-            <GridBottom>
+            <GridBottom $styleMargin={styleMarginBottom}>
               <GridRowBottom textAlign='right'>
                 <GridColumnBottom width='8'>
                   <ButtonCancel onClick={() => close()} data-test='broadcast_modal_close_btn'>

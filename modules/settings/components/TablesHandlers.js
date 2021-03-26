@@ -498,7 +498,7 @@ class TablesHandlers extends Component {
               <CustomButton
                 fluid
                 onClick={() => {
-                  paymentProcessor === 'DWOLLA' ? Router.push('/dwolla-register') : Router.push('/velloci-register')
+                  paymentProcessor === 'DWOLLA' ? Router.push('/dwolla-register') : Router.push('/onboarding')
                 }}
                 data-test={
                   paymentProcessor === 'DWOLLA'
@@ -632,7 +632,7 @@ class TablesHandlers extends Component {
                           primary
                           onClick={() => {
                             openSidebar(null, currentTab)
-                            currentTab === 'logistics' && chatWidgetVerticalMoved(true)
+                            if (currentTab === 'logistics' || currentTab === 'users') chatWidgetVerticalMoved(true)
                           }}
                           data-test='settings_open_popup_btn'
                           disabled={currentTab === 'logistics' && isThirdPartyConnectionException}>

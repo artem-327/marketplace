@@ -117,7 +117,7 @@ function prepareDetail(data, type = 'sales') {
     productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
     proNumber: 'N/A', // ! ! TBD
     quantityOrdered: orderItems.map(d => {
-      if (!d.productOffers.length) return 'N/A'
+      if (!d?.productOffers?.length) return 'N/A'
       let pkgAmount = 0
       d.productOffers.forEach(pr => (pkgAmount += pr.pkgAmount))
       return d.packagingSize && d.packagingUnit
@@ -175,7 +175,7 @@ function prepareDetail(data, type = 'sales') {
       />
     ), //"$" + totalPriceWithShipping.formatMoney(2),
     totalPkg: orderItems.map(d => {
-      if (!d.productOffers.length) return 'N/A'
+      if (!d?.productOffers?.length) return 'N/A'
       let pkgAmount = 0
       d.productOffers.forEach(pr => (pkgAmount += pr.pkgAmount))
       return pkgAmount
@@ -183,7 +183,7 @@ function prepareDetail(data, type = 'sales') {
     unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
     unitCost: orderItems.map(d => {
       let sum = 0
-      if (d.productOffers && d.productOffers.length) {
+      if (d?.productOffers && d?.productOffers?.length) {
         //calculate average
         for (let product of d.productOffers) {
           if (product.costPerUOM) {

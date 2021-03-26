@@ -32,7 +32,8 @@ import {
   DivTitleSegment,
   GridRowLabel,
   GridColumnFlex,
-  DivCheckboxWrapper
+  DivCheckboxWrapper,
+  InfoCustom
 } from './ProductPopup.styles'
 
 // Constants
@@ -383,6 +384,16 @@ const ProductPopup = props => {
                         label={
                           <>
                             <FormattedMessage id='global.packageWeight' defaultMessage='Gross Weight Per Package' />
+                            <Popup
+                              content={
+                                <FormattedMessage
+                                  id='global.infoPackageWeight'
+                                  defaultMessage="The total weight of the contents and it's packaging"
+                                />
+                              }
+                              position='top center'
+                              trigger={<InfoCustom size='12' />}
+                            />
                             <Required />
                           </>
                         }
@@ -764,7 +775,7 @@ const ProductPopup = props => {
 
               <DivBottomButtons className='bottom-buttons'>
                 {!openGlobalAddForm && (
-                  <BasicButton noborder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
+                  <BasicButton noBorder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>

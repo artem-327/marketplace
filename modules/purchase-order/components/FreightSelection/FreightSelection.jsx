@@ -8,8 +8,9 @@ import { currency } from '~/constants/index'
 import { AlertCircle } from 'react-feather'
 
 //Components
-import { GridRow, GridColumn, Radio, Icon, Button, Header, Input, Dimmer, Loader } from 'semantic-ui-react'
+import { GridColumn, Radio, Icon, Button, Header, Input, Dimmer, Loader, Divider } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
+import BasicButton from '../../../../components/buttons/BasicButton'
 import {
   DivSectionCollapsedWrapper,
   DivSectionCollapsedRow,
@@ -24,7 +25,15 @@ import {
   DivSectionSmallHeader
 } from '../Checkout.styles'
 import moment from 'moment'
-import { GridStyled, CustomRectangle, DivTitle, DivInTitle, DivContent } from './FreightSelection.styles'
+import {
+  GridStyled,
+  CustomRectangle,
+  DivTitle,
+  DivInTitle,
+  DivContent,
+  GridRowCustomPadding,
+  DivLabel
+} from './FreightSelection.styles'
 import {
   VerticalUnpaddedColumn,
   StyledRow,
@@ -134,7 +143,7 @@ const FreightSelection = props => {
                                 maximumFractionDigits={2}
                                 style='currency'
                                 currency={currency}
-                                value={item.estimatedPrice}
+                                value={item.cfEstimatedSubtotal}
                               />
                             </DivSectionName>
                           </div>
@@ -167,7 +176,7 @@ const FreightSelection = props => {
 
               {(cart.weightLimitExceed || cart.palletLimitExceed) && !fixedFreightId && (
                 <GridStyled>
-                  <GridRow>
+                  <GridRowCustomPadding value='10px 5px 5px'>
                     <GridColumn computer={16}>
                       <CustomMessage warning>
                         <CustomMessage.Header>
@@ -185,15 +194,15 @@ const FreightSelection = props => {
                                 ? 'cart.weightLimitExceeded.content'
                                 : 'cart.palletLimitExceeded.content',
                               defaultMessage: cart.weightLimitExceed
-                                ? `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
-                                : `Your order pallet exceeds pallet limit ${palletLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                ? `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Our logistics provider will create a custom freight quote for your order and we'll notify you when it's ready.`
+                                : `Your order pallet exceeds pallet limit ${palletLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Our logistics provider will create a custom freight quote for your order and we'll notify you when it's ready.`
                             },
                             { limit: cart.weightLimitExceed ? weightLimitStr : palletLimitStr }
                           )}
                         </CustomMessage.Content>
                       </CustomMessage>
                     </GridColumn>
-                  </GridRow>
+                  </GridRowCustomPadding>
                 </GridStyled>
               )}
               {freightOptions.length === 0 &&
@@ -202,7 +211,7 @@ const FreightSelection = props => {
                 !cart.weightLimitExceed &&
                 !cart.palletLimitExceed && (
                   <GridStyled>
-                    <GridRow>
+                    <GridRowCustomPadding value='10px 5px 5px'>
                       <GridColumn computer={16}>
                         <CustomRectangle>
                           <DivTitle>
@@ -217,12 +226,12 @@ const FreightSelection = props => {
                           <DivContent>
                             <FormattedMessage
                               id='cart.noShippingQuotes.processManually'
-                              defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                              defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote may need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Our logistics provider will create a custom freight quote for your order and we'll notify you when it's ready.`}
                             />
                           </DivContent>
                         </CustomRectangle>
                       </GridColumn>
-                    </GridRow>
+                    </GridRowCustomPadding>
                   </GridStyled>
                 )}
 
@@ -230,47 +239,51 @@ const FreightSelection = props => {
                 !fixedFreightId &&
                 (cart.weightLimitExceed || freightOptions.length === 0 || cart.palletLimitExceed) && (
                   <GridStyled>
-                    <GridRow>
+                    <GridRowCustomPadding value='5px 0 15px'>
                       <GridColumn computer={8}>
-                        <Button
-                          basic
-                          fluid
+                        <BasicButton
                           loading={props.manualShipmentPending}
                           type='button'
                           onClick={() => handleManualShipment(props)}>
                           <FormattedMessage id='cart.requestShippingQuote' defaultMessage='Request Shipping Quote'>
                             {text => text}
                           </FormattedMessage>
-                        </Button>
+                        </BasicButton>
                       </GridColumn>
-                    </GridRow>
+                    </GridRowCustomPadding>
                   </GridStyled>
                 )}
 
               {!shippingQuotesAreFetching &&
                 (cart.weightLimitExceed || freightOptions.length === 0 || cart.palletLimitExceed) && (
                   <GridStyled>
-                    <GridRow>
+                    <GridRowCustomPadding value='0 5px 0'>
+                      <GridColumn>
+                        <Divider />
+                      </GridColumn>
+                    </GridRowCustomPadding>
+                    <GridRowCustomPadding value='15px 5px 2.5px'>
                       <GridColumn>
                         <Header as='h3'>
                           <FormattedMessage
                             id='cart.quoteReceived'
-                            defaultMessage='If you already received the shipping quote and agree, please type in the provide Shipping Quote Id and continue with Checkout.'
+                            defaultMessage='If you have already received a quote ID you may enter it below to continue checking out'
                           />
                         </Header>
                       </GridColumn>
-                    </GridRow>
-                    <GridRow>
+                    </GridRowCustomPadding>
+                    <GridRowCustomPadding value='2.5px 5px 10px'>
                       <GridColumn computer={8}>
-                        <div>
+                        <DivLabel>
                           <FormattedMessage id='cart.shippingQuoteId' defaultMessage='Shipping Quote ID' />
-                        </div>
+                        </DivLabel>
                         <Input
+                          fluid
                           onChange={(_, { value }) =>
                             onValueChange({
                               freightType: FREIGHT_TYPES.ECHO,
                               carrierName: value,
-                              estimatedPrice: '',
+                              cfEstimatedSubtotal: '',
                               estimatedDeliveryDate: '',
                               quoteId: value
                             })
@@ -278,9 +291,15 @@ const FreightSelection = props => {
                           name='shipmentQuoteId'
                           value={value && value.quoteId ? value.quoteId : ''}
                           disabled={isOwn}
+                          placeholder={
+                            formatMessage({
+                              id: 'cart.enterShippingQuoteId',
+                              defaultMessage: 'Enter Shipping Quote ID'
+                            })
+                          }
                         />
                       </GridColumn>
-                    </GridRow>
+                    </GridRowCustomPadding>
                   </GridStyled>
                 )}
               <FreightLabel isOwn={isOwn} onChange={val => onValueChange(val)} />
@@ -290,13 +309,13 @@ const FreightSelection = props => {
               <DivSectionCollapsedRow>
                 <DivSectionName>{value ? value.carrierName : ''}</DivSectionName>
                 <DivSectionDescription>
-                  {value && value.estimatedPrice ? (
+                  {value && value.cfEstimatedSubtotal ? (
                     <FormattedNumber
                       minimumFractionDigits={2}
                       maximumFractionDigits={2}
                       style='currency'
                       currency={currency}
-                      value={value ? value.estimatedPrice : 0}
+                      value={value ? value.cfEstimatedSubtotal : 0}
                     />
                   ) : (
                     ''
