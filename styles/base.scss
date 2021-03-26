@@ -2229,7 +2229,7 @@ i.file {
             background: #fff;
           }
 
-          > * {
+          > span.cell-wrapper {
             position: relative !important;
             z-index: 1;
             transform: translateY(-1px);
@@ -2241,6 +2241,16 @@ i.file {
             &.cell-wrapper {
               overflow: hidden;
             }
+          }
+
+          .ui.dropdown,
+          .ui.dropdown + span {
+            position: relative;
+            z-index: 1;
+          }
+
+          .ui.dropdown.active.visible {
+            z-index: 2;
           }
 
           &:first-child {
