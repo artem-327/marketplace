@@ -1,6 +1,5 @@
 import styled from 'styled-components'
-
-import { Sidebar, Segment, GridColumn, Icon, Grid, Modal, Dropdown, FormField, Header, Dimmer, Form } from 'semantic-ui-react'
+import { Sidebar, Segment, Icon, Dimmer, Form } from 'semantic-ui-react'
 import { TextArea } from 'formik-semantic-ui-fixed-validation'
 
 export const FormCustom = styled(Form)`
@@ -122,3 +121,4 @@ export const SubrowButtons = styled.div`
   margin: 0 -5px;
   text-align: right;
 `
+

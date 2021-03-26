@@ -21,23 +21,22 @@ export const formValidation = () =>
       contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
       /*readyTime: validateTime(),
       closeTime: validateTime()*/
-
-      warehouseAddresses: Yup.array().of(
-        Yup.object().shape({
-          addressName: Yup.string()
-            .trim()
-            .min(2, errorMessages.minLength(1))
-            .required(errorMessages.requiredMessage),
-          address: addressValidationSchema(),
-          contactName: Yup.string()
-            .trim()
-            .min(2, errorMessages.minLength(1))
-            .required(errorMessages.requiredMessage),
-          contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
-          contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
-        })
-      )
-    })
+    }),
+    warehouseAddresses: Yup.array().of(
+      Yup.object().shape({
+        addressName: Yup.string()
+          .trim()
+          .min(2, errorMessages.minLength(1))
+          .required(errorMessages.requiredMessage),
+        address: addressValidationSchema(),
+        contactName: Yup.string()
+          .trim()
+          .min(2, errorMessages.minLength(1))
+          .required(errorMessages.requiredMessage),
+        contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
+        contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
+      })
+    )
   })
 
 /**
@@ -49,8 +48,7 @@ export const getInitialFormValues = sidebarValues => {
   const provinceId = getSafe(() => sidebarValues.billToAddress.address.province.id, '')
   const countryId = getSafe(() => sidebarValues.billToAddress.address.country.id, null)
   const hasProvinces = getSafe(() => sidebarValues.billToAddress.address.country.hasProvinces, false)
-  const zip = getSafe(() => sidebarValues.billToAddress.address.zip.zip, '')
-  const zipID = getSafe(() => sidebarValues.billToAddress.address.zip.id, '')
+  const zip = getSafe(() => sidebarValues.billToAddress.address.zip.zip, '').replace(' ', '')
 
   const initialValues = {
     billToAddress: {
@@ -72,43 +70,7 @@ export const getInitialFormValues = sidebarValues => {
       liftGate: getSafe(() => sidebarValues.billToAddress.liftGate, false),
       readyTime: getSafe(() => sidebarValues.billToAddress.readyTime, ''),
     },
-    name: getSafe(() => sidebarValues.name, ''),
-
-
-    // ! ! temporary for testing
-    /*
-    warehouseAddresses: getSafe(() => sidebarValues.warehouseAddresses, []).map(war => {
-      const wProvinceId = getSafe(() => war.address.province.id, '')
-      const wCountryId = getSafe(() => war.address.country.id, null)
-      const wHasProvinces = getSafe(() => war.address.country.hasProvinces, false)
-      const wZip = getSafe(() => war.address.zip.zip, '')
-
-      return ({
-        addressName: getSafe(() => war.addressName, ''),
-        callAhead: getSafe(() => war.callAhead, false),
-        closeTime: getSafe(() => war.closeTime, ''),
-        contactEmail: getSafe(() => war.contactEmail, ''),
-        contactName: getSafe(() => war.contactName, ''),
-        contactPhone: getSafe(() => war.contactPhone, ''),
-        deliveryNotes: getSafe(() => war.deliveryNotes, ''),
-        forkLift: getSafe(() => war.forkLift, false),
-        liftGate: getSafe(() => war.liftGate, false),
-        readyTime: getSafe(() => war.readyTime, ''),
-        address: {
-          streetAddress: getSafe(() => war.address.streetAddress, ''),
-          city: getSafe(() => war.address.city, ''),
-          province: wProvinceId,
-          country: wCountryId ? JSON.stringify({ countryId: wCountryId, hasProvinces: wHasProvinces }) : '',
-          zip: wZip
-        }
-      })
-    })
-    */
-
-    //zipID,
-    //countryId,
-    //hasProvinces,
-    //province: getSafe(() => sidebarValues.address.province, '')
+    name: getSafe(() => sidebarValues.name, '')
   }
   return initialValues
 }
@@ -144,16 +106,18 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
   }
   removeEmpty(customerData)
 
-  console.log('!!!!!!!!!! submitHandler props', props)
-  console.log('!!!!!!!!!! submitHandler customerData', customerData)
-
   try {
     if (sidebarValues) {
       const {value} = await updateCustomer(sidebarValues.id, customerData)
       datagrid.updateRow(sidebarValues.id, () => value)
+      props.chatWidgetVerticalMoved(false)
+      props.closeSidebar()
+
     } else {
       const {value} = await addCustomer(customerData)
       datagrid.loadData()
+      props.chatWidgetVerticalMoved(false)
+      props.closeSidebar()
     }
   } catch (e) {
     console.error(e)

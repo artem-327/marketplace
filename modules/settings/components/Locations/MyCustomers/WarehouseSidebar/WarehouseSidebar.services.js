@@ -36,7 +36,7 @@ export const getInitialFormValues = values => {
   const provinceId = getSafe(() => values.address.province.id, '')
   const countryId = getSafe(() => values.address.country.id, null)
   const hasProvinces = getSafe(() => values.address.country.hasProvinces, false)
-  const zip = getSafe(() => values.address.zip.zip, '')
+  const zip = getSafe(() => values.address.zip.zip, '').replace(' ', '')
 
   return {
     ...INIT_VALUES,
