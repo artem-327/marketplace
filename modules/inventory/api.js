@@ -146,6 +146,14 @@ export const removeAttachmentLinkProductOffer = (attachmentId, productOfferId) =
   api.delete(
     `/prodex/api/attachment-links/to-product-offer?attachmentId=${attachmentId}&productOfferId=${productOfferId}`
   )
+
+export const getMarkUp = poId =>
+  api.get(`/prodex/api/product-offers/${poId}/mark-up`).then(response => response.data)
+
+export function updateMarkUp(poId, values) {
+  return api.patch(`/prodex/api/product-offers/${poId}/mark-up`, values).then(response => response.data)
+}
+
 //TODO missing implementation ???
 export const addVerificationDocuments = (attachment, type) => attachment
 

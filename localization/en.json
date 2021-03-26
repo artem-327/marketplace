@@ -3344,5 +3344,8 @@
   "sharedListings.detailRow.elementName": "Element Name",
   "sharedListings.detailRow.casNumber": "CAS Number",
   "sharedListings.detailRow.assay": "Assay",
+  "sharedListings.detailRow.conditionNotes": "Condition Notes",
+  "sharedListings.detailRow.externalNotes": "External Notes",
+  "sharedListings.detailRow.internalNotes": "Internal Notes",
   "sharedListings.detailRow.productInformation": "Product Information"
 }

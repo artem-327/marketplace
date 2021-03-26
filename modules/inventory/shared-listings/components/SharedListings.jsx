@@ -30,9 +30,11 @@ const SharedListings = props => {
 
   const [values, setValues] = useState({
     header: {
-      // ! ! hodit to asi do .constants.js ?
       pricingTabIndex: 0,
-      markup: ''
+      priceMultiplier: '',
+      priceAddition: '',
+      priceOverride: '',
+      id: ''
     },
     tabs: {
       activeTab: 0
@@ -48,7 +50,8 @@ const SharedListings = props => {
     getTemplates,
     broadcastTemplates,
     triggerPriceBookModal,
-    rowIdPriceBook
+    rowIdPriceBook,
+    getMarkUp
   } = props
 
   const state = {
@@ -99,18 +102,25 @@ const SharedListings = props => {
               .value()
           }
           renderGroupLabel={({ row: { value }, groupLength }) => null}
-          onRowClick={(_, row) => {
+          onRowClick={async (_, row) => {
             setActiveTab(0)
             let ids = expandedRowIds.slice()
             if (ids.includes(row.id)) {
               setValues(prevValues => ({
                 ...prevValues,
-                header: { ...prevValues.header, markup: '' },
+                header: { ...prevValues.header, priceMultiplier: '', priceAddition: '', priceOverride: '', id: '' },
                 tabs: { activeTab: 0 }
               }))
               setExpandedRowIds([])
             } else {
               setExpandedRowIds([row.id])
+              try {
+                const { value } = await getMarkUp(row.id)
+                setValues(prevValues => ({
+                  ...prevValues,
+                  header: { ...prevValues.header, ...value, id: row.id }
+                }))
+              } catch (e) {console.error(e)}
             }
           }}
           expandedRowIds={expandedRowIds}
