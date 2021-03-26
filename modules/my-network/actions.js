@@ -98,3 +98,13 @@ export const getConnection = id => ({
   type: AT.GET_CONNECTION,
   payload: api.getConnection(id)
 })
+
+export const showBluePallet = () => ({
+  type: AT.BLUE_PALLET_SHOW,
+  payload: {}
+})
+
+export const hideBluePallet = () => ({
+  type: AT.BLUE_PALLET_HIDE,
+  payload: {}
+})

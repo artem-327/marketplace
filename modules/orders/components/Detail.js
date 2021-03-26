@@ -21,7 +21,7 @@ import {
   Dimmer,
   Modal
 } from 'semantic-ui-react'
-import { ArrowLeft, ChevronDown, DownloadCloud, PlusCircle, UploadCloud } from 'react-feather'
+import { ArrowLeft, ChevronDown, DownloadCloud, PlusCircle, UploadCloud, Link2 } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
@@ -352,16 +352,17 @@ const TopRow = styled.div`
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
     border: solid 1px #dee2e6;
     background-color: #ffffff;
-    color: #848893;
+    color: #20273a;
     font-size: 14px !important;
     font-weight: 500;
     line-height: 1.43;
     padding: 9px 17px 11px 17px;
+    margin-right: 10px;
 
     > svg {
       width: 18px;
       height: 20px;
-      color: #848893;
+      color: #20273a;
       margin-right: 9px;
       vertical-align: middle;
     }
@@ -382,7 +383,7 @@ const TopRow = styled.div`
     }
 
     > div:first-child {
-      color: #848893;
+      color: #20273a;
     }
   }
 `
@@ -491,7 +492,8 @@ class Detail extends Component {
     openDocumentsPopup: false,
     openDocumentsAttachments: [],
     documentsPopupProduct: '',
-    orderItemId: null
+    orderItemId: null,
+    changedTypeOrder: false
   }
 
   constructor(props) {
@@ -511,7 +513,7 @@ class Detail extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { order } = this.props
+    const { order, listDocumentTypes } = this.props
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     let dataCells = document.querySelectorAll('.data-list dd')
     for (let i = 0; i < dataCells.length; i++) {
@@ -541,6 +543,18 @@ class Detail extends Component {
       getSafe(() => order.returnShippingTrackingCode, '')
     ) {
       this.setState({ returnShippingTrackingCode: order.returnShippingTrackingCode })
+    }
+
+    if (!prevState?.changedTypeOrder && this.state?.changedTypeOrder) {
+      let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
+      this.props.loadDetail(endpointType, this.props.router.query.id)
+
+      if (listDocumentTypes && !listDocumentTypes.length) this.props.getDocumentTypes()
+      this.setState({
+        shippingTrackingCode: getSafe(() => order.shippingTrackingCode, ''),
+        returnShippingTrackingCode: getSafe(() => order.returnShippingTrackingCode, ''),
+        changedTypeOrder: false
+      })
     }
   }
 
@@ -852,12 +866,13 @@ class Detail extends Component {
     } = this.props
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
-
+    let oppositeOrderType = ordersType === 'Sales' ? 'purchase' : 'sales'
     let orderDate = moment(order.orderDate, 'MMM Do, YYYY h:mm:ss A')
     const keyColumn = 5
     const valColumn = 16 - keyColumn
 
     const test = true
+    const { counterOrderId } = order
 
     return (
       <div id='page' className='auto-scrolling'>
@@ -895,6 +910,18 @@ class Detail extends Component {
               <ArrowLeft />
               <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
             </a>
+            {counterOrderId ? (
+              <a
+                onClick={async () => {
+                  await router.push(`/orders/detail?type=${oppositeOrderType}&id=${counterOrderId}`)
+                  this.setState({ changedTypeOrder: true })
+                }}
+                style={{ cursor: 'pointer' }}
+                data-test='orders_detail_view_linked_order_btn'>
+                <Link2 />
+                <FormattedMessage id='order.detail.viewLinkedOrder' defaultMessage='View Linked Order' />
+              </a>
+            ) : null}
           </TopRow>
           <OrderSegment loading={isDetailFetching || Object.keys(order).length === 0}>
             <Grid verticalAlign='middle'>
@@ -1118,7 +1145,7 @@ class Detail extends Component {
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
               {isAdmin || isCompanyAdmin || isOrderProcessing ? (
                 <>
-                  <ActionsRequired order={order} ordersType={ordersType} />
+                  {!counterOrderId ? <ActionsRequired order={order} ordersType={ordersType} /> : null}
                   {openedAssignLots ? <AssignLots /> : null}
                   {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
                   {openedEnterTrackingIdShip ? <EnterTrackingIdShip /> : null}
@@ -1234,12 +1261,13 @@ class Detail extends Component {
                                     </TableRowData>
                                   </Table.Header>
                                   <Table.Body>
-                                    <TableRowData>
+                                    {/* Commented based on https://bluepallet.atlassian.net/browse/DT-333 */}
+                                    {/* <TableRowData>
                                       <Table.Cell>
                                         <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' />
                                       </Table.Cell>
                                       <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
-                                    </TableRowData>
+                                    </TableRowData> */}
                                   </Table.Body>
                                   <Table.Footer>
                                     <TableRowData>

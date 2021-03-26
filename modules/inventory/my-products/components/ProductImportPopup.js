@@ -125,7 +125,8 @@ class ProductImportPopup extends Component {
       csvWithoutHeader,
       broadcastTemplates,
       companies,
-      companyGenericProduct
+      companyGenericProduct,
+      productOffer
     } = this.props
 
     const { currentStep, isFinishUpload, isFinishMap, isFinishPreview } = this.state
@@ -218,7 +219,7 @@ class ProductImportPopup extends Component {
             checked={csvWithoutHeader}
             onChange={() => this.props.changeCsvHeader()}
           />
-          {currentStep === 'preview' && !companies && !companyGenericProduct && (
+          {currentStep === 'preview' && !companies && !companyGenericProduct && productOffer && (
             <DivSeeOffer>
               <Dropdown
                 name='import.broadcastOption'

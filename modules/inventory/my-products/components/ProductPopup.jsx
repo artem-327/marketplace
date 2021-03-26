@@ -32,7 +32,8 @@ import {
   DivTitleSegment,
   GridRowLabel,
   GridColumnFlex,
-  DivCheckboxWrapper
+  DivCheckboxWrapper,
+  InfoCustom
 } from './ProductPopup.styles'
 
 // Constants
@@ -383,6 +384,16 @@ const ProductPopup = props => {
                         label={
                           <>
                             <FormattedMessage id='global.packageWeight' defaultMessage='Gross Weight Per Package' />
+                            <Popup
+                              content={
+                                <FormattedMessage
+                                  id='global.infoPackageWeight'
+                                  defaultMessage="The total weight of the contents and it's packaging"
+                                />
+                              }
+                              position='top center'
+                              trigger={<InfoCustom size='12' />}
+                            />
                             <Required />
                           </>
                         }

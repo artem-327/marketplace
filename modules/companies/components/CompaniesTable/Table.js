@@ -151,9 +151,7 @@ class CompaniesTable extends Component {
     return rows.map(row => {
       return {
         ...row,
-        associations: (
-          <ArrayToFirstItem values={row.associations ? row.associations.map(r => r.name) : []} />
-        ),
+        associations: <ArrayToFirstItem values={row.associations ? row.associations.map(r => r.name) : []} />,
         companyName: (
           <ActionCell
             row={row}
@@ -269,7 +267,7 @@ class CompaniesTable extends Component {
         callback: async row => {
           row.paymentProcessor === 'DWOLLA'
             ? !row.hasDwollaAccount && Router.push(`/admin/dwolla-register?companyId=${row.id}`)
-            : !row.hasVellociAccount && Router.push(`/admin/velloci-register?companyId=${row.id}`)
+            : !row.hasVellociAccount && Router.push(`/admin/onboarding?companyId=${row.id}`)
         },
         hidden: row => row.hasDwollaAccount || row.hasVellociAccount
       },

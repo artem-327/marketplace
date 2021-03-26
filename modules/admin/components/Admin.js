@@ -118,7 +118,7 @@ const datagridConfig = {
   logistics: {
     url: '/prodex/api/logistics-providers/stored/datagrid',
     searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'LogisticsProvider.name', values: [`%${v.searchInput}%`] }] : []
   },
   carriers: {
     url: '/prodex/api/logistics-carriers/stored/datagrid',

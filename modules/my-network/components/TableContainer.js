@@ -6,7 +6,7 @@ import { withDatagrid } from '../../datagrid'
 //Services
 import { getStatuses, getRowDetail } from '../MyNetwork.services'
 //Actions
-import { buttonActionsDetailRow, connectionsStatuses, getConnection } from '../actions'
+import { buttonActionsDetailRow, connectionsStatuses, getConnection, showBluePallet, hideBluePallet } from '../actions'
 import { getCompanyLogo } from '../../company-form/actions'
 
 //Constants
@@ -16,7 +16,8 @@ const mapDispatchToProps = {
   buttonActionsDetailRow,
   connectionsStatuses,
   getCompanyLogo,
-  getConnection
+  getConnection,
+  showBluePallet
 }
 
 const mapStateToProps = ({ myNetwork }, { datagrid }) => {

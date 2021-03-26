@@ -58,6 +58,7 @@ export const DivEmpty = styled.div`
 
 export const GridColumnDetail = styled(Grid.Column)`
   padding: 0px !important;
+  ${({ $colorText }) => ($colorText ? `color: ${$colorText} !important` : null)}
 `
 
 export const GridRowBottomSegment = styled(Grid.Row)`
