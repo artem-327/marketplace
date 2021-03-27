@@ -262,6 +262,8 @@
   "navigation.myNetworkDeclined": "Declined ({value})",
   "navigation.myNetworkDisconnected": "Disconnected ({value})",
   "navigation.myNetwork": "My Network",
+  "navigation.credentials.certified": "Certified",
+  "navigation.credentials.pending": "Pending",
   "dwolla.controllerTitlePopup": "Please read below for the definition of Controller in this context.",
   "dwolla.paymentPoweredBy": "Echo Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Account Administrator Information",
@@ -3344,5 +3346,7 @@
   "sharedListings.detailRow.elementName": "Element Name",
   "sharedListings.detailRow.casNumber": "CAS Number",
   "sharedListings.detailRow.assay": "Assay",
-  "sharedListings.detailRow.productInformation": "Product Information"
+  "sharedListings.detailRow.productInformation": "Product Information",
+  "warehouseCredentials.expDate": "Exp. Date",
+  "warehouseCredentials.issueDate": "Issue Date"
 }

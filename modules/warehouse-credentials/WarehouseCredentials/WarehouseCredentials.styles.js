@@ -2,6 +2,12 @@ import styled from 'styled-components'
 import { Form, Header, Label } from 'semantic-ui-react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
+export const PositionHeaderSettings = styled.div`
+  position: relative;
+  z-index: 602;
+  padding: 20px 30px 10px;
+`
+
 export const IconDown = styled(ChevronDown)`
   width: 16px;
   height: 16px;
@@ -35,7 +41,7 @@ export const CertificationLabel = styled(Label)`
   line-height: 1.33 !important;
 
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     top: 2px;
     left: 2px;
@@ -43,6 +49,30 @@ export const CertificationLabel = styled(Label)`
     height: 16px;
     border-radius: 50%;
     background: #84c225;
+  }
+  
+  &.pending:before {
+    content: "?";
+    background: #ffc65d;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: 900;
+    color: #fff;
+    line-height: 16px;
+  }
+  
+  &.certified:after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 7px;
+    transform-clip: 50% 50%;
+    transform: rotate(45deg);
+    width: 6px;
+    height: 10px;
+    border-width: 0 2px 2px 0;
+    border-style: solid;
+    border-color: #fff;
   }
 `
 
@@ -127,12 +157,32 @@ export const FileName = styled.div`
     }
   }
 
-  > label {
+  > label,
+  > div > label {
     display: block !important;
     margin: 0;
     font-size: 12px;
     color: #848893;
     line-height: 16px;
+  }
+  
+  > div {
+    position: absolute;
+    top: -1px;
+    left: 57%;
+    width: auto;
+    height: 60px;
+    margin: 0 0 15px;
+    border: 0 none;
+    padding: 12px 22px 14px 52px;
+    background-color: transparent;
+    font-size: 14px;
+    color: #20273a;
+    line-height: 18px;
+    
+    + div {
+      left: 73%;
+    }
   }
 
   &.clickable {
@@ -169,10 +219,20 @@ export const FormArea = styled(Form)`
       display: flex;
       flex-flow: row nowrap;
       width: 100%;
+      
+      &.ui.input.disabled {
+        opacity: 1;
+      }
 
       input {
         flex: 1 0 50px;
         width: 0;
+        
+        &:disabled {
+          opacity: 1;
+          border-color: rgba(222, 226, 230, 0.45);
+          color: #000; //rgba(0, 0, 0, 0.87);
+        }
       }
     }
   }

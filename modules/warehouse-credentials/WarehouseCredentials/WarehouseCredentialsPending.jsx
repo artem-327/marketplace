@@ -1,6 +1,5 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { func, bool, array, string } from 'prop-types'
 import { withDatagrid } from '~/modules/datagrid'
 import { Formik } from 'formik'
 import moment from 'moment'
@@ -10,14 +9,16 @@ import {
   denyDeaListCertificate,
   denyTaxExemptCertificate
 } from '../actions'
+import { debounce } from 'lodash'
 // Components
 import DetailRow from '../../../components/detail-row'
-import { Popup, FormGroup } from 'semantic-ui-react'
+import { Popup, FormGroup, Input as SearchInput } from 'semantic-ui-react'
 import BasicButton from '../../../components/buttons/BasicButton'
 import { Input } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '../../../components/custom-formik'
 import { Required } from '../../../components/constants/layout'
 import { Download, FileText, Map } from 'react-feather'
+import { CustomRowDiv } from '../../companies/constants'
 // Services
 import { injectIntl, FormattedMessage } from 'react-intl'
 import ProdexTable from '../../../components/table'
@@ -30,6 +31,7 @@ import { UserCompany, UserImage, UserName } from '../../alerts/components/layout
 import { groupActions } from '../../company-product-info/constants'
 // Styles
 import {
+  PositionHeaderSettings,
   IconDown,
   IconUp,
   CertificationLabel,
@@ -39,12 +41,14 @@ import {
   FormArea,
   ButtonGroup
 } from './WarehouseCredentials.styles'
+import {config} from "../../admin/config";
 
 class WarehouseCredentialsPending extends Component {
   state = {
     expandedRowIds: [],
     expandedSubrowIds: [],
-    formikData: {}
+    formikData: {},
+    filter: {}
   }
 
   componentDidMount() {
@@ -134,9 +138,15 @@ class WarehouseCredentialsPending extends Component {
           <>
             {expandedSubrowIds.includes(branch.id) ? <IconUp /> : <IconDown />}
             {branch.deliveryAddress.cfName}
-            {branch.deaListReceiveVerify && <CertificationLabel>DEA</CertificationLabel>}
-            {branch.epaReceiveVerify && <CertificationLabel>EPA</CertificationLabel>}
-            {branch.taxExemptReceiveVerify && <CertificationLabel>DHL</CertificationLabel>}
+            {branch.deaListReceiveVerify && <CertificationLabel className='pending'>
+              <FormattedMessage id='warehouseCertifications.dea' defaultMessage='DEA' />
+            </CertificationLabel>}
+            {branch.epaReceiveVerify && <CertificationLabel className='pending'>
+              <FormattedMessage id='warehouseCertifications.epa' defaultMessage='EPA' />
+            </CertificationLabel>}
+            {branch.taxExemptReceiveVerify && <CertificationLabel className='pending'>
+              <FormattedMessage id='warehouseCertifications.dhl' defaultMessage='DHL' />
+            </CertificationLabel>}
           </>
         )
       }))
@@ -415,16 +425,47 @@ class WarehouseCredentialsPending extends Component {
     )
   }
 
+  handleFiltersValue = debounce(filter => {
+    const { datagrid } = this.props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }, 300)
+
+  handleFilterChangeInputSearch = (e, data) => {
+    const filter = {
+      ...this.state.filter,
+      [data.name]: data.value
+    }
+    this.setState({ filter: filter })
+    this.handleFiltersValue(filter)
+  }
+
   render() {
     const {
       datagrid,
       intl: { formatMessage },
       rows
     } = this.props
+    const filterValue = this.state.filter
 
     return (
       <>
-        <div className='flex stretched warehouse-credentials-wrapper' style={{ padding: '10px 30px' }}>
+        <PositionHeaderSettings>
+          <CustomRowDiv>
+            <div>
+              <div className='column'>
+                <SearchInput
+                  style={{ width: 340 }}
+                  icon='search'
+                  name='searchInput'
+                  placeholder={formatMessage({ id: 'warehouseCredentials.searchText', defaultMessage: 'Search...' })}
+                  onChange={this.handleFilterChangeInputSearch}
+                  value={filterValue && filterValue.searchInput ? filterValue.searchInput : ''}
+                />
+              </div>
+            </div>
+          </CustomRowDiv>
+        </PositionHeaderSettings>
+        <div className={`flex stretched warehouse-credentials-wrapper${datagrid.rows.length ? '' : ' empty'}`} style={{ padding: '10px 30px' }}>
           <ProdexTable
             {...datagrid.tableProps}
             tableName='warehouse_credentials_grid'
