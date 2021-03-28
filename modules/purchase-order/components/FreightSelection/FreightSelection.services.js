@@ -1,6 +1,6 @@
 import { generateToastMarkup } from '~/utils/functions'
 
-export const handleManualShipment = async props => {
+export const handleManualShipment = async (setIsOpenConfirmPopup, props) => {
   let {
     requestManualShipment,
     shippingAddress
@@ -13,6 +13,7 @@ export const handleManualShipment = async props => {
 
     try {
       await requestManualShipment(payload)
+      setIsOpenConfirmPopup(true)
     } catch (e) {
       console.error(e)
     }

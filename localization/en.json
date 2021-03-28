@@ -1881,6 +1881,8 @@
   "checkout.freight.estDelivery": "Est. Delivery",
   "checkout.freight.etd": "ETD",
   "checkout.freight.service": "Service",
+  "checkout.freight.quoteRequestSent": "Quote Request Sent",
+  "checkout.freight.weWillNotifyYou": "We'll notify you when your custom quote has been created",
   "checkout.summary.orderSummary": "Order Summary",
   "checkout.summary.subTotal": "Sub Total",
   "checkout.summary.freightCost": "Freight Cost",
