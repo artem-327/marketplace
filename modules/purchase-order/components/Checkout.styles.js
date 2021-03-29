@@ -106,7 +106,7 @@ export const GridExpandedSection = styled(Grid)`
   &.ui.grid {
     margin: 10px -20px;
     padding: 0;
-    ${props => (props.maxHeight ? 'max-height: ' + props.maxHeight + ';' : '')}
+    ${props => (props.maxheight ? 'max-height: ' + props.maxheight + ';' : '')}
 
     > .row {
       margin: 2.5px 20px;
@@ -130,5 +130,6 @@ export const GridRowExpandedSelectionRow = styled(GridRow)`
     props.checked
       ? 'border: solid 1px #2599d5; background-color: #ddf1fc;'
       : 'border: solid 1px #dee2e6; background-color: #f8f9fb;'}
-  ${props => (props.selection ? 'cursor: pointer;' : '')}
+  ${props => (props.selection && !props.disabled ? 'cursor: pointer;' : '')}
+  ${props => (props.disabled ? 'background-color: #edeef2;' : '')}
 `

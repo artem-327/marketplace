@@ -7,7 +7,7 @@ import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 
 //Components
-import { Button, GridColumn, Radio, Dimmer, Loader } from 'semantic-ui-react'
+import { Button, GridColumn, Radio, Dimmer, Loader, Popup } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import AddAddress from '../AddAddress/AddAddress'
 import ShippingHandler from './ShippingHandler'
@@ -97,39 +97,58 @@ const ShippingTerms = props => {
                 searchValue={searchValue}
                 onSetSearchValueChange={val => setSearchValue(val)}
               />
-              <GridExpandedSection overflow={'overflow: auto;'} maxHeight='605px'>
+              <GridExpandedSection overflow={'overflow: auto;'} maxheight='605px'>
                 <Dimmer inverted active={warehousesFetching || isFetching}>
                   <Loader />
                 </Dimmer>
-                {addressOptions.map((item, index) => (
-                  <GridRowExpandedSelectionRow
-                    key={index}
-                    checked={value && value.id === item.id}
-                    onClick={() => onValueChange(item)}
-                    selection={'true'}>
-                    <GridColumn width={16}>
-                      <DivFlexRow>
-                        <DivCentered>
-                          <Radio checked={value && value.id === item.id} />
-                        </DivCentered>
-                        <div>
-                          <DivSectionHeader>{item.name}</DivSectionHeader>
-                          <DivSectionName>{item.description}</DivSectionName>
-                        </div>
-                        <DivRightSection>
-                          <IconEdit
-                            size={18}
-                            onClick={() => {
-                              setAddAddressValues(item)
-                              setIsOpenAddAddress(true)
-                              chatWidgetVerticalMoved(true)
-                            }}
-                          />
-                        </DivRightSection>
-                      </DivFlexRow>
-                    </GridColumn>
-                  </GridRowExpandedSelectionRow>
-                ))}
+                {addressOptions.map((item, index) => {
+                  const disabled = !item.isBroadcasted
+                  return (
+                    <GridRowExpandedSelectionRow
+                      key={index}
+                      checked={value && value.id === item.id}
+                      onClick={() => !disabled && onValueChange(item)}
+                      selection={'true'}
+                      disabled={disabled}>
+                      <GridColumn width={16}>
+                        <Popup
+                          disabled={!disabled}
+                          wide
+                          trigger={
+                            <DivFlexRow>
+                              <DivCentered>
+                                <Radio checked={value && value.id === item.id} disabled={disabled}/>
+                              </DivCentered>
+                              <div>
+                                <DivSectionHeader disabled={disabled}>{item.name}</DivSectionHeader>
+                                <DivSectionName disabled={disabled}>{item.description}</DivSectionName>
+                              </div>
+                              <DivRightSection>
+                                <IconEdit
+                                  disabled={disabled}
+                                  size={18}
+                                  onClick={() => {
+                                    if (!disabled) {
+                                      setAddAddressValues(item)
+                                      setIsOpenAddAddress(true)
+                                      chatWidgetVerticalMoved(true)
+                                    }
+                                  }}
+                                />
+                              </DivRightSection>
+                            </DivFlexRow>
+                          }
+                          content={
+                            <FormattedMessage
+                              id='checkout.shipping.disabledPopupDescription'
+                              defaultMessage='A product in this order is not able to be shipped to this location due to regional restrictions set by the vendor. Please select a different address.'
+                            />
+                          }
+                        />
+                      </GridColumn>
+                    </GridRowExpandedSelectionRow>
+                  )
+                })}
               </GridExpandedSection>
               <DivRightButtons>
                 <Button

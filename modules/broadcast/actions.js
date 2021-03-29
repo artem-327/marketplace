@@ -63,7 +63,7 @@ export const broadcastChange = createAsyncAction(
 
 export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, datagrid) => {
   if (row && row.id) {
-    datagrid &&
+    datagrid && datagrid.updateRow &&
       datagrid.updateRow(row.id, () => ({
         ...row,
         warehouse: {
@@ -74,7 +74,7 @@ export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, 
         isBroadcastLoading: true
       }))
     const data = await api.saveRules(row.id, rules)
-    datagrid &&
+    datagrid && datagrid.updateRow &&
       datagrid.updateRow(row.id, () => ({
         ...row,
         warehouse: {

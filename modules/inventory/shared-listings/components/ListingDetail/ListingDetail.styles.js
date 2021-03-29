@@ -199,16 +199,36 @@ export const GridStyledNotes = styled(Grid)`
     background-color: #ffffff;
 
     > .row {
-      padding: 10px 0;
-      margin: 5px 0;
-      border-radius: 3px;
-      border: solid 1px #dee2e6;
       background-color: #ffffff;
-
-      > .column {
-        padding: 0 19px;
-      }
     }
+  }
+`
+
+export const GridRowNotesLabel = styled(GridRow)`
+  &.row {
+    padding: 5px 0 0px !important;
+    margin: 0 !important;;
+  }
+`
+
+export const GridColumnNotesLabel = styled(GridColumn)`
+  &.column {
+    padding: 0 !important;;
+  }
+`
+
+export const GridRowNotesContent = styled(GridRow)`
+  &.row {
+    border-radius: 3px;
+    border: solid 1px #dee2e6;
+    padding: 9px 0 !important;;
+    margin: 3px 0 5px!important;;
+  }
+`
+
+export const GridColumnNotesContent = styled(GridColumn)`
+  &.column {
+    padding: 0 19px !important;;
   }
 `
 
