@@ -17,7 +17,6 @@ import admin from '~/modules/admin/reducers'
 import profile from '~/modules/profile/reducers'
 import marketplace from '~/modules/marketplace/reducer'
 import filter, { initialState as filterInit } from '~/modules/filter/reducer'
-import chatWidget from '~/modules/chatWidget/reducer'
 import simpleAdd from '~/modules/inventory/reducer'
 import shiping from '~/modules/shipping/reducer'
 import cart, { initialState as cartInit } from '~/modules/purchase-order/reducer'
@@ -74,7 +73,6 @@ const reducer = combineReducers({
   profile,
   broadcast,
   phoneNumber,
-  chatWidget,
   operations,
   wantedBoard,
   search,

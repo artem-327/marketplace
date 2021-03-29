@@ -45,12 +45,10 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { AgreementModal } from '../components/modals'
 import { getCountryCodes } from '../modules/phoneNumber/actions'
 
-import { chatWidgetToggle } from '../modules/chatWidget/actions'
 import { toggleMenu, openGlobalAddForm, setMainContainer } from '../modules/layout/actions'
 import { getCompanyLogo } from '../modules/company-form/actions'
 import { withToastManager } from 'react-toast-notifications'
 
-import ChatWidget from '../modules/chatWidget/components/ChatWidgetContainer'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import ErrorComponent from '../components/error'
@@ -264,7 +262,6 @@ class Layout extends Component {
       triggerSystemSettingsModal,
       profile,
       openProfilePopup,
-      chatWidgetToggle,
       cartItems,
       takeover,
       intl: { formatMessage },
@@ -385,15 +382,6 @@ class Layout extends Component {
                       defaultMessage: 'My Profile'
                     })}
                   </Dropdown.Item>
-                  {/* <Dropdown.Item
-        as={Menu.Item}
-        onClick={() => chatWidgetToggle()}
-        data-test='navigation_menu_user_support_chat_drpdn'>
-        {formatMessage({
-          id: 'global.supportChat',
-          defaultMessage: 'Support Chat'
-        })}
-      </Dropdown.Item> */}
                   {getSafe(() => auth.identity.isAdmin, false) && takeover && (
                     <Dropdown.Item
                       as={Menu.Item}
@@ -481,7 +469,6 @@ class Layout extends Component {
 
         {profile && profile.profilePopup && <Profile />}
         <Settings role='user' scrolling={false} />
-        <ChatWidget />
         <FlexContainer className={copyrightClassName} onScroll={this.trackScrolling}>
           <TopMenuContainer fluid>
             <Messages />
@@ -555,7 +542,6 @@ class Layout extends Component {
 const mapDispatchToProps = {
   takeOverCompanyFinish,
   openProfilePopup,
-  chatWidgetToggle,
   triggerSystemSettingsModal,
   agreeWithTOS,
   getCountryCodes,

@@ -30,25 +30,16 @@ import {
 // Services
 import { formValidation, getInitialFormValues, submitHandler } from './CasProductsSidebar.services'
 import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest } from '../../actions'
-import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 const CasProductsSidebar = props => {
   const { popupValues, updating } = props
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-    props.chatWidgetVerticalMoved(true)
-  }, [])  // If [] is empty then is similar as componentDidMount.
 
   return (
     <Formik
       initialValues={getInitialFormValues(popupValues)}
       validationSchema={formValidation()}
       enableReinitialize
-      onReset={() => {
-        props.closeAddPopup()
-        props.chatWidgetVerticalMoved(false)
-      }}
+      onReset={() => props.closeAddPopup()}
       onSubmit={submitHandler}
       loading={false}>
       {formikProps => {
@@ -56,10 +47,7 @@ const CasProductsSidebar = props => {
           <FormCustom autoComplete='off'>
             <DimmerSidebarOpened
               active={true}
-              onClickOutside={() => {
-                props.closeAddPopup()
-                props.chatWidgetVerticalMoved(false)
-              }}
+              onClickOutside={() => props.closeAddPopup()}
               page
             />
             <SidebarFlex
@@ -73,10 +61,7 @@ const CasProductsSidebar = props => {
                   <Loader />
                 </Dimmer>
                 <CustomHighSegment
-                  onClick={() => {
-                    props.closeAddPopup()
-                    props.chatWidgetVerticalMoved(false)
-                  }}
+                  onClick={() => props.closeAddPopup()}
                   basic>
                   <DivTitle>
                     <DivHeader>
@@ -102,10 +87,7 @@ const CasProductsSidebar = props => {
               <DivBottomSidebar>
                 <BasicButton
                   noborder
-                  onClick={() => {
-                    props.closeAddPopup()
-                    props.chatWidgetVerticalMoved(false)
-                  }}
+                  onClick={() => props.closeAddPopup()}
                   data-test='cas_product_sidebar_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
                 </BasicButton>
@@ -147,7 +129,6 @@ function mapStateToProps(store) {
 }
 
 export default withDatagrid(injectIntl(connect(mapStateToProps, {
-  chatWidgetVerticalMoved,
   closeAddPopup,
   postNewCasProductRequest,
   updateCasProductRequest
