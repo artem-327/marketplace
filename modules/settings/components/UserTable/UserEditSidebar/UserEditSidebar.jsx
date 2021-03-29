@@ -44,8 +44,6 @@ import {
   switchUser,
   generateCheckboxes
 } from './UserEditSidebar.services'
-//Constants
-import { currencyId } from '../../../../../constants/index'
 //Styles
 import { DivTitle } from '../../Locations/Branches/BranchesSidebar/BranchesSidebar.styles'
 

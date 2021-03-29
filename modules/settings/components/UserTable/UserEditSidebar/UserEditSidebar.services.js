@@ -8,6 +8,11 @@ import { getSafe, removeEmpty } from '../../../../../utils/functions'
 import { errorMessages, phoneValidation } from '../../../../../constants/yupValidation'
 //Constants
 import { currencyId } from '../../../../../constants/index'
+import {
+  USER_DAILY_PURCHASE_LIMIT_ID,
+  USER_MONTHLY_PURCHASE_LIMIT_ID,
+  USER_ORDER_PURCHASE_LIMIT_ID
+} from './UserEditSidebar.constants'
 //Types
 import { TInitialValues } from './UserEditSidebar.types'
 
@@ -288,15 +293,15 @@ export const submitUser = async (values, actions, props, state) => {
   const settingsData = {
     settings: [
       {
-        id: userSettings?.dailyPurchaseLimit?.id,
+        id: userSettings?.dailyPurchaseLimit?.id || USER_DAILY_PURCHASE_LIMIT_ID,
         value: values?.dailyPurchaseLimit?.toString() || 'EMPTY_SETTING'
       },
       {
-        id: userSettings?.monthlyPurchaseLimit?.id,
+        id: userSettings?.monthlyPurchaseLimit?.id || USER_MONTHLY_PURCHASE_LIMIT_ID,
         value: values?.monthlyPurchaseLimit?.toString() || 'EMPTY_SETTING'
       },
       {
-        id: userSettings?.orderPurchaseLimit?.id,
+        id: userSettings?.orderPurchaseLimit?.id || USER_ORDER_PURCHASE_LIMIT_ID,
         value: values?.orderPurchaseLimit?.toString() || 'EMPTY_SETTING'
       }
     ]
