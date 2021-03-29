@@ -44,7 +44,11 @@ class ListingDetail extends Component {
           onClick={() => {
             let ids = expandedRowIds.slice()
             if (ids.includes(row.id)) {
-              onChange({ ...values, header: { markup: '' }, tabs: { activeTab: 0 } })
+              onChange({
+                ...values,
+                header: { priceMultiplier: '', priceAddition: '', priceOverride: '', id: '' },
+                tabs: { activeTab: 0 }
+              })
               setExpandedRowIds([])
             }
           }}

@@ -910,7 +910,7 @@ class Detail extends Component {
               <ArrowLeft />
               <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
             </a>
-            {counterOrderId && (
+            {counterOrderId ? (
               <a
                 onClick={async () => {
                   await router.push(`/orders/detail?type=${oppositeOrderType}&id=${counterOrderId}`)
@@ -921,7 +921,7 @@ class Detail extends Component {
                 <Link2 />
                 <FormattedMessage id='order.detail.viewLinkedOrder' defaultMessage='View Linked Order' />
               </a>
-            )}
+            ) : null}
           </TopRow>
           <OrderSegment loading={isDetailFetching || Object.keys(order).length === 0}>
             <Grid verticalAlign='middle'>

@@ -81,7 +81,7 @@ class SearchByNamesAndTags extends Component {
   handleSearchQuery = debounce((e, { searchQuery }) => {
     e && e.persist()
     try {
-      this.props.searchProductOffersInventory(searchQuery, this.props.isMarketplace)
+      this.props.searchProductOffersInventory(searchQuery, this.props.filterType)
       this.props.searchTags(searchQuery)
     } catch (error) {
       console.error(error)
@@ -243,7 +243,7 @@ SearchByNamesAndTags.propTypes = {
   onChange: PropTypes.func,
   clearProductOffers: PropTypes.func,
   filterApply: PropTypes.bool,
-  isMarketplace: PropTypes.bool
+  filterType: PropTypes.string
 }
 
 SearchByNamesAndTags.defaultProps = {
@@ -254,7 +254,7 @@ SearchByNamesAndTags.defaultProps = {
   onChange: () => {},
   clearProductOffers: () => {},
   filterApply: true,
-  isMarketplace: false
+  filterType: ''
 }
 
 const mapStateToProps = state => ({

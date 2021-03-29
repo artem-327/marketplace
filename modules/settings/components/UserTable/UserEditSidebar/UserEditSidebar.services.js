@@ -64,14 +64,14 @@ export const getBranchesOptions = branches => {
 export const getInitialFormValues = sidebarValues => {
   return !isEmpty(sidebarValues)
     ? {
-        additionalBranches: sidebarValues?.additionalBranches?.map(d => d?.id),
+        additionalBranches: sidebarValues?.additionalBranches?.map(d => d?.id) || [],
         email: sidebarValues?.email,
         homeBranch: sidebarValues?.homeBranch ? sidebarValues?.homeBranch?.id : '',
         jobTitle: sidebarValues?.jobTitle,
         name: sidebarValues?.name,
         phone: sidebarValues?.phone,
         preferredCurrency: currencyId,
-        roles: sidebarValues?.roles?.map(d => d?.id),
+        roles: sidebarValues?.roles?.map(d => d?.id) || [],
         sellMarketSegments: getSafe(() => sidebarValues?.sellMarketSegments, [])?.map(d => d?.id),
         buyMarketSegments: getSafe(() => sidebarValues?.buyMarketSegments, [])?.map(d => d?.id),
         regulatoryDeaListAuthorized: sidebarValues?.regulatoryDeaListAuthorized,

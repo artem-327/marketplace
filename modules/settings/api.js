@@ -21,6 +21,42 @@ export default {
     )
   },
 
+  addDeaAttachment: (attachment, branchId) => {
+    const formData = new FormData()
+    formData.append('file', attachment)
+
+    return api.post(
+      `/prodex/api/branches/uploadDeaListCertificate/${branchId}`,
+      formData,
+      {
+        headers: {
+          accept: 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+          Pragma: 'no-handle-error, no-cache'
+        }
+      }
+    )
+  },
+
+  addTaxExemptAttachment: (attachment, branchId) => {
+    const formData = new FormData()
+    formData.append('file', attachment)
+
+    return api.post(
+      `/prodex/api/branches/uploadTaxExemptCertificate/${branchId}`,
+      formData,
+      {
+        headers: {
+          accept: 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+          Pragma: 'no-handle-error, no-cache'
+        }
+      }
+    )
+  },
+
   dwollaAddVerificationDocument: (attachment, docType) => {
     const formData = new FormData()
     formData.append('file', attachment)
@@ -323,5 +359,28 @@ export default {
     api
       .patch(`/prodex/api/settings/company-user/${userId}`, request)
       .then(response => response.data)
-      .catch(err => err)
+      .catch(err => err),
+  addCustomer: (customerData) =>
+    api
+      .post(`/prodex/api/customers/`, customerData)
+      .then(response => response.data)
+      .catch(err => err),
+  updateCustomer: (customerId, customerData) =>
+    api
+      .patch(`/prodex/api/customers/${customerId}`, customerData)
+      .then(response => response.data)
+      .catch(err => err),
+  deleteCustomer: id => api.delete(`/prodex/api/customers/${id}`),
+  addCustomerWarehouse: (customerId, warehouse) =>
+    api
+      .post(`/prodex/api/customers/warehouses?customerId=${customerId}`, warehouse)
+      .then(response => response.data)
+      .catch(err => err),
+  updateCustomerWarehouse: (customerId, warehouseId, warehouse) =>
+    api
+      .patch(`/prodex/api/customers/warehouses?customerId=${customerId}&warehouseId=${warehouseId}`, warehouse)
+      .then(response => response.data)
+      .catch(err => err),
+  deleteCustomerWarehouse: (customerId, warehouseId) =>
+    api.delete(`/prodex/api/customers/warehouses?customerId=${customerId}&warehouseId=${warehouseId}`)
 }

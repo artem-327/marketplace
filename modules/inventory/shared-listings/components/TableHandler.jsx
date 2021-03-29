@@ -76,6 +76,7 @@ class TableHandler extends Component {
           <SearchByNamesAndTags
             onChange={this.SearchByNamesAndTagsChanged}
             initFilterState={getSafe(() => sharedListingsFilters.SearchByNamesAndTags, null)}
+            filterType='sharedListings'
             filterApply={false}
           />
           {/* <InputSearch
