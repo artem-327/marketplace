@@ -114,7 +114,7 @@ class Navigation extends Component {
     myNetwork: getSafe(() => Router.router.pathname === '/my-network', false),
     alerts: getSafe(() => Router.router.pathname === '/alerts', false),
     credentials:
-      getSafe(() => Router.router.pathname === '/warehouse-credentials/all', false) ||
+      getSafe(() => Router.router.pathname === '/warehouse-credentials/certified', false) ||
       getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false),
     activeNetworkStatus: 'ALL'
   }
@@ -845,7 +845,7 @@ class Navigation extends Component {
             className={credentials ? 'opened' : null}
             open={credentials.toString()}
             onClick={(data, e) => {
-              this.toggleOpened('credentials', '/warehouse-credentials/all')
+              this.toggleOpened('credentials', '/warehouse-credentials/certified')
             }}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'credentials'}
@@ -855,9 +855,9 @@ class Navigation extends Component {
                 <Dropdown.Item
                   key={0}
                   as={MenuLink}
-                  to={`/warehouse-credentials/all`}
+                  to={`/warehouse-credentials/certified`}
                   dataTest={'navigation_credentials_all_drpdn'}>
-                  {formatMessage({ id: 'navigation.credentials.all', defaultMessage: 'All' })}
+                  {formatMessage({ id: 'navigation.credentials.certified', defaultMessage: 'Certified' })}
                 </Dropdown.Item>
                 <Dropdown.Item
                   key={0}
