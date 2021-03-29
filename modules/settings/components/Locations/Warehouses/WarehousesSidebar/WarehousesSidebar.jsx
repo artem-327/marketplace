@@ -16,6 +16,8 @@ import {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
+  addDeaAttachment,
+  addTaxExemptAttachment,
   loadFile,
   setAttachmentFiles
 } from '../../../../actions'
@@ -72,15 +74,32 @@ class WarehousesSidebar extends Component {
       removeAttachmentLinkToBranch,
       removeAttachment,
       addAttachment,
+      addDeaAttachment,
+      addTaxExemptAttachment,
       loadFile,
       sidebarValues,
       attachmentFiles,
-      setAttachmentFiles
+      setAttachmentFiles,
+      listDocumentTypes
     } = this.props
     switch (editTab) {
       case 0: {
         // Edit
-        return <WarehousesFormEdit intl={intl} sidebarValues={sidebarValues} formikProps={formikProps} />
+        return (
+          <WarehousesFormEdit
+            intl={intl}
+            sidebarValues={sidebarValues}
+            formikProps={formikProps}
+            addAttachment={addAttachment}
+            addDeaAttachment={addDeaAttachment}
+            addTaxExemptAttachment={addTaxExemptAttachment}
+            loadFile={loadFile}
+            removeAttachment={removeAttachment}
+            attachmentFiles={attachmentFiles}
+            setAttachmentFiles={setAttachmentFiles}
+            listDocumentTypes={listDocumentTypes}
+          />
+        )
       }
 
       case 1: {
@@ -263,6 +282,8 @@ const mapDispatchToProps = {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
+  addDeaAttachment,
+  addTaxExemptAttachment,
   loadFile,
   chatWidgetVerticalMoved,
   setAttachmentFiles
@@ -279,7 +300,8 @@ const mapStateToProps = state => {
     isOpenSidebar: state.settings.isOpenSidebar,
     loading: state.settings.loading,
     openTab: state.settings.openTab,
-    attachmentFiles: state.settings.attachmentFiles
+    attachmentFiles: state.settings.attachmentFiles,
+    listDocumentTypes: state.simpleAdd.listDocumentTypes
   }
 }
 

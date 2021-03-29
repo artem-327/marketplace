@@ -52,6 +52,19 @@ const DivUpload = styled.div`
       padding-top: 1em;
     }
   }
+  
+  &.no-styles {
+    margin: 0 !important;
+    border: 0 none !important;
+    padding: 0 !important;
+    background: transparent none !important;
+    
+    .dropzoneLot,
+    .dropzoneLotHasFile {
+      border: 0 none !important;
+      background: transparent none !important;
+    }
+  }
 `
 
 class UploadAttachment extends Component {
@@ -341,7 +354,7 @@ class UploadAttachment extends Component {
   }
 
   render() {
-    let { attachments, disabled, filesLimit, toastManager, hideAttachments } = this.props
+    let { attachments, disabled, filesLimit, toastManager, hideAttachments, noWrapperStyles } = this.props
     let hasFile = attachments && attachments.length !== 0
 
     const limitMsg = generateToastMarkup(
@@ -356,7 +369,7 @@ class UploadAttachment extends Component {
     return (
       <>
         {this.renderDuplicateFilesModal()}
-        <DivUpload className={'uploadAttachment ' + (hasFile ? ' has-file' : '')}>
+        <DivUpload className={'uploadAttachment ' + (hasFile ? ' has-file' : '') + (noWrapperStyles ? ' no-styles' : '')}>
           {this.props.header}
           {disabled ? (
             <span className='file-space'>
@@ -449,7 +462,8 @@ UploadAttachment.propTypes = {
   uploadClass: PropTypes.string,
   uploadedClass: PropTypes.string,
   acceptFiles: PropTypes.string,
-  listDocumentTypes: PropTypes.array
+  listDocumentTypes: PropTypes.array,
+  noWrapperStyles: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
