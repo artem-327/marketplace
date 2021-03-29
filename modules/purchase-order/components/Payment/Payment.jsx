@@ -73,7 +73,7 @@ const Payment = props => {
       content={
         sectionState.accepted || isExpanded ? (
           isExpanded ? (
-            <GridExpandedSection overflow={'overflow: auto;'} maxHeight='605px'>
+            <GridExpandedSection overflow={'overflow: auto;'} maxheight='605px'>
               {!getSafe(() => payments.length, false) && isThirdPartyConnectionException ? (
                 <Grid.Row>
                   <Grid.Column textAlign='center'>

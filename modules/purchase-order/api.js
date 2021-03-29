@@ -18,7 +18,10 @@ export const postNewDeliveryAddress = address =>
   api.post('/prodex/api/delivery-addresses', address).then(response => response.data)
 export const updateDeliveryAddress = (address, id) =>
   api.put(`/prodex/api/delivery-addresses/id/${id}`, address).then(response => response.data)
-export const getDeliveryAddresses = () => api.get('/prodex/api/delivery-addresses').then(response => response.data)
+
+export const getDeliveryAddresses = () => api.get('/prodex/api/delivery-addresses/search-broadcasted-by-cart')
+  .then(response => response.data)
+
 export const getDwollaPayments = () =>
   api.get('/prodex/api/payments/bank-accounts/dwolla').then(response => response.data)
 export const getVellociPayments = () =>
@@ -38,7 +41,10 @@ export const getProvinces = ({ countryId }) =>
 export const getStateDetail = id =>
   api.get(`/prodex/api/companies/?entityId=${id}&entityType=country`).then(response => response.data)
 export const getBranches = () => api.get('/prodex/api/branches').then(response => response.data)
-export const getWarehouses = () => api.get('/prodex/api/branches/warehouses').then(response => response.data)
+
+export const getWarehouses = () => api.get('/prodex/api/branches/warehouses/search-broadcasted-by-cart')
+  .then(response => response.data)
+
 
 export const updateHazmatInfo = (cartItemId, payload) =>
   api.patch(`/prodex/api/cart/items/${cartItemId}/hazard-info`, payload).then(response => response.data)
@@ -54,7 +60,9 @@ export const postNewWarehouse = (createWarehouse, payload) =>
 export const updateWarehouse = (payload, id) =>
   api.put(`/prodex/api/branches/${id}`, payload).then(response => response.data)
 
+
+
 export const searchDeliveryAddresses = val =>
-  api.get(`/prodex/api/delivery-addresses/search?pattern=${val}`).then(response => response.data)
+  api.get(`/prodex/api/delivery-addresses/search-broadcasted-by-cart?pattern=${val}`).then(response => response.data)
 export const searchWarehouses = val =>
-  api.get(`/prodex/api/branches/warehouses/search?pattern=${val}`).then(response => response.data)
+  api.get(`/prodex/api/branches/warehouses/search-broadcasted-by-cart?pattern=${val}`).then(response => response.data)
