@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Grid, GridRow, Button, Segment, Dimmer } from 'semantic-ui-react'
+import { Input } from 'formik-semantic-ui-fixed-validation'
 
 export const GridStyled = styled(Grid)`
   &.ui.grid {
@@ -50,36 +51,36 @@ export const ButtonOrCustom = styled(Button.Group)`
     color: #20273a !important;
     font-weight: bold !important;
   }
-  
+
   .ui.active.button {
     background-color: #20273a !important;
     color: #ffffff !important;
   }
-  
+
   &.ui.buttons {
     width: 320px;
     .button:first-child {
       border-top-left-radius: 4px;
       border-bottom-left-radius: 4px;
-      
+
       :not(.active) {
-        border-top: solid 1px #dee2e6; 
+        border-top: solid 1px #dee2e6;
         border-left: solid 1px #dee2e6;
         border-bottom: solid 1px #dee2e6;
       }
     }
-    
+
     .button:last-child {
       border-top-right-radius: 4px;
       border-bottom-right-radius: 4px;
-      
+
       :not(.active) {
-        border-top: solid 1px #dee2e6; 
+        border-top: solid 1px #dee2e6;
         border-right: solid 1px #dee2e6;
         border-bottom: solid 1px #dee2e6;
       }
     }
-    
+
     .or {
       margin: 1px -2px;
     }
@@ -100,5 +101,14 @@ export const SegmentStyled = styled(Segment)`
 export const DimmerStyled = styled(Dimmer)`
   &.ui.inverted.dimmer {
     background: rgba(255, 255, 255, 0.85) !important;
+  }
+`
+
+export const InputTradePassId = styled(Input)`
+  &.ui.disabled.input {
+    opacity: 1 !important;
+  }
+  &.ui.form .field :disabled {
+    opacity: 1 !important;
   }
 `

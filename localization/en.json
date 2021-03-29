@@ -3351,5 +3351,6 @@
   "sharedListings.detailRow.internalNotes": "Internal Notes",
   "sharedListings.detailRow.productInformation": "Product Information",
   "warehouseCredentials.expDate": "Exp. Date",
-  "warehouseCredentials.issueDate": "Issue Date"
+  "warehouseCredentials.issueDate": "Issue Date",
+  "company.myTradePassId": "My TradePass ID"
 }
