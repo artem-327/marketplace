@@ -120,7 +120,7 @@ const FreightSelection = props => {
           isExpanded ? (
             <>
               {!cart.weightLimitExceed && !cart.palletLimitExceed && !fixedFreightId && (
-                <GridExpandedSection overflow={'overflow: auto;'} maxHeight='605px'>
+                <GridExpandedSection overflow={'overflow: auto;'} maxheight='605px'>
                   <Dimmer inverted active={shippingQuotesAreFetching}>
                     <Loader />
                   </Dimmer>

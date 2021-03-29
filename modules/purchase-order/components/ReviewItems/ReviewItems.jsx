@@ -124,8 +124,8 @@ const ReviewItems = props => {
                     </GridExpandedSection>
                   ) : (
                     <DivSectionCollapsedWrapper>
-                      {cartItems.map(item => (
-                        <DivSectionCollapsedRow>
+                      {cartItems.map((item, index) => (
+                        <DivSectionCollapsedRow key={index}>
                           <DivSectionName>{item.productName}</DivSectionName>
                           <DivSectionDescription>{item.pkgAmount * item.packagingSize}</DivSectionDescription>
                           <DivSectionDescription>{item.packaging}</DivSectionDescription>
