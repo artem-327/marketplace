@@ -4,6 +4,8 @@ import moment from 'moment'
 import { Datagrid } from '~/modules/datagrid'
 
 export function approveDeaListCertificate(branchId, values) {
+  console.log('Issue Date: ', values.issueDate)
+  console.log('Expire Date: ', values.expDate)
   const approveData = {
     deaListCertificateIssueDate: moment(values.issueDate).format('YYYY-MM-DD') + 'T00:00:00Z',
     deaListCertificateExpireDate: moment(values.expDate).format('YYYY-MM-DD') + 'T00:00:00Z'
@@ -19,6 +21,8 @@ export function approveDeaListCertificate(branchId, values) {
 }
 
 export function approveTaxExemptCertificate(branchId, values) {
+  console.log('Issue Date: ', values.issueDate)
+  console.log('Expire Date: ', values.expDate)
   const approveData = {
     taxExemptCertificateNumber: values.certificateNumber,
     taxExemptCertificateIssueDate: moment(values.issueDate).format('YYYY-MM-DD') + 'T00:00:00Z',
