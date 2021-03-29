@@ -22,7 +22,6 @@ import {
   getDocumentTypes,
   searchCompany
 } from '~/modules/products/actions'
-import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 import { Header } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
@@ -47,8 +46,7 @@ const mapDispatchToProps = {
   getUnNumbersByString,
   searchProductGroups,
   getDocumentTypes,
-  searchCompany,
-  chatWidgetVerticalMoved
+  searchCompany
 }
 
 const mapStateToProps = ({ productsAdmin }, props) => {

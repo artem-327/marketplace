@@ -830,8 +830,7 @@ class AddEditEchoProduct extends React.Component {
       closePopup,
       linkAttachment,
       listDocumentTypes,
-      datagrid,
-      chatWidgetVerticalMoved
+      datagrid
     } = this.props
 
     const { popupValues } = this.state
@@ -889,7 +888,6 @@ class AddEditEchoProduct extends React.Component {
       }
 
       setSubmitting(false)
-      chatWidgetVerticalMoved(false)
       callback()
     } catch (err) {
       setSubmitting(false)
@@ -2260,8 +2258,7 @@ class AddEditEchoProduct extends React.Component {
       closePopup,
       intl: { formatMessage },
       isLoading,
-      datagrid,
-      chatWidgetVerticalMoved
+      datagrid
     } = this.props
 
     const { editTab } = this.state
@@ -2284,10 +2281,7 @@ class AddEditEchoProduct extends React.Component {
               <DimmerBottomSidebarOpend
                 height='height: 11% !important;' // 89% height has Sidebar'
                 active={true}
-                onClickOutside={() => {
-                  closePopup()
-                  chatWidgetVerticalMoved(false)
-                }}
+                onClickOutside={() => closePopup()}
                 page></DimmerBottomSidebarOpend>
               <FlexSidebar visible={true} width='very wide' direction='bottom' animation='overlay'>
                 <Dimmer inverted active={isLoading}>
@@ -2300,13 +2294,7 @@ class AddEditEchoProduct extends React.Component {
                         {formatMessage(tab.text)}
                       </Menu.Item>
                     ))}
-                    <DivIconChevronDown
-                      onClick={() => {
-                        closePopup()
-                        chatWidgetVerticalMoved(false)
-                      }}>
-                      <ChevronDown />
-                    </DivIconChevronDown>
+                    <DivIconChevronDown onClick={() => closePopup()}><ChevronDown /></DivIconChevronDown>
                   </MenuCustom>
                 </HighSegment>
 
@@ -2321,7 +2309,6 @@ class AddEditEchoProduct extends React.Component {
                     onClick={() => {
                       if (this.state.changedAttachments) datagrid.loadData()
                       closePopup()
-                      chatWidgetVerticalMoved(false)
                     }}
                     data-test='sidebar_inventory_cancel'>
                     {Object.keys(touched).length || this.state.changedForm

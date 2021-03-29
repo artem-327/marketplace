@@ -50,7 +50,6 @@ const ShippingTerms = props => {
     warehousesFetching,
     isFetching,
     isOpenModal,
-    chatWidgetVerticalMoved,
     setIsOpenAddAddress
   } = props
 
@@ -131,7 +130,6 @@ const ShippingTerms = props => {
                                     if (!disabled) {
                                       setAddAddressValues(item)
                                       setIsOpenAddAddress(true)
-                                      chatWidgetVerticalMoved(true)
                                     }
                                   }}
                                 />
@@ -156,7 +154,6 @@ const ShippingTerms = props => {
                   onClick={() => {
                     setAddAddressValues(null)
                     setIsOpenAddAddress(true)
-                    chatWidgetVerticalMoved(true)
                   }}>
                   <FormattedMessage id='global.addNew' defaultMessage='Add New'>
                     {text => text}
@@ -177,10 +174,7 @@ const ShippingTerms = props => {
                   }}
                   isWarehouse={warehouseAddressSwitch === 'warehouses'}
                   popupValues={addAddressValues}
-                  onClose={() => {
-                    setIsOpenAddAddress(false)
-                    chatWidgetVerticalMoved(false)
-                  }}
+                  onClose={() => setIsOpenAddAddress(false)}
                 />
               )}
             </div>

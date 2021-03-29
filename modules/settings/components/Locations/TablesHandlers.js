@@ -9,7 +9,6 @@ import TreeModel from 'tree-model'
 import { withToastManager } from 'react-toast-notifications'
 
 import * as Actions from '../../actions'
-import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import { currency } from '~/constants/index'
@@ -195,7 +194,6 @@ class TablesHandlers extends Component {
     const {
       currentTab,
       openSidebar,
-      chatWidgetVerticalMoved,
       intl: { formatMessage }
     } = this.props
 
@@ -221,10 +219,7 @@ class TablesHandlers extends Component {
         <div className='column'>
           <ButtonAdd
             primary
-            onClick={() => {
-              openSidebar()
-              chatWidgetVerticalMoved(true)
-            }}
+            onClick={() => openSidebar()}
             data-test='settings_open_popup_btn'>
             <PlusCircle />
             <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
@@ -255,5 +250,5 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(
-  withToastManager(connect(mapStateToProps, { ...Actions, chatWidgetVerticalMoved })(injectIntl(TablesHandlers)))
+  withToastManager(connect(mapStateToProps, Actions)(injectIntl(TablesHandlers)))
 )

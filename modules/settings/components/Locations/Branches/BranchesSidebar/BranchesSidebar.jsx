@@ -26,7 +26,7 @@ import {
   addAttachment,
   loadFile
 } from '../../../../actions'
-import { chatWidgetVerticalMoved } from '../../../../../chatWidget/actions'
+
 //Styles
 import { CustomHighSegment, DivTitle } from './BranchesSidebar.styles'
 import {
@@ -55,10 +55,7 @@ const BranchSidebar = props => {
       initialValues={initialValues}
       validationSchema={formValidation()}
       enableReinitialize
-      onReset={() => {
-        props.closeSidebar()
-        props.chatWidgetVerticalMoved(false)
-      }}
+      onReset={() => props.closeSidebar()}
       onSubmit={submitHandler}
       loading={props.loading}>
       {formikProps => (
@@ -66,10 +63,7 @@ const BranchSidebar = props => {
           <FormCustom autoComplete='off'>
             <DimmerSidebarOpend
               active={props.isOpenSidebar}
-              onClickOutside={() => {
-                props.closeSidebar()
-                props.chatWidgetVerticalMoved(false)
-              }}
+              onClickOutside={() => props.closeSidebar()}
               page></DimmerSidebarOpend>
             <SidebarFlex
               visible={props.isOpenSidebar}
@@ -82,10 +76,7 @@ const BranchSidebar = props => {
                   <Loader />
                 </Dimmer>
                 <CustomHighSegment
-                  onClick={() => {
-                    props.closeSidebar()
-                    props.chatWidgetVerticalMoved(false)
-                  }}
+                  onClick={() => props.closeSidebar()}
                   basic>
                   <DivTitle>
                     <div>
@@ -109,10 +100,7 @@ const BranchSidebar = props => {
               <DivBottomSidebar>
                 <BasicButton
                   noBorder
-                  onClick={() => {
-                    props.closeSidebar()
-                    props.chatWidgetVerticalMoved(false)
-                  }}
+                  onClick={() => props.closeSidebar()}
                   data-test='settings_branches_popup_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
@@ -136,7 +124,6 @@ const BranchSidebar = props => {
                           },
                           getSafe(() => props.sidebarValues.id, null)
                         )
-                        await props.chatWidgetVerticalMoved(false)
                       }
                     })
                   }}
@@ -164,8 +151,7 @@ const mapDispatchToProps = {
   removeAttachmentLinkToBranch,
   removeAttachment,
   addAttachment,
-  loadFile,
-  chatWidgetVerticalMoved
+  loadFile
 }
 
 const mapStateToProps = state => {
@@ -191,7 +177,6 @@ BranchSidebar.propTypes = {
   removeAttachment: PropTypes.func,
   addAttachment: PropTypes.func,
   loadFile: PropTypes.func,
-  chatWidgetVerticalMoved: PropTypes.func,
   hasProvinces: PropTypes.bool,
   sidebarValues: PropTypes.object,
   country: PropTypes.string,
@@ -212,7 +197,6 @@ BranchSidebar.defaultProps = {
   removeAttachment: () => {},
   addAttachment: () => {},
   loadFile: () => {},
-  chatWidgetVerticalMoved: () => {},
   hasProvinces: false,
   sidebarValues: null,
   country: '',

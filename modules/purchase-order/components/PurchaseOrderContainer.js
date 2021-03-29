@@ -4,7 +4,6 @@ import TmpBoth from './TmpBoth'
 import Checkout from './Checkout'
 //Actions
 import * as Actions from '../actions'
-import { chatWidgetVerticalMoved } from '../../chatWidget/actions'
 
 import { getSafe } from '~/utils/functions'
 
@@ -69,4 +68,4 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions, chatWidgetVerticalMoved })(Checkout)
+export default connect(mapStateToProps, Actions)(Checkout)
