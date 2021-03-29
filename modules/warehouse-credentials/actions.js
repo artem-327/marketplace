@@ -2,13 +2,12 @@ import * as AT from './action-types'
 import * as api from './api'
 import moment from 'moment'
 import { Datagrid } from '~/modules/datagrid'
+import { getLocaleDateFormat } from '../../components/date-format'
 
 export function approveDeaListCertificate(branchId, values) {
-  console.log('Issue Date: ', values.issueDate)
-  console.log('Expire Date: ', values.expDate)
   const approveData = {
-    deaListCertificateIssueDate: moment(values.issueDate).format('YYYY-MM-DD') + 'T00:00:00Z',
-    deaListCertificateExpireDate: moment(values.expDate).format('YYYY-MM-DD') + 'T00:00:00Z'
+    deaListCertificateIssueDate: moment(values.issueDate, getLocaleDateFormat()).format('YYYY-MM-DD') + 'T00:00:00Z',
+    deaListCertificateExpireDate: moment(values.expDate, getLocaleDateFormat()).format('YYYY-MM-DD') + 'T00:00:00Z'
   }
   return {
     type: AT.WAREHOUSE_CREDENTIALS_DEA_APPROVE,
@@ -21,12 +20,10 @@ export function approveDeaListCertificate(branchId, values) {
 }
 
 export function approveTaxExemptCertificate(branchId, values) {
-  console.log('Issue Date: ', values.issueDate)
-  console.log('Expire Date: ', values.expDate)
   const approveData = {
     taxExemptCertificateNumber: values.certificateNumber,
-    taxExemptCertificateIssueDate: moment(values.issueDate).format('YYYY-MM-DD') + 'T00:00:00Z',
-    taxExemptCertificateExpireDate: moment(values.expDate).format('YYYY-MM-DD') + 'T00:00:00Z'
+    taxExemptCertificateIssueDate: moment(values.issueDate, getLocaleDateFormat()).format('YYYY-MM-DD') + 'T00:00:00Z',
+    taxExemptCertificateExpireDate: moment(values.expDate, getLocaleDateFormat()).format('YYYY-MM-DD') + 'T00:00:00Z'
   }
   return {
     type: AT.WAREHOUSE_CREDENTIALS_TAX_EXEMPT_APPROVE,

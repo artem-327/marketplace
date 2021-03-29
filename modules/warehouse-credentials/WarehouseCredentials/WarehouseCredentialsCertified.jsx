@@ -9,6 +9,7 @@ import ProdexTable from '../../../components/table'
 import { postNewWarehouseRequest, putEditWarehouse } from '../../settings/actions'
 import { downloadAttachment } from '../../inventory/actions'
 import { getSafe, getMimeType, getFormattedAddress } from '../../../utils/functions'
+import { getLocaleDateFormat } from '../../../components/date-format'
 // Constants
 import { columns, CONTENT_SUBCOLUMNS, INITIAL_VALUES, VALIDATION_SCHEME } from './WarehouseCredentials.constants'
 import { UserCompany, UserImage, UserName } from '../../alerts/components/layout'
@@ -72,43 +73,6 @@ class WarehouseCredentialsCertified extends Component {
     return rows.map(r => ({
       ...r,
       warehouseName: r.name,
-      user: (
-        <>
-          {getSafe(() => r.info.requestedBy.avatar, false) && (
-            <UserImage>
-              <img src={r.info.requestedBy.avatar} />
-            </UserImage>
-          )}
-          <UserName as='h3'>{r.name}</UserName>
-          <UserCompany as='h4'>{getSafe(() => r.cfDisplayName, false)}</UserCompany>
-        </>
-      ),
-      description: r.description,
-      date: r.createdAt ? (
-        <Popup
-          size='small'
-          inverted
-          style={{
-            fontSize: '12px',
-            color: '#cecfd4',
-            opacity: '0.9'
-          }}
-          header={
-            <div style={{ color: '#cecfd4', fontSize: '12px' }}>
-              {moment(r.createdAt)
-                .toDate()
-                .toLocaleString()}
-            </div>
-          }
-          trigger={
-            <div style={{ color: r.read || this.props.isAdmin ? '#848893' : '#20273a' }}>
-              {moment(r.createdAt).fromNow()}
-            </div>
-          }
-        />
-      ) : (
-        'N/A'
-      ),
       branches: r.branches.map(branch => ({
         ...branch,
         branchName: (
@@ -210,12 +174,12 @@ class WarehouseCredentialsCertified extends Component {
 
               <div>
                 <label><FormattedMessage id='warehouseCredentials.issueDate' defaultMessage='Issue Date' /></label>
-                {getSafe(() => moment(branch.deaListCertificateIssueDate).format('MM/DD/YYYY'), '')}
+                {getSafe(() => moment(branch.deaListCertificateIssueDate).format(getLocaleDateFormat()), '')}
               </div>
 
               <div>
                 <label><FormattedMessage id='warehouseCredentials.expDate' defaultMessage='Exp. Date' /></label>
-                {getSafe(() => moment(branch.deaListCertificateExpireDate).format('MM/DD/YYYY'), '')}
+                {getSafe(() => moment(branch.deaListCertificateExpireDate).format(getLocaleDateFormat()), '')}
               </div>
 
               <Download className='download' />
@@ -280,7 +244,7 @@ class WarehouseCredentialsCertified extends Component {
                   <Input
                     disabled={true}
                     name='taxExempt.issueDate'
-                    value={moment(branch.taxExemptCertificateIssueDate).format('MM/DD/YYYY')}
+                    value={moment(branch.taxExemptCertificateIssueDate).format(getLocaleDateFormat())}
                   />
                 </FormField>
                 <FormField>
@@ -291,7 +255,7 @@ class WarehouseCredentialsCertified extends Component {
                   <Input
                     disabled={true}
                     name='taxExempt.expDate'
-                    value={moment(branch.taxExemptCertificateExpireDate).format('MM/DD/YYYY')}
+                    value={moment(branch.taxExemptCertificateExpireDate).format(getLocaleDateFormat())}
                   />
                 </FormField>
               </FormGroup>

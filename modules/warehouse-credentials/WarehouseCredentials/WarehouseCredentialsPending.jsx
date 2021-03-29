@@ -95,43 +95,6 @@ class WarehouseCredentialsPending extends Component {
     return rows.map(r => ({
       ...r,
       warehouseName: r.name,
-      user: (
-        <>
-          {getSafe(() => r.info.requestedBy.avatar, false) && (
-            <UserImage>
-              <img src={r.info.requestedBy.avatar} />
-            </UserImage>
-          )}
-          <UserName as='h3'>{r.name}</UserName>
-          <UserCompany as='h4'>{getSafe(() => r.cfDisplayName, false)}</UserCompany>
-        </>
-      ),
-      description: r.description,
-      date: r.createdAt ? (
-        <Popup
-          size='small'
-          inverted
-          style={{
-            fontSize: '12px',
-            color: '#cecfd4',
-            opacity: '0.9'
-          }}
-          header={
-            <div style={{ color: '#cecfd4', fontSize: '12px' }}>
-              {moment(r.createdAt)
-                .toDate()
-                .toLocaleString()}
-            </div>
-          }
-          trigger={
-            <div style={{ color: r.read || this.props.isAdmin ? '#848893' : '#20273a' }}>
-              {moment(r.createdAt).fromNow()}
-            </div>
-          }
-        />
-      ) : (
-        'N/A'
-      ),
       branches: r.branches.map(branch => ({
         ...branch,
         branchName: (
@@ -265,7 +228,7 @@ class WarehouseCredentialsPending extends Component {
                       />
                     </FormGroup>
                     <ButtonGroup>
-                      <BasicButton $noBorder onClick={() => this.props.denyDeaListCertificate(branch.id)}>
+                      <BasicButton $noBorder={true} onClick={() => this.props.denyDeaListCertificate(branch.id)}>
                         <FormattedMessage id='global.deny' defaultMessage='Deny' />
                       </BasicButton>
                       <BasicButton
@@ -373,7 +336,7 @@ class WarehouseCredentialsPending extends Component {
                       />
                     </FormGroup>
                     <ButtonGroup>
-                      <BasicButton $noBorder onClick={() => this.props.denyTaxExemptCertificate(branch.id)}>
+                      <BasicButton $noBorder={true} onClick={() => this.props.denyTaxExemptCertificate(branch.id)}>
                         <FormattedMessage id='global.deny' defaultMessage='Deny' />
                       </BasicButton>
                       <BasicButton
