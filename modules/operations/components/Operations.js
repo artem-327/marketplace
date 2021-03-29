@@ -141,7 +141,7 @@ class Operations extends Component {
             : []
       },
       orders: {
-        url: '/prodex/api/purchase-orders/datagrid',
+        url: '/prodex/api/admin/orders/datagrid',
         searchToFilter: v => {
           let filter = { or: [], and: [] }
 

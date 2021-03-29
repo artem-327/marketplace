@@ -83,30 +83,39 @@ const ReviewItems = props => {
           validationSchema={getValidationScheme()}
           render={formikProps => {
             selfFormikProps = formikProps
-            const { values, errors } = formikProps
-
+            const { values, errors, submitForm } = formikProps
             return (
               <Form loading={offerDetailIsFetching || cartIsFetching}>
                 {sectionState.accepted || isExpanded ? (
                   isExpanded ? (
                     <GridExpandedSection>
                       {cartItems.map((item, index) => (
-                        <GridRowReviewItems>
+                        <GridRowReviewItems key={index}>
                           <GridColumn>
                             <ItemComponent
                               {...props}
                               item={item}
                               index={index}
                               value={getSafe(() => values.items[index].quantity.toString(), '')}
-                              onValueChange={async ({ val, price }) => {
+                              onValueChange={async ({ val, price, validate }) => {
                                 await formikProps.setFieldValue(`items[${index}].quantity`, val)
                                 await formikProps.setFieldValue(`items[${index}].price`, price)
-                                await formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
-                                const newErrors = await formikProps.validateForm()
+
                                 let newValues = values.items.slice()
                                 newValues[index].quantity = val
                                 newValues[index].price = price
-                                onValueChange({ value: newValues, errors: !!newErrors.items })
+                                let newErrors = {}
+                                if (validate) {
+                                  await formikProps.setFieldTouched(`items[${index}].quantity`, true, true)
+                                  formikProps.validateForm().then(err => {
+                                    newErrors = err
+                                    if (newErrors) {
+                                      submitForm() // to show errors
+                                    }
+                                    onValueChange({value: newValues, errors: !!newErrors.items || val === ''})
+                                  })
+                                }
+                                onValueChange({value: newValues, errors: !!newErrors.items || val === ''})
                               }}
                             />
                           </GridColumn>
@@ -115,8 +124,8 @@ const ReviewItems = props => {
                     </GridExpandedSection>
                   ) : (
                     <DivSectionCollapsedWrapper>
-                      {cartItems.map(item => (
-                        <DivSectionCollapsedRow>
+                      {cartItems.map((item, index) => (
+                        <DivSectionCollapsedRow key={index}>
                           <DivSectionName>{item.productName}</DivSectionName>
                           <DivSectionDescription>{item.pkgAmount * item.packagingSize}</DivSectionDescription>
                           <DivSectionDescription>{item.packaging}</DivSectionDescription>

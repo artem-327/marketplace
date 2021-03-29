@@ -2,7 +2,8 @@ import * as AT from './action-types'
 import * as api from './api'
 import moment from 'moment'
 import { getSafe } from '~/utils/functions'
-
+//Actions
+import { openBroadcast } from '../broadcast/actions'
 // import { createAsyncAction } from 'redux-promise-middleware-actions'
 
 // import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
@@ -125,11 +126,14 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
   }
 
   if (!poId) {
-    const broadcastOption =
-      getSafe(() => values.broadcastOption, '') && values.broadcastOption.indexOf('|') >= 0
-        ? ''
-        : values.broadcastOption
-    const broadcastedTemplateId = getSafe(() => parseInt(values.broadcastOption.split('|')[1]), '')
+    const broadcastOption = values?.broadcastOption.includes('BROADCAST_TEMPLATE')
+      ? 'BROADCAST_TEMPLATE'
+      : values?.broadcastOption
+      ? values?.broadcastOption
+      : ''
+    const broadcastedTemplateId = !isNaN(parseInt(values.broadcastOption.split('|')[1]))
+      ? parseInt(values.broadcastOption.split('|')[1])
+      : ''
 
     params = { ...params, broadcastOption, broadcastedTemplateId }
   }
@@ -569,5 +573,38 @@ export function changeBroadcast(broadcastOption) {
   return {
     type: AT.CHANGE_BROADCAST,
     payload: broadcastOption
+  }
+}
+
+export function getMarkUp(poId) {
+  return {
+    type: AT.INVENTORY_GET_MARKUP,
+    payload: api.getMarkUp(poId)
+  }
+}
+
+export function updateMarkUp(poId, values) {
+  return {
+    type: AT.INVENTORY_UPDATE_MARKUP,
+    payload: api.updateMarkUp(poId, values)
+  }
+}
+
+export function setActiveTab(tab) {
+  return {
+    type: AT.SET_ACTIVE_TAB,
+    payload: tab
+  }
+}
+
+export function triggerPriceBookModal(isOpen, rowIdPriceBook) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.TRIGGER_PRICE_BOOK_MODAL,
+      payload: { isOpen, rowIdPriceBook }
+    })
+    if (rowIdPriceBook && isOpen) {
+      await dispatch(openBroadcast({ id: rowIdPriceBook }))
+    }
   }
 }

@@ -2385,6 +2385,17 @@ i.file {
         &.root-row td.p-0,
         &.root-row.opened td.p-0 {
           background-color: transparent !important;
+      .warehouse-credentials-wrapper.empty & {
+
+        td.not-found {
+          border-top: 1px solid #dee2e6 !important;
+          border-radius: 4px !important;
+
+          &:before,
+          &:after {
+            content: none !important;
+            display: none !important;
+          }
         }
       }
 

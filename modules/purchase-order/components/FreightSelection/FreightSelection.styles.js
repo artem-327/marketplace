@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Grid } from 'semantic-ui-react'
+import { Grid, GridRow } from 'semantic-ui-react'
 
 export const GridStyled = styled(Grid)`
   &.ui.grid {
@@ -16,6 +16,17 @@ export const GridStyled = styled(Grid)`
       }
     }
   }
+`
+
+export const GridRowCustomPadding = styled(GridRow)`
+  &.row {
+    ${props => (props.value ? `padding: ${props.value} !important` : '')};
+    margin: 0 !important;
+  }
+`
+
+export const DivLabel = styled.div`
+  margin-bottom: 5px;
 `
 
 export const Line = styled.div`

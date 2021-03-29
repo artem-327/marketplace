@@ -11,8 +11,7 @@ import {
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,
   getAddressSearchPrimaryBranch,
-  getAddressSearchMailingBranch,
-  removeEmpty
+  getAddressSearchMailingBranch
 } from '~/modules/companies/actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
@@ -33,7 +32,7 @@ import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
 import { addressValidationSchema, phoneValidation, websiteValidationNotRequired } from '~/constants/yupValidation'
 
-import { getSafe, deepSearch } from '~/utils/functions'
+import { getSafe, deepSearch, removeEmpty } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { withDatagrid } from '~/modules/datagrid'
@@ -62,7 +61,20 @@ const initialFormValues = {
   businessType: {
     id: null
   },
+  tinType: '',
+  tin: '',
+  type: '',
+  associations: [],
+  cin: '',
+  dba: '',
+  dunsNumber: '',
+  industryType: '',
+  socialFacebook: '',
+  socialInstagram: '',
+  socialLinkedin: '',
+  socialTwitter: '',
   website: '',
+  tagline: '',
   primaryUser: {
     name: '',
     email: '',
@@ -100,9 +112,14 @@ const initialFormValues = {
       }
     },
     warehouse: false
-  },
-  tinType: '',
-  type: ''
+  }
+}
+
+const getInitialFormValues = values => {
+  return {
+    ...initialFormValues,
+    ...(values !== null && { ...values })
+  }
 }
 
 class AddEditCompanySidebar extends Component {
@@ -308,32 +325,40 @@ class AddEditCompanySidebar extends Component {
     return (
       <Formik
         enableReinitialize
-        initialValues={popupValues ? popupValues : initialFormValues}
+        initialValues={getInitialFormValues(popupValues)}
         validationSchema={popupValues ? validationSchema : this.formValidationNew()}
         onSubmit={async (values, actions) => {
           try {
             if (popupValues) {
-              let newAssociations = []
+
+              let associations = []
               if (getSafe(() => values.associations[0].id, false)) {
-                newAssociations = values.associations.map(assoc => assoc.id)
+                associations = values.associations.map(assoc => assoc.id)
               } else {
-                newAssociations = getSafe(() => values.associations, [])
+                associations = getSafe(() => values.associations, [])
               }
               let newValues = {
-                associations: newAssociations,
+                associations,
                 businessType: getSafe(() => values.businessType.id, null),
                 cin: getSafe(() => values.cin, ''),
                 dba: getSafe(() => values.dba, ''),
                 dunsNumber: getSafe(() => values.dunsNumber, ''),
                 enabled: getSafe(() => values.enabled, false),
+                industryType: getSafe(() => values.industryType, ''),
                 name: getSafe(() => values.name, ''),
                 phone: getSafe(() => values.phone, ''),
+                purchaseHazmatEligible: getSafe(() => values.purchaseHazmatEligible, false),
+                socialFacebook: getSafe(() => values.socialFacebook, ''),
+                socialInstagram: getSafe(() => values.socialInstagram, ''),
+                socialLinkedin: getSafe(() => values.socialLinkedin, ''),
+                socialTwitter: getSafe(() => values.socialTwitter, ''),
+                tagline: getSafe(() => values.tagline, ''),
                 tin: getSafe(() => values.tin, ''),
                 tinType: getSafe(() => values.tinType, ''),
-                website: getSafe(() => values.website, ''),
-                purchaseHazmatEligible: getSafe(() => values.purchaseHazmatEligible, false)
+                website: getSafe(() => values.website, '')
               }
               if (values.type) newValues['type'] = values.type
+              removeEmpty(newValues)
 
               const data = await updateCompany(popupValues.id, newValues)
               if (this.state.shouldUpdateLogo) {
@@ -371,6 +396,7 @@ class AddEditCompanySidebar extends Component {
               if (!payload.type) delete payload.type
               delete payload.enabled
               if (!payload.businessType) delete payload.businessType
+              removeEmpty(payload)
               if (this.state.companyLogo) {
                 let reader = new FileReader()
                 reader.onload = async function () {

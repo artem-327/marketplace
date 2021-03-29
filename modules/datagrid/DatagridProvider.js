@@ -107,7 +107,6 @@ class DatagridProvider extends Component {
   }
 
   loadNextPage = async (overPage = 0) => {
-    console.log('loadNextPage')
     if (!this.props.apiConfig) return
 
     const { datagridParams, query, refreshTable, allLoaded } = this.state
@@ -145,8 +144,7 @@ class DatagridProvider extends Component {
               pageNumber
             }
           }
-    console.log('dataOrParams')
-    console.log(dataOrParams)
+
     dataOrParams?.params?.status === 'ALL' && delete dataOrParams.params.status
 
     try {
