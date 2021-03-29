@@ -276,12 +276,12 @@ class TablesHandlers extends Component {
               {text => text}
             </FormattedMessage>
           ),
-          values: 'All document types'
+          value: ''
         },
-        ...this.props.documentTypes.map(document => ({
-          key: document.key,
-          text: document.text,
-          value: document.text
+        ...this.props.documentTypes.map(doc => ({
+          key: doc.key,
+          text: doc.text,
+          value: doc.text
         }))
       ]
     })
@@ -446,7 +446,7 @@ class TablesHandlers extends Component {
               <Dropdown
                 style={{ width: '200px' }}
                 name='documentType'
-                value={filterValue.documentType}
+                value={filterValue?.documentType}
                 placeholder={formatMessage({
                   id: 'settings.tables.documents.dropdown',
                   defaultMessage: 'Choose document type'
