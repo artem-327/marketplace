@@ -576,6 +576,20 @@ export function changeBroadcast(broadcastOption) {
   }
 }
 
+export function getMarkUp(poId) {
+  return {
+    type: AT.INVENTORY_GET_MARKUP,
+    payload: api.getMarkUp(poId)
+  }
+}
+
+export function updateMarkUp(poId, values) {
+  return {
+    type: AT.INVENTORY_UPDATE_MARKUP,
+    payload: api.updateMarkUp(poId, values)
+  }
+}
+
 export function setActiveTab(tab) {
   return {
     type: AT.SET_ACTIVE_TAB,

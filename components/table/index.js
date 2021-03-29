@@ -124,6 +124,9 @@ const ModalHeader = styled(Modal.Header)`
 `
 
 const TableRow = styled(Table.Row)`
+  &.hidden-row {
+    display: none !important;
+  }
   .ui.dropdown .menu > .item:hover {
     background: #2599d5 !important;
     color: #ffffff !important;
@@ -424,6 +427,7 @@ class _Table extends Component {
     sorting: pt.bool,
     treeDataType: pt.bool,
     rowDetailType: pt.bool,
+    rowDetailTypeSecondary: pt.bool,
     isToggleCellComponent: pt.bool,
     groupBy: pt.array,
     defaultSelection: pt.array,
@@ -449,7 +453,9 @@ class _Table extends Component {
     normalWidth: pt.bool,
     tableTreeColumn: pt.string,
     onExpandedRowIdsChange: pt.func,
+    onExpandedRowIdsChangeSecondary: pt.func,
     expandedRowIds: pt.array,
+    expandedRowIdsSecondary: pt.array,
     loadedAllData: pt.bool,
     shrinkGroups: pt.bool,
     columnAction: pt.string,
@@ -475,6 +481,7 @@ class _Table extends Component {
     sorting: true,
     treeDataType: false,
     rowDetailType: false,
+    rowDetailTypeSecondary: false,
     isToggleCellComponent: false,
     rowDetail: () => {},
     toggleCellComponent: () => {},
@@ -493,7 +500,9 @@ class _Table extends Component {
     normalWidth: false,
     tableTreeColumn: '',
     onExpandedRowIdsChange: () => {},
+    onExpandedRowIdsChangeSecondary: () => {},
     expandedRowIds: [],
+    expandedRowIdsSecondary: [],
     loadedAllData: true,
     shrinkGroups: false,
     columnActions: '',
@@ -991,6 +1000,7 @@ class _Table extends Component {
       sorting,
       treeDataType,
       rowDetailType,
+      rowDetailTypeSecondary,
       isToggleCellComponent,
       onSortingChange,
       integratedSorting,
@@ -1013,7 +1023,9 @@ class _Table extends Component {
       removeFlexClass,
       tableTreeColumn,
       onExpandedRowIdsChange,
+      onExpandedRowIdsChangeSecondary,
       expandedRowIds,
+      expandedRowIdsSecondary,
       loadedAllData,
       columnActions,
       isOpenColumnSettingModal,
@@ -1117,6 +1129,13 @@ class _Table extends Component {
               <RowDetailState expandedRowIds={expandedRowIds} onExpandedRowIdsChange={onExpandedRowIdsChange} />
             )}
 
+            {rowDetailTypeSecondary && (
+              <RowDetailState
+                expandedRowIds={expandedRowIdsSecondary}
+                onExpandedRowIdsChange={onExpandedRowIdsChangeSecondary}
+              />
+            )}
+
             {virtual ? (
               <VirtualTable
                 columnExtensions={this.getColumnsExtension()}
@@ -1162,7 +1181,7 @@ class _Table extends Component {
               />
             )}
 
-            {rowDetailType && isToggleCellComponent && (
+            {(rowDetailType || rowDetailTypeSecondary) && isToggleCellComponent && (
               <TableRowDetail
                 contentComponent={rowDetail}
                 cellComponent={props => <DetailTableCells rowDetail={rowDetail} {...props} />}
@@ -1170,7 +1189,7 @@ class _Table extends Component {
               />
             )}
 
-            {rowDetailType && !isToggleCellComponent && (
+            {(rowDetailType || rowDetailTypeSecondary) && !isToggleCellComponent && (
               <TableRowDetail
                 toggleColumnWidth={3}
                 contentComponent={rowDetail}

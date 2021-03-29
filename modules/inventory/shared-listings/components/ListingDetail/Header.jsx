@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Grid, Image, Input, List } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
@@ -24,19 +25,23 @@ import { StyledGrid, TableSegment, StyledList } from '../../../../../components/
 import { SegmentGroupHeader, GridColumnDetail } from '../../../../my-network/components/DetailRow/DetailRow.style'
 import { getSafe } from '../../../../../utils/functions'
 
+// Services
+import { submitHandler } from './Header.services'
+import { updateMarkUp } from '../../../actions'
+
 /**
  * @category Inventory - Shared Listings
  * @component
  */
 const Header = props => {
-  const { row, values, onChange } = props
+  const { row, values, onChange, loadingMarkup } = props
   const ref = useRef(null)
 
   useEffect(() => {
-    if (values?.markup) {
+    if (values?.priceMultiplier) {
       if (typeof ref !== 'undefined') ref.current.focus()
     }
-  }, [values?.markup])
+  }, [values?.priceMultiplier])
 
   const priceColumnsLength = row?.priceColumns?.length
   const { pricingTabIndex } = values
@@ -139,7 +144,7 @@ const Header = props => {
               )}
             </GridColumnDetail>
           </Grid.Row>
-          {/* <Grid.Row>
+          <Grid.Row>
             <GridColumnDetail width={8} $colorText='#404040'>
               <FormattedMessage id='detailRow.pricing.markup' defaultMessage='Markup' />
             </GridColumnDetail>
@@ -151,12 +156,13 @@ const Header = props => {
                 fluid
                 label='%'
                 labelPosition='right'
-                name='markup'
+                name='priceMultiplier'
                 placeholder={'Enter Markup'}
+                readOnly={!values.id || loadingMarkup}
                 onChange={(e, data) => {
-                  onChange({ ...values, markup: data.value })
+                  onChange({ ...values, priceMultiplier: data.value })
                 }}
-                value={values?.markup}
+                value={values?.priceMultiplier}
               />
             </GridColumnDetail>
             <GridColumnDetail width={8}>
@@ -165,12 +171,20 @@ const Header = props => {
                 textcolor='#ffffff !important'
                 background='#00c7f9 !important'
                 fluid
-                onClick={() => console.log('click save and value is: ', values?.markup)}
+                disabled={
+                  !values?.priceMultiplier ||
+                  isNaN(parseFloat(values.priceMultiplier)) ||
+                  parseFloat(values.priceMultiplier) <= 0 ||
+                  !values.id ||
+                  loadingMarkup
+                }
+                loading={loadingMarkup}
+                onClick={() => submitHandler(values, props)}
                 data-test='shared_listings_markup_save_btn'>
                 <FormattedMessage id='global.save' defaultMessage='Save' />
               </BasicButton>
             </GridColumnDetail>
-          </Grid.Row> */}
+          </Grid.Row>
         </StyledGrid>
       </SegmentDetailRow>
     </SegmentGroupHeader>
@@ -179,8 +193,18 @@ const Header = props => {
 
 Header.propTypes = {}
 
-function areEqual(prevProps, nextProps) {
-  return prevProps?.row?.id === nextProps?.row?.id && prevProps?.values?.markup === nextProps?.values?.markup
+function mapStateToProps(store) {
+  return {
+    loadingMarkup: store.simpleAdd.loadingMarkup
+  }
 }
 
-export default memo(Header, areEqual)
+function areEqual(prevProps, nextProps) {
+  return prevProps?.row?.id === nextProps?.row?.id &&
+    prevProps?.values?.priceMultiplier === nextProps?.values?.priceMultiplier &&
+    prevProps?.loadingMarkup === nextProps?.loadingMarkup
+}
+
+const MemoHeader =  memo(Header, areEqual)
+
+export default connect(mapStateToProps, { updateMarkUp })(MemoHeader)

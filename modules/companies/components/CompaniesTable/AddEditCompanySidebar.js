@@ -118,8 +118,7 @@ const initialFormValues = {
 const getInitialFormValues = values => {
   return {
     ...initialFormValues,
-    ...(values !== null && { ...values }),
-    associations: getSafe(() => values.associations, []).map(el => el.id)
+    ...(values !== null && { ...values })
   }
 }
 
@@ -331,8 +330,15 @@ class AddEditCompanySidebar extends Component {
         onSubmit={async (values, actions) => {
           try {
             if (popupValues) {
+
+              let associations = []
+              if (getSafe(() => values.associations[0].id, false)) {
+                associations = values.associations.map(assoc => assoc.id)
+              } else {
+                associations = getSafe(() => values.associations, [])
+              }
               let newValues = {
-                associations: getSafe(() => values.associations, []),
+                associations,
                 businessType: getSafe(() => values.businessType.id, null),
                 cin: getSafe(() => values.cin, ''),
                 dba: getSafe(() => values.dba, ''),

@@ -23,6 +23,7 @@ export const initialState = {
   searchedProductsLoading: false,
   warehousesList: [],
   loading: false,
+  loadingMarkup: false,
   updatingDatagrid: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
@@ -710,6 +711,24 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPriceBookModal: action?.payload?.isOpen,
         rowIdPriceBook: { id: action?.payload?.rowIdPriceBook }
+      }
+    }
+
+    case AT.INVENTORY_GET_MARKUP_PENDING:
+    case AT.INVENTORY_UPDATE_MARKUP_PENDING: {
+      return {
+        ...state,
+        loadingMarkup: true
+      }
+    }
+
+    case AT.INVENTORY_GET_MARKUP_FULFILLED:
+    case AT.INVENTORY_GET_MARKUP_REJECTED:
+    case AT.INVENTORY_UPDATE_MARKUP_FULFILLED:
+    case AT.INVENTORY_UPDATE_MARKUP_REJECTED: {
+      return {
+        ...state,
+        loadingMarkup: false
       }
     }
 

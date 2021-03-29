@@ -9,6 +9,7 @@ function mapStateToProps(state) {
   const openGlobalAddFormName = getSafe(() => state.layout.openGlobalAddFormName, '')
   const adminCompaniesFormName = getSafe(() => state.companiesAdmin.isOpenSidebar, false)
   const settingsOpenSidebar = getSafe(() => state.settings.openTab, '')
+  const locationsTab = getSafe(() => state.settings.locationsTab, '')
 
   const sidebars = () => {
     const adminTab =
@@ -22,6 +23,7 @@ function mapStateToProps(state) {
     if (
       getSafe(() => state.chatWidget.isVerticalMoved, false) &&
       (getSafe(() => state.settings.isOpenSidebar, false) ||
+        getSafe(() => state.settings.isOpenSubSidebar, false) ||
         getSafe(() => state.productsAdmin.currentAddForm, false) ||
         getSafe(() => state.productsAdmin.currentEditForm, false) ||
         getSafe(() => state.cart.isOpenModal, false))
@@ -42,7 +44,7 @@ function mapStateToProps(state) {
       getSafe(() => state.companyProductInfo.isOpen, false) ||
       (getSafe(() => state.settings.isOpenSidebar, false) &&
         !getSafe(() => state.chatWidget.isVerticalMoved, false) &&
-        settingsOpenSidebar !== 'users') ||
+        (settingsOpenSidebar !== 'users') && !locationsTab) ||
       getSafe(() => state.cart.sidebar.isOpen, false) ||
       getSafe(() => state.companyProductInfo.isOpen, false) ||
       adminCompaniesFormName === 'companies' ||

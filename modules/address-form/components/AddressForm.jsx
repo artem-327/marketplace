@@ -93,6 +93,7 @@ class AddressForm extends Component {
 
     const country = values && values.address && values.address.country
     const oldCountry = oldValues && oldValues.address && oldValues.address.country
+
     if (
       values.id !== oldValues.id ||
       getSafe(() => values.address.id, '') !== getSafe(() => oldValues.address.id, '')
@@ -191,9 +192,8 @@ class AddressForm extends Component {
   }
 
   getValues = (values = this.props.values) => {
-    let value = this.props.prefix ? getDeeply(this.props.prefix.split('.'), values) : values
+    let value = this.props.prefix ? eval('values.' + this.props.prefix) : values
     // TODO check wheter this works for array...
-
     if (value instanceof Array) return value[this.props.index]
     else return value
 

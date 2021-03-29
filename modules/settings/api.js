@@ -359,5 +359,28 @@ export default {
     api
       .patch(`/prodex/api/settings/company-user/${userId}`, request)
       .then(response => response.data)
-      .catch(err => err)
+      .catch(err => err),
+  addCustomer: (customerData) =>
+    api
+      .post(`/prodex/api/customers/`, customerData)
+      .then(response => response.data)
+      .catch(err => err),
+  updateCustomer: (customerId, customerData) =>
+    api
+      .patch(`/prodex/api/customers/${customerId}`, customerData)
+      .then(response => response.data)
+      .catch(err => err),
+  deleteCustomer: id => api.delete(`/prodex/api/customers/${id}`),
+  addCustomerWarehouse: (customerId, warehouse) =>
+    api
+      .post(`/prodex/api/customers/warehouses?customerId=${customerId}`, warehouse)
+      .then(response => response.data)
+      .catch(err => err),
+  updateCustomerWarehouse: (customerId, warehouseId, warehouse) =>
+    api
+      .patch(`/prodex/api/customers/warehouses?customerId=${customerId}&warehouseId=${warehouseId}`, warehouse)
+      .then(response => response.data)
+      .catch(err => err),
+  deleteCustomerWarehouse: (customerId, warehouseId) =>
+    api.delete(`/prodex/api/customers/warehouses?customerId=${customerId}&warehouseId=${warehouseId}`)
 }
