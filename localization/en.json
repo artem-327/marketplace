@@ -2406,6 +2406,7 @@
   "settings.addDeliveryAddress": "Add Delivery Address",
   "settings.editDeliveryAddress": "Edit Delivery Address",
   "settings.certifications": "Certifications",
+  "settings.certifications.saveFirst": "Create Warehouse first",
   "settings.certifications.dea": "Is this location certified to receive DEA List I chemicals?",
   "settings.certifications.dea.fileText": "DEA List I",
   "settings.certifications.isCertifiedToDEA": "Is this location certified to receive DEA List I chemicals?",

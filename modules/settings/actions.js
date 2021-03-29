@@ -372,7 +372,7 @@ export function postNewWarehouseRequest(createWarehouse, payload, attachmentFile
       })
     }
     //dispatch(getWarehousesDataRequest())
-    dispatch(closeSidebar())
+    //dispatch(closeSidebar())
     Datagrid.loadData()
   }
 }
