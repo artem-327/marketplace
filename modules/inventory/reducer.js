@@ -23,6 +23,7 @@ export const initialState = {
   searchedProductsLoading: false,
   warehousesList: [],
   loading: false,
+  loadingMarkup: false,
   updatingDatagrid: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
@@ -48,9 +49,13 @@ export const initialState = {
   myProductsUnmappedValue: 'ALL',
   myListingsFilters: null,
   myProductsFilters: null,
+  sharedListingsFilters: null,
   tdsTemplatesLoading: false,
   tdsTemplates: [],
-  broadcastOption: GLOBAL_RULES
+  broadcastOption: GLOBAL_RULES,
+  activeTab: 0,
+  isOpenPriceBookModal: false,
+  rowIdPriceBook: { id: null }
 }
 
 export default function reducer(state = initialState, action) {
@@ -691,6 +696,39 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         broadcastOption: action.payload
+      }
+    }
+
+    case AT.SET_ACTIVE_TAB: {
+      return {
+        ...state,
+        activeTab: action.payload
+      }
+    }
+
+    case AT.TRIGGER_PRICE_BOOK_MODAL: {
+      return {
+        ...state,
+        isOpenPriceBookModal: action?.payload?.isOpen,
+        rowIdPriceBook: { id: action?.payload?.rowIdPriceBook }
+      }
+    }
+
+    case AT.INVENTORY_GET_MARKUP_PENDING:
+    case AT.INVENTORY_UPDATE_MARKUP_PENDING: {
+      return {
+        ...state,
+        loadingMarkup: true
+      }
+    }
+
+    case AT.INVENTORY_GET_MARKUP_FULFILLED:
+    case AT.INVENTORY_GET_MARKUP_REJECTED:
+    case AT.INVENTORY_UPDATE_MARKUP_FULFILLED:
+    case AT.INVENTORY_UPDATE_MARKUP_REJECTED: {
+      return {
+        ...state,
+        loadingMarkup: false
       }
     }
 

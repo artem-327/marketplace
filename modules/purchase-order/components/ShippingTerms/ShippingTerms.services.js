@@ -45,13 +45,18 @@ export const getAddressOptions = addresses => {
         ? getSafe(() => val.cfName, '')
         : getSafe(() => val.addressName, '')
 
+    const isBroadcasted = val.warehouse
+      ? getSafe(() => val.deliveryAddress.isBroadcasted, '')
+      : getSafe(() => val.isBroadcasted, '')
+
     return ({
       id: val.id,
       name,
       description: getFullAddress(address),
       fullAddress: val.warehouse ? val.deliveryAddress : val,
       warehouse: val.warehouse,
-      taxId: val.taxId
+      taxId: val.taxId,
+      isBroadcasted
     })}
   )
 }

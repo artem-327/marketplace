@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { UploadCloud } from 'react-feather'
+import { UploadCloud, Info } from 'react-feather'
 import { Grid, Icon, Form, Segment, GridRow, GridColumn } from 'semantic-ui-react'
 
 export const FormStyled = styled(Form)`
@@ -74,7 +74,7 @@ export const GridStyled = styled(Grid)`
   &.ui.grid {
     margin: 15px 20px;
   }
-  
+
   > .row {
     padding: 7.5px 0 !important;
     .column {
@@ -115,4 +115,9 @@ export const GridColumnFlex = styled(GridColumn)`
 
 export const DivCheckboxWrapper = styled.div`
   margin-right: 40px;
+`
+
+export const InfoCustom = styled(Info)`
+  margin-left: 6px;
+  color: #808085 !important;
 `

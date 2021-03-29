@@ -451,7 +451,8 @@ class Broadcast extends Component {
     return tree
   }
 
-  setHidden = (predicate, hidden, elements = this.props.data.elements) => {
+  setHidden = (predicate, hidden, elements = this.props?.data?.elements) => {
+    if (!elements) return
     for (let i = 0; i < elements.length; i++) {
       if (predicate(elements[i])) {
         elements[i].hidden = hidden
@@ -772,7 +773,8 @@ class Broadcast extends Component {
       templateSaving,
       associationsFetching,
       associations,
-      close
+      close,
+      styleMarginBottom
     } = this.props
 
     let totalCompanies = _.uniqBy(
@@ -1165,7 +1167,7 @@ class Broadcast extends Component {
             </GridRowTable>
           </StretchedGrid>
           {asModal && (
-            <GridBottom>
+            <GridBottom $styleMargin={styleMarginBottom}>
               <GridRowBottom textAlign='right'>
                 <GridColumnBottom width='8'>
                   <ButtonCancel onClick={() => close()} data-test='broadcast_modal_close_btn'>

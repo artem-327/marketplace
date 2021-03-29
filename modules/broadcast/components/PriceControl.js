@@ -37,10 +37,10 @@ export default class PriceControl extends Component {
     const changeInElements = (elementsParam, values, id) => {
       if (getSafe(() => elementsParam.length, false)) {
         elementsParam.forEach(element => {
-          if (!element.hidden) {
-            if (!element.priceOverride && (element.id === id || !id)) asignValues(values, element)
+          if (!element?.hidden) {
+            if (!element?.priceOverride && (element?.id === id || !id)) asignValues(values, element)
           }
-          if (getSafe(() => element.elements.length, '') > 0) changeInElements(element.elements, values, id)
+          if (getSafe(() => element.elements.length, '') > 0) changeInElements(element?.elements, values, id)
         })
       }
     }
@@ -52,7 +52,7 @@ export default class PriceControl extends Component {
     } = item
 
     let type = name === 'type' ? value : this.state.type
-    let val = rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
+    let val = rule?.priceAddition !== 0 ? rule?.priceAddition : rule?.priceMultiplier !== 0 ? rule?.priceMultiplier : ''
 
     let minimum = name === 'type' ? this.calculateMinimum(value) : this.calculateMinimum(type)
     if (this.state.type !== type) this.setState({ type })
@@ -62,44 +62,44 @@ export default class PriceControl extends Component {
     if (name === 'type' && val < minimum) value = minimum
 
     if (name === 'type') {
-      if (type === 'multiplier' && rule.priceMultiplier) return
+      if (type === 'multiplier' && rule?.priceMultiplier) return
       values = {
-        priceAddition: rule.priceMultiplier,
-        priceMultiplier: rule.priceAddition
+        priceAddition: rule?.priceMultiplier,
+        priceMultiplier: rule?.priceAddition
       }
     } else {
       if (type === 'addition') {
-        values = { priceAddition: value ? parseFloat(value, 10) : 0, priceMultiplier: 0 }
+        values = { priceAddition: value ? parseFloat(value) : 0, priceMultiplier: 0 }
       } else {
-        values = { priceMultiplier: value ? parseFloat(value, 10) : 0, priceAddition: 0 }
+        values = { priceMultiplier: value ? parseFloat(value) : 0, priceAddition: 0 }
       }
     }
 
     asignValues(values, rule)
     let idCompanies = []
     let foundAllNodes = []
-    if (item.hasChildren()) {
-      if ((item.isRoot() && associationFilter === 'ALL' && !filter.search) || !item.isRoot()) {
+    if (item?.hasChildren()) {
+      if ((item?.isRoot() && associationFilter === 'ALL' && !filter?.search) || !item?.isRoot()) {
         // it writes value to the model
         // its not sufficient for display all values in all levels in FE inputs
-        item.walk(n => {
-          if (!n.model.rule.priceOverride && !n.model.rule.hidden) asignValues(values, n.model.rule)
+        item?.walk(n => {
+          if (!n?.model?.rule?.priceOverride && !n?.model?.rule?.hidden) asignValues(values, n?.model?.rule)
         })
 
         //find all parents (state) of branches when change whole company
         let copyTreeData = treeData
         if (
-          rule.type !== 'root' &&
-          this.props.filter.category === 'branch' &&
-          item.model.children.length > item.model.rule.elements.length
+          rule?.type !== 'root' &&
+          this.props?.filter?.category === 'branch' &&
+          item?.model?.children?.length > item?.model?.rule?.elements?.length
         ) {
           foundAllNodes = copyTreeData.all(
-            n => n.model.id === item.model.rule.id && n.model.type === item.model.rule.type
+            n => n?.model?.id === item?.model?.rule?.id && n?.model?.type === item?.model?.rule?.type
           )
 
           foundAllNodes.forEach(nod => {
             nod.walk(no => {
-              if (!getSafe(() => no.model.rule, '') && !no.model.priceOverride && !no.model.hidden) {
+              if (!getSafe(() => no.model.rule, '') && !no?.model?.priceOverride && !no?.model?.hidden) {
                 no.model.rule = {
                   ...no.model,
                   priceAddition: values?.priceAddition,
@@ -115,35 +115,35 @@ export default class PriceControl extends Component {
           })
         }
         // it writes value to the elements
-        changeInElements(item.model.rule.elements, values)
-      } else if (item.isRoot() && (associationFilter !== 'ALL' || filter.search)) {
+        changeInElements(item?.model?.rule?.elements, values)
+      } else if (item.isRoot() && (associationFilter !== 'ALL' || filter?.search)) {
         //write changes to the filtered model
         item.walk(n => {
-          if (filter.category === 'branch') {
-            if (!n.model.rule.priceOverride && n.model.rule.type === 'branch' && !n.model.rule.hidden) {
+          if (filter?.category === 'branch') {
+            if (!n?.model?.rule?.priceOverride && n?.model?.rule?.type === 'branch' && !n?.model?.rule?.hidden) {
               // it writes value to the filtered model (branches)
               // its sufficient for display value in inputs of branches
-              asignValues(values, n.model.rule)
+              asignValues(values, n?.model?.rule)
               if (
-                !n.parent.model.rule.priceOverride &&
-                n.parent.model.rule.type === 'company' &&
-                !n.parent.model.rule.hidden
+                !n?.parent?.model?.rule?.priceOverride &&
+                n?.parent?.model?.rule?.type === 'company' &&
+                !n?.parent?.model?.rule?.hidden
               ) {
                 // it writes value to the parent (company) to the model
                 // but for some reasons its not sufficient for display value in inputs
-                asignValues(values, n.parent.model.rule)
+                asignValues(values, n?.parent?.model?.rule)
                 // here are collected ids of filtered companies
-                idCompanies.push(n.parent.model.rule.id)
+                idCompanies.push(n?.parent?.model?.rule?.id)
               }
             }
           }
         })
         // Value for company will be displayed in company input when we write value to the elements
-        if (idCompanies.length) {
+        if (idCompanies?.length) {
           idCompanies = _.uniqBy(idCompanies, 'id')
           //write changes to the correct elements (parent = company of branche)
           idCompanies.forEach(id => {
-            changeInElements(item.model.rule.elements, values, id)
+            changeInElements(item?.model?.rule?.elements, values, id)
           })
         }
       }
@@ -156,8 +156,12 @@ export default class PriceControl extends Component {
     const { offer } = this.props
     if (type === 'multiplier') {
       return -99.9
-    } else if (offer.pricingTiers[this.props.offer.pricingTiers.length - 1] && type !== 'multiplier') {
-      return -1 * this.props.offer.pricingTiers[this.props.offer.pricingTiers.length - 1].pricePerUOM + 0.001
+    } else if (
+      offer?.pricingTiers &&
+      offer?.pricingTiers[this.props?.offer?.pricingTiers?.length - 1] &&
+      type !== 'multiplier'
+    ) {
+      return -1 * this.props?.offer?.pricingTiers[this.props?.offer?.pricingTiers?.length - 1].pricePerUOM + 0.001
     } else {
       return
     }
@@ -176,7 +180,7 @@ export default class PriceControl extends Component {
     const calc = p => p + p * (getSafe(() => r.priceMultiplier, 0) / 100) + getSafe(() => r.priceAddition, 0)
 
     let high = calc(getSafe(() => offer.pricingTiers[0].pricePerUOM, null)),
-      low = calc(getSafe(() => offer.pricingTiers[offer.pricingTiers.length - 1].pricePerUOM, null))
+      low = calc(getSafe(() => offer?.pricingTiers[offer?.pricingTiers?.length - 1]?.pricePerUOM, null))
 
     return {
       highStr: (
@@ -209,7 +213,7 @@ export default class PriceControl extends Component {
     } = item
 
     const prices = hideFobPrice ? null : this.getPrices()
-    let type = rule.priceAddition ? 'addition' : this.state.type
+    let type = rule?.priceAddition ? 'addition' : this.state.type
 
     let value =
       !getSafe(() => rule.priceAddition, false) && !getSafe(() => rule.priceMultiplier, false)

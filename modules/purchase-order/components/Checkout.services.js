@@ -7,7 +7,7 @@ import { FREIGHT_TYPES } from './Checkout.constants'
  * @param {object} sectionState Object with section statuses
  * @return {string} Name of section to open for edit/accept
  */
-export const findSectionToOpen = (sectionState) => {
+export const findSectionToOpen = sectionState => {
   const keys = Object.keys(sectionState)
   const index = keys.findIndex(el => sectionState[el].accepted === false)
 
@@ -18,19 +18,14 @@ export const findSectionToOpen = (sectionState) => {
   }
 }
 
-export const checkAllAccepted = sectionState => (
-  sectionState.review.accepted && sectionState.shipping.accepted
-  && sectionState.payment.accepted && sectionState.freight.accepted
-)
+export const checkAllAccepted = sectionState =>
+  sectionState.review.accepted &&
+  sectionState.shipping.accepted &&
+  sectionState.payment.accepted &&
+  sectionState.freight.accepted
 
-export const confirmSection = ({
-  openSection,
-  setOpenSection,
-  sectionState,
-  setSectionState
-}) => {
+export const confirmSection = ({ openSection, setOpenSection, sectionState, setSectionState }) => {
   if (openSection) {
-
     const newSectionState = {
       ...sectionState,
       [openSection]: {
@@ -45,13 +40,9 @@ export const confirmSection = ({
 }
 
 export const submitButton = (props, state) => {
-  const {
-    allAccepted,
-    openSection,
-    sectionState
-  } = state
+  const { allAccepted, openSection, sectionState } = state
 
-  if (sectionState[openSection] && sectionState[openSection].value || allAccepted || openSection === 'review') {
+  if ((sectionState[openSection] && sectionState[openSection].value) || allAccepted || openSection === 'review') {
     if (allAccepted) {
       handleSubmitOrder(props, state)
     } else {
@@ -68,14 +59,7 @@ export const submitButton = (props, state) => {
  * @return object Default component attributes and event handlings (isExpanded, onButtonClick, onChangeButtonClick, etc.)
  */
 export const getComponentParameters = (props, state) => {
-  const {
-    name,
-    allAccepted,
-    openSection,
-    setOpenSection,
-    sectionState,
-    setSummaryButtonCaption
-  } = state
+  const { name, allAccepted, openSection, setOpenSection, sectionState, setSummaryButtonCaption } = state
 
   return {
     id: name,

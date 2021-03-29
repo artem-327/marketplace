@@ -2388,6 +2388,20 @@ i.file {
         }
       }
 
+      .warehouse-credentials-wrapper.empty & {
+
+        td.not-found {
+          border-top: 1px solid #dee2e6 !important;
+          border-radius: 4px !important;
+
+          &:before,
+          &:after {
+            content: none !important;
+            display: none !important;
+          }
+        }
+      }
+
       .warehouse-credentials-wrapper & {
 
         &:not([class]) > td {

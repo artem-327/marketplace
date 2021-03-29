@@ -16,7 +16,7 @@ export const searchTags = tag => ({
   })
 })
 
-export const searchProductOffersInventory = (filter, isMarketplace) => ({
+export const searchProductOffersInventory = (filter, filterType = 'inventory') => ({
   type: AT.SEARCH_PRODUCT_OFFERS_INVENTORY,
   payload: api.searchProductOffersInventory(
     {
@@ -27,7 +27,7 @@ export const searchProductOffersInventory = (filter, isMarketplace) => ({
       pageNumber: 0,
       pageSize: 50
     },
-    isMarketplace
+    filterType
   )
 })
 

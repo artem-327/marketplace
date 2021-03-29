@@ -34,8 +34,8 @@ export const LINK_TRANSLATE_TABLE = {
   '/wanted-board/bids-sent': '/wanted-board/bids-sent',
   '/wanted-board/bids-received': '/wanted-board/bids-received',
   '/orders/detail': '/orders/detail',
-  '/velloci/beneficial-owners': '/velloci/beneficial-owners',
-  '/velloci/bank-accounts': '/velloci/bank-accounts',
+  '/velloci/beneficial-owners': '/onboarding/beneficial-owners',
+  '/velloci/bank-accounts': '/onboarding/bank-accounts',
   '/marketplace/bids-sent': '/marketplace/bids-sent',
   '/marketplace/bids-received': '/marketplace/bids-received',
 
@@ -46,8 +46,8 @@ export const LINK_TRANSLATE_TABLE = {
   '/own-purchase-request-offers': '/wanted-board/bids-sent',
   '/own-purchase-requests': '/wanted-board/bids-received',
   '/order-detail': '/orders/detail',
-  '/beneficial-owners': '/velloci/beneficial-owners',
-  '/bank-accounts': '/velloci/bank-accounts',
+  '/beneficial-owners': '/onboarding/beneficial-owners',
+  '/bank-accounts': '/onboarding/bank-accounts',
   '/own-product-offer-bids': '/marketplace/bids-sent',
   '/other-product-offer-bids': '/marketplace/bids-received'
 }

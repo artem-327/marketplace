@@ -156,7 +156,7 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
           <lable>
             <FormattedMessage
               id='velloci.ownerInformation.otherBeneficialOwner'
-              defaultMessage='Are there any other beneficial owner?'
+              defaultMessage='Are there any other Beneficial Owners?'
             />
           </lable>
           <DivCheckboxes>

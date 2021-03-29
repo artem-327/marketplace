@@ -265,7 +265,7 @@ const GridRowTable = styled(Grid.Row)`
   flex-direction: column !important;
   padding-top: 7px !important;
   padding-bottom: 0 !important;
-  
+
   > div {
     flex-grow: 1;
     flex-shrink: 1;
@@ -377,7 +377,8 @@ const ButtonSaveAs = styled(Button)`
 `
 
 const GridBottom = styled(Grid)`
-  margin: 10px -30px 0px -30px !important;
+  ${props =>
+    props.$styleMargin ? 'margin: 20px -20px 0px -20px !important;' : 'margin: 10px -30px 0px -30px !important'}
   padding: 5px 20px 0px 20px !important;
   box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
   background: #ffffff;

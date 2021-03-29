@@ -27,8 +27,8 @@ function mapStateToProps(store, { datagrid }) {
       const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
       return {
         ...po,
+        id: po.id + '_' + po.sellerId,
         rawData: po,
-        id: po.id,
         expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
         productGroupName: getSafe(() => po.companyProduct.companyGenericProduct.productGroup.name, ''),
         intProductName: getSafe(() => po.companyProduct.intProductName, ''),
