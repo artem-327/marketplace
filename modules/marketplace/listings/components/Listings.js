@@ -469,7 +469,7 @@ class Listings extends Component {
                     onChange={this.SearchByNamesAndTagsChanged}
                     initFilterState={getSafe(() => tableHandlersFiltersListings.SearchByNamesAndTags, null)}
                     filterApply={false}
-                    isMarketplace={true}
+                    filterType='marketplace'
                   />
                 </CustomSearchNameTags>
               </div>

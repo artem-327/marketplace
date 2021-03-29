@@ -2810,7 +2810,6 @@
   "filter.searchCasProduct": "Search CAS Product",
   "title.settings": "My TradePass - {tab}",
   "title.admin.carriers": "Carriers",
-  "title.settings": "Settings - {tab}",
   "title.settings.bank-accounts": "Bank Accounts",
   "title.settings.branches": "Branches",
   "title.settings.company-details": "Company Details",
@@ -3346,6 +3345,9 @@
   "sharedListings.detailRow.elementName": "Element Name",
   "sharedListings.detailRow.casNumber": "CAS Number",
   "sharedListings.detailRow.assay": "Assay",
+  "sharedListings.detailRow.conditionNotes": "Condition Notes",
+  "sharedListings.detailRow.externalNotes": "External Notes",
+  "sharedListings.detailRow.internalNotes": "Internal Notes",
   "sharedListings.detailRow.productInformation": "Product Information",
   "warehouseCredentials.expDate": "Exp. Date",
   "warehouseCredentials.issueDate": "Issue Date"

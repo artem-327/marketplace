@@ -1,34 +1,71 @@
 import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import { GridColumn, GridRow } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
 //Styles
-import { DivTableWrapper, GridStyledNotes, DivNormalText } from '../ListingDetail.styles'
+import {
+  DivTableWrapper,
+  GridStyledNotes,
+  DivNormalText,
+  DivTdsTableHeader,
+  GridRowNotesContent,
+  GridColumnNotesContent,
+  GridRowNotesLabel,
+  GridColumnNotesLabel
+} from '../ListingDetail.styles'
 
 const NotesTab = ({ row }) => {
   return (
     <DivTableWrapper>
       <GridStyledNotes>
         {row.conditionNotes && (
-          <GridRow>
-            <GridColumn width={16}>
-              <DivNormalText>{row.conditionNotes}</DivNormalText>
-            </GridColumn>
-          </GridRow>
+          <>
+            <GridRowNotesLabel>
+              <GridColumnNotesLabel>
+                <DivTdsTableHeader>
+                  <FormattedMessage id={`sharedListings.detailRow.conditionNotes`} defaultMessage='Condition Notes' />
+                </DivTdsTableHeader>
+              </GridColumnNotesLabel>
+            </GridRowNotesLabel>
+            <GridRowNotesContent>
+              <GridColumnNotesContent width={16}>
+                <DivNormalText>{row.conditionNotes}</DivNormalText>
+              </GridColumnNotesContent>
+            </GridRowNotesContent>
+          </>
         )}
         {row.externalNotes && (
-          <GridRow>
-            <GridColumn width={16}>
-              <DivNormalText>{row.externalNotes}</DivNormalText>
-            </GridColumn>
-          </GridRow>
+          <>
+            <GridRowNotesLabel>
+              <GridColumnNotesLabel>
+                <DivTdsTableHeader>
+                  <FormattedMessage id={`sharedListings.detailRow.externalNotes`} defaultMessage='External Notes' />
+                </DivTdsTableHeader>
+              </GridColumnNotesLabel>
+            </GridRowNotesLabel>
+            <GridRowNotesContent>
+              <GridColumnNotesContent width={16}>
+                <DivNormalText>{row.externalNotes}</DivNormalText>
+              </GridColumnNotesContent>
+            </GridRowNotesContent>
+          </>
         )}
         {row.internalNotes && (
-          <GridRow>
-            <GridColumn width={16}>
-              <DivNormalText>{row.internalNotes}</DivNormalText>
-            </GridColumn>
-          </GridRow>
+          <>
+            <GridRowNotesLabel>
+              <GridColumnNotesLabel>
+                <DivTdsTableHeader>
+                  <FormattedMessage id={`sharedListings.detailRow.internalNotes`} defaultMessage='Internal Notes' />
+                </DivTdsTableHeader>
+              </GridColumnNotesLabel>
+            </GridRowNotesLabel>
+            <GridRowNotesContent>
+              <GridColumnNotesContent width={16}>
+                <DivNormalText>{row.internalNotes}</DivNormalText>
+              </GridColumnNotesContent>
+            </GridRowNotesContent>
+          </>
         )}
       </GridStyledNotes>
     </DivTableWrapper>
