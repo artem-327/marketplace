@@ -105,7 +105,6 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
       await postNewCasProductRequest(payload)
       datagrid.loadData()
     }
-    props.chatWidgetVerticalMoved(false)
     props.closeAddPopup()
   } catch (e) {
     console.error(e)

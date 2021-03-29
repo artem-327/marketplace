@@ -40,7 +40,7 @@ export const getInitValues = values => {
  * @param {Object<string, any>} formikProps
  */
 export const handleSubmit = async (props, formikProps) => {
-  const { onUpdateAddress, isWarehouse, popupValues, setIsOpenAddAddress, chatWidgetVerticalMoved } = props
+  const { onUpdateAddress, isWarehouse, popupValues, setIsOpenAddAddress } = props
   const { values } = formikProps
 
   let payload = {}
@@ -96,7 +96,6 @@ export const handleSubmit = async (props, formikProps) => {
       await onUpdateAddress(response.value)
     }
     setIsOpenAddAddress(false)
-    chatWidgetVerticalMoved(false)
   } catch (e) {
     console.error(e)
   } finally {

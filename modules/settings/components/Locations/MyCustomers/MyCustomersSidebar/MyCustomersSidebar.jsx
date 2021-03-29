@@ -21,7 +21,6 @@ import ErrorFocus from '../../../../../../components/error-focus'
 
 // Actions
 import * as Actions from '../../../../actions'
-import { chatWidgetVerticalMoved } from '../../../../../chatWidget/actions'
 
 // Styles
 import {
@@ -64,10 +63,7 @@ const MyCustomersSidebar = props => {
       }}
       validationSchema={formValidation()}
       enableReinitialize
-      onReset={() => {
-        props.closeSidebar()
-        props.chatWidgetVerticalMoved(false)
-      }}
+      onReset={() => props.closeSidebar()}
       onSubmit={submitHandler}
       loading={props.loading}>
 
@@ -78,10 +74,7 @@ const MyCustomersSidebar = props => {
           <FormCustom autoComplete='off'>
             <DimmerStyled
               active={true}
-              onClickOutside={() => {
-                props.closeSidebar()
-                props.chatWidgetVerticalMoved(false)
-              }}
+              onClickOutside={() => props.closeSidebar()}
               page
             />
             <SidebarFlex
@@ -96,10 +89,7 @@ const MyCustomersSidebar = props => {
                   <Loader />
                 </Dimmer>
                 <CustomHighSegment
-                  onClick={() => {
-                    props.closeSidebar()
-                    props.chatWidgetVerticalMoved(false)
-                  }}
+                  onClick={() => props.closeSidebar()}
                   basic>
                   <DivTitle>
                     <div>
@@ -343,10 +333,7 @@ const MyCustomersSidebar = props => {
               <DivBottomSidebar>
                 <BasicButton
                   noBorder
-                  onClick={() => {
-                    props.closeSidebar()
-                    props.chatWidgetVerticalMoved(false)
-                  }}
+                  onClick={() => props.closeSidebar()}
                   data-test='settings_branches_popup_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                     {text => text}
@@ -387,4 +374,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withDatagrid(injectIntl(connect(mapStateToProps, { ...Actions, chatWidgetVerticalMoved })(MyCustomersSidebar)))
+export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(MyCustomersSidebar)))

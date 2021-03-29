@@ -1,13 +1,10 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { logout } from '~/modules/auth/actions'
-import { chatWidgetTerminate } from '~/modules/chatWidget/actions'
 
 class Logout extends Component {
   componentDidMount() {
-    const { logout, router, chatWidgetTerminate } = this.props
-
-    chatWidgetTerminate()
+    const { logout, router } = this.props
     logout(router.query.auto)
   }
 
@@ -16,4 +13,4 @@ class Logout extends Component {
   }
 }
 
-export default connect(() => ({}), { logout, chatWidgetTerminate })(Logout)
+export default connect(() => ({}), { logout })(Logout)

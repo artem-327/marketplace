@@ -13,8 +13,6 @@ import { getSafe } from '~/utils/functions'
 
 import confirm from '~/components/Confirmable/confirm'
 import { FormattedPhone } from '~/components/formatted-messages/'
-//Actions
-import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 
 import styled from 'styled-components'
 const DivIcons = styled.div`
@@ -150,7 +148,7 @@ class WarehousesTable extends Component {
   }
 
   getActions = () => {
-    const { openSidebar, deleteBranch, intl, datagrid, chatWidgetVerticalMoved } = this.props
+    const { openSidebar, deleteBranch, intl, datagrid } = this.props
 
     const { formatMessage } = intl
     return [
@@ -158,7 +156,6 @@ class WarehousesTable extends Component {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
         callback: row => {
           const indexTabofSidebar = 0
-          chatWidgetVerticalMoved(true)
           getBranch(row.id)
           openSidebar(row.rawData, indexTabofSidebar)
         }
@@ -167,7 +164,6 @@ class WarehousesTable extends Component {
         text: formatMessage({ id: 'global.certificates', defaultMessage: 'Certificates' }),
         callback: row => {
           const indexTabofSidebar = 1
-          chatWidgetVerticalMoved(true)
           getBranch(row.id)
           openSidebar(row.rawData, indexTabofSidebar)
         }
@@ -219,8 +215,7 @@ class WarehousesTable extends Component {
 const mapDispatchToProps = {
   openSidebar,
   deleteBranch,
-  getBranch,
-  chatWidgetVerticalMoved
+  getBranch
 }
 
 const mapStateToProps = (state, { datagrid }) => {

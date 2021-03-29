@@ -262,7 +262,6 @@ export const submitUser = async (values, actions, props, state) => {
     currentUserId,
     getIdentity,
     openGlobalAddForm,
-    chatWidgetVerticalMoved,
     userSettings
   } = props
   const { sidebarValues } = state
@@ -324,7 +323,6 @@ export const submitUser = async (values, actions, props, state) => {
       openGlobalAddForm('')
     } else {
       closeSidebar()
-      chatWidgetVerticalMoved(false)
     }
   } catch (err) {
     console.error(err)
