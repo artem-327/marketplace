@@ -28,7 +28,7 @@ import {
   ButtonOrCustom,
   SegmentStyled,
   DimmerStyled,
-  InputTradePassId
+  GridColumnTradePassId
 } from './CompanyDetails.styles'
 
 // Services
@@ -150,15 +150,15 @@ const CompanyDetails = props => {
               </GridColumn>
             </GridRow>
             <GridRow>
-              <GridColumn width={16}>
-                <InputTradePassId
+              <GridColumnTradePassId width={16}>
+                <Input
                   label={<FormattedMessage id='company.myTradePassId' defaultMessage='My TradePass ID' />}
                   name='vellociBusinessId'
                   inputProps={{
                     disabled: true
                   }}
                 />
-              </GridColumn>
+              </GridColumnTradePassId>
             </GridRow>
           </GridStyled>
         </GridColumn>

@@ -104,11 +104,11 @@ export const DimmerStyled = styled(Dimmer)`
   }
 `
 
-export const InputTradePassId = styled(Input)`
-  &.ui.disabled.input {
+export const GridColumnTradePassId = styled(Grid.Column)`
+  .ui.disabled.input {
     opacity: 1 !important;
   }
-  &.ui.form .field :disabled {
+  input {
     opacity: 1 !important;
   }
 `
