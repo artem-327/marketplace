@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Segment, Form, Sidebar, Dimmer } from 'semantic-ui-react'
+import { Segment, Form, Sidebar, Dimmer, Image } from 'semantic-ui-react'
 
 export const SidebarFlex = styled(Sidebar)`
   display: flex;
@@ -159,4 +159,50 @@ export const SegmentCustom = styled(Segment)`
 
 export const FormCustom = styled(Form)`
   flex-grow: 0 !important;
+`
+
+export const SegmentCertifications = styled(SegmentCustom)`
+  .ui.dropdown {
+    width: 80px !important;
+    min-width: 80px !important;
+  }
+  
+  p {
+    font-style: italic;
+    color: #848893;
+  }
+`
+
+export const HorizontalRule = styled.hr`
+  height: 1px;
+  margin: 19px 0 20px;
+  border: 0 none;
+  background: #dee2e6;
+`
+
+export const DivBrowseFile = styled.div`
+  display: flex;
+  align-items: space-between;
+  place-content: center space-between;
+  width: 50%;
+  height: 50px;
+  margin: 0 0 20px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 12px 15px 12px 20px;
+  background: transparent;
+  color: #20273a;
+  line-height: 24px;
+`
+
+export const DivIcon = styled.div`
+  margin-left: 8px;
+`
+
+export const ImageResized = styled(Image)`
+  width: 24px;
+  max-width: 24px;
+  height: 24px;
+  max-height: 24px;
+  object-fit: contain;
 `

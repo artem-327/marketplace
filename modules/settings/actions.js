@@ -1046,6 +1046,28 @@ export function addAttachment(attachment, type, expirationDate) {
   }
 }
 
+export function addDeaAttachment(attachment, branchId) {
+  return {
+    type: AT.SETTINGS_ADD_DEA_ATTACHMENT,
+    async payload() {
+      const data = await api.addDeaAttachment(attachment, branchId)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
+  }
+}
+
+export function addTaxExemptAttachment(attachment, branchId) {
+  return {
+    type: AT.SETTINGS_ADD_TAX_EXEMPT_ATTACHMENT,
+    async payload() {
+      const data = await api.addTaxExemptAttachment(attachment, branchId)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
+  }
+}
+
 export function removeAttachmentLink(isLot, itemId, aId) {
   return {
     type: AT.SETTINGS_REMOVE_ATTACHMENT_LINK,
@@ -1310,5 +1332,56 @@ export function getCompanyUser(id) {
   return {
     type: AT.GET_COMPANY_USER,
     payload: api.getCompanyUser(id)
+  }
+}
+
+export function addCustomer(customerData) {
+  return {
+    type: AT.POST_CUSTOMER,
+    payload: api.addCustomer(customerData)
+  }
+}
+
+export function updateCustomer(customerId, customerData) {
+  return {
+    type: AT.PATCH_CUSTOMER,
+    payload: api.updateCustomer(customerId, customerData)
+  }
+}
+
+export function deleteCustomer(id) {
+  return {
+    type: AT.DELETE_CUSTOMER,
+    payload: api.deleteCustomer(id)
+  }
+}
+
+export function openCustomerWarehouse(customerIdName = null, warehouseRow = null, datagrid = null, openTab = null) {
+  return {
+    type: AT.OPEN_CUSTOMER_WAREHOUSE,
+    payload: { data: { customerIdName, warehouseRow }, datagrid, openTab }
+  }
+}
+
+export function addCustomerWarehouse(customerId, warehouse) {
+  console.log('ADD')
+  return {
+    type: AT.POST_CUSTOMER_WAREHOUSE,
+    payload: api.addCustomerWarehouse(customerId, warehouse)
+  }
+}
+
+export function updateCustomerWarehouse(customerId, warehouseId, warehouse) {
+  console.log('UPDATE')
+  return {
+    type: AT.PATCH_CUSTOMER_WAREHOUSE,
+    payload: api.updateCustomerWarehouse(customerId, warehouseId, warehouse)
+  }
+}
+
+export function deleteCustomerWarehouse(customerId, warehouseId) {
+  return {
+    type: AT.DELETE_CUSTOMER_WAREHOUSE,
+    payload: api.deleteCustomerWarehouse(customerId, warehouseId)
   }
 }

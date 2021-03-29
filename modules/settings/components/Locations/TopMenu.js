@@ -24,12 +24,12 @@ class TopMenu extends Component {
             <Menu.Item
               style={{ textTransform: 'uppercase' }}
               name={formatMessage({
-                id: 'settings.locations.menu.deliveryLocations',
-                defaultMessage: 'Customer Ship To'
+                id: 'settings.locations.menu.myCustomers',
+                defaultMessage: 'My Customers'
               })}
-              onClick={() => this.tabSwitch('delivery-locations')}
-              active={!activeTab || activeTab === 'delivery-locations'}
-              data-test='menu_settings_locations_delivery_locations'
+              onClick={() => this.tabSwitch('my-customers')}
+              active={!activeTab || activeTab === 'my-customers'}
+              data-test='menu_settings_locations_my_customers'
             />
             <Menu.Item
               style={{ textTransform: 'uppercase' }}

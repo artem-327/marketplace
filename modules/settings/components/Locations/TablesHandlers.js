@@ -119,9 +119,9 @@ const ButtonAdd = styled(Button)`
 `
 
 const textsTable = {
-  'delivery-locations': {
-    BtnAddText: 'settings.tables.deliveryAddresses.buttonAdd',
-    SearchText: 'settings.tables.deliveryAddresses.search'
+  'my-customers': {
+    BtnAddText: 'settings.tables.myCustomers.buttonAdd',
+    SearchText: 'settings.tables.myCustomers.search'
   },
   'pick-up-locations': {
     BtnAddText: 'settings.tables.warehouses.buttonAdd',
@@ -137,7 +137,7 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      'delivery-locations': {
+      'my-customers': {
         searchInput: ''
       },
       'pick-up-locations': {
@@ -223,7 +223,7 @@ class TablesHandlers extends Component {
             primary
             onClick={() => {
               openSidebar()
-              if (currentTab === 'branches' || currentTab === 'pick-up-locations') chatWidgetVerticalMoved(true)
+              chatWidgetVerticalMoved(true)
             }}
             data-test='settings_open_popup_btn'>
             <PlusCircle />

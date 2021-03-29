@@ -20,8 +20,9 @@ import WarehousesTable from './Warehouses/WarehousesTable'
 import BranchesTable from './Branches/BranchesTable'
 import PickUpLocationsSidebar from './Warehouses/WarehousesSidebar/WarehousesSidebar'
 import BranchesSidebar from './Branches/BranchesSidebar/BranchesSidebar'
-import DeliveryLocationsTable from './DeliveryLocationsTable/DeliveryLocationsTable'
-import DeliveryLocationsSidebar from './DeliveryLocationsTable/DeliveryLocationsSidebar'
+import MyCustomers from './MyCustomers/MyCustomers'
+import MyCustomersSidebar from './MyCustomers/MyCustomersSidebar/MyCustomersSidebar'
+import WarehouseSidebar from './MyCustomers/WarehouseSidebar/WarehouseSidebar'
 
 const SettingsGrid = styled(Grid)`
   flex-direction: column !important;
@@ -77,23 +78,23 @@ class Locations extends Component {
   }
 
   renderContent = () => {
-    const { activeTab, isOpenPopup, isUserAdmin, isOpenSidebar } = this.props
+    const { activeTab, isOpenPopup, isUserAdmin, isOpenSidebar, isOpenSubSidebar } = this.props
 
     const tables = {
-      'delivery-locations': <DeliveryLocationsTable />,
+      'my-customers': <MyCustomers />,
       'pick-up-locations': <WarehousesTable />,
       branches: <BranchesTable />
     }
 
     const popupForm = {
-      'delivery-locations': <DeliveryLocationsSidebar />,
+      'my-customers': isOpenSubSidebar ? <WarehouseSidebar/> : <MyCustomersSidebar />,
       'pick-up-locations': <PickUpLocationsSidebar />,
       branches: <BranchesSidebar />
     }
 
     return (
       <>
-        {(isOpenPopup || isOpenSidebar) && popupForm[activeTab]}
+        {(isOpenPopup || isOpenSidebar || isOpenSubSidebar) && popupForm[activeTab]}
         {tables[activeTab] || <p>This page is still under construction</p>}
       </>
     )
@@ -103,14 +104,14 @@ class Locations extends Component {
     const { activeTab } = this.props
 
     const datagridApiMap = {
-      'delivery-locations': {
-        url: '/prodex/api/delivery-addresses/datagrid',
+      'my-customers': {
+        url: '/prodex/api/customers/datagrid',
         searchToFilter: v =>
           v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
-                  path: 'DeliveryAddress.address.streetAddress',
+                  path: 'Customer.name',
                   values: [`%${v.searchInput}%`]
                 }
               ]
