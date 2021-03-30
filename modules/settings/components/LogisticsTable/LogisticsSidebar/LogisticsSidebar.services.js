@@ -53,7 +53,7 @@ export const getValidationSchema = sidebarValues => {
  *
  * @param {object} values - Formik input data
  * @param {object} sidebarValues - Data for loaded Logistics item
- * @param {object} actions - Necessary functions to submitForm {updateLogisticsAccount, createLogisticsAccount, getLogisticsAccounts, setSubmitting, closeSidebar, chatWidgetVerticalMoved}
+ * @param {object} actions - Necessary functions to submitForm {updateLogisticsAccount, createLogisticsAccount, getLogisticsAccounts, setSubmitting, closeSidebar}
  */
 export const submitForm = async (values, sidebarValues, actions) => {
   const {
@@ -61,8 +61,7 @@ export const submitForm = async (values, sidebarValues, actions) => {
     createLogisticsAccount,
     getLogisticsAccounts,
     setSubmitting,
-    closeSidebar,
-    chatWidgetVerticalMoved
+    closeSidebar
   } = actions
   const apiKey = values.apiKey ? { apiKey: values.apiKey } : null
 
@@ -89,6 +88,5 @@ export const submitForm = async (values, sidebarValues, actions) => {
   } finally {
     setSubmitting(false)
     closeSidebar()
-    await chatWidgetVerticalMoved(false)
   }
 }

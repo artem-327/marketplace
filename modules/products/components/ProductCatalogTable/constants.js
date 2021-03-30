@@ -1,5 +1,4 @@
 import { FormattedMessage } from 'react-intl'
-import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 export const tabs = [
   { text: { id: 'global.ep.edit', defaultMessage: 'Edit' }, key: 'edit' },

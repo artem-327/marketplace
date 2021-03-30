@@ -13,7 +13,7 @@ import {
   updateLogisticsAccount,
   getLogisticsAccounts
 } from '../../../actions'
-import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
+
 //Components
 import { Required } from '../../../../../components/constants/layout'
 import ErrorFocus from '../../../../../components/error-focus'
@@ -42,7 +42,6 @@ const LogisticsSidebar = props => {
     createLogisticsAccount,
     updateLogisticsAccount,
     getLogisticsAccounts,
-    chatWidgetVerticalMoved,
     intl: { formatMessage }
   } = props
 
@@ -58,34 +57,24 @@ const LogisticsSidebar = props => {
       validateOnChange={false}
       validateOnBlur={false}
       initialValues={getInitialValues(sidebarValues)}
-      onReset={() => {
-        closeSidebar()
-        chatWidgetVerticalMoved(false)
-      }}
+      onReset={() => closeSidebar()}
       onSubmit={async (values, { setSubmitting }) => {
         await submitForm(values, sidebarValues, {
           updateLogisticsAccount,
           createLogisticsAccount,
           getLogisticsAccounts,
           setSubmitting,
-          closeSidebar,
-          chatWidgetVerticalMoved
+          closeSidebar
         })
       }}>
       <DimmerSidebarOpend
         active={true}
-        onClickOutside={() => {
-          closeSidebar()
-          chatWidgetVerticalMoved(false)
-        }}
+        onClickOutside={() => closeSidebar()}
         page></DimmerSidebarOpend>
       <SidebarFlex visible={isOpenSidebar} direction='bottom' animation='overlay'>
         <div>
           <CustomHighSegment
-            onClick={() => {
-              closeSidebar()
-              chatWidgetVerticalMoved(false)
-            }}
+            onClick={() => closeSidebar()}
             basic>
             <DivTitle>
               <div>
@@ -185,10 +174,7 @@ const LogisticsSidebar = props => {
         <DivBottomSidebar>
           <BasicButton
             noBorder
-            onClick={() => {
-              closeSidebar()
-              chatWidgetVerticalMoved(false)
-            }}
+            onClick={() => closeSidebar()}
             data-test='settings_logistics_sidebar_reset_btn'>
             <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
               {text => text}
@@ -212,8 +198,7 @@ const mapDispatchToProps = {
   getLogisticsProviders,
   createLogisticsAccount,
   updateLogisticsAccount,
-  getLogisticsAccounts,
-  chatWidgetVerticalMoved
+  getLogisticsAccounts
 }
 
 const mapStateToProps = ({
@@ -231,7 +216,6 @@ LogisticsSidebar.propTypes = {
   createLogisticsAccount: PropTypes.func,
   updateLogisticsAccount: PropTypes.func,
   getLogisticsAccounts: PropTypes.func,
-  chatWidgetVerticalMoved: PropTypes.func,
   isOpenSidebar: PropTypes.bool,
   sidebarValues: PropTypes.object,
   logisticsProvidersFetching: PropTypes.bool,
@@ -244,7 +228,6 @@ LogisticsSidebar.defaultProps = {
   createLogisticsAccount: () => {},
   updateLogisticsAccount: () => {},
   getLogisticsAccounts: () => {},
-  chatWidgetVerticalMoved: () => {},
   isOpenSidebar: false,
   sidebarValues: null,
   logisticsProvidersFetching: false,

@@ -110,13 +110,11 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
     if (sidebarValues) {
       const {value} = await updateCustomer(sidebarValues.id, customerData)
       datagrid.updateRow(sidebarValues.id, () => value)
-      props.chatWidgetVerticalMoved(false)
       props.closeSidebar()
 
     } else {
       const {value} = await addCustomer(customerData)
       datagrid.loadData()
-      props.chatWidgetVerticalMoved(false)
       props.closeSidebar()
     }
   } catch (e) {

@@ -27,7 +27,6 @@ import { CustomerName, SubrowButtons, ChevronDownStyled, ChevronUpStyled } from 
 import {
 } from './MyCustomers.services'
 import * as Actions from '../../../actions'
-import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 
 import confirm from '~/components/Confirmable/confirm'
 
@@ -44,7 +43,6 @@ const getWarehouseActions = (row, war, props) => {
           { ...war, rawData: war },
           props.datagrid
         )
-        props.chatWidgetVerticalMoved(true)
       }
     },
     {
@@ -79,10 +77,7 @@ const getCustomersActions = (row, props) => {
   return [
     {
       text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-      callback: () => {
-        openSidebar(row)
-        props.chatWidgetVerticalMoved(true)
-      }
+      callback: () => openSidebar(row)
     },
     {
       text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -134,7 +129,6 @@ export const getRows = (rows, state, props) => {
                 { ...war, rawData: war },
                 props.datagrid
               )
-              props.chatWidgetVerticalMoved(true)
             }}
           />
         ),
@@ -175,7 +169,6 @@ export const getRows = (rows, state, props) => {
             e.stopPropagation()
             e.preventDefault()
             props.openSidebar(row)
-            props.chatWidgetVerticalMoved(true)
           }}
           rightAlignedContent={expandedRowIds.includes(row.id)
             ? (<ChevronDownStyled size={20} />)
@@ -197,10 +190,7 @@ const getRowDetail = (row, props) => {
     <div>
       <SubrowButtons>
         <BasicButton floatRight={true}
-                     onClick={() => {
-                       props.openCustomerWarehouse(row, null, props.datagrid)
-                       props.chatWidgetVerticalMoved(true)
-                     }}>
+                     onClick={() => props.openCustomerWarehouse(row, null, props.datagrid)}>
           <FormattedMessage id='global.addNew' defaultMessage='Add New' />
         </BasicButton>
       </SubrowButtons>
@@ -282,4 +272,4 @@ function mapStateToProps(store) {
 }
 
 //export default injectIntl(MyCustomers)
-export default withDatagrid(injectIntl(connect(mapStateToProps, { ...Actions, chatWidgetVerticalMoved })(MyCustomers)))
+export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(MyCustomers)))

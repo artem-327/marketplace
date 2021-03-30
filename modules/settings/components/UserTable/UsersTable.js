@@ -24,7 +24,6 @@ import {
   setPrimaryUser,
   openUserSettingsModal
 } from '../../actions'
-import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 import { Checkbox, Popup, Icon } from 'semantic-ui-react'
 import ActionCell from '~/components/table/ActionCell'
@@ -139,18 +138,14 @@ class UsersTable extends Component {
       deleteUser,
       resendWelcomeEmail,
       setPrimaryUser,
-      datagrid,
-      chatWidgetVerticalMoved
+      datagrid
     } = this.props
 
     const { formatMessage } = intl
     return [
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => {
-          openSidebar(row.rawData, 'users')
-          chatWidgetVerticalMoved(true)
-        }
+        callback: row => openSidebar(row.rawData, 'users')
         // hidden: row => this.props.currentUserId === row.id
       },
       /* #34139
@@ -264,8 +259,7 @@ const mapDispatchToProps = {
   userSwitchEnableDisable,
   resendWelcomeEmail,
   setPrimaryUser,
-  openUserSettingsModal,
-  chatWidgetVerticalMoved
+  openUserSettingsModal
 }
 
 const userEnableDisableStatus = (r, currentUserId) => {
