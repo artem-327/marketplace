@@ -2211,7 +2211,7 @@
   "laststep.company.dba": "Doing Business As",
   "laststep.company.header": "Company Profile",
   "laststep.company.name": "Company Legal Name",
-  "laststep.submit": "Enter Echo Exchange",
+  "laststep.submit": "Enter {companyName}",
   "laststep.subheader": "Please verify the company information below.",
   "laststep.header": "Last Step",
   "laststep.address.contactName": "Contact Name",
