@@ -101,7 +101,7 @@ export const getRows = (state, props) => {
           content={
             <StyledName>
               <div className='name'>{lastHistory.createdBy.name}</div>
-              <div className='company'>{lastHistory.createdBy.company.cfDisplayName}</div>
+              <div className='company'>{getSafe(() => lastHistory.createdBy.company.cfDisplayName, '')}</div>
             </StyledName>
           }
           onContentClick={e => {

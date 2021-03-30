@@ -78,7 +78,7 @@ const RowDescription = props => {
         id={messageId}
         values={{
           name: <DivBlueText>{createdBy.name}</DivBlueText>,
-          company: <DivBlueText>{createdBy.company.name}</DivBlueText>,
+          company: <DivBlueText>{getSafe(() => createdBy.company.name, '')}</DivBlueText>,
           fob: <DivBlueText>{fob}</DivBlueText>,
           quantity: <DivBlueText>{quantity}</DivBlueText>,
           product: <DivBlueText>{productName}</DivBlueText>
