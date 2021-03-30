@@ -2521,6 +2521,8 @@
   "settings.customers.addWarehouseFor": "Add Warehouse for {name}",
   "settings.customers.editWarehouseFor": "Edit Warehouse for {name}",
   "settings.customers.enterWarehouseName": "Enter Warehouse Name",
+  "settings.customers.billToAddressName": "Bill To Address Name",
+  "settings.customers.enterBillToAddressName": "Enter Bill To Address Name",
   "shippingQuote.header": "Shipping Quote",
   "shippingQuote.shippingQuantity": "Shipping Quantity",
   "shippingQuote.purchase": "Purchase",
