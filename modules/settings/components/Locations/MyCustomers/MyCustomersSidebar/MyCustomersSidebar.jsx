@@ -116,17 +116,15 @@ const MyCustomersSidebar = props => {
                       type='text'
                       label={
                         <>
-                          <FormattedMessage
-                            id='settings.customers.billToAddressName'
-                            defaultMessage='Bill To Address Name' />
+                          <FormattedMessage id='settings.customerName' defaultMessage='Customer Name' />
                           <Required />
                         </>
                       }
                       name='name'
                       inputProps={{
                         placeholder: formatMessage({
-                          id: 'settings.customers.enterBillToAddressName',
-                          defaultMessage: 'Enter Bill To Address Name'
+                          id: 'settings.customers.enterCustomerName',
+                          defaultMessage: 'Enter Customer Name'
                         })
                       }}
                     />
@@ -134,15 +132,17 @@ const MyCustomersSidebar = props => {
                       type='text'
                       label={
                         <>
-                          <FormattedMessage id='settings.companyName' defaultMessage='Company Name' />
+                          <FormattedMessage
+                            id='settings.customers.billToAddressName'
+                            defaultMessage='Bill To Address Name' />
                           <Required />
                         </>
                       }
                       name='billToAddress.addressName'
                       inputProps={{
                         placeholder: formatMessage({
-                          id: 'settings.customers.enterCompanyName',
-                          defaultMessage: 'Enter Company Name'
+                          id: 'settings.customers.enterBillToAddressName',
+                          defaultMessage: 'Enter Bill To Address Name'
                         })
                       }}
                     />

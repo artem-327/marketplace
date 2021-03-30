@@ -2518,6 +2518,8 @@
   "settings.documents.selectSharingOption": "Select sharing option",
   "settings.documents.enterIssuerName": "Enter issuer name",
   "settings.tableColumnSettings": "TABLE COLUMN SETTINGS",
+  "settings.customerName": "Customer Name",
+  "settings.customers.enterCustomerName": "Enter Customer Name",
   "settings.customers.addWarehouseFor": "Add Warehouse for {name}",
   "settings.customers.editWarehouseFor": "Edit Warehouse for {name}",
   "settings.customers.enterWarehouseName": "Enter Warehouse Name",
