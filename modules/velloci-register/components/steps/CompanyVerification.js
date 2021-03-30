@@ -3,6 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Check } from 'react-feather'
 //Components
+import { getSafe } from '~/utils/functions'
 import {
   Rectangle,
   CustomDivContent,
@@ -45,7 +46,7 @@ const DivRectangle = styled(Rectangle)`
   border: solid 1px #dee2e6;
 `
 
-function CompanyVerification() {
+function CompanyVerification(props) {
   return (
     <GridCompanyVerification>
       <GridRow>
@@ -116,16 +117,19 @@ function CompanyVerification() {
         <ColumnTextCenter>
           <FormattedMessage
             id='velloci.companyVerification.infoText'
-            defaultMessage='Thank you for taking the time to register your business with BluePallet. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.'
+            defaultMessage='Thank you for taking the time to register your business with {company}. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.'
             values={{
+              company: (
+                getSafe(() => props.appInfo.systemCompanyName, '')
+              ),
               email: (
                 <CustomA href={`mailto: ${SUPPORT_EMAIL}`}>
-                  <FormattedMessage id='global.email.support' defaultMessage={SUPPORT_EMAIL} />
+                  {getSafe(() => props.appInfo.supportEmail, '')}
                 </CustomA>
               ),
               phoneNumber: (
                 <b>
-                  <FormattedMessage id='global.phone.support' defaultMessage='833-321-3246' />
+                  {getSafe(() => props.appInfo.supportPhone, '')}
                 </b>
               )
             }}
