@@ -7,7 +7,7 @@ import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 
 //Components
-import { Button, GridColumn, Radio, Dimmer, Loader, Popup } from 'semantic-ui-react'
+import { Button, GridRow, GridColumn, Radio, Dimmer, Loader, Popup } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import AddAddress from '../AddAddress/AddAddress'
 import ShippingHandler from './ShippingHandler'
@@ -147,6 +147,16 @@ const ShippingTerms = props => {
                     </GridRowExpandedSelectionRow>
                   )
                 })}
+                {addressOptions.length >= 50 && (
+                  <GridRow>
+                    <GridColumn textAlign='center' width={16}>
+                      <FormattedMessage
+                        id='checkout.moreResultsAreAvailable'
+                        defaultMessage='More results are available, please search by location name or address.'
+                      />
+                    </GridColumn>
+                  </GridRow>
+                )}
               </GridExpandedSection>
               <DivRightButtons>
                 <Button
