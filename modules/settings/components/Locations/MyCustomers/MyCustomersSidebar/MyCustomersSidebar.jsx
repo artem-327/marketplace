@@ -126,15 +126,17 @@ const MyCustomersSidebar = props => {
                       type='text'
                       label={
                         <>
-                          <FormattedMessage id='settings.customerName' defaultMessage='Customer Name' />
+                          <FormattedMessage
+                            id='settings.customers.billToAddressName'
+                            defaultMessage='Bill To Address Name' />
                           <Required />
                         </>
                       }
                       name='name'
                       inputProps={{
                         placeholder: formatMessage({
-                          id: 'settings.customers.customerName',
-                          defaultMessage: 'Enter Customer Name'
+                          id: 'settings.customers.enterBillToAddressName',
+                          defaultMessage: 'Enter Bill To Address Name'
                         })
                       }}
                     />

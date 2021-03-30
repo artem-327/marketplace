@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Sidebar, Segment, Icon, Dimmer, Form } from 'semantic-ui-react'
 import { TextArea } from 'formik-semantic-ui-fixed-validation'
+import { ChevronDown, ChevronUp } from 'react-feather'
 
 export const FormCustom = styled(Form)`
   flex-grow: 0 !important;
@@ -122,3 +123,12 @@ export const SubrowButtons = styled.div`
   text-align: right;
 `
 
+export const ChevronDownStyled = styled(ChevronDown)`
+  color: #848893;
+  cursor: pointer;
+`
+
+export const ChevronUpStyled = styled(ChevronUp)`
+  color: #848893;
+  cursor: pointer;
+`

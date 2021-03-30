@@ -8,7 +8,6 @@ import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import ActionCell from '~/components/table/ActionCell'
 
-
 // Constants
 import { COLUMNS } from './MyCustomers.constants'
 
@@ -22,7 +21,7 @@ import BasicButton from '../../../../../components/buttons/BasicButton'
 //import { usePrevious } from '../../../hooks'
 
 // Styles
-import { CustomerName, SubrowButtons } from './MyCustomers.styles'
+import { CustomerName, SubrowButtons, ChevronDownStyled, ChevronUpStyled } from './MyCustomers.styles'
 
 // Services
 import {
@@ -110,8 +109,9 @@ const getCustomersActions = (row, props) => {
   ]
 }
 
-export const getRows = (rows, props) => {
-  const { countryCodes, actions, expandedRowIds } = props // ?
+export const getRows = (rows, state, props) => {
+  const { countryCodes, actions} = props
+  const { expandedRowIds, setExpandedRowIds, expandedRowIdsSecondary, setExpandedRowIdsSecondary } = state
 
   return rows.map(row => {
     const warehouses = getSafe(() => row.warehouseAddresses.length > 0, false) ? row.warehouseAddresses.map(war => {
@@ -152,6 +152,13 @@ export const getRows = (rows, props) => {
       actions
     }]
 
+    if (expandedRowIds.includes(row.id) && expandedRowIdsSecondary.length) {
+      const lastWarehouseId = warehouses.length && warehouses[warehouses.length - 1].id
+      if (lastWarehouseId && lastWarehouseId !== expandedRowIdsSecondary[0]) {
+        setExpandedRowIdsSecondary(lastWarehouseId)
+      }
+    }
+
     return {
       //...row,
       clsName: `tree-table root-row${expandedRowIds.includes(row.id) ? ' opened' : ''}`,
@@ -170,6 +177,10 @@ export const getRows = (rows, props) => {
             props.openSidebar(row)
             props.chatWidgetVerticalMoved(true)
           }}
+          rightAlignedContent={expandedRowIds.includes(row.id)
+            ? (<ChevronDownStyled size={20} />)
+            : (<ChevronUpStyled size={20} />)
+          }
         />
       ),
       customerId: row.id,
@@ -201,6 +212,8 @@ const MyCustomers = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
   const [expandedRowIdsSecondary, setExpandedRowIdsSecondary] = useState([])
 
+  const state = { expandedRowIds, setExpandedRowIds, expandedRowIdsSecondary, setExpandedRowIdsSecondary }
+
   const {
     datagrid,
     loading,
@@ -225,7 +238,7 @@ const MyCustomers = props => {
         {...datagrid.tableProps}
         loading={datagrid.loading || loading}
         columns={COLUMNS}
-        rows={getRows(datagrid.rows, { ...props, expandedRowIds })}
+        rows={getRows(datagrid.rows, state, props)}
         rowSelection={false}
         showSelectionColumn={false}
         treeDataType={true}
