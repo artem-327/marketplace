@@ -19,162 +19,10 @@ import { Schedule } from '@material-ui/icons'
 
 import { TableSegment, StyledList, StyledRectangle, PriceInput, BottomButtons } from '../../constants/layout'
 
-const StyledModal = styled(Modal)`
-  > i.close.icon {
-    font-size: 18px;
-  }
 
-  &.ui.large.modal > .header {
-    font-size: 18px;
-  }
-
-  &.ui.large.modal > .scrolling.content {
-    padding: 30px;
-  }
-`
-
-const BottomButtons2 = styled.div`
-  display: inline-block;
-  position: relative;
-  overflow: visible;
-  margin: 0;
-  box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 #dee2e6;
-  padding: 10px 25px;
-  text-align: right;
-
-  .ui.button {
-    height: 40px;
-    border-radius: 3px;
-    font-weight: 500;
-    color: #848893;
-    margin: 0 5px;
-    align-items: center;
-
-    &.light {
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-      border: solid 1px #dee2e6;
-      background-color: #ffffff;
-      color: #848893;
-      &:hover {
-        background-color: #f8f9fb;
-        color: #20273a;
-      }
-      &:active {
-        background-color: #edeef2;
-        color: #20273a;
-      }
-    }
-    &.secondary {
-      color: #ffffff;
-      background-color: #2599d5;
-      &:hover {
-        background-color: #188ec9;
-      }
-      &:active {
-        background-color: #0d82bc;
-      }
-    }
-  }
-
-  .ui.modal & {
-    margin: 30px -1.5rem -1.5rem;
-    border-top: 1px solid #dee2e6;
-    box-shadow: 0 0 0 0 transparent;
-  }
-`
-
-const FieldRectangle = styled.div`
-  padding: 10px 15px;
-  border-radius: 3px;
-  border: solid 1px #dee2e6;
-  background-color: #f8f9fb;
-  font-size: 14px;
-  font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.29;
-  letter-spacing: normal;
-  color: #20273a;
-`
-
-const SmallText = styled.div`
-  font-size: 12px;
-  color: #848893;
-  display: flex;
-
-  > svg.title-icon {
-    font-size: 14px;
-    margin-right: 8px;
-  }
-`
-
-const StyledGrid = styled(Grid)`
-  &.ui.grid {
-    margin: -7.5px -10px;
-
-    .row {
-      padding: 7.5px 0;
-
-      .column {
-        padding: 0 10px;
-      }
-    }
-
-    .ui.input {
-      height: 40px;
-    }
-  }
-`
-
-const formValidation = () =>
-  Yup.object().shape({
-    pricePerUOM: Yup.number()
-      .min(0.001, errorMessages.minimum(0.001))
-      .typeError(errorMessages.mustBeNumber)
-      .test('maxdec', errorMessages.maxDecimals(3), val => {
-        return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-      })
-      .required(errorMessages.requiredMessage),
-    pkgAmount: Yup.number()
-      .min(1, errorMessages.minimum(1))
-      .required(errorMessages.requiredMessage)
-      .test('int', errorMessages.integer, val => {
-        return val % 1 === 0
-      })
-  })
-
-class MakeOfferPopup extends Component {
+class MakeOfferPopupOld extends Component {
   state = {}
 
-  getInitialFormValues = () => {
-    const { popupValues } = this.props
-    return {
-      message: '',
-      pkgAmount: '',
-      pricePerUOM: '',
-      productOffer: popupValues.id
-    }
-  }
-
-  submitOffer = async ({ values, setSubmitting }) => {
-    const { closePopup, makeOffer, datagrid } = this.props
-    const body = {
-      pkgAmount: parseInt(values.pkgAmount),
-      productOffer: values.productOffer,
-      pricePerUOM: parseFloat(values.pricePerUOM),
-      message: values.message
-    }
-    removeEmpty(body)
-
-    try {
-      await makeOffer(body)
-      datagrid.loadData()
-      closePopup()
-    } catch (e) {
-      console.error(e)
-    }
-    setSubmitting(false)
-  }
 
   render() {
     const {
@@ -192,9 +40,9 @@ class MakeOfferPopup extends Component {
       <Formik
         autoComplete='off'
         enableReinitialize
-        initialValues={this.getInitialFormValues()}
+        initialValues={this.getInitialFormValues(props)}
         validationSchema={formValidation()}
-        onSubmit={this.submitOffer}>
+        onSubmit={data => this.submitOffer(data, props)}>
         {formikProps => {
           let { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
@@ -417,7 +265,7 @@ class MakeOfferPopup extends Component {
                       if (errors.length && errors[0] !== 'isCanceled') {
                         submitForm() // to show errors
                       } else {
-                        this.submitOffer(formikProps)
+                        this.submitOffer(formikProps, props)
                       }
                     })
                   }}
@@ -450,4 +298,4 @@ function mapStateToProps(store) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(MakeOfferPopup)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(MakeOfferPopupOld)))
