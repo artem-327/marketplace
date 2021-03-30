@@ -14,7 +14,7 @@ export const switchPages = props => {
 
   switch (props.activeStep) {
     case 0: {
-      return <CompanyVerification formikProps={props.formikProps} />
+      return <CompanyVerification formikProps={props.formikProps} appInfo={props.appInfo} />
     }
     case 1: {
       return (

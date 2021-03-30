@@ -3178,7 +3178,7 @@
   "velloci.ownerInformation.needInfo": "Here is the info you'll need:",
   "velloci.ownerInformation.obtainInfoTitle": "Can't Obtain this Information",
   "velloci.companyVerification.infoTitle": "Beneficial Owner Information",
-  "velloci.companyVerification.infoText": "Thank you for taking the time to register your business with BluePallet. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.",
+  "velloci.companyVerification.infoText": "Thank you for taking the time to register your business with {company}. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.",
   "velloci.companyVerification.text": "We require the full legal business name and registered business address. In addition, you will need to submit one of the following five documents in PDF format. It is important that the document/s you submit clearly shows your company EIN number. Please have these ready prior to starting your verification. We require one of the following:",
   "velloci.ownerInformation.obtainInfoContent": "No problem. Please select email and we will send them the form to fill separately. You may continue the KYC process for yourself and complete registration.",
   "velloci.personalInfo.firstName.placeholder": "Enter first name",
