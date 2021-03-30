@@ -70,9 +70,9 @@ export const INIT_VALUES = {
   recommendedUses: '',
   relativeDensity: '',
   rtkIllinois: false,
-  rtkMassachusettes: false,
+  rtkMassachusetts: false,
   rtkNewJersey: false,
-  rtkPennslyvania: false,
+  rtkPennsylvania: false,
   rtkRhodeIsland: false,
   solubility: '',
   specificGravity: '',
@@ -103,7 +103,7 @@ export const GROUP_EPA = [
 ]
 
 export const GROUP_RIGHT_TO_KNOW = [
-  [['Pennslyvania', 'rtkPennslyvania', []], ['Massachusettes', 'rtkMassachusettes', []]],
+  [['Pennsylvania', 'rtkPennsylvania', []], ['Massachusetts', 'rtkMassachusetts', []]],
   [['Illinois', 'rtkIllinois', []], ['New Jersey', 'rtkNewJersey', []]],
   [['Rhode Island', 'rtkRhodeIsland', []], []]
 ]
