@@ -17,6 +17,7 @@ import GenericProductRequest from './DetailMessages/GenericProductRequest'
 import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest'
 import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo'
 import { UserImage, UserName, UserCompany, CheckIcon } from './layout'
+import Link from 'next/link'
 
 const StyledStatusLabel = styled(Label)`
   font-size: 12px !important;
@@ -294,7 +295,10 @@ class Table extends Component {
               </UserImage>
             )}
             <UserName as='h3'>{r.nameOfUser}</UserName>
-            <UserCompany as='h4'>{getSafe(() => r.info.requestedBy.company.cfDisplayName, false) || getSafe(() => r.info.buyerCompanyName, false)}</UserCompany>
+            <UserCompany as='h4'>
+              {getSafe(() => r.info.requestedBy.company.cfDisplayName, false) ||
+                getSafe(() => r.info.buyerCompanyName, false)}
+            </UserCompany>
           </>
         ),
         clsName: read + (selected ? ' selected' : '') + (open ? ' open' : '') + (recent ? ' recent' : ''),
@@ -309,13 +313,13 @@ class Table extends Component {
               opacity: '0.9'
             }}
             header={
-              <div style={{ color: '#cecfd4', fontSize: '12px' }}>
-                {moment(r.createdAt)
-                  .toDate()
-                  .toLocaleString()}
+              <div style={{ color: '#cecfd4', fontSize: '12px' }}>{moment(r.createdAt).toDate().toLocaleString()}</div>
+            }
+            trigger={
+              <div style={{ color: r.read || this.props.isAdmin ? '#848893' : '#20273a' }}>
+                {moment(r.createdAt).fromNow()}
               </div>
             }
-            trigger={<div style={{ color: r.read || this.props.isAdmin ? '#848893' : '#20273a' }}>{moment(r.createdAt).fromNow()}</div>}
           />
         ) : (
           'N/A'
@@ -350,18 +354,23 @@ class Table extends Component {
   }
 
   getRowDetail = ({ row }) => {
+    console.log('row')
+    console.log(row)
     const messageType = row.info && row.info.infoType ? row.info.infoType : ''
     const messageDetailTable = {
       MessageCompanyGenericProductRequestInfoResponse: <GenericProductRequest row={row.rawData} />,
       MessageShippingQuoteRequestInfoResponse: <ShippingQuoteRequest row={row.rawData} />,
       MessageShippingQuoteInfoResponse: <ShippingQuoteInfo row={row.rawData} />
     }
-
-    return (
-      <>
-        {messageType && messageDetailTable[messageType] ? messageDetailTable[messageType] : ReactHtmlParser(row.text)}
-      </>
-    )
+    const textMessage =
+      row?.category === 'Disputes' && row?.info?.orderId ? (
+        <Link href={`/operations/orders/detail/${row?.info?.orderId}`}>
+          <a>{ReactHtmlParser(row?.text)}</a>
+        </Link>
+      ) : (
+        ReactHtmlParser(row.text)
+      )
+    return <>{messageType && messageDetailTable[messageType] ? messageDetailTable[messageType] : textMessage}</>
   }
 
   handleClickOnUnread = async row => {

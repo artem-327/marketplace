@@ -234,7 +234,8 @@ class ActionsRequired extends Component {
       isSending,
       openedPopup,
       sellEligible,
-      actionNeeded
+      actionNeeded,
+      disputeResolutionStatus
     } = this.props
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
@@ -409,16 +410,16 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 0 // Confirmed && Pending
+            {orderStatus === 2 && reviewStatus === 1 && disputeResolutionStatus === 0 && shippingStatus === 3 // Confirmed && Pending && none && Delivered
               ? this.renderSegment(null, 10, null, 'order.delivered.description', [
-                  disputeButton,
                   {
                     buttonType: 'primary',
                     onClick: this.acceptDelivery,
                     dataTest: 'orders_detail_accept_btn',
                     text: 'global.accept',
                     loading: isSending && !openedPopup
-                  }
+                  },
+                  disputeButton
                   // {
                   //   buttonType: 'danger',
                   //   className: 'outline',
@@ -490,6 +491,7 @@ function mapStateToProps(state, ownProps) {
     shippingStatus: getSafe(() => orders.detail.shippingStatus, 0),
     reviewStatus: getSafe(() => orders.detail.reviewStatus, 0),
     creditReviewStatus: getSafe(() => orders.detail.creditReviewStatus, 0),
+    disputeResolutionStatus: getSafe(() => orders.detail.disputeResolutionStatus, 0),
     returnStatus: getSafe(() => orders.detail.returnStatus, 0),
     assignLotsRequired: false, // checkAssignLotsRequired(orders.detail),
     isSending: orders.isSending,

@@ -7,6 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 import * as val from 'yup'
+import { Check } from 'react-feather'
 
 import { generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
@@ -14,8 +15,13 @@ import UploadAttachment from '~/modules/inventory/components/upload/UploadAttach
 import { getSafe } from '~/utils/functions'
 //Styles
 import { PaperclipIcon } from '../../../company-form/components/AddCertifications/AddCertifications.styles'
+import { DivCircle, DivModal } from '../../../my-network/components/DetailRow/DetailRow.style'
 //Components
 import BasicButton from '../../../../components/buttons/BasicButton'
+import confirm from '../../../../components/Confirmable/confirm'
+//Constants
+import { SUPPORT_PHONE_NUMBER, SUPPORT_EMAIL } from '../../../../constants'
+
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `
@@ -28,6 +34,14 @@ const StrongTitle = styled.strong`
 const CreditInput = styled.div`
   padding-left: 10px;
   padding-right: 10px;
+`
+
+const CustomA = styled.a`
+  color: #2599d5;
+`
+
+const SpanModalText = styled.span`
+  text-align: center;
 `
 
 const reasons = [
@@ -88,17 +102,25 @@ class PurchaseRequestCreditDelivery extends Component {
   }
 
   submitHandler = async (values, actions) => {
-    const { closePopup, orderId, toastManager, creditRequest } = this.props
+    console.log('values')
+    console.log(values)
+    const {
+      closePopup,
+      orderId,
+      toastManager,
+      creditRequest,
+      intl: { formatMessage }
+    } = this.props
     const { reason, reasonText, attachments, credit } = values
 
     const request = {
-      amount: credit,
-      message:
+      reason,
+      reasonComment:
         reason > 0 && reason < 7
           ? `${getSafe(() => reasons[reason - 1].label.defaultMessage, '')}. ${reasonText ? reasonText : ''}`
           : reasonText
     }
-    if (!request.message) {
+    if (!request.reasonComment) {
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='order.requestCreditNotSent' defaultMessage='Not sent' />,
@@ -116,6 +138,49 @@ class PurchaseRequestCreditDelivery extends Component {
     }
     try {
       await creditRequest(orderId, request, attachments)
+      confirm(
+        <DivModal>
+          <DivCircle background='#84c225' borderColor='#dae7c7'>
+            <Check size='34' color='#ffffff' />
+          </DivCircle>
+        </DivModal>,
+        <DivModal>
+          <SpanModalText>
+            {formatMessage({
+              id: 'dispute.submit.success',
+              defaultMessage:
+                'Your dispute has been opened, a member of our Support staff will reach out shortly with the next steps. You can also email or call us at any time at '
+            })}
+            {formatMessage(
+              {
+                id: 'global.emailAndPhoneNumber',
+                defaultMessage: '{emailAndPhoneNumber}'
+              },
+              {
+                emailAndPhoneNumber: (
+                  <>
+                    <CustomA href={`mailto: ${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</CustomA>
+                    {formatMessage({ id: 'global.andSpaceAround', defaultMessage: ' and ' })}
+                    <b>{SUPPORT_PHONE_NUMBER}</b>
+                  </>
+                )
+              }
+            )}
+          </SpanModalText>
+        </DivModal>,
+        {
+          cancelText: formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' }),
+          proceedText: formatMessage({ id: 'global.close', defaultMessage: 'Close' })
+        },
+        true //Basic Modal
+      ).then(
+        async () => {
+          // confirm
+        },
+        () => {
+          // cancel
+        }
+      )
       closePopup()
     } catch (e) {
       console.error(e)
@@ -149,8 +214,8 @@ class PurchaseRequestCreditDelivery extends Component {
             <Modal.Description>
               <Form
                 enableReinitialize
-                validateOnChange={true}
-                validationSchema={validationSchema}
+                //validateOnChange={true}
+                //validationSchema={validationSchema}
                 initialValues={{ ...initValues }}
                 onSubmit={this.submitHandler}
                 className='flex stretched'
@@ -254,12 +319,12 @@ class PurchaseRequestCreditDelivery extends Component {
                             </FormGroup>
                           </Grid.Column>
                         </Grid.Row>
-                        <Grid.Row>
-                          <Grid.Column width={10}></Grid.Column>
-                          <Grid.Column floated='right' width={3}>
+                        <Grid.Row textAlign='right'>
+                          <Grid.Column width={8}></Grid.Column>
+                          <Grid.Column floated='right' width={4}>
                             <BasicButton
+                              margin='0px !important'
                               noBorder
-                              fluid
                               onClick={() => {
                                 resetForm()
                                 this.props.closePopup()
@@ -269,9 +334,9 @@ class PurchaseRequestCreditDelivery extends Component {
                               </FormattedMessage>
                             </BasicButton>
                           </Grid.Column>
-                          <Grid.Column floated='right' width={3}>
-                            <BasicButton fluid type='submit'>
-                              <FormattedMessage id='global.confirm' defaultMessage='Confirm' tagName='span'>
+                          <Grid.Column floated='right' width={4}>
+                            <BasicButton margin='0px !important' type='submit'>
+                              <FormattedMessage id='global.send' defaultMessage='Send' tagName='span'>
                                 {text => text}
                               </FormattedMessage>
                             </BasicButton>

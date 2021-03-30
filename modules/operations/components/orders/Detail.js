@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import '~/components/AddInventory.scss'
 import Spinner from '~/components/Spinner/Spinner'
+import Link from 'next/link'
 import { Grid, Segment, Accordion, Table, List, Button, Icon, Divider, Header, GridRow, Modal } from 'semantic-ui-react'
 import { ChevronDown, DownloadCloud, ArrowLeft } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
@@ -629,13 +630,15 @@ class Detail extends Component {
         )}
         <div className='scroll-area'>
           <TopRow>
-            <a
-              onClick={() => this.props.openOrderDetail(null)}
-              style={{ cursor: 'pointer' }}
-              data-test='orders_detail_back_btn'>
-              <ArrowLeft />
-              <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
-            </a>
+            <Link href='/operations/orders'>
+              <a
+                onClick={() => this.props.openOrderDetail(null)}
+                style={{ cursor: 'pointer' }}
+                data-test='orders_detail_back_btn'>
+                <ArrowLeft />
+                <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
+              </a>
+            </Link>
             <div className='field'>
               <div>
                 <FormattedMessage id='order.detail.buyerCompanyEin' defaultMessage='Buyer Company EIN' />

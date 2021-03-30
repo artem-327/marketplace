@@ -1025,6 +1025,7 @@
   "global.palletPkgMin": "Pallet Pkg Min",
   "global.palletPkgMax": "Pallet Pkg Max",
   "global.and": "and",
+  "global.andSpaceAround": " and ",
   "global.companyGenericProductName": "Company Generic Product Name",
   "global.companyGenericProductCode": "Company Generic Product Code",
   "global.companyGenericProductNameOrCode": "Company Generic Product Name Or Code",
@@ -1057,6 +1058,7 @@
   "global.invite": "Invite",
   "global.search": "Search",
   "global.na": "N/A",
+  "global.emailAndPhoneNumber": "{emailAndPhoneNumber}",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
@@ -3279,6 +3281,7 @@
   "detailRow.reviewStatus": "Review Status",
   "detailRow.creditStatus": "Credit Status",
   "detailRow.paymentStatus": "Payment Status",
+  "detailRow.disputeResolutionStatus": "Dispute Status",
   "detailRow.productName": "Product Name",
   "detailRow.packaging": "Packaging",
   "detailRow.fobPrice": "FOB Price",
@@ -3378,5 +3381,6 @@
   "sharedListings.detailRow.productInformation": "Product Information",
   "warehouseCredentials.expDate": "Exp. Date",
   "warehouseCredentials.issueDate": "Issue Date",
-  "company.myTradePassId": "My TradePass ID"
+  "company.myTradePassId": "My TradePass ID",
+  "dispute.submit.success": "Your dispute has been opened, a member of our Support staff will reach out shortly with the next steps. You can also email or call us at any time at "
 }
