@@ -1900,6 +1900,7 @@
   "checkout.summary.privacyPolicy": "Privacy Policy",
   "checkout.summary.conditionsOfUse": "Conditions Of Use",
   "checkout.titlePage": "Echosystem / Checkout",
+  "checkout.moreResultsAreAvailable": "More results are available, please search by location name or address.",
   "order.deleteHeader": "Delete Order",
   "order.deleteBody": "You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?",
   "cart.shoppingCartHeader": "ITEMS ({number})",
