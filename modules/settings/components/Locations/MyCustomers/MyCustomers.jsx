@@ -149,7 +149,7 @@ export const getRows = (rows, state, props) => {
     if (expandedRowIds.includes(row.id) && expandedRowIdsSecondary.length) {
       const lastWarehouseId = warehouses.length && warehouses[warehouses.length - 1].id
       if (lastWarehouseId && lastWarehouseId !== expandedRowIdsSecondary[0]) {
-        setExpandedRowIdsSecondary(lastWarehouseId)
+        setExpandedRowIdsSecondary([lastWarehouseId])
       }
     }
 
@@ -170,22 +170,19 @@ export const getRows = (rows, state, props) => {
             e.preventDefault()
             props.openSidebar(row)
           }}
-          rightAlignedContent={expandedRowIds.includes(row.id)
-            ? (<ChevronDownStyled size={20} />)
-            : (<ChevronUpStyled size={20} />)
-          }
         />
       ),
       customerId: row.id,
       customerName: row.name,
+      chevron: expandedRowIds.includes(row.id)
+        ? (<ChevronDownStyled size={20} />)
+        : (<ChevronUpStyled size={20} />),
       warehouses
     }
   })
 }
 
 const getRowDetail = (row, props) => {
-  console.log('AAA row', row)
-  console.log('AAA props', props)
   return (
     <div>
       <SubrowButtons>
