@@ -17,6 +17,7 @@ import { addCertificateAttachment } from './Warehouses.services'
 //Styles
 import {
   DivHeader,
+  DivHeaderRight,
   SegmentCustom,
   SegmentCertifications,
   HorizontalRule,
@@ -152,10 +153,15 @@ const WarehousesFormEdit = ({
         </FormGroup>
       </SegmentCustom>
 
-      <DivHeader>
+      <DivHeader className={!sidebarValues ? 'disabled' : ''}>
         <FormattedMessage id='settings.certifications' defaultMessage='Certifications' />
+        {!sidebarValues &&
+          <DivHeaderRight>
+            <FormattedMessage id='settings.certifications.saveFirst' defaultMessage='Create Warehouse first' />
+          </DivHeaderRight>
+        }
       </DivHeader>
-      <SegmentCertifications>
+      <SegmentCertifications disabled={!sidebarValues}>
         <FormGroup data-test='settings_warehouse_popup_certifications_dea_drpdn'>
           <Dropdown
             label={formatMessage({
@@ -173,6 +179,9 @@ const WarehousesFormEdit = ({
                 value: true
               }
             ]}
+            inputProps={{
+              disabled: !sidebarValues
+            }}
           />
         </FormGroup>
         {values.deaListReceiveFlag && (
@@ -257,6 +266,9 @@ const WarehousesFormEdit = ({
                 value: true
               }
             ]}
+            inputProps={{
+              disabled: !sidebarValues
+            }}
           />
         </FormGroup>
         {values.taxExemptReceiveFlag && (
