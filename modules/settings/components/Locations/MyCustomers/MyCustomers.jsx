@@ -8,7 +8,6 @@ import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
 import ActionCell from '~/components/table/ActionCell'
 
-
 // Constants
 import { COLUMNS } from './MyCustomers.constants'
 
@@ -22,13 +21,12 @@ import BasicButton from '../../../../../components/buttons/BasicButton'
 //import { usePrevious } from '../../../hooks'
 
 // Styles
-import { CustomerName, SubrowButtons } from './MyCustomers.styles'
+import { CustomerName, SubrowButtons, ChevronDownStyled, ChevronUpStyled } from './MyCustomers.styles'
 
 // Services
 import {
 } from './MyCustomers.services'
 import * as Actions from '../../../actions'
-import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 
 import confirm from '~/components/Confirmable/confirm'
 
@@ -45,7 +43,6 @@ const getWarehouseActions = (row, war, props) => {
           { ...war, rawData: war },
           props.datagrid
         )
-        props.chatWidgetVerticalMoved(true)
       }
     },
     {
@@ -80,10 +77,7 @@ const getCustomersActions = (row, props) => {
   return [
     {
       text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-      callback: () => {
-        openSidebar(row)
-        props.chatWidgetVerticalMoved(true)
-      }
+      callback: () => openSidebar(row)
     },
     {
       text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -110,8 +104,9 @@ const getCustomersActions = (row, props) => {
   ]
 }
 
-export const getRows = (rows, props) => {
-  const { countryCodes, actions, expandedRowIds } = props // ?
+export const getRows = (rows, state, props) => {
+  const { countryCodes, actions} = props
+  const { expandedRowIds, setExpandedRowIds, expandedRowIdsSecondary, setExpandedRowIdsSecondary } = state
 
   return rows.map(row => {
     const warehouses = getSafe(() => row.warehouseAddresses.length > 0, false) ? row.warehouseAddresses.map(war => {
@@ -134,7 +129,6 @@ export const getRows = (rows, props) => {
                 { ...war, rawData: war },
                 props.datagrid
               )
-              props.chatWidgetVerticalMoved(true)
             }}
           />
         ),
@@ -152,6 +146,13 @@ export const getRows = (rows, props) => {
       actions
     }]
 
+    if (expandedRowIds.includes(row.id) && expandedRowIdsSecondary.length) {
+      const lastWarehouseId = warehouses.length && warehouses[warehouses.length - 1].id
+      if (lastWarehouseId && lastWarehouseId !== expandedRowIdsSecondary[0]) {
+        setExpandedRowIdsSecondary([lastWarehouseId])
+      }
+    }
+
     return {
       //...row,
       clsName: `tree-table root-row${expandedRowIds.includes(row.id) ? ' opened' : ''}`,
@@ -168,28 +169,25 @@ export const getRows = (rows, props) => {
             e.stopPropagation()
             e.preventDefault()
             props.openSidebar(row)
-            props.chatWidgetVerticalMoved(true)
           }}
         />
       ),
       customerId: row.id,
       customerName: row.name,
+      chevron: expandedRowIds.includes(row.id)
+        ? (<ChevronDownStyled size={20} />)
+        : (<ChevronUpStyled size={20} />),
       warehouses
     }
   })
 }
 
 const getRowDetail = (row, props) => {
-  console.log('AAA row', row)
-  console.log('AAA props', props)
   return (
     <div>
       <SubrowButtons>
         <BasicButton floatRight={true}
-                     onClick={() => {
-                       props.openCustomerWarehouse(row, null, props.datagrid)
-                       props.chatWidgetVerticalMoved(true)
-                     }}>
+                     onClick={() => props.openCustomerWarehouse(row, null, props.datagrid)}>
           <FormattedMessage id='global.addNew' defaultMessage='Add New' />
         </BasicButton>
       </SubrowButtons>
@@ -200,6 +198,8 @@ const getRowDetail = (row, props) => {
 const MyCustomers = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
   const [expandedRowIdsSecondary, setExpandedRowIdsSecondary] = useState([])
+
+  const state = { expandedRowIds, setExpandedRowIds, expandedRowIdsSecondary, setExpandedRowIdsSecondary }
 
   const {
     datagrid,
@@ -225,7 +225,7 @@ const MyCustomers = props => {
         {...datagrid.tableProps}
         loading={datagrid.loading || loading}
         columns={COLUMNS}
-        rows={getRows(datagrid.rows, { ...props, expandedRowIds })}
+        rows={getRows(datagrid.rows, state, props)}
         rowSelection={false}
         showSelectionColumn={false}
         treeDataType={true}
@@ -269,4 +269,4 @@ function mapStateToProps(store) {
 }
 
 //export default injectIntl(MyCustomers)
-export default withDatagrid(injectIntl(connect(mapStateToProps, { ...Actions, chatWidgetVerticalMoved })(MyCustomers)))
+export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(MyCustomers)))

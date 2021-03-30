@@ -49,7 +49,8 @@ const mapStateToProps = store => ({
       naicsCode: ''
     }
   },
-  mainContainer: store.layout.mainContainer
+  mainContainer: store.layout.mainContainer,
+  appInfo: getSafe(() => store.auth.identity.appInfo, null)
 })
 
 const mapDispatchToProps = {

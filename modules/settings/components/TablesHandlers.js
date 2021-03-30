@@ -21,8 +21,6 @@ import { PlaidLink } from 'react-plaid-link'
 import api from '~/api'
 //Components
 import BasicButton from '../../../components/buttons/BasicButton'
-//Actions
-import { chatWidgetVerticalMoved } from '../../chatWidget/actions'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -376,8 +374,7 @@ class TablesHandlers extends Component {
       vellociBusinessId,
       vellociToken,
       intl: { formatMessage },
-      isThirdPartyConnectionException,
-      chatWidgetVerticalMoved
+      isThirdPartyConnectionException
     } = this.props
 
     const filterValue = this.state[currentTab]
@@ -630,10 +627,7 @@ class TablesHandlers extends Component {
                       <div>
                         <Button
                           primary
-                          onClick={() => {
-                            openSidebar(null, currentTab)
-                            if (currentTab === 'logistics' || currentTab === 'users') chatWidgetVerticalMoved(true)
-                          }}
+                          onClick={() => openSidebar(null, currentTab)}
                           data-test='settings_open_popup_btn'
                           disabled={currentTab === 'logistics' && isThirdPartyConnectionException}>
                           <PlusCircle />
@@ -741,7 +735,7 @@ const mapStateToProps = state => {
 
 export default withDatagrid(
   withToastManager(
-    connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast, chatWidgetVerticalMoved })(
+    connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast })(
       injectIntl(TablesHandlers)
     )
   )

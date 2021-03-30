@@ -1919,7 +1919,8 @@ export default function reducer(state = initialState, action) {
     case AT.POST_NEW_WAREHOUSE_REQUEST_FULFILLED: {
       return {
         ...state,
-        loading: false
+        loading: false,
+        sidebarValues: payload.data
       }
     }
 

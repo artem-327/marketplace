@@ -7,7 +7,6 @@ import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 //Actions
 import * as Actions from '../actions'
-import { chatWidgetVerticalMoved } from '../../chatWidget/actions'
 import { openImportPopup } from '../../settings/actions'
 //Services
 import { getSafe } from '../../../utils/functions'
@@ -113,8 +112,7 @@ class TablesHandlers extends Component {
       openPopup,
       intl: { formatMessage },
       openImportPopup,
-      handleFilterChange,
-      chatWidgetVerticalMoved
+      handleFilterChange
     } = this.props
 
     const item = textsTable[currentTab]
@@ -153,10 +151,7 @@ class TablesHandlers extends Component {
               <Button
                 fluid
                 primary
-                onClick={() => {
-                  openPopup()
-                  if (currentTab === 'product-catalog') chatWidgetVerticalMoved(true)
-                }}
+                onClick={() => openPopup()}
                 data-test='products_open_popup_btn'>
                 <PlusCircle />
                 <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
@@ -193,5 +188,5 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, openImportPopup, chatWidgetVerticalMoved })(injectIntl(TablesHandlers))
+  connect(mapStateToProps, { ...Actions, openImportPopup })(injectIntl(TablesHandlers))
 )

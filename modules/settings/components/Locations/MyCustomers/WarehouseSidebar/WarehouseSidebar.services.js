@@ -74,7 +74,6 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
     popupValues,
     updateCustomerWarehouse,
     addCustomerWarehouse,
-    chatWidgetVerticalMoved,
     closeSidebar,
     datagrid
   } = props
@@ -96,7 +95,6 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
       const { value } = await addCustomerWarehouse(customerIdName.customerId, body)
       datagrid.loadData()
     }
-    chatWidgetVerticalMoved(false)
     closeSidebar()
   } catch (e) {
     console.error(e)

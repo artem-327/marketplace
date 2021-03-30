@@ -25,14 +25,13 @@ const AddAddress = props => {
     isWarehouse,
     popupValues,
     intl: { formatMessage },
-    chatWidgetVerticalMoved,
     setIsOpenAddAddress
   } = props
 
   return (
     <Formik
       onSubmit={async () =>
-        await handleSubmit({ ...props, setIsOpenAddAddress, chatWidgetVerticalMoved }, formikPropsSelf)
+        await handleSubmit({ ...props, setIsOpenAddAddress }, formikPropsSelf)
       }
       enableReinitialize
       initialValues={popupValues ? { ...INITIAL_VALUES, ...getInitValues(popupValues) } : INITIAL_VALUES}
@@ -226,14 +225,12 @@ const AddAddress = props => {
 AddAddress.propTypes = {
   selectedAddress: PropTypes.object,
   savedShippingPreferences: PropTypes.bool,
-  chatWidgetVerticalMoved: PropTypes.func,
   setIsOpenAddAddress: PropTypes.func
 }
 
 AddAddress.defaultProps = {
   selectedAddress: null,
   savedShippingPreferences: false,
-  chatWidgetVerticalMoved: () => {},
   setIsOpenAddAddress: () => {}
 }
 

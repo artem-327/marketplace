@@ -11,7 +11,6 @@ import ProdexTable from '~/components/table'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import { withDatagrid } from '~/modules/datagrid'
 import ActionCell from '~/components/table/ActionCell'
-import { chatWidgetVerticalMoved } from '../../../chatWidget/actions'
 
 class LogisticsTable extends Component {
   constructor(props) {
@@ -54,7 +53,6 @@ class LogisticsTable extends Component {
   getActions = () => {
     const {
       openSidebar,
-      chatWidgetVerticalMoved,
       intl: { formatMessage },
       deleteLogisticsAccount,
       datagrid
@@ -63,10 +61,7 @@ class LogisticsTable extends Component {
     return [
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => {
-          openSidebar(row)
-          chatWidgetVerticalMoved(true)
-        }
+        callback: row => openSidebar(row)
       },
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
@@ -112,10 +107,7 @@ class LogisticsTable extends Component {
                 row={acc}
                 getActions={this.getActions}
                 content={acc.provider.name}
-                onContentClick={() => {
-                  this.props.openSidebar(acc)
-                  this.props.chatWidgetVerticalMoved(true)
-                }}
+                onContentClick={() => this.props.openSidebar(acc)}
               />
             )
           }
@@ -168,8 +160,7 @@ LogisticsTable.defaultProps = {
 const mapDispatchToProps = {
   openSidebar,
   getLogisticsAccounts,
-  deleteLogisticsAccount,
-  chatWidgetVerticalMoved
+  deleteLogisticsAccount
 }
 
 const mapStateToProps = ({

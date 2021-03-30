@@ -81,5 +81,11 @@ export const COLUMNS = [
     ),
     width: 130,
     //sortPath: 'Branch.deliveryAddress.contactPhone'
+  },
+  {
+    name: 'chevron',
+    title: ' ',
+    width: 42,
+    allowReordering: false
   }
 ]

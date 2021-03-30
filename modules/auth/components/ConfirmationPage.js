@@ -153,6 +153,7 @@ class ConfirmationPage extends Component {
       searchProvinces
     } = this.props
     const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
+    const companyName = getSafe(() => identity.appInfo.systemCompanyName, 'BluePallet')
 
     let { formatMessage } = intl
 
@@ -381,7 +382,10 @@ class ConfirmationPage extends Component {
                         </FormattedMessage>
                       </Button>
                       <Button.Submit color='blue' data-test='auth_confirm_submit_btn'>
-                        <FormattedMessage id='laststep.submit' defaultMessage='Enter Echo Exchange'>
+                        <FormattedMessage
+                          id='laststep.submit'
+                          defaultMessage={`Enter ${companyName}`}
+                          values={{ companyName }}>
                           {text => text}
                         </FormattedMessage>
                       </Button.Submit>

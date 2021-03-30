@@ -11,7 +11,6 @@ import { ChevronDown } from 'react-feather'
 
 import { withDatagrid } from '~/modules/datagrid'
 import { closeSidebar, updateCustomerWarehouse, addCustomerWarehouse } from '../../../../actions'
-import { chatWidgetVerticalMoved } from '../../../../../chatWidget/actions'
 
 import { AddressForm } from '../../../../../address-form/'
 import { getSafe } from '../../../../../../utils/functions'
@@ -51,10 +50,7 @@ const WarehouseSidebar = props => {
       initialValues={getInitialFormValues(popupValues)}
       validationSchema={formValidation()}
       enableReinitialize
-      onReset={() => {
-        props.closeSidebar()
-        props.chatWidgetVerticalMoved(false)
-      }}
+      onReset={() => props.closeSidebar()}
       onSubmit={submitHandler}
       loading={false}>
       {formikProps => {
@@ -64,10 +60,7 @@ const WarehouseSidebar = props => {
           <FormCustom autoComplete='off'>
             <DimmerSidebarOpened
               active={true}
-              onClickOutside={() => {
-                props.closeSidebar()
-                props.chatWidgetVerticalMoved(false)
-              }}
+              onClickOutside={() => props.closeSidebar()}
               page
             />
             <SidebarFlex
@@ -81,10 +74,7 @@ const WarehouseSidebar = props => {
                   <Loader />
                 </Dimmer>
                 <CustomHighSegment
-                  onClick={() => {
-                    props.closeSidebar()
-                    props.chatWidgetVerticalMoved(false)
-                  }}
+                  onClick={() => props.closeSidebar()}
                   basic>
                   <DivTitle>
                     <DivHeader>
@@ -234,6 +224,5 @@ const mapStateToProps = state => {
 export default withDatagrid(injectIntl(connect(mapStateToProps, {
   updateCustomerWarehouse,
   addCustomerWarehouse,
-  chatWidgetVerticalMoved,
   closeSidebar
 })(WarehouseSidebar)))

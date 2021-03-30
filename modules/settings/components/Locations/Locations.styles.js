@@ -123,7 +123,18 @@ export const DivHeader = styled.div`
   color: #404040;
   font-size: 14px;
   margin-top: 25px;
+  
+  &.disabled {
+    color: rgba(64, 64, 64, 0.5);
+  }
 `
+
+export const DivHeaderRight = styled.span`
+  opacity: 1;
+  float: right;
+  color: #404040;
+`
+
 export const SegmentCustom = styled(Segment)`
   background-color: #ffffff !important;
   border: none !important;

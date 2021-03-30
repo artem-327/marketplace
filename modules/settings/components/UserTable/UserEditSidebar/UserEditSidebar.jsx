@@ -21,7 +21,6 @@ import {
 } from '../../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../../companies/actions'
 import { getIdentity } from '../../../../auth/actions'
-import { chatWidgetVerticalMoved } from '../../../../chatWidget/actions'
 
 //Components
 import { Required } from '../../../../../components/constants/layout'
@@ -44,8 +43,6 @@ import {
   switchUser,
   generateCheckboxes
 } from './UserEditSidebar.services'
-//Constants
-import { currencyId } from '../../../../../constants/index'
 //Styles
 import { DivTitle } from '../../Locations/Branches/BranchesSidebar/BranchesSidebar.styles'
 
@@ -91,7 +88,6 @@ const UserEditSidebar = props => {
     searchedBuyMarketSegments,
     isCompanyAdmin,
     openGlobalAddForm,
-    chatWidgetVerticalMoved,
     userSettings
   } = props
 
@@ -172,10 +168,7 @@ const UserEditSidebar = props => {
           <>
             <DimmerSidebarOpend
               active={true}
-              onClickOutside={() => {
-                closeSidebar()
-                chatWidgetVerticalMoved(false)
-              }}
+              onClickOutside={() => closeSidebar()}
               page></DimmerSidebarOpend>
             <SidebarFlex visible={true} direction='bottom' animation='overlay'>
               {/* <ModalFixed
@@ -192,7 +185,6 @@ const UserEditSidebar = props => {
                   onClick={() => {
                     !!openGlobalAddForm && openGlobalAddForm('')
                     closeSidebar()
-                    chatWidgetVerticalMoved(false)
                   }}>
                   <DivTitle>
                     <div>
@@ -552,10 +544,7 @@ const UserEditSidebar = props => {
                 {!openGlobalAddForm && (
                   <Button
                     className='light'
-                    onClick={() => {
-                      closeSidebar()
-                      chatWidgetVerticalMoved(false)
-                    }}
+                    onClick={() => closeSidebar()}
                     data-test='settings_users_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
@@ -586,7 +575,6 @@ const mapDispatchToProps = {
   searchBuyMarketSegments,
   getIdentity,
   getUsersDataRequest,
-  chatWidgetVerticalMoved,
   getCompanyUser
 }
 

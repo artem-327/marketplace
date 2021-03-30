@@ -27,7 +27,8 @@ import {
   GridRowAddress,
   ButtonOrCustom,
   SegmentStyled,
-  DimmerStyled
+  DimmerStyled,
+  GridColumnTradePassId
 } from './CompanyDetails.styles'
 
 // Services
@@ -80,15 +81,19 @@ const CompanyDetails = props => {
     } catch (e) {
       console.error(e)
     }
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
+  }, []) // If [] is empty then is similar as componentDidMount.
+  console.log('props')
+  console.log(props)
   return (
     <GridStyled>
       <DimmerStyled active={isSubmitting} inverted>
         <Loader />
       </DimmerStyled>
       <GridRowGreyDescription>
-        <FormattedMessage id='company.companyFormDescription' defaultMessage='The following information will help other businesses find you and determine if you are compliant with their practices.'/>
+        <FormattedMessage
+          id='company.companyFormDescription'
+          defaultMessage='The following information will help other businesses find you and determine if you are compliant with their practices.'
+        />
       </GridRowGreyDescription>
 
       <GridRow>
@@ -135,21 +140,32 @@ const CompanyDetails = props => {
                     multiple: true,
                     selection: true,
                     search: true,
-                    placeholder:
-                      formatMessage({
-                        id: 'company.selectTradeOrganizations', defaultMessage: 'Select Trade Organizations'
-                      }),
+                    placeholder: formatMessage({
+                      id: 'company.selectTradeOrganizations',
+                      defaultMessage: 'Select Trade Organizations'
+                    }),
                     'data-test': 'company_form_association_drpdn'
                   }}
                 />
               </GridColumn>
+            </GridRow>
+            <GridRow>
+              <GridColumnTradePassId width={16}>
+                <Input
+                  label={<FormattedMessage id='company.myTradePassId' defaultMessage='My TradePass ID' />}
+                  name='vellociBusinessId'
+                  inputProps={{
+                    disabled: true
+                  }}
+                />
+              </GridColumnTradePassId>
             </GridRow>
           </GridStyled>
         </GridColumn>
       </GridRow>
 
       <GridRowSectionDescription>
-        <FormattedMessage id='company.dbaName' defaultMessage='DBA Name'/>
+        <FormattedMessage id='company.dbaName' defaultMessage='DBA Name' />
       </GridRowSectionDescription>
       <GridRow>
         <GridColumn width={16}>
@@ -158,43 +174,46 @@ const CompanyDetails = props => {
               <>
                 <FormattedMessage
                   id='company.dbaNameIfApplicable'
-                  defaultMessage={`DBA Name ${formatMessage({id: 'company.ifApplicable', defaultMessage: '(if applicable)' })}`}
+                  defaultMessage={`DBA Name ${formatMessage({
+                    id: 'company.ifApplicable',
+                    defaultMessage: '(if applicable)'
+                  })}`}
                   values={{
-                    ifApplicable: (<SpanGreyHeader>
-                      {formatMessage({ id: 'company.ifApplicable', defaultMessage: '(if applicable)' })}
-                    </SpanGreyHeader>)
+                    ifApplicable: (
+                      <SpanGreyHeader>
+                        {formatMessage({ id: 'company.ifApplicable', defaultMessage: '(if applicable)' })}
+                      </SpanGreyHeader>
+                    )
                   }}
                 />
                 <Required />
               </>
             }
             name='dba'
-            inputProps={{placeholder:
-                formatMessage({
-                  id: 'company.businessName', defaultMessage: 'Business Name'
-                })
+            inputProps={{
+              placeholder: formatMessage({
+                id: 'company.businessName',
+                defaultMessage: 'Business Name'
+              })
             }}
           />
         </GridColumn>
       </GridRow>
 
       <GridRowSectionDescription>
-        <FormattedMessage id='company.websiteAndSocialMedia' defaultMessage='Website and Social Media'/>
+        <FormattedMessage id='company.websiteAndSocialMedia' defaultMessage='Website and Social Media' />
       </GridRowSectionDescription>
       {['website', 'socialLinkedin', 'socialFacebook', 'socialTwitter', 'socialInstagram'].map(el => (
         <GridRow>
           <GridColumn width={16}>
             <Input
-              label={
-                <FormattedMessage
-                  id={`company.${el}`}
-                  defaultMessage={el} />
-              }
+              label={<FormattedMessage id={`company.${el}`} defaultMessage={el} />}
               name={el}
-              inputProps={{placeholder:
-                  formatMessage({
-                    id: `company.enter.${el}Url`, defaultMessage: `Enter ${el} URL`
-                  })
+              inputProps={{
+                placeholder: formatMessage({
+                  id: `company.enter.${el}Url`,
+                  defaultMessage: `Enter ${el} URL`
+                })
               }}
             />
           </GridColumn>
@@ -202,15 +221,15 @@ const CompanyDetails = props => {
       ))}
 
       <GridRowSectionDescription>
-        <FormattedMessage id='company.businessContact' defaultMessage='Business Contact'/>
+        <FormattedMessage id='company.businessContact' defaultMessage='Business Contact' />
       </GridRowSectionDescription>
       <GridRow>
         <GridColumn width={8}>
           <Input
             label={<FormattedMessage id='company.emailAddress' defaultMessage='Email Address' />}
             name='email'
-            inputProps={{placeholder:
-                formatMessage({id: 'company.enterEmailAddress', defaultMessage: 'Enter Email Address'})
+            inputProps={{
+              placeholder: formatMessage({ id: 'company.enterEmailAddress', defaultMessage: 'Enter Email Address' })
             }}
           />
         </GridColumn>
@@ -230,7 +249,7 @@ const CompanyDetails = props => {
       </GridRow>
 
       <GridRowSectionDescription>
-        <FormattedMessage id='company.businessType' defaultMessage='Business Type'/>
+        <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
       </GridRowSectionDescription>
       <GridRow>
         <GridColumn width={16}>
@@ -263,10 +282,11 @@ const CompanyDetails = props => {
               </>
             }
             name='name'
-            inputProps={{placeholder:
-                formatMessage({
-                  id: 'company.enterLegalBusinessName', defaultMessage: 'Enter Legal Business Name'
-                })
+            inputProps={{
+              placeholder: formatMessage({
+                id: 'company.enterLegalBusinessName',
+                defaultMessage: 'Enter Legal Business Name'
+              })
             }}
           />
         </GridColumn>
@@ -295,17 +315,17 @@ const CompanyDetails = props => {
               <FormattedMessage id='company.ssn' defaultMessage='SSN' />
             </ButtonSemantic>
           </ButtonOrCustom>
-
         </GridColumn>
       </GridRowCustomPadding>
       <GridRow>
         <GridColumn width={16}>
           <Input
             name='tin'
-            inputProps={{placeholder:
+            inputProps={{
+              placeholder:
                 values.tinType === 'ein'
-                  ? formatMessage({id: 'company.enterEin', defaultMessage: 'Enter EIN'})
-                  : formatMessage({id: 'company.enterSsn', defaultMessage: 'Enter SSN'})
+                  ? formatMessage({ id: 'company.enterEin', defaultMessage: 'Enter EIN' })
+                  : formatMessage({ id: 'company.enterSsn', defaultMessage: 'Enter SSN' })
             }}
           />
         </GridColumn>
@@ -330,22 +350,16 @@ const CompanyDetails = props => {
       </GridRow>
 
       <GridRowSectionDescription>
-        <FormattedMessage id='company.yourLegalAddress' defaultMessage='Your Legal Address'/>
+        <FormattedMessage id='company.yourLegalAddress' defaultMessage='Your Legal Address' />
       </GridRowSectionDescription>
       <GridRowAddress>
         <GridColumn width={16}>
-          <AddressForm
-            required
-            displayHeader={false}
-            values={values}
-            setFieldValue={setFieldValue}
-            noBorder
-          />
+          <AddressForm required displayHeader={false} values={values} setFieldValue={setFieldValue} noBorder />
         </GridColumn>
       </GridRowAddress>
 
       <GridRowSectionDescription>
-        <FormattedMessage id='company.legalDocumentation' defaultMessage='Legal Documentation'/>
+        <FormattedMessage id='company.legalDocumentation' defaultMessage='Legal Documentation' />
       </GridRowSectionDescription>
 
       <SegmentStyled>
@@ -378,11 +392,14 @@ const CompanyDetails = props => {
       <GridRowSectionDescription>
         <FormattedMessage
           id='company.federalOwnershipCertifications'
-          defaultMessage='Federal Ownership Certifications'/>
+          defaultMessage='Federal Ownership Certifications'
+        />
       </GridRowSectionDescription>
       <SegmentStyled>
         <DimmerStyled
-          active={deleting || documentTypesLoading || federalOwnershipDocsLoading || managementCertificationsDocsLoading}
+          active={
+            deleting || documentTypesLoading || federalOwnershipDocsLoading || managementCertificationsDocsLoading
+          }
           inverted>
           <Loader />
         </DimmerStyled>
@@ -407,8 +424,9 @@ const CompanyDetails = props => {
         })}
 
         {documentTypesManagementCertifications.map((docType, index) => {
-          let uploadedFiles =
-            managementCertificationsDocs.filter(el => el.documentType && el.documentType.id === docType.id)
+          let uploadedFiles = managementCertificationsDocs.filter(
+            el => el.documentType && el.documentType.id === docType.id
+          )
           return uploadedFiles.map((uploadedFile, fileIndex) => {
             return (
               <GridRowCustomPadding value='5px 0' key={index + '_' + fileIndex}>
@@ -430,10 +448,7 @@ const CompanyDetails = props => {
 
       <GridRowCustomPadding value='5px 0'>
         <GridColumn width={8}>
-          <Button
-            basic
-            onClick={() => setOpenCertificationsPopup({ docType: null, uploadedFile: null })}
-          >
+          <Button basic onClick={() => setOpenCertificationsPopup({ docType: null, uploadedFile: null })}>
             <FormattedMessage id='company.add' defaultMessage='Add'>
               {text => text}
             </FormattedMessage>
@@ -496,8 +511,10 @@ function mapStateToProps(state) {
     associations: getSafe(() => state.businessTypes.associations, []),
     documentTypesLoading: getSafe(() => state.businessTypes.documentTypesLoading, false),
     documentTypesAll: getSafe(() => state.businessTypes.documentTypesAll, []),
-    documentTypesFederalOwnershipCertifications: getSafe(() =>
-      state.businessTypes.documentTypesFederalOwnershipCertifications, []),
+    documentTypesFederalOwnershipCertifications: getSafe(
+      () => state.businessTypes.documentTypesFederalOwnershipCertifications,
+      []
+    ),
     documentTypesManagementCertifications: getSafe(() => state.businessTypes.documentTypesManagementCertifications, []),
     industryTypesLoading: getSafe(() => state.businessTypes.industryTypesLoading, false),
     industryTypes: getSafe(() => state.businessTypes.industryTypes, []).map(el => ({

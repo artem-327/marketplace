@@ -2211,7 +2211,7 @@
   "laststep.company.dba": "Doing Business As",
   "laststep.company.header": "Company Profile",
   "laststep.company.name": "Company Legal Name",
-  "laststep.submit": "Enter Echo Exchange",
+  "laststep.submit": "Enter {companyName}",
   "laststep.subheader": "Please verify the company information below.",
   "laststep.header": "Last Step",
   "laststep.address.contactName": "Contact Name",
@@ -2406,6 +2406,7 @@
   "settings.addDeliveryAddress": "Add Delivery Address",
   "settings.editDeliveryAddress": "Edit Delivery Address",
   "settings.certifications": "Certifications",
+  "settings.certifications.saveFirst": "Create Warehouse first",
   "settings.certifications.dea": "Is this location certified to receive DEA List I chemicals?",
   "settings.certifications.dea.fileText": "DEA List I",
   "settings.certifications.isCertifiedToDEA": "Is this location certified to receive DEA List I chemicals?",
@@ -2520,6 +2521,8 @@
   "settings.customers.addWarehouseFor": "Add Warehouse for {name}",
   "settings.customers.editWarehouseFor": "Edit Warehouse for {name}",
   "settings.customers.enterWarehouseName": "Enter Warehouse Name",
+  "settings.customers.billToAddressName": "Bill To Address Name",
+  "settings.customers.enterBillToAddressName": "Enter Bill To Address Name",
   "shippingQuote.header": "Shipping Quote",
   "shippingQuote.shippingQuantity": "Shipping Quantity",
   "shippingQuote.purchase": "Purchase",
@@ -3183,7 +3186,7 @@
   "velloci.ownerInformation.needInfo": "Here is the info you'll need:",
   "velloci.ownerInformation.obtainInfoTitle": "Can't Obtain this Information",
   "velloci.companyVerification.infoTitle": "Beneficial Owner Information",
-  "velloci.companyVerification.infoText": "Thank you for taking the time to register your business with BluePallet. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.",
+  "velloci.companyVerification.infoText": "Thank you for taking the time to register your business with {company}. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.",
   "velloci.companyVerification.text": "We require the full legal business name and registered business address. In addition, you will need to submit one of the following five documents in PDF format. It is important that the document/s you submit clearly shows your company EIN number. Please have these ready prior to starting your verification. We require one of the following:",
   "velloci.ownerInformation.obtainInfoContent": "No problem. Please select email and we will send them the form to fill separately. You may continue the KYC process for yourself and complete registration.",
   "velloci.personalInfo.firstName.placeholder": "Enter first name",
@@ -3374,5 +3377,6 @@
   "sharedListings.detailRow.internalNotes": "Internal Notes",
   "sharedListings.detailRow.productInformation": "Product Information",
   "warehouseCredentials.expDate": "Exp. Date",
-  "warehouseCredentials.issueDate": "Issue Date"
+  "warehouseCredentials.issueDate": "Issue Date",
+  "company.myTradePassId": "My TradePass ID"
 }

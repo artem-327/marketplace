@@ -29,8 +29,6 @@ import WarehousesFormEdit from './WarehousesFormEdit'
 import WarehousesFormCertificates from './WarehousesFormCertificates'
 import { withDatagrid } from '../../../../../datagrid'
 import ErrorFocus from '../../../../../../components/error-focus'
-//Actions
-import { chatWidgetVerticalMoved } from '../../../../../chatWidget/actions'
 //Components
 import BasicButton from '../../../../../../components/buttons/BasicButton'
 //Styles
@@ -133,7 +131,6 @@ class WarehousesSidebar extends Component {
       openGlobalAddForm,
       loading,
       intl: { formatMessage },
-      chatWidgetVerticalMoved,
       attachmentFiles,
       setAttachmentFiles,
       postNewWarehouseRequest,
@@ -162,7 +159,6 @@ class WarehousesSidebar extends Component {
             openGlobalAddForm('')
           } else {
             closeSidebar()
-            chatWidgetVerticalMoved(false)
           }
         }}
         onSubmit={this.submitHandler}
@@ -172,10 +168,7 @@ class WarehousesSidebar extends Component {
             <FormCustom autoComplete='off'>
               <DimmerSidebarOpend
                 active={isOpenSidebar}
-                onClickOutside={() => {
-                  closeSidebar()
-                  chatWidgetVerticalMoved(false)
-                }}
+                onClickOutside={() => closeSidebar()}
                 page></DimmerSidebarOpend>
               <SidebarFlex visible={true} width='very wide' inverted direction='bottom' animation='overlay'>
                 <div>
@@ -206,11 +199,7 @@ class WarehousesSidebar extends Component {
                             {formatMessage(tab.text)}
                           </Menu.Item>
                         ))}
-                        <DivIconChevronDown
-                          onClick={() => {
-                            closeSidebar()
-                            chatWidgetVerticalMoved(false)
-                          }}>
+                        <DivIconChevronDown onClick={() => closeSidebar()}>
                           <ChevronDown />
                         </DivIconChevronDown>
                       </MenuCustom>
@@ -224,10 +213,7 @@ class WarehousesSidebar extends Component {
                   {!openGlobalAddForm && (
                     <BasicButton
                       noBorder
-                      onClick={() => {
-                        closeSidebar()
-                        chatWidgetVerticalMoved(false)
-                      }}
+                      onClick={() => closeSidebar()}
                       data-test='settings_warehouse_popup_reset_btn'>
                       <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                         {text => text}
@@ -253,7 +239,6 @@ class WarehousesSidebar extends Component {
                             setAttachmentFiles,
                             datagrid
                           })
-                          await chatWidgetVerticalMoved(false)
                         }
                       })
                     }}
@@ -285,7 +270,6 @@ const mapDispatchToProps = {
   addDeaAttachment,
   addTaxExemptAttachment,
   loadFile,
-  chatWidgetVerticalMoved,
   setAttachmentFiles
 }
 

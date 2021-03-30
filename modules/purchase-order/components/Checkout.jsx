@@ -13,7 +13,6 @@ import ShippingTerms from './ShippingTerms/ShippingTerms'
 import Payment from './Payment/Payment'
 import FreightSelection from './FreightSelection/FreightSelection'
 import Spinner from '../../../components/Spinner/Spinner'
-import ChatWidget from '../../chatWidget/components/ChatWidgetContainer'
 
 //Services
 import { getSafe } from '../../../utils/functions'
@@ -227,7 +226,6 @@ const Checkout = props => {
             </Grid>
           </ContainerCheckout>
         </DivScrollableContent>
-        <ChatWidget />
       </ContainerMain>
     </>
   )
