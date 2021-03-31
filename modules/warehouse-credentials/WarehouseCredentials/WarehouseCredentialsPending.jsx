@@ -94,8 +94,10 @@ class WarehouseCredentialsPending extends Component {
 
     return rows.map(r => ({
       ...r,
+      key: r.id,
       warehouseName: r.name,
       branches: r.branches.map(branch => ({
+        key: `${r.id}_${branch.id}`,
         ...branch,
         branchName: (
           <>
@@ -175,6 +177,9 @@ class WarehouseCredentialsPending extends Component {
 
     const mergedValues = this.mergeInitialValues(INITIAL_VALUES, stateData)
 
+    const today = moment()
+    const tomorrow = moment().add(1, 'days')
+
     return (
       <Formik
         onSubmit={async (values, actions) => {}}
@@ -207,7 +212,7 @@ class WarehouseCredentialsPending extends Component {
                   <FormArea>
                     <FormGroup widths='equal'>
                       <DateInput
-                        inputProps={{ maxDate: moment(), id: 'deaIssueDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{ initialDate: today, maxDate: today, id: `deaIssueDate-${branch.id}`, clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
                         name='dea.issueDate'
                         label={
                           <>
@@ -217,7 +222,7 @@ class WarehouseCredentialsPending extends Component {
                         }
                       />
                       <DateInput
-                        inputProps={{ minDate: moment().add(1, 'days'), id: 'deaExpDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{ initialDate: tomorrow, minDate: tomorrow, id: `deaExpDate-${branch.id}`, clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
                         name='dea.expDate'
                         label={
                           <>
@@ -315,7 +320,7 @@ class WarehouseCredentialsPending extends Component {
                         name='taxExempt.certificateNumber'
                       />
                       <DateInput
-                        inputProps={{ maxDate: moment(), id: 'taxExemptIssueDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{ initialDate: today, maxDate: today, id: `taxExemptIssueDate-${branch.id}`, clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
                         name='taxExempt.issueDate'
                         label={
                           <>
@@ -325,7 +330,7 @@ class WarehouseCredentialsPending extends Component {
                         }
                       />
                       <DateInput
-                        inputProps={{ minDate: moment().add(1, 'days'), id: 'taxExemptExpireDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{ initialDate: tomorrow, minDate: tomorrow, id: `taxExemptExpireDate-${branch.id}`, clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
                         name='taxExempt.expDate'
                         label={
                           <>
