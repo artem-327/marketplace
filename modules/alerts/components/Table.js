@@ -362,9 +362,12 @@ class Table extends Component {
       MessageShippingQuoteRequestInfoResponse: <ShippingQuoteRequest row={row.rawData} />,
       MessageShippingQuoteInfoResponse: <ShippingQuoteInfo row={row.rawData} />
     }
+    // TODO when BE will have GET endpoint for Detail Order in Operatins
+    // and FE adjust component Detail in Operation
+    // then we can call specific detail with /detail/${row?.info?.orderId} in href
     const textMessage =
       row?.category === 'Disputes' && row?.info?.orderId ? (
-        <Link href={`/operations/orders/detail/${row?.info?.orderId}`}>
+        <Link href={`/operations/orders`}>
           <a>{ReactHtmlParser(row?.text)}</a>
         </Link>
       ) : (

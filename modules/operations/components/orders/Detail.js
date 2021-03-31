@@ -595,6 +595,9 @@ class Detail extends Component {
       echoSupportPhone,
       editTrackingCode
     } = this.props
+    console.log('order')
+    console.log(order)
+
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = 'Sales'
 
@@ -815,6 +818,13 @@ class Detail extends Component {
           ) : (
             <>
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
+              {false ? (
+                <>
+                  {false ? <PurchaseRequestCreditDelivery /> : null}
+                  {false ? <PurchaseReviewCreditRequest /> : null}
+                  {false ? <SaleReviewCreditRequest /> : null}
+                </>
+              ) : null}
               <Divider hidden />
               <OrderAccordion
                 defaultActiveIndex={[0, 1]}

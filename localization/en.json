@@ -3385,5 +3385,9 @@
   "warehouseCredentials.expDate": "Exp. Date",
   "warehouseCredentials.issueDate": "Issue Date",
   "company.myTradePassId": "My TradePass ID",
-  "dispute.submit.success": "Your dispute has been opened, a member of our Support staff will reach out shortly with the next steps. You can also email or call us at any time at "
+  "dispute.submit.success": "Your dispute has been opened, a member of our Support staff will reach out shortly with the next steps. You can also email or call us at any time at ",
+  "operations.orders.detail.modal.title": "Resolve Dispute",
+  "operations.orders.detail.modal.acceptOrder": "Accept Order",
+  "operations.orders.detail.modal.creditOrder": "Credit Order",
+  "operations.orders.detail.modal.rejectOrder": "Reject Order"
 }
