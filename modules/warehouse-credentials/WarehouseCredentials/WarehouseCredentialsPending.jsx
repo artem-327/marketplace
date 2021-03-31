@@ -41,7 +41,7 @@ import {
   FormArea,
   ButtonGroup
 } from './WarehouseCredentials.styles'
-import {config} from "../../admin/config";
+import { config } from '../../admin/config'
 
 class WarehouseCredentialsPending extends Component {
   state = {
@@ -77,11 +77,9 @@ class WarehouseCredentialsPending extends Component {
 
   handleChange = (e, branchId, { name, value }) => {
     let { formikData } = this.state
-    const parts = name.split(".")
-    if (!formikData[branchId])
-      formikData[branchId] = {}
-    if (!formikData[branchId][parts[0]])
-      formikData[branchId][parts[0]] = {}
+    const parts = name.split('.')
+    if (!formikData[branchId]) formikData[branchId] = {}
+    if (!formikData[branchId][parts[0]]) formikData[branchId][parts[0]] = {}
 
     formikData[branchId][parts[0]][parts[1]] = value
 
@@ -103,15 +101,21 @@ class WarehouseCredentialsPending extends Component {
           <>
             {expandedSubrowIds.includes(branch.id) ? <IconUp /> : <IconDown />}
             {branch.deliveryAddress.cfName}
-            {branch.deaListReceiveVerify && <CertificationLabel className='pending'>
-              <FormattedMessage id='warehouseCertifications.dea' defaultMessage='DEA' />
-            </CertificationLabel>}
-            {branch.epaReceiveVerify && <CertificationLabel className='pending'>
-              <FormattedMessage id='warehouseCertifications.epa' defaultMessage='EPA' />
-            </CertificationLabel>}
-            {branch.taxExemptReceiveVerify && <CertificationLabel className='pending'>
-              <FormattedMessage id='warehouseCertifications.dhl' defaultMessage='DHL' />
-            </CertificationLabel>}
+            {branch.deaListReceiveVerify && (
+              <CertificationLabel className='pending'>
+                <FormattedMessage id='warehouseCertifications.dea' defaultMessage='DEA' />
+              </CertificationLabel>
+            )}
+            {branch.epaReceiveVerify && (
+              <CertificationLabel className='pending'>
+                <FormattedMessage id='warehouseCertifications.epa' defaultMessage='EPA' />
+              </CertificationLabel>
+            )}
+            {branch.taxExemptReceiveVerify && (
+              <CertificationLabel className='pending'>
+                <FormattedMessage id='warehouseCertifications.dhl' defaultMessage='DHL' />
+              </CertificationLabel>
+            )}
           </>
         )
       }))
@@ -172,8 +176,7 @@ class WarehouseCredentialsPending extends Component {
     } = this.props
     const { formikData } = this.state
     let stateData = {}
-    if (`${branch.id}` in formikData)
-      stateData = formikData[branch.id]
+    if (`${branch.id}` in formikData) stateData = formikData[branch.id]
 
     const mergedValues = this.mergeInitialValues(INITIAL_VALUES, stateData)
 
@@ -212,7 +215,13 @@ class WarehouseCredentialsPending extends Component {
                   <FormArea>
                     <FormGroup widths='equal'>
                       <DateInput
-                        inputProps={{ initialDate: today, maxDate: today, id: `deaIssueDate-${branch.key}`, clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{
+                          initialDate: today,
+                          maxDate: today,
+                          id: `deaIssueDate-${branch.key}`,
+                          clearable: true,
+                          onChange: (e, data) => this.handleChange(e, branch.id, data)
+                        }}
                         name='dea.issueDate'
                         label={
                           <>
@@ -222,7 +231,13 @@ class WarehouseCredentialsPending extends Component {
                         }
                       />
                       <DateInput
-                        inputProps={{ initialDate: tomorrow, minDate: tomorrow, id: `deaExpDate-${branch.key}`, clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{
+                          initialDate: tomorrow,
+                          minDate: tomorrow,
+                          id: `deaExpDate-${branch.key}`,
+                          clearable: true,
+                          onChange: (e, data) => this.handleChange(e, branch.id, data)
+                        }}
                         name='dea.expDate'
                         label={
                           <>
@@ -320,7 +335,13 @@ class WarehouseCredentialsPending extends Component {
                         name='taxExempt.certificateNumber'
                       />
                       <DateInput
-                        inputProps={{ initialDate: today, maxDate: today, id: `taxExemptIssueDate-${branch.key}`, clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{
+                          initialDate: today,
+                          maxDate: today,
+                          id: `taxExemptIssueDate-${branch.key}`,
+                          clearable: true,
+                          onChange: (e, data) => this.handleChange(e, branch.id, data)
+                        }}
                         name='taxExempt.issueDate'
                         label={
                           <>
@@ -330,7 +351,13 @@ class WarehouseCredentialsPending extends Component {
                         }
                       />
                       <DateInput
-                        inputProps={{ initialDate: tomorrow, minDate: tomorrow, id: `taxExemptExpireDate-${branch.key}`, clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{
+                          initialDate: tomorrow,
+                          minDate: tomorrow,
+                          id: `taxExemptExpireDate-${branch.key}`,
+                          clearable: true,
+                          onChange: (e, data) => this.handleChange(e, branch.id, data)
+                        }}
                         name='taxExempt.expDate'
                         label={
                           <>
@@ -433,7 +460,9 @@ class WarehouseCredentialsPending extends Component {
             </div>
           </CustomRowDiv>
         </PositionHeaderSettings>
-        <div className={`flex stretched warehouse-credentials-wrapper${datagrid.rows.length ? '' : ' empty'}`} style={{ padding: '10px 30px' }}>
+        <div
+          className={`flex stretched warehouse-credentials-wrapper${datagrid.rows.length ? '' : ' empty'}`}
+          style={{ padding: '10px 30px' }}>
           <ProdexTable
             {...datagrid.tableProps}
             tableName='warehouse_credentials_grid'
