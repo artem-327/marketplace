@@ -24,6 +24,8 @@ import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 import MakeOfferPopup from './MakeOfferPopup'
+import DeaPopup from './ConfirmationPopups/DeaPopup'
+import DhsPopup from './ConfirmationPopups/DhsPopup'
 
 const defaultHiddenColumns = [
   'origin',
@@ -218,7 +220,9 @@ class Listings extends Component {
       //pageNumber: 0,
       filterValues: {
         SearchByNamesAndTags: null
-      }
+      },
+      buyAttemptHasDea: null,
+      buyAttemptHasDhs: null
     }
   }
 
@@ -316,7 +320,7 @@ class Listings extends Component {
           onContentClick={e => {
             e.stopPropagation()
             e.preventDefault()
-            this.tableRowClicked(r.id, r?.sellerId)
+            this.checkBuyAttempt(r)
           }}
           rightAlignedContent={
             r.expired || r.condition ? (
@@ -392,6 +396,23 @@ class Listings extends Component {
     sidebarChanged({ isOpen: true, id: poId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
+  checkBuyAttempt = row => {
+    const elements = getSafe(() => row.companyProduct.companyGenericProduct.elements, [])
+    const hasDea = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
+    const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
+
+    if (hasDea) {
+      this.setState({ buyAttemptHasDea: row })
+      return
+    }
+    if (hasDhs) {
+      this.setState({ buyAttemptHasDhs: row })
+      return
+    }
+
+    this.tableRowClicked(row.id, row?.sellerId)
+  }
+
   getActions = row => {
     const {
       isMerchant,
@@ -419,7 +440,7 @@ class Listings extends Component {
         id: 'marketplace.buy',
         defaultMessage: 'Buy Product Offer'
       }),
-      callback: () => this.tableRowClicked(row.id, row?.sellerId)
+      callback: () => this.checkBuyAttempt(row)
     }
     const buttonMakeAnOffer = {
       text: formatMessage({
@@ -453,7 +474,7 @@ class Listings extends Component {
       activeMarketplaceFilter,
       isOpenPopup
     } = this.props
-    const { columns, openFilterPopup } = this.state
+    const { columns, openFilterPopup, buyAttemptHasDea, buyAttemptHasDhs } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -545,6 +566,18 @@ class Listings extends Component {
         <AddCart openInfo={openInfo} />
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
         {isOpenPopup && <MakeOfferPopup />}
+        {buyAttemptHasDea &&
+          <DeaPopup
+            onCancel={() => this.setState({ buyAttemptHasDea: null })}
+            onAccept={() => this.tableRowClicked(buyAttemptHasDea.id, buyAttemptHasDea?.sellerId)}
+          />
+        }
+        {buyAttemptHasDhs &&
+          <DhsPopup
+            onCancel={() => this.setState({ buyAttemptHasDhs: null })}
+            onAccept={() => this.tableRowClicked(buyAttemptHasDhs.id, buyAttemptHasDhs?.sellerId)}
+          />
+        }
       </Container>
     )
   }
