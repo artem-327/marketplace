@@ -20,12 +20,20 @@ export const NetworkDropdown = styled(Dropdown)`
           fill: #848893 !important;
         }
       }
+
+      img {
+        width: 18px;
+        height: 18px;
+        margin-right: 0px !important;
+        margin-top: 0px !important;
+      }
     }
 
     &.active {
       background: #edeef2 !important;
 
-      > svg {
+      > svg,
+      img {
         transform: rotate(180deg);
       }
 
@@ -67,7 +75,8 @@ export const NetworkDropdown = styled(Dropdown)`
         box-shadow: 0 0 0 1px transparent;
       }
 
-      > .text svg {
+      > .text svg,
+      img {
         opacity: 0;
       }
     }
@@ -96,7 +105,8 @@ export const NetworkDropdown = styled(Dropdown)`
         padding: 16px 30px 12px 60px !important;
         line-height: 16px;
 
-        svg {
+        svg,
+        img {
           position: absolute;
           top: 17px;
           left: 20px;
@@ -116,6 +126,7 @@ export const NetworkDropdown = styled(Dropdown)`
           font-size: 14px;
           color: #20273a;
           line-height: 16px;
+          padding-left: 0px !important;
 
           .sub.header {
             font-size: 12px;
