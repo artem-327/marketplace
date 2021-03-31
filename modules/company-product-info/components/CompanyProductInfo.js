@@ -518,9 +518,9 @@ class CompanyProductInfo extends Component {
         markup.push(
           this.getHeader('rightToKnow'),
           this.getDropdown({
-            id: 'casProduct.rtkMassachusettes',
-            defaultMessage: 'Massachusettes',
-            name: 'casProduct.rtkMassachusettes',
+            id: 'casProduct.rtkMassachusetts',
+            defaultMessage: 'Massachusetts',
+            name: 'casProduct.rtkMassachusetts',
             props: yesNoOptions
           }),
           this.getDropdown({
@@ -530,9 +530,9 @@ class CompanyProductInfo extends Component {
             props: yesNoOptions
           }),
           this.getDropdown({
-            id: 'casProduct.rtkPennslyvania',
-            defaultMessage: 'Pennslyvania',
-            name: 'casProduct.rtkPennslyvania',
+            id: 'casProduct.rtkPennsylvania',
+            defaultMessage: 'Pennsylvania',
+            name: 'casProduct.rtkPennsylvania',
             props: yesNoOptions
           }),
           this.getDropdown({
@@ -574,7 +574,7 @@ class CompanyProductInfo extends Component {
           }),
           this.getDropdown({
             id: 'casProduct.dhsTheftScreeningThresholdQuantities',
-            defaultMessage: 'Theft: Screening Threshold Quantitie',
+            defaultMessage: 'Theft: Screening Threshold Quantities',
             name: 'casProduct.dhsTheftScreeningThresholdQuantities',
             props: dropdownOptions.dhs.dhsTheftScreeningThresholdQuantities
           }),

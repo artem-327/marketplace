@@ -1025,9 +1025,9 @@ class AddCart extends Component {
       case rightToKnow.key: {
         markup.push(
           this.renderDropdown({
-            id: 'casProduct.rtkMassachusettes',
-            defaultMessage: 'Massachusettes',
-            name: `${prefix}casProduct.rtkMassachusettes`,
+            id: 'casProduct.rtkMassachusetts',
+            defaultMessage: 'Massachusetts',
+            name: `${prefix}casProduct.rtkMassachusetts`,
             props: yesNoOptions
           }),
           this.renderDropdown({
@@ -1037,9 +1037,9 @@ class AddCart extends Component {
             props: yesNoOptions
           }),
           this.renderDropdown({
-            id: 'casProduct.rtkPennslyvania',
-            defaultMessage: 'Pennslyvania',
-            name: `${prefix}casProduct.rtkPennslyvania`,
+            id: 'casProduct.rtkPennsylvania',
+            defaultMessage: 'Pennsylvania',
+            name: `${prefix}casProduct.rtkPennsylvania`,
             props: yesNoOptions
           }),
           this.renderDropdown({
@@ -1078,7 +1078,7 @@ class AddCart extends Component {
           }),
           this.renderField({
             id: 'casProduct.dhsTheftScreeningThresholdQuantities',
-            defaultMessage: 'Theft: Screening Threshold Quantitie',
+            defaultMessage: 'Theft: Screening Threshold Quantities',
             name: `${prefix}casProduct.dhsTheftScreeningThresholdQuantities`
           }),
           this.renderField({
