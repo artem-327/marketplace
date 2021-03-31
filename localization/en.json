@@ -3389,5 +3389,7 @@
   "operations.orders.detail.modal.title": "Resolve Dispute",
   "operations.orders.detail.modal.acceptOrder": "Accept Order",
   "operations.orders.detail.modal.creditOrder": "Credit Order",
-  "operations.orders.detail.modal.rejectOrder": "Reject Order"
+  "operations.orders.detail.modal.rejectOrder": "Reject Order",
+  "order.actionDisputed": "Order Disputed",
+  "order.actionDisputed.text": "This order has been disputed by the buyer and needs to be resolved. When ready enter the resolution here."
 }

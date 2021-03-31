@@ -15,6 +15,10 @@ import { currency } from '~/constants/index'
 import ProdexGrid from '~/components/table'
 import { getLocaleDateFormat } from '~/components/date-format'
 import TransactionInfo from '~/modules/orders/components/components/TransactionInfo'
+import { Info } from 'react-feather'
+//Components
+import ModalResolveDispute from './ModalResolveDispute'
+import BasicButton from '../../../../components/buttons/BasicButton'
 
 export const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
@@ -593,10 +597,12 @@ class Detail extends Component {
       isDetailFetching,
       intl: { formatMessage },
       echoSupportPhone,
-      editTrackingCode
+      editTrackingCode,
+      closePopup,
+      isOpenPopup,
+      loading,
+      openPopup
     } = this.props
-    console.log('order')
-    console.log(order)
 
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = 'Sales'
@@ -606,6 +612,7 @@ class Detail extends Component {
 
     return (
       <div id='page' className='auto-scrolling'>
+        <ModalResolveDispute open={isOpenPopup} loading={loading} onClose={closePopup} />
         {this.state.openDocumentsPopup && (
           <StyledModal
             size='Default'
@@ -818,13 +825,26 @@ class Detail extends Component {
           ) : (
             <>
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
-              {false ? (
-                <>
-                  {false ? <PurchaseRequestCreditDelivery /> : null}
-                  {false ? <PurchaseReviewCreditRequest /> : null}
-                  {false ? <SaleReviewCreditRequest /> : null}
-                </>
-              ) : null}
+              <Segment color={'blue'} style={{ marginLeft: '32px', marginRight: '32px' }}>
+                <Info />
+                <Grid verticalAlign='middle' columns='equal'>
+                  <Grid.Column width={10}>
+                    <Header as='h3' color={'blue'} style={{ margin: '0 0 6px' }}>
+                      <FormattedMessage id='order.actionDisputed' defaultMessage='Order Dispute' />
+                    </Header>
+                    <FormattedMessage
+                      id='order.actionDisputed.text'
+                      defaultMessage='This order has been disputed by the buyer and needs to be resolved. When ready enter the resolution here.'
+                    />
+                  </Grid.Column>
+                  <Grid.Column width={6} textAlign='right'>
+                    <BasicButton onClick={() => openPopup()}>
+                      <FormattedMessage id='global.continue' defaultMessage='Continue' />
+                    </BasicButton>
+                  </Grid.Column>
+                </Grid>
+              </Segment>
+
               <Divider hidden />
               <OrderAccordion
                 defaultActiveIndex={[0, 1]}
