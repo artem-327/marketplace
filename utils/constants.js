@@ -49,5 +49,7 @@ export const LINK_TRANSLATE_TABLE = {
   '/beneficial-owners': '/onboarding/beneficial-owners',
   '/bank-accounts': '/onboarding/bank-accounts',
   '/own-product-offer-bids': '/marketplace/bids-sent',
-  '/other-product-offer-bids': '/marketplace/bids-received'
+  '/other-product-offer-bids': '/marketplace/bids-received',
+  '/pending-branch-certificates': '/warehouse-credentials/pending',
+  '/credentials-branch-certificates': '/warehouse-credentials/certified'
 }
