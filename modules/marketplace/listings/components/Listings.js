@@ -24,6 +24,7 @@ import { getSafe } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 import MakeOfferPopup from './MakeOfferPopup'
+import ViewOnlyPopup from './ConfirmationPopups/ViewOnlyPopup'
 
 const defaultHiddenColumns = [
   'origin',
@@ -218,7 +219,8 @@ class Listings extends Component {
       //pageNumber: 0,
       filterValues: {
         SearchByNamesAndTags: null
-      }
+      },
+      viewOnlyPopupOpen: false
     }
   }
 
@@ -316,7 +318,7 @@ class Listings extends Component {
           onContentClick={e => {
             e.stopPropagation()
             e.preventDefault()
-            this.tableRowClicked(r.id, r?.sellerId)
+            this.checkBuyAttempt(r)
           }}
           rightAlignedContent={
             r.expired || r.condition ? (
@@ -392,6 +394,15 @@ class Listings extends Component {
     sidebarChanged({ isOpen: true, id: poId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
   }
 
+  checkBuyAttempt = row => {
+    if (!this.props.buyEligible) {
+      this.setState({ viewOnlyPopupOpen: true })
+      return
+    }
+
+    this.tableRowClicked(row.id, row?.sellerId)
+  }
+
   getActions = row => {
     const {
       isMerchant,
@@ -419,7 +430,7 @@ class Listings extends Component {
         id: 'marketplace.buy',
         defaultMessage: 'Buy Product Offer'
       }),
-      callback: () => this.tableRowClicked(row.id, row?.sellerId)
+      callback: () => this.checkBuyAttempt(row)
     }
     const buttonMakeAnOffer = {
       text: formatMessage({
@@ -453,7 +464,7 @@ class Listings extends Component {
       activeMarketplaceFilter,
       isOpenPopup
     } = this.props
-    const { columns, openFilterPopup } = this.state
+    const { columns, openFilterPopup, viewOnlyPopupOpen } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -545,6 +556,7 @@ class Listings extends Component {
         <AddCart openInfo={openInfo} />
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
         {isOpenPopup && <MakeOfferPopup />}
+        {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })}/>}
       </Container>
     )
   }
