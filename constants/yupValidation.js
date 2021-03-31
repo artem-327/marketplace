@@ -156,7 +156,8 @@ export const errorMessages = {
     />
   ),
   passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />,
-  invalidTime: <FormattedMessage id='validation.invalidTime' defaultMessage='Invalid time' />
+  invalidTime: <FormattedMessage id='validation.invalidTime' defaultMessage='Invalid time' />,
+  invalidHashtag: <FormattedMessage id='validation.invalidHashtag' defaultMessage='Invalid hashtag' />
 }
 
 export const provinceObjectRequired = hasProvinces =>
@@ -381,4 +382,11 @@ export const multipleEmails = () =>
       return !emails.some(email => {
         return !Yup.string().trim().email().isValidSync(email)
       })
+    })
+
+export const tagValidate = () =>
+  Yup.string()
+    .trim()
+    .test('time', errorMessages.invalidHashtag, t => {
+      return !t || t.charAt(0) === '#'
     })

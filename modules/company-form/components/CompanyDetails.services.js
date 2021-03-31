@@ -4,7 +4,8 @@ import {
   errorMessages,
   websiteValidationNotRequired,
   phoneValidation,
-  addressValidationSchema
+  addressValidationSchema,
+  tagValidate
 } from '~/constants/yupValidation'
 
 export const validationSchema = Yup.object().shape({
@@ -15,8 +16,8 @@ export const validationSchema = Yup.object().shape({
   website: websiteValidationNotRequired(),
   socialLinkedin: websiteValidationNotRequired(),
   socialFacebook: websiteValidationNotRequired(),
-  socialTwitter: websiteValidationNotRequired(),
-  socialInstagram: websiteValidationNotRequired(),
+  socialTwitter: tagValidate(),
+  socialInstagram: tagValidate(),
   phone: phoneValidation(10),
   address: addressValidationSchema(),
   email: Yup.string().trim().email(errorMessages.invalidEmail)
