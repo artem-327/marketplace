@@ -128,3 +128,7 @@ export const SUPPORT_EMAIL = 'support@bluepallet.io'
  * @constant {string}
  */
 export const SUPPORT_PHONE_NUMBER = '(312) 380-2440'
+/**
+ * @constant {string}
+ */
+export const ORDER_RESOLUTION_PHONE_NUMBER = '833-321-3246'

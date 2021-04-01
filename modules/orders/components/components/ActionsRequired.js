@@ -309,6 +309,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && shippingStatus === 1 && assignLotsRequired // Confirmed && Not shipped
               ? this.renderSegment(null, 11, null, 'order.ship.description', [
                   {
@@ -320,6 +321,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && creditReviewStatus === 1 && creditReviewStatus === 1 // CONFIRMED && PENDING && PENDING
               ? this.renderSegment(null, 11, null, 'order.reviewCreditRequestSales.description', [
                   {
@@ -331,6 +333,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
               ? this.renderSegment(null, 11, null, 'order.returnShipmentSale.description', [
                   {
@@ -341,6 +344,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && returnStatus === 2 // Confirmed && IN_TRANSIT
               ? this.renderSegment(null, 11, null, 'order.returnInTransit.description', [
                   {
@@ -349,6 +353,19 @@ class ActionsRequired extends Component {
                     dataTest: 'orders_detail_returnInTransit_btn',
                     text: 'order.returnInTransit',
                     loading: isSending
+                  }
+                ])
+              : null}
+
+            {orderStatus === 2 &&
+            (reviewStatus === 4 || reviewStatus === 3) &&
+            (disputeResolutionStatus === 1 || disputeResolutionStatus === 2) // Confirmed && Credited || Rejected && Pending || Accepted by buyer
+              ? this.renderSegment('orange', 11, null, 'order.reviewResolutionDispute.description', [
+                  {
+                    buttonType: 'basic',
+                    onClick: () => openPopupName('openedDisputedRequest'),
+                    dataTest: 'orders_detail_view_btn',
+                    text: 'order.view'
                   }
                 ])
               : null}
@@ -377,6 +394,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 1 // Pending
               ? this.renderSegment(null, 11, null, 'order.detail.status.pending', [
                   {
@@ -388,6 +406,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
               ? this.renderSegment(null, 11, null, 'order.shipFailed.description', [
                   disputeButton, //!!REMOVE
@@ -399,6 +418,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && shippingStatus === 2 // Confirmed && In transit
               ? this.renderSegment(null, 11, null, 'order.transit.description', [
                   {
@@ -410,6 +430,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && reviewStatus === 1 && disputeResolutionStatus === 0 && shippingStatus === 3 // Confirmed && Pending && none && Delivered
               ? this.renderSegment(null, 10, null, 'order.delivered.description', [
                   {
@@ -429,6 +450,7 @@ class ActionsRequired extends Component {
                   // }
                 ])
               : null}
+
             {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 2
               ? // Confirmed && PENDING && COUNTER_OFFER_PENDING
                 this.renderSegment(null, 11, null, 'order.reviewCreditRequestPurchase.description', [
@@ -440,6 +462,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && reviewStatus === 3 && returnStatus === 1 // Confirmed && Rejected && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 11, null, 'order.waitToReturn.description', [
                   {
@@ -451,6 +474,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && reviewStatus !== 3 && (detail.paymentStatus === 5 || detail.paymentStatus === 4) // Confirmed && Rejected && (Failed || Canceled)
               ? this.renderSegment('red', 11, null, 'order.payment.failed.description', [
                   {
@@ -458,6 +482,19 @@ class ActionsRequired extends Component {
                     onClick: openReinitiateTransfer,
                     dataTest: 'orders_detail_reinitiate_transfer',
                     text: 'order.reinitiateTransfer'
+                  }
+                ])
+              : null}
+
+            {orderStatus === 2 &&
+            (reviewStatus === 4 || reviewStatus === 3) &&
+            (disputeResolutionStatus === 1 || disputeResolutionStatus === 3) // Confirmed && Credited || Rejected && Pending || Accepted by seller
+              ? this.renderSegment('orange', 11, null, 'order.reviewResolutionDispute.description', [
+                  {
+                    buttonType: 'basic',
+                    onClick: () => openPopupName('openedDisputedRequest'),
+                    dataTest: 'orders_detail_view_btn',
+                    text: 'order.view'
                   }
                 ])
               : null}

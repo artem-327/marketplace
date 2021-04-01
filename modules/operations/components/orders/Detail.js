@@ -601,7 +601,10 @@ class Detail extends Component {
       closePopup,
       isOpenPopup,
       loading,
-      openPopup
+      openPopup,
+      resolveDisputeReject,
+      resolveDisputeCredit,
+      resolveDisputeAccept
     } = this.props
 
     const { activeIndexes, documentsPopupProduct } = this.state
@@ -612,7 +615,14 @@ class Detail extends Component {
 
     return (
       <div id='page' className='auto-scrolling'>
-        <ModalResolveDispute open={isOpenPopup} loading={loading} onClose={closePopup} />
+        <ModalResolveDispute
+          orderId={order?.id}
+          disputeReasonComment={order?.disputeReasonComment}
+          open={isOpenPopup}
+          loading={loading}
+          onClose={closePopup}
+          actions={{ resolveDisputeReject, resolveDisputeCredit, resolveDisputeAccept }}
+        />
         {this.state.openDocumentsPopup && (
           <StyledModal
             size='Default'
@@ -825,25 +835,27 @@ class Detail extends Component {
           ) : (
             <>
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
-              <Segment color={'blue'} style={{ marginLeft: '32px', marginRight: '32px' }}>
-                <Info />
-                <Grid verticalAlign='middle' columns='equal'>
-                  <Grid.Column width={10}>
-                    <Header as='h3' color={'blue'} style={{ margin: '0 0 6px' }}>
-                      <FormattedMessage id='order.actionDisputed' defaultMessage='Order Dispute' />
-                    </Header>
-                    <FormattedMessage
-                      id='order.actionDisputed.text'
-                      defaultMessage='This order has been disputed by the buyer and needs to be resolved. When ready enter the resolution here.'
-                    />
-                  </Grid.Column>
-                  <Grid.Column width={6} textAlign='right'>
-                    <BasicButton onClick={() => openPopup()}>
-                      <FormattedMessage id='global.continue' defaultMessage='Continue' />
-                    </BasicButton>
-                  </Grid.Column>
-                </Grid>
-              </Segment>
+              {order?.reviewStatus === 'Disputed' && order?.disputeResolutionStatus === 1 ? (
+                <Segment color={'blue'} style={{ marginLeft: '32px', marginRight: '32px' }}>
+                  <Info />
+                  <Grid verticalAlign='middle' columns='equal'>
+                    <Grid.Column width={10}>
+                      <Header as='h3' color={'blue'} style={{ margin: '0 0 6px' }}>
+                        <FormattedMessage id='order.actionDisputed' defaultMessage='Order Dispute' />
+                      </Header>
+                      <FormattedMessage
+                        id='order.actionDisputed.text'
+                        defaultMessage='This order has been disputed by the buyer and needs to be resolved. When ready enter the resolution here.'
+                      />
+                    </Grid.Column>
+                    <Grid.Column width={6} textAlign='right'>
+                      <BasicButton onClick={() => openPopup()}>
+                        <FormattedMessage id='global.continue' defaultMessage='Continue' />
+                      </BasicButton>
+                    </Grid.Column>
+                  </Grid>
+                </Segment>
+              ) : null}
 
               <Divider hidden />
               <OrderAccordion

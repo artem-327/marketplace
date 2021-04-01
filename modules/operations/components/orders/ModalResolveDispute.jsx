@@ -1,15 +1,29 @@
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Modal, Dimmer, Loader, Input, Checkbox, Form } from 'semantic-ui-react'
-import { func, bool, array, object } from 'prop-types'
+import { Modal, Dimmer, Loader, Input, Form, Radio } from 'semantic-ui-react'
+import { func, bool, string, number } from 'prop-types'
 // Components
 import BasicButton from '../../../../components/buttons/BasicButton'
 //Styles
 import { ModalCustom } from '../../../my-network/components/InviteModal/InviteModal.styles'
+import { FormFieldCustom, DivReasonText } from './Orders.styles'
+//Constants
+import { REJECT_ORDER, CREDIT_ORDER, ACCEPT_ORDER } from './Orders.constants'
 
-const ModalResolveDispute = ({ open, loading, onClose }) => {
-  const [value, setValue] = useState(null)
-  const [credit, setCredit] = useState(null)
+/**
+ * @category Operations - Orders - Detail
+ * @components
+ */
+const ModalResolveDispute = ({
+  orderId,
+  disputeReasonComment,
+  open,
+  loading,
+  onClose,
+  actions: { resolveDisputeAccept, resolveDisputeCredit, resolveDisputeReject }
+}) => {
+  const [value, setValue] = useState('')
+  const [credit, setCredit] = useState('')
 
   return (
     <ModalCustom size={'tiny'} open={open} onClose={() => onClose()} closeIcon={true}>
@@ -20,69 +34,104 @@ const ModalResolveDispute = ({ open, loading, onClose }) => {
         <FormattedMessage id='operations.orders.detail.modal.title' defaultMessage='Resolve Dispute' />
       </Modal.Header>
       <Modal.Content>
+        <div>
+          <b>
+            <FormattedMessage id='operations.orders.detail.modal.reason' defaultMessage='Reason:' />
+          </b>
+        </div>
+        <DivReasonText>{disputeReasonComment}</DivReasonText>
+
         <Form>
-          <Form.Field>
-            <Checkbox
-              radio
+          <FormFieldCustom>
+            <Radio
               label={<FormattedMessage id='operations.orders.detail.modal.acceptOrder' defaultMessage='Accept Order' />}
-              name='acceptOrder'
-              value='acceptOrder'
-              checked={value === 'acceptOrder'}
-              onChange={() => setValue('acceptOrder')}
+              name={ACCEPT_ORDER}
+              value={ACCEPT_ORDER}
+              checked={value === ACCEPT_ORDER}
+              onChange={() => {
+                setValue(ACCEPT_ORDER)
+                setCredit('')
+              }}
             />
-          </Form.Field>
-          <Form.Field>
-            <Checkbox
-              radio
+          </FormFieldCustom>
+          <FormFieldCustom>
+            <Radio
               label={<FormattedMessage id='operations.orders.detail.modal.creditOrder' defaultMessage='Credit Order' />}
-              name='creditOrder'
-              value='creditOrder'
-              checked={value === 'creditOrder'}
-              onChange={() => setValue('creditOrder')}
+              name={CREDIT_ORDER}
+              value={CREDIT_ORDER}
+              checked={value === CREDIT_ORDER}
+              onChange={() => {
+                setValue(CREDIT_ORDER)
+                setCredit('')
+              }}
             />
-          </Form.Field>
-          <Form.Field>
+          </FormFieldCustom>
+          <FormFieldCustom width={4}>
             <Input
               name='credit'
               label='$'
               value={credit}
               onChange={(e, data) => setCredit(data.value)}
-              disabled={value !== 'creditOrder'}
+              disabled={value !== CREDIT_ORDER}
             />
-          </Form.Field>
-          <Form.Field>
-            <Checkbox
-              radio
+          </FormFieldCustom>
+          <FormFieldCustom>
+            <Radio
               label={<FormattedMessage id='operations.orders.detail.modal.rejectOrder' defaultMessage='Reject Order' />}
-              name='rejectOrder'
-              value='rejectOrder'
-              checked={value === 'rejectOrder'}
-              onChange={() => setValue('rejectOrder')}
+              name={REJECT_ORDER}
+              value={REJECT_ORDER}
+              checked={value === REJECT_ORDER}
+              onChange={() => {
+                setValue(REJECT_ORDER)
+                setCredit('')
+              }}
             />
-          </Form.Field>
+          </FormFieldCustom>
         </Form>
       </Modal.Content>
       <Modal.Actions>
         <BasicButton noBorder onClick={() => onClose()}>
-          <b>
-            <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
-          </b>
+          <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
         </BasicButton>
         <BasicButton
-          disabled={!value || (value === 'creditOrder' && !credit)}
+          disabled={!value || (value === CREDIT_ORDER && !credit)}
           onClick={async () => {
-            console.log(value)
-            console.log(credit)
+            if (value === ACCEPT_ORDER) await resolveDisputeAccept(orderId)
+            if (value === CREDIT_ORDER && credit) await resolveDisputeCredit(orderId, credit)
+            if (value === REJECT_ORDER) await resolveDisputeReject(orderId)
+            onClose()
           }}>
-          <b>
-            <FormattedMessage id='global.confirm' defaultMessage='Confirm' />
-          </b>
+          <FormattedMessage id='global.confirm' defaultMessage='Confirm' />
         </BasicButton>
       </Modal.Actions>
     </ModalCustom>
   )
 }
 
-ModalResolveDispute.propTypes = {}
+ModalResolveDispute.propTypes = {
+  open: bool,
+  orderId: number,
+  disputeReasonComment: string,
+  loading: bool,
+  onClose: func,
+  actions: {
+    resolveDisputeAccept: func,
+    resolveDisputeCredit: func,
+    resolveDisputeReject: func
+  }
+}
+
+ModalResolveDispute.defaultValues = {
+  orderId: null,
+  open: false,
+  disputeReasonComment: '',
+  loading: false,
+  onClose: () => {},
+  actions: {
+    resolveDisputeAccept: () => {},
+    resolveDisputeCredit: () => {},
+    resolveDisputeReject: () => {}
+  }
+}
 
 export default ModalResolveDispute

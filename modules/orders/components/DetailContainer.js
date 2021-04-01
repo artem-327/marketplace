@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import Detail from './Detail'
 import * as Actions from '../actions'
-import * as OrdersHelper from '~/components/helpers/Orders'
+import * as OrdersHelper from '../../../components/helpers/Orders'
 import moment from 'moment/moment'
 import { getSafe, getFormattedAddress } from '~/utils/functions'
 import { FormattedNumber } from 'react-intl'
@@ -288,7 +288,9 @@ function mapStateToProps(state, ownProps) {
     isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
     isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
     isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
-    isThirdPartyConnectionException: getSafe(() => orders.isThirdPartyConnectionException, false)
+    isThirdPartyConnectionException: getSafe(() => orders.isThirdPartyConnectionException, false),
+    isSending: orders?.isSending,
+    openedDisputedRequest: orders?.openedDisputedRequest
   }
 }
 

@@ -266,7 +266,8 @@ function mapStateToProps(state, ownProps) {
     action: actionRequired(orderDetailData),
     //! !opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
     listDocumentTypes: operations.listDocumentTypes,
-    isOpenPopup: operations?.isOpenPopup
+    isOpenPopup: operations?.isOpenPopup,
+    loading: operations?.loading
   }
 }
 

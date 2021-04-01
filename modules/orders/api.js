@@ -137,5 +137,15 @@ export default {
   editTrackingCode: (orderId, trackingCode) =>
     api.patch(`/prodex/api/purchase-orders/${orderId}/shipping-tracking-code?trackingCode=${trackingCode}`),
   editReturnTrackingCode: (orderId, trackingCode) =>
-    api.patch(`/prodex/api/sale-orders/${orderId}/return-shipping-tracking-code?trackingCode=${trackingCode}`)
+    api.patch(`/prodex/api/sale-orders/${orderId}/return-shipping-tracking-code?trackingCode=${trackingCode}`),
+  orderResolutionAccept: orderId =>
+    api
+      .patch(`/prodex/api/purchase-orders/${orderId}/dispute-resolution-accept`)
+      .then(res => res.data)
+      .catch(e => console.error(e)),
+  orderResolutionReopen: orderId =>
+    api
+      .patch(`/prodex/api/purchase-orders/${orderId}/dispute-resolution-reopen`)
+      .then(res => res.data)
+      .catch(e => console.error(e))
 }
