@@ -1,4 +1,10 @@
-export const HEADER_ATTRIBUTES = ['orderStatus', 'shippingStatus', 'reviewStatus', 'creditStatus', 'paymentStatus']
+export const HEADER_ATTRIBUTES = [
+  'orderStatus',
+  'shippingStatus',
+  'reviewStatus',
+  'disputeResolutionStatus',
+  'paymentStatus'
+]
 
 export const CONTENT_ATTRIBUTES = [
   { name: 'productName', width: '34%' },

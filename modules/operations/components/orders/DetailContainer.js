@@ -30,7 +30,7 @@ function getReturnAddress(data) {
 }
 
 function prepareDetail(data, type = 'sales') {
-  if (typeof data.id === 'undefined') return {}
+  if (typeof data?.id === 'undefined') return {}
 
   const subtotal = getSafe(() => data.cfPriceSubtotal, 0)
   const totalPriceWithShipping = getSafe(
@@ -265,7 +265,9 @@ function mapStateToProps(state, ownProps) {
     isPaymentCancellable: getSafe(() => orderDetailData.isPaymentCancellable, false),
     action: actionRequired(orderDetailData),
     //! !opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
-    listDocumentTypes: operations.listDocumentTypes
+    listDocumentTypes: operations.listDocumentTypes,
+    isOpenPopup: operations?.isOpenPopup,
+    loading: operations?.loading
   }
 }
 

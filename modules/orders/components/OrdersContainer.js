@@ -58,6 +58,7 @@ function mapStateToProps(state, { router, datagrid, currentTab }) {
       reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
       creditStatus: OrdersHelper.getCreditStatus(r.creditReviewStatus),
       paymentStatus: OrdersHelper.getPaymentStatus(r.paymentStatus),
+      disputeResolutionStatus: OrdersHelper.getDisputeStatus(r.disputeResolutionStatus),
       bl: '',
       sds: '',
       cofA: '',

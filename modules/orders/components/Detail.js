@@ -59,6 +59,8 @@ import {
   CustomDivTitle,
   InfoIcon
 } from '~/modules/cart/components/StyledComponents'
+//Components
+import ModalOrderResolution from './components/ModalOrderResolution'
 
 export const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
@@ -862,7 +864,12 @@ class Detail extends Component {
       editReturnTrackingCode,
       isOrderProcessing,
       isCompanyAdmin,
-      isAdmin
+      isAdmin,
+      openedDisputedRequest,
+      isSending,
+      orderResolutionAccept,
+      orderResolutionReopen,
+      closePopup
     } = this.props
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -1145,6 +1152,14 @@ class Detail extends Component {
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
               {isAdmin || isCompanyAdmin || isOrderProcessing ? (
                 <>
+                  {openedDisputedRequest ? (
+                    <ModalOrderResolution
+                      order={order}
+                      onClose={closePopup}
+                      loading={isSending}
+                      actions={{ orderResolutionAccept, orderResolutionReopen }}
+                    />
+                  ) : null}
                   {!counterOrderId ? <ActionsRequired order={order} ordersType={ordersType} /> : null}
                   {openedAssignLots ? <AssignLots /> : null}
                   {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
