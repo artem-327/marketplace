@@ -20,7 +20,7 @@ export default class CompanyProductMixtures extends Component {
     return (
       <>
         {casProducts.length > 0 && (
-          <BottomUnpaddedRow columns={4}>
+          <BottomUnpaddedRow columns={6}>
             <GridColumn>
               <BoldLabel>
                 <FormattedMessage id='global.casIndexNumber' defaultMessage='CAS Index Number' />
@@ -44,11 +44,23 @@ export default class CompanyProductMixtures extends Component {
                 <FormattedMessage id='global.assayMax' defaultMessage='Assay Max' />
               </BoldLabel>
             </GridColumn>
+
+            <GridColumn>
+              <BoldLabel>
+                <FormattedMessage id='global.caProp65' defaultMessage='CA PROP 65' />
+              </BoldLabel>
+            </GridColumn>
+
+            <GridColumn>
+              <BoldLabel>
+                <FormattedMessage id='global.regulatoryReach' defaultMessage='REACH' />
+              </BoldLabel>
+            </GridColumn>
           </BottomUnpaddedRow>
         )}
-        {casProducts.map((_, i) => {
+        {casProducts.map((el, i) => {
           return (
-            <GridRow columns={4}>
+            <GridRow columns={6}>
               <GridColumn>
                 <Input name={`${prefix}[${i}].casIndexNumber`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
@@ -62,6 +74,20 @@ export default class CompanyProductMixtures extends Component {
 
               <GridColumn>
                 <Input name={`${prefix}[${i}].max`} inputProps={{ transparent: true, readOnly: true }} />
+              </GridColumn>
+
+              <GridColumn>
+                {el.caprop65 === true
+                  ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                  : (el.caprop65 === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
+                }
+              </GridColumn>
+
+              <GridColumn>
+                {el.reach === true
+                  ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                  : (el.reach === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
+                }
               </GridColumn>
             </GridRow>
           )

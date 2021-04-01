@@ -85,7 +85,7 @@ const DivBrowseFile = styled.div`
 `
 
 const GridColumnMixtures = styled(GridColumn)`
-  padding: 3px 14px !important;
+  padding: 3px 10px !important;
 `
 
 const GridColumnLabelTextArea = styled(GridColumn)`
@@ -251,6 +251,17 @@ const StyledButton = styled(Button)`
     color: #84c225 !important;
   }
 `
+
+const DivReadOnlyValues = styled.div`
+  border-radius: 3px;
+  border: solid 1px #dee2e6;
+  background-color: #edeef2;
+  font-size: 14px;
+  padding: 9.5px 15px;
+  line-height: 1.29;
+  color: #848893;
+`
+
 
 const CustomForm = styled(Form)`
   flex-grow: 0 !important;
@@ -530,9 +541,19 @@ class AddEditEchoProduct extends React.Component {
                   casProduct: getSafe(() => element.casProduct.id, null),
                   assayMin: getSafe(() => element.assayMin, ''),
                   assayMax: getSafe(() => element.assayMax, ''),
-                  proprietary: getSafe(() => element.proprietary, false)
+                  proprietary: getSafe(() => element.proprietary, false),
+                  caprop65: getSafe(() => element.casProduct.caprop65, ''),
+                  reach: getSafe(() => element.casProduct.reach, '')
                 })),
-              [{ name: '', casProduct: '', assayMin: '', assayMax: '', proprietary: false }]
+              [{
+                name: '',
+                casProduct: '',
+                assayMin: '',
+                assayMax: '',
+                proprietary: false,
+                caprop65: '',
+                reach: ''
+              }]
             ),
             emergencyCompanyName: getSafe(() => popupValues.emergencyCompanyName, ''),
             emergencyContactName: getSafe(() => popupValues.emergencyContactName, ''),
@@ -697,7 +718,15 @@ class AddEditEchoProduct extends React.Component {
       initialValues.tdsRevisionDate = this.getDateInLocaleFormat(initialValues.tdsRevisionDate)
 
     if (initialValues.elements.length === 0) {
-      initialValues.elements = [{ name: '', casProduct: null, assayMin: '', assayMax: '', proprietary: false }]
+      initialValues.elements = [{
+        name: '',
+        casProduct: '',
+        assayMin: '',
+        assayMax: '',
+        proprietary: false,
+        caprop65: '',
+        reach: ''
+      }]
     }
     return initialValues
   }
@@ -1125,6 +1154,8 @@ class AddEditEchoProduct extends React.Component {
 
     let searchedCasProducts = this.props.searchedCasProducts.concat(initialCasProducts)
 
+    console.log('!!!!!!!!!! aaaaa values', values)
+
     return (
       <>
         <GridRowCustom>
@@ -1140,7 +1171,7 @@ class AddEditEchoProduct extends React.Component {
               <FormattedMessage id='admin.proprietary' defaultMessage='Proprietary?' />
             </DivTitleColumn>
           </GridColumnMixtures>
-          <GridColumnMixtures width={6}>
+          <GridColumnMixtures width={5}>
             <DivTitleColumn>
               <FormattedMessage id='global.elementName' defaultMessage='Element Name' />
               <Required />
@@ -1149,14 +1180,24 @@ class AddEditEchoProduct extends React.Component {
               <Required />
             </DivTitleColumn>
           </GridColumnMixtures>
-          <GridColumnMixtures width={3}>
+          <GridColumnMixtures width={2}>
             <DivTitleColumn>
               <FormattedMessage id='global.assayMin' defaultMessage='Assay Min?' />
             </DivTitleColumn>
           </GridColumnMixtures>
-          <GridColumnMixtures width={3}>
+          <GridColumnMixtures width={2}>
             <DivTitleColumn>
               <FormattedMessage id='global.assayMax' defaultMessage='Assay Max?' />
+            </DivTitleColumn>
+          </GridColumnMixtures>
+          <GridColumnMixtures width={2}>
+            <DivTitleColumn>
+              <FormattedMessage id='global.caProp65' defaultMessage='CA PROP 65' />
+            </DivTitleColumn>
+          </GridColumnMixtures>
+          <GridColumnMixtures width={2}>
+            <DivTitleColumn>
+              <FormattedMessage id='global.regulatoryReach' defaultMessage='REACH' />
             </DivTitleColumn>
           </GridColumnMixtures>
           <GridColumnMixtures width={2}></GridColumnMixtures>
@@ -1175,7 +1216,7 @@ class AddEditEchoProduct extends React.Component {
                         verticalAlign='middle'>
                         <Checkbox name={`elements[${index}].proprietary`} />
                       </GridColumnMixtures>
-                      <GridColumnMixtures width={6}>
+                      <GridColumnMixtures width={5}>
                         {values.elements[index].proprietary ? (
                           <Input
                             name={`elements[${index}].name`}
@@ -1228,7 +1269,7 @@ class AddEditEchoProduct extends React.Component {
                           />
                         )}
                       </GridColumnMixtures>
-                      <GridColumnMixtures width={3} data-test='admin_product_popup_assayMin_inp'>
+                      <GridColumnMixtures width={2} data-test='admin_product_popup_assayMin_inp'>
                         <Input
                           type='number'
                           name={`elements[${index}].assayMin`}
@@ -1240,7 +1281,7 @@ class AddEditEchoProduct extends React.Component {
                           }}
                         />
                       </GridColumnMixtures>
-                      <GridColumnMixtures width={3} data-test='admin_product_popup_assayMax_inp'>
+                      <GridColumnMixtures width={2} data-test='admin_product_popup_assayMax_inp'>
                         <Input
                           type='number'
                           name={`elements[${index}].assayMax`}
@@ -1252,7 +1293,32 @@ class AddEditEchoProduct extends React.Component {
                           }}
                         />
                       </GridColumnMixtures>
+
                       <GridColumnMixtures width={2}>
+                        <DivReadOnlyValues>
+                          {values.elements[index].caprop65 === true
+                            ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                            : (values.elements[index].caprop65 === false
+                                ? <FormattedMessage id='global.no' defaultMessage='No' />
+                                : 'N/A'
+                            )
+                          }
+                        </DivReadOnlyValues>
+                      </GridColumnMixtures>
+
+                      <GridColumnMixtures width={2}>
+                        <DivReadOnlyValues>
+                          {values.elements[index].reach === true
+                            ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                            : (values.elements[index].reach === false
+                                ? <FormattedMessage id='global.no' defaultMessage='No' />
+                                : 'N/A'
+                            )
+                          }
+                        </DivReadOnlyValues>
+                      </GridColumnMixtures>
+
+                      <GridColumnMixtures width={1}>
                         {index ? (
                           <StyledButton
                             icon
@@ -1272,8 +1338,8 @@ class AddEditEchoProduct extends React.Component {
                   ))
                 : ''}
               <GridRowCustom>
-                <GridColumnMixtures width={14}></GridColumnMixtures>
-                <GridColumnMixtures width={2}>
+                <GridColumnMixtures width={15}></GridColumnMixtures>
+                <GridColumnMixtures width={1}>
                   <StyledButton
                     icon
                     color='green'
