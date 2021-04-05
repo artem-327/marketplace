@@ -101,7 +101,7 @@ const GridColumnForm = styled(GridColumn)`
 
 const DivHeader = styled.div`
   background-color: #edeef2;
-  padding: 10px;
+  padding: 5px 10px;
   color: #404040;
   font-size: 14px;
 `
@@ -238,18 +238,32 @@ const DivIcon = styled.div`
 `
 
 const StyledButton = styled(Button)`
-  min-width: 40px !important;
-  padding: 9px 9px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  width: 18px !important;
+  height: 18px !important; 
+  padding: 0 !important;
   background: transparent !important;
+  border: solid 1px #dee2e6 !important;
+  border-radius: 9px !important;
+  
+  margin: 11px 0 !important;
 
   &.red {
-    box-shadow: 0px 0px 0px 1px #f16844 inset !important;
     color: #f16844 !important;
   }
-  &.green {
-    box-shadow: 0px 0px 0px 1px #84c225 inset !important;
-    color: #84c225 !important;
+  &.grey {
+    color: #848893 !important;
   }
+`
+
+const DivCentered = styled.div`
+  margin: -2px 0;
+`
+
+const IconStyled = styled(Icon)` 
+  vertical-align: middle;
+  margin: auto 0 !important;
 `
 
 const DivReadOnlyValues = styled.div`
@@ -261,7 +275,6 @@ const DivReadOnlyValues = styled.div`
   line-height: 1.29;
   color: #848893;
 `
-
 
 const CustomForm = styled(Form)`
   flex-grow: 0 !important;
@@ -1154,8 +1167,6 @@ class AddEditEchoProduct extends React.Component {
 
     let searchedCasProducts = this.props.searchedCasProducts.concat(initialCasProducts)
 
-    console.log('!!!!!!!!!! aaaaa values', values)
-
     return (
       <>
         <GridRowCustom>
@@ -1261,7 +1272,16 @@ class AddEditEchoProduct extends React.Component {
                               }),
                               loading: this.state.isLoading,
                               onSearchChange: this.handleSearchChange,
-                              dataindex: index
+                              dataindex: index,
+                              onChange: (_, { value }) => {
+                                const  casItem = getSafe(
+                                  () => uniqueArrayByKey(searchedCasProducts.concat(initialCasProducts), 'id'),
+                                  []).find(el => el.id === value)
+                                if (casItem) {
+                                  formikProps.setFieldValue(`elements[${index}].caprop65`, casItem.caprop65)
+                                  formikProps.setFieldValue(`elements[${index}].reach`, casItem.reach)
+                                }
+                              }
                             }}
                             defaultValue={
                               getSafe(() => element.casProduct.casNumber, false) ? element.casProduct.casNumber : null
@@ -1296,25 +1316,31 @@ class AddEditEchoProduct extends React.Component {
 
                       <GridColumnMixtures width={2}>
                         <DivReadOnlyValues>
-                          {values.elements[index].caprop65 === true
-                            ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                            : (values.elements[index].caprop65 === false
+                          {values.elements[index].proprietary ? (
+                            'N/A'
+                          ) : (
+                            values.elements[index].caprop65 === true
+                              ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                              : (values.elements[index].caprop65 === false
                                 ? <FormattedMessage id='global.no' defaultMessage='No' />
                                 : 'N/A'
-                            )
-                          }
+                              )
+                          )}
                         </DivReadOnlyValues>
                       </GridColumnMixtures>
 
                       <GridColumnMixtures width={2}>
                         <DivReadOnlyValues>
-                          {values.elements[index].reach === true
-                            ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                            : (values.elements[index].reach === false
+                          {values.elements[index].proprietary ? (
+                            'N/A'
+                          ) :(
+                            values.elements[index].reach === true
+                              ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                              : (values.elements[index].reach === false
                                 ? <FormattedMessage id='global.no' defaultMessage='No' />
                                 : 'N/A'
-                            )
-                          }
+                              )
+                          )}
                         </DivReadOnlyValues>
                       </GridColumnMixtures>
 
@@ -1328,7 +1354,9 @@ class AddEditEchoProduct extends React.Component {
                               this.setState({ changedForm: true })
                             }}
                             data-test={`settings_product_popup_remove_${index}_btn`}>
-                            <Icon name='minus' />
+                            <DivCentered>
+                              <IconStyled name='delete' size='small' />
+                            </DivCentered>
                           </StyledButton>
                         ) : (
                           ''
@@ -1342,13 +1370,23 @@ class AddEditEchoProduct extends React.Component {
                 <GridColumnMixtures width={1}>
                   <StyledButton
                     icon
-                    color='green'
+                    color='grey'
                     onClick={() => {
-                      arrayHelpers.push({ name: '', casProduct: null, assayMin: '', assayMax: '' })
+                      arrayHelpers.push({
+                        name: '',
+                        casProduct: null,
+                        assayMin: '',
+                        assayMax: '',
+                        proprietary: false,
+                        caprop65: '',
+                        reach: ''
+                      })
                       this.setState({ changedForm: true })
                     }}
                     data-test='settings_product_popup_add_btn'>
-                    <Icon name='plus' />
+                    <DivCentered>
+                      <IconStyled name='plus' size='small' />
+                    </DivCentered>
                   </StyledButton>
                 </GridColumnMixtures>
               </GridRowCustom>
