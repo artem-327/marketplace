@@ -14,7 +14,7 @@ export const CustomButton = styled(Button)`
   align-items: center !important;
   justify-content: center !important;
   font-size: 14px !important;
-  margin: 0px 5px !important;
+  margin: ${props => (props.$margin ? props.$margin : '0px 5px !important')};
   &.ui.button[disabled] {
     opacity: 0.3 !important;
   }

@@ -679,6 +679,7 @@ class Orders extends Component {
 
   getActions = () => {
     const {
+      router,
       intl: { formatMessage }
     } = this.props
 
@@ -688,7 +689,10 @@ class Orders extends Component {
           id: 'orders.detail',
           defaultMessage: 'Detail'
         }),
-        callback: row => this.props.openOrderDetail(row.rawData)
+        callback: async row => {
+          await this.props.openOrderDetail(row.rawData)
+          await router.push(`/operations/orders/detail/${row.id}`)
+        }
       },
       {
         text: formatMessage({

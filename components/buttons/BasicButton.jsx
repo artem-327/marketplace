@@ -11,9 +11,9 @@ import { CustomButton } from './BasicButton.styles'
  * )
  */
 const BasicButton = props => {
-  const { noBorder, ...rest } = props
+  const { noBorder, margin, type, disabled, onClick, ...rest } = props
   return (
-    <CustomButton $noBorder={noBorder} {...rest}>
+    <CustomButton $noBorder={noBorder} $margin={margin} type={type} disabled={disabled} onClick={onClick} {...rest}>
       {props.children}
     </CustomButton>
   )
@@ -27,7 +27,11 @@ BasicButton.propTypes = {
   textcolor: PropTypes.string,
   background: PropTypes.string,
   floatright: PropTypes.string,
-  children: PropTypes.any
+  children: PropTypes.any,
+  margin: PropTypes.string,
+  type: PropTypes.string,
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func
 }
 
 BasicButton.defaultProps = {
@@ -35,7 +39,11 @@ BasicButton.defaultProps = {
   children: null,
   textcolor: '#20273a !important',
   floatright: null,
-  background: '#ffffff !important'
+  background: '#ffffff !important',
+  margin: null,
+  type: 'button',
+  disabled: false,
+  onClick: () => {}
 }
 
 export default BasicButton

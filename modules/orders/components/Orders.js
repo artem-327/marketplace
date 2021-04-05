@@ -435,6 +435,7 @@ class Orders extends Component {
         reviewStatus: '',
         creditStatus: '',
         paymentStatus: '',
+        disputeResolutionStatus: '',
         bl:
           item.bl && item.bl.length ? (
             <a href='#' onClick={() => this.downloadAttachment(item.bl[0].name, item.bl[0].id)}>

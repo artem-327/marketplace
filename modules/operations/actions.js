@@ -163,3 +163,24 @@ export const searchManualQuoteRequest = name => ({
     pageSize: 50
   })
 })
+
+export function resolveDisputeAccept(orderId) {
+  return {
+    type: AT.RESOLVE_DISPUTE_ACCEPT,
+    payload: api.resolveDisputeAccept(orderId)
+  }
+}
+
+export function resolveDisputeCredit(orderId, amount) {
+  return {
+    type: AT.RESOLVE_DISPUTE_CREDIT,
+    payload: api.resolveDisputeCredit(orderId, amount)
+  }
+}
+
+export function resolveDisputeReject(orderId) {
+  return {
+    type: AT.RESOLVE_DISPUTE_REJECT,
+    payload: api.resolveDisputeReject(orderId)
+  }
+}
