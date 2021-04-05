@@ -2376,7 +2376,7 @@ class AddEditEchoProduct extends React.Component {
           this.submitForm(values, setSubmitting, closePopup)
         }}
         render={formikProps => {
-          let { touched, validateForm, resetForm, values } = formikProps
+          let { touched, validateForm, resetForm, values, submitForm } = formikProps
           this.resetForm = resetForm
           this.formikProps = formikProps
 
@@ -2424,8 +2424,12 @@ class AddEditEchoProduct extends React.Component {
                     disabled={!(Object.keys(touched).length || this.state.changedForm)}
                     onClick={() =>
                       validateForm().then(err => {
-                        if (Object.keys(err).length) {
-                          this.switchToErrors(Object.keys(err))
+                        const errors = Object.keys(err)
+                        if (errors.length && errors[0] !== 'isCanceled') {
+                          submitForm() // to show errors
+                          this.switchToErrors(errors)
+                        } else {
+                          submitForm()
                         }
                       })
                     }
