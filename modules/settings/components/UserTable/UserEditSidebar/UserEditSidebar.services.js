@@ -251,9 +251,9 @@ export const switchUser = async (sidebarValues, state) => {
  * @param {object} values Formik object - values
  * @param {object} actions Formik object - actions
  * @param {object} props object with all props (actions, init data, ...)
- * @param {object} state object with state / set state Hook functions
+ * @param {object} sidebarValues object with state / set state Hook functions
  */
-export const submitUser = async (values, actions, props, state) => {
+export const submitUser = async (values, actions, props, sidebarValues) => {
   const {
     handlerSubmitUserEditPopup,
     postNewUserRequest,
@@ -264,7 +264,7 @@ export const submitUser = async (values, actions, props, state) => {
     openGlobalAddForm,
     userSettings
   } = props
-  const { sidebarValues } = state
+
   let sendSuccess = false
   let signedDate = new Date()
   let regulatoryDeaListSignedDate = signedDate.toISOString()

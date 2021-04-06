@@ -1364,7 +1364,6 @@ export function openCustomerWarehouse(customerIdName = null, warehouseRow = null
 }
 
 export function addCustomerWarehouse(customerId, warehouse) {
-  console.log('ADD')
   return {
     type: AT.POST_CUSTOMER_WAREHOUSE,
     payload: api.addCustomerWarehouse(customerId, warehouse)
@@ -1372,7 +1371,6 @@ export function addCustomerWarehouse(customerId, warehouse) {
 }
 
 export function updateCustomerWarehouse(customerId, warehouseId, warehouse) {
-  console.log('UPDATE')
   return {
     type: AT.PATCH_CUSTOMER_WAREHOUSE,
     payload: api.updateCustomerWarehouse(customerId, warehouseId, warehouse)
@@ -1383,5 +1381,12 @@ export function deleteCustomerWarehouse(customerId, warehouseId) {
   return {
     type: AT.DELETE_CUSTOMER_WAREHOUSE,
     payload: api.deleteCustomerWarehouse(customerId, warehouseId)
+  }
+}
+
+export function getUser(userId) {
+  return {
+    type: AT.GET_USER,
+    payload: api.getUser(userId)
   }
 }
