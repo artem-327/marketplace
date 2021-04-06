@@ -1988,8 +1988,7 @@ class ModalDetail extends Component {
                                     () => {
                                       this.setState(state => ({
                                         ...state,
-                                        initValues: INIT_VALUES,
-                                        detailValues: null
+                                        detailValues: { ...state.detailValues, id: null }
                                       })) // confirm (New)
                                     },
                                     () => {
