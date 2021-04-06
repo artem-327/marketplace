@@ -82,8 +82,7 @@ const CompanyDetails = props => {
       console.error(e)
     }
   }, []) // If [] is empty then is similar as componentDidMount.
-  console.log('props')
-  console.log(props)
+
   return (
     <GridStyled>
       <DimmerStyled active={isSubmitting} inverted>

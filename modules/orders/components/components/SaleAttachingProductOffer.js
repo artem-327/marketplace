@@ -659,7 +659,7 @@ class SaleAttachingProductOffer extends Component {
                               this.setState({ activeTab: index })
                             })
                             .catch(e => {
-                              console.log('CATCH', e)
+                              console.error('CATCH', e)
                             })
                         }}
                         data-test={`order_grouped_offers_tab${index}`}>

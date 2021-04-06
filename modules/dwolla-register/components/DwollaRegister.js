@@ -759,7 +759,7 @@ class DwollaRegister extends Component {
         if (Object.keys(errors).length === 0) this.setState({ step: this.state.step + 1 })
         setTouched(errors)
       })
-      .catch(err => console.log('catch', err))
+      .catch(err => console.error('catch', err))
   }
 
   render() {

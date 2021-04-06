@@ -210,11 +210,11 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
         formikProps.handleSubmit()
       } else if ((_.isEmpty(errors) && activeStep !== 6) || (!errors[titleForms[activeStep]] && activeStep !== 6)) {
         nextStep(activeStep + 1)
-        mainContainer.current.scroll({top: 0, left: 0, behavior: 'smooth'})
+        mainContainer.current.scroll({ top: 0, left: 0, behavior: 'smooth' })
         formikProps.setErrors({})
       }
     })
-    .catch(err => console.log('catch', err))
+    .catch(err => console.error('catch', err))
 }
 
 /**

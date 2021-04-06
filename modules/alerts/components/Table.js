@@ -354,8 +354,6 @@ class Table extends Component {
   }
 
   getRowDetail = ({ row }) => {
-    console.log('row')
-    console.log(row)
     const messageType = row.info && row.info.infoType ? row.info.infoType : ''
     const messageDetailTable = {
       MessageCompanyGenericProductRequestInfoResponse: <GenericProductRequest row={row.rawData} />,
