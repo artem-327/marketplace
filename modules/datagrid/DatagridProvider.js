@@ -30,7 +30,8 @@ const initialState = {
   savedFilters: {},
   refreshTable: false,
   loadedAllData: false,
-  isUpdatedRow: false
+  isUpdatedRow: false,
+  callCount: 0
 }
 
 // singleton instance
@@ -147,62 +148,68 @@ class DatagridProvider extends Component {
 
     dataOrParams?.params?.status === 'ALL' && delete dataOrParams.params.status
 
-    try {
-      const response = await api.request({
-        url: this.apiConfig && this.apiConfig.url ? this.apiConfig.url : apiConfig.url,
-        method: apiConfig.method || 'POST',
-        ...dataOrParams
-      })
-      if (
-        (this.apiConfig && this.apiConfig.url && this.apiConfig.url !== response.config.url) ||
-        (!this.apiConfig && response.config.url !== this.props.apiConfig.url)
-      ) {
-        return
-      }
+    this.setState(prevState => ({ callCount: prevState.callCount + 1 }), async () => {
+      const beginCnt = this.state.callCount
 
-      const { data } = response
-      const allLoaded = data.length < datagridParams.pageSize || data.length === 0
-
-      if (this.state.loadedAllData || allLoaded) this.props.renderCopyright()
-      else this.props.cleanRenderCopyright()
-
-      let arrRows = this.state.rows
-      if (arrRows && arrRows.length) {
-        arrRows.forEach((row, i) => {
-          if (data && data.length) {
-            data.forEach((d, j) => {
-              if (d.id === row.id) {
-                arrRows.splice(i, 1, d)
-                data.splice(j, 1)
-              }
-              return
-            })
-          }
+      try {
+        const response = await api.request({
+          url: this.apiConfig && this.apiConfig.url ? this.apiConfig.url : apiConfig.url,
+          method: apiConfig.method || 'POST',
+          ...dataOrParams
         })
-      }
-      const newRows =
-        arrRows && arrRows.length
-          ? arrRows.concat(data && data.length ? data : [])
-          : [].concat(data && data.length ? data : [])
 
-      this.setState(s => ({
-        rows: newRows,
-        loading: false,
-        allLoaded,
-        loadedAllData: s.loadedAllData ? s.loadedAllData : allLoaded,
-        datagridParams: {
-          ...s.datagridParams,
-          pageNumber: pageNumber + (allLoaded ? 0 : 1)
-        },
-        refreshTable: false
-      }))
-    } catch (e) {
-      console.error(e)
-      this.setState({ loading: false, refreshTable: false })
-    } finally {
-      this.setState({ isScrollToEnd: false, isScrollToUp: false, refreshTable: false, isUpdatedRow: false })
-      this.apiConfig = null
-    }
+        if (beginCnt < this.state.callCount) return
+        if (
+          (this.apiConfig && this.apiConfig.url && this.apiConfig.url !== response.config.url) ||
+          (!this.apiConfig && response.config.url !== this.props.apiConfig.url)
+        ) {
+          return
+        }
+
+        const { data } = response
+        const allLoaded = data.length < datagridParams.pageSize || data.length === 0
+
+        if (this.state.loadedAllData || allLoaded) this.props.renderCopyright()
+        else this.props.cleanRenderCopyright()
+
+        let arrRows = this.state.rows
+        if (arrRows && arrRows.length) {
+          arrRows.forEach((row, i) => {
+            if (data && data.length) {
+              data.forEach((d, j) => {
+                if (d.id === row.id) {
+                  arrRows.splice(i, 1, d)
+                  data.splice(j, 1)
+                }
+                return
+              })
+            }
+          })
+        }
+        const newRows =
+          arrRows && arrRows.length
+            ? arrRows.concat(data && data.length ? data : [])
+            : [].concat(data && data.length ? data : [])
+
+        this.setState(s => ({
+          rows: newRows,
+          loading: false,
+          allLoaded,
+          loadedAllData: s.loadedAllData ? s.loadedAllData : allLoaded,
+          datagridParams: {
+            ...s.datagridParams,
+            pageNumber: pageNumber + (allLoaded ? 0 : 1)
+          },
+          refreshTable: false
+        }))
+      } catch (e) {
+        console.error(e)
+        this.setState({ loading: false, refreshTable: false })
+      } finally {
+        this.setState({ isScrollToEnd: false, isScrollToUp: false, refreshTable: false, isUpdatedRow: false })
+        this.apiConfig = null
+      }
+    })
   }
 
   updateRow = (id, updateFn) => {
