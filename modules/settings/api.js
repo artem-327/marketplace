@@ -327,7 +327,8 @@ export default {
   vellociAddAcount: (publicToken, metadata) =>
     api
       .post(`/prodex/api/payments/bank-accounts/velloci/add?publicToken=${publicToken}`, metadata)
-      .then(response => response.data),
+      .then(response => response.data)
+      .catch(e => console.error(e)),
   deleteInstitution: institutionId =>
     api
       .delete(`/prodex/api/payments/bank-accounts/velloci/institution/${institutionId}`)

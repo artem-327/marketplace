@@ -276,7 +276,7 @@ class TablesHandlers extends Component {
           ),
           value: ''
         },
-        ...this.props.documentTypes.map(doc => ({
+        ...this.props?.documentTypes?.map(doc => ({
           key: doc.key,
           text: doc.text,
           value: doc.text
@@ -734,9 +734,5 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(
-  withToastManager(
-    connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast })(
-      injectIntl(TablesHandlers)
-    )
-  )
+  withToastManager(connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast })(injectIntl(TablesHandlers)))
 )

@@ -52,7 +52,7 @@ customAxios.interceptors.response.use(
       return resetTokenAndReattemptRequest(error)
     }
 
-    if (status === 500) {
+    if (status === 500 && !config?.url?.includes('/prodex/api/payments/bank-accounts/velloci/add?publicToken')) {
       hasWindow && window.localStorage.setItem('errorStatus', '500')
       Router.push('/errors')
     }
