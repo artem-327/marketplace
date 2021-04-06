@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Formik } from 'formik'
+import { usePrevious } from '../../../../hooks'
 
 // Components
 import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Dimmer, Loader } from 'semantic-ui-react'
@@ -58,6 +59,9 @@ import confirm from '~/components/Confirmable/confirm'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 
 const ProductPopup = props => {
+  const mounted = useRef()
+  const previousUnitsAll = usePrevious(props.unitsAll)
+
   const [openUpload, setOpenUpload] = useState(false)
   const [documentType, setDocumentType] = useState(null)
   const [attachments, setAttachments] = useState([])
@@ -77,6 +81,20 @@ const ProductPopup = props => {
     setpackagingTypesReduced
   }
 
+  // Similar to call componentDidUpdate:
+  useEffect(() => {
+    if (mounted.current && (props.unitsAll !== previousUnitsAll)) {
+      if (props.popupValues.packagingUnit) {
+        filterPackagingTypes(
+          popupValues.packagingUnit.id,
+          props.unitsAll,
+          props.packagingTypesAll,
+          setpackagingTypesReduced
+        )
+      } else setpackagingTypesReduced(props.packagingType)
+    }
+  })
+
   // Similar to call componentDidMount:
   useEffect(() => {
     props.getProductsCatalogRequest()
@@ -93,16 +111,9 @@ const ProductPopup = props => {
         linked: true
       }))
       setAttachments(attachments)
-
-      if (props.popupValues.packagingUnit) {
-        filterPackagingTypes(
-          popupValues.packagingUnit.id,
-          props.unitsAll,
-          props.packagingTypesAll,
-          setpackagingTypesReduced
-        )
-      } else setpackagingTypesReduced(props.packagingType)
     }
+
+    mounted.current = true
   }, []) // If [] is empty then is similar as componentDidMount.
 
   const {
