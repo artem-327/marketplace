@@ -141,7 +141,9 @@ export const getDesiredCasProductsProps = casProducts =>
     casIndexName: el.proprietary ? 'Proprietary' : getSafe(() => el.casProduct.casIndexName),
     casIndexNumber: getSafe(() => el.casProduct.casNumber),
     min: getSafe(() => el.assayMin, ''),
-    max: getSafe(() => el.assayMax, '')
+    max: getSafe(() => el.assayMax, ''),
+    caprop65: getSafe(() => el.casProduct.caprop65, ''),
+    reach: getSafe(() => el.casProduct.reach, '')
   }))
 
 export const formatAssay = (min = null, max = null, delimiter = ' - ') =>

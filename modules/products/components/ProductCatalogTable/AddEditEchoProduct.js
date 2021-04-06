@@ -85,7 +85,7 @@ const DivBrowseFile = styled.div`
 `
 
 const GridColumnMixtures = styled(GridColumn)`
-  padding: 3px 14px !important;
+  padding: 3px 10px !important;
 `
 
 const GridColumnLabelTextArea = styled(GridColumn)`
@@ -101,7 +101,7 @@ const GridColumnForm = styled(GridColumn)`
 
 const DivHeader = styled.div`
   background-color: #edeef2;
-  padding: 10px;
+  padding: 5px 10px;
   color: #404040;
   font-size: 14px;
 `
@@ -238,18 +238,42 @@ const DivIcon = styled.div`
 `
 
 const StyledButton = styled(Button)`
-  min-width: 40px !important;
-  padding: 9px 9px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  width: 18px !important;
+  height: 18px !important; 
+  padding: 0 !important;
   background: transparent !important;
+  border: solid 1px #dee2e6 !important;
+  border-radius: 9px !important;
+  
+  margin: 11px 0 !important;
 
   &.red {
-    box-shadow: 0px 0px 0px 1px #f16844 inset !important;
     color: #f16844 !important;
   }
-  &.green {
-    box-shadow: 0px 0px 0px 1px #84c225 inset !important;
-    color: #84c225 !important;
+  &.grey {
+    color: #848893 !important;
   }
+`
+
+const DivCentered = styled.div`
+  margin: -2px 0;
+`
+
+const IconStyled = styled(Icon)` 
+  vertical-align: middle;
+  margin: auto 0 !important;
+`
+
+const DivReadOnlyValues = styled.div`
+  border-radius: 3px;
+  border: solid 1px #dee2e6;
+  background-color: #edeef2;
+  font-size: 14px;
+  padding: 9.5px 15px;
+  line-height: 1.29;
+  color: #848893;
 `
 
 const CustomForm = styled(Form)`
@@ -530,9 +554,19 @@ class AddEditEchoProduct extends React.Component {
                   casProduct: getSafe(() => element.casProduct.id, null),
                   assayMin: getSafe(() => element.assayMin, ''),
                   assayMax: getSafe(() => element.assayMax, ''),
-                  proprietary: getSafe(() => element.proprietary, false)
+                  proprietary: getSafe(() => element.proprietary, false),
+                  caprop65: getSafe(() => element.casProduct.caprop65, ''),
+                  reach: getSafe(() => element.casProduct.reach, '')
                 })),
-              [{ name: '', casProduct: '', assayMin: '', assayMax: '', proprietary: false }]
+              [{
+                name: '',
+                casProduct: '',
+                assayMin: '',
+                assayMax: '',
+                proprietary: false,
+                caprop65: '',
+                reach: ''
+              }]
             ),
             emergencyCompanyName: getSafe(() => popupValues.emergencyCompanyName, ''),
             emergencyContactName: getSafe(() => popupValues.emergencyContactName, ''),
@@ -697,7 +731,15 @@ class AddEditEchoProduct extends React.Component {
       initialValues.tdsRevisionDate = this.getDateInLocaleFormat(initialValues.tdsRevisionDate)
 
     if (initialValues.elements.length === 0) {
-      initialValues.elements = [{ name: '', casProduct: null, assayMin: '', assayMax: '', proprietary: false }]
+      initialValues.elements = [{
+        name: '',
+        casProduct: '',
+        assayMin: '',
+        assayMax: '',
+        proprietary: false,
+        caprop65: '',
+        reach: ''
+      }]
     }
     return initialValues
   }
@@ -1140,7 +1182,7 @@ class AddEditEchoProduct extends React.Component {
               <FormattedMessage id='admin.proprietary' defaultMessage='Proprietary?' />
             </DivTitleColumn>
           </GridColumnMixtures>
-          <GridColumnMixtures width={6}>
+          <GridColumnMixtures width={5}>
             <DivTitleColumn>
               <FormattedMessage id='global.elementName' defaultMessage='Element Name' />
               <Required />
@@ -1149,14 +1191,24 @@ class AddEditEchoProduct extends React.Component {
               <Required />
             </DivTitleColumn>
           </GridColumnMixtures>
-          <GridColumnMixtures width={3}>
+          <GridColumnMixtures width={2}>
             <DivTitleColumn>
               <FormattedMessage id='global.assayMin' defaultMessage='Assay Min?' />
             </DivTitleColumn>
           </GridColumnMixtures>
-          <GridColumnMixtures width={3}>
+          <GridColumnMixtures width={2}>
             <DivTitleColumn>
               <FormattedMessage id='global.assayMax' defaultMessage='Assay Max?' />
+            </DivTitleColumn>
+          </GridColumnMixtures>
+          <GridColumnMixtures width={2}>
+            <DivTitleColumn>
+              <FormattedMessage id='global.caProp65' defaultMessage='CA PROP 65' />
+            </DivTitleColumn>
+          </GridColumnMixtures>
+          <GridColumnMixtures width={2}>
+            <DivTitleColumn>
+              <FormattedMessage id='global.regulatoryReach' defaultMessage='REACH' />
             </DivTitleColumn>
           </GridColumnMixtures>
           <GridColumnMixtures width={2}></GridColumnMixtures>
@@ -1175,7 +1227,7 @@ class AddEditEchoProduct extends React.Component {
                         verticalAlign='middle'>
                         <Checkbox name={`elements[${index}].proprietary`} />
                       </GridColumnMixtures>
-                      <GridColumnMixtures width={6}>
+                      <GridColumnMixtures width={5}>
                         {values.elements[index].proprietary ? (
                           <Input
                             name={`elements[${index}].name`}
@@ -1220,7 +1272,16 @@ class AddEditEchoProduct extends React.Component {
                               }),
                               loading: this.state.isLoading,
                               onSearchChange: this.handleSearchChange,
-                              dataindex: index
+                              dataindex: index,
+                              onChange: (_, { value }) => {
+                                const  casItem = getSafe(
+                                  () => uniqueArrayByKey(searchedCasProducts.concat(initialCasProducts), 'id'),
+                                  []).find(el => el.id === value)
+                                if (casItem) {
+                                  formikProps.setFieldValue(`elements[${index}].caprop65`, casItem.caprop65)
+                                  formikProps.setFieldValue(`elements[${index}].reach`, casItem.reach)
+                                }
+                              }
                             }}
                             defaultValue={
                               getSafe(() => element.casProduct.casNumber, false) ? element.casProduct.casNumber : null
@@ -1228,7 +1289,7 @@ class AddEditEchoProduct extends React.Component {
                           />
                         )}
                       </GridColumnMixtures>
-                      <GridColumnMixtures width={3} data-test='admin_product_popup_assayMin_inp'>
+                      <GridColumnMixtures width={2} data-test='admin_product_popup_assayMin_inp'>
                         <Input
                           type='number'
                           name={`elements[${index}].assayMin`}
@@ -1240,7 +1301,7 @@ class AddEditEchoProduct extends React.Component {
                           }}
                         />
                       </GridColumnMixtures>
-                      <GridColumnMixtures width={3} data-test='admin_product_popup_assayMax_inp'>
+                      <GridColumnMixtures width={2} data-test='admin_product_popup_assayMax_inp'>
                         <Input
                           type='number'
                           name={`elements[${index}].assayMax`}
@@ -1252,7 +1313,38 @@ class AddEditEchoProduct extends React.Component {
                           }}
                         />
                       </GridColumnMixtures>
+
                       <GridColumnMixtures width={2}>
+                        <DivReadOnlyValues>
+                          {values.elements[index].proprietary ? (
+                            'N/A'
+                          ) : (
+                            values.elements[index].caprop65 === true
+                              ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                              : (values.elements[index].caprop65 === false
+                                ? <FormattedMessage id='global.no' defaultMessage='No' />
+                                : 'N/A'
+                              )
+                          )}
+                        </DivReadOnlyValues>
+                      </GridColumnMixtures>
+
+                      <GridColumnMixtures width={2}>
+                        <DivReadOnlyValues>
+                          {values.elements[index].proprietary ? (
+                            'N/A'
+                          ) :(
+                            values.elements[index].reach === true
+                              ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                              : (values.elements[index].reach === false
+                                ? <FormattedMessage id='global.no' defaultMessage='No' />
+                                : 'N/A'
+                              )
+                          )}
+                        </DivReadOnlyValues>
+                      </GridColumnMixtures>
+
+                      <GridColumnMixtures width={1}>
                         {index ? (
                           <StyledButton
                             icon
@@ -1262,7 +1354,9 @@ class AddEditEchoProduct extends React.Component {
                               this.setState({ changedForm: true })
                             }}
                             data-test={`settings_product_popup_remove_${index}_btn`}>
-                            <Icon name='minus' />
+                            <DivCentered>
+                              <IconStyled name='delete' size='small' />
+                            </DivCentered>
                           </StyledButton>
                         ) : (
                           ''
@@ -1272,17 +1366,27 @@ class AddEditEchoProduct extends React.Component {
                   ))
                 : ''}
               <GridRowCustom>
-                <GridColumnMixtures width={14}></GridColumnMixtures>
-                <GridColumnMixtures width={2}>
+                <GridColumnMixtures width={15}></GridColumnMixtures>
+                <GridColumnMixtures width={1}>
                   <StyledButton
                     icon
-                    color='green'
+                    color='grey'
                     onClick={() => {
-                      arrayHelpers.push({ name: '', casProduct: null, assayMin: '', assayMax: '' })
+                      arrayHelpers.push({
+                        name: '',
+                        casProduct: null,
+                        assayMin: '',
+                        assayMax: '',
+                        proprietary: false,
+                        caprop65: '',
+                        reach: ''
+                      })
                       this.setState({ changedForm: true })
                     }}
                     data-test='settings_product_popup_add_btn'>
-                    <Icon name='plus' />
+                    <DivCentered>
+                      <IconStyled name='plus' size='small' />
+                    </DivCentered>
                   </StyledButton>
                 </GridColumnMixtures>
               </GridRowCustom>
@@ -2272,7 +2376,7 @@ class AddEditEchoProduct extends React.Component {
           this.submitForm(values, setSubmitting, closePopup)
         }}
         render={formikProps => {
-          let { touched, validateForm, resetForm, values } = formikProps
+          let { touched, validateForm, resetForm, values, submitForm } = formikProps
           this.resetForm = resetForm
           this.formikProps = formikProps
 
@@ -2320,8 +2424,12 @@ class AddEditEchoProduct extends React.Component {
                     disabled={!(Object.keys(touched).length || this.state.changedForm)}
                     onClick={() =>
                       validateForm().then(err => {
-                        if (Object.keys(err).length) {
-                          this.switchToErrors(Object.keys(err))
+                        const errors = Object.keys(err)
+                        if (errors.length && errors[0] !== 'isCanceled') {
+                          submitForm() // to show errors
+                          this.switchToErrors(errors)
+                        } else {
+                          submitForm()
                         }
                       })
                     }
