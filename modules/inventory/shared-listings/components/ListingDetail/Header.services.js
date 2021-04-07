@@ -1,4 +1,4 @@
-
+import { removeEmpty } from '../../../../../utils/functions'
 
 export const submitHandler = async (values, props) => {
   const body = {
@@ -7,6 +7,7 @@ export const submitHandler = async (values, props) => {
     priceOverride: values.priceOverride
   }
 
+  removeEmpty(body)
   try {
     props.updateMarkUp(values.id, body)
   } catch (e) {

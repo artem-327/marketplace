@@ -1,18 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState, useRef } from 'react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { useEffect, useState } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Formik } from 'formik'
 import { usePrevious } from '../../../../hooks'
 
 // Components
 import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Dimmer, Loader } from 'semantic-ui-react'
-import { Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import BasicButton from '../../../../components/buttons/BasicButton'
 import { AttachmentManager } from '~/modules/attachments'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
 import ProdexGrid from '~/components/table'
-import { withDatagrid } from '~/modules/datagrid'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
+import { FlexContent } from '~/modules/inventory/constants/layout'
 import { X as XIcon } from 'react-feather'
 import ErrorFocus from '~/components/error-focus'
 import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
@@ -39,7 +38,6 @@ import {
 
 // Constants
 import { COLUMNS } from './ProductPopup.constants'
-import { palletDimensions } from '~/modules/settings/contants'
 
 // Services
 import {
@@ -59,9 +57,6 @@ import confirm from '~/components/Confirmable/confirm'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
 
 const ProductPopup = props => {
-  const mounted = useRef()
-  const previousUnitsAll = usePrevious(props.unitsAll)
-
   const [openUpload, setOpenUpload] = useState(false)
   const [documentType, setDocumentType] = useState(null)
   const [attachments, setAttachments] = useState([])
@@ -81,40 +76,36 @@ const ProductPopup = props => {
     setpackagingTypesReduced
   }
 
-  // Similar to call componentDidUpdate:
   useEffect(() => {
-    if (mounted.current && (props.unitsAll !== previousUnitsAll)) {
-      if (props.popupValues.packagingUnit) {
-        filterPackagingTypes(
-          popupValues.packagingUnit.id,
-          props.unitsAll,
-          props.packagingTypesAll,
-          setpackagingTypesReduced
-        )
-      } else setpackagingTypesReduced(props.packagingType)
-    }
-  })
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-    props.getProductsCatalogRequest()
-
-    if (props.popupValues && props.popupValues.nmfcNumber) props.addNmfcNumber(props.popupValues.nmfcNumber)
-
-    if (props.documentTypes.length === 0) props.getDocumentTypes()
-
-    if (props.popupValues) {
-      const attachments = props.popupValues.attachments.map(att => ({
-        id: att.id,
-        name: att.name,
-        documentType: att.documentType.name,
-        linked: true
-      }))
-      setAttachments(attachments)
+    //async fetch data
+    async function fetchData() {
+      await props.getProductsCatalogRequest()
+      if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
+      if (props.documentTypes.length === 0) await props.getDocumentTypes()
+      if (props.popupValues) {
+        const attachments = props.popupValues.attachments.map(att => ({
+          id: att.id,
+          name: att.name,
+          documentType: att.documentType.name,
+          linked: true
+        }))
+        setAttachments(attachments)
+      }
     }
 
-    mounted.current = true
-  }, []) // If [] is empty then is similar as componentDidMount.
+    if (!props?.unitsAll?.length) fetchData()
+
+    if (props.popupValues.packagingUnit) {
+      filterPackagingTypes(
+        popupValues.packagingUnit.id,
+        props.unitsAll,
+        props.packagingTypesAll,
+        setpackagingTypesReduced
+      )
+    } else {
+      setpackagingTypesReduced(props.packagingType)
+    }
+  }, [props?.unitsAll?.length])
 
   const {
     closePopup,

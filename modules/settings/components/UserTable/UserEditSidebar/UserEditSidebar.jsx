@@ -2,12 +2,11 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Dimmer, Loader, Grid, GridRow, GridColumn, Modal, Form, FormGroup } from 'semantic-ui-react'
+import { Dimmer, Loader, Grid, GridRow, GridColumn, Form, FormGroup } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Person } from '@material-ui/icons'
 import get from 'lodash/get'
 import { Formik } from 'formik'
-import PerfectScrollbar from 'react-perfect-scrollbar'
 import { ChevronDown } from 'react-feather'
 
 //Actions
@@ -17,7 +16,8 @@ import {
   handlerSubmitUserEditPopup,
   getCompanyDetails,
   getUsersDataRequest,
-  getCompanyUser
+  getCompanyUser,
+  getUser
 } from '../../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../../companies/actions'
 import { getIdentity } from '../../../../auth/actions'
@@ -29,7 +29,7 @@ import { PhoneNumber } from '../../../../phoneNumber'
 import ErrorFocus from '../../../../../components/error-focus'
 //Services
 import { getSafe } from '../../../../../utils/functions'
-import { removeEmpty, uniqueArrayByKey } from '../../../../../utils/functions'
+import { uniqueArrayByKey } from '../../../../../utils/functions'
 import {
   userFormValidation,
   getHomeBranchesOptions,
@@ -46,30 +46,14 @@ import {
 //Styles
 import { DivTitle } from '../../Locations/Branches/BranchesSidebar/BranchesSidebar.styles'
 
-import {
-  CustomHighSegment,
-  SubmitButton,
-  CustomForm
-} from '../../LogisticsTable/LogisticsSidebar/LogisticsSidebar.styles'
-import {
-  DivHighSegment,
-  SegmentStyled,
-  GridColumnWError,
-  DivNotify,
-  HighSegment,
-  GridColumnRoles,
-  GridRowRoles,
-  DivHeaderCustom,
-  DivLabel
-} from './UserEditSidebar.styles'
-import { ModalFixed } from '../../../../companies/components/UsersTable/UsersSidebar.styles'
+import { CustomHighSegment } from '../../LogisticsTable/LogisticsSidebar/LogisticsSidebar.styles'
+import { GridColumnWError, DivNotify, GridRowRoles, DivHeaderCustom, DivLabel } from './UserEditSidebar.styles'
 import {
   SidebarFlex,
   DivFlexContent,
   SegmentCustomContent,
   DivBottomSidebar,
-  DimmerSidebarOpend,
-  DivHeader
+  DimmerSidebarOpend
 } from '../../Locations/Locations.styles'
 /**
  * @category Settings - Users
@@ -88,31 +72,29 @@ const UserEditSidebar = props => {
     searchedBuyMarketSegments,
     isCompanyAdmin,
     openGlobalAddForm,
-    userSettings
-  } = props
-
-  const [sidebarValues, setSidebarValues] = useState(null)
-  const [branches, setBranches] = useState([])
-  const [selectedSellMarketSegmentsOptions, setSelectedSellMarketSegmentsOptions] = useState([])
-  const [selectedBuyMarketSegmentsOptions, setSelectedBuyMarketSegmentsOptions] = useState([])
-
-  const state = {
+    userSettings,
+    companyId,
     sidebarValues,
-    setSidebarValues,
-    branches,
-    setBranches,
-    selectedSellMarketSegmentsOptions,
-    setSelectedSellMarketSegmentsOptions,
-    selectedBuyMarketSegmentsOptions,
-    setSelectedBuyMarketSegmentsOptions
+    getUsersDataRequest,
+    getCompanyUser,
+    getUser,
+    loading
+  } = props
+  {
+    /*Comemnted by https://pm.artio.net/issues/34033#note-14 */
   }
+  // const [sidebarValues, setSidebarValues] = useState(null)
+  // const [selectedSellMarketSegmentsOptions, setSelectedSellMarketSegmentsOptions] = useState([])
+  // const [selectedBuyMarketSegmentsOptions, setSelectedBuyMarketSegmentsOptions] = useState([])
+  const [branches, setBranches] = useState([])
 
   // Similar to call componentDidMount:
   useEffect(() => {
-    const { companyId, sidebarValues, isCompanyAdmin, openGlobalAddForm, getUsersDataRequest, getCompanyUser } = props
-
     const fetchData = async () => {
-      if (sidebarValues?.id && !userSettings) await getCompanyUser(sidebarValues?.id)
+      if (sidebarValues?.id) {
+        await getUser(sidebarValues?.id)
+        await getCompanyUser(sidebarValues?.id)
+      }
       if (companyId !== null) {
         const { value } = await props.getCompanyDetails(companyId)
         let branches = uniqueArrayByKey(
@@ -128,14 +110,15 @@ const UserEditSidebar = props => {
       }
     }
     fetchData()
-
-    if (sidebarValues) {
-      switchUser(props.sidebarValues, state)
-    } else {
-      setSidebarValues(null)
+    {
+      /*Comemnted by https://pm.artio.net/issues/34033#note-14 */
     }
-    /*Commented by https://pm.artio.net/issues/34033#note-14 */
-    /*
+    /* if (sidebarValues) {
+       switchUser(props.sidebarValues, state)
+     } else {
+       setSidebarValues(null)
+     }
+    
     if (isCompanyAdmin) {
       this.props.searchSellMarketSegments('')
       this.props.searchBuyMarketSegments('')
@@ -144,14 +127,17 @@ const UserEditSidebar = props => {
     if (!!openGlobalAddForm) getUsersDataRequest()
   }, []) // If [] is empty then is similar as componentDidMount.
 
-  const allSellMarketSegmentsOptions = uniqueArrayByKey(
-    searchedSellMarketSegments.concat(selectedSellMarketSegmentsOptions),
-    'key'
-  )
-  const allBuyMarketSegmentsOptions = uniqueArrayByKey(
-    searchedBuyMarketSegments.concat(selectedBuyMarketSegmentsOptions),
-    'key'
-  )
+  {
+    /*Comemnted by https://pm.artio.net/issues/34033#note-14 */
+  }
+  // const allSellMarketSegmentsOptions = uniqueArrayByKey(
+  //   searchedSellMarketSegments.concat(selectedSellMarketSegmentsOptions),
+  //   'key'
+  // )
+  // const allBuyMarketSegmentsOptions = uniqueArrayByKey(
+  //   searchedBuyMarketSegments.concat(selectedBuyMarketSegmentsOptions),
+  //   'key'
+  // )
 
   return (
     <Formik
@@ -159,24 +145,21 @@ const UserEditSidebar = props => {
       enableReinitialize
       initialValues={getInitialFormValues({ ...sidebarValues, ...userSettings })}
       validationSchema={userFormValidation()}
-      onSubmit={(values, actions) => submitUser(values, actions, props, state)}>
+      onSubmit={(values, actions) => submitUser(values, actions, props, sidebarValues)}>
       {formikProps => {
         let { values, setFieldValue, setFieldTouched, errors, touched, isSubmitting, submitForm } = formikProps
         let errorRoles = get(errors, 'roles', null)
 
         return (
           <>
-            <DimmerSidebarOpend
-              active={true}
-              onClickOutside={() => closeSidebar()}
-              page></DimmerSidebarOpend>
+            <DimmerSidebarOpend active={true} onClickOutside={() => closeSidebar()} page></DimmerSidebarOpend>
             <SidebarFlex visible={true} direction='bottom' animation='overlay'>
               {/* <ModalFixed
             open
             size='small'
             closeIcon={!!openGlobalAddForm}
             onClose={() => !!openGlobalAddForm && openGlobalAddForm('')}> */}
-              <Dimmer inverted active={updating}>
+              <Dimmer inverted active={updating || loading}>
                 <Loader />
               </Dimmer>
               <div>
@@ -542,10 +525,7 @@ const UserEditSidebar = props => {
 
               <DivBottomSidebar>
                 {!openGlobalAddForm && (
-                  <Button
-                    className='light'
-                    onClick={() => closeSidebar()}
-                    data-test='settings_users_popup_reset_btn'>
+                  <Button className='light' onClick={() => closeSidebar()} data-test='settings_users_popup_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
                       {text => text}
                     </FormattedMessage>
@@ -575,7 +555,8 @@ const mapDispatchToProps = {
   searchBuyMarketSegments,
   getIdentity,
   getUsersDataRequest,
-  getCompanyUser
+  getCompanyUser,
+  getUser
 }
 
 const mapStateToProps = state => {
@@ -601,7 +582,8 @@ const mapStateToProps = state => {
       text: d.name,
       value: d.id
     })),
-    searchedBuyMarketSegmentsLoading: getSafe(() => companiesAdmin.searchedBuyMarketSegmentsLoading, false)
+    searchedBuyMarketSegmentsLoading: getSafe(() => companiesAdmin.searchedBuyMarketSegmentsLoading, false),
+    loading: settings?.loading
   }
 }
 

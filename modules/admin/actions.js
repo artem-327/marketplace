@@ -91,11 +91,25 @@ export function getDataRequest(config, values = null) {
 export function postNewRequest(config, values) {
   return async dispatch => {
     await dispatch({
-      type: config.api.post.typeRequest,
-      payload: api.postNewRequest(config, values)
+      type: config?.api?.post?.pendingRequest
     })
-    Datagrid.loadData()
-    dispatch(closePopup())
+    await api
+      .postNewRequest(config, values)
+      .then(async response => {
+        await dispatch({
+          type: config?.api?.post?.fulfilledRequest,
+          payload: response?.data
+        })
+        Datagrid.loadData()
+        await dispatch(closePopup())
+      })
+      .catch(
+        async err =>
+          await dispatch({
+            type: config?.api?.post?.rejectedRequest,
+            error: err
+          })
+      )
   }
 }
 

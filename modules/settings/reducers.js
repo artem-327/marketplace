@@ -2068,6 +2068,30 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    /* GET_USER */
+
+    case AT.GET_USER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.GET_USER_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        sidebarValues: payload
+      }
+    }
+
+    case AT.GET_USER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     default: {
       return state
     }
