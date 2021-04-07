@@ -108,6 +108,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA',
+        pendingRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA_REJECTED',
         apiCall: '/prodex/api/units'
       },
       update: {
@@ -613,7 +616,7 @@ export const config = {
         {text => text}
       </FormattedMessage>
     ),
-    searchText: 'admin.searchLogisticsProvider',
+    searchText: 'admin.searchLogisticsProvider'
   },
   carriers: {
     tableName: 'admin_carriers',
@@ -622,7 +625,7 @@ export const config = {
         {text => text}
       </FormattedMessage>
     ),
-    searchText: 'admin.searchCarrier',
+    searchText: 'admin.searchCarrier'
   },
 
   'admin-settings': {
