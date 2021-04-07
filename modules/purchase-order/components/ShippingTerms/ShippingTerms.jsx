@@ -105,7 +105,7 @@ const ShippingTerms = props => {
                   return (
                     <GridRowExpandedSelectionRow
                       key={index}
-                      checked={value && value.id === item.id}
+                      checked={value && value.id === item.id && !disabled}
                       onClick={() => !disabled && onValueChange(item)}
                       selection={'true'}
                       disabled={disabled}>
@@ -116,7 +116,7 @@ const ShippingTerms = props => {
                           trigger={
                             <DivFlexRow>
                               <DivCentered>
-                                <Radio checked={value && value.id === item.id} disabled={disabled}/>
+                                <Radio checked={value && value.id === item.id && !disabled} disabled={disabled} />
                               </DivCentered>
                               <div>
                                 <DivSectionHeader disabled={disabled}>{item.name}</DivSectionHeader>
