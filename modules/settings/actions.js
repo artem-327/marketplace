@@ -1383,3 +1383,10 @@ export function deleteCustomerWarehouse(customerId, warehouseId) {
     payload: api.deleteCustomerWarehouse(customerId, warehouseId)
   }
 }
+
+export function getUser(userId) {
+  return {
+    type: AT.GET_USER,
+    payload: api.getUser(userId)
+  }
+}

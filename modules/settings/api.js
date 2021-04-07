@@ -25,36 +25,28 @@ export default {
     const formData = new FormData()
     formData.append('file', attachment)
 
-    return api.post(
-      `/prodex/api/branches/uploadDeaListCertificate/${branchId}`,
-      formData,
-      {
-        headers: {
-          accept: 'application/json',
-          'Accept-Language': 'en-US,en;q=0.8',
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-          Pragma: 'no-handle-error, no-cache'
-        }
+    return api.post(`/prodex/api/branches/uploadDeaListCertificate/${branchId}`, formData, {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+        Pragma: 'no-handle-error, no-cache'
       }
-    )
+    })
   },
 
   addTaxExemptAttachment: (attachment, branchId) => {
     const formData = new FormData()
     formData.append('file', attachment)
 
-    return api.post(
-      `/prodex/api/branches/uploadTaxExemptCertificate/${branchId}`,
-      formData,
-      {
-        headers: {
-          accept: 'application/json',
-          'Accept-Language': 'en-US,en;q=0.8',
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-          Pragma: 'no-handle-error, no-cache'
-        }
+    return api.post(`/prodex/api/branches/uploadTaxExemptCertificate/${branchId}`, formData, {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+        Pragma: 'no-handle-error, no-cache'
       }
-    )
+    })
   },
 
   dwollaAddVerificationDocument: (attachment, docType) => {
@@ -361,7 +353,7 @@ export default {
       .patch(`/prodex/api/settings/company-user/${userId}`, request)
       .then(response => response.data)
       .catch(err => err),
-  addCustomer: (customerData) =>
+  addCustomer: customerData =>
     api
       .post(`/prodex/api/customers/`, customerData)
       .then(response => response.data)
@@ -383,5 +375,10 @@ export default {
       .then(response => response.data)
       .catch(err => err),
   deleteCustomerWarehouse: (customerId, warehouseId) =>
-    api.delete(`/prodex/api/customers/warehouses?customerId=${customerId}&warehouseId=${warehouseId}`)
+    api.delete(`/prodex/api/customers/warehouses?customerId=${customerId}&warehouseId=${warehouseId}`),
+  getUser: userId =>
+    api
+      .get(`/prodex/api/users/id/${userId}`)
+      .then(res => res.data)
+      .catch(e => console.error(e))
 }
