@@ -19,3 +19,16 @@ export const palletDimensions = {
   width: 'APP_SHIPPING_PALLET_WIDTH_IN',
   height: 'APP_SHIPPING_PALLET_HEIGHT_IN'
 }
+/**
+ * @constant
+ */
+export const VELLOCI_ACCOUNT_STATUSES = {
+  INACTIVE: 'inactive',
+  ACTIVE: 'active',
+  PENDING_KYB: 'pending_kyb',
+  MEMBER_PENDING: 'member_pending',
+  MEMBER_UNVERIFIED: 'member_unverified',
+  MEMBER_REVIEW: 'member_review',
+  MEMBER_FAILED: 'member_failed',
+  REMOVED: 'removed'
+}
