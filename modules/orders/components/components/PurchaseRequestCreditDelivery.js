@@ -19,8 +19,6 @@ import { DivCircle, DivModal } from '../../../my-network/components/DetailRow/De
 //Components
 import BasicButton from '../../../../components/buttons/BasicButton'
 import confirm from '../../../../components/Confirmable/confirm'
-//Constants
-import { SUPPORT_PHONE_NUMBER, SUPPORT_EMAIL } from '../../../../constants'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -102,14 +100,13 @@ class PurchaseRequestCreditDelivery extends Component {
   }
 
   submitHandler = async (values, actions) => {
-    console.log('values')
-    console.log(values)
     const {
       closePopup,
       orderId,
       toastManager,
       creditRequest,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      appInfo
     } = this.props
     const { reason, reasonText, attachments, credit } = values
 
@@ -159,9 +156,9 @@ class PurchaseRequestCreditDelivery extends Component {
               {
                 emailAndPhoneNumber: (
                   <>
-                    <CustomA href={`mailto: ${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</CustomA>
+                    <CustomA href={`mailto: ${appInfo?.supportEmail}`}>{appInfo?.supportEmail}</CustomA>
                     {formatMessage({ id: 'global.andSpaceAround', defaultMessage: ' and ' })}
-                    <b>{SUPPORT_PHONE_NUMBER}</b>
+                    <b>{appInfo?.supportPhone}</b>
                   </>
                 )
               }
@@ -169,7 +166,7 @@ class PurchaseRequestCreditDelivery extends Component {
           </SpanModalText>
         </DivModal>,
         {
-          cancelText: formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' }),
+          cancelText: null,
           proceedText: formatMessage({ id: 'global.close', defaultMessage: 'Close' })
         },
         true //Basic Modal
@@ -359,7 +356,8 @@ function mapStateToProps(state) {
   const { detail } = state.orders
   return {
     orderId: detail.id,
-    isSending: state.orders.isSending
+    isSending: state.orders.isSending,
+    appInfo: state?.auth?.identity?.appInfo
   }
 }
 

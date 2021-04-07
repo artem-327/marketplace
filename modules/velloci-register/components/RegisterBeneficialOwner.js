@@ -131,7 +131,7 @@ class RegisterBeneficialOwner extends Component {
           this.handleSubmit()
         }
       })
-      .catch(err => console.log('catch', err))
+      .catch(err => console.error('catch', err))
   }
 
   render() {

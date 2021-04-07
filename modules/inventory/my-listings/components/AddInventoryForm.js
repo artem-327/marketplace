@@ -1337,7 +1337,7 @@ class AddInventoryForm extends Component {
                                   this.switchTab(0, values, setFieldValue)
                                 })
                                 .catch(e => {
-                                  console.log('CATCH', e)
+                                  console.error('CATCH', e)
                                 })
                             }}
                             data-test='new_inventory_productOffer'>
@@ -2034,7 +2034,7 @@ class AddInventoryForm extends Component {
                                   this.switchTab(1, values, setFieldValue)
                                 })
                                 .catch(e => {
-                                  console.log('CATCH', e)
+                                  console.error('CATCH', e)
                                 })
                             }}
                             data-test='new_inventory_productOptional'>
@@ -2718,7 +2718,7 @@ class AddInventoryForm extends Component {
                                   this.switchTab(2, values, setFieldValue)
                                 })
                                 .catch(e => {
-                                  console.log('CATCH', e)
+                                  console.error('CATCH', e)
                                 })
                             }}
                             data-test='new_inventory_productDocuments'>
