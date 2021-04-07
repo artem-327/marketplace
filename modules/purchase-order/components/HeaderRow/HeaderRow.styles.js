@@ -1,9 +1,7 @@
 import styled from 'styled-components'
-import { Image, Button, Grid, Popup } from 'semantic-ui-react'
+import { Image, Button, Grid, Popup, Container } from 'semantic-ui-react'
 
 export const DivHeaderRow = styled.div`
-  display: flex;
-  flex-flow: row;
   position: fixed;
   width: auto;
   height: 80px;
@@ -11,10 +9,18 @@ export const DivHeaderRow = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  justify-content: space-between;
-  padding: 0 130px;
+  padding: 25px 0;
   box-shadow: 0 1px 0 0 #dee2e6;
   background-color: #ffffff;
+`
+
+export const ContainerHeader = styled(Container)`
+  &.ui.container {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    padding: 0;
+  }
 `
 
 export const DivHeaderRowText = styled.div`
@@ -26,16 +32,16 @@ export const DivHeaderRowText = styled.div`
   letter-spacing: normal;
   text-align: right;
   color: #20273a;
-  margin: auto 5px;
+  margin: auto 0 auto 5px;
 `
 
 export const DivImageWrapper = styled.div`
-  margin: auto 5px;
+  margin: auto 5px auto 9px;
   cursor: pointer;
 `
 
 export const LogoImage = styled(Image)`
-  max-height: 80px;
+  max-height: 30px;
   margin: auto 0;
 `
 
