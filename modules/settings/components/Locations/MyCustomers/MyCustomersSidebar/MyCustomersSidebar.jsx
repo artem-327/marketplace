@@ -155,6 +155,13 @@ const MyCustomersSidebar = props => {
                     displayHeader={false}
                     values={values}
                     setFieldValue={setFieldValue}
+                    initialZipCodes={[
+                      {
+                        key: values.zipID.toString(),
+                        value: values.billToAddress.address.zip,
+                        text: values.billToAddress.address.zip
+                      }
+                    ]}
                   />
 
                   <DivSectionHeader>
