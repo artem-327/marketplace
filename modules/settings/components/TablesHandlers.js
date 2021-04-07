@@ -278,7 +278,7 @@ class TablesHandlers extends Component {
           ),
           value: ''
         },
-        ...this.props.documentTypes.map(doc => ({
+        ...this.props?.documentTypes?.map(doc => ({
           key: doc.key,
           text: doc.text,
           value: doc.text
