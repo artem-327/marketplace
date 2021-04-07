@@ -95,22 +95,19 @@ class ModalDetail extends Component {
     openedTdsSaveAs: false
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const {
       detailValues,
-      broadcastTemplates,
       getProductConditions,
       getProductForms,
       getProductGrades,
       getWarehouses,
-      getDocumentTypes,
       searchOrigins,
       searchManufacturers,
-      modalActiveTab,
-      getTemplates
+      modalActiveTab
     } = this.props
     if (detailValues) {
-      await this.loadProductOffer(detailValues.id) // Start editing, reload product offer
+      this.loadProductOffer(detailValues.id) // Start editing, reload product offer
     } else {
       searchOrigins('', 200)
     }
@@ -118,11 +115,6 @@ class ModalDetail extends Component {
     this.fetchIfNoData('listForms', getProductForms)
     this.fetchIfNoData('listGrades', getProductGrades)
     this.fetchIfNoData('warehousesList', getWarehouses)
-    this.fetchIfNoData('listDocumentTypes', getDocumentTypes)
-
-    if (broadcastTemplates && !broadcastTemplates.length) {
-      getTemplates()
-    }
 
     searchManufacturers('', 200)
     this.switchTab(modalActiveTab)
@@ -694,7 +686,8 @@ class ModalDetail extends Component {
       tdsTemplatesLoading,
       tdsTemplates,
       broadcastChange,
-      autocompleteData
+      autocompleteData,
+      getDocumentTypes
     } = this.props
     const { openedTdsList, openedTdsSaveAs } = this.state
 
@@ -1728,31 +1721,33 @@ class ModalDetail extends Component {
                               ),
                               pane: (
                                 <Tab.Pane key='documents' style={{ padding: '16px' }}>
-                                  <DocumentTab
-                                    listDocumentTypes={listDocumentTypes}
-                                    values={values.documents}
-                                    setFieldValue={setFieldValue}
-                                    setFieldNameAttachments='documents.attachments'
-                                    dropdownName='documents.documentType'
-                                    removeAttachmentLink={removeAttachmentLinkProductOffer}
-                                    removeAttachment={removeAttachment}
-                                    addAttachment={addAttachment}
-                                    loadFile={loadFile}
-                                    changedForm={files =>
-                                      this.setState(prevState => ({
-                                        changedForm: true,
-                                        attachmentFiles: prevState.attachmentFiles.concat(files)
-                                      }))
-                                    }
-                                    idForm={getSafe(() => detailValues.id, 0)}
-                                    attachmentFiles={this.state.attachmentFiles}
-                                    removeAttachmentFromUpload={id => {
-                                      const attachmentFiles = this.state.attachmentFiles.filter(
-                                        attachment => attachment.id !== id
-                                      )
-                                      this.setState({ attachmentFiles })
-                                    }}
-                                  />
+                                  {this.state.activeTab === 2 ? (
+                                    <DocumentTab
+                                      listDocumentTypes={listDocumentTypes}
+                                      values={values.documents}
+                                      setFieldValue={setFieldValue}
+                                      setFieldNameAttachments='documents.attachments'
+                                      dropdownName='documents.documentType'
+                                      removeAttachmentLink={removeAttachmentLinkProductOffer}
+                                      removeAttachment={removeAttachment}
+                                      addAttachment={addAttachment}
+                                      loadFile={loadFile}
+                                      changedForm={files =>
+                                        this.setState(prevState => ({
+                                          changedForm: true,
+                                          attachmentFiles: prevState.attachmentFiles.concat(files)
+                                        }))
+                                      }
+                                      idForm={getSafe(() => detailValues.id, 0)}
+                                      attachmentFiles={this.state.attachmentFiles}
+                                      removeAttachmentFromUpload={id => {
+                                        const attachmentFiles = this.state.attachmentFiles.filter(
+                                          attachment => attachment.id !== id
+                                        )
+                                        this.setState({ attachmentFiles })
+                                      }}
+                                    />
+                                  ) : null}
                                 </Tab.Pane>
                               )
                             },
@@ -1787,6 +1782,7 @@ class ModalDetail extends Component {
                                         }
 
                                         // if validation is correct - switch tabs
+
                                         this.switchTab(3)
                                       })
                                       .catch(e => {
@@ -1807,15 +1803,17 @@ class ModalDetail extends Component {
                                   }
                                   key='priceBook'
                                   style={{ padding: '18px' }}>
-                                  <Broadcast
-                                    isPrepared={!this.state.broadcastLoading}
-                                    asModal={true}
-                                    saveBroadcast={this.state.saveBroadcast}
-                                    changedForm={this.changedForm}
-                                    close={this.props.closeModalDetail}
-                                    detailValues={detailValues}
-                                    inventoryGrid={datagrid}
-                                  />
+                                  {this.state.activeTab === 3 ? (
+                                    <Broadcast
+                                      isPrepared={!this.state.broadcastLoading}
+                                      asModal={true}
+                                      saveBroadcast={this.state.saveBroadcast}
+                                      changedForm={this.changedForm}
+                                      close={this.props.closeModalDetail}
+                                      detailValues={detailValues}
+                                      inventoryGrid={datagrid}
+                                    />
+                                  ) : null}
                                 </Tab.Pane>
                               )
                             },
